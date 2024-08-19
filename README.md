@@ -1,0 +1,2 @@
+# ccn
+CCN monorepo
