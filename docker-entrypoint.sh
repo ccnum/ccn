@@ -58,12 +58,16 @@ if version_greater "$image_version" "$installed_version"; then
 	tar cf - --one-file-system -C /usr/src/spip . | tar xf -
 	echo >&2 "Complete! SPIP has been successfully copied to $PWD"
 
-	echo >&2 "Create plugins, libraries and template directories"
-	mkdir -p plugins/auto
+	echo >&2 "Création des dossiers lib et tmp à la racine"
 	mkdir -p lib
-	mkdir -p squelettes
 	mkdir -p tmp/{dump,log,upload}
-	chown -R www-data:www-data plugins lib squelettes tmp
+	chown -R www-data:www-data lib tmp
+
+	for CCN in $LISTE_CCN ; do
+		echo >&2 "Création des dossiers pour la ccn $CCN : IMG,tmp,local,config"
+		mkdir -p sites/$CCN{IMG,tmp,local,config}
+		chown -R www-data:www-data sites/$CCN
+	done
 
 	if [ ! -e .htaccess ]; then
 		cp -p htaccess.txt .htaccess
@@ -96,16 +100,6 @@ if [[ ! -e config/connect.php && ${SPIP_AUTO_INSTALL} = 1 ]]; then
 		--admin-login ${SPIP_ADMIN_LOGIN} \
 		--admin-email ${SPIP_ADMIN_EMAIL} \
 		--admin-pass ${SPIP_ADMIN_PASS}" || true
-fi
-
-# Default mes_options
-if [ ! -e config/mes_options.php ]; then
-	/bin/cat << MAINEOF > config/mes_options.php
-<?php
-if (!defined("_ECRIRE_INC_VERSION")) return;
-\$GLOBALS['spip_header_silencieux'] = 1;
-?>
-MAINEOF
 fi
 
 exec "$@"
