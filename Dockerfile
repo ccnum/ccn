@@ -148,7 +148,7 @@ RUN set -eux; \
 	\
 	curl -o mutualisation.zip -fSL "files.spip.net/spip-zone/spip-contrib-extensions/mutualisation-992d7-mutualisation-${MUTUALISATION_PACKAGE}.zip"; \
 	unzip mutualisation.zip -d /usr/src/spip; \
-	mv mutualisation-${MUTUALISATION_PACKAGE} mutualisation; \
+	mv mutualisation-${MUTUALISATION_PACKAGE} mutualisation/; \
 	rm mutualisation.zip; \
 	chown -R www-data:www-data /usr/src/spip; \
 	\
