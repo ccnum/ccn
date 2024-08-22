@@ -1,7 +1,7 @@
 FROM php:8.2-apache-bullseye AS base
 ENV SPIP_VERSION 4.3
 ENV SPIP_PACKAGE 4.3.2
-ENV LISTE_CCN
+ENV LISTE_CCN="archives fictions ontourne zerodechet"
 
 RUN set -eux; \
 	apt-get update; \
@@ -170,7 +170,7 @@ ENV PHP_MAX_EXECUTION_TIME 60
 ENV PHP_MEMORY_LIMIT 256M
 ENV PHP_POST_MAX_SIZE 40M
 ENV PHP_UPLOAD_MAX_FILESIZE 32M
-ENV PHP_TIMEZONE America/Guadeloupe
+ENV PHP_TIMEZONE Europe/Paris
 
 EXPOSE 80
 
