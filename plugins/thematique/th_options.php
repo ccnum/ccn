@@ -104,14 +104,6 @@ $table_des_traitements['NOM'][] = 'supprimer_numero(typo(%s))';
 // Limiter la longueur des messages de forum
 define('_FORUM_LONGUEUR_MAXI', 10000);
 
-// Limiter la taille des images/docs uploadees
-//define('_LOGO_MAX_WIDTH',3000) ;
-//define('_LOGO_MAX_HEIGHT',3000) ;
-//define('_IMG_MAX_WIDTH',3000) ;
-//define('_IMG_MAX_HEIGHT',3000) ;
-//define('_IMG_MAX_SIZE',2024);
-define('_DOC_MAX_SIZE', 3000);
-
 /**
  * Autorisation de modifier un auteur
  *
