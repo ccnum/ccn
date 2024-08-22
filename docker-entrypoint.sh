@@ -65,7 +65,7 @@ if version_greater "$image_version" "$installed_version"; then
 
 	for CCN in $LISTE_CCN ; do
 		echo >&2 "Création des dossiers pour la ccn $CCN : IMG,tmp,local,config"
-		mkdir -p sites/$CCN{IMG,tmp,local,config}
+		mkdir -p sites/$CCN.laclasse.com/{config,IMG,local,tmp}
 		chown -R www-data:www-data sites/$CCN
 	done
 
