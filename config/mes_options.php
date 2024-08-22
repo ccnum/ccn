@@ -18,7 +18,7 @@ if (preg_match('/ddev.site/', $_SERVER['HTTP_HOST'])) {
 } else {
 	define('_SITES_ADMIN_MUTUALISATION', 'thematiques.laclasse.com');
 	define('_AUTORISER_TELECHARGER_PLUGINS', false);
-	date_default_timezone_set('Europe/Paris');
+	$GLOBALS['spip_header_silencieux'] = 1;
 }
 
 define('_DOC_MAX_SIZE', 3000);
