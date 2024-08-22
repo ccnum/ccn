@@ -1,4 +1,7 @@
 FROM php:8.2-apache-bullseye AS base
+ENV SPIP_VERSION 4.3
+ENV SPIP_PACKAGE 4.3.2
+ENV LISTE_CCN
 
 RUN set -eux; \
 	apt-get update; \
@@ -117,9 +120,6 @@ RUN set -eux; \
 	a2enconf remoteip; \
 	# (replace all instances of "%h" with "%a" in LogFormat)
 	find /etc/apache2 -type f -name '*.conf' -exec sed -ri 's/([[:space:]]*LogFormat[[:space:]]+"[^"]*)%h([^"]*")/\1%a\2/g' '{}' +
-
-ENV SPIP_VERSION 4.3
-ENV SPIP_PACKAGE 4.3.2
 
 # Install SPIP-Cli
 RUN set -eux; \
