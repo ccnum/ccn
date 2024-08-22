@@ -1,8 +1,9 @@
 .ddev
+config/ecran-securite.php
 ecrire
 IMG
 local
-plugins
+plugins-dist
 prive
 sites
 squelettes-dist
