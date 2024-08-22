@@ -1,6 +1,7 @@
 FROM php:8.2-apache-bullseye AS base
 ENV SPIP_VERSION 4.3
 ENV SPIP_PACKAGE 4.3.2
+ENV MUTUSALISATION_PACKAGE 1.5.0
 ENV LISTE_CCN="archives fictions ontourne zerodechet"
 
 RUN set -eux; \
@@ -145,6 +146,11 @@ RUN set -eux; \
 	rm spip.zip; \
 	chown -R www-data:www-data /usr/src/spip; \
 	\
+	curl -o mutualisation.zip -fSL "files.spip.org/spip-zone/spip-contrib-extensions/mutualisation-992d7-mutualisation-${MUTUALISATION_PACKAGE}.zip"; \
+	unzip mutualisation.zip -d /usr/src/spip; \
+	rm mutualisation.zip; \
+	chown -R www-data:www-data /usr/src/spip; \
+	\
 	apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false $fetchDeps; \
 	rm -rf /tmp/*; \
 	rm -rf /var/lib/apt/lists/*
@@ -152,7 +158,7 @@ RUN set -eux; \
 VOLUME /var/www/html
 
 # SPIP
-ENV SPIP_AUTO_INSTALL 1
+ENV SPIP_AUTO_INSTALL 0
 ENV SPIP_DB_SERVER mysql
 ENV SPIP_DB_HOST mysql
 ENV SPIP_DB_LOGIN spip
