@@ -1,0 +1,11 @@
+.ddev
+ecrire
+IMG
+local
+plugins
+prive
+sites
+composer.*
+index.php
+spip_loader.php
+spip.*
