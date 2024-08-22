@@ -5,6 +5,9 @@ local
 plugins
 prive
 sites
+squelettes-dist
+tmp
+vendor
 composer.*
 index.php
 spip_loader.php
