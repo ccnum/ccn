@@ -3,6 +3,7 @@ config/ecran_securite.php
 ecrire
 IMG
 local
+plugins/auto
 plugins-dist
 prive
 sites

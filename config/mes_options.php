@@ -21,7 +21,7 @@ if (preg_match('/ddev.site/', $_SERVER['HTTP_HOST'])) {
 	date_default_timezone_set('Europe/Paris');
 }
 
-define('_DOC_MAX_SIZE', 1000000);
+define('_DOC_MAX_SIZE', 3000);
 if (!is_readable(_DIR_RACINE . 'mutualisation/mutualiser.php')) {
 	echo _L("Fichier 'mutualisation/mutualiser.php' manquant dans la racine " . _DIR_RACINE);
 	exit;
