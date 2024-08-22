@@ -1,7 +1,7 @@
 FROM php:8.2-apache-bullseye AS base
 ENV SPIP_VERSION 4.3
 ENV SPIP_PACKAGE 4.3.2
-ENV MUTUSALISATION_PACKAGE 1.5.0
+ENV MUTUALISATION_PACKAGE 1.5.0
 ENV LISTE_CCN="archives fictions ontourne zerodechet"
 
 RUN set -eux; \
@@ -146,7 +146,7 @@ RUN set -eux; \
 	rm spip.zip; \
 	chown -R www-data:www-data /usr/src/spip; \
 	\
-	curl -o mutualisation.zip -fSL "files.spip.org/spip-zone/spip-contrib-extensions/mutualisation-992d7-mutualisation-${MUTUALISATION_PACKAGE}.zip"; \
+	curl -o mutualisation.zip -fSL "files.spip.net/spip-zone/spip-contrib-extensions/mutualisation-992d7-mutualisation-${MUTUALISATION_PACKAGE}.zip"; \
 	unzip mutualisation.zip -d /usr/src/spip; \
 	rm mutualisation.zip; \
 	chown -R www-data:www-data /usr/src/spip; \
