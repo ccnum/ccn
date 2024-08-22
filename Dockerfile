@@ -1,6 +1,4 @@
 FROM php:8.2-apache-bullseye as base
-LABEL maintainer="docker@ipeos.com"
-LABEL authors="Laurent Vergerolle <docker@ipeos.com>, Michael Nival <docker@mn-home.fr>"
 
 RUN set -eux; \
 	apt-get update; \
@@ -152,8 +150,6 @@ RUN set -eux; \
 	rm -rf /var/lib/apt/lists/*
 
 VOLUME /var/www/html
-
-
 
 # SPIP
 ENV SPIP_AUTO_INSTALL 1

@@ -1,0 +1,50 @@
+#CACHE{0}
+
+<script type="text/javascript">
+  $().ready(function(){
+    $('.call_sidebar_main').off('click').on('click', function(){
+      if ($('body').hasClass('hasSidebarLateralVisible')) {
+        hideSidebarLateral();
+      } else {
+        showSidebarLateral();
+      }
+    });
+  });
+</script>
+
+[(#REM) Crochet Parenthèse #TYPE_OBJET|match{classes|travail_en_cours|consignes}|ou{#TYPE_OBJET|is_null}|oui Parenthèse ]
+
+[(#TYPE_OBJET|match{ressources|agora}|oui)
+
+<div class="call_sidebar_main couleur_[(#TYPE_OBJET)][(#MODELE{nb2col}{id_article})]">
+  <div class="call_sidebar_main_inner">
+    [(#REM)
+      [(#TYPE_OBJET|match{classes}|oui) 
+        Afficher les autres classes
+      ]
+      
+      [(#TYPE_OBJET|match{travail_en_cours}|oui) 
+        Afficher les réponses des autres classes
+      ]
+      
+      [(#TYPE_OBJET|match{consignes}|oui) 
+        Afficher les réponses des classes
+      ]
+    ]
+    
+    [(#TYPE_OBJET|match{ressources}|oui) 
+      Retour aux ressources
+    ]
+    
+    [(#TYPE_OBJET|match{agora}|oui) 
+      Retour à l'agora
+    ]
+    [(#REM)
+      [(#TYPE_OBJET|is_null|oui) 
+        &#9664; Retour
+      ]
+    ]
+  </div>
+</div>
+
+]
