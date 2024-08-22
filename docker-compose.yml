@@ -21,7 +21,7 @@ services:
     links:
       - db:mysql
     environment:
-      - SPIP_AUTO_INSTALL=1
+      - SPIP_AUTO_INSTALL=0
       - SPIP_DB_SERVER=mysql
       - SPIP_DB_LOGIN=spip
       - SPIP_DB_PASS=spip
