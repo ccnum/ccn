@@ -1,4 +1,5 @@
 .ddev
+.vscode
 config/ecran_securite.php
 ecrire
 IMG
