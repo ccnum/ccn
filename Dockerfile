@@ -1,4 +1,4 @@
-FROM php:8.2-apache-bullseye as base
+FROM php:8.2-apache-bullseye AS base
 
 RUN set -eux; \
 	apt-get update; \
