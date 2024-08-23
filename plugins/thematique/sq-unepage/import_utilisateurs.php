@@ -6,7 +6,7 @@ error_reporting(E_ALL);
 // On active les sessions (pour gérer les connexions).
 session_start();
 
-define('accès_autorisé', TRUE);
+define('accès_autorisé', true);
 $env=new Env();
 
 /*
@@ -15,17 +15,17 @@ $env=new Env();
  */
 $url_courante = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
 
-if ( isset($_POST['mdp']) && $env->verifier_mot_de_passe($_POST['mdp'])){
+if (isset($_POST['mdp']) && $env->verifier_mot_de_passe($_POST['mdp'])) {
     $_SESSION['auth'] = true;
     header("Refresh:0");
 }
 
-if( !isset($_SESSION['auth']) || $_SESSION['auth']!==true ){
+if(!isset($_SESSION['auth']) || $_SESSION['auth']!==true ) {
     echo '<form method="post"><input type="password" name="mdp" placeholder="Accès à l\'import"></form>';
 } else{
     // Ici, on est connecté et autorisé à voir. On peut donc afficher la page d'import des utilisateurs et importer les données.
-    if( isset($_POST['import_utilisateurs']) ){
-        if( isset($_FILES['fichier_csv_utilisateurs']) && $_FILES['fichier_csv_utilisateurs']['error']===0){
+    if(isset($_POST['import_utilisateurs']) ) {
+        if(isset($_FILES['fichier_csv_utilisateurs']) && $_FILES['fichier_csv_utilisateurs']['error']===0) {
             importer_donnees_du_tableur(
                 $_FILES['fichier_csv_utilisateurs']['tmp_name'],
                 $_POST['table_auteur'],
@@ -75,7 +75,7 @@ th{border: 5px solid black;}
     $codeHTML .= '<select name="table_auteur"><option disabled selected value="">---Veuillez choisir---</option>';
     foreach (get_liste_tables() as $table){
         $nom_table = reset($table);
-        if( strlen($nom_table)>8 && substr($nom_table,-8)==='_auteurs' && substr($nom_table,-16)!=='_donnees_auteurs' && substr($nom_table,-14)!=='_zones_auteurs'){
+        if(strlen($nom_table)>8 && substr($nom_table, -8)==='_auteurs' && substr($nom_table, -16)!=='_donnees_auteurs' && substr($nom_table, -14)!=='_zones_auteurs') {
             $codeHTML .= '<option value="' . $nom_table . '">' . $nom_table . '</option>';
         }
     }
@@ -83,7 +83,7 @@ th{border: 5px solid black;}
     $codeHTML .= '<select name="table_auteur_liens"><option disabled selected value="">---Veuillez choisir---</option>';
     foreach (get_liste_tables() as $table){
         $nom_table = reset($table);
-        if( strlen($nom_table)>14 && substr($nom_table,-14)==='_auteurs_liens'){
+        if(strlen($nom_table)>14 && substr($nom_table, -14)==='_auteurs_liens') {
             $codeHTML .= '<option value="' . $nom_table . '">' . $nom_table . '</option>';
         }
     }
@@ -93,7 +93,8 @@ th{border: 5px solid black;}
 }
 
 
-function importer_donnees_du_tableur($nom_fichier_tableur='', $table_auteur='', $table_auteur_liens=''){
+function importer_donnees_du_tableur($nom_fichier_tableur='', $table_auteur='', $table_auteur_liens='')
+{
     $liste_auteurs = generer_liste_auteur($nom_fichier_tableur);
     foreach ($liste_auteurs as $auteur){
         $auteur->inserer_auteur_en_bdd($table_auteur, $table_auteur_liens);
@@ -102,16 +103,17 @@ function importer_donnees_du_tableur($nom_fichier_tableur='', $table_auteur='', 
 
 /**
  * Renvoie un tableau d'objets Auteur avec les informations sur ces auteurs.
- * @param string $nom_fichier_tableur
+ *
+ * @param  string $nom_fichier_tableur
  * @return array
  */
 function generer_liste_auteur(string $nom_fichier_tableur=''): array
 {
     $liste_auteurs = array();
     $ligne=0;
-    if (($handle = fopen($nom_fichier_tableur, "r")) !== FALSE) {
-        while (($data = fgetcsv($handle, 1000, ",")) !== FALSE) {
-            if ($ligne!==0){
+    if (($handle = fopen($nom_fichier_tableur, "r")) !== false) {
+        while (($data = fgetcsv($handle, 1000, ",")) !== false) {
+            if ($ligne!==0) {
                 $liste_auteurs[] = new Auteur_SPIP($data);
             }
             $ligne++;
@@ -123,7 +125,8 @@ function generer_liste_auteur(string $nom_fichier_tableur=''): array
 
 
 
-class Auteur_SPIP{
+class Auteur_SPIP
+{
     public int $id_auteur = 0;
     public string $nom = '';
     public array $emails = array();
@@ -166,7 +169,7 @@ class Auteur_SPIP{
          * Si des rubriques sont déclarées comme ayant cette personne comme admin, cette personne est donc admin.
          * Les restrictions par rubriques seront faites plus tard.
          */
-        if ($data!==''){
+        if ($data!=='') {
             return '0minirezo';
         }
         return '6forum';
@@ -174,11 +177,11 @@ class Auteur_SPIP{
 
     private function detecter_rubriques_possedees(string $data=''): array
     {
-        if(mb_strtolower($data)==='toutes'){
+        if(mb_strtolower($data)==='toutes') {
             return array();
         }
 
-        if (trim($data)===''){
+        if (trim($data)==='') {
             return array();
         }
 
@@ -192,7 +195,7 @@ class Auteur_SPIP{
 
     private function detecter_articles_possedes(string $data=''): array
     {
-        if (trim($data)===''){
+        if (trim($data)==='') {
             return array();
         }
         $donnees_crado = explode(",", $data);
@@ -206,11 +209,12 @@ class Auteur_SPIP{
     /**
      * @return void
      */
-    public function inserer_auteur_en_bdd($table_auteur='', $table_auteurs_liens=''){
+    public function inserer_auteur_en_bdd($table_auteur='', $table_auteurs_liens='')
+    {
         $connexion = new ConnexionBDD();
         $connexion = $connexion->getConnexion();
         // L'auteur existe-t-il déjà dans la base de données ? Si non, on le créé.
-        if (!$this->existe_deja_en_bdd($table_auteur)){
+        if (!$this->existe_deja_en_bdd($table_auteur)) {
             echo $this->nom . ' n\'existe pas en bdd.<br>';
             try {
                 $transaction = $connexion->prepare("INSERT INTO " . $table_auteur . " (nom, email, login, statut, webmestre, bio, nom_site, url_site,pass,low_sec,pgp,htpass) VALUES (?,?,?,?,?,?,?,?,?,?,?,?)");
@@ -218,7 +222,8 @@ class Auteur_SPIP{
                 $transaction->execute([$this->nom, $this->emails[0], $this->login, $this->statut, $this->webmestre, '','','','','','','']);
                 $this->id_auteur = $connexion->lastInsertId();
                 $connexion->commit();
-            }catch (Exception $e){var_dump($e);}
+            }catch (Exception $e){var_dump($e);
+            }
         } else {
             echo $this->nom . ' existe en bdd.<br>';
             // S'il existe déjà, on récupère au moins son identifiant.
@@ -226,18 +231,21 @@ class Auteur_SPIP{
                 $transaction = $connexion->query("SELECT * FROM " . $table_auteur . " WHERE login=\"" .$this->login . "\"");
                 $user = $transaction->fetch();
                 $this->id_auteur = $user['id_auteur'];
-            }catch (Exception $e){var_dump($e);}
+            }catch (Exception $e){var_dump($e);
+            }
             // Et on s'assure qu'il est bel et bien en auteur. S'ils se sont connectés par eux-mêmes, ils auront été assignés en tant que visiteur.
             try {
-                $transaction = $connexion->query("UPDATE " . $table_auteur . " SET statut=\"" . $this->statut . "\" WHERE id_auteur=\"" . $this->id_auteur . "\"" );
+                $transaction = $connexion->query("UPDATE " . $table_auteur . " SET statut=\"" . $this->statut . "\" WHERE id_auteur=\"" . $this->id_auteur . "\"");
                 $user = $transaction->fetch();
-            }catch (Exception $e){var_dump($e);}
+            }catch (Exception $e){var_dump($e);
+            }
         }
         // Maintenant que l'auteur est en BDD, mettons à jour ses rubriques et articles possédés.
         $this->inserer_possessions_auteur($table_auteurs_liens);
     }
 
-    private function inserer_possessions_auteur($table_auteur_liens=''){
+    private function inserer_possessions_auteur($table_auteur_liens='')
+    {
         $connexion = new ConnexionBDD();
         $connexion = $connexion->getConnexion();
         try {
@@ -254,7 +262,7 @@ class Auteur_SPIP{
 
             // Ajoutons les rubriques où l'auteur est admin.
             foreach ($this->rubriques_ou_auteur_est_admin as $rubrique){
-                if (!$this->existe_deja_lien_auteur($this->id_auteur, $rubrique, 'rubrique', $table_auteur_liens)){
+                if (!$this->existe_deja_lien_auteur($this->id_auteur, $rubrique, 'rubrique', $table_auteur_liens)) {
                     $requete = "INSERT INTO " . $table_auteur_liens . " (id_auteur, id_objet, objet, vu) VALUES (?,?,?,?)";
                     $requete= $connexion->prepare($requete);
                     $requete->execute([$this->id_auteur, $rubrique, 'rubrique', 'non']);
@@ -262,13 +270,14 @@ class Auteur_SPIP{
             }
             // Et ajoutons les articles où l'auteur est "auteur".
             foreach ($this->articles_ou_auteur_est_auteur as $article){
-                if (!$this->existe_deja_lien_auteur($this->id_auteur, $article, 'article', $table_auteur_liens)){
+                if (!$this->existe_deja_lien_auteur($this->id_auteur, $article, 'article', $table_auteur_liens)) {
                     $requete = "INSERT INTO " . $table_auteur_liens . " (id_auteur, id_objet, objet, vu) VALUES (?,?,?,?)";
                     $requete= $connexion->prepare($requete);
                     $requete->execute([$this->id_auteur, $article, 'article', 'non']);
                 }
             }
-        }catch (Exception $e){echo $e;}
+        }catch (Exception $e){echo $e;
+        }
     }
 
     private function existe_deja_lien_auteur($id_auteur=0, $id_objet=0, $type_objet='rubrique', $table_auteur_liens=''): bool
@@ -278,10 +287,11 @@ class Auteur_SPIP{
         try {
             $requete = 'SELECT * FROM '.$table_auteur_liens.' WHERE id_auteur=' . $id_auteur . ' AND id_objet=' . $id_objet . ' AND objet="' . $type_objet . '"';
             $transaction = $connexion->query($requete);
-            if ($transaction->fetch()){
+            if ($transaction->fetch()) {
                 return true;
             }
-        }catch (Exception $e){var_dump($e);}
+        }catch (Exception $e){var_dump($e);
+        }
         return false;
     }
 
@@ -292,10 +302,11 @@ class Auteur_SPIP{
         try {
             $stmt = $connexion->query("SELECT * FROM ".$table_auteur." WHERE login=\"" . $this->login . "\"");
             $user = $stmt->fetch();
-            if ($user){
+            if ($user) {
                 return true;
             }
-        }catch (Exception $e){}
+        }catch (Exception $e){
+        }
         return false;
     }
 }
@@ -315,7 +326,8 @@ function get_liste_tables(): array
     }catch (Exception $e){
         throw new Erreur(
             'Impossible de récupérer la liste des tables de la base.',
-            'Vérifiez l\'accès à la BDD');
+            'Vérifiez l\'accès à la BDD'
+        );
     }
     return $liste_tables;
 }
@@ -323,7 +335,8 @@ function get_liste_tables(): array
 /**
  * Gestion de la connexion à la BDD.
  */
-class ConnexionBDD{
+class ConnexionBDD
+{
     private string $servername = "127.0.0.1";
     private string $db         = "";
     private string $username   = "";
@@ -335,7 +348,8 @@ class ConnexionBDD{
         PDO::ATTR_EMULATE_PREPARES   => false,
     ];
 
-    public function __construct(){
+    public function __construct()
+    {
         $variables = new Env();
         $this->db = $variables->env_variables['database'];
         $this->username = $variables->env_variables['db_username'];
@@ -359,7 +373,8 @@ class ConnexionBDD{
 /**
  * Sert à récupérer les variables d'environnement.
  */
-class Env{
+class Env
+{
 
     public array $env_variables = array();
 
@@ -382,10 +397,11 @@ class Env{
     public function verifier_mot_de_passe(string $mot_de_passe_a_tester=''): bool
     {
         try {
-            if( !isset($this->env_variables['mot_de_passe_import_utilisateurs']) ){
+            if(!isset($this->env_variables['mot_de_passe_import_utilisateurs']) ) {
                 throw new Erreur(
                     'Impossible de trouver la variable dans le fichier env.php.',
-                    'Ajoutez ceci dans votre fichier env.php : "$mot_de_passe_import_utilisateurs=le_mot_de_passe_que_vous_voulez_pour_protéger_cette_page".');
+                    'Ajoutez ceci dans votre fichier env.php : "$mot_de_passe_import_utilisateurs=le_mot_de_passe_que_vous_voulez_pour_protéger_cette_page".'
+                );
             }
         } catch (Erreur $e){
             echo $e->afficher_erreur();
@@ -400,7 +416,8 @@ class Env{
 /**
  * Sert à représenter proprement les erreurs.
  */
-class Erreur extends Exception{
+class Erreur extends Exception
+{
 
     private string $probleme='';
     private string $solution='';

@@ -4,21 +4,22 @@
  * @constructor
  */
 
-function Intervenant(){
+function Intervenant()
+{
 
-	var id, nom;
+    var id, nom;
 
 
-  /**
-   * Initialise l'intervenant.
-   *
-   * @param {Object} data - Données à affecter à l'instance
-   */
+    /**
+     * Initialise l'intervenant.
+     *
+     * @param {Object} data - Données à affecter à l'instance
+     */
 
-	this.init = function(data){
-    this.data = data;
-		this.id = data.id;
-		this.nom = data.nom;
-	}
-	
+    this.init = function (data) {
+        this.data = data;
+        this.id = data.id;
+        this.nom = data.nom;
+    }
+    
 }
