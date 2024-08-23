@@ -73,6 +73,7 @@ if version_greater "$image_version" "$installed_version"; then
 	if [ -f config/connect.php ]; then
 		spip core:maj:bdd
 		spip plugins:maj:bdd
+		spip plugins:svp:depoter https://plugins.spip.net/depots/principal.xml
 	fi
 fi
 
