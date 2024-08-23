@@ -73,6 +73,8 @@ if version_greater "$image_version" "$installed_version"; then
 		spip core:maj:bdd
 		spip plugins:maj:bdd
 	fi
+
+	spip plugins:activer th
 fi
 
 # Install SPIP
