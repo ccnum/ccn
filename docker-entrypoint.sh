@@ -62,7 +62,7 @@ if version_greater "$image_version" "$installed_version"; then
 	mkdir -p lib
 	mkdir -p plugins/auto
 	mkdir -p tmp/{dump,log,upload}
-	chown -R www-data:www-data lib tmp
+	chown -R www-data:www-data lib plugins tmp
 
 	if [ ! -e .htaccess ]; then
 		cp -p htaccess.txt .htaccess
