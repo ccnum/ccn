@@ -118,7 +118,7 @@ function formulaires_joindre_document_traiter(
 */
 
 /************************************************************************************/
-/*	FONCTIONS 																*/
+/*    FONCTIONS                                                                 */
 /************************************************************************************/
 /*
 function nb2col($nb) {
@@ -126,22 +126,25 @@ function nb2col($nb) {
 }
 */
 
-/****************** Tableaux et dates *****************************/
+/******************
+ * 
+ * Tableaux et dates 
+ *****************************/
 
 /*
  * Ces deux fonctions fonctionnaient très mal et n'étaient pas propres et mal utilisées. 22/08/2022
  * -> Si pas de crash/bug SPIP d'ici décembre 2022, on pourra les supprimer sans souci.
 function afficher_options_date($annee,$mois,$annee_scolaire)
 {
-	if (date('m')>=8) $annee_actuelle = date('Y'); else $annee_actuelle = date('Y')-1;
-	if ($mois<9) $annee = $annee--;
+    if (date('m')>=8) $annee_actuelle = date('Y'); else $annee_actuelle = date('Y')-1;
+    if ($mois<9) $annee = $annee--;
   for ($i=$annee_actuelle;$i>=$annee;$i--) {
-		$j=$i+1;
-		$texte .= "<option value='$i'";
-		if ($i==$annee_scolaire) $texte .= " selected ";
-		$texte .= ">$i/$j</option>";
-	}
-	return $texte;
+        $j=$i+1;
+        $texte .= "<option value='$i'";
+        if ($i==$annee_scolaire) $texte .= " selected ";
+        $texte .= ">$i/$j</option>";
+    }
+    return $texte;
 }
 
 function afficher_options_date2($anneed,$moisd,$anneef,$moisf)

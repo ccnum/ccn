@@ -1,11 +1,13 @@
 <?php
 
-if (!defined("_ECRIRE_INC_VERSION")) return;
+if (!defined("_ECRIRE_INC_VERSION")) { return;
+}
 
 include_spip('inc/cextras');
 include_spip('base/th_cextras');
 
-function th_upgrade($nom_meta_base_version, $version_cible) {
+function th_upgrade($nom_meta_base_version, $version_cible)
+{
 
     $maj = array();
 
@@ -55,7 +57,6 @@ function th_upgrade($nom_meta_base_version, $version_cible) {
         array('th_configurer_rubriques'),
     );
 
-    cextras_api_upgrade(th_declarer_champs_extras(), $maj['3.0.3']);
     $maj['3.0.3'] = array(
         array('th_ajouter_mots_clef'),
         array('maj_tables', array('spip_rubriques')),
@@ -65,21 +66,25 @@ function th_upgrade($nom_meta_base_version, $version_cible) {
     maj_plugin($nom_meta_base_version, $version_cible, $maj);
 }
 
-function th_vider_tables($nom_meta_base_version) {
+function th_vider_tables($nom_meta_base_version)
+{
     effacer_meta($nom_meta_base_version);
 }
 
-function th_configurer_meta() {
+function th_configurer_meta()
+{
 
-    $documents_objets = lire_meta('documents_objets');
-    if (!preg_match('/spip\_articles/', $documents_objets))
+    $documents_objets = lire_config('documents_objets');
+    if (!preg_match('/spip\_articles/', $documents_objets)) {
         $documents_objets .= ",spip_articles";
-    if (!preg_match('/spip\_rubriques/', $documents_objets))
+    }
+    if (!preg_match('/spip\_rubriques/', $documents_objets)) {
         $documents_objets .= ",spip_rubriques";
+    }
     ecrire_meta('documents_objets', $documents_objets);
 
     ecrire_meta('image_process', 'gd2', 'non');
-    ecrire_meta('formats_graphiques', lire_meta('gd_formats_read'), 'non');
+    ecrire_meta('formats_graphiques', lire_config('gd_formats_read'), 'non');
 
     ecrire_meta('auto_compress_http', 'oui');
     ecrire_meta('auto_compress_js', 'oui');
@@ -98,39 +103,40 @@ function th_configurer_meta() {
 }
 
 
-function th_configurer_site() {
+function th_configurer_site()
+{
 
     $nom_site_spip = lire_config('nom_site');
     $site_ent_url = "";
     $site_ent_nom = "";
 
     switch ($nom_site_spip) {
-        case "philo.laclasse.com":
-            $nom_site_spip = "philo";
-            $site_ent_nom = ".laclasse.com";
-            /*
+    case "philo.laclasse.com":
+        $nom_site_spip = "philo";
+        $site_ent_nom = ".laclasse.com";
+        /*
+        if login
+            http://www.laclasse.com/pls/education/!page.laclasse?rubrique=428&choix=105&p_env_id=688
+        */
+        break;
+
+    case "design.laclasse.com":
+        $nom_site_spip = "design";
+        $site_ent_url = "Atelier design";
+        $site_ent_nom = $url_site_spip;
+        /*
+            if login & pgp = cybercolleges42
+                $site_parent_url = http://www.cybercolleges42.fr
+                $site_parent_nom = ".cybercolleges42.fr"
             if login
-                http://www.laclasse.com/pls/education/!page.laclasse?rubrique=428&choix=105&p_env_id=688
-            */
-            break;
+                $site_parent_nom = ".laclasse.com"
+                $site_parent_url = http://www.laclasse.com
+        */
 
-        case "design.laclasse.com":
-            $nom_site_spip = "design";
-            $site_ent_url = "Atelier design";
-            $site_ent_nom = $url_site_spip;
-            /*
-                if login & pgp = cybercolleges42
-                    $site_parent_url = http://www.cybercolleges42.fr
-                    $site_parent_nom = ".cybercolleges42.fr"
-                if login
-                    $site_parent_nom = ".laclasse.com"
-                    $site_parent_url = http://www.laclasse.com
-            */
-
-            break;
-        default:
-            $site_ent_url = lire_config('th/site_parent_url');
-            $site_ent_nom = lire_config('th/site_ent_nom');
+        break;
+    default:
+        $site_ent_url = lire_config('th/site_parent_url');
+        $site_ent_nom = lire_config('th/site_ent_nom');
     }
 
     ecrire_config('th/site_ent_url', $site_ent_url);
@@ -139,91 +145,115 @@ function th_configurer_site() {
 }
 
 
-function th_ajouter_mots_clef() {
+function th_ajouter_mots_clef()
+{
     spip_log('erererr');
 
     //Creation mots clefs
     //Groupe Contenus
     if (!$id_groupe = sql_getfetsel("id_groupe", "spip_groupes_mots", "titre='Contenus'")) {
-        $id_groupe = sql_insertq('spip_groupes_mots', array(
+        $id_groupe = sql_insertq(
+            'spip_groupes_mots', array(
             'titre' => 'Contenus',
             'unseul' => 'non',
             'tables_liees' => 'rubriques',
             'minirezo' => 'oui',
             'comite' => 'non',
             'forum' => 'non'
-        ));
+            )
+        );
     }
 
-    if (!$id_mot = sql_getfetsel("id_mot", "spip_mots", "titre='travail_en_cours' AND id_groupe=$id_groupe"))
+    if (!$id_mot = sql_getfetsel("id_mot", "spip_mots", "titre='travail_en_cours' AND id_groupe=$id_groupe")) {
         $id = sql_insertq('spip_mots', array('titre' => 'travail_en_cours', 'id_groupe' => $id_groupe));
-    if (!$id_mot = sql_getfetsel("id_mot", "spip_mots", "titre='consignes' AND id_groupe=$id_groupe"))
+    }
+    if (!$id_mot = sql_getfetsel("id_mot", "spip_mots", "titre='consignes' AND id_groupe=$id_groupe")) {
         $id = sql_insertq('spip_mots', array('titre' => 'consignes', 'id_groupe' => $id_groupe));
-    if (!$id_mot = sql_getfetsel("id_mot", "spip_mots", "titre='evenements' AND id_groupe=$id_groupe"))
+    }
+    if (!$id_mot = sql_getfetsel("id_mot", "spip_mots", "titre='evenements' AND id_groupe=$id_groupe")) {
         $id = sql_insertq('spip_mots', array('titre' => 'evenements', 'id_groupe' => $id_groupe));
-    if (!$id_mot = sql_getfetsel("id_mot", "spip_mots", "titre='blogs' AND id_groupe=$id_groupe"))
+    }
+    if (!$id_mot = sql_getfetsel("id_mot", "spip_mots", "titre='blogs' AND id_groupe=$id_groupe")) {
         $id = sql_insertq('spip_mots', array('titre' => 'blogs', 'id_groupe' => $id_groupe));
-    if (!$id_mot = sql_getfetsel("id_mot", "spip_mots", "titre='ressources' AND id_groupe=$id_groupe"))
+    }
+    if (!$id_mot = sql_getfetsel("id_mot", "spip_mots", "titre='ressources' AND id_groupe=$id_groupe")) {
         $id = sql_insertq('spip_mots', array('titre' => 'ressources', 'id_groupe' => $id_groupe));
-    if (!$id_mot = sql_getfetsel("id_mot", "spip_mots", "titre='images_background' AND id_groupe=$id_groupe"))
+    }
+    if (!$id_mot = sql_getfetsel("id_mot", "spip_mots", "titre='images_background' AND id_groupe=$id_groupe")) {
         $id = sql_insertq('spip_mots', array('titre' => 'images_background', 'id_groupe' => $id_groupe));
-    if (!$id_mot = sql_getfetsel("id_mot", "spip_mots", "titre='agora' AND id_groupe=$id_groupe"))
+    }
+    if (!$id_mot = sql_getfetsel("id_mot", "spip_mots", "titre='agora' AND id_groupe=$id_groupe")) {
         $id = sql_insertq('spip_mots', array('titre' => 'agora', 'id_groupe' => $id_groupe));
+    }
 
     //Groupe Presentation_rubriques
     if (!$id_groupe = sql_getfetsel("id_groupe", "spip_groupes_mots", "titre='Presentation' AND tables_liees LIKE '%rubriques%'")) {
-        $id_groupe = sql_insertq('spip_groupes_mots', array(
+        $id_groupe = sql_insertq(
+            'spip_groupes_mots', array(
             'titre' => 'Presentation',
             'unseul' => 'non',
             'tables_liees' => 'rubriques',
             'minirezo' => 'oui',
             'comite' => 'non',
             'forum' => 'non'
-        ));
+            )
+        );
     }
 
-    if (!$id_mot = sql_getfetsel("id_mot", "spip_mots", "titre='blog' AND id_groupe=$id_groupe"))
+    if (!$id_mot = sql_getfetsel("id_mot", "spip_mots", "titre='blog' AND id_groupe=$id_groupe")) {
         $id_mot_defaut = sql_insertq('spip_mots', array('titre' => 'blog', 'id_groupe' => $id_groupe));
-    if (!$id_mot = sql_getfetsel("id_mot", "spip_mots", "titre='pas_une' AND id_groupe=$id_groupe"))
+    }
+    if (!$id_mot = sql_getfetsel("id_mot", "spip_mots", "titre='pas_une' AND id_groupe=$id_groupe")) {
         $id_mot_fin = sql_insertq('spip_mots', array('titre' => 'pas_une', 'id_groupe' => $id_groupe));
-    if (!$id_mot = sql_getfetsel("id_mot", "spip_mots", "titre='laclasse.com' AND id_groupe=$id_groupe"))
+    }
+    if (!$id_mot = sql_getfetsel("id_mot", "spip_mots", "titre='laclasse.com' AND id_groupe=$id_groupe")) {
         $id_veille_defaut = sql_insertq('spip_mots', array('titre' => 'laclasse.com', 'id_groupe' => $id_groupe));
-    if (!$id_mot = sql_getfetsel("id_mot", "spip_mots", "titre='trombinoscope' AND id_groupe=$id_groupe"))
+    }
+    if (!$id_mot = sql_getfetsel("id_mot", "spip_mots", "titre='trombinoscope' AND id_groupe=$id_groupe")) {
         $id_veille_defaut = sql_insertq('spip_mots', array('titre' => 'trombinoscope', 'id_groupe' => $id_groupe));
+    }
 
     //Groupe Presentation_articles
     if (!$id_groupe = sql_getfetsel("id_groupe", "spip_groupes_mots", "titre='Presentation' AND tables_liees LIKE '%articles%'")) {
-        $id_groupe = sql_insertq('spip_groupes_mots', array(
+        $id_groupe = sql_insertq(
+            'spip_groupes_mots', array(
             'titre' => 'Presentation',
             'unseul' => 'non',
             'tables_liees' => 'articles',
             'minirezo' => 'oui',
             'comite' => 'non',
             'forum' => 'non'
-        ));
+            )
+        );
     }
 
-    if (!$id_mot = sql_getfetsel("id_mot", "spip_mots", "titre='laclasse.com' AND id_groupe=$id_groupe"))
+    if (!$id_mot = sql_getfetsel("id_mot", "spip_mots", "titre='laclasse.com' AND id_groupe=$id_groupe")) {
         $id_veille_defaut = sql_insertq('spip_mots', array('titre' => 'laclasse.com', 'id_groupe' => $id_groupe));
-    if (!$id_mot = sql_getfetsel("id_mot", "spip_mots", "titre='sommaire_edito' AND id_groupe=$id_groupe"))
+    }
+    if (!$id_mot = sql_getfetsel("id_mot", "spip_mots", "titre='sommaire_edito' AND id_groupe=$id_groupe")) {
         $id_veille_defaut = sql_insertq('spip_mots', array('titre' => 'sommaire_edito', 'id_groupe' => $id_groupe));
-    if (!$id_mot = sql_getfetsel("id_mot", "spip_mots", "titre='livrable' AND id_groupe=$id_groupe"))
+    }
+    if (!$id_mot = sql_getfetsel("id_mot", "spip_mots", "titre='livrable' AND id_groupe=$id_groupe")) {
         $id_veille_defaut = sql_insertq('spip_mots', array('titre' => 'livrable', 'id_groupe' => $id_groupe));
+    }
 
     //Groupe Sites
     if (!$id_groupe = sql_getfetsel("id_groupe", "spip_groupes_mots", "titre='site'")) {
-        $id_groupe = sql_insertq('spip_groupes_mots', array(
+        $id_groupe = sql_insertq(
+            'spip_groupes_mots', array(
             'titre' => 'site',
             'unseul' => 'non',
             'tables_liees' => '',
             'minirezo' => 'oui',
             'comite' => 'non',
             'forum' => 'non'
-        ));
+            )
+        );
     }
 }
 
-function  th_configurer_rubriques() {
+function th_configurer_rubriques()
+{
     $mots = array(
         'travail_en_cours' => 'Travail des classes',
         'consignes' => 'Consignes',
