@@ -14,75 +14,12 @@ if (preg_match('/ddev.site/', $_SERVER['HTTP_HOST'])) {
 	ini_set("display_errors", "On");
 	define('SPIP_ERREUR_REPORT', E_ALL);
 	define('_TEST_EMAIL_DEST', 'pierrekuhn@ik.me');
-	define('_SITES_ADMIN_MUTUALISATION', 'ccn-archives.ddev.site');
 } else {
-	define('_SITES_ADMIN_MUTUALISATION', 'thematiques.laclasse.com');
 	define('_AUTORISER_TELECHARGER_PLUGINS', false);
 	$GLOBALS['spip_header_silencieux'] = 1;
 }
 
 define('_DOC_MAX_SIZE', 3000);
-if (!is_readable(_DIR_RACINE . 'mutualisation/mutualiser.php')) {
-	echo _L("Fichier 'mutualisation/mutualiser.php' manquant dans la racine " . _DIR_RACINE);
-	exit;
-}
-
-require _DIR_RACINE . 'mutualisation/mutualiser.php';
-
-/* placer dans ce tableau les sites ou l'on ne veut pas la redirection canonique */
-$www = array();
-
-$site = str_replace('www.', '', $_SERVER['HTTP_HOST']);
-if ($site != $_SERVER['HTTP_HOST'] and !in_array($site, $www)) {
-	include_spip('inc/headers');
-	$req = isset($_SERVER['REQUEST_URI']) ? $_SERVER['REQUEST_URI'] : '/';
-	if (
-		isset($_SERVER['HTTPS'])
-		and test_valeur_serveur($_SERVER['HTTPS'])
-	) {
-		$protocole = 'https';
-	} elseif (!isset($_SERVER["SCRIPT_URI"]) or !($p = strpos($_SERVER["SCRIPT_URI"], '://'))) {
-		$protocole = 'http';
-	} else {
-		$protocole = substr($_SERVER["SCRIPT_URI"], 0, $p);
-	}
-	redirige_par_entete($protocole . '://' . $site . $req);
-}
-
-// Compatibilite avec le ":" de $dossier_squelettes
-// Si l'url indique explicitement un port (grace a ":")
-// tout eliminer s'il s'agit du port 80
-// et remplacer ":" par _ pour les autres ports
-
-if (strpos($site, ':')) {
-	if (preg_match('/:80$/', $site)) {
-		$site = substr($site, -3);
-	} else {
-		$site = str_replace(':', '_', $site);
-	}
-}
-
-define('_INSTALL_SITE_PREF', prefixe_mutualisation($site));
-demarrer_site(
-	$site,
-	array(
-		'creer_site' => false,        // Creer ou non le site s'il n'existe pas (defaut: false)
-		'creer_base' => false,        // Creer ou non la base de donnee si elle n'existe pas (false)
-		'creer_user_base' => false,  // Creer ou non un utilisateur pour la nouvelle base de donnee (false)
-		'mail' => 'pracine@erasme.org', // Adresse mail pour recevoir un mail lors d'une creation de site mutualise ('')
-		'code' => 'u8!96b',        // Code d'activation ('ecureuil')
-		'table_prefix' => false,     // Definir automatiquement le prefixe de table (false) ... mettre true si tous les sites dans la meme base
-		'cookie_prefix' => false,     // Definir automatiquement le prefixe de cookie (false)
-		'repertoire' => 'sites',     // Nom du repertoire contenant les sites mutualises ('sites')
-		'url_img_courtes' => false,   // Utiliser la redirection des URL d'images courtes dans la partie publique (false)
-		// /!\ il faut qu'apache ait le droit d'ecrire dans les dossiers IMG/ et local/ a la racine du site !
-		// C'est la que la mutualisation va ecrire les regles de redirection automatiques pour les images de chaque site
-		# 'utiliser_panel' => false, // Utiliser une table externe pour recuperer des identifiants ... (code, user, pass) permettant a un utilisateur d'installer le site (false)
-		# 'annonce' => '<p>Un service propos&eacute; par <a href="http://www.spip.net/">la communaut&eacute; SPIP</a></p>', // Texte a afficher en bas du formulaire d'activation de la mutualisation
-		'url_creer_base' => ''       // Creer la base de donnees via une URL (methode AlternC)
-	)
-);
-
 
 if (preg_match('/fictions./', $_SERVER['HTTP_HOST'])) {
 	// PIPELINES

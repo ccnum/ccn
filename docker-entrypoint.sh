@@ -63,12 +63,6 @@ if version_greater "$image_version" "$installed_version"; then
 	mkdir -p tmp/{dump,log,upload}
 	chown -R www-data:www-data lib tmp
 
-	for CCN in $LISTE_CCN ; do
-		echo >&2 "Création des dossiers pour la ccn $CCN : IMG,tmp,local,config"
-		mkdir -p sites/$CCN.laclasse.com/{config,IMG,local,tmp}
-		chown -R www-data:www-data sites/$CCN
-	done
-
 	if [ ! -e .htaccess ]; then
 		cp -p htaccess.txt .htaccess
 		chown www-data:www-data .htaccess

@@ -4,7 +4,6 @@ config/ecran_securite.php
 ecrire
 IMG
 local
-mutualisation
 plugins/auto
 plugins-dist
 prive
