@@ -7,7 +7,6 @@ on:
 
 jobs:
   spip:
-    if: github.ref == 'refs/heads/dev' || (github.event_name == 'workflow_dispatch' && github.ref == 'refs/heads/master')
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
