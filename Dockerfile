@@ -1,4 +1,6 @@
 FROM php:8.2-apache-bullseye AS base
+ENV SPIP_VERSION 4.3
+ENV SPIP_PACKAGE 4.3.2
 
 RUN set -eux; \
 	apt-get update; \
@@ -118,9 +120,6 @@ RUN set -eux; \
 	# (replace all instances of "%h" with "%a" in LogFormat)
 	find /etc/apache2 -type f -name '*.conf' -exec sed -ri 's/([[:space:]]*LogFormat[[:space:]]+"[^"]*)%h([^"]*")/\1%a\2/g' '{}' +
 
-ENV SPIP_VERSION 4.3
-ENV SPIP_PACKAGE 4.3.2
-
 # Install SPIP-Cli
 RUN set -eux; \
 	cd /opt; \
@@ -152,7 +151,7 @@ RUN set -eux; \
 VOLUME /var/www/html
 
 # SPIP
-ENV SPIP_AUTO_INSTALL 1
+ENV SPIP_AUTO_INSTALL 0
 ENV SPIP_DB_SERVER mysql
 ENV SPIP_DB_HOST mysql
 ENV SPIP_DB_LOGIN spip
@@ -170,7 +169,7 @@ ENV PHP_MAX_EXECUTION_TIME 60
 ENV PHP_MEMORY_LIMIT 256M
 ENV PHP_POST_MAX_SIZE 40M
 ENV PHP_UPLOAD_MAX_FILESIZE 32M
-ENV PHP_TIMEZONE America/Guadeloupe
+ENV PHP_TIMEZONE Europe/Paris
 
 EXPOSE 80
 
