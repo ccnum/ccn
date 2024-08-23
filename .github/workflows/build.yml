@@ -30,3 +30,15 @@ jobs:
           push: true
           context: .
           tags: erasme/spip-ccn:${{ github.ref == 'refs/heads/main' && 'latest' || 'dev' }} , erasme/spip-ccn:${{ github.sha }}
+  redeploy:
+      name: Redeploy spip Workload
+      runs-on: ubuntu-latest
+      needs: spip
+      steps:
+        - name: Make API Request
+          uses: fjogeleit/http-request-action@master
+          with:
+            url: ${{ secrets.RANCHER_BASE_URL }}/v3/project/c-m-ls255pvz:p-rhr69/workloads/deployment:ccn-dev:spip-mariadb?action=redeploy
+            method: 'POST'
+            bearerToken: ${{ secrets.RANCHER_TOKEN }}
+            data: '{"scale": 2}'
