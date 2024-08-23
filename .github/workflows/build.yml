@@ -38,7 +38,9 @@ jobs:
         - name: Make API Request
           uses: fjogeleit/http-request-action@master
           with:
-            url: ${{ secrets.RANCHER_BASE_URL }}/v3/project/c-m-ls255pvz:p-rhr69/workloads/deployment:ccn-dev:spip-mariadb?action=redeploy
+            url: ${{ if eq( github.branch, 'main' ) 
+                    then '{{$ secrets.RANCHER_BASE_URL }}/v3/project/c-m-ls255pvz:p-rhr69/workloads/deployment:ccn:ccn-main?action=redeploy'
+                    else '{{ secrets.RANCHER_BASE_URL }}/v3/project/c-m-ls255pvz:p-rhr69/workloads/deployment:ccn-dev:spip-mariadb?action=redeploy' }}'
             method: 'POST'
             bearerToken: ${{ secrets.RANCHER_TOKEN }}
             data: '{"scale": 2}'
