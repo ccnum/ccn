@@ -4,9 +4,6 @@ if (!defined("_ECRIRE_INC_VERSION")) {
 	return;
 }
 
-// Dossier plugins en plus
-define('_DIR_PLUGINS_SUPPL', _DIR_RACINE . 'plugins-ccn');
-
 if (preg_match('/ddev.site/', $_SERVER['HTTP_HOST'])) {
 	define('_NO_CACHE', -1);
 	define('_INTERDIRE_COMPACTE_HEAD_ECRIRE', true);
@@ -15,7 +12,6 @@ if (preg_match('/ddev.site/', $_SERVER['HTTP_HOST'])) {
 	define('SPIP_ERREUR_REPORT', E_ALL);
 	define('_TEST_EMAIL_DEST', 'pierrekuhn@ik.me');
 } else {
-	define('_AUTORISER_TELECHARGER_PLUGINS', false);
 	$GLOBALS['spip_header_silencieux'] = 1;
 }
 
