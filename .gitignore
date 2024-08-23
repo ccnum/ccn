@@ -13,5 +13,6 @@ tmp
 vendor
 composer.*
 index.php
+rector.php
 spip_loader.php
 spip.*
