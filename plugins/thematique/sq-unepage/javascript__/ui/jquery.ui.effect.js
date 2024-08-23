@@ -655,7 +655,7 @@
 
                                     value = value.blend(
                                         backgroundColor && backgroundColor !== "transparent" ?
-                                    backgroundColor :
+                                        backgroundColor :
                                         "_default" 
                                     );
                                 }
