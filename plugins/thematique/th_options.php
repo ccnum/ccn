@@ -6,7 +6,7 @@
  */
 
 /************************************************************************************/
-/*	VARIABLES GLOBALES									*/
+/*    VARIABLES GLOBALES                                    */
 /************************************************************************************/
 define('_cookie_affichage', 'laclasse_affichage');
 define('_cookie_rubrique', 'laclasse_rubrique_admin');
@@ -36,40 +36,41 @@ $GLOBALS['ext_photo'] = 'jpg|png|gif';
 //if ($id = sql_getfetsel("id_groupe", "spip_groupes_mots", "titre='carte'")) define('_id_groupe_mot_badge',$id);
 
 /************************************************************************************/
-/*	DOSSIER_SQUELETTE FONCTION DU COOKIE														*/
+/*    DOSSIER_SQUELETTE FONCTION DU COOKIE                                                        */
 /************************************************************************************/
 
 /*
-	if ($_COOKIE[_cookie_affichage]=='classique')
-	{
-	$GLOBALS['dossier_squelettes'] = _DIR_PLUGIN_TH."sq-classique".":"._DIR_PLUGIN_TH;
-	define('_affichage','classique');
-	}
-	//$GLOBALS['dossier_squelettes'] = _DIR_PLUGIN_TH."sq-unepage".":"._DIR_PLUGIN_TH.":"._DIR_PLUGIN_TH."sq-classique";
+    if ($_COOKIE[_cookie_affichage]=='classique')
+    {
+    $GLOBALS['dossier_squelettes'] = _DIR_PLUGIN_TH."sq-classique".":"._DIR_PLUGIN_TH;
+    define('_affichage','classique');
+    }
+    //$GLOBALS['dossier_squelettes'] = _DIR_PLUGIN_TH."sq-unepage".":"._DIR_PLUGIN_TH.":"._DIR_PLUGIN_TH."sq-classique";
 */
 
 define('_affichage', 'unepage');
 
 
 /************************************************************************************/
-/*	REQUETES DANS LA FENETRE ACTIVE ANNEE_SCOLAIRE  : SURCHARGE DU PIPELINE PRE_BOUCLE */
+/*    REQUETES DANS LA FENETRE ACTIVE ANNEE_SCOLAIRE  : SURCHARGE DU PIPELINE PRE_BOUCLE */
 /************************************************************************************/
 //Calcul de l'année scolaire en lien avec le dernier article en cours
 include_spip('base/abstract_sql');
 $date = sql_getfetsel("date", "spip_articles", "date != '0000-00-00 00:00:00'", "", "date DESC");
 if ($date != '') {
-	$annee_scolaire = intval(substr($date, 0, 4));
-	$mois_scolaire = intval(substr($date, 5, 2));
-	if ($mois_scolaire < 9) $annee_scolaire--;
+    $annee_scolaire = intval(substr($date, 0, 4));
+    $mois_scolaire = intval(substr($date, 5, 2));
+    if ($mois_scolaire < 9) { $annee_scolaire--;
+    }
 }
 
 //Obligation de transmettre les paramètre par l'url pour tous les calculs xml
 if ((isset($_GET['id_article'])) && (!$_GET['mode'] == 'detail')) {
-	$annee_scolaire = $annee_scolaire; /*calculer l'annee de l'article pour changement d'année en cours*/
+    $annee_scolaire = $annee_scolaire; /*calculer l'annee de l'article pour changement d'année en cours*/
 } else if ((isset($_GET['annee_scolaire'])) && ($_GET['annee_scolaire'] != 0) && ($_GET['annee_scolaire'] != '')) {
-	$annee_scolaire = $_GET['annee_scolaire'];
+    $annee_scolaire = $_GET['annee_scolaire'];
 } else if ((isset($_COOKIE[_cookie_annee_scolaire])) && ($_COOKIE[_cookie_annee_scolaire] != 0) && ($_COOKIE[_cookie_annee_scolaire] != '')) {
-	$annee_scolaire = $_COOKIE[_cookie_annee_scolaire];
+    $annee_scolaire = $_COOKIE[_cookie_annee_scolaire];
 }
 define('_annee_scolaire', $annee_scolaire);
 define('_date_debut', $annee_scolaire . '-08-01');
@@ -77,7 +78,7 @@ define('_date_fin', ($annee_scolaire + 1) . '-08-01');
 //spip_log($annee_scolaire);
 
 /************************************************************************************/
-/*	OPTIONS SPIP																*/
+/*    OPTIONS SPIP                                                                */
 /************************************************************************************/
 
 //Retire jQuery d'insert head pour insertion personnalisée et bug ajax callback
@@ -121,69 +122,69 @@ define('_FORUM_LONGUEUR_MAXI', 10000);
 /*
 function autoriser_auteur_modifier($faire, $type, $id, $qui, $opt) {
 
-	// Un redacteur peut modifier ses propres donnees mais ni son login/email
-	// ni son statut (qui sont le cas echeant passes comme option)
-	if ($qui['statut'] == '1comite'  or $qui['statut'] == '6forum') {
-		if (isset($opt['webmestre']) and $opt['webmestre']) {
-			return false;
-		} elseif ((isset($opt['statut']) and $opt['statut'])
-			or (isset($opt['restreintes']) and $opt['restreintes'])
-			or $opt['email']
-		) {
-			return false;
-		} elseif ($id == $qui['id_auteur']) {
-			return true;
-		} else {
-			return false;
-		}
-	}
+    // Un redacteur peut modifier ses propres donnees mais ni son login/email
+    // ni son statut (qui sont le cas echeant passes comme option)
+    if ($qui['statut'] == '1comite'  or $qui['statut'] == '6forum') {
+        if (isset($opt['webmestre']) and $opt['webmestre']) {
+            return false;
+        } elseif ((isset($opt['statut']) and $opt['statut'])
+            or (isset($opt['restreintes']) and $opt['restreintes'])
+            or $opt['email']
+        ) {
+            return false;
+        } elseif ($id == $qui['id_auteur']) {
+            return true;
+        } else {
+            return false;
+        }
+    }
 
-	// Un admin restreint peut modifier/creer un auteur non-admin mais il
-	// n'a le droit ni de le promouvoir admin, ni de changer les rubriques
-	if ($qui['restreint']) {
-		if (isset($opt['webmestre']) and $opt['webmestre']) {
-			return false;
-		} elseif ((isset($opt['statut']) and ($opt['statut'] == '0minirezo'))
-			or (isset($opt['restreintes']) and $opt['restreintes'])
-		) {
-			return false;
-		} else {
-			if ($id == $qui['id_auteur']) {
-				if (isset($opt['statut']) and $opt['statut']) {
-					return false;
-				} else {
-					return true;
-				}
-			} else {
-				if ($id_auteur = intval($id)) {
-					$t = sql_fetsel("statut", "spip_auteurs", "id_auteur=$id_auteur");
-					if ($t and $t['statut'] != '0minirezo') {
-						return true;
-					} else {
-						return false;
-					}
-				} // id = 0 => creation
-				else {
-					return true;
-				}
-			}
-		}
-	}
+    // Un admin restreint peut modifier/creer un auteur non-admin mais il
+    // n'a le droit ni de le promouvoir admin, ni de changer les rubriques
+    if ($qui['restreint']) {
+        if (isset($opt['webmestre']) and $opt['webmestre']) {
+            return false;
+        } elseif ((isset($opt['statut']) and ($opt['statut'] == '0minirezo'))
+            or (isset($opt['restreintes']) and $opt['restreintes'])
+        ) {
+            return false;
+        } else {
+            if ($id == $qui['id_auteur']) {
+                if (isset($opt['statut']) and $opt['statut']) {
+                    return false;
+                } else {
+                    return true;
+                }
+            } else {
+                if ($id_auteur = intval($id)) {
+                    $t = sql_fetsel("statut", "spip_auteurs", "id_auteur=$id_auteur");
+                    if ($t and $t['statut'] != '0minirezo') {
+                        return true;
+                    } else {
+                        return false;
+                    }
+                } // id = 0 => creation
+                else {
+                    return true;
+                }
+            }
+        }
+    }
 
-	// Un admin complet fait ce qu'il veut
-	// sauf se degrader
-	if ($id == $qui['id_auteur'] && (isset($opt['statut']) and $opt['statut'])) {
-		return false;
-	}
-	// et toucher au statut webmestre si il ne l'est pas lui meme
-	// ou si les webmestres sont fixes par constante (securite)
-	elseif (isset($opt['webmestre']) and $opt['webmestre'] and (defined('_ID_WEBMESTRES') or !autoriser('webmestre'))) {
-		return false;
-	} // et modifier un webmestre si il ne l'est pas lui meme
-	elseif (intval($id) and autoriser('webmestre', '', 0, $id) and !autoriser('webmestre')) {
-		return false;
-	} else {
-		return true;
-	}
+    // Un admin complet fait ce qu'il veut
+    // sauf se degrader
+    if ($id == $qui['id_auteur'] && (isset($opt['statut']) and $opt['statut'])) {
+        return false;
+    }
+    // et toucher au statut webmestre si il ne l'est pas lui meme
+    // ou si les webmestres sont fixes par constante (securite)
+    elseif (isset($opt['webmestre']) and $opt['webmestre'] and (defined('_ID_WEBMESTRES') or !autoriser('webmestre'))) {
+        return false;
+    } // et modifier un webmestre si il ne l'est pas lui meme
+    elseif (intval($id) and autoriser('webmestre', '', 0, $id) and !autoriser('webmestre')) {
+        return false;
+    } else {
+        return true;
+    }
 }
 */

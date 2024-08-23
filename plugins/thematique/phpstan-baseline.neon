@@ -1,0 +1,136 @@
+parameters:
+	ignoreErrors:
+		-
+			message: "#^Function _T not found\\.$#"
+			count: 4
+			path: base/th_cextras.php
+
+		-
+			message: "#^Function _request not found\\.$#"
+			count: 1
+			path: sq-unepage/formulaires/public_editer_article.php
+
+		-
+			message: "#^Function charger_fonction not found\\.$#"
+			count: 1
+			path: sq-unepage/formulaires/public_editer_article.php
+
+		-
+			message: "#^Function formulaires_editer_objet_charger not found\\.$#"
+			count: 1
+			path: sq-unepage/formulaires/public_editer_article.php
+
+		-
+			message: "#^Function formulaires_editer_objet_traiter not found\\.$#"
+			count: 1
+			path: sq-unepage/formulaires/public_editer_article.php
+
+		-
+			message: "#^Function formulaires_editer_objet_verifier not found\\.$#"
+			count: 1
+			path: sq-unepage/formulaires/public_editer_article.php
+
+		-
+			message: "#^Function include_spip not found\\.$#"
+			count: 2
+			path: sq-unepage/formulaires/public_editer_article.php
+
+		-
+			message: "#^Function sql_updateq not found\\.$#"
+			count: 1
+			path: sq-unepage/formulaires/public_editer_article.php
+
+		-
+			message: "#^Function appliquer_modifs_config not found\\.$#"
+			count: 1
+			path: th_administrations.php
+
+		-
+			message: "#^Function cextras_api_upgrade not found\\.$#"
+			count: 2
+			path: th_administrations.php
+
+		-
+			message: "#^Function ecrire_config not found\\.$#"
+			count: 3
+			path: th_administrations.php
+
+		-
+			message: "#^Function ecrire_meta not found\\.$#"
+			count: 11
+			path: th_administrations.php
+
+		-
+			message: "#^Function effacer_meta not found\\.$#"
+			count: 1
+			path: th_administrations.php
+
+		-
+			message: "#^Function include_spip not found\\.$#"
+			count: 6
+			path: th_administrations.php
+
+		-
+			message: "#^Function lire_config not found\\.$#"
+			count: 5
+			path: th_administrations.php
+
+		-
+			message: "#^Function maj_plugin not found\\.$#"
+			count: 1
+			path: th_administrations.php
+
+		-
+			message: "#^Function objet_associer not found\\.$#"
+			count: 1
+			path: th_administrations.php
+
+		-
+			message: "#^Function rubrique_inserer not found\\.$#"
+			count: 1
+			path: th_administrations.php
+
+		-
+			message: "#^Function rubrique_modifier not found\\.$#"
+			count: 1
+			path: th_administrations.php
+
+		-
+			message: "#^Function spip_log not found\\.$#"
+			count: 1
+			path: th_administrations.php
+
+		-
+			message: "#^Function sql_countsel not found\\.$#"
+			count: 1
+			path: th_administrations.php
+
+		-
+			message: "#^Function sql_getfetsel not found\\.$#"
+			count: 19
+			path: th_administrations.php
+
+		-
+			message: "#^Function sql_insertq not found\\.$#"
+			count: 18
+			path: th_administrations.php
+
+		-
+			message: "#^Undefined variable\\: \\$url_site_spip$#"
+			count: 1
+			path: th_administrations.php
+
+		-
+			message: "#^Function autoriser not found\\.$#"
+			count: 2
+			path: th_autoriser.php
+
+		-
+			message: "#^Function include_spip not found\\.$#"
+			count: 1
+			path: th_options.php
+
+		-
+			message: "#^Function sql_getfetsel not found\\.$#"
+			count: 1
+			path: th_options.php

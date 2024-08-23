@@ -1,7 +1,9 @@
 <?php
-if (!defined("_ECRIRE_INC_VERSION")) return;
+if (!defined("_ECRIRE_INC_VERSION")) { return;
+}
 
-function th_declarer_champs_extras($champs = array()) {
+function th_declarer_champs_extras($champs = array())
+{
     $champs['spip_auteurs']['ent'] = array(
         'saisie' => 'input', //Type du champ (voir plugin Saisies)
         'options' => array(
