@@ -174,8 +174,8 @@ ENV PHP_TIMEZONE Europe/Paris
 EXPOSE 80
 
 COPY ./config/mes_options.php /config/mes_options.php
-COPY ./plugins /plugins
-COPY ./squelettes /squelettes
+COPY ./plugins/* /plugins/
+COPY ./squelettes/* /squelettes/*
 COPY ./docker-entrypoint.sh /
 
 RUN chmod +x /docker-entrypoint.sh
