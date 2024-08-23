@@ -16,8 +16,9 @@ services:
         - name=value
     restart: always
     volumes:
-      - ./plugins/:/var/www/html/plugins
       - ./IMG/:/var/www/html/IMG
+      - ./plugins/:/var/www/html/plugins
+      - ./tmp/sessions/:/var/www/html/tmp/sessions
     links:
       - db:mysql
     environment:
