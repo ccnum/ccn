@@ -2,11 +2,13 @@ services:
   db:
     image: mariadb:10.11
     restart: always
+    env_file:
+      - .env
     environment:
       - MYSQL_ROOT_PASSWORD=MysqlRootPassword
-      - MYSQL_DATABASE=spip
-      - MYSQL_USER=spip
-      - MYSQL_PASSWORD=spip
+      - MYSQL_DATABASE=${SPIP_DB_NAME}
+      - MYSQL_USER=${SPIP_DB_LOGIN}
+      - MYSQL_PASSWORD=${SPIP_DB_PASS}
 
   app:
     image: erasme/spip-ccn:dev
@@ -21,12 +23,7 @@ services:
       - ./tmp/sessions/:/var/www/html/tmp/sessions
     links:
       - db:mysql
-    environment:
-      - SPIP_AUTO_INSTALL=0
-      - SPIP_DB_SERVER=mysql
-      - SPIP_DB_LOGIN=spip
-      - SPIP_DB_PASS=spip
-      - SPIP_DB_NAME=spip
-      - SPIP_SITE_ADDRESS=http://localhost:8880
+    env_file:
+      - .env
     ports:
       - 8880:80
