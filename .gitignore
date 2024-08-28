@@ -16,3 +16,4 @@ index.php
 rector.php
 spip_loader.php
 spip.*
+.env
