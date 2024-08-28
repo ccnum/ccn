@@ -173,7 +173,6 @@ ENV PHP_TIMEZONE Europe/Paris
 
 EXPOSE 80
 
-COPY ./config/mes_options.php /usr/src/spip/config/
 COPY ./plugins /usr/src/spip/plugins/
 COPY ./squelettes /usr/src/spip/squelettes/
 COPY ./docker-entrypoint.sh /
