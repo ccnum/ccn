@@ -27,6 +27,7 @@ This monorepo contains all the plugins for SPIP CMS :
 | SPIP_SITE_ADDRESS | Site URL                                                       |
 | SPIP_ADMIN_EMAIL  | Default init Admin email                                       |
 | SPIP_ADMIN_PASS   | Default init  Admin password                                   |
+| SPIP_VERSION_SITE | Défault thematique, possibilite : fictions                     |
 
 
 ### Start the project
