@@ -4,8 +4,8 @@
 	<icon>pyramides-32.png</icon>
 	<licence>[Creative commons by-nc-sa->http://creativecommons.org/licenses/by-nc-sa/2.0/fr/]</licence>
 	<lien></lien>
-	<version>1.7.5</version>
-	<etat>stable</etat>
+	<version>3.1.0</version>
+	<etat>test</etat>
     <slogan>Auteur : &#169; C. Imberti. Licence : Creative commons by-nc-sa.</slogan>
     <description>
     Auteur : &#169; C. Imberti. Licence : Creative commons by-nc-sa.<br />
@@ -34,8 +34,7 @@
 		<icone>images/cicas.png</icone>
 		<url>cicas_config</url>
 	</bouton>
-
 	
-	<necessite id="SPIP" version='[2.0.9;]' />
+	<necessite id="SPIP" version='[3.0.0;]' />
 
 </plugin>
