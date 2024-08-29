@@ -6,7 +6,7 @@ IMG
 local
 plugins/auto
 plugins-dist
-prive
+/prive/
 sites
 squelettes-dist
 tmp
