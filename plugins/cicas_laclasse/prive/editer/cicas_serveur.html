@@ -1,0 +1,8 @@
+<div class='cadre-formulaire-editer'>
+<div class="entete-formulaire">
+[(#URL_ECRIRE{cicas_serveurs}|cicas_icone_verticale{<:icone_retour:>,rubrique,'',left retour[(#ENV{retourajax,''}|oui)ajax preload]})]
+
+<h1><:cicas:serveur:></h1>
+</div>
+#FORMULAIRE_CICAS_SERVEUR{#ENV{new}}
+</div>

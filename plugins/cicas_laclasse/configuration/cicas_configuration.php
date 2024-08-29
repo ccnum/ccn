@@ -102,7 +102,7 @@ function configuration_cicas_configuration()
 
 function cicas_afficher_choix($nom, $valeur_actuelle, $valeurs, $sep = "<br />", $disabled = false) {
 	$choix = array();
-	while (list($valeur, $titre) = each($valeurs)) {
+        foreach ($valeurs as $valeur => $titre) {
 		$choix[] = cicas_bouton_radio($nom, $valeur, $titre, $valeur == $valeur_actuelle, $disabled);
 	}
 	return "\n".join($sep, $choix);
@@ -114,12 +114,12 @@ function cicas_bouton_radio($nom, $valeur, $titre, $actif = false, $disabled = f
 	if ($disabled) $option = " disabled='disabled'";
 	else $option = "";
     
-	$texte = "<input type='radio' name='$nom' value='$valeur' id='label_${nom}_${id_label}'$option";
+	$texte = "<input type='radio' name='$nom' value='$valeur' id='label_".$nom."_".$id_label."'$option";
 	if ($actif) {
 		$texte .= ' checked="checked"';
 		$titre = '<b>'.$titre.'</b>';
 	}
-	$texte .= " /> <label for='label_${nom}_${id_label}'>$titre</label>\n";
+	$texte .= " /> <label for='label_".$nom."_".$id_label."'>$titre</label>\n";
 	$id_label++;
 	return $texte;
 }
