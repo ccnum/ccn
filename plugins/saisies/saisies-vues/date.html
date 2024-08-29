@@ -1,0 +1,17 @@
+#SET{valeur, #ENV{valeur}}
+[(#GET{valeur}|=={0000-00-00 00:00:00}|oui)
+	#SET{valeur,''}
+]
+[(#GET{valeur}|=={0000-00-00}|oui)
+	#SET{valeur,''}
+]
+[(#REM) Seulement si c'est une date SQL, on transforme en format slash. Sinon ça continue d'afficher la valeur de départ ]
+#SET{date_mysql,([0-9][0-9][0-9][0-9])-([0-9][0-9])-([0-9][0-9])}
+[(#GET{valeur}|match{#GET{date_mysql}}|oui)
+	[(#ENV{horaire}|?{
+		#SET{valeur,#ENV{valeur}|affdate{'d/m/Y H:i:s'}}
+		,
+		#SET{valeur,#ENV{valeur}|affdate{'d/m/Y'}}
+	})]
+]
+[<p class="date">(#GET{valeur})</p>]

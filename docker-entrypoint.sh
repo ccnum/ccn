@@ -58,7 +58,7 @@ if version_greater "$image_version" "$installed_version"; then
 	tar cf - --one-file-system -C /usr/src/spip . | tar xf -
 	echo >&2 "Complete! SPIP has been successfully copied to $PWD"
 
-	echo >&2 "Création des dossiers lib et tmp à la racine"
+	echo >&2 "Création des dossiers lib, plugins et tmp à la racine"
 	mkdir -p lib
 	mkdir -p plugins/auto
 	mkdir -p tmp/{dump,log,upload}
@@ -96,8 +96,18 @@ if [[ ! -e config/connect.php && ${SPIP_AUTO_INSTALL} = 1 ]]; then
 		--admin-email ${SPIP_ADMIN_EMAIL} \
 		--admin-pass ${SPIP_ADMIN_PASS}" || true
 
-	spip plugins:svp:depoter https://plugins.spip.net/depots/principal.xml
-	spip plugins:activer --from-list notifications -y
+	spip plugins:activer saisies -y
+	spip plugins:activer yaml -y
+	spip plugins:activer cextras -y
+	spip plugins:activer crayons -y
+	spip plugins:activer facteur -y
+	spip plugins:activer jqueryui -y
+	spip plugins:activer notation -y
+	spip plugins:activer notifications -y
+	spip plugins:activer socialtags -y
+	spip plugins:activer spip_bonux -y
+	spip plugins:activer cicas -y
+	spip plugins:activer th -y
 fi
 
 exec "$@"

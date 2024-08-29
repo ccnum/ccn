@@ -1,0 +1,18 @@
+Version PHP : <?php echo phpversion(); ?>
+
+
+<h1>Input</h1>
+[(#SAISIE{input,titre})]
+
+<h1>Textarea</h1>
+[(#SAISIE{textarea,texte})]
+
+<h1>Input obligatoire et label</h1>
+[(#SAISIE{input,titre,obligatoire=oui,label=Un vrai titre})]
+
+<h1>Sous saisie et label</h1>
+[(#SAISIE{input,saisie[sous],obligatoire=oui,label=Un sous-saisie})]
+
+
+<h1>Sous saisie (format HTML) et label</h1>
+[(#SAISIE{input,saisie/sous2,obligatoire=oui,label=Un sous-saisie})]

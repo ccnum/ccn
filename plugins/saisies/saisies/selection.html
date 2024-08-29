@@ -1,0 +1,100 @@
+[(#REM)
+
+  Parametres :
+  - ** data : tableau de donnees
+               liste simple : cle=>valeur
+               liste avec groupes :  cle=> tableau (cle=>valeur)
+  - option_intro : chaine de langue de la premiere ligne vide ? (defaut:"")
+  - cacher_option_intro : pas de premier option vide  (defaut:"")
+  - class : classe(s) css ajoutes au select
+  - defaut : valeur par defaut si pas présente dans l'environnement
+  - valeur_forcee : valeur utilisee meme si une valeur est dans l'environnement
+  - disable_choix : liste de valeurs à désactiver, séparées par des virgules
+	- multiple: permettre une selection multiple
+
+  Exemples d'appels
+  pour une liste simple :
+	[(#SAISIE{selection,produits,
+		label=<:plugin:info_produits:>,
+		data=#ARRAY{
+			cle1,valeur1,
+			cle2,valeur2,
+			cle3,valeur3}})]
+  pour une liste avec groupes :
+	[(#SAISIE{selection,produits,
+		label=<:plugin:info_produits:>,
+		data=#ARRAY{
+			cle1,#ARRAY{
+				cle1,valeur1,
+				cle2,valeur2},
+			cle2,#ARRAY{
+				cle1,valeur1,
+				cle2,valeur2}}})]
+]
+
+#SET{data, #ENV*{data, #ENV*{datas}}}
+
+
+[(#REM) Attention, la valeur ou la valeur forcée peut être une chaine vide. On doit donc tester avec is_null. ]
+#SET{valeur, #ENV{valeur_forcee}|is_null|?{#ENV{valeur}|is_null|?{#ENV{defaut},#ENV{valeur}},#ENV{valeur_forcee}}}
+
+[(#REM) si multiple, la valeur doit être un tableau]
+[(#ENV{multiple}|oui)
+	[(#ENV{multiple}|=={non}|non)
+		#SET{valeur,#GET{valeur}|saisies_valeur2tableau}
+	]
+]
+
+#SET{data,#GET{data}|saisies_depublier_data{#ENV{depublie_choix},#ENV{valeur}}}
+[(#ENV{choix_alternatif}|oui)
+	#SET{data,#GET{data}|plus{#ARRAY{@choix_alternatif,#ENV{choix_alternatif_label}}}}
+	[(#ENV{multiple}|oui)
+		[(#GET{valeur/choix_alternatif}|oui)
+			#SET{valeur_choix_alternatif,#GET{valeur/choix_alternatif}}
+			[(#REM)<!-- retrocompatiblite -->]
+			#SET{valeur,#GET{valeur}|plus{#LISTE{@choix_alternatif}}}
+		]
+	]
+	[(#ENV{multiple}|non)
+		[(#ENV{choix_alternatif}|oui)
+			#SET{data,#GET{data}|array_merge{#ARRAY{@choix_alternatif,#ENV{choix_alternatif_label}}}}
+			[(#GET{valeur}|oui)
+				[(#GET{data/#GET{valeur}}|non)
+					#SET{valeur_choix_alternatif,#GET{valeur}}
+					#SET{valeur,@choix_alternatif}
+				]
+			]
+		]
+	]
+]
+
+#SET{disabled, #ARRAY}
+[(#ENV{disable_choix,''}|strlen|oui) #SET{disabled, #ENV{disable_choix}|explode{','}}]
+#SET{disabled, #ENV{disable_choix}|saisies_normaliser_liste_choix}
+<select [(#HTML5|oui)[(#ENV{obligatoire}|et{#ENV{obligatoire}|!={non}}|oui) required="required"]] name="#ENV{nom}[(#ENV{multiple}|?{\[\],''})]" id="champ_[(#ENV{id,#ENV{nom}}|saisie_nom2classe)]"[ class="(#ENV{class})"][ disabled="(#ENV{disable})"][ size="(#ENV{size})"][ (#ENV*{attributs})][ multiple="(#ENV{multiple})"]>
+
+[(#ENV{cacher_option_intro}|non)<option value="">[(#ENV{option_intro})]</option>]
+<BOUCLE_selection(DATA){source tableau, #GET{data}}>
+	<B_cond>
+	<optgroup label="#CLE">
+	<BOUCLE_cond(CONDITION){si #VALEUR|is_array}>
+		#SET{data,#VALEUR}
+		<BOUCLE_recursive(BOUCLE_selection) />
+	</BOUCLE_cond>
+	</optgroup>
+	</B_cond>
+	#SET{selected,''}
+	[(#ENV{multiple}|non)
+		[(#SET{selected,[(#CLE|=={#GET{valeur}}|oui)[(#GET{valeur}|strval|strlen|oui)selected="selected"]]})]
+	]
+	[(#ENV{multiple}|oui)
+		[(#SET{selected,[(#CLE|in_array{#GET{valeur,#LISTE}}|oui)selected="selected"]})]
+	]
+	<option value="#CLE" #GET{selected} [(#CLE|in_any{#GET{disabled}}|oui) disabled="disabled"]>#VALEUR</option>
+	<//B_cond>
+</BOUCLE_selection>
+</select>
+
+[(#ENV{choix_alternatif}|oui)
+	<INCLURE{fond=saisies/_base/choix_alternatif,env,valeur=#GET{valeur_choix_alternatif},cle_tableau=#ENV{multiple}} />
+]

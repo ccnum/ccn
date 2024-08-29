@@ -1,0 +1,37 @@
+<h2 class="h2 spip" id="#ENV{id}">#ENV{titre}</h2>
+
+#ENV{preambule}
+
+
+<BOUCLE_options(DATA){source tableau, #ENV{options}}>
+[(#LABEL|oui)
+	[(#SET{label,#LABEL[ -(#LABEL_CASE)]})]
+]
+[(#LABEL|non)
+	#SET{label,#LABEL_CASE}
+]
+<h3 class="h3 spip" id="option_#CLE">[(#GET{label}|?{#GET{label} [ ((#CLE))], #CLE})]</h3>
+[<p class="description">
+	<strong>Description :</strong> (#EXPLICATION|sinon{#LABEL|?{#LABEL_CASE}})
+	[<br /><strong>Description pour les devs :</strong> (#EXPLICATION_DEV)]
+</p>]
+[<p class="attention">
+	<strong>Attention :</strong> (#ATTENTION)
+</p>]
+<B_utilisee_par>
+<p class="utilisee_par">
+	<strong>Utilisée par :</strong>
+	<BOUCLE_utilisee_par(DATA){source tableau, #UTILISEE_PAR}{", "}><a href="#saisie_#VALEUR">#VALEUR</a></BOUCLE_utilisee_par>
+</p>
+</B_utilisee_par>
+<B_choix>
+<p class="choix_possibles">
+	<strong>Choix possibles :</strong>
+	<ul class="spip">
+		<BOUCLE_choix(DATA){source tableau, #DATA}>
+		<li>"#CLE" : #VALEUR</li>
+		</BOUCLE_choix>
+	</ul>
+</p>
+</B_choix>
+</BOUCLE_options>

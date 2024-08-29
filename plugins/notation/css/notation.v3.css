@@ -1,0 +1,230 @@
+/**
+* Plugin Notation
+* par JEM (jean-marc.viglino@ign.fr) et b_b
+*
+* Copyright (c) 2008
+* Logiciel libre distribue sous licence GNU/GPL.
+*
+* Styles utilises par le plugin
+*
+**/
+
+/* jQuery.Rating Plugin CSS - http://www.fyneworks.com/jquery/star-rating/ */
+.star-rating-control, .notation_note {
+	display: flex;
+	flex-direction: row;
+}
+.notation_note .rating-cancel,
+.notation_note .star-rating {
+	display: block;
+	width:1em;
+	height:1em;
+	text-indent:-999em;
+	cursor:pointer;
+	background:transparent;
+	overflow:hidden;
+	margin-right:0.0625em;
+}
+
+.notation_note .rating-cancel {
+	margin-right:0.25em;
+	margin-top:0.0625em;
+}
+
+.notation_note .star-rating,
+.notation_note .star-rating a { background:url('img/notation-star.svg') no-repeat;background-size:1em 3em;background-position: center top;}
+
+.notation_note .rating-cancel,
+.notation_note .rating-cancel a { background:url('img/notation-delete.svg') no-repeat; background-size:1em 2em;background-position: center top;}
+
+.notation_note .rating-cancel a,
+.notation_note .star-rating a {display:block;width:100%;height:100%;background-position:center top;border:0}
+
+.notation_note .star-rating-on a {background-position:center!important}
+.notation_note .rating-cancel.star-rating-on a {background-position:center top!important}
+
+.notation_note .star-rating-hover a{background-position:center bottom;}
+.notation_note .rating-cancel.star-rating-hover a{background-position:center bottom;}
+
+/* Read Only CSS */
+.notation_note .star-rating-readonly a,
+.notation_note .star-rating-readonly {cursor:default !important}
+/* Partial Star CSS */
+.notation_note .star-rating{background:transparent!important;overflow:hidden!important}
+/* END jQuery.Rating Plugin CSS */
+
+.notation_note_container { display: flex; flex-direction: row;align-items: center}
+.notation_note_container .notation_valeur { margin-left: 0.5em;}
+
+.notation_note_container .rating-cancel {display: none}
+.notation_note_container.a_vote .rating-cancel {display: block}
+
+
+/* Pour affichage dans les modeles
+*/
+.notation-align-left {
+	float:left;
+}
+.notation-align-right {
+	float:right;
+}
+.notation-align-center {
+	margin:0 auto;
+}
+
+.notation .notation_note
+{	color:Purple;
+	font-weight:normal;
+}
+
+.notation .topten
+{	border:1px solid #AAE;
+	padding:1px;
+}
+.notation td
+{	padding: 0 5px 0 5px;
+}
+
+.notation .ligne_paire
+{	background-color:#EEF;
+}
+
+.notation thead tr
+{	background-color:#AAE;
+	text-align:center;
+	color:#005;
+}
+
+.notation .auteurs
+{ border:1px solid #AAE;
+  border-bottom:0;
+  border-right:0;
+}
+
+.notation .auteurs .nom
+{ border-bottom:1px solid #AAE;
+}
+.notation .auteurs .note
+{ border:1px solid #AAE;
+	border-left:0;
+	border-top:0;
+}
+.notation .auteurs img
+{  /* width:16px; /* pour afficher la note en plus petit */
+}
+
+.notation .stat
+{ font-size:0.81em;
+  border:1px solid #AAE;
+}
+.notation .barre
+{ background-color:#AAE;
+  height:10px;
+  line-height:5px;
+  font-size:0.4em;
+  display:block;
+  float:left;
+  margin-top:1em;
+  margin-right:1em;
+}
+
+
+/* Affichage des critiques */
+.notation-critique
+{ font-size:0.9em;
+  border:1px solid Purple;
+  padding:0;
+}
+
+.notation-critique .titre-note a
+{	font-weight:bold;
+	color:white;
+	background-color:purple ;
+	padding:0 5px 0 5px;
+	margin:0;
+}
+.notation-critique .spip
+{ margin:0 0 0 5px;
+}
+.notation-critique small
+{ color:Purple;
+  font-size:0.8em;
+  font-weight:normal;
+}
+.notation-critique .grosse_note
+{ float:right;
+  border:2px solid Purple;
+  padding: 0 10px 0 10px;
+  margin-left:3px;
+  color:Purple;
+  font-size:3em;
+  font-weight:bold;
+}
+
+.formulaire_notation button {
+	border: none;
+	background-color: transparent;
+	display: inline;
+	padding: 0;
+	margin: 0;
+	cursor: pointer;
+}
+.formulaire_notation button img {
+	vertical-align:middle;
+	padding: 0 !important;
+	margin: 0;
+}
+
+/* formulaire jaime_jaimepas */
+.formulaire_jaime_jaimepas {}
+.formulaire_jaime_jaimepas div.rating-cancel,
+.formulaire_jaime_jaimepas div.star-rating {margin-bottom:2px;}
+.formulaire_jaime_jaimepas .note {margin:0 5px;}
+.formulaire_jaime_jaimepas .reponse_formulaire {clear:left;margin:0;font-size:90%;padding:3px 3px 0;}
+.formulaire_jaime_jaimepas form div {clear:left;}
+
+.formulaire_jaime_jaimepas form .submit {border:0;background:0;padding:1px 0;cursor:pointer;}
+.formulaire_jaime_jaimepas form .submit:hover {font-weight:bold;}
+
+/* formulaire jaime */
+.formulaire_jaime {}
+.formulaire_jaime notation_note_container. .rating-cancel,
+.formulaire_jaime .notation_note_container .star-rating {}
+.formulaire_jaime .notation_valeur {}
+.formulaire_jaime .reponse_formulaire {clear:left;margin:0;font-size:90%;padding:3px 3px 0;}
+.formulaire_jaime form div {clear:left;}
+
+.formulaire_jaime .reponse_formulaire_ok {display:none;}
+
+.formulaire_jaime form .submit {border:0;background:0;padding:1px 0;cursor:pointer;}
+.formulaire_jaime form .submit:hover {font-weight:bold;}
+
+
+/**** jaime_coeur ****/
+
+.notation_note_container .jaime_coeur{}
+.notation_note_container .notation_valeur{}
+
+
+/**** surcharge Bootstrap ****/
+button.jaime_coeur, button.jaimeplus_coeur{
+border: 0;
+overflow: hidden;
+text-indent: -200em;
+width: 1.25em;
+height: 1.25em;
+margin: 0;
+padding:0;
+background-size: 1.25em 2.5em;
+}
+
+button.jaime_coeur, button.jaimeplus_coeur:hover, button.jaimeplus_coeur:active{
+background: transparent url("img/notation-coeur.svg") no-repeat;
+background-position: top left;
+background-size: 1.25em 2.5em;
+}
+button.jaimeplus_coeur, button.jaime_coeur:hover, button.jaime_coeur:active{
+background: transparent url("img/notation-coeur.svg") no-repeat;
+background-position: bottom left;
+background-size: 1.25em 2.5em;
+}

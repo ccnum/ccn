@@ -1,0 +1,129 @@
+<div class="formulaire_spip formulaire_#FORM formulaire_configurer_notation_ponderation">
+	[<div class="reponse_formulaire reponse_formulaire_ok">(#ENV**{message_ok})</div>]
+	[<div class="reponse_formulaire reponse_formulaire_erreur">(#ENV**{message_erreur})</div>]
+
+	<form method="post" action="#ENV{action}"><div>
+		#ACTION_FORMULAIRE{#ENV{action}}
+		<fieldset>
+			<legend><:notation:ponderation:></legend>
+			<divl class="editer-groupe">
+				<div class="editer editer_notation_ponderation long_label">
+					<label for="notation_ponderation"><:notation:valeur_ponderation:></label>
+					[<span class='erreur_message'>(#ENV**{erreurs}|table_valeur{ponderation})</span>]
+					<input type="text" name="ponderation" class="text" value="#ENV{ponderation,30}" id="notation_ponderation" size='8' aria-describedby="explication_ponderation"/>
+				</div>
+				<div class='explication' id="explication_ponderation">
+						<:notation:info_ponderation|propre:>
+						#SET{note_max,#ENV{nombre,5}}
+						#SET{nombres,#LISTE{1,10,25,50,100,150,200}}
+						<:notation:exemple{ponderation=#ENV*{ponderation,''},note=#GET{note_max}}|propre:>
+						<table class="spip">
+						<tbody>
+							<tr class="row_odd">
+								<td><:notation:nbvotes:></td><BOUCLE(DATA){source table,#GET{nombres}}><td>#VALEUR</td></BOUCLE>
+							</tr>
+							<tr class="row_even">
+								<td><:notation:note:></td><BOUCLE(DATA){source table,#GET{nombres}}><td>#GET{note_max}</td></BOUCLE>
+							</tr>
+							<tr class="row_odd">
+								<td><:notation:note_pond:></td>
+								<BOUCLE(DATA){source table,#GET{nombres}}><td>[(#GET{note_max}|notation_ponderee{#VALEUR,#ENV*{ponderation},#GET{note_max}})]</td></BOUCLE>
+							</tr>
+						</tbody>
+						</table>
+				</div>
+			</divl>
+		</fieldset>
+
+		<fieldset>
+			<legend><:notation:acces:></legend>
+			<p class="explication"><:notation:info_vote_unique_auteur:></p>
+			<div class="editer-groupe">
+				<div class="editer long_label editer_notation_acces">
+					<label><:notation:info_acces:></label>
+					[<span class='erreur_message'>(#ENV**{erreurs}|table_valeur{acces})</span>]
+					<div class="choix">
+						<input type="radio" name="acces" class="radio" value="adm"
+							[ (#ENV{acces}|=={adm}|oui)checked="checked"] id="notation_acces_admin" />
+						<label for="notation_acces_admin"><:notation:item_adm:></label>
+					</div>
+					<div class="choix">
+						<input type="radio" name="acces" class="radio" value="aut"
+							[ (#ENV{acces}|=={aut}|oui)checked="checked"] id="notation_acces_aut" />
+						<label for="notation_acces_aut"><:notation:item_aut:></label>
+					</div>
+					<div class="choix">
+						<input type="radio" name="acces" class="radio" value="ide"
+							[ (#ENV{acces}|=={ide}|oui)checked="checked"] id="notation_acces_ide" />
+						<label for="notation_acces_ide"><:notation:item_ide:></label>
+					</div>
+					<div class="choix">
+						<input type="radio" name="acces" class="radio" value="all"
+							[ (#ENV{acces}|=={all}|oui)checked="checked"] id="notation_acces_all" />
+						<label for="notation_acces_all"><:notation:item_all:></label>
+					</div>
+				</div>
+				<div class="editer long_label editer_notation_methode_id[(#ENV{acces}|=={all}|non)none]">
+					<label><:notation:info_methode_id:></label>
+					[<span class='erreur_message'>(#ENV**{erreurs}|table_valeur{methode_id})</span>]
+					<div class="choix">
+						<input type="radio" name="methode_id" class="radio" value="ip"
+							[ (#ENV{methode_id,ip}|=={ip}|oui)checked="checked"] id="notation_methode_id_ip" />
+						<label for="notation_methode_id_ip"><:notation:item_methode_id_ip:></label>
+					</div>
+					<div class="choix">
+						<input type="radio" name="methode_id" class="radio" value="hash"
+							[ (#ENV{methode_id,ip}|=={hash}|oui)checked="checked"] id="notation_methode_id_hash" />
+						<label for="notation_methode_id_hash"><:notation:item_methode_id_hash:></label>
+					</div>
+					<div class="choix">
+						<input type="radio" name="methode_id" class="radio" value="cookie"
+							[ (#ENV{methode_id,ip}|=={cookie}|oui)checked="checked"] id="notation_methode_id_cookie" />
+						<label for="notation_methode_id_cookie"><:notation:item_methode_id_cookie:></label>
+					</div>
+				</div>
+
+				<div class="editer long_label editer_notation_modifier_note">
+					<label for="notation_changer_note"><:notation:info_modifications:></label>
+					<div class="choix">
+						<input type="checkbox" name="change_note" class="checkbox" id="notation_changer_note"[ (#ENV{change_note}|=={oui}|oui)checked="checked"] value="oui" />
+						<label for="notation_changer_note"><:notation:change_note_label:></label>
+					</div>
+				</div>
+			</div>
+		</fieldset>
+
+		<fieldset>
+		<legend><:notation:nb_etoiles:></legend>
+			<div class="notice"><:notation:info_etoiles_warning|propre:></div>
+			<div class="editer-groupe">
+				<div class="editer editer_notation_etoile long_label">
+					<label for="notation_etoiles"><:notation:valeur_nb_etoiles:></label>
+					[<span class='erreur_message'>(#ENV**{erreurs}|table_valeur{nombre})</span>]
+					<input type="text" name="nombre" class="text" value="#ENV{nombre}" size="8" id="notation_etoiles" />
+					<div class='explication'><:notation:info_etoiles|propre:></div>
+				</div>
+			</div>
+		</fieldset>
+		<p class="boutons">
+			<input type="submit" name="_cfg_ok" value="<:bouton_valider:>" class="submit" />
+		</p>
+	</div></form>
+</div>
+
+<script type="application/javascript">
+	function update_editer_notation_methode_id_visible() {
+		var val = jQuery('[name=acces]:checked').attr('value');
+		console.log(val);
+		if (val == 'all') {
+			jQuery('.editer_notation_methode_id:hidden').show('fast');
+		}
+		else {
+			jQuery('.editer_notation_methode_id:visible').hide('fast');
+		}
+	}
+	jQuery(function() {
+		update_editer_notation_methode_id_visible();
+		jQuery('[name=acces]').bind('change',update_editer_notation_methode_id_visible);
+	});
+</script>

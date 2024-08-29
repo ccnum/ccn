@@ -1,0 +1,234 @@
+/* Correction d'un bug de navigateur. On l'ajoute là pour tout le monde, c'est gentil. https://stackoverflow.com/a/17863685 */
+fieldset {
+	min-width:0;
+}
+
+fieldset.pliable > legend{
+	cursor:pointer;
+}
+
+
+fieldset.pliable:not(.plie) > legend:before{
+	content: '▾ ';
+}
+
+fieldset.plie > legend:before{
+	content: '▸ ';
+}
+
+[dir='rtl']  fieldset.plie > fieldset > legend:before{
+	content: '◂ ';
+}
+
+/*date triple champs...
+	jour	mois	annee
+	/12/	/10/	/2010/
+*/
+.editer.saisie_date_jour_mois_annee .choix {
+	display: inline-block;
+	background-color:transparent;
+	padding:0;
+	border:0;
+}
+.saisie_date_jour_mois_annee .choix+.choix {margin-left:1em;}
+.saisie_date_jour_mois_annee .choix label{display:block; width:auto;}
+.saisie_date_jour_mois_annee .choix .text{width:auto;}
+
+
+/* avec crayons + formulaire de saisies, éviter un padding à gauche du label */
+.formulaire_crayon .editer-groupe .editer { padding-left:10px; }
+
+/* les étapes */
+.formulaire_spip .etapes__items {
+	list-style: none;
+}
+.formulaire_spip .etapes__item {
+	display: inline-block;
+}
+.formulaire_spip .etapes__item:not(:first-child):before {
+	content: ' → ';
+}
+
+/* Pour les saisies grilles, on s'arrange pour faire défiler si ça dépasse en largeur */
+.choix_grille_wrapper {
+	overflow-x: auto;
+}
+
+.formulaire_spip .choix-groupe {
+	border: none;
+	margin-top: 0;
+	margin-bottom: 0;
+	margin-left: 0;
+	padding: 0;
+}
+
+.formulaire_spip .choix-groupe label,
+.formulaire_spip .choix-groupe legend.label,
+.formulaire_spip .choix-groupe .editer-label {
+	float: none;
+	background-color: transparent;
+	margin-left: 0;
+	margin-bottom: 0.5em;
+	padding-left: 0;
+	padding-bottom: 0;
+	width: auto;
+}
+
+/* Base minimale des onglets des saisies fieldsets  */
+.saisies-menu-onglets {
+	border-bottom: 1px solid hsla(0, 0%, 0%, 0.15);
+}
+.saisies-menu-onglets__items {
+	display: -webkit-box;
+	display: -ms-flexbox;
+	display: flex;
+	list-style: none;
+	padding: 0;
+	margin: 0;
+}
+.saisies-menu-onglets__item,
+.saisies-menu-onglets__lien {
+	display: -webkit-box;
+	display: -ms-flexbox;
+	display: flex;
+}
+.saisies-menu-onglets__lien {
+	-webkit-box-align: center;
+  -ms-flex-align: center;
+	align-items: center;
+	padding: 0.5em 1em;
+	text-decoration: none;
+}
+.saisies-menu-onglets__lien.actif {
+	font-weight: bold;
+}
+.saisies-contenus-onglets fieldset {
+	margin-top: 0; /* pour la dist */
+}
+
+.saisies-onglets-verticaux {
+	margin-bottom: calc(var(--spip-form-spacing-y) / 2);
+}
+.saisies-onglets-verticaux > .saisies-menu-onglets {
+	width: 100%;
+}
+@media (min-width: 580px) {
+	.saisies-onglets-verticaux {
+		display: flex;
+		column-gap: var(--spip-form-spacing-x);
+		margin-bottom: calc(var(--spip-form-spacing-y) / 2);
+	}
+	.saisies-onglets-verticaux > .saisies-menu-onglets {
+		max-width: 15em;
+		min-width: 15em;
+	}
+}
+
+
+.saisies-onglets-verticaux > .saisies-contenus-onglets {
+	flex-basis: 100%;
+}
+.saisies-onglets-verticaux > .saisies-menu-onglets > .saisies-menu-onglets__items {
+	flex-direction: column;
+}
+
+/*
+ * A supprimer après correction de https://git.spip.net/spip-contrib-extensions/select2/issues/4
+*/
+.saisies-onglets .select2-container {
+	width:100%!important;
+}
+
+
+.afficher_si_masque_chargement, .etapes__item.afficher_si_masque{
+  position: absolute!important;
+  width: 1px!important;
+  height: 1px!important;
+  padding: 0!important;
+  overflow: hidden!important;
+  clip: rect(0, 0, 0, 0)!important;
+  white-space: nowrap!important;
+  border: 0!important;
+}
+
+.champ.afficher {
+	margin-bottom: 1rem;
+}
+.champ.afficher p:last-child,
+#wysiwyg .champ.afficher p:last-child {
+	margin-bottom: 0;
+}
+
+.champ.afficher.saisie_fieldset fieldset > .fieldset_legend {
+	font-weight: 800;
+	font-size: 1.1em;
+	margin-left: 0;
+	margin-bottom: 1rem;
+}
+
+.champ.afficher.saisie_fieldset > .fieldset_valeurs {
+	padding-left: 1.5em;
+	border-left: 1px solid #E3E3E3;
+	border-radius: 12px;
+}
+/** Saisie groupe inline **/
+.editer-groupe_inline {
+	--gap: 1em;
+	display: flex;
+	flex-wrap: wrap;
+	align-items: flex-start;
+	column-gap: var(--gap);
+	padding: 0;
+	margin: 0;
+}
+/* label sur une seule ligne */
+.editer-groupe_inline > .editer:not(.en_configuration) {
+	margin-left: 0;
+	margin-right: 0;
+	flex-shrink: 0;
+	max-width: 100%;
+}
+/* label sur une seule ligne */
+.editer-groupe_inline > .editer:not(.en_configuration) > .editer-label {
+	display: block;
+	float: none;
+	padding-top: 0;
+	margin-left:0;
+}
+
+/* nombre de colonnes déterminé */
+@media (min-width: 580px) {
+	.formulaire_spip .editer-groupe_inline > .editer:not(.en_configuration) > .editer-label {
+		max-width: 100%;
+		padding-right: 0.5em;
+	}
+	.formulaire_spip .editer-groupe_2_colonnes {
+		--columns: 2;
+	}
+
+	.formulaire_spip .editer-groupe_3_colonnes > .editer {
+		--columns: 3;
+	}
+
+	.formulaire_spip .editer-groupe_4_colonnes > .editer {
+		--columns: 4;
+	}
+
+	.formulaire_spip .editer-groupe_2_colonnes > .editer:not(.en_configuration) ,
+	.formulaire_spip .editer-groupe_3_colonnes > .editer:not(.en_configuration) ,
+	.formulaire_spip .editer-groupe_4_colonnes > .editer:not(.en_configuration) {
+		width: calc((100% / var(--columns)) - var(--gap) + (var(--gap) / var(--columns)));
+	}
+
+	/* une seule ligne */
+	.formulaire_spip .editer-groupe_1ligne_colonnes,  .formulaire_spip .editer-groupe_1ligne_max_colonnes{
+		flex-wrap: nowrap;
+	}
+	.formulaire_spip .editer-groupe_1ligne_colonnes > .editer:not(.en_configuration), .formulaire_spip .editer-groupe_1ligne_max_colonnes > .editer:not(.en_configuration) {
+		flex-shrink: 1;
+		min-width: 8em;
+	}
+	.formulaire_spip .editer-groupe_1ligne_max_colonnes > .editer:not(.en_configuration), .formulaire_spip .editer-groupe_xlignes_max_colonnes > .editer:not(.en_configuration) {
+		flex-grow: 1;
+	}
+}

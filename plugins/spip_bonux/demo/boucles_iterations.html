@@ -1,0 +1,71 @@
+<h1>Critère <code>{enum debut,fin,pas}</code></h1>
+
+<h2><code>{enum 1,10}</code></h2>
+<B_test10>
+<ul>
+	<BOUCLE_test10(DATA){enum 1,10}>
+		<li>
+			<code>\#CLE:</code> #CLE
+			<code>\#VALEUR:</code> #VALEUR
+		</li>
+	</BOUCLE_test10>
+</ul>
+<strong>\#TOTAL_BOUCLE:</strong> #TOTAL_BOUCLE
+</B_test10>
+
+<h2><code>{enum 1,10,2}</code></h2>
+<B_test11>
+<ul>
+	<BOUCLE_test11(DATA){enum 1,10,2}>
+		<li>
+			<code>\#CLE:</code> #CLE
+			<code>\#VALEUR:</code> #VALEUR
+		</li>
+	</BOUCLE_test11>
+</ul>
+<strong>\#TOTAL_BOUCLE:</strong> #TOTAL_BOUCLE
+</B_test11>
+
+
+<h2><code>{enum 10,1,-2}</code></h2>
+<B_test12>
+<ul>
+	<BOUCLE_test12(DATA){enum 10,1,-2}>
+		<li>
+			<code>\#CLE:</code> #CLE
+			<code>\#VALEUR:</code> #VALEUR
+		</li>
+	</BOUCLE_test12>
+</ul>
+<strong>\#TOTAL_BOUCLE:</strong> #TOTAL_BOUCLE
+</B_test12>
+
+
+
+<h2><code>{enum 1,100}{pagination}</code></h2>
+<B_test13>
+<nav role="navigation" class="pagination">#PAGINATION</nav>
+<ul>
+	<BOUCLE_test13(DATA){enum 1,100}{pagination}>
+		<li>
+			<code>\#CLE:</code> #CLE
+			<code>\#VALEUR:</code> #VALEUR
+		</li>
+	</BOUCLE_test13>
+</ul>
+<strong>\#TOTAL_BOUCLE:</strong> #TOTAL_BOUCLE
+</B_test13>
+
+
+<h2><code>{enum 1,7} > {enum 1,\#VALEUR}</code></h2>
+<B_test14>
+<ul>
+<BOUCLE_test14(DATA){enum 1,7}>
+<li>
+	<BOUCLE_test15(DATA){enum 1,#VALEUR}>
+	#VALEUR
+	</BOUCLE_test15>
+</li>
+</BOUCLE_test14>
+</ul>
+</B_test14>
