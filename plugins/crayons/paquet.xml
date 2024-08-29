@@ -1,0 +1,24 @@
+<paquet
+	prefix="crayons"
+	categorie="edition"
+	version="3.1.2"
+	etat="stable"
+	compatibilite="[4.1.0;4.3.*]"
+	logo="images/crayon-64.png"
+	documentation="https://contrib.spip.net/Les-Crayons"
+>
+	<nom>Crayons</nom>
+
+	<auteur>Fil</auteur>
+	<auteur>toggg</auteur>
+
+	<licence>GNU/GPL</licence>
+
+	<traduire gestionnaire="salvatore" module="crayons" reference="fr" />
+
+	<pipeline nom="affichage_final" />
+	<pipeline nom="header_prive" action="insert_head" />
+	<pipeline nom="crayons_controleur" action="" />
+	<pipeline nom="crayons_verifier" action="" />
+	<pipeline nom="crayons_vue_affichage_final" action="" />
+</paquet>

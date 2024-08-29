@@ -1,0 +1,83 @@
+
+titre: '<:saisies:saisie_destinataires_titre:>'
+description: '<:saisies:saisie_destinataires_explication:>'
+icone: 'images/saisies_destinataires-xx.svg'
+categorie:
+  type: 'choix'
+  rang: 30
+options:
+  -
+    saisie: 'fieldset'
+    options:
+      nom: 'description'
+      label: '<:saisies:option_groupe_description:>'
+    saisies:
+      -
+        saisie: 'input'
+        options:
+          nom: 'label'
+          label: '<:saisies:option_label_label:>'
+          explication: '<:saisies:option_label_explication:>'
+          size: 50
+      - 'inclure:saisies/_base/explication.yaml'
+      -
+        saisie: 'auteurs'
+        options:
+          nom: 'choix_destinataires'
+          label: '<:saisies:option_choix_destinataires_label:>'
+          explication: '<:saisies:option_choix_destinataires_explication:>'
+          multiple: 'oui'
+          option_statut: 'oui'
+      -
+        saisie: 'radio'
+        options:
+          nom: 'type_choix'
+          label: '<:saisies:option_type_choix_label:>'
+          data:
+            tous: '<:saisies:option_type_choix_tous:>'
+            un: '<:saisies:option_type_choix_un:>'
+            un_radio: '<:saisies:option_type_choix_un_radio:>'
+            plusieurs: '<:saisies:option_type_choix_plusieurs:>'
+          defaut: 'tous'
+      -
+        saisie: 'input'
+        options:
+          nom: 'option_intro'
+          label: '<:saisies:option_option_destinataire_intro_label:>'
+          size: 50
+  -
+    saisie: 'fieldset'
+    options:
+      nom: 'affichage'
+      label: '<:saisies:option_groupe_affichage:>'
+    saisies:
+      -  'inclure:saisies/_base/afficher_si.yaml'
+      -
+        saisie: 'input'
+        options:
+          nom: 'attention'
+          label: '<:saisies:option_attention_label:>'
+          explication: '<:saisies:option_attention_explication:>'
+          size: 50
+  -
+    saisie: 'fieldset'
+    options:
+      nom: 'conditions'
+      label: '<:saisies:option_groupe_conditions:>'
+    saisies:
+      -  'inclure:saisies/_base/afficher_si.yaml'
+  -
+    saisie: 'fieldset'
+    options:
+      nom: 'validation'
+      label: '<:saisies:option_groupe_validation:>'
+    saisies:
+      -  'inclure:saisies/_base/obligatoire.yaml'
+options_dev:
+      - 'inclure:saisies/_base/options_dev.yaml'
+defaut:
+  options:
+    label: '<:saisies:saisie_destinataires_titre:>'
+    choix_destinataires: [1,2,3,4]
+    # champs extras (definition du champ sql)
+    sql: "text DEFAULT '' NOT NULL"

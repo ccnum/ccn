@@ -1,0 +1,111 @@
+<div class="formulaire_spip formulaire_cfg formulaire_configurer formulaire_#FORM">
+
+[<p class="reponse_formulaire reponse_formulaire_ok">(#ENV*{message_ok})</p>]
+[<p class="reponse_formulaire reponse_formulaire_erreur">(#ENV*{message_erreur})</p>]
+
+<style>
+.socialtags_checklist + .socialtags_checklist {
+	margin-top: 1em;
+}
+</style>
+<form method="post" action="#ENV{action}"><div>
+	#ACTION_FORMULAIRE
+	<div class="editer-groupe">
+		<div class="editer editer_tags" id="sc_list">
+			<label><:socialtags:cfg_liste_site:></label>
+			<input type="hidden" name="tags[]" value="" />
+			[(#VAL|socialtags_choix)]
+			<script type='text/javascript'>
+			/*<!\[CDATA\[*/ 
+				jQuery.extend({
+					sc_cocher_decocher_tout: function(b) {
+						$('#sc_list input[type=checkbox]').attr('checked', b);
+					}
+				});
+			/*]]>*/ 
+			</script>
+			<noscript>
+				<:socialtags:cfg_activer_javascript:>
+			</noscript>
+			<p>
+				<small>
+					<a href="#sc_list" onclick="$.sc_cocher_decocher_tout(true);"><:socialtags:cfg_tout_cocher:></a> /
+					<a href="#sc_list" onclick="$.sc_cocher_decocher_tout(false);"><:socialtags:cfg_tout_decocher:></a>
+				</small>
+			</p>
+		</div>
+		<div class="fieldset" id="sc_insertion">
+			<fieldset>
+				<legend><:socialtags:cfg_insertion:></legend>
+				<div class="editer-groupe">
+					<div class="editer editer_jsselector">
+						<label for="jsselector"><:socialtags:cfg_selector:></label>
+						<p class="explication"><:socialtags:cfg_inserer:></p>
+						<input type="text" name="jsselector" class="text" id="jsselector" value="[(#ENV{jsselector}|sinon{'#contenu'})]" size="50" />
+						<div class="explication">
+							<strong><:socialtags:cfg_exemples:></strong>
+							<dl>
+								<dt><tt>#contenu</tt></dt>
+								<dd><:socialtags:cfg_en_bas:></dd>
+								<dt><tt>.page_article .cartouche:first</tt></dt>
+								<dd><:socialtags:cfg_sous_bloc:></dd>
+								<dt><tt>#socialtags</tt></dt>
+								<dd><:socialtags:cfg_sous_div:></dd>
+							</dl>
+						</div>
+					</div>
+					<div class="editer editer_afterorappend">
+						<label for="afterorappend"><:socialtags:cfg_afterorappend:></label>
+						<p class="explication"><:socialtags:cfg_afterorappend_exp:></p>
+						<div class="choix">
+							<input type="radio" name="afterorappend" id="afterorappend_append" value="after"[ (#ENV{afterorappend, 'after'}|=={after}|oui) checked="checked"]><label for="afterorappend_append"><:socialtags:item_append:></label>&nbsp;&nbsp;
+							<input type="radio" name="afterorappend" id="afterorappend_after" value="append"[ (#ENV{afterorappend, 'after'}|=={after}|non) checked="checked"]><label for="afterorappend_after"><:socialtags:item_after:></label>
+						</div>
+					</div>
+					<div class="editer editer_wopen">
+						<label for="wopen"><:socialtags:cfg_wopen:></label>
+						<p class="explication"><:socialtags:cfg_wopen_exp:></p>
+						<div class="choix">
+							<input type="radio" name="wopen" id="wopen_oui" value="oui"[ (#ENV{wopen, 'non'}|=={oui}|oui) checked="checked"]><label for="wopen_oui"><:item_oui:></label>&nbsp;&nbsp;
+							<input type="radio" name="wopen" id="wopen_non" value="non"[ (#ENV{wopen, 'non'}|=={oui}|non) checked="checked"]><label for="wopen_non"><:item_non:></label>
+						</div>
+					</div>
+				</div>
+			</fieldset>
+		</div>
+		<div class="fieldset" id="sc_fanbadge">
+			<fieldset id="fanbadge">
+				<legend><:socialtags:cfg_badge_fb:></legend>
+				<div class="editer-groupe">
+					<div class="editer">
+						<p class="explication"><:socialtags:cfg_badge_fb_existe:></p>
+					</div>
+					<div class="editer editer_badge">
+						<label for="badge"><:socialtags:cfg_badge_html:></label>
+						<p class="explication"><:socialtags:cfg_badge_html_ajouter_1:>
+							<code>&#35;MODELE{socialtags_badge}</code><:socialtags:cfg_badge_html_ajouter_2:>
+							<code>&lt;socialtags|badge&gt;)</code>
+						</p>
+						<textarea name="badge" id="badge" class="textarea" rows="6" cols="40">#ENV{badge}</textarea>
+					</div>
+					<div class="editer editer_badgejs">
+						<label for="badgejs"><:socialtags:cfg_badge_js:></label>
+						<p class="explication"><:socialtags:cfg_badge_js_1{code=?page=socialtags.js}:></p>
+						<textarea name="badgejs" id="badgejs" class="textarea" rows="8" cols="40">#ENV{badgejs}</textarea>
+					</div>
+				</div>
+			</fieldset>
+		</div>
+		<div class="editer editer_ifreferer">
+			<div class="choix">
+				<input type="checkbox" name="ifreferer"  class="checkbox" id="ifreferer"[ checked="(#ENV{ifreferer}|?{checked})"] />
+				<label for="ifreferer"><:socialtags:cfg_referer:></label>
+			</div>
+		</div>
+	</div>
+	<div class="boutons">
+		<input type="submit" class="submit" name="_cfg_ok" value="<:bouton_valider:>" />
+	</div>
+	</div>
+</form>
+</div>

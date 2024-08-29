@@ -1,0 +1,51 @@
+<paquet
+	prefix="saisies"
+	categorie="outil"
+	version="5.6.1"
+	etat="stable"
+	compatibilite="[4.0.0;4.*.*]"
+	logo="saisies.svg"
+	documentation="https://contrib.spip.net/Saisies"
+	schema="1"
+>
+	<nom>Saisies</nom>
+	<auteur lien="https://contrib.spip.net/Matthieu-Marcillaud">Matthieu Marcillaud</auteur>
+	<auteur lien="https://contrib.spip.net/RastaPopoulos">RastaPopoulos</auteur>
+	<auteur lien="https://contrib.spip.net/Joseph">Joseph</auteur>
+	<auteur lien="http://www.ldd.fr">Les Développements Durables</auteur>
+	<auteur>Maïeul</auteur>
+	<licence>GNU/GPL</licence>
+
+	<traduire module="saisies" reference="fr" gestionnaire="salvatore" />
+
+	<pipeline nom="insert_head" inclure="saisies_pipelines.php" />
+	<pipeline nom="header_prive" inclure="saisies_pipelines.php" />
+	<pipeline nom="affichage_final" inclure="saisies_pipelines.php" />
+	<pipeline nom="saisies_autonomes" action="" />
+	<pipeline nom="saisies_aide_memoire_inserer_debut" />
+	<pipeline nom="saisie_est_tabulaire" action="" />
+	<pipeline nom="saisie_est_fichier" action="" />
+	<pipeline nom="saisies_lister_disponibles" inclure="saisies_pipelines.php" />
+	<pipeline nom="saisies_lister_categories" action="" />
+	<pipeline nom="saisies_construire_formulaire_config" action="" />
+	<pipeline nom="formulaire_verifier_post_saisies" action="" />
+	<pipeline nom="formulaire_verifier_etape_post_saisies" action="" />
+	<pipeline nom="formulaire_saisies" action="" />
+	<pipeline nom="saisies_verifier" action="" />
+	<pipeline nom="saisies_verifier_lister_disponibles" action="saisies_pipelines.php" />
+	<pipeline nom="saisies_afficher_si_saisies" inclure="saisies_pipelines.php"  />
+	<pipeline nom="formulaire_receptionner" inclure="saisies_pipelines.php" />
+	<pipeline nom="formulaire_charger" inclure="saisies_pipelines.php" />
+	<pipeline nom="formulaire_verifier" inclure="saisies_pipelines.php" />
+	<pipeline nom="formulaire_verifier_etape" inclure="saisies_pipelines.php" />
+	<pipeline nom="styliser" inclure="saisies_pipelines.php" />
+	<pipeline nom="formulaire_fond" inclure="saisies_pipelines.php" />
+
+	<menu nom="saisies_doc" titre="saisies:titre_page_saisies_doc" parent="menu_developpement"  icone="images/saisies-xx.svg" />
+
+	<utilise nom="verifier" compatibilite="[1.14.0;]" />
+	<utilise nom="spip_bonux" compatibilite="[3.5.0;]" />
+	<utilise nom="yaml" compatibilite="[1.5.0;]" />
+	<utilise nom="nospam" compatibilite="[2.3.0;]" />
+
+</paquet>

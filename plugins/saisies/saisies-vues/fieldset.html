@@ -1,0 +1,15 @@
+
+[(#ENV{saisies}|is_array|oui)
+	[
+		[(#ENV{valeur_uniquement}|et{#ENV{valeur_uniquement}|!={non}}|non)
+		<fieldset class="fieldset_valeurs">
+			[<legend [id="(#ENV{nom})_label"] class="fieldset_legend[ (#ENV{vue_class})]">(#ENV*{label})</legend>]
+			<div class="fieldset_champs">
+		]
+			(#INCLURE{fond=inclure/voir_saisies, env, from_fieldset='on'})
+		[(#ENV{valeur_uniquement}|et{#ENV{valeur_uniquement}|!={non}}|non)
+			</div>
+		</fieldset>
+		]
+	]
+]
