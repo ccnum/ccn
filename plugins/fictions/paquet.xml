@@ -1,0 +1,17 @@
+<paquet
+	prefix="fictions"
+	categorie="squelette"
+	version="1.0.0"
+	etat="stable"
+	logo=""
+	schema=""
+	documentation="http://www.laclasse.com"
+	compatibilite="[3.0;["
+>
+	<nom>Thematiques</nom>
+	<auteur>Patrick Vincent</auteur>
+	<licence>GNU/GPL</licence>
+
+	<chemin path="./squelettes/air" />
+	<chemin path="" />
+</paquet>
