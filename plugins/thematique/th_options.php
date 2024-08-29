@@ -60,7 +60,8 @@ $date = sql_getfetsel("date", "spip_articles", "date != '0000-00-00 00:00:00'", 
 if ($date != '') {
     $annee_scolaire = intval(substr($date, 0, 4));
     $mois_scolaire = intval(substr($date, 5, 2));
-    if ($mois_scolaire < 9) { $annee_scolaire--;
+    if ($mois_scolaire < 9) {
+        $annee_scolaire--;
     }
 }
 
@@ -75,6 +76,7 @@ if ((isset($_GET['id_article'])) && (!$_GET['mode'] == 'detail')) {
 define('_annee_scolaire', $annee_scolaire);
 define('_date_debut', $annee_scolaire . '-08-01');
 define('_date_fin', ($annee_scolaire + 1) . '-08-01');
+echo $annee_scolaire;
 //spip_log($annee_scolaire);
 
 /************************************************************************************/
