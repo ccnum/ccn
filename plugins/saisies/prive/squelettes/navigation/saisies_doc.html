@@ -1,0 +1,17 @@
+<B_categories>
+	<div>
+		<ul class="liste_items navigation">
+			<BOUCLE_categories (DATA) {source table, #VAL{saisies}|saisies_lister_disponibles{''}|saisies_regrouper_disponibles_par_categories} {si #PLUGIN{yaml}|oui}>
+				<li class="item sous_navigation"><a href="#[categorie_(#CLE)]">[(#NOM)]</a>
+					<B_saisies>
+					<ul class="navigation">
+					<BOUCLE_saisies(DATA) {source table, #SAISIES}>
+						<li class="item"><a href="#[saisie_(#CLE)]" class="bando2_saisie_[(#CLE)]">[(#TITRE)] (#CLE)</a></li>
+					</BOUCLE_saisies>
+					</ul>
+					</B_saisies>
+				</li>
+			</BOUCLE_categories>
+		</ul>
+	</div>
+</B_categories>

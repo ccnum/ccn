@@ -1,0 +1,30 @@
+<!--#hierarchie-->
+<a href="#URL_ECRIRE"><:ecrire:info_racine_site:></a>
+>
+<a href="#SELF"><:cicas:eq_titre:></a>
+<!--/#hierarchie-->
+    
+    [(#BOITE_OUVRIR{<:cicas:eq_titre:>,'simple','section'})]
+     
+         <:cicas:eq_avertissement:>
+     
+        <div class='ajax'>
+            #FORMULAIRE_CICAS_AUTH_MODE
+        </div>
+
+        <BOUCLE_enumere(DATA){enum 1, #CONFIG{cicas/server_nb,1}}>
+            <div class='ajax'>
+                #FORMULAIRE_CICAS_SERVER*{#VALEUR}
+            </div>
+            <div class='ajax'>
+                #FORMULAIRE_CICAS_ATTRIBUTES*{#VALEUR}
+            </div>
+        </BOUCLE_enumere>
+
+    #BOITE_FERMER
+     
+<!--#navigation-->
+<!--/#navigation-->
+ 
+<!--#extra-->
+<!--/#extra-->

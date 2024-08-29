@@ -108,6 +108,7 @@ if [[ ! -e config/connect.php && ${SPIP_AUTO_INSTALL} = 1 ]]; then
 	spip plugins:activer spip_bonux -y
 	spip plugins:activer cicas -y
 	spip plugins:activer th -y
+	spip plugins:maj:bdd
 fi
 
 exec "$@"
