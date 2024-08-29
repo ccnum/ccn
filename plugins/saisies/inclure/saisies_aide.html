@@ -1,0 +1,8 @@
+
+Sauter à : <a href="#liste_saisies">Toutes les saisies</a>, <a href="#liste_options_saisies">Toutes les options de base</a>, <a href="#liste_options_dev_saisies">Toutes les options de dev</a>.
+<INCLURE{fond=inclure/saisies_aide/tableau, titre='Utilisation des options de base', env} />
+<INCLURE{fond=inclure/saisies_aide/tableau, titre='Utilisation des options de dev', preambule="Options disponibles uniquement pour le dévellopement PHP/Squelette.", env, options=#ENV{options_dev}} />
+<INCLURE{fond=inclure/saisies_aide/saisies, env} />
+<INCLURE{fond=inclure/saisies_aide/options, titre='Toutes les options de base', id='liste_options_saisies', env} />
+<INCLURE{fond=inclure/saisies_aide/options, titre='Toutes les options de dev', id='liste_options_dev_saisies', preambule="Options disponibles uniquement pour le dévellopement PHP/Squelette.", env, options=#ENV{options_dev}} />
+<INCLURE{fond=inclure/saisies_aide/addendum, env} />

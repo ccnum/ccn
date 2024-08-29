@@ -1,0 +1,36 @@
+<div class="formulaire_spip formulaire_#ENV{form}[ (#ENV{_etape}|oui)formulaire_multietapes]"[(#ENV{_saisies}|saisies_dont_avec_option{afficher_si}|oui) data-avec-afficher_si="true"]>
+	#ENV**{_saisies/options/inserer_debut}
+	[<p class="reponse_formulaire reponse_formulaire_ok"[(#HTML5|oui) role="status"]>(#ENV**{message_ok})</p>]
+	[<p class="reponse_formulaire reponse_formulaire_erreur"[(#HTML5|oui) role="alert"]>(#ENV**{message_erreur})</p>]
+	[(#ENV{editable}|oui)
+	<form method="post" action="#ENV{action}" enctype="multipart/form-data"[ data-resume_etapes_futures="(#ENV{_resume_etapes_futures}|json_encode|attribut_html)"]><div>
+		[(#REM) declarer les hidden qui declencheront le service du formulaire
+		parametre : url d'action ]
+		#ACTION_FORMULAIRE{#ENV{action}}
+		[(#ENV{_etape}|oui)
+			<INCLURE{fond=formulaires/inc-saisies-cvt-etapes-#ENV{_saisies/options/etapes_presentation,defaut}, etapes=#ENV{_saisies_par_etapes}, env} />
+		]
+
+		<div class="editer-groupe">
+				#SET{saisies, #ENV{_saisies}}
+				[(#ENV{_etape}|oui)
+					[(#ENV{_saisies/options/etapes_ignorer_recapitulatif}|non|et{#ENV{_etape}|=={#ENV{_etapes}}}|oui)
+						<INCLURE{fond=formulaires/inc-saisies-cvt-etapes-recapitulatif,env} />
+					]
+					[(#ENV{_saisies/options/etapes_ignorer_recapitulatif}|non|et{#ENV{_etape}|=={#ENV{_etapes}}}|non)
+						#SET{saisies, #GET{etapes}|table_valeur{etape_#ENV{_etape}/saisies}}
+						#GENERER_SAISIES{#GET{saisies},saisies_par_etapes=#ENV{_saisies_par_etapes}}
+					]
+				]
+				[(#ENV{_etape}|non)
+					#GENERER_SAISIES{#GET{saisies}}
+				]
+		</div>
+
+		[(#REM) ajouter les saisies supplementaires : extra et autre, a cet endroit ]
+		<!--extra-->
+		<INCLURE{fond=formulaires/inc-saisies-cvt-boutons,env} />
+	</div></form>
+	]
+	#ENV**{_saisies/options/inserer_fin}
+</div>

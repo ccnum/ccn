@@ -1,0 +1,14 @@
+-
+  saisie: 'input'
+  options:
+    nom: 'explication'
+    label: '<:saisies:option_explication_label:>'
+    explication: '<:saisies:option_explication_explication:>'
+    size: 50
+-
+  saisie: 'input'
+  options:
+    nom: 'explication_apres'
+    label: '<:saisies:option_explication_apres_label:>'
+    attention: '<:saisies:option_explication_apres_attention:>'
+    size: 50

@@ -1,0 +1,62 @@
+nom: '<:socialtags:nom_noisette_facebook_like:>'
+description: '<:socialtags:description_noisette_facebook_like:>'
+icon: 'noisettes/socialtags_facebook_like.png'
+parametres:
+  -
+    saisie: 'url'
+    options:
+      nom: 'href'
+      label: '<:socialtags:noisette_label_href:>'
+      defaut: 'http://www.facebook.com/'
+      obligatoire: 'oui'
+    verifier:
+      type: 'url'
+  -
+    saisie: 'radio'
+    options:
+      nom: 'bouton_action'
+      label: '<:socialtags:noisette_label_action:>'
+      defaut: 'like'
+      data:
+        like: '<:socialtags:noisette_action_like:>'
+        recommend: '<:socialtags:noisette_action_recommand:>'
+  -
+    saisie: 'selection'
+    options:
+      nom: 'layout'
+      label: '<:socialtags:noisette_label_layout:>'
+      defaut: 'standard'
+      cacher_option_intro: 'true'
+      data:
+        standard: '<:socialtags:noisette_layout_standard:>'
+        button_count: '<:socialtags:noisette_layout_button_count:>'
+        box_count: '<:socialtags:noisette_layout_box_count:>'
+  -
+    saisie: 'radio'
+    options:
+      nom: 'colorscheme'
+      label: '<:socialtags:noisette_label_colorscheme:>'
+      defaut: 'light'
+      data:
+        light: '<:socialtags:noisette_colorscheme_light:>'
+        dark: '<:socialtags:noisette_colorscheme_dark:>'
+  -
+    saisie: 'oui_non'
+    options:
+      nom: 'afficher_send'
+      label: '<:socialtags:noisette_label_afficher_send:>'
+      defaut: ''
+  -
+    saisie: 'true_false'
+    options:
+      nom: 'show_faces'
+      label: '<:socialtags:noisette_label_show_faces:>'
+      defaut: 'false'
+  -
+    saisie: 'input'
+    options:
+      nom: 'width'
+      label: '<:socialtags:noisette_label_width:>'
+      defaut: '490'
+    verifier:
+      type: 'entier'

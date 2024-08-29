@@ -1,0 +1,20 @@
+-
+  saisie: 'case'
+  options:
+    nom: 'choix_alternatif'
+    label_case: '<:saisies:option_choix_alternatif_label:>'
+    defaut: ''
+    conteneur_class: 'pleine_largeur'
+-
+  saisie: 'input'
+  options:
+    nom: 'choix_alternatif_label'
+    label: '<:saisies:option_choix_alternatif_label_label:>'
+    defaut: '<:saisies:option_choix_alternatif_label_defaut:>'
+    afficher_si: '@choix_alternatif@ == "on"'
+-
+  saisie: 'input'
+  options:
+    nom: 'choix_alternatif_explication'
+    label: '<:saisies:option_choix_alternatif_explication_label:>'
+    afficher_si: '@choix_alternatif@ == "on"'

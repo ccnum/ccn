@@ -1,0 +1,44 @@
+<h2 class="h2 spip">#ENV{titre}</h2>
+<B_options_tableau>
+
+#ENV{preambule}
+
+<div style="overflow:auto; border-collapse:collapse">
+<table class="spip">
+	<colgroup>
+		<col span="1">
+	<BOUCLE_categories_tableau_colgroup(DATA){source tableau, #ENV{saisies}}>
+		<col span="[(#SAISIES|count)]">
+	</BOUCLE_categories_tableau_colgroup>
+	</colgroup>
+<thead>
+	<tr class="first_row">
+		<th></th>
+		<BOUCLE_categories_tableau_th_first(DATA){source tableau, #ENV{saisies}}>
+			<th colspan="[(#SAISIES|count)]" style="border-left: 1px solid black;">#NOM</th>
+		</BOUCLE_categories_tableau_th_first>
+	</tr>
+	<tr class="first_row">
+		<th>Options \ Saisies</th>
+		<BOUCLE_categories_tableau_th(DATA){source tableau, #ENV{saisies}}>
+			<BOUCLE_saisies_tableau_th(DATA){source tableau, #SAISIES}>
+				<th [(#COMPTEUR_BOUCLE|=={1}|oui)style="border-left: 1px solid black;"]><a href="#saisie_#CLE">#CLE</a></th>
+			</BOUCLE_saisies_tableau_th>
+		</BOUCLE_categories_tableau_th>
+	</tr>
+</thead>
+<tbody>
+	<BOUCLE_options_tableau(DATA){source tableau, #ENV{options}}>
+	<tr class="tr_liste [(#COMPTEUR_BOUCLE|alterner{row_odd,row_even})]">
+		<th><a href="#option_#CLE">#CLE</a></th>
+		<BOUCLE_categories_tableau(DATA){source tableau, #ENV{saisies}}>
+			<BOUCLE_saisies_tableau(DATA){source tableau, #SAISIES}>
+				<td [(#COMPTEUR_BOUCLE|=={1}|oui)style="border-left: 1px solid black;"]>[(#CLE|in_array{#_options_tableau:UTILISEE_PAR}|?{'X','-'})]</td>
+			</BOUCLE_saisies_tableau>
+		</BOUCLE_categories_tableau>
+	</tr>
+	</BOUCLE_options_tableau>
+</tbody>
+</table>
+</div>
+</B_options_tableau>

@@ -1,0 +1,13 @@
+#SET{colonnes, #ENV{colonnes, 1ligne}|replace{'col',''}}
+[(#SET{subdiv_class,editer-groupe editer-groupe_inline[ editer-groupe_(#GET{colonnes})_colonnes][ (#ENV{class})]})]
+<div class="avec_sous_saisies conteneur_inline[ conteneur_inline_(#ENV{nom}|saisie_nom2classe)][ (#ENV{conteneur_class})][ (#ENV{type_saisie}|saisie_type2classe)][(#ENV{constructeur}|non) #GET{subdiv_class}][ (#ENV{class})]"[ data-id="(#ENV{id_saisie})"]>
+	#ENV*{inserer_debut}
+	[(#ENV{constructeur}|oui)
+		<div class="#GET{subdiv_class}">
+	]
+			#INCLURE{fond=#ENV{fond_generer,"inclure/generer_saisies"}, env, saisies=#ENV{saisies}, from_conteneur_inline='on'}
+	[(#ENV{constructeur}|oui)
+		</div>
+	]
+	#ENV*{inserer_fin}
+</div>

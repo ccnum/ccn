@@ -1,0 +1,25 @@
+<p class="boutons" [ data-afficher_si="(#ENV*{_saisies/options/afficher_si_submit}|saisies_afficher_si_js{#ENV{_saisies}})"]>
+	<span class="image_loading"></span>
+	[(#SET{label_valider, #ENV*{_saisies/options/texte_submit, #ENV*{saisies_texte_submit, <:bouton_enregistrer:>}}})]
+	#SET{label_enregistrer,#GET{label_valider}}
+
+	[(#ENV{_etape}|et{#ENV{_etape}|!={#ENV{_etapes}}}|oui)
+		[(#SET{label_valider, #ENV*{_saisies/options/etapes_suivant, <:bouton_suivant:>}})]
+		[(#ENV*{_saisies/options/etapes_precedent_suivant_titrer}|oui)
+			#SET{etape,#ENV*{_saisies_par_etapes/etape_#VAL{#ENV{_etape}|plus{1}}}
+			[(#SET{etape_suivante_titre,#ENV*{label}|sinon{<:saisies:etapes_recapitulatif_label:>}})]
+			#SET{label_valider,#GET{label_valider}|trim|label_ponctuer|concat{' ',#GET{etape_suivante_titre}|wrap{'<span class="titre-etape">'}}}
+		]
+	]
+
+	[(#ENV{_etape}|>{1}|oui)
+		[(#SET{label_precedent,#ENV*{_saisies/options/etapes_precedent, <:precedent|ucfirst:>}})]
+		[(#ENV*{_saisies/options/etapes_precedent_suivant_titrer}|oui)
+			#SET{etape,#ENV*{_saisies_par_etapes}|saisies_determiner_recul_rapide{#ENV{_etape}}}
+			#SET{etape,#ENV*{_saisies_par_etapes/etape_#GET{etape}}}
+			#SET{label_precedent,#GET{label_precedent}|trim|label_ponctuer|concat{' ',#ENV*{label}}|wrap{'<span class="titre-etape">'}}
+		]
+		<button type="submit" class="submit submit_precedent" name="aller_a_etape" value="[(#ENV{_saisies}|saisies_determiner_recul_rapide{#ENV{_etape}})]"><span class="btn__label">[(#GET{label_precedent}|_T_ou_typo)]</span></button>
+	]
+	<button type="submit" class="submit[ (#ENV{_etapes}|?{submit_suivant,submit_main})]" value="1" data-label_enregistrer="[(#GET{label_enregistrer}|_T_ou_typo)]"><span class="btn__label">[(#GET{label_valider}|_T_ou_typo)]</span></button>
+</p>

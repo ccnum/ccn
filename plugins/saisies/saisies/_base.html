@@ -1,0 +1,116 @@
+[(#REM)
+
+  Parametres :
+  ** : obligatoire
+  * : fortement conseille
+
+  - ** nom : nom du parametre
+  - * label : nom joli
+  (- * erreurs : tableau des erreurs) (transmis par defaut avec SAISIE)
+  (- * valeur : valeur actuelle du parametre) (transmis par defaut avec SAISIE : valeur=#ENV{nom du parametre})
+  - defaut : valeur par defaut du parametre
+  - obligatoire : est-ce un parametre obligatoire ? (defaut: non, valeurs : null/"non"/autre=oui )
+  - info_obligatoire : si obligatoire, ajoute ce contenu apres le label (defaut : "")
+  - explication : texte d'explication suppplementaire
+  - explication_apres : une explication après la saisie
+  - attention : texte pour les cas graves !
+  - disable : est-ce que le champ est desactive ? (pas de saisie possible, selection impossible, contenus non postes)
+              (defaut: non, valeurs : null/"non"/autre=oui ) n'est peut etre pas valable pour toutes les saisies.
+  - disable_avec_post : idem disable, mais en envoyant en hidden le champ tout de meme.
+  - readonly : est-ce que le champ est non modifiable ? (pas de saisie possible, selection possible, contenus postes)
+              (defaut: non, valeurs : null/"non"/autre=oui ) n'est peut etre pas valable pour toutes les saisies.
+  - conteneur_class : Classe CSS à ajouter au conteneur
+  - li_class : pour compatibilité. Voir conteneur_class
+  - label_class : pour mettre des styles sur les labels
+
+
+  Exemples d'appels :
+	[(#SAISIE{input, couleur_foncee,
+		label=<:spa:couleur_foncee:>,
+		obligatoire=oui})]
+
+]
+[(#REM)<!-- on ne génère une saisie que si elle a un nom -->]
+[(#ENV{nom}|oui)
+
+	[(#REM)<!-- Plusieurs formatage possible pour les noms tabulaires passé à #ENV{nom}
+		1. Syntaxe SPIP avec slash
+		2. Syntaxe HTML avec crochets
+		On stock 1. dans nom et 2 dans name. -->
+	]
+	[(#SET{name,#ENV{nom}|saisie_nom2name})]
+	[(#SET{nom,#ENV{nom}|saisie_name2nom})]
+
+	[(#REM)<!-- caractère obligatoire, désactivé ou readonly de la saisie-->]
+	#SET{obligatoire,#ENV{obligatoire}|et{#ENV{obligatoire}|!={non}}|?{obligatoire,''}}
+	#SET{disable,#ENV{disable,#ENV{disable_avec_post}}|et{#ENV{disable,#ENV{disable_avec_post}}|!={non}}|?{#ENV{disable}|is_array|?{#ENV{disable,#ARRAY},disabled},''}}
+	#SET{readonly,#ENV{readonly}|et{#ENV{readonly}|!={non}}|?{readonly,''}}
+
+	[(#REM)<!-- Si la saisie est autonome, ne pas l'encapusler-->]
+	#SET{saisies_autonomes,#VAL|saisies_autonomes}
+	[(#ENV{type_saisie}|in_array{#GET{saisies_autonomes}}|oui)
+		[(#INCLURE{fond=saisies/#ENV{type_saisie},env,nom=#GET{name},obligatoire=#GET{obligatoire},disable=#GET{disable},readonly=#GET{readonly}})]
+	]
+
+	[(#ENV{type_saisie}|in_array{#GET{saisies_autonomes}}|non)
+
+		[(#REM)<!-- définir l'encapsulation de la saisie et du label (problèmatique d'accessibilité)-->]
+		#SET{conteneur_tag,div}
+		#SET{conteneur_label,label}
+		#SET{attribut_for, champ_#ENV{id,#ENV{nom}}|saisie_nom2classe}
+		[(#ENV{type_saisie}|in_array{#LISTE{oui_non,radio,checkbox,choix_grille}}|oui)
+			#SET{conteneur_tag,fieldset}
+			#SET{conteneur_label,legend}
+			#SET{attribut_for,''}
+		]
+		[(#ENV{type_saisie}|=={case}|et{#ENV{label_case}|oui}|et{#ENV{label}|oui})
+			#SET{conteneur_tag,fieldset}
+			#SET{conteneur_label,legend}
+			#SET{attribut_for,''}
+		]
+
+		[(#REM)<!-- affichage des erreur -->]
+
+		[(#REM)<!-- Plusieurs formatage possible pour les noms tabulaires
+			1. Syntaxe SPIP avec slash
+			2. Syntaxe HTML avec crochets
+
+			De même pour erreurs on peut avoir
+			1. Syntaxe SPIP avec slash (ex. form de config où le nomme avev slash)
+			2. Syntaxe PHP array(entre=> array(sous-entre=>array())) (ex. formidable)
+			3. Syntaxe HTML avec crochets (ex. form de config où l'on nomme avec crochet)
+
+			On utilise la fonction dédié pour cela
+		-->
+		]
+		#SET{erreur,#ENV{erreurs}|saisies_trouver_erreur{#GET{nom}}}
+
+		[(#REM)<!-- gestion des describedby -->]
+		#SET{describedby, ''}
+		[(#ENV*{explication}|oui) #SET{describedby, #GET{describedby}|concat{' ',explication_#ENV{nom}|saisie_nom2classe}} ]
+
+		[(#REM)<!-- et maintenant début de la saisie -->]
+		<!--!inserer_saisie_editer-->
+		<[(#GET{conteneur_tag})] class="editer editer_[(#ENV{nom}|saisie_nom2classe)][ (#GET{obligatoire})][ (#GET{erreur}|oui)erreur][ (#GET{disable}|oui)disabled][ (#ENV{conteneur_class,#ENV{li_class}})][ (#ENV{type_saisie}|saisie_type2classe)]"[ data-id="(#ENV{id_saisie})"][ data-afficher_si="(#ENV*{afficher_si}|saisies_afficher_si_js{#ENV{_saisies}})"]>
+			#ENV**{inserer_debut}
+
+			[(#REM)<!-- tout ce qui se trouve avant les champs de form au sens html -->]
+			[<[(#GET{conteneur_label})]  class="editer-label[ (#GET{conteneur_label}|=={legend}|oui)label][ (#ENV{label_class})]"[ for="(#GET{attribut_for})"]>(#ENV*{label})[(#ENV{aide}|oui)#AIDER{#ENV{aide}}][<span class='obligatoire'>(#GET{obligatoire}|oui)[(#ENV*{info_obligatoire}|is_null|?{<:info_obligatoire_02:>,#ENV*{info_obligatoire}})]</span>]</[(#GET{conteneur_label})]>]
+
+			[<span class='erreur_message' id="[erreur_(#ENV{nom}|saisie_nom2classe)]">(#GET{erreur})</span> #SET{describedby, #GET{describedby}|concat{' ',erreur_#ENV{nom}|saisie_nom2classe}} ]
+			[<p class="explication" id="[explication_(#ENV{nom}|saisie_nom2classe)]">(#ENV*{explication})</p>]
+			[<em class='attention'>(#ENV*{attention})</em>]
+
+			[(#REM)<!-- appeler la saisie proprement dite -->]
+			[(#INCLURE{fond=saisies/#ENV{type_saisie},env,nom=#GET{name}, disable=#GET{disable},readonly=#GET{readonly},describedby=#GET{describedby}|trim})]
+
+			[<p class="explication explication_apres" id="[explication_apres(#ENV{nom}|saisie_nom2classe)]">(#ENV*{explication_apres})</p>]
+
+			[(#REM)<!-- gerer le disable avec post -->]
+			[(#ENV{disable_avec_post}|et{#ENV{disable_avec_post}|!={non}}|et{#ENV{type_saisie}|in_array{#LISTE{case,checkbox}}|non}|oui)<input type='hidden' name='#GET{name}' value="#ENV{valeur,#ENV{defaut}}" />]
+
+			[(#REM)<!-- finir la saisie -->]
+			#ENV**{inserer_fin}
+		</[(#GET{conteneur_tag})]>
+	]
+]

@@ -1,0 +1,35 @@
+#SET{classe_pliable,#ENV{pliable}|et{#ENV{pliable}|!=={non}}|?{pliable}}
+#SET{classe_plie,#ENV{plie}|et{#ENV{plie}|!=={non}}|?{plie}}
+#SET{classe_onglet,#ENV{onglet}|et{#ENV{onglet}|!=={non}}|?{fieldset_onglet}}
+#SET{classe_onglet_vertical,''}
+[(#GET{classe_onglet}|oui)
+	[(#ENV{onglet_vertical}|et{#ENV{onglet_vertical}|!=={non}}|oui)
+		#SET{classe_onglet_vertical,fieldset_onglet_vertical}
+	]
+]
+
+[(#REM) S'il y a des erreurs pour au moins un des champs internes, on ne plie pas ! ]
+#SET{champs_internes, #ENV{saisies}|saisies_lister_par_nom}
+#SET{erreurs, #ENV**{erreurs}|sinon{#ARRAY}}
+#SET{erreurs_fieldset, #GET{erreurs}|array_intersect_key{#GET{champs_internes}}}
+[(#GET{erreurs_fieldset}|oui)
+	#SET{plie, ''}
+]
+#SET{erreur_ici,#ENV**{erreurs/#ENV{nom}}}
+
+<fieldset id="champ_[(#ENV{id,#ENV{nom}}|saisie_nom2classe)]" class="avec_sous_saisies fieldset[ fieldset_(#ENV{nom}|saisie_nom2classe)][ (#ENV{conteneur_class,#ENV{li_class}})][ (#ENV{type_saisie}|saisie_type2classe)][ (#GET{classe_pliable})[ (#GET{classe_plie})]][ (#GET{classe_onglet})][ (#GET{classe_onglet_vertical})]"[ data-id="(#ENV{id_saisie})"][ data-afficher_si="(#ENV*{afficher_si}|saisies_afficher_si_js{#ENV{_saisies}})"][ (#ENV*{attributs})]>
+	#ENV*{inserer_debut}
+
+	[<legend>(#ENV*{label})</legend>]
+
+	[<span class='erreur_message'>(#GET{erreur_ici})</span>]
+	[<p class='explication'>(#ENV*{explication})</p>]
+	[<em class='attention'>(#ENV*{attention})</em>]
+	[(#ENV{saisies}|is_array|oui)
+		<div class="editer-groupe">
+	#INCLURE{fond=#ENV{fond_generer,"inclure/generer_saisies"}, env, saisies=#ENV{saisies}, from_fieldset='on'}
+		</div>
+	]
+
+	#ENV*{inserer_fin}
+</fieldset>

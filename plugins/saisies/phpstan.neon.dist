@@ -1,0 +1,9 @@
+# phpstan.neon.dist
+parameters:
+	paths:
+		- .
+	excludePaths:
+		analyseAndScan:
+			- lang
+	level: 0
+

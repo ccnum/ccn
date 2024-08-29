@@ -1,0 +1,27 @@
+#SET{nom,#ENV{identifiant,#ENV{nom}}}
+<div id="configurer_#ENV{nom}" class="actions groupe-btns">
+	[(#ENV{formulaire_config}|is_array|non)
+	[(#ENV{deplacable}|oui)
+	<span class="btn move deplacer_saisie" title="<:saisies:construire_action_deplacer:>">
+		[(#CHEMIN_IMAGE{formulaire-action-deplacer-16.png}|balise_img{<:saisies:construire_action_deplacer:>})]
+	</span>
+	]
+	<button type="submit" class="submit noscroll configurer_saisie" name="configurer_saisie" value="#GET{nom}" title="<:saisies:construire_action_configurer:>">
+		[(#CHEMIN_IMAGE{formulaire-action-configurer-16.png}|balise_img{<:saisies:construire_action_configurer:>})]
+	</button>
+	<button type="submit" class="submit noscroll dupliquer_saisie" name="dupliquer_saisie" value="#GET{nom}" title="<:saisies:construire_action_dupliquer:>">
+		[(#CHEMIN_IMAGE{formulaire-action-dupliquer-16.png}|balise_img{<:saisies:construire_action_dupliquer:>})]
+	</button>
+	<button type="submit" class="submit noscroll supprimer_saisie" name="supprimer_saisie" value="#GET{nom}" title="<:saisies:construire_action_supprimer:>" onclick="javascript:return confirm('<:saisies:construire_confirmer_supprimer_champ:>');">
+		[(#CHEMIN_IMAGE{formulaire-action-supprimer-16.png}|balise_img{<:saisies:construire_action_supprimer:>})]
+	</button>
+	]
+	[(#ENV{formulaire_config}|is_array|oui)
+	<button type="submit" class="submit enregistrer_saisie" name="enregistrer_saisie" value="#GET{nom}" title="<:bouton_enregistrer:>">
+		[(#CHEMIN_IMAGE{formulaire-action-enregistrer-16.png}|balise_img{<:bouton_enregistrer:>})]
+	</button>
+	<button type="submit" class="submit annuler" name="enregistrer_saisie" value="" title="<:saisies:construire_action_annuler:>">
+		[(#CHEMIN_IMAGE{formulaire-action-annuler-16.png}|balise_img{<:saisies:construire_action_annuler:>})]
+	</button>
+	]
+</div>

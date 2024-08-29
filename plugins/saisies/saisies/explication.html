@@ -1,0 +1,56 @@
+[(#SET{selector,[explication_(#ENV{nom}|saisie_nom2classe)]})]
+<div class="editer pleine_largeur editer_explication[ explication_(#ENV{nom}|saisie_nom2classe)][ (#ENV{conteneur_class,#ENV{li_class}})][ (#ENV{type_saisie}|saisie_type2classe)]"[ data-id="(#ENV{id_saisie})"][ data-afficher_si="(#ENV*{afficher_si}|saisies_afficher_si_js{#ENV{_saisies}})"]>
+	#ENV*{inserer_debut}
+
+	[(#ENV{alerte_role}|non)
+		<div class="explication"[ (#ENV*{attributs})]>
+			[<strong class="explication_titre">(#ENV*{titre})</strong>]
+			[(#ENV{liens_meme_fenetre}|?{
+				[<div id="#GET{selector}_texte" class="explication_texte">(#ENV*{texte}|propre)</div>],
+				[<div id="#GET{selector}_texte" class="explication_texte">(#ENV*{texte}|propre|saisies_liens_ouvrants)</div>]
+			})]
+		</div>
+	]
+	[(#ENV{alerte_role}|oui)
+		[(#ENV{titre}|oui)
+			#ALERTE_OUVRIR{#ENV{titre},#ENV{alerte_type},#ENV{alerte_role},#GET{selector}}
+			#ENV{texte}
+			#ALERTE_FERMER
+		]
+		[(#ENV{titre}|non)
+			#ALERTE_MESSAGE{#ENV{texte},'',#ENV{alerte_type},#ENV{alerte_role},#GET{selector}}
+		]
+	]
+
+	#ENV*{inserer_fin}
+</div>
+
+
+
+[(#ENV{masquer}|oui)
+<script>
+	function masquer_#GET{selector}(){
+		$("[.(#GET{selector})] .explication_texte").#CONST{_SAISIES_AFFICHER_SI_JS_HIDE}.attr('aria-hidden','true');
+		$("[.(#GET{selector})] button\[aria-controls=#GET{selector}_texte\]").text('<:saisies:afficher:>').attr('aria-expanded', 'false');
+	};
+	function afficher_#GET{selector}(){
+		$("[.(#GET{selector})] .explication_texte").#CONST{_SAISIES_AFFICHER_SI_JS_SHOW}.attr('aria-hidden','false');
+		$("[.(#GET{selector})] button\[aria-controls=#GET{selector}_texte\]").text('<:saisies:masquer:>').attr('aria-expanded', 'true');
+	};
+	function basculer_#GET{selector}(){
+		if (est_masque_#GET{selector} == true) {
+			est_masque_#GET{selector} = false;
+			afficher_#GET{selector}();
+		} else {
+			est_masque_#GET{selector} = true;
+			masquer_#GET{selector}();
+		}
+	};
+
+	est_masque_#GET{selector} = true;
+	$("[.(#GET{selector})] .explication_texte").css('display','none');
+	$("[.(#GET{selector})] .explication_titre").append("<span class='boutons'><button aria-expanded='false' aria-controls='#GET{selector}_texte' type='button'><:saisies:afficher:></button></span>");
+	$("[.(#GET{selector})] .explication_titre button").click(function(){basculer_#GET{selector}();});
+</script>
+]
+

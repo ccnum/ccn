@@ -1,0 +1,9 @@
+
+[(#REM) On récupère les statuts de l'objet demandé ]
+#SET{statuts, #ARRAY}
+<BOUCLE_statuts(DATA){source table, #ENV{objet}|objet_info{statut_textes_instituer}}>
+#SET{statuts, #GET{statuts}|plus{#ARRAY{#CLE, #VALEUR|_T}}}
+</BOUCLE_statuts>
+
+#SET{type_saisie, #ENV{multiple}|?{selection_multiple, selection}}
+<INCLURE{fond=saisies/#GET{type_saisie}, env, data=#GET{statuts}}>
