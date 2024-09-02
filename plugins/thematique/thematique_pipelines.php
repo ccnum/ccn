@@ -1,11 +1,12 @@
 <?php
-if (!defined("_ECRIRE_INC_VERSION")) { return;
+
+if (!defined('_ECRIRE_INC_VERSION')) {
+	return;
 }
 
 //Pre_boucles
 //Retourne les articles et articles syndiqués en lien avec l'année scolaire
-function th_pre_boucle($boucle)
-{
+function th_pre_boucle($boucle) {
 	$affichage = _affichage;
 
 	$annee = _annee_scolaire;
@@ -16,33 +17,32 @@ function th_pre_boucle($boucle)
 	$mois2 = '08';
 	$jour2 = '01';
 
-	$date_debut = $annee . "." . $mois . "." . $jour;
-	$date_fin = $annee2 . "." . $mois2 . "." . $jour2;
+	$date_debut = $annee . '.' . $mois . '.' . $jour;
+	$date_fin = $annee2 . '.' . $mois2 . '.' . $jour2;
 
 	if (($boucle->type_requete == 'articles') || ($boucle->type_requete == 'syndic_articles')) {
-		$date = $boucle->id_table . ".date";
-		if ((!isset($boucle->modificateur['tout'])) && (!strstr($_SERVER['REQUEST_URI'], "/ecrire")) && (!$affichage == 'unepage')) {
-			$boucle->where[] = array(
-			"'AND'",
-			array("'>='", "'$date'", ("'\"$annee-$mois-$jour\"'")),
-			array("'<='", "'$date'", ("'\"$annee2-$mois2-$jour2\"'"))
-			);
+		$date = $boucle->id_table . '.date';
+		if ((!isset($boucle->modificateur['tout'])) && (!strstr($_SERVER['REQUEST_URI'], '/ecrire')) && (!$affichage == 'unepage')) {
+			$boucle->where[] = [
+				"'AND'",
+				["'>='", "'$date'", ("'\"$annee-$mois-$jour\"'")],
+				["'<='", "'$date'", ("'\"$annee2-$mois2-$jour2\"'")]
+			];
 		}
 	}
 	return $boucle;
 }
 
-function th_jqueryui_plugins($scripts)
-{
-	$scripts[] = "jquery.ui.core";
-	$scripts[] = "jquery.ui.widget";
-	$scripts[] = "jquery.ui.mouse";
-	$scripts[] = "jquery.ui.position";
-	$scripts[] = "jquery.ui.draggable";
-	$scripts[] = "jquery.ui.droppable";
-	$scripts[] = "jquery.ui.tooltip"; /* a TROUVER */
-	$scripts[] = "jquery.ui.effect";
-	$scripts[] = "jquery.ui.effect-bounce";
+function th_jqueryui_plugins($scripts) {
+	$scripts[] = 'jquery.ui.core';
+	$scripts[] = 'jquery.ui.widget';
+	$scripts[] = 'jquery.ui.mouse';
+	$scripts[] = 'jquery.ui.position';
+	$scripts[] = 'jquery.ui.draggable';
+	$scripts[] = 'jquery.ui.droppable';
+	$scripts[] = 'jquery.ui.tooltip'; /* a TROUVER */
+	$scripts[] = 'jquery.ui.effect';
+	$scripts[] = 'jquery.ui.effect-bounce';
 
 	return $scripts;
 }
