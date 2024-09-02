@@ -3,7 +3,7 @@ parameters:
 		-
 			message: "#^Function _T not found\\.$#"
 			count: 4
-			path: base/th_cextras.php
+			path: base/thematique_cextras.php
 
 		-
 			message: "#^Function _request not found\\.$#"
@@ -43,94 +43,94 @@ parameters:
 		-
 			message: "#^Function appliquer_modifs_config not found\\.$#"
 			count: 1
-			path: th_administrations.php
+			path: thematique_administrations.php
 
 		-
 			message: "#^Function cextras_api_upgrade not found\\.$#"
 			count: 2
-			path: th_administrations.php
+			path: thematique_administrations.php
 
 		-
 			message: "#^Function ecrire_config not found\\.$#"
 			count: 3
-			path: th_administrations.php
+			path: thematique_administrations.php
 
 		-
 			message: "#^Function ecrire_meta not found\\.$#"
 			count: 11
-			path: th_administrations.php
+			path: thematique_administrations.php
 
 		-
 			message: "#^Function effacer_meta not found\\.$#"
 			count: 1
-			path: th_administrations.php
+			path: thematique_administrations.php
 
 		-
 			message: "#^Function include_spip not found\\.$#"
 			count: 6
-			path: th_administrations.php
+			path: thematique_administrations.php
 
 		-
 			message: "#^Function lire_config not found\\.$#"
 			count: 5
-			path: th_administrations.php
+			path: thematique_administrations.php
 
 		-
 			message: "#^Function maj_plugin not found\\.$#"
 			count: 1
-			path: th_administrations.php
+			path: thematique_administrations.php
 
 		-
 			message: "#^Function objet_associer not found\\.$#"
 			count: 1
-			path: th_administrations.php
+			path: thematique_administrations.php
 
 		-
 			message: "#^Function rubrique_inserer not found\\.$#"
 			count: 1
-			path: th_administrations.php
+			path: thematique_administrations.php
 
 		-
 			message: "#^Function rubrique_modifier not found\\.$#"
 			count: 1
-			path: th_administrations.php
+			path: thematique_administrations.php
 
 		-
 			message: "#^Function spip_log not found\\.$#"
 			count: 1
-			path: th_administrations.php
+			path: thematique_administrations.php
 
 		-
 			message: "#^Function sql_countsel not found\\.$#"
 			count: 1
-			path: th_administrations.php
+			path: thematique_administrations.php
 
 		-
 			message: "#^Function sql_getfetsel not found\\.$#"
 			count: 19
-			path: th_administrations.php
+			path: thematique_administrations.php
 
 		-
 			message: "#^Function sql_insertq not found\\.$#"
 			count: 18
-			path: th_administrations.php
+			path: thematique_administrations.php
 
 		-
 			message: "#^Undefined variable\\: \\$url_site_spip$#"
 			count: 1
-			path: th_administrations.php
+			path: thematique_administrations.php
 
 		-
 			message: "#^Function autoriser not found\\.$#"
 			count: 2
-			path: th_autoriser.php
+			path: thematique_autoriser.php
 
 		-
 			message: "#^Function include_spip not found\\.$#"
 			count: 1
-			path: th_options.php
+			path: thematique_options.php
 
 		-
 			message: "#^Function sql_getfetsel not found\\.$#"
 			count: 1
-			path: th_options.php
+			path: thematique_options.php
