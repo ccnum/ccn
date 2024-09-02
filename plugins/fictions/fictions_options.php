@@ -87,27 +87,3 @@ if ((isset($_GET['id_rubrique']))) {
 }
 
 define('_annee_scolaire', $annee_scolaire);
-
-//SQUELETTES
-
-// 'nom' => 'chemin du squelette'
-$squelettes = [
-	'jeu' => 'squelettes/fictions/jeu:' . $dir . 'squelettes/air:squelettes/fictions',
-	'air' => 'squelettes/fictions/air:' . $dir . 'squelettes'
-];
-
-// Si l'on demande un squelette particulier qui existe,  on pose un cookie, sinon suppression du cookie
-if (isset($_GET['scenario'])) {
-	if (isset($squelettes[$_GET['scenario']])) {
-		setcookie('spip_skel', $_COOKIE['spip_skel'] = $_GET['scenario'], time() + 10 * 24 * 3600, '/');
-	} else {
-		setcookie('spip_skel', $_COOKIE['spip_skel'] = '', -24 * 3600, '/');
-	}
-}
-
-// Si un squelette particulier est sauve, on le definit comme dossier squelettes
-if (isset($_COOKIE['spip_skel']) and isset($squelettes[$_COOKIE['spip_skel']])) {
-	$GLOBALS['dossier_squelettes'] = $squelettes[$_COOKIE['spip_skel']];
-} else {
-	$GLOBALS['dossier_squelettes'] = $squelettes['air'];
-}
