@@ -10,7 +10,7 @@ plugins-dist
 sites
 squelettes-dist
 tmp
-vendor
+/vendor
 composer.*
 index.php
 rector.php
