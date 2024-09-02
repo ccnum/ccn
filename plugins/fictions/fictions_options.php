@@ -1,6 +1,6 @@
 <?php
 
-if (!defined("_ECRIRE_INC_VERSION")) {
+if (!defined('_ECRIRE_INC_VERSION')) {
 	return;
 }
 
@@ -19,15 +19,17 @@ function traiter_article_jeu0($flux) {
 		$id_article = $flux['data']['id_article'];
 		$id_rubrique = $flux['data']['id_rubrique'];
 		//Publication
-		sql_update('spip_articles', array("`statut`" => "'publie'"), 'id_article=' . intval($id_article));
+		sql_update('spip_articles', ['statut' => "publie'"], 'id_article=' . intval($id_article));
 
 		//Si 5ème chapitre
-		if ($res = sql_select('titre', 'spip_articles', 'id_rubrique=' . $id_rubrique)) $n = sql_count($res);
+		if ($res = sql_select('titre', 'spip_articles', 'id_rubrique=' . $id_rubrique)) {
+			$n = sql_count($res);
+		}
 		if ($n >= 5) {
-			$id_parent = sql_getfetsel("id_parent", "spip_rubriques", "id_rubrique=" . intval($id_rubrique));
+			$id_parent = sql_getfetsel('id_parent', 'spip_rubriques', 'id_rubrique=' . intval($id_rubrique));
 			$mail = $flux['data']['soustitre'];
 			creer_histoire($id_parent);
-			$message = "http://air.laclasse.com/spip.php?page=lecture&id_rubrique=" . $id_rubrique;
+			$message = 'http://air.laclasse.com/spip.php?page=lecture&id_rubrique=' . $id_rubrique;
 			mail('pvincent@erasme.org', 'air.laclasse.com', $message);
 		}
 	}
@@ -36,12 +38,14 @@ function traiter_article_jeu0($flux) {
 
 function annee_rub1($idr) {
 
-	$date = sql_getfetsel("id_rubrique", "spip_rubriques", "id_rubrique=" . intval($idr));
+	$date = sql_getfetsel('id_rubrique', 'spip_rubriques', 'id_rubrique=' . intval($idr));
 
 	if ($date != '') {
 		$annee_scolaire = intval(substr($date, 0, 4));
 		$mois_scolaire = intval(substr($date, 5, 2));
-		if ($mois_scolaire < 9) $annee_scolaire--;
+		if ($mois_scolaire < 9) {
+			$annee_scolaire--;
+		}
 	}
 
 	return $annee_scolaire;
@@ -69,7 +73,7 @@ if (
 	&& ($_GET['annee_scolaire'] != '')
 ) {
 	$annee_scolaire = $_GET['annee_scolaire'];
-	setcookie("_cookie_annee_scolaire", $annee_scolaire);
+	setcookie('_cookie_annee_scolaire', $annee_scolaire);
 }
 
 //Hack temporaire d'indexation d'année
@@ -83,7 +87,9 @@ if ((isset($_GET['id_rubrique']))) {
 		$mois_scolaire = intval(substr($date,5,2));
 		if ($mois_scolaire < 9) $annee_scolaire--;
 	}*/
-	if ($annee_scolaire == "") $annee_scolaire = 2020;
+	if ($annee_scolaire == '') {
+		$annee_scolaire = 2020;
+	}
 }
 
 define('_annee_scolaire', $annee_scolaire);
