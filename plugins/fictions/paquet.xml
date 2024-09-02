@@ -12,6 +12,16 @@
 	<auteur>Patrick Vincent</auteur>
 	<licence>GNU/GPL</licence>
 
-	<chemin path="./squelettes/air" />
+	<necessite nom="notifications" />
+	<necessite nom="crayons" />
+	<necessite nom="cicas" />
+	<necessite nom="socialtags" />
+	<necessite nom="jqueryui" compatibilite="[1.8.21;[" />
+	<necessite nom="cextras" compatibilite="[3.0.5;[" />
+	<necessite nom="notation" />
+	<necessite nom="spip_bonux" />
+	<necessite nom="vider_rubrique" />
+
+	<chemin path="squelettes/air" />
 	<chemin path="" />
 </paquet>
