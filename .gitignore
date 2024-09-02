@@ -1,9 +1,10 @@
 .ddev
 .vscode
-config/ecran_securite.php
+config
 ecrire
 IMG
 local
+mutualisation
 plugins/auto
 plugins-dist
 /prive/
