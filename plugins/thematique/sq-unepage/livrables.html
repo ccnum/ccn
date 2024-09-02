@@ -2,7 +2,7 @@
 #SET{hasLivrable, 'false'}
 <div id="livrables" class="zone-livrables">
 	<div class="wrapper" onclick="callLivrable(null, 'close')">
-		<BOUCLE_rubAnnee(RUBRIQUES) {racine} {titre LIKE %(#EVAL{_annee_scolaire})%} >
+		<BOUCLE_rubAnnee(RUBRIQUES) {racine} {titre LIKE %(#CONST{_annee_scolaire})%} >
 				<BOUCLE_filtreTravailEnCours(RUBRIQUES){id_parent}{titre_mot=travail_en_cours}{par date}>
 					<BOUCLE_colleges(RUBRIQUES){id_parent}>
 						#SET{auteur, #TITRE}

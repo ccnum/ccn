@@ -20,7 +20,7 @@
 			[(#TYPE_OBJET|=={blogs}|oui)#SET{objet,blog}]
 			[(#TYPE_OBJET|=={evenements}|oui)#SET{objet,evenements}]
 			[(#GET{objet}|oui)
-				//window.parent.#GET{objet}_load("spip.php?page=xml&mode=#GET{objet}&annee_scolaire=#EVAL{_annee_scolaire}&var_mode=recalcul");
+				//window.parent.#GET{objet}_load("spip.php?page=xml&mode=#GET{objet}&annee_scolaire=#CONST{_annee_scolaire}&var_mode=recalcul");
 			]
 			[(#TYPE_OBJET|=={travail_en_cours}|oui)
 				//window.parent.callReponse([(#ID_ARTICLE)]);

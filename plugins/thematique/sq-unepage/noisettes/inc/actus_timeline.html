@@ -1,17 +1,17 @@
 
-    
+
 #SET{contenu,#ARRAY}
 
 [(#INCLURE{fond=noisettes/fonction/type_role})]
 <BOUCLE_blogPrive(RUBRIQUES){racine} {si #SESSION{role}|=={prof}|ou {#SESSION{role}|=={intervenant}}|ou {#SESSION{role}|=={admin}}}{titre_mot= evenements}>
-  <BOUCLE_articleBlogPrive(ARTICLES){id_rubrique} {date>=#EVAL{_date_debut}}{date<=#EVAL{_date_fin}}>
+  <BOUCLE_articleBlogPrive(ARTICLES){id_rubrique} {date>=#CONST{_date_debut}}{date<=#CONST{_date_fin}}>
       <BOUCLE_commentaires1(FORUMS){id_article}{!par date}{0,5} {doublons}>
           #SET_PUSH{contenu,#ARRAY{#DATE_MODIF, #ARRAY{forum, #ID_FORUM}}}
         </BOUCLE_commentaires1>
   </BOUCLE_articleBlogPrive>
 </BOUCLE_blogPrive>
 
-<BOUCLE_rubAnnee(RUBRIQUES) {racine} {titre LIKE %(#EVAL{_annee_scolaire})%}>
+<BOUCLE_rubAnnee(RUBRIQUES) {racine} {titre LIKE %(#CONST{_annee_scolaire})%}>
         <BOUCLE_filtreRessources(RUBRIQUES){racine}{titre_mot= ressources}>
             <BOUCLE_ressources(RUBRIQUES){id_parent}{!par date}>
               <BOUCLE_ressourcesArticles(ARTICLES){id_rubrique}{!par date}{0,1}>
@@ -54,7 +54,7 @@
   <BOUCLE_affiche_livrable(POUR){tableau #VALEUR}{cle= livrable}>
       [(#REM) Nouveaux documents sur livrable]
       [(#MODELE{actu_livrables}{id_article=#VALEUR})]
-  </BOUCLE_affiche_livrable>    
+  </BOUCLE_affiche_livrable>
 
   <BOUCLE_affiche_doc(POUR){tableau #VALEUR}{cle= doc}>
     [(#REM) Nouveaux documents ]
@@ -70,12 +70,12 @@
     [(#MODELE{actu_travail_en_cours}{id_objet=#VALEUR})]
   </BOUCLE_affiche_consignes>
   <BOUCLE_affiche_ressources(POUR){tableau #VALEUR}{cle= ressources}>
-   
+
   </BOUCLE_affiche_ressources>
   </BOUCLE_triDate>
 </BOUCLE_dataContenu>
 </B_dataContenu>
-<div class="actualites-actu couleur_travail_en_cours1">		
+<div class="actualites-actu couleur_travail_en_cours1">
   <p>Il n'a aucune actualité pour le moment</p>
 </div>
 <//B_dataContenu>

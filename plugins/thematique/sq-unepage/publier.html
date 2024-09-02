@@ -5,15 +5,15 @@
 	[(#SET{type_objet,[(#INCLURE{fond=noisettes/fonction/type_objet,id_rubrique})]})]
 
 [(#REM)Mode d'ouverture]
-	#SET{mode,#EVAL{_mode_popup}}
-	#SET{ref,#EVAL{$_SERVER['HTTP_REFERER']}}
+	#SET{mode,#CONST{_MODE_POPUP}}
+	#SET{ref,#CONST{$_SERVER['HTTP_REFERER']}}
 	[(#ENV{mode}|oui)
 		#SET{mode,#MODE}
 	]
 	[(#ENV{mode}|non)
 		[(#GET{ref}|match{#URL_SITE_SPIP/ecrire}|oui) #SET{mode,complet} ]
 		[(#GET{ref}|match{#URL_SITE_SPIP}|non) #SET{mode,complet} ]
-		[(#GET{ref}|non) #SET{mode,complet} ]		
+		[(#GET{ref}|non) #SET{mode,complet} ]
 	]
 
 [(#REM)Page]
