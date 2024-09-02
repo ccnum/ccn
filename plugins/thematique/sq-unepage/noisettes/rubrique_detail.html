@@ -6,13 +6,13 @@
 <head> </head>
 
 <div class="popup [popup_(#GET{type_objet})]">
-  
+
 <INCLURE{fond=noisettes/call_sidebar}{type_objet=classes}>
-  
-		
+
+
 		#SET{type_objet,#TYPE_OBJET}
 		[(#TYPE_OBJET|=={travail_en_cours}|et{#MODE|=={ajax}|oui})#SET{type_objet,ressources}]
-		
+
 			<BOUCLE_nb_doc(DOCUMENTS) {id_rubrique} {mode=document}>
 			</BOUCLE_nb_doc>
 				#SET{nb_doc,#TOTAL_BOUCLE}
@@ -21,8 +21,8 @@
 			<//B_nb_doc>
 
  [(#REM) ---------------- Titre ---------------- ]
-			
-		<div class="sidebar_bubble">  		
+
+		<div class="sidebar_bubble">
 			<div class="fiche_titre couleur_texte_[(#TYPE_OBJET)] couleur_[(#TYPE_OBJET)][(#MODELE{nb2col}{id_article})]">
 			    <div class="photo #EDIT{logo}">[(#MODELE{logo_carre}{id_rubrique})]</div>
 			    <div class="texte">
@@ -32,9 +32,9 @@
 			</div>
 		</div>
 
-		
+
     [(#REM) ---------------- Texte (descriptif) ---------------- ]
-    
+
     [<div class="sidebar_bubble">
       <div class="bloc_texte #EDIT{texte}">
     		(#TEXTE)
@@ -47,11 +47,11 @@
       </div>
       </div>
     ]
-		
+
     [(#REM) ---------------- Réponses ---------------- ]
 
 		<div class="sidebar_bubble">
-  		
+
 			<INCLURE{fond=noisettes/js/accordeon}{nom=bloc_option_reponses_consignes_classe-#ID_ARTICLE}>
 			<div class="bloc_option_doc nettoyeur">
 				<a id="bloc_option_reponses_consignes_classe-#ID_ARTICLE" class="hac liens_voir bloc_option_doc_reply" title="Réponses de la classe">
@@ -59,35 +59,35 @@
 				</a>
 				<div style="clear:both" class='bloc_option_reponses_consignes_classe'>
 					<div class="nettoyeur"></div>
-					
+
     			<BOUCLE_rubrique(RUBRIQUES){titre_mot=consignes}{par id_rubrique}{inverse}{tout}>
-    			
-          	<BOUCLE_consigne(ARTICLES){branche}{par date}{date>=#EVAL{_date_debut}}{date<=#EVAL{_date_fin}}>
+
+          	<BOUCLE_consigne(ARTICLES){branche}{par date}{date>=#CONST{_date_debut}}{date<=#CONST{_date_fin}}>
           	  #SET{id_to_check,#_principale:ID_RUBRIQUE}
-          	
-              
+
+
 
   						<script type="text/javascript">
-      						
+
     						$().ready(function(){
       						$('#ajax_go_to_consigne_#ID_ARTICLE').on('click',function() {
-      							callConsigne('#ID_ARTICLE');			
+      							callConsigne('#ID_ARTICLE');
       						});
-    						});						
-  						
-  						</script>            	  
+    						});
+
+  						</script>
             			<BOUCLE_reponse(ARTICLES){id_consigne=#ID_ARTICLE}{id_rubrique=#_principale:ID_RUBRIQUE}>
-            			
+
       						<script type="text/javascript">
-          						
-        						$().ready(function(){      						
+
+        						$().ready(function(){
           						$('#ajax_go_to_reponse_#ID_ARTICLE').on('click',function() {
-          							callReponse('#ID_ARTICLE');			
+          							callReponse('#ID_ARTICLE');
           						});
-        						});						
-      						
+        						});
+
       						</script>
-  						
+
                     <div class="classe_consigne couleur_[(#TYPE_OBJET)][(#GET{id_to_check}|substr{[(#GET{id_to_check}|strlen|moins{1})],1})]">
                     	<div id="ajax_go_to_reponse_#ID_ARTICLE" class="classe_consigne_reponse">
                     	  <div class="classe_consigne_reponse_photo">[(#MODELE{logo_carre}{id_rubrique})]</div>
@@ -98,9 +98,9 @@
                     		<div class="classe_consigne_reponse_consigne_titre">[(#_consigne:TITRE)]</div>
                     	</div>
                     </div>
-            			</BOUCLE_reponse>		
-            				
-            			</B_reponse>            			  
+            			</BOUCLE_reponse>
+
+            			</B_reponse>
                     <div id="ajax_go_to_consigne_#ID_ARTICLE" class="classe_consigne consigne_no_reponse">
               			  <div class="classe_consigne_reponse">
                 			  <div class="classe_consigne_reponse_photo"></div>
@@ -112,8 +112,8 @@
                 			</div>
                     </div>
             			<//B_reponse>
-          			
-          		
+
+
           	</BOUCLE_consigne>
           </BOUCLE_rubrique>
 
@@ -122,7 +122,7 @@
 		  </div>
 
 		</div>
-		
+
 
  [(#REM) ---------------- Inclusion/iframe des urls liées aux classes ---------------- ]
 
@@ -149,14 +149,14 @@
 
 
 
-		[(#REM) ---------------- bloc rubrique ---------------- ] 
+		[(#REM) ---------------- bloc rubrique ---------------- ]
 		<BOUCLE_police(MOTS){id_rubrique}{type=police}>#SET{police,#TITRE}</BOUCLE_police>
-		
+
 		</div>
 		</div>
 	</div>
 
-  
+
 </div>
 
 </BOUCLE_principale>

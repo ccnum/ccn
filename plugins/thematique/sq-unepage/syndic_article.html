@@ -10,8 +10,8 @@
 	[(#GET{type_objet}|match{blogs|evenements}|oui)#SET{pre,article_}]
 
 [(#REM)Mode]
-	#SET{mode,#EVAL{_mode_popup}}
-	#SET{ref,#EVAL{$_SERVER['HTTP_REFERER']}}
+	#SET{mode,#CONST{_MODE_POPUP}}
+	#SET{ref,#CONST{$_SERVER['HTTP_REFERER']}}
 
 	[(#ENV{mode}|oui)
 		#SET{mode,#MODE}
@@ -19,9 +19,9 @@
 	[(#ENV{mode}|non)
 		[(#GET{ref}|match{#URL_SITE_SPIP/ecrire}|oui) #SET{mode,complet} ]
 		[(#GET{ref}|match{#URL_SITE_SPIP}|non) #SET{mode,complet} ]
-		[(#GET{ref}|non) #SET{mode,complet} ]		
+		[(#GET{ref}|non) #SET{mode,complet} ]
 	]
-	
+
 [(#GET{mode}|=={detail}|oui)<INCLURE{fond=layout}{id_rubrique}{env}{page=syndic_article}{type_objet=#GET{type_objet}}{id_article=#ID_ARTICLE} />]
 [(#GET{mode}|=={complet}|oui)<INCLURE{fond=layout}{id_rubrique}{env}{page=sommaire}{type_objet=#GET{type_objet}}{id_objet=#ID_SYNDIC_ARTICLE} />]
 [(#GET{mode}|match{ajax}|oui)

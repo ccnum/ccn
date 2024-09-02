@@ -3,16 +3,16 @@
 <datas>
 <BOUCLE_rubrique(RUBRIQUES){titre_mot=consignes}{par id_rubrique}{inverse}{tout}>
 	<!-- #ID_RUBRIQUE-->
-	<!-- date début : #EVAL{_date_debut} -->
-	<!-- date fin : #EVAL{_date_fin} -->
+	<!-- date début : #CONST{_date_debut} -->
+	<!-- date fin : #CONST{_date_fin} -->
 	<!-- date spip : #DATE -->
-	<BOUCLE_consigne(ARTICLES){branche}{par date}{date>=#EVAL{_date_debut}}{date<=#EVAL{_date_fin}}>
+	<BOUCLE_consigne(ARTICLES){branche}{par date}{date>=#CONST{_date_debut}}{date<=#CONST{_date_fin}}>
 		<consigne>
 			<id>#ID_ARTICLE</id>
 			<intervenant_id>#ID_RUBRIQUE</intervenant_id>
 			<titre>[(#TITRE|couper{40}|wordwrap{23,<br />}|entites_html)]</titre>
 			<date>[(#DATE|affdate{'d'})]/[(#DATE|affdate{'m'})]/[(#DATE|affdate{'Y'})]</date>
-			<annee_scolaire>#EVAL{_annee_scolaire}</annee_scolaire>
+			<annee_scolaire>#CONST{_annee_scolaire}</annee_scolaire>
 			<image>[(#MODELE{logo_carre}{id_rubrique}|extraire_attribut{src})]</image>
 			<y>[(#Y|sinon{0})]</y>
 			<BOUCLE_reponse(ARTICLES){id_consigne=#ID_ARTICLE}>
@@ -25,7 +25,7 @@
 					<vignette>[(#MODELE{logo_carre}{id_rubrique}{taille=35}|extraire_attribut{src})]</vignette>
 					<y>[(#Y|sinon{0})]</y>
 				</reponse>
-			</BOUCLE_reponse>			
+			</BOUCLE_reponse>
 		</consigne>
 	</BOUCLE_consigne>
 </BOUCLE_rubrique>

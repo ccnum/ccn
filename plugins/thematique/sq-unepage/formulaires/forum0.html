@@ -133,34 +133,34 @@
 	Sauver les donnees du formulaire dans un cookie, si on quitte la page,
 	et les remettre quand on revient (dans les limites de 4ko etc)
 ]
-<script type="text/javascript">/*<!#EVAL{chr(91)}CDATA#EVAL{chr(91)}*/
+<script type="text/javascript">/*<!#CONST{chr(91)}CDATA#CONST{chr(91)}*/
 if (window.jQuery)(function($){
 	var a = $.cookie('spip_contenu_formulaire_#ENV{_sign}');
 	var saveauto = true;
 	if (a) {
-		$('#formulaire_forum textarea#EVAL{chr(91)}name=texte#EVAL{chr(93)}')
+		$('#formulaire_forum textarea#CONST{chr(91)}name=texte#CONST{chr(93)}')
 		.val(a);
 		$.cookie('spip_contenu_formulaire_#ENV{_sign}', null);
 	}
 	/* virer le cookie a la validation finale du message */
-	$('input#EVAL{chr(91)}name=confirmer_previsu_forum#EVAL{chr(93)}')
+	$('input#CONST{chr(91)}name=confirmer_previsu_forum#CONST{chr(93)}')
 	.live('click', function(e) {
 		saveauto = false;
 	});
 	$(window)
 	.bind('unload', function(){
 		if (saveauto){
-			var s = $('#formulaire_forum textarea#EVAL{chr(91)}name=texte#EVAL{chr(93)}').val();
+			var s = $('#formulaire_forum textarea#CONST{chr(91)}name=texte#CONST{chr(93)}').val();
 			if (s)
 				$.cookie('spip_contenu_formulaire_#ENV{_sign}', s);
 			else
 				$.cookie('spip_contenu_formulaire_#ENV{_sign}', null);
 		}else{
 			/* on vide le champs texte après le submit car refuser_traiter_formulaire_ajax(); va reposter le formulaire, et donc reposer un cookie car saveauto sera false la seconde fois. */
-			$('#formulaire_forum textarea#EVAL{chr(91)}name=texte#EVAL{chr(93)}').val('');
+			$('#formulaire_forum textarea#CONST{chr(91)}name=texte#CONST{chr(93)}').val('');
 		}
 	});
 }(jQuery));
-/*#EVAL{chr(93)}[(#EVAL{chr(93)})]>*/</script>
+/*#CONST{chr(93)}[(#CONST{chr(93)})]>*/</script>
 ]
 </div>

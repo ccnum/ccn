@@ -34,12 +34,12 @@
 
         $('div[name=annee_scolaire] input[type=radio]').change( function() {
             var valeur = $('div[name=annee_scolaire] input[type=radio]:checked').val()
-            reloadAndSetCookie('','[(#EVAL{_cookie_annee_scolaire})]',valeur)
+            reloadAndSetCookie('','[(#CONST{_cookie_annee_scolaire})]',valeur)
         });
 
         $('div[name=rubrique_admin] input[type=radio]').change( function() {
             var valeur = $('div[name=rubrique_admin] input[type=radio]:checked').val()
-            reloadAndSetCookie('','[(#EVAL{_cookie_rubrique})]',valeur)
+            reloadAndSetCookie('','[(#CONST{_cookie_rubrique})]',valeur)
         });
 
     });

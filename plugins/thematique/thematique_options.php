@@ -14,14 +14,13 @@ define('_cookie_annee_scolaire', 'laclasse_annee_scolaire');
 
 //Ces variables ne sont plus utilisées à vérifier
 //Tailles
-define('_taille_img', 50);
 define('_hauteur', 800);
 define('_largeur', 1500);
 //Type d'affichage des popups : detail (iframe), ajax (modalbox sans iframe)
-define('_mode_popup', 'complet');
+define('_MODE_POPUP', 'complet');
 //Fin vérification
 
-$annee_scolaire = 2023;
+$annee_scolaire = 2024;
 define('_annee_cours', $annee_scolaire);
 
 //Qualifie les médias pour les tris
@@ -55,29 +54,31 @@ define('_affichage', 'unepage');
 /*    REQUETES DANS LA FENETRE ACTIVE ANNEE_SCOLAIRE  : SURCHARGE DU PIPELINE PRE_BOUCLE */
 /************************************************************************************/
 //Calcul de l'année scolaire en lien avec le dernier article en cours
-include_spip('base/abstract_sql');
-$date = sql_getfetsel("date", "spip_articles", "date != '0000-00-00 00:00:00'", "", "date DESC");
-if ($date != '') {
-    $annee_scolaire = intval(substr($date, 0, 4));
-    $mois_scolaire = intval(substr($date, 5, 2));
-    if ($mois_scolaire < 9) {
-        $annee_scolaire--;
-    }
+if (
+	(isset($_COOKIE['_cookie_annee_scolaire']))
+	&& ($_COOKIE['_cookie_annee_scolaire'] != 0)
+	&& ($_COOKIE['_cookie_annee_scolaire'] != '')
+	&& ($_COOKIE['_cookie_annee_scolaire'] > 2011)
+) {
+	$annee_scolaire = $_COOKIE['_cookie_annee_scolaire'];
+} else {
+	if (date('m') >= '08') {
+		$annee_scolaire = date('Y');
+	} else {
+		$annee_scolaire = date('Y') - 1;
+	}
 }
 
-//Obligation de transmettre les paramètre par l'url pour tous les calculs xml
-if ((isset($_GET['id_article'])) && (!$_GET['mode'] == 'detail')) {
-    $annee_scolaire = $annee_scolaire; /*calculer l'annee de l'article pour changement d'année en cours*/
-} else if ((isset($_GET['annee_scolaire'])) && ($_GET['annee_scolaire'] != 0) && ($_GET['annee_scolaire'] != '')) {
-    $annee_scolaire = $_GET['annee_scolaire'];
-} else if ((isset($_COOKIE[_cookie_annee_scolaire])) && ($_COOKIE[_cookie_annee_scolaire] != 0) && ($_COOKIE[_cookie_annee_scolaire] != '')) {
-    $annee_scolaire = $_COOKIE[_cookie_annee_scolaire];
+if (
+	(isset($_GET['annee_scolaire']))
+	&& ($_GET['annee_scolaire'] != 0)
+	&& ($_GET['annee_scolaire'] != '')
+) {
+	$annee_scolaire = $_GET['annee_scolaire'];
+	setcookie("_cookie_annee_scolaire", $annee_scolaire);
 }
-define('_annee_scolaire', $annee_scolaire);
-define('_date_debut', $annee_scolaire . '-08-01');
-define('_date_fin', ($annee_scolaire + 1) . '-08-01');
-echo $annee_scolaire;
-//spip_log($annee_scolaire);
+
+define('_annee_scolaire', '2024');
 
 /************************************************************************************/
 /*    OPTIONS SPIP                                                                */
