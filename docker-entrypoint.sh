@@ -106,6 +106,7 @@ if [[ ! -e config/connect.php && ${SPIP_AUTO_INSTALL} = 1 ]]; then
 	spip plugins:activer notifications -y
 	spip plugins:activer socialtags -y
 	spip plugins:activer spip_bonux -y
+	spip plugins:activer vider_rubrique -y
 	spip plugins:activer cicas -y
 	spip plugins:activer ${SPIP_VERSION_SITE} -y
 	spip plugins:maj:bdd
