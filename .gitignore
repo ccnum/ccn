@@ -1,6 +1,7 @@
 .ddev
 .vscode
-config/
+config/ecran_securite.php
+config/mes_options.php
 ecrire
 IMG
 local
