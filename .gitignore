@@ -1,6 +1,6 @@
 .ddev
 .vscode
-config
+config/
 ecrire
 IMG
 local
