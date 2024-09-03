@@ -199,7 +199,7 @@ et/ou
 							</BOUCLE_FiltreAnnee>
 
 
-					<BOUCLE_r3(RUBRIQUES){titre_mot==travail_en_cours}{tout}{si #GET{hasYearRub}|== {false}}{par date}{inverse}>
+					<BOUCLE_r3(RUBRIQUES){titre_mot==travail_en_cours}{tout}{si #GET{hasYearRub}|== {false}}{!par date}>
 						<BOUCLE_c3(RUBRIQUES){id_parent}{tout}>
 							<BOUCLE_a3(ARTICLES){id_rubrique}{date>=#CONST{_date_debut}}{date<=#CONST{_date_fin}}>
 							</BOUCLE_a3>
@@ -247,7 +247,7 @@ et/ou
 					<!-- [(#REM) GESTION DU LIEN DE L'ESPACE DOC] -->
 					<!-- [(#REM) ON RÉCUPÈRE LA DERNIÈRE RUBRIQUE DES ANNÉES, ON EN TIRE LE DESCRIPTIF ET VOILÀ !] -->
 					<!-- tutu -->
-					<BOUCLE_espace_doc(RUBRIQUES){tout}{racine}{titre==^[20]}{par titre}{inverse}{0,1}>
+					<BOUCLE_espace_doc(RUBRIQUES){tout}{racine}{titre==^[20]}{!par titre}{0,1}>
 					<!-- #ID_RUBRIQUE -->
 					<li class="logo">
 						<a class="logo_menu-doc menu_logo_type_sidebarView" href="[(#DESCRIPTIF|textebrut)]" title="<:th:cartable_ligne:>" target="blank"></a>
@@ -276,7 +276,7 @@ et/ou
 
   			<ul class="liste-select filter clearfix option-set" data-filter-group="classe">
 			[(#MODELE{item_select}{valeur=tout}{class=selected}{title=Toutes les classes})]
-			<BOUCLE_select_r3(RUBRIQUES){titre_mot==travail_en_cours}{tout}{par date}{inverse}>
+			<BOUCLE_select_r3(RUBRIQUES){titre_mot==travail_en_cours}{tout}{!par date}>
 			  <BOUCLE_select_c3(RUBRIQUES){id_parent}{tout}>
 				<BOUCLE_select_a3(ARTICLES){id_rubrique}{date>=#CONST{_date_debut}}{date<=#CONST{_date_fin}}>
 				</BOUCLE_select_a3>
