@@ -2,7 +2,7 @@
 
 RUBRIQUE.HTML > RUBRIQUE-BOUTON.HTML
 (affichage des boutons d'accès rapide dans la page rubrique.html)
- 
+
  -->
 
 <!-- ID et nom de l'auteur connecté -->
@@ -21,31 +21,31 @@ RUBRIQUE.HTML > RUBRIQUE-BOUTON.HTML
 #SET{var_oui, oui}
 <BOUCLE_annee(RUBRIQUES){titre==#ANNEE_SCOLAIRE}{tout}{0,1}>
 <BOUCLE_rubriques_toutes(RUBRIQUES){id_parent=#ID_RUBRIQUE}{id_rubrique != 12}>
-<BOUCLE_zone_ecrivain_article(ARTICLES){id_rubrique}{par date}{inverse}{0,1}>
+<BOUCLE_zone_ecrivain_article(ARTICLES){id_rubrique}{!par date}{0,1}>
 <BOUCLE_zone_ecrivain_auteur(AUTEURS){id_article}{0,1}>
-    
+
     #SET{var_auteur, #NOM}
-	
+
     [(#SESSION{webmestre}|=={#GET{var_oui}}|?{' ',''})
 
         [(#GET{var_nom_auteur}|=={#GET{var_auteur}}|?{' ',''})
         #SET{id_rubrique_prev, #SOUSTRACTION{#ID_RUBRIQUE, 1}}
         #SET{var_id_zone_2, #ID_RUBRIQUE}
         ]
-    
+
     ]
-    
+
 </BOUCLE_zone_ecrivain_auteur>
 </BOUCLE_zone_ecrivain_article>
 </BOUCLE_rubriques_toutes>
 </BOUCLE_annee>
 <!-- Si l'id de la zone de travail est egale a zero -->
-[(#GET{id_rubrique_prev}|=={0}|?{#SET{id_rubrique_prev, 11},''})] 
+[(#GET{id_rubrique_prev}|=={0}|?{#SET{id_rubrique_prev, 11},''})]
 
             <!-- CADAVRE PRECEDENT -->
             <div class="ecriture-wip-bloc light">
                 <BOUCLE_wip_prev(RUBRIQUES){id_rubrique= #GET{id_rubrique_prev}}>
-                    <BOUCLE_wip_article_prev(ARTICLES){id_rubrique}{id_auteur = #GET{var_id_auteur}}{par date}{inverse}{0,1}>
+                    <BOUCLE_wip_article_prev(ARTICLES){id_rubrique}{id_auteur = #GET{var_id_auteur}}{!par date}{0,1}>
                     <a href="#URL_RUBRIQUE">
                         <i>#TITRE</i><br>
                         <b>#TITRE</b>
@@ -64,9 +64,9 @@ RUBRIQUE.HTML > RUBRIQUE-BOUTON.HTML
             <BOUCLE_wip_next(RUBRIQUES){id_rubrique= #GET{var_id_zone_2}}>
                 <a href="#URL_RUBRIQUE">
                 <i>#TITRE</i><br>
-                    <BOUCLE_wip_article_next(ARTICLES){id_rubrique}{id_auteur = #GET{var_id_auteur}}{par date}{inverse}{0,1}>
+                    <BOUCLE_wip_article_next(ARTICLES){id_rubrique}{id_auteur = #GET{var_id_auteur}}{!par date}{0,1}>
                         <b>#TITRE</b>
-                
+
                         <div class="ecriture-wip-forum">
                         <!-- affichage du nombre de message pour le forum de l'article N-1 -->
                             <!-- On recupere l'id du chapitre à masquer -->
@@ -77,12 +77,12 @@ RUBRIQUE.HTML > RUBRIQUE-BOUTON.HTML
                             [(#TOTAL_BOUCLE)]
                             <//B_combien_wip>
                         </div>
-            
+
                     </BOUCLE_wip_article_next>
                 </a>
             </BOUCLE_wip_next>
-            
-            
+
+
             </div>
 
 
