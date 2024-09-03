@@ -185,7 +185,7 @@
 </body>
 
 <script type="text/javascript">
-	jQuery(document).ready(function() {
+	$(document).ready(function() {
 
 // RESIZE
 		window.onresize = resize_global_content;
@@ -200,7 +200,7 @@
 		compteur = parseFloat(compteur);
 		var num_page_gauche;
 		var num_page_droite;
-		var num_page_limite = $('.content-left > div').size();
+		var num_page_limite = $('.content-left > div').size;
 
 		$('.lecture-page').hide();
 		pagination(compteur);
