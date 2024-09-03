@@ -1,5 +1,5 @@
 <BOUCLE_principale(RUBRIQUES){id_rubrique}>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE html>
 <html lang="fr" xml:lang="fr" xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
@@ -17,25 +17,25 @@
 <body>
 
 <!-- ID/NOM AUTEUR-->
- 	
+
     <!-- Le cache est a zero pour pouvoir récupérer l'id de l'auteur connecté-->
     #CACHE{0}
-      
+
     <!-- ID et nom de l'auteur connecté -->
     #SET{var_id_auteur,#SESSION{id_auteur}}
     #SET{var_nom_auteur,#SESSION{nom}}
-    
+
     <!-- On recupere l'id du chapitre à masquer -->
     <BOUCLE_max_cadavres(ARTICLES){id_rubrique}{par date}>
     #SET{var_max_cadavres, #TOTAL_BOUCLE}
     </BOUCLE_max_cadavres>
     #SET{id_cadavre_hidden, #SOUSTRACTION{#GET{var_max_cadavres}, 1}}
-    
+
     <!-- on recupere l'id de la rubrique de travail -->
     <BOUCLE_id_zone(spip_auteurs_liens){objet = rubrique}{spip_auteurs_liens.id_auteur =  #GET{var_id_auteur}}{0,1}>
     #SET{var_id_zone, #ID_OBJET}
     </BOUCLE_id_zone>
-    
+
 <!-- TOOLTIP -->
 <div id="liste-tooltip">
 </div>
@@ -81,27 +81,27 @@
 
 		<div id="global-spacer">
         </div>
-        
+
 		<div class="global-content">
-        	
+
            <div class="content">
-           
+
            <div class="content-left-small">
-                
+
                 <div id="titre_site">
            		<a href="http://fictions.laclasse.com" title="Accueil"><strong>fictions</strong></a><a href="http://www.laclasse.com" title="http://www.laclasse.com">.laclasse.com</a>
            		</div>
-           
+
                 <div id="ecriture-en-cours">
                     <!--[(#REM) Pas la moindre foutue idée d'à quoi sert ce rubrique-bouton... Je supprile son inclure fond=rubrique-bouton]-->
                 </div>
-                
+
                 <!-- LISTE CADAVRE SMALL-->
                 <div id="ecriture-liste">
                 [(#SESSION{id_auteur}|oui)<INCLURE{fond=liste-cadavres-auteur-small} />]
                 </div>
 			</div>
-           
+
            <div class="content-right-large">
 				<div id="ecriture">
 
@@ -111,49 +111,49 @@
             				<div id="open_prologue">
                                <img src="#CHEMIN{img/ecriture/bt-open-prologue.png}" onmouseover="this.src='#CHEMIN{img/ecriture/bt-open-prologue-hover.png}';" onmouseout="this.src='#CHEMIN{img/ecriture/bt-open-prologue.png}';" width="25" height="25" />
                             </div>
-                            
+
                             <div id="close_prologue">
                                <img src="#CHEMIN{img/ecriture/bt-close-prologue.png}" onmouseover="this.src='#CHEMIN{img/ecriture/bt-close-prologue_hover.png}';" onmouseout="this.src='#CHEMIN{img/ecriture/bt-close-prologue.png}';" width="25" height="25" />
                             </div>
         				</div>
-    
+
                         <BOUCLE_annee(RUBRIQUES){titre==#EVAL{_annee_scolaire}}{tout}{0,1}>
-                        <BOUCLE_article(ARTICLES){id_rubrique}{titre LIKE prologue}{tout}{0,1}>                            
+                        <BOUCLE_article(ARTICLES){id_rubrique}{titre LIKE prologue}{tout}{0,1}>
                             <div class="ecriture-chapitre-texte">
                                 <div class="ecriture-chapitre-surtitre">—</div>
-                                <div class="ecriture-chapitre-titre">#TITRE</div> 
+                                <div class="ecriture-chapitre-titre">#TITRE</div>
                             </div>
-                            
+
                             <div class="ecriture-chapitre-auteur">
-                            
+
                             </div>
-                            
+
                             <div class="texte_courant #EDIT{texte}" id="texte_prologue">
                             #TEXTE<br />
                             </div>
-                        
+
                         </BOUCLE_article>
                         </BOUCLE_annee>
-                    
+
                     </div>
                     <hr />
-                    
+
                     <!-- END PROLOGUE -->
-                    
+
                     <!-- Boucle affichage des cadavres -->
                     <BOUCLE_cadavres(ARTICLES){id_rubrique}{id_rubrique !=12}{par date}>
-						
+
                         <!-- L'UTILISATEUR N'EST PAS WEBMESTRE / ECRIVAIN -->
                         #SET{var_oui, oui}
                         [(#SESSION{webmestre}|!={#GET{var_oui}}|oui)
                             <!-- L'utilisateur est sur son espace de travail -->
                             [(#GET{var_id_zone}|=={#ID_RUBRIQUE}|oui)
-                            
+
                                      <!-- Affichage du chapitre masque N-1 -->
                                     [(#GET{id_cadavre_hidden}|=={#_cadavres:COMPTEUR_BOUCLE}|oui)
                                         <INCLURE{fond=chapitre-visible, id_article}>
-                                    ] 
-            
+                                    ]
+
                                    <!-- Affichage du chapitre N VERROUILLE -->
                                     [(#GET{id_cadavre_hidden}|!={#_cadavres:COMPTEUR_BOUCLE}|oui)
                                         <!-- precedent chapitre VERROUILLE-->
@@ -162,20 +162,20 @@
                                         [(#_cadavres:COMPTEUR_BOUCLE|=={#GET{var_max_cadavres}}|oui)<INCLURE{fond=chapitre-ecriture, id_article}>]
                                     ]
                             ]
-                                
+
                             <!-- L'utilisateur n'est pas sur son espace de travail -->
                                 [(#GET{var_id_zone}|!={#ID_RUBRIQUE}|oui)
-                                
+
                                         <!-- Affichage du chapitre masque N-1 -->
                                         [(#GET{id_cadavre_hidden}|=={#_cadavres:COMPTEUR_BOUCLE}|oui)
-                  
-                                            <!-- Si l'utilisateur est l'auteur du chapitre N-1  --> 
-                                            [(#NOM|=={#GET{var_nom_auteur}}|oui)<INCLURE{fond=chapitre-visible, id_article}>] 
-                                            <!-- Si l'utilisateur n'est pas l'auteur du chapitre N-1  --> 
+
+                                            <!-- Si l'utilisateur est l'auteur du chapitre N-1  -->
+                                            [(#NOM|=={#GET{var_nom_auteur}}|oui)<INCLURE{fond=chapitre-visible, id_article}>]
+                                            <!-- Si l'utilisateur n'est pas l'auteur du chapitre N-1  -->
                                             [(#NOM|!={#GET{var_nom_auteur}}|oui)<INCLURE{fond=chapitre-visible, id_article,fin=non}>]
-                                        
-                                        ] 
-                
+
+                                        ]
+
                                        <!-- Affichage du chapitre masque N VERROUILLE -->
                                         [(#GET{id_cadavre_hidden}|!={#_cadavres:COMPTEUR_BOUCLE}|oui)
 
@@ -185,9 +185,9 @@
                                                 <!-- precedent chapitre VERROUILLE-->
                                                 [(#_cadavres:COMPTEUR_BOUCLE|!={#GET{var_max_cadavres}}|oui)<INCLURE{fond=chapitre-visible, id_article,fin=non}>]
                                                 <!-- dernier chapitre ECRITURE -->
-                                                [(#_cadavres:COMPTEUR_BOUCLE|=={#GET{var_max_cadavres}}|oui)<INCLURE{fond=chapitre-ecriture, id_article}>] 
+                                                [(#_cadavres:COMPTEUR_BOUCLE|=={#GET{var_max_cadavres}}|oui)<INCLURE{fond=chapitre-ecriture, id_article}>]
                                             ]
-                                            
+
                                             <!-- Si l'utilisateur n'est pas webmestre -->
                                             [(#SESSION{webmestre}|!={#GET{var_oui}}|oui)
                                                 <!-- precedent chapitre VERROUILLE-->
@@ -198,7 +198,7 @@
                                             ]
 
                                         ]
- 
+
                                 ]
 
                           ]
@@ -209,14 +209,14 @@
              				<!-- Affichage du chapitre masque N-1 -->
                             [(#GET{id_cadavre_hidden}|=={#_cadavres:COMPTEUR_BOUCLE}|oui)
                                 <INCLURE{fond=chapitre-visible, id_article}>
-                            ] 
+                            ]
 
                            <!-- Affichage du chapitre N VERROUILLE -->
-                            [(#GET{id_cadavre_hidden}|!={#_cadavres:COMPTEUR_BOUCLE}|oui)                      
+                            [(#GET{id_cadavre_hidden}|!={#_cadavres:COMPTEUR_BOUCLE}|oui)
                                 <!-- precedent chapitre VERROUILLE-->
-                                [(#_cadavres:COMPTEUR_BOUCLE|!={#GET{var_max_cadavres}}|oui)<INCLURE{fond=chapitre-verrouille, id_article,fin=non}>] 
+                                [(#_cadavres:COMPTEUR_BOUCLE|!={#GET{var_max_cadavres}}|oui)<INCLURE{fond=chapitre-verrouille, id_article,fin=non}>]
                                 <!-- dernier chapitre ECRITURE-->
-                                [(#_cadavres:COMPTEUR_BOUCLE|=={#GET{var_max_cadavres}}|oui)<INCLURE{fond=chapitre-ecriture, id_article}>] 
+                                [(#_cadavres:COMPTEUR_BOUCLE|=={#GET{var_max_cadavres}}|oui)<INCLURE{fond=chapitre-ecriture, id_article}>]
 
                             ]
 
@@ -281,7 +281,7 @@ $('.liste-link-small').mouseover(function() {
 	var toptooltip = Math.round(offset.top);
 	toptooltip = toptooltip - hauteur_tooltip;
 	var lefttooltip = Math.round(offset.left);
-	lefttooltip -= 108; 
+	lefttooltip -= 108;
 	$('#liste-tooltip').css('top', toptooltip -5);
 	$('#liste-tooltip').css('left', lefttooltip + 2);
 });
@@ -314,7 +314,7 @@ $('.script-texte-hide').hide();
 $('#open-script-ecrivain').click(function() {
 	$('#slideup-script-ecrivain').toggle('fast');
 	if( $('#slideup-script-ecrivain').is(':visible') ) {
-        $('#open-script-ecrivain').css('background-image','url(#CHEMIN{img/ecriture/bt-moins.png})');    
+        $('#open-script-ecrivain').css('background-image','url(#CHEMIN{img/ecriture/bt-moins.png})');
     }
     else {
         $('#open-script-ecrivain').css('background-image','url(#CHEMIN{img/ecriture/bt-plus.png})');
@@ -323,7 +323,7 @@ $('#open-script-ecrivain').click(function() {
 $('#open-script-college').click(function() {
     $('#slideup-script-college').toggle('fast');
     if( $('#slideup-script-college').is(':visible') ) {
-        $('#open-script-college').css('background-image','url(#CHEMIN{img/ecriture/bt-moins.png})');    
+        $('#open-script-college').css('background-image','url(#CHEMIN{img/ecriture/bt-moins.png})');
     }
     else {
         $('#open-script-college').css('background-image','url(#CHEMIN{img/ecriture/bt-plus.png})');
@@ -353,14 +353,14 @@ setInterval(function() {
 	  $('.crayon-html').css('width','100%');
 	  $('.crayon-html').css('height','100%');
 	  $('.crayon-html').css('z-index','9400');
-	  
+
 	  $('.crayon-active').css('background-color','#FFF');
 	  $('.crayon-active').css('color','#000');
 	  $('.crayon-active').css('height','300px');
 	  $('.crayon-active').css('font-size','13px');
 	  $('.crayon-active').css('line-height','18px');
 	  $('.crayon-active').css('width','516px');
-	  
+
 	  $('.formulaire_crayon').css('position','absolute');
 	  $('.formulaire_crayon').css('width','520px');
 	  $('.formulaire_crayon').css('height','500px');
@@ -368,22 +368,22 @@ setInterval(function() {
 	  $('.formulaire_crayon').css('left','50%');
 	  $('.formulaire_crayon').css('margin-left','-250px');
 	  $('.formulaire_crayon').css('margin-top','-150px');
-	  
+
 }, 200);
 
-// ROLLOVER 
+// ROLLOVER
 $('.script-ecrivain-edit').mouseover(function() {
-	$(this).prev().find('img').attr('src','#CHEMIN{img/ecriture/fleche_script_ecrivain_hover.png}');									   
+	$(this).prev().find('img').attr('src','#CHEMIN{img/ecriture/fleche_script_ecrivain_hover.png}');
  });
 $('.script-ecrivain-edit').mouseout(function() {
-	$(this).prev().find('img').attr('src','#CHEMIN{img/ecriture/fleche_script_ecrivain.png}');									   
+	$(this).prev().find('img').attr('src','#CHEMIN{img/ecriture/fleche_script_ecrivain.png}');
  });
 
 $('.forum_bt').mouseover(function() {
-	$('#script-forum-fleche-roll').find('img').attr('src','#CHEMIN{img/ecriture/fleche_forum_hover.png}');									   
+	$('#script-forum-fleche-roll').find('img').attr('src','#CHEMIN{img/ecriture/fleche_forum_hover.png}');
  });
 $('.forum_bt').mouseout(function() {
-	$('#script-forum-fleche-roll').find('img').attr('src','#CHEMIN{img/ecriture/fleche_forum.png}');									   
+	$('#script-forum-fleche-roll').find('img').attr('src','#CHEMIN{img/ecriture/fleche_forum.png}');
  });
 
 });
