@@ -32,7 +32,7 @@
     #SET{id_cadavre_hidden, #SOUSTRACTION{#GET{var_max_cadavres}, 1}}
 
     <!-- on recupere l'id de la rubrique de travail -->
-    <BOUCLE_id_zone(spip_auteurs_liens){objet = rubrique}{spip_auteurs_liens.id_auteur =  #GET{var_id_auteur}}{0,1}>
+    <BOUCLE_id_zone(spip_auteurs_liens){objet = rubrique}{spip_auteurs_liens.id_auteur = #GET{var_id_auteur}}{0,1}>
     #SET{var_id_zone, #ID_OBJET}
     </BOUCLE_id_zone>
 
@@ -42,7 +42,7 @@
 
 <!-- BOUTON CONNEXION -->
 <div id="bouton-connexion">
-    [(#SESSION{id_auteur}|non)<span id="bouton-connexion-texte"><a href="#URL_SITE_SPIP/?page=popup-login" class="mediabox boxIframe boxWidth-330px boxHeight-350px">se connecter</a></span>]
+    [(#SESSION{id_auteur}|non)<span id="bouton-connexion-texte"><a href="#URL_PAGE{popup-login}" class="mediabox boxIframe boxWidth-330px boxHeight-350px">se connecter</a></span>]
     [(#SESSION{id_auteur}|oui)<span id="bouton-connexion-texte"><a href="#URL_LOGOUT" rel="nofollow"><:icone_deconnecter:></a></span>]
     <span id="bouton-connexion-picto"><img src="#CHEMIN{img/global/picto-login.png}" width="17" height="18" /></span>
 </div>
@@ -89,7 +89,7 @@
            <div class="content-left-small">
 
                 <div id="titre_site">
-           		<a href="http://fictions.laclasse.com" title="Accueil"><strong>fictions</strong></a><a href="http://www.laclasse.com" title="http://www.laclasse.com">.laclasse.com</a>
+           		<a href="#URL_SITE_SPIP" title="Accueil"><strong>fictions</strong></a><a href="http://www.laclasse.com" title="http://www.laclasse.com">.laclasse.com</a>
            		</div>
 
                 <div id="ecriture-en-cours">
