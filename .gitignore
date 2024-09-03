@@ -16,5 +16,5 @@ composer.*
 index.php
 rector.php
 spip_loader.php
-spip.*
+/spip.*
 .env
