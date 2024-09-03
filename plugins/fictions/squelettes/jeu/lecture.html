@@ -2,12 +2,12 @@
 
     <!-- Le cache est a zero pour pouvoir récupérer l'id de l'auteur connecté-->
     #CACHE{0}
-      
+
     <!-- ID et nom de l'auteur connecté -->
     #SET{var_id_auteur,#SESSION{id_auteur}}
     #SET{var_nom_auteur,#SESSION{nom}}
     #SET{titre,#TITRE}
-               
+
     <BOUCLE_nb(ARTICLES){id_rubrique}>
     </BOUCLE_nb>
       #SET{n,#COMPTEUR_BOUCLE}
@@ -28,13 +28,13 @@
 
     #SET{rub_jeu,#EVAL{$_COOKIE['rub_jeu']}}
 
-    [(#RUB_JEU|oui) 
-      [(#VAL{rub_jeu}|cookie{#RUB_JEU})] 
+    [(#RUB_JEU|oui)
+      [(#VAL{rub_jeu}|cookie{#RUB_JEU})]
       #SET{rub_jeu,#RUB_JEU}
     ]
 
-    <BOUCLE_jeu(RUBRIQUES){si #GET{rub_jeu}|=={''}|oui}{titre==jeu}{0,1}{par id_rubrique}{inverse}{tout}>
-      <BOUCLE_j1(RUBRIQUES){id_parent=#ID_RUBRIQUE}{0,1}{par id_rubrique}{inverse}{tout}>
+    <BOUCLE_jeu(RUBRIQUES){si #GET{rub_jeu}|=={''}|oui}{titre==jeu}{0,1}{!par id_rubrique}{tout}>
+      <BOUCLE_j1(RUBRIQUES){id_parent=#ID_RUBRIQUE}{0,1}{!par id_rubrique}{tout}>
         #SET{rub_jeu,#ID_RUBRIQUE}
         [(#VAL{rub_jeu}|cookie{#ID_RUBRIQUE})]
       </BOUCLE_j1>
@@ -46,9 +46,9 @@
 <div id="global" style="overflow: auto;">
 
     <div id="global-spacer"></div>
-        
+
     <div class="global-content">
-          
+
            <div class="content">
                <!-- PAGE GAUCHE -->
                <div class="content-left">
@@ -56,10 +56,10 @@
                  <!-- PPROLOGUE -->
                   <BOUCLE_article(ARTICLES){id_article=#DESCRIPTIF*}{titre = prologue}{tout}{0,1}>
                     <div class="lecture-page" id="page-gauche-1" data-num="1">
-                        
+
                         <div class="lecture-options">
                           <span class="lecture-titre-cadavre">#GET{titre}</span>
-                            
+
                             <div class="lecture-chapitre-auteur">
                               <BOUCLE_auteur_article3(AUTEURS){id_article}{0,1}{tout}>
                                 <div class="ecriture-chapitre-avatar">[(#LOGO_AUTEUR||image_reduire{42,42})]</div>
@@ -77,16 +77,16 @@
                     </div>
                   </BOUCLE_article>
 
-                  <BOUCLE_lecture_gauche(ARTICLES){id_rubrique}{par date}{tout}>               
-                   
+                  <BOUCLE_lecture_gauche(ARTICLES){id_rubrique}{par date}{tout}>
+
                    <div class="lecture-page" id="page-gauche-[(#COMPTEUR_BOUCLE|plus{1})]" data-num="[(#COMPTEUR_BOUCLE|plus{1})]">
 
                         <!-- BOUTONS OPTIONS GAUCHE-->
                         <div class="lecture-options">
                             <span class="lecture-titre-cadavre">#GET{titre}</span>
-                            
+
                             <div class="lecture-chapitre-auteur">
-    
+
                               <BOUCLE_auteur_article2(AUTEURS){id_auteur IN 1,2,60,71,80,28,70,73}{par hasard}{0,1}{tout}>
                                     <div class="ecriture-chapitre-avatar">[(#LOGO_AUTEUR||image_reduire{42,42})]</div>
                                </BOUCLE_auteur_article2>
@@ -101,16 +101,16 @@
                        <h2>#TITRE</h2>
                           [(#GET{visible}|=={visible}|oui)<INCLURE{fond=lecture-texte-visible, id_article}>]
                           [(#GET{visible}|=={visible}|non)<INCLURE{fond=lecture-texte, id_article}>]
- 
+
                    </div>
                   </BOUCLE_lecture_gauche>
-                   
+
                </div>
-               
+
                <!-- PAGE DROITE -->
                <div class="content-right">
-               
-                  <BOUCLE_lecture_droite(ARTICLES){id_rubrique}{par date}> 
+
+                  <BOUCLE_lecture_droite(ARTICLES){id_rubrique}{par date}>
                     <div class="lecture-page" id="page-droite-[(#COMPTEUR_BOUCLE|plus{1})]" data-num="[(#COMPTEUR_BOUCLE|plus{1})]">
                           <div class="lecture-options">
                               <span class="lecture-titre-cadavre">#GET{titre}</span>
@@ -134,13 +134,13 @@
                     </div>
                   </BOUCLE_lecture_droite>
                </div>
-            
+
            </div>
-           
+
            </div>
-        
+
 </div>
-        
+
 </div>
 
 <INCLURE{fond=footer}/>
@@ -194,7 +194,7 @@ $('.lecture-tooltip').mouseover(function() {
   var toptooltip = Math.round(offset.top);
   toptooltip = toptooltip - hauteur_tooltip;
   var lefttooltip = Math.round(offset.left);
-  lefttooltip -= 100; 
+  lefttooltip -= 100;
   $('#liste-tooltip').css('top', 75);
   $('#liste-tooltip').css('left', lefttooltip + 2);
 });
@@ -237,7 +237,7 @@ function next_prev(var_compteur, var_limite) {
     $('#bt-next').hide();
   }
   else {};
-  
+
   if(var_compteur == 1 || var_compteur == 2){$('#bt-prev').hide();} else {};
 }
 </script>

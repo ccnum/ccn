@@ -52,7 +52,7 @@
   			|   donc la boucle n'est jamais exécutée
         ]
 
-  			<BOUCLE_sous_articles0(ARTICLES) {id_rubrique} {tout} {par date} {inverse} {doublons}>
+  			<BOUCLE_sous_articles0(ARTICLES) {id_rubrique} {tout} {!par date} {doublons}>
   				<script type="text/javascript">
   				$().ready(function(){
   				$('#ajax#ID_ARTICLE').click(function() {
@@ -279,7 +279,7 @@
         			|   donc la boucle n'est jamais exécutée
               ]
 
-							<BOUCLE_sous_articles2(ARTICLES) {id_rubrique} {tout} {par date} {inverse} {doublons}>
+							<BOUCLE_sous_articles2(ARTICLES) {id_rubrique} {tout} {!par date} {doublons}>
 
         				<script type="text/javascript">
         					$().ready(function(){
@@ -344,7 +344,7 @@
       			|   Tous les autres articles ||| enfants ||| de la sous-rubrique #_rubriques ||| enfant ||| de la rubrique #_principale
             ]
 
-						<BOUCLE_sous_articles(ARTICLES) {id_rubrique} {si #STATUT|== {publie}} {par date} {inverse} {doublons}>
+						<BOUCLE_sous_articles(ARTICLES) {id_rubrique} {si #STATUT|== {publie}} {!par date} {doublons}>
       				<script type="text/javascript">
       					$().ready(function(){
         					// TODO

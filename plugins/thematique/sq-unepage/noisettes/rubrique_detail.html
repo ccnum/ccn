@@ -60,7 +60,7 @@
 				<div style="clear:both" class='bloc_option_reponses_consignes_classe'>
 					<div class="nettoyeur"></div>
 
-    			<BOUCLE_rubrique(RUBRIQUES){titre_mot=consignes}{par id_rubrique}{inverse}{tout}>
+    			<BOUCLE_rubrique(RUBRIQUES){titre_mot=consignes}{!par id_rubrique}{tout}>
 
           	<BOUCLE_consigne(ARTICLES){branche}{par date}{date>=#CONST{_date_debut}}{date<=#CONST{_date_fin}}>
           	  #SET{id_to_check,#_principale:ID_RUBRIQUE}
