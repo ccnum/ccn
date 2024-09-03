@@ -4,13 +4,13 @@
 </body>
 
 <script type="text/javascript">
-$(document).ready(function() {
+jQuery(document).ready(function() {
 
 // RESIZE
   window.onresize = resize_global_content;
   resize_global_content();
 
-// NICESCROLL 
+// NICESCROLL
   $(".global-content").niceScroll({cursorcolor:"#ff6b6b", cursoropacitymin:'0.2',cursoropacitymax:'1', scrollspeed:'100', cursorborder:'0px'});
   $('#ascrail2000').css({'cursor':'pointer'});
 
@@ -25,7 +25,7 @@ $('.liste-link').mouseover(function() {
   var toptooltip = Math.round(offset.top);
   toptooltip = toptooltip - hauteur_tooltip;
   var lefttooltip = Math.round(offset.left);
-  lefttooltip -= 95; 
+  lefttooltip -= 95;
   $('#liste-tooltip').css('top', toptooltip -5);
   $('#liste-tooltip').css('left', lefttooltip + 2);
 });
