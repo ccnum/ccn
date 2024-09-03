@@ -18,7 +18,7 @@
 	</image>
 ]
 
-<BOUCLE_tres_recents(ARTICLES){lang ?}{branche ?}{id_mot ?}{par date_modif}{inverse}{unique}{0,10}>
+<BOUCLE_tres_recents(ARTICLES){lang ?}{branche ?}{id_mot ?}{!par date_modif}{unique}{0,10}>
 
 			<BOUCLE_un_article(ARTICLES){id_article}>
 				<item[ xml:lang="(#LANG)"]>
