@@ -4,7 +4,7 @@ PAGE-TYPE.HTML
  -->
 
 
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
@@ -21,15 +21,15 @@ PAGE-TYPE.HTML
 <body>
 
 <!-- ID/NOM AUTEUR-->
- 	
+
     <!-- Le cache est a zero pour pouvoir récupérer l'id de l'auteur connecté-->
     #CACHE{0}
-      
+
     <!-- ID et nom de l'auteur connecté -->
     #SET{var_id_auteur,#SESSION{id_auteur}}
     #SET{var_nom_auteur,#SESSION{nom}}
- 
-        
+
+
 <!-- TOOLTIP -->
 <div id="liste-tooltip">
 </div>
@@ -67,9 +67,9 @@ PAGE-TYPE.HTML
 
 		<div id="global-spacer">
     </div>
-        
+
 		<div class="global-content">
-        	
+
            <div class="content">
            <BOUCLE_annee(RUBRIQUES){titre==#EVAL{_annee_scolaire}}{tout}{0,1}>
             <BOUCLE_art(ARTICLES){id_rubrique}{titre LIKE presentation}{tout}{0,1}>
@@ -86,7 +86,7 @@ PAGE-TYPE.HTML
 
             </BOUCLE_art>
             </BOUCLE_annee>
-           
+
            <div class="content-right-large">
             <BOUCLE_page_article(ARTICLES){id_article}>
             	<!-- TEXTE PAGE -->
@@ -98,18 +98,18 @@ PAGE-TYPE.HTML
                 	#TEXTE
                 	</div>
                 </div>
-            
+
             </BOUCLE_page_article>
-           
+
             </div>
-            
+
            </div>
-           
+
            </div>
-        
+
         </div>
-        
-        
+
+
 
 
 
