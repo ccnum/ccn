@@ -18,14 +18,14 @@
 	</image>
 ]
 
-<BOUCLE_articles_recherche(ARTICLES){titre_mot=laclasse.com}{par date}{inverse}{0,5}{doublons}>
+<BOUCLE_articles_recherche(ARTICLES){titre_mot=laclasse.com}{!par date}{0,5}{doublons}>
 	<INCLURE{fond=inc-rss-item}{id_article}>
 </BOUCLE_articles_recherche>
 
 
 <BOUCLE_branche_mot(RUBRIQUES){titre_mot=laclasse.com}>
 	<BOUCLE_branche_mot2(RUBRIQUES){branche}>
-		<BOUCLE_art(ARTICLES){id_rubrique}{par date}{inverse}{0,10}{doublons}>
+		<BOUCLE_art(ARTICLES){id_rubrique}{!par date}{0,10}{doublons}>
 			<INCLURE{fond=inc-rss-item}{id_article}>
 		</BOUCLE_art>
 	</BOUCLE_branche_mot2>
