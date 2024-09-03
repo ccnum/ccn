@@ -186,7 +186,7 @@ li#f-winter {
 .liste-book-bt {
 
 	}
-	
+
 	.liste-book-bt a{
 		border-radius:2px;
 		min-width:100px;
@@ -207,7 +207,7 @@ li#f-winter {
 @media (min-width: 600px) and (max-width: 1300px){
 
 	.mast img {width: 90%; height: 90%;}
-	.main img {width: 100%; height: 100%;}	
+	.main img {width: 100%; height: 100%;}
 }
 
 @media (min-width: 400px) and (max-width: 600px) {
@@ -224,9 +224,9 @@ li#f-winter {
 	}
 	.intro {float: none; position: relative; }
 	.intro h2 {text-align: left; font-size: 2em;}
-	.intro p {clear: both;}	
+	.intro p {clear: both;}
 	.main {clear: both;}
-	.main img {width: 100%; height: 100%;}	
+	.main img {width: 100%; height: 100%;}
 	.mast {float: left; width: 180px; }
 	.mast img {width: 90%; height: 90%;}
 }
@@ -248,7 +248,7 @@ li#f-winter {
 	}
 	.intro {float: none; position: relative; }
 	.intro p {clear: both;}
-	.intro h2 {text-align: left; font-size: 1.4em; margin-top: 5px;}	
+	.intro h2 {text-align: left; font-size: 1.4em; margin-top: 5px;}
 	.main img {width: 123px; height: 175px;}
 	.main {clear: both;}
 	.mast {float: left; width: 150px; }
@@ -290,9 +290,9 @@ li#f-winter {
 				lignes sont visibles par les élèves de 10 collèges. Chaque classe
 				poursuit cette amorce selon le même principe, de sorte qu’un
 				texte se tisse au fil de l’année, alternant les écrits de l’ écrivain
-				et ceux des élèves.              
+				et ceux des élèves.
 				<br /><br />
-	            Téléchargez ci-dessous les 11 livres issus du travail et retrouvez en ligne sur <a href="http://air.laclasse.com/spip.php?page=sommaire&mode=fabrication">air.laclasse.com</a> le processus de fabrication des histoires ! 
+	            Téléchargez ci-dessous les 11 livres issus du travail et retrouvez en ligne sur <a href="http://air.laclasse.com/spip.php?page=sommaire&mode=fabrication">air.laclasse.com</a> le processus de fabrication des histoires !
 	              <!--
 	              <br /><br />
 	              Une résidence d’artiste sur l’espace numérique de travail <a href="http://www.laclasse.com">www.laclasse.com</a> initiée par le Centre Erasme (Livinglab du Département du Rhône).
@@ -308,25 +308,25 @@ li#f-winter {
 			<ol>
 
 					<BOUCLE_rubriques_toutes(RUBRIQUES){id_parent=#ID_RUBRIQUE}{id_rubrique != 12}>
- 				    	
+
 				    	<div class="liste-fin-rubrique">
-				        
+
 								<li id="" class="figure">
-						             <BOUCLE_doc2(DOCUMENTS){id_rubrique = #ID_RUBRIQUE}{mode=document}{par extension}{inverse}{0,1}>
+						             <BOUCLE_doc2(DOCUMENTS){id_rubrique = #ID_RUBRIQUE}{mode=document}{!par extension}{0,1}>
 						             <a href="#URL_DOCUMENT" target="_blank">
 										[(#LOGO_RUBRIQUE|image_reduire{170,0})]
 									</a>
 						             </BOUCLE_doc2>
 
 								</li>
-				        
+
 				        </div>
 					</BOUCLE_rubriques_toutes>
 			</ol>
 		</div><!-- /end .section.main -->
 
 		<div class="footer">
-			<img src="#CHEMIN{img}/responsive/bandeau2.png" alt="AIR">		
+			<img src="#CHEMIN{img}/responsive/bandeau2.png" alt="AIR">
 		</div><!-- /end .footer -->
 	</div><!-- /end .inner -->
 </div><!-- /end #page -->
