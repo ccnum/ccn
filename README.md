@@ -33,6 +33,25 @@ This monorepo contains all the plugins for SPIP CMS :
 ### Start the project
 1. Run `docker-compose up` to start the containers in detached mode.
 
+
+
+## 🔩 CI config
+
+The CI is configured to run on every push and pull request on the `dev` branch. It will:
+1. Build the Docker images and push them to Docker Hub if the build is successful.
+2. Redeploy the workflows on the `dev` branch if the build is successful.
+
+### Setup workloads
+Github secrets are used to store the Docker Hub credentials and the Github token. These secrets should be added in your repository settings under `Secrets` with the following names:
+| Name             | Description                                                                                                                                                            |
+| ---------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| DOCKER_USERNAME  | Docker Hub username                                                                                                                                                    |
+| DOCKER_PASSWORD  | Docker Hub password                                                                                                                                                    |
+| WORKLOADS        | the name of the workloads you want to redeploy seperated by a comma  ex: workload1,workload2                                                                           |
+| RANCHER_DEV_URL  | the url  to your rancher api url with the name of your namespace and cluster ex: https://mycluster.com/v3/project/mycluster:myproject/workloads/deployment:mynamespace |
+| RANCHER_PROD_URL | same as above but to redeploy workloads when main branch ci is triggered                                                                                               |
+|                  |                                                                                                                                                                        |
+
 ### ❤️ Humans.txt
 - pierretux
 - pipazoul

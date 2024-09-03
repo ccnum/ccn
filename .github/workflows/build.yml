@@ -30,15 +30,31 @@ jobs:
           push: true
           context: .
           tags: erasme/spip-ccn:${{ github.ref == 'refs/heads/main' && 'latest' || 'dev' }} , erasme/spip-ccn:${{ github.sha }}
+
   redeploy:
-      name: Redeploy spip Workload
-      runs-on: ubuntu-latest
-      needs: spip
-      steps:
-        - name: Make API Request
-          uses: fjogeleit/http-request-action@master
-          with:
-            url: ${{ github.ref == 'refs/heads/main' && secrets.RANCHER_PROD_URL || secrets.RANCHER_DEV_URL }}
-            method: 'POST'
-            bearerToken: ${{ secrets.RANCHER_TOKEN }}
-            data: '{"scale": 2}'
+    name: Redeploy Workloads
+    runs-on: ubuntu-latest
+    needs: spip
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Set up workload list and Rancher URL
+        id: vars
+        run: |
+          echo "::set-output name=workloads::${{ secrets.WORKLOADS }}"
+          if [ "${{ github.ref }}" == "refs/heads/main" ]
+          then
+            echo "::set-output name=site::${{ secrets.RANCHER_PROD_URL }}"
+          else
+            echo "::set-output name=site::${{ secrets.RANCHER_DEV_URL }}"
+          fi
+
+      - name: Redeploy workloads
+        run: |
+          IFS="," read -ra ADDR <<< "${{ steps.vars.outputs.workloads }}"
+          for i in "${ADDR[@]}"; do
+            echo "Redeploying $i... ${{ steps.vars.outputs.site }}:${i}?action=redeploy "
+            curl -s -X POST -H "Authorization: Bearer ${{ secrets.RANCHER_TOKEN }}" \
+              "${{ steps.vars.outputs.site }}:${i}?action=redeploy"
+          done
