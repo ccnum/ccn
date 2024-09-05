@@ -2,7 +2,7 @@
 
 RUBRIQUE.HTML > CHAPITRE-VISIBLE.HTML > CHAPITRE-VISIBLE-SCRIPT-COLLEGE.HTML
 (affichage du script college)
- 
+
  -->
 
 
@@ -10,7 +10,7 @@ RUBRIQUE.HTML > CHAPITRE-VISIBLE.HTML > CHAPITRE-VISIBLE-SCRIPT-COLLEGE.HTML
 
 <!-- AUTEUR DE L'ARTICLE -->
 <BOUCLE_auteur_article(AUTEURS){id_article}{0,1}>
-         #SET{var_auteur_article, #NOM}
+	#SET{var_auteur_article, #NOM}
 </BOUCLE_auteur_article>
 
 
@@ -18,8 +18,8 @@ RUBRIQUE.HTML > CHAPITRE-VISIBLE.HTML > CHAPITRE-VISIBLE-SCRIPT-COLLEGE.HTML
 <div class="script-college">
 <!-- titi tutu -->
 	<div class="script-open-close" id="open-script-college"></div>
-    <div class="script-titre">SCRIPT | #GET{var_auteur_article}</div>
-    <div class="script-texte script-texte-hide" id="slideup-script-college">#PS</div>
+	<div class="script-titre">SCRIPT | #GET{var_auteur_article}</div>
+	<div class="script-texte script-texte-hide" id="slideup-script-college">#PS</div>
 </div>
 
 </BOUCLE_chapitre_visible_script_college>
