@@ -19,7 +19,7 @@ function traiter_article_jeu0($flux) {
 		$id_article = $flux['data']['id_article'];
 		$id_rubrique = $flux['data']['id_rubrique'];
 		//Publication
-		sql_update('spip_articles', ['statut' => "publie'"], 'id_article=' . intval($id_article));
+		sql_update('spip_articles', ['statut' => "publie"], 'id_article=' . intval($id_article));
 
 		//Si 5ème chapitre
 		if ($res = sql_select('titre', 'spip_articles', 'id_rubrique=' . $id_rubrique)) {
