@@ -54,7 +54,7 @@ Parametres :
 [(#TYPE_PARENT|=={article}|oui)
 	[(#AUTORISER{modifier, article, #ID_PARENT})
 		[(#OBJET|=={document}|oui)
-			<a class="ajax" title="Supprimer le texte"  href="[(#URL_ACTION_AUTEUR{documenter,-#ID_PARENT/article/#ID_OBJET,[(#GET{url}|parametre_url{edition,-1})]})]">
+			<a class="ajax" title="Supprimer le texte" href="[(#URL_ACTION_AUTEUR{documenter,-#ID_PARENT/article/#ID_OBJET,[(#GET{url}|parametre_url{edition,-1})]})]">
 			<div class="action_supprimer"></div></a>
 		]
 	]
