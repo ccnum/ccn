@@ -14,7 +14,7 @@
                   </div>
                   <p class="date">[(#DATE|affdate)]</p>
                   [(#MEDIA|match{'image'}|oui)
-                    <a href="#URL_DOCUMENT" title="[(#TITRE|supprimer_numero)]"  title="[(#TITRE|supprimer_numero)]" class="thickbox mediabox" type="#MIME_TYPE">
+                    <a href="#URL_DOCUMENT" title="[(#TITRE)]"  title="[(#TITRE)]" class="thickbox mediabox" type="#MIME_TYPE">
                     [(#EMBED_DOCUMENT|image_reduire{700}|inserer_attribut{alt,[(#TITRE|couper{80}|texte_backend)]}|inserer_attribut{style,'border:0px solid #000000;'})]
                     </a>
                   ]
@@ -22,9 +22,9 @@
                   [(#MEDIA|match{'image'}|non)
                   <div class="document">
                     [(#LOGO_DOCUMENT|image_reduire{100}|inserer_attribut{style,'border:0px solid #000000;'})]
-					    [<span class="spip_doc_titre"><br />(#TITRE|supprimer_numero|couper{25}|sinon{<span class="ajouter_couleur" style="text-color: gray;">Document sans titre</span>})</span>]
+					    [<span class="spip_doc_titre"><br />(#TITRE|couper{25}|sinon{<span class="ajouter_couleur" style="text-color: gray;">Document sans titre</span>})</span>]
                     [(#AUTORISER{modifier,article,#ID_ARTICLE}|non)
-                        [<span class="spip_doc_titre"><br />(#TITRE|supprimer_numero|couper{25})</span>]
+                        [<span class="spip_doc_titre"><br />(#TITRE|couper{25})</span>]
                     ]
                   </div>
                   ]
