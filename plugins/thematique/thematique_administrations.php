@@ -7,7 +7,7 @@ if (!defined('_ECRIRE_INC_VERSION')) {
 include_spip('inc/cextras');
 include_spip('base/th_cextras');
 
-function th_upgrade($nom_meta_base_version, $version_cible) {
+function thematique_upgrade($nom_meta_base_version, $version_cible) {
 
 	$maj = [];
 
