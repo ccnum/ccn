@@ -21,7 +21,7 @@
 	<BOUCLE_tres_recents(FORUMS){!par date} {0,10}>
 
 		<item>
-			<title>[(#TITRE|supprimer_numero|texte_backend)][ / (#NOM_SITE_SPIP|texte_backend)]</title>
+			<title>[(#TITRE|texte_backend)][ / (#NOM_SITE_SPIP|texte_backend)]</title>
 			<BOUCLE_article(ARTICLES){id_article=#ID_OBJET}>
 			<link>[(#URL_ARTICLE|url_absolue)]</link>
 			[<guid isPermaLink="true">(#URL_ARTICLE|url_absolue)</guid>]

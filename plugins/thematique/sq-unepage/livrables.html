@@ -50,10 +50,10 @@
 																		<div class='action_supprimer'></div>
 																	</a>]
 																	]
-																<a href="#URL_DOCUMENT" title="[(#TITRE|supprimer_numero)]" class="thickbox mediabox" type="#MIME_TYPE">
+																<a href="#URL_DOCUMENT" title="[(#TITRE)]" class="thickbox mediabox" type="#MIME_TYPE">
 																	[(#FICHIER |image_reduire{500})]
 																</a>
-																[<span class="spip_doc_titre #EDIT{titre}">(#TITRE|supprimer_numero|couper{25}|sinon{<span class="ajouter_couleur" style="text-color: gray;">ajouter un titre</span>})</span>]
+																[<span class="spip_doc_titre #EDIT{titre}">(#TITRE|couper{25}|sinon{<span class="ajouter_couleur" style="text-color: gray;">ajouter un titre</span>})</span>]
 
 															</div>
 														]
@@ -91,10 +91,10 @@
 
 																	[<a href="#URL_DOCUMENT" target="blank">(#LOGO_DOCUMENT|image_reduire{100}|inserer_attribut{style,'border:0px solid #000000;'}) </a>]
 																	[(#AUTORISER{modifier,article,#ID_ARTICLE}|oui)
-																	[<span class="spip_doc_titre #EDIT{titre}"><br />(#TITRE|supprimer_numero|couper{25}|sinon{<span class="ajouter_couleur" style="text-color: gray;">ajouter un titre</span>})</span>]
+																	[<span class="spip_doc_titre #EDIT{titre}"><br />(#TITRE|couper{25}|sinon{<span class="ajouter_couleur" style="text-color: gray;">ajouter un titre</span>})</span>]
 																	]
 																	[(#AUTORISER{modifier,article,#ID_ARTICLE}|non)
-																	[<span class="spip_doc_titre #EDIT{titre}"><br />(#TITRE|supprimer_numero|couper{25})</span>]
+																	[<span class="spip_doc_titre #EDIT{titre}"><br />(#TITRE|couper{25})</span>]
 																	]
 
 																	[(#AUTORISER{modifier,article,#ID_ARTICLE}|oui)

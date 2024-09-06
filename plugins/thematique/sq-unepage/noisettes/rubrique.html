@@ -17,7 +17,7 @@
 		<div class="fiche_titre">
 		    <div class="photo #EDIT{logo}">[(#MODELE{logo_carre}{id_rubrique})]</div>
 		    <div class="texte">
-	        <div class="titre #EDIT{titre}">[(#TITRE|supprimer_numero)]</div>
+	        <div class="titre #EDIT{titre}">[(#TITRE)]</div>
 	        <!--<div class="auteur_date">[(#NOM) - ][(#DATE|affdate)]</div>-->
 		    </div>
 		</div>
@@ -69,7 +69,7 @@
 
 					// console.log('(A) Rubrique (#TYPE_OBJET) : Affichage de l\'article ##ID_ARTICLE || enfant || de la rubrique #_principale ##_principale:ID_RUBRIQUE ayant les mots-clés blog ou chrono');
   				</script>
-  				<li><a id="ajax#ID_ARTICLE" href="#" class="ajax [(#EXPOSE) [(#GET{art1}|=={#ID_ARTICLE}|?{ gauche_menu_on })]]">[- (#TITRE|supprimer_numero|couper{80})]</a></li>
+  				<li><a id="ajax#ID_ARTICLE" href="#" class="ajax [(#EXPOSE) [(#GET{art1}|=={#ID_ARTICLE}|?{ gauche_menu_on })]]">[- (#TITRE|couper{80})]</a></li>
   			</BOUCLE_sous_articles0>
   			<br />
   			</B_sous_articles0>
@@ -121,7 +121,7 @@
 					<BOUCLE_sous_articlesTest(ARTICLES) {id_rubrique == #GET{laclasse_rubrique_admin}} {par num titre} {doublons}>
 								<li class="ressources_classe_consignes">
 									<a id="ajax#ID_ARTICLE" href="#" class="hac ajax  [ (#EXPOSE)][ (#GET{rub1}|=={#ID_RUBRIQUE}|?{ on })]">
-										[<strong>(#TITRE|supprimer_numero|couper{80})</strong>]
+										[<strong>(#TITRE|couper{80})</strong>]
 									</a>
 								</li>
 						</ul>
@@ -172,7 +172,7 @@
 
 					</script>
 					<div class="sidebar_bubble">
-  					<a id="ajax#ID_ARTICLE" href="#" class="ressources_classe_nom ajax [(#EXPOSE) [(#GET{art1}|=={#ID_ARTICLE}|?{ gauche_menu_on })]]">[- (#TITRE|supprimer_numero|couper{80})]</a>
+  					<a id="ajax#ID_ARTICLE" href="#" class="ressources_classe_nom ajax [(#EXPOSE) [(#GET{art1}|=={#ID_ARTICLE}|?{ gauche_menu_on })]]">[- (#TITRE|couper{80})]</a>
   				</div>
 				</BOUCLE_sous_articles1>
 				<br />
@@ -209,7 +209,7 @@
 				<div class="sidebar_bubble ressources_classes_around [(#TYPE_OBJET|match{travail_en_cours}|oui) ressources_travail_en_cours] [(#TYPE_OBJET|match{travail_en_cours}|non) ressources_no_color]">
   				<div class="[(#TYPE_OBJET|match{travail_en_cours}|oui) couleur_travail_en_cours[(#ID_RUBRIQUE|nb2col)]] ressources_classes">
 				  <a id="ajax_rub_#ID_RUBRIQUE" href="#" class="hac ajax ressources_classe_nom [ (#EXPOSE)][ (#GET{rub1}|=={#ID_RUBRIQUE}|?{ on })]">
-					  [<strong>(#TITRE|supprimer_numero|couper{80})</strong>]
+					  [<strong>(#TITRE|couper{80})</strong>]
 				  </a>
 					<ul>
 						[(#REM)Rubriques]
@@ -253,7 +253,7 @@
           			  </script>
 
 
-									<li><a href="#" class="ajax [(#EXPOSE) [(#GET{rub1}|=={#ID_RUBRIQUE}|?{ gauche_menu_on })]]">[- (#TITRE|supprimer_numero|couper{80})]</a></li>
+									<li><a href="#" class="ajax [(#EXPOSE) [(#GET{rub1}|=={#ID_RUBRIQUE}|?{ gauche_menu_on })]]">[- (#TITRE|couper{80})]</a></li>
 									</BOUCLE_sous_rubriques00>
 									</ul>
 								</B_sous_rubriques00>
@@ -299,7 +299,7 @@
 
         			  <li class="ressources_classe_consignes">
         			    <a id="ajax#ID_ARTICLE" href="#"  class="ajax [(#EXPOSE) [(#GET{art1}|=={#ID_ARTICLE}|?{ gauche_menu_on })]]">
-          			    [(#TITRE|supprimer_numero|couper{80})]
+          			    [(#TITRE|couper{80})]
           			  </a>
           		  </li>
 							</BOUCLE_sous_articles2>
@@ -332,7 +332,7 @@
 					  </script>
 								<li class="ressources_classe_consignes">
 								  <a id="ajax#ID_ARTICLE" href="#" class="ajax [(#EXPOSE) [(#GET{art1}|=={#ID_ARTICLE}|?{ gauche_menu_on })]]">
-  								  [(#TITRE|supprimer_numero|couper{80})]
+  								  [(#TITRE|couper{80})]
   								</a>
   						  </li>
 							</BOUCLE_sous_articles3>
@@ -363,7 +363,7 @@
 
 							<li class="ressources_classe_consignes">
 							  <a id="ajax#ID_ARTICLE" href="#"  class="ajax [(#EXPOSE) [(#GET{art1}|=={#ID_ARTICLE}|?{ gauche_menu_on })]]">
-  							  [(#TITRE|supprimer_numero|couper{80})]
+  							  [(#TITRE|couper{80})]
   						  </a>
   						</li>
 						</BOUCLE_sous_articles>
@@ -374,7 +374,7 @@
 
 			[(#REM)Déroulé des sites syndiqués]
 				<BOUCLE_sites(SITES) {id_rubrique} {par nom_site}{tout} >
-					<li><a id="ajax_rub_#ID_SYNDIC" [(#URL_SITE|match{thematiques.laclasse.com}|non)href="#URL_SITE" target="_blank"] class="hac ajax [ (#EXPOSE)]">[<strong>(#NOM_SITE|supprimer_numero|couper{80})</strong>]</a>
+					<li><a id="ajax_rub_#ID_SYNDIC" [(#URL_SITE|match{thematiques.laclasse.com}|non)href="#URL_SITE" target="_blank"] class="hac ajax [ (#EXPOSE)]">[<strong>(#NOM_SITE|couper{80})</strong>]</a>
 						<ul>
 							[(#REM)Articles syndic]
 							<BOUCLE_syndic_articles(SYNDIC_ARTICLES) {id_syndic} {tout} {par titre} {doublons}>
@@ -395,7 +395,7 @@
 											});
 									});});
 									</script>
-									<li><a id="ajax#ID_SYNDIC_ARTICLE" href="#" class="">[- (#TITRE|supprimer_numero|couper{80})]</a></li>
+									<li><a id="ajax#ID_SYNDIC_ARTICLE" href="#" class="">[- (#TITRE|couper{80})]</a></li>
 								]
 								[(#TAGS|non)
 
@@ -413,7 +413,7 @@
 											});
 									});});
 									</script>
-									<li><a id="ajax#ID_SYNDIC_ARTICLE" href="#" class="ajax [(#EXPOSE) [(#GET{art1}|=={#ID_ARTICLE}|?{ gauche_menu_on })]]">[(#TITRE|supprimer_numero|couper{80})]</a></li>
+									<li><a id="ajax#ID_SYNDIC_ARTICLE" href="#" class="ajax [(#EXPOSE) [(#GET{art1}|=={#ID_ARTICLE}|?{ gauche_menu_on })]]">[(#TITRE|couper{80})]</a></li>
 								]
 							</BOUCLE_syndic_articles>
 						</ul>

@@ -18,14 +18,14 @@
 			<div class="fiche_titre couleur_texte_[(#TYPE_OBJET)] couleur_[(#TYPE_OBJET)][(#MODELE{nb2col}{id_article})]">
 				<div class="photo">[(#MODELE{logo_carre}{id_article})]</div>
 				<div class="texte">
-					<div class="titre">[(#TITRE|supprimer_numero)]</div>
+					<div class="titre">[(#TITRE)]</div>
 					<div class="auteur_date">[(#GET{titre_parent}) - ][<span class="">(#DATE|affdate)</span>]</div>
 				</div>
 			</div>
 		]
 		[(#GET{type_objet}|match{blogs|evenements}|oui)
 			<div class="popup_titre">
-				<div class="titre">[(#TITRE|supprimer_numero)]</div>
+				<div class="titre">[(#TITRE)]</div>
 				<span class="date ">[(#DATE|nom_jour)] [(#DATE|affdate)]</span>
 				<span class="auteur">[ - (#LESAUTEURS)]</span>
 			</div>
@@ -68,7 +68,7 @@
 					<div class="nettoyeur"></div>
 					<BOUCLE_documents_joints1(DOCUMENTS) {media IN audio,video} {id_article} {tout} {doublons}>
 						<div class="portfolio_grand">
-							<a href="#URL_DOCUMENT" title="[(#TITRE|supprimer_numero)]" class="thickbox mediabox" type="#MIME_TYPE">
+							<a href="#URL_DOCUMENT" title="[(#TITRE)]" class="thickbox mediabox" type="#MIME_TYPE">
 							[(#MODELE{audio, autostart=false, hauteur=200, largeur=200})]
 							</a>
 						</div>
@@ -79,7 +79,7 @@
 					<div class="nettoyeur"></div>
 					<BOUCLE_documents_joints2(DOCUMENTS) {media IN image} {id_article} {tout} {doublons}>
 						<div class="portfolio_grand">
-							<a href="#URL_DOCUMENT" title="[(#TITRE|supprimer_numero)]" class="thickbox mediabox" type="#MIME_TYPE">
+							<a href="#URL_DOCUMENT" title="[(#TITRE)]" class="thickbox mediabox" type="#MIME_TYPE">
 							[(#EMBED_DOCUMENT|image_reduire{700,500}|inserer_attribut{alt,[(#TITRE|couper{80}|texte_backend)]}|inserer_attribut{style,'border:0px solid #000000;'})]
 							</a>
 						</div>
@@ -90,14 +90,14 @@
 					<div class="nettoyeur"></div>
 					<BOUCLE_documents_joints3(DOCUMENTS) {id_article} {tout} {doublons}>
 						<div class="portfolio">
-							<a href="#URL_DOCUMENT" title="[(#TITRE|supprimer_numero)]" type="#MIME_TYPE" style="text-decoration:none;">
+							<a href="#URL_DOCUMENT" title="[(#TITRE)]" type="#MIME_TYPE" style="text-decoration:none;">
 								[(#LOGO_DOCUMENT|image_reduire{100}|inserer_attribut{style,'border:0px solid #000000;'})]
 							</a>
 							[(#AUTORISER{modifier,article,#ID_ARTICLE}|oui)
-								[<span class="spip_doc_titre"><br />(#TITRE|supprimer_numero|couper{25}|sinon{<span class="ajouter_couleur" style="text-color: gray;">ajouter un titre</span>})</span>]
+								[<span class="spip_doc_titre"><br />(#TITRE|couper{25}|sinon{<span class="ajouter_couleur" style="text-color: gray;">ajouter un titre</span>})</span>]
 							]
 							[(#AUTORISER{modifier,article,#ID_ARTICLE}|non)
-								[<span class="spip_doc_titre"><br />(#TITRE|supprimer_numero|couper{25})</span>]
+								[<span class="spip_doc_titre"><br />(#TITRE|couper{25})</span>]
 							]
 						</div>
 					</BOUCLE_documents_joints3>
@@ -107,7 +107,7 @@
 				<B_documents_joints>
 					<BOUCLE_documents_joints(DOCUMENTS) {id_article} {tout} {doublons}>
 						<div class="portfolio">
-							[<br /><a href="#URL_DOCUMENT" title="[(#TITRE|supprimer_numero)]" [(#TYPE_DOCUMENT|match{jpg|png|gif}|?{class="thickbox mediabox"})] type="#MIME_TYPE">(#EMBED_DOCUMENT|image_reduire{100}|inserer_attribut{alt,[(#TITRE|couper{80}|texte_backend)]}|inserer_attribut{style,'border:0px solid #000000; padding: 30px; float: left; position: relative;'})</a>]
+							[<br /><a href="#URL_DOCUMENT" title="[(#TITRE)]" [(#TYPE_DOCUMENT|match{jpg|png|gif}|?{class="thickbox mediabox"})] type="#MIME_TYPE">(#EMBED_DOCUMENT|image_reduire{100}|inserer_attribut{alt,[(#TITRE|couper{80}|texte_backend)]}|inserer_attribut{style,'border:0px solid #000000; padding: 30px; float: left; position: relative;'})</a>]
 						</div>
 					</BOUCLE_documents_joints>
 				</B_documents_joints>

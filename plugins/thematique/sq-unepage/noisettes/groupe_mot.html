@@ -5,7 +5,7 @@
 		<div class="popup_titre">
 			[(#MODE|=={ajax}|non)<!--<img class='img_titre' src="#CHEMIN{images}/puce_titrecouleur#GET{coul}.gif">-->]
 			[(#MODE|=={ajax}|et{#TYPE_OBJET|=={travail_en_cours}}|oui)<span class="#EDIT{logo}">[(#LOGO_RUBRIQUE|image_reduire{80}|inserer_attribut{class,img_titre ombre_portee}|sinon{#LOGO_SITE_SPIP})]</span>]
-			<span class="#EDIT{titre} titre">[(#TITRE|supprimer_numero)]</span>
+			<span class="#EDIT{titre} titre">[(#TITRE)]</span>
 		</div>
 
 		[(#REM)Corps Menu Arborescent]
@@ -25,7 +25,7 @@
 								});
 						});});
 						</script>
-					<li><a id="ajax_rub_#ID_MOT" href="#" class="hac ajax [ (#EXPOSE)][ (#GET{rub1}|=={#ID_RUBRIQUE}|?{ on })]">[<strong>(#TITRE|supprimer_numero|couper{80})</strong>]</a>
+					<li><a id="ajax_rub_#ID_MOT" href="#" class="hac ajax [ (#EXPOSE)][ (#GET{rub1}|=={#ID_RUBRIQUE}|?{ on })]">[<strong>(#TITRE|couper{80})</strong>]</a>
 						<ul>
 
 							[(#REM)Articles]
@@ -41,7 +41,7 @@
 												});
 										});});
 										</script>
-									<li><a id="ajax#ID_ARTICLE" href="#"  class="ajax [(#EXPOSE) [(#GET{art1}|=={#ID_ARTICLE}|?{ gauche_menu_on })]]">[- (#TITRE|supprimer_numero|couper{80})]</a></li>
+									<li><a id="ajax#ID_ARTICLE" href="#"  class="ajax [(#EXPOSE) [(#GET{art1}|=={#ID_ARTICLE}|?{ gauche_menu_on })]]">[- (#TITRE|couper{80})]</a></li>
 								</BOUCLE_sous_articles2>
 
 						</ul>
