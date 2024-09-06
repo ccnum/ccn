@@ -16,7 +16,7 @@
 <INCLURE{fond=noisettes/js/accordeon}{nom=bloc_option_extraits}>
 <div id="bloc_option_extraits" style="clear: both;">
 <ul ><li><a class="hac lien_ajouter" title="ajouter un document">
-<img src="[(#CHEMIN{img/logo_editer_on_15.png}||image_reduire{15}|extraire_attribut{src})]" >&nbsp;&nbsp;Gérer les extraits</a>
+<img src="[(#CHEMIN{img/logo_editer_on_15.png}|image_reduire{15}|extraire_attribut{src})]" >&nbsp;&nbsp;Gérer les extraits</a>
 <ul style="display: none;">
 
 		[(#REM)Affichage mots-clefs]
@@ -32,7 +32,7 @@
 						echo '<a class="" title="Changer l\'extrait" href="'.securiser_action_auteur($action, $arg, $redirect, $mode=false, $att="").'"><div class="action_supprimer"></div></a>';
 					}
 				?>
-				
+
 				<div style='text-align: center;'>
 				[(#REM)FLV choisi]
 					<a href="#URL_ARTICLE" style="text-decoration:none; border:0px;">[(#TITRE|couper{30})]</a>
@@ -51,18 +51,18 @@
 					</BOUCLE_documents_joints_mp3>
 						<br /><p style="color: #cccccc;">Lancer les bandes sons librement en appuyant sur PLAY après avoir déclenché le film muet.</p>
 					</B_documents_joints_mp3>
-										
+
 				</div>
 				#SET{aff,oui}
 				</BOUCLE_art>
 			</BOUCLE_mot>
 
-		[(#REM)Articles substitué à Mots clefs(magouille) dans la table spip_mot_article / modifiables sur FrontOffice]						
+		[(#REM)Articles substitué à Mots clefs(magouille) dans la table spip_mot_article / modifiables sur FrontOffice]
 			<?php
 				if ((isset($GLOBALS['auteur_session']['nom']))&&(autoriser('modifier', 'article', #ID_ARTICLE)))
-				{			
+				{
 					[(#REM)On ne peut choisir qu'un extrait - on affiche le formulaire que si on a pas de danse]
-						if ($nb_danse==0) 
+						if ($nb_danse==0)
 						{
 							$action="editer_mots";
 							$redirect="spip.php?page=article&id_article=#ID_ARTICLE";
@@ -76,8 +76,8 @@
 							$mode.="</select><input type='submit' value='valider' id='valider_groupe_3' />";
 
 							$arg="#ID_ARTICLE,,articles,id_article,article";
-					
-							//echo "<div style='clear:both; padding: 5px 0px 0px 10px; position: relative; '><img src='plugins/crayons/images/crayon20.png' alt='modifier' title='modifier les extraits' style='cursor:pointer;'' /><span id='modif_mat' padding:5px;'><input class='publier_menu publier_droite publier' type='submit' onclick='window.open(\"spip.php?rubrique17\")' value='Voir les extraits'/>";					
+
+							//echo "<div style='clear:both; padding: 5px 0px 0px 10px; position: relative; '><img src='plugins/crayons/images/crayon20.png' alt='modifier' title='modifier les extraits' style='cursor:pointer;'' /><span id='modif_mat' padding:5px;'><input class='publier_menu publier_droite publier' type='submit' onclick='window.open(\"spip.php?rubrique17\")' value='Voir les extraits'/>";
 							echo securiser_action_auteur($action, $arg, $redirect, $mode, $att);
 							//echo "</span></div>";
 						}

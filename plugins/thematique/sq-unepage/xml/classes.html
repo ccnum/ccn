@@ -1,79 +1,48 @@
 #SET{dans_archives,non}
-
 <datas>
-
-
-    #SET{titre_rubrique_archive,#CONST{_annee_scolaire}}
-
-    <BOUCLE_archives_annee(RUBRIQUES){titre==^#GET{titre_rubrique_archive}}{tout}{0,1}>
-
-      #SET{dans_archives,oui}
-
-        <BOUCLE_archives_annee_intervenants(RUBRIQUES){id_parent=#ID_RUBRIQUE}{tout}>
-          <BOUCLE_archives_annee_intervenants_in(RUBRIQUES){id_parent=#ID_RUBRIQUE}{titre_mot==consignes}{tout}>
-            <intervenant>
-            	<id>#ID_RUBRIQUE</id>
-            	<nom>[(#TITRE|entites_html)]</nom>
-            </intervenant>
-          </BOUCLE_archives_annee_intervenants_in>
-        </BOUCLE_archives_annee_intervenants>
-        </B_archives_annee_intervenants>
-            <intervenant>
-              <id>0</id>
-              <nom>nom</nom>
-            </intervenant>
-            <travail_en_cours_id>0</travail_en_cours_id>
-
-        <//B_archives_annee_intervenants>
-
-        <BOUCLE_archives_annee_classes(RUBRIQUES){id_parent=#ID_RUBRIQUE}{titre_mot==travail_en_cours}{tout}>
-
-          <travail_en_cours_id>#ID_RUBRIQUE</travail_en_cours_id>
-
-          <BOUCLE_archives_annee_classes_in(RUBRIQUES){id_parent=#ID_RUBRIQUE}{tout}>
-
-          	<classe>
-            	<id>#ID_RUBRIQUE</id>
-            	<nom>[(#TITRE|entites_html)]</nom>
-          	</classe>
-
-          </BOUCLE_archives_annee_classes_in>
-        </BOUCLE_archives_annee_classes>
-
-
-    </BOUCLE_archives_annee>
-
-
-  <BOUCLE_intervenants(RUBRIQUES){racine}{titre==Consignes$}{tout}{si #GET{dans_archives}|=={non}|oui}>
-
-    <BOUCLE_intervenants_in(RUBRIQUES){id_parent=#ID_RUBRIQUE}{tout}>
-
-      [(#REM) CCN courant]
-
-    	<intervenant>
-      	<id>#ID_RUBRIQUE</id>
-      	<nom>[(#TITRE|entites_html)]</nom>
-    	</intervenant>
-
-    </BOUCLE_intervenants_in>
-
-  </BOUCLE_intervenants>
-
-
-  <BOUCLE_classes(RUBRIQUES){racine}{titre_mot==travail_en_cours}{tout}{si #GET{dans_archives}|=={non}|oui}>
-
-    <travail_en_cours_id>#ID_RUBRIQUE</travail_en_cours_id>
-
-    <BOUCLE_classes_in(RUBRIQUES){id_parent=#ID_RUBRIQUE}{tout}>
-
-      [(#REM) CCN courant]
-
-    	<classe>
-      	<id>#ID_RUBRIQUE</id>
-      	<nom>[(#TITRE|entites_html)]</nom>
-    	</classe>
-
-    </BOUCLE_classes_in>
-  </BOUCLE_classes>
-
+	<BOUCLE_archives_annee(RUBRIQUES){titre==^#CONST{_annee_scolaire}}{tout}{0,1}>
+		#SET{dans_archives,oui}
+		<BOUCLE_archives_annee_intervenants(RUBRIQUES){id_parent=#ID_RUBRIQUE}{tout}>
+			<BOUCLE_archives_annee_intervenants_in(RUBRIQUES){id_parent=#ID_RUBRIQUE}{titre_mot==consignes}{tout}>
+				<intervenant>
+					<id>#ID_RUBRIQUE</id>
+					<nom>[(#TITRE|entites_html)]</nom>
+				</intervenant>
+			</BOUCLE_archives_annee_intervenants_in>
+		</BOUCLE_archives_annee_intervenants>
+			<intervenant>
+				<id>0</id>
+				<nom>nom</nom>
+			</intervenant>
+			<travail_en_cours_id>0</travail_en_cours_id>
+		<//B_archives_annee_intervenants>
+		<BOUCLE_archives_annee_classes(RUBRIQUES){id_parent=#ID_RUBRIQUE}{titre_mot==travail_en_cours}{tout}>
+			<travail_en_cours_id>#ID_RUBRIQUE</travail_en_cours_id>
+			<BOUCLE_archives_annee_classes_in(RUBRIQUES){id_parent=#ID_RUBRIQUE}{tout}>
+				<classe>
+					<id>#ID_RUBRIQUE</id>
+					<nom>[(#TITRE|entites_html)]</nom>
+				</classe>
+			</BOUCLE_archives_annee_classes_in>
+		</BOUCLE_archives_annee_classes>
+	</BOUCLE_archives_annee>
+	<BOUCLE_intervenants(RUBRIQUES){racine}{titre==Consignes$}{tout}{si #GET{dans_archives}|=={non}|oui}>
+		<BOUCLE_intervenants_in(RUBRIQUES){id_parent=#ID_RUBRIQUE}{tout}>
+			[(#REM) CCN courant]
+			<intervenant>
+				<id>#ID_RUBRIQUE</id>
+				<nom>[(#TITRE|entites_html)]</nom>
+			</intervenant>
+		</BOUCLE_intervenants_in>
+	</BOUCLE_intervenants>
+	<BOUCLE_classes(RUBRIQUES){racine}{titre_mot==travail_en_cours}{tout}{si #GET{dans_archives}|=={non}|oui}>
+		<travail_en_cours_id>#ID_RUBRIQUE</travail_en_cours_id>
+		<BOUCLE_classes_in(RUBRIQUES){id_parent=#ID_RUBRIQUE}{tout}>
+			[(#REM) CCN courant]
+			<classe>
+				<id>#ID_RUBRIQUE</id>
+				<nom>[(#TITRE|entites_html)]</nom>
+			</classe>
+		</BOUCLE_classes_in>
+	</BOUCLE_classes>
 </datas>
