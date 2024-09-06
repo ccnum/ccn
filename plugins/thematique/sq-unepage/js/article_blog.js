@@ -43,9 +43,9 @@ function ArticleBlog() {
 
 		var date_texte = this.date.substring(0, 2) + " " + CCN.nomMois[parseFloat(this.date.substring(3, 5)) - 1];
 
-		var html = "<div id='article_blog" + this.id + "' class='article_blog ";
+		var html = "<div id='article_blog" + this.id + "' class='article_blog";
 		if ((this.titre.match("gazette")) || (this.titre.match("novamag")) || (this.titre.match("magazine"))) {
-			html = html + " article_blog2 ";
+			html = html + " article_blog2";
 		}
 		html = html + "'><div class=\"article_blog_inner\"><b>" + this.titre + "</b><br/><span class=\"article_blog_date\">" + date_texte + "</span></div>";
 
