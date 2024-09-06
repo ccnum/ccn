@@ -16,10 +16,10 @@ id_objet : id_article
 				$id_objet = #ID_OBJET;
 				$id_mot = #ID_MOT;
 				$type_objet = "#TYPE_OBJET";
-				
+
 				echo sql_insertq("spip_mots_liens",
 					array("id_mot" => $id_mot, "id_objet" => $id_objet, "objet" => $type_objet));
-				
+
 			?>
 		]
 	]
