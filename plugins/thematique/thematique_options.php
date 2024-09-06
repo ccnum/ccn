@@ -100,10 +100,6 @@ $pagination_separateur = '&nbsp;|&nbsp;';
 // Forcer la langue selon le choix du visiteur
 $GLOBALS['forcer_lang'] = true;
 
-// Masquer les numeros de titre
-$GLOBALS['table_des_traitements']['TITRE'][] = 'typo(supprimer_numero(%s))';
-$table_des_traitements['NOM'][] = 'supprimer_numero(typo(%s))';
-
 // Ne pas transformer toutes les urls en lien !
 //define('_EXTRAIRE_LIENS',',^$,');
 
