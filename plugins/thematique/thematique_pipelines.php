@@ -40,7 +40,7 @@ function thematique_jqueryui_plugins($scripts) {
 	$scripts[] = 'jquery.ui.position';
 	$scripts[] = 'jquery.ui.draggable';
 	$scripts[] = 'jquery.ui.droppable';
-	$scripts[] = 'jquery.ui.tooltip'; /* a TROUVER */
+	$scripts[] = 'jquery.ui.tooltip';
 	$scripts[] = 'jquery.ui.effect';
 	$scripts[] = 'jquery.ui.effect-bounce';
 

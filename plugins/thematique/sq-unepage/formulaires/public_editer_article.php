@@ -12,7 +12,8 @@
 \
  ***************************************************************************/
 
-if (!defined('_ECRIRE_INC_VERSION')) { return;
+if (!defined('_ECRIRE_INC_VERSION')) {
+	return;
 }
 
 include_spip('inc/actions');
@@ -24,7 +25,8 @@ function formulaires_public_editer_article_charger_dist($id_article = 'new', $id
 	// il faut enlever l'id_rubrique car la saisie se fait sur id_parent
 	// et id_rubrique peut etre passe dans l'url comme rubrique parent initiale
 	// et sera perdue si elle est supposee saisie
-	if (is_array($valeurs)) { unset($valeurs['id_rubrique']);
+	if (is_array($valeurs)) {
+		unset($valeurs['id_rubrique']);
 	}
 	return $valeurs;
 }
@@ -58,7 +60,7 @@ function formulaires_public_editer_article_traiter_dist($id_article = 'new', $id
 	$id_article1 = $res['id_article'];
 
 	if ((isset($id_consigne)) && (isset($id_article1))) {
-		sql_updateq('spip_articles', ['id_consigne' => $id_consigne,'statut' => 'publie'], "id_article=$id_article1");
+		sql_updateq('spip_articles', ['id_consigne' => $id_consigne, 'statut' => 'publie'], "id_article=$id_article1");
 	}
 
 	//Mail
@@ -73,13 +75,5 @@ function formulaires_public_editer_article_traiter_dist($id_article = 'new', $id
 			);
 		}
 	}
-
-	//Redirection
-	//    $res['redirect']="spip.php?page=article&id_article=$id_article1&id_consigne=$id_consigne";
-
-	// $res['redirect']="spip.php?google=yahoo";
-
-	// TODO
-
 	return $res;
 }

@@ -1,6 +1,7 @@
 <?php
 
-if (!defined('_ECRIRE_INC_VERSION')) { return;
+if (!defined('_ECRIRE_INC_VERSION')) {
+	return;
 }
 
 function th_declarer_champs_extras($champs = []) {
