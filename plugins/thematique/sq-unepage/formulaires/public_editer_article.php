@@ -65,7 +65,6 @@ function formulaires_public_editer_article_traiter_dist($id_article = 'new', $id
 
 	//Mail
 	if ($id_article == '') {
-		//$res['redirect']="spip.php?page=sommaire_recharge&type_objet=reponse&id_article=$id_article&id_consigne=$id_consigne";
 		$date = date('Y-m-d H:i:s');
 		if ($notifications = charger_fonction('notifications', 'inc')) {
 			$notifications(
