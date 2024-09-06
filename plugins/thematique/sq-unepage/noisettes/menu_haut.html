@@ -53,7 +53,7 @@
 </script>
 
 <ul id="menu_haut_user" class="bloc_titre">
-    <INCLURE{fond=noisettes/inc/authentification, admin, restreint, type_restreint}>
+    <INCLURE{fond=noisettes/inc/authentification, id_auteur, admin, restreint, type_restreint}>
 </ul>
 
 [(#RESTREINT|!={0}|oui|et{#RESTREINT|!={''}}|et{#TYPE_RESTREINT|!={''}}|et{#TYPE_RESTREINT|!={travail_en_cours}|oui}|oui)
@@ -82,4 +82,4 @@
 ]
 
 [(#REM)Initialisations dont crayons]
-<BOUCLE_auteur(AUTEURS){id_auteur=#SESSION{id_auteur}}{tout}><div class="#EDIT{nom} cache">#NOM</div></BOUCLE_auteur>
+<BOUCLE_auteur(AUTEURS){id_auteur}{tout}><div class="#EDIT{nom} cache">#NOM</div></BOUCLE_auteur>
