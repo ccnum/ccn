@@ -5,34 +5,34 @@
 	</BOUCLE_getCouleur1>
 </BOUCLE_getCouleur>
 <BOUCLE_commentaires(FORUMS){id_forum}>
-		<div class="actualites-actu couleur_travail_en_cours[(#GET{IdCouleur}|nb2col)]" onclick="callConsigne(#ID_OBJET);">		
+		<div class="actualites-actu couleur_travail_en_cours[(#GET{IdCouleur}|nb2col)]" onclick="callConsigne(#ID_OBJET);">
 				<span class="profil">[(#MODELE{logo_carre}{taille=40}{id_rubrique=#ID_RUBRIQUE}{titre=#TITRE})]</span>
 				Commentaire de &nbsp;<b>#AUTEUR</b> &nbsp; sur &nbsp; <b>#TITRE </b> &nbsp;
 				[<p class="date">(#DATE|affdate)</p>]
 				 <div class="content">[(#TEXTE|couper{80})]<br><br>
 					<BOUCLE_images(DOCUMENTS){id_forum}>
-							[(#MEDIA|match{'image'}|oui)                                   
+							[(#MEDIA|match{'image'}|oui)
 								<div class="img-container">
 									<a href="#URL_DOCUMENT" title="[(#TITRE|supprimer_numero)]" class="thickbox mediabox" type="#MIME_TYPE">
 									[(#FICHIER |image_reduire{200})]
 									</a>
 								</div>
 							]
-							
+
 							[(#MEDIA|match{'image'}|non)
                   <div class="document">
-                    [(#LOGO_DOCUMENT||image_reduire{100}|inserer_attribut{style,'border:0px solid #000000;'})]
+                    [(#LOGO_DOCUMENT|image_reduire{100}|inserer_attribut{style,'border:0px solid #000000;'})]
 								    [<span class="spip_doc_titre"><br />(#TITRE|supprimer_numero|couper{25}|sinon{<span class="ajouter_couleur" style="text-color: gray;">Document sans titre</span>})</span>]
                     [(#AUTORISER{modifier,article,#ID_ARTICLE}|non)
                       [<span class="spip_doc_titre"><br />(#TITRE|supprimer_numero|couper{25})</span>]
                     ]
                   </div>
                   ]
-							
+
 					</BOUCLE_images>
 				</div>
 				 <div class="arrow-down"></div>
 			</div>
 </BOUCLE_commentaires>
-	
+
 
