@@ -41,7 +41,6 @@ function initCCN() {
 	CCN.timelineLayerLivrables = $('#livrables');
 
 	// Charge le projet
-
 	loadProjet(CCN.urlXml + "projet");
 }
 
@@ -699,8 +698,6 @@ function initTimeline() {
 
 // window.onload = init();
 
-$(
-	function () {
-		initCCN();
-	}
-);
+$(function () {
+	initCCN();
+});
