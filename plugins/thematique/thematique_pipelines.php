@@ -6,7 +6,7 @@ if (!defined('_ECRIRE_INC_VERSION')) {
 
 //Pre_boucles
 //Retourne les articles et articles syndiqués en lien avec l'année scolaire
-function th_pre_boucle($boucle) {
+function thematique_pre_boucle($boucle) {
 	$affichage = _affichage;
 
 	$annee = _annee_scolaire;
@@ -33,7 +33,7 @@ function th_pre_boucle($boucle) {
 	return $boucle;
 }
 
-function th_jqueryui_plugins($scripts) {
+function thematique_jqueryui_plugins($scripts) {
 	$scripts[] = 'jquery.ui.core';
 	$scripts[] = 'jquery.ui.widget';
 	$scripts[] = 'jquery.ui.mouse';
