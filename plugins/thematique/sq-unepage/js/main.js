@@ -624,7 +624,7 @@ function initTimeline() {
 					var expires = new Date();
 					expires.setDate(expires.getDate() + 30);
 					document.cookie = "visited=true; expires=" + expires.toUTCString();
-					//$('.presentation').colorbox({width:'900px',height: '600px',slideshow:true, slideshowSpeed: 5000, transition:"fade", loop:false, open: true}); (TO DO ?)
+					//$('.presentation').mediabox({width:'900px',height: '600px',slideshow:true, slideshowSpeed: 5000, transition:"fade", loop:false, open: true}); (TO DO ?)
 				}
 			}
 		);
@@ -650,7 +650,7 @@ function initTimeline() {
 	$().ready(
 		function () {
 			// Listener popups
-			/*$('.cache .mediabox').colorbox({width:'80%',height: '80%', className:"aide-ccn", slideshow:true, slideshowSpeed: 5000, transition:"fade", loop:false, title: function(){
+			/*$('.cache .mediabox').mediabox({width:'80%',height: '80%', className:"aide-ccn", slideshow:true, slideshowSpeed: 5000, transition:"fade", loop:false, title: function(){
 			var title = $(this).data("title");
 			if ($(this).hasClass("description")) {
 			$(this).css({position: 'absolute', top:'50%', color: 'red' })
@@ -674,15 +674,15 @@ function initTimeline() {
 
 			}});*/
 			// Silder colorbox d'aide
-			$(".ccn-aide").colorbox({ width: '80%', height: 'auto', rel: 'ccn-aide', inline: true, href: $(this).attr('href'), current: "{current}/{total}" });
+			$(".ccn-aide").mediabox({ width: '80%', height: 'auto', rel: 'ccn-aide', inline: true, href: $(this).attr('href'), current: "{current}/{total}" });
 			$('.logo_menu-aide').click(
 				function () {
-					$(".ccn-aide").colorbox({ open: true });
+					$(".ccn-aide").mediabox({ open: true });
 				}
 			)
 
-			//$('.presentation').colorbox({ width:'80%',height: '80%',slideshow:true, slideshowSpeed: 5000, transition:"fade", loop:false});
-			$('.profil').colorbox({ width: '80%', height: '80%' });
+			//$('.presentation').mediabox({ width:'80%',height: '80%',slideshow:true, slideshowSpeed: 5000, transition:"fade", loop:false});
+			$('.profil').mediabox({ width: '80%', height: '80%' });
 
 			window.addEventListener(
 				"resize", function (event) {
