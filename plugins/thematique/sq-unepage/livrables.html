@@ -15,16 +15,16 @@
 								<div class="header">
 									<h3>#TITRE</h3>
 								</div>
-									<span class="profil">[(#MODELE{logo_carre}{taille=40}{id_rubrique=#ID_RUBRIQUE}{titre=#TITRE})]
-										<h4>#GET{auteur}</h4>
-									</span>
-									<!--<div class="featured-image">[(#LOGO_ARTICLE |image_reduire{500,300})]</div>-->
+								<span class="profil">[(#MODELE{logo_carre}{taille=40}{id_rubrique=#ID_RUBRIQUE}{titre=#TITRE})]
+									<h4>#GET{auteur}</h4>
+								</span>
+								<!--<div class="featured-image">[(#LOGO_ARTICLE |image_reduire{500,300})]</div>-->
 							</div>
 						</a>
 						<!-- LLIVRABLE DETAILS --------------->
 						<div>
 							<div  id="livrable[(#ID_ARTICLE)]" class="livrable-details-wrapper" style="overflow: scroll;" data-id="[(#ID_ARTICLE)]">
-								<div style="overflow:scroll;" class="livrable-details  couleur_travail_en_cours[(#ID_RUBRIQUE|nb2col)]">
+								<div style="overflow:scroll;" class="livrable-details couleur_travail_en_cours[(#ID_RUBRIQUE|nb2col)]">
 									<span style="overflow:scroll;" class="close" onclick="callLivrable(null, 'closeDetails')"><img src="[(#CHEMIN{img/close.svg}|image_reduire{25}|extraire_attribut{src})]"></span>
 									<div style="overflow:scroll;" class="featured-image #EDIT{logo}">
 									[(#LOGO_ARTICLE|sinon{
