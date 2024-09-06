@@ -3,9 +3,9 @@
 	<meta name="author" content="Erasme - pvincent (chez) erasme.org" />
 	<meta name="apple-mobile-web-app-capable" content="yes">
 	<title>[(#TITRE) - ][(#NOM_SITE_SPIP)]</title>
-	<link rel="alternate" type="application/rss+xml" href="#URL_SITE_SPIP/spip.php?page=backend" title="Dernières publications">
-	<link rel="alternate" type="application/rss+xml" href="#URL_SITE_SPIP/spip.php?page=rss_maj" title="Dernières mises à jour">
-	<link rel="alternate" type="application/rss+xml" href="#URL_SITE_SPIP/spip.php?page=rss_forum" title="Derniers commentaires dans le forum">
+	<link rel="alternate" type="application/rss+xml" href="#URL_PAGE{backend}" title="Dernières publications">
+	<link rel="alternate" type="application/rss+xml" href="#URL_PAGE{rss_maj}" title="Dernières mises à jour">
+	<link rel="alternate" type="application/rss+xml" href="#URL_PAGE{rss_forum}" title="Derniers commentaires dans le forum">
 	<link rel="icon" sizes="98x98" href="#CHEMIN{th.png}">
 	<!--<link rel="alternate" type="application/rss+xml" href="#URL_SITE_SPIP/spip.php?page=rss_laclasse_actu" title="Dernières publications pour laclasse.com">-->
 	<!--<link rel="alternate" type="application/rss+xml" href="#URL_SITE_SPIP/spip.php?page=rss_laclasse&recherche=texte" title="Recherche pour laclasse.com (modifier le texte dans l'url)">-->
@@ -13,7 +13,7 @@
 	<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 [(#REM)Fonctions JS générales]
 	[(#VUE|=={classe}|oui|et{#MODE|=={detail}|oui}|non)
-	]	
+	]
 	#INSERT_HEAD
 
 	<script src="#CHEMIN{js/bundled/html4+html5/jquery.history.js}"></script>
@@ -28,7 +28,7 @@
 	]
 
 	<link rel="stylesheet" href="#CHEMIN{css/isotope.css}" />
-	
+
 	[(#REM)
 	<link rel="stylesheet" href="#CHEMIN{css/jplayer.css}" />
 	<link rel="stylesheet" href="#CHEMIN{css/circle.player.css}" />

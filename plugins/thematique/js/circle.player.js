@@ -30,29 +30,29 @@
 
 
 var CirclePlayer = function (jPlayerSelector, media, options) {
-    var    self = this,
+    var self = this,
 
-    defaults = {
-        // solution: "flash, html", // For testing Flash with CSS3
-        supplied: "m4a, oga",
-        // Android 2.3 corrupts media element if preload:"none" is used.
-        // preload: "none", // No point preloading metadata since no times are displayed. It helps keep the buffer state correct too.
-        cssSelectorAncestor: "#cp_container_1",
-        cssSelector: {
-            play: ".cp-play",
-            pause: ".cp-pause"
-        }
-    },
+        defaults = {
+            // solution: "flash, html", // For testing Flash with CSS3
+            supplied: "m4a, oga",
+            // Android 2.3 corrupts media element if preload:"none" is used.
+            // preload: "none", // No point preloading metadata since no times are displayed. It helps keep the buffer state correct too.
+            cssSelectorAncestor: "#cp_container_1",
+            cssSelector: {
+                play: ".cp-play",
+                pause: ".cp-pause"
+            }
+        },
 
-    cssSelector = {
-        bufferHolder: ".cp-buffer-holder",
-        buffer1: ".cp-buffer-1",
-        buffer2: ".cp-buffer-2",
-        progressHolder: ".cp-progress-holder",
-        progress1: ".cp-progress-1",
-        progress2: ".cp-progress-2",
-        circleControl: ".cp-circle-control"
-    };
+        cssSelector = {
+            bufferHolder: ".cp-buffer-holder",
+            buffer1: ".cp-buffer-1",
+            buffer2: ".cp-buffer-2",
+            progressHolder: ".cp-progress-holder",
+            progress1: ".cp-progress-1",
+            progress2: ".cp-progress-2",
+            circleControl: ".cp-circle-control"
+        };
 
     this.cssClass = {
         gt50: "cp-gt50",
@@ -92,7 +92,7 @@ CirclePlayer.prototype = {
 
         this.player.bind(
             $.jPlayer.event.ready + this.eventNamespace, function (event) {
-                if(event.jPlayer.html.used && event.jPlayer.html.audio.available) {
+                if (event.jPlayer.html.used && event.jPlayer.html.audio.available) {
                     self.audio = $(this).data("jPlayer").htmlElement.audio;
                 }
                 $(this).jPlayer("setMedia", self.media);
@@ -119,10 +119,10 @@ CirclePlayer.prototype = {
         this.player.bind(
             $.jPlayer.event.progress + this.eventNamespace, function (event) {
                 var percent = 0;
-                if((typeof self.audio.buffered === "object") && (self.audio.buffered.length > 0)) {
-                    if(self.audio.duration > 0) {
+                if ((typeof self.audio.buffered === "object") && (self.audio.buffered.length > 0)) {
+                    if (self.audio.duration > 0) {
                         var bufferTime = 0;
-                        for(var i = 0; i < self.audio.buffered.length; i++) {
+                        for (var i = 0; i < self.audio.buffered.length; i++) {
                             bufferTime += self.audio.buffered.end(i) - self.audio.buffered.start(i);
                             // console.log(i + " | start = " + self.audio.buffered.start(i) + " | end = " + self.audio.buffered.end(i) + " | bufferTime = " + bufferTime + " | duration = " + self.audio.duration);
                         }
@@ -160,8 +160,8 @@ CirclePlayer.prototype = {
     _resetSolution: function () {
         if (this.cssTransforms) {
             this.jq.progressHolder.removeClass(this.cssClass.gt50);
-            this.jq.progress1.css({'transform': 'rotate(0deg)'});
-            this.jq.progress2.css({'transform': 'rotate(0deg)'}).hide();
+            this.jq.progress1.css({ 'transform': 'rotate(0deg)' });
+            this.jq.progress2.css({ 'transform': 'rotate(0deg)' }).hide();
         }
         else {
             this.jq.progress1.css('background-position', '0 ' + this.spritePitch + 'px');
@@ -172,7 +172,7 @@ CirclePlayer.prototype = {
         this.jq.circleControl.grab(
             {
                 onstart: function () {
-                      self.dragging = true;
+                    self.dragging = true;
                 }, onmove: function (event) {
                     var pc = self._getArcPercent(event.position.x, event.position.y);
                     self.player.jPlayer("playHead", pc).jPlayer("play");
@@ -186,50 +186,50 @@ CirclePlayer.prototype = {
         );
     },
     _timeupdate: function (percent) {
-        var degs = percent * 3.6+"deg";
+        var degs = percent * 3.6 + "deg";
 
-        var spriteOffset = (Math.floor((Math.round(percent))*this.spriteRatio)-1)*-this.spritePitch;
+        var spriteOffset = (Math.floor((Math.round(percent)) * this.spriteRatio) - 1) * -this.spritePitch;
 
         if (percent <= 50) {
             if (this.cssTransforms) {
                 this.jq.progressHolder.removeClass(this.cssClass.gt50);
-                this.jq.progress1.css({'transform': 'rotate(' + degs + ')'});
+                this.jq.progress1.css({ 'transform': 'rotate(' + degs + ')' });
                 this.jq.progress2.hide();
             } else { // fall back
-                this.jq.progress1.css('background-position', '0 '+spriteOffset+'px');
+                this.jq.progress1.css('background-position', '0 ' + spriteOffset + 'px');
             }
         } else if (percent <= 100) {
             if (this.cssTransforms) {
                 this.jq.progressHolder.addClass(this.cssClass.gt50);
-                this.jq.progress1.css({'transform': 'rotate(180deg)'});
-                this.jq.progress2.css({'transform': 'rotate(' + degs + ')'});
+                this.jq.progress1.css({ 'transform': 'rotate(180deg)' });
+                this.jq.progress2.css({ 'transform': 'rotate(' + degs + ')' });
                 this.jq.progress2.show();
             } else { // fall back
-                this.jq.progress1.css('background-position', '0 '+spriteOffset+'px');
+                this.jq.progress1.css('background-position', '0 ' + spriteOffset + 'px');
             }
         }
     },
     _progress: function (percent) {
-        var degs = percent * 3.6+"deg";
+        var degs = percent * 3.6 + "deg";
 
         if (this.cssTransforms) {
             if (percent <= 50) {
                 this.jq.bufferHolder.removeClass(this.cssClass.gt50);
-                this.jq.buffer1.css({'transform': 'rotate(' + degs + ')'});
+                this.jq.buffer1.css({ 'transform': 'rotate(' + degs + ')' });
                 this.jq.buffer2.hide();
             } else if (percent <= 100) {
                 this.jq.bufferHolder.addClass(this.cssClass.gt50);
-                this.jq.buffer1.css({'transform': 'rotate(180deg)'});
+                this.jq.buffer1.css({ 'transform': 'rotate(180deg)' });
                 this.jq.buffer2.show();
-                this.jq.buffer2.css({'transform': 'rotate(' + degs + ')'});
+                this.jq.buffer2.css({ 'transform': 'rotate(' + degs + ')' });
             }
         }
     },
     _getArcPercent: function (pageX, pageY) {
-        var    offset    = this.jq.circleControl.offset(),
-        x    = pageX - offset.left - this.jq.circleControl.width()/2,
-        y    = pageY - offset.top - this.jq.circleControl.height()/2,
-        theta    = Math.atan2(y,x);
+        var offset = this.jq.circleControl.offset(),
+            x = pageX - offset.left - this.jq.circleControl.width() / 2,
+            y = pageY - offset.top - this.jq.circleControl.height() / 2,
+            theta = Math.atan2(y, x);
 
         if (theta > -1 * Math.PI && theta < -0.5 * Math.PI) {
             theta = 2 * Math.PI + theta;
