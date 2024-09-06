@@ -1,7 +1,7 @@
 <datas>
 	<BOUCLE_rubrique(RUBRIQUES){titre_mot=evenements}{tout}>
 		<BOUCLE_article(ARTICLES){branche}{par date}{date>=#CONST{_date_debut}}{date<=#CONST{_date_fin}}>
-			<BOUCLE_forum(FORUMS){id_article}><?php ?></BOUCLE_forum>#SET{total,#TOTAL_BOUCLE}</B_forum>#SET{total,0}<//B_forum>
+			#SET{total,0}<BOUCLE_forum(FORUMS){id_article}> </BOUCLE_forum>#SET{total,#TOTAL_BOUCLE}</B_forum>
 			[(#SESSION{statut}|=={0minirezo}|oui)
 			<article>
 				<id>article_#ID_ARTICLE</id>
