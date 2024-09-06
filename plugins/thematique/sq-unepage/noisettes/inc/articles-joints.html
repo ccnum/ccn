@@ -9,7 +9,7 @@
 	<span>Classe[(#GET{nb}|>{1}|?{s})] travaillant dessus</span>
 </div>
 
-<div id="bloc_article">	
+<div id="bloc_article">
 	<div id="bloc_article_h"><img src="#CHEMIN{images/bloc_article_h.gif}" alt="" width="546" height="12" /></div>
 	<div id="bloc_article_m">
 
@@ -21,8 +21,8 @@
 					<div class="portfolio" >
 						[(#LESAUTEURS|inserer_attribut{class,titre_bloc2})<br /><br />]
 						<a href="#URL_ARTICLE" style="text-decoration:none; border:0px;">
-							[(#LOGO_ARTICLE_RUBRIQUE||image_reduire{120})]<br />[(#TITRE)]
-						</a>							
+							[(#LOGO_ARTICLE_RUBRIQUE|image_reduire{120})]<br />[(#TITRE)]
+						</a>
 					</div>
 				</BOUCLE_art>
 			</BOUCLE_mot>

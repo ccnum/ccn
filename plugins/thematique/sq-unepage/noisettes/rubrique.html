@@ -45,7 +45,7 @@
   			|   …la rubrique #_principale a les mots-clés blog ou chrono,
   			|
   			|  Alors on cherche :
-  			|   Articles ||| enfants ||| de la rubrique #_principale ayant les mots-clés blog ou chrono
+  			|   Articles || enfants || de la rubrique #_principale ayant les mots-clés blog ou chrono
   			|
   			|  Note :
   			|   Il n'y a aucun article/rubrique avec ces mots-clés,
@@ -67,7 +67,7 @@
   						});
   				});});
 
-					// console.log('(A) Rubrique (#TYPE_OBJET) : Affichage de l\'article ##ID_ARTICLE ||| enfant ||| de la rubrique #_principale ##_principale:ID_RUBRIQUE ayant les mots-clés blog ou chrono');
+					// console.log('(A) Rubrique (#TYPE_OBJET) : Affichage de l\'article ##ID_ARTICLE || enfant || de la rubrique #_principale ##_principale:ID_RUBRIQUE ayant les mots-clés blog ou chrono');
   				</script>
   				<li><a id="ajax#ID_ARTICLE" href="#" class="ajax [(#EXPOSE) [(#GET{art1}|=={#ID_ARTICLE}|?{ gauche_menu_on })]]">[- (#TITRE|supprimer_numero|couper{80})]</a></li>
   			</BOUCLE_sous_articles0>
@@ -83,7 +83,7 @@
 			|   …la rubrique #_principale n'a pas les mots-clés blog ou chrono,
 			|
 			|  Alors on cherche :
-			|   Articles ||| enfants ||| de la rubrique #_principale n'ayant pas les mots-clés blog ou chrono
+			|   Articles || enfants || de la rubrique #_principale n'ayant pas les mots-clés blog ou chrono
 			|
 			| 	Affiche la rubrique concernant l'utilisateur connecté en premiere place dans Travail en cours
 			|	seulement si l'utilisateur connecté est professeur
@@ -168,7 +168,7 @@
 						});
 					});
 
-					// console.log('(A.a) Rubrique (#TYPE_OBJET) : Affichage de l\'article ##ID_ARTICLE ||| enfants ||| de la rubrique #_principale ##_principale:ID_RUBRIQUE n\'ayant pas les mots-clés blog ou chrono');
+					// console.log('(A.a) Rubrique (#TYPE_OBJET) : Affichage de l\'article ##ID_ARTICLE || enfants || de la rubrique #_principale ##_principale:ID_RUBRIQUE n\'ayant pas les mots-clés blog ou chrono');
 
 					</script>
 					<div class="sidebar_bubble">
@@ -186,7 +186,7 @@
 			|  - La rubrique #_principale si elle a les mots-clés chrono ou blog (donc si la rubrique #_principale a un des mots-clés, cette boucle n'est pas exécutée)
 			|
 			|  On cherche :
-			|   Sous-rubriques ||| enfants ||| de la rubrique #_principale n'ayant pas les mots-clés blog ou chrono
+			|   Sous-rubriques || enfants || de la rubrique #_principale n'ayant pas les mots-clés blog ou chrono
       ]
 
 			<BOUCLE_rubriques(RUBRIQUES) {id_parent} {par num titre, titre}{tout} {doublons r}>
@@ -227,7 +227,7 @@
         					});
       					});
 
-                // console.log('(B.a) Rubrique (#TYPE_OBJET) : Affichage de la sous-sous-rubrique ##ID_RUBRIQUE ||| enfant ||| de la sous-rubrique ##ID_PARENT ||| enfant ||| de la rubrique #_principale ##_principale:ID_RUBRIQUE n\'ayant pas les mots-clés blog ou chrono');
+                // console.log('(B.a) Rubrique (#TYPE_OBJET) : Affichage de la sous-sous-rubrique ##ID_RUBRIQUE || enfant || de la sous-rubrique ##ID_PARENT || enfant || de la rubrique #_principale ##_principale:ID_RUBRIQUE n\'ayant pas les mots-clés blog ou chrono');
       			  </script>
 
 							<li class="ressources_classe_consignes">
@@ -272,7 +272,7 @@
         			|   …la sous-rubrique #_rubriques a les mots-clés blog ou chrono enfant de la rubrique #_principale
         			|
         			|  Alors on cherche :
-        			|   Articles ||| enfants ||| de la sous-rubrique #_rubriques ayant les mots-clés blog ou chrono ||| enfant ||| de la rubrique #_principale n'ayant pas les mots-clés blog ou chrono
+        			|   Articles || enfants || de la sous-rubrique #_rubriques ayant les mots-clés blog ou chrono || enfant || de la rubrique #_principale n'ayant pas les mots-clés blog ou chrono
         			|
         			|  Note :
         			|   Il n'y a aucun article/rubrique avec ces mots-clés,
@@ -309,7 +309,7 @@
         			[(#REM)
         			|
         			|  On cherche :
-        			|   Articles ||| enfants ||| de la sous-rubrique #_rubriques n'ayant pas les mots-clés blog ou chrono ||| enfant ||| de la rubrique #_principale n'ayant pas les mots-clés blog ou chrono
+        			|   Articles || enfants || de la sous-rubrique #_rubriques n'ayant pas les mots-clés blog ou chrono || enfant || de la rubrique #_principale n'ayant pas les mots-clés blog ou chrono
               ]
 
 							<BOUCLE_sous_articles3(ARTICLES) {id_rubrique} {si #STATUT|== {publie}} {par num titre} {doublons}>
@@ -341,7 +341,7 @@
       			[(#REM)
       			|
       			|  On cherche (si on ne se trompe pas) :
-      			|   Tous les autres articles ||| enfants ||| de la sous-rubrique #_rubriques ||| enfant ||| de la rubrique #_principale
+      			|   Tous les autres articles || enfants || de la sous-rubrique #_rubriques || enfant || de la rubrique #_principale
             ]
 
 						<BOUCLE_sous_articles(ARTICLES) {id_rubrique} {si #STATUT|== {publie}} {!par date} {doublons}>
@@ -358,7 +358,7 @@
         					});
       					});
 
-                // console.log('(B.d) Rubrique (#TYPE_OBJET) : Affichage de tous les autres articles (ici ##ID_ARTICLE) ||| enfants ||| de la sous-rubrique #_rubriques ##_rubriques:ID_RUBRIQUE ||| enfant ||| de la rubrique #_principale ##_principale:ID_RUBRIQUE');
+                // console.log('(B.d) Rubrique (#TYPE_OBJET) : Affichage de tous les autres articles (ici ##ID_ARTICLE) || enfants || de la sous-rubrique #_rubriques ##_rubriques:ID_RUBRIQUE || enfant || de la rubrique #_principale ##_principale:ID_RUBRIQUE');
       			  </script>
 
 							<li class="ressources_classe_consignes">
