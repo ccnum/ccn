@@ -7,34 +7,9 @@ if (!defined('_ECRIRE_INC_VERSION')) {
 // PIPELINES
 //$GLOBALS['marqueur'] .= ':'.$_COOKIE['mobile'];
 //$GLOBALS['spip_pipeline']['pre_propre'] .= '|post_autobr';
-//$GLOBALS['spip_pipeline']['formulaire_traiter'] .= "|traiter_article_jeu";
 //define('_DEBUG_AUTORISER', true);
 //define('_AUTOBR', true);
 define('_cookie_annee_scolaire', 'laclasse_annee_scolaire');
-
-//Cas de la publication du chapitre d'une histoire (JEU)
-function traiter_article_jeu0($flux) {
-	if (($flux['args']['form'] == 'editer_article')) {
-		//Article
-		$id_article = $flux['data']['id_article'];
-		$id_rubrique = $flux['data']['id_rubrique'];
-		//Publication
-		sql_update('spip_articles', ['statut' => "publie"], 'id_article=' . intval($id_article));
-
-		//Si 5ème chapitre
-		if ($res = sql_select('titre', 'spip_articles', 'id_rubrique=' . $id_rubrique)) {
-			$n = sql_count($res);
-		}
-		if ($n >= 5) {
-			$id_parent = sql_getfetsel('id_parent', 'spip_rubriques', 'id_rubrique=' . intval($id_rubrique));
-			$mail = $flux['data']['soustitre'];
-			creer_histoire($id_parent);
-			$message = 'http://air.laclasse.com/spip.php?page=lecture&id_rubrique=' . $id_rubrique;
-			mail('pvincent@erasme.org', 'air.laclasse.com', $message);
-		}
-	}
-	return $flux;
-}
 
 function annee_rub1($idr) {
 
