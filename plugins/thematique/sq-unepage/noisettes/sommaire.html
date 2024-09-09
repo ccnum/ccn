@@ -10,43 +10,43 @@ et/ou
 <div id="offset"></div>
 <div id="global">
 
-	<INCLURE{fond=noisettes/inc/no_ie6}>
+	<INCLURE{fond=noisettes/inc/no_ie6} />
 
 	[(#VUE|=={classe}|non)]
 
 	<div id="menu_haut" class="zone-menu ">
-		<INCLURE{fond=noisettes/menu_haut}{env}>
+		<INCLURE{fond=noisettes/menu_haut, id_auteur=#SESSION{id_auteur}, env}>
 	</div>
 
-  <div id="timeline">
-	<div id="timeline_responsive">
-	  <div id="timeline_fixed"></div>
-	  <div id="timeline_wrapin">
+	<div id="timeline">
+		<div id="timeline_responsive">
+		<div id="timeline_fixed"></div>
+		<div id="timeline_wrapin">
 			<INCLURE{fond=livrables} />
-		<div class="timeline_layer" id="timeline_layer_consignes">
-		  <div class="timeline_trigger"></div>
+			<div class="timeline_layer" id="timeline_layer_consignes">
+				<div class="timeline_trigger"></div>
+			</div>
+			<div class="timeline_layer" id="timeline_layer_blogs">
+				<div class="timeline_trigger"></div>
+			</div>
+			<div class="timeline_layer" id="timeline_layer_evenements">
+				<div class="timeline_trigger"></div>
+			</div>
+			<div class="timeline_layer" id="timeline_layer_livrables">
+				<div class="timeline_trigger"></div>
+			</div>
+			<div id="timeline_background"></div>
 		</div>
-		<div class="timeline_layer" id="timeline_layer_blogs">
-		  <div class="timeline_trigger"></div>
 		</div>
-		<div class="timeline_layer" id="timeline_layer_evenements">
-		  <div class="timeline_trigger"></div>
-				</div>
-				<div class="timeline_layer" id="timeline_layer_livrables">
-		  <div class="timeline_trigger"></div>
-		</div>
-		<div id="timeline_background"></div>
-	  </div>
-	</div>
-  </div>
-
-	<div id="zone" class="zone_timeline zone" [(#VUE|=={classe}|oui) style="display:none;"]>
-		<INCLURE{fond=noisettes/timeline}{env}>
 	</div>
 
-  [(#REM)
-  	<div id="zone_classe" class="zone_classe zone" [(#VUE|=={classe}|oui) style="display:block;"]>
-  		<INCLURE{fond=noisettes/isotope}{env}>
+	<div id="zone" class="zone_timeline zone"[ (#VUE|=={classe}|oui) style="display:none;"]>
+		<INCLURE{fond=noisettes/timeline, env}>
+	</div>
+
+	[(#REM)
+  	<div id="zone_classe" class="zone_classe zone"[ (#VUE|=={classe}|oui) style="display:block;"]>
+  		<INCLURE{fond=noisettes/isotope, env}>
   	</div>
 	]
 
@@ -58,31 +58,29 @@ et/ou
 
 	<div id="sidebar_content">
 
-	  <div id="sidebar_main_around">
-		<div id="sidebar_main">
-
-		  <div id="sidebar_main_inner" class="sidebar_content_inner">
-		  </div>
+		<div id="sidebar_main_around">
+			<div id="sidebar_main">
+				<div id="sidebar_main_inner" class="sidebar_content_inner">
+				</div>
+			</div>
 		</div>
-	  </div>
 
-	  <div id="sidebar_lateral_around">
-		<div id="sidebar_lateral">
-		  <div id="sidebar_lateral_inner" class="sidebar_content_inner">
-		  </div>
+		<div id="sidebar_lateral_around">
+			<div id="sidebar_lateral">
+				<div id="sidebar_lateral_inner" class="sidebar_content_inner">
+				</div>
+			</div>
 		</div>
-	  </div>
-
 	</div>
-  </div>
+</div>
 
 	<div id="menu_bas" class="clearfix combo-filters zone-menu">
 
 		[(#REM)Col 1]
-			<!--<h3 class="first">Général</h3>-->
+		<!--<h3 class="first">Général</h3>-->
 
-<!--
-		[(#REM)Vues]
+		<!--
+			[(#REM)Vues]
 			<div id="menu-vues" class="bloc_view col">
 				<h3><span>Vues</span></h3>
 				<ul class="filter clearfix option-set vue">
@@ -90,236 +88,221 @@ et/ou
 					[(#MODELE{logo_menu}{valeur=classe}{title=Vue Classes})]
 				</ul>
 			</div>
--->
+		-->
 		[(#REM)Timeline]
-			<div id="menu-timeline" class="bloc_view col">
-				<h3><span>Timeline</span></h3>
-			  	<ul class="filter clearfix option-set ressource" data-filter-group="ressource">
-					[(#MODELE{logo_menu}{valeur=consignes}{class=menu_logo_consignes}{onclick=changeTimelineMode('consignes');CCN.projet.showWholeTimeline();}{title=Toutes les consignes})]
+		<div id="menu-timeline" class="bloc_view col">
+			<h3><span>Timeline</span></h3>
+			<ul class="filter clearfix option-set ressource" data-filter-group="ressource">
+				[(#MODELE{logo_menu}{valeur=consignes}{class=menu_logo_consignes}{onclick=changeTimelineMode('consignes');CCN.projet.showWholeTimeline();}{title=Toutes les consignes})]
 
-						#SET{blog, Agenda}
-						[(#NOM_SITE_SPIP|=={novaterra.laclasse.com}|oui) #SET{blog,Le journal du capitaine et le novamag} ]
-						[(#NOM_SITE_SPIP|=={air.laclasse.com}|oui) #SET{blog,Les actualités littéraires} ]
-						[(#NOM_SITE_SPIP|=={miam.laclasse.com}|oui) #SET{blog,Le blog du potager} ]
-						[(#NOM_SITE_SPIP|=={aqueduc.laclasse.com}|oui) #SET{blog,Le blog de Flavie Jones} ]
-						[(#NOM_SITE_SPIP|=={design.laclasse.com}|oui) #SET{blog,Les actualités} ]
-						[(#NOM_SITE_SPIP|=={theatre.laclasse.com}|oui) #SET{blog,L'agenda} ]
-					[(#MODELE{logo_menu}{valeur=blog}{class=menu_logo_blogs}{filter=.ressource_blogs}{onclick=changeTimelineMode('blogs');}{title=#GET{blog}})]
+				#SET{blog, Agenda}
+				[(#NOM_SITE_SPIP|=={novaterra.laclasse.com}|oui) #SET{blog,Le journal du capitaine et le novamag} ]
+				[(#NOM_SITE_SPIP|=={air.laclasse.com}|oui) #SET{blog,Les actualités littéraires} ]
+				[(#NOM_SITE_SPIP|=={miam.laclasse.com}|oui) #SET{blog,Le blog du potager} ]
+				[(#NOM_SITE_SPIP|=={aqueduc.laclasse.com}|oui) #SET{blog,Le blog de Flavie Jones} ]
+				[(#NOM_SITE_SPIP|=={design.laclasse.com}|oui) #SET{blog,Les actualités} ]
+				[(#NOM_SITE_SPIP|=={theatre.laclasse.com}|oui) #SET{blog,L'agenda} ]
+				[(#MODELE{logo_menu}{valeur=blog}{class=menu_logo_blogs}{filter=.ressource_blogs}{onclick=changeTimelineMode('blogs');}{title=#GET{blog}})]
 
-					[(#INCLURE{fond=noisettes/fonction/type_role})]
-					[(#SESSION{role}|=={prof}|ou {#SESSION{role}|=={intervenant}}|ou {#SESSION{role}|=={admin}})
-						[(#MODELE{logo_menu}{valeur=evenement}{class=menu_logo_evenements}{filter=.ressource_evenements}{onclick=changeTimelineMode('evenements');}{title=Le blog pédagogique})]
-					]
+				[(#INCLURE{fond=noisettes/fonction/type_role})]
+				[(#SESSION{role}|=={prof}|ou {#SESSION{role}|=={intervenant}}|ou {#SESSION{role}|=={admin}})
+					[(#MODELE{logo_menu}{valeur=evenement}{class=menu_logo_evenements}{filter=.ressource_evenements}{onclick=changeTimelineMode('evenements');}{title=Le blog pédagogique})]
+				]
 
-		[(#REM) Si il n'y a pas de livrables ne pas afficher le bouton]
+				[(#REM) Si il n'y a pas de livrables ne pas afficher le bouton]
 
-					#SET{hasLivrable, 'false'}
-					<BOUCLE_rubAnnee(RUBRIQUES) {racine} {titre LIKE %(#EVAL{_annee_scolaire})%} >
-				<BOUCLE_filtreTravailEnCours(RUBRIQUES){id_parent}{titre_mot=travail_en_cours}>
-									<BOUCLE_getRubTravail(RUBRIQUES){id_rubrique}>
-											<BOUCLE_getRubColleges(RUBRIQUES){id_parent}>
-												<BOUCLE_getLivrable(ARTICLES){id_rubrique}{titre_mot=livrable}>
-												#SET{hasLivrable, 'true'}
-												</BOUCLE_getLivrable>
-											</BOUCLE_getRubColleges>
-									</BOUCLE_getRubTravail>
-							</BOUCLE_filtreTravailEnCours>
-					</BOUCLE_rubAnnee>
+				#SET{hasLivrable, 'false'}
+				<BOUCLE_rubAnnee(RUBRIQUES) {racine} {titre LIKE %(#CONST{_annee_scolaire})%} >
+					<BOUCLE_filtreTravailEnCours(RUBRIQUES){id_parent}{titre_mot=travail_en_cours}>
+						<BOUCLE_getRubTravail(RUBRIQUES){id_rubrique}>
+							<BOUCLE_getRubColleges(RUBRIQUES){id_parent}>
+								<BOUCLE_getLivrable(ARTICLES){id_rubrique}{titre_mot=livrable}>
+								#SET{hasLivrable, 'true'}
+								</BOUCLE_getLivrable>
+							</BOUCLE_getRubColleges>
+						</BOUCLE_getRubTravail>
+					</BOUCLE_filtreTravailEnCours>
+				</BOUCLE_rubAnnee>
 
-					[(#GET{hasLivrable}|choixsiegal{true,
-						[(#MODELE{logo_menu}{valeur=livrable}{class=menu_logo_livrables logo_menu-cible}{filter=.ressource_livrables}{title=Les projets finis}{onclick=callLivrable(null, 'open');})],
-						''}
-					)]
+				[(#GET{hasLivrable}|choixsiegal{true,
+					[(#MODELE{logo_menu}{valeur=livrable}{class=menu_logo_livrables logo_menu-cible}{filter=.ressource_livrables}{title=Les projets finis}{onclick=callLivrable(null, 'open');})],
+					''}
+				)]
 
+				<BOUCLE_j(DATA){liste tout,blog,evenement,ressources,consignes,travail_en_cours}>
+					<!--<li><a href="#ressource-[(#VALEUR)]" data-filter-value="[(#VALEUR|=={tout}|non)[.ressource_(#VALEUR)s]]" onClick="showhide_articles_[(#VALEUR)]();" class="couleur_grille [(#COMPTEUR_BOUCLE|=={1}|oui) selected]" title="[(#VALEUR)]" style="background-image: url([(#CHEMIN{img/logo_[(#VALEUR)]_grand_#NOM_SITE_SPIP.png}|sinon{[(#CHEMIN{img/logo_[(#VALEUR)]_grand.png})]}|sinon{#CHEMIN{img/logo_voir.png}}|image_gamma{255}|image_reduire{#GET{taille_bloc_option}}|extraire_attribut{src})]);">&nbsp;</a></li>-->
+				</BOUCLE_j>
+			</ul>
+		</div>
 
-					<BOUCLE_j(DATA){liste tout,blog,evenement,ressources,consignes,travail_en_cours}>
-				  		<!--<li><a href="#ressource-[(#VALEUR)]" data-filter-value="[(#VALEUR|=={tout}|non)[.ressource_(#VALEUR)s]]" onClick="showhide_articles_[(#VALEUR)]();" class="couleur_grille [(#COMPTEUR_BOUCLE|=={1}|oui) selected]" title="[(#VALEUR)]" style="background-image: url([(#CHEMIN{img/logo_[(#VALEUR)]_grand_#NOM_SITE_SPIP.png}|sinon{[(#CHEMIN{img/logo_[(#VALEUR)]_grand.png})]}|sinon{#CHEMIN{img/logo_voir.png}}|image_gamma{255}|image_reduire{#GET{taille_bloc_option}}|extraire_attribut{src})]);">&nbsp;</a></li>-->
-					</BOUCLE_j>
-				</ul>
-			</div>
+		<!--
+		<div id="menu-ressources" class="bloc_view col">
+			<h3><span>Forums</span></h3>
+			<ul class="filter clearfix option-set ressource" data-filter-group="ressource">
 
-
-			<!--
-
-			<div id="menu-ressources" class="bloc_view col">
-				<h3><span>Forums</span></h3>
-			  	<ul class="filter clearfix option-set ressource" data-filter-group="ressource">
-
-				</ul>
-			</div>
-
-			-->
+			</ul>
+		</div>
+		-->
 
 
 		[(#REM)Consignes]
-			<div id="menu-consignes" class="bloc_view col">
-				<h3><span>Consignes</span></h3>
-				<ul class="filter clearfix option-set" data-filter-group="consigne">
-				  #SET{num,0}
+		<div id="menu-consignes" class="bloc_view col">
+			<h3><span>Consignes</span></h3>
+			<ul class="filter clearfix option-set" data-filter-group="consigne">
+				#SET{num,0}
 
-					<BOUCLE_consignes0(RUBRIQUES mots mots_liens){mots.titre=consignes}{rubriques.id_rubrique=mots_liens.id_objet}>
-					  [(#MODELE{logo_menu}{valeur=[(#GET{num})]}{filter=.consigne_#ID_ARTICLE}{class=hover_couleur_consignes[(#ID_RUBRIQUE|nb2col)] menu_logo_consignes-[(#GET{num}|plus{1})] menu_logo_consignes-#ID_ARTICLE}{onclick=callConsigne('#ID_ARTICLE');}{title=#TITRE}{texte=[(#GET{num}|plus{1})]})]
-					  [(#SET{num,[(#GET{num}|plus{1})]})]
-					</BOUCLE_consignes0>
-					<BOUCLE_consignes(ARTICLES mots_liens rubriques){rubriques.id_rubrique=mots_liens.id_objet}{mots_liens.id_mot=2}{tout}>
-					  [(#MODELE{logo_menu}{valeur=[(#GET{num})]}{filter=.consigne_#ID_ARTICLE}{class=hover_couleur_consignes[(#ID_RUBRIQUE|nb2col)] menu_logo_consignes-[(#GET{num}|plus{1})] menu_logo_consignes-#ID_ARTICLE}{onclick=callConsigne('#ID_ARTICLE');}{title=#TITRE}{texte=[(#GET{num}|plus{1})]})]
-					  [(#SET{num,[(#GET{num}|plus{1})]})]
-					</BOUCLE_consignes>
+				<BOUCLE_consignes0(RUBRIQUES mots mots_liens){mots.titre=consignes}{rubriques.id_rubrique=mots_liens.id_objet}>
+					[(#MODELE{logo_menu}{valeur=[(#GET{num})]}{filter=.consigne_#ID_ARTICLE}{class=hover_couleur_consignes[(#ID_RUBRIQUE|nb2col)] menu_logo_consignes-[(#GET{num}|plus{1})] menu_logo_consignes-#ID_ARTICLE}{onclick=callConsigne('#ID_ARTICLE');}{title=#TITRE}{texte=[(#GET{num}|plus{1})]})]
+					[(#SET{num,[(#GET{num}|plus{1})]})]
+				</BOUCLE_consignes0>
+				<BOUCLE_consignes(ARTICLES mots_liens rubriques){rubriques.id_rubrique=mots_liens.id_objet}{mots_liens.id_mot=2}{tout}>
+					[(#MODELE{logo_menu}{valeur=[(#GET{num})]}{filter=.consigne_#ID_ARTICLE}{class=hover_couleur_consignes[(#ID_RUBRIQUE|nb2col)] menu_logo_consignes-[(#GET{num}|plus{1})] menu_logo_consignes-#ID_ARTICLE}{onclick=callConsigne('#ID_ARTICLE');}{title=#TITRE}{texte=[(#GET{num}|plus{1})]})]
+					[(#SET{num,[(#GET{num}|plus{1})]})]
+				</BOUCLE_consignes>
 
-				  <BOUCLE_r4(RUBRIQUES){titre_mot=consignes}{par id_rubrique}{inverse}{tout}>
-					<BOUCLE_a4(ARTICLES){branche}{par date}{date>=#EVAL{_date_debut}}{date<=#EVAL{_date_fin}}>
-					  [(#MODELE{logo_menu}{valeur=[(#GET{num})]}{filter=.consigne_#ID_ARTICLE}{class=hover_couleur_consignes[(#ID_RUBRIQUE|nb2col)] menu_logo_consignes-[(#GET{num}|plus{1})] menu_logo_consignes-#ID_ARTICLE}{onclick=callConsigne('#ID_ARTICLE');}{title=#TITRE}{texte=[(#GET{num}|plus{1})]})]
-					  [(#SET{num,[(#GET{num}|plus{1})]})]
-					</BOUCLE_a4>
-				  </BOUCLE_r4>
-				</ul>
-			</div>
-
+				<BOUCLE_r4(RUBRIQUES){titre_mot=consignes}{!par id_rubrique}{tout}>
+				<BOUCLE_a4(ARTICLES){branche}{par date}{date>=#CONST{_date_debut}}{date<=#CONST{_date_fin}}>
+					[(#MODELE{logo_menu}{valeur=[(#GET{num})]}{filter=.consigne_#ID_ARTICLE}{class=hover_couleur_consignes[(#ID_RUBRIQUE|nb2col)] menu_logo_consignes-[(#GET{num}|plus{1})] menu_logo_consignes-#ID_ARTICLE}{onclick=callConsigne('#ID_ARTICLE');}{title=#TITRE}{texte=[(#GET{num}|plus{1})]})]
+					[(#SET{num,[(#GET{num}|plus{1})]})]
+				</BOUCLE_a4>
+				</BOUCLE_r4>
+			</ul>
+		</div>
 
 		[(#REM)Classes]
-			<div id="menu-classes" class="bloc_view col" >
-				<h3><span>Classes</span></h3>
-		  		<ul class="filter clearfix option-set" data-filter-group="classe">
-					[(#MODELE{logo_menu}{valeur=tout}{title=Toutes les classes}{class=menu_logo_consignes menu_logo_classes menu_logo_type_sidebarView}{onclick=callClasses();})]
-							#SET{hasYearRub, false}
-							<!-- Nouveau modele -->
+		<div id="menu-classes" class="bloc_view col">
+			<h3><span>Classes</span></h3>
+			<ul class="filter clearfix option-set" data-filter-group="classe">
+				[(#MODELE{logo_menu}{valeur=tout}{title=Toutes les classes}{class=menu_logo_consignes menu_logo_classes menu_logo_type_sidebarView}{onclick=callClasses();})]
+						#SET{hasYearRub, false}
+						<!-- Nouveau modele -->
 
-							<BOUCLE_FiltreAnnee(RUBRIQUES){racine} {titre LIKE %(#EVAL{_annee_scolaire})%}>
-									#SET{hasYearRub, true}
-								<BOUCLE_rubMot(RUBRIQUES){id_parent}{titre_mot=travail_en_cours}>
-  					  <BOUCLE_rubLoop(RUBRIQUES){id_parent}{tout}>
-  						<BOUCLE_filterDate(ARTICLES){id_rubrique}{date>=#EVAL{_date_debut}}{date<=#EVAL{_date_fin}}>
-										</BOUCLE_filterDate>
-  							[(#MODELE{logo_menu_classe}{valeur=#TITRE}{filter=.#ID_RUBRIQUE}{title=[(#_c3:TITRE)]}{class=menu_logo_classes-#ID_RUBRIQUE hover_couleur_travail_en_cours[(#ID_RUBRIQUE|nb2col)]}{classcouleur=couleur_travail_en_cours[(#ID_RUBRIQUE|nb2col)]}{texte=[(#_c3:TITRE|couper{2})]})]
-  						</B_filterDate>
-  							[(#_c3:DATE|substr{0,10}|replace{-,.}|>={#EVAL{_date_debut}}|oui|et{#_c3:DATE|substr{0,10}|replace{-,.}|<={#EVAL{_date_fin}}|oui}|oui)
-	  							[(#MODELE{logo_menu_classe}{valeur=#ID_RUBRIQUE}{filter=.#ID_RUBRIQUE}{title=[(#_c3:TITRE)]}{class=menu_logo_classes-#ID_RUBRIQUE hover_couleur_travail_en_cours[(#ID_RUBRIQUE|nb2col)]}{classcouleur=couleur_travail_en_cours[(#ID_RUBRIQUE|nb2col)]}{texte=[(#_c3:TITRE|couper{2})]})]
-  							]
-  						<//B_filterDate>
-  					  </BOUCLE_rubLoop>
-								</BOUCLE_rubMot>
-							</BOUCLE_FiltreAnnee>
-
-
-							<BOUCLE_r3(RUBRIQUES){titre_mot==travail_en_cours}{tout}{si #GET{hasYearRub}|== {false}}{par date}{inverse}>
-  					  <BOUCLE_c3(RUBRIQUES){id_parent}{tout}>
-  						<BOUCLE_a3(ARTICLES){id_rubrique}{date>=#EVAL{_date_debut}}{date<=#EVAL{_date_fin}}>
-  						</BOUCLE_a3>
-  							[(#MODELE{logo_menu_classe}{valeur=#ID_RUBRIQUE}{filter=.#ID_RUBRIQUE}{title=[(#_c3:TITRE)]}{class=menu_logo_classes-#ID_RUBRIQUE hover_couleur_travail_en_cours[(#ID_RUBRIQUE|nb2col)]}{classcouleur=couleur_travail_en_cours[(#ID_RUBRIQUE|nb2col)]}{texte=[(#_c3:TITRE|couper{2})]})]
-  						</B_a3>
-  							[(#_c3:DATE|substr{0,10}|replace{-,.}|>={#EVAL{_date_debut}}|oui|et{#_c3:DATE|substr{0,10}|replace{-,.}|<={#EVAL{_date_fin}}|oui}|oui)
-	  							[(#MODELE{logo_menu_classe}{valeur=#ID_RUBRIQUE}{filter=.#ID_RUBRIQUE}{title=[(#_c3:TITRE)]}{class=menu_logo_classes-#ID_RUBRIQUE hover_couleur_travail_en_cours[(#ID_RUBRIQUE|nb2col)]}{classcouleur=couleur_travail_en_cours[(#ID_RUBRIQUE|nb2col)]}{texte=[(#_c3:TITRE|couper{2})]})]
-  							]
-  						<//B_a3>
-  					  </BOUCLE_c3>
-					</BOUCLE_r3>
-
-				</ul>
-			</div>
+						<BOUCLE_FiltreAnnee(RUBRIQUES){racine} {titre LIKE %(#CONST{_annee_scolaire})%}>
+								#SET{hasYearRub, true}
+							<BOUCLE_rubMot(RUBRIQUES){id_parent}{titre_mot=travail_en_cours}>
+					<BOUCLE_rubLoop(RUBRIQUES){id_parent}{tout}>
+					<BOUCLE_filterDate(ARTICLES){id_rubrique}{date>=#CONST{_date_debut}}{date<=#CONST{_date_fin}}>
+									</BOUCLE_filterDate>
+						[(#MODELE{logo_menu_classe}{valeur=#TITRE}{filter=.#ID_RUBRIQUE}{title=[(#_c3:TITRE)]}{class=menu_logo_classes-#ID_RUBRIQUE hover_couleur_travail_en_cours[(#ID_RUBRIQUE|nb2col)]}{classcouleur=couleur_travail_en_cours[(#ID_RUBRIQUE|nb2col)]}{texte=[(#_c3:TITRE|couper{2})]})]
+					</B_filterDate>
+						[(#_c3:DATE|substr{0,10}|replace{-,.}|>={#CONST{_date_debut}}|oui|et{#_c3:DATE|substr{0,10}|replace{-,.}|<={#CONST{_date_fin}}|oui}|oui)
+							[(#MODELE{logo_menu_classe}{valeur=#ID_RUBRIQUE}{filter=.#ID_RUBRIQUE}{title=[(#_c3:TITRE)]}{class=menu_logo_classes-#ID_RUBRIQUE hover_couleur_travail_en_cours[(#ID_RUBRIQUE|nb2col)]}{classcouleur=couleur_travail_en_cours[(#ID_RUBRIQUE|nb2col)]}{texte=[(#_c3:TITRE|couper{2})]})]
+						]
+					<//B_filterDate>
+					</BOUCLE_rubLoop>
+							</BOUCLE_rubMot>
+						</BOUCLE_FiltreAnnee>
 
 
-			[(#REM)Ressources]
-			<div id="menu-ressources" class="bloc_view col">
-				<h3><span>Ressources</span></h3>
-			  	<ul class="filter clearfix option-set ressource" data-filter-group="ressource">
-						#SET{blog,Le blog du projet}
-						[(#NOM_SITE_SPIP|=={novaterra.laclasse.com}|oui) #SET{blog,Le journal du capitaine et le novamag} ]
-						[(#NOM_SITE_SPIP|=={air.laclasse.com}|oui) #SET{blog,Les actualités littéraires} ]
-						[(#NOM_SITE_SPIP|=={miam.laclasse.com}|oui) #SET{blog,Le blog du potager} ]
-						[(#NOM_SITE_SPIP|=={aqueduc.laclasse.com}|oui) #SET{blog,Le blog de Flavie Jones} ]
-						[(#NOM_SITE_SPIP|=={design.laclasse.com}|oui) #SET{blog,Les actualités} ]
-						[(#NOM_SITE_SPIP|=={theatre.laclasse.com}|oui) #SET{blog,L'agenda} ]
+				<BOUCLE_r3(RUBRIQUES){titre_mot==travail_en_cours}{tout}{si #GET{hasYearRub}|== {false}}{!par date}>
+					<BOUCLE_c3(RUBRIQUES){id_parent}{tout}>
+						<BOUCLE_a3(ARTICLES){id_rubrique}{date>=#CONST{_date_debut}}{date<=#CONST{_date_fin}}>
+						</BOUCLE_a3>
+							[(#MODELE{logo_menu_classe}{valeur=#ID_RUBRIQUE}{filter=.#ID_RUBRIQUE}{title=[(#_c3:TITRE)]}{class=menu_logo_classes-#ID_RUBRIQUE hover_couleur_travail_en_cours[(#ID_RUBRIQUE|nb2col)]}{classcouleur=couleur_travail_en_cours[(#ID_RUBRIQUE|nb2col)]}{texte=[(#_c3:TITRE|couper{2})]})]
+						</B_a3>
+							[(#_c3:DATE|substr{0,10}|replace{-,.}|>={#CONST{_date_debut}}|oui|et{#_c3:DATE|substr{0,10}|replace{-,.}|<={#CONST{_date_fin}}|oui}|oui)
+								[(#MODELE{logo_menu_classe, valeur=#ID_RUBRIQUE, filter=.#ID_RUBRIQUE, title=[(#_c3:TITRE)], class=menu_logo_classes-#ID_RUBRIQUE hover_couleur_travail_en_cours[(#ID_RUBRIQUE|nb2col)]}{classcouleur=couleur_travail_en_cours[(#ID_RUBRIQUE|nb2col)]}{texte=[(#_c3:TITRE|couper{2})]})]
+							]
+						<//B_a3>
+					</BOUCLE_c3>
+				</BOUCLE_r3>
 
-					[(#MODELE{logo_menu}{valeur=ressource}{class=menu_logo_ressources menu_logo_type_sidebarView}{filter=.ressource_ressources}{onclick=callRessource();}{title=Ressources})]
+			</ul>
+		</div>
 
-					#SET{blog,Le blog du projet}
-						[(#NOM_SITE_SPIP|=={novaterra.laclasse.com}|oui) #SET{blog,Le journal du capitaine et le novamag} ]
-						[(#NOM_SITE_SPIP|=={air.laclasse.com}|oui) #SET{blog,Les actualités littéraires} ]
-						[(#NOM_SITE_SPIP|=={miam.laclasse.com}|oui) #SET{blog,Le blog du potager} ]
-						[(#NOM_SITE_SPIP|=={aqueduc.laclasse.com}|oui) #SET{blog,Le blog de Flavie Jones} ]
-						[(#NOM_SITE_SPIP|=={design.laclasse.com}|oui) #SET{blog,Les actualités} ]
-						[(#NOM_SITE_SPIP|=={theatre.laclasse.com}|oui) #SET{blog,L'agenda} ]
 
-					[(#MODELE{logo_menu}{valeur=agora}{class=menu_logo_agora menu_logo_type_sidebarView}{filter=.ressource_agora}{title=L'espace de discussion}{onclick=callAgora();})]
+		[(#REM)Ressources]
+		<div id="menu-ressources" class="bloc_view col">
+			<h3><span>Ressources</span></h3>
+			<ul class="filter clearfix option-set ressource" data-filter-group="ressource">
+				#SET{blog,Le blog du projet}
+				[(#NOM_SITE_SPIP|=={novaterra.laclasse.com}|oui) #SET{blog,Le journal du capitaine et le novamag} ]
+				[(#NOM_SITE_SPIP|=={air.laclasse.com}|oui) #SET{blog,Les actualités littéraires} ]
+				[(#NOM_SITE_SPIP|=={miam.laclasse.com}|oui) #SET{blog,Le blog du potager} ]
+				[(#NOM_SITE_SPIP|=={aqueduc.laclasse.com}|oui) #SET{blog,Le blog de Flavie Jones} ]
+				[(#NOM_SITE_SPIP|=={design.laclasse.com}|oui) #SET{blog,Les actualités} ]
+				[(#NOM_SITE_SPIP|=={theatre.laclasse.com}|oui) #SET{blog,L'agenda} ]
 
-					[(#REM)Espace Doc]
+				[(#MODELE{logo_menu}{valeur=ressource}{class=menu_logo_ressources menu_logo_type_sidebarView}{filter=.ressource_ressources}{onclick=callRessource();}{title=Ressources})]
+				[(#MODELE{logo_menu}{valeur=agora}{class=menu_logo_agora menu_logo_type_sidebarView}{filter=.ressource_agora}{title=L'espace de discussion}{onclick=callAgora();})]
 
-					 	[(#ENV{restreint}|?{#SET{docId,#ENV{restreint}}, #SET{docId,false}})]
+				[(#REM)Espace Doc]
+				[(#ENV{restreint}|?{#SET{docId,#ENV{restreint}}, #SET{docId,false}})]
 
-					<!-- [(#REM) GESTION DU LIEN DE L'ESPACE DOC] -->
-					<!-- [(#REM) ON RÉCUPÈRE LA DERNIÈRE RUBRIQUE DES ANNÉES, ON EN TIRE LE DESCRIPTIF ET VOILÀ !] -->
-					<!-- tutu -->
-					<BOUCLE_espace_doc(RUBRIQUES){tout}{racine}{titre==^[20]}{par titre}{inverse}{0,1}>
-					<!-- #ID_RUBRIQUE -->
-					<li class="logo">
-						<a class="logo_menu-doc menu_logo_type_sidebarView" href="[(#DESCRIPTIF|textebrut)]" title="<:th:cartable_ligne:>" target="blank"></a>
-					</li>
-					</BOUCLE_espace_doc>
+				<!-- [(#REM) GESTION DU LIEN DE L'ESPACE DOC] -->
+				<!-- [(#REM) ON RÉCUPÈRE LA DERNIÈRE RUBRIQUE DES ANNÉES, ON EN TIRE LE DESCRIPTIF ET VOILÀ !] -->
+				<!-- tutu -->
+				<BOUCLE_espace_doc(RUBRIQUES){tout}{racine}{titre==^[20]}{!par titre}{0,1}>
+				<!-- #ID_RUBRIQUE -->
+				<li class="logo">
+					<a class="logo_menu-doc menu_logo_type_sidebarView" href="[(#DESCRIPTIF|textebrut)]" title="<:th:cartable_ligne:>" target="blank"></a>
+				</li>
+				</BOUCLE_espace_doc>
 
-				</ul>
-			</div>
+			</ul>
+		</div>
 
 		[(#REM)Actualités]
-			<div id="menu-actualites" class="bloc_view col" >
-				<h3><span>Actualités</span></h3>
+		<div id="menu-actualites" class="bloc_view col">
+			<h3><span>Actualités</span></h3>
 			<ul class="actualites-ul filter clearfix option-set" data-filter-group="classe">
-			[(#MODELE{logo_menu}{valeur=tout}{title=Toutes les actualités}{class=menu_logo_type_sidebarView menu_logo_actualites}{onclick=callActualites();})]
+				[(#MODELE{logo_menu, valeur=tout, title=Toutes les actualités, class=menu_logo_type_sidebarView menu_logo_actualites, onclick=callActualites();})]
 			</ul>
 			<div class="actualites-inner filter clearfix option-set" data-filter-group="actualites">
-	  		<INCLURE{fond=noisettes/inc/actus_timeline}{nb_actus=5} />
-		</div>
+				<INCLURE{fond=noisettes/inc/actus_timeline, nb_actus=5} />
 			</div>
+		</div>
 
-			<!--
+		<!--
 		[(#REM)Classes]
 
-			<div id="menu-classes-select" class="menu-bas-select bloc_view col">
-  			<div class="call-to-select">Afficher une classe…</div>
+		<div id="menu-classes-select" class="menu-bas-select bloc_view col">
+		<div class="call-to-select">Afficher une classe…</div>
 
-  			<ul class="liste-select filter clearfix option-set" data-filter-group="classe">
-			[(#MODELE{item_select}{valeur=tout}{class=selected}{title=Toutes les classes})]
-			<BOUCLE_select_r3(RUBRIQUES){titre_mot==travail_en_cours}{tout}{par date}{inverse}>
-			  <BOUCLE_select_c3(RUBRIQUES){id_parent}{tout}>
-				<BOUCLE_select_a3(ARTICLES){id_rubrique}{date>=#EVAL{_date_debut}}{date<=#EVAL{_date_fin}}>
-				</BOUCLE_select_a3>
-				<li>
-					[(#MODELE{item_select}{valeur=#ID_RUBRIQUE}{filter=.#ID_RUBRIQUE}{title=[(#_select_c3:TITRE)]}{class=couleur_travail_en_cours[(#ID_RUBRIQUE|nb2col)]}{texte=[(#_select_c3:TITRE|couper{2})]}{onclick=callClasse([(#ID_RUBRIQUE)]);})]+
+		<ul class="liste-select filter clearfix option-set" data-filter-group="classe">
+		[(#MODELE{item_select}{valeur=tout}{class=selected}{title=Toutes les classes})]
+		<BOUCLE_select_r3(RUBRIQUES){titre_mot==travail_en_cours}{tout}{!par date}>
+			<BOUCLE_select_c3(RUBRIQUES){id_parent}{tout}>
+			<BOUCLE_select_a3(ARTICLES){id_rubrique}{date>=#CONST{_date_debut}}{date<=#CONST{_date_fin}}>
+			</BOUCLE_select_a3>
+			<li>
+				[(#MODELE{item_select}{valeur=#ID_RUBRIQUE}{filter=.#ID_RUBRIQUE}{title=[(#_select_c3:TITRE)]}{class=couleur_travail_en_cours[(#ID_RUBRIQUE|nb2col)]}{texte=[(#_select_c3:TITRE|couper{2})]}{onclick=callClasse([(#ID_RUBRIQUE)]);})]+
 
-				</li>
-				</B_select_a3>
-				<//B_select_a3>
-			  </BOUCLE_select_c3>
-			</BOUCLE_select_r3>
-				</ul>
-			</div>
+			</li>
+			</B_select_a3>
+			<//B_select_a3>
+			</BOUCLE_select_c3>
+		</BOUCLE_select_r3>
+			</ul>
+		</div>
 -->
 		<div id="menu-classe" [(#VUE|=={classe}|non) style="display:none;"]>
 
 			[(#REM)Médias]
-				<div id="menu-medias" class="bloc_view col">
-					<h3><span>Médias</span></h3>
-					<ul class="filter clearfix option-set ressource" data-filter-group="media">
-						[(#MODELE{logo_menu}{valeur=tout}{class=selected}{title=Tous les médias})]
-						[(#MODELE{logo_menu}{valeur=texte}{filter=.texte}{title=Les textes})]
-						[(#MODELE{logo_menu}{valeur=image}{filter=.image}{title=Les images})]
-						[(#MODELE{logo_menu}{valeur=son}{filter=.son}{title=Les sons})]
-						[(#MODELE{logo_menu}{valeur=video}{filter=.video}{title=Les vidéos})]
-						[(#MODELE{logo_menu}{valeur=autre}{filter=.autre}{title=Les documents})]
-					</ul>
-				</div>
+			<div id="menu-medias" class="bloc_view col">
+				<h3><span>Médias</span></h3>
+				<ul class="filter clearfix option-set ressource" data-filter-group="media">
+					[(#MODELE{logo_menu}{valeur=tout}{class=selected}{title=Tous les médias})]
+					[(#MODELE{logo_menu}{valeur=texte}{filter=.texte}{title=Les textes})]
+					[(#MODELE{logo_menu}{valeur=image}{filter=.image}{title=Les images})]
+					[(#MODELE{logo_menu}{valeur=son}{filter=.son}{title=Les sons})]
+					[(#MODELE{logo_menu}{valeur=video}{filter=.video}{title=Les vidéos})]
+					[(#MODELE{logo_menu}{valeur=autre}{filter=.autre}{title=Les documents})]
+				</ul>
+			</div>
 
 			[(#REM)Tri]
-				<div id="menu-tris" class="bloc_view col">
-					<h3><span>Tri</span></h3>
-					<ul id="sort-by" class="option-set clearfix" data-option-key="sortBy">
-						[(#MODELE{logo_menu}{valeur=date}{option=date}{title=Par date}{class=selected})]
-						[(#MODELE{logo_menu}{valeur=notation}{option=notation}{title=Par notation})]
-					</ul>
-					<ul id="sort-direction" class="option-set clearfix" data-option-key="sortAscending">
-						[(#MODELE{logo_menu}{valeur=descendant}{option=false}{title=Descendant}{class=selected})]
-						[(#MODELE{logo_menu}{valeur=ascendant}{option=true}{title=Ascendant})]
-					</ul>
-				</div>
+			<div id="menu-tris" class="bloc_view col">
+				<h3><span>Tri</span></h3>
+				<ul id="sort-by" class="option-set clearfix" data-option-key="sortBy">
+					[(#MODELE{logo_menu}{valeur=date}{option=date}{title=Par date}{class=selected})]
+					[(#MODELE{logo_menu}{valeur=notation}{option=notation}{title=Par notation})]
+				</ul>
+				<ul id="sort-direction" class="option-set clearfix" data-option-key="sortAscending">
+					[(#MODELE{logo_menu}{valeur=descendant}{option=false}{title=Descendant}{class=selected})]
+					[(#MODELE{logo_menu}{valeur=ascendant}{option=true}{title=Ascendant})]
+				</ul>
+			</div>
 
 		</div>
 

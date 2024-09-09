@@ -1,0 +1,51 @@
+[(#REM)
+
+  Génère le contenu (l'intérieur) d'un formulaire, à partir d'une description dans un tableau PHP.
+  Le tableau doit être de la forme suivante :
+
+  // Chaque ligne est elle-même un tableau
+  array(
+  	// Ligne de type "explication"
+  	array(
+  		'explication' => 'Ceci est un bloc d'explication général.'
+  	),
+  	// Ligne classique, cad un champ de formulaire
+  	array(
+  		'saisie' => 'input',
+  		'options => array(
+  			'nom' => 'mon_champ',
+  			'label' => 'Un joli titre',
+  			'obligatoire' => 'oui'
+  		)
+  	),
+  	// Ligne contenant un fieldset
+  	array(
+  		'groupe' => 'Ceci est le titre du groupe de champs (fieldset)',
+  		'css' => 'eventuelles classes css',
+  		'contenu' => array(
+  			// On recommence ici suivant le même formalisme que le tableau général.
+  		)
+  	)
+  )
+
+
+  Exemples d'appels :
+    # INCLURE{fond=inclure/generer_saisies, env, saisies=#ENV{tableau}}
+
+]
+
+[(#SET{saisies, #ENV*{saisies}})]
+
+[(#REM) sécurité sur l'appel : chercher les saisies dans l'étape courante, on test #ENV{_env} pour ne pas chercher des étapes au sein d'une étape, sinon ca tourne en rond !]
+[(#ENV{_etape}|oui)
+	[(#ENV{_env}|non)
+		#SET{saisies_par_etapes, #ENV*{saisies_par_etapes}|sinon{#ENV*{_saisies_par_etapes}}|sinon{#ENV*{saisies}|saisies_lister_par_etapes}}
+		#SET{saisies, #GET{saisies_par_etapes/etape_#ENV{_etape}/saisies}}
+	]
+]
+
+<BOUCLE_contenu(DATA){source tableau, #GET{saisies}}>
+[(#VAL{saisie}|array_key_exists{#VALEUR}|oui)
+[(#VALEUR**|saisies_generer_html{#ENV{_env}|sinon{#ENV**|unserialize}})]
+]
+</BOUCLE_contenu>

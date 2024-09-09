@@ -1,21 +1,28 @@
 #CACHE{0}
-#SET{color_menu_hover,#fc0078}
-
 <ul id="menu_haut_titre" class="bloc_titre">
     [(#REM)Titre]
 
     <div id="menu_haut_titre_fixed">
         <li class="double bloc1">
-            <a href="[(#URL_SITE_SPIP)]" title="Accueil"><span class="logo">[(#CHEMIN{img/pictos_blc/[(#NOM_SITE_SPIP)].png}|image_reduire{100})]</span>[(#NOM_SITE_SPIP)]</a>
+            <a href="[(#URL_SITE_SPIP)]" title="Accueil">
+                <span class="logo">[(#CHEMIN{img/pictos_blc/[(#NOM_SITE_SPIP)].png}|image_reduire{100})]</span>
+                [(#NOM_SITE_SPIP)]
+            </a>
         </li>
         <li class="double bloc2">
-            <a href="[(#CONFIG{th/site_ent_url}|sinon{http://www.laclasse.com})]" target="_blank" title="[(#CONFIG{th/site_ent_nom}|sinon{.laclasse.com})]">[(#CONFIG{th/site_ent_nom}|sinon{laclasse.com})]</a>
+            <a href="[(#CONFIG{th/site_ent_url}|sinon{http://www.laclasse.com})]" target="_blank" title="[(#CONFIG{th/site_ent_nom}|sinon{.laclasse.com})]">
+                [(#CONFIG{th/site_ent_nom}|sinon{laclasse.com})]
+            </a>
         </li>
     </div>
 
     <div id="menu_haut_titre_more">
         <div class="select" name="annee_scolaire">
-            <input type="radio" value="#ENV{annee_scolaire}" class="first"><label class="first_label"><span id="annee_scolaire_more">année scolaire </span><span class="highlight">#ENV{annee_scolaire}/[(#ENV{annee_scolaire}|plus{1})]</span></label>
+            <input type="radio" value="#ENV{annee_scolaire}" class="first">
+                <label class="first_label">
+                    <span id="annee_scolaire_more">année scolaire </span>
+                    <span class="highlight">#ENV{annee_scolaire}/[(#ENV{annee_scolaire}|plus{1})]</span>
+                </label>
             <BOUCLE_dates(RUBRIQUES){!par titre}{racine}{titre==^[2]}>
             <input type='radio' value='#TITRE'><label>#TITRE/[(#TITRE|plus{1})]</label>
             </BOUCLE_dates>
@@ -34,19 +41,19 @@
 
         $('div[name=annee_scolaire] input[type=radio]').change( function() {
             var valeur = $('div[name=annee_scolaire] input[type=radio]:checked').val()
-            reloadAndSetCookie('','[(#EVAL{_cookie_annee_scolaire})]',valeur)
+            reloadAndSetCookie('','[(#CONST{_cookie_annee_scolaire})]',valeur)
         });
 
         $('div[name=rubrique_admin] input[type=radio]').change( function() {
             var valeur = $('div[name=rubrique_admin] input[type=radio]:checked').val()
-            reloadAndSetCookie('','[(#EVAL{_cookie_rubrique})]',valeur)
+            reloadAndSetCookie('','[(#CONST{_cookie_rubrique})]',valeur)
         });
 
     });
 </script>
 
 <ul id="menu_haut_user" class="bloc_titre">
-    <INCLURE{fond=noisettes/inc/authentification}{admin=#ENV{admin}}{restreint=#ENV{restreint}}{type_restreint=#ENV{type_restreint}}>
+    <INCLURE{fond=noisettes/inc/authentification, id_auteur, admin, restreint, type_restreint}>
 </ul>
 
 [(#RESTREINT|!={0}|oui|et{#RESTREINT|!={''}}|et{#TYPE_RESTREINT|!={''}}|et{#TYPE_RESTREINT|!={travail_en_cours}|oui}|oui)
@@ -75,5 +82,4 @@
 ]
 
 [(#REM)Initialisations dont crayons]
-<INCLURE{fond=noisettes/js/marqueurs}>
-<BOUCLE_auteur(AUTEURS){id_auteur=#SESSION{id_auteur}}{tout}><div class="#EDIT{nom} cache">#NOM</div></BOUCLE_auteur>
+<BOUCLE_auteur(AUTEURS){id_auteur}{tout}><div class="#EDIT{nom} cache">#NOM</div></BOUCLE_auteur>

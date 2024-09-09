@@ -1,0 +1,24 @@
+#SET{nom,#ENV{nom}|saisies_name_suffixer{choix_alternatif}}
+[(#ENV{cle_tableau}|oui)
+	#SET{nom,#ENV{nom}\[choix_alternatif\]}
+	#SET{afficher_si,@#ENV{nom}@ == '@choix_alternatif'}
+	#SET{afficher_si,#GET{afficher_si}|saisies_afficher_si_js{#ENV{_saisies}}}
+]
+[(#ENV{cle_tableau}|non)
+	#SET{afficher_si,@#ENV{nom}@}
+	#SET{afficher_si,#GET{afficher_si}|saisies_afficher_si_js{#ENV{_saisies}}}
+	#SET{afficher_si,#ENV{nom}|str_replace{#ENV{nom}:choix_alternatif,#GET{afficher_si}}}
+]
+<div
+	class="
+				 [(#ENV{nom}|saisie_nom2classe)_choix_alternatif]
+				 choix_alternatif
+				 [ (#ENV{choix})_alternatif]
+				 [ (#ENV{class})]
+	"
+	data-afficher_si="#GET{afficher_si}"
+	>
+	[<p class="explication" id="[explication_(#ENV{nom}|saisies_name_suffixer{choix_alternatif}|saisie_nom2classe)]">(#ENV*{choix_alternatif_explication})</p>]
+	<label class="offscreen" [for="champ:(#GET{nom}|saisie_nom2classe)"]>[(#ENV{choix_alternatif_label}|sinon{<:saisies:option_choix_alternatif_label_defaut:>})]</label>
+	<INCLURE{fond=saisies/input,type=text,nom=#GET{nom},valeur=#ENV{valeur}} />
+</div>

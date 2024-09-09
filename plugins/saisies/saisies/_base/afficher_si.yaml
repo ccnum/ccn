@@ -1,0 +1,25 @@
+-
+  saisie: 'textarea'
+  options:
+    nom: 'afficher_si'
+    label: '<:saisies:option_afficher_si_label:>'
+    explication: '<:saisies:option_afficher_si_explication:>'
+    rows: 5
+  verifier:
+    type: 'afficher_si'
+-
+  saisie: 'case'
+  options:
+    nom: 'afficher_si_remplissage_uniquement'
+    label: '<:saisies:option_afficher_si_remplissage_uniquement_label:>'
+    label_case: '<:saisies:option_afficher_si_remplissage_uniquement_label_case:>'
+    explication: '<:saisies:option_afficher_si_remplissage_uniquement_explication:>'
+    afficher_si: '@afficher_si@'
+-
+  saisie: 'case'
+  options:
+    nom: 'afficher_si_avec_post'
+    label: '<:saisies:option_afficher_si_avec_post_label:>'
+    label_case: '<:saisies:option_afficher_si_avec_post_label_case:>'
+    explication: '<:saisies:option_afficher_si_avec_post_explication:>'
+    afficher_si: '@afficher_si@'

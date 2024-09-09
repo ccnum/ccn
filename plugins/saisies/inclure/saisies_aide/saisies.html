@@ -1,0 +1,22 @@
+<h2 class="h2 spip" id="liste_saisies">Toutes les saisies, par catégories</h2>
+<BOUCLE_categories(DATA){source tableau, #ENV{saisies}}>
+<h3 class="h3">#NOM</h3>
+<BOUCLE_saisies(DATA){source tableau, #SAISIES}>
+<h4 class="h3 spip" id="saisie_#CLE">#TITRE (#CLE)</h4>
+<p class="description">
+	<strong>Description :</strong> #DESCRIPTION
+</p>
+<B_options_saisie>
+<p class="options">
+	<strong>Options de base:</strong>
+	<BOUCLE_options_saisie(DATA){source tableau, #OPTIONS}{", "}><a href="#option_#CLE">#CLE</a></BOUCLE_options_saisie>
+</p>
+</B_options_saisie>
+<B_options_dev_saisie>
+<p class="options_dev">
+	<strong>Options de dev:</strong>
+	<BOUCLE_options_dev_saisie(DATA){source tableau, #OPTIONS_DEV}{", "}><a href="#option_#CLE">#CLE</a></BOUCLE_options_dev_saisie>
+</p>
+</B_options_dev_saisie>
+</BOUCLE_saisies>
+</BOUCLE_categories>

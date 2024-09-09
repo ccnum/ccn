@@ -1,0 +1,36 @@
+titre: '<:saisies:conteneur_inline_titre:>'
+description: '<:saisies:conteneur_inline_explication:>'
+icone: 'images/saisies_conteneur_inline.svg'
+categorie:
+  type: 'structure'
+  rang: 50
+options:
+  -
+    saisie: 'fieldset'
+    options:
+      nom: 'description'
+      label: '<:saisies:option_groupe_description:>'
+    saisies:
+      -
+        saisie : 'radio'
+        options:
+          nom: 'colonnes'
+          label: '<:saisies:option_colonnes_label:>'
+          data:
+            1ligne_max: '<:saisies:option_1ligne_max:>'
+            1ligne: '<:saisies:option_1ligne:>'
+            xlignes_max: '<:saisies:option_xlignes_max:>'
+            xlignes: '<:saisies:option_xlignes:>'
+            col2: '<:saisies:option_col2:>'
+            col3: '<:saisies:option_col3:>'
+            col4: '<:saisies:option_col4:>'
+          defaut: '1ligne_max'
+      -
+        saisie: 'input'
+        options:
+          nom: 'class'
+          label: '<:saisies:option_class_label:>'
+          size: 50
+defaut:
+  saisies: []
+  colonnes: '1ligne_max'

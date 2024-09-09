@@ -1,0 +1,51 @@
+<h1 class="grostitre"><:saisies:titre_page_saisies_doc:></h1>
+<div class="nettoyeur"></div>
+
+<B_categorie>
+<BOUCLE_categorie (DATA) {source table, #VAL{saisies}|saisies_lister_disponibles{''}|saisies_regrouper_disponibles_par_categories} {si #PLUGIN{yaml}|oui}>
+	<h3 id="[categorie_(#CLE)]">[(#ICONE|balise_img|image_reduire{24})&nbsp;][(#NOM)]</h3>
+			<BOUCLE_saisies(DATA) {source table, #SAISIES}>
+			[(#BOITE_OUVRIR)]
+			<h4 id="[saisie_(#CLE)]">[(#ICONE|balise_img|image_reduire{24})&nbsp;][(#TITRE)]</h4>
+			<p>[(#DESCRIPTION)]</p>
+			<BOUCLE_options (DATA) {source table, #OPTIONS}>
+				<div class="info">
+					<h5>[(#VALEUR{options/label}|saisies_label)]</h5>
+					<B_saisies_options>
+						<ul class="spip">
+							<BOUCLE_saisies_options (DATA) {source table, #SAISIES}>
+							<li><strong>[(#VALEUR{options/label}|sinon{#VALEUR{options/label_case}}|saisies_label)] [((#VALEUR{options/nom}|=={datas}|?{data,#VALEUR{options/nom}}))]</strong>[(#VALEUR{options/label}|oui|et{#VALEUR{options/label_case}|oui})[(#VALEUR{options/label_case}|saisies_label)]]
+									[<br/>(#VALEUR{options/explication}|saisies_label)]
+									[<br/><strong><:saisies:explication_dev|label_ponctuer:></strong> (#VALEUR{options/explication_dev}|saisies_label)]
+									[<br/><strong><:saisies:option_attention_label|label_ponctuer:></strong> (#VALEUR{options/attention}|saisies_label)]
+									[<br/>Par défaut : (#VALEUR{options/defaut}|saisies_label)]
+									<B_saisies_data>
+										<br/>Choix possibles :
+										<ul class="spip"><BOUCLE_saisies_data (DATA) {source table, #VALEUR|saisies_trouver_data}>
+											<li class="item data_[(#CLE)]">[(#VALEUR|saisies_label)][ ((#CLE))]</li>
+									</BOUCLE_saisies_data></ul>
+									</B_saisies_data>
+								</li>
+							</BOUCLE_saisies_options>
+						</ul>
+					</B_saisies_options>
+				</div>
+			</BOUCLE_options>
+			<B_saisies_options_dev>
+			<h5><:saisies:options_dev_titre:></h5>
+			<ul class="spip">
+				<BOUCLE_saisies_options_dev (DATA) {source table, #OPTIONS_DEV}>
+				<li><strong>[(#VALEUR{options/label}|sinon{#VALEUR{options/label_case}}|saisies_label)] [((#VALEUR{options/nom}|=={datas}|?{data,#VALEUR{options/nom}}))]</strong>[(#VALEUR{options/label}|oui|et{#VALEUR{options/label_case}|oui})[(#VALEUR{options/label_case}|saisies_label)]]
+					[(#VALEUR{options/explication}|oui)<br/>[(#VALEUR{options/explication}|saisies_label)]]
+					[(#VALEUR{options/explication_dev}|oui)<br/><strong><:saisies:explication_dev|label_ponctuer:></strong> [(#VALEUR{options/explication_dev}|saisies_label)]]
+					[(#VALEUR{options/defaut}|oui)<br/>[Par défaut : (#VALEUR{options/defaut}|saisies_label)]]
+				</li>
+				</BOUCLE_saisies_options_dev>
+			</ul>
+			</B_saisies_options_dev>
+			[(#BOITE_FERMER)]
+			</BOUCLE_saisies>
+	</B_saisies>
+</BOUCLE_categorie>
+<:saisies:plugin_yaml_inactif:>
+<//B_categorie>

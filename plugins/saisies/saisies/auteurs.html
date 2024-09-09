@@ -1,0 +1,42 @@
+[(#REM)
+
+	Permet de sélectionner un·e ou plusieurs auteur·trices
+	Réutilise le fond des saisies selection et selection_multiple.
+
+	Paramètres :
+
+	- statut : un tableau des statuts listés
+	- tri : champ sur lequel effectuer le tri (par défaut par nom)
+	- webmestre : si oui, ne selectionne que les webmestres
+	- multiple : « oui » pour permettre de choisir pusieurs valeurs
+
+	+ voir les params des saisies selection et selection_multiple
+
+	Exemple d'appel :
+
+	[(#SAISIE{auteurs,auteurs_site,
+		label=<:plugin:auteurs_du_site:>,
+		multiple=oui,
+		statut=0minirezo})]
+
+]
+#SET{type_saisie, #ENV{multiple}|?{selection_multiple, selection}}
+#SET{data, #ARRAY}
+#SET{defaut_tri,#ARRAY{
+	statut,1,
+	multi nom,1,
+	num nom,1,
+	nom,1,
+	id_auteur,1,
+}}
+<BOUCLE_auteurs(AUTEURS)
+	{statut ?}
+	{statut != 5poubelle}
+	{webmestre ?}
+	{tri #ENV{tri,multi nom},#GET{defaut_tri}}
+	{tout}
+>
+#SET{data, #GET{data}|plus{#ARRAY{#ID_AUTEUR,#NOM}}}
+</BOUCLE_auteurs>
+
+<INCLURE{fond=saisies/#GET{type_saisie}, data=#GET{data}, env}>

@@ -1,0 +1,22 @@
+#SET{href,#ENV{href}}
+#SET{width,#ENV{width,300}}
+#SET{height,#ENV{height,}}
+#SET{colorscheme,#ENV{colorscheme,light}}
+#SET{show_faces,#ENV{show_faces,true}}
+#SET{stream,#ENV{stream,true}}
+#SET{header,#ENV{header,true}}
+#SET{border_color,#ENV{border_color,}}
+[(#SET{code,#LANG|concat{_}|concat{#LANG|strtoupper}})]
+
+<div id="fb-root"></div>
+<script type="application/javascript">/*<!#EVAL{chr(91)}CDATA#EVAL{chr(91)}*/
+(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) {return;}
+  js = d.createElement(s); js.id = id;
+  js.src = "//connect.facebook.net/#GET{code}/all.js#xfbml=1";
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));
+/*#EVAL{chr(93)}[(#EVAL{chr(93)})]>*/</script>
+
+<div class="fb-like-box" data-href="#GET{href}" data-width="#GET{width}" [data-height="(#GET{height})"] data-show-faces="#GET{show_faces}" data-stream="#GET{stream}" data-header="#GET{header}" [data-border-color="(#GET{border_color})"] ></div>

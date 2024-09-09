@@ -1,0 +1,212 @@
+[(#REM)<style>/*
+	Ce squelette definit les styles de l'espace prive
+
+	Note: l'entete "Vary:" sert a repousser l'entete par
+	defaut "Vary: Cookie,Accept-Encoding", qui est (un peu)
+	genant en cas de "rotation du cookie de session" apres
+	un changement d'IP (effet de clignotement).
+
+	ATTENTION: il faut absolument le charset sinon Firefox croit que
+	c'est du text/html !
+*/]#CACHE{3600*100,cache-client}
+#HTTP_HEADER{Content-Type: text/css; charset=iso-8859-15}
+#HTTP_HEADER{Vary: Accept-Encoding}
+#wysiwyg .saisie_fieldset .champ {font-size: 1em;}
+
+<BOUCLE_si_yaml(CONDITION){si #PLUGIN{yaml}}>
+<BOUCLE_saisies (DATA) {source table, #VAL{saisies}|saisies_lister_disponibles{''}}>
+.navigation_avec_icones .bando2_saisie_[(#CLE)] { [background-image: url((#ICONE|image_reduire{16}|extraire_attribut{src}));] }
+</BOUCLE_saisies>
+</BOUCLE_si_yaml>
+
+/* Thème des saisies fieldsets en onglets
+ * La base mutualisée avec le public se trouve dans saisies.css.html
+ * On s'inspire de material design : https://material.io/components/tabs
+ */
+.formulaire_spip fieldset.fieldset_onglet {
+	border-top: 0;
+}
+.saisies-menu-onglets.saisies-menu-onglets {
+	border-bottom: 0;
+}
+/* pseudo-element pour avoir une bordure en bas à la fin */
+.saisies-menu-onglets__item:last-child {
+	flex: 1 1 auto;
+}
+.saisies-menu-onglets__item:last-child:after {
+	content: '';
+	flex: 1 1 auto;
+}
+.saisies-menu-onglets__item:last-child:after,
+.saisies-menu-onglets__lien {
+	border-bottom: 2px solid hsla(0, 0%, 0%, 0.066);
+}
+.saisies-onglets-verticaux > .saisies-menu-onglets .saisies-menu-onglets__lien {
+	border-#RIGHT: 2px solid hsla(0, 0%, 0%, 0.066);
+	border-bottom: 0;
+	width: 100%;
+}
+
+.saisies-menu-onglets__lien {
+	color: inherit;
+	white-space: nowrap;
+	text-transform: uppercase;
+	font-weight: 500;
+	font-size: 0.85em;
+	transition: 0.05s all;
+}
+.saisies-menu-onglets__item .saisies-menu-onglets__lien.actif {
+	color: [#(#ENV{foncee}|couleur_foncer{0.1})];
+	border-bottom-color: #ENV{foncee};
+	font-weight: 500;
+}
+.saisies-menu-onglets__lien:hover,
+.saisies-menu-onglets__lien:focus {
+	transition-duration: 0.2s;
+}
+.saisies-menu-onglets__lien:hover {
+	border-bottom-color: #ENV{foncee};
+}
+
+@media (min-width: 580px) {
+	.saisies-onglets-verticaux > .saisies-menu-onglets {
+		max-width: var(--spip-form-label-width) !important; /**Ne pas se laisser surprendre par les styles par défaut en 15em **/
+		min-width: var(--spip-form-label-width) !important;
+	}
+}
+
+.saisies-onglets-verticaux > .saisies-menu-onglets .saisies-menu-onglets__lien.actif {
+	background-color: hsla(0, 0%, 0%, 0.05);
+	border-bottom-color: hsla(0, 0%, 0%, 0.066);
+	border-right-color: #ENV{foncee};
+}
+/**
+	Éviter d'avoir la toute première ligne
+	du contenu d'un onglet vertical décalée
+	vers le bas
+**/
+.saisies-onglets-verticaux > .saisies-contenu-onglet > fieldset{
+	padding-top: 0;
+	padding-bottom: 0;
+}
+.saisies-onglets-verticaux > .saisies-contenu-onglet > fieldset > .editer-groupe:first-of-type,
+/** On cible volontairement div.editer pour ne pas avoir .fieldset.editer, où il est nécessaire de garder un peu de padding-top pour pas que le libellé/legend soit collé à la suite**/
+.saisies-onglets-verticaux > .saisies-contenu-onglet > fieldset > .editer-groupe:first-of-type > div.editer:first-of-type
+{
+	padding-top: 0;
+}
+.saisies-onglets-verticaux > .saisies-menu-onglets .saisies-menu-onglets__lien {
+	white-space: normal;/* Les onglets horizontaux ont nowrap*/
+}
+
+.formulaire_spip .saisies-onglets fieldset + fieldset,
+.formulaire_spip .saisies-onglets .fieldset + .fieldset > fieldset {
+	margin-top: 0/* Annulation de style de SPIP pour les fieldset successifs */
+}
+.formulaire_spip .saisies-onglets fieldset + fieldset,
+.formulaire_spip .saisies-onglets .fieldset + .fieldset > fieldset,
+.formulaire_spip .afficher_si_masque + fieldset,
+.formulaire_spip .afficher_si_masque + .fieldset > fieldset
+{
+	margin-top: 0;/* Annulation de style de SPIP pour les fieldset successifs */
+}
+
+/* Dans les onglets, c'est seulement en troisième niveau qu'on va décaler à gauche */
+.formulaire_spip .saisies-onglets fieldset:not(.editer) fieldset:not(.editer) {
+	margin-left: 0;
+}
+.formulaire_spip .saisies-onglets fieldset:not(.editer) > fieldset:not(.editer) > fieldset:not(.editer) {
+	margin-left: var(--spip-form-fieldset-offset);
+}
+
+.saisies-menu-onglets__lien:focus {
+	background-color: hsla(0, 0%, 0%, 0.1);
+}
+.saisies-menu-onglets__lien.erreur {
+	color: red;
+}
+.saisies-menu-onglets__lien.erreur:after {
+	content: '';
+	display: block;
+	width: 1em;
+	height: 1em;
+	background: url(#CHEMIN_IMAGE{erreur-16.png}) no-repeat;
+	background-size: contain;
+	margin-#LEFT: 0.5em;
+}
+/* Menu scrollable quand les onglets dépassent */
+.saisies-menu-onglets.scrollable {
+	overflow-x: scroll;
+	scrollbar-width: thin;
+	scrollbar-color: transparent transparent;
+	transition: scrollbar-color 0.2s;
+	-webkit-mask-image: linear-gradient(
+		to right,
+		transparent 0%,
+		black 2em,
+		black calc(100% - 10em),
+		transparent 100%
+	);
+	mask-image: linear-gradient(
+		to right,
+		transparent 0%,
+		black 2em,
+		black calc(100% - 10em),
+		transparent 100%
+	);
+}
+.saisies-menu-onglets.scrollable .saisies-menu-onglets__item:first-child {
+	padding-#LEFT: 2em;
+}
+.saisies-menu-onglets.scrollable .saisies-menu-onglets__item:last-child {
+	padding-#RIGHT: 6em;
+}
+.saisies-menu-onglets.scrollable:hover {
+	scrollbar-color: black transparent;
+}
+@supports (-moz-appearance:none){/*CSS spécifique FF, cf issue 180 */
+	.saisies-menu-onglets.scrollable {
+		padding-bottom:8px;
+	}
+}
+.formulaire_spip__etapes {
+	padding: 0.75em;
+}
+
+/** recap des étapes **/
+.formulaire_spip .saisies_etapes_recapitulatif .editer_explication{
+  padding-left:0;
+  padding-right:0;
+}
+.saisies_etapes_recapitulatif {
+   margin:10px;
+}
+/* Saisie groupe inline
+ * La base mutualisée avec le public se trouve dans saisies.css.html
+ */
+.editer-groupe_inline > .editer:not(.en_configuration) {
+	padding-left: 0;
+	padding-right: 0;
+}
+.formulaire_construire_formulaire .conteneur_inline:not(.en_configuration)::before {
+	content: '<:saisies:conteneur_inline_titre:>';
+	font-style: italic;
+	font-size: 0.8em;
+}
+/* Que pour les legend des fieldset.editer */
+.editer-groupe_inline > fieldset.editer:not(.en_configuration) > .editer-label {
+	float: left;
+}
+.editer-groupe_inline > fieldset.editer:not(.en_configuration) > .editer-label + * {
+	clear: both;
+}
+
+
+
+/** Indiquer les saisies dépubliées **/
+
+.formulaire_construire_formulaire .configurable.depublie:before {
+	content: '<:saisies:saisie_depublie:>';
+	font-style: italic;
+	font-size: 0.8em;
+}

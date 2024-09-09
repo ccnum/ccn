@@ -1,0 +1,6 @@
+[(#REM) data peut être une chaine qu'on sait décomposer ]
+#SET{data, #ENV*{data, #ENV*{datas}}|saisies_aplatir_tableau{#ENV{vue_masquer_sous_groupe}}}
+[(#ENV{cle_ou_valeur,valeur}|=={cle}|?{
+	[<p>(#ENV{valeur})</p>],
+	[<p>(#GET{data/#ENV{valeur}}|sinon{[(#ENV{choix_alternatif}|oui)[(#VAL{<em>#ENV{choix_alternatif_label}</em>}|label_ponctuer)] #ENV{valeur}]})</p>]
+})]
