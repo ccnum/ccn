@@ -1,0 +1,20 @@
+-
+  saisie: 'case'
+  options:
+    nom: 'obligatoire'
+    label_case: '<:saisies:option_obligatoire_label:>'
+    conteneur_class: 'pleine_largeur'
+-
+  saisie: 'input'
+  options:
+    nom: 'info_obligatoire'
+    label: '<:saisies:option_info_obligatoire_label:>'
+    explication: '<:saisies:option_info_obligatoire_explication:>'
+    afficher_si: '@obligatoire@'
+-
+  saisie: 'input'
+  options:
+    nom: 'erreur_obligatoire'
+    label: '<:saisies:option_erreur_obligatoire_label:>'
+    explication: '<:saisies:option_erreur_obligatoire_explication:>'
+    afficher_si: '@obligatoire@'

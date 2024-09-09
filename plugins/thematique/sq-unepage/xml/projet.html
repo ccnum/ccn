@@ -13,23 +13,22 @@
 			[(#NOM_SITE_SPIP|=={novaterra.laclasse.com}|oui) #ff9e0d ]
 			[(#NOM_SITE_SPIP|=={air.laclasse.com}|oui) #ff9e0d ]
 		</couleur_blog>
-		
+
 		<image_fond>
 			#SET{anneeEnCours, false}
 			<BOUCLE_rub(RUBRIQUES){titre_mot=images_background}{par hasard}{0,1}{tout}>
 				[(#REM) Si l'image dans le contenu editorial porte le TITRE de l'année en cours]
 				<BOUCLE_yearImage(DOCUMENTS){id_rubrique}>
-						<BOUCLE_selectYearImage(DOCUMENTS){id_document}{si #EVAL{_annee_scolaire}|=={#TITRE}}{si #GET{anneeEnCours}|=={false}}>
-								[(#SET{url,[(#URL_DOCUMENT||image_reduire{1600}|extraire_attribut{src})]})]
-								#SET{anneeEnCours, true}
-						</BOUCLE_selectYearImage>
-
+					<BOUCLE_selectYearImage(DOCUMENTS){id_document}{si #CONST{_annee_scolaire}|=={#TITRE}}{si #GET{anneeEnCours}|=={false}}>
+						[(#SET{url,[(#URL_DOCUMENT|image_reduire{1600}|extraire_attribut{src})]})]
+						#SET{anneeEnCours, true}
+					</BOUCLE_selectYearImage>
 				</BOUCLE_yearImage>
 				[(#REM) Sinon choisir une image au hasard]
 				<BOUCLE_Image(DOCUMENTS){id_rubrique}{si #GET{anneeEnCours}|=={false}}{par hasard}{0,1}>
-						<BOUCLE_selectImage(DOCUMENTS){id_document}{par hasard}{0,1}>
-								[(#SET{url,[(#URL_DOCUMENT||image_reduire{1600}|extraire_attribut{src})]})]
-						</BOUCLE_selectImage>
+					<BOUCLE_selectImage(DOCUMENTS){id_document}{par hasard}{0,1}>
+						[(#SET{url,[(#URL_DOCUMENT|image_reduire{1600}|extraire_attribut{src})]})]
+					</BOUCLE_selectImage>
 				</BOUCLE_Image>
 			</BOUCLE_rub>
 			<//B_rub>
@@ -39,8 +38,8 @@
 			]
 			#GET{url}
 		</image_fond>
-		<largeur>#EVAL{_largeur}</largeur>
-		<hauteur>#EVAL{_hauteur}</hauteur>
+		<largeur>#CONST{_largeur}</largeur>
+		<hauteur>#CONST{_hauteur}</hauteur>
 		<fps>20</fps>
 		<zoom_consignes>2</zoom_consignes>
 		<seq_posy_consignes>0.30, 0.10, 0.50, 0.70, 0.50, 0.20, 0.70, 0.00, 0.30, 0.60, 0.10, 1.00, 0.40, 0.80</seq_posy_consignes>
@@ -81,7 +80,7 @@
 				[(#SESSION{nom}|non)
 					https://docs.google.com/spreadsheet/pub?hl=fr_FR&amp;key=0An8SJZ8E7nY9dGFlQ25YTnA1ZW1paVVZZ3lXcFlNTXc&amp;hl=fr_FR#gid=8
 				]
-			]		
+			]
 		</url_popup_chat>
 		<url_popup_chat2>
 			[(#NOM_SITE_SPIP|=={miam.laclasse.com}|oui)

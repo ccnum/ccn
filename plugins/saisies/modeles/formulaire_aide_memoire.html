@@ -1,0 +1,64 @@
+[(#REM)
+	<!-- affiche un aide mémoire listant les saisies d'un formulaire sous forme de série de @@
+	Options possible :
+		- `saisies` : liste des saisies
+		- `source` : si `constructeur`, rechercher les saisies dans `constructeur_id`, sinon prendre dans `saisies`
+		- pre_saisies: des choses à mettre dans l'aide mémoire avant les saisies, ex pour formidable:
+			\['nom_site_spip' => _T\('info_nom_site_spip'\),
+			 'message_retour' => _T\('formidable:editer_message_ok'\)
+			 \]
+	)
+	-->
+]
+<strong><:saisies:saisies_aide_memoire|label_ponctuer:></strong>
+
+[(#PIPELINE{
+	saisies_aide_memoire_inserer_debut,
+	#ARRAY{
+		data,#ENV*{inserer_debut},
+		args,#ARRAY{
+			type_aide_memoire,#ENV{type_aide_memoire},
+			id_aide_memoire,#ENV{id_aide_memoire}
+			}
+		}
+	})
+<hr />]
+#SET{source,#ENV{source,formulaire}}
+<BOUCLE_constructeur(CONDITION) {si #GET{source}|=={constructeur}}>
+[(#SET{saisies,#SESSION{constructeur_formulaire_#ENV{constructeur_id}}})]
+</BOUCLE_constructeur>
+#SET{saisies,#ENV{saisies}}
+<//B_constructeur>
+
+<B_champs>
+<dl>
+<BOUCLE_champs(DATA){source tableau, #PIPELINE{saisies_afficher_si_saisies, #GET{saisies}}|saisies_lister_par_nom{1}}>
+	[(#VALEUR|saisies_saisie_est_labelisable|oui)
+		[(#VALEUR|saisies_saisie_est_avec_sous_saisies|oui)
+		<hr />
+
+		]
+
+		<dt>@#CLE@</dt>
+		[<dd>(#VALEUR|saisies_saisie_get_label)</dd>]
+		[<dl style="margin-left:1em">
+			<dd>
+			<dt><:saisies:option_datas_label:></dt>
+			<dd>(#VALEUR|saisies_trouver_data|saisies_tableau2chaine|propre|PtoBr)
+					[(#VALEUR{options/choix_alternatif}|oui)
+							<br />
+							[(#VALEUR|saisies_saisie_est_tabulaire|oui)
+							choix_alternatif|[(#VALEUR{options/choix_alternatif_label}|sinon{<:saisies:option_choix_alternatif_label_defaut:>})]
+							]
+							[(#VALEUR|saisies_saisie_est_tabulaire|non)
+							[&lt;(#VALEUR{options/choix_alternatif_label}|sinon{<:saisies:option_choix_alternatif_label_defaut:>})&gt;]
+							]
+
+					]
+			</dd>
+			</dd>
+		</dl>]
+	]
+	</BOUCLE_champs>
+</dl>
+</B_champs>

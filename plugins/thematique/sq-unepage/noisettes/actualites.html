@@ -1,17 +1,14 @@
 [(#REM) Actualites]
-
-
-<div class="popup [popup_(#GET{type_objet})]"> 
-	<div class="sidebar_bubble">  		
+<div class="popup [popup_(#GET{type_objet})]">
+	<div class="sidebar_bubble">
 		<div class="fiche_titre">
-	    <div class="texte">
-	      <div class="titre">Actualités</div>
-	    </div>
+			<div class="texte">
+				<div class="titre">Actualités</div>
+			</div>
 		</div>
 	</div>
-		
-	<div class="sidebar_bubble">
-    <INCLURE{fond=noisettes/inc/actus_timeline}{nb_actus=20} />
-	</div>		
 
+	<div class="sidebar_bubble">
+		<INCLURE{fond=noisettes/inc/actus_timeline}{nb_actus=20} />
+	</div>
 </div>

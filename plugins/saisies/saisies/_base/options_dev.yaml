@@ -1,0 +1,22 @@
+-
+  saisie: 'input'
+  options:
+    nom: 'inserer_debut'
+    label: '<:saisies:option_inserer_debut_label:>'
+-
+  saisie: 'input'
+  options:
+    nom: 'inserer_fin'
+    label: '<:saisies:option_inserer_fin_label:>'
+-
+  saisie: 'input'
+  options:
+    nom: 'id'
+    label: '<:saisies:option_id_label:>'
+    explication: '<:saisies:option_id_explication:>'
+-
+  saisie: 'input'
+  options:
+    nom: 'attributs'
+    label: '<:saisies:option_attributs_label:>'
+    explication: '<:saisies:option_attributs_explication:>'

@@ -1,0 +1,22 @@
+<paquet
+	prefix="spip_bonux"
+	categorie="outil"
+	version="4.2.0"
+	etat="stable"
+	compatibilite="[4.0.0;4.*]"
+	logo="spip_bonux.svg"
+	documentation="https://contrib.spip.net/4589"
+>
+
+	<nom>SPIP Bonux</nom>
+	<!-- Le plugin SPIP avec une cerise dessus -->
+
+	<auteur>Cedric Morin</auteur>
+	<auteur>Matthieu Marcillaud</auteur>
+	<auteur>romy.tetue.net</auteur>
+
+	<copyright>2008-2022</copyright>
+
+	<licence lien="http://www.gnu.org/licenses/gpl-3.0.html">GPL</licence>
+	<pipeline nom="affichage_final" />
+</paquet>

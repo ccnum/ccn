@@ -21,27 +21,27 @@ Sinon, utiliser le comportement normal.
 #SET{player,#ENV{player,#CONFIG{player,'neoplayer'}}}
 
 
-[<!--(#REM) 
+[<!--(#REM)
 
-	Document MP3 ? 
+	Document MP3 ?
 
 -->][(#TYPE_DOCUMENT|=={MP3}|?{
 <dl class='spip_document_#ID_DOCUMENT spip_documents[ spip_documents_(#ENV{align})][ (#ENV{class})] spip_lien_ok'[ style='float:(#ENV{align}|match{left|right});']>
 [(#ID_VIGNETTE|?{
 	<dt><a href="[(#ENV{lien}|sinon{#URL_DOCUMENT})]" type="#MIME_TYPE"[ class="(#ENV{lien_class})"] title='#TYPE_DOCUMENT - [(#TAILLE|taille_en_octets|texte_backend)]'>
-	<img src='[(#LOGO_DOCUMENT||extraire_attribut{src})]' width='[(#LOGO_DOCUMENT||largeur)]' height='[(#LOGO_DOCUMENT||hauteur)]' alt='#TYPE_DOCUMENT - [(#TAILLE|taille_en_octets|texte_backend)]' /></a></dt>
+	<img src='[(#LOGO_DOCUMENT|extraire_attribut{src})]' width='[(#LOGO_DOCUMENT|largeur)]' height='[(#LOGO_DOCUMENT|hauteur)]' alt='#TYPE_DOCUMENT - [(#TAILLE|taille_en_octets|texte_backend)]' /></a></dt>
 ,
 	''
 })]
 [
-<dt class='spip_doc_titre #EDIT{titre}'[ style='width:(#LOGO_DOCUMENT||largeur|min{350}|max{120})px;']><strong>(#TITRE)</strong></dt>][
-<dd class='spip_doc_descriptif #EDIT{descriptif}'[ style='width:(#LOGO_DOCUMENT||largeur|min{350}|max{120})px;']>(#DESCRIPTIF|PtoBR)[(#NOTES|PtoBR)]</dd>]
-<dd class='spip_doc_descriptif'[ style='width:(#LOGO_DOCUMENT||largeur|min{350}|max{120})px;']>
+<dt class='spip_doc_titre #EDIT{titre}'[ style='width:(#LOGO_DOCUMENT|largeur|min{350}|max{120})px;']><strong>(#TITRE)</strong></dt>][
+<dd class='spip_doc_descriptif #EDIT{descriptif}'[ style='width:(#LOGO_DOCUMENT|largeur|min{350}|max{120})px;']>(#DESCRIPTIF|PtoBR)[(#NOTES|PtoBR)]</dd>]
+<dd class='spip_doc_descriptif'[ style='width:(#LOGO_DOCUMENT|largeur|min{350}|max{120})px;']>
 [(#GET{player}|=={pixplayer}|?{' ',''})
-[<!--(#REM) 
+[<!--(#REM)
 
 	Pour voir les options de configuration : http://www.1pixelout.net/code/audio-player-wordpress-plugin/
-	
+
 -->]
 <object type='application/x-shockwave-flash' data='#CHEMIN{flash/pixplayer.swf}' id='audioplayer#ID_DOCUMENT' height='[(#ENV{height,200})]' width='[(#ENV{width,290})]'>
 <param name="wmode" value="transparent" />
@@ -84,10 +84,10 @@ Sinon, utiliser le comportement normal.
 })]
 
 
-[<!--(#REM) 
+[<!--(#REM)
 
 	Document Flash (.flv) ?
-	
+
 	Documentation:
 	- player_flv_js.swf -> http://flv-player.net/players/js/documentation/
 	- player_flv_multi.swf -> http://flv-player.net/players/multi/documentation/
@@ -103,27 +103,27 @@ Sinon, utiliser le comportement normal.
 <dt class='spip_doc_titre'>
 <object type="application/x-shockwave-flash" data="#CHEMIN{flash/player_flv_maxi.swf}" width="#GET{largeur}" height="#GET{hauteur}">
 <param name="movie" value="#CHEMIN{flash/player_flv_maxi.swf}" />
-<param name="FlashVars" value="flv=[(#URL_DOCUMENT|url_absolue)]&amp;width=#GET{largeur}&amp;height=#GET{hauteur}&amp;bgcolor1=ffffff&amp;bgcolor2=cccccc&amp;buttoncolor=999999&amp;buttonovercolor=0&amp;slidercolor1=cccccc&amp;slidercolor2=999999&amp;sliderovercolor=666666&amp;textcolor=0&amp;showstop=1&amp;title=[(#TITRE|textebrut|urlencode)][(#LOGO_DOCUMENT||extraire_attribut{src}|match{flv.png$}|?{'',' '})&amp;startimage=[(#LOGO_DOCUMENT||extraire_attribut{src})]]&amp;ondoubleclick=fullscreen&amp;showfullscreen=1&amp;autoplay=[(#ENV{autoplay}|?{1,0})]" />
+<param name="FlashVars" value="flv=[(#URL_DOCUMENT|url_absolue)]&amp;width=#GET{largeur}&amp;height=#GET{hauteur}&amp;bgcolor1=ffffff&amp;bgcolor2=cccccc&amp;buttoncolor=999999&amp;buttonovercolor=0&amp;slidercolor1=cccccc&amp;slidercolor2=999999&amp;sliderovercolor=666666&amp;textcolor=0&amp;showstop=1&amp;title=[(#TITRE|textebrut|urlencode)][(#LOGO_DOCUMENT|extraire_attribut{src}|match{flv.png$}|?{'',' '})&amp;startimage=[(#LOGO_DOCUMENT|extraire_attribut{src})]]&amp;ondoubleclick=fullscreen&amp;showfullscreen=1&amp;autoplay=[(#ENV{autoplay}|?{1,0})]" />
 <param name="allowFullScreen" value="true" />
 <param name="wmode" value="transparent" />
 [<strong>(#TITRE)</strong>]
 [<span><a href="(#URL_DOCUMENT)" rel="enclosure">#URL_DOCUMENT</a></span>]
 </object>
 </dt>
-[<dd class='spip_doc_descriptif'[ style='width:(#LOGO_DOCUMENT||largeur|min{350}|max{120})px;']>(#DESCRIPTIF|PtoBR)[(#NOTES|PtoBR)]</dd>]
+[<dd class='spip_doc_descriptif'[ style='width:(#LOGO_DOCUMENT|largeur|min{350}|max{120})px;']>(#DESCRIPTIF|PtoBR)[(#NOTES|PtoBR)]</dd>]
 </dl>
 ]
 
-[<!--(#REM) 
+[<!--(#REM)
 
-	Sinon : document normal 
-	
+	Sinon : document normal
+
 -->][(#TYPE_DOCUMENT|match{^(Flash Video|MP3)$}|?{'',' '})
 <dl class='spip_document_#ID_DOCUMENT spip_documents[ spip_documents_(#ENV{align})][ (#ENV{class})] spip_lien_ok'[ style='float:(#ENV{align}|match{left|right});']>
-<a href="[(#ENV{lien}|sinon{#URL_DOCUMENT})]" type="#MIME_TYPE"[ class="(#ENV{lien_class})"]><img src='[(#LOGO_DOCUMENT||extraire_attribut{src})]' width='[(#LOGO_DOCUMENT||largeur)]' height='[(#LOGO_DOCUMENT||hauteur)]' alt='#TYPE_DOCUMENT - [(#TAILLE|taille_en_octets)]' title='#TYPE_DOCUMENT - [(#TAILLE|taille_en_octets)]' /></a>
+<a href="[(#ENV{lien}|sinon{#URL_DOCUMENT})]" type="#MIME_TYPE"[ class="(#ENV{lien_class})"]><img src='[(#LOGO_DOCUMENT|extraire_attribut{src})]' width='[(#LOGO_DOCUMENT|largeur)]' height='[(#LOGO_DOCUMENT|hauteur)]' alt='#TYPE_DOCUMENT - [(#TAILLE|taille_en_octets)]' title='#TYPE_DOCUMENT - [(#TAILLE|taille_en_octets)]' /></a>
 [
-<dt class='spip_doc_titre'[ style='width:(#LOGO_DOCUMENT||largeur|min{350}|max{120})px;']><strong>(#TITRE)</strong></dt>][
-<dd class='spip_doc_descriptif'[ style='width:(#LOGO_DOCUMENT||largeur|min{350}|max{120})px;']>(#DESCRIPTIF|PtoBR)[(#NOTES|PtoBR)]</dd>]
+<dt class='spip_doc_titre'[ style='width:(#LOGO_DOCUMENT|largeur|min{350}|max{120})px;']><strong>(#TITRE)</strong></dt>][
+<dd class='spip_doc_descriptif'[ style='width:(#LOGO_DOCUMENT|largeur|min{350}|max{120})px;']>(#DESCRIPTIF|PtoBR)[(#NOTES|PtoBR)]</dd>]
 </dl>
 ]
 </BOUCLE_doc>

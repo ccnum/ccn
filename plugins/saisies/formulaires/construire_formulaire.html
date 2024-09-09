@@ -1,0 +1,186 @@
+<div class="formulaire_spip formulaire_editer formulaire_#ENV{form}[ (#ENV{formulaire_modifie}|oui) modifie][ (#ENV{_configurer_saisie})]">
+	[<p class="reponse_formulaire reponse_formulaire_ok">(#ENV*{message_ok})</p>]
+	<p id="message_attention" class="message_reinitialiser reponse_formulaire reponse_formulaire_ok">#ENV*{_message_attention}</p>
+	[<p class="reponse_formulaire reponse_formulaire_erreur">(#ENV*{message_erreur})</p>]
+	<BOUCLE_editable(CONDITION){si #ENV{editable}|oui}>
+	<form method='post' action='#ENV{action}' enctype='multipart/form-data'><div>
+		[(#REM) declarer les hidden qui declencheront le service du formulaire
+		parametre : url d'action ]
+		#ACTION_FORMULAIRE{#ENV{action}}
+		<input type="submit" class="submit noscroll invisible" name="enregistrer" value="<:bouton_enregistrer:>" />
+
+		[(#ENV{_activer_options_globales}|oui)
+			[(#ENV{erreurs/configurer_globales}|non)
+			<div class="actions-globales float-end">
+				<button type="submit" class="submit btn_secondaire" name="configurer_globales" value="oui">
+					<:saisies:construire_configurer_globales_label:>
+				</button>
+			</div>
+			]
+			[(#ENV{erreurs/configurer_globales}|oui)
+			<div class="editer-groupe en_configuration">
+				#GENERER_SAISIES{#ENV{erreurs/configurer_globales}}
+
+				<div class="boutons">
+					<input type="hidden" name="enregistrer_globales" value="oui" />
+					<div class="groupe-btns">
+						<button type="submit" class="submit btn_secondaire noscroll" name="enregistrer_globales" value=""><:bouton_annuler:></button>
+						<input type="submit" class="submit noscroll" name="enregistrer" value="<:bouton_valider:>" />
+					</div>
+				</div>
+			</div>
+			]
+		]
+			<div id="reinitialiser" class="actions_formulaire">
+				<button type="submit" class="submit btn_secondaire" name="reinitialiser" value="oui" onclick="return confirm('<:saisies:construire_reinitialiser_confirmer:>')">
+					[(#CHEMIN_IMAGE{formulaire-action-reinitialiser-16.png}|balise_img{'','sp-icone'})]
+					<:saisies:construire_reinitialiser:>
+				</button>
+			</div>
+
+		<div class="editer-groupe saisies_presentes" id="sortable">
+
+			[(#REM)<!-- les choix de saisies -->]
+			<BOUCLE_contenu(DATA){source tableau, #ENV{_contenu}}>
+			[(#VAL{saisie}|array_key_exists{#VALEUR}|oui)
+				[(#VALEUR**|construire_formulaire_generer_saisie_configurable{#ENV**|unserialize})]
+			]
+			</BOUCLE_contenu>
+			[(#ALERTE_MESSAGE{<:saisies:construire_aucun_champs:>})]
+			<//B_contenu>
+
+	</div>
+			<B_saisies_disponibles_par_categories>
+			<div class="editer haut saisies_disponibles" id="attrapable">
+				<h2><:saisies:construire_ajouter_champ:></h2>
+				<BOUCLE_saisies_disponibles_par_categories(DATA){source tableau, #ENV{_saisies_disponibles_par_categories}}>
+				<B_saisies_disponibles>
+				<div class="fieldset[ fieldset_saisie_categorie_(#CLE|saisie_nom2classe)] fieldset_saisie_categorie">
+				<fieldset>
+					<legend class="legend">#NOM</legend>
+					<div class="editer_groupe">
+						<BOUCLE_saisies_disponibles(DATA){source tableau, #SAISIES}>
+						<button type="submit" name="ajouter_saisie" value="#CLE" class="submit noscroll ajouter_saisie"[ title="(#DESCRIPTION)"] [style="background-image:url((#ICONE|sinon{#CHEMIN{images/formulaire-saisie-defaut-xx.svg}}))"]>
+							<span>#TITRE</span>
+						</button>
+						</BOUCLE_saisies_disponibles>
+					</div>
+				</fieldset>
+				</div>
+				</B_saisies_disponibles>
+				</BOUCLE_saisies_disponibles_par_categories>
+			</div>
+			</B_saisies_disponibles_par_categories>
+
+			<B_saisies_groupes_disponibles>
+			<div class="editer haut saisies_groupes_disponibles" id="attrapable_bis">
+				<label><:saisies:construire_ajouter_groupe:></label>
+				<BOUCLE_saisies_groupes_disponibles(DATA){source tableau, #ENV{_saisies_groupes_disponibles}}{par titre}>
+				<button type="submit" name="ajouter_groupe_saisie" value="#CLE" class="submit noscroll ajouter_saisie"[ title="(#DESCRIPTION)"] [style="background-image:url((#ICONE|sinon{#CHEMIN{images/formulaire-saisie-defaut-xx.svg}}))"]>
+					<span>#TITRE</span>
+				</button>
+				</BOUCLE_saisies_groupes_disponibles>
+			</div>
+			</B_saisies_groupes_disponibles>
+
+
+		[(#REM) ajouter les saisies supplementaires : extra et autre, a cet endroit ]
+		<!--extra-->
+
+		<span class='image_loading'></span>
+	</div></form>
+
+	<style>
+		.message_reinitialiser,#reinitialiser {display: none}
+		.modifie .message_reinitialiser,.modifie #reinitialiser {display: block}
+	</style>
+	<script type="text/javascript">
+	(function($){
+
+		jQuery.getScript('[(#CHEMIN{prive/javascript/Sortable.js}|timestamp)]').done(function() {
+			var sortableOptions = {
+				group: {
+					name: "construire_formulaire",
+					pull: true,
+					put: true,
+				},
+				handle: '.deplacer_saisie',
+				onEnd: function(evt) {
+						$saisie = $(evt.item);
+						id = $saisie.data('id');
+						ou = $saisie.next().data('id');
+						if (!ou) {
+							// sinon dans le parent
+							ou = $saisie.closest('.avec_sous_saisies').data('id');
+							// Si jamais match lui-même, ca veut dire qu'on déplace un fieldest
+							if (ou == id) {
+								ou = $saisie.parents('.avec_sous_saisies').first().data("id");
+							}
+							if (ou) {
+								ou = '\[' + ou + '\]';
+							}
+						}
+						url = "#URL_ECRIRE";
+						$.get(url, {
+							session: '#ENV{_identifiant_session}',
+							action: 'deplacer_saisie',
+							saisie: id,
+							ou: ou
+						}, function() {
+							$('.formulaire_#ENV{form}').addClass('modifie').trigger('modifsaisies');
+						});
+					},
+					animation: 250,
+			};
+			containers = document.querySelectorAll("#sortable, #sortable .avec_sous_saisies .editer-groupe");
+			for (var i = 0; i < containers.length; i++) {
+				new Sortable(containers[i], sortableOptions);
+			}
+		});
+		/* enlever les required */
+		$('.formulaire_#FORM .editer.obligatoire').find('input, textarea, select').each(function(){
+			if ($(this).prop('required')) {
+				$(this).prop('required', false);
+			}
+		});
+
+		$('.formulaire_#FORM .configurable')
+			.hover(
+				function(){
+					$(this)
+						.addClass('hover')
+						.end()
+						.parents('li.configurable:not(.en_configuration)')
+							.mouseout();
+				},
+				function(){
+					if (!$(this).is('.en_configuration'))
+						$(this)
+							.removeClass('hover')
+							.end()
+							.parents('.configurable').eq('0')
+								.mouseover();
+				}
+			)
+			.filter(':not(.en_configuration)')
+				.end()
+			.end();
+
+
+		// On déplie toujours les fieldsets plés par défaut
+		$('.fieldset.plie').each(function(){
+			$(this)
+				.removeClass('plie')
+				.find('> fieldset > .editer-groupe').show();
+		});
+
+		// On se rend à la saisie en cour d'édition
+		if ($('.en_configuration').length > 0) {
+			$('.en_configuration').positionner(true);
+		}
+
+	})(jQuery);
+		[location.href = '#configurer_(#ENV{_saisie_deplacee_par_select})';]
+	</script>
+	</BOUCLE_editable>
+</div>

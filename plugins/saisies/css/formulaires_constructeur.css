@@ -1,0 +1,325 @@
+/**
+ * Styles du constructeur de formulaires.
+ */
+
+
+/**
+ * Conteneur
+ */
+.formulaire_construire_formulaire {
+	--saisies-btn-padding-x: var(--spip-btn-padding-x);
+	--saisies-btn-padding-y: var(--spip-btn-padding-y);
+	--saisies-btn-fontsize: var(--spip-btn-font-size);
+	--saisies-btn-iconsize: 32px;
+	margin-left: calc(var(--spip-form-spacing-x) * -1);
+	margin-right: calc(var(--spip-form-spacing-x) * -1);
+}
+.formulaire_spip .formulaire_construire_formulaire {
+	border: none;
+	background: transparent;
+}
+
+
+/**
+ * Saisie en configuration, avec le formulaire inséré à la fin.
+ * Pour les fieldsets et conteneur_inline, c'est inséré après.
+ */
+.formulaire_construire_formulaire .en_configuration {
+	border: 3px solid var(--spip-color-theme) !important;
+	border-radius: var(--spip-form-border-radius);
+	padding-top: var(--spip-form-spacing-y);
+	padding-bottom: 0;
+	margin: calc(var(--spip-form-spacing-y) / 2) 0;
+	box-shadow: 0 0 2em var(--spip-color-theme-lightest); /* Pour faire « poper » la saisie */
+}
+.formulaire_construire_formulaire .avec_sous_saisies.en_configuration > *,
+.formulaire_construire_formulaire .avec_sous_saisies.en_configuration > .formulaire_configurer {
+	margin: 0;
+}
+
+
+/**
+ * Formulaire de configuration dans une saisie
+ */
+.formulaire_construire_formulaire .formulaire_configurer {
+	margin-top: var(--spip-form-spacing-y);
+	margin-left: calc(var(--spip-form-spacing-x) * -1);
+	margin-right: calc(var(--spip-form-spacing-x) * -1);
+	padding: 0;
+	border-top: 3px dashed var(--spip-color-theme-light);
+}
+.formulaire_construire_formulaire .editer.pleine_largeur .formulaire_configurer,
+.formulaire_construire_formulaire .avec_sous_saisies.editer:not(.en_configuration) .formulaire_configurer {
+	margin-left: calc(var(--spip-form-spacing-x) * -1);
+}
+@media (min-width: 580px) {
+	.formulaire_construire_formulaire .formulaire_configurer {
+		margin-left: calc((var(--spip-form-label-width) + (var(--spip-form-spacing-x) * 2)) * -1);
+	}
+	.formulaire_construire_formulaire .editer.long_label .formulaire_configurer {
+		margin-left: calc((var(--spip-form-label-long-width) + (var(--spip-form-spacing-x) * 2)) * -1);
+	}
+}
+.formulaire_construire_formulaire .formulaire_configurer > .editer-groupe {
+	margin-left: 0;
+	margin-right: 0;
+}
+/* onglets */
+.formulaire_construire_formulaire .formulaire_configurer .saisies-contenus-onglets > .fieldset {
+	padding-left: 0;
+}
+/* boutons  */
+.formulaire_construire_formulaire .formulaire_configurer .boutons {
+	margin: 0;
+}
+/*
+ * Saisies inline
+*/
+.formulaire_construire_formulaire .conteneur_inline:not(.en_configuration) .editer-groupe_inline{
+	border:1px dashed var(--spip-color-gray);
+	min-height:1em;
+	padding-top: var(--spip-form-spacing-y);
+	padding-bottom: calc(var(--spip-form-spacing-y) / 2);
+	column-gap: 0.5em;
+}
+.formulaire_construire_formulaire .editer-groupe_inline > .editer {
+	/* largeur minimale de la saisie = largeur du bloc de boutons d'actions
+	4 boutons avec une icone de 16px (1em) + padding de 0.25em */
+	min-width: calc(4em + 8 * 0.25em);
+}
+.formulaire_construire_formulaire .conteneur_inline > .actions,
+.formulaire_construire_formulaire .editer-groupe_inline > .editer .actions {
+	right: 0;
+	inset-inline-end: 0;
+}
+.formulaire_construire_formulaire .editer-groupe_inline > .editer .actions {
+	position: relative;
+	float: right;
+	top: unset;
+	right: unset;
+}
+.formulaire_construire_formulaire .editer-groupe_inline > .editer .actions img {
+	min-width: 1em;
+}
+.formulaire_construire_formulaire .editer-groupe_inline > .editer > .actions .btn,
+.formulaire_construire_formulaire .editer-groupe_inline > .editer > .actions button {
+	padding-left: 0.25em;
+	padding-right: 0.25em;
+}
+.formulaire_construire_formulaire.configurer_saisie .editer-groupe_inline {
+	display: block;/** Lorsqu'on configure une saisie au sein d'un conteneur_inline, la prendre en pleine largeur**/
+}
+.formulaire_construire_formulaire .conteneur_inline:not(.en_configuration) .editer-groupe_1ligne_colonnes {
+	overflow: scroll;
+}
+/**
+ * Fieldsets
+ * On ajoute une bordure pour mieux visualiser, il faut donc ajuster les marges et cie.
+ */
+.formulaire_construire_formulaire .avec_sous_saisies.configurable:not(.en_configuration).fieldset {
+	border: 1px dashed var(--spip-color-gray);
+	padding-top: 0 !important;
+}
+.formulaire_construire_formulaire .saisies_presentes fieldset.avec_sous_saisies  {
+	margin-left: 0;
+	margin-right: 0;
+}
+.formulaire_construire_formulaire .saisies_presentes  fieldset:not(.editer),
+.formulaire_construire_formulaire .saisies_presentes  fieldset.editer.pleine_largeur {
+	padding-left: var(--spip-form-spacing-x);
+	padding-right: var(--spip-form-spacing-x);
+}
+.formulaire_construire_formulaire .avec_sous_saisies.en_configuration {
+	padding-left:0!important;
+	padding-right:0!important;
+}
+.formulaire_construire_formulaire .avec_sous_saisies.en_configuration > legend {
+	margin: 0 var(--spip-form-spacing-x);
+}
+/* Ceux dans le form de config (nb : fieldsets 1er niveaux affichés sous forme d'onglets) */
+.formulaire_construire_formulaire .saisies_presentes .formulaire_configurer fieldset fieldset > .editer-groupe > .editer:first-child {
+	padding-top: 0;
+}
+.formulaire_construire_formulaire .saisies_presentes .formulaire_configurer .fieldset > fieldset {
+	padding-left: 0;
+	padding-right: 0;
+}
+
+/**
+ * Element en flex : non en veut pas
+**/
+.formulaire_construire_formulaire .en_configuration {
+	display: block!important;
+}
+/**
+ * Bouton de configuration des options globales
+ */
+.formulaire_construire_formulaire .actions-globales {
+	margin-top: var(--spip-form-spacing-y);
+}
+.formulaire_construire_formulaire .actions-globales .submit {
+	margin-bottom: 0; /* déjà la marge nécessaire via .editer-groupe + .editer */
+}
+.formulaire_construire_formulaire .actions-globales ~ .editer-groupe {
+	clear: both;
+}
+
+
+/**
+ * Boutons divers au début (réinitialiser, etc.)
+ */
+.formulaire_construire_formulaire .actions_formulaire {
+	margin: 0;
+	text-align: center;
+	border: 0;
+}
+.formulaire_construire_formulaire .actions_formulaire img {
+	vertical-align: middle;
+}
+
+
+/**
+ * Barre de boutons d'actions pour une saisie
+ */
+.formulaire_spip.formulaire_construire_formulaire .disabled{
+	/* Surcharger les réglages de spip en .formulaire_construire_formulaire .disabled
+	*/
+	opacity: 1;
+	pointer-events: inherit;
+}
+.formulaire_construire_formulaire .actionable {
+	padding-top: calc((var(--spip-form-spacing-y) / 2) + (16px + (var(--spip-btn-padding-y) * 2)))!important;
+	position: relative;
+}
+.formulaire_construire_formulaire .fieldset.actionable > .actions {
+	right: 0;
+}
+.formulaire_construire_formulaire .actions {
+	position: absolute;
+	top: calc(var(--spip-form-spacing-y) / 2);
+	right: var(--spip-form-spacing-x);
+	inset-inline-end: var(--spip-form-spacing-x);
+	display: flex;
+	justify-content: flex-end;
+	margin: 0;
+}
+/** Pour les saisies inline et fieldset, coller le bouton d'action à la ligne pointillé du haut
+ *
+**/
+.formulaire_construire_formulaire .conteneur_inline.actionable {
+	padding-top: 0!important;
+}
+.formulaire_construire_formulaire fieldset.fieldset  > .actions {
+	top: calc(var(--spip-form-input-padding-y) * -2 - 1em);
+}
+.formulaire_construire_formulaire .actions button,
+.formulaire_construire_formulaire .actions .btn {
+	cursor: pointer;
+	background-color: var(--spip-color-gray-lightest);
+	border: none;
+	margin: 0;
+}
+.formulaire_construire_formulaire .actions button:hover,
+.formulaire_construire_formulaire .actions .btn:hover {
+	background-color: var(--spip-color-gray-lighter);
+}
+.formulaire_construire_formulaire .actions .move {
+	cursor:move;
+}
+
+
+/**
+ * Groupes de boutons d'ajout de saisies
+ */
+.formulaire_construire_formulaire .fieldset_saisie_categorie legend.legend {
+	background-color: transparent;
+}
+.formulaire_construire_formulaire .fieldset_saisie_categorie .editer_groupe {
+	display: grid;
+	grid-template-columns: 1fr;
+	grid-gap: 1em;
+}
+@media (min-width: 580px) {
+	.formulaire_construire_formulaire .fieldset_saisie_categorie .editer_groupe {
+		grid-template-columns: repeat(2, 1fr);
+	}
+}
+@media (min-width: 960px) {
+	.formulaire_construire_formulaire .fieldset_saisie_categorie .editer_groupe {
+		grid-template-columns: repeat(3, 1fr);
+	}
+}
+
+
+/**
+ * Bouton d'ajout d'une saisie avec icône
+ */
+.formulaire_construire_formulaire .ajouter_saisie {
+	color: var(--spip-black, black);
+	padding: var(--saisies-btn-padding-y) var(--saisies-btn-padding-x);
+	padding-left: calc(var(--saisies-btn-iconsize) + (var(--saisies-btn-padding-x) * 2));
+	min-height: calc(var(--saisies-btn-iconsize) + (var(--saisies-btn-padding-y) * 2));
+	margin: 0;
+	border: 0;
+	background-color: var(--spip-color-gray-lightest);
+	background-size: auto var(--saisies-btn-iconsize);
+	background-repeat: no-repeat;
+	background-position: var(--spip-left) var(--saisies-btn-padding-x) center;
+	white-space: initial;
+	font-size: var(--saisies-btn-fontsize);
+	text-align: var(--spip-left);
+	justify-content: flex-start;
+}
+.formulaire_construire_formulaire .ajouter_saisie:hover {
+	background-color: var(--spip-color-gray-lighter);
+}
+.formulaire_construire_formulaire .ajouter_saisie img{
+	vertical-align:middle;
+}
+
+
+/**
+ * Divers
+ */
+
+/* Bitonio de sortable.js */
+.formulaire_construire_formulaire .sortable-ghost {
+	opacity: 0;
+}
+/* Labels */
+.formulaire_construire_formulaire .editer.obligatoire .formulaire_configurer label {
+	color: #666;
+	font-weight: normal;
+}
+.formulaire_construire_formulaire .editer.obligatoire .formulaire_configurer .obligatoire label {
+	color: black;
+	font-weight: bold;
+}
+/* ? */
+.formulaire_construire_formulaire .editer-groupe.formulaire_configurer-contenus {
+	padding: 0;
+}
+/* boutons */
+.formulaire_construire_formulaire .editer-groupe.en_configuration .boutons {
+	margin: 0.5em 0 0;
+}
+/* onglets */
+.formulaire_construire_formulaire .saisies-menu-onglets__items {
+	margin: 0;
+}
+/* Explication */
+.formulaire_construire_formulaire .editer.saisie_explication > .explication {
+	position: initial;
+}
+.formulaire_construire_formulaire .editer.hover {
+	background-color: transparent;
+}
+/** Indiquer les saisies dépubliées **/
+
+
+.configurable.depublie, .configurable.depublie:hover {
+	opacity: 0.75;
+	background-color: #eeeeee;
+	outline: 2px solid white;
+	outline-offset: -2px;
+}

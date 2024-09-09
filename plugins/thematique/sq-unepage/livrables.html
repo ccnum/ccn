@@ -2,7 +2,7 @@
 #SET{hasLivrable, 'false'}
 <div id="livrables" class="zone-livrables">
 	<div class="wrapper" onclick="callLivrable(null, 'close')">
-		<BOUCLE_rubAnnee(RUBRIQUES) {racine} {titre LIKE %(#EVAL{_annee_scolaire})%} >
+		<BOUCLE_rubAnnee(RUBRIQUES) {racine} {titre LIKE %(#CONST{_annee_scolaire})%} >
 				<BOUCLE_filtreTravailEnCours(RUBRIQUES){id_parent}{titre_mot=travail_en_cours}{par date}>
 					<BOUCLE_colleges(RUBRIQUES){id_parent}>
 						#SET{auteur, #TITRE}
@@ -15,16 +15,16 @@
 								<div class="header">
 									<h3>#TITRE</h3>
 								</div>
-									<span class="profil">[(#MODELE{logo_carre}{taille=40}{id_rubrique=#ID_RUBRIQUE}{titre=#TITRE})]
-										<h4>#GET{auteur}</h4>
-									</span>
-									<!--<div class="featured-image">[(#LOGO_ARTICLE |image_reduire{500,300})]</div>-->
+								<span class="profil">[(#MODELE{logo_carre}{taille=40}{id_rubrique=#ID_RUBRIQUE}{titre=#TITRE})]
+									<h4>#GET{auteur}</h4>
+								</span>
+								<!--<div class="featured-image">[(#LOGO_ARTICLE |image_reduire{500,300})]</div>-->
 							</div>
 						</a>
 						<!-- LLIVRABLE DETAILS --------------->
 						<div>
 							<div  id="livrable[(#ID_ARTICLE)]" class="livrable-details-wrapper" style="overflow: scroll;" data-id="[(#ID_ARTICLE)]">
-								<div style="overflow:scroll;" class="livrable-details  couleur_travail_en_cours[(#ID_RUBRIQUE|nb2col)]">
+								<div style="overflow:scroll;" class="livrable-details couleur_travail_en_cours[(#ID_RUBRIQUE|nb2col)]">
 									<span style="overflow:scroll;" class="close" onclick="callLivrable(null, 'closeDetails')"><img src="[(#CHEMIN{img/close.svg}|image_reduire{25}|extraire_attribut{src})]"></span>
 									<div style="overflow:scroll;" class="featured-image #EDIT{logo}">
 									[(#LOGO_ARTICLE|sinon{
@@ -50,10 +50,10 @@
 																		<div class='action_supprimer'></div>
 																	</a>]
 																	]
-																<a href="#URL_DOCUMENT" title="[(#TITRE|supprimer_numero)]" class="thickbox mediabox" type="#MIME_TYPE">
+																<a href="#URL_DOCUMENT" title="[(#TITRE)]" class="thickbox mediabox" type="#MIME_TYPE">
 																	[(#FICHIER |image_reduire{500})]
 																</a>
-																[<span class="spip_doc_titre #EDIT{titre}">(#TITRE|supprimer_numero|couper{25}|sinon{<span class="ajouter_couleur" style="text-color: gray;">ajouter un titre</span>})</span>]
+																[<span class="spip_doc_titre #EDIT{titre}">(#TITRE|couper{25}|sinon{<span class="ajouter_couleur" style="text-color: gray;">ajouter un titre</span>})</span>]
 
 															</div>
 														]
@@ -89,12 +89,12 @@
 															<div class="fichier">
 
 
-																	[<a href="#URL_DOCUMENT" target="blank">(#LOGO_DOCUMENT||image_reduire{100}|inserer_attribut{style,'border:0px solid #000000;'}) </a>]
+																	[<a href="#URL_DOCUMENT" target="blank">(#LOGO_DOCUMENT|image_reduire{100}|inserer_attribut{style,'border:0px solid #000000;'}) </a>]
 																	[(#AUTORISER{modifier,article,#ID_ARTICLE}|oui)
-																	[<span class="spip_doc_titre #EDIT{titre}"><br />(#TITRE|supprimer_numero|couper{25}|sinon{<span class="ajouter_couleur" style="text-color: gray;">ajouter un titre</span>})</span>]
+																	[<span class="spip_doc_titre #EDIT{titre}"><br />(#TITRE|couper{25}|sinon{<span class="ajouter_couleur" style="text-color: gray;">ajouter un titre</span>})</span>]
 																	]
 																	[(#AUTORISER{modifier,article,#ID_ARTICLE}|non)
-																	[<span class="spip_doc_titre #EDIT{titre}"><br />(#TITRE|supprimer_numero|couper{25})</span>]
+																	[<span class="spip_doc_titre #EDIT{titre}"><br />(#TITRE|couper{25})</span>]
 																	]
 
 																	[(#AUTORISER{modifier,article,#ID_ARTICLE}|oui)

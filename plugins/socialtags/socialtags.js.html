@@ -1,0 +1,53 @@
+#HTTP_HEADER{Content-Type: text/javascript}
+[(#SET{popup,'onclick="if (this.href.lastIndexOf(&quot;javascript:&quot;) != 0 ) { window.open(this.href, &quot;_blank&quot;, &quot;screenX=50,left=50,screenY=50,top=50, width=550, height=450,toolbar=no, location=no,resizable=yes, scrollbars=yes&quot;);return false; }"'})]
+// socialtags.js
+
+// 'ajouter un bookmark' ne marche que sous IE
+// les tuyaux trouves pour FF
+//	window.sidebar.addPanel(t,u,'');
+//	cf https://bugzilla.mozilla.org/show_bug.cgi?id=214530
+// ou Opera sont creves
+;var socialtags_addfavorite = function(u,t){
+	if(document.all)window.external.AddFavorite(u,t);
+};
+
+(function($) {
+	var socialtags_init = function() {
+		var selector = $('[(#CONFIG{socialtags/jsselector}|sinon{#contenu})]');
+		if (!selector.length) return;
+		var socialtags = [(#CONFIG{socialtags/tags}|socialtags_json)];
+		var title = $('head > title').text() || '';
+		var description = ($('meta[name=description]').attr('content') || '').substr(0,250);
+		var cano = $('link[rel=canonical]')[0];
+		var url = cano ? cano.href : document.location.href.split("%23")[0].split("#")[0];
+		var ul = $('<ul><\/ul>');
+		var esc = function(x){return encodeURIComponent(x).replace(/\s/g,' ');};
+		var ref = document.referrer.match(/^.*\/\/([^\/]+)\//);
+
+		if (ref && ref[1].match(/\.facebook\./))
+			Cookies.set('social_facebook', 1, { path: '/', expires: 30 }); // 30 jours
+
+		$.each(socialtags, function(){ if (this.u) {
+			if (this.a == 'bookmark' && !document.all) return;
+
+			[(#CONFIG{socialtags/ifreferer}|?{"
+			if (Cookies.get('social_'+this.a)!=1) return;"})]
+
+			$('<a rel="nofollow"[ (#CONFIG{socialtags/wopen, 'non'}|=={oui}?{#GET{popup}})]><img class="socialtags-hovers" src="'+ this.i +'" width="'+ this.w +'" height="'+ this.h +'" alt="'+this.a+'"\/><\/a>')
+			.attr('href',
+				this.u
+				.replace(/%u/g, esc(url))
+				.replace(/%t/g, esc(title))
+				.replace(/%d/g, esc(description))
+				.replace(/%u_site/g, esc(this.u_site))
+			)
+			.attr('title', this.n).wrap('<li class="'+this.a+'"><\/li>')
+			.parent().appendTo(ul);
+		}});
+		selector.#CONFIG{socialtags/afterorappend,'after'}(ul.wrap('<div class="socialtags"><\/div>').parent());
+		#CONFIG{socialtags/badgejs}
+	};
+	$(function(){
+		$(socialtags_init);
+	});
+})(jQuery);

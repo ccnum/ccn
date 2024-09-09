@@ -1,0 +1,35 @@
+[(#REM) data peut être une chaine qu'on sait décomposer ]
+#SET{data_cols, #ENV*{data_cols}|saisies_chaine2tableau}
+#SET{data_rows, #ENV*{data_rows}|saisies_chaine2tableau}
+<BOUCLE_test_export(CONDITION){si #ENV{valeur_uniquement}}{si #ENV{valeur_uniquement}|!={non}}>
+[(#REM) dans le cas d'un export des réponses, on construit des données structurées,exploitables par un script ]
+
+
+[(#REM) valeur doit être un tableau ! ]
+#SET{valeur, #ENV{valeur_forcee, #ENV{valeur}}|saisies_valeur2tableau}
+
+#SET{separateur,'|'}
+
+<BOUCLE_lignes (DATA) {source table,#GET{data_rows}}{'<br>'}>
+	#SET{choix,#ARRAY}
+	#SET{libelles, #VALEUR|explode{'|'}}
+	<B_colonnes>
+	<BOUCLE_colonnes (DATA) {source table,#GET{data_cols}}>
+		#SET{coche, #CLE|=={#GET{valeur/#_lignes:CLE}}}
+		[(#ENV{multiple}|et{#ENV{multiple}|!={non}}|oui)
+			[(#REM)<!-- le saisie_chaine2tableau permet de s'assurer que la ligne est au bon format si avant l'option multiple n'était pas activé -->]
+			#SET{coche, #CLE|in_array{#GET{valeur/#_lignes:CLE}|saisies_chaine2tableau}}
+		]
+		[(#GET{coche}|oui)
+			[(#SET{valeur_choix,#ENV{cle_ou_valeur,valeur}|=={cle}|?{#CLE,#GET{data_cols/#CLE}}})]
+			#SET{choix,#GET{choix}|push{#GET{valeur_choix}}
+		]
+	</BOUCLE_colonnes>
+	[* (#GET{libelles}|table_valeur{0})#GET{separateur}][(#GET{separateur}|join{#GET{choix}})]
+	</B_colonnes>
+</BOUCLE_lignes>
+
+</BOUCLE_test_export>
+[(#REM) dans le cas d'un affichage de la réponse, on réaffiche la saisie en mode disabled ]
+#INCLURE{fond=saisies/choix_grille,env,disabled=disabled,data_rows=#GET{data_rows},data_cols=#GET{data_cols}}
+<//B_test_export>

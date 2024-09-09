@@ -4,7 +4,7 @@
 - mode:admin : Type d'admin : 0 : total / autrement : nb de rubriques restreintes / -1 : pas admin
 - mode:restreint : renvoie Id de la rubrique restreinte sélectionnée
 ]
-#SET{restreint0,#EVAL{$_COOKIE[_cookie_rubrique]}}
+#SET{restreint0,#CONST{$_COOKIE[_cookie_rubrique]}}
 <BOUCLE_rub_admin(CONDITION){si #SESSION{statut}|=={0minirezo}}>
 	#SET{admin,0}
 	<B_rub_aut>
@@ -19,7 +19,6 @@
 		#SET{admin,0}
 	<//B_rub_aut>
 </BOUCLE_rub_admin>
-</B_rub_admin>
 	#SET{admin,-1}
 <//B_rub_admin>
 [(#GET{admin}|=={1}|oui)

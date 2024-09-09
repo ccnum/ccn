@@ -3,41 +3,40 @@
 -restreint
 -annee_scolaire
 ]
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="#LANG" lang="#LANG" dir="#LANG_DIR">
 
 [(#REM) ******************* VARIABLES ***************************** ]
-
-	[(#REM)Annee scolaire]	
-		#SET{annee_scolaire,#EVAL{_annee_scolaire}}
+	[(#REM)Annee scolaire]
+		#SET{annee_scolaire,#CONST{_annee_scolaire}}
 
 	[(#REM)Mode callback defaut]
-		#SET{mode_popup,#EVAL{_mode_popup}}
+		#SET{mode_popup,#CONST{_mode_popup}}
 
 	[(#SET{projet,[(#URL_PAGE{xml}|concat{&mode=projet}|url_absolue|copie_locale)]})]
-			#SET{largeur,#EVAL{_largeur}}
-			#SET{hauteur,#EVAL{_hauteur}}
-			#SET{couleur_base_texte,#000000}
-			#SET{couleur_1erplan3,#00A0F0}
+		#SET{largeur,#CONST{_largeur}}
+		#SET{hauteur,#CONST{_hauteur}}
+		#SET{couleur_base_texte,#000000}
+		#SET{couleur_1erplan3,#00A0F0}
 
-		[(#REM)Type d'admin : 0 : total / autrement : nb de rubriques restreintes / -1 : pas admin / -2 pas connecté]	
-			[(#SET{admin,[(#INCLURE{fond=noisettes/fonction/admin,mode=admin})]})]
-			
-		[(#REM)Id de la rubrique restreinte sélectionnée]
-			[(#SET{restreint,[(#INCLURE{fond=noisettes/fonction/admin,mode=restreint})]})]
-			
-		[(#REM)Type de rubrique restreinte: consignes, travail_en_cours, blogs, evenements,ressources,classes]
-			[(#GET{restreint}|oui)
-				[(#SET{type_restreint,[(#INCLURE{fond=noisettes/fonction/type_objet,id_rubrique=#GET{restreint}})]})]
-			]
-			
-		[(#REM)Type auteur : travail_en_cours,ressources,consignes]
-			[(#SET{type_auteur,[(#MODELE{type_auteur}{id_auteur=#SESSION{id_auteur}})]})]
+	[(#REM)Type d'admin : 0 : total / autrement : nb de rubriques restreintes / -1 : pas admin / -2 pas connecté]
+		[(#SET{admin,[(#INCLURE{fond=noisettes/fonction/admin,mode=admin})]})]
+
+	[(#REM)Id de la rubrique restreinte sélectionnée]
+		[(#SET{restreint,[(#INCLURE{fond=noisettes/fonction/admin,mode=restreint})]})]
+
+	[(#REM)Type de rubrique restreinte: consignes, travail_en_cours, blogs, evenements,ressources,classes]
+		[(#GET{restreint}|oui)
+			[(#SET{type_restreint,[(#INCLURE{fond=noisettes/fonction/type_objet,id_rubrique=#GET{restreint}})]})]
+		]
+
+	[(#REM)Type auteur : travail_en_cours,ressources,consignes]
+		[(#SET{type_auteur,[(#MODELE{type_auteur}{id_auteur=#SESSION{id_auteur}})]})]
 
 [(#REM) ******************* AFFICHAGE ***************************** ]
 
 	<head>
-		<INCLURE{fond=noisettes/inc-head}{env}>
+		<INCLURE{fond=noisettes/inc-head, env}>
 		<meta http-equiv="Pragma" content="no-cache" />
 		<meta http-equiv="Cache-Control" content="no-cache, must-revalidate" />
 		<meta http-equiv="Expires" content="0" />
@@ -55,14 +54,14 @@
 			{id_article}
 			{annee_scolaire=#GET{annee_scolaire}}
 			{chemin=#DOSSIER_SQUELETTE/}
-			{page}		
+			{page}
 			{env}
 			/>
 		]
 		[(#TYPE_OBJET|=={evenements}|oui|et{#GET{admin}|<{0}|oui}|oui)
 		<script>
 			const urlCourante = encodeURIComponent("#URL_ARTICLE");
-			const urlFormulaireConnexion = "#URL_SITE_SPIP/spip.php?page=sommaire&url=" + urlCourante + "&cicas=oui&ent=1";
+			const urlFormulaireConnexion = "[(#URL_PAGE{sommaire})]&url=" + urlCourante + "&cicas=oui&ent=1";
 			window.location = urlFormulaireConnexion;
 		</script>
 		]

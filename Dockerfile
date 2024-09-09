@@ -163,6 +163,7 @@ ENV SPIP_ADMIN_LOGIN admin
 ENV SPIP_ADMIN_EMAIL admin@spip
 ENV SPIP_ADMIN_PASS adminadmin
 ENV SPIP_SITE_ADDRESS http://localhost
+ENV SPIP_VERSION_SITE thematique
 
 # PHP
 ENV PHP_MAX_EXECUTION_TIME 60
@@ -173,7 +174,9 @@ ENV PHP_TIMEZONE Europe/Paris
 
 EXPOSE 80
 
+COPY ./plugins /usr/src/spip/plugins/
 COPY ./docker-entrypoint.sh /
+COPY ./update_plugin_git.sh /
 
 RUN chmod +x /docker-entrypoint.sh
 

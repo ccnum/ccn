@@ -58,10 +58,11 @@ if version_greater "$image_version" "$installed_version"; then
 	tar cf - --one-file-system -C /usr/src/spip . | tar xf -
 	echo >&2 "Complete! SPIP has been successfully copied to $PWD"
 
-	echo >&2 "Création des dossiers lib et tmp à la racine"
+	echo >&2 "Création des dossiers lib, plugins et tmp à la racine"
 	mkdir -p lib
+	mkdir -p plugins/auto
 	mkdir -p tmp/{dump,log,upload}
-	chown -R www-data:www-data lib tmp
+	chown -R www-data:www-data lib plugins tmp
 
 	if [ ! -e .htaccess ]; then
 		cp -p htaccess.txt .htaccess
@@ -94,6 +95,23 @@ if [[ ! -e config/connect.php && ${SPIP_AUTO_INSTALL} = 1 ]]; then
 		--admin-login ${SPIP_ADMIN_LOGIN} \
 		--admin-email ${SPIP_ADMIN_EMAIL} \
 		--admin-pass ${SPIP_ADMIN_PASS}" || true
+
+	spip plugins:activer saisies -y
+	spip plugins:activer yaml -y
+	spip plugins:activer cextras -y
+	spip plugins:activer crayons -y
+	spip plugins:activer facteur -y
+	spip plugins:activer jqueryui -y
+	spip plugins:activer notation -y
+	spip plugins:activer notifications -y
+	spip plugins:activer socialtags -y
+	spip plugins:activer spip_bonux -y
+	spip plugins:activer cicas -y
+	if [ ${SPIP_VERSION_SITE} = "fictions" ]; then
+		spip plugins:activer vider_rubrique -y
+	fi
+	spip plugins:activer ${SPIP_VERSION_SITE} -y
+	spip plugins:maj:bdd
 fi
 
 exec "$@"

@@ -1,11 +1,11 @@
 #HTTP_HEADER{Content-Type: text/plain; charset=#CHARSET}
 #CACHE{0}
 
-[(#REM) 
+[(#REM)
 
   Reversibilité du type d'article pour passage paramètre js > vue joel
-  
-  Renvoie : 
+
+  Renvoie :
 
   - classes             : Classes participant au projet
   - consignes           : Consignes du projet
@@ -14,40 +14,41 @@
   - blogs               : Blog du projet (accessible par tous, bulles roses)
   - ressource           : Bibliothèque du projet, ressources diverses, médias partagés
   - agora               : Agora
-    
-  Paramètre : 
-  
-  - id_article 
+
+  Paramètre :
+
+  - id_article
   - ou id_syndic_article
-  
+
 ]
+#SET{titre, blogs,evenements,consignes,travail_en_cours,ressources,agora}
 <BOUCLE_art(ARTICLES){id_article}>
-  <BOUCLE_hie_art(HIERARCHIE){id_article}>
-    <BOUCLE_mot_art(MOTS){id_rubrique}{titre IN blogs,evenements,consignes,travail_en_cours,ressources,agora}>
-      #SET{type,#TITRE}
-    </BOUCLE_mot_art>
-  </BOUCLE_hie_art>
-  [(#ID_CONSIGNE|!={0}|oui) #SET{type,travail_en_cours} ]
+	<BOUCLE_hie_art(HIERARCHIE){id_article}>
+		<BOUCLE_mot_art(MOTS){id_rubrique}{titre IN #GET{titre}}>
+			#SET{type,#TITRE}
+		</BOUCLE_mot_art>
+	</BOUCLE_hie_art>
+	[(#ID_CONSIGNE|!={0}|oui) #SET{type,travail_en_cours} ]
 </BOUCLE_art>
 
 <BOUCLE_rub(RUBRIQUES){id_rubrique}{tout}>
-  <BOUCLE_hie_rub(HIERARCHIE){id_rubrique}{tout}>
-    <BOUCLE_mot_rub(MOTS){id_rubrique}{titre IN blogs,evenements,consignes,travail_en_cours,ressources,agora}>
-      #SET{type,#TITRE}
-    </BOUCLE_mot_rub>
-  </BOUCLE_hie_rub>
-  
-  <BOUCLE_mot_rub0(MOTS){id_rubrique}{titre IN blogs,evenements,consignes,travail_en_cours,ressources,agora}>
-    #SET{type,#TITRE}
-  </BOUCLE_mot_rub0>
+	<BOUCLE_hie_rub(HIERARCHIE){id_rubrique}{tout}>
+		<BOUCLE_mot_rub(MOTS){id_rubrique}{titre IN #GET{titre}}>
+			#SET{type,#TITRE}
+		</BOUCLE_mot_rub>
+	</BOUCLE_hie_rub>
+
+	<BOUCLE_mot_rub0(MOTS){id_rubrique}{titre IN #GET{titre}}>
+		#SET{type,#TITRE}
+	</BOUCLE_mot_rub0>
 </BOUCLE_rub>
 
 <BOUCLE_site(SYNDIC_ARTICLES){id_syndic_article}>
-  <BOUCLE_principale_site_article(HIERARCHIE){id_syndic_article}>
-    <BOUCLE_rub_site(MOTS){id_rubrique}{titre IN blogs,evenements,consignes,travail_en_cours,ressources,agora}>
-      #SET{type,#TITRE}
-    </BOUCLE_rub_site>
-  </BOUCLE_principale_site_article>
+	<BOUCLE_principale_site_article(HIERARCHIE){id_syndic_article}>
+		<BOUCLE_rub_site(MOTS){id_rubrique}{titre IN #GET{titre}}>
+			#SET{type,#TITRE}
+		</BOUCLE_rub_site>
+	</BOUCLE_principale_site_article>
 </BOUCLE_site>
 
 #GET{type}
