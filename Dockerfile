@@ -176,7 +176,6 @@ EXPOSE 80
 
 COPY ./plugins /usr/src/spip/plugins/
 COPY ./docker-entrypoint.sh /
-COPY ./update_plugin_git.sh /
 
 RUN chmod +x /docker-entrypoint.sh
 
