@@ -499,7 +499,7 @@ function cicas_tableau_parametrage_par_fichier() {
 		$tableau = array();
 
 		// chemin d'un eventuel fichier de parametrage
-		$f = _DIR_ETC . '_config_cas.php';
+		$f = 'config/_config_cas.php';
 
 		if (@file_exists($f)) {
 			// parametrage par fichier
