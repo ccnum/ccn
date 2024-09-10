@@ -174,6 +174,7 @@ ENV PHP_TIMEZONE Europe/Paris
 
 EXPOSE 80
 
+COPY ./config/_config_cas.php /config/_config_cas.php
 COPY ./plugins /usr/src/spip/plugins/
 COPY ./docker-entrypoint.sh /
 
