@@ -1,5 +1,6 @@
 <?php
 
+echo $_SERVER;
 /*
  * Plugin Thématiques
  * Licence GPL
