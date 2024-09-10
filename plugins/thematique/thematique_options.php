@@ -1,6 +1,5 @@
 <?php
 
-echo $_SERVER['HTTP_X_FORWARDED_SERVER'] . '#' . $_SERVER['SERVER_NAME'] . '#' . $_SERVER['HTTP_HOST'];
 /*
  * Plugin Thématiques
  * Licence GPL
