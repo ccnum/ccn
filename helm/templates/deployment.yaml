@@ -12,20 +12,20 @@ spec:
         app: ccn
     spec:
       volumes:
-        - name: ccn-vol
+        - name: {{ .Values.pvc.name }}
           persistentVolumeClaim:
-            claimName: ccn-vol
+            claimName: {{ .Values.pvc.name }}
       containers:
         - env:
             - name: MYSQL_ROOT_PASSWORD
-              value: password
+              value: {{ .Values.mariadb.env.MYSQL_ROOT_PASSWORD }}
             - name: MYSQL_DATABASE
-              value: spip
+              value: {{ .Values.mariadb.env.MYSQL_DATABASE }}
             - name: MYSQL_USER
-              value: spip
+              value: {{ .Values.mariadb.env.MYSQL_USER }}
             - name: MYSQL_PASSWORD
-              value: mypass
-          image: mariadb:10.11
+              value: {{ .Values.mariadb.env.MYSQL_PASSWORD }}
+          image: {{ .Values.mariadb.image }}
           imagePullPolicy: Always
           name: mariadb
           resources: {}
@@ -38,28 +38,28 @@ spec:
           terminationMessagePolicy: File
           volumeMounts:
             - mountPath: /var/lib/mysql
-              name: ccn-vol
+              name: {{ .Values.pvc.name }}
               subPath: mariadb-2
         - env:
             - name: SPIP_AUTO_INSTALL
-              value: '1'
+              value: {{ .Values.spip.env.SPIP_AUTO_INSTALL }}
             - name: SPIP_DB_SERVER
-              value: mysql
+              value: {{ .Values.spip.env.SPIP_DB_SERVER }}
             - name: SPIP_DB_LOGIN
-              value: spip
+              value: {{ .Values.spip.env.SPIP_DB_LOGIN }}
             - name: SPIP_DB_PASS
-              value: mypass
+              value: {{ .Values.spip.env.SPIP_DB_PASS }}
             - name: SPIP_DB_NAME
-              value: spip
+              value: {{ .Values.spip.env.SPIP_DB_NAME }}
             - name: SPIP_SITE_ADDRESS
-              value: http://localhost:8080
+              value: {{ .Values.spip.env.SPIP_SITE_ADDRESS }}
             - name: SPIP_DB_HOST
-              value: 127.0.0.1
+              value: {{ .Values.spip.env.SPIP_DB_HOST }}
             - name: SPIP_ADMIN_PASS
-              value: password
+              value: {{ .Values.spip.env.SPIP_ADMIN_PASS }}
             - name: SPIP_ADMIN_EMAIL
-              value: admin@erasme.org
-          image: erasme/spip-ccn:dev
+              value: {{ .Values.spip.env.SPIP_ADMIN_EMAIL }}
+          image: {{ .Values.spip.image }}
           imagePullPolicy: Always
           name: spip
           resources: {}
@@ -72,5 +72,5 @@ spec:
           terminationMessagePolicy: File
           volumeMounts:
             - mountPath: /var/www/html/IMG
-              name: ccn-vol
+              name: {{ .Values.pvc.name }}
               subPath: spip-3
