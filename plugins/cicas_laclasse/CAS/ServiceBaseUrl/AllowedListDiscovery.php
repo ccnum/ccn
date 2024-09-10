@@ -116,7 +116,6 @@ extends CAS_ServiceBaseUrl_Base {
         }
  */
         $server_url = cicas_url_host();
-        echo $server_url;
         //----- Fin ajout CI -----
 
         if (!strpos($server_url, ':')) {
