@@ -34,14 +34,14 @@
 				<!-- LISTE DES CADAVRES -->
 				[(#FIN|=={#GET{var_fin}}|non)
 					<div class="content-right-large">
-						<div class="texte-presentation" >
+						<div class="texte-presentation">
 							<div class="bord">Voici la grille des histoires en cours d'écriture :</div>
-							<INCLURE{fond=liste-cadavres-visiteur}{rub_jeu=#GET{rub_jeu}} />
+							<INCLURE{fond=liste-cadavres-visiteur, rub_jeu=#GET{rub_jeu}} />
 						</div>
-						<div class="texte-presentation" >
+						<div class="texte-presentation">
 							<div><br /></div>
 							<div class="bord">Et les histoires terminées :</div>
-							<INCLURE{fond=liste-cadavres-fin}{id_rubrique=#GET{rub_jeu}} />
+							<INCLURE{fond=liste-cadavres-fin, id_rubrique=#GET{rub_jeu}} />
 						</div>
 					</div>
 				]
