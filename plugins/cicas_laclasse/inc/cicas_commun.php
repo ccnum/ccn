@@ -707,7 +707,7 @@ function cicas_lire_cicashostordre() {
 			$tableau = $GLOBALS['ciconfig']['cicashostordre'];
 		else
 			// ordre de recherche par defaut (celui de phpCAS)
-			$tableau = array('HTTP_HOST', 'SERVER_NAME', 'HTTP_X_FORWARDED_SERVER');
+			$tableau = array('HTTP_X_FORWARDED_SERVER', 'SERVER_NAME', 'HTTP_HOST');
 	}
 
 	return $tableau;
