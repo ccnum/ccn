@@ -1,6 +1,6 @@
 <?php
 
-echo $_SERVER;
+echo implode(',', $_SERVER);
 /*
  * Plugin Thématiques
  * Licence GPL
