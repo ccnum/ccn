@@ -1,0 +1,28 @@
+<paquet
+	prefix="duplicator"
+	categorie="edition"
+	version="3.1.0"
+	schema="1.0.0"
+	etat="stable"
+	compatibilite="[4.0.0;4.*]"
+	logo="duplicator.svg"
+	documentation="https://contrib.spip.net/3354"
+>
+	<nom>Duplicator</nom>
+	<!-- Dupliquer simplement les objets éditoriaux -->
+
+	<auteur lien="http://demo.apsulis.com">Apsulis</auteur>
+	<auteur lien="http://poivron-robotique.fr">Keuronde</auteur>
+	<auteur lien="https://www.ldd.fr">Les Développements Durables</auteur>
+	<auteur lien="http://rastapopoulos.artizanal.info/">RastaPoppoulos</auteur>
+	<licence lien="http://www.gnu.org/licenses/gpl-3.0.html">GPL 3</licence>
+
+	<necessite nom="medias" compatibilite="[3.2.3;]" />
+	<necessite nom="saisies" compatibilite="[4.0.0;]" />
+	<necessite nom="yaml" compatibilite="[3.0.0;]" />
+
+	<pipeline nom="duplicator" action="" />
+	<pipeline nom="autoriser" inclure="duplicator_autoriser.php" />
+	<pipeline nom="boite_infos" inclure="duplicator_pipelines.php" />
+
+</paquet>
