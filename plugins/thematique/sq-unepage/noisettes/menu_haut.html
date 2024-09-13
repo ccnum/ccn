@@ -55,7 +55,7 @@
 <ul id="menu_haut_user" class="bloc_titre">
     <INCLURE{fond=noisettes/inc/authentification, id_auteur, admin, restreint, type_restreint}>
 </ul>
-#RESTREINT
+
 [(#RESTREINT|!={0}|oui|et{#RESTREINT|!={''}}|et{#TYPE_RESTREINT|!={''}}|et{#TYPE_RESTREINT|!={travail_en_cours}|oui}|oui)
 <ul id="menu_haut_publier_consigne" class="bloc_titre">
     <li>
