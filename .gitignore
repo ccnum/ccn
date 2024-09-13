@@ -1,11 +1,10 @@
 .ddev
 .vscode
+.env
 config/ecran_securite.php
-config/mes_options.php
 ecrire
 IMG
 local
-mutualisation
 plugins/auto
 plugins-dist
 /prive/
@@ -18,4 +17,3 @@ index.php
 rector.php
 spip_loader.php
 /spip.*
-.env
