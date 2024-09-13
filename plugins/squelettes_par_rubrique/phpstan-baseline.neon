@@ -1,0 +1,12 @@
+parameters:
+	ignoreErrors:
+		-
+			message: "#^Function lang_select not found\\.$#"
+			count: 2
+			path: squelettes_par_rubrique_options.php
+
+		-
+			message: "#^Function quete_parent not found\\.$#"
+			count: 1
+			path: squelettes_par_rubrique_options.php
+
