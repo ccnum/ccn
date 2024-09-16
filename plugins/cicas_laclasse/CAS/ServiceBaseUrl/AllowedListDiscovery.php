@@ -42,8 +42,7 @@
  */
 
 class CAS_ServiceBaseUrl_AllowedListDiscovery
-extends CAS_ServiceBaseUrl_Base
-{
+extends CAS_ServiceBaseUrl_Base {
     private $_list = array();
 
     public function __construct($list) {
@@ -66,8 +65,7 @@ extends CAS_ServiceBaseUrl_Base
      *
      * @return void
      */
-    public function allow($url)
-    {
+    public function allow($url) {
         $this->_list[] = $this->removeStandardPort($url);
     }
 
@@ -78,8 +76,7 @@ extends CAS_ServiceBaseUrl_Base
      *
      * @return bool whether the allowed list contains the server name
      */
-    protected function isAllowed($name)
-    {
+    protected function isAllowed($name) {
         return in_array($name, $this->_list);
     }
 
@@ -96,14 +93,13 @@ extends CAS_ServiceBaseUrl_Base
      *
      * @return string the discovered, unsanitized server protocol, hostname and port
      */
-    protected function discover()
-    {
+    protected function discover() {
         $isHttps = $this->isHttps();
         $protocol = $isHttps ? 'https' : 'http';
         $protocol .= '://';
-        
-//----- Debut ajout CI (ordre de recherche personnalise dans config/_config_cas.php) -----
-/*          
+
+        //----- Debut ajout CI (ordre de recherche personnalise dans config/_config_cas.php) -----
+        /*
         if (!empty($_SERVER['HTTP_X_FORWARDED_HOST'])) {
             // explode the host list separated by comma and use the first host
             $hosts = explode(',', $_SERVER['HTTP_X_FORWARDED_HOST']);
@@ -120,8 +116,8 @@ extends CAS_ServiceBaseUrl_Base
         }
  */
         $server_url = cicas_url_host();
-//----- Fin ajout CI -----
-        
+        //----- Fin ajout CI -----
+
         if (!strpos($server_url, ':')) {
             if (empty($_SERVER['HTTP_X_FORWARDED_PORT'])) {
                 $server_port = $_SERVER['SERVER_PORT'];
@@ -141,8 +137,7 @@ extends CAS_ServiceBaseUrl_Base
      *
      * @return string the server protocol, hostname and port
      */
-    public function get()
-    {
+    public function get() {
         phpCAS::traceBegin();
         $result = $this->removeStandardPort($this->discover());
         phpCAS::trace("Discovered server base URL: " . $result);

@@ -1,10 +1,9 @@
-#HTTP_HEADER{Content-Type: text/plain; charset=#CHARSET}
 #CACHE{0}
 [(#REM)Paramètre
 - mode:admin : Type d'admin : 0 : total / autrement : nb de rubriques restreintes / -1 : pas admin / -2 : pas connecté
 - mode:restreint : renvoie Id de la rubrique restreinte sélectionnée
 ]
-#SET{restreint0,#CONST{$_COOKIE[_cookie_rubrique]}}
+#SET{restreint0,#EVAL{$_COOKIE[_cookie_rubrique]}}
 #SET{admin,0}
 <B_rub_aut>
 <BOUCLE_rub_aut(RUBRIQUES AUTEURS){id_auteur=#SESSION{id_auteur}}{tout}>
@@ -41,5 +40,6 @@
 	|ou{#GET{admin}|=={0}|oui})
 		[(#SET{restreint,#GET{restreint0}})]
 ]
-[(#MODE|=={restreint}|oui)#GET{restreint}]
-[(#MODE|=={restreint}|non)#GET{admin}]
+
+[(#MODE|=={restreint}|oui)#SESSION_SET{restreint, #GET{restreint}}]
+[(#MODE|=={restreint}|non)#SESSION_SET{admin, #GET{admin}}]

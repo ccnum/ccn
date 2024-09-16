@@ -1,0 +1,23 @@
+<paquet
+	prefix="autorite"
+	categorie="auteur"
+	version="2.1.0"
+	etat="stable"
+	compatibilite="[4.1.0;4.*]"
+	logo="illuminati-xx.svg"
+	schema="0.1.0"
+	documentation="https://contrib.spip.net/Le-plugin-Autorite"
+>
+
+	<nom>Autorité</nom>
+	<!-- Quelques réglages d'autorisations (ajoutez les vôtres !) -->
+
+	<auteur>Fil</auteur>
+	<auteur>James</auteur>
+	<auteur>Superyms</auteur>
+
+	<licence lien="http://www.gnu.org/licenses/lgpl-3.0.html">GNU/LGPL</licence>
+
+	<traduire module="autorite" reference="fr" gestionnaire="salvatore" />
+
+</paquet>

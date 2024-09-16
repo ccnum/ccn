@@ -1,0 +1,57 @@
+#CACHE{0}[(#REM) Fond pour SPIP >= 4.0 ]
+<style type="text/css">
+<!--
+ul.derniers_connectes {list-style-type:none; padding:0;margin:0;}
+ul.derniers_connectes li {margin:0.2em 0.4em;}
+ul.derniers_connectes a.suppr {color:#C00; font-weight:bold;}
+.pagdc { text-align:center; }
+-->
+</style>
+<script type="text/javascript">
+	if(window.jQuery) jQuery(document).ready(function () {
+		if(window.location.href.match(/#pagination_aut2?$/))
+		jQuery('*[onmouseover*="bp_infos_connection"]').trigger('mouseover');
+		jQuery('a.suppr').click( function() { 
+			return window.confirm("<:confirm_changer_statut|cs_javascript:>"); 
+		});
+	});
+</script>
+
+[(#SET{aide,[(#VAL{aide.gif}|http_img_pack{'','',<:couteau:attente_confirmation:>})]})]
+<p><b><:couteau:derniers_connectes:></b></p>
+<B_aut>
+<ul class="derniers_connectes">
+<BOUCLE_aut(AUTEURS){tous}{par en_ligne}{inverse}{pagination #ENV{nbdc,10}}>
+	#SET{icon,#URL_ECRIRE{auteurs,statut=#STATUT}|cs_lien{#ARRAY{statut,#STATUT}|cs_auteur_statut}}
+	#SET{title, #ID_AUTEUR|concat{'. ',#EMAIL}}
+	#SET{nom,#URL_ECRIRE{auteur,id_auteur=#ID_AUTEUR}|cs_lien{#NOM}|inserer_attribut{title,#GET{title}}}
+	[(#STATUT|=={nouveau}|oui) #SET{icon,#GET{aide}}]
+	<li>
+		[(#VAL{'couteau:stats_auteur'}|_T_sain{#ARRAY{icon,#GET{icon},nom,#GET{nom},date,#EN_LIGNE|cs_date_long}})]
+	</li>
+</BOUCLE_aut>
+</ul>
+[<nav role="navigation" class="p pagination">(#PAGINATION{prive,nombre_liens_max=8})</nav>]
+</B_aut>
+<:couteau:variable_vide:>
+<//B_aut>
+
+<p><b><:couteau:non_confirmes:></b></p>
+<B_aut2>
+<ul class="derniers_connectes">
+<BOUCLE_aut2(AUTEURS){tous}{statut=nouveau}{par maj}{inverse}{pagination #ENV{nbnc,5}}>
+	#SET{title, #ID_AUTEUR|concat{'. ',#EMAIL}}
+	#SET{nom,#URL_ECRIRE{auteur,id_auteur=#ID_AUTEUR}|cs_lien{#NOM}|inserer_attribut{title,#GET{title}}}
+	<li>
+    [(#AUTORISER{modifier,auteur,#ID_AUTEUR,'',#ARRAY{statut,'?'}}|oui)
+    <div style="float:right">
+    <a href="#URL_ACTION_AUTEUR{instituer_objet,auteur-#ID_AUTEUR-5poubelle,#SELF#pagination_aut2}" class="suppr" title="<:texte_statut_poubelle|attribut_html:>">x</a>
+    </div>]
+    [(#VAL{'couteau:stats_auteur'}|_T_sain{#ARRAY{icon,#GET{aide},nom,#GET{nom},date,#MAJ|cs_date_long}})]
+    </li>
+</BOUCLE_aut2>
+</ul>
+[<nav role="navigation" class="p pagination">(#PAGINATION{prive,nombre_liens_max=8})</nav>]
+</B_aut2>
+<:couteau:variable_vide:>
+<//B_aut2>

@@ -1,0 +1,36 @@
+#CACHE{0}
+#SET{tab, #ARRAY}
+<BOUCLE_m(FORUMS){statut?=#ENV*{statut}}{plat}{par date}{inverse}>
+	#SET{test, #ARRAY{0,#TEXTE*,1,#TITRE*,2,#AUTEUR*,3,#EMAIL_AUTEUR*}|spam_filtre_de_test_array|=={ko}}
+	[(#GET{test}|non)#SET{test, #IP|spam_filtre_de_test_ip|=={ko}}]
+	[(#GET{test}|oui)#SET{tab, #GET{tab}|push{#ID_FORUM}}]
+</BOUCLE_m>
+<B_msg>
+<div style="color:darkRed; font-weight:bold;" id="test_spam_bd">
+<BOUCLE_msg(FORUMS){statut?=#ENV*{statut}}{plat}{par date}{inverse}{id_forum IN #GET{tab}}{pagination 10}>
+[(#VAL{_SPIP19300}|defined|non)
+	<a href="#URL_ECRIRE{controle_forum,debut_id_forum=#ID_FORUM}" style="color:darkRed;" target="_blank">]
+[(#VAL{_SPIP19300}|defined|oui)
+	<a href="[(#ID_FORUM|generer_url_entite{forum,debut_forums=@#ID_FORUM,forum#ID_FORUM})]" style="color:darkRed;" target="_blank">]
+#ID_FORUM. #TITRE</a>[ (#STATUT|!={publie}|oui)&#40;#STATUT&#41;]<br />
+</BOUCLE_msg>
+[(#VAL{_SPIP40000}|defined|?{
+	[<nav role="navigation" class="p pagination">(#PAGINATION{prive})</nav>],
+	[<p class="pagination">(#PAGINATION)</p>]
+})]#DEBUT_MSG
+<script language="JavaScript" type="text/javascript">
+if (window.jQuery) jQuery(function(){
+	// forcer la pagination a rester en ajax
+	jQuery("#test_spam_bd a.lien_pagination").click(function() {
+		var debut = parseInt(jQuery(this).text());
+		[(#VAL{_SPIP40000}|defined|oui)debut = isNaN(debut) ? -1 : (debut - 1) * 10;]
+		jQuery("#debut_msg").val(debut);
+		jQuery(this).parents('form').eq(0).submit();
+		return false;
+	});
+});
+</script>
+</div>
+</B_msg>
+<div style="color:#22BB22; font-weight:bold;">Aucun message identifi&eacute;</div>
+<//B_msg>

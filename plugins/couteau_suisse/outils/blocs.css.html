@@ -1,0 +1,28 @@
+[(#VAL{_SPIP40000}|defined|?{
+	[(#SET{bas,[(#CHEMIN_IMAGE{deplierhaut.svg})]})]
+	[(#SET{haut,[(#CHEMIN_IMAGE{deplier-right.svg})]})]
+	[(#SET{padd,26})]
+	,
+	[(#SET{bas,[(#CONST{_DIR_IMG_PACK}|url_absolue)]triangle-bas.gif})]
+	[(#SET{haut,[(#CONST{_DIR_IMG_PACK}|url_absolue)]triangle.gif})]
+	[(#SET{padd,20})]
+})]
+
+.blocs_titre {
+	background: transparent url(#GET{bas}) no-repeat scroll left center;
+	font-weight: normal;
+	line-height: 1.2em;
+	margin-top: 4px;
+	padding: 0pt 0pt 0pt #GET{padd}px;
+	margin-bottom: 0.1em;
+	clear: left;
+	cursor: pointer;
+}
+
+.blocs_replie {
+	background: transparent url(#GET{haut}) no-repeat scroll left center;
+}
+
+.blocs_title{
+	display: none;
+}
