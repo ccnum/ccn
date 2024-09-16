@@ -1,6 +1,7 @@
 .ddev
 .vscode
 .env
+.htaccess
 config/ecran_securite.php
 ecrire
 IMG
