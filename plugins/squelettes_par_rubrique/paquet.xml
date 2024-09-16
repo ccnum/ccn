@@ -1,0 +1,15 @@
+<paquet
+	prefix="squelettes_par_rubrique"
+	categorie="outil"
+	version="2.2.0"
+	etat="stable"
+	compatibilite="[4.1.0;4.*]"
+	logo="squelettes_par_rubrique-32.png"
+	documentation="https://www.spip.net/3445"
+>
+
+	<nom>Squelettes par Rubrique</nom>
+	<!-- Support des squelettes suffixés dans SPIP -->
+
+	<auteur>Collectif SPIP</auteur>
+</paquet>

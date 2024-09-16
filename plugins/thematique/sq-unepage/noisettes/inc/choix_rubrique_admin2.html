@@ -11,7 +11,6 @@
 	</BOUCLE_filtreTravailEnCours>
 </BOUCLE_rubAnnee>
 
-
 #SET{laclasse_rubrique_admin, #RESTREINT}
 <BOUCLE_rub(RUBRIQUES){id_rubrique=#RESTREINT}{tout}>
 	#SET{titre,#TITRE}
@@ -30,9 +29,7 @@
 	#SET{affiche,oui}
 ]
 
-
 [(#REM) Admin restreint]
-
 <B_rub_aut2>[(#GET{affiche}|=={oui}|oui)
 <div id="choix_rubrique_admin" name="rubrique_admin" class="select">
 <input type="radio" value="#ENV{restreint}" class="first"><label class="first_label">Je veux publier en tant que / dans <span class="highlight">[(#GET{titre}|couper{30})]</span></label>

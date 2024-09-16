@@ -29,5 +29,5 @@
 	|ou{#GET{admin}|=={0}|oui})
 		[(#SET{restreint,#GET{restreint0}})]
 ]
-[(#MODE|=={restreint}|oui)#GET{restreint}]
-[(#MODE|=={restreint}|non)#GET{admin}]
+[(#MODE|=={restreint}|oui)#SESSION_SET{admin, restreint}]
+[(#MODE|=={restreint}|non)#SESSION_SET{admin, admin}]
