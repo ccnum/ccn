@@ -32,26 +32,6 @@ $().ready(
 
 		onResize();
 
-		function slideshowActualites(actu) {
-			var posY = actu.offset().top - $('#menu_bas .actualites-inner').offset().top;
-
-			$('#menu_bas .actualites-inner').animate({ scrollTop: (32 * actu.index()) }, 500);
-
-			var _actu = actu;
-
-			setTimeout(
-				function () {
-					if (_actu.index() < $('#menu_bas .actualites-inner .actualites-actu').length - 1) {
-						slideshowActualites($('#menu_bas .actualites-inner .actualites-actu').eq(_actu.index() + 1));
-					} else {
-						slideshowActualites($('#menu_bas .actualites-inner .actualites-actu').eq(0));
-					}
-				}, 8000
-			);
-		}
-
-		slideshowActualites($('#menu_bas .actualites-inner .actualites-actu').eq(0));
-
 		$('#sidebarExpand').on(
 			'click', function () {
 				toggleSidebarExpand();
@@ -726,10 +706,8 @@ function callRessource() {
 		url_lateral, 'rubrique', 'ressources', function () {
 		}
 	);
-
 	console.log('callRessource');
 }
-
 
 /**
  * Appelle le chargement d'un article ressource
@@ -767,7 +745,6 @@ function callRessourceArticle(id_article, type_objet) {
 	console.log('callRessourceArticle');
 }
 
-
 /**
  * Appelle le chargement d'un article syndic
  * dans la sidebar secondaire
@@ -797,7 +774,6 @@ function callRessourceSyndicArticle(id_syndic_article, type_objet) {
 		}
 	);
 
-
 	var url_lateral = (type_objet == 'ressources') ? CCN.projet.url_popup_ressources : CCN.projet.url_popup_agora;
 	loadContentInLateralSidebar(
 		url_lateral, 'rubrique', type_objet, function () {
@@ -806,8 +782,6 @@ function callRessourceSyndicArticle(id_syndic_article, type_objet) {
 
 	console.log('callRessourceSyndicArticle');
 }
-
-
 
 /**
  * Appelle le chargement d'une rubrique ressource
@@ -838,10 +812,8 @@ function callRessourceRubrique(id_rubrique, type_objet) {
 		}
 	);
 
-
 	var url_lateral = (type_objet == 'ressources') ? CCN.projet.url_popup_ressources : CCN.projet.url_popup_agora;
 	//loadContentInLateralSidebar(url_lateral, 'rubrique', type_objet, function(){
-
 
 	console.log('callRessourceRubrique');
 }
