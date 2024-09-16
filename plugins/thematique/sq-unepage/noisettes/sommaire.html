@@ -14,29 +14,29 @@ et/ou
 
 	[(#VUE|=={classe}|non)]
 
-	<div id="menu_haut" class="zone-menu ">
+	<div id="menu_haut" class="zone-menu">
 		<INCLURE{fond=noisettes/menu_haut, id_auteur=#SESSION{id_auteur}, env}>
 	</div>
 
 	<div id="timeline">
 		<div id="timeline_responsive">
-		<div id="timeline_fixed"></div>
-		<div id="timeline_wrapin">
-			<INCLURE{fond=livrables} />
-			<div class="timeline_layer" id="timeline_layer_consignes">
-				<div class="timeline_trigger"></div>
+			<div id="timeline_fixed"></div>
+			<div id="timeline_wrapin">
+				<INCLURE{fond=livrables} />
+				<div class="timeline_layer" id="timeline_layer_consignes">
+					<div class="timeline_trigger"></div>
+				</div>
+				<div class="timeline_layer" id="timeline_layer_blogs">
+					<div class="timeline_trigger"></div>
+				</div>
+				<div class="timeline_layer" id="timeline_layer_evenements">
+					<div class="timeline_trigger"></div>
+				</div>
+				<div class="timeline_layer" id="timeline_layer_livrables">
+					<div class="timeline_trigger"></div>
+				</div>
+				<div id="timeline_background"></div>
 			</div>
-			<div class="timeline_layer" id="timeline_layer_blogs">
-				<div class="timeline_trigger"></div>
-			</div>
-			<div class="timeline_layer" id="timeline_layer_evenements">
-				<div class="timeline_trigger"></div>
-			</div>
-			<div class="timeline_layer" id="timeline_layer_livrables">
-				<div class="timeline_trigger"></div>
-			</div>
-			<div id="timeline_background"></div>
-		</div>
 		</div>
 	</div>
 
@@ -310,7 +310,7 @@ et/ou
 
 </div>
 
-[(#REM) TODO PAS DE REDIRECTION]
+[(#REM) TODO PAS DE REDIRECTION
 <script>
 	window.onload = function () {
 		if($.urlParam('page') == 'sommaire'){
@@ -320,7 +320,7 @@ et/ou
 		}
 	}
 </script>
-
+]
 [(#REM)
 	[(#INCLURE{fond=noisettes/fonction/type_role})]
 	[(#SESSION{role}|choixsiegal{prof,"<script>	window.onload = function () {	$('.menu_logo_classes').click(); }</script>", ""})]

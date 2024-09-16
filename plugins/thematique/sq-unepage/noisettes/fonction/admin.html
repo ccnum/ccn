@@ -7,7 +7,8 @@
 #SET{admin,0}
 <B_rub_aut>
 <BOUCLE_rub_aut(RUBRIQUES AUTEURS){id_auteur=#SESSION{id_auteur}}{tout}>
-	[(#SET{type_objet,[(#INCLURE{fond=noisettes/fonction/type_objet,id_rubrique})]})]
+	[(#INCLURE{fond=noisettes/fonction/type_objet,id_rubrique})]
+	[(#SET{type_objet,#SESSION{type}})]
 	[(#GET{type_objet}|=={evenements}|non)
 		[(#SET{restreint1,#ID_RUBRIQUE})]
 	]
