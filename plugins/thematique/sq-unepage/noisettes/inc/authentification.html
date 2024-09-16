@@ -1,8 +1,8 @@
 #CACHE{0}
 <BOUCLE_restreint(RUBRIQUES){id_rubrique=#RESTREINT}>#SET{titre,#TITRE}</BOUCLE_restreint>
 
-[(#REM)Mire authentification]
-[(#REM)Ajouter des images]
+[(#REM) Mire authentification]
+[(#REM) Ajouter des images]
 [(#SESSION{statut}|oui)
 	<li class="bloc2"><a class='mediabox boxIframe boxWidth-700px boxHeight-600px' href="#URL_PAGE{auteur_editer,id_auteur=#SESSION{id_auteur}}" title="Profil d'auteur">[(#SESSION{nom}|couper{10})]</a></li>
 	<li class="logo li_deconnexion"><a class="ajax logo_menu-deconnecter" href="[(#URL_LOGOUT)]" title="Se déconnecter"></a></li>
@@ -22,4 +22,4 @@
 	-->
 	[(#FORMULAIRE_LOGIN)]
 ]
-[(#MODELE{logo_aide}{rel=presentation}{valeur=aide}{class=mediabox}{title=1. Le projet}{href=#CHEMIN{img/presentation/01.png}})]
+[(#MODELE{logo_aide, rel=presentation, valeur=aide, class=mediabox, title='1. Le projet', href=#CHEMIN{img/presentation/01.png}})]
