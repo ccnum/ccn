@@ -242,7 +242,7 @@ et/ou
 			</ul>
 		</div>
 
-		[(#REM)Actualités
+		[(#REM) Actualités
 		<div id="menu-actualites" class="bloc_view col">
 			<h3><span>Actualités</span></h3>
 			<ul class="actualites-ul filter clearfix option-set" data-filter-group="classe">
@@ -310,7 +310,7 @@ et/ou
 
 </div>
 
-[(#REM) TODO PAS DE REDIRECTION
+[(#REM) TODO PAS DE REDIRECTION ]
 <script>
 	window.onload = function () {
 		if($.urlParam('page') == 'sommaire'){
@@ -320,7 +320,6 @@ et/ou
 		}
 	}
 </script>
-]
 [(#REM)
 	[(#INCLURE{fond=noisettes/fonction/type_role})]
 	[(#SESSION{role}|choixsiegal{prof,"<script>	window.onload = function () {	$('.menu_logo_classes').click(); }</script>", ""})]
