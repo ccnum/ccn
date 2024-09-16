@@ -239,12 +239,6 @@ function setContentFromState(state) {
 		}
 	}
 
-	// Actualités
-
-	if (state.page == "actualites") {
-		callActualites();
-	}
-
 
 	if (state.id_objet != "0") {
 
@@ -929,39 +923,6 @@ function callAgora() {
 	console.log('callAgora');
 }
 
-
-/**
- * Appelle le chargement de l'agora
- * dans la sidebar principale et appelle
- * (…)
- *
- * @see loadContentInMainSidebar
- * @see loadContentInLateralSidebar
- *
- * @todo Modifier le contenu de la sidebar principale
- * @todo Modifier le contenu de la sidebar secondaire
- * @todo Documenter
- */
-
-function callActualites() {
-	changeTimelineMode('consignes');
-	updateMenuIcon(['actualites'], 'sidebarView');
-	setFullscreenModeToCols(false);
-
-	var url = './spip.php?page=actualites&type_objet=actualites&mode=ajax-detail';
-	loadContentInMainSidebar(
-		url, 'rubrique', 'actualites', function () {
-			updateUrl(
-				{
-					'type_objet': 'actualites',
-					'page': 'actualites'
-				}, "Actualites", "./spip.php?page=actualites&mode=complet"
-			);
-		}
-	);
-
-	console.log('callActualites');
-}
 
 /**
  * Gère les événements lors du clic sur un livrable
