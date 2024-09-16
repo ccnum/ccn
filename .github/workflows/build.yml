@@ -55,7 +55,6 @@ jobs:
         run: |
           IFS="," read -ra ADDR <<< "${{ steps.vars.outputs.workloads }}"
           for i in "${ADDR[@]}"; do
-            echo ${{ steps.vars.outputs.site }} | sed 's/./& /g'
             echo "Redeploying $i... ${{ steps.vars.outputs.site }}:${i}?action=redeploy "
             curl -s -X POST -H "Authorization: Bearer ${{ secrets.RANCHER_TOKEN }}" \
               "${{ steps.vars.outputs.site }}:${i}?action=redeploy"
