@@ -1,4 +1,5 @@
 name: Build and Push Docker Images
+
 on:
   push:
     branches:
@@ -42,11 +43,11 @@ jobs:
       - name: Set up workload list and Rancher URL
         id: vars
         run: |
-          echo "::set-output name=workloads::${{ secrets.WORKLOADS }}"
-          if [ "${{ github.ref }}" == "refs/heads/main" ]
-          then
+          if [ "${{ github.ref }}" == "refs/heads/main" ]; then
+            echo "::set-output name=workloads::${{ secrets.WORKLOADS_PROD }}"
             echo "::set-output name=site::${{ secrets.RANCHER_PROD_URL }}"
           else
+            echo "::set-output name=workloads::${{ secrets.WORKLOADS }}"
             echo "::set-output name=site::${{ secrets.RANCHER_DEV_URL }}"
           fi
 
