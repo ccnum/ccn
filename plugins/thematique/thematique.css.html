@@ -474,8 +474,6 @@ body {
 	background-color: #999;
 }
 
-
-
 .logo_menu_classe_image {
 	width:100%;
 	height:100%;
@@ -631,14 +629,12 @@ body {
 	padding-top:10px;
 	z-index: 500;
 	position:absolute;
-	/*background-color: #fff;*/
 	clear: both;
 	display: none;
 }
 .zone_bas_timeline{
 	position:absolute;
 	bottom: 10px;
-	/*top:[(#ENV{hauteur}|plus{20})]px;*/
 	left: auto;
 	width: 100%;
 }
@@ -655,7 +651,6 @@ body {
 #connexion{
 	width: 90%;
 	margin-top: 4px 20px 5px;
-	/*visibility:  hidden;*/
 	display: none;
 	clear: both;
 }
@@ -663,22 +658,17 @@ body {
 
 a, label{
 	color: #ENV{couleur_base_texte};
-	/*font-size: #GET{font-size1}px;*/
 	text-decoration: none;
 }
 
 input{
-	/*background-color: #C0C0C0;*/
 	font-size: #GET{font-size1}px;
-	/*border: 1px solid #333;*/
-	/*height: 20px;*/
 	vertical-align: top;
 	padding: 2px;
 }
 
 a:hover{
 	color: #ENV{couleur_1erplan3};
-	/*font-size: #GET{font-size1}px;*/
 	text-decoration: none;
 }
 
@@ -978,10 +968,6 @@ a:hover{
 }
 
 .select input {
-	/*
-	max-height: 0;
-	max-width: 0;
-	*/
 	filter:alpha(opacity=0);
 	-moz-opacity: 0;
 	opacity: 0;
@@ -1046,24 +1032,8 @@ a:hover{
 	float: left;
 }
 
-#SET{lar_col,35} /* 35*n - 4 */
-
-/*
-	#menu-vues {width: [(#GET{lar_col}|mult{2}|moins{4})]px;}
-	#menu-ressources {width: [(#GET{lar_col}|mult{6}|moins{4})]px;}
-	#menu-consignes {width: [(#GET{lar_col}|mult{8}|moins{4})]px;}
-	#menu-classes {width: [(#GET{lar_col}|mult{10}|moins{4})]px;}
-	#menu-medias {width: [(#GET{lar_col}|mult{6}|moins{4})]px;}
-	#menu-tris {width: [(#GET{lar_col}|mult{2}|moins{4})]px;}
-
-	*/
-
 #menu_bas.zone-menu .menu-bas-select {
 	position:relative;
-}
-
-#menu_bas.zone-menu .menu-bas-select .call-to-select {
-
 }
 
 #menu_bas.zone-menu .menu-bas-select .liste-select {
@@ -4016,10 +3986,6 @@ ul#forum, .lien_forum {
 	pointer-events:none;
 }
 
-#menu_bas.zone-menu li.logo, #menu_haut.zone-menu li.logo {
-	width: 27px;
-}
-
 /* TO DO */
 
 .hoveringReponse .reponse_haute,
@@ -4599,9 +4565,9 @@ ul#forum, .lien_forum {
 		width: 91px;
 	}
 
-	.zone-menu .titre3, .zone-menu .titre3 a{
-	font-size:#GET{font-size2}px;
-	line-height:#GET{font-size2}px;
+	.zone-menu .titre3, .zone-menu .titre3 a {
+		font-size:#GET{font-size2}px;
+		line-height:#GET{font-size2}px;
 	}
 
 	#SET{lar_col,30} 	/* 30*n - 3 */
@@ -4611,8 +4577,6 @@ ul#forum, .lien_forum {
 	#menu-classes {width: [(#GET{lar_col}|mult{8}|moins{3})]px;}
 	#menu-medias {width: [(#GET{lar_col}|mult{6}|moins{3})]px;}
 	#menu-tris {width: [(#GET{lar_col}|mult{2}|moins{3})]px;}
-
-
 }
 
 @media screen and (max-width: 1050px) and (max-height: 770px ) {
