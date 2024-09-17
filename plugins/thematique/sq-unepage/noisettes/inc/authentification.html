@@ -3,13 +3,15 @@
 
 [(#REM) Mire authentification]
 [(#REM) Ajouter des images]
-[(#SESSION{statut}|oui)
+[(#SESSION{id_auteur}|oui)
 	<li class="bloc2"><a class='mediabox boxIframe boxWidth-700px boxHeight-600px' href="#URL_PAGE{auteur_editer,id_auteur=#SESSION{id_auteur}}" title="Profil d'auteur">[(#SESSION{nom}|couper{10})]</a></li>
 	<li class="logo li_deconnexion"><a class="ajax logo_menu-deconnecter" href="[(#URL_LOGOUT)]" title="Se déconnecter"></a></li>
 	<INCLURE{fond=noisettes/inc/choix_rubrique_admin2, restreint, admin}>
 ]
 [(#SESSION{statut}|non)
-	<li class="logo"><a href="[(#PLUGIN{CICAS}|oui|?{'?page=sommaire&url=spip.php%3Fpage%3Dsommaire&cicas=oui&ent=1','?page=login&url=.%2F'})]" class="logo_menu-connecter" title="Se connecter à l'ENT"></a></li>
+	<li class="logo">
+		<a href="[(#URL_PAGE{login}|parametre_url{url,#SELF}|parametre_url{cicas,oui})]" class="logo_menu-connecter" title="Se connecter à l'ENT"></a>
+	</li>
 	<!--
 	<li class="logo logo_connexion first">
 		<a href="[(#SELF|parametre_url{cicas,oui}|parametre_url{ent,1})]" class="logo_menu-connecter" title="Se connecter à laclasse v2">Se connecter à laclasse V2</a>

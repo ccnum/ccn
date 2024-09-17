@@ -13,16 +13,15 @@
 		<//B_mot>
 	<//B_auteur2>
 
-<BOUCLE_auteurs_liens(auteurs_liens){id_auteur}{objet=rubrique}{!par id_objet}>
-	<BOUCLE_auteur(RUBRIQUES){id_rubrique=#ID_OBJET}{tout}{!titre_mot IN evenements,blogs,ressources}>
-		<BOUCLE_ex(RUBRIQUES){id_enfant}{titre_mot IN evenements,blogs,ressources}>
-		</BOUCLE_ex>
-		</B_ex>
-			#SET{id_rubrique,#ID_RUBRIQUE}
-		<//B_ex>
-	</BOUCLE_auteur>
-</BOUCLE_auteurs_liens>
-
+	<BOUCLE_auteurs_liens(auteurs_liens){id_auteur}{objet=rubrique}{!par id_objet}>
+		<BOUCLE_auteur(RUBRIQUES){id_rubrique=#ID_OBJET}{tout}{!titre_mot IN evenements,blogs,ressources}>
+			<BOUCLE_ex(RUBRIQUES){id_enfant}{titre_mot IN evenements,blogs,ressources}>
+			</BOUCLE_ex>
+			</B_ex>
+				#SET{id_rubrique,#ID_RUBRIQUE}
+			<//B_ex>
+		</BOUCLE_auteur>
+	</BOUCLE_auteurs_liens>
 <//B_article>
 <BOUCLE_rub(RUBRIQUES){id_rubrique=#GET{id_rubrique}}{tout}>
 	#SET{logo,#LOGO_RUBRIQUE}
