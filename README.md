@@ -48,6 +48,7 @@ Github secrets are used to store the Docker Hub credentials and the Github token
 | DOCKER_USERNAME  | Docker Hub username                                                                                                                                                    |
 | DOCKER_PASSWORD  | Docker Hub password                                                                                                                                                    |
 | WORKLOADS        | the name of the workloads you want to redeploy seperated by a comma  ex: workload1,workload2                                                                           |
+| WORKLOADS_PROD   | the name of the workloads you want to redeploy on production env seperated by a comma  ex: workload1,workload2                                                         |
 | RANCHER_DEV_URL  | the url  to your rancher api url with the name of your namespace and cluster ex: https://mycluster.com/v3/project/mycluster:myproject/workloads/deployment:mynamespace |
 | RANCHER_PROD_URL | same as above but to redeploy workloads when main branch ci is triggered                                                                                               |
 |                  |                                                                                                                                                                        |
