@@ -1,14 +1,15 @@
 <BOUCLE_principale_article(ARTICLES){id_article}>
-[(#REM)Type objet: consignes, travail_en_cours, blogs, evenements,ressources]
+[(#REM) Type objet: consignes, travail_en_cours, blogs, evenements,ressources]
 	[(#ENV{type_objet}|oui)
 		#SET{type_objet,#TYPE_OBJET}
 	]
 	[(#ENV{type_objet}|non)
-		[(#SET{type_objet,[(#INCLURE{fond=noisettes/fonction/type_objet,id_article})]})]
-	]
+		[(#INCLURE{fond=noisettes/fonction/type_objet,id_article})]
+		[(#SET{type_objet,#SESSION{type}})]
+	]rrr #GET{type_objet}
 	[(#GET{type_objet}|match{blogs|evenements}|oui)#SET{pre,article_}]
 
-[(#REM)Mode d'ouverture]
+[(#REM) Mode d'ouverture]
 	#SET{mode,#CONST{_MODE_POPUP}}
 	#SET{ref,#CONST{$_SERVER['HTTP_REFERER']}}
 	[(#ENV{mode}|oui)
@@ -20,16 +21,16 @@
 		[(#GET{ref}|non) #SET{mode,complet} ]
 	]
 
-[(#REM)Page]
+[(#REM) Page]
 	#SET{page,article}
 	[(#GET{type_objet}|match{ressources|classes}|oui)#SET{page,rubrique}]
 	[(#GET{mode}|=={ajax-detail}|oui)#SET{page,article}]
 
-[(#REM)Ouverture]
+[(#REM) Ouverture]
 	<BOUCLE_rub1(RUBRIQUES){id_rubrique}{tout}>
-	  #SET{id_rubrique_lien_bis,#ID_RUBRIQUE}
-	  #SET{id_rubrique_lien,#ID_RUBRIQUE_LIEN}
-  </BOUCLE_rub1>
+		#SET{id_rubrique_lien_bis,#ID_RUBRIQUE}
+		#SET{id_rubrique_lien,#ID_RUBRIQUE_LIEN}
+	</BOUCLE_rub1>
 	<BOUCLE_lien(ARTICLES){id_consigne}{id_rubrique=#GET{id_rubrique_lien}}>#SET{art_lie,#ID_ARTICLE}</BOUCLE_lien>
 	<BOUCLE_lien_bis(ARTICLES){id_consigne}{id_rubrique}>#SET{art_lie_bis,#ID_ARTICLE}</BOUCLE_lien_bis>
 
@@ -40,28 +41,26 @@
   	    <div id="reponse_binome_1">
     ]
 
-		<INCLURE{fond=noisettes/#GET{page}}{id_rubrique}{env}{page=#GET{page}}{type_objet=#GET{type_objet}}{id_article=#ID_ARTICLE} />
+	<INCLURE{fond=noisettes/#GET{page}}{id_rubrique}{env}{page=#GET{page}}{type_objet=#GET{type_objet}}{id_article=#ID_ARTICLE} />
 
-		[(#GET{art_lie}|oui)
+	[(#GET{art_lie}|oui)
+	</div>
+		<div class="popup popup_separation_binome">
+			<div class="sidebar_bubble separation_binome">Réponse binôme</div>
+			<div class="nettoyeur"></div>
+		</div>
 
-  	    </div>
+	<div id="reponse_binome_2">
+		<INCLURE{fond=noisettes/#GET{page}}{id_rubrique}{env}{page=#GET{page}}{type_objet=#GET{type_objet}}{id_article=#GET{art_lie}} />
+	</div>
+	]
 
-  			<div class="popup popup_separation_binome">
-    			<div class="sidebar_bubble separation_binome">Réponse binôme</div>
-          <div class="nettoyeur"></div>
-  			</div>
-
-        <div id="reponse_binome_2">
-          <INCLURE{fond=noisettes/#GET{page}}{id_rubrique}{env}{page=#GET{page}}{type_objet=#GET{type_objet}}{id_article=#GET{art_lie}} />
-        </div>
-		]
-
-	  [(#GET{art_lie}|oui) </div>]
+	[(#GET{art_lie}|oui) </div>]
 	]
 
 	[(#GET{mode}|=={complet}|oui)
-	  <INCLURE{fond=layout}{id_rubrique}{env}{page=sommaire}{type_objet=#GET{type_objet}}{id_objet=#ID_ARTICLE} />
-  ]
+		<INCLURE{fond=layout}{id_rubrique}{env}{page=sommaire}{type_objet=#GET{type_objet}}{id_objet=#ID_ARTICLE} />
+	]
 
 	[(#GET{mode}|=={ajax}|oui)
 		[(#REM)Type d'admin : 0 : total / autrement : nb de rubriques restreintes / -1 : pas admin]
@@ -70,6 +69,5 @@
 	]
 
 </BOUCLE_principale_article>
-</B_principale_article>
 	<INCLURE{fond=chargement}{type_objet=#TYPE_OBJET}>
 <//B_principale_article>
