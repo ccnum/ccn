@@ -18,14 +18,11 @@
 			});
 			*/
 		</script>
-
-
-
-		[(#SET{type_objet,[(#INCLURE{fond=noisettes/fonction/type_objet,id_rubrique})]})]
+		[(#REM) [(#INCLURE{fond=noisettes/fonction/type_objet,id_rubrique})] ]
+		[(#SET{type_objet,#SESSION{type}})]
 
 		<div class="sidebar_bubble bloc_publier_repondre">
   		[(#GET{type_objet}|=={travail_en_cours}|oui)
-
 			<div class="fiche_titre couleur_texte_[(#GET{type_objet})] couleur_[(#GET{type_objet})][(#ENV{id_rubrique}|nb2col)]">
 				<div class="photo">[(#MODELE{logo_carre}{id_rubrique})]</div>
 				<div class="texte">
@@ -35,22 +32,22 @@
 			</div>
   		]
 
-			<div class="popup_titre">
-				<div class="titre">
-					[(#GET{type_objet}|=={travail_en_cours}|oui) Répondre à la consigne]
-					[(#GET{type_objet}|=={travail_en_cours}|non) Publier un nouvel article]
-				</div>
-				<div class="date" id="entete_publication" style="display: block;">
-					<!-- <img class='img_titre' src="#CHEMIN{images}/puce_titrecouleur6.gif"> -->
-					[(#GET{type_objet}|=={travail_en_cours}|oui) Etape 1 : Pour répondre à la consigne, choisir un titre et le valider ci-dessous]
-					[(#GET{type_objet}|=={travail_en_cours}|non) Etape 1 : Pour créer votre article, choisir un titre et le valider ci-dessous]
-				</div>
+		<div class="popup_titre">
+			<div class="titre">
+				[(#GET{type_objet}|=={travail_en_cours}|oui) Répondre à la consigne]
+				[(#GET{type_objet}|=={travail_en_cours}|non) Publier un nouvel article]
 			</div>
+			<div class="date" id="entete_publication" style="display: block;">
+				<!-- <img class='img_titre' src="#CHEMIN{images}/puce_titrecouleur6.gif"> -->
+				[(#GET{type_objet}|=={travail_en_cours}|oui) Etape 1 : Pour répondre à la consigne, choisir un titre et le valider ci-dessous]
+				[(#GET{type_objet}|=={travail_en_cours}|non) Etape 1 : Pour créer votre article, choisir un titre et le valider ci-dessous]
+			</div>
+		</div>
 
-			<br />
+		<br />
 
-      <div class="bloc_texte">
-  			<div id="entete_contenu" class="popup_new_article" style="opacity: 1;">
+		<div class="bloc_texte">
+		<div id="entete_contenu" class="popup_new_article" style="opacity: 1;">
   		]
 
     	[(#REM)Impossible de passer l'url de retour en paramètre... donc forcée en dur dans le formulaire]
@@ -60,9 +57,6 @@
     		[(#ID_ARTICLE|oui)
     			#FORMULAIRE_PUBLIC_EDITER_ARTICLE{#ENV{id_article},#ENV{id_rubrique},#URL_ARTICLE|parametre_url{mode,complet}}
     		]
-
-
-
   			[(#ID_ARTICLE|non) </div>
   		</div>
 

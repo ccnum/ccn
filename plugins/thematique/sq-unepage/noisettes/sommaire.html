@@ -9,10 +9,7 @@ et/ou
 <style id="crayons-surcharge-styles"></style>
 <div id="offset"></div>
 <div id="global">
-
 	<INCLURE{fond=noisettes/inc/no_ie6} />
-
-	[(#VUE|=={classe}|non)]
 
 	<div id="menu_haut" class="zone-menu">
 		<INCLURE{fond=noisettes/menu_haut, id_auteur=#SESSION{id_auteur}, env, ajax}>
@@ -53,29 +50,26 @@ et/ou
 	<div id="loading_feedback">Chargement</div>
 
 	<div id="sidebar">
-  	<div id="sidebarCache"></div>
-  	<div id="sidebarExpand">Agrandir/réduire</div>
+		<div id="sidebarCache"></div>
+		<div id="sidebarExpand">Agrandir/réduire</div>
 
-	<div id="sidebar_content">
-
-		<div id="sidebar_main_around">
-			<div id="sidebar_main">
-				<div id="sidebar_main_inner" class="sidebar_content_inner">
+		<div id="sidebar_content">
+			<div id="sidebar_main_around">
+				<div id="sidebar_main">
+					<div id="sidebar_main_inner" class="sidebar_content_inner">
+					</div>
 				</div>
 			</div>
-		</div>
 
-		<div id="sidebar_lateral_around">
-			<div id="sidebar_lateral">
-				<div id="sidebar_lateral_inner" class="sidebar_content_inner">
+			<div id="sidebar_lateral_around">
+				<div id="sidebar_lateral">
+					<div id="sidebar_lateral_inner" class="sidebar_content_inner">
+					</div>
 				</div>
 			</div>
 		</div>
 	</div>
-</div>
-
 	<div id="menu_bas" class="clearfix combo-filters zone-menu">
-
 		[(#REM)Col 1]
 		<!--<h3 class="first">Général</h3>-->
 
