@@ -84,7 +84,8 @@
 		</url_popup_chat>
 		<url_popup_chat2>
 			[(#NOM_SITE_SPIP|=={miam.laclasse.com}|oui)
-				[(#SET{admin,[(#INCLURE{fond=noisettes/fonction/admin,mode=admin})]})]
+				[(#INCLURE{fond=noisettes/fonction/admin,mode=admin})]
+				[(#SET{admin,#SESSION{admin}})]
 				[(#GET{admin}|>={0}|oui)
 					https://docs.google.com/drawings/d/1XNN89gz1qaVkV1BBwztvQNJuFetv3y-fXtrwbFGyEPM/edit?target=blank
 				]

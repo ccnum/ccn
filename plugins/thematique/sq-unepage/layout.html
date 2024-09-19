@@ -19,8 +19,8 @@
 	#SET{couleur_base_texte,#000000}
 	#SET{couleur_1erplan3,#00A0F0}
 
-[(#INCLURE{fond=noisettes/fonction/admin,mode=admin})]
 [(#REM) Type d'admin : 0 : total / autrement : nb de rubriques restreintes / -1 : pas admin / -2 pas connecté]
+[(#INCLURE{fond=noisettes/fonction/admin,mode=admin})]
 [(#SET{admin,#SESSION{admin}})]
 
 [(#INCLURE{fond=noisettes/fonction/admin,mode=restreint})]

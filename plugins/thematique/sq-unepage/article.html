@@ -63,8 +63,9 @@
 	]
 
 	[(#GET{mode}|=={ajax}|oui)
-		[(#REM)Type d'admin : 0 : total / autrement : nb de rubriques restreintes / -1 : pas admin]
-		[(#SET{admin,[(#INCLURE{fond=noisettes/fonction/admin,mode=admin})]})]
+		[(#REM) Type d'admin : 0 : total / autrement : nb de rubriques restreintes / -1 : pas admin / -2 pas connecté]
+		[(#INCLURE{fond=noisettes/fonction/admin,mode=admin})]
+		[(#SET{admin,#SESSION{admin}})]
 		<INCLURE{fond=noisettes/#GET{page}}{type_objet=#GET{type_objet}}{admin=#GET{admin}}{env} />
 	]
 
