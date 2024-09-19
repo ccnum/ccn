@@ -109,20 +109,20 @@
 															]
 													</BOUCLE_autresDocs>
 												</div>
-												[(#REM)Ajouter un document]
+												[(#REM) Ajouter un document]
 												[(#AUTORISER{modifier,article,#ID_ARTICLE}|oui)
-												  <div class="sidebar_bubble">
-													<INCLURE{fond=noisettes/js/accordeon}{nom=bloc_option_doc-#ID_ARTICLE}>
-													<div class="bloc_option_doc nettoyeur">
-													  <a id="bloc_option_doc-#ID_ARTICLE" class="hac lien_ajouter bloc_option_doc_adddocument" title="Ajouter un document">
-														Ajouter un document
-													  </a>
-													  <div class='nettoyeur cache formulaire_spip formulaire_editer_document bloc_option_doc'>
-														#FORMULAIRE_JOINDRE_DOCUMENT{new,#ID_ARTICLE,article}
-													  </div>
-													  <INCLURE{fond=prive/squelettes/inclure/colonne-documents,env,ajax=documents} />
+													<div class="sidebar_bubble">
+														<INCLURE{fond=noisettes/js/accordeon,nom=bloc_option_doc-#ID_ARTICLE}>
+														<div class="bloc_option_doc nettoyeur">
+														<a id="bloc_option_doc-#ID_ARTICLE" class="hac lien_ajouter bloc_option_doc_adddocument" title="Ajouter un document">
+															Ajouter un document
+														</a>
+														<div class='nettoyeur cache formulaire_spip formulaire_editer_document bloc_option_doc'>
+															#FORMULAIRE_JOINDRE_DOCUMENT{new,#ID_ARTICLE,article}
+														</div>
+														<INCLURE{fond=prive/squelettes/inclure/colonne-documents,env,ajax=documents} />
+														</div>
 													</div>
-												  </div>
 												]
 											</div>
 											[(#REM)Permalien - [&annee_scolaire=(#ANNEE_SCOLAIRE)]
