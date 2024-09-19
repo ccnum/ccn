@@ -19,7 +19,7 @@
   - ou id_syndic_article
 
 ]
-#SET{titre, blogs,evenements,consignes,travail_en_cours,ressources,agora}
+#SET{titre, #ARRAY{blogs,evenements,consignes,travail_en_cours,ressources,agora}}
 <BOUCLE_art(ARTICLES){id_article}>
 	<BOUCLE_hie_art(HIERARCHIE){id_article}>
 		<BOUCLE_mot_art(MOTS){id_rubrique}{titre IN #GET{titre}}>
