@@ -4,7 +4,7 @@
 <BOUCLE_principale00(RUBRIQUES){id_rubrique}{titre_mot=agora}{tout}>
 	#SET{is_agora,agora}
 </BOUCLE_principale00>
-[(#TYPE_OBJET|is_array{#LISTE{ressources,agora}}|oui)<INCLURE{fond=noisettes/call_sidebar, id_article=#ID_ARTICLE, type_objet=#GET{is_agora}}/>]
+[(#TYPE_OBJET|in_array{#LISTE{ressources,agora}}|oui)<INCLURE{fond=noisettes/call_sidebar, id_article=#ID_ARTICLE, type_objet=#GET{is_agora}}/>]
 <div class="popup [popup_(#ENV{type_objet})]">
 	<div id="bloc_article-#ID_ARTICLE" class="bloc_article [(#GET{police})]">
 		<div class="sidebar_bubble">
@@ -359,42 +359,28 @@
 					<BOUCLE_rub_classe(RUBRIQUES){id_rubrique}{tout}>
 						[(#SET{donnees_classe,[(#TEXTE*|liens_ouvrants)]})]
 					</BOUCLE_rub_classe>
-					<!--
 
-						[(#ENV{type_objet}}|=={consignes}|oui)
+					[(#REM) Ajouter un document]
 
+					[(#AUTORISER{modifier,article,#ID_ARTICLE}|oui)
+						[(#GET{blocs_cplt}|=={non}|non)
 
 						<div class="sidebar_bubble">
+
+							<INCLURE{fond=noisettes/js/accordeon}{nom=bloc_option_doc-#ID_ARTICLE}>
 							<div class="bloc_option_doc nettoyeur">
-								<a class="hac lien_ajouter bloc_option_doc_ressources" title="Accéder aux ressources">
-									Accéder aux ressources
+								<a id="bloc_option_doc-#ID_ARTICLE" class="hac lien_ajouter bloc_option_doc_adddocument" title="Ajouter un document">
+									Ajouter un document
 								</a>
+								<div class='nettoyeur cache formulaire_spip formulaire_editer_document bloc_option_doc'>
+										Vos documents apparaîtront par ordre de chargement (du premier au dernier document chargé)
+										<INCLURE{fond=formulaires/ajouter_document,ajax,env}/>
+								</div>
+								<INCLURE{fond=prive/squelettes/inclure/colonne-documents,env,ajax=documents} />
 							</div>
 						</div>
 						]
-						-->
-
-					[(#REM)Ajouter un document]
-
-						[(#AUTORISER{modifier,article,#ID_ARTICLE}|oui)
-							[(#GET{blocs_cplt}|=={non}|non)
-
-							<div class="sidebar_bubble">
-
-								<INCLURE{fond=noisettes/js/accordeon}{nom=bloc_option_doc-#ID_ARTICLE}>
-								<div class="bloc_option_doc nettoyeur">
-									<a id="bloc_option_doc-#ID_ARTICLE" class="hac lien_ajouter bloc_option_doc_adddocument" title="Ajouter un document">
-										Ajouter un document
-									</a>
-									<div class='nettoyeur cache formulaire_spip formulaire_editer_document bloc_option_doc'>
-											Vos documents apparaîtront par ordre de chargement (du premier au dernier document chargé)
-											<INCLURE{fond=formulaires/ajouter_document,ajax,env}/>
-									</div>
-									<INCLURE{fond=prive/squelettes/inclure/colonne-documents,env,ajax=documents} />
-								</div>
-							</div>
-							]
-						]
+					]
 
 				[(#GET{blocs_cplt}|=={non}|non)
 
