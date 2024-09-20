@@ -61,11 +61,11 @@
 					]
 					<BOUCLE_rub3(RUBRIQUES){id_parent=#ID_RUBRIQUE}{tout}>
 						[(#GET{affiche}|=={oui}|oui)
-						<input type="radio" value="#ID_RUBRIQUE" title="[(#TITRE|attribut_html)]" ><label>[|-(#TITRE|couper{40})]</label>
+						<input type="radio" value="#ID_RUBRIQUE" title="[(#TITRE|attribut_html)]"><label>[|-(#TITRE|couper{40})]</label>
 						]
 						<BOUCLE_rub5(RUBRIQUES){id_parent=#ID_RUBRIQUE}{tout}>
 						[(#GET{affiche}|=={oui}|oui)
-						<input type="radio" value="#ID_RUBRIQUE" title="[(#TITRE|attribut_html)]" ><label>[&nbsp;&nbsp;&nbsp;&nbsp;|-(#TITRE|couper{40})]</label>
+						<input type="radio" value="#ID_RUBRIQUE" title="[(#TITRE|attribut_html)]"><label>[&nbsp;&nbsp;&nbsp;&nbsp;|-(#TITRE|couper{40})]</label>
 						]
 						</BOUCLE_rub5>
 					</BOUCLE_rub3>

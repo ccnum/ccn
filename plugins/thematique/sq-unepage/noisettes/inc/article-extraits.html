@@ -16,7 +16,7 @@
 <INCLURE{fond=noisettes/js/accordeon}{nom=bloc_option_extraits}>
 <div id="bloc_option_extraits" style="clear: both;">
 <ul ><li><a class="hac lien_ajouter" title="ajouter un document">
-<img src="[(#CHEMIN{img/logo_editer_on_15.png}|image_reduire{15}|extraire_attribut{src})]" >&nbsp;&nbsp;Gérer les extraits</a>
+<img src="[(#CHEMIN{img/logo_editer_on_15.png}|image_reduire{15}|extraire_attribut{src})]">&nbsp;&nbsp;Gérer les extraits</a>
 <ul style="display: none;">
 
 		[(#REM)Affichage mots-clefs]
@@ -68,7 +68,7 @@
 							$redirect="spip.php?page=article&id_article=#ID_ARTICLE";
 							$att=" method='post' ";
 							$mode="<input name='image' type='file' size='15' /><input name='sousaction1' type='submit' value='T&eacute;l&eacute;charger' class='fondo spip_xx-small' /><input type='hidden' name='iframe_redirect' value='#URL_SITE_SPIP%2Fecrire%2F%3Fexec%3Diconifier%26type%3Did_article%26id_article%3D#ID_ARTICLE%26script%3Darticles' />";
-							$mode="<select name='nouv_mot' size='1' >";
+							$mode="<select name='nouv_mot' size='1'>";
 							$mode.="<option value=''>Sélectionner un extrait</option>";
 							<BOUCLE_materiau(ARTICLES){id_rubrique=17}>
 								$mode.="<option value='#ID_ARTICLE'>#TITRE</option>";

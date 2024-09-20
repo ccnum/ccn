@@ -18,7 +18,7 @@
 		[(#REM)Articles joints aux articles par la table spip_mots_articles]
 			<BOUCLE_mot(spip_mots_articles){id_mot=#ID_ARTICLE}{tout}>
 				<BOUCLE_art(ARTICLES){id_article}>
-					<div class="portfolio" >
+					<div class="portfolio">
 						[(#LESAUTEURS|inserer_attribut{class,titre_bloc2})<br /><br />]
 						<a href="#URL_ARTICLE" style="text-decoration:none; border:0px;">
 							[(#LOGO_ARTICLE_RUBRIQUE|image_reduire{120})]<br />[(#TITRE)]
