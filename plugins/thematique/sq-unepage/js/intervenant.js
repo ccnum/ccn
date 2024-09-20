@@ -4,8 +4,7 @@
  * @constructor
  */
 
-function Intervenant()
-{
+function Intervenant() {
 
     var id, nom;
 
@@ -21,5 +20,5 @@ function Intervenant()
         this.id = data.id;
         this.nom = data.nom;
     }
-    
+
 }

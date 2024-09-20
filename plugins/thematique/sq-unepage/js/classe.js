@@ -4,8 +4,7 @@
  * @constructor
  */
 
-function Classe()
-{
+function Classe() {
 
     var id, nom;
 
@@ -20,5 +19,5 @@ function Classe()
         this.id = data.id;
         this.nom = data.nom;
     }
-    
+
 }
