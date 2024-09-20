@@ -14,7 +14,7 @@
 
 	[(#REM) ---------------- titre & logo ---------------- ]
 		<BOUCLE_rub(RUBRIQUES){id_rubrique=#ID_RUBRIQUE}{tout}>#SET{titre_parent,#TITRE}</BOUCLE_rub>
-		[(#GET{type_objet}|match{consignes|travail_en_cours|ressources|classes}|oui)
+		[(#GET{type_objet}|in_array{#LISTE{consignes|travail_en_cours|ressources|classes}}|oui)
 			<div class="fiche_titre couleur_texte_[(#TYPE_OBJET)] couleur_[(#TYPE_OBJET)][(#MODELE{nb2col}{id_article})]">
 				<div class="photo">[(#MODELE{logo_carre}{id_article})]</div>
 				<div class="texte">
@@ -23,7 +23,7 @@
 				</div>
 			</div>
 		]
-		[(#GET{type_objet}|match{blogs|evenements}|oui)
+		[(#GET{type_objet}|in_array{#LISTE{blogs|evenements}}|oui)
 			<div class="popup_titre">
 				<div class="titre">[(#TITRE)]</div>
 				<span class="date ">[(#DATE|nom_jour)] [(#DATE|affdate)]</span>
@@ -32,12 +32,12 @@
 		]
 
 		[(#REM) ---------------- entete publication ---------------- ]
-				<BOUCLE_nb_doc(DOCUMENTS) {id_article} {tout}>
-				</BOUCLE_nb_doc>
-					#SET{nb_doc,#TOTAL_BOUCLE}
-				</B_nb_doc>
-					#SET{nb_doc,0}
-				<//B_nb_doc>
+		<BOUCLE_nb_doc(DOCUMENTS) {id_article} {tout}>
+		</BOUCLE_nb_doc>
+			#SET{nb_doc,#TOTAL_BOUCLE}
+		</B_nb_doc>
+			#SET{nb_doc,0}
+		<//B_nb_doc>
 
 
 	[(#REM) ---------------- bloc article ---------------- ]
