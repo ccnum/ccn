@@ -36,7 +36,6 @@ $GLOBALS['ext_photo'] = 'jpg|png|gif';
 //if ($id = sql_getfetsel("id_form", "spip_forms", "titre='form_client_mail'")) define('_id_form_client_mail',$id);
 //if ($id = sql_getfetsel("id_groupe", "spip_groupes_mots", "titre='carte'")) define('_id_groupe_mot_badge',$id);
 
-
 /************************************************************************************/
 /*    REQUETES DANS LA FENETRE ACTIVE ANNEE_SCOLAIRE  : SURCHARGE DU PIPELINE PRE_BOUCLE */
 /************************************************************************************/
