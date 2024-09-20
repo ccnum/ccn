@@ -39,7 +39,7 @@ $GLOBALS['ext_photo'] = 'jpg|png|gif';
 /************************************************************************************/
 /*    REQUETES DANS LA FENETRE ACTIVE ANNEE_SCOLAIRE  : SURCHARGE DU PIPELINE PRE_BOUCLE */
 /************************************************************************************/
-//Calcul de l'année scolaire en lien avec le dernier article en cours
+// Calcul de l'année scolaire en lien avec le dernier article en cours
 if (
 	(isset($_COOKIE['_cookie_annee_scolaire']))
 	&& ($_COOKIE['_cookie_annee_scolaire'] != 0)
