@@ -4,7 +4,7 @@
 <BOUCLE_principale00(RUBRIQUES){id_rubrique}{titre_mot=agora}{tout}>
 	#SET{is_agora,agora}
 </BOUCLE_principale00>
-[(#TYPE_OBJET|in_array{#LISTE{ressources,agora}}|oui)<INCLURE{fond=noisettes/call_sidebar, id_article=#ID_ARTICLE, type_objet=#GET{is_agora}}/>]
+[(#TYPE_OBJET|in_array{#LISTE{ressources,agora}}|oui)<INCLURE{fond=noisettes/call_sidebar, id_article=#ID_ARTICLE, type_objet=#GET{is_agora}} />]
 <div class="popup [popup_(#ENV{type_objet})]">
 	<div id="bloc_article-#ID_ARTICLE" class="bloc_article [(#GET{police})]">
 		<div class="sidebar_bubble">
@@ -31,9 +31,8 @@
 						#SET{classe_iframe,#DESCRIPTIF*}
 					]
 					[(#DESCRIPTIF*|substr_count{''}|>{1}|oui)
-						[(#SET{tab,[(#DESCRIPTIF*|explode{''})]})]
-							#SET{classe_iframe,#GET{tab}|table_valeur{#GET{artc}|moins{1}}}
-						]
+						[(#SET{tab,(#DESCRIPTIF*|explode{''})})]
+						#SET{classe_iframe,#GET{tab}|table_valeur{#GET{artc}|moins{1}}}
 					]
 				]
 				#SET{titre_parent,#TITRE}
