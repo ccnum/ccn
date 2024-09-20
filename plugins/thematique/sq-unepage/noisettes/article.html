@@ -10,7 +10,7 @@
 		<div class="sidebar_bubble">
 			<div class="formulaire_jaime_flottant">#FORMULAIRE_JAIME</div>
 			[(#REM) ---------------- Entete publication ---------------- ]
-			[(#ENV{type_objet}|=={travail_en_cours}|et{#MODE|=={ajax0}|oui})#SET{type_objet,ressources}]
+			[(#ENV{type_objet}|=={travail_en_cours}|et{#MODE|=={ajax0}}|oui)#SET{type_objet,ressources}]
 			<BOUCLE_auteur(auteurs_liens){id_rubrique}>
 			</BOUCLE_auteur>
 				[(#TOTAL_BOUCLE|=={1}|oui) #SET{type_objet0,consignes} ]
