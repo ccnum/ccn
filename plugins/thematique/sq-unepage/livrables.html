@@ -39,7 +39,7 @@
 											<!-- Affichage documents -->
 											<div class="documents border-bg" style="overflow:scroll;">
 												<BOUCLE_images(DOCUMENTS){id_article}>
-														[(#MEDIA|match{'image'}|oui)
+														[(#MEDIA|=={image}|oui)
 
 															<div class="img-container">
 																	[(#AUTORISER{modifier,article,#ID_ARTICLE}|oui)
@@ -61,7 +61,7 @@
 												<div class="autres-docs" style="overflow:scroll;">
 													<BOUCLE_autresDocs(DOCUMENTS){id_article}>
 
-															[(#MEDIA|match{'audio'}|oui) <div class="audio">
+															[(#MEDIA|=={'audio'}|oui) <div class="audio">
 																[(#AUTORISER{modifier,article,#ID_ARTICLE}|oui)
 																[<a href="(#URL_ACTION_AUTEUR{dissocier_document,#ID_ARTICLE-article-#ID_DOCUMENT-suppr-safe,#URL_SITE_SPIP/spip.php?page=article&id_article=#ID_ARTICLE&mode=complet&type=livrables})"
 																	class='supprimer_couleur'
@@ -73,7 +73,7 @@
 																[(#MODELE{audio, autostart=false, hauteur=50px, largeur=35%})]
 															</div> ]
 
-															[(#MEDIA|match{'video'}|oui) <div class="video">
+															[(#MEDIA|=={'video'}|oui) <div class="video">
 																[(#AUTORISER{modifier,article,#ID_ARTICLE}|oui)
 																[<a href="(#URL_ACTION_AUTEUR{dissocier_document,#ID_ARTICLE-article-#ID_DOCUMENT-suppr-safe,#URL_SITE_SPIP/spip.php?page=article&id_article=#ID_ARTICLE&mode=complet&type=livrables})"
 																	class='supprimer_couleur'
@@ -85,7 +85,7 @@
 																[(#MODELE{audio, autostart=false, hauteur=150px, largeur=35%})]
 															</div> ]
 
-															[(#MEDIA|match{'image|audio|video'}|non)
+															[(#MEDIA|in_array{#LISTE{image,audio,video}}|non)
 															<div class="fichier">
 
 
