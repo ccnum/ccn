@@ -1069,7 +1069,7 @@ function updateUrl(object, title, url) {
  */
 
 function reloadAndSetCookie(url, cookie_nom, cookie_valeur) {
-	document.cookie = cookie_nom + "=" + escape(cookie_valeur);
+	document.cookie = cookie_nom + "=" + cookie_valeur;
 	reload(url);
 }
 

@@ -222,7 +222,7 @@
 			<B_documents_joints1>
 				<BOUCLE_documents_joints1(DOCUMENTS){vu=non} {id_article} {doublons d} {par titre}>
 					<div class="portfolio_grand">
-						[(#MEDIA|match{'audio|video'}|oui)
+						[(#MEDIA|in_array{#LISTE{audio,video}}|oui)
 							<div class="audio">
 							[(#AUTORISER{modifier,article,#ID_ARTICLE}|oui)
 								[<a href="(#URL_ACTION_AUTEUR{dissocier_document,#ID_ARTICLE-article-#ID_DOCUMENT-suppr-safe,#URL_SITE_SPIP/spip.php?article#_principale:ID_ARTICLE&var_mode=recalcul})"
@@ -236,7 +236,7 @@
 							</div>
 						]
 
-						[(#MEDIA|match{'image'}|oui)
+						[(#MEDIA|=={image}|oui)
 							[(#AUTORISER{modifier,article,#ID_ARTICLE}|oui)
 								[<a href="(#URL_ACTION_AUTEUR{dissocier_document,#ID_ARTICLE-article-#ID_DOCUMENT-suppr-safe,#URL_SITE_SPIP/spip.php?article#_principale:ID_ARTICLE&var_mode=recalcul})"
 										class='supprimer_couleur'
@@ -257,26 +257,24 @@
 						]
 						<!-- MODIF -->
 
-				[(#MEDIA|match{'image|audio'}|non)
+						[(#MEDIA|in_array{#LISTE{audio,image}}|oui)
 
-						[(#AUTORISER{modifier,article,#ID_ARTICLE}|oui)
+							[(#AUTORISER{modifier,article,#ID_ARTICLE}|oui)
 								[<a href="(#URL_ACTION_AUTEUR{dissocier_document,#ID_ARTICLE-article-#ID_DOCUMENT-suppr-safe,#URL_SITE_SPIP/spip.php?article#_principale:ID_ARTICLE&var_mode=recalcul})"
 										class='supprimer_couleur'
 										onClick='return confirmation("Êtes-vous sûr de vouloir supprimer ce document ?")'
 										title='Supprimer ce document' >
 										<div class='action_supprimer'></div>
 								</a>]
-						]
-
+							]
 								[<a class="icone" href="#URL_DOCUMENT" target="blank">(#LOGO_DOCUMENT|image_reduire{100}|inserer_attribut{style,'border:0px solid #000000;'}) </a>]
 								[(#AUTORISER{modifier,article,#ID_ARTICLE}|oui)
-								[<span class="spip_doc_titre #EDIT{titre}"><br />(#TITRE|sinon{<span class="ajouter_couleur" style="text-color: gray;">ajouter un titre</span>})</span>]
+									[<span class="spip_doc_titre #EDIT{titre}"><br />(#TITRE|sinon{<span class="ajouter_couleur" style="text-color: gray;">ajouter un titre</span>})</span>]
 								]
 								[(#AUTORISER{modifier,article,#ID_ARTICLE}|non)
-								[<span class="spip_doc_titre #EDIT{titre}"><br />(#TITRE)</span>]
+									[<span class="spip_doc_titre #EDIT{titre}"><br />(#TITRE)</span>]
 								]
-
-				]
+						]
 							<!--END MODIF-->
 
 						</div>
