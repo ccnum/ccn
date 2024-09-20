@@ -143,7 +143,6 @@ function th_configurer_site() {
 
 
 function th_ajouter_mots_clef() {
-	spip_log('erererr');
 
 	//Creation mots clefs
 	//Groupe Contenus
