@@ -9,9 +9,7 @@
 </BOUCLE_rub>
 
 [(#ADMIN|=={1}|oui|et{#RESTREINT}|oui)
-	[(#CONST{_affichage}|=={classique}|oui)<p><strong title="[(#GET{titre}|attribut_html)]">]
-		[(#GET{titre}|couper{18})]
-	[(#CONST{_affichage}|=={classique}|oui)</strong></p>]
+	[(#GET{titre}|couper{18})]
 ]
 #SET{affiche,non}
 [(#ADMIN|=={0}|oui)
