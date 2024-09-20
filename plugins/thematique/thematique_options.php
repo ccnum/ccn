@@ -36,21 +36,6 @@ $GLOBALS['ext_photo'] = 'jpg|png|gif';
 //if ($id = sql_getfetsel("id_form", "spip_forms", "titre='form_client_mail'")) define('_id_form_client_mail',$id);
 //if ($id = sql_getfetsel("id_groupe", "spip_groupes_mots", "titre='carte'")) define('_id_groupe_mot_badge',$id);
 
-/************************************************************************************/
-/*    DOSSIER_SQUELETTE FONCTION DU COOKIE                                                        */
-/************************************************************************************/
-
-/*
-	if ($_COOKIE[_cookie_affichage]=='classique')
-	{
-	$GLOBALS['dossier_squelettes'] = _DIR_PLUGIN_TH."sq-classique".":"._DIR_PLUGIN_TH;
-	define('_affichage','classique');
-	}
-	//$GLOBALS['dossier_squelettes'] = _DIR_PLUGIN_TH."sq-unepage".":"._DIR_PLUGIN_TH.":"._DIR_PLUGIN_TH."sq-classique";
-*/
-
-define('_affichage', 'unepage');
-
 
 /************************************************************************************/
 /*    REQUETES DANS LA FENETRE ACTIVE ANNEE_SCOLAIRE  : SURCHARGE DU PIPELINE PRE_BOUCLE */

@@ -4,8 +4,8 @@ if (!defined('_ECRIRE_INC_VERSION')) {
 	return;
 }
 
-//Pre_boucles
-//Retourne les articles et articles syndiqués en lien avec l'année scolaire
+// Pre_boucles
+// Retourne les articles et articles syndiqués en lien avec l'année scolaire
 function thematique_pre_boucle($boucle) {
 	$affichage = _affichage;
 
