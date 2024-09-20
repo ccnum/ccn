@@ -91,7 +91,6 @@ function loadProjet(fichier) {
 				dataForProjet.url_popup_chat = getXMLNodeValue('url_popup_chat', xml);
 				dataForProjet.url_popup_chat2 = getXMLNodeValue('url_popup_chat2', xml);
 
-
 				dataForProjet.image_fond = (hasXMLNodeValue('image_fond', xml)) ? getXMLNodeValue('image_fond', xml) : '';
 
 				// Initialise le projet
@@ -104,7 +103,6 @@ function loadProjet(fichier) {
 				CCN.idRubriqueAgora = getXMLNodeValue('id_rubrique_agora', xml);
 
 				// Lance le chargement des classes
-
 				loadClasses(CCN.urlXml + "classes");
 			}
 		}
@@ -170,7 +168,6 @@ function loadClasses(fichier) {
 				CCN.travailEnCoursId = parseFloat(getXMLNodeValue('travail_en_cours_id', xml));
 
 				// Lance le chargement des consignes
-
 				loadConsignes(CCN.urlXml + "consignes");
 			}
 		}
