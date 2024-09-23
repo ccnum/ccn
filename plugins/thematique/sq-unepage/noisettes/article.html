@@ -46,10 +46,6 @@
 				#SET{id_consigne,#ID_ARTICLE}
 			</BOUCLE_consigne_de_la_reponse>
 
-			[(#REM) Balise head obligatoire afin d'activer le crayon ]
-			<head>
-			</head>
-
 			[(#REM) ---------------- Titre & logo ---------------- ]
 			[(#ENV{type_objet}|in_array{#LISTE{consignes,travail_en_cours,ressources,classes,agora}}|oui)
 				[(#ENV{type_objet}|in_array{#LISTE{travail_en_cours,classes}}|oui)

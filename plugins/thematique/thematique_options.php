@@ -12,7 +12,6 @@
 /************************************************************************************/
 define('_cookie_affichage', 'laclasse_affichage');
 define('_cookie_rubrique', 'laclasse_rubrique_admin');
-define('_cookie_annee_scolaire', 'laclasse_annee_scolaire');
 
 //Ces variables ne sont plus utilisées à vérifier
 //Tailles
@@ -41,12 +40,12 @@ $GLOBALS['ext_photo'] = 'jpg|png|gif';
 /************************************************************************************/
 // Calcul de l'année scolaire en lien avec le dernier article en cours
 if (
-	(isset($_COOKIE['_cookie_annee_scolaire']))
-	&& ($_COOKIE['_cookie_annee_scolaire'] != 0)
-	&& ($_COOKIE['_cookie_annee_scolaire'] != '')
-	&& ($_COOKIE['_cookie_annee_scolaire'] > 2011)
+	(isset($_COOKIE['laclasse_annee_scolaire']))
+	&& ($_COOKIE['laclasse_annee_scolaire'] != 0)
+	&& ($_COOKIE['laclasse_annee_scolaire'] != '')
+	&& ($_COOKIE['laclasse_annee_scolaire'] > 2011)
 ) {
-	$annee_scolaire = $_COOKIE['_cookie_annee_scolaire'];
+	$annee_scolaire = $_COOKIE['laclasse_annee_scolaire'];
 } else {
 	if (date('m') >= '08') {
 		$annee_scolaire = date('Y');
@@ -61,7 +60,7 @@ if (
 	&& ($_GET['annee_scolaire'] != '')
 ) {
 	$annee_scolaire = $_GET['annee_scolaire'];
-	setcookie('_cookie_annee_scolaire', $annee_scolaire);
+	setcookie('laclasse_annee_scolaire', $annee_scolaire);
 }
 
 define('_annee_scolaire', $annee_scolaire);
