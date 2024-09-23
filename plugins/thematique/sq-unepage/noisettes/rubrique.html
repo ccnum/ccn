@@ -118,27 +118,28 @@
 
 					<ul>
 						<!-- AFFICHAGE ARTICLES  -->
-					<BOUCLE_sous_articlesTest(ARTICLES) {id_rubrique == #GET{laclasse_rubrique_admin}} {par num titre} {doublons}>
-								<li class="ressources_classe_consignes">
-									<a id="ajax#ID_ARTICLE" href="#" class="hac ajax  [ (#EXPOSE)][ (#GET{rub1}|=={#ID_RUBRIQUE}|?{ on })]">
-										[<strong>(#TITRE|couper{80})</strong>]
-									</a>
-								</li>
-						</ul>
+						<BOUCLE_sous_articlesTest(ARTICLES) {id_rubrique == #GET{laclasse_rubrique_admin}} {par num titre} {doublons}>
+						<li class="ressources_classe_consignes">
+							<a id="ajax#ID_ARTICLE" href="#" class="hac ajax[ (#EXPOSE)][ (#GET{rub1}|=={#ID_RUBRIQUE}|?{ on })]">
+								[<strong>(#TITRE|couper{80})</strong>]
+							</a>
+						</li>
+					</ul>
 						<!--<h2 style="color: black; background: white">TEST - #ID_ARTICLE - RUBRIQUE : #ID_RUBRIQUE</h2>-->
 						<script type="text/javascript">
 							$().ready(function(){
-							// TODO
-							$('#ajax#ID_ARTICLE').click(function() {
-								call({
-								'type':'article',
-								'type_objet':'travail_en_cours',
-								'id_article':'#ID_ARTICLE',
-						'id_parent':'#ID_PARENT',
-						[(#ID_CONSIGNE|oui) 'type_entite':'reponse',]
-								'mode':'ajax-detail'
+								// TODO
+								console.lo('clic');
+								$('#ajax#ID_ARTICLE').click(function() {
+									call({
+									'type':'article',
+									'type_objet':'travail_en_cours',
+									'id_article':'#ID_ARTICLE',
+									'id_parent':'#ID_PARENT',
+									'mode':'ajax-detail'
+									[(#ID_CONSIGNE|oui) 'type_entite':'reponse']
+									});
 								});
-							});
 							});
 						</script>
 
@@ -389,7 +390,7 @@
 										$('div#sidebar_main').addClass('chargement');
 										$('#sidebar_main').load('[(#URL_PAGE{syndic_article}|parametre_url{id_syndic_article,#ID_SYNDIC_ARTICLE}|parametre_url{mode,ajax-detail}|html_entity_decode)]'
 										, {limit: 25}, function(){
-  				hideSidebarLateral();
+											hideSidebarLateral();
 											$('div#sidebar_main').removeClass('chargement');
 											$('#sidebar_main').show('slow');
 											});
@@ -407,7 +408,7 @@
 										$('div#sidebar_main').addClass('chargement');
 										$('#sidebar_main').load('[(#URL_PAGE{syndic_article}|parametre_url{id_syndic_article,#ID_SYNDIC_ARTICLE}|parametre_url{mode,ajax-detail}|html_entity_decode)]'
 										, {limit: 25}, function(){
-  				hideSidebarLateral();
+											hideSidebarLateral();
 											$('div#sidebar_main').removeClass('chargement');
 											$('#sidebar_main').show('slow');
 											});
@@ -442,29 +443,6 @@
 		*/
 		</script>
 	</BOUCLE_rubart>
-
-	[(#ID_RUBRIQUE_OUVRE|oui)
-
-	  [(#REM) N'est plus utilisé]
-
-		<script type="text/javascript">
-
-  	// console.log('Rubrique : (old) AJAX de la rubrique ##ID_RUBRIQUE_OUVRE');
-  		/*
-		$().ready(function(){
-			$('#menug li a.selected').removeClass('selected');
-			$('#ajax_rub_#ID_RUBRIQUE_OUVRE').addClass('selected');
-			$('div#sidebar_main').addClass('chargement');
-			$('#sidebar_main').load('[(#URL_PAGE{rubrique}|parametre_url{id_rubrique,#ID_RUBRIQUE_OUVRE}|parametre_url{mode,ajax-detail}|html_entity_decode)]'
-			, {limit: 25}, function(){
-				hideSidebarLateral();
-				$('div#sidebar_main').removeClass('chargement');
-				$('#sidebar_main').show('slow');
-		  });
-		});
-		*/
-		</script>
-	]
 
 	[(#REM) #TYPE_OBJET|=={travail_en_cours}|oui
 		<script type="text/javascript">
