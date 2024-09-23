@@ -1,5 +1,5 @@
 #CACHE{0}
-[(#TYPE_OBJET|is_array{#LISTE{ressources,agora}}|oui)
+[(#TYPE_OBJET|in_array{#LISTE{ressources,agora}}|oui)
 <script type="text/javascript">
 	$().ready(function(){
 		$('.call_sidebar_main').off('click').on('click', function(){
@@ -27,11 +27,11 @@
 			]
 		]
 
-		[(#TYPE_OBJET|={ressources}|oui)
+		[(#TYPE_OBJET|=={ressources}|oui)
 			Retour aux ressources
 		]
 
-		[(#TYPE_OBJET|={agora}|oui)
+		[(#TYPE_OBJET|=={agora}|oui)
 			Retour à l'agora
 		]
 		[(#REM)
@@ -41,5 +41,4 @@
 		]
 	</div>
 </div>
-
 ]

@@ -134,5 +134,5 @@ function formulaires_joindre_document_traiter(
  * FONCTIONS
  **/
 function filtre_nb2col($nb) {
-	return substr($nb, strlen($nb) - 1, 1);
+	return substr($nb, spip_strlen((int) $nb) - 1, 1);
 }

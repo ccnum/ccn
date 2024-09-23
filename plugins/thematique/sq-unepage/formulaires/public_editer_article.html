@@ -4,15 +4,15 @@
 	[<p class="reponse_formulaire reponse_formulaire_erreur">(#ENV*{message_erreur})</p>]
 	[(#ENV{editable})
 	<form method='post' action='#ENV{action}' enctype='multipart/form-data' class="ajax heyhey"><div>
-		[(#REM) declarer les hidden qui declencheront le service du formulaire 
+		[(#REM) declarer les hidden qui declencheront le service du formulaire
 		parametre : url d'action ]
 		#ACTION_FORMULAIRE{#ENV{action}}
 		<input type='hidden' name='id_article' value='#ENV{id_article}' />
 		[(#ENV{id_consigne}|oui)
-			[<input type='hidden' name='id_consigne' id='id_consigne' value='(#ENV{id_consigne})' />]		
+			[<input type='hidden' name='id_consigne' id='id_consigne' value='(#ENV{id_consigne})' />]
 		]
 		[(#ENV{id_consigne}|non)
-			[<input type='hidden' name='id_consigne' id='id_consigne' value='(#VAL{id_consigne}|_request)' />]		
+			[<input type='hidden' name='id_consigne' id='id_consigne' value='(#VAL{id_consigne}|_request)' />]
 		]
 		<ul>
 
@@ -90,7 +90,7 @@
 			<label for="text_area"><:info_texte:><em class="aide">#AIDER{text_area}</em></label>[
 			<span class='erreur_message'>(#ENV**{erreurs}|table_valeur{texte})</span>
 			][(#ENV**{_texte_trop_long,''})]
-				<textarea name='texte' id='text_area'[ lang='(#LANGUE)'] rows='10' cols='40' >[(#ENV**{texte})]</textarea>
+				<textarea name='texte' id='text_area'[ lang='(#LANGUE)'] rows='10' cols='40'>[(#ENV**{texte})]</textarea>
 	    </li>]
 	  	[(#ENV**{config}|table_valeur{articles_ps}|=={non}|?{#ENV**{ps,''},' '}|oui)
 	    <li class="editer_ps[ (#ENV**{erreurs}|table_valeur{ps}|oui)erreur]">
