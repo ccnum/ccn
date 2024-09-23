@@ -1161,13 +1161,8 @@ a:hover{
 	border: 0px solid #fff;
 }
 
-
-
 <BOUCLE_vue(DATA){liste tout,timeline,classe,blog,evenement,ressource,consigne,consignes,ressources,evenements,blogs,classes,article_evt,texte,image,son,video,autre,date,notation,descendant,ascendant,agora,forum,ressource_classes,reponse}>
-	#SET{file,#CHEMIN{img}/logo_#NOM_SITE_SPIP_#VALEUR.png}
-	[(#GET{file}|non) #SET{file,#CHEMIN{img}/logo_#VALEUR.png} ]
-	[(#GET{file}|non) #SET{file,#CHEMIN{prive/vignettes}/#VALEUR.png} ]
-	[(#GET{file}|non) #SET{file,#CHEMIN{img/logo_voir.png}} ]
+	#SET{file,#CHEMIN{img/logo_#NOM_SITE_SPIP_#VALEUR.png}|sinon{#CHEMIN{img/logo_#VALEUR.png}}|sinon{#CHEMIN{prive/vignettes/#VALEUR.png}}|sinon{#CHEMIN{img/logo_voir.png}}}
 	[(#SET{img,#GET{file}|image_gamma{255}|image_reduire{20}|extraire_attribut{src}})]
 	[(#SET{col1,[(#GET{file}|couleur_extraire)]})]
 	#SET{col,#GET{gris_fonce}}
@@ -1178,10 +1173,7 @@ a:hover{
 
 /* Pictos haut */
 <BOUCLE_vue2(DATA){liste presentation,connecter,connecter1,connecter2,prive,ecrire,mdpperdu,inscription,profil-publication}>
-	#SET{file,#CHEMIN{img}/logo_#NOM_SITE_SPIP_#VALEUR.png}
-	[(#GET{file}|non) #SET{file,#CHEMIN{img/logo_#VALEUR.png}} ]
-	[(#GET{file}|non) #SET{file,#CHEMIN{prive/vignettes/#VALEUR.png}} ]
-	[(#GET{file}|non) #SET{file,#CHEMIN{img/logo_voir.png}} ]
+	#SET{file,#CHEMIN{img/logo_#NOM_SITE_SPIP_#VALEUR.png}|sinon{#CHEMIN{img/logo_#VALEUR.png}}|sinon{#CHEMIN{prive/vignettes/#VALEUR.png}}|sinon{#CHEMIN{img/logo_voir.png}}}
 	[(#SET{img,#GET{file}|image_sepia{#GET{color_menu_hover}}|image_reduire{15}|extraire_attribut{src}})]
 	[(#SET{img2,#GET{file}|image_gamma{255}|image_reduire{15}|extraire_attribut{src}})]
 	[(#SET{col1,[(#GET{file}|couleur_extraire)]})]
@@ -1219,12 +1211,12 @@ a:hover{
 
 /* --------- Classes --------- */
 
-.titre2{
+.titre2 {
 	font-size:#GET{font-size2}px;
 	line-height:#GET{font-size2}px;
 }
 
-.consigne_reponses{
+.consigne_reponses {
 	width: 26px;
 	height: 32px;
 	font-size: #GET{font-size2}px;
@@ -1235,7 +1227,7 @@ a:hover{
 	background-image: url(#ENV{chemin}/img/reponse.png);
 }
 
-.consigne_reponses_classe{
+.consigne_reponses_classe {
 	width: 26px;
 	height: 32px;
 	font-size: #GET{font-size2}px;
@@ -1246,7 +1238,7 @@ a:hover{
 	background-image: url(#ENV{chemin}/img/reponse_classe.png);
 }
 
-.reponse_p{
+.reponse_p {
 	float: left;
 	white-space: nowrap;
 	font-size: #GET{font-size1}px;
@@ -1255,7 +1247,7 @@ a:hover{
 	margin-top: 2px;
 }
 
-.reponse_plus{
+.reponse_plus {
 	float: left;
 	white-space: nowrap;
 	color: #ENV{couleur_1erplan3};
@@ -1265,17 +1257,17 @@ a:hover{
 	margin-top: 2px;
 }
 
-.bouton_article_plus{
+.bouton_article_plus {
 	cursor: pointer;
 	margin: 0px auto;
 	z-index:800;
 }
 
-#reponse_plus2{
+#reponse_plus2 {
 	visibility: visible;
 }
 
-.commentaires{
+.commentaires {
 	z-index: 2;
 	width:25px;
 	height: 25px;
@@ -1360,7 +1352,7 @@ a:hover{
 	justify-content: center;
 }
 
-.portfolio_grand .icone img{
+.portfolio_grand .icone img {
 	padding-left: 15px;
 	height: auto;
 	width: 25px;
@@ -1371,7 +1363,6 @@ a:hover{
 }
 
 /* --------- Formulaires --------- */
-
 .classe_select{
 	height:0px;
 	margin:0 0 10px 0;
@@ -1390,7 +1381,6 @@ a:hover{
 #pass_securise img {display: none;}
 
 /*--- Notations ---*/
-
 .formulaire_jaime_flottant {
 	top:45px;
 	z-index: 100;
@@ -1465,7 +1455,6 @@ div.jaimeplus {
 }
 
 /*-- Tooltip -- */
-
 .ui-tooltip, .arrow:after {
 	background: #333 !important;
 	border: none;

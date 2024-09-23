@@ -9,7 +9,7 @@
 			$redirect="#URL_SITE_SPIP/spip.php?article#_principale:ID_ARTICLE&var_mode=recalcul";
 			$arg="-#ID_ARTICLE/article/#ID_DOCUMENT";
 			$confirmation= attribut_html("Etes vous sûr de vouloir supprimer ce document ?");
-			echo "<br /><a href='".securiser_action_auteur($action, $arg, $redirect, $mode=false, $att='')."' class='supprimer_couleur' onClick='return confirmation(\"$confirmation\")' title='supprimer ce document' ><input class='publier publier_menu_petit' type='submit' value='X' title='supprimer ce document' /></a>";
+			echo "<br /><a href='".securiser_action_auteur($action, $arg, $redirect, $mode=false, $att='')."' class='supprimer_couleur' onClick='return confirmation(\"$confirmation\")' title='supprimer ce document'><input class='publier publier_menu_petit' type='submit' value='X' title='supprimer ce document' /></a>";
 		}
 	else
 	<BOUCLE_principale2(DOCUMENTS){id_document}{extension!=mp3}>

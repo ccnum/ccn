@@ -1,30 +1,23 @@
 #CACHE{0}
 #SET{laclasse_rubrique_admin,#CONST{$_COOKIE[_cookie_rubrique]}}
-
 <BOUCLE_principale(RUBRIQUES){id_rubrique}{tout}>
-
-<div class="popup [popup_(#GET{type_objet})]">
-
-<INCLURE{fond=noisettes/call_sidebar}>
-
-[(#INCLURE{fond=noisettes/fonction/type_role})]
-
-	<BOUCLE_rub1(HIERARCHIE){id_rubrique}{tout}{0,1}>[(#SET{coul,[(#ID_RUBRIQUE|moins{2})]})]</BOUCLE_rub1>
-
-  [(#REM) ---------------- titre & logo ---------------- ]
-
-	<div class="sidebar_bubble">
-		<div class="fiche_titre">
-		    <div class="photo #EDIT{logo}">[(#MODELE{logo_carre}{id_rubrique})]</div>
-		    <div class="texte">
-	        <div class="titre #EDIT{titre}">[(#TITRE)]</div>
-	        <!--<div class="auteur_date">[(#NOM) - ][(#DATE|affdate)]</div>-->
-		    </div>
+	<div class="popup [popup_(#GET{type_objet})]">
+		<INCLURE{fond=noisettes/call_sidebar} />
+		[(#INCLURE{fond=noisettes/fonction/type_role})]
+		<BOUCLE_rub1(HIERARCHIE){id_rubrique}{tout}{0,1}>[(#SET{coul,[(#ID_RUBRIQUE|moins{2})]})]</BOUCLE_rub1>
+		[(#REM) ---------------- titre & logo ---------------- ]
+		<div class="sidebar_bubble">
+			<div class="fiche_titre">
+				<div class="photo #EDIT{logo}">[(#MODELE{logo_carre}{id_rubrique})]</div>
+				<div class="texte">
+				<div class="titre #EDIT{titre}">[(#TITRE)]</div>
+				<!--<div class="auteur_date">[(#NOM) - ][(#DATE|affdate)]</div>-->
+				</div>
+			</div>
 		</div>
-	</div>
 
 		[(#REM)Corps Menu Arborescent]
-  <div id="listmenu">
+		<div id="listmenu">
 
 			[(#REM)
 			|
@@ -34,10 +27,10 @@
 			|  Note :
 			|   Il n'y a aucun article/rubrique avec ces mots-clés,
 			|   donc la boucle n'est jamais exécutée
-      ]
+			]
 
-      <BOUCLE_rubriques_ordre(RUBRIQUES) {id_rubrique} {titre_mot IN chrono,blog} {doublons r}>
-      </BOUCLE_rubriques_ordre>
+			<BOUCLE_rubriques_ordre(RUBRIQUES) {id_rubrique} {titre_mot IN chrono,blog} {doublons r}>
+			</BOUCLE_rubriques_ordre>
 
   			[(#REM)
   			|
@@ -50,24 +43,25 @@
   			|  Note :
   			|   Il n'y a aucun article/rubrique avec ces mots-clés,
   			|   donc la boucle n'est jamais exécutée
-        ]
+        	]
 
   			<BOUCLE_sous_articles0(ARTICLES) {id_rubrique} {tout} {!par date} {doublons}>
   				<script type="text/javascript">
   				$().ready(function(){
-  				$('#ajax#ID_ARTICLE').click(function() {
-  					$('div#sidebar_main').addClass('chargement');
-  					$('#menug li a.selected').removeClass('selected');
-  					$('#ajax_rub_#ID_RUBRIQUE').addClass('selected');
-  					$('#sidebar_main').load('[(#URL_PAGE{article}|parametre_url{id_article,#ID_ARTICLE}|parametre_url{mode,ajax-detail}|html_entity_decode)]'
-  					, {limit: 25}, function(){
-              hideSidebarLateral();
-  						$('div#sidebar_main').removeClass('chargement');
-  						$('#sidebar_main').show('slow');
-  						});
-  				});});
+					$('#ajax#ID_ARTICLE').click(function() {
+						$('div#sidebar_main').addClass('chargement');
+						$('#menug li a.selected').removeClass('selected');
+						$('#ajax_rub_#ID_RUBRIQUE').addClass('selected');
+						$('#sidebar_main').load('[(#URL_PAGE{article}|parametre_url{id_article,#ID_ARTICLE}|parametre_url{mode,ajax-detail}|html_entity_decode)]'
+						, {limit: 25}, function(){
+							hideSidebarLateral();
+							$('div#sidebar_main').removeClass('chargement');
+							$('#sidebar_main').show('slow');
+							});
+					});
+				});
 
-					// console.log('(A) Rubrique (#TYPE_OBJET) : Affichage de l\'article ##ID_ARTICLE || enfant || de la rubrique #_principale ##_principale:ID_RUBRIQUE ayant les mots-clés blog ou chrono');
+				// console.log('(A) Rubrique (#TYPE_OBJET) : Affichage de l\'article ##ID_ARTICLE || enfant || de la rubrique #_principale ##_principale:ID_RUBRIQUE ayant les mots-clés blog ou chrono');
   				</script>
   				<li><a id="ajax#ID_ARTICLE" href="#" class="ajax [(#EXPOSE) [(#GET{art1}|=={#ID_ARTICLE}|?{ gauche_menu_on })]]">[- (#TITRE|couper{80})]</a></li>
   			</BOUCLE_sous_articles0>
@@ -87,11 +81,10 @@
 			|
 			| 	Affiche la rubrique concernant l'utilisateur connecté en premiere place dans Travail en cours
 			|	seulement si l'utilisateur connecté est professeur
-
-	  ]
+			]
 
 			<!-- Vérifie le mot clé de la rubrique  -->
-			<BOUCLE_getMotCle(MOTS) {id_rubrique == #SESSION{idRubriqueUser} }>
+			<BOUCLE_getMotCle(MOTS) {id_rubrique == #SESSION{idRubriqueUser}}>
 				#SET{motcle, #TITRE}
 			</BOUCLE_getMotCle>
 			<BOUCLE_rubAnnee(RUBRIQUES) {racine}{titre LIKE %(#CONST{_annee_scolaire})%} {si #SESSION{role}|=={prof}} {si #GET{motcle}|!={evenements} } >
@@ -118,27 +111,28 @@
 
 					<ul>
 						<!-- AFFICHAGE ARTICLES  -->
-					<BOUCLE_sous_articlesTest(ARTICLES) {id_rubrique == #GET{laclasse_rubrique_admin}} {par num titre} {doublons}>
-								<li class="ressources_classe_consignes">
-									<a id="ajax#ID_ARTICLE" href="#" class="hac ajax  [ (#EXPOSE)][ (#GET{rub1}|=={#ID_RUBRIQUE}|?{ on })]">
-										[<strong>(#TITRE|couper{80})</strong>]
-									</a>
-								</li>
-						</ul>
+						<BOUCLE_sous_articlesTest(ARTICLES) {id_rubrique == #GET{laclasse_rubrique_admin}} {par num titre} {doublons}>
+						<li class="ressources_classe_consignes">
+							<a id="ajax#ID_ARTICLE" href="#" class="hac ajax[ (#EXPOSE)][ (#GET{rub1}|=={#ID_RUBRIQUE}|?{ on })]">
+								[<strong>(#TITRE|couper{80})</strong>]
+							</a>
+						</li>
+					</ul>
 						<!--<h2 style="color: black; background: white">TEST - #ID_ARTICLE - RUBRIQUE : #ID_RUBRIQUE</h2>-->
 						<script type="text/javascript">
 							$().ready(function(){
-							// TODO
-							$('#ajax#ID_ARTICLE').click(function() {
-								call({
-								'type':'article',
-								'type_objet':'travail_en_cours',
-								'id_article':'#ID_ARTICLE',
-						'id_parent':'#ID_PARENT',
-						[(#ID_CONSIGNE|oui) 'type_entite':'reponse',]
-								'mode':'ajax-detail'
+								// TODO
+								console.lo('clic');
+								$('#ajax#ID_ARTICLE').click(function() {
+									call({
+									'type':'article',
+									'type_objet':'travail_en_cours',
+									'id_article':'#ID_ARTICLE',
+									'id_parent':'#ID_PARENT',
+									'mode':'ajax-detail'
+									[(#ID_CONSIGNE|oui) 'type_entite':'reponse']
+									});
 								});
-							});
 							});
 						</script>
 
@@ -160,7 +154,7 @@
 							$('#sidebar_main').load('[(#URL_PAGE{article}|parametre_url{id_article,#ID_ARTICLE}|parametre_url{mode,ajax-detail}|html_entity_decode)]',
 							  {limit: 25},
 							  function(){
-                  hideSidebarLateral();
+								hideSidebarLateral();
   								$('div#sidebar_main').removeClass('chargement');
   								$('#sidebar_main').show('slow');
 								}
@@ -389,7 +383,7 @@
 										$('div#sidebar_main').addClass('chargement');
 										$('#sidebar_main').load('[(#URL_PAGE{syndic_article}|parametre_url{id_syndic_article,#ID_SYNDIC_ARTICLE}|parametre_url{mode,ajax-detail}|html_entity_decode)]'
 										, {limit: 25}, function(){
-  				hideSidebarLateral();
+											hideSidebarLateral();
 											$('div#sidebar_main').removeClass('chargement');
 											$('#sidebar_main').show('slow');
 											});
@@ -407,7 +401,7 @@
 										$('div#sidebar_main').addClass('chargement');
 										$('#sidebar_main').load('[(#URL_PAGE{syndic_article}|parametre_url{id_syndic_article,#ID_SYNDIC_ARTICLE}|parametre_url{mode,ajax-detail}|html_entity_decode)]'
 										, {limit: 25}, function(){
-  				hideSidebarLateral();
+											hideSidebarLateral();
 											$('div#sidebar_main').removeClass('chargement');
 											$('#sidebar_main').show('slow');
 											});
@@ -442,29 +436,6 @@
 		*/
 		</script>
 	</BOUCLE_rubart>
-
-	[(#ID_RUBRIQUE_OUVRE|oui)
-
-	  [(#REM) N'est plus utilisé]
-
-		<script type="text/javascript">
-
-  	// console.log('Rubrique : (old) AJAX de la rubrique ##ID_RUBRIQUE_OUVRE');
-  		/*
-		$().ready(function(){
-			$('#menug li a.selected').removeClass('selected');
-			$('#ajax_rub_#ID_RUBRIQUE_OUVRE').addClass('selected');
-			$('div#sidebar_main').addClass('chargement');
-			$('#sidebar_main').load('[(#URL_PAGE{rubrique}|parametre_url{id_rubrique,#ID_RUBRIQUE_OUVRE}|parametre_url{mode,ajax-detail}|html_entity_decode)]'
-			, {limit: 25}, function(){
-				hideSidebarLateral();
-				$('div#sidebar_main').removeClass('chargement');
-				$('#sidebar_main').show('slow');
-		  });
-		});
-		*/
-		</script>
-	]
 
 	[(#REM) #TYPE_OBJET|=={travail_en_cours}|oui
 		<script type="text/javascript">

@@ -47,7 +47,7 @@
                 [<a href="(#URL_ACTION_AUTEUR{instituer_forum,#ID_FORUM-forum-suppr-safe,#URL_SITE_SPIP/spip.php?article#_principale:ID_ARTICLE&var_mode=recalcul})"
                   class='supprimer_couleur'
                   onClick='return confirmation("Êtes-vous sûr de vouloir supprimer ce message ?")'
-                  title='Supprimer ce message' >
+                  title='Supprimer ce message'>
                   <div class='action_supprimer'></div>
                 </a>]
               ]
@@ -64,9 +64,9 @@
   				<B_documents_joints>
   					<BOUCLE_documents_joints(DOCUMENTS) {id_forum} {tout} {doublons}>
   						<div class="forum_around_document">
-								<br/><a href="#URL_DOCUMENT" title="[(#TITRE)]" [(#TYPE_DOCUMENT|match{jpg|png|gif}|?{class="thickbox mediabox"})] type="#MIME_TYPE">[(#EMBED_DOCUMENT|image_reduire{700}|inserer_attribut{alt,[(#TITRE|couper{80}|texte_backend)]})]</a>
+								<br/><a href="#URL_DOCUMENT" title="[(#TITRE)]" [(#TYPE_DOCUMENT|in_array{#LISTE{jpg,png,gif}}|?{class="thickbox mediabox"})] type="#MIME_TYPE">[(#EMBED_DOCUMENT|image_reduire{700}|inserer_attribut{alt,[(#TITRE|couper{80}|texte_backend)]})]</a>
 
-								<br/><div class="doc"><a href="#URL_DOCUMENT" title="[(#TITRE)]" [(#TYPE_DOCUMENT|match{pdf}|?{class="thickbox mediabox"})] type="#MIME_TYPE">[(#LOGO_DOCUMENT|image_reduire{100}|inserer_attribut{style,'border:0px solid #000000;'})]<span>[(#FICHIER|basename)]</span></a></div>
+								<br/><div class="doc"><a href="#URL_DOCUMENT" title="[(#TITRE)]" [(#TYPE_DOCUMENT|=={pdf}|?{class="thickbox mediabox"})] type="#MIME_TYPE">[(#LOGO_DOCUMENT|image_reduire{100}|inserer_attribut{style,'border:0px solid #000000;'})]<span>[(#FICHIER|basename)]</span></a></div>
   						</div>
   					</BOUCLE_documents_joints>
   				</B_documents_joints>
@@ -122,7 +122,7 @@
                       [<a href="(#URL_ACTION_AUTEUR{instituer_forum,#ID_FORUM-forum-suppr-safe,#URL_SITE_SPIP/spip.php?article#_principale:ID_ARTICLE&var_mode=recalcul})"
                           class='supprimer_couleur'
                           onClick='return confirmation("Êtes-vous sûr de vouloir supprimer ce message ?")'
-                          title='Supprimer ce message' >
+                          title='Supprimer ce message'>
                           <div class='action_supprimer'></div>
                       </a>]
                    ]

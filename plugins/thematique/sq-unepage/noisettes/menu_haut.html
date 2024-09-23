@@ -5,7 +5,7 @@
 	<div id="menu_haut_titre_fixed">
 		<li class="double bloc1">
 			<a href="[(#URL_SITE_SPIP)]" title="Accueil">
-				<span class="logo">[(#CHEMIN{img/pictos_blc/[(#NOM_SITE_SPIP)].png}|image_reduire{100})]</span>
+				[<span class="logo">(#CHEMIN{img/pictos_blc/[(#NOM_SITE_SPIP)].png}|image_reduire{100})</span>]
 				[(#NOM_SITE_SPIP)]
 			</a>
 		</li>
@@ -41,12 +41,12 @@
 
 		$('div[name=annee_scolaire] input[type=radio]').change( function() {
 			var valeur = $('div[name=annee_scolaire] input[type=radio]:checked').val()
-			reloadAndSetCookie('','[(#CONST{_cookie_annee_scolaire})]',valeur)
+			reloadAndSetCookie('','laclasse_annee_scolaire',valeur)
 		});
 
 		$('div[name=rubrique_admin] input[type=radio]').change( function() {
 			var valeur = $('div[name=rubrique_admin] input[type=radio]:checked').val()
-			reloadAndSetCookie('','[(#CONST{_cookie_rubrique})]',valeur)
+			reloadAndSetCookie('','laclasse_rubrique_admin',valeur)
 		});
 
 	});
@@ -59,7 +59,7 @@
 [(#RESTREINT|!={0}|oui|et{#RESTREINT|!={''}}|et{#TYPE_RESTREINT|!={''}}|et{#TYPE_RESTREINT|!={travail_en_cours}|oui}|oui)
 <ul id="menu_haut_publier_consigne" class="bloc_titre">
 	<li>
-		<a title="Publier un nouvel article" class="logo_menu-ecrire" onClick='createReponse(0, #RESTREINT);' >
+		<a title="Publier un nouvel article" class="logo_menu-ecrire" onClick='createReponse(0, #RESTREINT);'>
 			<div id='reponse_plus2' class='bouton_article_plus'></div>
 		</a>
 	</li>

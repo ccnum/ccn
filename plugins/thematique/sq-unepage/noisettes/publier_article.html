@@ -1,5 +1,5 @@
 #CACHE{0}
-
+#ID_ARTICLE // #ENV{id_article}
 <div class="popup [popup_(#GET{type_objet})]">
 	[(#ID_ARTICLE|non)
 		<script type="text/javascript">
@@ -37,7 +37,7 @@
 				[(#GET{type_objet}|=={travail_en_cours}|oui) Répondre à la consigne]
 				[(#GET{type_objet}|=={travail_en_cours}|non) Publier un nouvel article]
 			</div>
-			<div class="date" id="entete_publication" style="display: block;">
+			<div class="date" id="entete_publication">
 				<!-- <img class='img_titre' src="#CHEMIN{images}/puce_titrecouleur6.gif"> -->
 				[(#GET{type_objet}|=={travail_en_cours}|oui) Etape 1 : Pour répondre à la consigne, choisir un titre et le valider ci-dessous]
 				[(#GET{type_objet}|=={travail_en_cours}|non) Etape 1 : Pour créer votre article, choisir un titre et le valider ci-dessous]
@@ -47,10 +47,10 @@
 		<br />
 
 		<div class="bloc_texte">
-		<div id="entete_contenu" class="popup_new_article" style="opacity: 1;">
+		<div id="entete_contenu" class="popup_new_article">
   		]
 
-    	[(#REM)Impossible de passer l'url de retour en paramètre... donc forcée en dur dans le formulaire]
+    	[(#REM)Impossible de passer l'url de retour en paramètre... donc forcée en dur dans le formulaire]#ID_ARTICLE
     		[(#ID_ARTICLE|non)
     			#FORMULAIRE_PUBLIC_EDITER_ARTICLE{#ENV{new},#ENV{id_rubrique},#URL_ARTICLE|parametre_url{mode,complet}}
     		]
