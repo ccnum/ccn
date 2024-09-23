@@ -1161,8 +1161,6 @@ a:hover{
 	border: 0px solid #fff;
 }
 
-
-
 <BOUCLE_vue(DATA){liste tout,timeline,classe,blog,evenement,ressource,consigne,consignes,ressources,evenements,blogs,classes,article_evt,texte,image,son,video,autre,date,notation,descendant,ascendant,agora,forum,ressource_classes,reponse}>
 	#SET{file,#CHEMIN{img}/logo_#NOM_SITE_SPIP_#VALEUR.png}
 	[(#GET{file}|non) #SET{file,#CHEMIN{img}/logo_#VALEUR.png} ]
@@ -1179,8 +1177,8 @@ a:hover{
 /* Pictos haut */
 <BOUCLE_vue2(DATA){liste presentation,connecter,connecter1,connecter2,prive,ecrire,mdpperdu,inscription,profil-publication}>
 	#SET{file,#CHEMIN{img}/logo_#NOM_SITE_SPIP_#VALEUR.png}
-	[(#GET{file}|non) #SET{file,#CHEMIN{img/logo_#VALEUR.png}} ]
-	[(#GET{file}|non) #SET{file,#CHEMIN{prive/vignettes/#VALEUR.png}} ]
+	[(#GET{file}|non) #SET{file,#CHEMIN{img}/logo_#VALEUR.png} ]
+	[(#GET{file}|non) #SET{file,#CHEMIN{prive/vignettes}/#VALEUR.png} ]
 	[(#GET{file}|non) #SET{file,#CHEMIN{img/logo_voir.png}} ]
 	[(#SET{img,#GET{file}|image_sepia{#GET{color_menu_hover}}|image_reduire{15}|extraire_attribut{src}})]
 	[(#SET{img2,#GET{file}|image_gamma{255}|image_reduire{15}|extraire_attribut{src}})]
