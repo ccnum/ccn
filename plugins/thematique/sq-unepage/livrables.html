@@ -10,7 +10,7 @@
 						<BOUCLE_filtreLivrable(ARTICLES){id_rubrique}{titre_mot=livrable}{par date}>
 							#SET{hasLivrable, 'true'}
 						<!-- PAGE LIVRABLE -->
-						<a class="livrable-inline"  onclick="callLivrable('#ID_ARTICLE', 'openDetails');">
+						<a class="livrable-inline" onclick="callLivrable('#ID_ARTICLE', 'openDetails');">
 							<div class="livrable couleur_travail_en_cours[(#ID_RUBRIQUE|nb2col)]" data-id="[(#ID_ARTICLE)]">
 								<div class="header">
 									<h3>#TITRE</h3>
@@ -127,27 +127,27 @@
 											</div>
 											[(#REM)Permalien - [&annee_scolaire=(#ANNEE_SCOLAIRE)]
 
-												[(#GET{is_agora}|=={oui}|non)[(#SET{url,[(#URL_ARTICLE|concat{&mode=complet})]})]]
-												[(#GET{is_agora}|=={oui}|oui)[(#SET{url,[(#URL_ARTICLE|concat{&type_objet=agora&mode=complet})]})]]
+												[(#SET{url,#URL_ARTICLE|parametre_url{mode,complet}})]
+												[(#GET{is_agora}|=={oui}|oui)[(#SET{url,#GET{url}|parametre_url{type_objet,agora}})]]
 												[
 												<div class="sidebar_bubble">
-												<INCLURE{fond=noisettes/js/accordeon}{nom=bloc_permalien-#ID_ARTICLE}>
-												<div class="bloc_option_doc nettoyeur">
-													<a id="bloc_permalien-#ID_ARTICLE" class="hac liens_forum bloc_option_doc_link" title="Permalien" href="#">
-													Partager le lien
-													</a>
-													<div class="cache">
-													<code><a href="#URL_SITE_SPIP/(#GET{url})&type=livrables" target="_blank">#URL_SITE_SPIP/#GET{url}&type=livrables</a></code>
+													<INCLURE{fond=noisettes/js/accordeon}{nom=bloc_permalien-#ID_ARTICLE}>
+													<div class="bloc_option_doc nettoyeur">
+														<a id="bloc_permalien-#ID_ARTICLE" class="hac liens_forum bloc_option_doc_link" title="Permalien" href="#">
+														Partager le lien
+														</a>
+														<div class="cache">
+														<code><a href="[(#GET{url, type=livrables})]" target="_blank">[(#GET{url, type=livrables})]</a></code>
+														</div>
 													</div>
-												</div>
 												</div>
 												]
 											]
 											<!-- Footer -->
 											<div class="footer border-bg" style="overflow:scroll;">
-													#GET{auteur}
+												#GET{auteur}
 												<li class="ccn-logo">
-												<a href="[(#URL_SITE_SPIP)]" title="Accueil"><span class="logo">[(#CHEMIN{img/pictos_blc/[(#NOM_SITE_SPIP)].png}|image_reduire{100})]</span><span>[(#NOM_SITE_SPIP)]</span></a>
+													<a href="[(#URL_SITE_SPIP)]" title="Accueil"><span class="logo">[(#CHEMIN{img/pictos_blc/[(#NOM_SITE_SPIP)].png}|image_reduire{100})]</span><span>[(#NOM_SITE_SPIP)]</span></a>
 												</li>
 												<p style="overflow:scroll;" class="classe-desc #EDIT{titre}">[(#GET{desc}|textebrut)]</p>
 											</div>
