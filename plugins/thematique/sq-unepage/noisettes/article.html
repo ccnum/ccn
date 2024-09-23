@@ -17,7 +17,6 @@
 			</B_auteur>
 
 			[(#REM) ---------------- Inclusion/iframe des urls liées aux classes ---------------- ]
-
 			<BOUCLE_rub(RUBRIQUES){id_rubrique=#ID_RUBRIQUE}{tout}>
 				<BOUCLE_artc(ARTICLES){id_rubrique}>
 				</BOUCLE_artc>
@@ -102,7 +101,7 @@
 				#SET{nb_doc,#TOTAL_BOUCLE}
 			</B_nb_doc>
 				#SET{nb_doc,0}
-			<//B_nb_doc>
+			<//B_nb_doc>#AUTORISER{modifier, article, #ID_ARTICLE}
 			[(#AUTORISER{modifier, article, #ID_ARTICLE}|oui
 			|et{#TEXTE|non|et{#GET{nb_doc}|=={0}|oui}}
 			|et{#ADMIN|=={-1}|non}
