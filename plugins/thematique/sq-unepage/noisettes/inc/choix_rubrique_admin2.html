@@ -55,7 +55,7 @@
 		<input type="radio" value="#ENV{restreint}" class="first"><label class="first_label">Je veux publier en tant que / dans <span class="highlight">[(#GET{titre}|couper{30})]</span></label>
 		]
 			<div class="choix_rubrique_wrapper">
-				<BOUCLE_rub2(RUBRIQUES){id_parent=0}{!par maj}{tout}>
+				<BOUCLE_rub2(RUBRIQUES){racine}{!par maj}{tout}>
 					[(#GET{affiche}|=={oui}|oui)
 					<input type="radio" value="#ID_RUBRIQUE" title="[(#TITRE|attribut_html)]"><label>[(#TITRE|couper{40})]</label>
 					]

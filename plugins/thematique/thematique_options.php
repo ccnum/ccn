@@ -21,9 +21,6 @@ define('_largeur', 1500);
 define('_MODE_POPUP', 'complet');
 //Fin vérification
 
-$annee_scolaire = 2024;
-define('_annee_cours', $annee_scolaire);
-
 //Qualifie les médias pour les tris
 $GLOBALS['ext_audio'] = 'mp3|ogg|wav';
 $GLOBALS['ext_video'] = 'avi|mpg|flv|mp4|mov';
@@ -64,6 +61,8 @@ if (
 }
 
 define('_annee_scolaire', $annee_scolaire);
+define('_date_debut', $annee_scolaire . '-08-01');
+define('_date_fin', ($annee_scolaire + 1) . '-08-01');
 
 /************************************************************************************/
 /*    OPTIONS SPIP                                                                */
