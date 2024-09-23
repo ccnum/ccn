@@ -6,7 +6,7 @@
 </BOUCLE_principale00>
 [(#TYPE_OBJET|in_array{#LISTE{ressources,agora}}|oui)<INCLURE{fond=noisettes/call_sidebar, id_article=#ID_ARTICLE, type_objet=#GET{is_agora}} />]
 <div class="popup [popup_(#ENV{type_objet})]">
-	<div id="bloc_article-#ID_ARTICLE" class="bloc_article [(#GET{police})]">
+	<div id="bloc_article-#ID_ARTICLE" class="bloc_article[ (#GET{police})]">
 		<div class="sidebar_bubble">
 			<div class="formulaire_jaime_flottant">#FORMULAIRE_JAIME</div>
 			[(#REM) ---------------- Entete publication ---------------- ]
@@ -101,7 +101,7 @@
 				#SET{nb_doc,#TOTAL_BOUCLE}
 			</B_nb_doc>
 				#SET{nb_doc,0}
-			<//B_nb_doc>#AUTORISER{modifier, article, #ID_ARTICLE}
+			<//B_nb_doc>
 			[(#AUTORISER{modifier, article, #ID_ARTICLE}|oui
 			|et{#TEXTE|non|et{#GET{nb_doc}|=={0}|oui}}
 			|et{#ADMIN|=={-1}|non}
@@ -210,9 +210,9 @@
 		<B_documents_joints_compteur>
 		<div class="sidebar_bubble">
 			<div class="bloc_documents">
-		<BOUCLE_documents_joints_compteur(DOCUMENTS){vu=non} {id_article}> </BOUCLE_documents_joints_compteur>
+			<BOUCLE_documents_joints_compteur(DOCUMENTS){vu=non} {id_article}> </BOUCLE_documents_joints_compteur>
 			[(#REM)Documents joints]
-			<BOUCLE_documents_joints1(DOCUMENTS){vu=non} {id_article} {doublons d} {par titre}>
+			<BOUCLE_documents_joints1(DOCUMENTS){vu=non} {id_article} {par titre}>
 				<div class="portfolio_grand">
 					[(#MEDIA|in_array{#LISTE{audio,video}}|oui)
 						<div class="audio">
