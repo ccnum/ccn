@@ -8,7 +8,7 @@
 	]
 
 [(#REM)Mode]
-	#SET{mode,complet}
+	#SET{mode,#CONST{_MODE_POPUP}}
 	#SET{ref,#CONST{$_SERVER['HTTP_REFERER']}}
 
 	[(#ENV{mode}|oui)
