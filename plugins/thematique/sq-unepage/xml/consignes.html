@@ -11,7 +11,7 @@
 			<id>#ID_ARTICLE</id>
 			<intervenant_id>#ID_RUBRIQUE</intervenant_id>
 			<titre>[(#TITRE|couper{40}|wordwrap{23,<br />}|entites_html)]</titre>
-			<date>[(#DATE|affdate{'d'})]/[(#DATE|affdate{'m'})]/[(#DATE|affdate{'Y'})]</date>
+			<date>[(#DATE|affdate{'d/m/Y'})]</date>
 			<annee_scolaire>#CONST{_annee_scolaire}</annee_scolaire>
 			<image>[(#MODELE{logo_carre}{id_rubrique}|extraire_attribut{src})]</image>
 			<y>[(#Y|sinon{0})]</y>
@@ -19,7 +19,7 @@
 				<reponse>
 					<id>#ID_ARTICLE</id>
 					<classe_id>#ID_RUBRIQUE</classe_id>
-					<date>[(#DATE|affdate{'d'})]/[(#DATE|affdate{'m'})]/[(#DATE|affdate{'Y'})]</date>
+					<date>[(#DATE|affdate{'d/m/Y'})]</date>
 					<texte>[(#TITRE|couper{60}|entites_html)]</texte>
 					<commentaires><BOUCLE_forum(FORUMS){id_article}> </BOUCLE_forum>#TOTAL_BOUCLE</B_forum>0<//B_forum></commentaires>
 					<vignette>[(#MODELE{logo_carre,id_rubrique,taille=35}|extraire_attribut{src})]</vignette>

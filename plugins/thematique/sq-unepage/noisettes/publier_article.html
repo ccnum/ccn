@@ -1,5 +1,4 @@
 #CACHE{0}
-#ID_ARTICLE // #ENV{id_article}
 <div class="popup [popup_(#GET{type_objet})]">
 	[(#ID_ARTICLE|non)
 		<script type="text/javascript">
@@ -50,7 +49,7 @@
 		<div id="entete_contenu" class="popup_new_article">
   		]
 
-    	[(#REM)Impossible de passer l'url de retour en paramètre... donc forcée en dur dans le formulaire]#ID_ARTICLE
+    	[(#REM)Impossible de passer l'url de retour en paramètre... donc forcée en dur dans le formulaire]
     		[(#ID_ARTICLE|non)
     			#FORMULAIRE_PUBLIC_EDITER_ARTICLE{#ENV{new},#ENV{id_rubrique},#URL_ARTICLE|parametre_url{mode,complet}}
     		]
