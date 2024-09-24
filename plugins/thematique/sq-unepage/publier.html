@@ -5,7 +5,7 @@
 	[(#SET{type_objet,[(#INCLURE{fond=noisettes/fonction/type_objet,id_rubrique})]})]
 
 [(#REM) Mode d'ouverture]
-	#SET{mode,#CONST{_MODE_POPUP}}
+	#SET{mode,complet}
 	#SET{ref,#CONST{$_SERVER['HTTP_REFERER']}}
 	[(#ENV{mode}|oui)
 		#SET{mode,#MODE}

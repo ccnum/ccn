@@ -7,8 +7,8 @@
 				<id_objet>#ID_ARTICLE</id_objet>
 				<type_objet>article</type_objet>
 				<titre>[(#TITRE|entites_html)]</titre>
-				<date>[(#DATE|affdate{'d'})]/[(#DATE|affdate{'m'})]/[(#DATE|affdate{'Y'})]</date>
-				<commentaires><BOUCLE_forum(FORUMS){id_article}><?php ?></BOUCLE_forum>#TOTAL_BOUCLE</B_forum>0<//B_forum></commentaires>
+				<date>[(#DATE|affdate{'d/m/Y'})]</date>
+				<commentaires><BOUCLE_forum(FORUMS){id_article}> </BOUCLE_forum>#TOTAL_BOUCLE</B_forum>0<//B_forum></commentaires>
 				<y>[(#Y|sinon{0})]</y>
 			</article>
 		</BOUCLE_article>
@@ -22,7 +22,7 @@
 					<id_objet>#ID_SYNDIC_ARTICLE</id_objet>
 					<type_objet>syndic_article</type_objet>
 					<titre>[(#TITRE|entites_html)]</titre>
-					<date>[(#DATE|affdate{'d'})]/[(#DATE|affdate{'m'})]/[(#DATE|affdate{'Y'})]</date>
+					<date>[(#DATE|affdate{'d/m/Y'})]</date>
 					<commentaires>0</commentaires>
 					<y>[(#Y|sinon{0})]</y>
 				</article>

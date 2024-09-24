@@ -638,8 +638,7 @@ function callRessource() {
 
 	var url_lateral = CCN.projet.url_popup_ressources;
 	loadContentInLateralSidebar(
-		url_lateral, 'rubrique', 'ressources', function () {
-		}
+		url_lateral, 'rubrique', 'ressources', function () { }
 	);
 	console.log('callRessource');
 }
