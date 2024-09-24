@@ -239,20 +239,24 @@ function Consigne() {
 		$('.reponse_haute').not('.reponse_haute_consigne_parent' + this.id).addClass('hide');
 
 		// On ouvre les réponses
+
 		$('#consigne_haute' + this.id).removeClass('hide');
 		$('.reponse_haute_consigne_parent' + this.id).removeClass('hide');
 
 		// (TODO*1) Cache les articles de blog
+
 		for (i = 0; i < CCN.articlesBlog.length; i++) {
 			$(CCN.articlesBlog[i].div_base).hide();
 		}
 
 		// (TODO*2) Cache les articles d'événement
+
 		for (i = 0; i < CCN.articlesEvenement.length; i++) {
 			$(CCN.articlesEvenement[i].div_base).hide();
 		}
 
 		// (TODO*3) Interrompre le clearInterval
+
 		setTimeout(
 			function () {
 				clearInterval(CCN.projet.setIntervalConnecteurs);

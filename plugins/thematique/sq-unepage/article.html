@@ -10,7 +10,7 @@
 	[(#GET{type_objet}|in_array{#LISTE{blogs,evenements}}|oui)#SET{pre,article_}]
 
 	[(#REM) Mode d'ouverture]
-	#SET{mode,complet}
+	#SET{mode,#CONST{_MODE_POPUP}}
 	#SET{ref,#CONST{$_SERVER['HTTP_REFERER']}}
 	[(#ENV{mode}|oui)
 		#SET{mode,#MODE}

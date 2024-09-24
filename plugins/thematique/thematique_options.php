@@ -6,13 +6,22 @@
  * Auteur Patrick Vincent
  */
 
-/****************************/
-/*    VARIABLES GLOBALES    */
-/****************************/
+/************************************************************************************/
+
+/*    VARIABLES GLOBALES                                    */
+/************************************************************************************/
 define('_cookie_affichage', 'laclasse_affichage');
 define('_cookie_rubrique', 'laclasse_rubrique_admin');
 
-// Qualifie les médias pour les tris
+//Ces variables ne sont plus utilisées à vérifier
+//Tailles
+define('_hauteur', 800);
+define('_largeur', 1500);
+//Type d'affichage des popups : detail (iframe), ajax (modalbox sans iframe)
+define('_MODE_POPUP', 'complet');
+//Fin vérification
+
+//Qualifie les médias pour les tris
 $GLOBALS['ext_audio'] = 'mp3|ogg|wav';
 $GLOBALS['ext_video'] = 'avi|mpg|flv|mp4|mov';
 $GLOBALS['ext_photo'] = 'jpg|png|gif';
@@ -59,8 +68,11 @@ define('_date_fin', ($annee_scolaire + 1) . '-08-01');
 /*    OPTIONS SPIP                                                                */
 /************************************************************************************/
 
+//Retire jQuery d'insert head pour insertion personnalisée et bug ajax callback
+//$GLOBALS['spip_pipeline']['insert_head'] = str_replace('|f_jQuery', '', $GLOBALS['spip_pipeline']['insert_head']);
+
 //Désactiver les boutons administrateur
-//$flag_preserver = true;
+$flag_preserver = true;
 
 // Personnalisation des items de pagination (a changer si besoin)
 $pagination_item_avant = '';

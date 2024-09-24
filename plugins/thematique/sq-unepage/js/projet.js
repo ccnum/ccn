@@ -166,6 +166,7 @@ function Projet() {
     this.showWholeTimeline = function () {
         canShowConsigneSidebar = false;
 
+
         setContentFromState(
             {
                 'data': {
@@ -175,10 +176,12 @@ function Projet() {
             }, 'CCN', './'
         );
 
+
         $('#menu-consignes .filter a, #menu-classes .filter a').removeClass('selected');
         $('#menu-consignes .logo_menu-tout, #menu-classes .logo_menu-tout').addClass('selected');
 
         this.showRangeOfTimeline(CCN.projet.nombre_jours, 0, 0);
+
         $('body').removeClass('hasSidebarOpen highlightReponse');
 
         this.mois_select = -1;
