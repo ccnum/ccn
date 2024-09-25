@@ -18,3 +18,7 @@ index.php
 rector.php
 spip_loader.php
 /spip.*
+*
+
+dump/
+TMP_SPIP_3
