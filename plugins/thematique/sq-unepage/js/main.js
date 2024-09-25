@@ -224,6 +224,10 @@ function loadConsignes(fichier) {
 					dataForConsigne.date.setFullYear(parseFloat(dataForConsigne.date_texte.substring(6, 10)));
 					dataForConsigne.jour_consigne = parseFloat(Math.round((dataForConsigne.date) / (24 * 60 * 60 * 1000)));
 					dataForConsigne.nombre_jours = dataForConsigne.jour_consigne - CCN.projet.premier_jour; // Compte des jours avec le premier jour de la CCN comme 0
+					
+					while(dataForConsigne.nombre_jours < 0) {
+						dataForConsigne.nombre_jours += 365
+					}
 
 					xmlReponses = xmlConsignes[i].getElementsByTagName("reponse");
 
