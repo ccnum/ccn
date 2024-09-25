@@ -123,12 +123,12 @@ function importer_utilisateurs_file() {
 		foreach ($post as $file) {
 			if (is_array($file['name'])) {
 				while (count($file['name'])) {
-					$test = array(
+					$test = [
 						'error' => array_shift($file['error']),
 						'name' => array_shift($file['name']),
 						'tmp_name' => array_shift($file['tmp_name']),
 						'type' => array_shift($file['type']),
-					);
+					];
 					if (!($test['error'] == 4)) {
 						if (is_string($err = joindre_upload_error($test['error']))) {
 							return $err;
@@ -231,8 +231,7 @@ function importer_utilisateurs_importe($filename) {
 		$admin_rubriques = trim($d['admin des rubriques']);
 		$auteur_articles = trim($d['auteur des articles']);
 		$champs = [
-			"nom" => $nom,
-			"prenom" => $prenom,
+			"nom" => $prenom . ' ' . $nom,
 			"login" => $login,
 			"email" => $email,
 			"statut" => '6forum',
