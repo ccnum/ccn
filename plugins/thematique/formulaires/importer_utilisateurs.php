@@ -3,11 +3,11 @@
 /**
  * Gestion du formulaire d'export des utilisateurs
  *
- * @plugin     Géolocalisation des utilisateurs de ressources
- * @copyright  2016
- * @author     Teddy Payet
- * @licence    GNU/GPL
- * @package    SPIP\Georessources\Formulaires
+ * @plugin    Géolocalisation des utilisateurs de ressources
+ * @copyright 2016
+ * @author    Teddy Payet
+ * @licence   GNU/GPL
+ * @package   SPIP\Georessources\Formulaires
  */
 
 if (!defined('_ECRIRE_INC_VERSION')) {
@@ -21,7 +21,7 @@ include_spip('action/editer_liens');
  * Declarer les champs postes et y integrer les valeurs par defaut
  */
 function formulaires_importer_utilisateurs_charger_dist() {
-	$valeurs = array();
+	$valeurs = [];
 
 	return $valeurs;
 }
@@ -30,7 +30,7 @@ function formulaires_importer_utilisateurs_charger_dist() {
  * Verifier les champs postes et signaler d'eventuelles erreurs
  */
 function formulaires_importer_utilisateurs_verifier_dist() {
-	$erreurs = array();
+	$erreurs = [];
 	$filename = '';
 	if (_request('go')) {
 		$filename = session_get('importer_utilisateurs::tmpfilename');
@@ -64,8 +64,8 @@ function formulaires_importer_utilisateurs_verifier_dist() {
 		$erreurs['test'] .= "\n\n";
 		$erreurs['test'] .= "<p class='explication'>{{" . singulier_ou_pluriel(
 			$count,
-			'georessources:info_1_centre_a_importer',
-			'georessources:info_nb_utilisateurs_a_importer'
+			'thematique:info_1_auteur_importer',
+			'thematique:info_nb_auteurs_importer'
 		) . "}}</p>";
 		$erreurs['message_erreur'] = '';
 	}
@@ -89,10 +89,10 @@ function formulaires_importer_utilisateurs_traiter_dist() {
 		sinon(
 			singulier_ou_pluriel(
 				$r['count'],
-				'georessources:info_1_centre_importer',
-				'georessources:info_nb_utilisateurs_importer'
+				'thematique:info_1_auteur_importer',
+				'thematique:info_nb_auteurs_importer'
 			),
-			_T('georessources:info_aucun_utilisateurs_importer')
+			_T('thematique:info_aucun_auteurs_importer')
 		);
 	if (count($r['erreurs'])) {
 		$message .= "<p>Erreurs : <br />" . implode("<br />", $r['erreurs']) . "</p>";
@@ -106,7 +106,7 @@ function formulaires_importer_utilisateurs_traiter_dist() {
 
 
 function importer_utilisateurs_file() {
-	static $files = array();
+	static $files = [];
 	// on est appele deux fois dans un hit, resservir ce qu'on a trouve a la verif
 	// lorsqu'on est appelle au traitement
 
@@ -115,7 +115,7 @@ function importer_utilisateurs_file() {
 	}
 
 	$post = isset($_FILES) ? $_FILES : $GLOBALS['HTTP_POST_FILES'];
-	$files = array();
+	$files = [];
 	if (is_array($post)) {
 		include_spip('action/ajouter_documents');
 		include_spip('inc/joindre_document');
@@ -123,18 +123,18 @@ function importer_utilisateurs_file() {
 		foreach ($post as $file) {
 			if (is_array($file['name'])) {
 				while (count($file['name'])) {
-					$test = array(
+					$test = [
 						'error' => array_shift($file['error']),
 						'name' => array_shift($file['name']),
 						'tmp_name' => array_shift($file['tmp_name']),
 						'type' => array_shift($file['type']),
-					);
+					];
 					if (!($test['error'] == 4)) {
 						if (is_string($err = joindre_upload_error($test['error']))) {
 							return $err;
 						} // un erreur upload
 						if (!is_array(verifier_upload_autorise($test['name']))) {
-							return _T('medias:erreur_upload_type_interdit', array('nom' => $test['name']));
+							return _T('medias:erreur_upload_type_interdit', ['nom' => $test['name']]);
 						}
 						$files[] = $test;
 					}
@@ -146,7 +146,7 @@ function importer_utilisateurs_file() {
 						return $err;
 					} // un erreur upload
 					if (!is_array(verifier_upload_autorise($file['name']))) {
-						return _T('medias:erreur_upload_type_interdit', array('nom' => $file['name']));
+						return _T('medias:erreur_upload_type_interdit', ['nom' => $file['name']]);
 					}
 					$files[] = $file;
 				}
@@ -168,7 +168,7 @@ function importer_utilisateurs_data($filename) {
 	// lire la premiere ligne et voir si elle contient 'email' pour decider si entete ou non
 	if ($handle = @fopen($filename, "r")) {
 		$line = fgets($handle, 4096);
-		if (!$line or stripos($line, 'Début labellisation') === false) {
+		if (!$line or stripos($line, 'nom') === false) {
 			$header = false;
 		}
 		@fclose($handle);
@@ -188,29 +188,21 @@ function importer_utilisateurs_data($filename) {
 		$d = array_map('trim', $d);
 		$d = array_filter($d);
 		if (count($d) > 1) {
-			$data_raw = array();
+			$data_raw = [];
 			foreach ($d as $v) {
 				$data_raw[] = array($v);
 			}
 		}
 	}
+
 	// colonner : si colonne email on prend toutes les colonnes
 	// sinon on ne prend que la premiere colonne, comme un email
-	$data = array();
+	$data = [];
 	while ($data_raw and count($data_raw)) {
 
 		$row = array_shift($data_raw);
 
-		$d = array();
-		$count = 0;
-		foreach (array("Début labellisation", "Nom de la structure labellisée (obligatoire)", "Orientation", "Information", "Acc général", "Acc spécial", "Spécialité", "NOM de référent 1 (obligatoire)", "Prénom de référent 1 (obligatoire)", "Mail1 (obligatoire)", "NOM de référent 2", "Prénom de référent 2", "Mail2 (uniquement si NOM du référent 2)", "Tél1 (obligatoire)", "Adresse (obligatoire)", "Code postal (obligatoire)", "Ville (obligatoire)", "Cedex (obligatoire)") as $k) {
-			if (isset($row[$count])) {
-				$d[$k] = $row[$count];
-			}
-			$count++;
-		}
-
-		$data[] = $d;
+		$data[] = $row;
 	}
 
 	return $data;
@@ -218,105 +210,54 @@ function importer_utilisateurs_data($filename) {
 
 /**
  *
- * @param string $filename
- * @param array $options
+ * @param  string $filename
+ * @param  array  $options
  *   statut
  *   listes
  * @return array
  */
 function importer_utilisateurs_importe($filename) {
-	$res = array('count' => 0, 'erreurs' => array());
+	$res = ['count' => 0, 'erreurs' => []];
 	$count = 0;
 	$data = importer_utilisateurs_data($filename);
 	set_request('id_auteur', ''); // pas d'auteur associe a nos inscrits
 
 	foreach ($data as $d) {
-		if ($d['Début labellisation'] != "Début labellisation") {
-
-			$titre = str_replace('’', "'", trim($d['Nom de la structure labellisée (obligatoire)']));
-			$titre = str_replace('"', '', $titre);
-			$code_postal = preg_replace('/\D/', '', $d['Code postal (obligatoire)']);
-			$coord = filtre_getXmlCoordsFromAdress($titre, trim($d['Adresse (obligatoire)']), $code_postal, trim($d['Ville (obligatoire)']));
-			list($lat, $lon, $dep_num, $dep_nom, $region) = explode(';', $coord);
-			if ($lat == 0) {
-				$coord = filtre_getXmlCoordsFromAdress($titre, trim($d['Adresse (obligatoire)']), $code_postal, trim($d['Ville (obligatoire)']), '2');
-				list($lat, $lon, $dep_num, $dep_nom, $region) = explode(';', $coord);
-			}
-			if ($lat == 0) {
-				$coord = filtre_getXmlCoordsFromAdress($titre, trim($d['Adresse (obligatoire)']), $code_postal, trim($d['Ville (obligatoire)']), '3');
-				list($lat, $lon, $dep_num, $dep_nom, $region) = explode(';', $coord);
-			}
-			if (is_array(explode('/', $d['Tél1 (obligatoire)']))) {
-				$tels = explode('/', $d['Tél1 (obligatoire)']);
-				$tel1 = $tels[0] ?? '';
-				$tel2 = $tels[1] ?? '';
-				$tel3 = $tels[2] ?? '';
-			} else {
-				$tel1 = $d['Tél1 (obligatoire)'];
-			}
-			$champs = array(
-				"titre" => $titre,
-				"tel1" => filtre_numero_tel($tel1),
-				"tel2" => filtre_numero_tel($tel2 ?? ''),
-				"tel3" => filtre_numero_tel($tel3 ?? ''),
-				"adresse" => trim($d['Adresse (obligatoire)']),
-				"cp" => $code_postal,
-				"ville" => trim($d['Ville (obligatoire)']),
-				"cedex" => trim($d['Cedex (obligatoire)']),
-				"debut_labellisation" => trim($d['Début labellisation']) . '-00-00 00:00:00',
-				"lat" => $lat,
-				"lon" => $lon,
-				"departement" => $dep_num,
-				"departement_nom" => $dep_nom,
-				"region" => $region,
-				"statut" => 'publie'
-			);
-			$id_centre = sql_insertq('spip_utilisateurs', $champs);
-			// thematiques
-			if (!empty(trim($d['Orientation']))) {
-				$id_mot = sql_getfetsel('id_mot', 'spip_mots', array('id_groupe=' . intval('8'), 'titre LIKE ' . sql_quote('%Orientation%')));
-				objet_associer(array('mot' => $id_mot), array('centre' => $id_centre));
-			}
-			if (!empty(trim($d['Information']))) {
-				$id_mot = sql_getfetsel('id_mot', 'spip_mots', array('id_groupe=' . intval('8'), 'titre LIKE ' . sql_quote('%Information%')));
-				objet_associer(array('mot' => $id_mot), array('centre' => $id_centre));
-			}
-			if (!empty(trim($d['Acc général']))) {
-				$id_mot = sql_getfetsel('id_mot', 'spip_mots', array('id_groupe=' . intval('8'), 'titre LIKE ' . sql_quote('%Accompagnement%')));
-				objet_associer(array('mot' => $id_mot), array('centre' => $id_centre));
-			}
-			if (!empty(trim($d['Acc spécial']))) {
-				$id_mot = sql_getfetsel('id_mot', 'spip_mots', array('id_groupe=' . intval('8'), 'titre LIKE ' . sql_quote('%Accompagnement spécialisé%')));
-				objet_associer(array('mot' => $id_mot), array('centre' => $id_centre));
-			}
-
-			// https://git.spip.net/spip/spip/src/branch/3.2/ecrire/action/inscrire_auteur.php
-			$inscrire_auteur = charger_fonction('inscrire_auteur', 'action');
-			// L'auteur du point
-			if (!empty(trim($d['Mail1 (obligatoire)'])) and $id_auteur = sql_getfetsel('id_auteur', 'spip_auteurs', 'email=' . sql_quote(trim($d['Mail1 (obligatoire)'])))) {
-				objet_associer(array('auteur' => $id_auteur), array('centre' => $id_centre));
-			} else {
-				if (!empty(trim($d['Prénom de référent 1 (obligatoire)'])) and !empty(trim($d['NOM de référent 1 (obligatoire)']))) {
-					$options = array();
-					$options['login'] = trim($d['Mail1 (obligatoire)']);
-					$options['modele_mail'] = "notifications/mail_inscription_georessources";
-					$desc = $inscrire_auteur('1comite', trim($d['Mail1 (obligatoire)']), trim($d['Prénom de référent 1 (obligatoire)']) . ' ' . trim($d['NOM de référent 1 (obligatoire)']), $options);
-					objet_associer(array('auteur' => $desc['id_auteur']), array('centre' => $id_centre));
-				}
-			}
-			if (!empty(trim($d['Mail2 (uniquement si NOM du référent 2)'])) and $id_auteur = sql_getfetsel('id_auteur', 'spip_auteurs', 'email=' . sql_quote(trim($d['Mail2 (uniquement si NOM du référent 2)'])))) {
-				objet_associer(array('auteur' => $id_auteur), array('centre' => $id_centre));
-			} else {
-				if (!empty(trim($d['Prénom de référent 2'])) and !empty(trim($d['NOM de référent 2']))) {
-					$options = array();
-					$options['login'] = trim($d['Mail2 (uniquement si NOM du référent 2)']);
-					$options['modele_mail'] = "notifications/mail_inscription_georessources";
-					$desc = $inscrire_auteur('1comite', trim($d['Mail2 (uniquement si NOM du référent 2)']), trim($d['Prénom de référent 2']) . ' ' . trim($d['NOM de référent 2']), $options);
-					objet_associer(array('auteur' => $desc['id_auteur']), array('centre' => $id_centre));
-				}
-			}
-			$count++;
+		$nom = trim($d['nom']);
+		$prenom = trim($d['prenom']);
+		$login = trim($d['login']);
+		$email = trim($d['emails']);
+		[$email] = explode(':', $email);
+		$admin_rubriques = trim($d['admin des rubriques']);
+		$auteur_articles = trim($d['auteur des articles']);
+		$champs = [
+			"nom" => $prenom . ' ' . $nom,
+			"login" => $login,
+			"email" => $email,
+			"statut" => '6forum',
+			"webmestre" => 'nom'
+		];
+		if ($id_auteur = sql_getfetsel('id_auteur', 'spip_auteurs', 'login=' . sql_quote($login))) {
+		} else {
+			$id_auteur = sql_insertq('spip_auteurs', $champs);
 		}
+		if (is_array(explode(',', $admin_rubriques))) {
+			$admin_rubriques = explode(',', $admin_rubriques);
+			foreach ($admin_rubriques as $a_r) {
+				objet_associer(['id_auteur' => $id_auteur], ['rubrique' => $a_r]);
+			}
+		} else {
+			objet_associer(['id_auteur' => $id_auteur], ['rubrique' => $admin_rubriques]);
+		}
+		if (is_array(explode(',', $auteur_articles))) {
+			$auteur_articles = explode(',', $auteur_articles);
+			foreach ($auteur_articles as $a_r) {
+				objet_associer(['id_auteur' => $id_auteur], ['article' => $a_r]);
+			}
+		} else {
+			objet_associer(['id_auteur' => $id_auteur], ['article' => $auteur_articles]);
+		}
+		$count++;
 	}
 	$res['count'] = $count;
 	return $res;
