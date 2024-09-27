@@ -13,5 +13,5 @@ $GLOBALS[$GLOBALS['idx_lang']] = [
 	'info_nb_auteurs_importer' => 'Vous allez importer @nb@ auteurs',
 	'info_aucun_auteurs_importer' => 'Vous n\'avez aucun auteur à importer',
 	'label_file_import' => 'Fichier à importer',
-	'titre_page_importer_user' => 'Importe des utilisateurs'
+	'titre_page_importer_user' => 'Import des utilisateurs'
 ];
