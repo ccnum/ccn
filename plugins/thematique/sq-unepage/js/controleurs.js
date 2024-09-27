@@ -674,9 +674,6 @@ function callRessourceArticle(id_article, type_objet) {
 	);
 
 	var url_lateral = (type_objet == 'ressources') ? CCN.projet.url_popup_ressources : CCN.projet.url_popup_agora;
-	/*loadContentInLateralSidebar(url_lateral, 'rubrique', type_objet, function(){
-	});*/
-
 	console.log('callRessourceArticle');
 }
 
@@ -748,8 +745,6 @@ function callRessourceRubrique(id_rubrique, type_objet) {
 	);
 
 	var url_lateral = (type_objet == 'ressources') ? CCN.projet.url_popup_ressources : CCN.projet.url_popup_agora;
-	//loadContentInLateralSidebar(url_lateral, 'rubrique', type_objet, function(){
-
 	console.log('callRessourceRubrique');
 }
 
@@ -811,15 +806,6 @@ function callAgora() {
 
 	blankMainSidebar('<div class="sidebar_bubble"><div class="fiche_titre couleur_texte_ressources couleur_ressources0"><div class="texte"><div class="titre">Agora</div></div></div></div><div class="sidebar_bubble sidebar_bubble_blank">Naviguez dans Agora grâce à la barre latérale sur votre droite.</div>');
 	setFullscreenModeToCols(true);
-
-	/*var url = CCN.projet.url_popup_agora;
-	loadContentInMainSidebar(url, 'rubrique', 'agora', function(){
-	updateUrl({
-		'type_objet':'agora',
-		'id_rubrique':CCN.idRubriqueAgora,
-		'page':'rubrique'
-	  }, "Agora", "./spip.php?page=rubrique&id_rubrique="+CCN.idRubriqueAgora+"&type_objet=agora&mode=complet");
-	});*/
 
 	var url_lateral = CCN.projet.url_popup_agora;
 	loadContentInLateralSidebar(
@@ -891,7 +877,6 @@ function callLivrable(id_livrable = null, state = null) {
 	// Genere le lien d'un detail livrable
 	if (id_livrable) {
 		var url = CCN.projet.url_popup_consigne + "&id_article=" + id_livrable;
-		//updateMenuIcon(['livrable-'+id_livrable], 'mainView');
 		updateUrl(
 			{
 				'type_objet': 'livrables',
@@ -905,7 +890,6 @@ function callLivrable(id_livrable = null, state = null) {
 
 }
 
-
 /**
  * @param {number} id_consigne
  * @param {number} id_rubrique_classe
@@ -913,7 +897,6 @@ function callLivrable(id_livrable = null, state = null) {
  *
  * @todo Documenter
  */
-
 function createReponse(id_consigne, id_rubrique_classe, numero) {
 
 	changeTimelineMode('consignes');
@@ -934,7 +917,6 @@ function createReponse(id_consigne, id_rubrique_classe, numero) {
  *
  * @see callReponse
  */
-
 function getIdConsigneFromIdReponse(id_reponse) {
 	for (var index_consigne in CCN.consignes) {
 		for (var index_reponse in CCN.consignes[index_consigne].reponses) {
@@ -977,7 +959,6 @@ function getIdClasseFromIdReponse(id_reponse) {
  *
  * @todo Éléments autres que DOM ?
  */
-
 function updateConnecteurs() {
 	$('.connecteur_timeline').each(
 		function () {
@@ -1015,7 +996,6 @@ function updateConnecteurs() {
  * @param {string} val - Sélecteur de l'élément DOM en jQuery
  * @todo  Améliorer la récupération de la couleur ?
  */
-
 function changeCouleurLogoMenu(val) {
 	var color = $(val).css('background-color');
 	$(val).parent().parent().parent().children("h3").css('background-color', color);
