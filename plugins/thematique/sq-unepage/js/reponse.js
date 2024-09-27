@@ -7,17 +7,14 @@
 function Reponse() {
 
 	// Membres
-
 	var id, classe_id, titre, date, nombre_commentaires, x, y;
 	var div_base, div_texte, div_commentaires, connecteur;
-
 
 	/**
 	 * Initialise la réponse.
 	 *
 	 * @param {Object} data - Données à affecter à l'instance
 	 */
-
 	this.init = function (data) {
 		this.data = data;
 		this.id = this.data.id;
@@ -47,7 +44,6 @@ function Reponse() {
 	/**
 	 * Crée l'élément DOM et l'intègre dans la timeline.
 	 */
-
 	this.initDOM = function () {
 
 		var coul = "" + this.classe_id + "";
@@ -105,12 +101,10 @@ function Reponse() {
 		);
 
 		// Calcul de la hauteur de la consigne
-
 		this.largeur = $(this.div_base).outerWidth();
 		this.hauteur = $(this.div_base).outerHeight() + 7;
 
 		// Draggable
-
 		if (CCN.admin == 0) {
 			$(this.div_base).draggable(
 				{
@@ -134,13 +128,11 @@ function Reponse() {
 		}
 	}
 
-
 	/**
 	 * Affiche la réponse dans la timeline.
 	 *
 	 * @param {Object} data - Données à affecter à l'instance
 	 */
-
 	this.showInTimeline = function () {
 		var reponse_DOM = $('.reponse_haute[data-reponse-id="' + this.id + '"]');
 
