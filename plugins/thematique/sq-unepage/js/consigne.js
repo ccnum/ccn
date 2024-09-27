@@ -11,7 +11,6 @@ function Consigne() {
 	 *
 	 * @param {Object} data - Données à affecter à l'instance
 	 */
-
 	this.init = function (data) {
 		this.data = data;
 		this.id = this.data.id;
@@ -52,7 +51,6 @@ function Consigne() {
 	/**
 	 * Crée l'élément DOM et l'intègre dans la timeline.
 	 */
-
 	this.initDOM = function () {
 		var coul = "" + this.data.intervenant_id + "";
 		coul = coul.substr(coul.length - 1, 1);
@@ -126,7 +124,6 @@ function Consigne() {
 		);
 
 		// Draggable (admin)
-
 		if (CCN.admin == 0) {
 			$(this.div_base).draggable(
 				{
@@ -158,7 +155,6 @@ function Consigne() {
 	 *
 	 * @see loadConsignes
 	 */
-
 	this.showNewReponseButtonInTimeline = function () {
 		if ((CCN.idRestreint > 0)
 			&& (CCN.typeRestreint != '')
@@ -175,7 +171,6 @@ function Consigne() {
 	 *
 	 * @see loadConsignes
 	 */
-
 	this.showMyReponseButtonInTimeline = function (answerId) {
 		if ((CCN.idRestreint > 0)
 			&& (CCN.typeRestreint != '')
@@ -189,11 +184,9 @@ function Consigne() {
 		}
 	}
 
-
 	/**
 	 * Fait apparaître le picto du nombre de commentaires d'une consigne.
 	 */
-
 	this.showConsignePastille = function () {
 		$("#consigne" + this.id + " .picto_nombre_commentaires").fadeIn('slow');
 	}
@@ -202,7 +195,6 @@ function Consigne() {
 	/**
 	 * Fait disparaître le picto du nombre de commentaires d'une consigne.
 	 */
-
 	this.hideConsignePastille = function () {
 		$("#consigne" + this.id + " .picto_nombre_commentaires").fadeOut('slow');
 	}
@@ -217,7 +209,6 @@ function Consigne() {
 	 * @todo *2 : Vérifier
 	 * @todo *3 : Améliorer l'arrêt du <tt>clearInterval</tt>
 	 */
-
 	this.showInTimeline = function () {
 
 		CCN.projet.setIntervalConnecteurs = setInterval(
@@ -239,24 +230,20 @@ function Consigne() {
 		$('.reponse_haute').not('.reponse_haute_consigne_parent' + this.id).addClass('hide');
 
 		// On ouvre les réponses
-
 		$('#consigne_haute' + this.id).removeClass('hide');
 		$('.reponse_haute_consigne_parent' + this.id).removeClass('hide');
 
 		// (TODO*1) Cache les articles de blog
-
 		for (i = 0; i < CCN.articlesBlog.length; i++) {
 			$(CCN.articlesBlog[i].div_base).hide();
 		}
 
 		// (TODO*2) Cache les articles d'événement
-
 		for (i = 0; i < CCN.articlesEvenement.length; i++) {
 			$(CCN.articlesEvenement[i].div_base).hide();
 		}
 
 		// (TODO*3) Interrompre le clearInterval
-
 		setTimeout(
 			function () {
 				clearInterval(CCN.projet.setIntervalConnecteurs);
@@ -266,4 +253,3 @@ function Consigne() {
 		this.select = true;
 	}
 }
-

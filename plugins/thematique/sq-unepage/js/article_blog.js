@@ -9,13 +9,11 @@ function ArticleBlog() {
 	var id, titre, date, nombre_commentaires, x, y, type_objet, left, top;
 	var div_base, div_texte, div_commentaires;
 
-
 	/**
 	 * Initialise l'article de blog.
 	 *
 	 * @param {Object} data - Données à affecter à l'instance
 	 */
-
 	this.init = function (data) {
 		this.data = data;
 		this.id = this.data.id;

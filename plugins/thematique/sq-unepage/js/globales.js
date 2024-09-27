@@ -35,7 +35,6 @@ function log(message) {
 	console.log(message);
 }
 
-
 /**
  *  Retourne la valeur du noeud XML demandé.
  *
@@ -47,7 +46,6 @@ function log(message) {
 function getXMLNodeValue(tagName, xml) {
 	return xml.getElementsByTagName(tagName)[0].childNodes[0].nodeValue;
 }
-
 
 /**
  * Retourne vrai si le noeud existe.
@@ -65,7 +63,6 @@ function hasXMLNodeValue(tagName, xml) {
  * Retourne un tableau des paramètres d'une URL passée en paramètre string
  * Voir : http://stackoverflow.com/questions/8486099/how-do-i-parse-a-url-query-parameters-in-javascript
  */
-
 function getJsonFromUrl(query) {
 	var result = {};
 

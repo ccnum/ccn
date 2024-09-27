@@ -107,6 +107,7 @@ if [[ ! -e config/connect.php && ${SPIP_AUTO_INSTALL} = 1 ]]; then
 	spip plugins:activer socialtags -y
 	spip plugins:activer spip_bonux -y
 	spip plugins:activer cicas -y
+	spip plugins:activer corbeille -y
 	if [ ${SPIP_VERSION_SITE} = "fictions" ]; then
 		spip plugins:activer vider_rubrique -y
 	fi

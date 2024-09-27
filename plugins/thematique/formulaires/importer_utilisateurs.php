@@ -235,7 +235,7 @@ function importer_utilisateurs_importe($filename) {
 			"nom" => $prenom . ' ' . $nom,
 			"login" => $login,
 			"email" => $email,
-			"statut" => '6forum',
+			"statut" => '0minirezo',
 			"webmestre" => 'non'
 		];
 		if ($id_auteur = sql_getfetsel('id_auteur', 'spip_auteurs', 'login=' . sql_quote($login))) {
