@@ -66,7 +66,6 @@
 							[<span class="#EDIT{date}">(#DATE|affdate)</span>]
 
 							[(#ENV{type_objet}|=={travail_en_cours}|oui)
-
 								<script type="text/javascript">
 									$().ready(function(){
 										$('#ajax_go_to_consigne_#GET{id_consigne}').on('click',function() {
@@ -74,7 +73,6 @@
 										});
 									});
 								</script>
-
 								<div id="ajax_go_to_consigne_#GET{id_consigne}" class="reponse_goto_consigne">
 									<div class="reponse_goto_consigne_label">En réponse à la consigne :</div>
 									#GET{titre_consigne}
@@ -103,9 +101,9 @@
 				#SET{nb_doc,0}
 			<//B_nb_doc>
 			[(#AUTORISER{modifier, article, #ID_ARTICLE}|oui
-			|et{#TEXTE|non|et{#GET{nb_doc}|=={0}|oui}}
-			|et{#ADMIN|=={-1}|non}
-			|oui)
+				|et{#TEXTE|non|et{#GET{nb_doc}|=={0}|oui}}
+				|et{#ADMIN|=={-1}|non}
+				|oui)
 				<script type="text/javascript">
 					/*
 					$().ready(function(){
@@ -210,93 +208,86 @@
 		<B_documents_joints_compteur>
 		<div class="sidebar_bubble">
 			<div class="bloc_documents">
-			<BOUCLE_documents_joints_compteur(DOCUMENTS){vu=non} {id_article}> </BOUCLE_documents_joints_compteur>
-			[(#REM)Documents joints]
-			<BOUCLE_documents_joints1(DOCUMENTS){vu=non} {id_article} {par titre}>
-				<div class="portfolio_grand">
-					[(#MEDIA|in_array{#LISTE{audio,video}}|oui)
-						<div class="audio">
-						[(#AUTORISER{modifier,article,#ID_ARTICLE}|oui)
-							[<a href="(#URL_ACTION_AUTEUR{dissocier_document,#ID_ARTICLE-article-#ID_DOCUMENT-suppr-safe,#URL_SITE_SPIP/spip.php?article#_principale:ID_ARTICLE&var_mode=recalcul})"
-									class='supprimer_couleur'
-									onClick='return confirmation("Êtes-vous sûr de vouloir supprimer ce document ?")'
-									title='Supprimer ce document'>
-									<div class='action_supprimer'></div>
-							</a>]
+				<BOUCLE_documents_joints_compteur(DOCUMENTS){vu=non} {id_article}> </BOUCLE_documents_joints_compteur>
+				[(#REM) Documents joints]
+				<BOUCLE_documents_joints1(DOCUMENTS){vu=non} {id_article} {par titre}>
+					<div class="portfolio_grand">
+						[(#MEDIA|in_array{#LISTE{audio,video}}|oui)
+							<div class="audio">
+							[(#AUTORISER{modifier,article,#ID_ARTICLE}|oui)
+								[<a href="(#URL_ACTION_AUTEUR{dissocier_document,#ID_ARTICLE-article-#ID_DOCUMENT-suppr-safe,#URL_SITE_SPIP/spip.php?article#_principale:ID_ARTICLE&var_mode=recalcul})"
+										class='supprimer_couleur'
+										onClick='return confirmation("Êtes-vous sûr de vouloir supprimer ce document ?")'
+										title='Supprimer ce document'>
+										<div class='action_supprimer'></div>
+								</a>]
+							]
+							[(#MODELE{audio, autostart=false, hauteur=400, largeur=600})]
+							</div>
 						]
-						[(#MODELE{audio, autostart=false, hauteur=400, largeur=600})]
-						</div>
-					]
 
-					[(#MEDIA|=={image}|oui)
-						[(#AUTORISER{modifier,article,#ID_ARTICLE}|oui)
-							[<a href="(#URL_ACTION_AUTEUR{dissocier_document,#ID_ARTICLE-article-#ID_DOCUMENT-suppr-safe,#URL_SITE_SPIP/spip.php?article#_principale:ID_ARTICLE&var_mode=recalcul})"
-									class='supprimer_couleur'
-									onClick='return confirmation("Êtes-vous sûr de vouloir supprimer ce document ?")'
-									title='Supprimer ce document'>
-									<div class='action_supprimer'></div>
+						[(#MEDIA|=={image}|oui)
+							[(#AUTORISER{modifier,article,#ID_ARTICLE}|oui)
+								[<a href="(#URL_ACTION_AUTEUR{dissocier_document,#ID_ARTICLE-article-#ID_DOCUMENT-suppr-safe,#URL_SITE_SPIP/spip.php?article#_principale:ID_ARTICLE&var_mode=recalcul})"
+										class='supprimer_couleur'
+										onClick='return confirmation("Êtes-vous sûr de vouloir supprimer ce document ?")'
+										title='Supprimer ce document'>
+										<div class='action_supprimer'></div>
+								</a>
+									[<span class="spip_doc_titre #EDIT{titre}"><br />(#TITRE|couper{25}|sinon{<span class="ajouter_couleur">ajouter un titre</span>})</span>]
+								]
+							]
+							[(#AUTORISER{modifier,article,#ID_ARTICLE}|non)
+								[<span class="spip_doc_titre #EDIT{titre}"><br />(#TITRE|couper{25})</span>]
+							]
+							<a href="#URL_DOCUMENT" title="[(#TITRE)]" class="thickbox mediabox" type="#MIME_TYPE">
+							[(#FICHIER|image_reduire{300}|inserer_attribut{alt,[(#TITRE|couper{80}|texte_backend)]}|inserer_attribut{style,'border:0px solid #000000;'})]
 							</a>
-								[<span class="spip_doc_titre #EDIT{titre}"><br />(#TITRE|couper{25}|sinon{<span class="ajouter_couleur">ajouter un titre</span>})</span>]
+							[<span class="spip_doc_titre #EDIT{descriptif}"><br />(#DESCRIPTIF|sinon{<span class="ajouter_couleur">Votre descriptif ici</span>})</span>]
+						]
+
+						[(#MEDIA|in_array{#LISTE{audio,image}}|oui)
+							[(#AUTORISER{modifier,article,#ID_ARTICLE}|oui)
+								[<a href="(#URL_ACTION_AUTEUR{dissocier_document,#ID_ARTICLE-article-#ID_DOCUMENT-suppr-safe,#URL_SITE_SPIP/spip.php?article#_principale:ID_ARTICLE&var_mode=recalcul})"
+										class='supprimer_couleur'
+										onClick='return confirmation("Êtes-vous sûr de vouloir supprimer ce document ?")'
+										title='Supprimer ce document'>
+										<div class='action_supprimer'></div>
+								</a>]
+							]
+							[<a class="icone" href="#URL_DOCUMENT" target="blank">(#LOGO_DOCUMENT|image_reduire{100}|inserer_attribut{style,'border:0px solid #000000;'}) </a>]
+							[(#AUTORISER{modifier,article,#ID_ARTICLE}|oui)
+								[<span class="spip_doc_titre #EDIT{titre}"><br />(#TITRE|sinon{<span class="ajouter_couleur">ajouter un titre</span>})</span>]
+							]
+							[(#AUTORISER{modifier,article,#ID_ARTICLE}|non)
+								[<span class="spip_doc_titre #EDIT{titre}"><br />(#TITRE)</span>]
 							]
 						]
-						[(#AUTORISER{modifier,article,#ID_ARTICLE}|non)
-							[<span class="spip_doc_titre #EDIT{titre}"><br />(#TITRE|couper{25})</span>]
-						]
-						<a href="#URL_DOCUMENT" title="[(#TITRE)]" class="thickbox mediabox" type="#MIME_TYPE">
-						[(#FICHIER|image_reduire{300}|inserer_attribut{alt,[(#TITRE|couper{80}|texte_backend)]}|inserer_attribut{style,'border:0px solid #000000;'})]
-						</a>
-						[<span class="spip_doc_titre #EDIT{descriptif}"><br />(#DESCRIPTIF|sinon{<span class="ajouter_couleur">Votre descriptif ici</span>})</span>]
-					]
-					<!-- MODIF -->
+					</div>
+				</BOUCLE_documents_joints1>
 
-					[(#MEDIA|in_array{#LISTE{audio,image}}|oui)
+				<BOUCLE_documents_joints(DOCUMENTS) {vu=non}{id_article} {doublons d}>
+					<div class="portfolio">
+						<div onclick="location.href='#URL_DOCUMENT'" title="[(#TITRE)]" type="#MIME_TYPE" class="portfolio_lien">
+							[<div class="portfolio_logo_around">(#LOGO_DOCUMENT|image_reduire{100}|inserer_attribut{class,'portfolio_logo'})</div>]
+							[(#AUTORISER{modifier,article,#ID_ARTICLE}|oui)
+								[<div class="portfolio_titre"><div class="#EDIT{titre} spip_doc_titre">(#TITRE|sinon{<span class="ajouter_couleur">Ajouter un titre…</span>})</div></div>]
+							]
+							[(#AUTORISER{modifier,article,#ID_ARTICLE}|non)
+								[<div class="portfolio_titre"><div class="#EDIT{titre} spip_doc_titre">(#TITRE)</div></div>]
+							]
+						</div>
+
 						[(#AUTORISER{modifier,article,#ID_ARTICLE}|oui)
 							[<a href="(#URL_ACTION_AUTEUR{dissocier_document,#ID_ARTICLE-article-#ID_DOCUMENT-suppr-safe,#URL_SITE_SPIP/spip.php?article#_principale:ID_ARTICLE&var_mode=recalcul})"
-									class='supprimer_couleur'
-									onClick='return confirmation("Êtes-vous sûr de vouloir supprimer ce document ?")'
-									title='Supprimer ce document'>
-									<div class='action_supprimer'></div>
+								class='supprimer_couleur'
+								onClick='return confirmation("Êtes-vous sûr de vouloir supprimer ce document ?")'
+								title='Supprimer ce document'>
+								<div class='action_supprimer'></div>
 							</a>]
 						]
-						[<a class="icone" href="#URL_DOCUMENT" target="blank">(#LOGO_DOCUMENT|image_reduire{100}|inserer_attribut{style,'border:0px solid #000000;'}) </a>]
-						[(#AUTORISER{modifier,article,#ID_ARTICLE}|oui)
-							[<span class="spip_doc_titre #EDIT{titre}"><br />(#TITRE|sinon{<span class="ajouter_couleur">ajouter un titre</span>})</span>]
-						]
-						[(#AUTORISER{modifier,article,#ID_ARTICLE}|non)
-							[<span class="spip_doc_titre #EDIT{titre}"><br />(#TITRE)</span>]
-						]
-					]
-						<!--END MODIF-->
-
 					</div>
-
-			</BOUCLE_documents_joints1>
-
-			<BOUCLE_documents_joints(DOCUMENTS) {vu=non}{id_article} {doublons d}>
-				<div class="portfolio">
-					<div onclick="location.href='#URL_DOCUMENT'" title="[(#TITRE)]" type="#MIME_TYPE" class="portfolio_lien">
-						[<div class="portfolio_logo_around">(#LOGO_DOCUMENT|image_reduire{100}|inserer_attribut{class,'portfolio_logo'})</div>]
-
-						[(#AUTORISER{modifier,article,#ID_ARTICLE}|oui)
-							[<div class="portfolio_titre"><div class="#EDIT{titre} spip_doc_titre">(#TITRE|sinon{<span class="ajouter_couleur">Ajouter un titre…</span>})</div></div>]
-						]
-
-						[(#AUTORISER{modifier,article,#ID_ARTICLE}|non)
-							[<div class="portfolio_titre"><div class="#EDIT{titre} spip_doc_titre">(#TITRE)</div></div>]
-						]
-					</div>
-
-
-					[(#AUTORISER{modifier,article,#ID_ARTICLE}|oui)
-					[<a href="(#URL_ACTION_AUTEUR{dissocier_document,#ID_ARTICLE-article-#ID_DOCUMENT-suppr-safe,#URL_SITE_SPIP/spip.php?article#_principale:ID_ARTICLE&var_mode=recalcul})"
-							class='supprimer_couleur'
-							onClick='return confirmation("Êtes-vous sûr de vouloir supprimer ce document ?")'
-							title='Supprimer ce document'>
-							<div class='action_supprimer'></div>
-					</a>]
-					]
-				</div>
-			</BOUCLE_documents_joints>
+				</BOUCLE_documents_joints>
 
 			<B_documents_joints_compteur2>
 					</div>
@@ -324,11 +315,11 @@
 				[(#MODE|=={ajax-detail}|et{#ENV{type_objet}|=={travail_en_cours}}|oui) #SET{blocs_cplt,non0} ]
 
 			[(#REM)On exclut le forum sur les consignes pour les enseignants]
-				[(#TYPE_AUTEUR|=={travail_en_cours}
-				|ou{#TYPE_AUTEUR|=={''}}
-				|et{#ENV{type_objet}|=={consignes}}|oui)
-					#SET{blocs_forum,non}
-				]
+			[(#TYPE_AUTEUR|=={travail_en_cours}
+			|ou{#TYPE_AUTEUR|=={''}}
+			|et{#ENV{type_objet}|=={consignes}}|oui)
+				#SET{blocs_forum,non}
+			]
 
 			[(#ADMIN|=={0}|oui)
 				#SET{blocs_forum,oui}
@@ -355,8 +346,8 @@
 							Ajouter un document
 						</a>
 						<div class='nettoyeur cache formulaire_spip formulaire_editer_document bloc_option_doc'>
-								Vos documents apparaîtront par ordre de chargement (du premier au dernier document chargé)
-								<INCLURE{fond=formulaires/ajouter_document,ajax,env}/>
+							Vos documents apparaîtront par ordre de chargement (du premier au dernier document chargé)
+							<INCLURE{fond=formulaires/ajouter_document,ajax,env}/>
 						</div>
 						<INCLURE{fond=prive/squelettes/inclure/colonne-documents,env,ajax=documents} />
 					</div>
@@ -364,67 +355,66 @@
 				]
 			]
 
-				[(#GET{blocs_cplt}|=={non}|non)
-					[(#REM) Mots-clefs]
-					[(#AUTORISER{modifier,article,#ID_ARTICLE}|oui)
-						[(#NOM_SITE_SPIP|match{novaterra.laclasse.com}|oui)
-						<div class="sidebar_bubble">
-							<INCLURE{fond=noisettes/js/accordeon}{nom=bloc_motsclefs-#ID_ARTICLE}>
-							<div class="bloc_option_doc nettoyeur">
-								<a id="bloc_motsclefs-#ID_ARTICLE" class="hac lien_ajouter bloc_option_doc_adddocument" title="Ajouter à l'encyclopédie" href="#">
-									Ajouter à l'encyclopédie
-								</a>
-								<div class="nettoyeur cache formulaire_spip formulaire_editer_document bloc_option_doc">
-									<INCLURE{fond=noisettes/inc/article-mot}{id_article}{id_groupe=5}{titre='Thématique'}>
-								</div>
+			[(#GET{blocs_cplt}|=={non}|non)
+				[(#REM) Mots-clefs]
+				[(#AUTORISER{modifier,article,#ID_ARTICLE}|oui)
+					[(#NOM_SITE_SPIP|match{novaterra.laclasse.com}|oui)
+					<div class="sidebar_bubble">
+						<INCLURE{fond=noisettes/js/accordeon}{nom=bloc_motsclefs-#ID_ARTICLE}>
+						<div class="bloc_option_doc nettoyeur">
+							<a id="bloc_motsclefs-#ID_ARTICLE" class="hac lien_ajouter bloc_option_doc_adddocument" title="Ajouter à l'encyclopédie" href="#">
+								Ajouter à l'encyclopédie
+							</a>
+							<div class="nettoyeur cache formulaire_spip formulaire_editer_document bloc_option_doc">
+								<INCLURE{fond=noisettes/inc/article-mot}{id_article}{id_groupe=5}{titre='Thématique'}>
 							</div>
 						</div>
-						]
+					</div>
 					]
+				]
 
-					<!--
-					[(#REM)Permalien - [&annee_scolaire=(#ANNEE_SCOLAIRE)]
+				<!--
+				[(#REM)Permalien - [&annee_scolaire=(#ANNEE_SCOLAIRE)]
 
-						[(#GET{is_agora}|=={oui}|non)[(#SET{url,[(#URL_ARTICLE|concat{&mode=complet})]})]]
-						[(#GET{is_agora}|=={oui}|oui)[(#SET{url,[(#URL_ARTICLE|concat{&type_objet=agora&mode=complet})]})]]
-						[
-						<div class="sidebar_bubble">
-							<INCLURE{fond=noisettes/js/accordeon}{nom=bloc_permalien-#ID_ARTICLE}>
-							<div class="bloc_option_doc nettoyeur">
-								<a id="bloc_permalien-#ID_ARTICLE" class="hac liens_forum bloc_option_doc_link" title="Permalien" href="#">
-									Partager le lien
-								</a>
-								<div class="cache">
-									<code><a href="#URL_SITE_SPIP/(#GET{url})" target="_blank">#URL_SITE_SPIP/#GET{url}</a></code>
-								</div>
+					[(#GET{is_agora}|=={oui}|non)[(#SET{url,[(#URL_ARTICLE|concat{&mode=complet})]})]]
+					[(#GET{is_agora}|=={oui}|oui)[(#SET{url,[(#URL_ARTICLE|concat{&type_objet=agora&mode=complet})]})]]
+					[
+					<div class="sidebar_bubble">
+						<INCLURE{fond=noisettes/js/accordeon}{nom=bloc_permalien-#ID_ARTICLE}>
+						<div class="bloc_option_doc nettoyeur">
+							<a id="bloc_permalien-#ID_ARTICLE" class="hac liens_forum bloc_option_doc_link" title="Permalien" href="#">
+								Partager le lien
+							</a>
+							<div class="cache">
+								<code><a href="#URL_SITE_SPIP/(#GET{url})" target="_blank">#URL_SITE_SPIP/#GET{url}</a></code>
 							</div>
 						</div>
-						]
-						]
-					-->
+					</div>
+					]
+					]
+				-->
 
-					<!--
-					[(#REM)Liens sociaux]
-						[(#PLUGIN{SOCIALTAGS}|oui)
+				<!--
+				[(#REM)Liens sociaux]
+					[(#PLUGIN{SOCIALTAGS}|oui)
 
-						<div class="sidebar_bubble">
-							<INCLURE{fond=noisettes/js/accordeon}{nom=bloc_reseaux-#ID_ARTICLE}>
-							<div class="bloc_option_doc nettoyeur">
-								<a id="bloc_reseaux-#ID_ARTICLE" class="hac liens_forum bloc_option_doc_social" title="Réseaux sociaux" href="#">
-									Réseaux sociaux
-								</a>
-								<div class="cache">
-									<div class="reseaux"></div>
-								</div>
+					<div class="sidebar_bubble">
+						<INCLURE{fond=noisettes/js/accordeon}{nom=bloc_reseaux-#ID_ARTICLE}>
+						<div class="bloc_option_doc nettoyeur">
+							<a id="bloc_reseaux-#ID_ARTICLE" class="hac liens_forum bloc_option_doc_social" title="Réseaux sociaux" href="#">
+								Réseaux sociaux
+							</a>
+							<div class="cache">
+								<div class="reseaux"></div>
 							</div>
 						</div>
-						]
-					-->
-					[(#REM)Données de la classe]
-						[(#ENV{type_objet}|=={travail_en_cours}|oui)
-						[
-							<div class="sidebar_bubble">
-								<INCLURE{fond=noisettes/js/accordeon}{nom=bloc_donnees-#ID_ARTICLE}>
+					</div>
+					]
+				-->
+				[(#REM)Données de la classe]
+				[(#ENV{type_objet}|=={travail_en_cours}|oui)
+					[<div class="sidebar_bubble">
+						<INCLURE{fond=noisettes/js/accordeon, nom=bloc_donnees-#ID_ARTICLE} />
 						<div class="bloc_option_doc nettoyeur">
 							<a id="bloc_donnees-#ID_ARTICLE" class="hac liens_forum bloc_option_doc_about" title="À propos de la classe" href="#">
 								À propos de la classe
@@ -432,25 +422,22 @@
 							<div class="cache">
 								<div class="donnees_classe">(#GET{donnees_classe})</div>
 							</div>
-						</div></div>
-						]
-						]
-
-					[(#REM)Bloc suppression]
-						[(#AUTORISER{modifier, article, #ID_ARTICLE})
-							[(#SET{confirmation,Étes-vous sûr de vouloir supprimer l\'article [\'(#TITRE|attribut_html)\']})]
-							<!--
-							<INCLURE{fond=noisettes/objet/objet-supprimer}{objet=article}{id_objet=#ID_ARTICLE}{id_parent=#ID_RUBRIQUE}{confirmation=#GET{confirmation}}{url=#URL_PAGE{sommaire_recharge}}>
-							-->
-						]
+						</div>
+					</div>]
 				]
-	 </div>
+
+				[(#REM)Bloc suppression]
+				[(#AUTORISER{modifier, article, #ID_ARTICLE})
+					[(#SET{confirmation,Étes-vous sûr de vouloir supprimer l\'article [\'(#TITRE|attribut_html)\']})]
+					<!--
+					<INCLURE{fond=noisettes/objet/objet-supprimer}{objet=article}{id_objet=#ID_ARTICLE}{id_parent=#ID_RUBRIQUE}{confirmation=#GET{confirmation}}{url=#URL_PAGE{sommaire_recharge}}>
+					-->
+				]
+			]
+		</div>
 
 	[(#AUTORISER{modifier, article, #ID_ARTICLE}|oui)
 		</div>
 	]
-	<!--
 </div>
--->
-
 </BOUCLE_principale>

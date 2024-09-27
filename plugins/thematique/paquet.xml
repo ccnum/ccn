@@ -28,8 +28,6 @@
 	<pipeline nom="declarer_champs_extras" inclure="base/th_cextras.php" />
 	<pipeline nom="jqueryui_plugins" inclure="thematique_pipelines.php" />
 
-	<menu nom="thematique" titre="notation:notation" parent="menu_activite" icone="images/notation-16.png" />
-
 	<chemin path="sq-unepage" />
 	<chemin path="" />
 </paquet>

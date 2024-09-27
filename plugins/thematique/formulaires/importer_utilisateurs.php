@@ -230,14 +230,16 @@ function importer_utilisateurs_importe($filename) {
 		[$email] = explode(':', $email);
 		$admin_rubriques = trim($d['admin des rubriques']);
 		$auteur_articles = trim($d['auteur des articles']);
+		spip_log($prenom . ' ' . $nom . ' ' . $login, 'test');
 		$champs = [
 			"nom" => $prenom . ' ' . $nom,
 			"login" => $login,
 			"email" => $email,
 			"statut" => '6forum',
-			"webmestre" => 'nom'
+			"webmestre" => 'non'
 		];
 		if ($id_auteur = sql_getfetsel('id_auteur', 'spip_auteurs', 'login=' . sql_quote($login))) {
+			sql_updateq('spip_auteurs', $champs, 'id_auteur=' . intval($id_auteur));
 		} else {
 			$id_auteur = sql_insertq('spip_auteurs', $champs);
 		}
