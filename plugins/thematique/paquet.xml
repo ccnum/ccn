@@ -6,7 +6,7 @@
 	logo="th.png"
 	schema="3.0.3"
 	documentation="http://www.laclasse.com"
-	compatibilite="[3.0;["
+	compatibilite="[4.3.2;4.*]"
 >
 	<nom>Thematiques</nom>
 	<auteur>Patrick Vincent</auteur>
