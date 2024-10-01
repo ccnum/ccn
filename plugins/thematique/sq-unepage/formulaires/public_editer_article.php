@@ -1,7 +1,6 @@
 <?php
 
-/***************************************************************************
- * \
+/**************************************************************************\
  *  SPIP, Systeme de publication pour l'internet                           *
  *                                                                         *
  *  Copyright (c) 2001-2010                                                *
@@ -9,8 +8,7 @@
  *                                                                         *
  *  Ce programme est un logiciel libre distribue sous licence GNU/GPL.     *
  *  Pour plus de details voir le fichier COPYING.txt ou l'aide en ligne.   *
-\
- ***************************************************************************/
+\***************************************************************************/
 
 if (!defined('_ECRIRE_INC_VERSION')) {
 	return;
@@ -45,32 +43,29 @@ function articles_edit_config($row) {
 }
 
 function formulaires_public_editer_article_verifier_dist($id_article = 'new', $id_rubrique = 0, $retour = '', $lier_trad = 0, $config_fonc = 'articles_edit_config', $row = [], $hidden = '') {
-
 	$erreurs = formulaires_editer_objet_verifier('article', $id_article, ['titre']);
 	return $erreurs;
 }
 
 // http://doc.spip.org/@inc_editer_article_dist
 function formulaires_public_editer_article_traiter_dist($id_article = 'new', $id_rubrique = 0, $retour = '', $lier_trad = 0, $config_fonc = 'articles_edit_config', $row = [], $hidden = '') {
-	//Traitement principal
+	// Traitement principal
 	$res = formulaires_editer_objet_traiter('article', $id_article, $id_rubrique, $lier_trad, $retour, $config_fonc, $row, $hidden);
 
-	//Ajout du champ id_consigne
+	// Ajout du champ id_consigne
 	$id_consigne = _request('id_consigne');
-	$id_article1 = $res['id_article'];
 
-	if ((isset($id_consigne)) && (isset($id_article1))) {
-		sql_updateq('spip_articles', ['id_consigne' => $id_consigne, 'statut' => 'publie'], "id_article=$id_article1");
+	if (isset($id_consigne)) {
+		sql_updateq('spip_articles', ['id_consigne' => $id_consigne, 'statut' => 'publie'], "id_article=" . intval($res['id_article']));
 	}
 
-	//Mail
+	// Mail
 	if ($id_article == '') {
-		$date = date('Y-m-d H:i:s');
 		if ($notifications = charger_fonction('notifications', 'inc')) {
 			$notifications(
 				'instituerarticle',
-				$id_article1,
-				['statut' => 'publie', 'statut_ancien' => 'propose', 'date' => $date]
+				$res['id_article'],
+				['statut' => 'publie', 'statut_ancien' => 'propose', 'date' => date('Y-m-d H:i:s')]
 			);
 		}
 	}

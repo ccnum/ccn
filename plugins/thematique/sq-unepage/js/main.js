@@ -94,7 +94,6 @@ function loadProjet(fichier) {
 				dataForProjet.image_fond = (hasXMLNodeValue('image_fond', xml)) ? getXMLNodeValue('image_fond', xml) : '';
 
 				// Initialise le projet
-
 				CCN.projet = new Projet();
 				CCN.projet.init(dataForProjet);
 
@@ -118,7 +117,6 @@ function loadProjet(fichier) {
  */
 
 function loadClasses(fichier) {
-
 	$.ajax(
 		{
 			url: fichier,
@@ -224,8 +222,8 @@ function loadConsignes(fichier) {
 					dataForConsigne.date.setFullYear(parseFloat(dataForConsigne.date_texte.substring(6, 10)));
 					dataForConsigne.jour_consigne = parseFloat(Math.round((dataForConsigne.date) / (24 * 60 * 60 * 1000)));
 					dataForConsigne.nombre_jours = dataForConsigne.jour_consigne - CCN.projet.premier_jour; // Compte des jours avec le premier jour de la CCN comme 0
-					
-					while(dataForConsigne.nombre_jours < 0) {
+
+					while (dataForConsigne.nombre_jours < 0) {
 						dataForConsigne.nombre_jours += 365
 					}
 
@@ -276,7 +274,6 @@ function loadConsignes(fichier) {
 					nouvelleConsigne.init(dataForConsigne);
 
 					// Calcul du positionnement y intelligent des réponses (TO DO)
-
 					var liste_y = [];
 
 					for (j = 0; j < xmlReponses.length; j++) {
@@ -305,12 +302,10 @@ function loadConsignes(fichier) {
 					}
 
 					// TO DO
-
 					var hauteur_utile_reponses = CCN.projet.hauteur - nouvelleConsigne.hauteur - 140;
 					var hauteur_max_reponses = hauteur_utile_reponses / liste_y.length;
 
 					// Nouvelles réponses ajoutées à la consigne en cours de traitement
-
 					var nb_classe_reponse = 0;
 					var nb_classe_commentaires = 0;
 					var indexReponseInConsigne = 0;
@@ -337,7 +332,6 @@ function loadConsignes(fichier) {
 						dataForReponse.vignette = (hasXMLNodeValue('vignette', xmlReponses[j])) ? getXMLNodeValue('vignette', xmlReponses[j]) : '';
 
 						// Positionnement en hauteur (TO DO)
-
 						dataForReponse.y = parseFloat(getXMLNodeValue('y', xmlReponses[j]));
 
 						if ((dataForReponse.y === 0) || (dataForReponse.y > 0.8) || (dataForReponse.y < -0.2)) {
@@ -351,14 +345,11 @@ function loadConsignes(fichier) {
 						dataForReponse.index = indexReponseInConsigne;
 
 						// Initialise la réponse de la consigne
-
 						var nouvelleReponse = new Reponse();
 						nouvelleReponse.init(dataForReponse);
 						nouvelleConsigne.reponses.push(nouvelleReponse);
 
-
 						// Sélection de la classe prime sur classe logguée
-
 						if (CCN.classeSelection > 0) {
 							if (CCN.classeSelection == dataForReponse.classe_id) {
 								has_current_classe_already_answer = true;
@@ -378,7 +369,6 @@ function loadConsignes(fichier) {
 					}
 
 					// Ajoute le bouton de réponse si pas encore de réponse de la classe
-
 					if (has_current_classe_already_answer) {
 						//  nouvelleConsigne.showMyReponseButtonInTimeline(answer_id_of_current_classe);
 					} else {
@@ -386,7 +376,6 @@ function loadConsignes(fichier) {
 					}
 
 					// Consigne suivante
-
 					CCN.consignes.push(nouvelleConsigne);
 					indexConsigne++;
 				}
@@ -421,7 +410,6 @@ function loadBlog(fichier) {
 					var dataForArticleBlog = {};
 
 					// Nouvel article de blog
-
 					dataForArticleBlog.id = getXMLNodeValue('id', xmlArticlesBlog[i]);
 					dataForArticleBlog.type_objet = getXMLNodeValue('type_objet', xmlArticlesBlog[i]);
 					dataForArticleBlog.id_objet = getXMLNodeValue('id_objet', xmlArticlesBlog[i]);
@@ -632,7 +620,6 @@ function initTimeline() {
 	}
 
 	//  CCN.projet.showWholeTimeline();
-
 	setContentFromState(
 		{
 			data: {

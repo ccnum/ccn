@@ -4,7 +4,7 @@ if (!defined('_ECRIRE_INC_VERSION')) {
 	return;
 }
 
-$GLOBALS[$GLOBALS['idx_lang']] = [
+return [
 
 	'bouton_previsu_importer' => 'Prévisualiser l\'import',
 	'bouton_importer' => 'Faire l\'import',

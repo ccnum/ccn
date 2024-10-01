@@ -21,7 +21,7 @@
 					<classe_id>#ID_RUBRIQUE</classe_id>
 					<date>[(#DATE|affdate{'d'})]/[(#DATE|affdate{'m'})]/[(#DATE|affdate{'Y'})]</date>
 					<texte>[(#TITRE|couper{60}|entites_html)]</texte>
-					<commentaires><BOUCLE_forum(FORUMS){id_article}> </BOUCLE_forum>#TOTAL_BOUCLE</B_forum>0<//B_forum></commentaires>
+					<commentaires><BOUCLE_forum(FORUMS){id_article}><?php ?></BOUCLE_forum>#TOTAL_BOUCLE</B_forum>0<//B_forum></commentaires>
 					<vignette>[(#MODELE{logo_carre,id_rubrique,taille=35}|extraire_attribut{src})]</vignette>
 					<y>[(#Y|sinon{0})]</y>
 				</reponse>
