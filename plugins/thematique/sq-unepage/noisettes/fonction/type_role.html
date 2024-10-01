@@ -1,16 +1,15 @@
 #CACHE{0}
 [(#REM)
-		Retourne le role de l'utilisateur :
-			- ADMIN
-			- INTERVENANT
-			- PROF
-			- ELEVE
+	Retourne le role de l'utilisateur :
+		- ADMIN
+		- INTERVENANT
+		- PROF
+		- ELEVE
 ]
-
 #SET{role,null}
 #SET{prof,0}
 #SET{intervenant,0}
-#SET{eleve, 0}
+#SET{eleve,0}
 #SET{admin,0}
 
 <!-- SI PROF -->
@@ -37,7 +36,7 @@
 <BOUCLE_auteur(AUTEURS){id_auteur=#SESSION{id_auteur}}{tout}>
 	[(#STATUT|=={0minirezo}|oui)
 		[(#GET{intervenant}|=={0}|oui)
-			[(#GET{prof}|=={0}|oui)#SESSION_SET{role,admin}]
+			[(#GET{prof}|=={0}|oui) #SESSION_SET{role,admin}]
 		]
 	]
 	[(#STATUT|=={6forum}|oui)

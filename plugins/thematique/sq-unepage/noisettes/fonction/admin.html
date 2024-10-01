@@ -5,7 +5,6 @@
 ]
 #SET{restreint0,#EVAL{$_COOKIE[_cookie_rubrique]}}
 #SET{admin,0}
-<B_rub_aut>
 <BOUCLE_rub_aut(RUBRIQUES AUTEURS){id_auteur=#SESSION{id_auteur}}{tout}>
 	[(#INCLURE{fond=noisettes/fonction/type_objet,id_rubrique})]
 	[(#SET{type_objet,#SESSION{type}})]
@@ -17,7 +16,6 @@
 		[(#SET{admin,[(#GET{admin}|plus{1})]})]
 	</BOUCLE_rub4>
 </BOUCLE_rub_aut>
-</B_rub_aut>
 	#SET{admin,0}
 <//B_rub_aut>
 
@@ -36,10 +34,8 @@
 	[(#SET{restreint,#GET{restreint1}})]
 ]
 
-[(#GET{restreint0}|is_numeric|oui
-	|et{#GET{admin}|>{1}|oui}
-	|ou{#GET{admin}|=={0}|oui})
-		[(#SET{restreint,#GET{restreint0}})]
+[(#GET{restreint0}|is_numeric|oui|et{#GET{admin}|>{1}|oui}|ou{#GET{admin}|=={0}|oui})
+	[(#SET{restreint,#GET{restreint0}})]
 ]
 
 [(#MODE|=={restreint}|oui)#SESSION_SET{restreint, #GET{restreint}}]

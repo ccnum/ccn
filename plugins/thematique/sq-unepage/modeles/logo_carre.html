@@ -4,11 +4,9 @@
 	<BOUCLE_auteur2(AUTEURS){id_auteur}{tout}>
 		#SET{id_auteur,#ID_AUTEUR}
 	</BOUCLE_auteur2>
-	</B_auteur2>
 		<BOUCLE_mot(MOTS){id_mot}{tout}>
 			#SET{id_mot,#ID_MOT}
 		</BOUCLE_mot>
-		</B_mot>
 			#SET{id_rubrique,#ID_RUBRIQUE}
 		<//B_mot>
 	<//B_auteur2>
@@ -17,7 +15,6 @@
 		<BOUCLE_auteur(RUBRIQUES){id_rubrique=#ID_OBJET}{tout}{!titre_mot IN evenements,blogs,ressources}>
 			<BOUCLE_ex(RUBRIQUES){id_enfant}{titre_mot IN evenements,blogs,ressources}>
 			</BOUCLE_ex>
-			</B_ex>
 				#SET{id_rubrique,#ID_RUBRIQUE}
 			<//B_ex>
 		</BOUCLE_auteur>
@@ -30,7 +27,6 @@
 	<BOUCLE_auteur3(AUTEURS){id_auteur}{tout}>
 		#SET{logo,#LOGO_AUTEUR}
 	</BOUCLE_auteur3>
-	</B_auteur3>
 		<BOUCLE_mot3(MOTS){id_mot}{tout}>
 			#SET{logo,#LOGO_MOT}
 		</BOUCLE_mot3>

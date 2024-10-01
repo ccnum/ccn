@@ -6,7 +6,7 @@
 	<div style="clear:both" class='cache bloc_option_reponses_consignes_classe'>
 		<div class="nettoyeur"></div>
 
-		<BOUCLE_reponse(ARTICLES){id_consigne=#_principale:ID_ARTICLE}>
+		<BOUCLE_reponse(ARTICLES){id_consigne=#ID_ARTICLE}>
 			<script type="text/javascript">
 				$().ready(function(){
 					$('#ajax_go_to_reponse_#ID_ARTICLE').on('click',function() {
@@ -18,12 +18,12 @@
 			[(#REM) [(#ID_RUBRIQUE|substr{[(#GET{id_to_check}|strlen|moins{1})],1})]]
 			<div class="classe_consigne couleur_[(#TYPE_OBJET)]">
 				<div id="ajax_go_to_reponse_#ID_ARTICLE" class="classe_consigne_reponse">
-				<div class="classe_consigne_reponse_photo">[(#MODELE{logo_carre}{id_rubrique})]</div>
+					<div class="classe_consigne_reponse_photo">[(#MODELE{logo_carre}{id_rubrique})]</div>
 					<div class="classe_consigne_reponse_titre">[(#TITRE)]</div>
-				<div class="classe_consigne_reponse_classe">
-					<BOUCLE_classe_de_la_reponse(RUBRIQUES){id_rubrique}{si #TYPE_OBJET|match{consignes}|oui}>
-						#TITRE
-					</BOUCLE_classe_de_la_reponse>
+					<div class="classe_consigne_reponse_classe">
+						<BOUCLE_classe_de_la_reponse(RUBRIQUES){id_rubrique}{si #TYPE_OBJET|=={consignes}|oui}>
+							#TITRE
+						</BOUCLE_classe_de_la_reponse>
 					</div>
 				</div>
 			</div>
