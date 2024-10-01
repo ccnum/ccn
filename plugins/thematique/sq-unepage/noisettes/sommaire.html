@@ -128,12 +128,11 @@ et/ou
 			</ul>
 		</div>
 
-		[(#REM)Consignes]
+		[(#REM) Consignes]
 		<div id="menu-consignes" class="bloc_view col">
 			<h3><span>Consignes</span></h3>
 			<ul class="filter clearfix option-set" data-filter-group="consigne">
 				#SET{num,0}
-
 				<BOUCLE_consignes0(RUBRIQUES mots mots_liens){mots.titre=consignes}{rubriques.id_rubrique=mots_liens.id_objet}>
 					[(#MODELE{logo_menu}{valeur=[(#GET{num})]}{filter=.consigne_#ID_ARTICLE}{class=hover_couleur_consignes[(#ID_RUBRIQUE|nb2col)] menu_logo_consignes-[(#GET{num}|plus{1})] menu_logo_consignes-#ID_ARTICLE}{onclick=callConsigne('#ID_ARTICLE');}{title=#TITRE}{texte=[(#GET{num}|plus{1})]})]
 					[(#SET{num,[(#GET{num}|plus{1})]})]

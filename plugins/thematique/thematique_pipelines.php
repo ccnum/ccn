@@ -48,7 +48,20 @@ function thematique_jqueryui_plugins($scripts) {
 }
 
 function thematique_insert_head($flux) {
+	$flux .= "<script type='text/javascript' src='" . find_in_path('js/article_blog.js') . "'></script>\n";
+	$flux .= "<script type='text/javascript' src='" . find_in_path('js/article_evenement.js') . "'></script>\n";
+	$flux .= "<script type='text/javascript' src='" . find_in_path('js/bouton.js') . "'></script>\n";
 	$flux .= "<script type='text/javascript' src='" . find_in_path('js/bundled/html4+html5/jquery.history.js') . "'></script>\n";
-	$flux .= "<script type='text/javascript' src='" . find_in_path('js/layout.js') . "'></script>";
+	$flux .= "<script type='text/javascript' src='" . find_in_path('js/classe.js') . "'></script>\n";
+	$flux .= "<script type='text/javascript' src='" . find_in_path('js/consigne.js') . "'></script>\n";
+	$flux .= "<script type='text/javascript' src='" . find_in_path('js/controleurs.js') . "'></script>\n";
+	$flux .= "<script type='text/javascript' src='" . find_in_path('js/globales.js') . "'></script>\n";
+	$flux .= "<script type='text/javascript' src='" . find_in_path('js/intervenant.js') . "'></script>\n";
+	$flux .= "<script type='text/javascript' src='" . find_in_path('js/jquery.isotope.min.js') . "'></script>\n";
+	$flux .= "<script type='text/javascript' src='" . find_in_path('js/layout.js') . "'></script>\n";
+	$flux .= "<script type='text/javascript' src='" . find_in_path('js/main.js') . "'></script>\n";
+	$flux .= "<script type='text/javascript' src='" . find_in_path('js/projet.js') . "'></script>\n";
+	$flux .= "<script type='text/javascript' src='" . find_in_path('js/reponse.js') . "'></script>\n";
+
 	return $flux;
 }
