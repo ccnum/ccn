@@ -2,23 +2,19 @@
 [(#REM) Type objet: consignes, travail_en_cours, blogs, evenements,ressources]
 
 [(#REM) Type objet]
-	[(#SET{type_objet,[(#INCLURE{fond=noisettes/fonction/type_objet,id_rubrique})]})]
+[(#INCLURE{fond=noisettes/fonction/type_objet,id_rubrique})]
+[(#SET{type_objet,#SESSION{type}})]
 
 [(#REM) Mode d'ouverture]
-	#SET{mode,#CONST{_MODE_POPUP}}
+	#SET{mode,complet}
 	#SET{ref,#CONST{$_SERVER['HTTP_REFERER']}}
 	[(#ENV{mode}|oui)
 		#SET{mode,#MODE}
 	]
-	[(#ENV{mode}|non)
-		[(#GET{ref}|match{#URL_SITE_SPIP/ecrire}|oui) #SET{mode,complet} ]
-		[(#GET{ref}|match{#URL_SITE_SPIP}|non) #SET{mode,complet} ]
-		[(#GET{ref}|non) #SET{mode,complet} ]
-	]
 
 [(#REM) Page]
 	#SET{page,publier_article}
-	[(#GET{type_objet}|match{ressources|classes}|oui)#SET{page,rubrique}]
+	[(#GET{type_objet}|in_array{#LISTE{ressources|classes}}|oui)#SET{page,rubrique}]
 	[(#GET{mode}|=={ajax-detail}|oui)#SET{page,publier_article}]
 
 [(#REM) Ouverture]
@@ -26,10 +22,10 @@
 	<INCLURE{fond=chargement}{type_objet=travail_en_cours}>
 ]
 [(#AUTORISER{modifier, rubrique, #ID_RUBRIQUE}|oui)
-	[(#ENV{mode}|match{ajax}|non)
+	[(#ENV{mode}|=={ajax}|non)
 		<INCLURE{fond=layout}{page=#GET{page}}{env} />
 	]
-	[(#ENV{mode}|match{ajax}|oui)
+	[(#ENV{mode}|=={ajax}|oui)
 		<INCLURE{fond=noisettes/#GET{page}}{env} />
 	]
 ]

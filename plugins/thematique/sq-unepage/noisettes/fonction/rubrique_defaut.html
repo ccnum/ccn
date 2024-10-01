@@ -1,4 +1,3 @@
-#HTTP_HEADER{Content-Type: text/plain; charset=#CHARSET}
 #CACHE{0}
 [(#REM)Paramètre
 - mode:admin : Type d'admin : 0 : total / autrement : nb de rubriques restreintes / -1 : pas admin
@@ -24,10 +23,8 @@
 [(#GET{admin}|=={1}|oui)
 	[(#SET{restreint,#GET{restreint1}})]
 ]
-[(#GET{restreint0}|is_numeric|oui
-	|et{#GET{admin}|>{1}|oui}
-	|ou{#GET{admin}|=={0}|oui})
-		[(#SET{restreint,#GET{restreint0}})]
+[(#GET{restreint0}|is_numeric|oui|et{#GET{admin}|>{1}|oui}|ou{#GET{admin}|=={0}|oui})
+	[(#SET{restreint,#GET{restreint0}})]
 ]
 [(#MODE|=={restreint}|oui)#SESSION_SET{admin, restreint}]
 [(#MODE|=={restreint}|non)#SESSION_SET{admin, admin}]

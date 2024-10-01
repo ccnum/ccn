@@ -230,7 +230,6 @@ function importer_utilisateurs_importe($filename) {
 		[$email] = explode(':', $email);
 		$admin_rubriques = trim($d['admin des rubriques']);
 		$auteur_articles = trim($d['auteur des articles']);
-		spip_log($prenom . ' ' . $nom . ' ' . $login, 'test');
 		$champs = [
 			"nom" => $prenom . ' ' . $nom,
 			"login" => $login,

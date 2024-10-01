@@ -5,16 +5,11 @@
 	]
 
 [(#REM)Mode]
-	#SET{mode,#CONST{_MODE_POPUP}}
+	#SET{mode,complet}
 	#SET{ref,#CONST{$_SERVER['HTTP_REFERER']}}
 
 	[(#ENV{mode}|oui)
 		#SET{mode,#MODE}
-	]
-	[(#ENV{mode}|non)
-		[(#GET{ref}|match{#URL_SITE_SPIP/ecrire}|oui) #SET{mode,complet} ]
-		[(#GET{ref}|match{#URL_SITE_SPIP}|non) #SET{mode,complet} ]
-		[(#GET{ref}|non) #SET{mode,complet} ]
 	]
 
 	[(#GET{mode}|=={detail}|oui)<INCLURE{fond=layout}{env}{page=groupe_mot} />]
@@ -32,6 +27,5 @@
 	]
 
 </BOUCLE_principale_rubrique>
-</B_principale_rubrique>
 	<INCLURE{fond=layout}{env}{page=sommaire} />
 <//B_principale_rubrique>

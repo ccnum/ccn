@@ -10,17 +10,17 @@
 	<span class="image_loading"></span>
 	[<div class="reponse_formulaire reponse_formulaire_ok">(#ENV**{message_ok})</div>]
 	[<p class="reponse_formulaire reponse_formulaire_erreur">(#ENV**{message_erreur})</p>]
-	
+
 	[(#REM) #ENV{action}#formulaire_joindre_document-#ENV{id,new} ]
-	
+
 	<form action="" method="post" enctype='multipart/form-data'><div>
 		[(#ACTION_FORMULAIRE{#URL_PAGE|parametre_url{mode,complet}})]
-		
+
 		[(#INCLURE{fond=formulaires/inc-upload_document, env, mediatheque=#ENV{objet,''}|et{#ENV{id_objet,''}}|et{#ENV{proposer_media}}})]
-		
+
 	</div></form>
 
 </div>]
 [(#ENV{_galerie,''}|oui)
-		[(#INCLURE{fond=#ENV{_galerie}, env, ajax})]
+	[(#INCLURE{fond=#ENV{_galerie}, env, ajax})]
 ]
