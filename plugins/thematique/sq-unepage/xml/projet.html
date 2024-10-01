@@ -62,7 +62,8 @@
 				#SET{gid,8}
 
 				[(#SESSION{nom}|oui)
-					[(#SET{restreint,[(#INCLURE{fond=noisettes/fonction/admin,mode=restreint})]})]
+				[(#INCLURE{fond=noisettes/fonction/admin,mode=restreint})]
+					[(#SET{restreint,#SESSION{restreint}})]
 					[(#GET{restreint}|=={26}|oui)#SET{gid,9}]
 					[(#GET{restreint}|=={23}|oui)#SET{gid,11}]
 					[(#GET{restreint}|=={24}|oui)#SET{gid,10}]
