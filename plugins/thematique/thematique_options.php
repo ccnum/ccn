@@ -13,14 +13,6 @@
 define('_cookie_affichage', 'laclasse_affichage');
 define('_cookie_rubrique', 'laclasse_rubrique_admin');
 
-//Ces variables ne sont plus utilisées à vérifier
-//Tailles
-define('_hauteur', 800);
-define('_largeur', 1500);
-//Type d'affichage des popups : detail (iframe), ajax (modalbox sans iframe)
-define('_MODE_POPUP', 'complet');
-//Fin vérification
-
 //Qualifie les médias pour les tris
 $GLOBALS['ext_audio'] = 'mp3|ogg|wav';
 $GLOBALS['ext_video'] = 'avi|mpg|flv|mp4|mov';
