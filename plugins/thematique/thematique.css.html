@@ -5,9 +5,7 @@
 /* ------------------------ GENERAUX ------------------------------ */
 /* ---------------------------------------------------------------- */
 /* --------- Tailles ----------- */
-[(#SET{largeur_ref,1500})]
-[(#SET{hauteur_ref,900})]
-[(#SET{rapport,[(#ENV{largeur}|div{#GET{largeur_ref}}|plus{#ENV{hauteur}|div{#GET{hauteur_ref}}}|mult{0.65})]})]
+[(#SET{rapport,1.43})]
 
 [(#SET{font-size1,[(#GET{rapport}|mult{13}|round)]})]
 [(#SET{font-size1_bas,[(#GET{rapport}|mult{12}|round)]})]
@@ -241,7 +239,7 @@ option, select, form {
 /* --------- Généraux --------- */
 @font-face {
 	font-family: font;
-	src: url(#ENV{chemin}/font/lato/Lato-Reg.ttf);
+	src: url(#DOSSIER_SQUELETTE/font/lato/Lato-Reg.ttf);
 }
 
 
@@ -250,7 +248,7 @@ body {
 	margin: 0px;
 	padding: 0 0 64px 0;
 	font-family: '#GET{font}', Helvetica, Arial, sans-serif;
-	color : #ENV{couleur_base_texte};
+	color : #000000;
 	font-size: #GET{font-size1}px;
 	overflow-x : hidden;
 }
@@ -447,12 +445,12 @@ body {
 }
 
 .logo_menu-doc {
-	background-image: url(#ENV{chemin}/img/logo_doc.png);
+	background-image: url(#DOSSIER_SQUELETTE/img/logo_doc.png);
 	background-size: 25px;
 }
 
 .logo_menu-cible {
-	background-image: url(#ENV{chemin}/img/logo_cible.png);
+	background-image: url(#DOSSIER_SQUELETTE/img/logo_cible.png);
 	background-size: 25px;
 }
 
@@ -641,7 +639,7 @@ body {
 
 
 a, label {
-	color: #ENV{couleur_base_texte};
+	color: #000000;
 	text-decoration: none;
 }
 
@@ -652,7 +650,7 @@ input {
 }
 
 a:hover {
-	color: #ENV{couleur_1erplan3};
+	color: #00A0F0;
 	text-decoration: none;
 }
 
@@ -1217,7 +1215,7 @@ a:hover {
 	text-align: center;
 	display: table-cell;
 	vertical-align: middle;
-	background-image: url(#ENV{chemin}/img/reponse.png);
+	background-image: url(#DOSSIER_SQUELETTE/img/reponse.png);
 }
 
 .consigne_reponses_classe {
@@ -1228,14 +1226,14 @@ a:hover {
 	text-align: center;
 	display: table-cell;
 	vertical-align: middle;
-	background-image: url(#ENV{chemin}/img/reponse_classe.png);
+	background-image: url(#DOSSIER_SQUELETTE/img/reponse_classe.png);
 }
 
 .reponse_p {
 	float: left;
 	white-space: nowrap;
 	font-size: #GET{font-size1}px;
-	color: #ENV{couleur_base_texte};
+	color: #000000;
 	margin-left: 30px;
 	margin-top: 2px;
 }
@@ -1243,7 +1241,7 @@ a:hover {
 .reponse_plus {
 	float: left;
 	white-space: nowrap;
-	color: #ENV{couleur_1erplan3};
+	color: #00A0F0;
 	font-size: #GET{font-size1}px;
 	font-weight: bold;
 	margin-left: 41px;
@@ -1264,13 +1262,13 @@ a:hover {
 	z-index: 2;
 	width:25px;
 	height: 25px;
-	color: #ENV{couleur_base_texte};
+	color: #000000;
 	font-size: #GET{font-size1}px;
 	font-weight: bold;
 	text-align: center;
 	/*display: table-cell;*/
 	vertical-align: middle;
-	background-image: url(#ENV{chemin}/img/commentaire.png);
+	background-image: url(#DOSSIER_SQUELETTE/img/commentaire.png);
 }
 
 .intervention .action_supprimer {
@@ -1292,12 +1290,12 @@ a:hover {
 	margin-left: 5px;
 	margin-bottom: 3px;
 	margin-right: 5px;
-	background: url(#ENV{chemin}/img/logo_supprimer_off_15.png) no-repeat center center / 12px auto;
+	background: url(#DOSSIER_SQUELETTE/img/logo_supprimer_off_15.png) no-repeat center center / 12px auto;
 	position: relative;
 	z-index: 2;
 }
 .action_supprimer:hover, .formulaire_editer_rubrique .action_supprimer:hover, .action_supprimer_on {
-	background: url(#ENV{chemin}/img/logo_supprimer_off_15_white.png) no-repeat scroll center center / 12px auto tomato;
+	background: url(#DOSSIER_SQUELETTE/img/logo_supprimer_off_15_white.png) no-repeat scroll center center / 12px auto tomato;
 	border-radius:0 3px 3px 0;
 	position: relative;
 	z-index: 2;
@@ -2776,7 +2774,6 @@ div.donnees_classe {
 
 
 #sidebar_lateral {
-	/* width: calc(100% - 8px); */
 	width:100%;
 	position: absolute;
 	font-size: 13px;
@@ -2786,7 +2783,6 @@ div.donnees_classe {
 	padding: 0;
 	box-sizing: border-box;
 	overflow: auto;
-	/* background: #fff; */
 	-webkit-transition: right 500ms ease-in-out, width 500ms ease-in-out;
 	 -moz-transition: right 500ms ease-in-out, width 500ms ease-in-out;
 		 -o-transition: right 500ms ease-in-out, width 500ms ease-in-out;
@@ -2818,7 +2814,7 @@ div.donnees_classe {
 #sidebar_main {
 	width: 100%;
 	font-size:13px;
-	min-height: [(#ENV{hauteur}|mult{0.8})px];
+	min-height: 1200px;
 	-webkit-transition: opacity 500ms ease;
 	 -moz-transition: opacity 500ms ease;
 		 -o-transition: opacity 500ms ease;
@@ -2976,13 +2972,13 @@ div.donnees_classe {
 
 
 .chargement_grand {
-	background: url(#ENV{chemin}/img/chargement.gif) no-repeat center center;
+	background: url(#DOSSIER_SQUELETTE/img/chargement.gif) no-repeat center center;
 	min-width: 200px;
 	min-height: 200px;
 	}
 
 .chargement {
-	background: url(#ENV{chemin}/img/chargement-petit.gif) no-repeat center center;
+	background: url(#DOSSIER_SQUELETTE/img/chargement-petit.gif) no-repeat center center;
 	}
 
 a.lien_ajouter { cursor: pointer; color: #58ab27; padding-right: 25px; font-weight: normal;}
@@ -3018,7 +3014,7 @@ a.liens_forum:hover { }
 #cboxClose, #cboxClose:hover {
 	top: -4px;
 	right: -6px;
-	background-image: url(#ENV{chemin}/img/close.png);
+	background-image: url(#DOSSIER_SQUELETTE/img/close.png);
 	background-position: 0px 0px;
 	width: 30px;
 	height: 30px;
@@ -3086,7 +3082,7 @@ a.liens_forum:hover { }
 	background-attachment: scroll;
 	background-clip: border-box;
 	background-color: transparent;
-	background-image: url("#ENV{chemin}/img/logo_crayon_20.png");
+	background-image: url("#DOSSIER_SQUELETTE/img/logo_crayon_20.png");
 	background-origin: padding-box;
 	background-position: 0 0;
 	background-repeat: no-repeat;
@@ -3837,11 +3833,11 @@ ul#forum, .lien_forum {
 	font-size: 0;
 	line-height: 33px;
 	z-index: -1;
-	background:url(#ENV{chemin}/img/expandIcon_off.png) no-repeat center center white
+	background:url(#DOSSIER_SQUELETTE/img/expandIcon_off.png) no-repeat center center white
 }
 
 .hasSidebarExpanded #sidebarExpand {
-	background:url(#ENV{chemin}/img/expandIcon_on.png) no-repeat center center white
+	background:url(#DOSSIER_SQUELETTE/img/expandIcon_on.png) no-repeat center center white
 }
 
 #sidebarCache {
@@ -4004,15 +4000,15 @@ ul#forum, .lien_forum {
 }
 
 .socialtags ul li.facebook {
-	background: url(#ENV{chemin}/img/facebook.svg) no-repeat center center / 80% auto;
+	background: url(#DOSSIER_SQUELETTE/img/facebook.svg) no-repeat center center / 80% auto;
 }
 
 .socialtags ul li.twitter {
-	background: url(#ENV{chemin}/img/twitter.svg) no-repeat center center / 80% auto;
+	background: url(#DOSSIER_SQUELETTE/img/twitter.svg) no-repeat center center / 80% auto;
 }
 
 .socialtags ul li.printer {
-	background: url(#ENV{chemin}/img/print.svg) no-repeat center center / 80% auto;
+	background: url(#DOSSIER_SQUELETTE/img/print.svg) no-repeat center center / 80% auto;
 }
 
 .resizehandle {
@@ -4033,7 +4029,7 @@ ul#forum, .lien_forum {
 #cboxClose, #cboxClose:hover {
 	top: 0;
 	right: 0;
-	background: url(#ENV{chemin}/img/close.svg) no-repeat center center / 80% auto white;
+	background: url(#DOSSIER_SQUELETTE/img/close.svg) no-repeat center center / 80% auto white;
 	width: 40px;
 	height: 40px;
 	z-index: 2000;

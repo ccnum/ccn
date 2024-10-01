@@ -10,27 +10,20 @@
 [(#REM) Annee scolaire]
 	#SET{annee_scolaire,#CONST{_annee_scolaire}}
 
-[(#REM) Mode callback defaut]
-	#SET{mode_popup,#CONST{_mode_popup}}
-
-[(#SET{projet,[(#URL_PAGE{xml}|concat{&mode=projet}|url_absolue|copie_locale)]})]
-	#SET{largeur,#CONST{_largeur}}
-	#SET{hauteur,#CONST{_hauteur}}
-	#SET{couleur_base_texte,#000000}
-	#SET{couleur_1erplan3,#00A0F0}
+[(#SET{projet,[(#URL_PAGE{xml, mode=projet}|url_absolue|copie_locale)]})]
 
 [(#REM) Type d'admin : 0 : total / autrement : nb de rubriques restreintes / -1 : pas admin / -2 pas connecté]
 [(#INCLURE{fond=noisettes/fonction/admin,mode=admin})]
 [(#SET{admin,#SESSION{admin}})]
 
-[(#INCLURE{fond=noisettes/fonction/admin,mode=restreint})]
 [(#REM) Id de la rubrique restreinte sélectionnée]
+[(#INCLURE{fond=noisettes/fonction/admin,mode=restreint})]
 [(#SET{restreint,#SESSION{restreint}})]
 
-[(#REM) Type de rubrique restreinte: consignes, travail_en_cours, blogs, evenements,ressources,classes]
+[(#REM) Type de rubrique restreinte: consignes, travail_en_cours, blogs, evenements, ressources, classes]
 [(#GET{restreint}|oui)
 	[(#INCLURE{fond=noisettes/fonction/type_objet,id_rubrique=#GET{restreint}})]
-	[(#SET{type_restreint,#SESSION{type}]})]
+	[(#SET{type_restreint,#SESSION{type}})]
 ]
 
 [(#REM) Type auteur : travail_en_cours,ressources,consignes]
@@ -43,30 +36,30 @@
 		<meta http-equiv="Pragma" content="no-cache" />
 		<meta http-equiv="Cache-Control" content="no-cache, must-revalidate" />
 		<meta http-equiv="Expires" content="0" />
-		<link rel="stylesheet" type="text/css" href="[(#URL_PAGE{thematique.css}|parametre_url{largeur,#GET{largeur}}|parametre_url{hauteur,#GET{hauteur}}|parametre_url{couleur_base_texte,#GET{couleur_base_texte}}|parametre_url{couleur_1erplan3,#GET{couleur_1erplan3}}|parametre_url{chemin,#DOSSIER_SQUELETTE}|parametre_url{type_objet,#TYPE_OBJET})]">
+		<link rel="stylesheet" type="text/css" href="[(#URL_PAGE{thematique.css}|parametre_url{type_objet,#TYPE_OBJET})]">
 	</head>
 	<body>
 		[(#TYPE_OBJET|=={evenements}|oui|et{#GET{admin}|<{0}|oui}|non)
 			<INCLURE{fond=noisettes/#ENV{page}}
-			{admin=#GET{admin}}
-			{restreint=#GET{restreint}}
-			{mode_popup=#GET{mode_popup}}
-			{type_restreint=#GET{type_restreint}}
-			{type_auteur=#GET{type_auteur}}
-			{id_rubrique}
-			{id_article}
-			{annee_scolaire=#GET{annee_scolaire}}
-			{chemin=#DOSSIER_SQUELETTE/}
-			{page}
-			{env, ajax}
+				{admin=#GET{admin}}
+				{restreint=#GET{restreint}}
+				{mode_popup=complet}
+				{type_restreint=#GET{type_restreint}}
+				{type_auteur=#GET{type_auteur}}
+				{id_rubrique}
+				{id_article}
+				{chemin=#DOSSIER_SQUELETTE/}
+				{annee_scolaire=#GET{annee_scolaire}}
+				{page}
+				{env, ajax}
 			/>
 		]
 		[(#TYPE_OBJET|=={evenements}|oui|et{#GET{admin}|<{0}|oui}|oui)
-		<script>
-			const urlCourante = encodeURIComponent("#URL_ARTICLE");
-			const urlFormulaireConnexion = "[(#URL_PAGE{sommaire})]&url=" + urlCourante + "&cicas=oui&ent=1";
-			window.location = urlFormulaireConnexion;
-		</script>
+			<script>
+				const urlCourante = encodeURIComponent("#URL_ARTICLE");
+				const urlFormulaireConnexion = "[(#URL_PAGE{sommaire})]&url=" + urlCourante + "&cicas=oui&ent=1";
+				window.location = urlFormulaireConnexion;
+			</script>
 		]
 	</body>
 
