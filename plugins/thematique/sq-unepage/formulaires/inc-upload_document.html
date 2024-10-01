@@ -4,12 +4,7 @@
 [(#ENV{joindre_distant}|oui)#SET{methode,distant}]
 [(#ENV{joindre_ftp}|oui)#SET{methode,ftp}]
 
-<div id="defaultsubmit#GET{domid}" class="none"></div>
-[
-
-
-(#REM) Formulaire d'upload de fichier
-]<div class='joindre_mode#GET{domid}[(#GET{methode}|=={upload}|non)none-js]' id='joindre_upload#GET{domid}'>
+<div id="defaultsubmit#GET{domid}" class="none"></div><div class='joindre_mode#GET{domid}[(#GET{methode}|=={upload}|non)none-js]' id='joindre_upload#GET{domid}'>
 	<ul>
 		<li class='editer editer_fichier_upload[ (#ENV**{erreurs}|table_valeur{fichier_upload}|oui)erreur]'>
 			<label for='fichier_upload#GET{domid}'><:bouton_upload:></label>[
@@ -29,12 +24,7 @@
 	</div>
 	<p class='boutons'><input class='submit' type="submit" name="joindre_upload" value="<:bouton_upload:>"/></p>
 </div>[
-
-
-
-
-(#REM) Formulaire pour document dans mediatheque
-][(#ENV{mediatheque,''}|oui)
+[(#ENV{mediatheque,''}|oui)
 <div class='joindre_mode#GET{domid}[(#GET{methode}|=={mediatheque}|non)none-js]' id='joindre_mediatheque#GET{domid}'>
 	<ul>
 		<li class='editer editer_refdoc_joindre[ (#ENV**{erreurs}|table_valeur{refdoc_joindre}|oui)erreur]'>
@@ -60,13 +50,7 @@
 	</div>
 	<p class='boutons'><input class='submit' type="submit" name="joindre_mediatheque" value="<:medias:bouton_attacher_document:>"/></p>
 </div>
-][
-
-
-
-
-(#REM) Formulaire pour upload ftp
-][(#ENV{proposer_ftp,''}|oui)
+[(#ENV{proposer_ftp,''}|oui)
 <div class='joindre_mode#GET{domid}[(#GET{methode}|=={ftp}|non)none-js]' id='joindre_ftp#GET{domid}'>
 	[
 	<ul>
@@ -98,13 +82,8 @@
 		]
 	</p>
 </div>
-][
-
-
-
-
-(#REM) Formulaire pour document distant
-]<div class='joindre_mode#GET{domid}[(#GET{methode}|=={distant}|non)none-js]' id='joindre_distant#GET{domid}'>
+]
+<div class='joindre_mode#GET{domid}[(#GET{methode}|=={distant}|non)none-js]' id='joindre_distant#GET{domid}'>
 	<ul>
 		<li class='editer editer_url[ (#ENV**{erreurs}|table_valeur{url}|oui)erreur]'>
 			<label for='url#GET{domid}'><:medias:info_referencer_doc_distant:></label>[
@@ -123,25 +102,23 @@
 		| <:medias:bouton_download_sur_le_web:>
 	</div>
 	<p class='boutons'><input class='submit' type="submit" name="joindre_distant" value="<:bouton_choisir:>"/></p>
-</div>[
-
-
-
-
-(#REM) Formulaire pour deballer un zip
-][<ul><li class='fieldset deballer_zip'>(#ENV**{erreurs}|table_valeur{lister_contenu_archive})</li></ul>]
+</div>
+[<ul><li class='fieldset deballer_zip'>(#ENV**{erreurs}|table_valeur{lister_contenu_archive})</li></ul>]
 
 <script type='text/javascript'>/*<!#CONST{chr(91)}CDATA#CONST{chr(91)}*/
-if (window.jQuery){
-function change_methode(domid,methode){
-	var id = "#joindre_"+methode+domid;
-	if (jQuery(id).is(':hidden')) {
-		jQuery('div.joindre_mode'+domid+':visible').slideUp('fast');
-		jQuery(id).slideDown('fast');
+	if (window.jQuery) {
+		function change_methode(domid,methode) {
+			var id = "#joindre_"+methode+domid;
+			if (jQuery(id).is(':hidden')) {
+				jQuery('div.joindre_mode'+domid+':visible').slideUp('fast');
+				jQuery(id).slideDown('fast');
+			}
+			// placer en haut du formulaire les boutons submit par defaut correspondant a la methode active
+			jQuery("#defaultsubmit"+domid).html('').append(jQuery(id).find('.boutons').eq(-1).find('input').clone(true));
+		}
+		jQuery(function() {
+			change_methode('#GET{domid}','#GET{methode}');
+		});
 	}
-	// placer en haut du formulaire les boutons submit par defaut correspondant a la methode active
-	jQuery("#defaultsubmit"+domid).html('').append(jQuery(id).find('.boutons').eq(-1).find('input').clone(true));
-}
-jQuery(function(){change_methode('#GET{domid}','#GET{methode}');});
-}
-/*#CONST{chr(93)}[(#CONST{chr(93)})]>*/</script>
+	/*#CONST{chr(93)}[(#CONST{chr(93)})]>*/
+</script>
