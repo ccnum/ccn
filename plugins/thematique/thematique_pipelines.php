@@ -46,3 +46,9 @@ function thematique_jqueryui_plugins($scripts) {
 
 	return $scripts;
 }
+
+function thematique_insert_head($flux) {
+	$flux .= "<script type='text/javascript' src='" . find_in_path('js/bundled/html4+html5/jquery.history.js') . "'></script>\n";
+	$flux .= "<script type='text/javascript' src='" . find_in_path('js/layout.js') . "'></script>";
+	return $flux;
+}

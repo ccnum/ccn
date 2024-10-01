@@ -68,9 +68,6 @@ define('_date_fin', ($annee_scolaire + 1) . '-08-01');
 /*    OPTIONS SPIP                                                                */
 /************************************************************************************/
 
-//Retire jQuery d'insert head pour insertion personnalisée et bug ajax callback
-//$GLOBALS['spip_pipeline']['insert_head'] = str_replace('|f_jQuery', '', $GLOBALS['spip_pipeline']['insert_head']);
-
 //Désactiver les boutons administrateur
 $flag_preserver = true;
 
