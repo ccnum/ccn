@@ -1,0 +1,14 @@
+<paquet
+	prefix="imports_utilisateurs"
+	categorie="squelette"
+	version="1.0.0"
+	etat="stable"
+	logo=""
+	schema=""
+	documentation="http://www.laclasse.com"
+	compatibilite="[4.3.2;4.*]"
+>
+	<nom>Imports Utilisateurs</nom>
+	<auteur>Patrick Vincent</auteur>
+	<licence>GNU/GPL</licence>
+</paquet>
