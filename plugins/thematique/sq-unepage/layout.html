@@ -36,7 +36,7 @@
 		<meta http-equiv="Pragma" content="no-cache" />
 		<meta http-equiv="Cache-Control" content="no-cache, must-revalidate" />
 		<meta http-equiv="Expires" content="0" />
-		<link rel="stylesheet" type="text/css" href="[(#URL_PAGE{thematique.css}|parametre_url{type_objet,#TYPE_OBJET})]">
+		<link rel="stylesheet" type="text/css" href="[(#URL_PAGE{thematique.css}|parametre_url{chemin,#DOSSIER_SQUELETTE}|parametre_url{type_objet,#TYPE_OBJET})]">
 	</head>
 	<body>
 		[(#TYPE_OBJET|=={evenements}|oui|et{#GET{admin}|<{0}|oui}|non)
