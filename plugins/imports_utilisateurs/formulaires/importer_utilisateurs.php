@@ -64,8 +64,8 @@ function formulaires_importer_utilisateurs_verifier_dist() {
 		$erreurs['test'] .= "\n\n";
 		$erreurs['test'] .= "<p class='explication'>{{" . singulier_ou_pluriel(
 			$count,
-			'thematique:info_1_auteur_importer',
-			'thematique:info_nb_auteurs_importer'
+			'imports_utilisateurs:info_1_auteur_importer',
+			'imports_utilisateurs:info_nb_auteurs_importer'
 		) . "}}</p>";
 		$erreurs['message_erreur'] = '';
 	}
@@ -89,10 +89,10 @@ function formulaires_importer_utilisateurs_traiter_dist() {
 		sinon(
 			singulier_ou_pluriel(
 				$r['count'],
-				'thematique:info_1_auteur_importer',
-				'thematique:info_nb_auteurs_importer'
+				'imports_utilisateurs:info_1_auteur_importer',
+				'imports_utilisateurs:info_nb_auteurs_importer'
 			),
-			_T('thematique:info_aucun_auteurs_importer')
+			_T('imports_utilisateurs:info_aucun_auteurs_importer')
 		);
 	if (count($r['erreurs'])) {
 		$message .= "<p>Erreurs : <br />" . implode("<br />", $r['erreurs']) . "</p>";

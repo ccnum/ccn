@@ -6,7 +6,7 @@
 	logo=""
 	schema=""
 	documentation="http://www.laclasse.com"
-	compatibilite="[3.0;["
+	compatibilite="[4.3.2;4.*]"
 >
 	<nom>Fictions</nom>
 	<auteur>Patrick Vincent</auteur>
