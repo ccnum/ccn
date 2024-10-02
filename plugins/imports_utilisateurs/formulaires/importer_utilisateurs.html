@@ -6,7 +6,7 @@
 	<form method='post' action='#ENV{action}' enctype="multipart/form-data"><div>
 		#ACTION_FORMULAIRE
 		<ul class="editer-groupe">
-			#SET{fl,thematique}
+			#SET{fl,imports_utilisateurs}
 			#SET{name,file_import}#SET{obli,#ENV**{erreurs/test,''}|?{'',obligatoire}}#SET{defaut,''}#SET{erreurs,#ENV**{erreurs}|table_valeur{#GET{name}}}
 			<li class="editer editer_[(#GET{name})][ (#GET{obli})][ (#GET{erreurs}|oui)erreur]">
 				<label for="#GET{name}">[(#GET{fl}|concat{':label_',#GET{name}}|_T)]</label>[
@@ -16,7 +16,7 @@
 		</ul>
 		[(#REM) ajouter les saisies supplementaires : extra et autre, a cet endroit ]
 		<!--extra-->
-		<p class="boutons"><input type='submit' class='submit' value='<:thematique:bouton_previsu_importer|attribut_html:>' /></p>
+		<p class="boutons"><input type='submit' class='submit' value='<:imports_utilisateurs:bouton_previsu_importer|attribut_html:>' /></p>
 
 		[
 		<ul class="editer-groupe">
@@ -38,7 +38,7 @@
 			</li>
 			]
 		</ul>
-		<p class="boutons"><input type='submit' class='submit' name='go' value='<:thematique:bouton_importer|attribut_html:>' /></p>
+		<p class="boutons"><input type='submit' class='submit' name='go' value='<:imports_utilisateurs:bouton_importer|attribut_html:>' /></p>
 		]
 	</div></form>
 	]
