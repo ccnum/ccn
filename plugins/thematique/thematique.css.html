@@ -239,7 +239,7 @@ option, select, form {
 /* --------- Généraux --------- */
 @font-face {
 	font-family: font;
-	src: url(#DOSSIER_SQUELETTE/font/lato/Lato-Reg.ttf);
+	src: url(#ENV{chemin}/font/lato/Lato-Reg.ttf);
 }
 
 
@@ -445,12 +445,12 @@ body {
 }
 
 .logo_menu-doc {
-	background-image: url(#DOSSIER_SQUELETTE/img/logo_doc.png);
+	background-image: url(#ENV{chemin}/img/logo_doc.png);
 	background-size: 25px;
 }
 
 .logo_menu-cible {
-	background-image: url(#DOSSIER_SQUELETTE/img/logo_cible.png);
+	background-image: url(#ENV{chemin}/img/logo_cible.png);
 	background-size: 25px;
 }
 
@@ -1215,7 +1215,7 @@ a:hover {
 	text-align: center;
 	display: table-cell;
 	vertical-align: middle;
-	background-image: url(#DOSSIER_SQUELETTE/img/reponse.png);
+	background-image: url(#ENV{chemin}/img/reponse.png);
 }
 
 .consigne_reponses_classe {
@@ -1226,7 +1226,7 @@ a:hover {
 	text-align: center;
 	display: table-cell;
 	vertical-align: middle;
-	background-image: url(#DOSSIER_SQUELETTE/img/reponse_classe.png);
+	background-image: url(#ENV{chemin}/img/reponse_classe.png);
 }
 
 .reponse_p {
@@ -1268,7 +1268,7 @@ a:hover {
 	text-align: center;
 	/*display: table-cell;*/
 	vertical-align: middle;
-	background-image: url(#DOSSIER_SQUELETTE/img/commentaire.png);
+	background-image: url(#ENV{chemin}/img/commentaire.png);
 }
 
 .intervention .action_supprimer {
@@ -1290,12 +1290,12 @@ a:hover {
 	margin-left: 5px;
 	margin-bottom: 3px;
 	margin-right: 5px;
-	background: url(#DOSSIER_SQUELETTE/img/logo_supprimer_off_15.png) no-repeat center center / 12px auto;
+	background: url(#ENV{chemin}/img/logo_supprimer_off_15.png) no-repeat center center / 12px auto;
 	position: relative;
 	z-index: 2;
 }
 .action_supprimer:hover, .formulaire_editer_rubrique .action_supprimer:hover, .action_supprimer_on {
-	background: url(#DOSSIER_SQUELETTE/img/logo_supprimer_off_15_white.png) no-repeat scroll center center / 12px auto tomato;
+	background: url(#ENV{chemin}/img/logo_supprimer_off_15_white.png) no-repeat scroll center center / 12px auto tomato;
 	border-radius:0 3px 3px 0;
 	position: relative;
 	z-index: 2;
@@ -2972,13 +2972,13 @@ div.donnees_classe {
 
 
 .chargement_grand {
-	background: url(#DOSSIER_SQUELETTE/img/chargement.gif) no-repeat center center;
+	background: url(#ENV{chemin}/img/chargement.gif) no-repeat center center;
 	min-width: 200px;
 	min-height: 200px;
 	}
 
 .chargement {
-	background: url(#DOSSIER_SQUELETTE/img/chargement-petit.gif) no-repeat center center;
+	background: url(#ENV{chemin}/img/chargement-petit.gif) no-repeat center center;
 	}
 
 a.lien_ajouter { cursor: pointer; color: #58ab27; padding-right: 25px; font-weight: normal;}
@@ -3014,7 +3014,7 @@ a.liens_forum:hover { }
 #cboxClose, #cboxClose:hover {
 	top: -4px;
 	right: -6px;
-	background-image: url(#DOSSIER_SQUELETTE/img/close.png);
+	background-image: url(#ENV{chemin}/img/close.png);
 	background-position: 0px 0px;
 	width: 30px;
 	height: 30px;
@@ -3082,7 +3082,7 @@ a.liens_forum:hover { }
 	background-attachment: scroll;
 	background-clip: border-box;
 	background-color: transparent;
-	background-image: url("#DOSSIER_SQUELETTE/img/logo_crayon_20.png");
+	background-image: url("#ENV{chemin}/img/logo_crayon_20.png");
 	background-origin: padding-box;
 	background-position: 0 0;
 	background-repeat: no-repeat;
@@ -3833,11 +3833,11 @@ ul#forum, .lien_forum {
 	font-size: 0;
 	line-height: 33px;
 	z-index: -1;
-	background:url(#DOSSIER_SQUELETTE/img/expandIcon_off.png) no-repeat center center white
+	background:url(#ENV{chemin}/img/expandIcon_off.png) no-repeat center center white
 }
 
 .hasSidebarExpanded #sidebarExpand {
-	background:url(#DOSSIER_SQUELETTE/img/expandIcon_on.png) no-repeat center center white
+	background:url(#ENV{chemin}/img/expandIcon_on.png) no-repeat center center white
 }
 
 #sidebarCache {
@@ -4000,15 +4000,15 @@ ul#forum, .lien_forum {
 }
 
 .socialtags ul li.facebook {
-	background: url(#DOSSIER_SQUELETTE/img/facebook.svg) no-repeat center center / 80% auto;
+	background: url(#ENV{chemin}/img/facebook.svg) no-repeat center center / 80% auto;
 }
 
 .socialtags ul li.twitter {
-	background: url(#DOSSIER_SQUELETTE/img/twitter.svg) no-repeat center center / 80% auto;
+	background: url(#ENV{chemin}/img/twitter.svg) no-repeat center center / 80% auto;
 }
 
 .socialtags ul li.printer {
-	background: url(#DOSSIER_SQUELETTE/img/print.svg) no-repeat center center / 80% auto;
+	background: url(#ENV{chemin}/img/print.svg) no-repeat center center / 80% auto;
 }
 
 .resizehandle {
@@ -4029,7 +4029,7 @@ ul#forum, .lien_forum {
 #cboxClose, #cboxClose:hover {
 	top: 0;
 	right: 0;
-	background: url(#DOSSIER_SQUELETTE/img/close.svg) no-repeat center center / 80% auto white;
+	background: url(#ENV{chemin}/img/close.svg) no-repeat center center / 80% auto white;
 	width: 40px;
 	height: 40px;
 	z-index: 2000;
