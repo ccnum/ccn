@@ -65,3 +65,20 @@ function thematique_insert_head($flux) {
 
 	return $flux;
 }
+
+function thematique_post_edition($flux) {
+	if (
+		isset($flux['args']['table'])
+		and $flux['args']['table'] === 'spip_articles'
+		and isset($flux['args']['action'])
+		and $flux['args']['action'] === 'instituer'
+	) {
+		$notifications = charger_fonction('notifications', 'inc');
+		$notifications(
+			'instituerarticle',
+			$flux['args']['id_objet'],
+			['statut' => 'publie', 'statut_ancien' => 'propose', 'date' => date('Y-m-d H:i:s')]
+		);
+	}
+	return $flux;
+}
