@@ -109,6 +109,7 @@ if [[ ! -e config/connect.php && ${SPIP_AUTO_INSTALL} = 1 ]]; then
 	spip plugins:activer cicas -y
 	spip plugins:activer corbeille -y
 	spip plugins:activer import_utilisateurs -y
+	spip plugins:activer simplog -y
 	if [ ${SPIP_VERSION_SITE} = "fictions" ]; then
 		spip plugins:activer vider_rubrique -y
 	fi
