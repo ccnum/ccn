@@ -1,6 +1,5 @@
 <?php
 if (preg_match('/ddev.site/', $_SERVER['HTTP_HOST'])) {
-	/*
 	define('_NO_CACHE', -1);
 	define('_INTERDIRE_COMPACTE_HEAD_ECRIRE', true);
 	error_reporting(E_ALL ^ E_NOTICE);
@@ -12,7 +11,6 @@ if (preg_match('/ddev.site/', $_SERVER['HTTP_HOST'])) {
 	define('_LOG_FILTRE_GRAVITE', 8);
 	define('_DEBUG_SLOW_QUERIES', true);
 	define('_BOUCLE_PROFILER', 5000);
-	*/
 	define('_TEST_EMAIL_DEST', 'pierrekuhn@ik.me');
 
 	$rep = 'sites/';
