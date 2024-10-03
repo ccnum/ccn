@@ -1,16 +1,16 @@
-[(#REM) 
-	
+[(#REM)
+
   Parametres :
   - class : classe(s) css ajoutes au select
   - defaut : valeur par defaut si pas présente dans l'environnement
   - valeur_forcee : valeur utilisee meme si une valeur est dans l'environnement
-  
+
   Exemple d'appel :
 	[(#SAISIE{selecteur_langue,lang,
-		label=<:plugin:info_langue:>})] 
+		label=<:plugin:info_langue:>})]
 ]
 [(#SET{valeur,[(#ENV{valeur_forcee,#ENV{valeur,#ENV{defaut,''}}})]})]
 <select name="#ENV{nom}" id="champ_[(#ENV{id,#ENV{nom}}|saisie_nom2classe)]"[ class="(#ENV{class})"][ disabled="(#ENV{disable})"][ (#ENV*{attributs})]>
 [(#ENV{cacher_option_intro}|non)<option value="">[(#ENV{option_intro})]</option>]
-[(#INCLURE{fond=prive/formulaires/inc-options-langues,name=#ENV{type_lang, changer_lang},default=#GET{valeur}})]
+<INCLURE{fond=prive/formulaires/inc-options-langues,name=#ENV{type_lang, changer_lang},default=#GET{valeur}} />
 </select>

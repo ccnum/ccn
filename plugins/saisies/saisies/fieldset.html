@@ -1,3 +1,4 @@
+#CACHE{24*3600*31,statique}
 #SET{classe_pliable,#ENV{pliable}|et{#ENV{pliable}|!=={non}}|?{pliable}}
 #SET{classe_plie,#ENV{plie}|et{#ENV{plie}|!=={non}}|?{plie}}
 #SET{classe_onglet,#ENV{onglet}|et{#ENV{onglet}|!=={non}}|?{fieldset_onglet}}
@@ -27,7 +28,7 @@
 	[<em class='attention'>(#ENV*{attention})</em>]
 	[(#ENV{saisies}|is_array|oui)
 		<div class="editer-groupe">
-	#INCLURE{fond=#ENV{fond_generer,"inclure/generer_saisies"}, env, saisies=#ENV{saisies}, from_fieldset='on'}
+			<INCLURE{fond=#ENV{fond_generer,"inclure/generer_saisies"}, env, saisies=#ENV{saisies}, from_fieldset='on'} />
 		</div>
 	]
 

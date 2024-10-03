@@ -125,10 +125,17 @@ function saisies_generer_html($champ, $env = []) {
 
 	$contexte = [];
 
-	// Si la saisie est depubliee, mais qu'une valeur existait avant (car sinon elle ne serait plus éditable), on enlève l'obligation
+	// Si la saisie est depubliee, mais qu'une valeur existait avant (car sinon elle ne serait plus éditable), on enlève l'obligation et on marque que c'est dépubliée
 	if (($champ['options']['depublie'] ?? '') || ($env['depublie'] ?? '')) {
 		$env['depublie'] = 'on';// pour transmettre aux enfants
 		unset($champ['options']['obligatoire']);
+		// On indique si c'est dépubliée
+		if ($champ['options']['label'] ?? '') {
+			$champ['options']['label'] = $champ['options']['label'] . ' (' . _T('saisies:saisie_depublie') . ')';
+		}
+		if ($options['label_case'] ?? '') {
+			$champ['option']['label_case'] = $champ['options']['label_case'] . ' (' . _T('saisies:saisie_depublie') . ')';
+		}
 	}
 
 
@@ -282,6 +289,16 @@ function saisies_generer_vue($saisie, $env = [], $env_obligatoire = []) {
 			$options[$option] = _T_ou_typo(saisies_chaine2tableau($valeur), 'multi');
 		} else {
 			$options[$option] = _T_ou_typo($valeur, 'multi');
+		}
+	}
+
+	// On indique si c'est dépubliée
+	if ($options['depublie'] ?? '') {
+		if ($options['label'] ?? '') {
+			$options['label'] = $options['label'] . ' (' . _T('saisies:saisie_depublie') . ')';
+		}
+		if ($options['label_case'] ?? '') {
+			$options['label_case'] = $options['label_case'] . ' (' . _T('saisies:saisie_depublie') . ')';
 		}
 	}
 

@@ -1,3 +1,4 @@
+#CACHE{24*3600*31,statique}
 <select name="#ENV{nom}" id="champ_[(#ENV{id,#ENV{nom}}|saisie_nom2classe)]">
 	#SET{tab,#ENV{formulaire}}
 	#SET{tab_par_nom,#ENV{formulaire}|saisies_lister_par_nom}
