@@ -1,0 +1,20 @@
+<paquet
+	prefix="simplog"
+	version="2.1.0"
+	etat="stable"
+	compatibilite="[4.0.0;4.*]"
+	logo="simplog.svg"
+	documentation="https://contrib.spip.net/Simples-Logs"
+>
+
+	<nom>Simples Logs</nom>
+	<!-- Visualisation des logs SPIP par les administrateurs -->
+
+	<auteur mail="luc.tech@free.fr">Luc Tech</auteur>
+	<auteur lien="http://blog.smellup.net/">Eric Lupinacci</auteur>
+
+	<licence>GNU/GLP</licence>
+
+	<pipeline nom="autoriser" inclure="simplog_autorisations.php" />
+	<menu nom="simplog" titre="simplog:logs" parent="menu_administration" icone="images/log-16.png" action="simplog" />
+</paquet>

@@ -1,0 +1,7 @@
+[(#REM) Inclusion de la caption de la table des enregistrements du log, formulaire de filtrage des logs
+	- niveau : liste (chaine séparée par des virgule) des niveaux de gravité à afficher
+	- niveaux_logs : liste des niveaux de gravité inclus dans le log
+]
+[<div class="noajax">
+	(#FORMULAIRE_FILTRER_LOG{#ENV{niveau}, #ENV{niveaux_log}})
+</div>]
