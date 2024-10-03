@@ -12,6 +12,5 @@ $GLOBALS[$GLOBALS['idx_lang']] = array(
 	balise #SAISIE. Le HTML généré est compatible avec la nomenclature des formulaires
 	proposée par SPIP.',
 	'saisies_nom' => 'Saisies pour formulaires',
-	'saisies_slogan' => 'Écrire facilement des champs de formulaires.',
-	'saisies_titre' => 'Saisies pour formulaires'
+	'saisies_slogan' => 'Écrire facilement des champs de formulaires.'
 );

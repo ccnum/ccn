@@ -12,6 +12,5 @@ $GLOBALS[$GLOBALS['idx_lang']] = array(
 	// S
 	'saisies_description' => 'Deze plugin vereenvoudigt het maken van formuliervelden danzij een code #SAISIE. De gegenereerde HTML is compatibel met die van SPIP formulieren vanaf versie 2.0 en met de configuratie plugin CFG.', # MODIF
 	'saisies_nom' => 'Saisies (Invoer) voor formulieren',
-	'saisies_slogan' => 'Eenvoudig formuliervelden maken.',
-	'saisies_titre' => 'Invoer voor formulieren'
+	'saisies_slogan' => 'Eenvoudig formuliervelden maken.'
 );

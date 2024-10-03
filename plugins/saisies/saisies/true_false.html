@@ -1,12 +1,12 @@
-[(#REM) 
-
+#CACHE{24*3600*31,statique}
+[(#REM)
+	<!> Déprécié, non maintenu, utiliser plutôt une saisie radio en passant le bon paramètre DATA
   Action :
   - Rempli "true" si oui, "false" si non.
-  
+
   Parametres :
   - defaut : valeur par defaut si pas présente dans l'environnement
   - valeur_forcee : valeur utilisee meme si une valeur est dans l'environnement
-  
   Exemple d'appel :
 	[(#SAISIE{true_false, afficher_liste,
 		label=<:plugin:afficher_liste:>,

@@ -43,14 +43,21 @@ function saisies_afficher_si_js($condition, $saisies_par_etapes = []) {
 			$expression = $test['expression'];
 			unset($test['expression']);// Les les fonctions saisies_afficher_si_js n'ont pas besoin de l'expression qui est deja parsée, et cela évite qu'elles l'insèrent dans le js, avec le risque du coup de remplacement recursif et du coup de saisie js invalide.
 
-			$negation = isset($test['negation']) ? $test['negation'] : '' ;
-			$champ = isset($test['champ']) ? $test['champ'] : '' ;
-			$total = isset($test['total']) ? $test['total'] : '';
-			$operateur = isset($test['operateur']) ? $test['operateur'] : null ;
-			$negation = isset($test['negation']) ? $test['negation'] : '';
-			$booleen = isset($test['booleen']) ? $test['booleen'] : '';
-			$valeur = isset($test['valeur']) ? $test['valeur'] : null ;
-			$valeur_numerique = isset($test['valeur_numerique']) ? $test['valeur_numerique'] : '' ;
+			$negation = $test['negation'] ?? '' ;
+			$champ = $test['champ'] ?? '' ;
+			$total = $test['total'] ?? '';
+			$operateur = $test['operateur'] ?? null ;
+			$negation = $test['negation'] ?? '';
+			$booleen = $test['booleen'] ?? '';
+			$valeur = $test['valeur'] ?? null ;
+			$valeur_numerique = $test['valeur_numerique'] ?? '';
+
+			$champ = saisie_nom2name($champ);
+			// Cas des saisies type grille, rechercher le vrai nom de la saisie
+			preg_match('/(.*)\[(.*)\]$/', $champ, $sous_champ);
+			$racine_champ = $sous_champ[1] ?? '';
+			$sous_champ = $sous_champ[2] ?? '';
+
 
 			$plugin = saisies_afficher_si_evaluer_plugin($champ, $negation);
 
@@ -63,16 +70,24 @@ function saisies_afficher_si_js($condition, $saisies_par_etapes = []) {
 			} elseif ($booleen) {
 				$condition = $condition;
 			} else { // et maintenant, on rentre dans le vif du sujet : les champs.
-				if (!isset($saisies_toutes_par_nom[$champ])) {//La saisie conditionnante n'existe pas pour ce formulaire > on laisse tomber
+				if (!saisies_verifier_coherence_afficher_si_par_champ($champ, $saisies_toutes_par_nom)) {//La saisie conditionnante n'existe pas pour ce formulaire > on laisse tomber
 					spip_log("Afficher_si incorrect. Champ $champ inexistant", 'saisies' . _LOG_CRITIQUE);
 					$condition = '';
-				} elseif (!isset($saisies_etape_courante_par_nom[$champ])) {
+				} elseif (
+						!isset($saisies_etape_courante_par_nom[$champ])
+						&& !($racine_champ && isset($saisies_etape_courante_par_nom[$racine_champ]))
+				) {
 					//Cas 1. La saisie existe bien dans le formulaire, mais pas à l'étape courante.
-
-					$test_modifie = eval('return ' . saisies_tester_condition_afficher_si(saisies_get_valeur_saisie($saisies_toutes_par_nom[$champ]), $total, $operateur, $valeur, $negation) . ';') ? 'true' : 'false';
+					if (isset($saisies_toutes_par_nom[$champ])) {
+						$valeur_champ = saisies_get_valeur_saisie($saisies_toutes_par_nom[$champ]);
+					} else {
+						$valeur_champ = saisies_get_valeur_saisie($saisies_toutes_par_nom[$racine_champ]);
+						$valeur_champ = $valeur_champ[$sous_champ] ?? '';
+					}
+					$test_modifie = eval('return ' . saisies_tester_condition_afficher_si($valeur_champ, $total, $operateur, $valeur, $negation) . ';') ? 'true' : 'false';
 					$condition = str_replace($expression, $test_modifie, $condition);
 				} else {
-					$type_saisie = $saisies_toutes_par_nom[$champ]['saisie'];
+					$type_saisie = $saisies_toutes_par_nom[$champ]['saisie'] ?? $saisies_toutes_par_nom[$racine_champ]['saisie'];
 					if (!$f = charger_fonction($type_saisie, 'saisies_afficher_si_js', true)) {//Y-a-t'il une fonction spécifique pour la génération du JS de cette saisie ?
 						$f = charger_fonction('defaut', 'saisies_afficher_si_js');
 					}

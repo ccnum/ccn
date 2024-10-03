@@ -54,6 +54,10 @@ fieldset.plie > legend:before{
 	overflow-x: auto;
 }
 
+.choix_grille input {
+	width: 100%;
+}
+
 .formulaire_spip .choix-groupe {
 	border: none;
 	margin-top: 0;
@@ -232,3 +236,5 @@ fieldset.plie > legend:before{
 		flex-grow: 1;
 	}
 }
+
+

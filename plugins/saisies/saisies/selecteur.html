@@ -3,7 +3,7 @@
 
 [(#SET{val,#ENV{valeur_forcee,#ENV{valeur,#ENV{defaut}}}})]
 
-[(#INCLURE{fond=formulaires/selecteur/generique,
+<INCLURE{fond=formulaires/selecteur/generique,
 	selected=#GET{val},
 	name=#ENV{nom},
 	afficher_langue=#ENV{afficher_langue,''},
@@ -13,4 +13,5 @@
 	racine=#ENV{racine},
 	objet=#ENV{objet,racine},
 	id_objet=#ENV{id_objet,0},
-	env})]
+	env}
+	/>

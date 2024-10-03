@@ -228,7 +228,7 @@ function saisies_tester_condition_afficher_si_array($valeur_champ, $total, $oper
 function saisies_afficher_si_get_valeur_config($champ) {
 	$valeur = '';
 	if (preg_match('#config:(.*)#', $champ, $config)) {
-		$config_a_tester = str_replace(':', '/', $config[1]);
+		$config_a_tester = str_replace(':', '/', saisie_name2nom($config[1]));
 		$valeur = lire_config($config_a_tester);
 	}
 	return $valeur;
@@ -243,13 +243,21 @@ function saisies_afficher_si_get_valeur_config($champ) {
  **/
 function saisies_afficher_si_secure($condition, $tests = []) {
 	$condition_original = $condition;
+	$expressions = array_column($tests, 'expression');
+
+	// Trier les expressions en commençant par celle qui sont le plus larges,
+	// de sort que `@toto@ != ''` soit effacée avant `@toto@
+	// cf https://git.spip.net/spip-contrib-extensions/saisies/-/issues/427
+	uasort($expressions, function (string $a, string $b): int {
+		return strlen($b) - strlen($a);
+	});
+
+	$condition = str_replace($expressions, '', $condition);
+
 	$hors_test = ['||','&&','!','(',')','true','false'];
-	foreach ($tests as $test) {
-		$condition = str_replace($test['expression'], '', $condition);
-	}
-	foreach ($hors_test as $hors) {
-		$condition = str_replace($hors, '', $condition);
-	}
+
+	$condition = str_replace($hors_test, '', $condition);
+
 	$condition = trim($condition);
 	if ($condition) {// il reste quelque chose > c'est le mal
 		spip_log("Afficher_si incorrect. $condition_original non sécurisée; il reste une partie non parsée : $condition", 'saisies' . _LOG_CRITIQUE);
@@ -330,7 +338,7 @@ function saisies_afficher_si_parser_valeur_MATCH($valeur) {
 
 /**
  * Vérifier que les afficher_si dans un tableau de saisies sont cohérents
- * A savoir qu'on ne demande pas un test sur un champ inexistans
+ * A savoir qu'on ne demande pas un test sur un champ inexistant
  * @param array $saisie
  * @return string erreurs
  **/
@@ -339,25 +347,23 @@ function saisies_verifier_coherence_afficher_si(array $saisies): string {
 	$liste_erreurs = [];
 	$saisies_avec_afficher_si = saisies_lister_avec_option('afficher_si', $saisies);
 	$saisies = pipeline('saisies_afficher_si_saisies', $saisies);
-	$saisies_par_nom = array_keys(saisies_lister_par_nom($saisies));
+	$saisies_par_nom = saisies_lister_par_nom($saisies);
+	$nom_des_saisies = array_keys($saisies_par_nom);
 
 	foreach ($saisies_avec_afficher_si as $saisie) {
 		$afficher_si = $saisie['options']['afficher_si'];
 		preg_match_all('/@(.*)@/mU', $afficher_si, $champs_dans_afficher_si);
 		$champs_dans_afficher_si = $champs_dans_afficher_si[1];
 
-		// Autoriser '@config:xxx' et '@plugin:xx@'
-		$champs_dans_afficher_si = array_filter($champs_dans_afficher_si, function ($champ) {
-			if (strpos($champ, 'config:') === 0 || strpos($champ, 'plugin:') === 0) {
-				return false;
-			} else {
-				return true;
-			}
+		$champs_en_erreur = array_filter($champs_dans_afficher_si, function ($champ) use ($saisies_par_nom) {
+			return !saisies_verifier_coherence_afficher_si_par_champ($champ, $saisies_par_nom);
 		});
-		$diff = array_diff($champs_dans_afficher_si, $saisies_par_nom);
-		if ($diff) {
+
+
+		// Et maintenant générer les erreurs pour ce champ précis
+		if ($champs_en_erreur) {
 			$liste_erreurs[$saisie['options']['nom']] = [
-				'erreurs' => 	$diff,
+				'erreurs' => 	$champs_en_erreur,
 				'label' => $saisie['options']['label_case'] ?? $saisie['options']['label']
 			];
 		}
@@ -382,4 +388,35 @@ function saisies_verifier_coherence_afficher_si(array $saisies): string {
 		}
 	}
 	return $erreur;
+}
+
+/**
+ * Vérifie qu'un champ testé dans un `afficher_si` (ce qui est donc entre `@@`)
+ * se trouve dans la liste des saisies proposées
+ * en tenant compte du fait qu'on peut avoir :
+ *	- @plugin:xx@
+ *	- @config:xxx@
+ *	- @choix_grille_1[soustruc]@
+ *	@param string $champ sans les `@` d'encadrement
+ *	@param array $saisies_par_nom
+ *	@return bool
+ **/
+function saisies_verifier_coherence_afficher_si_par_champ(string $champ, array $saisies_par_nom): bool {
+	$champ = saisie_nom2name($champ);
+	// Autoriser 'config:' et 'plugin:',
+	if (strpos($champ, 'config:') === 0 || strpos($champ, 'plugin:') === 0) {
+		return true;
+	}
+	// Autoriser `@choix_grille_1[c]@` si `c` est proposé  en data_row de `choix_grille_1[c]`
+	preg_match('/(.*)\[(.*)\]$/', $champ, $sous_champ);
+	if ($sous_champ) {
+		$champ_principal = $sous_champ[1];
+		$sous_champ = $sous_champ[2];
+		$data_rows = saisies_chaine2tableau($saisies_par_nom[$champ_principal]['options']['data_rows'] ?? []);
+		if (isset($data_rows[$sous_champ])) {
+			return true;
+		} // Ne pas retourner false, cela se trouve on a vraiment une saisie dont le nom est `choix_grille_1[c]`
+	}
+	// Et finalement vérifier les champs simples
+	return isset($saisies_par_nom[$champ]);
 }

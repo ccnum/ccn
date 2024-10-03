@@ -36,10 +36,12 @@
 ]
 [(#REM) Donner a manger a CFG ou CVT-configurer si aucune valeur definie ]
 <!--keepme: <input type="hidden" name="[(#ENV{nom,id_item})][]" id="[champ_(#ENV{nom,id_item})]" value="" />-->
-[(#INCLURE{fond=formulaires/selecteur/rubriques,
+[(#SET{select,[(#ENV{multiple}|?{0,1})]})]
+<INCLURE{fond=formulaires/selecteur/rubriques,
 	selected=#GET{val},
 	name=#ENV{nom},
 	afficher_langue=#ENV{afficher_langue,''},
 	filtrer_langue_rubrique=#GET{filtrer_langue_rubrique,''},
 	limite_branche=#ENV{limite_branche,''},
-	select=[(#ENV{multiple}|?{0,1})]})]
+	select=#GET{select}}
+	/>

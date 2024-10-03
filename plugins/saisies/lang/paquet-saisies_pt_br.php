@@ -12,6 +12,5 @@ $GLOBALS[$GLOBALS['idx_lang']] = array(
 	// S
 	'saisies_description' => 'Este plugin permite facilitar a escrita de campos de formulários, propondo uma tag #SAISIE. O HTML gerado é compatível com a nomenclatura dos formulários propostos pelo SPIP > 2.0 e com o plugin de configuração CFG.', # MODIF
 	'saisies_nom' => 'Entradas para formulários',
-	'saisies_slogan' => 'Facilitar a entrada de dados em campos de formulários.',
-	'saisies_titre' => 'Entrada de dados para formulários'
+	'saisies_slogan' => 'Facilitar a entrada de dados em campos de formulários.'
 );
