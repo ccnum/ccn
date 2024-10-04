@@ -14,6 +14,5 @@ $GLOBALS[$GLOBALS['idx_lang']] = array(
 		The generated HTML is compatible with the classification of forms
 		proposed by SPIP.', # MODIF
 	'saisies_nom' => 'Entries for forms',
-	'saisies_slogan' => 'Create easily forms fields.',
-	'saisies_titre' => 'Entries for forms'
+	'saisies_slogan' => 'Create easily forms fields.'
 );

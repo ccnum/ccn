@@ -17,18 +17,18 @@
   - afficher_rub_dans_langue_interface : si oui, on n'affiche que les rubriques de la langue de l'interface
   - defaut : valeur par defaut si pas présente dans l'environnement
   - valeur_forcee : valeur utilisee meme si une valeur est dans l'environnement
-	 
+
   Exemple d'appel :
 	[(#SAISIE{selecteur_rubrique_article,menu,
 		multiple=1,
-		label=<:plugin:choisir_le_menu:>})] 
+		label=<:plugin:choisir_le_menu:>})]
 ]
 [(#SET{val,#ENV{valeur_forcee,#ENV{valeur,#ENV{defaut}}}})]
 
 [(#SET{filtrer_langue_article,[(#ENV{afficher_art_dans_langue_interface,0}|oui) #ENV{lang}]})]
 [(#SET{filtrer_langue_rubrique,[(#ENV{afficher_rub_dans_langue_interface,0}|oui) #ENV{lang}]})]
 
-[(#REM) input necessaire au tag label for 
+[(#REM) input necessaire au tag label for
 	Mais si on le garde, la saisie enregistree en base, n'est pas correcte
    On pourrait rajouter l'id dans le input cree par Bonux, mais du coup manque la chaine "champ_"
    Comme ca a l'air un peu tordu tout ca, tant pis pour l'erreur HTML
@@ -37,12 +37,14 @@
 [(#REM) Donner a manger a CFG ou CVT-configurer si aucune valeur definie ]
 <!--keepme: <input type="hidden" name="[(#ENV{nom,id_item})][]" id="[champ_(#ENV{nom,id_item})]" value="" /> -->
 
-[(#INCLURE{fond=formulaires/selecteur/articles,
+[(#SET{select,[(#ENV{multiple}|?{0,1})]})]
+<INCLURE{fond=formulaires/selecteur/articles,
 	selected=#GET{val},
 	name=#ENV{nom},
 	afficher_langue=#ENV{afficher_langue,''},
 	filtrer_langue_article=#GET{filtrer_langue_article,''},
 	filtrer_langue_rubrique=#GET{filtrer_langue_rubrique,''},
-	select=[(#ENV{multiple}|?{0,1})],
-	rubriques=1})]
+  select=#GET{select},
+	rubriques=1}
+	/>
 

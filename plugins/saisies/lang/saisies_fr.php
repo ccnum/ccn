@@ -288,6 +288,7 @@ $GLOBALS[$GLOBALS['idx_lang']] = array(
 	'saisie_input_explication' => 'Une simple ligne de texte, pouvant être visible ou masquée (mot de passe).',
 	'saisie_input_titre' => 'Ligne de texte',
 	'saisie_mot_explication' => 'Des mots-clés d’un groupe de mot',
+	'saisie_mot_pas_configuree' => 'Configurez la saisie mots pour afficher les mots-clés selon vos propres critères.',
 	'saisie_mot_titre' => 'Mot-clé',
 	'saisie_oui_non_explication' => 'Oui ou non, c’est clair ? :)',
 	'saisie_oui_non_titre' => 'Oui ou non',
@@ -309,7 +310,6 @@ $GLOBALS[$GLOBALS['idx_lang']] = array(
 	'saisie_textarea_titre' => 'Bloc de texte',
 	'saisies_aide_memoire' => 'Aide mémoire',
 	'saisies_aplatir_tableau_montrer_groupe' => '@groupe@ : @valeur@',
-	'saisie_mot_pas_configuree' => 'Configurez la saisie mots pour afficher les mots-clés selon vos propres critères.',
 
 	// T
 	'titre_page_saisies_doc' => 'Documentation des saisies',

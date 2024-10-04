@@ -17,7 +17,7 @@
 	<BOUCLE_colonnes (DATA) {source table,#GET{data_cols}}>
 		#SET{coche, #CLE|=={#GET{valeur/#_lignes:CLE}}}
 		[(#ENV{multiple}|et{#ENV{multiple}|!={non}}|oui)
-			[(#REM)<!-- le saisie_chaine2tableau permet de s'assurer que la ligne est au bon format si avant l'option multiple n'était pas activé -->]
+			[(#REM)<!-- le saisies_chaine2tableau permet de s'assurer que la ligne est au bon format si avant l'option multiple n'était pas activé -->]
 			#SET{coche, #CLE|in_array{#GET{valeur/#_lignes:CLE}|saisies_chaine2tableau}}
 		]
 		[(#GET{coche}|oui)

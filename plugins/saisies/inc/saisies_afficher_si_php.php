@@ -210,10 +210,21 @@ function saisies_transformer_condition_afficher_si($condition, $env = null, $sai
 
 				if ($no_arobase === null) {
 					$nom_champ = $test['champ'];
+					$nom_champ = saisie_nom2name($nom_champ);
+					// Cas des saisies type grille, rechercher le vrai nom de la saisie
+					preg_match('/(.*)\[(.*)\]$/', $nom_champ, $sous_champ);
+					$racine_champ = $sous_champ[1] ?? '';
+					$sous_champ = $sous_champ[2] ?? '';
 				} else {
 					$nom_champ = '';
 				}
-				if (!$saisies_par_nom || isset($saisies_par_nom[$nom_champ]) || strpos($nom_champ, 'config:') === 0 || strpos($nom_champ, 'plugin:') === 0) {
+				if (
+						!$saisies_par_nom
+						|| isset($saisies_par_nom[$nom_champ])
+						|| strpos($nom_champ, 'config:') === 0
+						|| strpos($nom_champ, 'plugin:') === 0
+						|| isset($saisies_par_nom[$racine_champ])
+				) {
 					if ($no_arobase === null) {
 						$valeur_champ = saisies_afficher_si_get_valeur_champ($nom_champ, $env, $saisies_par_nom);
 					} else {

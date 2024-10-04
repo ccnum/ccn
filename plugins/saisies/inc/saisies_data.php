@@ -292,8 +292,8 @@ function saisies_normaliser_liste_choix($liste): array {
  * @return array
 **/
 function saisies_normaliser_disable_choix($liste): array {
-	trigger_error('La fonction `saisies_normaliser_disable_choix()` est depréciée et sera supprimée en v7 du plugin. Utiliser `saisies_normaliser_liste_choix()` à la place', E_USER_DEPRECATED);
-	spip_log('La fonction `saisies_normaliser_disable_choix()` est depréciée et sera supprimée en v7 du plugin. Utiliser `saisies_normaliser_liste_choix()` à la place', 'saisies');
+	trigger_error('La fonction `saisies_normaliser_disable_choix()` est depréciée et sera supprimée en v6 du plugin. Utiliser `saisies_normaliser_liste_choix()` à la place', E_USER_DEPRECATED);
+	spip_log('La fonction `saisies_normaliser_disable_choix()` est depréciée et sera supprimée en v6 du plugin. Utiliser `saisies_normaliser_liste_choix()` à la place', 'saisies');
 	return saisies_normaliser_liste_choix($liste);
 }
 

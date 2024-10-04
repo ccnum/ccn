@@ -6,7 +6,12 @@ afficher_si_current_data = '';
 function afficher_si_init() {
 	$('form:not([data-afficher_si-init])').each(function(){
 		// Seulement si au moins un afficher_si dedans !
-		if ($(this).find('[data-afficher_si]').length !== 0 || $(this).find('[data-resume_etapes_futures]') !== 0) {
+		if (this.hasAttribute('data-resume_etapes_futures')) {
+			var resume_etapes_futures = this.getAttribute('data-resume_etapes_futures');
+		} else {
+			var resume_etapes_futures = '';
+		}
+		if ($(this).find('[data-afficher_si]').length !== 0 || resume_etapes_futures) {
 			form = $(this);
 			form.find('.formulaire_spip__etapes').each(function() {
 				$(this).css('min-height', $(this).height());
@@ -27,7 +32,7 @@ function afficher_si_init() {
 				var name = $(this).attr('name');
 				if (name) {
 					name = afficher_si_normaliser_name(name);
-					if (form.find('[data-afficher_si*=\''+name+'\']').length) {
+					if (form.find('[data-afficher_si*=\''+name+'\']').length || resume_etapes_futures.includes(name)) {
 						$(this).on('input change', function() {
 							afficher_si_onchange($(this));
 						});

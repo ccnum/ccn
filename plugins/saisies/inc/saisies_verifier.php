@@ -25,9 +25,12 @@ if (!defined('_ECRIRE_INC_VERSION')) {
  */
 function saisies_verifier($formulaire, $saisies_masquees_empty_string = true, $etape = null, $valeurs = null) {
 	include_spip('inc/verifier');
+
 	$verif_fonction = charger_fonction('verifier', 'inc', true);
 
-	$formulaire = saisies_appliquer_depublie_recursivement($formulaire);
+	// Supprimer les saisies depubliéee
+	$formulaire = saisies_supprimer_depublie($formulaire);
+
 
 	// Lister les saisies par étapes, si besoin
 	if (is_numeric($etape)) {
@@ -35,6 +38,7 @@ function saisies_verifier($formulaire, $saisies_masquees_empty_string = true, $e
 	} else {
 		$saisies_par_etapes = $formulaire;
 	}
+
 
 	// Enlever les afficher_si où la condition n'est pas validée, si besoin
 	if ($saisies_masquees_empty_string) {
@@ -188,11 +192,11 @@ function saisies_verifier_valeurs_acceptables($saisies, $erreurs) {
  **/
 function saisies_appliquer_depublie_recursivement(array $saisies, string $depublie = ''): array {
 	foreach ($saisies as &$saisie) {
-		if (!($saisie['options']['depublie'] ?? '')) {
+		if (!($saisie['options']['depublie'] ?? '') && $depublie) {
 			$saisie['options']['depublie'] = $depublie;
 		}
 		if (isset($saisie['saisies'])) {
-			$saisie['saisies'] = saisies_appliquer_depublie_recursivement($saisie['saisies'], $saisie['options']['depublie']);
+			$saisie['saisies'] = saisies_appliquer_depublie_recursivement($saisie['saisies'], $saisie['options']['depublie'] ?? $depublie);
 		}
 	}
 	return $saisies;
@@ -210,26 +214,46 @@ function saisies_appliquer_depublie_recursivement(array $saisies, string $depubl
 **/
 function saisies_saisie_verifier_obligatoire(array $saisie, $valeur): string {
 	$depublie	= $saisie['options']['depublie'] ?? '';
+	// Inutile d'aller plus loin si dépubliée
+	if ($depublie) {
+		return '';
+	}
 	$obligatoire = $saisie['options']['obligatoire'] ?? '';
+	// Inutile d'aller plus loin si pas obligatoire
+	if (!$obligatoire || $obligatoire === 'non') {
+		return '';
+	}
+
+	$erreur = '';
+
 	$file = saisies_saisie_est_fichier($saisie);
 	if (
-		$obligatoire
-		&& $obligatoire !== 'non'
-		&& !$depublie
-		&& (
 			($file && $valeur == null)
 			|| (!$file && (
 				is_null($valeur)
 				|| (is_string($valeur) && trim($valeur) == '')
 				|| (is_array($valeur) && count($valeur) == 0)
 			))
-		)
 	) {
-		if ($saisie['options']['erreur_obligatoire'] ?? '') {
-			return _T_ou_typo($saisie['options']['erreur_obligatoire']);
-		} else {
-			return  _T('info_obligatoire');
+		$erreur = true;
+	}
+
+	// Cas où c'est une saisie avec data_rows et data_col ($choix_grille)
+	foreach (saisies_chaine2tableau($saisie['options']['data_rows'] ?? []) as $cle => $row) {
+		if (!isset($valeur[$cle])) {
+			$erreur = true;
+			break;
 		}
 	}
-	return '';
+
+	// Choix du message d'erreur
+	if ($erreur) {
+		if ($saisie['options']['erreur_obligatoire'] ?? '') {
+			$erreur = _T_ou_typo($saisie['options']['erreur_obligatoire']);
+		} else {
+			$erreur =  _T('info_obligatoire');
+		}
+	}
+
+	return $erreur;
 }

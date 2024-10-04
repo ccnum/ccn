@@ -1,0 +1,97 @@
+[(#AUTORISER{voir, simplog}|sinon_interdire_acces)]
+
+[(#SET{defaut_tri, #ARRAY{
+	index, -1,
+	gravite, 1,
+	hit, 1,
+	ip, 1,
+	pid, 1
+}})]
+#SET{fichier_log, ''}
+
+<h1 class="grostitre"><:simplog:logs:></h1>
+
+[(#REM) On vérifie qu'un log a bien été fourni en paramètre de l'url ]
+<BOUCLE_parametre_log(CONDITION) {si #ENV{log}|oui}>
+	[(#REM) On vérifie que le log passé en parametre est bien dans _DIR_LOG ]
+	<BOUCLE_controle_log(DATA){source glob, #CONST{_DIR_LOG}|concat{*.log*}}{par valeur}{valeur = #CONST{_DIR_LOG}|concat{#ENV{log}}}>
+		[(#REM) On construit le chemin complet du fichier de log ]
+		#SET{fichier_log, #VALEUR}
+		#SET{phrasage_log, #GET{fichier_log}|simplog_phraser_log}
+		#SET{niveaux, #GET{phrasage_log}|table_valeur{niveaux}}
+		#SET{niveaux_a_afficher, #ENV{niveau}|?{#ENV{niveau}|explode{','}, #GET{niveaux}}}
+		<B_lecture_log>
+			<INCLURE{fond=prive/squelettes/inclure/inc-caption,
+				niveau=#ENV{niveau},
+				niveaux_log=#GET{niveaux}} />
+			#ANCRE_PAGINATION
+			<div class="logs">
+				<table class="spip liste">
+					<thead>
+						#SET{exclusions, #CONST{_SIMPLOG_COLONNES_EXCLUES}|count}
+						<tr class="first_row">
+							<th class="sens" colspan="2">
+								<div class="pagination tri">
+									[(#TRI{'>', <:simplog:tri_croissant:>})]
+									[ | (#TRI{'<', <:simplog:tri_decroissant:>}) ]
+								</div>
+							</th>
+							<th class="navigation" colspan="[(#VAL{4}|moins{#GET{exclusions}})]">
+								[<nav class="pagination" role='navigation'>(#PAGINATION{prive})</nav>]
+							</th>
+						</tr>
+						<tr class="first_row">
+							<th class="date secondaire" scope="col">[(#TRI{index, <:simplog:colonne_date:>, ajax})]</th>[
+							(#CONST{_SIMPLOG_COLONNES_EXCLUES}|find{ip}|non)
+								<th class="ip" scope="col">[(#TRI{ip, <:simplog:colonne_ip:>, ajax})]</th>][
+							(#CONST{_SIMPLOG_COLONNES_EXCLUES}|find{pid}|non)
+								<th class="pid" scope="col">[(#TRI{pid, <:simplog:colonne_pid:>, ajax})]</th>][
+							(#CONST{_SIMPLOG_COLONNES_EXCLUES}|find{hit}|non)
+								<th class="hit" scope="col">[(#TRI{hit, <:simplog:colonne_hit:>, ajax})]</th>]
+							<th class="gravite" scope="col">[(#TRI{gravite, <:simplog:colonne_gravite:>, ajax})]</th>
+							<th class="texte principale" scope="col"><:simplog:colonne_texte:></th>
+						</tr>
+					</thead>
+					<tbody>
+		<BOUCLE_lecture_log(DATA){source table, #GET{phrasage_log}|table_valeur{logs}}{niveau IN #GET{niveaux_a_afficher}}{tri #ENV{par, index}, #GET{defaut_tri}}{pagination 100}>
+						<tr class="[(#COMPTEUR_BOUCLE|alterner{row_odd, row_even})]">
+							<td class="date secondaire">[(#DATE)]</td>[
+							(#CONST{_SIMPLOG_COLONNES_EXCLUES}|find{ip}|non)
+								<td class="ip">[(#IP)]</td>][
+							(#CONST{_SIMPLOG_COLONNES_EXCLUES}|find{pid}|non)
+								<td class="pid">[(#PID)]</td>][
+							(#CONST{_SIMPLOG_COLONNES_EXCLUES}|find{hit}|non)
+								<td class="hit">[(#HIT)]</td>]
+							<td class="gravite">[(#GRAVITE)]</td>
+							<td class="texte principale">[(#TEXTE)]</td>
+						</tr>
+		</BOUCLE_lecture_log>
+					</tbody>
+					[<tfoot>
+						<tr>
+							<td class="navigation" colspan="6">
+								<nav class="pagination" role='navigation'>(#PAGINATION{prive})</nav>
+							</td>
+						</tr>
+					</tfoot>]
+				</table>
+			</div>
+		</B_lecture_log>
+			<INCLURE{fond=prive/squelettes/inclure/inc-caption,
+				niveau=#ENV{niveau},
+				niveaux_log=#GET{niveaux}} />
+			#BOITE_OUVRIR{'', notice}
+				[(#GRAVITE|non)<:simplog:message_fichier_vide:>]
+				[(#GRAVITE|oui)<:simplog:message_fichier_filtre_vide{gravite=#GRAVITE}:>]
+			#BOITE_FERMER
+		<//B_lecture_log>
+	</BOUCLE_controle_log>
+		#BOITE_OUVRIR{'', error}
+			<:simplog:message_fichier_non_log{fichier=#ENV{log}}:>
+		#BOITE_FERMER
+	<//B_controle_log>
+</BOUCLE_parametre_log>
+	#BOITE_OUVRIR{'', notice}
+		<:simplog:message_fichier_choisir:>
+	#BOITE_FERMER
+<//B_parametre_log>
