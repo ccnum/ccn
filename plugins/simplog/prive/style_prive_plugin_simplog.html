@@ -1,0 +1,59 @@
+[(#REM)
+
+	Ce squelette definit les styles de l'espace prive
+
+	Note: l'entete "Vary:" sert a repousser l'entete par
+	defaut "Vary: Cookie,Accept-Encoding", qui est (un peu)
+	genant en cas de "rotation du cookie de session" apres
+	un changement d'IP (effet de clignotement).
+
+	ATTENTION: il faut absolument le charset sinon Firefox croit que
+	c'est du text/html !
+	<style>
+]
+#CACHE{3600*100,cache-client}
+#HTTP_HEADER{Content-Type: text/css; charset=iso-8859-15}
+#HTTP_HEADER{Vary: Accept-Encoding}
+
+#SET{claire,##ENV{couleur_claire,edf3fe}}
+#SET{foncee,##ENV{couleur_foncee,3874b0}}
+#SET{left,#ENV{ltr}|choixsiegal{left,left,right}}
+#SET{right,#ENV{ltr}|choixsiegal{left,right,left}}
+
+/* Limiter la taille des textes pour éviter des blocs trop longs. */
+.simplog .logs {font-size: 0.85em;}
+
+/* La caption du tableau qui porte le nom du log, les actions et les filtres */
+.simplog .caption {margin-bottom:6rem;;}
+/* -- le nom du log */
+.simplog .caption .log {font-size: 125%; font-style: bold; text-align: left;}
+/* -- les actions sur le log */
+.simplog .caption .filtre-gravite {padding:0.5rem;}
+.simplog .caption .actions { display:flex; flex-wrap:wrap;margin-bottom:1rem;}
+/* -- les filtres sur les enregistrements du log */
+.simplog .caption .filtre {text-align: right;}
+
+/* Les boutons de sens de tri (thead) et la pagination (thead et tfoot) */
+.simplog .pagination {margin: 0; border: 0; padding: 0.5em; background-color: [#(#ENV{claire}|couleur_eclaircir{0.4})];}
+.simplog .pagination .on {background-color: #ENV{foncee}; font-style: normal;}
+.simplog .pagination .sep,
+.simplog .pagination a {font-style: normal;}
+
+.simplog .navigation,
+.simplog .sens {padding: 0;}
+.simplog .navigation .pagination {text-align: #GET{left};}
+.simplog .first_row .navigation {border-left: 0;}
+.simplog .sens .pagination {text-align: #GET{left};}
+.simplog .first_row .sens {border-right: 0;}
+
+.simplog #conteneur ul.spip {list-style: none;}
+.simplog #conteneur ul.spip li {margin-left: 0;}
+
+.simplog .formulaire_spip .conteneur_gravite {display: flex; flex-flow: row wrap;}
+.simplog .formulaire_spip .conteneur_gravite div.choix {border: 0; padding-top: 0; width: 25%;}
+.simplog .formulaire_spip .conteneur_gravite label.disable {color: rgb(180,180,180);}
+
+.simplog div#filtre_logs {margin-bottom: 1em;}
+
+.simplog table.spip td.texte{ word-wrap: anywhere; }
+[(#REM)	</style>]

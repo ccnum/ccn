@@ -1,12 +1,12 @@
 #SET{afficher_si,#ARRAY}
 #SET{etapes_max,0}[(#REM) nombre d'étape max, en tenant compte du fait que certaines étapes passées ont deja été masquées par afficher_si]
 #SET{etape_a_afficher,0}
-#SET{saisies_afficher_si_masquees,#VAL{get}|saisies_afficher_si_liste_masquees}
+#SET{saisies_afficher_si_masquees,#VAL{get}|saisies_afficher_si_liste_masquees|saisies_lister_par_nom|array_keys}
 <BOUCLE_etapes(DATA){source table, #ENV{etapes}}>
 #SET{etape_courante,#CLE|replace{'etape_',''}}
 [(#REM) mettre uniquement les étapes passées qui ont réussi le test d'afficher_si]
 [(#GET{etape_courante}|<{#ENV{_etape}}|oui)
-	[(#VALEUR|in_any{#GET{saisies_afficher_si_masquees}}|non)
+	[(#VALEUR{options/nom}|in_any{#GET{saisies_afficher_si_masquees}}|non)
 		#SET{etape_a_afficher,#GET{etape_a_afficher}|plus{1}}
 		#SET{etapes_max,#GET{etapes_max}|plus{1}}
 	]

@@ -39,12 +39,22 @@
 
 		]
 
+		<B_rows>
+		[<dt>(#VALEUR|saisies_saisie_get_label|_T_ou_Typo)</dt>]
+		<dd><:saisies:data_rows_label:></dd>
+		<dl style="margin-left:1em">
+			<BOUCLE_rows(DATA) {source tableau, #VALEUR{options/data_rows}|saisies_chaine2tableau}>
+				<dt>@#_champs:CLE/#CLE@</dt>
+				<dd>#VALEUR</dd>
+			</BOUCLE_rows>
+			</dl>
+		</B_rows>
 		<dt>@#CLE@</dt>
-		[<dd>(#VALEUR|saisies_saisie_get_label)</dd>]
+		[<dd>(#VALEUR|saisies_saisie_get_label|_T_ou_Typo)</dd>]
+		<//B_rows>
 		[<dl style="margin-left:1em">
-			<dd>
 			<dt><:saisies:option_datas_label:></dt>
-			<dd>(#VALEUR|saisies_trouver_data|saisies_tableau2chaine|propre|PtoBr)
+			<dd>(#VALEUR|saisies_trouver_data|sinon{#VALEUR{options/data_cols}}|saisies_tableau2chaine|propre|PtoBr)
 					[(#VALEUR{options/choix_alternatif}|oui)
 							<br />
 							[(#VALEUR|saisies_saisie_est_tabulaire|oui)
@@ -55,7 +65,6 @@
 							]
 
 					]
-			</dd>
 			</dd>
 		</dl>]
 	]

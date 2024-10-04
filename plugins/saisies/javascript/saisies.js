@@ -2,9 +2,11 @@ jQuery(function(){
 	saisies_fieldset_pliable();
 	saisies_fieldset_onglet();
 	saisies_multi_novalidate();
+	saisies_choix_grille_ergo();
 	onAjaxLoad(saisies_fieldset_pliable);
 	onAjaxLoad(saisies_fieldset_onglet);
 	onAjaxLoad(saisies_multi_novalidate);
+	onAjaxLoad(saisies_choix_grille_ergo);
 });
 
 /**
@@ -335,5 +337,14 @@ function saisies_date_jour_mois_annee_changer_date(me, datetime) {
 function saisies_multi_novalidate() {
 	$('[name^="_retour_etape"],[name="aller_a_etape"]').click(function() {
 		$(this).parents('form').attr('novalidate', 'novalidate');
+	});
+}
+
+/** Choix grille élargir le click au td **/
+function saisies_choix_grille_ergo() {
+	document.querySelectorAll('.choix_grille td:has(input)').forEach(item => {
+		item.addEventListener('click', function () {
+			this.querySelector('input').click();
+		});
 	});
 }

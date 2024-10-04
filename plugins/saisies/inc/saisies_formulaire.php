@@ -39,6 +39,8 @@ function saisies_chercher_formulaire($form, $args, $je_suis_poste = false) {
 
 	if (!is_array($saisies)) {
 		$saisies = false;
+	} else {
+		$saisies = saisies_appliquer_depublie_recursivement($saisies);// Pour le cas des constructeurs
 	}
 
 	return $saisies;
@@ -108,21 +110,21 @@ function saisies_determiner_deplacement_rapide(array $saisies, int $etape, int $
 	} else {
 		$saisies_par_etapes = saisies_lister_par_etapes($saisies);
 	}
-	$saisies_afficher_si_liste_masquees = saisies_afficher_si_liste_masquees('get');
+	$saisies_afficher_si_liste_masquees = array_keys(saisies_lister_par_nom(saisies_afficher_si_liste_masquees('get')));
 	$nb_total_etapes = count($saisies_par_etapes);
 	$i = $etape + $sens;
 	$etape_a_conserver = false;//Basculé à true dès qu'un afficher_si réussit ou si pas d'afficher_si
-	while (!$etape_a_conserver && $i <= $nb_total_etapes) {//Tester les futures étapes 1 par 1
+	while (!$etape_a_conserver && $i <= $nb_total_etapes && $i > 0) {//Tester les étapes futures/passées (selon sens) 1 par 1
 		$etape = $saisies_par_etapes["etape_$i"];
 		if (!($etape['options']['afficher_si'] ?? '')) {
 			$etape_a_conserver = true;
-		} elseif (!in_array($etape, $saisies_afficher_si_liste_masquees)) {
+		} elseif (!in_array($etape['options']['nom'], $saisies_afficher_si_liste_masquees)) {
 			$etape_a_conserver = true;
 		} else {
 			$i = $i + $sens;
 		}
 	}
-	return $i;
+	return max(1, $i);
 }
 
 /**

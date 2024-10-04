@@ -1,3 +1,4 @@
+#CACHE{24*3600*31,statique}
 [(#REM)
 	Zone de saisie de date utilsant le dateur de Bonux si présent.
 	Sur les sites en HTML5, utilise type="date"
@@ -57,20 +58,27 @@
 <p hidden id="[format_date_(#ENV{nom}|saisie_nom2classe)]"><:saisies:format_date_attendu:></p>
 #SET{describedby, #ENV{describedby}|concat{' ',format_date_#ENV{nom}|saisie_nom2classe} }
 
-[(#INCLURE{fond=saisies/input,
+[(#SET{nom,#ENV{nom}[(#ENV{horaire}|?{\[date\]})]})]
+[(#SET{class,[(#ENV{class}) ]date})]
+<INCLURE{fond=saisies/input,
 	env,
-	nom=#ENV{nom}[(#ENV{horaire}|?{\[date\]})],
+	nom=#GET{nom},
 	describedby=#GET{describedby},
 	valeur=#GET{date},
 	type=text,
-	class=[(#ENV{class}) ]date})]
+	class=#GET{class}
+	}/>
 [(#ENV{horaire}|oui)
-[(#INCLURE{fond=saisies/input,
-	env,
-	nom=#ENV{nom}\[heure\],
-	valeur=#GET{heure},
-	size=4,
-	maxlength=5,
-	class=[(#ENV{class}) ]heure})]
+	[(#SET{nom,#ENV{nom}\[heure\]})]
+	[(#SET{class,[(#ENV{class}) ]heure})]
+	<INCLURE{fond=saisies/input,
+		env,
+		nom=#GET{nom},
+		valeur=#GET{heure},
+		size=4,
+		maxlength=5,
+		class=#GET{class}
+		}
+		/>
 ]
-[(#ENV{disable}|non|et{#ENV{readonly}|non})[(#INCLURE{fond=formulaires/dateur/inc-dateur, heure_pas=#ENV{heure_pas,30}})]]
+[(#ENV{disable}|non|et{#ENV{readonly}|non})<INCLURE{fond=formulaires/dateur/inc-dateur, heure_pas=#ENV{heure_pas,30}} />]

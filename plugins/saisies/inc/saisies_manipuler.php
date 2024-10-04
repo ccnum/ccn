@@ -626,30 +626,66 @@ function saisies_fieldsets_en_onglets($saisies, $identifiant_prefixe = '', $vert
  * @return array
  **/
 function saisies_supprimer_sans_reponse(array $saisies, array $tableau = []): array {
+	$saisies = saisies_supprimer_callback($saisies, function (array $saisie): bool {
+		// Si sous saisie, on garde, la fonction saisies_supprimer_callback fera les tests sous chaque sous saisies
+		if (isset($saisie['saisies'])) {
+			return true;
+		}
+		$valeur = saisies_request($saisie['options']['nom']);
+		if (is_string($valeur)) {
+			$valeur = vider_date($valeur);
+		}
+		if (
+			($valeur === '' || is_null($valeur))
+			&& !saisies_request_from_FILES($saisie['options']['nom'])
+		) {// Notons la très stricte égalité pour ne pas supprimer une saisie dont la valeur serait 0
+			return false;
+		} else {
+			return true;
+		}
+	});
+	return $saisies;
+}
+
+/**
+ * Prend un tableau de saisies
+ * Enlève les saisies dépubliées
+ * Ou dont l'ensemble des sous-saisies sont dépubliés
+ * @param array $saisies
+ * @return array
+ **/
+function saisies_supprimer_depublie(array $saisies): array {
+	$saisies = saisies_supprimer_callback($saisies, function (array $saisie): bool {
+		return !($saisie['options']['depublie'] ?? false);
+	});
+	return $saisies;
+}
+
+/**
+ * Prend un tableau de saisies
+ * supprime les saisies selon une fonction de rappel
+ * @param array $saisies tableau de saisies
+ * @param callable $callback fonction de rappel
+ *  la fonction doit renvoyer `true` si on garde, `false` sinon
+ * @return array
+**/
+function saisies_supprimer_callback(array $saisies, callable $callback): array {
 	// On gère les options de saisies
 	if (isset($saisies['options'])) {
 		$options_generales = $saisies['options'];
 		unset($saisies['options']);
 	}
-	foreach ($saisies as $key => $saisie) {
+	foreach ($saisies as $key => &$saisie) {
 		// Cas 1: c'est une saisies avec sous_saisies, dans ce cas on analyse d'abord les sous_saisies, puis on supprime le cas échéant
 		if (isset($saisie['saisies'])) {
-			$saisie['saisies'] = saisies_supprimer_sans_reponse($saisie['saisies'], $tableau);
+			$saisie['saisies'] = saisies_supprimer_callback($saisie['saisies'], $callback);
 			if (empty($saisie['saisies'])) {
 				unset($saisies[$key]);
 			}
-		} else {
-			// Cas 2, c'est une saisie terminale, dans ce cas on vérifie si présente
-			$valeur = saisies_request($saisie['options']['nom']);
-			if (is_string($valeur)) {
-				$valeur = vider_date($valeur);
-			}
-			if (
-				($valeur === '' || is_null($valeur))
-				&& !saisies_request_from_FILES($saisie['options']['nom'])
-			) {// Notons la très stricte égalité ppur ne pas supprimer une saisie dont la valeur serait 0
-				unset($saisies[$key]);
-			}
+		}
+		// Dans tous les cas, on vérifie
+		if (!$callback($saisie)) {
+			unset($saisies[$key]);
 		}
 	}
 	$saisies = array_values($saisies);

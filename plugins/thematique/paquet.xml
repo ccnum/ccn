@@ -1,7 +1,7 @@
 <paquet
 	prefix="thematique"
 	categorie="squelette"
-	version="3.1.2"
+	version="3.1.3"
 	etat="stable"
 	logo="th.png"
 	schema="3.0.3"
@@ -24,10 +24,11 @@
 	<utilise nom="autorite" compatibilite="[0.10.18;[" />
 	<utilise nom="medias" />
 
-	<pipeline nom="declarer_tables_principales" inclure="base/th_install.php" />
 	<pipeline nom="declarer_champs_extras" inclure="base/th_cextras.php" />
+	<pipeline nom="declarer_tables_principales" inclure="base/th_install.php" />
 	<pipeline nom="insert_head" inclure="thematique_pipelines.php" />
 	<pipeline nom="jqueryui_plugins" inclure="thematique_pipelines.php" />
+	<pipeline nom="post_edition" inclure="thematique_pipelines.php" />
 
 	<chemin path="sq-unepage" />
 	<chemin path="" />

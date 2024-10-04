@@ -1,5 +1,4 @@
 [(#REM)
-
 Parametres :
 ** : obligatoire
 * : fortement conseille
@@ -16,6 +15,9 @@ Hors option 'valeur_uniquement' :
 
 ]
 [(#SET{sans_reponse,#ENV{sans_reponse}|is_null|?{<:saisies:vue_sans_reponse:>,#ENV{sans_reponse}}})]
+[(#CONST{_SAISIES_AFFICHAGE_COMPACT}|oui)
+	#SET{sans_reponse,''}
+]
 
 #SET{valeur_uniquement,#ENV{valeur_uniquement}|et{#ENV{valeur_uniquement}|!={non}}|oui}
 #SET{enfants,#ENV*{saisies}|et{#ENV*{saisies}|is_array}}
@@ -38,10 +40,24 @@ Hors option 'valeur_uniquement' :
 		#GET{reponse}
 	]
 	[(#GET{enfants}|non|et{#ENV{type_saisie}|!={explication}})
-		[<strong class="label">(#ENV*{label_case,#ENV*{label,#ENV{nom}}})</strong>]
-		<div class="valeur #ENV{vue_class}">
-		[(#GET{reponse}|sinon{#GET{sans_reponse}})]
-		</div>
+
+
+	[(#GET{reponse}|non)
+		#SET{reponse,#GET{sans_reponse}}
+	]
+	#SET{label,#ENV*{label_case,#ENV*{label,#ENV{nom}}}}
+	#SET{wrapper,div}
+
+	[(#CONST{_SAISIES_AFFICHAGE_COMPACT}|oui)
+		#SET{reponse,#GET{reponse}|PtoBr}
+		#SET{label,#GET{label}|label_ponctuer}
+		#SET{wrapper,span}
+	]
+
+	[<strong class="label[(#CONST{_SAISIES_AFFICHAGE_COMPACT}|oui) colonincluded]">(#GET{label})</strong>]
+		<[(#GET{wrapper}) ]class="valeur #ENV{vue_class}">
+		#GET{reponse}
+		</#GET{wrapper}>
 	]
 	[(#ENV{voir_explications,non}|!={non}|et{#ENV{type_saisie}|=={explication}}|oui)
 		<INCLURE{fond=saisies/explication,env} />

@@ -1,4 +1,4 @@
-#SET{afficher_si_masquees,#VAL{'get'}|saisies_afficher_si_liste_masquees}
+#SET{afficher_si_masquees,#VAL{'get'}|saisies_afficher_si_liste_masquees|saisies_lister_par_nom|array_keys}
 <B_etapes>
 <nav class="formulaire_spip__etapes etapes" aria-label="<:saisies:etapes_formulaire:>">
 	<ol class="etapes__items">
@@ -6,9 +6,10 @@
 		#SET{etape,#CLE|replace{etape_,''}}
 		#SET{afficher_si,#VALEUR{options/afficher_si}|saisies_afficher_si_js{#ENV{etapes}}}
 		#SET{afficher,oui}
-		[(#VALEUR|in_any{#GET{afficher_si_masquees}}|oui)
+		[(#VALEUR{options/nom}|in_any{#GET{afficher_si_masquees}}|oui)
 			#SET{afficher,''}
 		]
+
 		[(#GET{afficher}|oui)
 			<li class="etapes__item #CLE" [(#ENV{_etape}|=={#GET{etape}}|oui) aria-current="step"]>
 				[(#ENV{_etape}|>{#GET{etape}}|oui)<button type="submit" class="submit" name="aller_a_etape" value="#GET{etape}">#VALEUR{options/label}</button>]

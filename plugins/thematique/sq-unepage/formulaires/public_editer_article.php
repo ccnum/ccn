@@ -38,7 +38,6 @@ function articles_edit_config($row) {
 	$config['lignes'] = ($spip_ecran == 'large') ? 8 : 5;
 	$config['langue'] = $spip_lang;
 
-	$config['restreint'] = ($row['statut'] == 'publie');
 	return $config;
 }
 
@@ -52,22 +51,15 @@ function formulaires_public_editer_article_traiter_dist($id_article = 'new', $id
 	// Traitement principal
 	$res = formulaires_editer_objet_traiter('article', $id_article, $id_rubrique, $lier_trad, $retour, $config_fonc, $row, $hidden);
 
+	// Publication de l'article
+	include_spip('action/editer_objet');
+	objet_instituer('article', $res['id_article'], ['statut' => 'publie']);
+
 	// Ajout du champ id_consigne
 	$id_consigne = _request('id_consigne');
 
 	if (isset($id_consigne)) {
 		sql_updateq('spip_articles', ['id_consigne' => $id_consigne, 'statut' => 'publie'], "id_article=" . intval($res['id_article']));
-	}
-
-	// Mail
-	if ($id_article == '') {
-		if ($notifications = charger_fonction('notifications', 'inc')) {
-			$notifications(
-				'instituerarticle',
-				$res['id_article'],
-				['statut' => 'publie', 'statut_ancien' => 'propose', 'date' => date('Y-m-d H:i:s')]
-			);
-		}
 	}
 	return $res;
 }

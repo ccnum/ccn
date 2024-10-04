@@ -13,6 +13,5 @@ $GLOBALS[$GLOBALS['idx_lang']] = array(
 	'saisies_description' => 'Questo plugin semplifica la scrittura dei campi del modulo offrendo l’etichetta #SAISIE. L’HTML generato è compatibile con la nomenclatura dei form
 offerto da SPIP.', # MODIF
 	'saisies_nom' => 'Saisies per i moduli',
-	'saisies_slogan' => 'Scrivi facilmente i campi del modulo.',
-	'saisies_titre' => 'Saisies per i moduli'
+	'saisies_slogan' => 'Scrivi facilmente i campi del modulo.'
 );

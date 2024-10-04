@@ -1,0 +1,28 @@
+<div class="formulaire_spip formulaire_#FORM">
+	<form method='post' action='#ENV{action}'><div>
+		[(#REM) declarer les hidden qui declencheront le service du formulaire parametre : url d'action ]
+		#ACTION_FORMULAIRE
+			<div class="editer-groupe">
+				#SET{name, niveau}#SET{erreurs, #ENV**{erreurs}|table_valeur{#GET{name}}}
+				<div class="editer editer_[(#GET{name})][ (#GET{obli})][ (#GET{erreurs}|oui)erreur] pleine_largeur conteneur_gravite">[
+					<span class='erreur_message'>(#GET{erreurs})</span>]
+					<BOUCLE_gravites(DATA) {source table, #VAL|simplog_lister_gravites}{par cle}>
+						#SET{gravite_affichee, #CLE|simplelog_contruire_gravite{#VALEUR}}
+						<div class="choix">
+							<input type="checkbox" name="#GET{name}\[\]" id="#GET{name}_#CLE" value="#CLE"
+							[(#CLE|in_any{#ENV{#GET{name}}}|oui)checked="checked"]
+							[(#CLE|in_any{#ENV{_niveaux_log}}|non)disabled="disabled"] />
+							<label for="#GET{name}_#CLE"[ (#CLE|in_any{#ENV{_niveaux_log}}|non)class="disable"]>#GET{gravite_affichee}</label>
+						</div>
+					</BOUCLE_gravites>
+				</div>
+			</div>
+
+		[(#REM) ajouter les saisies supplementaires : extra et autre, a cet endroit ]
+		<!--extra-->
+		<p class='boutons'>
+			<span class='image_loading'>&nbsp;</span>
+			<input type='submit' class='btn btn_mini submit' value='<:simplog:filtrer:>' />
+		</p>
+	</div></form>
+</div>
