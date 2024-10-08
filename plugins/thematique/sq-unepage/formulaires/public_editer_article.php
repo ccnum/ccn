@@ -59,7 +59,8 @@ function formulaires_public_editer_article_traiter_dist($id_article = 'new', $id
 	$id_consigne = _request('id_consigne');
 
 	if (isset($id_consigne)) {
-		sql_updateq('spip_articles', ['id_consigne' => $id_consigne, 'statut' => 'publie'], "id_article=" . intval($res['id_article']));
+		sql_updateq('spip_articles', ['id_consigne' => $id_consigne], "id_article=" . intval($res['id_article']));
+		objet_instituer('article', $res['id_article'], ['statut' => 'publie']);
 	}
 	return $res;
 }
