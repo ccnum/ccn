@@ -25,6 +25,7 @@ function saisies_afficher_si_js($condition, $saisies_par_etapes = []) {
 	if (!$condition) {
 		return '';
 	}
+	$saisies_par_etapes = saisies_mapper_option($saisies_par_etapes, 'nom', 'saisie_nom2name');
 	$saisies_par_etapes = pipeline('saisies_afficher_si_saisies', $saisies_par_etapes);
 	$etape = _request('_etape');
 	if ($etape && array_key_exists('etape_1', $saisies_par_etapes)) {
