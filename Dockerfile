@@ -1,6 +1,6 @@
 FROM php:8.2-apache-bullseye AS base
 ENV SPIP_VERSION 4.3
-ENV SPIP_PACKAGE 4.3.2
+ENV SPIP_PACKAGE 4.3.3
 
 RUN set -eux; \
 	apt-get update; \

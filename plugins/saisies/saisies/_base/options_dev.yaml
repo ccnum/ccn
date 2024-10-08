@@ -20,3 +20,9 @@
     nom: 'attributs'
     label: '<:saisies:option_attributs_label:>'
     explication: '<:saisies:option_attributs_explication:>'
+-
+  saisie: 'input'
+  options:
+    nom: 'label_class'
+    label: '<:saisies:option_label_class_label:>'
+    size: 50

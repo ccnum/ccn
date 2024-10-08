@@ -171,7 +171,7 @@ function yaml_charger_inclusions($tableau, $options = []) {
 			} elseif (is_array($valeur)) {
 				$retour = array_merge($retour, [$cle => yaml_charger_inclusions($valeur, $options)]);
 			} else {
-				$retour = array_merge($retour, [$cle => $valeur]);
+				$retour = array_replace($retour, [$cle => $valeur]);//Array_replace plutôt qu'array_merge pour préserver $cle si numérique
 			}
 		}
 	} elseif (is_string($tableau) && substr($tableau, 0, 8) == 'inclure:' && substr($tableau, -5) == '.yaml') {

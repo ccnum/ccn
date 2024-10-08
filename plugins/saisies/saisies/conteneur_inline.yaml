@@ -25,12 +25,7 @@ options:
             col3: '<:saisies:option_col3:>'
             col4: '<:saisies:option_col4:>'
           defaut: '1ligne_max'
-      -
-        saisie: 'input'
-        options:
-          nom: 'class'
-          label: '<:saisies:option_class_label:>'
-          size: 50
+      - 'inclure:saisies/_base/class.yaml'
 defaut:
   saisies: []
   colonnes: '1ligne_max'

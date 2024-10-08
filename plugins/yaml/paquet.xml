@@ -1,7 +1,7 @@
 <paquet
 	prefix="yaml"
 	categorie="outil"
-	version="3.1.0"
+	version="3.1.2"
 	etat="stable"
 	compatibilite="[4.0.0;4.*]"
 	logo="prive/themes/spip/images/yaml-xx.svg"
