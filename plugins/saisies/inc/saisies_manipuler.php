@@ -605,6 +605,8 @@ function saisies_inserer_html($saisie, $insertion, $ou = 'fin') {
  * @return array $saisies modifiées
  **/
 function saisies_fieldsets_en_onglets($saisies, $identifiant_prefixe = '', $vertical = false) {
+	$options = $saisies['options'] ?? [];
+	unset($saisies['options']);
 	foreach ($saisies as &$saisie) {
 		if ($saisie['saisie'] == 'fieldset') {
 			$saisie['options']['onglet'] = 'on';
@@ -614,6 +616,7 @@ function saisies_fieldsets_en_onglets($saisies, $identifiant_prefixe = '', $vert
 			$saisie['identifiant'] = $identifiant_prefixe . '_' . saisie_nom2classe($saisie['options']['nom']);
 		}
 	}
+	$saisies['options'] = $options;
 	return $saisies;
 }
 
@@ -626,25 +629,41 @@ function saisies_fieldsets_en_onglets($saisies, $identifiant_prefixe = '', $vert
  * @return array
  **/
 function saisies_supprimer_sans_reponse(array $saisies, array $tableau = []): array {
-	$saisies = saisies_supprimer_callback($saisies, function (array $saisie): bool {
+	$saisies = saisies_supprimer_callback($saisies, function ($saisie) use ($tableau): bool {
 		// Si sous saisie, on garde, la fonction saisies_supprimer_callback fera les tests sous chaque sous saisies
-		if (isset($saisie['saisies'])) {
-			return true;
-		}
-		$valeur = saisies_request($saisie['options']['nom']);
-		if (is_string($valeur)) {
-			$valeur = vider_date($valeur);
-		}
-		if (
-			($valeur === '' || is_null($valeur))
-			&& !saisies_request_from_FILES($saisie['options']['nom'])
-		) {// Notons la très stricte égalité pour ne pas supprimer une saisie dont la valeur serait 0
-			return false;
-		} else {
-			return true;
-		}
+		return saisies_saisie_possede_reponse($saisie, $tableau);
 	});
 	return $saisies;
+}
+
+/**
+ * Indique si une saisie possède une réponse
+ * @param array $saisie la saisie individuelle
+ * @param null|array $tableau (tableau pour chercher les valeurs, à défaut request
+ * @return bool
+**/
+function saisies_saisie_possede_reponse(array $saisie, $tableau = null) {
+	// Si sous saisie, on fait récursivement
+	if (isset($saisie['saisies'])) {
+		foreach ($saisie['saisies'] as $s => $ss) {
+			if (saisies_saisie_possede_reponse($ss, $tableau)) {
+				return true;
+			}
+		}
+		return false;
+	}
+	$valeur = saisies_request($saisie['options']['nom'], $tableau);
+	if (is_string($valeur)) {
+		$valeur = vider_date($valeur);
+	}
+	if (
+		($valeur === '' || is_null($valeur))
+		&& !saisies_request_from_FILES($saisie['options']['nom'])
+	) {// Notons la très stricte égalité pour ne pas invalider une saisie dont la valeur serait 0
+		return false;
+	} else {
+		return true;
+	}
 }
 
 /**
@@ -660,6 +679,25 @@ function saisies_supprimer_depublie(array $saisies): array {
 	});
 	return $saisies;
 }
+
+
+
+/**
+ * Prend un tableau de saisies
+ * Enlève les saisies dépubliées
+ * Et qui n'ont pas de réponse
+ * Ou dont l'ensemble des saisies répondent au critère ci-dessus
+ * @param array $saisies
+ * @param array|null $reponses null pour chercher dans _request
+ * @return array
+ **/
+function saisies_supprimer_depublie_sans_reponse(array $saisies,  $reponses = null): array {
+	$saisies = saisies_supprimer_callback($saisies, function (array $saisie) use ($reponses): bool {
+		return (!($saisie['options']['depublie'] ?? false)) || saisies_saisie_possede_reponse($saisie, $reponses);
+	});
+	return $saisies;
+}
+
 
 /**
  * Prend un tableau de saisies

@@ -183,6 +183,7 @@ $GLOBALS[$GLOBALS['idx_lang']] = array(
 	'option_inserer_debut_label' => 'Code à insérer en début de saisie',
 	'option_inserer_fin_label' => 'Code à insérer en fin de saisie',
 	'option_label_case_label' => 'Label placé à côté de la case',
+	'option_label_class_label' => 'Classes CSS supplémentaires sur le label',
 	'option_label_explication' => 'Le titre qui sera affiché.',
 	'option_label_label' => 'Label',
 	'option_label_non_explication' => 'Sera visible lors de l’affichage des résultats.',

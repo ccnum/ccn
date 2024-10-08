@@ -1,0 +1,13 @@
+-
+  saisie: 'input'
+  options:
+    nom: 'class'
+    label: '<:saisies:option_class_label:>'
+    size: 50
+-
+  saisie: 'input'
+  options:
+    nom: 'conteneur_class'
+    label: '<:saisies:option_conteneur_class_label:>'
+    size: 50
+    placeholder: 'pleine_largeur'
