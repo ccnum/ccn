@@ -62,12 +62,7 @@ options:
           explication: '<:saisies:option_onglet_vertical_explication:>'
           conteneur_class: 'pleine_largeur'
           afficher_si: '!@pliable@ && @onglet@'
-      -
-        saisie: 'input'
-        options:
-          nom: 'conteneur_class'
-          label: '<:saisies:option_class_label:>'
-          size: 50
+      - 'inclure:saisies/_base/class.yaml'
   -
     saisie: 'fieldset'
     options:
