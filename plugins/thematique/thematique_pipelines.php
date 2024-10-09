@@ -74,7 +74,7 @@ function thematique_notifications_destinataires($flux) {
 		and $flux['args']['options']['statut'] === 'publie'
 		and $flux['args']['options']['statut_ancien'] !== 'publie'
 	) {
-		$flux['data'][] = $GLOBALS['meta']['adresse_suivi'];
+		$flux['data'][] = $GLOBALS['meta']['email_envoi'];
 		$article = sql_fetsel('*', 'spip_articles', 'id_article=' . intval($flux['args']['id']));
 		if ($article['id_consigne'] == '0') {
 			// Prendre les admin restreint des sous rubriques (des écoles)
