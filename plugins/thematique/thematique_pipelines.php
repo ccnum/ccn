@@ -74,7 +74,6 @@ function thematique_notifications_destinataires($flux) {
 		and $flux['args']['options']['statut'] === 'publie'
 		and $flux['args']['options']['statut_ancien'] !== 'publie'
 	) {
-		$emails = [];
 		$article = sql_fetsel('*', 'spip_articles', 'id_article=' . intval($flux['args']['id']));
 		if ($article['id_consigne'] == '0') {
 			// Prendre les admin restreint des sous rubriques (des écoles)
@@ -86,7 +85,7 @@ function thematique_notifications_destinataires($flux) {
 					["lien.objet='rubrique'", "lien.id_objet=" . intval($r['id_rubrique']), "auteurs.statut='0minirezo'"]
 				);
 				foreach ($auteurs_restreint as $ar) {
-					$emails[] = $ar['email'];
+					$flux['data'][] = $ar['email'];
 				}
 			}
 		} else {
@@ -96,10 +95,9 @@ function thematique_notifications_destinataires($flux) {
 				["lien.objet='rubrique'", "lien.id_objet=" . intval($article['id_secteur']), "auteurs.statut='0minirezo'"]
 			);
 			foreach ($auteurs_restreint as $ar) {
-				$emails[] = $ar['email'];
+				$flux['data'][] = $ar['email'];
 			}
 		}
-		$flux['data']['destinataires'] = implode(',', $emails);
 	}
 	return $flux;
 }
