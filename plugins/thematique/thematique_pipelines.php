@@ -99,7 +99,7 @@ function thematique_notifications_destinataires($flux) {
 				$emails[] = $ar['email'];
 			}
 		}
-		$flux['data']['destinataires'] = $emails;
+		$flux['data']['destinataires'] = implode(',', $emails);
 	}
 	return $flux;
 }
