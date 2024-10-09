@@ -50,17 +50,19 @@ function formulaires_public_editer_article_verifier_dist($id_article = 'new', $i
 function formulaires_public_editer_article_traiter_dist($id_article = 'new', $id_rubrique = 0, $retour = '', $lier_trad = 0, $config_fonc = 'articles_edit_config', $row = [], $hidden = '') {
 	// Traitement principal
 	$res = formulaires_editer_objet_traiter('article', $id_article, $id_rubrique, $lier_trad, $retour, $config_fonc, $row, $hidden);
-
-	// Publication de l'article
-	include_spip('action/editer_objet');
-	objet_instituer('article', $res['id_article'], ['statut' => 'publie']);
-
 	// Ajout du champ id_consigne
 	$id_consigne = _request('id_consigne');
 
-	if (isset($id_consigne)) {
+	// Publication de l'article
+	include_spip('action/editer_objet');
+	if ($id_consigne != 0) {
 		sql_updateq('spip_articles', ['id_consigne' => $id_consigne], "id_article=" . intval($res['id_article']));
 		objet_instituer('article', $res['id_article'], ['statut' => 'publie']);
+	} else {
+		$statut = sql_getfetsel('statut', 'spip_articles', 'id_article=' . intval($id_consigne));
+		if ($statut !== 'publie') {
+			objet_instituer('article', $res['id_article'], ['statut' => 'publie']);
+		}
 	}
 	return $res;
 }
