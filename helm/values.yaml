@@ -15,7 +15,7 @@ mariadb:
 spip:
   image: "erasme/spip-ccn:dev"
   env:
-    SPIP_AUTO_INSTALL: true
+    SPIP_AUTO_INSTALL: 1
     SPIP_DB_SERVER: "mysql"
     SPIP_DB_LOGIN: "spip"
     SPIP_DB_PASS: "spip"
@@ -24,6 +24,7 @@ spip:
     SPIP_DB_HOST: "127.0.0.1"
     SPIP_ADMIN_PASS: "admin-pass"
     SPIP_ADMIN_EMAIL: "admin@example.com"
+    #SPIP_VERSION_SITE: "fictions" # is not enabled will used thematique plugin
 
 ingress:
   name: "ccn-ingress"
