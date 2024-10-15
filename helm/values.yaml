@@ -13,7 +13,7 @@ mariadb:
     MYSQL_PASSWORD: "spip"
 
 spip:
-  image: "spip:latest"
+  image: "erasme/spip-ccn:dev"
   env:
     SPIP_AUTO_INSTALL: true
     SPIP_DB_SERVER: "mysql"
@@ -21,15 +21,9 @@ spip:
     SPIP_DB_PASS: "spip"
     SPIP_DB_NAME: "spip"
     SPIP_SITE_ADDRESS: "www.example.com"
-    SPIP_DB_HOST: "localhost"
+    SPIP_DB_HOST: "127.0.0.1"
     SPIP_ADMIN_PASS: "admin-pass"
     SPIP_ADMIN_EMAIL: "admin@example.com"
-
-service:
-  name: "ccn-service"
-  type: ClusterIP
-  port: 80
-  targetPort: 8080
 
 ingress:
   name: "ccn-ingress"
