@@ -2,13 +2,11 @@ apiVersion: v1
 kind: Service
 metadata:
   name: {{ .Release.Name }}-{{ .Values.service.name | default "ccn-service" }}
-  labels:
-    app: {{ .Release.Name }}-ccn
 spec:
-  type: {{ .Values.service.type }}
+  type: {{ .Values.service.type | default "ClusterIP" }}
   ports:
-    - port: {{ .Values.service.port }}
-      targetPort: {{ .Values.service.targetPort }}
+    - port: 80                         # External port exposed
+      targetPort: 80                    # Container port (spip container is listening on 80)
       protocol: TCP
   selector:
-    app: {{ .Release.Name }}-ccn
+    app: {{ .Release.Name }}-ccn        # Target the spip application in the deployment

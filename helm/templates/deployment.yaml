@@ -20,6 +20,10 @@ spec:
       containers:
         - name: mariadb
           image: {{ .Values.mariadb.image }}
+          ports:                            # Add a ports section to expose the container ports
+            - containerPort: 3306               # The spip container listens on port 80
+              name: http                      # Port name (optional but useful)
+              protocol: TCP   
           env:
             - name: MYSQL_ROOT_PASSWORD
               value: {{ .Values.mariadb.env.MYSQL_ROOT_PASSWORD }}
@@ -36,6 +40,10 @@ spec:
 
         - name: spip
           image: {{ .Values.spip.image }}
+          ports:                            # Add a ports section to expose the container ports
+            - containerPort: 80               # The spip container listens on port 80
+              name: http                      # Port name (optional but useful)
+              protocol: TCP   
           env:
             - name: SPIP_AUTO_INSTALL
               value: {{ .Values.spip.env.SPIP_AUTO_INSTALL | quote }}

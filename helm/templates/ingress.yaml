@@ -4,10 +4,6 @@ metadata:
   name: {{ .Release.Name }}-{{ .Values.ingress.name | default "ccn-ingress" }}
   annotations:
     kubernetes.io/ingress.class: {{ .Values.ingress.class | default "nginx" }}  
-    {{- if .Values.ingress.annotations }}
-    {{ toYaml .Values.ingress.annotations | indent 4 }}
-    {{- end }}
-
 spec:
   rules:
     - host: {{ .Values.ingress.host }}
@@ -19,11 +15,4 @@ spec:
               service:
                 name: {{ .Release.Name }}-{{ .Values.service.name | default "ccn-service" }}
                 port:
-                  number: {{ .Values.service.port }}
-  
-  {{- if .Values.ingress.tls }}
-  tls:
-    - hosts:
-        - {{ .Values.ingress.host }}
-      secretName: {{ .Values.ingress.tls.secretName }}
-  {{- end }}
+                  number: 80
