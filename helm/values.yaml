@@ -1,25 +1,37 @@
-mariadb:
-  image: mariadb:10.11
-  env:
-    MYSQL_ROOT_PASSWORD: password
-    MYSQL_DATABASE: spip
-    MYSQL_USER: spip
-    MYSQL_PASSWORD: mypass
-    
-spip:
-  image: erasme/spip-ccn:dev
-  env:
-    SPIP_AUTO_INSTALL: 1
-    SPIP_DB_SERVER: mysql
-    SPIP_DB_LOGIN: spip
-    SPIP_DB_PASS: mypass
-    SPIP_DB_NAME: spip
-    SPIP_SITE_ADDRESS: http://localhost:8080
-    SPIP_DB_HOST: 127.0.0.1
-    SPIP_ADMIN_PASS: password
-    SPIP_ADMIN_EMAIL: admin@erasme.org
+nameOverride: "custom-app"
 
 pvc:
-  name: ccn-vol
-  storage: 5Gi
-  storageClass: svb-retain
+  name: "ccn-pvc"  # This gets prefixed by the release name in the templates
+  storage: "1Gi"
+
+mariadb:
+  image: "mariadb:10.5"
+  env:
+    MYSQL_ROOT_PASSWORD: "MysqlRootPassword"
+    MYSQL_DATABASE: "spip"
+    MYSQL_USER: "spip"
+    MYSQL_PASSWORD: "spip"
+
+spip:
+  image: "spip:latest"
+  env:
+    SPIP_AUTO_INSTALL: true
+    SPIP_DB_SERVER: "mysql"
+    SPIP_DB_LOGIN: "spip"
+    SPIP_DB_PASS: "spip"
+    SPIP_DB_NAME: "spip"
+    SPIP_SITE_ADDRESS: "www.example.com"
+    SPIP_DB_HOST: "localhost"
+    SPIP_ADMIN_PASS: "admin-pass"
+    SPIP_ADMIN_EMAIL: "admin@example.com"
+
+service:
+  name: "ccn-service"
+  type: ClusterIP
+  port: 80
+  targetPort: 8080
+
+ingress:
+  name: "ccn-ingress"
+  host: "example.com"
+  class: nginx
