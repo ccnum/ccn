@@ -65,6 +65,10 @@ spec:
               value: {{ .Values.spip.env.SPIP_ADMIN_EMAIL }}
             - name: SPIP_VERSION_SITE
               value: {{ .Values.spip.env.SPIP_VERSION_SITE }}
+            - name: DUMP_MEDIA
+              value: {{ .Values.spip.env.DUMP_MEDIA }}
+            - name: DUMP_DB
+              value: {{ .Values.spip.env.DUMP_DB }}
           volumeMounts:
             - mountPath: /var/www/html/IMG
               name: {{ .Release.Name }}-{{ .Values.pvc.name }}

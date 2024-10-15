@@ -11,7 +11,7 @@ services:
       - MYSQL_PASSWORD=${SPIP_DB_PASS}
 
   app:
-    image: erasme/spip-ccn:dev
+    image: erasme/spip-ccn:helm
     build:
       context: .
       args:
