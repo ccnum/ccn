@@ -66,19 +66,39 @@ function thematique_insert_head($flux) {
 	return $flux;
 }
 
-function thematique_post_edition($flux) {
+function thematique_notifications_destinataires($flux) {
 	if (
-		isset($flux['args']['table'])
-		and $flux['args']['table'] === 'spip_articles'
-		and isset($flux['args']['action'])
-		and $flux['args']['action'] === 'instituer'
+		isset($flux['args']['id'])
+		and isset($flux['args']['quoi'])
+		and $flux['args']['quoi'] === 'instituerarticle'
+		and $flux['args']['options']['statut'] === 'publie'
+		and $flux['args']['options']['statut_ancien'] !== 'publie'
 	) {
-		$notifications = charger_fonction('notifications', 'inc');
-		$notifications(
-			'instituerarticle',
-			$flux['args']['id_objet'],
-			['statut' => 'publie', 'statut_ancien' => 'propose', 'date' => date('Y-m-d H:i:s')]
-		);
+		$flux['data'][] = $GLOBALS['meta']['email_envoi'];
+		$article = sql_fetsel('*', 'spip_articles', 'id_article=' . intval($flux['args']['id']));
+		if ($article['id_consigne'] == '0') {
+			// Prendre les admin restreint des sous rubriques (des écoles)
+			$rubriques = sql_allfetsel('id_rubrique', 'spip_rubriques', 'id_secteur=' . intval($article['id_secteur']));
+			foreach ($rubriques as $r) {
+				$auteurs_restreint = sql_select(
+					"auteurs.email",
+					"spip_auteurs AS auteurs JOIN spip_auteurs_liens AS lien ON auteurs.id_auteur=lien.id_auteur",
+					["lien.objet='rubrique'", "lien.id_objet=" . intval($r['id_rubrique']), "auteurs.statut='0minirezo'"]
+				);
+				foreach ($auteurs_restreint as $ar) {
+					$flux['data'][] = $ar['email'];
+				}
+			}
+		} else {
+			$auteurs_restreint = sql_select(
+				"auteurs.email",
+				"spip_auteurs AS auteurs JOIN spip_auteurs_liens AS lien ON auteurs.id_auteur=lien.id_auteur",
+				["lien.objet='rubrique'", "lien.id_objet=" . intval($article['id_secteur']), "auteurs.statut='0minirezo'"]
+			);
+			foreach ($auteurs_restreint as $ar) {
+				$flux['data'][] = $ar['email'];
+			}
+		}
 	}
 	return $flux;
 }

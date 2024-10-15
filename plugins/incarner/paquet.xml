@@ -1,0 +1,25 @@
+<paquet
+	prefix="incarner"
+	categorie="outil"
+	version="2.1.0"
+	etat="stable"
+	compatibilite="[3.2.0;4.*]"
+	logo="prive/themes/spip/images/incarner-64.png"
+	documentation="https://contrib.spip.net/Incarner"
+>
+
+	<nom>Incarner</nom>
+
+	<auteur>Michel Bystranowski</auteur>
+
+	<licence>GNU/GPL</licence>
+
+	<pipeline nom="affichage_final" />
+	<pipeline nom="affichage_final_prive" />
+	<pipeline nom="autoriser" inclure="incarner_autorisations.php" />
+	<pipeline nom="boite_infos" inclure="incarner_pipelines.php" />
+	<pipeline nom="formulaire_admin" inclure="incarner_pipelines.php" />
+	<pipeline nom="insert_head" inclure="incarner_pipelines.php" />
+	<pipeline nom="header_prive" inclure="incarner_pipelines.php" />
+
+</paquet>
