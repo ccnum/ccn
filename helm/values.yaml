@@ -24,6 +24,8 @@ spip:
     SPIP_DB_HOST: "127.0.0.1"
     SPIP_ADMIN_PASS: "admin-pass"
     SPIP_ADMIN_EMAIL: "admin@example.com"
+    DUMP_MEDIA: ""
+    DUMP_DB: ""
     #SPIP_VERSION_SITE: "fictions" # is not enabled will used thematique plugin
 
 ingress:
