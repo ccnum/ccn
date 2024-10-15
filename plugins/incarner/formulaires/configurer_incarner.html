@@ -1,0 +1,45 @@
+<div class="formulaire_spip formulaire_configurer formulaire_#FORM">
+
+	[<p class="reponse_formulaire reponse_formulaire_ok">(#ENV*{message_ok})</p>]
+	[<p class="reponse_formulaire reponse_formulaire_erreur">(#ENV*{message_erreur})</p>]
+
+	<form method="post" action="#ENV{action}">
+	<div>
+		#ACTION_FORMULAIRE{#ENV{action}}
+
+		#SET{fl,incarner}
+		<div class="editer-groupe">
+			#SET{name,statut_minimum}#SET{obli,''}#SET{defaut,'webmestre'}#SET{erreurs,#ENV**{erreurs/#GET{name}}}
+			<div class="editer long_label editer_[(#GET{name})][ (#GET{obli})][ (#GET{erreurs}|oui)erreur]">
+				<label for="#GET{name}"><:incarner:label_statut_minimum:></label>[
+				<span class='erreur_message'>(#GET{erreurs})</span>
+				]<select name="#GET{name}" class="select" id="#GET{name}">
+					#SET{val,webmestre}
+					<option value="#GET{val}"[(#ENV{#GET{name},#GET{defaut}}|=={#GET{val}}|oui)selected="selected"]>[(#GET{fl}|concat{':label_',#GET{name},'_',#GET{val}}|_T)]</option>
+					#SET{val,admin}
+					<option value="#GET{val}"[(#ENV{#GET{name},#GET{defaut}}|=={#GET{val}}|oui)selected="selected"]>[(#GET{fl}|concat{':label_',#GET{name},'_',#GET{val}}|_T)]</option>
+					#SET{val,adminrestreint}
+					<option value="#GET{val}"[(#ENV{#GET{name},#GET{defaut}}|=={#GET{val}}|oui)selected="selected"]>[(#GET{fl}|concat{':label_',#GET{name},'_',#GET{val}}|_T)]</option>
+					#SET{val,redacteur}
+					<option value="#GET{val}"[(#ENV{#GET{name},#GET{defaut}}|=={#GET{val}}|oui)selected="selected"]>[(#GET{fl}|concat{':label_',#GET{name},'_',#GET{val}}|_T)]</option>
+				</select>
+			</div>
+
+
+			<!-- input text -->
+			#SET{name,email_notification}#SET{obli,''}#SET{defaut,''}#SET{erreurs,#ENV**{erreurs/#GET{name}}}
+			<div class="editer long_label editer_[(#GET{name})][ (#GET{obli})][ (#GET{erreurs}|oui)erreur]">
+				<label for="#GET{name}"><:incarner:label_email_notification:></label>[
+				<span class='erreur_message'>(#GET{erreurs})</span>
+				]<input type="email" name="#GET{name}" class="text email" value="#ENV*{#GET{name},#GET{defaut}}" id="#GET{name}" [(#HTML5|et{#GET{obli}})required='required']
+				        placeholder="mail@example.org"/>
+			</div>
+
+		</div>
+
+
+		<input type="hidden" name="_meta_casier" value="incarner" />
+		<p class="boutons"><span class="image_loading">&nbsp;</span><input type="submit" class="submit" value="<:bouton_enregistrer:>" /></p>
+	</div>
+	</form>
+</div>
