@@ -21,3 +21,5 @@ spip_loader.php
 
 dump/
 TMP_SPIP_3
+.env
+helm/custom.yaml
