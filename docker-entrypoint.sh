@@ -96,6 +96,9 @@ if [[ ! -e config/connect.php && ${SPIP_AUTO_INSTALL} = 1 ]]; then
 		--admin-email ${SPIP_ADMIN_EMAIL} \
 		--admin-pass ${SPIP_ADMIN_PASS}" || true
 
+	spip plugins:svp:depoter https://plugins.spip.net/depots/principal.xml
+	spip plugins:svp:telecharger oembed
+
 	spip plugins:activer saisies -y
 	spip plugins:activer yaml -y
 	spip plugins:activer cextras -y
@@ -124,37 +127,37 @@ elif [ -z "${DUMP_MEDIA}" ]; then
 else
     # Restore media
     echo "Restoring media"
-    
+
     # Check if ./IMG has files and if /tmp/dump/dump.sqlite exists
     if [ "$(ls -A ./IMG)" ] && [ -f /tmp/dump/dump.sqlite ]; then
         echo "Media and database are already restored, skipping restore step."
     else
         # Create /tmp/dump folder if it doesn't exist
         mkdir -p tmp/dump
-        
+
         # Check if DUMP_MEDIA is a file or a directory
         if [ -f "${DUMP_MEDIA}" ]; then
             echo "DUMP_MEDIA is a file."
         elif [ -d "${DUMP_MEDIA}" ]; then
             echo "DUMP_MEDIA is a directory."
         fi
-        
+
         # Download media using curl
         echo "Downloading media archive..."
         curl -o IMG.tar.gz -L "${DUMP_MEDIA}"
-        
+
         # Download database dump using curl
         echo "Downloading database dump..."
         curl -o tmp/dump/dump.sqlite -L "${DUMP_DB}"
-        
+
         # Extract the media archive
         echo "Extracting media archive..."
         tar -xzvf IMG.tar.gz
-        
+
         # Restore the database using SPIP CLI
         echo "Restoring the database..."
         spip sql:dump:restore --name dump
-        
+
         # Clean up the media archive
         echo "Cleaning up downloaded archive..."
         rm IMG.tar.gz
