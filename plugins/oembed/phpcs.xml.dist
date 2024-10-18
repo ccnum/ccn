@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<ruleset>
+    <file>action</file>
+    <file>formulaires</file>
+    <file>inc</file>
+    <file>oembed</file>
+    <file>spip-cli</file>
+    <file>oembed_administrations.php</file>
+    <file>oembed_fonctions.php</file>
+    <file>oembed_pipelines.php</file>
+
+    <rule ref="SPIP40"/>
+    <rule ref="PSR1"/>
+
+    <config name="ignore_warnings_on_exit" value="1"/>
+    <arg name="cache" value=".php_cs.cache"/>
+    <arg name="report-full" value=".php_cs.txt"/>
+    <arg name="report-summary"/>
+    <arg value="s"/>
+</ruleset>
