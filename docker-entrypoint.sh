@@ -98,7 +98,7 @@ if [[ ! -e config/connect.php && ${SPIP_AUTO_INSTALL} = 1 ]]; then
 		--admin-pass ${SPIP_ADMIN_PASS}" || true
 
 	spip plugins:svp:depoter https://plugins.spip.net/depots/principal.xml
-	spip plugins:svp:telecharger oembed -y
+	#spip plugins:svp:telecharger oembed -y
 
 	spip plugins:activer saisies -y
 	spip plugins:activer yaml -y
