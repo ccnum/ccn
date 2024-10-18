@@ -1,0 +1,617 @@
+parameters:
+	ignoreErrors:
+		-
+			message: "#^Function _request not found\\.$#"
+			count: 5
+			path: action/api_oembed.php
+
+		-
+			message: "#^Function charger_fonction not found\\.$#"
+			count: 1
+			path: action/api_oembed.php
+
+		-
+			message: "#^Function ecrire_fichier not found\\.$#"
+			count: 1
+			path: action/api_oembed.php
+
+		-
+			message: "#^Function http_status not found\\.$#"
+			count: 1
+			path: action/api_oembed.php
+
+		-
+			message: "#^Function include_spip not found\\.$#"
+			count: 2
+			path: action/api_oembed.php
+
+		-
+			message: "#^Function lire_fichier not found\\.$#"
+			count: 1
+			path: action/api_oembed.php
+
+		-
+			message: "#^Function pipeline not found\\.$#"
+			count: 1
+			path: action/api_oembed.php
+
+		-
+			message: "#^Function recuperer_fond not found\\.$#"
+			count: 1
+			path: action/api_oembed.php
+
+		-
+			message: "#^Function sous_repertoire not found\\.$#"
+			count: 1
+			path: action/api_oembed.php
+
+		-
+			message: "#^Function trouver_fond not found\\.$#"
+			count: 1
+			path: action/api_oembed.php
+
+		-
+			message: "#^Function urls_decoder_url not found\\.$#"
+			count: 1
+			path: action/api_oembed.php
+
+		-
+			message: "#^Function _request not found\\.$#"
+			count: 1
+			path: action/oembed_nettoyer_iframes.php
+
+		-
+			message: "#^Function autoriser not found\\.$#"
+			count: 1
+			path: action/oembed_nettoyer_iframes.php
+
+		-
+			message: "#^Function entites_html not found\\.$#"
+			count: 5
+			path: action/oembed_nettoyer_iframes.php
+
+		-
+			message: "#^Function extraire_attribut not found\\.$#"
+			count: 2
+			path: action/oembed_nettoyer_iframes.php
+
+		-
+			message: "#^Function extraire_balise not found\\.$#"
+			count: 1
+			path: action/oembed_nettoyer_iframes.php
+
+		-
+			message: "#^Function extraire_balises not found\\.$#"
+			count: 2
+			path: action/oembed_nettoyer_iframes.php
+
+		-
+			message: "#^Function id_table_objet not found\\.$#"
+			count: 1
+			path: action/oembed_nettoyer_iframes.php
+
+		-
+			message: "#^Function include_spip not found\\.$#"
+			count: 3
+			path: action/oembed_nettoyer_iframes.php
+
+		-
+			message: "#^Function objet_modifier not found\\.$#"
+			count: 2
+			path: action/oembed_nettoyer_iframes.php
+
+		-
+			message: "#^Function objet_type not found\\.$#"
+			count: 1
+			path: action/oembed_nettoyer_iframes.php
+
+		-
+			message: "#^Function parametre_url not found\\.$#"
+			count: 1
+			path: action/oembed_nettoyer_iframes.php
+
+		-
+			message: "#^Function sql_fetch not found\\.$#"
+			count: 1
+			path: action/oembed_nettoyer_iframes.php
+
+		-
+			message: "#^Function sql_select not found\\.$#"
+			count: 1
+			path: action/oembed_nettoyer_iframes.php
+
+		-
+			message: "#^Function charger_fonction not found\\.$#"
+			count: 6
+			path: inc/oembed.php
+
+		-
+			message: "#^Function ecrire_fichier not found\\.$#"
+			count: 1
+			path: inc/oembed.php
+
+		-
+			message: "#^Function extraire_attribut not found\\.$#"
+			count: 3
+			path: inc/oembed.php
+
+		-
+			message: "#^Function include_spip not found\\.$#"
+			count: 3
+			path: inc/oembed.php
+
+		-
+			message: "#^Function lire_config not found\\.$#"
+			count: 3
+			path: inc/oembed.php
+
+		-
+			message: "#^Function lire_fichier not found\\.$#"
+			count: 1
+			path: inc/oembed.php
+
+		-
+			message: "#^Function parametre_url not found\\.$#"
+			count: 5
+			path: inc/oembed.php
+
+		-
+			message: "#^Function pipeline not found\\.$#"
+			count: 1
+			path: inc/oembed.php
+
+		-
+			message: "#^Function recuperer_fond not found\\.$#"
+			count: 1
+			path: inc/oembed.php
+
+		-
+			message: "#^Function recuperer_url_cache not found\\.$#"
+			count: 1
+			path: inc/oembed.php
+
+		-
+			message: "#^Function sous_repertoire not found\\.$#"
+			count: 1
+			path: inc/oembed.php
+
+		-
+			message: "#^Function spip_log not found\\.$#"
+			count: 2
+			path: inc/oembed.php
+
+		-
+			message: "#^Function url_absolue not found\\.$#"
+			count: 1
+			path: inc/oembed.php
+
+		-
+			message: "#^Function url_de_base not found\\.$#"
+			count: 2
+			path: inc/oembed.php
+
+		-
+			message: "#^Function include_spip not found\\.$#"
+			count: 1
+			path: inc/oembed_recuperer_url.php
+
+		-
+			message: "#^Function recuperer_url not found\\.$#"
+			count: 1
+			path: inc/oembed_recuperer_url.php
+
+		-
+			message: "#^Function spip_log not found\\.$#"
+			count: 4
+			path: inc/oembed_recuperer_url.php
+
+		-
+			message: "#^Function PtoBR not found\\.$#"
+			count: 4
+			path: inc/ressource.php
+
+		-
+			message: "#^Function charger_fonction not found\\.$#"
+			count: 1
+			path: inc/ressource.php
+
+		-
+			message: "#^Function include_spip not found\\.$#"
+			count: 1
+			path: inc/ressource.php
+
+		-
+			message: "#^Function propre not found\\.$#"
+			count: 4
+			path: inc/ressource.php
+
+		-
+			message: "#^Function include_spip not found\\.$#"
+			count: 1
+			path: modeles/oembed_fonctions.php
+
+		-
+			message: "#^Function extraire_attribut not found\\.$#"
+			count: 3
+			path: oembed/input/posttraite_api_arte_tv.php
+
+		-
+			message: "#^Function extraire_balise not found\\.$#"
+			count: 1
+			path: oembed/input/posttraite_api_arte_tv.php
+
+		-
+			message: "#^Function extraire_balises not found\\.$#"
+			count: 1
+			path: oembed/input/posttraite_api_arte_tv.php
+
+		-
+			message: "#^Function inserer_attribut not found\\.$#"
+			count: 1
+			path: oembed/input/posttraite_api_arte_tv.php
+
+		-
+			message: "#^Function recuperer_url not found\\.$#"
+			count: 1
+			path: oembed/input/posttraite_api_arte_tv.php
+
+		-
+			message: "#^Function vider_attribut not found\\.$#"
+			count: 3
+			path: oembed/input/posttraite_api_arte_tv.php
+
+		-
+			message: "#^Function charger_fonction not found\\.$#"
+			count: 1
+			path: oembed/input/posttraite_mastodon.php
+
+		-
+			message: "#^Function extraire_balise not found\\.$#"
+			count: 1
+			path: oembed/input/posttraite_mastodon.php
+
+		-
+			message: "#^Function filtrer_entites not found\\.$#"
+			count: 1
+			path: oembed/input/posttraite_mastodon.php
+
+		-
+			message: "#^Function include_spip not found\\.$#"
+			count: 2
+			path: oembed/input/posttraite_mastodon.php
+
+		-
+			message: "#^Function is_utf8 not found\\.$#"
+			count: 1
+			path: oembed/input/posttraite_mastodon.php
+
+		-
+			message: "#^Function parametre_url not found\\.$#"
+			count: 1
+			path: oembed/input/posttraite_mastodon.php
+
+		-
+			message: "#^Function recuperer_fond not found\\.$#"
+			count: 1
+			path: oembed/input/posttraite_mastodon.php
+
+		-
+			message: "#^Function vider_attribut not found\\.$#"
+			count: 3
+			path: oembed/input/posttraite_mastodon.php
+
+		-
+			message: "#^Function filtrer not found\\.$#"
+			count: 1
+			path: oembed/input/posttraite_oeproxy_imdb_rich.php
+
+		-
+			message: "#^Function include_spip not found\\.$#"
+			count: 1
+			path: oembed/input/posttraite_oeproxy_imdb_rich.php
+
+		-
+			message: "#^Function copie_locale not found\\.$#"
+			count: 1
+			path: oembed/input/posttraite_slideshare_rich.php
+
+		-
+			message: "#^Function find_in_path not found\\.$#"
+			count: 1
+			path: oembed/input/posttraite_soundcloud_rich.php
+
+		-
+			message: "#^Function copie_locale not found\\.$#"
+			count: 1
+			path: oembed/input/posttraite_twitter.php
+
+		-
+			message: "#^Function include_spip not found\\.$#"
+			count: 2
+			path: oembed/input/posttraite_twitter.php
+
+		-
+			message: "#^Function propre not found\\.$#"
+			count: 1
+			path: oembed/input/posttraite_twitter.php
+
+		-
+			message: "#^Function recuperer_fond not found\\.$#"
+			count: 1
+			path: oembed/input/posttraite_twitter.php
+
+		-
+			message: "#^Function recuperer_url not found\\.$#"
+			count: 1
+			path: oembed/input/posttraite_twitter.php
+
+		-
+			message: "#^Function spip_getimagesize not found\\.$#"
+			count: 1
+			path: oembed/input/posttraite_twitter.php
+
+		-
+			message: "#^Function url_absolue not found\\.$#"
+			count: 1
+			path: oembed/input/posttraite_twitter.php
+
+		-
+			message: "#^Function include_spip not found\\.$#"
+			count: 1
+			path: oembed/input/posttraite_vimeo_video.php
+
+		-
+			message: "#^Function lire_config not found\\.$#"
+			count: 1
+			path: oembed/input/posttraite_vimeo_video.php
+
+		-
+			message: "#^Function spip_log not found\\.$#"
+			count: 1
+			path: oembed/input/posttraite_vimeo_video.php
+
+		-
+			message: "#^Function charger_fonction not found\\.$#"
+			count: 1
+			path: oembed/input/posttraite_youtube_video.php
+
+		-
+			message: "#^Function extraire_attribut not found\\.$#"
+			count: 1
+			path: oembed/input/posttraite_youtube_video.php
+
+		-
+			message: "#^Function extraire_balise not found\\.$#"
+			count: 1
+			path: oembed/input/posttraite_youtube_video.php
+
+		-
+			message: "#^Function parametre_url not found\\.$#"
+			count: 1
+			path: oembed/input/posttraite_youtube_video.php
+
+		-
+			message: "#^Function parametre_url not found\\.$#"
+			count: 1
+			path: oembed/input/pretraite_publish_twitter_com.php
+
+		-
+			message: "#^Function parametre_url not found\\.$#"
+			count: 1
+			path: oembed/input/pretraite_vimeo_com.php
+
+		-
+			message: "#^Function parametre_url not found\\.$#"
+			count: 1
+			path: oembed/input/pretraite_www_youtube_com.php
+
+		-
+			message: "#^Function include_spip not found\\.$#"
+			count: 1
+			path: oembed/output/xml.php
+
+		-
+			message: "#^Function texte_backend not found\\.$#"
+			count: 1
+			path: oembed/output/xml.php
+
+		-
+			message: "#^Function effacer_meta not found\\.$#"
+			count: 1
+			path: oembed_administrations.php
+
+		-
+			message: "#^Function include_spip not found\\.$#"
+			count: 1
+			path: oembed_administrations.php
+
+		-
+			message: "#^Function maj_plugin not found\\.$#"
+			count: 1
+			path: oembed_administrations.php
+
+		-
+			message: "#^Function sql_drop_table not found\\.$#"
+			count: 1
+			path: oembed_administrations.php
+
+		-
+			message: "#^Function PtoBR not found\\.$#"
+			count: 1
+			path: oembed_fonctions.php
+
+		-
+			message: "#^Function champ_sql not found\\.$#"
+			count: 2
+			path: oembed_fonctions.php
+
+		-
+			message: "#^Function extraire_attribut not found\\.$#"
+			count: 2
+			path: oembed_fonctions.php
+
+		-
+			message: "#^Function extraire_balise not found\\.$#"
+			count: 1
+			path: oembed_fonctions.php
+
+		-
+			message: "#^Function image_filtrer not found\\.$#"
+			count: 2
+			path: oembed_fonctions.php
+
+		-
+			message: "#^Function include_spip not found\\.$#"
+			count: 6
+			path: oembed_fonctions.php
+
+		-
+			message: "#^Function medias_modeles_styliser not found\\.$#"
+			count: 1
+			path: oembed_fonctions.php
+
+		-
+			message: "#^Function parametre_url not found\\.$#"
+			count: 3
+			path: oembed_fonctions.php
+
+		-
+			message: "#^Function propre not found\\.$#"
+			count: 2
+			path: oembed_fonctions.php
+
+		-
+			message: "#^Function recuperer_fond not found\\.$#"
+			count: 1
+			path: oembed_fonctions.php
+
+		-
+			message: "#^Function sql_fetsel not found\\.$#"
+			count: 1
+			path: oembed_fonctions.php
+
+		-
+			message: "#^Function sql_getfetsel not found\\.$#"
+			count: 3
+			path: oembed_fonctions.php
+
+		-
+			message: "#^Function sql_quote not found\\.$#"
+			count: 1
+			path: oembed_fonctions.php
+
+		-
+			message: "#^Function tester_url_absolue not found\\.$#"
+			count: 1
+			path: oembed_fonctions.php
+
+		-
+			message: "#^Function url_absolue not found\\.$#"
+			count: 1
+			path: oembed_fonctions.php
+
+		-
+			message: "#^Function _T not found\\.$#"
+			count: 3
+			path: oembed_pipelines.php
+
+		-
+			message: "#^Function action_ajouter_documents_dist not found\\.$#"
+			count: 1
+			path: oembed_pipelines.php
+
+		-
+			message: "#^Function affiche_raccourci_doc not found\\.$#"
+			count: 3
+			path: oembed_pipelines.php
+
+		-
+			message: "#^Function charger_fonction not found\\.$#"
+			count: 2
+			path: oembed_pipelines.php
+
+		-
+			message: "#^Function creer_uniqid not found\\.$#"
+			count: 1
+			path: oembed_pipelines.php
+
+		-
+			message: "#^Function document_modifier not found\\.$#"
+			count: 1
+			path: oembed_pipelines.php
+
+		-
+			message: "#^Function echappe_html not found\\.$#"
+			count: 2
+			path: oembed_pipelines.php
+
+		-
+			message: "#^Function ecrire_fichier not found\\.$#"
+			count: 1
+			path: oembed_pipelines.php
+
+		-
+			message: "#^Function extraire_attribut not found\\.$#"
+			count: 1
+			path: oembed_pipelines.php
+
+		-
+			message: "#^Function find_in_path not found\\.$#"
+			count: 1
+			path: oembed_pipelines.php
+
+		-
+			message: "#^Function include_spip not found\\.$#"
+			count: 8
+			path: oembed_pipelines.php
+
+		-
+			message: "#^Function lire_config not found\\.$#"
+			count: 2
+			path: oembed_pipelines.php
+
+		-
+			message: "#^Function nom_fichier_copie_locale not found\\.$#"
+			count: 1
+			path: oembed_pipelines.php
+
+		-
+			message: "#^Function parametre_url not found\\.$#"
+			count: 1
+			path: oembed_pipelines.php
+
+		-
+			message: "#^Function recuperer_infos_distantes not found\\.$#"
+			count: 2
+			path: oembed_pipelines.php
+
+		-
+			message: "#^Function set_spip_doc not found\\.$#"
+			count: 2
+			path: oembed_pipelines.php
+
+		-
+			message: "#^Function sinon not found\\.$#"
+			count: 1
+			path: oembed_pipelines.php
+
+		-
+			message: "#^Function spip_log not found\\.$#"
+			count: 3
+			path: oembed_pipelines.php
+
+		-
+			message: "#^Function sql_fetsel not found\\.$#"
+			count: 1
+			path: oembed_pipelines.php
+
+		-
+			message: "#^Function sql_getfetsel not found\\.$#"
+			count: 1
+			path: oembed_pipelines.php
+
+		-
+			message: "#^Function timestamp not found\\.$#"
+			count: 1
+			path: oembed_pipelines.php
+
