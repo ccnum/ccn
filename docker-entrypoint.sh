@@ -58,11 +58,12 @@ if version_greater "$image_version" "$installed_version"; then
 	tar cf - --one-file-system -C /usr/src/spip . | tar xf -
 	echo >&2 "Complete! SPIP has been successfully copied to $PWD"
 
-	echo >&2 "Création des dossiers lib, plugins et tmp à la racine"
-	mkdir -p lib
+	echo >&2 "Create plugins, libraries and template directories"
 	mkdir -p plugins/auto
+	mkdir -p lib
+	mkdir -p squelettes
 	mkdir -p tmp/{dump,log,upload}
-	chown -R www-data:www-data lib plugins tmp
+	chown -R www-data:www-data plugins lib squelettes tmp
 
 	if [ ! -e .htaccess ]; then
 		cp -p htaccess.txt .htaccess
