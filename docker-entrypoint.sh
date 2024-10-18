@@ -97,8 +97,13 @@ if [[ ! -e config/connect.php && ${SPIP_AUTO_INSTALL} = 1 ]]; then
 		--admin-email ${SPIP_ADMIN_EMAIL} \
 		--admin-pass ${SPIP_ADMIN_PASS}" || true
 
-	#spip plugins:svp:depoter https://plugins.spip.net/depots/principal.xml
-	#spip plugins:svp:telecharger oembed -y
+    # Try to depote the repository
+    if ! spip plugins:svp:depoter https://plugins.spip.net/depots/principal.xml; then
+        echo "Warning: Unable to depote repository https://plugins.spip.net/depots/principal.xml"
+        # Optionally handle this error differently, or just continue
+    fi
+	
+	spip plugins:svp:telecharger oembed -y
 
 	spip plugins:activer saisies -y
 	spip plugins:activer yaml -y
