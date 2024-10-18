@@ -102,9 +102,9 @@ if [[ ! -e config/connect.php && ${SPIP_AUTO_INSTALL} = 1 ]]; then
         echo "Warning: Unable to depote repository https://plugins.spip.net/depots/principal.xml"
         # Optionally handle this error differently, or just continue
     fi
-	
-	spip plugins:svp:telecharger oembed -y
 
+	spip plugins:svp:telecharger oembed -y
+	spip plugins:activer oembed -y
 	spip plugins:activer saisies -y
 	spip plugins:activer yaml -y
 	spip plugins:activer cextras -y
