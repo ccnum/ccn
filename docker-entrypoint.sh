@@ -127,6 +127,36 @@ if [[ ! -e config/connect.php && ${SPIP_AUTO_INSTALL} = 1 ]]; then
 	spip config:ecrire -p notation change_note:oui
 fi
 
+# Default mes_options
+if [ ! -e config/mes_options.php ]; then
+	/bin/cat << MAINEOF > config/mes_options.php
+<?php
+if (!defined("_ECRIRE_INC_VERSION")) return;
+\$GLOBALS['taille_des_logs'] = 500;
+define('_MAX_LOG', 500000);
+define('_LOG_FILELINE', true);
+define('_LOG_FILTRE_GRAVITE', 8);
+define('_DEBUG_SLOW_QUERIES', true);
+define('_BOUCLE_PROFILER', 5000);
+?>
+MAINEOF
+fi
+
+# Default _config_cas.php
+if [ ! -e config/_config_cas.php ]; then
+	/bin/cat << MAINEOF > config/_config_cas.php
+<?php
+if (!defined("_ECRIRE_INC_VERSION")) return;
+\$GLOBALS['ciconfig']['cicas'] = 'hybride';
+\$GLOBALS['ciconfig']['cicasuid'] = 'login';
+\$GLOBALS['ciconfig']['cicasurldefaut'] = 'www.laclasse.com';
+\$GLOBALS['ciconfig']['cicasrepertoire'] = '/sso';
+\$GLOBALS['ciconfig']['cicasport'] = '443';
+\$GLOBALS['ciconfig']['cicas_creer_auteur'] = '6forum';
+\$GLOBALS['ciconfig']['cicashostordre'] = ['HTTP_HOST', 'SERVER_NAME', 'HTTP_X_FORWARDED_SERVER'];
+?>
+MAINEOF
+fi
 
 # Check if DUMP_MEDIA and DUMP_DB are set, else echo no db/media to restore
 #if [ -z "${DUMP_MEDIA}" ] && [ -z "${DUMP_DB}" ]; then
