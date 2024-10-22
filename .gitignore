@@ -2,7 +2,7 @@
 .vscode
 .env
 .htaccess
-config/ecran_securite.php
+config/
 ecrire
 IMG
 local
