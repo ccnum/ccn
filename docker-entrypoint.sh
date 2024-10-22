@@ -103,7 +103,7 @@ if [[ ! -e config/connect.php && ${SPIP_AUTO_INSTALL} = 1 ]]; then
         # Optionally handle this error differently, or just continue
     fi
 
-	spip plugins:svp:telecharger alerte_urgence -y
+	spip plugins:svp:telecharger alerte_urgence
 	spip plugins:activer oembed -y
 	spip plugins:activer saisies -y
 	spip plugins:activer yaml -y
