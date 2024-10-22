@@ -122,6 +122,9 @@ if [[ ! -e config/connect.php && ${SPIP_AUTO_INSTALL} = 1 ]]; then
 	fi
 	spip plugins:activer ${SPIP_VERSION_SITE} -y
 	spip plugins:maj:bdd
+
+	spip config:ecrire -p notation acces:item_ide
+	spip config:ecrire -p notation change_note:oui
 fi
 
 
