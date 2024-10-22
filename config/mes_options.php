@@ -5,12 +5,6 @@ if (preg_match('/ddev.site/', $_SERVER['HTTP_HOST'])) {
 	error_reporting(E_ALL ^ E_NOTICE);
 	ini_set("display_errors", "On");
 	define('SPIP_ERREUR_REPORT', E_ALL);
-	$GLOBALS['taille_des_logs'] = 500;
-	define('_MAX_LOG', 500000);
-	define('_LOG_FILELINE', true);
-	define('_LOG_FILTRE_GRAVITE', 8);
-	define('_DEBUG_SLOW_QUERIES', true);
-	define('_BOUCLE_PROFILER', 5000);
 	define('_TEST_EMAIL_DEST', 'pierrekuhn@ik.me');
 
 	$rep = 'sites/';
@@ -35,3 +29,10 @@ if (preg_match('/ddev.site/', $_SERVER['HTTP_HOST'])) {
 		($path . _NOM_TEMPORAIRES_ACCESSIBLES)
 	);
 }
+
+$GLOBALS['taille_des_logs'] = 500;
+define('_MAX_LOG', 500000);
+define('_LOG_FILELINE', true);
+define('_LOG_FILTRE_GRAVITE', 8);
+define('_DEBUG_SLOW_QUERIES', true);
+define('_BOUCLE_PROFILER', 5000);
