@@ -1,0 +1,22 @@
+<BOUCLE_tous (DOCUMENTS types_documents) {id_document=#ID} {tout}
+>[(#SET{html,[(#FICHIER|contenu_document{#ENV{charset,auto}})]})]
+[(#SET{data,[(#ARRAY{
+type,[(#ARRAY{image,photo,video,video,audio,rich,sound,rich,file,rich}|table_valeur{#MEDIA})],
+html,[(#GET{html})],
+width,[(#GET{html}|extraire_attribut{width})],
+height,[(#GET{html}|extraire_attribut{height})],
+title,[(#TITRE)],
+media,[(#MEDIA)],
+author_name,[(#CREDITS)],
+provider_name,[(#OEMBED_DATA|json_decode{1}|table_valeur{provider_name}|sinon{''})],
+thumbnail_url,[(#LOGO_DOCUMENT|extraire_attribut{src})]})]})
+]
+<div
+	class="[(#ID_DOCUMENT|medias_modele_document_standard_classes{#MEDIA}) ]ressource oembed[ oembed_(#GET{data/type})][ oembed_(#MEDIA)][ oembed_(#GET{data/provider_name}|strtolower|replace{'\W','_'})]"
+	[(#ID_DOCUMENT|medias_modele_document_standard_attributs{#MEDIA})]
+>
+	<figure class="spip_doc_inner">
+		[(#INCLURE{fond=modeles/oembed_[(#GET{data/type,link})],data=#GET{data},url=#OEMBED,lien=#OEMBED,align,async,autoplay,id_document})]
+	</figure>
+</div>
+</BOUCLE_tous>

@@ -1,0 +1,76 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ccn-dev
+spec:
+  selector:
+    matchLabels:
+      app: ccn
+  template:
+    metadata:
+      labels:
+        app: ccn
+    spec:
+      volumes:
+        - name: ccn-vol
+          persistentVolumeClaim:
+            claimName: ccn-vol
+      containers:
+        - env:
+            - name: MYSQL_ROOT_PASSWORD
+              value: password
+            - name: MYSQL_DATABASE
+              value: spip
+            - name: MYSQL_USER
+              value: spip
+            - name: MYSQL_PASSWORD
+              value: mypass
+          image: mariadb:10.11
+          imagePullPolicy: Always
+          name: mariadb
+          resources: {}
+          securityContext:
+            allowPrivilegeEscalation: false
+            privileged: false
+            readOnlyRootFilesystem: false
+            runAsNonRoot: false
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+          volumeMounts:
+            - mountPath: /var/lib/mysql
+              name: ccn-vol
+              subPath: mariadb-2
+        - env:
+            - name: SPIP_AUTO_INSTALL
+              value: '1'
+            - name: SPIP_DB_SERVER
+              value: mysql
+            - name: SPIP_DB_LOGIN
+              value: spip
+            - name: SPIP_DB_PASS
+              value: mypass
+            - name: SPIP_DB_NAME
+              value: spip
+            - name: SPIP_SITE_ADDRESS
+              value: http://localhost:8080
+            - name: SPIP_DB_HOST
+              value: 127.0.0.1
+            - name: SPIP_ADMIN_PASS
+              value: password
+            - name: SPIP_ADMIN_EMAIL
+              value: admin@erasme.org
+          image: erasme/spip-ccn:dev
+          imagePullPolicy: Always
+          name: spip
+          resources: {}
+          securityContext:
+            allowPrivilegeEscalation: false
+            privileged: false
+            readOnlyRootFilesystem: false
+            runAsNonRoot: false
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+          volumeMounts:
+            - mountPath: /var/www/html/IMG
+              name: ccn-vol
+              subPath: spip-3

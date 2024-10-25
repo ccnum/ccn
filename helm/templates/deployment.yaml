@@ -1,0 +1,75 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}-{{ .Values.nameOverride | default "ccn-app" }}
+  labels:
+    app: {{ .Release.Name }}-ccn
+spec:
+  selector:
+    matchLabels:
+      app: {{ .Release.Name }}-ccn
+  template:
+    metadata:
+      labels:
+        app: {{ .Release.Name }}-ccn
+    spec:
+      volumes:
+        - name: {{ .Release.Name }}-{{ .Values.pvc.name }}
+          persistentVolumeClaim:
+            claimName: {{ .Release.Name }}-{{ .Values.pvc.name }}
+      containers:
+        - name: mariadb
+          image: {{ .Values.mariadb.image }}
+          ports:                            # Add a ports section to expose the container ports
+            - containerPort: 3306               # The spip container listens on port 80
+              name: http                      # Port name (optional but useful)
+              protocol: TCP   
+          env:
+            - name: MYSQL_ROOT_PASSWORD
+              value: {{ .Values.mariadb.env.MYSQL_ROOT_PASSWORD }}
+            - name: MYSQL_DATABASE
+              value: {{ .Values.mariadb.env.MYSQL_DATABASE }}
+            - name: MYSQL_USER
+              value: {{ .Values.mariadb.env.MYSQL_USER }}
+            - name: MYSQL_PASSWORD
+              value: {{ .Values.mariadb.env.MYSQL_PASSWORD }}
+          volumeMounts:
+            - mountPath: /var/lib/mysql
+              name: {{ .Release.Name }}-{{ .Values.pvc.name }}
+              subPath: mariadb-2
+
+        - name: spip
+          image: {{ .Values.spip.image }}
+          ports:                            # Add a ports section to expose the container ports
+            - containerPort: 80               # The spip container listens on port 80
+              name: http                      # Port name (optional but useful)
+              protocol: TCP   
+          env:
+            - name: SPIP_AUTO_INSTALL
+              value: {{ .Values.spip.env.SPIP_AUTO_INSTALL | quote }}
+            - name: SPIP_DB_SERVER
+              value: {{ .Values.spip.env.SPIP_DB_SERVER }}
+            - name: SPIP_DB_LOGIN
+              value: {{ .Values.spip.env.SPIP_DB_LOGIN }}
+            - name: SPIP_DB_PASS
+              value: {{ .Values.spip.env.SPIP_DB_PASS }}
+            - name: SPIP_DB_NAME
+              value: {{ .Values.spip.env.SPIP_DB_NAME }}
+            - name: SPIP_SITE_ADDRESS
+              value: {{ .Values.spip.env.SPIP_SITE_ADDRESS }}
+            - name: SPIP_DB_HOST
+              value: {{ .Values.spip.env.SPIP_DB_HOST }}
+            - name: SPIP_ADMIN_PASS
+              value: {{ .Values.spip.env.SPIP_ADMIN_PASS }}
+            - name: SPIP_ADMIN_EMAIL
+              value: {{ .Values.spip.env.SPIP_ADMIN_EMAIL }}
+            - name: SPIP_VERSION_SITE
+              value: {{ .Values.spip.env.SPIP_VERSION_SITE }}
+            - name: DUMP_MEDIA
+              value: {{ .Values.spip.env.DUMP_MEDIA }}
+            - name: DUMP_DB
+              value: {{ .Values.spip.env.DUMP_DB }}
+          volumeMounts:
+            - mountPath: /var/www/html/IMG
+              name: {{ .Release.Name }}-{{ .Values.pvc.name }}
+              subPath: spip-3
