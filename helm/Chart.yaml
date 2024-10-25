@@ -1,0 +1,4 @@
+apiVersion: v2
+name: ccn-chart
+description: A Helm chart for deploying CCN application
+version: "1.0.0"

@@ -1,0 +1,9 @@
+[<span class="oembed oe-link[(#ENV{data}|table_valeur{html}|oui)oe-rich clearfix][ (#ENV{align})]">
+	<a href="#ENV{url}" class="spip_out spip_url">(#ENV{data}|table_valeur{title}|sinon{#ENV{url}})</a>
+	[<span class="oe-html">
+	(#ENV{data}|table_valeur{html})
+	</span>]
+</span>]
+#SET{legende,''}[(#ID_DOCUMENT|oui)[(#SET{legende,#INCLURE{fond=modeles/document_legende,env,titre=#INFO_TITRE*{document,#ID_DOCUMENT}|oembed_lier_titre{#ENV*{url}}}|trim})]]
+[(#GET{legende}|non)
+[<figcaption class="spip_doc_legende"><div class="spip_doc_titre oembed-source">(#ENV*{lien}|echappe_retour)</div></figcaption>]][(#GET{legende})]

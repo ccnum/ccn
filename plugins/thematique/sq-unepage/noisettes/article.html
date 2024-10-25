@@ -62,8 +62,8 @@
 					<div class="texte">
 						<div class="#EDIT{titre} titre">[(#TITRE)]</div>
 						<div class="auteur_date">
-							[<div id="ajax_go_to_classe_#GET{id_parent}" class="reponse_goto_classe[(#ENV{type_objet}|in_array{#LISTE{travail_en_cours,classes}}|oui) pointer]">(#GET{titre_parent})</div><br>]
-							[<span class="#EDIT{date}">(#DATE|affdate)</span>]
+							[<div id="ajax_go_to_classe_#GET{id_parent}" class="reponse_goto_classe[(#ENV{type_objet}|in_array{#LISTE{travail_en_cours,classes}}|oui) pointer]">(#GET{titre_parent})</div>]
+							[<div class="#EDIT{date}">(#DATE|affdate)</div>]
 
 							[(#ENV{type_objet}|=={travail_en_cours}|oui)
 								<script type="text/javascript">

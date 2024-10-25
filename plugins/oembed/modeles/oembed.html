@@ -1,0 +1,12 @@
+#CACHE{7*24*3600}
+[(#SET{data,#ENV**{url}|oembed_recuperer_data{#ENV{maxwidth,0},#ENV{maxheight,0}}})
+][(#GET{data}|oui)
+[(#SET{media,#GET{data/media}|sinon{#GET{data/type}|oembed_media_from_type}})
+]<div
+	class="[(#ID_DOCUMENT|medias_modele_document_standard_classes{#GET{media}}) ]ressource oembed[ oembed_(#GET{data/type})][ oembed_(#GET{media})][ oembed_(#GET{data/provider_name}|strtolower|replace{'\W','_'})]"
+	[(#ID_DOCUMENT|medias_modele_document_standard_attributs{#GET{media}})]
+>
+	<figure class="spip_doc_inner">
+	[(#INCLURE{fond=modeles/oembed_[(#GET{data/type,link})],data=#GET{data},url,align,lien,async})]
+	</figure>
+</div>]
