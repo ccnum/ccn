@@ -1,6 +1,4 @@
 #CACHE{0}
-[(#REM) Mire authentification]
-[(#REM) Ajouter des images]
 [(#SESSION{id_auteur}|oui)
 	<li class="bloc2"><a class='mediabox boxIframe boxWidth-700px boxHeight-600px' href="#URL_PAGE{auteur_editer,id_auteur=#SESSION{id_auteur}}" title="Profil d'auteur">[(#SESSION{nom}|couper{10})]</a></li>
 	<li class="logo li_deconnexion"><a class="ajax logo_menu-deconnecter" href="[(#URL_LOGOUT)]" title="Se déconnecter"></a></li>
