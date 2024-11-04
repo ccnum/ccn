@@ -70,8 +70,8 @@ define('_annee_scolaire', $annee_scolaire);
 //SQUELETTES
 // 'nom' => 'chemin du squelette'
 $squelettes = [
-	'jeu' => _DIR_PLUGIN_FICTIONS . 'squelettes/jeu:' . _DIR_PLUGIN_FICTIONS . 'squelettes/air:squelettes',
-	'air' => _DIR_PLUGIN_FICTIONS . 'squelettes/air:squelettes'
+	'jeu' => _DIR_PLUGIN_PETITFABLAB . 'squelettes/jeu:' . _DIR_PLUGIN_PETITFABLAB . 'squelettes/air:squelettes',
+	'air' => _DIR_PLUGIN_PETITFABLAB . 'squelettes/air:squelettes'
 ];
 
 // Si l'on demande un squelette particulier qui existe,  on pose un cookie, sinon suppression du cookie
