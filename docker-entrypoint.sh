@@ -98,10 +98,10 @@ if [[ ! -e config/connect.php && ${SPIP_AUTO_INSTALL} = 1 ]]; then
 		--admin-pass ${SPIP_ADMIN_PASS}" || true
 
     # Try to depote the repository
-    if ! spip plugins:svp:depoter https://plugins.spip.net/depots/principal.xml; then
-        echo "Warning: Unable to depote repository https://plugins.spip.net/depots/principal.xml"
+    #if ! spip plugins:svp:depoter https://plugins.spip.net/depots/principal.xml; then
+    #    echo "Warning: Unable to depote repository https://plugins.spip.net/depots/principal.xml"
         # Optionally handle this error differently, or just continue
-    fi
+    #fi
 
 	spip plugins:activer cextras -y
 	spip plugins:activer cicas -y
