@@ -117,7 +117,7 @@ if [[ ! -e config/connect.php && ${SPIP_AUTO_INSTALL} = 1 ]]; then
 	spip plugins:activer socialtags -y
 	spip plugins:activer spip_bonux -y
 	spip plugins:activer yaml -y
-	if [ ${SPIP_VERSION_SITE} = "fictions" ]; then
+	if [ ${SPIP_VERSION_SITE} != "thematique" ]; then
 		spip plugins:activer vider_rubrique -y
 	fi
 	spip plugins:activer ${SPIP_VERSION_SITE} -y
