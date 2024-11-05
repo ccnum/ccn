@@ -22,6 +22,6 @@
 	<necessite nom="spip_bonux" />
 	<necessite nom="vider_rubrique" />
 
-	<chemin path="squelettes/air" />
+	<chemin path="squelettes" />
 	<chemin path="" />
 </paquet>
