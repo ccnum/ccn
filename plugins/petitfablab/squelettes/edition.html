@@ -19,19 +19,19 @@ form.formulaire_crayon {  width: 730px; }
 <body >
 
 <BOUCLE_article(ARTICLES){id_article=#DESCRIPTIF*}{titre = prologue}{tout}{0,1}>
-      <span class="">#GET{titre}</span>
-      <h2>#TITRE</h2>
-      <BOUCLE_auteur_article3(AUTEURS){id_article}{0,1}{tout}>
-        <div class="">#NOM</div>
-       </BOUCLE_auteur_article3>
-      <div >#TEXTE</div>
+	<span class="">#GET{titre}</span>
+	<h2>#TITRE</h2>
+	<BOUCLE_auteur_article3(AUTEURS){id_article}{0,1}{tout}>
+	<div class="">#NOM</div>
+	</BOUCLE_auteur_article3>
+	<div >#TEXTE</div>
 </BOUCLE_article>
 
 <BOUCLE_lecture_gauche(ARTICLES){id_rubrique}{par date}{tout}>
-      <h2 class="#EDIT{titre}" style="clear:both;">#TITRE</h2>
-      <div class="#EDIT{surtitre}" style="clear:both;">#SURTITRE</div>
-      <div class="#EDIT{texte}" style="clear:both;">#TEXTE</div>
-      <div class="#EDIT{ps}" style="clear:both;">#PS</div>
+	<h2 class="#EDIT{titre}" style="clear:both;">#TITRE</h2>
+	<div class="#EDIT{surtitre}" style="clear:both;">#SURTITRE</div>
+	<div class="#EDIT{texte}" style="clear:both;">#TEXTE</div>
+	<div class="#EDIT{ps}" style="clear:both;">#PS</div>
 
 </BOUCLE_lecture_gauche>
 
