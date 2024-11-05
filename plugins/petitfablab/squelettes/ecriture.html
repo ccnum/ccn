@@ -1,0 +1,48 @@
+#CACHE{0}
+<BOUCLE_jeu(RUBRIQUES){titre==jeu}{0,1}{tout}>
+	<BOUCLE_j1(RUBRIQUES){id_parent=#ID_RUBRIQUE}{0,1}{tout}>
+		#SET{rub_jeu,#ID_RUBRIQUE}
+	</BOUCLE_j1>
+</BOUCLE_jeu>
+#SET{rub_hist,''}
+[(#GET{rub_hist}|=={''}|oui)
+	[(#SET{rub_hist,[(#GET{rub_jeu}|creer_histoire)]})]
+]
+
+[(#REM) Validation des articles]
+
+#SET{chapitres, 0}
+<BOUCLE_max_cadavres(ARTICLES){id_rubrique=#GET{rub_hist}}{par date}{statut IN prepa,publie}>
+	#SET{chapitres, #TOTAL_BOUCLE}
+</BOUCLE_max_cadavres>
+
+<BOUCLE_publie(ARTICLES){id_article}{statut==prepa}>
+	[(#GET{chapitres}|<{5}|oui)
+		#SET{info,Félicitations : vous avez rempli votre chapitre.}
+		[(#ID_ARTICLE|valider_chapitre{#ID_RUBRIQUE})]
+	]
+	[(#GET{chapitres}|>={5}|oui)
+		#SET{info,Félicitations : vous avez terminé l'histoire.}
+		[(#SET{rub_hist,[(#ID_ARTICLE|valider_chapitre{#ID_RUBRIQUE})]})]
+	]
+</BOUCLE_publie>
+
+[(#REM)INCLUSION]
+
+<INCLURE{fond=layout_init}{ecriture=oui}{rub_hist=#GET{rub_hist}}{nb_chap=#GET{chapitres}}>
+
+<!-- BOOK -->
+<div id="global-ecriture">
+	<div id="global-spacer"></div>
+	<div class="global-content">
+		<div class="content">
+			<div class="content-left-small">
+				<INCLURE{fond=colonne_gauche}{id_rubrique=#GET{rub_jeu}} />
+			</div>
+			<div class="content-right-large">
+				<INCLURE{fond=rubrique}{id_rubrique=#GET{rub_hist}}{id_art=#ID_ARTICLE}{info=#GET{info}}>
+			</div>
+		</div>
+	</div>
+</div>
+<INCLURE{fond=layout_end}{ecriture=oui}{rub_hist=#GET{rub_hist}}>
