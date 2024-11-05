@@ -4,7 +4,7 @@
     <div id="footer-inner">
  		<div id="footer-nav-left">
 	        [(#SESSION{id_auteur}|oui)Bonjour <b><a class="mediabox boxIframe boxWidth-730px boxHeight-550px" href="[(#URL_PAGE{auteur_editer,id_auteur=#SESSION{id_auteur}})]">#SESSION{nom}</a></b>&nbsp;&nbsp;|]
-	        [(#SESSION{id_auteur}|non)<a href="#URL_PAGE{popup-login}" class="mediabox boxIframe boxWidth-330px boxHeight-350px">Se connecter</a>&nbsp;&nbsp;|]
+	        [(#SESSION{id_auteur}|non)<a href="[(#URL_PAGE{login}|parametre_url{url,#SELF}|parametre_url{cicas,oui})]">Se connecter</a>&nbsp;&nbsp;|]
 	        <a href="http://www.laclasse.com/pls/public/!page.laclasse?contexte=QUESTION&rubrique=0">Mot de passe oublié ?</a>
         </div>
 
