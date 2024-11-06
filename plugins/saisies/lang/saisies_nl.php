@@ -3,11 +3,7 @@
 // extrait automatiquement de https://trad.spip.net/tradlang_module/saisies?lang_cible=nl
 // ** ne pas modifier le fichier **
 
-if (!defined('_ECRIRE_INC_VERSION')) {
-	return;
-}
-
-$GLOBALS[$GLOBALS['idx_lang']] = array(
+return [
 
 	// A
 	'afficher' => 'Tonen',
@@ -243,5 +239,5 @@ Je vindt <a href="https://contrib.spip.net/5080" target="_blank"  rel="noopener 
 	'vue_sans_reponse' => '<i>Zonder antwoord</i>',
 
 	// Z
-	'z' => 'zzz'
-);
+	'z' => 'zzz',
+];

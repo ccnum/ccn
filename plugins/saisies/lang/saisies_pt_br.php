@@ -3,11 +3,7 @@
 // extrait automatiquement de https://trad.spip.net/tradlang_module/saisies?lang_cible=pt_br
 // ** ne pas modifier le fichier **
 
-if (!defined('_ECRIRE_INC_VERSION')) {
-	return;
-}
-
-$GLOBALS[$GLOBALS['idx_lang']] = array(
+return [
 
 	// A
 	'afficher' => 'Exibir',
@@ -306,5 +302,5 @@ Você pode reagrupar em subgrupo. Para isso, a <code>chave</code> deve ser o tí
 	'vue_sans_reponse' => '<i>Sem resposta</i>',
 
 	// Z
-	'z' => 'zzz'
-);
+	'z' => 'zzz',
+];
