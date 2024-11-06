@@ -10,7 +10,6 @@
 </head>
 <body>
 	<div id="lecture-script">
-		<div id="lecture-inner-close"></div>
 		<BOUCLE_lecture_script(ARTICLES){id_article}>
 			<div id="script-ecrivain-lecture">
 				<div class="script-titre">SCRIPT</div>
@@ -46,11 +45,6 @@ $(document).ready(function() {
 
 	//LARGEUR CHAMP FORUM
 	setInterval( "$('.forum').find('textarea').attr('cols','100');", 250 );
-
-	//BT CLOSE
-	$('#forum-inner-close').click(function() {
-		parent.$.fn.mediabox.close()
-	});
 
 });
 </script>
