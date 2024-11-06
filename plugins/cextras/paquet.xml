@@ -1,7 +1,7 @@
 <paquet
 	prefix="cextras"
 	categorie="outil"
-	version="4.2.0"
+	version="4.2.1"
 	etat="stable"
 	compatibilite="[4.0.0;4.*]"
 	logo="images/cextras-64.png"
