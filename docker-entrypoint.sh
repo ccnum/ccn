@@ -125,6 +125,7 @@ if [[ ! -e config/connect.php && ${SPIP_AUTO_INSTALL} = 1 ]]; then
 
 	spip config:ecrire -p notation acces:ide
 	spip config:ecrire -p notation change_note:oui
+	spip config:ecrire -p mediabox active:oui
 fi
 
 # Default mes_options
