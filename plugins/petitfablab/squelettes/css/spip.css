@@ -1478,11 +1478,6 @@ a:hover.spip_out {
 	display: none;
 }
 
-.formulaire_spip textarea.markItUpEditor,
-.formulaire_spip li.editer_texte textarea {
-	/*width:620px;*/
-}
-
 #formulaire_forum {
 	margin: 0px 0px 20px 0px;
 }
