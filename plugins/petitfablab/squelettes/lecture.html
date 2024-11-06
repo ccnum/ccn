@@ -22,7 +22,7 @@
 	</BOUCLE_j1>
 </BOUCLE_jeu>
 
-<INCLURE{fond=layout_init}{pages=oui}{home=oui}{id_rubrique=#GET{rub_jeu}}{overflow=oui}>
+<INCLURE{fond=layout_init, pages=oui, home=oui, id_rubrique=#GET{rub_jeu}, overflow=oui, compteur}>
 
 <!-- BOOK -->
 <div id="global" style="overflow: auto;">
@@ -38,8 +38,8 @@
 						<span class="lecture-titre-cadavre">#GET{titre}</span>
 						<div class="lecture-chapitre-auteur">
 							<BOUCLE_auteur_article3(AUTEURS){id_article}{0,1}{tout}>
-							<div class="ecriture-chapitre-avatar">[(#LOGO_AUTEUR||image_reduire{42,42})]</div>
-							<div class="ecriture-chapitre-nom">#NOM</div>
+								<div class="ecriture-chapitre-avatar">[(#LOGO_AUTEUR|image_reduire{42,42})]</div>
+								<div class="ecriture-chapitre-nom">#NOM</div>
 							</BOUCLE_auteur_article3>
 						</div>
 					</div>
@@ -58,7 +58,7 @@
 						<span class="lecture-titre-cadavre">#GET{titre}</span>
 						<div class="lecture-chapitre-auteur">
 							<BOUCLE_auteur_article2(AUTEURS){id_auteur IN 1,2,60,71,80,28,70,73}{par hasard}{0,1}{tout}>
-								<div class="ecriture-chapitre-avatar">[(#LOGO_AUTEUR||image_reduire{42,42})]</div>
+								<div class="ecriture-chapitre-avatar">[(#LOGO_AUTEUR|image_reduire{42,42})]</div>
 							</BOUCLE_auteur_article2>
 							<div class="ecriture-chapitre-nom">#SURTITRE</div>
 							[(#ENV{fin}|=={oui}|non)
@@ -82,7 +82,7 @@
 
 						<div class="lecture-chapitre-auteur">
 							<BOUCLE_auteur_article(AUTEURS){id_auteur IN 1,2,60,71,80,28,70,73}{par hasard}{0,1}{tout}>
-								<div class="ecriture-chapitre-avatar">[(#LOGO_AUTEUR||image_reduire{42,42})]</div>
+								<div class="ecriture-chapitre-avatar">[(#LOGO_AUTEUR|image_reduire{42,42})]</div>
 							</BOUCLE_auteur_article>
 							<div class="ecriture-chapitre-nom">#SURTITRE</div>
 							[(#ENV{fin}|=={oui}|non)
@@ -119,7 +119,7 @@
 		compteur = parseFloat(compteur);
 		var num_page_gauche;
 		var num_page_droite;
-		var num_page_limite = $('.content-left > div').size();
+		var num_page_limite = $('.content-left > div').length();
 
 		$('.lecture-page').hide();
 		pagination(compteur);
@@ -195,7 +195,7 @@
 		}
 		else {};
 
-		if(var_compteur == 1 || var_compteur == 2){$('#bt-prev').hide();} else {};
+		if(var_compteur == 1 | var_compteur == 2){$('#bt-prev').hide();} else {};
 	}
 </script>
 
