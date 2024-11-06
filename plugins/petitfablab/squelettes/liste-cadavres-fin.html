@@ -1,10 +1,10 @@
 <div id="liste-fin">
 	<BOUCLE_rubriques_toutes(RUBRIQUES){id_parent=#ID_RUBRIQUE}{tout}>
 		#SET{voir,nok}
-		<BOUCLE_test(ARTICLES){id_rubrique}></BOUCLE_test>
+		<BOUCLE_test(ARTICLES){id_rubrique}> </BOUCLE_test>
 			[(#COMPTEUR_BOUCLE|>={5}|oui)#SET{voir,ok}]
 		</B_test>
-		<div class="liste-fin-rubrique [(#GET{voir}|=={ok}|non)cache]">
+		<div class="liste-fin-rubrique[ (#GET{voir}|=={ok}|non)cache]">
 			<!--<div class="liste-title">#ID_RUBRIQUE</div>-->
 			<div class="liste-fin-book">
 				<!-- COUVERTURE LIVRE -->
