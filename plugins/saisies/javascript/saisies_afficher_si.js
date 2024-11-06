@@ -98,16 +98,18 @@ function afficher_si_set_current_data(form) {
 	});
 }
 function verifier_afficher_si(saisie, chargement = false) {
+	let condition = saisie.attr('data-afficher_si');
+	condition = eval(condition);
 	if (
-			(saisie.hasClass('erreur') || $('.erreur', saisie).length)
-			&& !saisie.hasClass('saisies-menu-onglets__item')
-			&& !saisie.hasClass('saisies-contenu-onglet')
+		chargement
+		&& !condition
+		&& (saisie.hasClass('erreur') || $('.erreur', saisie).length)
+		&& !saisie.hasClass('saisies-menu-onglets__item')
+		&& !saisie.hasClass('saisies-contenu-onglet')
 	) {//Tjr afficher au chargement s'il y  une erreur. Si cela arrive c'est qu'il y a quelque part une incohérence entre l'évaluation JS et l'évaluation PHP des afficher si. Attention ! Ne pas appliquer aux onglets qui ont des classes erreurs, ca c'est volontaire
 		console.log('Attention : saisies masquée par afficher_si avec une erreur...' + saisie.attr('data-id'));
 		return true;
 	}
-	condition = saisie.attr('data-afficher_si');
-	condition = eval(condition);
 	return condition
 }
 function animer_afficher_si(saisie, condition, chargement){

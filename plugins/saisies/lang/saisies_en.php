@@ -3,11 +3,7 @@
 // extrait automatiquement de https://trad.spip.net/tradlang_module/saisies?lang_cible=en
 // ** ne pas modifier le fichier **
 
-if (!defined('_ECRIRE_INC_VERSION')) {
-	return;
-}
-
-$GLOBALS[$GLOBALS['idx_lang']] = array(
+return [
 
 	// A
 	'afficher' => 'Display',
@@ -275,5 +271,5 @@ You will find <a href="https://contrib.spip.net/5080" target="_blank" rel="noope
 	'vue_sans_reponse' => '<i>(no data entered)</i>',
 
 	// Z
-	'z' => 'zzz'
-);
+	'z' => 'zzz',
+];
