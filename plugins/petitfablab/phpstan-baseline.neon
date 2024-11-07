@@ -3,27 +3,27 @@ parameters:
 		-
 			message: "#^Function include_spip not found\\.$#"
 			count: 2
-			path: fictions_fonctions.php
+			path: petitfablab_fonctions.php
 
 		-
 			message: "#^Function interprete_argument_balise not found\\.$#"
 			count: 2
-			path: fictions_fonctions.php
+			path: petitfablab_fonctions.php
 
 		-
 			message: "#^Function objet_inserer not found\\.$#"
 			count: 1
-			path: fictions_fonctions.php
+			path: petitfablab_fonctions.php
 
 		-
 			message: "#^Function sql_getfetsel not found\\.$#"
 			count: 1
-			path: fictions_fonctions.php
+			path: petitfablab_fonctions.php
 
 		-
 			message: "#^Function sql_getfetsel not found\\.$#"
 			count: 1
-			path: fictions_options.php
+			path: petitfablab_options.php
 
 		-
 			message: "#^Function _T not found\\.$#"
