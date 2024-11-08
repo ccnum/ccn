@@ -21,7 +21,4 @@
 	<necessite nom="notation" />
 	<necessite nom="spip_bonux" />
 	<necessite nom="vider_rubrique" />
-
-	<chemin path="squelettes" />
-	<chemin path="" />
 </paquet>

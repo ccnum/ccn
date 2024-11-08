@@ -167,175 +167,9 @@ select {
 	vertical-align: middle;
 }
 
-.cache {
-	display: none;
-}
-
-.clear {
-	clear: both;
-}
-
-.droite {
-	float: right;
-}
-
-.gauche {
-	float: left;
-}
-
-/* -------------------- */
-/* JEU */
-/* -------------------- */
-* {
-	font-family: Arial, sans-serif;
-}
-
-.formulaire_editer_article,
-.formulaire_editer_article li,
-.formulaire_editer_article ul {
-	list-style: none;
-	font-family: sans-serif;
-}
-
-.formulaire_editer_article {
-	width: 90%;
-	float: left;
-}
-
-.formulaire_editer_article li {
-	margin: 0px 0px 30px 0px;
-}
-
-.formulaire_editer_article input {
-	/*width: 79%;
-	float: right;*/
-	outline: none;
-}
-
-.formulaire_editer_article textarea {
-	width: 90%;
-	outline: none;
-}
-
-.cadre {
-	margin: 0px 0px 30px 10px;
-	width: 100%;
-	border-radius: 5px;
-	border: 0px;
-	padding: 23px;
-	color: #FFF;
-	float: left;
-	font-size: 12px;
-}
-
-.rouge {
-	background-color: #556270;
-}
-
-.bleu {
-	background-color: #ff6b6b;
-}
-
-.cadre2,
-.boutons input[type=submit] {
-	background-color: #fff;
-	margin: 0px;
-	width: 90%;
-	border-radius: 0px;
-	border: 3px solid;
-	padding: 23px;
-	color: black;
-	font-size: 16px;
-}
-
-.boutons input[type=submit] {
-	background-color: #ff6b6b;
-	color: #fff;
-	width: 100%;
-	text-transform: uppercase;
-}
-
-.rouge2 {
-	border-color: #ff6b6b;
-}
-
-.rouge2::-webkit-input-placeholder {
-	color: #ff6b6b;
-	text-transform: uppercase;
-}
-
-.rouge2:-moz-placeholder {
-	color: #ff6b6b;
-}
-
-.rouge2::-moz-placeholder {
-	color: #ff6b6b;
-}
-
-.rouge2:-ms-input-placeholder {
-	color: #ff6b6b;
-}
-
-.rouge3 {
-	color: #ff6b6b;
-}
-
-.bleu2 {
-	border-color: #556270;
-}
-
-.bleu2::-webkit-input-placeholder {
-	color: #556270;
-	text-transform: uppercase;
-}
-
-.bleu2:-moz-placeholder {
-	color: #556270;
-}
-
-.bleu2::-moz-placeholder {
-	color: #556270;
-}
-
-.bleu2:-ms-input-placeholder {
-	color: #556270;
-}
-
-.bleu3 {
-	color: #556270;
-}
-
-.cadre_titre,
-.formulaire_editer_article label {
-	display: none;
-	color: #fff;
-	font-size: 16px;
-	font-weight: bold;
-	float: left;
-	padding-top: 5px;
-	padding-bottom: 5px;
-}
-
-.formulaire_editer_article .markItUpHeader,
-.formulaire_editer_article .markItUpTabs {
-	display: none;
-}
-
-.boutons {
-	text-align: left;
-	margin: 0px 0px 0px 40px;
-}
-
-.previsu .boutons {
-	margin: 15px 0px 15px 0px;
-}
-
-
-
 /* -------------------- */
 /* STRUCTURE */
 /* -------------------- */
-/*Overflow pour le scroll*/
 
 html,
 body {
@@ -343,7 +177,7 @@ body {
 	height: 100%;
 	width: 100%;
 	text-align: center;
-	overflow: hidden;
+	overflow: visible;
 }
 
 body.mobile {
@@ -363,6 +197,8 @@ body.mobile {
 	background-image: url(../img/global/bg-book.png);
 	text-align: left;
 	/*background-repeat:no-repeat;*/
+	background-repeat: repeat-y;
+
 }
 
 #global-ecriture {
@@ -410,10 +246,6 @@ body.mobile {
 	width: 220px;
 	float: left;
 	margin: 0px 20px 0px 40px;
-}
-
-.content-left-small * {
-	font-family: Georgia, "Times New Roman", Times, serif;
 }
 
 .content-right-large {
@@ -554,6 +386,7 @@ body.mobile {
 	z-index: 100;
 	border-radius: 0 0 4px 4px;
 	behavior: url(../js/PIE.php);
+	font-family: Arial, Helvetica, sans-serif;
 }
 
 #bouton-connexion-texte {
@@ -578,6 +411,34 @@ body.mobile {
 	margin: 7px 10px 0px 0px;
 }
 
+
+/* -------------------- */
+/* SUPPRIMER */
+/* -------------------- */
+
+.action_supprimer,
+.formulaire_editer_rubrique .action_supprimer,
+.action_supprimer_off {
+	width: 15px;
+	height: 15px;
+	float: left;
+	margin: auto;
+	margin-left: 5px;
+	margin-bottom: 3px;
+	margin-right: 5px;
+	background: url(../img/ecriture/logo_supprimer_off_15.png) no-repeat scroll 0% 0%;
+	position: relative;
+	z-index: 2;
+}
+
+.action_supprimer:hover,
+.formulaire_editer_rubrique .action_supprimer:hover,
+.action_supprimer_on {
+	background: url(../img/ecriture/logo_supprimer_on_15.png) no-repeat scroll 0% 0%;
+	position: relative;
+	z-index: 2;
+}
+
 /* -------------------- */
 /* SOMMAIRE */
 /* -------------------- */
@@ -585,6 +446,7 @@ body.mobile {
 #titre_site {
 	width: 100%;
 	float: left;
+	font-family: Arial, Helvetica, sans-serif;
 	font-size: 22px;
 	margin: 50px 0px 0px 0px;
 }
@@ -601,7 +463,8 @@ body.mobile {
 	width: 100%;
 	float: left;
 	font-size: 12px;
-	line-height: 15px;
+	line-height: 17px;
+	font-family: Arial, Helvetica, sans-serif;
 	margin: 10px 0px 0px 0px;
 }
 
@@ -620,24 +483,15 @@ body.mobile {
 }
 
 .texte-presentation {
+	font-family: Arial, Helvetica, sans-serif;
 	font-size: 15px;
-
 }
 
 div.texte-presentation {
 	position: relative;
-	clear: both;
-	position: relative;
-	margin: 20px;
-	padding: 0px 20px 15px 20px;
+	margin: 10px 20px 0px 100px;
 }
 
-.texte-presentation div.bord {
-	margin: 10px 20px 0px 100px;
-	border-left: 5px #ff6b6b solid;
-	padding: 10px;
-	margin: 20px;
-}
 
 /* -------------------- */
 /* COUNTDOWN */
@@ -647,6 +501,7 @@ div.texte-presentation {
 	color: #000;
 	height: 140px;
 	clear: both;
+	font-family: Arial, Helvetica, sans-serif;
 	font-size: 12px;
 }
 
@@ -710,9 +565,9 @@ li#m0 {
 .liste-title {
 	color: #556270;
 	font-size: 15px;
-	margin: 0px auto 5px auto;
-	/*float:left;*/
-	text-align: center;
+	margin: 0px 0px 10px 0px;
+	float: left;
+	font-family: Arial, Helvetica, sans-serif;
 }
 
 .liste-link {
@@ -797,7 +652,7 @@ a.webmestre.last-small {
 	top: 0px;
 	bottom: 0px;
 	display: none;
-
+	font-family: Arial, Helvetica, sans-serif;
 	color: #FFF;
 	text-align: left;
 }
@@ -883,7 +738,7 @@ a.webmestre.last-small {
 
 #legende-cadavre {
 	float: left;
-
+	font-family: Arial, Helvetica, sans-serif;
 	margin: 40px 0px 0px 80px;
 }
 
@@ -914,7 +769,7 @@ a.webmestre.last-small {
 	font-size: 11px;
 	margin: 0px 0px 2px 0px;
 	float: left;
-
+	font-family: Arial, Helvetica, sans-serif;
 }
 
 .liste-link-small {
@@ -958,13 +813,10 @@ a.verrouille.last-small {
 	padding: 50px 0px 0px 30px;
 }
 
-.ecriture-chapitre,
-.ecriture-chapitre1,
-.ecriture-chapitre2 {
+.ecriture-chapitre {
 	width: 610px;
 	float: left;
 	padding: 0px 0px 10px 0px;
-	margin-top: 10px;
 }
 
 .ecriture-chapitre-picto {
@@ -983,12 +835,11 @@ a.verrouille.last-small {
 .ecriture-chapitre-surtitre {
 	font-size: 13px;
 	font-weight: bold;
-
+	font-family: Arial, Helvetica, sans-serif;
 	text-transform: uppercase;
 }
 
-.ecriture-chapitre-titre,
-.ecriture-chapitre-titre strong {
+.ecriture-chapitre-titre {
 	font-family: Georgia, "Times New Roman", Times, serif;
 	font-size: 22px;
 }
@@ -1009,7 +860,7 @@ a.verrouille.last-small {
 .ecriture-chapitre-nom {
 	float: left;
 	width: 140px;
-
+	font-family: Arial, Helvetica, sans-serif;
 	font-size: 12px;
 	font-style: italic;
 }
@@ -1032,18 +883,17 @@ a.verrouille.last-small {
 }
 
 hr {
-	margin: 20px 0px 20px 0px;
+	margin: 0px 0px 20px 0px;
 }
 
 .texte_courant {
 	font-family: Georgia, "Times New Roman", Times, serif;
-	/*font-size:14px;*/
+	font-size: 14px;
 	line-height: 22px;
 	padding: 0px 30px 0px 60px;
 	float: left;
 	clear: both;
 	margin-top: 10px;
-	margin-bottom: 20px;
 	font-weight: lighter;
 	width: 520px;
 }
@@ -1054,7 +904,8 @@ hr {
 }
 
 #texte_prologue {
-	display: block;
+	display: none;
+
 }
 
 #open_prologue {
@@ -1084,6 +935,7 @@ hr {
 	border-radius: 5px 5px 5px 5px;
 	padding: 25px;
 	color: #FFF;
+	font-family: Arial, Helvetica, sans-serif;
 	float: left;
 	position: relative;
 }
@@ -1114,6 +966,7 @@ hr {
 	border-radius: 5px 5px 5px 5px;
 	padding: 25px;
 	color: #FFF;
+	font-family: Arial, Helvetica, sans-serif;
 	float: left;
 	position: relative;
 }
@@ -1131,7 +984,7 @@ hr {
 }
 
 a.spip_out {
-	/*color:#FFF;*/
+	color: black;
 	text-decoration: underline;
 }
 
@@ -1179,6 +1032,7 @@ a:hover.spip_out {
 	border-radius: 5px;
 	padding: 23px 18px 23px 25px;
 	color: #FFF;
+	font-family: Arial, Helvetica, sans-serif;
 	float: left;
 	font-size: 12px;
 	background-image: url(../img/ecriture/forum-fond-pastille.png);
@@ -1227,6 +1081,7 @@ a:hover.spip_out {
 	behavior: url(../js/PIE.php);
 	margin-bottom: 5px;
 	padding: 10px 60px 10px 50px;
+	font-family: Arial, Helvetica, sans-serif;
 	font-size: 12px;
 	position: relative;
 }
@@ -1258,7 +1113,7 @@ a:hover.spip_out {
 	text-align: center;
 	padding: 8px 0px 0px 0px;
 	color: #FFF;
-
+	font-family: Arial, Helvetica, sans-serif;
 	font-size: 14px;
 	font-weight: bold;
 	background-image: url(../img/global/wip-pastille.png);
@@ -1270,7 +1125,6 @@ a:hover.spip_out {
 }
 
 #ecriture-navigation {
-
 	position: absolute;
 	right: 10px;
 	text-align: right;
@@ -1289,8 +1143,8 @@ a:hover.spip_out {
 	border-radius: 20px 20px 20px;
 	behavior: url(../js/PIE.php);
 	color: #FFF;
-
-	font-size: 14px;
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 12px;
 	text-align: center;
 	display: block;
 }
@@ -1330,7 +1184,7 @@ a:hover.spip_out {
 .page-type-texte {
 	float: left;
 	font-size: 12px;
-
+	font-family: Arial, Helvetica, sans-serif;
 	line-height: 17px;
 	margin-top: 20px;
 }
@@ -1349,7 +1203,7 @@ a:hover.spip_out {
 	overflow: auto;
 	width: 730px;
 	height: 100%;
-
+	font-family: Arial, Helvetica, sans-serif;
 	color: #FFF;
 	background-color: #AAB0B7;
 }
@@ -1359,7 +1213,7 @@ a:hover.spip_out {
 	overflow: auto;
 	width: 730px;
 	height: 100%;
-
+	font-family: Arial, Helvetica, sans-serif;
 	color: #FFF;
 	background-color: #77818d;
 }
@@ -1374,7 +1228,7 @@ a:hover.spip_out {
 }
 
 .forum-inner-titre {
-
+	font-family: Arial, Helvetica, sans-serif;
 	font-size: 16px;
 	color: #FFF;
 	font-weight: bold;
@@ -1470,12 +1324,26 @@ a:hover.spip_out {
 	width: 400px;
 }
 
-.session_qui {
+.session_qui,
+.saisie_qui,
+.saisie_titre {
 	display: none;
 }
 
-.saisie_titre {
-	display: none;
+
+.formulaire_spip textarea.markItUpEditor,
+.formulaire_spip li.editer_texte textarea {
+	width: 620px;
+}
+
+.formulaire_forum legend {
+	text-align: left;
+	font-weight: bold;
+}
+
+.formulaire_forum fieldset,
+.formulaire_forum p.boutons {
+	padding-bottom: 10px;
 }
 
 #formulaire_forum {
@@ -1502,10 +1370,29 @@ a:hover.spip_out {
 	margin: 0px 0px 0px 40px;
 }
 
+.boutons {
+	text-align: left;
+	margin: 0px 0px 0px 40px;
+}
+
+.previsu .boutons {
+	margin: 15px 0px 15px 0px;
+}
+
+.boutons input[type=submit] {
+	font-size: 13px;
+	padding: 5px;
+	background-color: #47494c;
+	border: 0;
+	border-radius: 20px 20px 20px 20px;
+	color: #FFF;
+	position: relative;
+}
+
 #forum-no-message {
 	float: left;
 	clear: both;
-
+	font-family: Arial, Helvetica, sans-serif;
 	font-size: 16px;
 	color: #FFF;
 	float: left;
@@ -1523,7 +1410,7 @@ a:hover.spip_out {
 	height: 350px;
 	width: 330px;
 	overflow: auto;
-
+	font-family: Arial, Helvetica, sans-serif;
 }
 
 #formulaire_login {
@@ -1665,11 +1552,14 @@ a:hover.spip_out {
 	clear: both;
 }
 
+
+
 /* -------------------- */
 /* LECTURE */
 /* -------------------- */
 
 .lecture-page {
+	display: none;
 	margin-top: 30px;
 	margin-bottom: 50px;
 }
@@ -1677,7 +1567,7 @@ a:hover.spip_out {
 .lecture-page h1 {
 	font-size: 13px;
 	color: #ff6b6b;
-
+	font-family: Arial, Helvetica, sans-serif;
 	text-transform: uppercase;
 	margin: 0px 0px 0px 20px;
 }
@@ -1704,8 +1594,14 @@ h1.prologue {
 }
 
 .lecture-page p,
-.texte-courant-lecture p {
-	margin-bottom: 10px;
+.texte-courant-lecture p,
+.texte_courant p {
+	margin-bottom: 25px;
+}
+
+.texte-presentation p,
+#texte-presentation p {
+	margin-bottom: 17px;
 }
 
 .texte-courant-lecture {
@@ -1733,13 +1629,35 @@ h1.prologue {
 	height: 100%;
 }
 
+#lecture-inner-close {
+	width: 25px;
+	height: 25px;
+	background-color: #cc5555;
+	float: right;
+	display: block;
+	border-radius: 20px 20px 20px 20px;
+	behavior: url(../js/PIE.php);
+	cursor: pointer;
+	background-image: url(../img/global/close.png);
+	text-align: left;
+	background-repeat: no-repeat;
+	background-position: center;
+	position: absolute;
+	top: 10px;
+	right: 10px;
+}
+
+#lecture-inner-close:hover {
+	background-color: #000;
+}
+
 #script-ecrivain-lecture {
 	margin: 0px 0px 0px 0px;
 	width: 470px;
 	background-color: #ff6b6b;
 	padding: 25px;
 	color: #FFF;
-
+	font-family: Arial, Helvetica, sans-serif;
 	float: left;
 	text-align: left;
 }
@@ -1761,7 +1679,7 @@ h1.prologue {
 	background-color: #ff9797;
 	padding: 25px;
 	color: #FFF;
-
+	font-family: Arial, Helvetica, sans-serif;
 	float: left;
 	position: relative;
 	text-align: left;
@@ -1800,32 +1718,35 @@ h1.prologue {
 
 .lecture-titre-cadavre {
 	float: left;
-
+	font-family: Arial, Helvetica, sans-serif;
 	font-size: 12px;
 	line-height: 16px;
 	color: #c1c1c1;
 	padding: 0px 20px 0px 0px;
 	margin-left: 20px;
+
 }
+
 
 /* -------------------- */
 /* FIN DU JEUX */
 /* -------------------- */
 
+#liste-fin {
+	width: 100%;
+	float: left;
+	margin-bottom: 50px;
+}
+
 .liste-fin-rubrique {
 	width: 175px;
 	float: left;
-	margin: 0px 10px 20px 0px;
-	min-height: 150px;
+	margin: 0px 9px 20px 0px;
+	border: 1px solid #CCC;
 }
 
-.liste-fin-book {
-	float: left;
-	border: 0px solid #CCC;
-}
-
-.liste-fin-book:hover {
-	border: 0px solid #000;
+.liste-fin-rubrique:hover {
+	border: 1px solid #000;
 }
 
 .liste-book-bt {
@@ -1841,7 +1762,7 @@ h1.prologue {
 	background-color: #ccc;
 	text-align: center;
 	display: block;
-
+	font-family: Arial, Helvetica, sans-serif;
 	font-size: 11px;
 	padding: 2px 0px 2px 0px;
 	line-height: 25px;
@@ -1854,6 +1775,7 @@ h1.prologue {
 /* -------------------- */
 /* FOOTER */
 /* -------------------- */
+
 #footer {
 	position: absolute;
 	width: 100%;
@@ -1861,7 +1783,7 @@ h1.prologue {
 	left: 0px;
 	background: #556270;
 	height: 40px;
-
+	font-family: Arial, Helvetica, sans-serif;
 	z-index: 200;
 }
 
@@ -1893,7 +1815,7 @@ h1.prologue {
 	float: left;
 	font-size: 11px;
 	color: #FFF;
-	padding: 11px 0px 0px 0px;
+	padding: 18px 0px 0px 0px;
 }
 
 #footer-nav-left a {
@@ -1905,6 +1827,16 @@ h1.prologue {
 
 #footer-nav-left a:hover {
 	color: #ff6b6b;
+
+}
+
+#footer select {
+	width: 150px;
+}
+
+#footer option,
+#footer select {
+	font-size: 11px;
 }
 
 /* -------------------- */
@@ -2019,6 +1951,8 @@ form.formulaire_crayon {
 	width: 730px;
 }
 
+
+
 #spip-admin {
 	display: none;
 }
@@ -2038,4 +1972,11 @@ div.socialtags {
 	margin-bottom: 10px;
 	margin-right: 30px;
 	position: relative;
+}
+
+.crayon-html .crayon-boutons button {
+	text-align: left;
+	border-color: white;
+	padding-left: 10px;
+	padding-right: 10px;
 }

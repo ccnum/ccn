@@ -24,7 +24,7 @@
 		}
 		else {
 			document.cookie = cookie_nom + "=" + escape(cookie_valeur);
-			url = '#URL_SITE_SPIP/?annee_scolaire=' + cookie_valeur;
+			url = 'http://fictions.laclasse.com/?annee_scolaire=' + cookie_valeur;
 		}
 		reload(url);
 	}
@@ -74,7 +74,7 @@
 					<select onchange="reload_cookie('[(#URL_SITE_SPIP)]','[(#EVAL{_cookie_annee_scolaire})]',document.annee_scolaire.annee_scolaire.value)" name="annee_scolaire">
 						<option value="#">---</option>
 						<BOUCLE_vieux(ARTICLES){par date}{date!=0000-00-00 00:00:00}{0,1}{tout}>
-						[(#DATE|annee|afficher_options_date{[(#DATE|mois)],#EVAL{_annee_scolaire}})]
+						<option value="[(#DATE|annee)]">[(#DATE|annee|afficher_options_date{[(#DATE|mois)],#EVAL{_annee_scolaire}})]</option>
 						</BOUCLE_vieux>
 						<option value="2011">2011/2012</option>
 						<option value="2010">2010/2011</option>
