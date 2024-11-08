@@ -3,12 +3,6 @@
 include_spip('action/editer_objet');
 include_spip('base/abstract_sql');
 
-function creer_histoire($id_rub) {
-    $id = objet_inserer('rubrique', $id_rub);
-    return $id;
-}
-
-
 function annee_rub($idr) {
 
     $date = sql_getfetsel('maj', 'spip_rubriques', 'id_rubrique=' . intval($idr));
