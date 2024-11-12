@@ -1,6 +1,6 @@
 FROM php:8.3-apache-bookworm AS base
 ENV SPIP_VERSION 4.3
-ENV SPIP_PACKAGE 4.3.3
+ENV SPIP_PACKAGE 4.3.4
 
 RUN set -eux; \
     apt-get update; \
