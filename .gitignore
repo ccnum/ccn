@@ -14,8 +14,13 @@ squelettes-dist
 tmp
 /vendor
 composer.*
+htaccess.txt
 index.php
+LICENSE
+plugins-dist.json
 rector.php
+SECURITY.md
+spip_loader_list.json
 spip_loader.php
 /spip.*
 
