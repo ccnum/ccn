@@ -24,7 +24,6 @@ la premiere fois qu'un message est poste (cf. inc/invalideur). ]
 		<BOUCLE_titre_chapitre(ARTICLES){id_article}>
 		#TITRE
 		</BOUCLE_titre_chapitre>
-		<div id="forum-inner-close"></div>
 	</div>
 	<hr />
 
@@ -73,11 +72,6 @@ $(document).ready(function() {
 
 	//LARGEUR CHAMP FORUM
 	setInterval( "$('.forum').find('textarea').attr('cols','100');", 250 );
-
-	//BT CLOSE
-	$('#forum-inner-close').click(function() {
-		parent.$.fn.mediabox.close()
-	});
 
 });
 </script>
