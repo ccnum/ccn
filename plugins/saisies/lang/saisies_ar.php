@@ -3,11 +3,7 @@
 // extrait automatiquement de https://trad.spip.net/tradlang_module/saisies?lang_cible=ar
 // ** ne pas modifier le fichier **
 
-if (!defined('_ECRIRE_INC_VERSION')) {
-	return;
-}
-
-$GLOBALS[$GLOBALS['idx_lang']] = array(
+return [
 
 	// C
 	'construire_action_annuler' => 'إلغاء',
@@ -40,5 +36,5 @@ $GLOBALS[$GLOBALS['idx_lang']] = array(
 	'saisie_selection_explication' => 'Choisir une option dans une liste déroulante.', # MODIF
 
 	// V
-	'vue_sans_reponse' => '<i>Sans réponse</i>' # MODIF
-);
+	'vue_sans_reponse' => '<i>Sans réponse</i>', # MODIF
+];

@@ -2,11 +2,9 @@ jQuery(function(){
 	saisies_fieldset_pliable();
 	saisies_fieldset_onglet();
 	saisies_multi_novalidate();
-	saisies_choix_grille_ergo();
 	onAjaxLoad(saisies_fieldset_pliable);
 	onAjaxLoad(saisies_fieldset_onglet);
 	onAjaxLoad(saisies_multi_novalidate);
-	onAjaxLoad(saisies_choix_grille_ergo);
 });
 
 /**
@@ -136,10 +134,14 @@ function saisies_fieldset_onglet() {
 				$onglet
 					.attr('data-afficher_si', afficher_si)
 					.click(function() {
-						$(this).siblings().has('.' + classes.active).each(function() {
+						var sibling_active = $(this).siblings().has('.' + classes.active);
+						sibling_active.each(function() {
 							var onglet_reference = $(this).find('a').attr('href');
 							autoriser_changement = container_reportValidity(onglet_reference);
 						});
+						if (!sibling_active.length) {
+							autoriser_changement = true;
+						}
 						if (autoriser_changement) {
 							activer_onglet($(this).find('.'+classes.tablist_link));
 						}
@@ -197,12 +199,12 @@ function saisies_fieldset_onglet() {
 			}
 
 			// On active l'onglet par défaut, par ordre de priorité :
-			//  - le premier avec une erreur
+			//  - le premier avec une erreur au sein de son groupe d'onglets
 			//	- celui en session s'il existe
 			//	- le 1er trouvé
 			var $onglet_defaut;
 			if ($('.' + classes.tablist_link + '.' + classes.error).length > 0) {
-				$onglet_defaut = $('.' + classes.tablist_link + '.' + classes.error).first();
+				$onglet_defaut = $menu.find('.' + classes.tablist_link + '.' + classes.error).first();
 			} else if (storage.getItem(id_menu) !== null && $('#'+escapeId(storage.getItem(id_menu))).length > 0) {
 				$onglet_defaut = $('#'+escapeId(storage.getItem(id_menu)));
 			} else {
@@ -337,14 +339,5 @@ function saisies_date_jour_mois_annee_changer_date(me, datetime) {
 function saisies_multi_novalidate() {
 	$('[name^="_retour_etape"],[name="aller_a_etape"]').click(function() {
 		$(this).parents('form').attr('novalidate', 'novalidate');
-	});
-}
-
-/** Choix grille élargir le click au td **/
-function saisies_choix_grille_ergo() {
-	document.querySelectorAll('.choix_grille td:has(input)').forEach(item => {
-		item.addEventListener('click', function () {
-			this.querySelector('input').click();
-		});
 	});
 }

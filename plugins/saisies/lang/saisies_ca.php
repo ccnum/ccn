@@ -3,11 +3,7 @@
 // extrait automatiquement de https://trad.spip.net/tradlang_module/saisies?lang_cible=ca
 // ** ne pas modifier le fichier **
 
-if (!defined('_ECRIRE_INC_VERSION')) {
-	return;
-}
-
-$GLOBALS[$GLOBALS['idx_lang']] = array(
+return [
 
 	// B
 	'bouton_parcourir_docs_article' => 'Fullejar l’article',
@@ -115,5 +111,5 @@ $GLOBALS[$GLOBALS['idx_lang']] = array(
 	'vue_sans_reponse' => '<i>Sense resposta</i>', # MODIF
 
 	// Z
-	'z' => 'zzz'
-);
+	'z' => 'zzz',
+];

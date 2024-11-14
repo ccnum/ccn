@@ -662,10 +662,11 @@ function initTimeline() {
 
 			}});*/
 			// Silder colorbox d'aide
-			$(".ccn-aide").mediabox({ width: '80%', height: 'auto', rel: 'ccn-aide', inline: true, href: $(this).attr('href'), current: "{current}/{total}" });
-			$('.logo_menu-aide').click(
+			$(".ccn-aide").mediabox({ width: '80%', height: 'auto', href: $(this).attr('href'), current: "{current}/{total}" });
+			$('.logo_menu-aide').on("click",
 				function () {
 					$(".ccn-aide").mediabox({ open: true });
+					console.log('test');
 				}
 			)
 

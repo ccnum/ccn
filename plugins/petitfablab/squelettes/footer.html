@@ -1,0 +1,24 @@
+#CACHE{0}
+
+<div id="footer">
+    <div id="footer-inner">
+ 		<div id="footer-nav-left">
+	        [(#SESSION{id_auteur}|oui)Bonjour <b><a class="mediabox boxIframe boxWidth-730px boxHeight-550px" href="[(#URL_PAGE{auteur_editer,id_auteur=#SESSION{id_auteur}})]">#SESSION{nom}</a></b>&nbsp;&nbsp;|]
+	        [(#SESSION{id_auteur}|non)<a href="[(#URL_PAGE{login}|parametre_url{url,#SELF}|parametre_url{cicas,oui})]">Se connecter</a>&nbsp;&nbsp;|]
+	        <a href="http://www.laclasse.com/pls/public/!page.laclasse?contexte=QUESTION&rubrique=0">Mot de passe oublié ?</a>
+        </div>
+
+        <div id="footer-nav">
+            <a href="http://fictions.laclasse.com/">Vers la version collèges</a>
+            <!--
+            <span id="rub_jeu" title="Choisir la chambre de jeu">
+                Room :
+                <form name="rub_jeu" style="display:inline;">
+                    <select onchange="reload_cookie('','[(#EVAL{_cookie_annee_scolaire})]',document.rub_jeu.rub_jeu.value)" name="rub_jeu">
+            		</select>
+                </form>
+            </span>
+        	-->
+        </div>
+    </div>
+</div>

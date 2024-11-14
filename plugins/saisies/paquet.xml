@@ -1,9 +1,9 @@
 <paquet
 	prefix="saisies"
 	categorie="outil"
-	version="5.8.0"
+	version="5.8.2"
 	etat="stable"
-	compatibilite="[4.0.0;4.*.*]"
+	compatibilite="[4.1.0;4.*.*]"
 	logo="saisies.svg"
 	documentation="https://contrib.spip.net/Saisies"
 	schema="1"

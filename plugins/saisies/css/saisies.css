@@ -49,15 +49,29 @@ fieldset.plie > legend:before{
 	content: ' → ';
 }
 
-/* Pour les saisies grilles, on s'arrange pour faire défiler si ça dépasse en largeur */
+/**
+ * Saisie choix_grille
+ */
+/* Faire défiler si ça dépasse en largeur */
 .choix_grille_wrapper {
 	overflow-x: auto;
 }
-
-.choix_grille input {
-	width: 100%;
+/* Amélioration UX : rendre tout le td cliquable, pas juste l'input */
+.choix_grille td {
+	position: relative;
+}
+.choix_grille label {
+	position: absolute;
+	inset: 0;
+	padding: inherit;
+	display: flex;
+	justify-content: center;
+	align-items: center;
 }
 
+/**
+ * Groupe de choix
+ */
 .formulaire_spip .choix-groupe {
 	border: none;
 	margin-top: 0;

@@ -130,9 +130,11 @@ function cextras_editer_contenu_objet($flux){
 		// ajouter au formulaire
 		$ajout = recuperer_fond('inclure/generer_saisies', array_merge($flux['args']['contexte'], array('saisies'=>$saisies)));
 
-		$flux['data'] = preg_replace(
+		$flux['data'] = preg_replace_callback(
 			'%(<!--extra-->)%is',
-			"<div class='editer-groupe champs_extras'>$ajout</div>\n" . '$1',
+			function ($matches) use ($ajout) {
+				return "<div class='editer-groupe champs_extras'>$ajout</div>\n" . $matches[1];
+			},
 			$flux['data']
 		);
 	}
@@ -324,9 +326,11 @@ function cextras_formulaire_fond($flux) {
 		// ajouter au formulaire
 		$ajout = recuperer_fond('inclure/generer_saisies', array_merge($flux['args']['contexte'], array('saisies' => $saisies)));
 
-		$flux['data'] = preg_replace(
+		$flux['data'] = preg_replace_callback(
 			'%(<!--extra-->)%is',
-			"<div class='editer-groupe champs_extras'>$ajout</div>\n" . '$1',
+			function ($matches) use ($ajout) {
+				return "<div class='editer-groupe champs_extras'>$ajout</div>\n" . $matches[1];
+			},
 			$flux['data']
 		);
 	}

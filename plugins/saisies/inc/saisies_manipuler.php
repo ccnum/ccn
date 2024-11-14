@@ -616,7 +616,9 @@ function saisies_fieldsets_en_onglets($saisies, $identifiant_prefixe = '', $vert
 			$saisie['identifiant'] = $identifiant_prefixe . '_' . saisie_nom2classe($saisie['options']['nom']);
 		}
 	}
-	$saisies['options'] = $options;
+	if ($options) {
+		$saisies['options'] = $options;
+	}
 	return $saisies;
 }
 
@@ -628,7 +630,7 @@ function saisies_fieldsets_en_onglets($saisies, $identifiant_prefixe = '', $vert
  * @param optional $tableau (tableau pour chercher dans request)
  * @return array
  **/
-function saisies_supprimer_sans_reponse(array $saisies, array $tableau = []): array {
+function saisies_supprimer_sans_reponse(array $saisies, ?array $tableau = null): array {
 	$saisies = saisies_supprimer_callback($saisies, function ($saisie) use ($tableau): bool {
 		// Si sous saisie, on garde, la fonction saisies_supprimer_callback fera les tests sous chaque sous saisies
 		return saisies_saisie_possede_reponse($saisie, $tableau);
