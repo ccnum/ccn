@@ -3,11 +3,7 @@
 // extrait automatiquement de https://trad.spip.net/tradlang_module/saisies?lang_cible=es
 // ** ne pas modifier le fichier **
 
-if (!defined('_ECRIRE_INC_VERSION')) {
-	return;
-}
-
-$GLOBALS[$GLOBALS['idx_lang']] = array(
+return [
 
 	// A
 	'afficher' => 'Mostrar',
@@ -296,5 +292,5 @@ Estado(s) especial(es)',
 	'vue_sans_reponse' => '<i>Sin respuesta</i>',
 
 	// Z
-	'z' => 'zzz'
-);
+	'z' => 'zzz',
+];

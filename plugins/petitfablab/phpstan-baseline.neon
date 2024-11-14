@@ -1,0 +1,71 @@
+parameters:
+	ignoreErrors:
+		-
+			message: "#^Function include_spip not found\\.$#"
+			count: 2
+			path: petitfablab_fonctions.php
+
+		-
+			message: "#^Function interprete_argument_balise not found\\.$#"
+			count: 2
+			path: petitfablab_fonctions.php
+
+		-
+			message: "#^Function objet_inserer not found\\.$#"
+			count: 1
+			path: petitfablab_fonctions.php
+
+		-
+			message: "#^Function sql_getfetsel not found\\.$#"
+			count: 1
+			path: petitfablab_fonctions.php
+
+		-
+			message: "#^Function sql_getfetsel not found\\.$#"
+			count: 1
+			path: petitfablab_options.php
+
+		-
+			message: "#^Function _T not found\\.$#"
+			count: 1
+			path: squelettes/jeu/formulaires/editer_article.php
+
+		-
+			message: "#^Function _request not found\\.$#"
+			count: 1
+			path: squelettes/jeu/formulaires/editer_article.php
+
+		-
+			message: "#^Function autoriser not found\\.$#"
+			count: 1
+			path: squelettes/jeu/formulaires/editer_article.php
+
+		-
+			message: "#^Function formulaires_editer_objet_charger not found\\.$#"
+			count: 1
+			path: squelettes/jeu/formulaires/editer_article.php
+
+		-
+			message: "#^Function formulaires_editer_objet_traiter not found\\.$#"
+			count: 1
+			path: squelettes/jeu/formulaires/editer_article.php
+
+		-
+			message: "#^Function formulaires_editer_objet_verifier not found\\.$#"
+			count: 1
+			path: squelettes/jeu/formulaires/editer_article.php
+
+		-
+			message: "#^Function include_spip not found\\.$#"
+			count: 3
+			path: squelettes/jeu/formulaires/editer_article.php
+
+		-
+			message: "#^Function set_request not found\\.$#"
+			count: 1
+			path: squelettes/jeu/formulaires/editer_article.php
+
+		-
+			message: "#^Function titre_automatique not found\\.$#"
+			count: 1
+			path: squelettes/jeu/formulaires/editer_article.php

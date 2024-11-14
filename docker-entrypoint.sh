@@ -98,25 +98,26 @@ if [[ ! -e config/connect.php && ${SPIP_AUTO_INSTALL} = 1 ]]; then
 		--admin-pass ${SPIP_ADMIN_PASS}" || true
 
     # Try to depote the repository
-    if ! spip plugins:svp:depoter https://plugins.spip.net/depots/principal.xml; then
-        echo "Warning: Unable to depote repository https://plugins.spip.net/depots/principal.xml"
+    #if ! spip plugins:svp:depoter https://plugins.spip.net/depots/principal.xml; then
+    #    echo "Warning: Unable to depote repository https://plugins.spip.net/depots/principal.xml"
         # Optionally handle this error differently, or just continue
-    fi
+    #fi
 
-	spip plugins:activer oembed -y
-	spip plugins:activer saisies -y
-	spip plugins:activer yaml -y
 	spip plugins:activer cextras -y
+	spip plugins:activer cicas -y
 	spip plugins:activer crayons -y
+	spip plugins:activer corbeille -y
 	spip plugins:activer facteur -y
+	spip plugins:activer imports_utilisateurs -y
 	spip plugins:activer jqueryui -y
 	spip plugins:activer notation -y
 	spip plugins:activer notifications -y
+	spip plugins:activer oembed -y
+	spip plugins:activer saisies -y
 	spip plugins:activer socialtags -y
 	spip plugins:activer spip_bonux -y
-	spip plugins:activer cicas -y
-	spip plugins:activer corbeille -y
-	if [ ${SPIP_VERSION_SITE} = "fictions" ]; then
+	spip plugins:activer yaml -y
+	if [ ${SPIP_VERSION_SITE} != "thematique" ]; then
 		spip plugins:activer vider_rubrique -y
 	fi
 	spip plugins:activer ${SPIP_VERSION_SITE} -y
@@ -124,6 +125,7 @@ if [[ ! -e config/connect.php && ${SPIP_AUTO_INSTALL} = 1 ]]; then
 
 	spip config:ecrire -p notation acces:ide
 	spip config:ecrire -p notation change_note:oui
+	spip config:ecrire -p mediabox active:oui
 fi
 
 # Default mes_options

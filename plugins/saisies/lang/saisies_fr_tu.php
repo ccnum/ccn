@@ -3,11 +3,7 @@
 // extrait automatiquement de https://trad.spip.net/tradlang_module/saisies?lang_cible=fr_tu
 // ** ne pas modifier le fichier **
 
-if (!defined('_ECRIRE_INC_VERSION')) {
-	return;
-}
-
-$GLOBALS[$GLOBALS['idx_lang']] = array(
+return [
 
 	// A
 	'afficher' => 'Afficher',
@@ -185,6 +181,7 @@ Tu trouveras la <a href="https://contrib.spip.net/5080" target="_blank" rel="noo
 	'option_inserer_debut_label' => 'Code à insérer en début de saisie',
 	'option_inserer_fin_label' => 'Code à insérer en fin de saisie',
 	'option_label_case_label' => 'Label placé à côté de la case',
+	'option_label_class_label' => 'Classes CSS supplémentaires sur le label',
 	'option_label_explication' => 'Le titre qui sera affiché.',
 	'option_label_label' => 'Label',
 	'option_label_non_explication' => 'Sera visible lors de l’affichage des résultats.',
@@ -328,5 +325,5 @@ Tu trouveras la <a href="https://contrib.spip.net/5080" target="_blank" rel="noo
 	'vue_sans_reponse' => '<i>Sans réponse</i>',
 
 	// Z
-	'z' => 'zzz'
-);
+	'z' => 'zzz',
+];

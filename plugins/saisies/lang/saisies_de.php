@@ -3,11 +3,7 @@
 // extrait automatiquement de https://trad.spip.net/tradlang_module/saisies?lang_cible=de
 // ** ne pas modifier le fichier **
 
-if (!defined('_ECRIRE_INC_VERSION')) {
-	return;
-}
-
-$GLOBALS[$GLOBALS['idx_lang']] = array(
+return [
 
 	// A
 	'afficher' => 'Anzeigen',
@@ -224,5 +220,5 @@ Um den Standard beizubehalten, setzen Sie nichts. Um nichts anzuzeigen, setzen S
 	'vue_sans_reponse' => '<i>Ohne Antwort</i>',
 
 	// Z
-	'z' => 'Zzz'
-);
+	'z' => 'Zzz',
+];

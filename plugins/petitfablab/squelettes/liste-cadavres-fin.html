@@ -1,0 +1,31 @@
+<div id="liste-fin">
+	#SET{id_rub,#ARRAY}
+	<BOUCLE_rubriques_toutes(RUBRIQUES){id_parent=#ID_RUBRIQUE}{tout}>
+		<BOUCLE_test(ARTICLES){id_rubrique}> </BOUCLE_test>
+			[(#COMPTEUR_BOUCLE|>={5}|oui)#SET{id_rub,#GET{id_rub}|push{#ID_RUBRIQUE}}]
+		</B_test>
+	</BOUCLE_rubriques_toutes>
+	<table>
+		<BOUCLE_rub(RUBRIQUES){id_rubrique IN #GET{id_rub}}>
+		[(#COMPTEUR_BOUCLE|alterner{<tr>,'',''})]
+			<td>
+				<!-- COUVERTURE LIVRE -->
+				<a href="[(#URL_PAGE{lecture}|parametre_url{id_rubrique,#ID_RUBRIQUE}|parametre_url{compteur,1})]">
+					[(#LOGO_RUBRIQUE|image_reduire{175,0})]
+				</a>
+				<!-- BOUTON TELECHARGEMENT -->
+				<div class="ecriture-chapitre-titre #_rubriques_toutes:EDIT{titre}">#TITRE</div>
+				<BOUCLE_doc(DOCUMENTS){id_rubrique}{mode=document}>
+					<a href="#URL_DOCUMENT">#TYPE_DOCUMENT</a>
+				</BOUCLE_doc>
+
+				[(#SESSION{login}|oui)
+				<span class="#_rubriques_toutes:EDIT{logo}">
+					logo
+				</span>
+				]
+			</td>
+		[(#COMPTEUR_BOUCLE|alterner{'','',</tr>})]
+		</BOUCLE_rub>
+	</table>
+</div>
