@@ -20,42 +20,41 @@ la premiere fois qu'un message est poste (cf. inc/invalideur). ]
 <div id="forum-lecture">
 <div id="forum-inner">
 	<div class="forum-inner-titre">
-        FORUM |
-        <BOUCLE_titre_chapitre(ARTICLES){id_article}>
-        #TITRE
-        </BOUCLE_titre_chapitre>
-        <div id="forum-inner-close"></div>
-    </div>
-    <hr />
+		FORUM |
+		<BOUCLE_titre_chapitre(ARTICLES){id_article}>
+		#TITRE
+		</BOUCLE_titre_chapitre>
+	</div>
+	<hr />
 
 <!-- AFFICHAGE FORUM -->
 <BOUCLE_forum(FORUMS){id_article}{par date}>
 
 	<!-- IMAGE PROFIL -->
-    <div class="forum-img-profil">
-    [(#LOGO_AUTEUR||image_reduire{42,42})]
-    </div>
+	<div class="forum-img-profil">
+	[(#LOGO_AUTEUR||image_reduire{42,42})]
+	</div>
 
-    <!-- MESSAGE FORUM -->
-    <div class="forum-texte">
+	<!-- MESSAGE FORUM -->
+	<div class="forum-texte">
 	<b>#NOM - [(#DATE|jour)] [(#DATE|nom_mois)]  [(#DATE|annee)]</b>
 	#TEXTE
 	</div>
 
-    <!-- REPONSES -->
-    <BOUCLE_reponse(FORUMS){id_parent}{par date}>
-    <div class="forum-reponse">
-    	<div class="forum-reponse-img">
-        [(#LOGO_AUTEUR||image_reduire{42,42})]
-        </div>
-        <div class="forum-reponse-texte">
-        <b>#NOM - [(#DATE|jour)] [(#DATE|nom_mois)]  [(#DATE|annee)]</b>
-        #TEXTE
-        </div>
-    </div>
-    </BOUCLE_reponse>
+	<!-- REPONSES -->
+	<BOUCLE_reponse(FORUMS){id_parent}{par date}>
+	<div class="forum-reponse">
+		<div class="forum-reponse-img">
+		[(#LOGO_AUTEUR||image_reduire{42,42})]
+		</div>
+		<div class="forum-reponse-texte">
+		<b>#NOM - [(#DATE|jour)] [(#DATE|nom_mois)]  [(#DATE|annee)]</b>
+		#TEXTE
+		</div>
+	</div>
+	</BOUCLE_reponse>
 
-    <div class="forum-repondre-link">
+	<div class="forum-repondre-link">
 	</div>
 
 <hr />
@@ -77,11 +76,6 @@ $(document).ready(function() {
 
 	//LARGEUR CHAMP FORUM
 	setInterval( "$('.forum').find('textarea').attr('cols','100');", 250 );
-
-	//BT CLOSE
-	$('#forum-inner-close').click(function() {
-		parent.$.fn.mediabox.close()
-	});
 
 });
 </script>

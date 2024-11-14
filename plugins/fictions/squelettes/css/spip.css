@@ -1238,26 +1238,6 @@ a:hover.spip_out {
 	text-align: left;
 }
 
-#forum-inner-close {
-	position: relative;
-	width: 25px;
-	height: 25px;
-	background-color: #555c64;
-	float: right;
-	display: block;
-	border-radius: 20px 20px 20px 20px;
-	behavior: url(../js/PIE.php);
-	cursor: pointer;
-	background-image: url(../img/global/close.png);
-	text-align: left;
-	background-repeat: no-repeat;
-	background-position: center;
-}
-
-#forum-inner-close:hover {
-	background-color: #ff6b6b;
-}
-
 .forum-img-profil {
 	float: left;
 	width: 42px;
