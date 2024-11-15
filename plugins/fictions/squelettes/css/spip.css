@@ -419,8 +419,9 @@ body.mobile {
 .action_supprimer,
 .formulaire_editer_rubrique .action_supprimer,
 .action_supprimer_off {
-	width: 15px;
-	height: 15px;
+	border: none;
+	width: 20px;
+	height: 20px;
 	float: left;
 	margin: auto;
 	margin-left: 5px;
@@ -845,8 +846,6 @@ a.verrouille.last-small {
 }
 
 
-
-
 .ecriture-chapitre-auteur {
 	width: 200px;
 	float: left;
@@ -938,6 +937,10 @@ hr {
 	font-family: Arial, Helvetica, sans-serif;
 	float: left;
 	position: relative;
+}
+
+.slideup-script-ecrivain {
+	min-height: 50px;
 }
 
 .script-ecrivain img {
@@ -1927,10 +1930,6 @@ h1.prologue {
 
 /* ------------------- */
 
-form.formulaire_crayon {
-	width: 730px;
-}
-
 
 
 #spip-admin {
@@ -1952,11 +1951,4 @@ div.socialtags {
 	margin-bottom: 10px;
 	margin-right: 30px;
 	position: relative;
-}
-
-.crayon-html .crayon-boutons button {
-	text-align: left;
-	border-color: white;
-	padding-left: 10px;
-	padding-right: 10px;
 }
