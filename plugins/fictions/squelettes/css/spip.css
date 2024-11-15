@@ -939,6 +939,10 @@ hr {
 	position: relative;
 }
 
+.slideup-script-ecrivain {
+	min-height: 50px;
+}
+
 .script-ecrivain img {
 	margin: 5px;
 }
