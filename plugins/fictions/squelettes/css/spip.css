@@ -904,7 +904,6 @@ hr {
 
 #texte_prologue {
 	display: none;
-
 }
 
 #open_prologue {
@@ -937,10 +936,6 @@ hr {
 	font-family: Arial, Helvetica, sans-serif;
 	float: left;
 	position: relative;
-}
-
-#slideup-script-ecrivain {
-	min-height: 50px;
 }
 
 .script-ecrivain img {
@@ -1003,6 +998,7 @@ a:hover.spip_out {
 .script-texte {
 	font-size: 13px;
 	line-height: 20px;
+	min-height: 50px;
 }
 
 .script-open-close {
