@@ -39,7 +39,7 @@ RUBRIQUE.HTML > CHAPITRE-VISIBLE.HTML
 	<div class="script-open-close" id="close-script-ecrivain" style="display: block; background-image: url('#CHEMIN{img/ecriture/bt-moins.png}');"></div>
 	<div class="script-titre">SCRIPT | #GET{var_auteur_article}</div>
 	<div class="script-texte #EDIT{texte}" id="slideup-script-ecrivain">
-		[(#TEXTE|sinon{"pas de script"})]
+		[(#TEXTE)]
 		<BOUCLE_doc(DOCUMENTS){id_article}{mode?}>
 		<div style="padding: 5px; width: 100px; float: left;">
 			<a href="#URL_DOCUMENT">[(#LOGO_DOCUMENT|image_reduire{80,60})]</a>
