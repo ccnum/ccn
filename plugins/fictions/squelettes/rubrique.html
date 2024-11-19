@@ -18,23 +18,23 @@
 
 <!-- ID/NOM AUTEUR-->
 
-	<!-- Le cache est a zero pour pouvoir récupérer l'id de l'auteur connecté-->
-	#CACHE{0}
+<!-- Le cache est a zero pour pouvoir récupérer l'id de l'auteur connecté-->
+#CACHE{0}
 
-	<!-- ID et nom de l'auteur connecté -->
-	#SET{var_id_auteur,#SESSION{id_auteur}}
-	#SET{var_nom_auteur,#SESSION{nom}}
+<!-- ID et nom de l'auteur connecté -->
+#SET{var_id_auteur,#SESSION{id_auteur}}
+#SET{var_nom_auteur,#SESSION{nom}}
 
-	<!-- On recupere l'id du chapitre à masquer -->
-	<BOUCLE_max_cadavres(ARTICLES){id_rubrique}{par date}>
-	#SET{var_max_cadavres, #TOTAL_BOUCLE}
-	</BOUCLE_max_cadavres>
-	#SET{id_cadavre_hidden, #SOUSTRACTION{#GET{var_max_cadavres}, 1}}
+<!-- On recupere l'id du chapitre à masquer -->
+<BOUCLE_max_cadavres(ARTICLES){id_rubrique}{par date}>
+#SET{var_max_cadavres, #TOTAL_BOUCLE}
+</BOUCLE_max_cadavres>
+#SET{id_cadavre_hidden, #SOUSTRACTION{#GET{var_max_cadavres}, 1}}
 
-	<!-- on recupere l'id de la rubrique de travail -->
-	<BOUCLE_id_zone(spip_auteurs_liens){objet = rubrique}{spip_auteurs_liens.id_auteur = #GET{var_id_auteur}}{0,1}>
-	#SET{var_id_zone, #ID_OBJET}
-	</BOUCLE_id_zone>
+<!-- on recupere l'id de la rubrique de travail -->
+<BOUCLE_id_zone(spip_auteurs_liens){objet = rubrique}{spip_auteurs_liens.id_auteur = #GET{var_id_auteur}}{0,1}>
+#SET{var_id_zone, #ID_OBJET}
+</BOUCLE_id_zone>
 
 <!-- TOOLTIP -->
 <div id="liste-tooltip">
@@ -49,14 +49,13 @@
 <div id="book-bottom-left"><img src="#CHEMIN{img/global/border-book-bottom-left.png}" width="14" height="16" /></div>
 <div id="book-bottom-right"><img src="#CHEMIN{img/global/border-book-bottom-right.png}" width="14" height="16" /></div>
 
-
 <div id="book-middle-top-ecriture"><img src="#CHEMIN{img/global/book-middle-top.png}" width="300" height="6" /></div>
 <div id="book-middle-bottom-ecriture"><img src="#CHEMIN{img/global/book-middle-bottom.png}" width="300" height="5" /></div>
 
 <div class="stitches-ecriture">
-<div class="stitches-inner"><img src="#CHEMIN{img/global/stitches.png}" width="5" height="86" /></div>
-<div class="stitches-inner"><img src="#CHEMIN{img/global/stitches.png}" width="5" height="86" /></div>
-<div class="stitches-inner"><img src="#CHEMIN{img/global/stitches.png}" width="5" height="86" /></div>
+	<div class="stitches-inner"><img src="#CHEMIN{img/global/stitches.png}" width="5" height="86" /></div>
+	<div class="stitches-inner"><img src="#CHEMIN{img/global/stitches.png}" width="5" height="86" /></div>
+	<div class="stitches-inner"><img src="#CHEMIN{img/global/stitches.png}" width="5" height="86" /></div>
 </div>
 
 <!-- RETOUR INDEX -->
@@ -84,36 +83,36 @@
 
 			<div class="content-left-small">
 
-					<div id="titre_site">
+				<div id="titre_site">
 					<a href="#URL_SITE_SPIP" title="Accueil"><strong>fictions</strong></a><a href="http://www.laclasse.com" title="http://www.laclasse.com">.laclasse.com</a>
-					</div>
-
-					<div id="ecriture-en-cours">
-						<!--[(#REM) Pas la moindre foutue idée d'à quoi sert ce rubrique-bouton... Je supprile son inclure fond=rubrique-bouton]-->
-					</div>
-
-					<!-- LISTE CADAVRE SMALL-->
-					<div id="ecriture-liste">
-					[(#SESSION{id_auteur}|oui)<INCLURE{fond=liste-cadavres-auteur-small} />]
-					</div>
 				</div>
 
+				<div id="ecriture-en-cours">
+					<!--[(#REM) Pas la moindre foutue idée d'à quoi sert ce rubrique-bouton... Je supprile son inclure fond=rubrique-bouton]-->
+				</div>
+
+				<!-- LISTE CADAVRE SMALL-->
+				<div id="ecriture-liste">
+					[(#SESSION{id_auteur}|oui)<INCLURE{fond=liste-cadavres-auteur-small} />]
+				</div>
+			</div>
+
 			<div class="content-right-large">
-					<div id="ecriture">
+				<div id="ecriture">
 
-						<!-- PROLOGUE -->
-						<div class="ecriture-chapitre">
-							<div class="ecriture-chapitre-picto">
-								<div id="open_prologue">
-								<img src="#CHEMIN{img/ecriture/bt-open-prologue.png}" onmouseover="this.src='#CHEMIN{img/ecriture/bt-open-prologue-hover.png}';" onmouseout="this.src='#CHEMIN{img/ecriture/bt-open-prologue.png}';" width="25" height="25" />
-								</div>
-
-								<div id="close_prologue">
-								<img src="#CHEMIN{img/ecriture/bt-close-prologue.png}" onmouseover="this.src='#CHEMIN{img/ecriture/bt-close-prologue_hover.png}';" onmouseout="this.src='#CHEMIN{img/ecriture/bt-close-prologue.png}';" width="25" height="25" />
-								</div>
+					<!-- PROLOGUE -->
+					<div class="ecriture-chapitre">
+						<div class="ecriture-chapitre-picto">
+							<div id="open_prologue">
+							<img src="#CHEMIN{img/ecriture/bt-open-prologue.png}" onmouseover="this.src='#CHEMIN{img/ecriture/bt-open-prologue-hover.png}';" onmouseout="this.src='#CHEMIN{img/ecriture/bt-open-prologue.png}';" width="25" height="25" />
 							</div>
 
-							<BOUCLE_annee(RUBRIQUES){titre==#EVAL{_annee_scolaire}}{tout}{0,1}>
+							<div id="close_prologue">
+							<img src="#CHEMIN{img/ecriture/bt-close-prologue.png}" onmouseover="this.src='#CHEMIN{img/ecriture/bt-close-prologue_hover.png}';" onmouseout="this.src='#CHEMIN{img/ecriture/bt-close-prologue.png}';" width="25" height="25" />
+							</div>
+						</div>
+
+						<BOUCLE_annee(RUBRIQUES){titre==#EVAL{_annee_scolaire}}{tout}{0,1}>
 							<BOUCLE_article(ARTICLES){id_rubrique}{titre LIKE prologue}{tout}{0,1}>
 								<div class="ecriture-chapitre-texte">
 									<div class="ecriture-chapitre-surtitre">—</div>
@@ -129,82 +128,79 @@
 								</div>
 
 							</BOUCLE_article>
-							</BOUCLE_annee>
+						</BOUCLE_annee>
 
-						</div>
-						<hr />
+					</div>
+					<hr />
 
-						<!-- END PROLOGUE -->
-						<!-- Boucle affichage des cadavres -->
-						<BOUCLE_cadavres(ARTICLES){id_rubrique}{id_rubrique !=12}{par date}>
-							<!-- L'UTILISATEUR N'EST PAS WEBMESTRE / ECRIVAIN -->
-							#SET{var_oui, oui}
-							[(#SESSION{webmestre}|!={#GET{var_oui}}|oui)
-								<!-- L'utilisateur est sur son espace de travail -->
-								[(#GET{var_id_zone}|=={#ID_RUBRIQUE}|oui)
-
-										<!-- Affichage du chapitre masque N-1 -->
-										[(#GET{id_cadavre_hidden}|=={#_cadavres:COMPTEUR_BOUCLE}|oui)
-											<INCLURE{fond=chapitre-visible, id_article}>
-										]
-
-									<!-- Affichage du chapitre N VERROUILLE -->
-										[(#GET{id_cadavre_hidden}|!={#_cadavres:COMPTEUR_BOUCLE}|oui)
-											<!-- precedent chapitre VERROUILLE-->
-											[(#_cadavres:COMPTEUR_BOUCLE|!={#GET{var_max_cadavres}}|oui)<INCLURE{fond=chapitre-visible, id_article,fin=non}>]
-											<!-- dernier chapitre ECRITURE-->
-											[(#_cadavres:COMPTEUR_BOUCLE|=={#GET{var_max_cadavres}}|oui)<INCLURE{fond=chapitre-ecriture, id_article}>]
-										]
-								]
-
-								<!-- L'utilisateur n'est pas sur son espace de travail -->
-								[(#GET{var_id_zone}|!={#ID_RUBRIQUE}|oui)
-
-									<!-- Affichage du chapitre masque N-1 -->
-									[(#GET{id_cadavre_hidden}|=={#_cadavres:COMPTEUR_BOUCLE}|oui)
-
-										<!-- Si l'utilisateur est l'auteur du chapitre N-1  -->
-										[(#NOM|=={#GET{var_nom_auteur}}|oui)<INCLURE{fond=chapitre-visible, id_article}>]
-										<!-- Si l'utilisateur n'est pas l'auteur du chapitre N-1  -->
-										[(#NOM|!={#GET{var_nom_auteur}}|oui)<INCLURE{fond=chapitre-visible, id_article,fin=non}>]
-									]
-									<!-- Affichage du chapitre masque N VERROUILLE -->
-									[(#GET{id_cadavre_hidden}|!={#_cadavres:COMPTEUR_BOUCLE}|oui)
-										#SET{var_oui, oui}
-										<!-- Si l'utilisateur est webmestre -->
-										[(#SESSION{webmestre}|=={#GET{var_oui}}|oui)
-											<!-- precedent chapitre VERROUILLE-->
-											[(#_cadavres:COMPTEUR_BOUCLE|!={#GET{var_max_cadavres}}|oui)<INCLURE{fond=chapitre-visible, id_article,fin=non}>]
-											<!-- dernier chapitre ECRITURE -->
-											[(#_cadavres:COMPTEUR_BOUCLE|=={#GET{var_max_cadavres}}|oui)<INCLURE{fond=chapitre-ecriture, id_article}>]
-										]
-										<!-- Si l'utilisateur n'est pas webmestre -->
-										[(#SESSION{webmestre}|!={#GET{var_oui}}|oui)
-											<!-- precedent chapitre VERROUILLE-->
-											[(#_cadavres:COMPTEUR_BOUCLE|!={#GET{var_max_cadavres}}|oui)<INCLURE{fond=chapitre-visible, id_article, fin=non}>]
-											<!-- dernier chapitre ECRITURE -->
-											[(#_cadavres:COMPTEUR_BOUCLE|=={#GET{var_max_cadavres}}|oui)<INCLURE{fond=chapitre-ecriture,fin=oui,id_article}>]
-										]
-									]
-								]
-							]
-							<!-- L'UTILISATEUR EST PAS WEBMESTRE / ECRIVAIN -->
-							[(#SESSION{webmestre}|=={#GET{var_oui}}|oui)
+					<!-- END PROLOGUE -->
+					<!-- Boucle affichage des cadavres -->
+					<BOUCLE_cadavres(ARTICLES){id_rubrique}{id_rubrique !=12}{par date}>
+						<!-- L'UTILISATEUR N'EST PAS WEBMESTRE / ECRIVAIN -->
+						#SET{var_oui, oui}
+						[(#SESSION{webmestre}|!={#GET{var_oui}}|oui)
+							<!-- L'utilisateur est sur son espace de travail -->
+							[(#GET{var_id_zone}|=={#ID_RUBRIQUE}|oui)
 
 								<!-- Affichage du chapitre masque N-1 -->
-								[(#GET{id_cadavre_hidden}|=={#_cadavres:COMPTEUR_BOUCLE}|oui)
-									<INCLURE{fond=chapitre-visible, id_article}>
-								]
+								[(#GET{id_cadavre_hidden}|=={#_cadavres:COMPTEUR_BOUCLE}|oui)<INCLURE{fond=chapitre-visible, id_article} />]
+
 								<!-- Affichage du chapitre N VERROUILLE -->
 								[(#GET{id_cadavre_hidden}|!={#_cadavres:COMPTEUR_BOUCLE}|oui)
 									<!-- precedent chapitre VERROUILLE-->
-									[(#_cadavres:COMPTEUR_BOUCLE|!={#GET{var_max_cadavres}}|oui)<INCLURE{fond=chapitre-verrouille, id_article,fin=non}>]
+									[(#_cadavres:COMPTEUR_BOUCLE|!={#GET{var_max_cadavres}}|oui)<INCLURE{fond=chapitre-visible, id_article,fin=non}>]
 									<!-- dernier chapitre ECRITURE-->
 									[(#_cadavres:COMPTEUR_BOUCLE|=={#GET{var_max_cadavres}}|oui)<INCLURE{fond=chapitre-ecriture, id_article}>]
 								]
 							]
-						</BOUCLE_cadavres>
-					</div>
+
+							<!-- L'utilisateur n'est pas sur son espace de travail -->
+							[(#GET{var_id_zone}|!={#ID_RUBRIQUE}|oui)
+
+								<!-- Affichage du chapitre masque N-1 -->
+								[(#GET{id_cadavre_hidden}|=={#_cadavres:COMPTEUR_BOUCLE}|oui)
+
+									<!-- Si l'utilisateur est l'auteur du chapitre N-1  -->
+									[(#NOM|=={#GET{var_nom_auteur}}|oui)<INCLURE{fond=chapitre-visible, id_article}>]
+									<!-- Si l'utilisateur n'est pas l'auteur du chapitre N-1  -->
+									[(#NOM|!={#GET{var_nom_auteur}}|oui)<INCLURE{fond=chapitre-visible, id_article,fin=non}>]
+								]
+								<!-- Affichage du chapitre masque N VERROUILLE -->
+								[(#GET{id_cadavre_hidden}|!={#_cadavres:COMPTEUR_BOUCLE}|oui)
+									#SET{var_oui, oui}
+									<!-- Si l'utilisateur est webmestre -->
+									[(#SESSION{webmestre}|=={#GET{var_oui}}|oui)
+										<!-- precedent chapitre VERROUILLE-->
+										[(#_cadavres:COMPTEUR_BOUCLE|!={#GET{var_max_cadavres}}|oui)<INCLURE{fond=chapitre-visible, id_article,fin=non}>]
+										<!-- dernier chapitre ECRITURE -->
+										[(#_cadavres:COMPTEUR_BOUCLE|=={#GET{var_max_cadavres}}|oui)<INCLURE{fond=chapitre-ecriture, id_article}>]
+									]
+									<!-- Si l'utilisateur n'est pas webmestre -->
+									[(#SESSION{webmestre}|!={#GET{var_oui}}|oui)
+										<!-- precedent chapitre VERROUILLE-->
+										[(#_cadavres:COMPTEUR_BOUCLE|!={#GET{var_max_cadavres}}|oui)<INCLURE{fond=chapitre-visible, id_article, fin=non}>]
+										<!-- dernier chapitre ECRITURE -->
+										[(#_cadavres:COMPTEUR_BOUCLE|=={#GET{var_max_cadavres}}|oui)<INCLURE{fond=chapitre-ecriture,fin=oui,id_article}>]
+									]
+								]
+							]
+						]
+						<!-- L'UTILISATEUR EST PAS WEBMESTRE / ECRIVAIN -->
+						[(#SESSION{webmestre}|=={#GET{var_oui}}|oui)
+
+							<!-- Affichage du chapitre masque N-1 -->
+							[(#GET{id_cadavre_hidden}|=={#_cadavres:COMPTEUR_BOUCLE}|oui)<INCLURE{fond=chapitre-visible, id_article} />]
+
+							<!-- Affichage du chapitre N VERROUILLE -->
+							[(#GET{id_cadavre_hidden}|!={#_cadavres:COMPTEUR_BOUCLE}|oui)
+								<!-- precedent chapitre VERROUILLE-->
+								[(#_cadavres:COMPTEUR_BOUCLE|!={#GET{var_max_cadavres}}|oui)<INCLURE{fond=chapitre-verrouille, id_article, fin=non}>]
+								<!-- dernier chapitre ECRITURE-->
+								[(#_cadavres:COMPTEUR_BOUCLE|=={#GET{var_max_cadavres}}|oui)<INCLURE{fond=chapitre-ecriture, id_article}>]
+							]
+						]
+					</BOUCLE_cadavres>
+				</div>
 			</div>
 		</div>
 	</div>
@@ -214,152 +210,156 @@
 </body>
 
 <style>
-.crayon-html {background-image:url(#CHEMIN{img/global/tooltip-background.png});background-repeat:repeat;}
-.crayon-html .formulaire_spip textarea {height:300px;background-color:#FFF;}
-.formulaire_crayon {width:500px;margin-left:auto;margin-right:auto;margin-top:40px;z-index:9999}
-.resizehandle{display:none;}
-/*.markItUpFooter{display:none;}*/
-.crayon-html .crayon-boutons {position:relative;width: auto; padding: 10px 45px 0 0;margin:5px 0px 0px 0px; }
-.crayon-html .crayon-boutons button { width: auto; height: 32px; text-indent: 0; cursor: pointer; background: #ff6b6b; color: #FFF; border-radius: 5px; font-family:Arial, Helvetica, sans-serif; font-size:13px; margin:0px 0px 0px 10px; float:left;}
-
+	.crayon-html {background-image:url(#CHEMIN{img/global/tooltip-background.png});background-repeat:repeat;}
+	.crayon-html .formulaire_spip textarea {height:300px;background-color:#FFF;}
+	.formulaire_crayon {width:500px;margin-left:auto;margin-right:auto;margin-top:40px;z-index:9999}
+	.resizehandle{display:none;}
+	/*.markItUpFooter{display:none;}*/
+	.crayon-html .crayon-boutons {position:relative;width: auto; padding: 10px 45px 0 0;margin:5px 0px 0px 0px; }
+	.crayon-html .crayon-boutons button { width: auto; height: 32px; text-indent: 0; cursor: pointer; background: #ff6b6b; color: #FFF; border-radius: 5px; font-family:Arial, Helvetica, sans-serif; font-size:13px; margin:0px 0px 0px 10px; float:left;}
 </style>
 
 <script type="text/javascript">
-$(document).ready(function() {
-	// RESIZE
- 	window.onresize = resize_global_content;
-	resize_global_content();
-
-	// NICESCROLL
-	$(".global-content").niceScroll({cursorcolor:"#ff6b6b", cursoropacitymin:'0.2',cursoropacitymax:'1', scrollspeed:'100', cursorborder:'0px'});
-	$('#ascrail2000').css({'cursor':'pointer'});
-
-	// TOOLTIP
-	$('.liste-link-small').mouseover(function() {
-		var offset = $(this).offset();
-		var content_tooltip = $(this).find('.liste-tooltip-content').html();
-		$('#liste-tooltip').show();
-		$('#liste-tooltip').html(content_tooltip);
-		var hauteur_tooltip = $('#liste-tooltip-content').height();
-		$('#liste-tooltip').height(hauteur_tooltip);
-		var toptooltip = Math.round(offset.top);
-		toptooltip = toptooltip - hauteur_tooltip;
-		var lefttooltip = Math.round(offset.left);
-		lefttooltip -= 108;
-		$('#liste-tooltip').css('top', toptooltip -5);
-		$('#liste-tooltip').css('left', lefttooltip + 2);
-	});
-	$('.liste-link-small').mouseout(function() {
-		$('#liste-tooltip').hide();
-	});
-
-	//SCROLL TO NAVIGATION
-	var $scrollTarget = $('.global-content');
-	$('#nav-script').click(function(event) {
-		event.preventDefault();
-		$scrollTarget.stop().scrollTo( '.script-ecrivain', 300, {offset: {top:-50, left:0} });
-	});
-	$('#nav-forum').click(function(event) {
-		event.preventDefault();
-		$scrollTarget.stop().scrollTo( '.forum-titre', 300, {offset: {top:-75, left:0} });
-	});
-	$('#nav-ecrire').click(function(event) {
-		event.preventDefault();
-		$scrollTarget.stop().scrollTo( '.ecriture-chapitre:last', 300, {offset: {top:-40, left:0} });
-	});
-
-	$('#nav-top').click(function(event) {
-		event.preventDefault();
-		$scrollTarget.stop().scrollTo( 0, 300);
-	});
-
-	// SCRIPT OPEN CLOSE
-	$('.script-texte').show();
-	$('#open-script-ecrivain').click(function() {
-		$('#slideup-script-ecrivain').toggle('fast');
-		if( $('#slideup-script-ecrivain').is(':visible') ) {
-			$('#open-script-ecrivain').css('background-image','url(#CHEMIN{img/ecriture/bt-moins.png})');
-		}
-		else {
-			$('#open-script-ecrivain').css('background-image','url(#CHEMIN{img/ecriture/bt-plus.png})');
-		}
-	});
-	$('#open-script-college').click(function() {
-		$('#slideup-script-college').toggle('fast');
-		if( $('#slideup-script-college').is(':visible') ) {
-			$('#open-script-college').css('background-image','url(#CHEMIN{img/ecriture/bt-moins.png})');
-		}
-		else {
-			$('#open-script-college').css('background-image','url(#CHEMIN{img/ecriture/bt-plus.png})');
-		}
-	});
-
-	// PROLOGUE OPEN CLOSE
-	$('#texte_prologue').hide();
-	$('#open_prologue').click(function() {
-		$('#texte_prologue').show('normal');
-		$('#close_prologue').show();
-		$(this).hide();
+	$(document).ready(function() {
+		// RESIZE
+		window.onresize = resize_global_content;
 		resize_global_content();
+
+		// NICESCROLL
+		$(".global-content").niceScroll({cursorcolor:"#ff6b6b", cursoropacitymin:'0.2',cursoropacitymax:'1', scrollspeed:'100', cursorborder:'0px'});
+		$('#ascrail2000').css({'cursor':'pointer'});
+
+		// TOOLTIP
+		$('.liste-link-small').mouseover(function() {
+			var offset = $(this).offset();
+			var content_tooltip = $(this).find('.liste-tooltip-content').html();
+			$('#liste-tooltip').show();
+			$('#liste-tooltip').html(content_tooltip);
+			var hauteur_tooltip = $('#liste-tooltip-content').height();
+			$('#liste-tooltip').height(hauteur_tooltip);
+			var toptooltip = Math.round(offset.top);
+			toptooltip = toptooltip - hauteur_tooltip;
+			var lefttooltip = Math.round(offset.left);
+			lefttooltip -= 108;
+			$('#liste-tooltip').css('top', toptooltip -5);
+			$('#liste-tooltip').css('left', lefttooltip + 2);
+		});
+		$('.liste-link-small').mouseout(function() {
+			$('#liste-tooltip').hide();
+		});
+
+		//SCROLL TO NAVIGATION
+		var $scrollTarget = $('.global-content');
+		$('#nav-script').click(function(event) {
+			event.preventDefault();
+			$scrollTarget.stop().scrollTo( '.script-ecrivain', 300, {offset: {top:-50, left:0} });
+		});
+		$('#nav-forum').click(function(event) {
+			event.preventDefault();
+			$scrollTarget.stop().scrollTo( '.forum-titre', 300, {offset: {top:-75, left:0} });
+		});
+		$('#nav-ecrire').click(function(event) {
+			event.preventDefault();
+			$scrollTarget.stop().scrollTo( '.ecriture-chapitre:last', 300, {offset: {top:-40, left:0} });
+		});
+
+		$('#nav-top').click(function(event) {
+			event.preventDefault();
+			$scrollTarget.stop().scrollTo( 0, 300);
+		});
+
+		// SCRIPT OPEN CLOSE
+		$('#slideup-script-ecrivain').hide();
+		$('#close-script-ecrivain').hide();
+		$('#open-script-ecrivain').click(function() {
+			$('#slideup-script-ecrivain').toggle("slow");
+			$('#close-script-ecrivain').show();
+			$('#open-script-ecrivain').hide();
+			$('#open-script-ecrivain').css('background-image','url(#CHEMIN{img/ecriture/bt-plus.png})');
+		});
+		$('#close-script-ecrivain').click(function() {
+			$('#slideup-script-ecrivain').toggle("slow");
+			$('#open-script-ecrivain').show();
+			$('#close-script-ecrivain').hide();
+			$('#close-script-ecrivain').css('background-image','url(#CHEMIN{img/ecriture/bt-moins.png})');
+		});
+
+		$('#open-script-college').click(function() {
+			$('#slideup-script-college').toggle('fast');
+			if( $('#slideup-script-college').is(':visible') ) {
+				$('#open-script-college').css('background-image','url(#CHEMIN{img/ecriture/bt-moins.png})');
+			}
+			else {
+				$('#open-script-college').css('background-image','url(#CHEMIN{img/ecriture/bt-plus.png})');
+			}
+		});
+
+		// PROLOGUE OPEN CLOSE
+		$('#texte_prologue').hide();
+		$('#open_prologue').click(function() {
+			$('#texte_prologue').show('normal');
+			$('#close_prologue').show();
+			$(this).hide();
+			resize_global_content();
+		});
+
+		$('#close_prologue').click(function() {
+			$('#texte_prologue').hide('normal');
+			$('#open_prologue').show();
+			$(this).hide();
+		});
+
+		// MODIFS PLUGINS CRAYON
+
+		setInterval(function() {
+			$('.crayon-html').css('top','0px');
+			$('.crayon-html').css('left','0px');
+			$('.crayon-html').css('width','100%');
+			$('.crayon-html').css('height','100%');
+			$('.crayon-html').css('z-index','9400');
+
+			$('.crayon-active').css('background-color','#FFF');
+			$('.crayon-active').css('color','#000');
+			$('.crayon-active').css('height','300px');
+			$('.crayon-active').css('font-size','13px');
+			$('.crayon-active').css('line-height','18px');
+			$('.crayon-active').css('width','516px');
+
+			$('.formulaire_crayon').css('position','absolute');
+			$('.formulaire_crayon').css('width','520px');
+			$('.formulaire_crayon').css('height','500px');
+			$('.formulaire_crayon').css('top','50%');
+			$('.formulaire_crayon').css('left','50%');
+			$('.formulaire_crayon').css('margin-left','-250px');
+			$('.formulaire_crayon').css('margin-top','-150px');
+
+		}, 200);
+
+		// ROLLOVER
+		$('.script-ecrivain-edit').mouseover(function() {
+			$(this).prev().find('img').attr('src','#CHEMIN{img/ecriture/fleche_script_ecrivain_hover.png}');
+		});
+		$('.script-ecrivain-edit').mouseout(function() {
+			$(this).prev().find('img').attr('src','#CHEMIN{img/ecriture/fleche_script_ecrivain.png}');
+		});
+
+		$('.forum_bt').mouseover(function() {
+			$('#script-forum-fleche-roll').find('img').attr('src','#CHEMIN{img/ecriture/fleche_forum_hover.png}');
+		});
+		$('.forum_bt').mouseout(function() {
+			$('#script-forum-fleche-roll').find('img').attr('src','#CHEMIN{img/ecriture/fleche_forum.png}');
+		});
+
 	});
 
-	$('#close_prologue').click(function() {
-		$('#texte_prologue').hide('normal');
-		$('#open_prologue').show();
-		$(this).hide();
-	});
-
-	// MODIFS PLUGINS CRAYON
-
-	setInterval(function() {
-		$('.crayon-html').css('top','0px');
-		$('.crayon-html').css('left','0px');
-		$('.crayon-html').css('width','100%');
-		$('.crayon-html').css('height','100%');
-		$('.crayon-html').css('z-index','9400');
-
-		$('.crayon-active').css('background-color','#FFF');
-		$('.crayon-active').css('color','#000');
-		$('.crayon-active').css('height','300px');
-		$('.crayon-active').css('font-size','13px');
-		$('.crayon-active').css('line-height','18px');
-		$('.crayon-active').css('width','516px');
-
-		$('.formulaire_crayon').css('position','absolute');
-		$('.formulaire_crayon').css('width','520px');
-		$('.formulaire_crayon').css('height','500px');
-		$('.formulaire_crayon').css('top','50%');
-		$('.formulaire_crayon').css('left','50%');
-		$('.formulaire_crayon').css('margin-left','-250px');
-		$('.formulaire_crayon').css('margin-top','-150px');
-
-	}, 200);
-
-	// ROLLOVER
-	$('.script-ecrivain-edit').mouseover(function() {
-		$(this).prev().find('img').attr('src','#CHEMIN{img/ecriture/fleche_script_ecrivain_hover.png}');
-	});
-	$('.script-ecrivain-edit').mouseout(function() {
-		$(this).prev().find('img').attr('src','#CHEMIN{img/ecriture/fleche_script_ecrivain.png}');
-	});
-
-	$('.forum_bt').mouseover(function() {
-		$('#script-forum-fleche-roll').find('img').attr('src','#CHEMIN{img/ecriture/fleche_forum_hover.png}');
-	});
-	$('.forum_bt').mouseout(function() {
-		$('#script-forum-fleche-roll').find('img').attr('src','#CHEMIN{img/ecriture/fleche_forum.png}');
-	});
-
-});
-
-// RESIZE
-function resize_global_content() {
-	h = $(window).height();
-	h -=61;
-	$('.global-content').height(h);
-	stitches_margin = ((h-60) - 258)/4;
-	$(".stitches-inner").css({'margin-top':stitches_margin});
-}
+	// RESIZE
+	function resize_global_content() {
+		h = $(window).height();
+		h -=61;
+		$('.global-content').height(h);
+		stitches_margin = ((h-60) - 258)/4;
+		$(".stitches-inner").css({'margin-top':stitches_margin});
+	}
 
 </script>
 
