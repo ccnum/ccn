@@ -1,10 +1,4 @@
-#ENV{rub_jeu}
-<BOUCLE_jeu(RUBRIQUES){titre==jeu}{0,1}{!par id_rubrique}{tout}>
-	<BOUCLE_j1(RUBRIQUES){id_parent=#ID_RUBRIQUE}{0,1}{!par id_rubrique}{tout}>
-		#SET{rub_jeu,#ID_RUBRIQUE}
-	</BOUCLE_j1>
-</BOUCLE_jeu>
-
+#SET{rub_jeu,#ENV{rub_jeu}}
 [(#SESSION{login}|oui)#SET{ecriture,oui}]
 <INCLURE{fond=layout_init, ecriture=oui} />
 <meta http-equiv="refresh" content="300" />
