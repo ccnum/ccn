@@ -70,6 +70,7 @@ return [
 	'fichier_erreur_explication_renvoi_pas_alternative' => 'Vous devez envoyer un autre fichier.',
 	'format_date_attendu' => 'Saisir une date au format jj/mm/aaaa.',
 	'format_email_attendu' => 'Saisir une adresse email au format vous@fournisseur.fr',
+	'formulaires_aucun_champ' => 'У формы нет полей для ввода информации.',
 
 	// I
 	'info_configurer_saisies' => 'Page de test des Saisies',
@@ -195,6 +196,7 @@ return [
 	'option_maxlength_label' => 'Nombre de caractères maximum',
 	'option_minlength_explication' => 'L’internaute ne pourra pas saisir moins de caractères que ce nombre.',
 	'option_minlength_label' => 'Nombre de caractères minimum',
+	'option_multiple_explication_choix_grille' => 'Peut-on avoir plusieurs choix par ligne ?',
 	'option_multiple_label' => 'Sélection multiple',
 	'option_nom_explication' => 'Un nom informatique qui identifiera le champ. Il ne doit contenir que des caractères alpha-numériques minuscules ou le caractère "_".',
 	'option_nom_label' => 'Nom du champ',
