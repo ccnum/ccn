@@ -12,18 +12,18 @@ services:
 
   app:
     image: erasme/spip-ccn:helm
+    restart: always
+    env_file:
+      - .env
     build:
       context: .
       args:
         - name=value
-    restart: always
     volumes:
       - ./IMG/:/var/www/html/IMG
       - ./plugins/:/var/www/html/plugins
       - ./tmp/sessions/:/var/www/html/tmp/sessions
     links:
       - db:mysql
-    env_file:
-      - .env
     ports:
       - 8880:80
