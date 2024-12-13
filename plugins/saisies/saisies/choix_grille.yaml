@@ -44,7 +44,7 @@ options:
         options:
           nom: 'multiple'
           label: '<:saisies:option_multiple_label:>'
-          explication: '<:saisies:option_multiple_explication:>'
+          explication: '<:saisies:option_multiple_explication_choix_grille:>'
   -
     saisie: 'fieldset'
     options:
