@@ -38,56 +38,69 @@ function valider_chapitre($id_article, $id_rubrique) {
 	include_spip('action/editer_objet');
 	include_spip('inc/autoriser');
 
-	//Publication
+	// Publication
 	autoriser_exception('modifier', 'article', $id_article);
-	sql_update('spip_articles', array("`statut`" => "'publie'"), 'id_article=' . intval($id_article));
+	sql_update('spip_articles', ["statut" => "publie"], 'id_article=' . intval($id_article));
 	autoriser_exception('modifier', 'article', $id_article, false);
 
-	//mail
-	$to = sql_getfetsel("soustitre", "spip_articles", "id_article = " . $id_article);
-	$subject = 'Vous venez d\'écrire un chapitre !';
-	$message = "Bonjour,\r\n\r\nMerci d'avoir participé au petit fablab d'écriture !\r\nAccédez dès maintenant à votre chapitre en ligne : http://air.laclasse.com/spip.php?scenario=jeu&page=lecture&id_rubrique=" . $id_rubrique . ". Un deuxième message vous préviendra lorsque votre histoire sera disponible.\r\n\r\nA très bientôt\r\n\r\nSuivez nos actualités sur Twitter @petitfablab ou sur le blog https://petit-fablab-ecriture.tumblr.com/ \r\n\r\nLe petit fablab d'écriture est un dispositif imaginé par Erasme, laboratoire d'innovation ouverte de la Métropole de Lyon, en collaboration avec la Villa Gillet. \r\nRetrouvez le Petit Fab Lab d'écriture à Lyon aux Assises Internationales du Roman et à Grenoble à La Casemate et au salon Experimenta.";
-	$headers = "From: petitfablab@gmail.com" . "\r\n" .
-		"Reply-To: petitfablab@gmail.com" . "\r\n" .
-		"Bcc: pvincent@erasme.org, petitfablab@gmail.com" . "\r\n" .
-		"Content-Type: text/plain; charset='utf-8'" . "\r\n" .
-		"X-Mailer: PHP/" . phpversion();
-	if (isset($to) && ($to != "") && (filter_var($to, FILTER_VALIDATE_EMAIL))) {
-		mail($to, $subject, $message, $headers);
+	$envoyer_mail = charger_fonction('envoyer_mail', 'inc');
+	// mail
+	$bcc = sql_getfetsel("soustitre", "spip_articles", "id_article = " . $id_article);
+	$sujet = 'Vous venez d\'écrire un chapitre !';
+	$html = "Bonjour,";
+	$html .= "<br />Merci d'avoir participé au petit fablab d'écriture !";
+	$html .= "<br />Accédez dès maintenant à votre chapitre en ligne : http://petitfablab.laclasse.com/spip.php?page=lecture&id_rubrique=" . $id_rubrique . ". Un deuxième message vous préviendra lorsque votre histoire sera disponible.";
+	$html .= "<br />A très bientôt";
+	$html .= "<br /><br />Suivez nos actualités sur Twitter @petitfablab ou sur le blog https://petit-fablab-ecriture.tumblr.com/";
+	$html .= "<br />Le petit fablab d'écriture est un dispositif imaginé par Erasme, laboratoire d'innovation ouverte de la Métropole de Lyon, en collaboration avec la Villa Gillet.";
+	$html .= "<br />Retrouvez le Petit Fab Lab d'écriture à Lyon aux Assises Internationales du Roman et à Grenoble à La Casemate et au salon Experimenta.";
+
+	$contenu_html = recuperer_fond('emails/texte', ['html' => $html]);
+	$corps = [
+		'html' => $contenu_html,
+		'from' => 'noreply@petitfablab.laclasse.com',
+		'nom_envoyeur' => 'Petit Fab Lab d\'écriture',
+		'bcc' => ['cmonnet@erasme.org', $bcc]
+	];
+	if (isset($bcc) && ($bcc != "") && (filter_var($bcc, FILTER_VALIDATE_EMAIL))) {
+		$envoyer_mail("petitfablab@gmail.com", $sujet, $corps);
 	}
 
-	//Si 5ème chapitre
-	if ($res = sql_select("titre", "spip_articles", "`statut` LIKE 'publie' AND id_rubrique=" . $id_rubrique)) {
-		$n = sql_count($res);
-	}
-
+	// Si 5ème chapitre
+	$n = sql_countsel("titre", "spip_articles", ["statut=" . sql_quote('publie'), "id_rubrique=" . intval($id_rubrique)]);
 	if ($n >= 5) {
 		$id_parent = sql_getfetsel("id_parent", "spip_rubriques", "id_rubrique=" . intval($id_rubrique));
 		$rub_hist = creer_histoire($id_parent);
-		$to = '';
-		if ($resultats = sql_select("soustitre", "spip_articles", "id_rubrique = " . intval($id_rubrique))) {
+		$bcc = ['cmonnet@erasme.org'];
+		if ($resultats = sql_allfetsel("soustitre", "spip_articles", "id_rubrique = " . intval($id_rubrique))) {
 			// boucler sur les resultats
-			while ($res = sql_fetch($resultats)) {
+			foreach ($resultats as $res) {
 				if (filter_var($res['soustitre'], FILTER_VALIDATE_EMAIL)) {
-					$to .= $res['soustitre'] . ",";
+					$bcc[] = $res['soustitre'];
 				}
 			}
 		}
 
-		$subject = 'Votre histoire est en ligne !';
-		$message = "Bonjour à tous,\r\n\r\nFélicitations votre histoire est en ligne.\r\nDiscutez de l'édition de votre histoire avec vos co-auteurs par retour de mail : http://air.laclasse.com/spip.php?scenario=jeu&page=lecture&id_rubrique=" . $id_rubrique . "\r\n\r\nA très bientôt\r\n\r\nSuivez nos actualités sur Twitter @petitfablab ou sur le blog https://petit-fablab-ecriture.tumblr.com/ \r\n\r\nLe petit fablab d'écriture est un dispositif imaginé par Erasme, laboratoire d'innovation ouverte de la Métropole de Lyon, en collaboration avec la Villa Gillet.  \r\nRetrouvez le Petit Fab Lab d'écriture à Lyon aux Assises Internationales du Roman et à Grenoble à La Casemate et au salon Experimenta. ";
-		$headers = "From: petitfablab@gmail.com" . "\r\n" .
-			"Reply-To: petitfablab@gmail.com" . "\r\n" .
-			"Bcc: pvincent@erasme.org, petitfablab@gmail.com" . "\r\n" .
-			"Content-Type: text/plain; charset='utf-8'" . "\r\n" .
-			"X-Mailer: PHP/" . phpversion();
-		//$to = "pvincent@erasme.org";
-		if ((isset($to)) && ($to != "")) {
-			mail($to, $subject, $message, $headers);
-		}
+		$sujet = 'Votre histoire est en ligne !';
+		$html = "Bonjour à tous,";
+		$html .= "<br />Félicitations votre histoire est en ligne.";
+		$html .= "<br />Discutez de l'édition de votre histoire avec vos co-auteurs par retour de mail : http://petitfablab.laclasse.com/spip.php?page=lecture&id_rubrique=" . $id_rubrique;
+		$html .= "<br />A très bientôt";
+		$html .= "<br /><br />Suivez nos actualités sur Twitter @petitfablab ou sur le blog https://petit-fablab-ecriture.tumblr.com/";
+		$html .= "<br />Le petit fablab d'écriture est un dispositif imaginé par Erasme, laboratoire d'innovation ouverte de la Métropole de Lyon, en collaboration avec la Villa Gillet.";
+		$html .= "<br />Retrouvez le Petit Fab Lab d'écriture à Lyon aux Assises Internationales du Roman et à Grenoble à La Casemate et au salon Experimenta. ";
+
+		$contenu_html = recuperer_fond('emails/texte', ['html' => $html]);
+		$corps = [
+			'html' => $contenu_html,
+			'from' => 'noreply@petitfablab.laclasse.com',
+			'nom_envoyeur' => 'Petit Fab Lab d\'écriture',
+			'bcc' => $bcc
+		];
+		$envoyer_mail("petitfablab@gmail.com", $sujet, $corps);
 	}
 
-	//return if last chapitre
+	// return if last chapitre
 	if (isset($rub_hist)) {
 		return $rub_hist;
 	}

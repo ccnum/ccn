@@ -44,12 +44,12 @@
 
 <BOUCLE_publie(ARTICLES){id_article}{statut==prepa}>
 	[(#GET{chapitres}|<{5}|oui)
-	#SET{info,Félicitations : vous avez rempli votre chapitre.}
-	[(#ID_ARTICLE|valider_chapitre{#ID_RUBRIQUE})]
+		#SET{info, Félicitations : vous avez rempli votre chapitre.}
+		[(#ID_ARTICLE|valider_chapitre{#ID_RUBRIQUE})]
 	]
 	[(#GET{chapitres}|>={5}|oui)
-	#SET{info,Félicitations : vous avez terminé l'histoire.}
-	[(#SET{rub_hist,[(#ID_ARTICLE|valider_chapitre{#ID_RUBRIQUE})]})]
+		#SET{info, Félicitations : vous avez terminé l'histoire.}
+		[(#SET{rub_hist,[(#ID_ARTICLE|valider_chapitre{#ID_RUBRIQUE})]})]
 	]
 </BOUCLE_publie>
 
@@ -59,21 +59,15 @@
 
 <!-- BOOK -->
 <div id="global-ecriture">
-
 	<div id="global-spacer"></div>
-
 	<div class="global-content">
-
 		<div class="content">
-		<div class="content-left-small">
-			<INCLURE{fond=colonne_gauche}{id_rubrique=#GET{rub_jeu}} />
-		</div>
-
-		<div class="content-right-large">
-
-			<INCLURE{fond=rubrique}{id_rubrique=#GET{rub_hist}}{id_art=#ID_ARTICLE}{info=#GET{info}}>
-
-		</div>
+			<div class="content-left-small">
+				<INCLURE{fond=colonne_gauche}{id_rubrique=#GET{rub_jeu}} />
+			</div>
+			<div class="content-right-large">
+				<INCLURE{fond=rubrique}{id_rubrique=#GET{rub_hist}}{id_art=#ID_ARTICLE}{info=#GET{info}}>
+			</div>
 		</div>
 	</div>
 </div>
