@@ -1,5 +1,5 @@
 #SESSION_SET{rub_jeu, #ENV{rub_jeu}}
-<BOUCLE_jeu(RUBRIQUES){si #SESSION{rub_jeu}|=={''}|oui}{titre==jeu}{0,1}{par id_rubrique}{inverse}{tout}>
+<BOUCLE_jeu(RUBRIQUES){si #SESSION{rub_jeu}|=={''}|oui}{titre==jeu}{0,1}{!par id_rubrique}{tout}>
 	<BOUCLE_j1(RUBRIQUES){id_parent=#ID_RUBRIQUE}{0,1}{par id_rubrique}{inverse}{tout}>
 		#SESSION_SET{rub_jeu, #ID_RUBRIQUE}
 	</BOUCLE_j1>

@@ -7,7 +7,7 @@ SOMMAIRE.HTML > LISTE-CADAVRE-AUTEUR.HTML
 #CACHE{0}
 #SET{i,0}
 
-<BOUCLE_rubriques_toutes(RUBRIQUES){id_parent=#RUB_JEU}{tout}{id_rubrique != 12}{par id_rubrique}>
+<BOUCLE_rubriques_toutes(RUBRIQUES){id_parent=#SESSION{rub_jeu}}{tout}{id_rubrique != 12}{par id_rubrique}>
 	<B_articles_tous>
 	#SET{i,#GET{i}|plus{1}}
 	<div class="liste-colonnes">
