@@ -102,31 +102,31 @@ if [[ ! -e config/connect.php && ${SPIP_AUTO_INSTALL} = 1 ]]; then
     #    echo "Warning: Unable to depote repository https://plugins.spip.net/depots/principal.xml"
         # Optionally handle this error differently, or just continue
     #fi
-
-	spip plugins:activer cextras -y
-	spip plugins:activer cicas -y
-	spip plugins:activer crayons -y
-	spip plugins:activer corbeille -y
-	spip plugins:activer facteur -y
-	spip plugins:activer imports_utilisateurs -y
-	spip plugins:activer jqueryui -y
-	spip plugins:activer notation -y
-	spip plugins:activer notifications -y
-	spip plugins:activer oembed -y
-	spip plugins:activer saisies -y
-	spip plugins:activer socialtags -y
-	spip plugins:activer spip_bonux -y
-	spip plugins:activer yaml -y
-	if [ ${SPIP_VERSION_SITE} != "thematique" ]; then
-		spip plugins:activer vider_rubrique -y
-	fi
-	spip plugins:activer ${SPIP_VERSION_SITE} -y
-	spip plugins:maj:bdd
-
-	spip config:ecrire -p notation acces:ide
-	spip config:ecrire -p notation change_note:oui
-	spip config:ecrire -p mediabox active:oui
 fi
+
+spip plugins:activer cextras -y
+spip plugins:activer cicas -y
+spip plugins:activer crayons -y
+spip plugins:activer corbeille -y
+spip plugins:activer facteur -y
+spip plugins:activer imports_utilisateurs -y
+spip plugins:activer jqueryui -y
+spip plugins:activer notation -y
+spip plugins:activer notifications -y
+spip plugins:activer oembed -y
+spip plugins:activer saisies -y
+spip plugins:activer socialtags -y
+spip plugins:activer spip_bonux -y
+spip plugins:activer yaml -y
+if [ ${SPIP_VERSION_SITE} != "thematique" ]; then
+	spip plugins:activer vider_rubrique -y
+fi
+spip plugins:activer ${SPIP_VERSION_SITE} -y
+spip plugins:maj:bdd
+
+spip config:ecrire -p notation acces:ide
+spip config:ecrire -p notation change_note:oui
+spip config:ecrire -p mediabox active:oui
 
 # Default mes_options
 if [ ! -e config/mes_options.php ]; then
@@ -139,6 +139,8 @@ define('_LOG_FILELINE', true);
 define('_LOG_FILTRE_GRAVITE', 8);
 define('_DEBUG_SLOW_QUERIES', true);
 define('_BOUCLE_PROFILER', 5000);
+// désactiver les notifications de mise à jour
+define('_MAJ_NOTIF_EMAILS', '');
 ?>
 MAINEOF
 fi

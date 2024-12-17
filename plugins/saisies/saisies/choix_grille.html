@@ -71,7 +71,7 @@
 					#SET{coche, #CLE|in_array{#GET{valeur/#_lignes:CLE}|saisies_chaine2tableau}}
 				]
 				<label>
-					<input type="#GET{type}"[ (#ENV{disabled}|oui)disabled="disabled"] name="#GET{name}" value="#CLE"[ (#GET{coche}|oui)checked="checked"] aria-labelledby="choix_grille_question_[(#ENV{id,#ENV{nom}}|saisie_nom2classe)]_[(#_lignes:CLE)] choix_grille_reponse_[(#ENV{id,#ENV{nom}}|saisie_nom2classe)]_[(#CLE)]"[ (#HTML5|et{#ENV{obligatoire}}|oui)required="required"][ (#ENV*{attributs})]/>
+					<input type="#GET{type}"[ (#ENV{disabled}|oui)disabled="disabled"] name="#GET{name}" value="#CLE"[ (#GET{coche}|oui)checked="checked"] aria-labelledby="choix_grille_question_[(#ENV{id,#ENV{nom}}|saisie_nom2classe)]_[(#_lignes:CLE)] choix_grille_reponse_[(#ENV{id,#ENV{nom}}|saisie_nom2classe)]_[(#CLE)]"[ (#HTML5|et{#ENV{obligatoire}}|et{#ENV{multiple}|non}|oui)required="required"][ (#ENV*{attributs})]/>
 				</label>
 			</td>
 			</BOUCLE_colonnes>

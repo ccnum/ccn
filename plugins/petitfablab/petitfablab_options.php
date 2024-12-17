@@ -11,8 +11,7 @@ if (!defined('_ECRIRE_INC_VERSION')) {
 //define('_AUTOBR', true);
 define('_cookie_annee_scolaire', 'laclasse_annee_scolaire');
 
-function annee_rub1($idr)
-{
+function annee_rub1($idr) {
 
     $date = sql_getfetsel('id_rubrique', 'spip_rubriques', 'id_rubrique=' . intval($idr));
 
@@ -55,8 +54,7 @@ if ((isset($_GET['id_rubrique']))) {
     $id_rub = $_GET['id_rubrique'];
     /*$date = sql_getfetsel("id_parent", "spip_rubriques", "id_rubrique=" . intval($id_rub));
 
-    if ($date != '')
-    {
+    if ($date != '') {
     $annee_scolaire = intval(substr($date,0,4));
     $mois_scolaire = intval(substr($date,5,2));
     if ($mois_scolaire < 9) $annee_scolaire--;
