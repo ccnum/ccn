@@ -2,8 +2,8 @@
 
 [(#REM)RUBRIQUE DE JEU : argument / cookie /derniere rubrique ]
 #SESSION_SET{rub_jeu, #ENV{rub_jeu}}
-<BOUCLE_jeu(RUBRIQUES){si #SESSION{rub_jeu}|=={''}|oui}{titre==jeu}{0,1}{!par id_rubrique}{tout}>
-	<BOUCLE_j1(RUBRIQUES){id_parent=#ID_RUBRIQUE}{0,1}{par id_rubrique}{inverse}{tout}>
+<BOUCLE_jeu(RUBRIQUES){si #SESSION{rub_jeu}|=={''}|oui}{titre==jeu}{!par id_rubrique}{tout}>
+	<BOUCLE_j1(RUBRIQUES){id_parent=#ID_RUBRIQUE}{0,1}{!par id_rubrique}{tout}>
 		#SESSION_SET{rub_jeu, #ID_RUBRIQUE}
 	</BOUCLE_j1>
 </BOUCLE_jeu>
@@ -11,7 +11,7 @@
 [(#REM)RUBRIQUE D'HISTOIRE : argument / cookie / création ]
 #SET{rub_hist,#CONST{$_COOKIE['rub_hist']}}
 
-<BOUCLE_test1(RUBRIQUES){id_rubrique=#GET{rub_hist}}{id_parent=#GET{rub_jeu}}{tout}>
+<BOUCLE_test1(RUBRIQUES){id_rubrique=#GET{rub_hist}}{id_parent=#SESSION{rub_jeu}}{tout}>
 </BOUCLE_test1>
 </B_test1>
 #SET{rub_hist,''}
@@ -24,7 +24,7 @@
 <//B_test>
 
 [(#GET{rub_hist}|=={''}|oui)
-	[(#SET{rub_hist,[(#GET{rub_jeu}|creer_histoire)]})]
+	[(#SET{rub_hist,[(#SESSION{rub_jeu}|creer_histoire)]})]
 ]
 
 [(#REM)Validation des articles]
@@ -55,7 +55,7 @@
 	<div class="global-content">
 		<div class="content">
 			<div class="content-left-small">
-				<INCLURE{fond=colonne_gauche}{id_rubrique=#GET{rub_jeu}} />
+				<INCLURE{fond=colonne_gauche}{id_rubrique=#SESSION{rub_jeu}} />
 			</div>
 			<div class="content-right-large">
 				<INCLURE{fond=rubrique}{id_rubrique=#GET{rub_hist}}{id_art=#ID_ARTICLE}{info=#GET{info}}>
