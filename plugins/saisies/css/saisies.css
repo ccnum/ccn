@@ -193,11 +193,11 @@ fieldset.plie > legend:before{
 .editer-groupe_inline {
 	--gap: 1em;
 	display: flex;
+	flex-direction: row;
 	flex-wrap: wrap;
 	align-items: flex-start;
 	column-gap: var(--gap);
 	padding: 0;
-	margin: 0;
 }
 /* label sur une seule ligne */
 .editer-groupe_inline > .editer:not(.en_configuration) {
