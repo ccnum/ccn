@@ -1,6 +1,6 @@
 <div id="liste-fin">
 	#SET{id_rub,#ARRAY}
-	<BOUCLE_rubriques_toutes(RUBRIQUES){id_parent=#ID_RUBRIQUE}{tout}>
+	<BOUCLE_rubriques_toutes(RUBRIQUES){id_parent=#ENV{rub_jeu}}{tout}>
 		<BOUCLE_test(ARTICLES){id_rubrique}> </BOUCLE_test>
 			[(#COMPTEUR_BOUCLE|>={5}|oui)#SET{id_rub,#GET{id_rub}|push{#ID_RUBRIQUE}}]
 		</B_test>
@@ -15,7 +15,7 @@
 				</a>
 				<!-- BOUTON TELECHARGEMENT -->
 				<div class="ecriture-chapitre-titre #_rubriques_toutes:EDIT{titre}">#TITRE</div>
-				<BOUCLE_doc(DOCUMENTS){id_rubrique}{mode=document}>
+				<BOUCLE_doc(DOCUMENTS){id_rubrique=#ENV{rub_jeu}}{mode=document}>
 					<a href="#URL_DOCUMENT">#TYPE_DOCUMENT</a>
 				</BOUCLE_doc>
 
