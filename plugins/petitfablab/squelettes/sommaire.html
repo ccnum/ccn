@@ -1,6 +1,6 @@
 #SESSION_SET{rub_jeu, #ENV{rub_jeu}}
-<BOUCLE_jeu(RUBRIQUES){si #SESSION{rub_jeu}|=={''}|oui}{titre==jeu}{0,1}{par id_rubrique}{inverse}{tout}>
-	<BOUCLE_j1(RUBRIQUES){id_parent=#ID_RUBRIQUE}{0,1}{par id_rubrique}{inverse}{tout}>
+<BOUCLE_jeu(RUBRIQUES){si #SESSION{rub_jeu}|=={''}|oui}{titre==jeu}{!par id_rubrique}{tout}>
+	<BOUCLE_j1(RUBRIQUES){id_parent=#ID_RUBRIQUE}{0,1}{!par id_rubrique}{tout}>
 		#SESSION_SET{rub_jeu, #ID_RUBRIQUE}
 	</BOUCLE_j1>
 </BOUCLE_jeu>
@@ -15,7 +15,7 @@
 	<div class="global-content">
 		<div class="content">
 			<div class="content-left-small">
-				<INCLURE{fond=colonne_gauche}{id_rubrique=#SESSION{rub_jeu}} />
+				<INCLURE{fond=colonne_gauche, id_rubrique=#SESSION{rub_jeu}} />
 			</div>
 			<div class="content-right-large">
 				<div class="texte-presentation" style="position: relative; margin: 60px 20px 0px 100px ;">
@@ -33,7 +33,7 @@
 						<div class="texte-presentation">
 							<div><br /></div>
 							<div class="bord">Et les histoires terminées :</div>
-							<INCLURE{fond=liste-cadavres-fin, id_rubrique=#SESSION{rub_jeu}} />
+							<INCLURE{fond=liste-cadavres-fin, rub_jeu=#SESSION{rub_jeu}} />
 						</div>
 					</div>
 				]
