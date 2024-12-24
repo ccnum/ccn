@@ -1,5 +1,5 @@
 #CACHE{0}
-<BOUCLE_principale(ARTICLES){id_article}{doublons}>
+<BOUCLE_principale(ARTICLES){id_article}>
 #SET{is_agora,#ENV{type_objet}}
 <BOUCLE_principale00(RUBRIQUES){id_rubrique}{titre_mot=agora}{tout}>
 	#SET{is_agora,agora}
@@ -17,7 +17,7 @@
 			</B_auteur>
 
 			[(#REM) ---------------- Inclusion/iframe des urls liées aux classes ---------------- ]
-			<BOUCLE_rub(RUBRIQUES){id_rubrique=#ID_RUBRIQUE}{tout}>
+			<BOUCLE_rub(RUBRIQUES){id_rubrique}{tout}>
 				<BOUCLE_artc(ARTICLES){id_rubrique}>
 				</BOUCLE_artc>
 					#SET{artc, #TOTAL_BOUCLE}
@@ -266,7 +266,7 @@
 					</div>
 				</BOUCLE_documents_joints1>
 
-				<BOUCLE_documents_joints(DOCUMENTS) {vu=non}{id_article} {doublons d}>
+				<BOUCLE_documents_joints(DOCUMENTS){vu=non}{id_article}>
 					<div class="portfolio">
 						<div onclick="location.href='#URL_DOCUMENT'" title="[(#TITRE)]" type="#MIME_TYPE" class="portfolio_lien">
 							[<div class="portfolio_logo_around">(#LOGO_DOCUMENT|image_reduire{100}|inserer_attribut{class,'portfolio_logo'})</div>]
@@ -347,7 +347,7 @@
 						</a>
 						<div class='nettoyeur cache formulaire_spip formulaire_editer_document bloc_option_doc'>
 							Vos documents apparaîtront par ordre de chargement (du premier au dernier document chargé)
-							<INCLURE{fond=formulaires/ajouter_document,ajax,env}/>
+							<INCLURE{fond=noisettes/ajouter_document,ajax,env}/>
 						</div>
 						<INCLURE{fond=prive/squelettes/inclure/colonne-documents,env,ajax=documents} />
 					</div>
@@ -356,7 +356,7 @@
 			]
 
 			[(#GET{blocs_cplt}|=={non}|non)
-				[(#REM) Mots-clefs]
+				[(#REM) Mots-clefs ]
 				[(#AUTORISER{modifier,article,#ID_ARTICLE}|oui)
 					[(#NOM_SITE_SPIP|match{novaterra.laclasse.com}|oui)
 					<div class="sidebar_bubble">
@@ -411,7 +411,7 @@
 					</div>
 					]
 				-->
-				[(#REM)Données de la classe]
+				[(#REM) Données de la classe ]
 				[(#ENV{type_objet}|=={travail_en_cours}|oui)
 					[<div class="sidebar_bubble">
 						<INCLURE{fond=noisettes/js/accordeon, nom=bloc_donnees-#ID_ARTICLE} />
@@ -426,7 +426,7 @@
 					</div>]
 				]
 
-				[(#REM) Bloc suppression]
+				[(#REM) Bloc suppression ]
 				[(#AUTORISER{modifier, article, #ID_ARTICLE})
 					[(#SET{confirmation,Étes-vous sûr de vouloir supprimer l\'article [\'(#TITRE|attribut_html)\']})]
 					<!--
