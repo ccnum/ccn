@@ -65,7 +65,7 @@
 			<BOUCLE_documents_joints1(DOCUMENTS) {media IN audio,video} {id_article} {tout} {doublons}>
 				<div class="portfolio_grand">
 					<a href="#URL_DOCUMENT" title="[(#TITRE)]" class="thickbox mediabox" type="#MIME_TYPE">
-					[(#MODELE{audio, autostart=false, hauteur=200, largeur=200})]
+						[(#MODELE{audio, autostart=false, hauteur=200, largeur=200})]
 					</a>
 				</div>
 			</BOUCLE_documents_joints1>
@@ -76,7 +76,7 @@
 			<BOUCLE_documents_joints2(DOCUMENTS) {media IN image} {id_article} {tout} {doublons}>
 				<div class="portfolio_grand">
 					<a href="#URL_DOCUMENT" title="[(#TITRE)]" class="thickbox mediabox" type="#MIME_TYPE">
-					[(#EMBED_DOCUMENT|image_reduire{700,500}|inserer_attribut{alt,[(#TITRE|couper{80}|texte_backend)]}|inserer_attribut{style,'border:0px solid #000000;'})]
+						[(#EMBED_DOCUMENT|image_reduire{700,500}|inserer_attribut{alt,[(#TITRE|couper{80}|texte_backend)]}|inserer_attribut{style,'border:0px solid #000000;'})]
 					</a>
 				</div>
 			</BOUCLE_documents_joints2>
@@ -99,44 +99,42 @@
 			</BOUCLE_documents_joints3>
 		</B_documents_joints3>
 
-		<B_documents_joints>
-			<BOUCLE_documents_joints(DOCUMENTS) {id_article} {tout} {doublons}>
-				<div class="portfolio">
-					[<br /><a href="#URL_DOCUMENT" title="[(#TITRE)]" [(#TYPE_DOCUMENT|match{jpg|png|gif}|?{class="thickbox mediabox"})] type="#MIME_TYPE">(#EMBED_DOCUMENT|image_reduire{100}|inserer_attribut{alt,[(#TITRE|couper{80}|texte_backend)]}|inserer_attribut{style,'border:0px solid #000000; padding: 30px; float: left; position: relative;'})</a>]
-				</div>
-			</BOUCLE_documents_joints>
-		</B_documents_joints>
+		<BOUCLE_documents_joints(DOCUMENTS) {id_article} {tout} {doublons}>
+			<div class="portfolio">
+				[<br /><a href="#URL_DOCUMENT" title="[(#TITRE)]" [(#TYPE_DOCUMENT|match{jpg|png|gif}|?{class="thickbox mediabox"})] type="#MIME_TYPE">(#EMBED_DOCUMENT|image_reduire{100}|inserer_attribut{alt,[(#TITRE|couper{80}|texte_backend)]}|inserer_attribut{style,'border:0px solid #000000; padding: 30px; float: left; position: relative;'})</a>]
+			</div>
+		</BOUCLE_documents_joints>
 
 		[(#REM) Commentaires]
 		<BOUCLE_forum(FORUMS){id_article}>
 		</BOUCLE_forum>
 			[(#GET{type_objet}|!={ressource0}|oui)
-			<div class="nettoyeur"></div>
-			<INCLURE{fond=noisettes/ajax/article-forum-detail}{id_article}{admin}>
-			<div class="introduction nettoyeur"></div>
+				<div class="nettoyeur"></div>
+					<INCLURE{fond=noisettes/ajax/article-forum-detail, id_article, admin} />
+				<div class="introduction nettoyeur"></div>
 			]
 		</B_forum>
 
 		[(#REM) ---------------- Blocs complémentaires ---------------- ]
-			<div class="nettoyeur"><br /></div>
+		<div class="nettoyeur"><br /></div>
 
-			[(#REM) On exclut le cas où on est dans la zone ajax-detail d'une rubrique - Désactivé temporairement car c'est quand même utile pour les classes]
-				[(#MODE|=={ajax-detail}|et{#TYPE_OBJET|=={travail_en_cours}}|oui) #SET{blocs_cplt,non0}	]
+		[(#REM) On exclut le cas où on est dans la zone ajax-detail d'une rubrique - Désactivé temporairement car c'est quand même utile pour les classes]
+			[(#MODE|=={ajax-detail}|et{#TYPE_OBJET|=={travail_en_cours}}|oui) #SET{blocs_cplt,non0}	]
 
-			[(#REM) On exclut les consignes pour les enseignants]
-				[(#TYPE_AUTEUR|=={travail_en_cours}
-				|ou{#TYPE_AUTEUR|=={''}}
-				|et{#TYPE_OBJET|=={consignes}}|oui)
-					#SET{blocs_forum,non}
-				]
-
-			[(#ADMIN|=={0}|oui)
-				#SET{blocs_forum,oui}
-				#SET{blocs_cplt,oui}
-			]
-			[(#ADMIN|=={-2}|oui)
+		[(#REM) On exclut les consignes pour les enseignants]
+			[(#TYPE_AUTEUR|=={travail_en_cours}
+			|ou{#TYPE_AUTEUR|=={''}}
+			|et{#TYPE_OBJET|=={consignes}}|oui)
 				#SET{blocs_forum,non}
 			]
+
+		[(#ADMIN|=={0}|oui)
+			#SET{blocs_forum,oui}
+			#SET{blocs_cplt,oui}
+		]
+		[(#ADMIN|=={-2}|oui)
+			#SET{blocs_forum,non}
+		]
 
 		<BOUCLE_rub_classe(RUBRIQUES){id_rubrique}{tout}>
 			#SET{donnees_classe,#TEXTE*}
@@ -147,7 +145,7 @@
 			[(#REM) Mots-clefs]
 			[(#AUTORISER{modifier,article,#ID_ARTICLE}|oui)
 				[(#NOM_SITE_SPIP|match{novaterra.laclasse.com}|oui)
-					<INCLURE{fond=noisettes/js/accordeon}{nom=bloc_motsclefs-#ID_ARTICLE}>
+					<INCLURE{fond=noisettes/js/accordeon, nom=bloc_motsclefs-#ID_ARTICLE}>
 					<div class="bloc_option_doc nettoyeur">
 						<a id="bloc_motsclefs-#ID_ARTICLE" class="hac lien_ajouter" title="Lien d'ouverture directe" href="#">
 							<img src="[(#CHEMIN{img/logo_editer_on_15.png}|image_reduire{17}|extraire_attribut{src})]">&nbsp;&nbsp;Ajouter à l'encyclopédie
@@ -161,7 +159,7 @@
 
 			[(#REM)Forum]
 			[(#GET{blocs_forum}|=={non}|non)
-				<INCLURE{fond=noisettes/js/accordeon}{nom=bloc_option_forum-#ID_ARTICLE}>
+				<INCLURE{fond=noisettes/js/accordeon, nom=bloc_option_forum-#ID_ARTICLE}>
 				<div class="bloc_option_doc nettoyeur">
 					<a id="bloc_option_forum-#ID_ARTICLE" class="hac liens_voir" title="commenter">
 						<img src="[(#CHEMIN{img/logo_aide_on_15.png}|image_reduire{15}|extraire_attribut{src})]">
@@ -177,7 +175,7 @@
 			[(#GET{type_objet}|=={ressources}|non)[(#SET{url,[(#URL_ARTICLE|concat{&mode=complet})]})]]
 			[(#GET{type_objet}|=={ressources}|oui)[(#SET{url,[(#URL_RUBRIQUE|concat{&id_article=#ID_ARTICLE&mode=complet})]})]]
 
-			[<INCLURE{fond=noisettes/js/accordeon}{nom=bloc_permalien-#ID_ARTICLE}>
+			[<INCLURE{fond=noisettes/js/accordeon, nom=bloc_permalien-#ID_ARTICLE}>
 			<div class="bloc_option_doc nettoyeur">
 				<a id="bloc_permalien-#ID_ARTICLE" class="hac liens_forum" title="Lien d'ouverture directe" href="#">
 					<img src="[(#CHEMIN{img/logo_voir_on_15.png}|image_reduire{17}|extraire_attribut{src})]">&nbsp;&nbsp;Permalien
@@ -188,32 +186,30 @@
 			</div>
 			]
 
-			[(#REM)Liens sociaux]
-				[(#PLUGIN{SOCIALTAGS}|oui)
-				<INCLURE{fond=noisettes/js/accordeon}{nom=bloc_reseaux-#ID_ARTICLE}>
-				<div class="bloc_option_doc nettoyeur">
-					<a id="bloc_reseaux-#ID_ARTICLE" class="hac liens_forum" title="Lien d'ouverture directe" href="#">
-						<img src="[(#CHEMIN{img/logo_voir_on_15.png}|image_reduire{17}|extraire_attribut{src})]">&nbsp;&nbsp;Réseaux sociaux
-					</a>
-					<div class="cache">
-						<div class="reseaux"></div>
-					</div>
-				</div>
-				]
-
-			[(#REM)Données de la classe ]
-			[(#GET{type_objet}|=={travail_en_cours}|oui
-			|et{#GET{donnees_classe}|=={''}|non}
-			|oui)
-			<INCLURE{fond=noisettes/js/accordeon}{nom=bloc_donnees-#ID_ARTICLE}>
+			[(#REM) Liens sociaux ]
+			[(#PLUGIN{SOCIALTAGS}|oui)
+			<INCLURE{fond=noisettes/js/accordeon, nom=bloc_reseaux-#ID_ARTICLE} />
 			<div class="bloc_option_doc nettoyeur">
-				<a id="bloc_donnees-#ID_ARTICLE" class="hac liens_forum" title="Lien d'ouverture directe" href="#">
-					<img src="[(#CHEMIN{img/logo_voir_on_15.png}|image_reduire{17}|extraire_attribut{src})]">&nbsp;&nbsp;Données de la classe
+				<a id="bloc_reseaux-#ID_ARTICLE" class="hac liens_forum" title="Lien d'ouverture directe" href="#">
+					<img src="[(#CHEMIN{img/logo_voir_on_15.png}|image_reduire{17}|extraire_attribut{src})]">&nbsp;&nbsp;Réseaux sociaux
 				</a>
-				<div class="">
-					<div class="donnees_classe">#GET{donnees_classe}</div>
+				<div class="cache">
+					<div class="reseaux"></div>
 				</div>
 			</div>
+			]
+
+			[(#REM) Données de la classe ]
+			[(#GET{type_objet}|=={travail_en_cours}|oui|et{#GET{donnees_classe}|=={''}|non}|oui)
+				<INCLURE{fond=noisettes/js/accordeon, nom=bloc_donnees-#ID_ARTICLE} />
+				<div class="bloc_option_doc nettoyeur">
+					<a id="bloc_donnees-#ID_ARTICLE" class="hac liens_forum" title="Lien d'ouverture directe" href="#">
+						<img src="[(#CHEMIN{img/logo_voir_on_15.png}|image_reduire{17}|extraire_attribut{src})]">&nbsp;&nbsp;Données de la classe
+					</a>
+					<div class="">
+						<div class="donnees_classe">#GET{donnees_classe}</div>
+					</div>
+				</div>
 			]
 		]
 	</div>
