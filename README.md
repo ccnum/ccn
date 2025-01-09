@@ -15,7 +15,7 @@ Par défaut a chaque fermerture de pull request, le numéro de version de patch 
 
 nom de pull request : `Ajout de la gestion des versions`
 
-Si la pull request est fermée sans label, la version sera incrémentée de la manière suivante : `1.0.0`
+Si la pull request est fermée sans label, la version sera incrémentée de la manière suivante : `1.0.1`
 
 nom de pull request : `#minor - Ajout de la gestion des versions `
 
