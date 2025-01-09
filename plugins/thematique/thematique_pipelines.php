@@ -48,7 +48,7 @@ function thematique_jqueryui_plugins($scripts) {
 }
 
 function thematique_insert_head($flux) {
-	$flux .= "<script type='text/javascript' src='" . find_in_path('js/article_blog.js') . "'></script>\n";
+	$flux .= "\n<script type='text/javascript' src='" . find_in_path('js/article_blog.js') . "'></script>\n";
 	$flux .= "<script type='text/javascript' src='" . find_in_path('js/article_evenement.js') . "'></script>\n";
 	$flux .= "<script type='text/javascript' src='" . find_in_path('js/bouton.js') . "'></script>\n";
 	$flux .= "<script type='text/javascript' src='" . find_in_path('js/bundled/html4+html5/jquery.history.js') . "'></script>\n";

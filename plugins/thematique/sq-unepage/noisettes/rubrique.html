@@ -52,7 +52,7 @@
 						$('div#sidebar_main').addClass('chargement');
 						$('#menug li a.selected').removeClass('selected');
 						$('#ajax_rub_#ID_RUBRIQUE').addClass('selected');
-						$('#sidebar_main').load('[(#URL_PAGE{article}|parametre_url{id_article,#ID_ARTICLE}|parametre_url{mode,ajax-detail}|html_entity_decode)]'
+						$('#sidebar_main').load('[(#URL_ARTICLE|parametre_url{mode,ajax-detail}|html_entity_decode)]'
 						, {limit: 25}, function(){
 							hideSidebarLateral();
 							$('div#sidebar_main').removeClass('chargement');
@@ -89,7 +89,7 @@
 			</BOUCLE_getMotCle>
 			<BOUCLE_rubAnnee(RUBRIQUES) {racine}{titre LIKE %(#CONST{_annee_scolaire})%} {si #SESSION{role}|=={prof}} {si #GET{motcle}|!={evenements} } >
 				<BOUCLE_filtreTravailEnCours(RUBRIQUES){id_parent} {titre_mot=travail_en_cours}{par date}{0,2}>
-					<BOUCLE_filtreIdRubriques(RUBRIQUES){id_parent}   {id_rubrique == #SESSION{idRubriqueUser}} {doublons r}>
+					<BOUCLE_filtreIdRubriques(RUBRIQUES){id_parent} {id_rubrique == #SESSION{idRubriqueUser}} {doublons r}>
 						<div class="sidebar_bubble ressources_classes_around [(#TYPE_OBJET|match{travail_en_cours}|oui) ressources_travail_en_cours] [(#TYPE_OBJET|match{travail_en_cours}|non) ressources_no_color]">
 								<div class="[(#TYPE_OBJET|match{travail_en_cours}|oui) couleur_travail_en_cours[(#ID_RUBRIQUE|nb2col)]] ressources_classes">
 					<a id="ajax_rub_#ID_RUBRIQUE" href="#" class="hac ajax ressources_classe_nom ">
