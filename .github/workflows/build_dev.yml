@@ -30,7 +30,7 @@ jobs:
         with:
           push: true
           context: .
-          tags: erasme/spip-ccn:${{ github.ref == 'refs/heads/main' && 'latest' || 'dev' }} , erasme/spip-ccn:${{ github.sha }}
+          tags: erasme/spip-ccn:${{ github.ref == 'refs/heads/main' && 'latest' || 'dev' }}
 
   redeploy:
     name: Redeploy Workloads
