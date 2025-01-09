@@ -13,19 +13,15 @@ Par défaut a chaque fermerture de pull request, le numéro de version de patch 
 
 ### Exemples
 
-nom de pull request : `#1 - Ajout de la gestion des versions`
+nom de pull request : `Ajout de la gestion des versions`
 
 Si la pull request est fermée sans label, la version sera incrémentée de la manière suivante : `1.0.0`
 
-nom de pull request : `#2 - Ajout de la gestion des versions #minor`
+nom de pull request : `#minor - Ajout de la gestion des versions `
 
 Si la pull request est fermée avec le label `#minor`, la version sera incrémentée de la manière suivante : `1.1.0`
 
-nom de pull request : `#3 - Ajout de la gestion des versions #major`
+nom de pull request : `#major - Ajout de la gestion des versions`
 
 Si la pull request est fermée avec le label `#major`, la version sera incrémentée de la manière suivante : `2.0.0`
-
-nom de pull request : `#4 - Ajout de la gestion des versions`
-
-Si la pull request est fermée sans label, la version sera incrémentée de la manière suivante : `2.0.1`
 
