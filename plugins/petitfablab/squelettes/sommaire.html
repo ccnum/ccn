@@ -1,10 +1,10 @@
 #SESSION_SET{rub_jeu, #ENV{rub_jeu}}
-<BOUCLE_jeu(RUBRIQUES){si #SESSION{rub_jeu}|=={''}|oui}{titre==jeu}{!par id_rubrique}{tout}>
+<BOUCLE_jeu(RUBRIQUES){si #SESSION{rub_jeu}|non}{titre==jeu}{!par id_rubrique}{tout}>
 	<BOUCLE_j1(RUBRIQUES){id_parent=#ID_RUBRIQUE}{0,1}{!par id_rubrique}{tout}>
 		#SESSION_SET{rub_jeu, #ID_RUBRIQUE}
 	</BOUCLE_j1>
 </BOUCLE_jeu>
-
+#SET{rub_jeu,#SESSION{rub_jeu}}
 [(#SESSION{login}|oui)#SET{ecriture,oui}]
 <INCLURE{fond=layout_init, ecriture=oui} />
 <meta http-equiv="refresh" content="300" />
@@ -15,10 +15,10 @@
 	<div class="global-content">
 		<div class="content">
 			<div class="content-left-small">
-				<INCLURE{fond=colonne_gauche, id_rubrique=#SESSION{rub_jeu}} />
+				<INCLURE{fond=colonne_gauche, id_rubrique=#GET{rub_jeu}} />
 			</div>
 			<div class="content-right-large">
-				<div class="texte-presentation" style="position: relative; margin: 60px 20px 0px 100px ;">
+				<div class="texte-presentation" style="position: relative; margin: 60px 20px 0px 100px;">
 					[<div class="#EDIT{descriptif}" style="border-left: 5px #ff6b6b solid; padding-left: 15px; padding-right: 5px;">
 						(#DESCRIPTIF)
 					</div>]
@@ -28,12 +28,12 @@
 					<div class="content-right-large">
 						<div class="texte-presentation">
 							<div class="bord">Voici la grille des histoires en cours d'écriture :</div>
-							<INCLURE{fond=liste-cadavres-visiteur, rub_jeu=#SESSION{rub_jeu}} />
+							<INCLURE{fond=liste-cadavres-visiteur, rub_jeu=#GET{rub_jeu}} />
 						</div>
 						<div class="texte-presentation">
 							<div><br /></div>
 							<div class="bord">Et les histoires terminées :</div>
-							<INCLURE{fond=liste-cadavres-fin, rub_jeu=#SESSION{rub_jeu}} />
+							<INCLURE{fond=liste-cadavres-fin, rub_jeu=#GET{rub_jeu}} />
 						</div>
 					</div>
 				]

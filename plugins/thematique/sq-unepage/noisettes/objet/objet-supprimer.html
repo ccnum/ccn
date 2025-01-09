@@ -14,9 +14,17 @@ Parametres :
 [(#TYPE_PARENT|!={article}|oui)
 	[(#AUTORISER{modifier, rubrique, #ID_PARENT})
 		[(#OBJET|=={article}|oui)
-			<div class="bloc_option_doc" class="nettoyeur"><ul><li><ul><li><a class="ajax hac liens_supprimer" [onClick="return confirmation('(#CONFIRMATION)')"] title="Supprimer l'article" href="[(#URL_ACTION_AUTEUR{instituer_article,#ID_OBJET-poubelle,[(#GET{url})]})]">
-			<img src="[(#CHEMIN{img/logo_supprimer_on_15.png}|image_reduire{14}|extraire_attribut{src})]" />&nbsp;&nbsp;Supprimer l'article
-			</a></ul></li></div>
+			<div class="bloc_option_doc" class="nettoyeur">
+				<ul>
+					<li>
+						<a class="ajax hac liens_supprimer" [onClick="return confirmation('(#CONFIRMATION)')"]
+							title="Supprimer l'article" href="[(#URL_ACTION_AUTEUR{instituer_article,#ID_OBJET-poubelle,[(#GET{url})]})]"
+						>
+							<img src="[(#CHEMIN{img/logo_supprimer_on_15.png}|image_reduire{14}|extraire_attribut{src})]" />&nbsp;&nbsp;Supprimer l'article
+						</a>
+					</li>
+				</ul>
+			</div>
 		]
 
 		[(#OBJET|=={document}|oui)

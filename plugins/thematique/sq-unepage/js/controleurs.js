@@ -202,7 +202,6 @@ function setContentFromState(state) {
 			}
 		}
 
-
 		// Classe
 		if (state.type_objet == "classes") {
 			changeTimelineMode('consignes');
@@ -213,16 +212,13 @@ function setContentFromState(state) {
 			}
 		}
 
-
 		// Article de blog
-
 		if (state.type_objet == "blogs") {
 			changeTimelineMode('blogs');
 			callArticleBlog(state.id_objet, "article");
 		}
 
 		// Article d'événement
-
 		if (state.type_objet == "evenements") {
 			changeTimelineMode('evenements');
 			callArticleEvenement(state.id_objet, "article");
@@ -244,15 +240,11 @@ function setContentFromState(state) {
 
 }
 
-
-
 /**
  * Initialise les binds jQuery des sidebars
  */
-
 function initLocalEvents(parent) {
 }
-
 
 /**
  * Gère la mise à jour des styles lorsque l'écran est resizé
