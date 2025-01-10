@@ -117,6 +117,7 @@ spip plugins:activer oembed -y
 spip plugins:activer saisies -y
 spip plugins:activer socialtags -y
 spip plugins:activer spip_bonux -y
+spip plugins:activer verifier -y
 spip plugins:activer yaml -y
 if [ ${SPIP_VERSION_SITE} != "thematique" ]; then
 	spip plugins:activer vider_rubrique -y
