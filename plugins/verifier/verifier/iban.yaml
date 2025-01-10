@@ -1,0 +1,13 @@
+
+titre: '<:verifier:type_iban:>'
+description: '<:verifier:type_iban_description:>'
+options:
+  -
+    saisie: 'radio'
+    options:
+      nom: 'normaliser'
+      label: '<:verifier:normaliser_option_iban:>'
+      data:
+        "": '<:verifier:normaliser_option_iban_non:>'
+        machine: '<:verifier:normaliser_option_iban_machine:>'
+      defaut: ''

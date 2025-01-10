@@ -1,0 +1,36 @@
+
+titre: '<:verifier:type_slug:>'
+description: '<:verifier:type_slug_description:>'
+options:
+  -
+    saisie: 'input'
+    options:
+      nom: 'longueur_maxi'
+      label: '<:verifier:option_slug_longueur_maxi_label:>'
+      defaut: 60
+      obligatoire: 'oui'
+      type: 'number'
+      min: 1
+  -
+    saisie: 'case'
+    options:
+      nom: 'normaliser'
+      label_case: '<:verifier:option_slug_normaliser_label:>'
+      explication: '<:verifier:option_slug_normaliser_explication:>'
+  -
+    saisie: 'case'
+    options:
+      nom: 'normaliser_suggerer'
+      label_case: '<:verifier:option_slug_normaliser_suggerer_label:>'
+      explication: '<:verifier:option_slug_normaliser_suggerer_explication:>'
+      defaut: ''
+      afficher_si: '@normaliser@ != ""'
+  -
+    saisie: 'input'
+    options:
+      nom: 'separateur'
+      label: '<:verifier:option_slug_separateur_label:>'
+      explication: '<:verifier:option_slug_separateur_explication:>'
+      defaut: '_'
+      afficher_si: '@normaliser@ != ""'
+      obligatoire: 'oui'
