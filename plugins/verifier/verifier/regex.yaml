@@ -1,0 +1,23 @@
+
+titre: '<:verifier:type_regex:>'
+description: '<:verifier:type_regex_description:>'
+options:
+  -
+    saisie: 'input'
+    options:
+      nom: 'modele'
+      label: '<:verifier:option_regex_modele_label:>'
+      explication: '<:verifier:option_regex_modele_explication:>'
+  -
+    saisie: 'case'
+    options:
+      nom: 'negation'
+      label_case: '<:verifier:option_regex_negation_label_case:>'
+      conteneur_class: 'pleine_largeur'
+  -
+    saisie: 'input'
+    options:
+      nom: 'message_erreur'
+      label: '<:verifier:options_message_erreur_label:>'
+      explication: '<:verifier:options_message_erreur_explication:>'
+      placeholder: '<:verifier:erreur_regex:>'
