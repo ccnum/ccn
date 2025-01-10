@@ -1,9 +1,7 @@
-# CCN 
-
-
+# CCN
 
 ## Gestion des versions
-Afin de proposer des images docker versionnées, une ci a été mise en place. 
+Afin de proposer des images docker versionnées, une ci a été mise en place.
 A chaque pull request fermée sur la branche `main`, un tag est créé sur le répo github et une image docker est construite et pushée sur le dockerhub.
 
 ### Incrémentation de la version

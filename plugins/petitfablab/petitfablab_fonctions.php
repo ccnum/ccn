@@ -1,39 +1,5 @@
 <?php
 
-function cookie($nom, $valeur) {
-	setcookie($nom, $valeur, time() + 10 * 24 * 3600);
-}
-
-function filtre_creer_histoire($id) {
-	include_spip('action/editer_objet');
-	include_spip('action/editer_rubrique');
-	include_spip('inc/autoriser');
-	$id_prologue = sql_getfetsel("id_article", "spip_articles", ['titre LIKE "%prologue%"', 'statut="publie"', 'id_rubrique =' . intval($id)], "", "RAND()");
-
-	// Rubrique
-	$id_rub = rubrique_inserer($id);
-	autoriser_exception('modifier', 'rubrique', $id_rub);
-	objet_modifier('rubrique', $id_rub, ["titre" => "Histoire " . $id_rub, "descriptif" => $id_prologue]);
-	objet_instituer('rubrique', $id_rub, ['id_parent' => $id, 'statut' => 'publie']);
-
-	// Prologue
-	/*
-	$art = objet_inserer('article',$id_rub);
-	autoriser_exception('modifier', 'article', $art);
-	objet_modifier('article', $art,  array('titre'=>'Prologue','texte'=> $texte));
-	sql_update('spip_articles', array("statut"=>"publie"), "id_article=".intval($art));
-	autoriser_exception('modifier', 'article', $art, false);
-	*/
-
-	// Cloture exceptions
-	autoriser_exception('modifier', 'rubrique', $id_rub, false);
-
-	// Cookie
-	cookie('rub_hist', $id_rub);
-
-	return $id_rub;
-}
-
 function valider_chapitre($id_article, $id_rubrique) {
 	include_spip('action/editer_objet');
 	include_spip('inc/autoriser');
