@@ -49,7 +49,7 @@ if (
 	&& ($_GET['annee_scolaire'] != '')
 ) {
 	$annee_scolaire = $_GET['annee_scolaire'];
-	setcookie('laclasse_annee_scolaire', $annee_scolaire);
+	setcookie('laclasse_annee_scolaire', $annee_scolaire, time() + 3600 * 12);
 }
 
 define('_annee_scolaire', $annee_scolaire);
