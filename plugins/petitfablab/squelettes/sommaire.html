@@ -5,7 +5,7 @@
 	</BOUCLE_j1>
 </BOUCLE_jeu>
 [(#SESSION{login}|oui)#SET{ecriture,oui}]
-<INCLURE{fond=layout_init, ecriture=oui} />
+<INCLURE{fond=inclure/layout_init,ecriture=oui} />
 [(#ENV{liste}|non)<meta http-equiv="refresh" content="300" />]
 
 <!-- BOOK -->
@@ -14,7 +14,7 @@
 	<div class="global-content">
 		<div class="content">
 			<div class="content-left-small">
-				<INCLURE{fond=colonne_gauche, rub_jeu=#GET{rub_jeu}} />
+				<INCLURE{fond=inclure/colonne_gauche,rub_jeu=#GET{rub_jeu}} />
 			</div>
 			[(#ENV{liste}|non)
 			<div class="content-right-large">
@@ -28,12 +28,12 @@
 					<div class="content-right-large">
 						<div class="texte-presentation">
 							<div class="bord">Voici la grille des histoires en cours d'écriture :</div>
-							<INCLURE{fond=liste-cadavres-visiteur, rub_jeu=#GET{rub_jeu}} />
+							<INCLURE{fond=inclure/liste-cadavres-visiteur,rub_jeu=#GET{rub_jeu}} />
 						</div>
 						<div class="texte-presentation">
 							<div><br /></div>
 							<div class="bord">Et les histoires terminées :</div>
-							<INCLURE{fond=liste-cadavres-fin, rub_jeu=#GET{rub_jeu}} />
+							<INCLURE{fond=inclure/liste-cadavres-fin,rub_jeu=#GET{rub_jeu}} />
 						</div>
 					</div>
 				]
@@ -85,7 +85,7 @@
 	</div>
 </div>
 
-<INCLURE{fond=layout_end, ecriture=oui, rub_hist=#GET{rub_hist}} />
+<INCLURE{fond=inclure/layout_end,ecriture=oui,rub_hist=#GET{rub_hist}} />
 
 <script type="text/javascript">
 $(document).ready(function() {
