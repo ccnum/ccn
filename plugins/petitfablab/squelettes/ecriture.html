@@ -26,7 +26,7 @@
 	<div class="global-content">
 		<div class="content">
 			<div class="content-left-small">
-				<INCLURE{fond=colonne_gauche}{id_rubrique=#SESSION{rub_jeu}} />
+				<INCLURE{fond=colonne_gauche,id_rubrique=#ENV{rub_jeu}} />
 			</div>
 			<div class="content-right-large">
 				<INCLURE{fond=rubrique,id_rubrique=#ENV{rub_jeu},id_art=#ID_ARTICLE,info=#GET{info}}>

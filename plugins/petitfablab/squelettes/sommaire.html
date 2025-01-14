@@ -47,10 +47,10 @@
 							<div class="bord">En tant qu'admin des rubriques suivante, quelle histoire souhaitez vous mettre en place sur ce poste ?</div>
 							<BOUCLE_admin(RUBRIQUES){titre==jeu}{tout}>
 								<BOUCLE_admin1(RUBRIQUES){id_parent=#ID_RUBRIQUE}{id_auteur=#SESSION{id_auteur}}{par num titre, titre}{'<br />'}>
-									<a href="[(#SELF|parametre_url{liste,''}|parametre_url{rub_jeu,#ID_RUBRIQUE})]">#TITRE</a>
+									<a href="[(#SELF|parametre_url{liste,''}|parametre_url{page,ecriture}|parametre_url{rub_jeu,#ID_RUBRIQUE})]">#TITRE</a>
 								</BOUCLE_admin1>
 									<BOUCLE_admin11(RUBRIQUES){id_parent=#ID_RUBRIQUE}{par num titre, titre}{'<br />'}>
-										<a href="[(#SELF|parametre_url{liste,''}|parametre_url{rub_jeu,#ID_RUBRIQUE})]">#TITRE</a>
+										<a href="[(#SELF|parametre_url{liste,''}|parametre_url{page,ecriture}|parametre_url{rub_jeu,#ID_RUBRIQUE})]">#TITRE</a>
 									</BOUCLE_admin11>
 								<//B_admin1>
 							</BOUCLE_admin>
@@ -70,7 +70,7 @@
 							[(#ENV{creer}|=={ok}|non)<div class="ajax">#FORMULAIRE_CREER_HISTOIRE{#ENV{creer},#SELF|parametre_url{creer,ok}}</div>]
 							[(#ENV{creer}|=={ok}|oui)
 							<BOUCLE_admin_retour(RUBRIQUES){id_parent=#ID_RUBRIQUE}{id_auteur=#SESSION{id_auteur}}{'<br />'}>
-								<a href="[(#SELF|parametre_url{rub_jeu,#ID_RUBRIQUE})]">#TITRE</a>
+								<a href="[(#SELF|parametre_url{liste,''}|parametre_url{page,ecriture}|parametre_url{rub_jeu,#ID_RUBRIQUE})]">#TITRE</a>
 							</BOUCLE_admin_retour>
 							]
 						]

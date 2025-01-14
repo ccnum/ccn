@@ -17,19 +17,17 @@
 				$('#entete_publication').slideUp(3000,
 				function(){
 					function cache1() {
-
 						$('.ecriture-chapitre').fadeTo('fast', 0.2);
 						$('#entete_publication1').delay(1000).slideDown(2000);
-					$('body').bind( "mousemove",function(){
-						$('body').unbind( "mousemove");
-						$('.ecriture-chapitre').fadeTo(1000, 1);
-						$('#entete_publication1').fadeTo(3000, 0.2).slideUp(3000);
+						$('body').bind( "mousemove",function(){
+							$('body').unbind( "mousemove");
+							$('.ecriture-chapitre').fadeTo(1000, 1);
+							$('#entete_publication1').fadeTo(3000, 0.2).slideUp(3000);
 
-					});
-						}
-
-						//window.setTimeout(cache1,5000);
-						//window.setTimeout(cache, 100000);
+						});
+					}
+					//window.setTimeout(cache1,5000);
+					//window.setTimeout(cache, 100000);
 				});
 
 			}
@@ -60,11 +58,11 @@
 				<img src="#CHEMIN{img/ecriture/forum-fond-pastille.png}" width="50" height="50" />
 			</div>
 
-				<div class="ecriture-chapitre-titre rouge3">
-					<strong>A vous d'écrire !</strong>
-					<br />
-					Lisez le prologue et poursuivez l’histoire en vous inspirant des fins de chapitres précédents.
-				</div>
+			<div class="ecriture-chapitre-titre rouge3">
+				<strong>A vous d'écrire !</strong>
+				<br />
+				Lisez le prologue et poursuivez l’histoire en vous inspirant des fins de chapitres précédents.
+			</div>
 			<hr />
 		</div>
 
@@ -104,15 +102,14 @@
 		<!-- END PROLOGUE -->
 		<!-- Boucle affichage des cadavres -->
 		<BOUCLE_cadavres(ARTICLES){id_rubrique}{par date}{tout}>
-		[(#_cadavres:COMPTEUR_BOUCLE|!={#GET{id_cadavre_hidden}}|oui)<INCLURE{fond=chapitre-verrouille, id_article,fin=non}>]
-		[(#_cadavres:COMPTEUR_BOUCLE|=={#GET{id_cadavre_hidden}}|oui)<INCLURE{fond=chapitre-visible, id_article}>]
+		[(#_cadavres:COMPTEUR_BOUCLE|!={#GET{id_cadavre_hidden}}|oui)<INCLURE{fond=chapitre-verrouille,id_article,fin=non}>]
+		[(#_cadavres:COMPTEUR_BOUCLE|=={#GET{id_cadavre_hidden}}|oui)<INCLURE{fond=chapitre-visible,id_article}>]
 
 		</BOUCLE_cadavres>
 		<div class="ecriture-chapitre-picto">
 			<img src="#CHEMIN{img/ecriture/picto-crayon.png}" width="50" height="50" />
 		</div>
-		#SET{url,#URL_PAGE{ecriture}}
-		#FORMULAIRE_EDITER_ARTICLE{oui, #ID_RUBRIQUE, #GET{url}}
+		#FORMULAIRE_EDITER_ARTICLE{oui, #ID_RUBRIQUE, #URL_PAGE{ecriture}}
 
 	</div>
 	<style>
