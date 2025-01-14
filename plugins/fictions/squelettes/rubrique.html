@@ -29,7 +29,7 @@
 <BOUCLE_max_cadavres(ARTICLES){id_rubrique}{par date}>
 #SET{var_max_cadavres, #TOTAL_BOUCLE}
 </BOUCLE_max_cadavres>
-#SET{id_cadavre_hidden, #SOUSTRACTION{#GET{var_max_cadavres}, 1}}
+#SET{id_cadavre_hidden, #GET{var_max_cadavres}|moins{1}}
 
 <!-- on recupere l'id de la rubrique de travail -->
 <BOUCLE_id_zone(spip_auteurs_liens){objet = rubrique}{spip_auteurs_liens.id_auteur = #GET{var_id_auteur}}{0,1}>
