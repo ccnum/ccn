@@ -61,22 +61,6 @@ function balise_LECTURE_dist($p) {
     return $p;
 }
 
-
-// FILTRE SOUSTRATION
-
-function balise_SOUSTRACTION_dist($p) {
-    $a = interprete_argument_balise(1, $p);
-    $b = interprete_argument_balise(2, $p);
-
-    if ($a == '' || $b == '') {
-        $p->code = '\'#SOUSTRACTION[Manque argument]\'';
-    } else {
-        $p->code = '(' . $a . '-' . $b . ')';
-    }
-
-    return $p;
-}
-
 // FUNCTION CLEANCUT
 function cleanCut($string, $length = 380, $cutString = '(...)') {
     if (strlen($string) <= $length) {
