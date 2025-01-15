@@ -13,12 +13,6 @@
 <!-- TOOLTIP -->
 <div id="liste-tooltip"></div>
 
-<!-- BOUTON CONNEXION -->
-[(#ECRITURE|oui)<div id="bouton-connexion"><span id="bouton-connexion-texte">]
-<BOUCLE_titre(RUBRIQUES){id_rubrique=#RUB_HIST}{tout}>#TITRE[ ((#NB_CHAP|plus{1}))]</BOUCLE_titre>
-</B_titre>[(#ECRITURE|oui|et{#SESSION{login}|oui}|oui)<a href="#URL_PAGE{ecriture}">JOUER</a>]<//B_titre>
-[(#ECRITURE|oui)</span><span id="bouton-connexion-picto"><img src="#CHEMIN{img/global/picto-login.png}" width="17" height="18" /></span></div>]
-
 <!-- ELEMENTS GRAPHIQUES-->
 <div id="book-top-left"><img src="#CHEMIN{img/global/border-book-top-left.png}" width="14" height="16" /></div>
 <div id="book-top-right"><img src="#CHEMIN{img/global/border-book-top-right.png}" width="14" height="16" /></div>

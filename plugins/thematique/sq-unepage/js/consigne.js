@@ -101,7 +101,7 @@ function Consigne() {
 		this.hauteur = $(this.div_base).outerHeight();
 
 		// Préparation bouton réponse plus (crayon)
-		this.div_reponse_plus = $("<div class='bouton_reponse_consigne' onclick='createReponse(" + this.id + "," + CCN.idRestreint + "," + this.numero + ");'><img src='" + CCN.urlRoot + "img/reponse_plus.png' title='Répondre à la consigne'> Répondre à la consigne</div>");
+		this.div_reponse_plus = $("<div class='bouton_reponse_consigne' onclick='createReponse(" + this.id + "," + CCN.idRestreint + "," + this.numero + ");'><img src='" + CCN.urlRoot + "img/reponse_plus.png' title='Répondre à la consigne'>Répondre à la consigne</div>");
 		this.div_reponse_see = $("<div class='bouton_reponse_consigne'><img src='" + CCN.urlRoot + "img/reponse_plus.png' title='Accéder à ma réponse'> Accéder à ma réponse</div>");
 
 		this.div_base.append(this.div_reponse_plus);
@@ -120,28 +120,26 @@ function Consigne() {
 
 		// Draggable (admin)
 		if (CCN.admin == 0) {
-			$(this.div_base).draggable(
-				{
-					axis: "y",
-					start: function (event, ui) {
-						$(this).addClass('no_event');
-					},
-					drag: function (event, ui) {
-						updateConnecteurs();
-					},
+			$(this.div_base).draggable({
+				axis: "y",
+				start: function (event, ui) {
+					$(this).addClass('no_event');
+				},
+				drag: function (event, ui) {
+					updateConnecteurs();
+				},
 
-					stop: function (event, ui) {
-						yy = (ui.offset.top - CCN.projet.timeline.offset().top) / CCN.projet.timeline.height();
+				stop: function (event, ui) {
+					yy = (ui.offset.top - CCN.projet.timeline.offset().top) / CCN.projet.timeline.height();
 
-						$.get("spip.php?page=ajax&mode=article-sauve-coordonnees", { id_objet: _thisIdObjet, type_objet: "article", X: 0, Y: yy });
-						$(this).removeClass('no_event');
+					$.get("spip.php?page=ajax&mode=article-sauve-coordonnees", { id_objet: _thisIdObjet, type_objet: "article", X: 0, Y: yy });
+					$(this).removeClass('no_event');
 
-						this.y = yy;
+					this.y = yy;
 
-						$(this).css({ 'top': (yy * 100) + '%' });
-					}
+					$(this).css({ 'top': (yy * 100) + '%' });
 				}
-			);
+			});
 		}
 	}
 
@@ -185,7 +183,6 @@ function Consigne() {
 	this.showConsignePastille = function () {
 		$("#consigne" + this.id + " .picto_nombre_commentaires").fadeIn('slow');
 	}
-
 
 	/**
 	 * Fait disparaître le picto du nombre de commentaires d'une consigne.

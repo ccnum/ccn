@@ -13,11 +13,11 @@
 [(#SET{projet,[(#URL_PAGE{xml, mode=projet}|url_absolue|copie_locale)]})]
 
 [(#REM) Type d'admin : 0 : total / autrement : nb de rubriques restreintes / -1 : pas admin / -2 pas connecté]
-[(#INCLURE{fond=noisettes/fonction/admin,mode=admin})]
+[(#INCLURE{fond=noisettes/fonction/admin,mode=admin,rub})]
 [(#SET{admin,#SESSION{admin}})]
 
 [(#REM) Id de la rubrique restreinte sélectionnée]
-[(#INCLURE{fond=noisettes/fonction/admin,mode=restreint})]
+[(#INCLURE{fond=noisettes/fonction/admin,mode=restreint,rub})]
 [(#SET{restreint,#SESSION{restreint}})]
 
 [(#REM) Type de rubrique restreinte: consignes, travail_en_cours, blogs, evenements, ressources, classes]
