@@ -1042,6 +1042,7 @@ function updateUrl(object, title, url) {
 
 function reloadAndSetCookie(url, cookie_nom, cookie_valeur) {
 	document.cookie = cookie_nom + "=" + cookie_valeur;
+	url = url + '/?rub=' + cookie_valeur;
 	reload(url);
 }
 
@@ -1058,8 +1059,7 @@ function reload(url) {
 	if (url == 'self') {
 		location.reload(true);
 		window.location.reload();
-	}
-	else {
+	} else {
 		window.location.href = url;
 	}
 }

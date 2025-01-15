@@ -62,7 +62,7 @@
 				#SET{gid,8}
 
 				[(#SESSION{nom}|oui)
-				[(#INCLURE{fond=noisettes/fonction/admin,mode=restreint})]
+				[(#INCLURE{fond=noisettes/fonction/admin,mode=restreint,rub})]
 					[(#SET{restreint,#SESSION{restreint}})]
 					[(#GET{restreint}|=={26}|oui)#SET{gid,9}]
 					[(#GET{restreint}|=={23}|oui)#SET{gid,11}]
@@ -85,7 +85,7 @@
 		</url_popup_chat>
 		<url_popup_chat2>
 			[(#NOM_SITE_SPIP|=={miam.laclasse.com}|oui)
-				[(#INCLURE{fond=noisettes/fonction/admin,mode=admin})]
+				[(#INCLURE{fond=noisettes/fonction/admin,mode=admin,rub})]
 				[(#SET{admin,#SESSION{admin}})]
 				[(#GET{admin}|>={0}|oui)
 					https://docs.google.com/drawings/d/1XNN89gz1qaVkV1BBwztvQNJuFetv3y-fXtrwbFGyEPM/edit?target=blank
