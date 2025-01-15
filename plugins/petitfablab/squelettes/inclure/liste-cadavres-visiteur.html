@@ -1,7 +1,7 @@
 <!--
 
 SOMMAIRE.HTML > LISTE-CADAVRE-AUTEUR.HTML
-(grille des cadavres affich� pour les visiteurs)
+(grille des cadavres affiché pour les visiteurs)
 
  -->
 #CACHE{0}
@@ -34,7 +34,7 @@ SOMMAIRE.HTML > LISTE-CADAVRE-AUTEUR.HTML
 				<div id="liste-tooltip-bulle">
 				</div>
 			</div>
-			<a href="[(#URL_PAGE{lecture, id_rubrique=#ID_RUBRIQUE}|parametre_url{compteur,1})]" class="verrouille [(#COMPTEUR_BOUCLE|=={#TOTAL_BOUCLE}|?{'last',''})]"></a>
+			<a href="[(#URL_PAGE{lecture, id_rubrique=#ID_RUBRIQUE}|parametre_url{rub_jeu,#ENV{rub_jeu}}|parametre_url{compteur,1})]" class="verrouille [(#COMPTEUR_BOUCLE|=={#TOTAL_BOUCLE}|?{'last',''})]"></a>
 		</div>
 		<div class="liste-link-spacer-5"></div>
 	</BOUCLE_articles_tous>

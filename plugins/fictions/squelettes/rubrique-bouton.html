@@ -15,7 +15,7 @@ RUBRIQUE.HTML > RUBRIQUE-BOUTON.HTML
 </BOUCLE_id_zone_2>
 
 <!-- ID de la zone de travail precedente -->
-#SET{id_rubrique_prev, #SOUSTRACTION{#GET{var_id_zone_2}, 1}}
+#SET{id_rubrique_prev, #GET{var_id_zone_2}|moins{1}}
 
 <!-- cas spécifique de l'ecrivain (impossible de determiner une zone de travail) -->
 #SET{var_oui, oui}
@@ -29,7 +29,7 @@ RUBRIQUE.HTML > RUBRIQUE-BOUTON.HTML
     [(#SESSION{webmestre}|=={#GET{var_oui}}|?{' ',''})
 
         [(#GET{var_nom_auteur}|=={#GET{var_auteur}}|?{' ',''})
-        #SET{id_rubrique_prev, #SOUSTRACTION{#ID_RUBRIQUE, 1}}
+        #SET{id_rubrique_prev, #ID_RUBRIQUE|moins{1}}
         #SET{var_id_zone_2, #ID_RUBRIQUE}
         ]
 

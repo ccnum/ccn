@@ -1,13 +1,12 @@
-#SESSION_SET{rub_jeu, #ENV{rub_jeu}}
-<BOUCLE_jeu(RUBRIQUES){si #SESSION{rub_jeu}|non}{titre==jeu}{!par id_rubrique}{tout}>
+#SET{rub_jeu,#ENV{rub_jeu}}
+<BOUCLE_jeu(RUBRIQUES){si #ENV{rub_jeu}|non}{titre==jeu}{!par id_rubrique}{tout}>
 	<BOUCLE_j1(RUBRIQUES){id_parent=#ID_RUBRIQUE}{0,1}{!par id_rubrique}{tout}>
-		#SESSION_SET{rub_jeu, #ID_RUBRIQUE}
+		#SET{rub_jeu, #ID_RUBRIQUE}
 	</BOUCLE_j1>
 </BOUCLE_jeu>
-#SET{rub_jeu,#SESSION{rub_jeu}}
 [(#SESSION{login}|oui)#SET{ecriture,oui}]
-<INCLURE{fond=layout_init, ecriture=oui} />
-<meta http-equiv="refresh" content="300" />
+<INCLURE{fond=inclure/layout_init,ecriture=oui} />
+[(#ENV{liste}|non)<meta http-equiv="refresh" content="300" />]
 
 <!-- BOOK -->
 <div id="global-ecriture">
@@ -15,8 +14,9 @@
 	<div class="global-content">
 		<div class="content">
 			<div class="content-left-small">
-				<INCLURE{fond=colonne_gauche, id_rubrique=#GET{rub_jeu}} />
+				<INCLURE{fond=inclure/colonne_gauche,rub_jeu=#GET{rub_jeu}} />
 			</div>
+			[(#ENV{liste}|non)
 			<div class="content-right-large">
 				<div class="texte-presentation" style="position: relative; margin: 60px 20px 0px 100px;">
 					[<div class="#EDIT{descriptif}" style="border-left: 5px #ff6b6b solid; padding-left: 15px; padding-right: 5px;">
@@ -28,21 +28,64 @@
 					<div class="content-right-large">
 						<div class="texte-presentation">
 							<div class="bord">Voici la grille des histoires en cours d'écriture :</div>
-							<INCLURE{fond=liste-cadavres-visiteur, rub_jeu=#GET{rub_jeu}} />
+							<INCLURE{fond=inclure/liste-cadavres-visiteur,rub_jeu=#GET{rub_jeu}} />
 						</div>
 						<div class="texte-presentation">
 							<div><br /></div>
 							<div class="bord">Et les histoires terminées :</div>
-							<INCLURE{fond=liste-cadavres-fin, rub_jeu=#GET{rub_jeu}} />
+							<INCLURE{fond=inclure/liste-cadavres-fin,rub_jeu=#GET{rub_jeu}} />
 						</div>
 					</div>
 				]
 			</div>
+			]
+			[(#ENV{liste}|oui)
+			<div class="content-right-large">
+				<div class="texte-presentation" style="position: relative; margin: 60px 20px 0px 100px;">
+					[(#SESSION{id_auteur}|oui)
+						[(#ENV{creer}|non)
+							<div class="bord">En tant qu'admin des rubriques suivante, quelle histoire souhaitez vous mettre en place sur ce poste ?</div>
+							<BOUCLE_admin(RUBRIQUES){titre==jeu}{tout}>
+								<BOUCLE_admin1(RUBRIQUES){id_parent=#ID_RUBRIQUE}{id_auteur=#SESSION{id_auteur}}{par num titre, titre}{'<br />'}>
+									<a href="[(#SELF|parametre_url{liste,''}|parametre_url{page,ecriture}|parametre_url{rub_jeu,#ID_RUBRIQUE})]">#TITRE</a>
+								</BOUCLE_admin1>
+									<BOUCLE_admin11(RUBRIQUES){id_parent=#ID_RUBRIQUE}{par num titre, titre}{'<br />'}>
+										<a href="[(#SELF|parametre_url{liste,''}|parametre_url{page,ecriture}|parametre_url{rub_jeu,#ID_RUBRIQUE})]">#TITRE</a>
+									</BOUCLE_admin11>
+								<//B_admin1>
+							</BOUCLE_admin>
+							<div class="bord">Où souhaitez vous créer des histoires ?</div>
+							<BOUCLE_admin2(RUBRIQUES){titre==jeu}{tout}>
+								<BOUCLE_admin21(RUBRIQUES){id_parent=#ID_RUBRIQUE}{id_auteur=#SESSION{id_auteur}}{par num titre, titre}{'<br />'}>
+									<a href="[(#SELF|parametre_url{creer,#ID_RUBRIQUE})]">#TITRE</a>
+								</BOUCLE_admin21>
+									<BOUCLE_admin211(RUBRIQUES){id_parent=#ID_RUBRIQUE}{par num titre, titre}{'<br />'}>
+										<a href="[(#SELF|parametre_url{creer,#ID_RUBRIQUE})]">#TITRE</a>
+									</BOUCLE_admin211>
+								<//B_admin21>
+							</BOUCLE_admin2>
+						]
+						[(#ENV{creer}|oui)
+							<div class="bord">Indiquez le nombre d'histoire que vous souhaitez créer dans cette rubrique ?</div>
+							[(#ENV{creer}|=={ok}|non)<div class="ajax">#FORMULAIRE_CREER_HISTOIRE{#ENV{creer},#SELF|parametre_url{creer,ok}}</div>]
+							[(#ENV{creer}|=={ok}|oui)
+							<BOUCLE_admin_retour(RUBRIQUES){id_parent=#ID_RUBRIQUE}{id_auteur=#SESSION{id_auteur}}{'<br />'}>
+								<a href="[(#SELF|parametre_url{liste,''}|parametre_url{page,ecriture}|parametre_url{rub_jeu,#ID_RUBRIQUE})]">#TITRE</a>
+							</BOUCLE_admin_retour>
+							]
+						]
+					]
+					[(#SESSION{id_auteur}|non)
+					<div class="ajax">#FORMULAIRE_LOGIN{#SELF|parametre_url{liste,log}}</div>
+					]
+				</div>
+			</div>
+			]
 		</div>
 	</div>
 </div>
 
-<INCLURE{fond=layout_end, ecriture=oui, rub_hist=#GET{rub_hist}} />
+<INCLURE{fond=inclure/layout_end,ecriture=oui,rub_hist=#GET{rub_hist}} />
 
 <script type="text/javascript">
 $(document).ready(function() {

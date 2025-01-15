@@ -20,5 +20,6 @@
 	<necessite nom="cextras" compatibilite="[3.0.5;[" />
 	<necessite nom="notation" />
 	<necessite nom="spip_bonux" />
+	<necessite nom="verifier" />
 	<necessite nom="vider_rubrique" />
 </paquet>

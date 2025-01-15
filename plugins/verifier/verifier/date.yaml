@@ -1,0 +1,25 @@
+
+titre: '<:verifier:type_date:>'
+description: '<:verifier:type_date_description:>'
+options:
+  -
+    saisie: 'radio'
+    options:
+      nom: 'normaliser'
+      label: '<:verifier:normaliser_option_date:>'
+      data:
+        aucune: '<:verifier:normaliser_option_date_aucune:>'
+        datetime: '<:verifier:normaliser_option_date_en_datetime:>'
+        date: '<:verifier:normaliser_option_date_en_date:>'
+        date_ou_datetime: '<:verifier:normaliser_option_date_en_date_ou_datetime:>'
+      defaut: 'datetime'
+  -
+    saisie: 'radio'
+    options:
+      nom: 'vider_date_nulle'
+      label: '<:verifier:vider_date_nulle:>'
+      data:
+        'oui': '<:item_oui:>'
+        'non': '<:item_non:>'
+      defaut: 'oui'
+      afficher_si: '@normaliser@ !="aucune"'

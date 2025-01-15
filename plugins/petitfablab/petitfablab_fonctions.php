@@ -1,39 +1,5 @@
 <?php
 
-function cookie($nom, $valeur) {
-	setcookie($nom, $valeur, time() + 10 * 24 * 3600);
-}
-
-function filtre_creer_histoire($id) {
-	include_spip('action/editer_objet');
-	include_spip('action/editer_rubrique');
-	include_spip('inc/autoriser');
-	$id_prologue = sql_getfetsel("id_article", "spip_articles", ['titre LIKE "%prologue%"', 'statut="publie"', 'id_rubrique =' . intval($id)], "", "RAND()");
-
-	// Rubrique
-	$id_rub = rubrique_inserer($id);
-	autoriser_exception('modifier', 'rubrique', $id_rub);
-	objet_modifier('rubrique', $id_rub, ["titre" => "Histoire " . $id_rub, "descriptif" => $id_prologue]);
-	objet_instituer('rubrique', $id_rub, ['id_parent' => $id, 'statut' => 'publie']);
-
-	// Prologue
-	/*
-	$art = objet_inserer('article',$id_rub);
-	autoriser_exception('modifier', 'article', $art);
-	objet_modifier('article', $art,  array('titre'=>'Prologue','texte'=> $texte));
-	sql_update('spip_articles', array("statut"=>"publie"), "id_article=".intval($art));
-	autoriser_exception('modifier', 'article', $art, false);
-	*/
-
-	// Cloture exceptions
-	autoriser_exception('modifier', 'rubrique', $id_rub, false);
-
-	// Cookie
-	cookie('rub_hist', $id_rub);
-
-	return $id_rub;
-}
-
 function valider_chapitre($id_article, $id_rubrique) {
 	include_spip('action/editer_objet');
 	include_spip('inc/autoriser');
@@ -164,24 +130,10 @@ function balise_LECTURE_dist($p) {
 	return $p;
 }
 
-
-// FILTRE SOUSTRATION
-
-function balise_SOUSTRACTION_dist($p) {
-	$a = interprete_argument_balise(1, $p);
-	$b = interprete_argument_balise(2, $p);
-
-	if ($a == '' || $b == '') {
-		$p->code = '\'#SOUSTRACTION[Manque argument]\'';
-	} else {
-		$p->code = '(' . $a . '-' . $b . ')';
-	}
-
-	return $p;
-}
-
-// FUNCTION CLEANCUT
-function cleanCut($string, $length = 380, $cutString = '(...)') {
+/**
+ * Filtre pour couper le texte à l'affichage
+ */
+function filtre_cleanCut($string, $length = 380, $cutString = '(...)') {
 	if (strlen($string) <= $length) {
 		return $string;
 	}
@@ -217,143 +169,4 @@ function afficher_options_date($annee, $mois, $annee_scolaire) {
 		$texte .= ">$i/$j</option>";
 	}
 	return $texte;
-}
-
-/**
- * Cette fonction reçoit une chaîne de caractère (un chapitre complet) et doit en retrancher les X derniers caractères.
- * X étant l'entier reçu en deuxième argument. Puis chaque caractère doit être remplacé par un x.
- *
- * -> si le chapitre contient moins de caractères que le nb de caractères à tronquer, on ne renvoie qu'une chaîne vide.
- *
- * @param  string $texteAMasquer
- * @param  int    $nbDeCaracteresATronquerALaFin
- * @return string
- */
-function masquerTexteChapitre(string $texteAMasquer = '', int $nbDeCaracteresATronquerALaFin = 325): string {
-	if (strlen($texteAMasquer) < $nbDeCaracteresATronquerALaFin) {
-		return '';
-	}
-	$texteTronque = substr($texteAMasquer, 0, strlen($texteAMasquer) - $nbDeCaracteresATronquerALaFin);
-
-	// Remplace tous les caractères sauf les diacritiques.
-	// Les RegEx ne semblent pas vouloir fonctionner :/ Je soupçonne un pb d'encodage iso-latin/utf-8. AU SECOURS !
-	$caracteresAMasquer = [
-		'à',
-		'ä',
-		'â',
-		'À',
-		'Ä',
-		'Â',
-		'ç',
-		'Ç',
-		'é',
-		'è',
-		'ë',
-		'ê',
-		'É',
-		'È',
-		'Ë',
-		'Ê',
-		'î',
-		'ï',
-		'Î',
-		'Ï',
-		'ô',
-		'ö',
-		'Ô',
-		'Ö',
-		'ù',
-		'û',
-		'ü',
-		'Ù',
-		'û',
-		'ü',
-		'ŷ',
-		'ÿ',
-		'Ŷ',
-		'Ÿ',
-		'a',
-		'b',
-		'c',
-		'd',
-		'e',
-		'f',
-		'g',
-		'h',
-		'i',
-		'j',
-		'k',
-		'l',
-		'm',
-		'n',
-		'o',
-		'p',
-		'q',
-		'r',
-		's',
-		't',
-		'u',
-		'v',
-		'w',
-		'x',
-		'y',
-		'z',
-		'A',
-		'B',
-		'C',
-		'D',
-		'E',
-		'F',
-		'G',
-		'H',
-		'I',
-		'J',
-		'K',
-		'L',
-		'M',
-		'N',
-		'O',
-		'P',
-		'Q',
-		'R',
-		'S',
-		'T',
-		'U',
-		'V',
-		'W',
-		'X',
-		'Y',
-		'Z  ',
-	];
-	return str_replace($caracteresAMasquer, 'X', $texteTronque);
-}
-
-/**
- * Cette fonction reçoit une chaîne de caractères (un chapitre) et doit n'en retourner que les X derniers caractères. X
- * étant le nombre de caractères finaux que nous désirons. Enfin avant de renvoyer la fin de chaîne ainsi tronquée, on
- * lui concatènera (à son commencement) la chaîne de caractère éventuelle reçue en troisième argument (qui est sensée
- * symboliser le texte manquant)
- *
- * Ex : recupererDernieresLignesChapitres('toto_titi_tutu_tata', 5, '...') renverra ...titi_tutu_tata
- *
- * -> Si le nombre de caractères voulus est supérieur à la taille du texte, on renverra le texte complet sans la chaîne
- * à concaténer au début.
- *
- * @param  string $texteChapitre
- * @param  int    $nbDeDerniersCaracteresAAfficher
- * @return string
- */
-function recupererDernieresLignesChapitres($texteChapitre = '', $nbDeDerniersCaracteresAAfficher = 325, $chaineAConcatenerAuDebut = '(...)') {
-	if (strlen($texteChapitre) < $nbDeDerniersCaracteresAAfficher) {
-		return $texteChapitre;
-	}
-	return $chaineAConcatenerAuDebut . substr($texteChapitre, strlen($texteChapitre) - $nbDeDerniersCaracteresAAfficher, -1);
-}
-
-
-function anneeAAfficher($derniereRubriqueAnneeTrouveeDansSpip = '') {
-	if (isset($_GET['annee_scolaire'])) {
-		return $_GET['annee_scolaire'];
-	}
-	return  $derniereRubriqueAnneeTrouveeDansSpip;
 }

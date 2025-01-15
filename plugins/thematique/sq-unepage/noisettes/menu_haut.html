@@ -39,21 +39,21 @@
 			$('#annee_scolaire_more').hide();
 		}
 
-		$('div[name=annee_scolaire] input[type=radio]').change( function() {
+		$('div[name="annee_scolaire"] input[type="radio"]').on( "change", function() {
 			var valeur = $('div[name=annee_scolaire] input[type=radio]:checked').val()
-			reloadAndSetCookie('','laclasse_annee_scolaire',valeur)
+			reloadAndSetCookie('', 'laclasse_annee_scolaire', valeur)
 		});
 
-		$('div[name=rubrique_admin] input[type=radio]').change( function() {
+		$('#choix_rubrique_admin input[type="radio"]').on( "change", function() {
 			var valeur = $('div[name=rubrique_admin] input[type=radio]:checked').val()
-			reloadAndSetCookie('','laclasse_rubrique_admin',valeur)
+			reloadAndSetCookie('', 'laclasse_rubrique_admin', valeur)
 		});
 
 	});
 </script>
 
 <ul id="menu_haut_user" class="bloc_titre">
-	<INCLURE{fond=noisettes/inc/authentification, id_auteur, admin, restreint, type_restreint, ajax}>
+	<INCLURE{fond=noisettes/inc/authentification, id_auteur, admin, restreint, type_restreint, ajax} />
 </ul>
 
 [(#RESTREINT|!={0}|oui|et{#RESTREINT|!={''}}|et{#TYPE_RESTREINT|!={''}}|et{#TYPE_RESTREINT|!={travail_en_cours}|oui}|oui)
