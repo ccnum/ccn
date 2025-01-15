@@ -143,7 +143,6 @@ function loadClasses(fichier) {
 					indexClasse++;
 				}
 
-
 				var xmlIntervenants = xml.getElementsByTagName("intervenant");
 
 				// Pour chaque intervenant, on ajoute une entrée dans le tableau `CCN.intervenants`
@@ -684,7 +683,6 @@ function initTimeline() {
 }
 
 // C'est parti
-
 // window.onload = init();
 
 $(function () {

@@ -3,13 +3,13 @@
 <B_Forums>
 <!-- Début Forum-->
 
-  <script type="text/javascript">
-    $(function(){
-      $('.triggertoggleshow').off('click').on('click', function(){
-        $(this).closest('.intervention_item_around').find('.toggleshow').slideToggle(300);
-      });
-    });
-  </script>
+	<script type="text/javascript">
+		$(function(){
+			$('.triggertoggleshow').off('click').on('click', function(){
+				$(this).closest('.intervention_item_around').find('.toggleshow').slideToggle(300);
+			});
+		});
+	</script>
 
 	<ul class="forum">
 	<BOUCLE_Forums(FORUMS){id_article?}{id_breve?}{!par date}>
@@ -20,45 +20,45 @@
 			[(#GET{type_objet}|=={ressources}|oui) #SET{type_objet,consignes} ]
 
 		<div id="forum#ID_FORUM" class="intervention_item_around">
-      <div class="intervention_item couleur_travail_en_cours[(#MODELE{nb2col}{id_auteur})]">
+	  <div class="intervention_item couleur_travail_en_cours[(#MODELE{nb2col}{id_auteur})]">
 
   			<div class="triggertoggleshow intervention couleur_texte[_(#GET{type_objet})] [couleur_(#GET{type_objet})[(#MODELE{nb2col}{id_auteur})]]">
-      		<B_forums_fils_compteur>
-      			<div class="intervention_nb_reponses">#TOTAL_BOUCLE</div>
+	  		<B_forums_fils_compteur>
+	  			<div class="intervention_nb_reponses">#TOTAL_BOUCLE</div>
 
-      		<BOUCLE_forums_fils_compteur(FORUMS){id_parent}{par date}> </BOUCLE_forums_fils_compteur>
+	  		<BOUCLE_forums_fils_compteur(FORUMS){id_parent}{par date}> </BOUCLE_forums_fils_compteur>
 
-      		</B_forums_fils_compteur>
+	  		</B_forums_fils_compteur>
 
 
   				<div class="intervention_header">
-    				<div class="photo">
-    					[(#MODELE{logo_carre}{taille=40}{id_auteur}{titre=#TITRE})]
-    				</div>
+					<div class="photo">
+						[(#MODELE{logo_carre}{taille=40}{id_auteur}{titre=#TITRE})]
+					</div>
 
-            <BOUCLE_forum_billet_auteur(AUTEURS){id_auteur}{tout}>
-              [<div class="intervention_auteur">(#NOM)</div>]
-            </BOUCLE_forum_billet_auteur>
+			<BOUCLE_forum_billet_auteur(AUTEURS){id_auteur}{tout}>
+			  [<div class="intervention_auteur">(#NOM)</div>]
+			</BOUCLE_forum_billet_auteur>
 						[<div class="intervention_date">(#DATE|affdate)</div>]
 
-            <div class="forum">
+			<div class="forum">
 
-              [(#AUTORISER{modifier,forum,#ID_FORUM}|oui)
-                [<a href="(#URL_ACTION_AUTEUR{instituer_forum,#ID_FORUM-forum-suppr-safe,#URL_SITE_SPIP/spip.php?article#_principale:ID_ARTICLE&var_mode=recalcul})"
-                  class='supprimer_couleur'
-                  onClick='return confirmation("Êtes-vous sûr de vouloir supprimer ce message ?")'
-                  title='Supprimer ce message'>
-                  <div class='action_supprimer'></div>
-                </a>]
-              ]
-            </div>
+			  [(#AUTORISER{modifier,forum,#ID_FORUM}|oui)
+				[<a href="(#URL_ACTION_AUTEUR{instituer_forum,#ID_FORUM-forum-suppr-safe,#URL_SITE_SPIP/spip.php?article#_principale:ID_ARTICLE&var_mode=recalcul})"
+				  class='supprimer_couleur'
+				  onClick='return confirmation("Êtes-vous sûr de vouloir supprimer ce message ?")'
+				  title='Supprimer ce message'>
+				  <div class='action_supprimer'></div>
+				</a>]
+			  ]
+			</div>
 
   				</div>
   			</div>
 
 
 
-        <div class="toggleshow intervention_item_content couleur_intervention_item[(#MODELE{nb2col}{id_auteur})] ">
+		<div class="toggleshow intervention_item_content couleur_intervention_item[(#MODELE{nb2col}{id_auteur})] ">
   			  [<div class="#EDIT{titre} titre">(#TITRE)</div>]
   				[<div class="#EDIT{texte} bloc_texte">(#TEXTE|liens_ouvrants)</div>]
   				<B_documents_joints>
@@ -112,26 +112,26 @@
 
   					<div class="intervention couleur_texte[_(#GET{type_objet})] [couleur_(#GET{type_objet})[(#MODELE{nb2col}{id_auteur})]]">
   						<div class="intervention_header">
-        				<div class="photo">
-        					[(#MODELE{logo_carre}{taille=40}{id_auteur}{titre=#TITRE})]
-        				</div>
-    						[<div class="intervention_auteur">(#NOM)</div>]
-    						[<div class="intervention_date">(#DATE|affdate)</div>]
+						<div class="photo">
+							[(#MODELE{logo_carre}{taille=40}{id_auteur}{titre=#TITRE})]
+						</div>
+							[<div class="intervention_auteur">(#NOM)</div>]
+							[<div class="intervention_date">(#DATE|affdate)</div>]
 
-                 [(#AUTORISER{modifier,forum,#ID_FORUM}|oui)
-                      [<a href="(#URL_ACTION_AUTEUR{instituer_forum,#ID_FORUM-forum-suppr-safe,#URL_SITE_SPIP/spip.php?article#_principale:ID_ARTICLE&var_mode=recalcul})"
-                          class='supprimer_couleur'
-                          onClick='return confirmation("Êtes-vous sûr de vouloir supprimer ce message ?")'
-                          title='Supprimer ce message'>
-                          <div class='action_supprimer'></div>
-                      </a>]
-                   ]
+				 [(#AUTORISER{modifier,forum,#ID_FORUM}|oui)
+					  [<a href="(#URL_ACTION_AUTEUR{instituer_forum,#ID_FORUM-forum-suppr-safe,#URL_SITE_SPIP/spip.php?article#_principale:ID_ARTICLE&var_mode=recalcul})"
+						  class='supprimer_couleur'
+						  onClick='return confirmation("Êtes-vous sûr de vouloir supprimer ce message ?")'
+						  title='Supprimer ce message'>
+						  <div class='action_supprimer'></div>
+					  </a>]
+				   ]
 
   						</div>
   					</div>
 
   					<div class="intervention_item_content couleur_intervention_item[(#MODELE{nb2col}{id_auteur})] ">
-              [<div class="#EDIT{titre} titre">(#TITRE)</div>]
+			  [<div class="#EDIT{titre} titre">(#TITRE)</div>]
   						[<div class="#EDIT{texte} bloc_texte">(#TEXTE|liens_ouvrants)</div>]
   						<BOUCLE_documents_joints3(DOCUMENTS) {id_forum} {tout} {doublons}>
   							<div class="portfolio_grand">
@@ -158,7 +158,7 @@
   				<i class="material-icons md-24">&#xE8AF;</i>&nbsp;&nbsp;&nbsp;Répondre à ce message
   		  </a>
 
-      <div id="ajax_callback_forum_#ID_FORUM" class="intervention_new_answer bloc_texte" style='display: none;'></div>
+	  <div id="ajax_callback_forum_#ID_FORUM" class="intervention_new_answer bloc_texte" style='display: none;'></div>
   		</div>
 
 
