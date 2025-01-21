@@ -15,11 +15,11 @@ nom de pull request : `Maj de code / rajout de fonction sur les CCN`
 
 Si la pull request est fermée sans label, la version sera incrémentée de la manière suivante : `1.0.1`
 
-nom de pull request : `#minor - MAJ de version Y de SPIP `
+nom de pull request : `#minor - MAJ de version Y de SPIP`
 
 Si la pull request est fermée avec le label `#minor`, la version sera incrémentée de la manière suivante : `1.1.0`
 
-nom de pull request : `#major - MAj de version X de SPIP`
+nom de pull request : `#major - MAJ de version X de SPIP`
 
 Si la pull request est fermée avec le label `#major`, la version sera incrémentée de la manière suivante : `2.0.0`
 
