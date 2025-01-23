@@ -9,7 +9,7 @@
 		<input type='hidden' name='id_article' value='#ENV{id_article}' />
 		<div class="editer-groupe">
 			<div class="editer editer_titre obligatoire[ (#ENV**{erreurs}|table_valeur{titre}|oui)erreur]">
-				<label for="titre" >Titre<em class="aide"></em></label>[
+				<label for="titre">Titre<em class="aide"></em></label>[
 				<span class='erreur_message'>(#ENV**{erreurs}|table_valeur{titre})</span>
 				]<input type='text' class='text cadre2 rouge2' name='titre' id='titre'[ lang='(#LANGUE)'] value="[(#ENV**{titre,''})]" placeholder="TITRE" />
 			</div>
@@ -23,7 +23,7 @@
 			</div>]
 
 			<div class="editer editer_surtitre[ (#ENV**{erreurs}|table_valeur{surtitre}|oui)erreur]">
-				<label for="surtitre" >Pseudo<em class="aide"></em></label>[
+				<label for="surtitre">Pseudo<em class="aide"></em></label>[
 				<span class='erreur_message'>(#ENV**{erreurs}|table_valeur{surtitre})</span>
 				]<input placeholder="Pseudo" type='text' class='text cadre2 bleu2' name='surtitre' id='surtitre'[ lang='(#LANGUE)'] value="[(#ENV**{surtitre})]" />
 			</div>

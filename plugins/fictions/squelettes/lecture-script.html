@@ -14,18 +14,13 @@
 
 <body>
 <div id="lecture-script">
-
-<div id="lecture-inner-close"></div>
-
 	<!-- AUTEUR -->
 	<BOUCLE_auteur_article(AUTEURS){id_article}{0,1}>
 		#SET{var_auteur_article, #NOM}
-   </BOUCLE_auteur_article>
+	</BOUCLE_auteur_article>
 
 
 	<BOUCLE_lecture_script(ARTICLES){id_article}>
-
-
 		<div id="script-ecrivain-lecture">
 			<div class="script-titre">SCRIPT | #GET{var_auteur_article}</div>
 			<div class="script-texte">#TEXTE</div>
@@ -49,10 +44,7 @@
 			</div>
 			</BOUCLE_doc>
 		</div>
-
-
- 	 </BOUCLE_lecture_script>
-
+	</BOUCLE_lecture_script>
 </div>
 </body>
 
