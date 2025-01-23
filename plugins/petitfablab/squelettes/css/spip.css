@@ -633,10 +633,17 @@ div.texte-presentation {
 }
 
 .texte-presentation div.bord {
-	margin: 10px 20px 0px 100px;
 	border-left: 5px #ff6b6b solid;
 	padding: 10px;
 	margin: 20px;
+}
+
+.texte-presentation div.bord ul {
+	margin: 20px;
+}
+
+.texte-presentation div.bord ul ul {
+	margin: 0 20px;
 }
 
 /* -------------------- */

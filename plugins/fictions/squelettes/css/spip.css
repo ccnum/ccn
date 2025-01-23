@@ -1608,28 +1608,6 @@ h1.prologue {
 	height: 100%;
 }
 
-#lecture-inner-close {
-	width: 25px;
-	height: 25px;
-	background-color: #cc5555;
-	float: right;
-	display: block;
-	border-radius: 20px 20px 20px 20px;
-	behavior: url(../js/PIE.php);
-	cursor: pointer;
-	background-image: url(../img/global/close.png);
-	text-align: left;
-	background-repeat: no-repeat;
-	background-position: center;
-	position: absolute;
-	top: 10px;
-	right: 10px;
-}
-
-#lecture-inner-close:hover {
-	background-color: #000;
-}
-
 #script-ecrivain-lecture {
 	margin: 0px 0px 0px 0px;
 	width: 470px;
