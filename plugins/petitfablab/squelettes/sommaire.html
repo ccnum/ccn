@@ -44,16 +44,28 @@
 				<div class="texte-presentation" style="position: relative; margin: 60px 20px 0px 100px;">
 					[(#SESSION{id_auteur}|oui)
 						[(#ENV{creer}|non)
-							<div class="bord">En tant qu'admin des rubriques suivante, quelle histoire souhaitez vous mettre en place sur ce poste ?</div>
+							<div class="bord">En tant qu'admin des rubriques suivante, quelle histoire souhaitez vous mettre en place sur ce poste ?
 							<BOUCLE_admin(RUBRIQUES){titre==jeu}{tout}>
 								<BOUCLE_admin1(RUBRIQUES){id_parent=#ID_RUBRIQUE}{id_auteur=#SESSION{id_auteur}}{par num titre, titre}{'<br />'}>
 									<a href="[(#SELF|parametre_url{liste,''}|parametre_url{page,ecriture}|parametre_url{rub_jeu,#ID_RUBRIQUE})]">#TITRE</a>
 								</BOUCLE_admin1>
-									<BOUCLE_admin11(RUBRIQUES){id_parent=#ID_RUBRIQUE}{par num titre, titre}{'<br />'}>
-										<a href="[(#SELF|parametre_url{liste,''}|parametre_url{page,ecriture}|parametre_url{rub_jeu,#ID_RUBRIQUE})]">#TITRE</a>
+									<ul>
+									<BOUCLE_admin11(RUBRIQUES){id_parent=#ID_RUBRIQUE}{par num titre, titre}>
+										<li>
+											#TITRE
+											<B_admin111>
+												<ul>
+											<BOUCLE_admin111(RUBRIQUES){id_parent=#ID_RUBRIQUE}{par num titre, titre}>
+												<li><a href="[(#SELF|parametre_url{liste,''}|parametre_url{page,ecriture}|parametre_url{rub_jeu,#ID_RUBRIQUE})]">#TITRE</a></li>
+											</BOUCLE_admin111>
+												</ul>
+											</B_admin111>
+										</li>
 									</BOUCLE_admin11>
+									</ul>
 								<//B_admin1>
 							</BOUCLE_admin>
+							</div>
 							<div class="bord">Où souhaitez vous créer des histoires ?</div>
 							<BOUCLE_admin2(RUBRIQUES){titre==jeu}{tout}>
 								<BOUCLE_admin21(RUBRIQUES){id_parent=#ID_RUBRIQUE}{id_auteur=#SESSION{id_auteur}}{par num titre, titre}{'<br />'}>
@@ -66,7 +78,6 @@
 							</BOUCLE_admin2>
 						]
 						[(#ENV{creer}|oui)
-							<div class="bord">Indiquez le nombre d'histoire que vous souhaitez créer dans cette rubrique ?</div>
 							[(#ENV{creer}|=={ok}|non)
 							<div class="bord">
 								Actuellement dans la rubrique[ (#INFO_TITRE{rubrique,#ENV{creer}}) ] on trouve les prologues suivant et leur utilisation :
