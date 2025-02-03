@@ -4,8 +4,12 @@
 
 
 [(#ENV{format}|=={brut}|oui)<textarea style="width:100%; height:100%;">]
-<p>Cette documentation a été générée à partir de la [v(#PLUGIN{saisies,version})] du plugin Saisies.</p>
-[(#VAL|saisies_generer_aide)
+
+	<p>Cette documentation a été générée à partir de la <strong>[v(#PLUGIN{saisies,version})] du plugin Saisies.</strong></p>
+
+	<sommaire|niveau_max=3>
+
+	[(#VAL|saisies_generer_aide)
 [(#ENV{format}|=={brut}|oui)</textarea>]
 ]
 ]

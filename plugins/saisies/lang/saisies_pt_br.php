@@ -48,6 +48,8 @@ return [
 	'construire_reinitialiser' => 'Reverter o formulário',
 	'construire_reinitialiser_confirmer' => 'Você perderá todas as suas modificações. Quer realmente reverter à versão inicial do formulário?',
 	'construire_verifications_label' => 'Verificação(ões) a realizar',
+	'conteneur_inline_explication' => 'Para agrupar visalmente os campos em linha.',
+	'conteneur_inline_titre' => 'Exibição em linha',
 	'cvt_etapes_courante' => 'Passo @etape@ / @etapes@:  @label_etape@',
 
 	// D
@@ -62,6 +64,7 @@ return [
 	'etapes_formulaire' => 'Passos do formulário',
 	'etapes_recapitulatif_label' => 'Resumo',
 	'etapes_recapitulatif_texte' => 'Por favor, releia e verifique as suas respostas antes da validação final.',
+	'etapes_remplissage_label' => 'Preenchimento',
 	'explication_dev' => 'Para os devs',
 
 	// F
@@ -69,6 +72,7 @@ return [
 	'fichier_erreur_explication_renvoi_pas_alternative' => 'Você deve enviar um outro arquivo.',
 	'format_date_attendu' => 'Informar uma data no formato dd/mm/aaaa.',
 	'format_email_attendu' => 'Informar um endereço de e-mail no formato nome@dominio.com.br',
+	'formulaires_aucun_champ' => 'No momento, não há nenhum campo de entrada para este formulário.',
 
 	// I
 	'info_configurer_saisies' => 'Página de teste das entradas de dados',
@@ -82,6 +86,8 @@ return [
 	'masquer' => 'Ocultar',
 
 	// O
+	'option_1ligne' => 'Largura automática, em uma linha única, ocupa menos espaço',
+	'option_1ligne_max' => 'Largura automática, em uma única linha, ocupa o máximo de espaço',
 	'option_aff_art_interface_explication' => 'Exibir somente as matérias do idioma do visitante',
 	'option_aff_art_interface_label' => 'Exibição multilíngue',
 	'option_aff_langue_explication' => 'Exibe o idioma da matéria ou da seção selecionada antes do titulo',
@@ -113,12 +119,17 @@ Você encontrará a <a href="https://contrib.spip.net/5080" target="_blank" rel=
 	'option_cacher_option_intro_label' => 'Esconder a primeira opção em branco.',
 	'option_case_valeur_non_explication' => 'Valor postado se o checkbox não estiver selecionado. Atenção, trata-se de um valor técnico e não de um valor exibido.',
 	'option_case_valeur_oui_explication' => 'Valor postado se o checkbox estiver selecionado. Atenção, trata-se de um valor técnico e não de um valor exibido.',
+	'option_choix_alternatif_explication_label' => 'Explicação da escolha alternativa',
 	'option_choix_alternatif_label' => 'Oferecer uma opção alternativa',
 	'option_choix_alternatif_label_defaut' => 'Outra opção',
 	'option_choix_alternatif_label_label' => 'Rótulo desta outra opção',
 	'option_choix_destinataires_explication' => 'Lista de autores para seleção de destinatários pelo visitante que, por padrão, será a pessoa que configurou o site.',
 	'option_choix_destinataires_label' => 'Destinatários possíveis',
 	'option_class_label' => 'Classes CSS adicionais',
+	'option_col2' => 'Dois campos por linha',
+	'option_col3' => 'Três campos por linha',
+	'option_col4' => 'Quatro campos por linha',
+	'option_colonnes_label' => 'Modo de exibição',
 	'option_cols_explication' => 'Largura do bloco (em números de caracteres). Este opção não é sempre aplicável, já que os estilos CSS do seu site podem se sobrepor.',
 	'option_cols_label' => 'Largura',
 	'option_conteneur_class_label' => 'Classes CSS adicionais no container',
@@ -135,6 +146,16 @@ Você pode indicar o início de um subgrupo, no formato "*Título do subgrupo". 
 	'option_datas_sous_groupe_explication_dev' => 'Disponibilizar uma lista de opções, no formato de um vetor PHP (<code>array()</code>) ou SPIP (<code>#ARRAY</code>), no formato <code>"chave" => "valor"</code>.<br />
 Você pode reagrupar em subgrupo. Para isso, a <code>chave</code> deve ser o título do subgrupo, e o valor deve ser um vetor associativo do tipo <code>"chave" => "valor"</code>.',
 	'option_defaut_label' => 'Valor padrão',
+	'option_defaut_session_explication' => 'Inserir o campo de sessão a usar. Se o campo existe na sessão atual, o seu valor terá precedêcia sobre o valor padrão.',
+	'option_defaut_session_label' => 'Valor padrão a partir da sessão do visitante',
+	'option_depublie_choix_explication' => 'Uma opção despublicada deixará de ser oferecida pelos novos formulários. Ela continuará visível se se modificar um registro que contenha esta opção.
+Indique as opções separadas por uma vírgula, exemplo:
+<code>opção1, opção3</code>.',
+	'option_depublie_choix_explication_dev' => 'Uma opção despublicada deixará de ser oferecida pelos novos formulários. Ela premanecerá visível se se alterar um registro que contenha essa opção.
+Indique as opções em forma de tabela, exemplo: <code>["opção1","opção3"]</code>.',
+	'option_depublie_choix_label' => 'Despublicar opções',
+	'option_depublie_explication' => 'Uma entrada de dados despublicada deixa de ser exibida nos novos formulários. Os dados informados continuam acessíveis e alteráveis.',
+	'option_depublie_label_case' => 'Despublicar a entrada de dados',
 	'option_disable_avec_post_explication' => 'Igual na opção anterior, mas envia ainda o valor dentro um campo escondido.',
 	'option_disable_avec_post_label' => 'Desativar mas enviar',
 	'option_disable_choix_explication' => 'Informar as opções separadas por vírgulas, exemplo: <code>opção1,opção3</code>.',
@@ -148,7 +169,7 @@ Você pode reagrupar em subgrupo. Para isso, a <code>chave</code> deve ser o tí
 	'option_explication_apres_label' => 'Explicações após o campo',
 	'option_explication_explication' => 'Se necessário, uma frase curta descrevendo o objeto do campo.',
 	'option_explication_label' => 'Explicação',
-	'option_forcer_select_explication' => 'Se um grupo de palavras for selecionado, por padrão será uma entrada radio. Você pode forçar o uso de select.', # MODIF
+	'option_forcer_select_explication' => 'Se um grupo de palavras-chave for selecionado, por padrão será uma entrada [radio] ou {checkbox], em função do parâmetro do grupo de palavras-chave: <em>"Só é possível selecionar <b>uma única</b> palavra-chave neste grupo."</em>. Você pode forçar o uso de um select.',
 	'option_forcer_select_label_case' => 'Forçar o uso de select',
 	'option_groupe_affichage' => 'Exibição',
 	'option_groupe_conditions' => 'Condições',
@@ -171,6 +192,7 @@ Você pode reagrupar em subgrupo. Para isso, a <code>chave</code> deve ser o tí
 	'option_inserer_debut_label' => 'Código a inserir no início da entrada',
 	'option_inserer_fin_label' => 'Código a inserir no fim da entrada',
 	'option_label_case_label' => 'Rótulo localizado ao lado do checkbox',
+	'option_label_class_label' => 'Classes CSS adicionais para o label',
 	'option_label_explication' => 'O titulo que será exibido.',
 	'option_label_label' => 'Rótulo',
 	'option_label_non_explication' => 'Será visível na exibição dos resultados.',
@@ -185,12 +207,13 @@ Você pode reagrupar em subgrupo. Para isso, a <code>chave</code> deve ser o tí
 	'option_maxlength_label' => 'Número máximo de caracteres.',
 	'option_minlength_explication' => 'O visitante não poderá informar menos caracteres do que esse número.',
 	'option_minlength_label' => 'Número mínimo de caracteres',
+	'option_multiple_explication_choix_grille' => 'Pode-se ter diversas opções por linha?',
 	'option_multiple_label' => 'Seleção múltipla',
 	'option_nom_explication' => 'Um nome que identificará o campo.  Só pode conter letras minúsculas, números e o caracter "_".',
 	'option_nom_label' => 'Nome do campo',
 	'option_obligatoire_label' => 'Campo obrigatório',
 	'option_onglet_label' => 'Aba',
-	'option_onglet_label_case' => 'Exibir no formato de aba', # MODIF
+	'option_onglet_label_case' => 'Exibir no formato de aba',
 	'option_onglet_vertical_explication' => 'Basta que uma única aba num grupo seja definida como vertical para que o conjunto de abas seja vertical.',
 	'option_onglet_vertical_label_case' => 'Aba vertical',
 	'option_option_destinataire_intro_label' => 'Rótulo da primeira opção em branco (quando em formato de lista)',
@@ -200,9 +223,9 @@ Você pode reagrupar em subgrupo. Para isso, a <code>chave</code> deve ser o tí
 	'option_oui_non_valeur_oui_explication' => 'Valor postado se o sim for selecionado.',
 	'option_placeholder_label' => 'Marcador de posição',
 	'option_pliable_label' => 'Expansível',
-	'option_pliable_label_case' => 'O grupo de campos poderá ser expandido', # MODIF
+	'option_pliable_label_case' => 'O grupo de campos poderá ser expandido',
 	'option_plie_label' => 'Já retraído',
-	'option_plie_label_case' => 'Se o grupo de campos é expansível, ele já estará contraído na exibição do formulário.', # MODIF
+	'option_plie_label_case' => 'Se o grupo de campos é expansível, ele estará contraído na exibição do formulário.',
 	'option_poster_afficher_si_label_case' => 'Postar os valores de todas as entradas ocultadas',
 	'option_previsualisation_explication' => 'Si o plugin Pena estiver ativo, adiciona uma aba para visualizar o texto digitado.',
 	'option_previsualisation_label' => 'Ativar a visualização',
@@ -224,25 +247,37 @@ Você pode reagrupar em subgrupo. Para isso, a <code>chave</code> deve ser o tí
 	'option_type_label' => 'Tipo do campo',
 	'option_type_password' => 'Texto mascarado durante o preenchimento (ex: senha).',
 	'option_type_text' => 'Normal',
+	'option_unique_multiple_auto' => 'Automático, em função do parâmetro do grupo de palavras-chave',
+	'option_unique_multiple_explication' => 'Em modo automático, a opção única / múltipla será determinada pelo parâmetro do grupo de palavras-chave: <em>"Só é possível selecionar <b>apenas uma</b> palavra-chave neste grupo."</em>',
+	'option_unique_multiple_explication_dev' => 'No modo automático (sem valor ou string vazia), a opção única / múltipla será determinada pelo campo <code>unseul</code> do grupo de palavras-chave (<em>"Só se pode selecionar <b>uma unica</> palavra-chave de cada vêz neste grupo"</em>).
+Se for passado o valor "não", será uma única entrada mesmo que o grupo de palavras-chave esteja configurado para permitir várias palavras-chave (padrão rádio, ou select, com <code>force_select</code>).<br>Se for passado algo diferente de "não", a entrada  de dados será múltipla.',
+	'option_unique_multiple_label' => 'Seleção única / múltipla',
+	'option_unique_multiple_non' => 'Forçar uma opção única',
+	'option_unique_multiple_oui' => 'Forças opções múltiplas',
 	'option_valeur_non_label' => 'Valor não',
 	'option_valeur_oui_label' => 'Valor sim',
 	'option_vue_masquer_sous_groupe' => 'Ao exibir o resultado, mostrar apenas o valor, sem o subgrupo',
+	'option_xlignes' => 'Largura automática, em várias linhas, ocupando o menor espaço possível',
+	'option_xlignes_max' => 'Largura automática, em várias linhas, ocupando o máximo de espaço disponível',
 	'options_dev_titre' => 'Opções para os devs',
 
 	// P
 	'plugin_yaml_inactif' => 'O plugin YAML está desativado. Você precisa ativá-lo para que esta página fique funcional.',
+	'previsualisation_label' => 'Visualizar',
 
 	// S
 	'saisie_auteurs_explication' => 'Permite selecionar um ou mais autores',
 	'saisie_auteurs_titre' => 'Autores',
 	'saisie_case_explication' => 'Permite ativar ou desativar algo.',
 	'saisie_case_titre' => 'Checkbox único',
+	'saisie_champ_option_aucun' => 'Nenhuma',
 	'saisie_checkbox_explication' => 'Permite escolher varias opções com checkboxes.',
 	'saisie_checkbox_titre' => 'Checkboxes',
 	'saisie_choix_grille_explication' => 'Permite apresentar uma série de perguntas de múltipla escolha de modo uniformizado no formato de grade',
 	'saisie_choix_grille_titre' => 'Grade de perguntas',
 	'saisie_date_explication' => 'Permite informar uma data com a ajuda de um calendário.',
 	'saisie_date_titre' => 'Data',
+	'saisie_depublie' => 'Entrada de dados despublicada',
 	'saisie_destinataires_explication' => 'Permite escolher um ou mais destinatários entre contas pré-selecionadas.',
 	'saisie_destinataires_titre' => 'Destinatários',
 	'saisie_email_explication' => 'Permite ter um campos do tipo e-mail em HTML5.',
@@ -266,6 +301,7 @@ Você pode reagrupar em subgrupo. Para isso, a <code>chave</code> deve ser o tí
 	'saisie_input_explication' => 'Uma simples linha de texto podendo ser visível ou mascarada (senha).',
 	'saisie_input_titre' => 'Linha de texto',
 	'saisie_mot_explication' => 'Uma ou mais palavras-chave de um grupo de palavras',
+	'saisie_mot_pas_configuree' => 'Configure a entrada de dados para exibir as palavras-chave segundo os seus critérios pessoais.',
 	'saisie_mot_titre' => 'Palavra-chave',
 	'saisie_oui_non_explication' => 'Sim ou não, está claro? ;)',
 	'saisie_oui_non_titre' => 'Sim ou não',
@@ -285,6 +321,7 @@ Você pode reagrupar em subgrupo. Para isso, a <code>chave</code> deve ser o tí
 	'saisie_selection_titre' => 'Lista dropdown / seleção',
 	'saisie_textarea_explication' => 'Um campo de texto em várias linhas.',
 	'saisie_textarea_titre' => 'Bloco de texto',
+	'saisies_aide_memoire' => 'Dica',
 	'saisies_aplatir_tableau_montrer_groupe' => '@groupe@: @valeur@',
 
 	// T

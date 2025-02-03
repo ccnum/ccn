@@ -7,19 +7,24 @@
 	[(#ENV{_etape}|oui)formulaire_multietapes]
 	[(#ENV**{_saisies/options/conteneur_class})]"
 	[(#ENV{_saisies}|saisies_dont_avec_option{afficher_si}|oui) data-avec-afficher_si="true"]
-	[id="(#ENV{_saisies/options/conteneur_id})"]
+																															[id="(#ENV{_saisies/options/conteneur_id}|sinon{#ENV{formulaire_sign}})"]
 	>
 	#ENV**{_saisies/options/inserer_debut}
 	[<div class="reponse_formulaire reponse_formulaire_ok"[(#HTML5|oui) role="status"]>(#ENV**{message_ok})</div>]
-	[<div class="reponse_formulaire reponse_formulaire_erreur"[(#HTML5|oui) role="alert"]>(#ENV**{message_erreur})</div>]
+	[(#ENV{erreurs/_previsu}|non)
+		[<div class="reponse_formulaire reponse_formulaire_erreur"[(#HTML5|oui) role="alert"]>(#ENV**{message_erreur})</div>]
+	]
 	[(#ENV{editable}|oui)
 	[(#ENV{_saisies}|et{#ENV{_saisies}|count}|oui)
-	<form method="post" action="[(#ENV{action}|ancre_url{#ENV{_saisies/options/id}})]" enctype="multipart/form-data"[ data-resume_etapes_futures="(#ENV{_resume_etapes_futures}|json_encode|attribut_html)"]><div>
+	<form method="post" action="[(#ENV{action}|ancre_url{#ENV{_saisies/options/conteneur_id}|sinon{#ENV{formulaire_sign}}})]" enctype="multipart/form-data"[ data-resume_etapes_futures="(#ENV{_resume_etapes_futures}|json_encode|attribut_html)"]><div>
 				[(#REM) declarer les hidden qui declencheront le service du formulaire
 				parametre : url d'action ]
 				#ACTION_FORMULAIRE{#ENV{action}}
 				[(#ENV{_etape}|oui)
 				<INCLURE{fond=formulaires/inc-saisies-cvt-etapes-#ENV{_saisies/options/etapes_presentation,defaut}, etapes=#ENV{_saisies_par_etapes}, env} />
+				]
+				[(#ENV{erreurs/_previsu}|oui)
+					<INCLURE{fond=formulaires/inc-saisies-cvt-previsu, env} />
 				]
 
 				<div class="editer-groupe">

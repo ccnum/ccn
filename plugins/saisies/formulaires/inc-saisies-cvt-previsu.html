@@ -1,0 +1,7 @@
+<INCLURE{fond=formulaires/inc-saisies-cvt-reponses,env,conteneur_class=saisies_previsu} />
+<div class="editer-groupe">
+	[(#SET{label_valider, #ENV*{_saisies/options/texte_submit, #ENV*{saisies_texte_submit, <:bouton_enregistrer:>}}})]
+</div>
+<p class="boutons">
+	<button type="submit" class="submit" name="_valider_previsu" value="on"><span class="btn__label">[(#GET{label_valider}|_T_ou_typo)]</span></button>
+</p>

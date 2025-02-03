@@ -2,7 +2,7 @@
 <B_etapes>
 <nav class="formulaire_spip__etapes etapes" aria-label="<:saisies:etapes_formulaire:>">
 	<ol class="etapes__items">
-		<BOUCLE_etapes(DATA){source table, #ENV{etapes}}>
+		<BOUCLE_etapes(DATA){source table, #ENV{etapes}} {si #ENV{_saisies/options/etapes_activer}|oui}>
 		#SET{etape,#CLE|replace{etape_,''}}
 		#SET{afficher_si,#VALEUR{options/afficher_si}|saisies_afficher_si_js{#ENV{etapes}}}
 		#SET{afficher,oui}

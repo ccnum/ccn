@@ -118,7 +118,7 @@ function saisies_inserer_avant($saisies, $saisie, $id_ou_nom_ou_chemin) {
  *
  * @param array $saisies     Tableau des descriptions de saisies
  * @param array $saisie     Description de la saisie à insérer
- * @param array $id_ou_nom_ou_chemin identifiant ou nom ou chemin de la saisie devant laquelle inserer
+ * @param array $id_ou_nom_ou_chemin identifiant ou nom ou chemin de la saisie derrière laquelle inserer
  * @return array
  *     Tableau des saisies complété de la saisie insérée
  */
@@ -379,7 +379,7 @@ function saisies_modifier($saisies, $id_ou_nom_ou_chemin, $modifs, $fusion = fal
 			$modifs['saisie'] = $type;
 			unset($modifs['options']['nouveau_type_saisie']);
 			trigger_error('Dans la fonction saisies_modifier, nouveau_type_saisie doit être appelé à la racine de $modifs. L\'appel dans $options est deprécié et sera supprimé en v6.', E_USER_DEPRECATED);
-			spip_log('Dans la fonction saisies_modifier, nouveau_type_saisie doit être appelé à la racine de $modifs. L\'appel dans $options est deprécié et sera supprimé en v6.', 'saisies');
+			spip_log('Dans la fonction saisies_modifier, nouveau_type_saisie doit être appelé à la racine de $modifs. L\'appel dans $options est deprécié et sera supprimé en v6.', 'deprecated_saisies');
 		}
 		// On remplace tout
 		if (!$fusion) {
@@ -516,6 +516,8 @@ function saisies_mapper_option($saisies, $options, $callback, $args = [], $recur
 	return $saisies;
 }
 
+
+
 /**
  * Supprime toutes les options d'un certain nom.
  *
@@ -535,6 +537,45 @@ function saisies_supprimer_option($saisies, $option, $recursif = true) {
 			// On parcourt récursivement toutes les saisies enfants
 			if (is_array($saisie['saisies'] ?? '') && $recursif) {
 				$saisies[$cle]['saisies'] = saisies_supprimer_option($saisie['saisies'], $option);
+			}
+		}
+	}
+
+	return $saisies;
+}
+
+/**
+ * Modifie les vérifications des saisies avec une fonction de rappel
+ *
+ * @param array $saisies
+ *     Tableau décrivant les saisies
+ * @param string $callback
+ *		 Nom de la fonction à appliquer, elle doit retourner la nouvelle version du tableau de vérification
+ *		 1. Les vérifs telles que disponibles actuellement sont passées en premier
+ *		  (on modifie donc l'ensemble des vérifications, charge à la fonction de rappel de choisir quelle vérification modifier).
+ *		  Toutefois le tableau de vérification est normalisé pour utiliser uniquement la "nouvelle" syntaxe permettant d'avoir plusieurs vérifications
+ *		 2. La description complète de la saisie est passée en second
+ * @param array $args
+ *		 Arguments supplémentaires passées à la fonction de rappel
+ * @param bool $recursif=True
+ * @return array
+ * 		Retourne le tableau modifié des saisies
+ */
+function saisies_mapper_verifier($saisies, $callback, $args = [], $recursif = true) {
+	if (is_array($saisies)) {
+		foreach ($saisies as &$saisie) {
+			// On parcourt récursivement toutes les saisies enfants
+			if (is_array($saisie['saisies'] ?? '')) {
+				if ($recursif) {
+				$saisie['saisies'] = saisies_mapper_verifier($saisie['saisies'], $callback, $args, $recursif);
+				}
+			} else {
+				$verifier = $saisie['verifier'] ?? [];
+				// Normalisation
+				if (isset($verifier['type'])) {
+					$verifier = [$verifier];
+				}
+				$saisie['verifier'] = call_user_func_array($callback, array_merge([$verifier], [$saisie], $args));
 			}
 		}
 	}
@@ -654,14 +695,18 @@ function saisies_saisie_possede_reponse(array $saisie, $tableau = null) {
 		}
 		return false;
 	}
-	$valeur = saisies_request($saisie['options']['nom'], $tableau);
+
+	// Les saisies de type fichier
+	if (saisies_saisie_est_fichier($saisie)) {
+		$valeur = saisies_request_from_FILES($saisie['options']['nom']);
+	} else {
+		$valeur = saisies_request($saisie['options']['nom'], $tableau);
+	}
+
 	if (is_string($valeur)) {
 		$valeur = vider_date($valeur);
 	}
-	if (
-		($valeur === '' || is_null($valeur))
-		&& !saisies_request_from_FILES($saisie['options']['nom'])
-	) {// Notons la très stricte égalité pour ne pas invalider une saisie dont la valeur serait 0
+	if ($valeur === '' || is_null($valeur)) {// Notons la très stricte égalité pour ne pas invalider une saisie dont la valeur serait 0
 		return false;
 	} else {
 		return true;
@@ -731,6 +776,29 @@ function saisies_supprimer_callback(array $saisies, callable $callback): array {
 	$saisies = array_values($saisies);
 	if (isset($options_generales)) {
 		$saisies['options'] = $options_generales;
+	}
+	return $saisies;
+}
+
+/**
+ * Transforme un tableau de saisies en englobant le tout dans un fieldset
+ * utilisé pour la prévisualisation
+ * @param array $saisies
+ * @param array $options du fieldset
+ * @return array
+ **/
+function saisies_wrapper_fieldset(array $saisies, array $options): array {
+	$options_globales = $saisies['options'] ?? [];
+	unset($saisies['options']);
+	$saisies = [
+		[
+			'saisie' => 'fieldset',
+			'options' => $options,
+			'saisies' => $saisies
+		]
+	];
+	if ($options_globales) {
+		$saisies['options'] = $options_globales;
 	}
 	return $saisies;
 }
