@@ -31,7 +31,7 @@ $GLOBALS[$GLOBALS['idx_lang']] = array(
 
 	// L
 	'label_activer_barre_typo' => 'Activar la barra tipogràfica a els llapis?',
-	'label_activer_crayons_prive' => 'Activar llapis a la part privada.',
+	'label_activer_crayons_prive' => 'Activar llapis a la part privada.', # MODIF
 	'label_barre_typo' => 'Barra tipogràfica',
 	'label_clickhide' => 'Fent un clic a l’exterior s’amaga els llapis',
 	'label_effets' => 'Tria dels efectes',
@@ -45,7 +45,7 @@ $GLOBALS[$GLOBALS['idx_lang']] = array(
 	'label_yellow_fade' => 'Sense interès',
 	'legend_controleur_logo' => 'Escollir un logotip:',
 	'legend_controleur_vignette' => 'Escollir una vinyeta:',
-	'legend_editer_prive' => 'Editar l’espai privat (experimental)',
+	'legend_editer_prive' => 'Editar l’espai privat (experimental)', # MODIF
 
 	// M
 	'message_image_obligatoire' => 'Cal escollir una imatge',

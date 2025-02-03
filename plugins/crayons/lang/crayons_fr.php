@@ -36,7 +36,7 @@ $GLOBALS[$GLOBALS['idx_lang']] = array(
 
 	// L
 	'label_activer_barre_typo' => 'Activer la barre typographique dans les crayons ?',
-	'label_activer_crayons_prive' => 'Activer crayons pour la partie privée.',
+	'label_activer_crayons_prive' => 'Activer les crayons dans l’espace privé',
 	'label_barre_typo' => 'Barre typographique',
 	'label_clickhide' => 'Un clic en-dehors masque les crayons',
 	'label_effets' => 'Choix des effets',
@@ -57,7 +57,7 @@ $GLOBALS[$GLOBALS['idx_lang']] = array(
 	'legend_controleur_vignette' => 'Choisir une vignette :',
 	'legend_controleur_vignette_remplacer' => 'Remplacer cette vignette',
 	'legend_documents' => 'Upload de documents',
-	'legend_editer_prive' => 'Éditer l’espace privé (expérimental)',
+	'legend_editer_prive' => 'Espace privé',
 	'legend_introduction_article' => 'Texte introductif de l’article',
 	'legend_introduction_rubrique' => 'Texte introductif de la rubrique',
 

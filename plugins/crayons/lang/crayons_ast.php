@@ -33,7 +33,7 @@ $GLOBALS[$GLOBALS['idx_lang']] = array(
 
 	// L
 	'label_activer_barre_typo' => '¿Activar la barra tipográfica nos llápices?',
-	'label_activer_crayons_prive' => 'Activar los llápices pa la parte privada.',
+	'label_activer_crayons_prive' => 'Activar los llápices pa la parte privada.', # MODIF
 	'label_barre_typo' => 'Barra tipográfica',
 	'label_clickhide' => 'Calcar una vegada per fuera anubre los llápices',
 	'label_effets' => 'Esbilla de los efeutos',
@@ -47,7 +47,7 @@ $GLOBALS[$GLOBALS['idx_lang']] = array(
 	'legend_controleur_logo' => 'Escoyer un logo:',
 	'legend_controleur_logo_remplacer' => 'Trocar esti logo',
 	'legend_controleur_qui' => '¿Quién?',
-	'legend_editer_prive' => 'Editar l’espaciu priváu (esperimental)',
+	'legend_editer_prive' => 'Editar l’espaciu priváu (esperimental)', # MODIF
 	'legend_introduction_article' => 'Testu introductoriu del artículu',
 
 	// M

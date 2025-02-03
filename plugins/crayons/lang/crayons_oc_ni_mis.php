@@ -38,7 +38,7 @@ $GLOBALS[$GLOBALS['idx_lang']] = array(
 
 	// L
 	'label_activer_barre_typo' => 'Ativà la barra tipougràfica en lu creioun ?',
-	'label_activer_crayons_prive' => 'Ativà creioun per la partida privada.',
+	'label_activer_crayons_prive' => 'Ativà creioun per la partida privada.', # MODIF
 	'label_barre_typo' => 'Barra tipougràfica',
 	'label_clickhide' => 'Un clic endefouòra escounde lu creioun',
 	'label_effets' => 'Chausida dei efet',
@@ -59,7 +59,7 @@ $GLOBALS[$GLOBALS['idx_lang']] = array(
 	'legend_controleur_vignette' => 'Chausì una vigneta :',
 	'legend_controleur_vignette_remplacer' => 'Remplaçà aquesta vigneta',
 	'legend_documents' => 'Televersagiamen de doucumen',
-	'legend_editer_prive' => 'Edità l’espaci privat (esperimental)',
+	'legend_editer_prive' => 'Edità l’espaci privat (esperimental)', # MODIF
 	'legend_introduction_article' => 'Tèstou introudutiéu de l’article',
 	'legend_introduction_rubrique' => 'Tèstou introudutiéu de la rùbrica',
 

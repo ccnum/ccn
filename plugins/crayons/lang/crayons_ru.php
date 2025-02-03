@@ -34,7 +34,7 @@ $GLOBALS[$GLOBALS['idx_lang']] = array(
 
 	// L
 	'label_activer_barre_typo' => 'Включить панель инструментов для плагина?',
-	'label_activer_crayons_prive' => 'Включить "Карандаш" в админке сайта',
+	'label_activer_crayons_prive' => 'Включить "Карандаш" в админке сайта', # MODIF
 	'label_barre_typo' => 'Панель инструментов',
 	'label_clickhide' => 'Нажмите вне области редактирования, чтобы закрыть экран',
 	'label_effets' => 'Выбрать эффект',
@@ -54,7 +54,7 @@ $GLOBALS[$GLOBALS['idx_lang']] = array(
 	'legend_controleur_vignette' => 'Выбрать миниатюру:',
 	'legend_controleur_vignette_remplacer' => 'Заменить миниатюру',
 	'legend_documents' => 'Загрузить документ',
-	'legend_editer_prive' => 'Использовать в админке сайта',
+	'legend_editer_prive' => 'Использовать в админке сайта', # MODIF
 	'legend_introduction_article' => 'Вводный текст для статьи',
 
 	// M

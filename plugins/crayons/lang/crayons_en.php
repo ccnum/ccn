@@ -37,7 +37,7 @@ $GLOBALS[$GLOBALS['idx_lang']] = array(
 
 	// L
 	'label_activer_barre_typo' => 'Activate the typographical bar for "Pencils"?',
-	'label_activer_crayons_prive' => 'Activate "Pencils" for the editing area.',
+	'label_activer_crayons_prive' => 'Enable the "Pencils" in the back office.',
 	'label_barre_typo' => 'Typographical bar',
 	'label_clickhide' => 'A click outside the area closes the pencils',
 	'label_effets' => 'Choice of effects',
@@ -58,7 +58,7 @@ $GLOBALS[$GLOBALS['idx_lang']] = array(
 	'legend_controleur_vignette' => 'Choose a thumbnail:',
 	'legend_controleur_vignette_remplacer' => 'Replace this thumbnail',
 	'legend_documents' => 'Upload documents',
-	'legend_editer_prive' => 'Use in editing area (experimental)',
+	'legend_editer_prive' => 'Back office',
 	'legend_introduction_article' => 'Introductory text for the article',
 	'legend_introduction_rubrique' => 'Section’s introductory text',
 
