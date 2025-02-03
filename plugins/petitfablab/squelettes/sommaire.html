@@ -44,7 +44,7 @@
 				<div class="texte-presentation" style="position: relative; margin: 60px 20px 0px 100px;">
 					[(#SESSION{id_auteur}|oui)
 						[(#ENV{creer}|non)
-							<div class="bord">En tant qu'admin des rubriques suivante, quelle histoire souhaitez vous mettre en place sur ce poste ?
+							<div class="bord">En tant qu'admin des rubriques suivante, quelle histoire souhaitez vous mettre en place sur ce poste ?</div>
 							<BOUCLE_admin(RUBRIQUES){titre==jeu}{tout}>
 								<BOUCLE_admin1(RUBRIQUES){id_parent=#ID_RUBRIQUE}{id_auteur=#SESSION{id_auteur}}{par num titre, titre}{'<br />'}>
 									<a href="[(#SELF|parametre_url{liste,''}|parametre_url{page,ecriture}|parametre_url{rub_jeu,#ID_RUBRIQUE})]">#TITRE</a>
@@ -65,7 +65,6 @@
 									</ul>
 								<//B_admin1>
 							</BOUCLE_admin>
-							</div>
 							<div class="bord">Où souhaitez vous créer des histoires ?</div>
 							<BOUCLE_admin2(RUBRIQUES){titre==jeu}{tout}>
 								<BOUCLE_admin21(RUBRIQUES){id_parent=#ID_RUBRIQUE}{id_auteur=#SESSION{id_auteur}}{par num titre, titre}{'<br />'}>
@@ -117,7 +116,6 @@
 
 <script type="text/javascript">
 $(document).ready(function() {
-
 	// RESIZE
  	window.onresize = resize_global_content;
 	resize_global_content();
@@ -153,5 +151,4 @@ function resize_global_content() {
 	stitches_margin = ((h-60) - 258)/4;
 	$(".stitches-inner").css({'margin-top':stitches_margin});
 }
-
 </script>
