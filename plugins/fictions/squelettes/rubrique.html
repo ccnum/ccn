@@ -93,7 +93,7 @@
 
 				<!-- LISTE CADAVRE SMALL-->
 				<div id="ecriture-liste">
-					[(#SESSION{id_auteur}|oui)<INCLURE{fond=liste-cadavres-auteur-small} />]
+					[(#SESSION{id_auteur}|oui)<INCLURE{fond=inclure/liste-cadavres-auteur-small} />]
 				</div>
 			</div>
 
@@ -143,14 +143,14 @@
 							[(#GET{var_id_zone}|=={#ID_RUBRIQUE}|oui)
 
 								<!-- Affichage du chapitre masque N-1 -->
-								[(#GET{id_cadavre_hidden}|=={#_cadavres:COMPTEUR_BOUCLE}|oui)<INCLURE{fond=chapitre-visible, id_article} />]
+								[(#GET{id_cadavre_hidden}|=={#_cadavres:COMPTEUR_BOUCLE}|oui)<INCLURE{fond=inclure/chapitre-visible, id_article} />]
 
 								<!-- Affichage du chapitre N VERROUILLE -->
 								[(#GET{id_cadavre_hidden}|!={#_cadavres:COMPTEUR_BOUCLE}|oui)
 									<!-- precedent chapitre VERROUILLE-->
-									[(#_cadavres:COMPTEUR_BOUCLE|!={#GET{var_max_cadavres}}|oui)<INCLURE{fond=chapitre-visible, id_article,fin=non}>]
+									[(#_cadavres:COMPTEUR_BOUCLE|!={#GET{var_max_cadavres}}|oui)<INCLURE{fond=inclure/chapitre-visible, id_article,fin=non}>]
 									<!-- dernier chapitre ECRITURE-->
-									[(#_cadavres:COMPTEUR_BOUCLE|=={#GET{var_max_cadavres}}|oui)<INCLURE{fond=chapitre-ecriture, id_article}>]
+									[(#_cadavres:COMPTEUR_BOUCLE|=={#GET{var_max_cadavres}}|oui)<INCLURE{fond=inclure/chapitre-ecriture, id_article}>]
 								]
 							]
 
@@ -161,9 +161,9 @@
 								[(#GET{id_cadavre_hidden}|=={#_cadavres:COMPTEUR_BOUCLE}|oui)
 
 									<!-- Si l'utilisateur est l'auteur du chapitre N-1  -->
-									[(#NOM|=={#GET{var_nom_auteur}}|oui)<INCLURE{fond=chapitre-visible, id_article}>]
+									[(#NOM|=={#GET{var_nom_auteur}}|oui)<INCLURE{fond=inclure/chapitre-visible, id_article}>]
 									<!-- Si l'utilisateur n'est pas l'auteur du chapitre N-1  -->
-									[(#NOM|!={#GET{var_nom_auteur}}|oui)<INCLURE{fond=chapitre-visible, id_article,fin=non}>]
+									[(#NOM|!={#GET{var_nom_auteur}}|oui)<INCLURE{fond=inclure/chapitre-visible, id_article,fin=non}>]
 								]
 								<!-- Affichage du chapitre masque N VERROUILLE -->
 								[(#GET{id_cadavre_hidden}|!={#_cadavres:COMPTEUR_BOUCLE}|oui)
@@ -171,16 +171,16 @@
 									<!-- Si l'utilisateur est webmestre -->
 									[(#SESSION{webmestre}|=={#GET{var_oui}}|oui)
 										<!-- precedent chapitre VERROUILLE-->
-										[(#_cadavres:COMPTEUR_BOUCLE|!={#GET{var_max_cadavres}}|oui)<INCLURE{fond=chapitre-visible, id_article,fin=non}>]
+										[(#_cadavres:COMPTEUR_BOUCLE|!={#GET{var_max_cadavres}}|oui)<INCLURE{fond=inclure/chapitre-visible, id_article,fin=non}>]
 										<!-- dernier chapitre ECRITURE -->
-										[(#_cadavres:COMPTEUR_BOUCLE|=={#GET{var_max_cadavres}}|oui)<INCLURE{fond=chapitre-ecriture, id_article}>]
+										[(#_cadavres:COMPTEUR_BOUCLE|=={#GET{var_max_cadavres}}|oui)<INCLURE{fond=inclure/chapitre-ecriture, id_article}>]
 									]
 									<!-- Si l'utilisateur n'est pas webmestre -->
 									[(#SESSION{webmestre}|!={#GET{var_oui}}|oui)
 										<!-- precedent chapitre VERROUILLE-->
-										[(#_cadavres:COMPTEUR_BOUCLE|!={#GET{var_max_cadavres}}|oui)<INCLURE{fond=chapitre-visible, id_article, fin=non}>]
+										[(#_cadavres:COMPTEUR_BOUCLE|!={#GET{var_max_cadavres}}|oui)<INCLURE{fond=inclure/chapitre-visible, id_article, fin=non}>]
 										<!-- dernier chapitre ECRITURE -->
-										[(#_cadavres:COMPTEUR_BOUCLE|=={#GET{var_max_cadavres}}|oui)<INCLURE{fond=chapitre-ecriture,fin=oui,id_article}>]
+										[(#_cadavres:COMPTEUR_BOUCLE|=={#GET{var_max_cadavres}}|oui)<INCLURE{fond=inclure/chapitre-ecriture,fin=oui,id_article}>]
 									]
 								]
 							]
@@ -189,14 +189,14 @@
 						[(#SESSION{webmestre}|=={#GET{var_oui}}|oui)
 
 							<!-- Affichage du chapitre masque N-1 -->
-							[(#GET{id_cadavre_hidden}|=={#_cadavres:COMPTEUR_BOUCLE}|oui)<INCLURE{fond=chapitre-visible, id_article} />]
+							[(#GET{id_cadavre_hidden}|=={#_cadavres:COMPTEUR_BOUCLE}|oui)<INCLURE{fond=inclure/chapitre-visible, id_article} />]
 
 							<!-- Affichage du chapitre N VERROUILLE -->
 							[(#GET{id_cadavre_hidden}|!={#_cadavres:COMPTEUR_BOUCLE}|oui)
 								<!-- precedent chapitre VERROUILLE-->
-								[(#_cadavres:COMPTEUR_BOUCLE|!={#GET{var_max_cadavres}}|oui)<INCLURE{fond=chapitre-verrouille, id_article, fin=non}>]
+								[(#_cadavres:COMPTEUR_BOUCLE|!={#GET{var_max_cadavres}}|oui)<INCLURE{fond=inclure/chapitre-verrouille, id_article, fin=non}>]
 								<!-- dernier chapitre ECRITURE-->
-								[(#_cadavres:COMPTEUR_BOUCLE|=={#GET{var_max_cadavres}}|oui)<INCLURE{fond=chapitre-ecriture, id_article}>]
+								[(#_cadavres:COMPTEUR_BOUCLE|=={#GET{var_max_cadavres}}|oui)<INCLURE{fond=inclure/chapitre-ecriture, id_article}>]
 							]
 						]
 					</BOUCLE_cadavres>
