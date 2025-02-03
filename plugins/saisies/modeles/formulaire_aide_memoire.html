@@ -32,7 +32,7 @@
 
 <B_champs>
 <dl>
-<BOUCLE_champs(DATA){source tableau, #PIPELINE{saisies_afficher_si_saisies, #GET{saisies}}|saisies_lister_par_nom{1}}>
+	<BOUCLE_champs(DATA){source tableau, #PIPELINE{saisies_afficher_si_saisies, #GET{saisies}}|saisies_lister_par_nom{1}|sinon{#ARRAY}}>
 	[(#VALEUR|saisies_saisie_est_labelisable|oui)
 		[(#VALEUR|saisies_saisie_est_avec_sous_saisies|oui)
 		<hr />

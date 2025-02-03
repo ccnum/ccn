@@ -34,7 +34,11 @@ function saisies_saisie_est_tabulaire($saisie) {
  * @return bool
  **/
 function saisies_saisie_est_fichier($saisie) {
-	$file = (($saisie['saisie'] === 'input' && ($saisie['options']['type'] ?? '') === 'file') || $saisie['saisie'] == 'fichiers');
+	$file = (
+		(($saisie['saisie'] === 'input') && ($saisie['options']['type'] ?? '') === 'file')
+		|| $saisie['saisie'] === 'fichiers'
+	);
+
 	return pipeline(
 		'saisie_est_fichier',
 		['args' => $saisie, 'data' => $file]
@@ -67,7 +71,7 @@ function saisies_saisie_est_gelee(array $description): bool {
 function saisies_verifier_gel_saisie(array $description): bool {
 
 	trigger_error('fonction `saisie_verifier_gel_saisie()` depréciée, utiliser à la place `saisies_saisie_est_gelee()`', E_USER_DEPRECATED);
-	spip_log('fonction `saisie_verifier_gel_saisie()` depréciée, utiliser à la place `saisies_saisie_est_gelee()`', 'saisies');
+	spip_log('fonction `saisie_verifier_gel_saisie()` depréciée, utiliser à la place `saisies_saisie_est_gelee()`', 'deprecated_saisies');
 	return saisies_saisie_est_gelee($description);
 }
 
@@ -89,7 +93,7 @@ function saisies_saisie_est_avec_sous_saisies(array $saisie): bool {
 
 
 /**
- * Renvoie true si la saisie peut recevoir un label,  qu'elle contienne effectivement un label ou pas
+ * Renvoie true si la saisie peut recevoir un label, qu'elle contienne effectivement un label ou pas
  * @param array $saisie
  * @return bool
  **/

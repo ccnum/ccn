@@ -63,6 +63,7 @@ return [
 	'etapes_formulaire' => 'Étapes du formulaire',
 	'etapes_recapitulatif_label' => 'Récapitulatif',
 	'etapes_recapitulatif_texte' => 'Merci de relire vos réponses et de les vérifier avant la validation finale.',
+	'etapes_remplissage_label' => 'Remplissage',
 	'explication_dev' => 'Pour les devs',
 
 	// F
@@ -70,7 +71,7 @@ return [
 	'fichier_erreur_explication_renvoi_pas_alternative' => 'Vous devez envoyer un autre fichier.',
 	'format_date_attendu' => 'Saisir une date au format jj/mm/aaaa.',
 	'format_email_attendu' => 'Saisir une adresse email au format vous@fournisseur.fr',
-	'formulaires_aucun_champ' => 'У формы нет полей для ввода информации.',
+	'formulaires_aucun_champ' => 'Il n’y a pour l’instant aucun champ de saisie pour ce formulaire.',
 
 	// I
 	'info_configurer_saisies' => 'Page de test des Saisies',
@@ -106,6 +107,8 @@ return [
 	'option_attention_label' => 'Avertissement',
 	'option_attribut_title_label' => 'Valeur en attribut title',
 	'option_attribut_title_label_case' => 'Mettre un attribut title dans le label, contenant la valeur technique du champ. À utiliser avec modération.',
+	'option_attributs_data_explication' => 'Tableau d’attribut <code>data-xx</code>, sans le préfixe <code>data</code>. Saisies se charge de convertir automatiquement en attributs html. Les tableaux sont serialisés via <code>json_encode()</code> et les chaînes protégées via <code>attribut_html()</code>.',
+	'option_attributs_data_label' => 'Data attributs',
 	'option_attributs_explication' => 'Les attributs portent sur chaque champ html, y compris pour les saisies avec plusieurs champs (<code>radio</code>, <code>checkbox</code>, etc.).',
 	'option_attributs_label' => 'Attributs HTML supplémentaires',
 	'option_autocomplete_defaut' => 'Laisser par défaut',
@@ -152,6 +155,8 @@ return [
 	'option_disable_choix_label' => 'Désactiver certains choix',
 	'option_disable_explication' => 'Le champ ne peut plus obtenir le focus.',
 	'option_disable_label' => 'Désactiver le champ',
+	'option_env_explication' => 'Valeur par défaut <code>false</code>. Mettre à <code>true</code> si on veut que l’environnement d’appel soit entièrement passé au squelette de la saisie.',
+	'option_env_label' => 'Transmettre l’environnement d’appel à la saisie',
 	'option_erreur_obligatoire_explication' => 'Vous pouvez personnaliser le message d’erreur affiché pour indiquer l’obligation (sinon laisser vide).',
 	'option_erreur_obligatoire_label' => 'Message d’erreur pour l’obligation',
 	'option_explication_apres_attention' => 'Pour des raisons d’accessibilité, les explications importantes doivent toujours être avant la saisie.',
@@ -251,6 +256,7 @@ return [
 
 	// P
 	'plugin_yaml_inactif' => 'Le plugin YAML est inactif. Vous devez l’activer pour que cette page soit fonctionnelle.',
+	'previsualisation_label' => 'Prévisualiser',
 
 	// S
 	'saisie_auteurs_explication' => 'Permet de sélectionner un auteur, une autrice, ou plusieurs',

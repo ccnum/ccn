@@ -211,8 +211,9 @@ function saisies_lister_par_type($contenu) {
 function saisies_lister_par_etapes($saisies, $check_only = false, ?array $env = []) {
 	$saisies_etapes = false;
 	$etapes = 0;
+	$previsualisation_etape = ($saisies['options']['previsualisation_mode'] ?? '') === 'etape';
 
-	if ($saisies['options']['etapes_activer'] ?? '') {
+	if (($saisies['options']['etapes_activer'] ?? '') || $previsualisation_etape) {
 		if (isset($saisies['options']['etapes_ignorer_recapitulatif'])) {
 			$ignorer_recapitulatif = $saisies['options']['etapes_ignorer_recapitulatif'];
 		} else {
@@ -227,13 +228,23 @@ function saisies_lister_par_etapes($saisies, $check_only = false, ?array $env = 
 			}
 		}
 
-		// Seulement s'il y a au moins deux étapes
-		if ($etapes > 1) {
+		// Seulement s'il y a au moins deux étapes ou que l'on est en mode prévisu sur du mono étape
+		if ($etapes > 1 || $previsualisation_etape) {
 			if ($check_only) {
 				return true;
 			}
 			$saisies_etapes = [];
 			$compteur_etape = 0;
+
+			if ($previsualisation_etape) {
+				$saisies = saisies_wrapper_fieldset(
+					$saisies,
+					[
+						'nom' => '@saisies_remplissage',
+						'label' => '<:saisies:etapes_remplissage_label:>'
+					]
+				);
+			}
 
 			// On reparcourt pour lister les saisies
 			foreach ($saisies as $cle => $saisie) {

@@ -177,6 +177,13 @@ function saisies_generer_html($champ, $env = []) {
 	// Ne pas passer les sous saisies qui auraient été mise dans $options directement dans le le contexte, cf https://git.spip.net/spip-contrib-extensions/saisies/issues/127
 	unset($options['saisies']);
 
+	// Normaliser l'option `attributs` : on la merge avec l'option `attributs_data`.
+	// Cette dernière sert à faciliter spécifiquement l'ajout d'attributs `data-xxx`.
+	// Format : tableau de paires clé / valeur dont les entrées seront ajoutées sous la forme `data-<cle> = <valeur>`.
+	// Les valeurs sous forme de tableau sont converties en JSON.
+	// Les valeurs null produisent juste `data-<cle>`, sans valeur.
+	$options = saisies_afficher_normaliser_options_attributs($options);
+
 	// On ajoute les options propres à la saisie
 	$contexte = array_merge($contexte, $options);
 
@@ -305,14 +312,10 @@ function saisies_generer_vue($saisie, $env = [], $env_obligatoire = []) {
 	// On ajoute les options propres à la saisie
 	$contexte = array_merge($contexte, $options);
 
+	$contexte['_env'] = $env;
 	// Si env est définie dans les options ou qu'il y a des enfants, on ajoute tout l'environnement
 	if (isset($contexte['env']) || is_array($saisie['saisies'] ?? '')) {
 		unset($contexte['env']);
-
-		// on sauve l'ancien environnement
-		// car les sous-saisies ne doivent pas être affectees
-		// par les modification sur l'environnement servant à generer la saisie mère
-		$contexte['_env'] = $env;
 
 		// À partir du moment où on passe tout l'environnement, il faut enlever
 		// certains éléments qui ne doivent absolument provenir que des options
@@ -388,4 +391,33 @@ function saisies_trouver_erreur(?array $erreurs, string $nom_ou_name): string {
 	}
 
 	return interdire_scripts($retour);
+}
+
+/**
+ * Normaliser l'option `attributs` d'une saisie individuelle
+ * En mergeant les attributs_data
+ * @param array $options liste des options de la saisie
+ * @return array $options liste des options, normalisée
+**/
+function saisies_afficher_normaliser_options_attributs(array $options) :array {
+	$attributs_data = $options['attributs_data'] ?? null;
+	if (is_array($attributs_data)) {
+		$attributs = $options['attributs'] ?? '';
+		foreach ($attributs_data as $cle => $valeur) {
+			if (is_null($valeur)) {
+				$attributs .= " data-{$cle}";
+			} else {
+				// Si c'est un tableau, on encode en JSON, sinon on force en string
+				$valeur = is_array($valeur) ? json_encode($valeur) : (string)$valeur;
+				// On échappe toujours le contenu de l'attribut
+				$valeur = attribut_html($valeur);
+				// On remplit la valeur de l'attribut
+				$attributs .= " data-{$cle}=\"{$valeur}\"";
+			}
+		}
+		$attributs = trim($attributs);
+		$options['attributs'] = $attributs;
+		unset($options['attributs_data']); // pas besoin de garder ça dans l'env
+	}
+	return $options;
 }

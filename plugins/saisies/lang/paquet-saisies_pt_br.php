@@ -6,7 +6,7 @@
 return [
 
 	// S
-	'saisies_description' => 'Este plugin permite facilitar a escrita de campos de formulários, propondo uma tag #SAISIE. O HTML gerado é compatível com a nomenclatura dos formulários propostos pelo SPIP > 2.0 e com o plugin de configuração CFG.', # MODIF
+	'saisies_description' => 'Este plugin facilita a escrita de campos de formulários, oferecendo uma tag #SAISIE. O HTML gerado é compatível com a nomenclatura dos formulários fornecidos pelo SPIP.',
 	'saisies_nom' => 'Entradas para formulários',
 	'saisies_slogan' => 'Facilitar a entrada de dados em campos de formulários.',
 ];

@@ -1,0 +1,14 @@
+<div class="reponses #ENV{conteneur_class}">
+	[(#SET{saisies,#ENV{_saisies}|saisies_inserer{
+		#ARRAY{
+			saisie,explication,
+			options,#ARRAY{
+				nom,saisies_etapes_recapitulatif,
+				texte,<:saisies:etapes_recapitulatif_texte:>,
+			},
+		},
+		#LISTE{0}
+	}})]
+	#SET{valeurs,#ENV{_saisies_par_etapes/etape_#ENV{_etapes}/valeurs}}
+	#VOIR_SAISIES{#GET{saisies},#GET{valeurs},voir_explications=oui}
+</div>
