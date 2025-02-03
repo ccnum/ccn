@@ -37,7 +37,7 @@ $GLOBALS[$GLOBALS['idx_lang']] = array(
 
 	// L
 	'label_activer_barre_typo' => 'Aktivovať klávesový panel pre "Farbičky"?',
-	'label_activer_crayons_prive' => 'Aktivovať "Farbičky" pre súkromnú zónu.',
+	'label_activer_crayons_prive' => 'Aktivovať "Farbičky" pre súkromnú zónu.', # MODIF
 	'label_barre_typo' => 'Klávesový panel',
 	'label_clickhide' => 'Klikom mimo oblasti farbičky zatvoríte',
 	'label_effets' => 'Výber efektov',
@@ -58,7 +58,7 @@ $GLOBALS[$GLOBALS['idx_lang']] = array(
 	'legend_controleur_vignette' => 'Vyberte miniatúru:',
 	'legend_controleur_vignette_remplacer' => 'Nahradiť túto miniatúru',
 	'legend_documents' => 'Nahrávanie súborov',
-	'legend_editer_prive' => 'Použiť v súkromnej zóne (experimentálne)',
+	'legend_editer_prive' => 'Použiť v súkromnej zóne (experimentálne)', # MODIF
 	'legend_introduction_article' => 'Úvodný text článku',
 	'legend_introduction_rubrique' => 'Úvodný text rubriky',
 

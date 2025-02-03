@@ -37,7 +37,7 @@ $GLOBALS[$GLOBALS['idx_lang']] = array(
 
 	// L
 	'label_activer_barre_typo' => 'De typografische knoppenbalk in De Krijtjes activeren?',
-	'label_activer_crayons_prive' => 'Schakel Krijtjes in voor het privé gedeelte.',
+	'label_activer_crayons_prive' => 'Schakel Krijtjes in voor het privé gedeelte.', # MODIF
 	'label_barre_typo' => 'Typografische knoppenbalk',
 	'label_clickhide' => 'Een klik erbuiten verbergt Krijtjes',
 	'label_effets' => 'Effectenkeuze',
@@ -58,7 +58,7 @@ $GLOBALS[$GLOBALS['idx_lang']] = array(
 	'legend_controleur_vignette' => 'Selecteer een miniatuur :',
 	'legend_controleur_vignette_remplacer' => 'Vervang dit miniatuur',
 	'legend_documents' => 'Upload van documenten',
-	'legend_editer_prive' => 'Bewerk het private deel (experimenteel)',
+	'legend_editer_prive' => 'Bewerk het private deel (experimenteel)', # MODIF
 	'legend_introduction_article' => 'Aanhef van artikel',
 	'legend_introduction_rubrique' => 'Introductietekst van de rubriek',
 

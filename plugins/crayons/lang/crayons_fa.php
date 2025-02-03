@@ -32,7 +32,7 @@ $GLOBALS[$GLOBALS['idx_lang']] = array(
 
 	// L
 	'label_activer_barre_typo' => 'فعال‌سازي ميل حروف‌نگاري در پلاگين «مدادها»؟',
-	'label_activer_crayons_prive' => 'فعال سازي «مدادها» براي قسمت خصوصي.',
+	'label_activer_crayons_prive' => 'فعال سازي «مدادها» براي قسمت خصوصي.', # MODIF
 	'label_barre_typo' => 'ميل حروف نگاري ',
 	'label_clickhide' => 'يك كليك بيرون محوطه مدادها را مبي بندد',
 	'label_effets' => 'گزينش افكت‌ها',
@@ -50,7 +50,7 @@ $GLOBALS[$GLOBALS['idx_lang']] = array(
 	'legend_controleur_qui' => 'كي؟',
 	'legend_controleur_vignette' => 'گزيش يك صورتك :',
 	'legend_controleur_vignette_remplacer' => 'جايگزيني اين صورت',
-	'legend_editer_prive' => 'استفاده در محوطه‌ي خصوصي (تجربي)',
+	'legend_editer_prive' => 'استفاده در محوطه‌ي خصوصي (تجربي)', # MODIF
 	'legend_introduction_article' => 'متن مقدماتي مقاله',
 
 	// M

@@ -610,8 +610,11 @@ function action_crayons_store_dist() {
  */
 function action_crayons_store_args($store = 'crayons_store') {
 	header('Content-Type: text/plain; charset=' . $GLOBALS['meta']['charset']);
-	if (isset($GLOBALS['auteur_session']['lang'])) {
-		lang_select($GLOBALS['auteur_session']['lang']);
+
+	include_spip ('inc/session');
+	$lang = session_get('lang');
+	if (!is_null($lang)) {
+		lang_select($lang);
 	}
 
 	$r = $store();

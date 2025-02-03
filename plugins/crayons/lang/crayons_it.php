@@ -37,7 +37,7 @@ $GLOBALS[$GLOBALS['idx_lang']] = array(
 
 	// L
 	'label_activer_barre_typo' => 'Attivare la barra tipografica per i pennarelli?',
-	'label_activer_crayons_prive' => 'Attivare i pennarelli per la parte redazionale.',
+	'label_activer_crayons_prive' => 'Attivare i pennarelli per la parte redazionale.', # MODIF
 	'label_barre_typo' => 'Barra tipografica',
 	'label_clickhide' => 'Un click fuori nasconde i pennarelli',
 	'label_effets' => 'Scelta degli effetti',
@@ -58,7 +58,7 @@ $GLOBALS[$GLOBALS['idx_lang']] = array(
 	'legend_controleur_vignette' => 'Scegli una miniatura:',
 	'legend_controleur_vignette_remplacer' => 'Sostituisci questa miniatura',
 	'legend_documents' => 'Upload di documenti',
-	'legend_editer_prive' => 'Modifica lo spazio redazionale (sperimentale)',
+	'legend_editer_prive' => 'Modifica lo spazio redazionale (sperimentale)', # MODIF
 	'legend_introduction_article' => 'Testo introduttivo dell’articolo',
 	'legend_introduction_rubrique' => 'Testo introduttivo della rubrica',
 

@@ -24,7 +24,7 @@ $GLOBALS[$GLOBALS['idx_lang']] = array(
 
 	// L
 	'label_activer_barre_typo' => 'Activer la barre typographique dans les crayons ?', # NEW
-	'label_activer_crayons_prive' => 'Activer crayons pour la partie privée.', # NEW
+	'label_activer_crayons_prive' => 'Activer crayons pour la partie privée.', # NEW MODIF
 	'label_barre_typo' => 'Barre typographique', # NEW
 	'label_clickhide' => 'Un clic en-dehors masque les crayons', # NEW
 	'label_effets' => 'Choix des effets', # NEW
@@ -36,7 +36,7 @@ $GLOBALS[$GLOBALS['idx_lang']] = array(
 	'label_msg_no_change' => 'Si pas de changement', # NEW
 	'label_reduire_logo' => 'Réduire les logos', # NEW
 	'label_yellow_fade' => 'Fade', # NEW
-	'legend_editer_prive' => 'Éditer l’espace privé (expérimental)',
+	'legend_editer_prive' => 'Éditer l’espace privé (expérimental)', # MODIF
 
 	// M
 	'messages' => 'Messages', # NEW
