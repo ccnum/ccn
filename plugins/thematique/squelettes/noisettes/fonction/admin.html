@@ -1,0 +1,40 @@
+#CACHE{0}
+[(#REM)Paramètre
+- mode:admin : Type d'admin : 0 : total / autrement : nb de rubriques restreintes / -1 : pas admin / -2 : pas connecté
+- mode:restreint : renvoie Id de la rubrique restreinte sélectionnée
+]
+[(#ENV{rub}|oui)#SESSION_SET{cookie_rubrique, #ENV{rub}}]
+#SET{admin,0}
+<BOUCLE_rub_aut(RUBRIQUES auteurs){id_auteur=#SESSION{id_auteur}}{tout}>
+	[(#INCLURE{fond=noisettes/fonction/type_objet,id_rubrique})]
+	[(#SET{type_objet,#SESSION{type}})]
+	[(#GET{type_objet}|=={evenements}|non)
+		[(#SET{restreint1,#ID_RUBRIQUE})]
+	]
+	[(#SET{admin,[(#GET{admin}|plus{1})]})]
+	<BOUCLE_rub4(RUBRIQUES){id_parent=#ID_RUBRIQUE}{tout}>
+		[(#SET{admin,[(#GET{admin}|plus{1})]})]
+	</BOUCLE_rub4>
+</BOUCLE_rub_aut>
+
+[(#SESSION{statut}|=={0minirezo}|non)
+	#SET{admin,-1}
+]
+
+[(#SESSION{statut}|non)
+	#SET{admin,-2}
+]
+
+[(#GET{admin}|=={1}|oui)
+	[(#SET{restreint,#GET{restreint1}})]
+]
+[(#GET{admin}|=={2}|oui)
+	[(#SET{restreint,#GET{restreint1}})]
+]
+
+[(#SESSION{cookie_rubrique}|is_numeric|oui|et{#GET{admin}|>{1}|oui}|ou{#GET{admin}|=={0}}|oui)
+	[(#SET{restreint,#SESSION{cookie_rubrique}})]
+]
+
+[(#MODE|=={restreint}|oui)#SESSION_SET{restreint, #GET{restreint}}]
+[(#MODE|=={restreint}|non)#SESSION_SET{admin, #GET{admin}}]

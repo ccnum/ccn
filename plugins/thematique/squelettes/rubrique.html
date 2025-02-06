@@ -1,0 +1,51 @@
+<BOUCLE_principale_rubrique(RUBRIQUES){id_rubrique}{tout}>
+[(#REM)Type objet: consignes, travail_en_cours, blogs, evenements,ressources]
+	[(#ENV{type_objet}|oui)
+		#SET{type_objet,#TYPE_OBJET}
+	]
+	[(#ENV{type_objet}|non)
+		[(#INCLURE{fond=noisettes/fonction/type_objet,id_rubrique})]
+		[(#SET{type_objet,#SESSION{type}})]
+	]
+
+[(#REM)Mode]
+	#SET{mode,complet}
+	#SET{ref,#CONST{$_SERVER['HTTP_REFERER']}}
+
+	[(#ENV{mode}|oui)
+		#SET{mode,#MODE}
+	]
+
+	[(#GET{mode}|=={detail}|oui)
+		<INCLURE{fond=noisettes/rubrique}{type_objet=#GET{type_objet}}{env} />
+	]
+	[(#GET{mode}|=={complet}|oui)
+	  <INCLURE{fond=layout}{id_rubrique}{env}{page=sommaire}{type_objet=#GET{type_objet}}{id_objet=#ID_ARTICLE} />
+	]
+
+	[(#GET{mode}|match{ajax}|oui)
+		[(#REM) Type d'admin : 0 : total / autrement : nb de rubriques restreintes / -1 : pas admin / -2 pas connecté]
+		[(#INCLURE{fond=noisettes/fonction/admin,mode=admin,rub})]
+		[(#SET{admin,#SESSION{admin}})]
+		[(#GET{mode}|=={ajax}|oui)
+			[(#GET{type_objet}|=={ressources}|oui)
+			<INCLURE{fond=noisettes/ressources}{type_objet=#GET{type_objet}}{admin=#GET{admin}}{env} />
+			]
+			[(#GET{type_objet}|=={ressources}|non)
+				<INCLURE{fond=noisettes/rubrique}{type_objet=#GET{type_objet}}{admin=#GET{admin}}{env} />
+			]
+		]
+		[(#GET{mode}|=={ajax-detail}|oui)
+			[(#GET{type_objet}|=={ressources}|oui)
+        		<INCLURE{fond=noisettes/ressources_detail}{type_objet=#GET{type_objet}}{admin=#GET{admin}}{env} />
+			]
+			[(#GET{type_objet}|=={ressources}|non)
+				<INCLURE{fond=noisettes/rubrique_detail}{type_objet=#GET{type_objet}}{admin=#GET{admin}}{env} />
+			]
+		]
+	]
+
+</BOUCLE_principale_rubrique>
+</B_principale_rubrique>
+	<INCLURE{fond=layout}{env}{page=sommaire} />
+<//B_principale_rubrique>

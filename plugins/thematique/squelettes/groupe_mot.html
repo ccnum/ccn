@@ -1,0 +1,31 @@
+<BOUCLE_principale_rubrique(GROUPES_MOTS){id_groupe}{tout}>
+[(#REM)Type objet: consignes, travail_en_cours, blogs, evenements,ressources]
+	[(#ENV{type_objet}|oui)
+		#SET{type_objet,#TYPE_OBJET}
+	]
+
+[(#REM)Mode]
+	#SET{mode,complet}
+	#SET{ref,#CONST{$_SERVER['HTTP_REFERER']}}
+
+	[(#ENV{mode}|oui)
+		#SET{mode,#MODE}
+	]
+
+	[(#GET{mode}|=={detail}|oui)<INCLURE{fond=layout}{env}{page=groupe_mot} />]
+	[(#GET{mode}|=={complet}|oui)<INCLURE{fond=layout}{id_rubrique}{env}{page=sommaire}{type_objet=#GET{type_objet}}{id_objet=#ID_ARTICLE} />]
+	[(#GET{mode}|match{ajax}|oui)
+		[(#REM) Type d'admin : 0 : total / autrement : nb de rubriques restreintes / -1 : pas admin / -2 pas connecté]
+		[(#INCLURE{fond=noisettes/fonction/admin,mode=admin,rub})]
+		[(#SET{admin,#SESSION{admin}})]
+		[(#GET{mode}|=={ajax}|oui)
+			<INCLURE{fond=noisettes/groupe_mot}{type_objet=#GET{type_objet}}{admin=#GET{admin}}{env} />
+		]
+		[(#GET{mode}|=={ajax-detail}|oui)
+			<INCLURE{fond=noisettes/groupe_mot_detail}{type_objet=#GET{type_objet}}{admin=#GET{admin}}{env} />
+		]
+	]
+
+</BOUCLE_principale_rubrique>
+	<INCLURE{fond=layout}{env}{page=sommaire} />
+<//B_principale_rubrique>

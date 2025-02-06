@@ -1,0 +1,69 @@
+<BOUCLE_principale_article(ARTICLES){id_article}>
+	[(#REM) Type objet: consignes, travail_en_cours, blogs, evenements,ressources]
+	[(#ENV{type_objet}|oui)
+		#SET{type_objet,#TYPE_OBJET}
+	]
+	[(#ENV{type_objet}|non)
+		[(#INCLURE{fond=noisettes/fonction/type_objet,id_article})]
+		[(#SET{type_objet,#SESSION{type}})]
+	]
+	[(#GET{type_objet}|in_array{#LISTE{blogs,evenements}}|oui)#SET{pre,article_}]
+
+	[(#REM) Mode d'ouverture]
+	#SET{mode,complet}
+	#SET{ref,#CONST{$_SERVER['HTTP_REFERER']}}
+	[(#ENV{mode}|oui)
+		#SET{mode,#MODE}
+	]
+
+	[(#REM) Page]
+	#SET{page,article}
+	[(#GET{type_objet}|in_array{#LISTE{ressources,classes}}|oui)#SET{page,rubrique}]
+	[(#GET{mode}|=={ajax-detail}|oui)#SET{page,article}]
+
+	[(#REM) Ouverture]
+	<BOUCLE_rub1(RUBRIQUES){id_rubrique}{tout}>
+		#SET{id_rubrique_lien_bis,#ID_RUBRIQUE}
+		#SET{id_rubrique_lien,#ID_RUBRIQUE_LIEN}
+	</BOUCLE_rub1>
+	<BOUCLE_lien(ARTICLES){id_consigne}{id_rubrique=#GET{id_rubrique_lien}}>#SET{art_lie,#ID_ARTICLE}</BOUCLE_lien>
+	<BOUCLE_lien_bis(ARTICLES){id_consigne}{id_rubrique}>#SET{art_lie_bis,#ID_ARTICLE}</BOUCLE_lien_bis>
+
+	[(#GET{mode}|in_array{#LISTE{detail,ajax-detail}}|oui)
+		[(#GET{art_lie}|oui)
+			<div class="reponse_binome_around">
+				<INCLURE{fond=noisettes/reponse_binome_head}{env}{type_objet=#GET{type_objet}}{id_rubrique_lien_bis=#GET{id_rubrique_lien_bis}}{id_rubrique_lien=#GET{id_rubrique_lien}}{id_consigne}{id_article_lien_bis=#GET{art_lie_bis}}{id_article_lien=#GET{art_lie}} />
+			<div id="reponse_binome_1">
+		]
+
+		<INCLURE{fond=noisettes/#GET{page}}{id_rubrique}{env}{page=#GET{page}}{type_objet=#GET{type_objet}}{id_article=#ID_ARTICLE} />
+
+		[(#GET{art_lie}|oui)
+		</div>
+			<div class="popup popup_separation_binome">
+				<div class="sidebar_bubble separation_binome">Réponse binôme</div>
+				<div class="nettoyeur"></div>
+			</div>
+
+		<div id="reponse_binome_2">
+			<INCLURE{fond=noisettes/#GET{page}}{id_rubrique}{env}{page=#GET{page}}{type_objet=#GET{type_objet}}{id_article=#GET{art_lie}} />
+		</div>
+		]
+
+		[(#GET{art_lie}|oui) </div>]
+	]
+
+	[(#GET{mode}|=={complet}|oui)
+		<INCLURE{fond=layout, page=sommaire, id_rubrique, env, type_objet=#GET{type_objet}, id_objet=#ID_ARTICLE} />
+	]
+
+	[(#GET{mode}|=={ajax}|oui)
+		[(#REM) Type d'admin : 0 : total / autrement : nb de rubriques restreintes / -1 : pas admin / -2 pas connecté]
+		[(#INCLURE{fond=noisettes/fonction/admin,mode=admin,rub})]
+		[(#SET{admin,#SESSION{admin}})]
+		<INCLURE{fond=noisettes/#GET{page}}{type_objet=#GET{type_objet}}{admin=#GET{admin}}{env} />
+	]
+
+</BOUCLE_principale_article>
+	<INCLURE{fond=chargement}{type_objet=#TYPE_OBJET}>
+<//B_principale_article>
