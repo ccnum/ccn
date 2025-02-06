@@ -1,0 +1,23 @@
+<BOUCLE_principale_article(SYNDIC_ARTICLES){id_syndic_article}>
+[(#REM)Type objet: consignes, travail_en_cours, blogs, evenements,ressources]
+	[(#ENV{type_objet}|oui)
+		#SET{type_objet,#TYPE_OBJET}
+	]
+	[(#ENV{type_objet}|non)
+	[(#INCLURE{fond=noisettes/fonction/type_objet,id_syndic_article})]
+		[(#SET{type_objet,#SESSION{type}})]
+
+	]
+	[(#GET{type_objet}|in_array{#LISTE{blogs|evenements}}|oui)#SET{pre,article_}]
+
+[(#REM)Mode]
+	#SET{ref,#CONST{$_SERVER['HTTP_REFERER']}}
+	#SET{mode,#MODE|sinon{complet}}
+
+[(#GET{mode}|=={detail}|oui)<INCLURE{fond=layout}{id_rubrique}{env}{page=syndic_article}{type_objet=#GET{type_objet}}{id_article=#ID_ARTICLE} />]
+[(#GET{mode}|=={complet}|oui)<INCLURE{fond=layout}{id_rubrique}{env}{page=sommaire}{type_objet=#GET{type_objet}}{id_objet=#ID_SYNDIC_ARTICLE} />]
+[(#GET{mode}|=={ajax}|oui)<INCLURE{fond=noisettes/syndic_article}{id_rubrique}{env}{type_objet=#GET{type_objet}} />]
+
+</BOUCLE_principale_article>
+Pas d'article syndiqué
+<//B_principale_article>
