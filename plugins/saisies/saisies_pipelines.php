@@ -328,6 +328,33 @@ function saisies_formulaire_verifier($flux) {
 	}
 	$flux['data'] = pipeline('formulaire_verifier_post_saisies', $flux);
 
+	// Prévisu au dessus du formulaire
+	$flux = saisies_verifier_previsualisation_au_dessus(
+		$flux,
+		$saisies,
+		saisies_request('_valider_previsu')
+	);
+
+	return $flux;
+}
+
+/**
+ * Modifie si besoin le $flux de vérification pour activer la prévisualisation au dessus
+ * @param array $flux comme pour le pipeline
+ * @param array $saisies tableau de saisies
+ * @param string|null $valider_previsu, le résultat de _request('valider_previsu')
+ * @return array $flux idem
+**/
+function saisies_verifier_previsualisation_au_dessus(array $flux, array $saisies, ?string $valider_previsu): array {
+	$previsualisation_mode = $saisies['options']['previsualisation_mode'] ?? '';
+	if (!$previsualisation_mode || $previsualisation_mode != 'dessus') {
+		return $flux;
+	}
+
+	if (!$valider_previsu && !$flux['data']) {
+		$flux['data']['_previsu'] = true;
+	}
+
 	return $flux;
 }
 
@@ -368,11 +395,11 @@ function saisies_formulaire_verifier_etape($flux) {
 
 
 	// Vérification du formulaire après la vérification des saisies
-	$verifier_etapes_post_saisies = charger_fonction('verifier_etapes_post_saisies', "formulaires/$form/", true);
-	if ($verifier_etapes_post_saisies) {
-		$flux['data'] =  array_merge($flux['data'], call_user_func_array($verifier_etapes_post_saisies, $args_du_form));// Lorsqu'on sera en PHP 8 ++ only, transformer en = $verifier_post_saisies(...$args_du_form);
+	$verifier_etape_post_saisies = charger_fonction('verifier_etape_post_saisies', "formulaires/$form/", true);
+	if ($verifier_etape_post_saisies) {
+		$flux['data'] =  array_merge($flux['data'], call_user_func_array($verifier_etape_post_saisies, array_merge([$etape], $args_du_form)));// Lorsqu'on sera en PHP 8 ++ only, transformer en = $verifier_post_saisies(...$args_du_form);
 	}
-	$flux['data'] = pipeline('formulaire_verifier_etapes_post_saisies', $flux);
+	$flux['data'] = pipeline('formulaire_verifier_etape_post_saisies', $flux);
 
 	return $flux;
 }

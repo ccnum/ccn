@@ -78,7 +78,6 @@ options_dev:
 defaut:
   options:
     label: '<:saisies:saisie_choix_grille_titre:>'
-    size: 40
     data_cols:
       choix1: '<:saisies:saisie_radio_defaut_choix1:>'
       choix2: '<:saisies:saisie_radio_defaut_choix2:>'

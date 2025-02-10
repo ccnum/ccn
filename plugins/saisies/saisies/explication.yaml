@@ -19,7 +19,6 @@ options:
           label: '<:saisies:saisie_explication_texte_label:>'
           explication: '<:saisies:saisie_explication_explication:>'
           class: 'inserer_barre_edition'
-          cols: 40
           rows: 5
       -
         saisie: 'case'

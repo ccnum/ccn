@@ -5,5 +5,5 @@
 #SET{statuts, #GET{statuts}|plus{#ARRAY{#CLE, #VALEUR|_T}}}
 </BOUCLE_statuts>
 
-#SET{type_saisie, #ENV{multiple}|?{selection_multiple, selection}}
+#SET{type_saisie, #ENV{multiple}|?{checkbox, selection}}
 <INCLURE{fond=saisies/#GET{type_saisie}, env, data=#GET{statuts}}>

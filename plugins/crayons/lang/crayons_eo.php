@@ -35,7 +35,7 @@ $GLOBALS[$GLOBALS['idx_lang']] = array(
 
 	// L
 	'label_activer_barre_typo' => 'Aktivigi la tipografian breton en la krajonoj ?',
-	'label_activer_crayons_prive' => 'Aktivigi krajonoj en la privata spaco.',
+	'label_activer_crayons_prive' => 'Aktivigi krajonoj en la privata spaco.', # MODIF
 	'label_barre_typo' => 'Tipografia breto',
 	'label_clickhide' => 'Ekstera alklako kaŝas la krajonoj',
 	'label_effets' => 'Elekto de efektoj',
@@ -56,7 +56,7 @@ $GLOBALS[$GLOBALS['idx_lang']] = array(
 	'legend_controleur_vignette' => 'Elekti vinjeton :',
 	'legend_controleur_vignette_remplacer' => 'Anstataŭigi tiun vinjeton',
 	'legend_documents' => 'Alŝuto de dokumentoj',
-	'legend_editer_prive' => 'Modifi la privatan spacon (eksperimenta)',
+	'legend_editer_prive' => 'Modifi la privatan spacon (eksperimenta)', # MODIF
 	'legend_introduction_article' => 'Enkonduka teksto de la artikolo',
 	'legend_introduction_rubrique' => 'Enkonduka teksto de la rubriko',
 

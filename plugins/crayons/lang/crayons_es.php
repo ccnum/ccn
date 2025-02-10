@@ -38,7 +38,7 @@ $GLOBALS[$GLOBALS['idx_lang']] = array(
 
 	// L
 	'label_activer_barre_typo' => '¿Activar la barra tipográfica en los lápices?',
-	'label_activer_crayons_prive' => 'Activar los lápices en el espacio privado.',
+	'label_activer_crayons_prive' => 'Activar los lápices en el espacio privado.', # MODIF
 	'label_barre_typo' => 'Barra tipográfica',
 	'label_clickhide' => 'Un clic afuera esconde los lápices',
 	'label_effets' => 'Elegir los efectos',
@@ -59,7 +59,7 @@ $GLOBALS[$GLOBALS['idx_lang']] = array(
 	'legend_controleur_vignette' => 'Escoger una viñeta:',
 	'legend_controleur_vignette_remplacer' => 'Reemplazar esta viñeta',
 	'legend_documents' => 'Subir documentos',
-	'legend_editer_prive' => 'Edición en el espacio privado (experimental)',
+	'legend_editer_prive' => 'Edición en el espacio privado (experimental)', # MODIF
 	'legend_introduction_article' => 'Texto introductivo del artículo',
 	'legend_introduction_rubrique' => 'Texto introductorio de la sección',
 

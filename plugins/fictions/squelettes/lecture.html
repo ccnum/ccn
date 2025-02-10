@@ -115,22 +115,21 @@
 							<!-- BOUTONS OPTIONS GAUCHE-->
 							<div class="lecture-options">
 								<BOUCLE_lecture_titre_rubrique_droite(RUBRIQUES){id_rubrique = #ID_RUBRIQUE}>
-								<span class="lecture-titre-cadavre">#TITRE</span>
+									<span class="lecture-titre-cadavre">#TITRE</span>
 								</BOUCLE_lecture_titre_rubrique_droite>
 								<div class="lecture-chapitre-auteur">
-
 									<BOUCLE_auteur_article(AUTEURS){id_article}{0,1}>
-									<div class="ecriture-chapitre-avatar">[(#LOGO_AUTEUR||image_reduire{42,42})]</div>
-									<div class="ecriture-chapitre-nom">#NOM</div>
+										<div class="ecriture-chapitre-avatar">[(#LOGO_AUTEUR||image_reduire{42,42})]</div>
+										<div class="ecriture-chapitre-nom">#NOM</div>
 									</BOUCLE_auteur_article>
 									[(#ENV{fin}|=={oui}|non)
-									<INCLURE{fond=logos-script-forum,id_article,class=ecriture-chapitre-liens}>
+										<INCLURE{fond=logos-script-forum,id_article,class=ecriture-chapitre-liens}>
 									]
 								</div>
 							</div>
 							<!-- CONTENT GAUCHE -->
 							<h1 class="nettoyeur">#SURTITRE</h1>
-								<h2>#TITRE</h2>
+							<h2>#TITRE</h2>
 							[(#ANNEE_ACTUELLE|=={#EVAL{_annee_scolaire}}|non)
 								<INCLURE{fond=lecture-texte-visible, id_article}>
 							]

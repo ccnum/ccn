@@ -39,7 +39,6 @@
 	[(#GET{disabled}|strlen|non) #SET{disabled,#ARRAY} ]
 	[(#GET{disabled}|oui) #SET{disabled,#ARRAY|push{#GET{disabled}}} ]
 ]
-
 <B_lignes>
 <div class="choix_grille_wrapper">
 <table class="spip choix_grille" role="presentation">
@@ -63,7 +62,10 @@
 			<td>
 				#SET{type, radio}
 				#SET{name, #ENV{nom}\[#_lignes:CLE\]}
-				#SET{coche, #CLE|=={#GET{valeur/#_lignes:CLE}}}
+				#SET{coche,''}
+				[(#GET{valeur/#_lignes:CLE}|oui|ou{#GET{valeur/#_lignes:CLE}|==={0}|oui})
+					#SET{coche, #CLE|=={#GET{valeur/#_lignes:CLE}}}
+				]
 				[(#ENV{multiple}|et{#ENV{multiple}|!={non}}|oui)
 					#SET{type, checkbox}
 					#SET{name, #GET{name}\[\]}

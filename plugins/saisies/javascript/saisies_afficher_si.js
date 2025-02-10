@@ -289,6 +289,7 @@ function afficher_si_set_etape_suivante(form, name) {
 	if (!etapes) {
 		return;
 	}
+
 	var label_enregistrer = form.find('button.submit_suivant').attr('data-label_enregistrer');
 	var titre_retenu = label_enregistrer;
 	// Chercher la première future étape
