@@ -144,7 +144,15 @@
 	padding-left: 0;
 	padding-right: 0;
 }
-
+/**
+ * Options globales
+**/
+.formulaire_construire_formulaire .configurer_globales{
+	padding:0;
+}
+.formulaire_construire_formulaire .configurer_globales .saisies-contenu-onglet  {
+	padding-right: var(--spip-form-spacing-x);
+}
 /**
  * Element en flex : non en veut pas
 **/

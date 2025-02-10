@@ -23,6 +23,18 @@
 -
   saisie: 'input'
   options:
+    nom: 'attributs_data'
+    label: '<:saisies:option_attributs_data_label:>'
+    explication: '<:saisies:option_attributs_data_explication:>'
+-
+  saisie: 'input'
+  options:
     nom: 'label_class'
     label: '<:saisies:option_label_class_label:>'
     size: 50
+-
+  saisie: 'input'
+  options:
+    nom: 'env'
+    label: '<:saisies:option_env_label:>'
+    explication: '<:saisies:option_env_explication:>'

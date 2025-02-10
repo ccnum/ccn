@@ -28,4 +28,5 @@ options:
       - 'inclure:saisies/_base/class.yaml'
 defaut:
   saisies: []
-  colonnes: '1ligne_max'
+  options:
+    colonnes: '1ligne_max'

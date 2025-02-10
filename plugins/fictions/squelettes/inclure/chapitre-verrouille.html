@@ -1,24 +1,17 @@
 <!--
-
 RUBRIQUE.HTML > CHAPITRE-VERROUILLE.HTML
 (le chapitre n'est pas visible)
-
  -->
-
 <BOUCLE_article_verrouille(ARTICLES){id_article}>
 <div class="ecriture-chapitre">
-
 	<div class="ecriture-chapitre-picto">
 		<img src="#CHEMIN{img/ecriture/picto-verrou.png}" width="50" height="50" />
 	</div>
-
 	<div class="ecriture-chapitre-texte">
 		<div class="ecriture-chapitre-surtitre bleu-opacity">#SURTITRE</div>
 		<div class="ecriture-chapitre-titre gris">#TITRE</div>
 	</div>
-
 	<div class="ecriture-chapitre-auteur">
-
 		<BOUCLE_auteur_article(AUTEURS){id_article}{0,1}>
 			<div class="ecriture-chapitre-avatar">[(#LOGO_AUTEUR|image_reduire{42,42})]</div>
 			<div class="ecriture-chapitre-nom">#NOM</div>
@@ -26,7 +19,10 @@ RUBRIQUE.HTML > CHAPITRE-VERROUILLE.HTML
 	</div>
 
 	[(#ENV{fin}|=={oui}|non)
-		<INCLURE{fond=logos-script-forum,id_article,class=ecriture-chapitre-liens}>
+		<INCLURE{fond=inclure/logos-script-forum,id_article,class=ecriture-chapitre-liens} />
+		<!-- LONGUEUR DE L' ARTICLE-->
+		[(#SET{ma_regexp, [[:alpha:]]})]
+		<span class="texte-masque">[(#DESCRIPTIF|couper{[(#DESCRIPTIF|textebrut|strlen|moins{400})], ''}|replace{[(#GET{ma_regexp})], x})]</span>
 		[<div class="ecriture-chapitre-nom">(#DESCRIPTIF|cleanCut)</div>]
 	]
 

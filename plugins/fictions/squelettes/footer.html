@@ -5,7 +5,7 @@
 		#SET{id_art,#ID_ARTICLE}
 	</BOUCLE_id_forum>
 </BOUCLE_annee>
-
+#SET{url_blog_auteur, ''}
 <BOUCLE_rubrique_contenant_annees(RUBRIQUES){titre_mot=rubrique-contenant-annees}>
 	<BOUCLE_rubrique_annee(RUBRIQUES){id_parent}{!par titre}{titre==^[2]}{0,1}>
 		#SET{url_blog_auteur, #TEXTE}
@@ -60,7 +60,7 @@
 				</BOUCLE_espace_doc>
 			</BOUCLE_rubriques>
 
-			<a href="[(#GET{url_blog_auteur}|extraire_attribut{href})]">Blog de l'auteur</a>
+			[<a href="(#GET{url_blog_auteur}|extraire_attribut{href})">Blog de l'auteur</a>]
 		</div>
 
 		<div id="footer-nav">

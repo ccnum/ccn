@@ -1,11 +1,8 @@
 <!--
-
 RUBRIQUE.HTML > CHAPITRE-VISIBLE.HTML
 (Cadavre n-1 visible)
-
  -->
 <BOUCLE_article_verrouille(ARTICLES){id_article}>
-<!-- DESCRIPTION CHAPITRE-->
 <div class="ecriture-chapitre">
 	<div class="ecriture-chapitre-picto">
 		<img src="#CHEMIN{img/ecriture/picto-oeil.png}" width="50" height="50" />
@@ -16,9 +13,9 @@ RUBRIQUE.HTML > CHAPITRE-VISIBLE.HTML
 	</div>
 	<div class="ecriture-chapitre-auteur">
 		<BOUCLE_auteur_article(AUTEURS){id_article}{0,1}>
-		<div class="ecriture-chapitre-avatar">[(#LOGO_AUTEUR|image_reduire{42,42})]</div>
-		<div class="ecriture-chapitre-nom">#NOM</div>
-		#SET{var_auteur_article, #NOM}
+			<div class="ecriture-chapitre-avatar">[(#LOGO_AUTEUR|image_reduire{42,42})]</div>
+			<div class="ecriture-chapitre-nom">#NOM</div>
+			#SET{var_auteur_article, #NOM}
 		</BOUCLE_auteur_article>
 	</div>
 </div>

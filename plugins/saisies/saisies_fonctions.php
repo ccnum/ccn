@@ -32,7 +32,7 @@ include_spip('formulaires/selecteur/generique_fonctions');
  */
 function saisie_balise_structure_formulaire($tag) {
 	trigger_error('Le filtre saisie_balise_structure_formulaire est deprécié et sera supprimé en v6 du plugin saisies. Utiliser directement `<div>`.', E_USER_DEPRECATED);
-	spip_log('Le filtre saisie_balise_structure_formulaire est deprécié et sera supprimé en v6 du plugin saisies. Utiliser directement `<div>`.', 'saisies');
+	spip_log('Le filtre saisie_balise_structure_formulaire est deprécié et sera supprimé en v6 du plugin saisies. Utiliser directement `<div>`.', 'deprecated_saisies');
 	return 'div';
 }
 
@@ -63,7 +63,7 @@ if (
 		$p->code = "'div'";
 		$p->interdire_scripts = false;
 		trigger_error('La balise #DIV est depréciée et sera supprimée en v6 du plugin saisies. Utiliser directement `<div>`.', E_USER_DEPRECATED);
-		spip_log('La balise #DIV est depréciée et sera supprimée en v6 du plugin saisies. Utiliser directement `<div>`.', 'saisies');
+		spip_log('La balise #DIV est depréciée et sera supprimée en v6 du plugin saisies. Utiliser directement `<div>`.', 'deprecated_saisies');
 		return $p;
 	}
 }

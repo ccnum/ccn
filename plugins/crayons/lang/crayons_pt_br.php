@@ -35,19 +35,19 @@ $GLOBALS[$GLOBALS['idx_lang']] = array(
 	'info_experimental' => 'Experimental',
 
 	// L
-	'label_activer_barre_typo' => 'Ativar a barra de formatação nos crayons?',
-	'label_activer_crayons_prive' => 'Ativar crayons na área restrita.',
+	'label_activer_barre_typo' => 'Ativar a barra de formatação nos "lápis"?',
+	'label_activer_crayons_prive' => 'Ativar os "lápis" na área restrita.',
 	'label_barre_typo' => 'Barra de formatação',
-	'label_clickhide' => 'Um clique fora esconde os crayons',
+	'label_clickhide' => 'Um clique fora esconde os "lápis"',
 	'label_effets' => 'Escolha dos efeitos',
-	'label_espaceprive' => 'Crayons na área restrita?',
+	'label_espaceprive' => '"Lápis" na área restrita?',
 	'label_exec_autorise' => 'Páginas liberadas',
 	'label_filet' => 'Linha',
 	'label_message' => 'Exibir uma mensagem',
 	'label_msg_abandon' => 'No cancelamento',
 	'label_msg_no_change' => 'Se não houve alteração',
 	'label_reduire_logo' => 'Reduzir os logos',
-	'label_upload_document' => 'Permitir a anexação de documentos por arrastar/soltar no crayon article.texte',
+	'label_upload_document' => 'Permitir a anexação de documentos por arrastar/soltar no "lápis" `article.texte`',
 	'label_yellow_fade' => 'Fade',
 	'legend_controleur_fichier_remplacer' => 'Substituir este documento "@extension@"',
 	'legend_controleur_hyperlien' => 'Hyperlink',
@@ -57,7 +57,7 @@ $GLOBALS[$GLOBALS['idx_lang']] = array(
 	'legend_controleur_vignette' => 'Escolher uma miniatura:',
 	'legend_controleur_vignette_remplacer' => 'Substituir esta miniatura',
 	'legend_documents' => 'Upload de documentos',
-	'legend_editer_prive' => 'Editar a área restrita (experimental)',
+	'legend_editer_prive' => 'Área restrita',
 	'legend_introduction_article' => 'Texto introdutório da matéria',
 	'legend_introduction_rubrique' => 'Texto introdutório da seção',
 
@@ -79,8 +79,8 @@ $GLOBALS[$GLOBALS['idx_lang']] = array(
 	'svp_copier_coller' => 'Desculpe, copie/cole as suas alterações e recomece',
 
 	// T
-	'titre_config_crayons' => 'Configurar os crayons',
-	'titre_crayons' => 'Crayons',
+	'titre_config_crayons' => 'Configurar os "lápis"',
+	'titre_crayons' => 'Lápis',
 
 	// U
 	'update_impossible' => 'A atualização falhou.',
