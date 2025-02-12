@@ -32,7 +32,7 @@
 		<traducteur nom="Davood Hossein" lien="https://trad.spip.net/auteur/davood-hossein" />
 	</langue>
 	<langue code="fr" url="https://trad.spip.net/tradlang_module/saisies?lang_cible=fr" total="298" traduits="298" relire="0" modifs="0" nouveaux="0" pourcent="100.00" />
-	<langue code="fr_tu" url="https://trad.spip.net/tradlang_module/saisies?lang_cible=fr_tu" total="298" traduits="292" relire="0" modifs="0" nouveaux="6" pourcent="97.99">
+	<langue code="fr_tu" url="https://trad.spip.net/tradlang_module/saisies?lang_cible=fr_tu" total="298" traduits="298" relire="0" modifs="0" nouveaux="0" pourcent="100.00">
 		<traducteur nom="beatnick" lien="https://trad.spip.net/auteur/beatnick" />
 		<traducteur nom="Cerf" lien="https://trad.spip.net/auteur/cerf" />
 		<traducteur nom="maieul" lien="https://trad.spip.net/auteur/maieul" />
@@ -41,12 +41,15 @@
 	<langue code="it" url="https://trad.spip.net/tradlang_module/saisies?lang_cible=it" total="298" traduits="234" relire="0" modifs="7" nouveaux="57" pourcent="78.52">
 		<traducteur nom="Alberto" lien="https://trad.spip.net/auteur/alberto" />
 	</langue>
+	<langue code="mg" url="https://trad.spip.net/tradlang_module/saisies?lang_cible=mg" total="298" traduits="298" relire="0" modifs="0" nouveaux="0" pourcent="100.00">
+		<traducteur nom="iBesorongola" lien="https://trad.spip.net/auteur/ibesorongola" />
+	</langue>
 	<langue code="nl" url="https://trad.spip.net/tradlang_module/saisies?lang_cible=nl" total="298" traduits="174" relire="0" modifs="31" nouveaux="93" pourcent="58.39">
 		<traducteur nom="Hanjo" lien="https://trad.spip.net/auteur/hanjo" />
 		<traducteur nom="maieul" lien="https://trad.spip.net/auteur/maieul" />
 		<traducteur nom="mpossoz" lien="https://trad.spip.net/auteur/mpossoz" />
 	</langue>
-	<langue code="pt_br" url="https://trad.spip.net/tradlang_module/saisies?lang_cible=pt_br" total="298" traduits="294" relire="0" modifs="0" nouveaux="4" pourcent="98.66">
+	<langue code="pt_br" url="https://trad.spip.net/tradlang_module/saisies?lang_cible=pt_br" total="298" traduits="298" relire="0" modifs="0" nouveaux="0" pourcent="100.00">
 		<traducteur nom="placido" lien="https://trad.spip.net/auteur/placido" />
 		<traducteur nom="Ricardo Porto" lien="https://trad.spip.net/auteur/ricardo-porto" />
 	</langue>

@@ -213,17 +213,16 @@ function saisies_formulaire_charger($flux) {
  * @return string
  **/
 function saisies_formulaire_charger_generer_hidden_ancienne_valeur_depubliee($flux) {
-	if ($anciennes_valeurs = saisies_request('_anciennes_valeurs')) {
-		$encode = $anciennes_valeurs;
-	}
-	else {
-		$saisies = $flux['data']['_saisies'];
-		$form = $flux['args']['form'];
-		$retenir_ancienne_valeur = saisies_lister_necessite_retenir_ancienne_valeur($saisies);
-		$anciennes_valeurs = array_intersect_key($flux['data'], array_flip($retenir_ancienne_valeur));
+	$saisies = $flux['data']['_saisies'];
+	$form = $flux['args']['form'];
+	$retenir_ancienne_valeur = saisies_lister_necessite_retenir_ancienne_valeur($saisies);
+	$anciennes_valeurs = array_intersect_key($flux['data'], array_flip($retenir_ancienne_valeur));
+	if ($anciennes_valeurs) {
 		$encode = encoder_contexte_ajax($anciennes_valeurs, $form);
+		return "<input type='hidden' name='_anciennes_valeurs' value='$encode' />";
+	} else {
+		return '';
 	}
-	return "<input type='hidden' name='_anciennes_valeurs' value='$encode' />";
 }
 
 /**
