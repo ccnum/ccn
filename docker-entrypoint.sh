@@ -105,7 +105,9 @@ if [[ ! -e config/connect.php && ${SPIP_AUTO_INSTALL} = 1 ]]; then
 fi
 
 spip plugins:activer cextras -y
-spip plugins:activer cicas -y
+if [ ${SPIP_PLUGINS_CICAS} == true ]; then
+	spip plugins:activer cicas -y
+fi
 spip plugins:activer crayons -y
 spip plugins:activer corbeille -y
 spip plugins:activer facteur -y
@@ -147,7 +149,7 @@ MAINEOF
 fi
 
 # Default _config_cas.php
-if [ ! -e config/_config_cas.php ]; then
+if [ ! -e config/_config_cas.php && ${SPIP_PLUGINS_CICAS} == true ]; then
 	/bin/cat << MAINEOF > config/_config_cas.php
 <?php
 if (!defined("_ECRIRE_INC_VERSION")) return;
