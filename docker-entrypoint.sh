@@ -149,7 +149,7 @@ MAINEOF
 fi
 
 # Default _config_cas.php
-if [ ${SPIP_PLUGINS_CICAS} = true ]; then
+if [ ${SPIP_PLUGINS_CICAS} === true ]; then
 	/bin/cat << MAINEOF > config/_config_cas.php
 <?php
 if (!defined("_ECRIRE_INC_VERSION")) return;
