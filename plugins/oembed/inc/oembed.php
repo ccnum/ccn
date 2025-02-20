@@ -25,23 +25,68 @@ function oembed_lister_providers($avec_provider_interdits = false) {
 	// https://github.com/panzi/oembedendpoints/blob/master/endpoints-simple.json
 	// voir aussi http://embed.ly/providers qui donne les scheme mais pas les endpoint
 	$providers = [
-		'http://*.youtube.com/watch*' => 'https://www.youtube.com/oembed',
-		'http://*.youtube.com/playlist*' => 'https://www.youtube.com/oembed',
-		'http://*.youtube.com/shorts*' => 'https://www.youtube.com/oembed',
-		'http://youtu.be/*' => 'https://www.youtube.com/oembed',
-		'http://*.vimeo.com/*' => 'https://vimeo.com/api/oembed.json',
-		'http://vimeo.com/*' => 'https://vimeo.com/api/oembed.json',
-		'http://*.dailymotion.com/*' => 'https://www.dailymotion.com/services/oembed',
-		'http://dai.ly/*' => 'https://www.dailymotion.com/services/oembed',
-		'http://*.flickr.com/*' => 'https://www.flickr.com/services/oembed/',
-		'http://flickr.com/*' => 'https://www.flickr.com/services/oembed/',
-		'http://flic.kr/*' => 'https://www.flickr.com/services/oembed/',
-		'http://soundcloud.com/*' => 'https://soundcloud.com/oembed',
-		'http://mixcloud.com/*' => 'https://mixcloud.com/oembed',
-		'http://*.soundcloud.com/*' => 'https://soundcloud.com/oembed',
-		'http://*.mixcloud.com/*' => 'https://mixcloud.com/oembed',
-		'http://*.slideshare.net/*/*' => 'https://www.slideshare.net/api/oembed/2',
-		'http://www.slideshare.net/*/*' => 'https://www.slideshare.net/api/oembed/2',
+		// source https://core.trac.wordpress.org/browser/trunk/src/wp-includes/class-wp-oembed.php
+		'#https?://((m|www)\.)?youtube\.com/watch.*#i' => 'https://www.youtube.com/oembed',
+		'#https?://((m|www)\.)?youtube\.com/playlist.*#i' => 'https://www.youtube.com/oembed',
+		'#https?://((m|www)\.)?youtube\.com/shorts/*#i' => 'https://www.youtube.com/oembed',
+		'#https?://((m|www)\.)?youtube\.com/live/*#i'  => 'https://www.youtube.com/oembed',
+		'#https?://youtu\.be/.*#i'                     => 'https://www.youtube.com/oembed',
+		'#https?://(.+\.)?vimeo\.com/.*#i'             => 'https://vimeo.com/api/oembed.json',
+		'#https?://(www\.)?dailymotion\.com/.*#i'      => 'https://www.dailymotion.com/services/oembed',
+		'#https?://dai\.ly/.*#i'                       => 'https://www.dailymotion.com/services/oembed',
+		'#https?://(www\.)?flickr\.com/.*#i'           => 'https://www.flickr.com/services/oembed/',
+		'#https?://flic\.kr/.*#i'                      => 'https://www.flickr.com/services/oembed/',
+		'#https?://(.+\.)?smugmug\.com/.*#i'           => 'https://api.smugmug.com/services/oembed/',
+		'#https?://(www\.)?scribd\.com/(doc|document)/.*#i' => 'https://www.scribd.com/services/oembed',
+		'#https?://wordpress\.tv/.*#i'                 => 'https://wordpress.tv/oembed/',
+		'#https?://(.+\.)?crowdsignal\.net/.*#i'       => 'https://api.crowdsignal.com/oembed',
+		'#https?://(.+\.)?polldaddy\.com/.*#i'         => 'https://api.crowdsignal.com/oembed',
+		'#https?://poll\.fm/.*#i'                      => 'https://api.crowdsignal.com/oembed',
+		'#https?://(.+\.)?survey\.fm/.*#i'             => 'https://api.crowdsignal.com/oembed',
+		'#https?://(www\.)?twitter\.com/\w{1,15}/status(es)?/.*#i' => 'https://publish.twitter.com/oembed',
+		'#https?://(www\.)?twitter\.com/\w{1,15}$#i'   => 'https://publish.twitter.com/oembed',
+		'#https?://(www\.)?twitter\.com/\w{1,15}/likes$#i' => 'https://publish.twitter.com/oembed',
+		'#https?://(www\.)?twitter\.com/\w{1,15}/lists/.*#i' => 'https://publish.twitter.com/oembed',
+		'#https?://(www\.)?twitter\.com/\w{1,15}/timelines/.*#i' => 'https://publish.twitter.com/oembed',
+		'#https?://(www\.)?twitter\.com/i/moments/.*#i' => 'https://publish.twitter.com/oembed',
+		'#https?://(www\.)?soundcloud\.com/.*#i'       => 'https://soundcloud.com/oembed',
+		'#https?://(.+?\.)?slideshare\.net/.*#i'       => 'https://www.slideshare.net/api/oembed/2',
+		'#https?://(open|play)\.spotify\.com/.*#i'     => 'https://embed.spotify.com/oembed/',
+		'#https?://(.+\.)?imgur\.com/.*#i'             => 'https://api.imgur.com/oembed',
+		'#https?://(www\.)?issuu\.com/.+/docs/.+#i'    => 'https://issuu.com/oembed_wp',
+		'#https?://(www\.)?mixcloud\.com/.*#i'         => 'https://app.mixcloud.com/oembed/',
+		'#https?://(www\.|embed\.)?ted\.com/talks/.*#i' => 'https://www.ted.com/services/v1/oembed.json',
+		'#https?://(www\.)?(animoto|video214)\.com/play/.*#i' => 'https://animoto.com/oembeds/create',
+		'#https?://(.+)\.tumblr\.com/.*#i'             => 'https://www.tumblr.com/oembed/1.0',
+		'#https?://(www\.)?kickstarter\.com/projects/.*#i' => 'https://www.kickstarter.com/services/oembed',
+		'#https?://kck\.st/.*#i'                       => 'https://www.kickstarter.com/services/oembed',
+		'#https?://cloudup\.com/.*#i'                  => 'https://cloudup.com/oembed',
+		'#https?://(www\.)?reverbnation\.com/.*#i'     => 'https://www.reverbnation.com/oembed',
+		'#https?://videopress\.com/v/.*#'              => 'https://public-api.wordpress.com/oembed/',
+		'#https?://(www\.)?reddit\.com/r/[^/]+/comments/.*#i' => 'https://www.reddit.com/oembed',
+		'#https?://(www\.)?speakerdeck\.com/.*#i'      => 'https://speakerdeck.com/oembed.json',
+		'#https?://(www\.)?screencast\.com/.*#i'       => 'https://api.screencast.com/external/oembed',
+		'#https?://([a-z0-9-]+\.)?amazon\.(com|com\.mx|com\.br|ca)/.*#i' => 'https://read.amazon.com/kp/api/oembed',
+		'#https?://([a-z0-9-]+\.)?amazon\.(co\.uk|de|fr|it|es|in|nl|ru)/.*#i' => 'https://read.amazon.co.uk/kp/api/oembed',
+		'#https?://([a-z0-9-]+\.)?amazon\.(co\.jp|com\.au)/.*#i' => 'https://read.amazon.com.au/kp/api/oembed',
+		'#https?://([a-z0-9-]+\.)?amazon\.cn/.*#i'     => 'https://read.amazon.cn/kp/api/oembed',
+		'#https?://(www\.)?a\.co/.*#i'                 => 'https://read.amazon.com/kp/api/oembed',
+		'#https?://(www\.)?amzn\.to/.*#i'              => 'https://read.amazon.com/kp/api/oembed',
+		'#https?://(www\.)?amzn\.eu/.*#i'              => 'https://read.amazon.co.uk/kp/api/oembed',
+		'#https?://(www\.)?amzn\.in/.*#i'              => 'https://read.amazon.in/kp/api/oembed',
+		'#https?://(www\.)?amzn\.asia/.*#i'            => 'https://read.amazon.com.au/kp/api/oembed',
+		'#https?://(www\.)?z\.cn/.*#i'                 => 'https://read.amazon.cn/kp/api/oembed',
+		'#https?://www\.someecards\.com/.+-cards/.+#i' => 'https://www.someecards.com/v2/oembed/',
+		'#https?://www\.someecards\.com/usercards/viewcard/.+#i' => 'https://www.someecards.com/v2/oembed/',
+		'#https?://some\.ly\/.+#i'                     => 'https://www.someecards.com/v2/oembed/',
+		'#https?://(www\.)?tiktok\.com/.*/video/.*#i'  => 'https://www.tiktok.com/oembed',
+		'#https?://(www\.)?tiktok\.com/@.*#i'          => 'https://www.tiktok.com/oembed',
+		'#https?://([a-z]{2}|www)\.pinterest\.com(\.(au|mx))?/.*#i' => 'https://www.pinterest.com/oembed.json',
+		'#https?://(www\.)?wolframcloud\.com/obj/.+#i' => 'https://www.wolframcloud.com/oembed',
+		'#https?://pca\.st/.+#i'                       => 'https://pca.st/oembed.json',
+		'#https?://((play|www)\.)?anghami\.com/.*#i'   => 'https://api.anghami.com/rest/v1/oembed.view',
+		'#https?://bsky.app/profile/.*/post/.*#i'      => 'https://embed.bsky.app/oembed',
+		// les notres
 		'http://huffduffer.com/*/*' => 'http://huffduffer.com/oembed',
 		'http://nfb.ca/film/*' => 'http://www.nfb.ca/remote/services/oembed/',
 		'http://dotsub.com/view/*' => 'http://dotsub.com/services/oembed',
@@ -49,31 +94,17 @@ function oembed_lister_providers($avec_provider_interdits = false) {
 		'http://kinomap.com/*' => 'http://www.kinomap.com/oembed',
 		'http://photobucket.com/albums/*' => 'http://api.photobucket.com/oembed',
 		'http://photobucket.com/groups/*' => 'http://api.photobucket.com/oembed',
-		'http://*.smugmug.com/*' => 'https://api.smugmug.com/services/oembed/',
 		'http://meetup.com/*' => 'https://api.meetup.com/oembed',
 		'http://meetup.ps/*' => 'http://api.meetup.com/oembed',
-		'http://*.wordpress.com/*' => 'https://public-api.wordpress.com/oembed/1.0/',
-		'http://twitter.com/*/status/*' => 'https://publish.twitter.com/oembed',
-		'http://twitter.com/*/likes' => 'https://publish.twitter.com/oembed',
-		'http://twitter.com/*/lists/*' => 'https://publish.twitter.com/oembed',
-		'http://twitter.com/*/timelines/*' => 'https://publish.twitter.com/oembed',
-		'http://twitter.com/i/moments/*' => 'https://publish.twitter.com/oembed',
 		'http://techcrunch.com/*' => 'http://public-api.wordpress.com/oembed/1.0/',
-		'http://wp.me/*' => 'http://public-api.wordpress.com/oembed/1.0/',
 		'http://my.opera.com/*' => 'http://my.opera.com/service/oembed',
 		'http://www.collegehumor.com/video/*' => 'http://www.collegehumor.com/oembed.json',
-		'http://imgur.com/*' => 'http://api.imgur.com/oembed',
-		'http://*.imgur.com/*' => 'http://api.imgur.com/oembed',
 		'http://*.onf.ca/*' => 'http://www.onf.ca/remote/services/oembed/',
 		'http://vine.co/v/*' => 'https://vine.co/oembed.json',
-		'http://*.tumblr.com/post/*' => 'https://www.tumblr.com/oembed/1.0',
-		'http://*.kickstarter.com/projects/*' => 'https://www.kickstarter.com/services/oembed',
-		'http://speakerdeck.com/*' => 'https://speakerdeck.com/oembed.json',
-		'http://issuu.com/*/docs/*' => 'https://issuu.com/oembed',
 		'http://*.calameo.com/books/*' => 'https://www.calameo.com/services/oembed',
 		'http://*.calameo.com/read/*' => 'https://www.calameo.com/services/oembed',
 		'http://*.arte.tv/*/videos/*' => 'https://api.arte.tv/api/player/v1/oembed/',
-
+		// les autres
 		'http://egliseinfo.catholique.fr/*' => 'http://egliseinfo.catholique.fr/api/oembed',
 
 		#'https://gist.github.com/*' => 'http://github.com/api/oembed?format=json'
@@ -104,7 +135,7 @@ function oembed_lister_providers($avec_provider_interdits = false) {
  *    null : utilise la config du plugin
  * @return array|null
  */
-function oembed_provider_from_url($url, bool $detecter_lien = null) {
+function oembed_provider_from_url($url, ?bool $detecter_lien = null) {
 	static $providers = [];
 
 	if (!isset($providers[$detecter_lien])) {
@@ -233,7 +264,7 @@ function oembed_recuperer_data($url, $maxwidth = null, $maxheight = null, $forma
 		} else {
 			$provider_name2 = '';
 		}
-		$type = strtolower($cache[$data_url]['type']);
+		$type = strtolower($cache[$data_url]['type'] ?? '');
 		// securisons le nom de la fonction (provider peut contenir n'importe quoi)
 		$f1 = preg_replace(',\W,', '', "posttraite_{$provider_name2}_$type");
 		$f2 = preg_replace(',\W,', '', "posttraite_{$provider_name2}");
@@ -274,8 +305,12 @@ function oembed_verifier_provider($url) {
 
 	$providers = oembed_lister_providers(true);
 	foreach ($providers as $scheme => $endpoint) {
-		$regex = '#' . str_replace('\*', '(.+)', preg_quote($scheme, '#')) . '#';
-		$regex = preg_replace('|^#http\\\://|', '#https?\://', $regex);
+		if (!str_starts_with($scheme, '#')) {
+			$regex = '#' . str_replace('\*', '(.+)', preg_quote($scheme, '#')) . '#';
+			$regex = preg_replace('|^#http\\\://|', '#https?\://', $regex);
+		} else {
+			$regex = $scheme;
+		}
 		if (preg_match($regex, $url)) {
 			return ['endpoint' => $endpoint];
 		}
