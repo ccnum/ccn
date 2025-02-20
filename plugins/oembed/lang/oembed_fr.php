@@ -1,11 +1,8 @@
 <?php
 // This is a SPIP language file  --  Ceci est un fichier langue de SPIP
 // Fichier source, a modifier dans https://git.spip.net/spip-contrib-extensions/oembed.git
-if (!defined('_ECRIRE_INC_VERSION')) {
-	return;
-}
 
-$GLOBALS[$GLOBALS['idx_lang']] = array(
+return [
 
 	// A
 	'aucun_provider' => 'Aucun provider',
@@ -44,4 +41,4 @@ $GLOBALS[$GLOBALS['idx_lang']] = array(
 	'titre_configurer_oembed' => 'Configurer oEmbed',
 	'titre_configurer_providers' => 'Providers oEmbed',
 	'titre_oembed' => 'oEmbed'
-);
+];

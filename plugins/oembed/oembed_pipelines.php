@@ -66,15 +66,7 @@ function oembed_formulaire_charger($flux) {
  */
 function oembed_recuperer_fond($flux) {
 	if ($flux['args']['fond'] === 'formulaires/inc-upload_document') {
-		include_spip('inc/oembed');
-		$providers = oembed_lister_providers();
-		$hosts = [];
-		foreach ($providers as $scheme => $endpoint) {
-			$h = parse_url($scheme, PHP_URL_HOST);
-			$hosts[trim(preg_replace(',^(\*|www)\.,i', '', $h))] = true;
-		}
-		$hosts = implode(', ', array_keys($hosts));
-		$i = _T('oembed:explication_upload_url', ['hosts' => $hosts]);
+		$i = _T('oembed:explication_upload_url');
 		$i = "<p class='explication small'>$i</p>";
 		$flux['data']['texte'] = str_replace($t = '<!--editer_url-->', $t . $i, $flux['data']['texte']);
 	} elseif ($flux['args']['fond'] === 'modeles/document_case') {

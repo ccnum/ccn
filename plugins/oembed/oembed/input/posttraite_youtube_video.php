@@ -11,7 +11,8 @@ if (!defined('_ECRIRE_INC_VERSION')) {
 }
 
 function oembed_input_posttraite_youtube_video_dist($data, $url_orig) {
-
+	include_spip('inc/filtres');
+	
 	$html = $data['html'];
 	if (
 		$e = extraire_balise($html, 'embed')
