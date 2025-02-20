@@ -144,6 +144,8 @@ define('_DEBUG_SLOW_QUERIES', true);
 define('_BOUCLE_PROFILER', 5000);
 // désactiver les notifications de mise à jour
 define('_MAJ_NOTIF_EMAILS', '');
+// des personalisations par projet
+define('_PROJET', $PROJET);
 ?>
 MAINEOF
 fi
