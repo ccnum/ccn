@@ -46,17 +46,30 @@
 						[(#ENV{creer}|non)
 							<div class="bord">En tant qu'admin des rubriques suivante, quelle histoire souhaitez vous mettre en place sur ce poste ?</div>
 							<BOUCLE_admin(RUBRIQUES){titre==jeu}{tout}>
-								<BOUCLE_admin1(RUBRIQUES){id_parent=#ID_RUBRIQUE}{id_auteur=#SESSION{id_auteur}}{par num titre, titre}{'<br />'}>
-									<a href="[(#SELF|parametre_url{liste,''}|parametre_url{page,ecriture}|parametre_url{rub_jeu,#ID_RUBRIQUE})]">#TITRE</a>
+								<B_admin1>
+								<ul>
+								<BOUCLE_admin1(RUBRIQUES){tous}{id_parent=#ID_RUBRIQUE}{id_auteur=#SESSION{id_auteur}}{par num titre, titre}{'<br />'}>
+									<li>
+										#TITRE
+										<B_admin1112>
+											<ul>
+										<BOUCLE_admin1112(RUBRIQUES){tous}{id_parent=#ID_RUBRIQUE}{par num titre, titre}>
+											<li><a target="_blank" [(#SELF|parametre_url{liste,''}|parametre_url{page,ecriture}|parametre_url{rub_jeu,#ID_RUBRIQUE})]">#TITRE</a></li>
+										</BOUCLE_admin1112>
+											</ul>
+										</B_admin1112>
+									</li>
 								</BOUCLE_admin1>
+								</ul>
+								</B_admin1>
 									<ul>
-									<BOUCLE_admin11(RUBRIQUES){id_parent=#ID_RUBRIQUE}{par num titre, titre}>
+									<BOUCLE_admin11(RUBRIQUES){tous}{id_parent=#ID_RUBRIQUE}{par num titre, titre}>
 										<li>
 											#TITRE
 											<B_admin111>
 												<ul>
-											<BOUCLE_admin111(RUBRIQUES){id_parent=#ID_RUBRIQUE}{par num titre, titre}>
-												<li><a href="[(#SELF|parametre_url{liste,''}|parametre_url{page,ecriture}|parametre_url{rub_jeu,#ID_RUBRIQUE})]">#TITRE</a></li>
+											<BOUCLE_admin111(RUBRIQUES){tous}{id_parent=#ID_RUBRIQUE}{par num titre, titre}>
+												<li><a target="_blank" [(#SELF|parametre_url{liste,''}|parametre_url{page,ecriture}|parametre_url{rub_jeu,#ID_RUBRIQUE})]">#TITRE</a></li>
 											</BOUCLE_admin111>
 												</ul>
 											</B_admin111>
