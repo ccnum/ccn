@@ -70,6 +70,10 @@ if version_greater "$image_version" "$installed_version"; then
 		chown www-data:www-data .htaccess
 	fi
 
+	if [ ${SPIP_DB_SERVER} = "mysql" ]; then
+		wait_for_db
+	fi
+
 	# Upgrade SPIP
 	if [ -f config/connect.php ]; then
 		spip core:maj:bdd
@@ -132,6 +136,7 @@ spip config:ecrire -p notation change_note:oui
 spip config:ecrire -p mediabox active:oui
 
 # Default mes_options
+rm -rf config/mes_options.php
 if [ ! -e config/mes_options.php ]; then
 	/bin/cat << MAINEOF > config/mes_options.php
 <?php
