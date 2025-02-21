@@ -32,145 +32,125 @@
 			<BOUCLE_rubriques_ordre(RUBRIQUES) {id_rubrique} {titre_mot IN chrono,blog} {doublons r}>
 			</BOUCLE_rubriques_ordre>
 
-  			[(#REM)
-  			|
-  			|  Si :
-  			|   …la rubrique #_principale a les mots-clés blog ou chrono,
-  			|
-  			|  Alors on cherche :
-  			|   Articles || enfants || de la rubrique #_principale ayant les mots-clés blog ou chrono
-  			|
-  			|  Note :
-  			|   Il n'y a aucun article/rubrique avec ces mots-clés,
-  			|   donc la boucle n'est jamais exécutée
-        	]
+				[(#REM)
+				|
+				|  Si :
+				|   …la rubrique #_principale a les mots-clés blog ou chrono,
+				|
+				|  Alors on cherche :
+				|   Articles || enfants || de la rubrique #_principale ayant les mots-clés blog ou chrono
+				|
+				|  Note :
+				|   Il n'y a aucun article/rubrique avec ces mots-clés,
+				|   donc la boucle n'est jamais exécutée
+				]
 
-  			<BOUCLE_sous_articles0(ARTICLES) {id_rubrique} {tout} {!par date} {doublons}>
-  				<script type="text/javascript">
-  				$().ready(function(){
-					$('#ajax#ID_ARTICLE').click(function() {
-						$('div#sidebar_main').addClass('chargement');
-						$('#menug li a.selected').removeClass('selected');
-						$('#ajax_rub_#ID_RUBRIQUE').addClass('selected');
-						$('#sidebar_main').load('[(#URL_ARTICLE|parametre_url{mode,ajax-detail}|html_entity_decode)]'
-						, {limit: 25}, function(){
-							hideSidebarLateral();
-							$('div#sidebar_main').removeClass('chargement');
-							$('#sidebar_main').show('slow');
-							});
-					});
-				});
-
-				// console.log('(A) Rubrique (#TYPE_OBJET) : Affichage de l\'article ##ID_ARTICLE || enfant || de la rubrique #_principale ##_principale:ID_RUBRIQUE ayant les mots-clés blog ou chrono');
-  				</script>
-  				<li><a id="ajax#ID_ARTICLE" href="#" class="ajax [(#EXPOSE) [(#GET{art1}|=={#ID_ARTICLE}|?{ gauche_menu_on })]]">[- (#TITRE|couper{80})]</a></li>
-  			</BOUCLE_sous_articles0>
-  			<br />
-  			</B_sous_articles0>
-
-			</B_rubriques_ordre>
-
-			[(#REM)
-			|
-			|  Si :
-			|	… l'id de la rubrique correspond à l'id de laclasse_rubrique_admin
-			|   …la rubrique #_principale n'a pas les mots-clés blog ou chrono,
-			|
-			|  Alors on cherche :
-			|   Articles || enfants || de la rubrique #_principale n'ayant pas les mots-clés blog ou chrono
-			|
-			| 	Affiche la rubrique concernant l'utilisateur connecté en premiere place dans Travail en cours
-			|	seulement si l'utilisateur connecté est professeur
-			]
-
-			<!-- Vérifie le mot clé de la rubrique  -->
-			<BOUCLE_getMotCle(MOTS) {id_rubrique == #SESSION{idRubriqueUser}}>
-				#SET{motcle, #TITRE}
-			</BOUCLE_getMotCle>
-			<BOUCLE_rubAnnee(RUBRIQUES) {racine}{titre LIKE %(#CONST{_annee_scolaire})%} {si #SESSION{role}|=={prof}} {si #GET{motcle}|!={evenements} } >
-				<BOUCLE_filtreTravailEnCours(RUBRIQUES){id_parent} {titre_mot=travail_en_cours}{par date}{0,2}>
-					<BOUCLE_filtreIdRubriques(RUBRIQUES){id_parent} {id_rubrique == #SESSION{idRubriqueUser}} {doublons r}>
-						<div class="sidebar_bubble ressources_classes_around [(#TYPE_OBJET|match{travail_en_cours}|oui) ressources_travail_en_cours] [(#TYPE_OBJET|match{travail_en_cours}|non) ressources_no_color]">
-								<div class="[(#TYPE_OBJET|match{travail_en_cours}|oui) couleur_travail_en_cours[(#ID_RUBRIQUE|nb2col)]] ressources_classes">
-					<a id="ajax_rub_#ID_RUBRIQUE" href="#" class="hac ajax ressources_classe_nom ">
-							<strong>#TITRE</strong>
-					</a>
+				<BOUCLE_sous_articles0(ARTICLES) {id_rubrique} {tout} {!par date} {doublons}>
 					<script type="text/javascript">
-						$().ready(function(){
-            					// TODO
-            					$('#ajax_rub_#ID_RUBRIQUE').click(function() {
-              					call({
-                					'type':'rubrique',
-                					'type_objet':'travail_en_cours',
-                					'id_rubrique':'#ID_RUBRIQUE',
-                					'mode':'ajax-detail'
-              					});
-            					});
-          					});
-					</script>
-
-					<ul>
-						<!-- AFFICHAGE ARTICLES  -->
-						<BOUCLE_sous_articlesTest(ARTICLES) {id_rubrique == #GET{laclasse_rubrique_admin}} {par num titre} {doublons}>
-						<li class="ressources_classe_consignes">
-							<a id="ajax#ID_ARTICLE" href="#" class="hac ajax[ (#EXPOSE)][ (#GET{rub1}|=={#ID_RUBRIQUE}|?{ on })]">
-								[<strong>(#TITRE|couper{80})</strong>]
-							</a>
-						</li>
-					</ul>
-						<!--<h2 style="color: black; background: white">TEST - #ID_ARTICLE - RUBRIQUE : #ID_RUBRIQUE</h2>-->
-						<script type="text/javascript">
-							$().ready(function(){
-								// TODO
-								console.lo('clic');
-								$('#ajax#ID_ARTICLE').click(function() {
-									call({
-									'type':'article',
-									'type_objet':'travail_en_cours',
-									'id_article':'#ID_ARTICLE',
-									'id_parent':'#ID_PARENT',
-									'mode':'ajax-detail'
-									[(#ID_CONSIGNE|oui) 'type_entite':'reponse']
-									});
-								});
-							});
-						</script>
-
-					</BOUCLE_sous_articlesTest>
-				</BOUCLE_filtreIdRubriques>
-			</BOUCLE_filtreTravailEnCours>
-		</BOUCLE_rubAnnee>
-			<br />
-		</div>
-	</div>
-
-				<BOUCLE_sous_articles1(ARTICLES) {id_rubrique} {tout} {par num titre} {doublons}>
-					<script type="text/javascript">
-					$().ready(function(){
 						$('#ajax#ID_ARTICLE').click(function() {
 							$('div#sidebar_main').addClass('chargement');
 							$('#menug li a.selected').removeClass('selected');
 							$('#ajax_rub_#ID_RUBRIQUE').addClass('selected');
-							$('#sidebar_main').load('[(#URL_PAGE{article}|parametre_url{id_article,#ID_ARTICLE}|parametre_url{mode,ajax-detail}|html_entity_decode)]',
-							  {limit: 25},
-							  function(){
+							$('#sidebar_main').load('[(#URL_ARTICLE|parametre_url{mode,ajax-detail}|html_entity_decode)]', {limit: 25}, function(){
 								hideSidebarLateral();
-  								$('div#sidebar_main').removeClass('chargement');
-  								$('#sidebar_main').show('slow');
-								}
-              );
+								$('div#sidebar_main').removeClass('chargement');
+								$('#sidebar_main').show('slow');
+							});
 						});
-					});
-
-					// console.log('(A.a) Rubrique (#TYPE_OBJET) : Affichage de l\'article ##ID_ARTICLE || enfants || de la rubrique #_principale ##_principale:ID_RUBRIQUE n\'ayant pas les mots-clés blog ou chrono');
-
 					</script>
-					<div class="sidebar_bubble">
-  					<a id="ajax#ID_ARTICLE" href="#" class="ressources_classe_nom ajax [(#EXPOSE) [(#GET{art1}|=={#ID_ARTICLE}|?{ gauche_menu_on })]]">[- (#TITRE|couper{80})]</a>
-  				</div>
-				</BOUCLE_sous_articles1>
+					<li><a id="ajax#ID_ARTICLE" href="#" class="ajax [(#EXPOSE) [(#GET{art1}|=={#ID_ARTICLE}|?{ gauche_menu_on })]]">[- (#TITRE|couper{80})]</a></li>
+				</BOUCLE_sous_articles0>
 				<br />
-				</B_sous_articles1>
+				</B_sous_articles0>
+
+			</B_rubriques_ordre>
+
+				[(#REM)
+				|
+				|  Si :
+				|	… l'id de la rubrique correspond à l'id de laclasse_rubrique_admin
+				|   …la rubrique #_principale n'a pas les mots-clés blog ou chrono,
+				|
+				|  Alors on cherche :
+				|   Articles || enfants || de la rubrique #_principale n'ayant pas les mots-clés blog ou chrono
+				|
+				| 	Affiche la rubrique concernant l'utilisateur connecté en premiere place dans Travail en cours
+				|	seulement si l'utilisateur connecté est professeur
+				]
+
+				<!-- Vérifie le mot clé de la rubrique  -->
+				<BOUCLE_getMotCle(MOTS) {id_rubrique == #SESSION{idRubriqueUser}}>
+					#SET{motcle, #TITRE}
+				</BOUCLE_getMotCle>
+				<BOUCLE_rubAnnee(RUBRIQUES) {racine}{titre LIKE %(#CONST{_annee_scolaire})%} {si #SESSION{role}|=={prof}} {si #GET{motcle}|!={evenements} } >
+					<BOUCLE_filtreTravailEnCours(RUBRIQUES){id_parent} {titre_mot=travail_en_cours}{par date}{0,2}>
+						<BOUCLE_filtreIdRubriques(RUBRIQUES){id_parent} {id_rubrique == #SESSION{idRubriqueUser}} {doublons r}>
+							<div class="sidebar_bubble ressources_classes_around [(#TYPE_OBJET|match{travail_en_cours}|oui) ressources_travail_en_cours] [(#TYPE_OBJET|match{travail_en_cours}|non) ressources_no_color]">
+								<div class="[(#TYPE_OBJET|match{travail_en_cours}|oui) couleur_travail_en_cours[(#ID_RUBRIQUE|nb2col)]] ressources_classes">
+									<a id="ajax_rub_#ID_RUBRIQUE" href="#" class="hac ajax ressources_classe_nom">
+										<strong>#TITRE</strong>
+									</a>
+									<script type="text/javascript">
+										$('#ajax_rub_#ID_RUBRIQUE').click(function() {
+											call({
+												'type':'rubrique',
+												'type_objet':'travail_en_cours',
+												'id_rubrique':'#ID_RUBRIQUE',
+												'mode':'ajax-detail'
+											});
+										});
+									</script>
+
+									<ul>
+										<!-- AFFICHAGE ARTICLES  -->
+										<BOUCLE_sous_articlesTest(ARTICLES) {id_rubrique == #GET{laclasse_rubrique_admin}} {par num titre} {doublons}>
+										<li class="ressources_classe_consignes">
+											<a id="ajax#ID_ARTICLE" href="#" class="hac ajax[ (#EXPOSE)][ (#GET{rub1}|=={#ID_RUBRIQUE}|?{ on })]">
+												[<strong>(#TITRE|couper{80})</strong>]
+											</a>
+										</li>
+										<script type="text/javascript">
+											$('#ajax#ID_ARTICLE').click(function() {
+												call({
+													'type':'article',
+													'type_objet':'travail_en_cours',
+													'id_article':'#ID_ARTICLE',
+													'id_parent':'#ID_PARENT',
+													'mode':'ajax-detail'
+													[(#ID_CONSIGNE|oui) 'type_entite':'reponse']
+												});
+											});
+										</script>
+										</BOUCLE_sous_articlesTest>
+									</ul>
+					</BOUCLE_filtreIdRubriques>
+				</BOUCLE_filtreTravailEnCours>
+			</BOUCLE_rubAnnee>
+				<br />
+			</div>
+		</div>
+
+					<BOUCLE_sous_articles1(ARTICLES) {id_rubrique} {tout} {par num titre} {doublons}>
+						<script type="text/javascript">
+							$('#ajax#ID_ARTICLE').click(function() {
+								$('div#sidebar_main').addClass('chargement');
+								$('#menug li a.selected').removeClass('selected');
+								$('#ajax_rub_#ID_RUBRIQUE').addClass('selected');
+								$('#sidebar_main').load('[(#URL_PAGE{article}|parametre_url{id_article,#ID_ARTICLE}|parametre_url{mode,ajax-detail}|html_entity_decode)]',
+								{limit: 25},
+								function(){
+									hideSidebarLateral();
+									$('div#sidebar_main').removeClass('chargement');
+									$('#sidebar_main').show('slow');
+								});
+							});
+						</script>
+						<div class="sidebar_bubble">
+						<a id="ajax#ID_ARTICLE" href="#" class="ressources_classe_nom ajax [(#EXPOSE) [(#GET{art1}|=={#ID_ARTICLE}|?{ gauche_menu_on })]]">[- (#TITRE|couper{80})]</a>
+					</div>
+					</BOUCLE_sous_articles1>
+					<br />
+					</B_sous_articles1>
 
 			<//B_rubriques_ordre>
 
@@ -185,7 +165,7 @@
 
 			<BOUCLE_rubriques(RUBRIQUES) {id_parent} {par num titre, titre}{tout} {doublons r}>
 				<script type="text/javascript">
-					$().ready(function(){
+					$(function() {
   					$('#ajax_rub_#ID_RUBRIQUE').click(function() {
     					call({
       					'type':'rubrique',
@@ -209,7 +189,7 @@
 						[(#REM)Rubriques]
 						<BOUCLE_sous_rubriques(RUBRIQUES) {id_parent} {par num titre, titre} {doublons r}>
       				<script type="text/javascript">
-      					$().ready(function(){
+      					$(function() {
         					// TODO
         					$('#ajax_rub_#ID_RUBRIQUE').click(function() {
           					call({
@@ -231,7 +211,7 @@
 									<BOUCLE_sous_rubriques00(RUBRIQUES) {id_parent} {tout} {par titre} {doublons r}>
 
           				<script type="text/javascript">
-          					$().ready(function(){
+          					$(function() {
             					// TODO
             					$('#ajax_rub_#ID_RUBRIQUE').click(function() {
               					call({
@@ -276,7 +256,7 @@
 							<BOUCLE_sous_articles2(ARTICLES) {id_rubrique} {tout} {!par date} {doublons}>
 
         				<script type="text/javascript">
-        					$().ready(function(){
+        					$(function() {
           					// TODO
           					$('#ajax#ID_ARTICLE').click(function() {
             					call({
@@ -308,7 +288,7 @@
 
 							<BOUCLE_sous_articles3(ARTICLES) {id_rubrique} {si #STATUT|== {publie}} {par num titre} {doublons}>
         				<script type="text/javascript">
-        					$().ready(function(){
+        					$(function() {
           					// TODO
           					$('#ajax#ID_ARTICLE').click(function() {
             					call({
@@ -340,7 +320,7 @@
 
 						<BOUCLE_sous_articles(ARTICLES) {id_rubrique} {si #STATUT|== {publie}} {!par date} {doublons}>
       				<script type="text/javascript">
-      					$().ready(function(){
+      					$(function() {
         					// TODO
         					$('#ajax#ID_ARTICLE').click(function() {
           					call({
@@ -376,7 +356,7 @@
 								[(#TAGS|oui)
 									[(#SET{dest,[(#TAGS|extraire_attribut{href})]})]
 									<script type="text/javascript">
-									$().ready(function(){
+									$(function() {
 									$('#ajax#ID_SYNDIC_ARTICLE').click(function() {
 										$('#menug li a.selected').removeClass('selected');
 										$('#ajax_rub_#ID_SYNDIC').addClass('selected');
@@ -394,7 +374,7 @@
 								[(#TAGS|non)
 
 									<script type="text/javascript">
-									$().ready(function(){
+									$(function() {
 									$('#ajax#ID_SYNDIC_ARTICLE').click(function() {
 										$('#menug li a.selected').removeClass('selected');
 										$('#ajax_rub_#ID_SYNDIC').addClass('selected');
@@ -423,7 +403,7 @@
   	// console.log('Rubrique : (old) AJAX de l\'article ##ID_ARTICLE');
 
   		/*
-		$().ready(function(){
+		$(function() {
 			$('#ajax_rub_#ID_RUBRIQUE').addClass('selected');
 			$('div#sidebar_main').addClass('chargement');
 			$('#sidebar_main').load('[(#URL_PAGE{article}|parametre_url{id_article,#ID_ARTICLE}|parametre_url{mode,ajax-detail}|html_entity_decode)]'
@@ -441,7 +421,7 @@
 		<script type="text/javascript">
   	// console.log('Rubrique : (old) AJAX de publier avec la rubrique ##ID_RUBRIQUE');
   	/*
-		$().ready(function(){
+		$(function() {
 			$('#ajax_rub_#ID_RUBRIQUE').addClass('selected');
 			$('div#sidebar_main').addClass('chargement');
 			$('div#sidebar_main').addClass('chargement');
