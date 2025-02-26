@@ -1,0 +1,12 @@
+<paquet
+	prefix="thematique_edifice"
+	categorie="squelette"
+	version="0.0.1"
+	etat="dev"
+	logo="th.png"
+	schema="1.0.0"
+	documentation="http://www.laclasse.com"
+	compatibilite="[4.3.2;4.*]"
+>
+	<nom>Thematiques EDIFICE</nom>
+</paquet>
