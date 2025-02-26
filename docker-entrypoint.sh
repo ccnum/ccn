@@ -108,27 +108,17 @@ if [[ ! -e config/connect.php && ${SPIP_AUTO_INSTALL} = 1 ]]; then
     #fi
 fi
 
-spip plugins:activer cextras -y
+spip plugins:activer --from-list=['cextras','crayons','corbeille','facteur','imports_utilisateurs','jqueryui','notation','notifications','oembed','saisies','socialtags','spip_bonux','verifier','yaml'] -y
 if [ ${SPIP_PLUGINS_CICAS} == true ]; then
 	spip plugins:activer cicas -y
 fi
-spip plugins:activer crayons -y
-spip plugins:activer corbeille -y
-spip plugins:activer facteur -y
-spip plugins:activer imports_utilisateurs -y
-spip plugins:activer jqueryui -y
-spip plugins:activer notation -y
-spip plugins:activer notifications -y
-spip plugins:activer oembed -y
-spip plugins:activer saisies -y
-spip plugins:activer socialtags -y
-spip plugins:activer spip_bonux -y
-spip plugins:activer verifier -y
-spip plugins:activer yaml -y
 if [ ${SPIP_VERSION_SITE} != "thematique" ]; then
 	spip plugins:activer vider_rubrique -y
 fi
 spip plugins:activer ${SPIP_VERSION_SITE} -y
+if [ ${PROJET} != "laclasse" ]; then
+	spip plugins:activer thematique_${PROJET} -y
+fi
 spip plugins:maj:bdd
 
 spip config:ecrire -p notation acces:ide
@@ -147,6 +137,7 @@ define('_LOG_FILELINE', true);
 define('_LOG_FILTRE_GRAVITE', 8);
 define('_DEBUG_SLOW_QUERIES', true);
 define('_BOUCLE_PROFILER', 5000);
+define('_AUTORISER_TELECHARGER_PLUGINS', false);
 // désactiver les notifications de mise à jour
 define('_MAJ_NOTIF_EMAILS', '');
 // des personalisations par projet
