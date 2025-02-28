@@ -6,7 +6,7 @@ function valider_chapitre($id_article, $id_rubrique) {
 
 	// Publication
 	autoriser_exception('modifier', 'article', $id_article);
-	sql_update('spip_articles', ["statut" => "publie"], 'id_article=' . intval($id_article));
+	sql_updateq('spip_articles', ["statut" => "publie"], 'id_article=' . intval($id_article));
 	autoriser_exception('modifier', 'article', $id_article, false);
 
 	$envoyer_mail = charger_fonction('envoyer_mail', 'inc');
@@ -16,10 +16,9 @@ function valider_chapitre($id_article, $id_rubrique) {
 	$html = "Bonjour,";
 	$html .= "<br />Merci d'avoir participé au petit fablab d'écriture !";
 	$html .= "<br />Accédez dès maintenant à votre chapitre en ligne : http://petitfablab.laclasse.com/spip.php?page=lecture&id_rubrique=" . $id_rubrique . ". Un deuxième message vous préviendra lorsque votre histoire sera disponible.";
-	$html .= "<br />A très bientôt";
-	$html .= "<br /><br />Suivez nos actualités sur Twitter @petitfablab ou sur le blog https://petit-fablab-ecriture.tumblr.com/";
+	$html .= "<br />A très bientôt<br />";
 	$html .= "<br />Le petit fablab d'écriture est un dispositif imaginé par Erasme, laboratoire d'innovation ouverte de la Métropole de Lyon, en collaboration avec la Villa Gillet.";
-	$html .= "<br />Retrouvez le Petit Fab Lab d'écriture à Lyon aux Assises Internationales du Roman et à Grenoble à La Casemate et au salon Experimenta.";
+	$html .= "<br />Suivez nos actualités sur le blog https://petit-fablab-ecriture.tumblr.com/";
 
 	$contenu_html = recuperer_fond('emails/texte', ['html' => $html]);
 	$corps = [
@@ -34,7 +33,7 @@ function valider_chapitre($id_article, $id_rubrique) {
 
 	// Si 5ème chapitre
 	$n = sql_countsel("titre", "spip_articles", ["statut=" . sql_quote('publie'), "id_rubrique=" . intval($id_rubrique)]);
-	if ($n >= 5) {
+	if ($n == 5) {
 		$id_parent = sql_getfetsel("id_parent", "spip_rubriques", "id_rubrique=" . intval($id_rubrique));
 		$rub_hist = creer_histoire($id_parent);
 		$bcc = ['cmonnet@erasme.org'];
@@ -51,10 +50,9 @@ function valider_chapitre($id_article, $id_rubrique) {
 		$html = "Bonjour à tous,";
 		$html .= "<br />Félicitations votre histoire est en ligne.";
 		$html .= "<br />Discutez de l'édition de votre histoire avec vos co-auteurs par retour de mail : http://petitfablab.laclasse.com/spip.php?page=lecture&id_rubrique=" . $id_rubrique;
-		$html .= "<br />A très bientôt";
-		$html .= "<br /><br />Suivez nos actualités sur Twitter @petitfablab ou sur le blog https://petit-fablab-ecriture.tumblr.com/";
+		$html .= "<br />A très bientôt<br />";
 		$html .= "<br />Le petit fablab d'écriture est un dispositif imaginé par Erasme, laboratoire d'innovation ouverte de la Métropole de Lyon, en collaboration avec la Villa Gillet.";
-		$html .= "<br />Retrouvez le Petit Fab Lab d'écriture à Lyon aux Assises Internationales du Roman et à Grenoble à La Casemate et au salon Experimenta. ";
+		$html .= "<br />Suivez nos actualités sur le blog https://petit-fablab-ecriture.tumblr.com/";
 
 		$contenu_html = recuperer_fond('emails/texte', ['html' => $html]);
 		$corps = [

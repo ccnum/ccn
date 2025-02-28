@@ -72,7 +72,7 @@
               <div class="ressource_rubrique_titre" id="rubrique_#ID_RUBRIQUE"><h3>#TITRE</h3></div>
 
               <script type="text/javascript">
-              	$().ready(function(){
+              	$(function() {
               		$('#ajax_go_to_ressources_rubrique_#ID_RUBRIQUE').on('click',function() {
               			callRessourceRubrique('#ID_RUBRIQUE','#GET{sous_type}');
               		});
@@ -83,7 +83,7 @@
                 <div class="ressource_article" id="ajax_go_to_ressources_article_#ID_ARTICLE">#TITRE</div>
 
               	<script type="text/javascript">
-              		$().ready(function(){
+              		$(function() {
               			$('#ajax_go_to_ressources_article_#ID_ARTICLE').on('click',function() {
               				callRessourceArticle('#ID_ARTICLE','#GET{sous_type}');
               			});
@@ -106,7 +106,7 @@
               <div class="ressource_rubrique_titre" id="ajax_go_to_ressources_rubrique_#ID_RUBRIQUE"><h3>#NOM_SITE</h3></div>
 
               <script type="text/javascript">
-              	$().ready(function(){
+              	$(function() {
               		$('#ajax_go_to_ressources_rubrique_#ID_RUBRIQUE').on('click',function() {
               		//	callRessourceRubrique('#ID_RUBRIQUE');
               		});
@@ -117,7 +117,7 @@
                 <div class="ressource_article" id="ajax_go_to_ressources_syndic_article_#ID_SYNDIC_ARTICLE">#TITRE</div>
 
               	<script type="text/javascript">
-              		$().ready(function(){
+              		$(function() {
               			$('#ajax_go_to_ressources_syndic_article_#ID_SYNDIC_ARTICLE').on('click',function() {
               				callRessourceSyndicArticle('#ID_SYNDIC_ARTICLE','#GET{sous_type}');
               			});
@@ -143,7 +143,7 @@
         	  <div class="ressource_article" id="ajax_go_to_ressources_article_#ID_ARTICLE">#TITRE</div>
 
 						<script type="text/javascript">
-  						$().ready(function(){
+  						$(function() {
     						$('#ajax_go_to_ressources_article_#ID_ARTICLE').on('click',function() {
     							callRessourceArticle('#ID_ARTICLE','#GET{sous_type}');
     						});
