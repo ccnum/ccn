@@ -14,7 +14,7 @@
 			[(#REM)Déroulé de l'arborescence]
 			<BOUCLE_rubriques(MOTS) {id_groupe} {par num titre, titre}{tout} {doublons r}>
 				<script type="text/javascript">
-					$().ready(function(){
+					$(function() {
 					$('#ajax_rub_#ID_MOT').click(function() {
 						$('div#sidebar_main').addClass('chargement');
 						$('#sidebar_main').load('[(#URL_PAGE{groupe_mot}|parametre_url{id_groupe,#ID_GROUPE}|parametre_url{id_mot,#ID_MOT}|parametre_url{mode,ajax-detail}|html_entity_decode)]'
@@ -30,7 +30,7 @@
 						[(#REM)Articles]
 						<BOUCLE_sous_articles2(ARTICLES) {id_mot} {tout} {!par date} {doublons}>
 							<script type="text/javascript">
-								$().ready(function(){
+								$(function() {
 								$('#ajax#ID_ARTICLE').click(function() {
 									$('div#sidebar_main').addClass('chargement');
 									$('#sidebar_main').load('[(#URL_PAGE{article}|parametre_url{id_article,#ID_ARTICLE}|parametre_url{mode,ajax-detail}|html_entity_decode)]'
@@ -52,7 +52,7 @@
 	[(#REM)Pour ouverture directe si id_article ou publier présent]
 		[(#ID_ARTICLE|oui)
 			<script type="text/javascript">
-			$().ready(function(){
+			$(function() {
 				$('div#sidebar_main').addClass('chargement');
 				$('#sidebar_main').load('[(#URL_PAGE{article}|parametre_url{id_article,#ID_ARTICLE}|parametre_url{mode,ajax-detail}|html_entity_decode)]'
 				, {limit: 25}, function(){
@@ -64,7 +64,7 @@
 		]
 		[(#TYPE_OBJET|=={travail_en_cours}|oui)
 			<script type="text/javascript">
-			$().ready(function(){
+			$(function() {
 				$('div#sidebar_main').addClass('chargement');
 				$('#sidebar_main').load('[(#URL_PAGE{publier}|parametre_url{id_rubrique,#ID_RUBRIQUE}|parametre_url{mode,ajax-detail}|parametre_url{type_objet,#TYPE_OBJET}|parametre_url{id_consigne,#ID_CONSIGNE}|html_entity_decode)]'
 				, {limit: 25}, function(){

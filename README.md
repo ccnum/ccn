@@ -1,25 +1,24 @@
-# CCN
+# SPIP
 
-## Gestion des versions
-Afin de proposer des images docker versionnées, une ci a été mise en place.
-A chaque pull request fermée sur la branche `main`, un tag est créé sur le répo github et une image docker est construite et pushée sur le dockerhub.
+[SPIP](https://www.spip.net/) (Système de Publication pour Internet) est un logiciel libre permettant de créer des sites internets,
+maintenu par sa communauté avec tendresse.
 
-### Incrémentation de la version
-Les version sont déclarés de la manière suivante : `X.Y.Z` où X est le numéro de version majeur, Y le numéro de version mineur et Z le numéro de version de patch.
+## Pour démarrer
 
-Par défaut a chaque fermerture de pull request, le numéro de version de patch est incrémenté. Si la pull request est taggée avec un label `#major` ou `#minor`, le numéro de version majeur ou mineur est incrémenté.
+- [Configuration requise](https://www.spip.net/fr_article4351.html)
+- [Versions maintenues](https://www.spip.net/fr_article6500.html)
+- [Téléchargement](https://www.spip.net/fr_download)
+- [Installation](https://www.spip.net/fr_rubrique151.html)
 
-### Exemples
+## Communauté & contributions
 
-nom de pull request : `Maj de code / rajout de fonction sur les CCN`
+- [Charte](https://www.spip.net/fr_article6431.html)
+- [Entraide et discussions](https://discuter.spip.net)
+- [Forge Git](https://git.spip.net) (tickets, pull requests)
+- [Règles de contribution](https://www.spip.net/fr_article825.html#Regles-de-contribution)
+- [Espace de traduction](https://trad.spip.net)
 
-Si la pull request est fermée sans label, la version sera incrémentée de la manière suivante : `1.0.1`
+## Politique de sécurité
 
-nom de pull request : `#minor - MAJ de version Y de SPIP`
-
-Si la pull request est fermée avec le label `#minor`, la version sera incrémentée de la manière suivante : `1.1.0`
-
-nom de pull request : `#major - MAJ de version X de SPIP`
-
-Si la pull request est fermée avec le label `#major`, la version sera incrémentée de la manière suivante : `2.0.0`
-
+- [Signaler une faille de sécurité](https://www.spip.net/fr_article6688.html)
+- [SECURITY.md](SECURITY.md)

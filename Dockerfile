@@ -1,6 +1,6 @@
 FROM php:8.3-apache-bookworm AS base
 ENV SPIP_VERSION 4.3
-ENV SPIP_PACKAGE 4.3.6
+ENV SPIP_PACKAGE 4.3.8
 
 RUN set -eux; \
     apt-get update; \
@@ -184,6 +184,7 @@ ENV SPIP_ADMIN_EMAIL admin@spip
 ENV SPIP_ADMIN_PASS adminadmin
 ENV SPIP_SITE_ADDRESS http://localhost
 ENV SPIP_VERSION_SITE thematique
+ENV PROJET laclasse
 
 # PHP
 ENV PHP_MAX_EXECUTION_TIME 60

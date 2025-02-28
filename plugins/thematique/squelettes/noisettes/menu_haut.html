@@ -65,6 +65,7 @@
 	</li>
 </ul>
 ]
+[(#CONST{_PROJET}|=={laclasse}|oui)
 <ul id="menu_haut_logos" class="bloc_titre">
 	<li>
 		<a href="https://erasme.org/-Classes-culturelles-numeriques-" target="_blank"><img src="#CHEMIN{img/logos/logo_ccn_horizontal.svg}" /></a>
@@ -79,6 +80,6 @@
 		<img src="#CHEMIN{img/logos/logo_europe_cofinance.svg}" />
 	</li>
 </ul>
-
+]
 [(#REM)Initialisations dont crayons]
 <BOUCLE_auteur(AUTEURS){id_auteur}{tout}><div class="#EDIT{nom} cache">#NOM</div></BOUCLE_auteur>

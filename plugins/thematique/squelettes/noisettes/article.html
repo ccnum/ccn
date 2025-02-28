@@ -49,7 +49,7 @@
 			[(#ENV{type_objet}|in_array{#LISTE{consignes,travail_en_cours,ressources,classes,agora}}|oui)
 				[(#ENV{type_objet}|in_array{#LISTE{travail_en_cours,classes}}|oui)
 				<script type="text/javascript">
-					$().ready(function(){
+					$(function() {
 						$('#ajax_go_to_classe_#GET{id_parent}').on('click',function() {
 							callClasse('#GET{id_parent}');
 						});
@@ -67,7 +67,7 @@
 
 							[(#ENV{type_objet}|=={travail_en_cours}|oui)
 								<script type="text/javascript">
-									$().ready(function(){
+									$(function() {
 										$('#ajax_go_to_consigne_#GET{id_consigne}').on('click',function() {
 											callConsigne('#GET{id_consigne}');
 										});
@@ -106,7 +106,7 @@
 				|oui)
 				<script type="text/javascript">
 					/*
-					$().ready(function(){
+					$(function() {
 						$('.bloc_article').fadeTo('fast', 0.2);
 						$('#entete_publication').delay(1000).slideDown('slow');
 						function cache() {

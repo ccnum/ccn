@@ -1,9 +1,4 @@
 <BOUCLE_principale(RUBRIQUES){id_rubrique}{tout}>
-	<!-- On recupere l'id du chapitre à masquer -->
-	<BOUCLE_max_cadavres(ARTICLES){id_rubrique}{par date}>
-		#SET{var_max_cadavres, #TOTAL_BOUCLE}
-	</BOUCLE_max_cadavres>
-	#SET{id_cadavre_hidden, #GET{var_max_cadavres}}
 
 	<div id="ecriture">
 
@@ -101,14 +96,13 @@
 		<!-- END PROLOGUE -->
 		<!-- Boucle affichage des cadavres -->
 		<BOUCLE_cadavres(ARTICLES){id_rubrique}{par date}{tout}>
-		[(#COMPTEUR_BOUCLE|!={#GET{id_cadavre_hidden}}|oui)<INCLURE{fond=chapitre-verrouille,id_article,fin=non}>]
-		[(#COMPTEUR_BOUCLE|=={#GET{id_cadavre_hidden}}|oui)<INCLURE{fond=chapitre-visible,id_article}>]
-
+		[(#COMPTEUR_BOUCLE|!={5}|oui)<INCLURE{fond=inclure/chapitre-verrouille,id_article,fin=non}>]
+		[(#COMPTEUR_BOUCLE|=={5}|oui)<INCLURE{fond=inclure/chapitre-visible,id_article}>]
 		</BOUCLE_cadavres>
 		<div class="ecriture-chapitre-picto">
 			<img src="#CHEMIN{img/ecriture/picto-crayon.png}" width="50" height="50" />
 		</div>
-		#FORMULAIRE_EDITER_ARTICLE{oui, #ID_RUBRIQUE, #URL_PAGE{ecriture}}
+		#FORMULAIRE_EDITER_ARTICLE{oui, #ID_RUBRIQUE, #SELF|parametre_url{var_mode,recalcul}}
 
 	</div>
 	<style>

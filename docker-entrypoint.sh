@@ -70,6 +70,10 @@ if version_greater "$image_version" "$installed_version"; then
 		chown www-data:www-data .htaccess
 	fi
 
+	if [ ${SPIP_DB_SERVER} = "mysql" ]; then
+		wait_for_db
+	fi
+
 	# Upgrade SPIP
 	if [ -f config/connect.php ]; then
 		spip core:maj:bdd
@@ -104,25 +108,17 @@ if [[ ! -e config/connect.php && ${SPIP_AUTO_INSTALL} = 1 ]]; then
     #fi
 fi
 
-spip plugins:activer cextras -y
-spip plugins:activer cicas -y
-spip plugins:activer crayons -y
-spip plugins:activer corbeille -y
-spip plugins:activer facteur -y
-spip plugins:activer imports_utilisateurs -y
-spip plugins:activer jqueryui -y
-spip plugins:activer notation -y
-spip plugins:activer notifications -y
-spip plugins:activer oembed -y
-spip plugins:activer saisies -y
-spip plugins:activer socialtags -y
-spip plugins:activer spip_bonux -y
-spip plugins:activer verifier -y
-spip plugins:activer yaml -y
+spip plugins:activer --from-list=['cextras','crayons','corbeille','facteur','imports_utilisateurs','jqueryui','notation','notifications','oembed','saisies','socialtags','spip_bonux','verifier','yaml'] -y
+if [ ${SPIP_PLUGINS_CICAS} == true ]; then
+	spip plugins:activer cicas -y
+fi
 if [ ${SPIP_VERSION_SITE} != "thematique" ]; then
 	spip plugins:activer vider_rubrique -y
 fi
 spip plugins:activer ${SPIP_VERSION_SITE} -y
+if [ ${PROJET} != "laclasse" ]; then
+	spip plugins:activer thematique_${PROJET} -y
+fi
 spip plugins:maj:bdd
 
 spip config:ecrire -p notation acces:ide
@@ -130,6 +126,7 @@ spip config:ecrire -p notation change_note:oui
 spip config:ecrire -p mediabox active:oui
 
 # Default mes_options
+rm -rf config/mes_options.php
 if [ ! -e config/mes_options.php ]; then
 	/bin/cat << MAINEOF > config/mes_options.php
 <?php
@@ -140,14 +137,17 @@ define('_LOG_FILELINE', true);
 define('_LOG_FILTRE_GRAVITE', 8);
 define('_DEBUG_SLOW_QUERIES', true);
 define('_BOUCLE_PROFILER', 5000);
+define('_AUTORISER_TELECHARGER_PLUGINS', false);
 // désactiver les notifications de mise à jour
 define('_MAJ_NOTIF_EMAILS', '');
+// des personalisations par projet
+define('_PROJET', '${PROJET}');
 ?>
 MAINEOF
 fi
 
 # Default _config_cas.php
-if [ ! -e config/_config_cas.php ]; then
+if [ ! -e config/_config_cas.php ] && [ ${SPIP_PLUGINS_CICAS} = true ]; then
 	/bin/cat << MAINEOF > config/_config_cas.php
 <?php
 if (!defined("_ECRIRE_INC_VERSION")) return;
