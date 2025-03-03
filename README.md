@@ -29,7 +29,7 @@ This monorepo contains all the plugins for SPIP CMS :
 | SPIP_ADMIN_PASS    | Default init Admin password                                    |
 | SPIP_VERSION_SITE  | Défault thematique, possibilite : fictions, erasme             |
 | SPIP_PLUGINS_CICAS | Mettre true si il faut le plugins CICAS                        |
-| PROJET             | Défault laclasse                                               |
+| PROJET             | Default laclasse, possibilite : edifice                        |
 
 ## Gestion des versions
 Afin de proposer des images docker versionnées, une ci a été mise en place.
