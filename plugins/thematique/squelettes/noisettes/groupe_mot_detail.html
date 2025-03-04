@@ -8,13 +8,13 @@
 		[(#REM) ---------------- entete publication ---------------- ]
 
 		[(#REM) ---------------- titre & logo ---------------- ]
-			<div class="fiche_titre couleur_texte_[(#TYPE_OBJET)] couleur_[(#TYPE_OBJET)][(#MODELE{nb2col}{id_article})]">
-			    <div class="photo">[(#MODELE{logo_carre}{id_mot})]</div>
-			    <div class="texte">
-			        <div class="titre">[(#TITRE)]</div>
-			        <!--<div class="auteur_date">[(#NOM) - ][(#DATE|affdate)]</div>-->
-			    </div>
+		<div class="fiche_titre couleur_texte_[(#TYPE_OBJET)] couleur_[(#TYPE_OBJET)][(#MODELE{nb2col}{id_article})]">
+			<div class="photo">[(#MODELE{logo_carre}{id_mot})]</div>
+			<div class="texte">
+				<div class="titre">[(#TITRE)]</div>
+				<!--<div class="auteur_date">[(#NOM) - ][(#DATE|affdate)]</div>-->
 			</div>
+		</div>
 
 		[(#REM) ---------------- bloc rubrique ---------------- ]
 		<BOUCLE_police(MOTS){id_rubrique}{type=police}>#SET{police,#TITRE}</BOUCLE_police>

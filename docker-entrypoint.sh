@@ -111,6 +111,8 @@ fi
 spip plugins:activer --from-list=['cextras','crayons','corbeille','facteur','imports_utilisateurs','jqueryui','notation','notifications','oembed','saisies','socialtags','spip_bonux','verifier','yaml'] -y
 if [ ${SPIP_PLUGINS_CICAS} == true ]; then
 	spip plugins:activer cicas -y
+	else
+	spip plugins:desactiver cicas -y
 fi
 if [ ${SPIP_VERSION_SITE} != "thematique" ]; then
 	spip plugins:activer vider_rubrique -y
