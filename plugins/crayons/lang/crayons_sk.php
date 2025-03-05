@@ -3,11 +3,7 @@
 // extrait automatiquement de https://trad.spip.net/tradlang_module/crayons?lang_cible=sk
 // ** ne pas modifier le fichier **
 
-if (!defined('_ECRIRE_INC_VERSION')) {
-	return;
-}
-
-$GLOBALS[$GLOBALS['idx_lang']] = array(
+return [
 
 	// A
 	'absence_cle_primaire' => 'Bez primárneho kľúča!',
@@ -87,5 +83,5 @@ $GLOBALS[$GLOBALS['idx_lang']] = array(
 	'update_impossible' => 'Aktualizácia neprebehla úspešne.',
 
 	// V
-	'veuillez_patienter' => 'Vyhľadáva sa...'
-);
+	'veuillez_patienter' => 'Vyhľadáva sa...',
+];

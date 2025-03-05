@@ -3,11 +3,7 @@
 // extrait automatiquement de https://trad.spip.net/tradlang_module/crayons?lang_cible=ast
 // ** ne pas modifier le fichier **
 
-if (!defined('_ECRIRE_INC_VERSION')) {
-	return;
-}
-
-$GLOBALS[$GLOBALS['idx_lang']] = array(
+return [
 
 	// A
 	'activation_barre_impossible' => 'Hai otru complementu que torga l’usu del portaplumes nel espaciu públicu.',
@@ -75,5 +71,5 @@ $GLOBALS[$GLOBALS['idx_lang']] = array(
 	'update_impossible' => 'Falló l’anovación.',
 
 	// V
-	'veuillez_patienter' => 'Un momentu...'
-);
+	'veuillez_patienter' => 'Un momentu...',
+];

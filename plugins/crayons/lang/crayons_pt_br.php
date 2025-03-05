@@ -3,11 +3,7 @@
 // extrait automatiquement de https://trad.spip.net/tradlang_module/crayons?lang_cible=pt_br
 // ** ne pas modifier le fichier **
 
-if (!defined('_ECRIRE_INC_VERSION')) {
-	return;
-}
-
-$GLOBALS[$GLOBALS['idx_lang']] = array(
+return [
 
 	// A
 	'absence_cle_primaire' => 'Sem chave primária!',
@@ -86,5 +82,5 @@ $GLOBALS[$GLOBALS['idx_lang']] = array(
 	'update_impossible' => 'A atualização falhou.',
 
 	// V
-	'veuillez_patienter' => 'Aguarde, por favor...'
-);
+	'veuillez_patienter' => 'Aguarde, por favor...',
+];

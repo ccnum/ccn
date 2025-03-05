@@ -3,11 +3,7 @@
 // extrait automatiquement de https://trad.spip.net/tradlang_module/crayons?lang_cible=tr
 // ** ne pas modifier le fichier **
 
-if (!defined('_ECRIRE_INC_VERSION')) {
-	return;
-}
-
-$GLOBALS[$GLOBALS['idx_lang']] = array(
+return [
 
 	// A
 	'annuler' => 'İptal et',
@@ -37,5 +33,5 @@ $GLOBALS[$GLOBALS['idx_lang']] = array(
 	'svp_copier_coller' => 'Üzgünüm, değişikliklerinizi kesin/yapıştırın ve tekrar başlayın',
 
 	// V
-	'veuillez_patienter' => 'Lütfen sabrediniz...'
-);
+	'veuillez_patienter' => 'Lütfen sabrediniz...',
+];

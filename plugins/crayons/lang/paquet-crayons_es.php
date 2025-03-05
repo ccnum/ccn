@@ -3,14 +3,10 @@
 // extrait automatiquement de https://trad.spip.net/tradlang_module/paquet-crayons?lang_cible=es
 // ** ne pas modifier le fichier **
 
-if (!defined('_ECRIRE_INC_VERSION')) {
-	return;
-}
-
-$GLOBALS[$GLOBALS['idx_lang']] = array(
+return [
 
 	// C
 	'crayons_description' => 'Modificación rápida desde las páginas públicas del sitio.',
 	'crayons_nom' => 'Lápices',
-	'crayons_slogan' => 'Edición rápida desde las páginas publicas del sitio'
-);
+	'crayons_slogan' => 'Edición rápida desde las páginas publicas del sitio',
+];
