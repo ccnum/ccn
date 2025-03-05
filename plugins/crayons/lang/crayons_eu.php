@@ -3,11 +3,7 @@
 // extrait automatiquement de https://trad.spip.net/tradlang_module/crayons?lang_cible=eu
 // ** ne pas modifier le fichier **
 
-if (!defined('_ECRIRE_INC_VERSION')) {
-	return;
-}
-
-$GLOBALS[$GLOBALS['idx_lang']] = array(
+return [
 
 	// A
 	'annuler' => 'Ezeztatu',
@@ -33,5 +29,5 @@ $GLOBALS[$GLOBALS['idx_lang']] = array(
 	'pas_de_valeur' => 'Balorerik ez',
 
 	// S
-	'sauvegarder' => 'Aldaketak grabatu ?'
-);
+	'sauvegarder' => 'Aldaketak grabatu ?',
+];

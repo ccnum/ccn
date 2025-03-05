@@ -3,11 +3,7 @@
 // extrait automatiquement de https://trad.spip.net/tradlang_module/crayons?lang_cible=zh
 // ** ne pas modifier le fichier **
 
-if (!defined('_ECRIRE_INC_VERSION')) {
-	return;
-}
-
-$GLOBALS[$GLOBALS['idx_lang']] = array(
+return [
 
 	// A
 	'annuler' => '取消', # MODIF
@@ -61,5 +57,5 @@ $GLOBALS[$GLOBALS['idx_lang']] = array(
 	'update_impossible' => 'La mise à jour a échoué.', # NEW
 
 	// V
-	'veuillez_patienter' => '请稍后...' # MODIF
-);
+	'veuillez_patienter' => '请稍后...', # MODIF
+];

@@ -3,11 +3,7 @@
 // extrait automatiquement de https://trad.spip.net/tradlang_module/crayons?lang_cible=br
 // ** ne pas modifier le fichier **
 
-if (!defined('_ECRIRE_INC_VERSION')) {
-	return;
-}
-
-$GLOBALS[$GLOBALS['idx_lang']] = array(
+return [
 
 	// A
 	'annuler' => 'Nullañ',
@@ -37,5 +33,5 @@ $GLOBALS[$GLOBALS['idx_lang']] = array(
 	'svp_copier_coller' => 'Digarez, eilit/pegit ho kemmoù, ha klaskit en-dro',
 
 	// V
-	'veuillez_patienter' => 'Gortozit...'
-);
+	'veuillez_patienter' => 'Gortozit...',
+];

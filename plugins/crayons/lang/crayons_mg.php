@@ -1,6 +1,6 @@
 <?php
 // This is a SPIP language file  --  Ceci est un fichier langue de SPIP
-// extrait automatiquement de https://trad.spip.net/tradlang_module/crayons?lang_cible=fr_tu
+// extrait automatiquement de https://trad.spip.net/tradlang_module/crayons?lang_cible=mg
 // ** ne pas modifier le fichier **
 
 return [
@@ -74,7 +74,7 @@ return [
 
 	// S
 	'sauvegarder' => 'Sauvegarder les modifications ?',
-	'svp_copier_coller' => 'Désolé, copie/colle tes changements et recommence',
+	'svp_copier_coller' => 'Désolé, copiez/collez vos changements et recommencez',
 
 	// T
 	'titre_config_crayons' => 'Configurer les crayons',
@@ -84,5 +84,5 @@ return [
 	'update_impossible' => 'La mise à jour a échoué.',
 
 	// V
-	'veuillez_patienter' => 'Patiente stp...',
+	'veuillez_patienter' => 'Veuillez patienter...',
 ];

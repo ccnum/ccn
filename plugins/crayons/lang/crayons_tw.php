@@ -3,11 +3,7 @@
 // extrait automatiquement de https://trad.spip.net/tradlang_module/crayons?lang_cible=tw
 // ** ne pas modifier le fichier **
 
-if (!defined('_ECRIRE_INC_VERSION')) {
-	return;
-}
-
-$GLOBALS[$GLOBALS['idx_lang']] = array(
+return [
 
 	// A
 	'annuler' => '取消',
@@ -37,5 +33,5 @@ $GLOBALS[$GLOBALS['idx_lang']] = array(
 	'svp_copier_coller' => '對不起，我們建議您複製/貼上您的修改',
 
 	// V
-	'veuillez_patienter' => '請稍後...'
-);
+	'veuillez_patienter' => '請稍後...',
+];

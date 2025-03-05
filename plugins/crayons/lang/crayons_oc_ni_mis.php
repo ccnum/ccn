@@ -3,11 +3,7 @@
 // extrait automatiquement de https://trad.spip.net/tradlang_module/crayons?lang_cible=oc_ni_mis
 // ** ne pas modifier le fichier **
 
-if (!defined('_ECRIRE_INC_VERSION')) {
-	return;
-}
-
-$GLOBALS[$GLOBALS['idx_lang']] = array(
+return [
 
 	// A
 	'absence_cle_primaire' => 'Mìnga de clau primari !',
@@ -88,5 +84,5 @@ $GLOBALS[$GLOBALS['idx_lang']] = array(
 	'update_impossible' => 'La messa a jou a souhit.',
 
 	// V
-	'veuillez_patienter' => 'Vourguès aspera...'
-);
+	'veuillez_patienter' => 'Vourguès aspera...',
+];

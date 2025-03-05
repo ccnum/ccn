@@ -3,11 +3,7 @@
 // extrait automatiquement de https://trad.spip.net/tradlang_module/crayons?lang_cible=gl
 // ** ne pas modifier le fichier **
 
-if (!defined('_ECRIRE_INC_VERSION')) {
-	return;
-}
-
-$GLOBALS[$GLOBALS['idx_lang']] = array(
+return [
 
 	// A
 	'annuler' => 'Anular',
@@ -40,5 +36,5 @@ $GLOBALS[$GLOBALS['idx_lang']] = array(
 	'update_impossible' => 'Fallou a actualización',
 
 	// V
-	'veuillez_patienter' => 'Teña paciencia ...'
-);
+	'veuillez_patienter' => 'Teña paciencia ...',
+];
