@@ -3,11 +3,7 @@
 // extrait automatiquement de https://trad.spip.net/tradlang_module/facteur?lang_cible=de
 // ** ne pas modifier le fichier **
 
-if (!defined('_ECRIRE_INC_VERSION')) {
-	return;
-}
-
-$GLOBALS[$GLOBALS['idx_lang']] = array(
+return [
 
 	// C
 	'config_info_enregistree' => 'Die Konfiguration des Briefträgers wurde gespeichert.',
@@ -98,5 +94,5 @@ $GLOBALS[$GLOBALS['idx_lang']] = array(
 	// V
 	'valider' => ' OK ',
 	'version_html' => 'HTML-Version.',
-	'version_texte' => 'Textversion.'
-);
+	'version_texte' => 'Textversion.',
+];

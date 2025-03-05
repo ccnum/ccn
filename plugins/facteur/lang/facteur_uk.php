@@ -3,11 +3,7 @@
 // extrait automatiquement de https://trad.spip.net/tradlang_module/facteur?lang_cible=uk
 // ** ne pas modifier le fichier **
 
-if (!defined('_ECRIRE_INC_VERSION')) {
-	return;
-}
-
-$GLOBALS[$GLOBALS['idx_lang']] = array(
+return [
 
 	// C
 	'config_info_enregistree' => 'Налаштування плагіну збережено',
@@ -97,5 +93,5 @@ $GLOBALS[$GLOBALS['idx_lang']] = array(
 	// V
 	'valider' => 'Зберегти',
 	'version_html' => 'У форматі HTML',
-	'version_texte' => 'У текстовому форматі'
-);
+	'version_texte' => 'У текстовому форматі',
+];

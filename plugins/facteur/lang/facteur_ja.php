@@ -3,11 +3,7 @@
 // extrait automatiquement de https://trad.spip.net/tradlang_module/facteur?lang_cible=ja
 // ** ne pas modifier le fichier **
 
-if (!defined('_ECRIRE_INC_VERSION')) {
-	return;
-}
-
-$GLOBALS[$GLOBALS['idx_lang']] = array(
+return [
 
 	// C
 	'config_info_enregistree' => '郵便屋さんの設定が記録されました。',
@@ -95,5 +91,5 @@ $GLOBALS[$GLOBALS['idx_lang']] = array(
 	// V
 	'valider' => '確認する',
 	'version_html' => 'HTMLバージョン',
-	'version_texte' => 'テキストバーション'
-);
+	'version_texte' => 'テキストバーション',
+];

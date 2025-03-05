@@ -3,11 +3,7 @@
 // extrait automatiquement de https://trad.spip.net/tradlang_module/facteur?lang_cible=en
 // ** ne pas modifier le fichier **
 
-if (!defined('_ECRIRE_INC_VERSION')) {
-	return;
-}
-
-$GLOBALS[$GLOBALS['idx_lang']] = array(
+return [
 
 	// C
 	'config_info_enregistree' => 'Postman’s configuration is now saved',
@@ -97,5 +93,5 @@ Check your <tt> mes_options.php </tt> file ',
 	// V
 	'valider' => 'Submit',
 	'version_html' => 'HTML version.',
-	'version_texte' => 'Text version.'
-);
+	'version_texte' => 'Text version.',
+];

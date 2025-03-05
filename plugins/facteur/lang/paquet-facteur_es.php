@@ -3,14 +3,10 @@
 // extrait automatiquement de https://trad.spip.net/tradlang_module/paquet-facteur?lang_cible=es
 // ** ne pas modifier le fichier **
 
-if (!defined('_ECRIRE_INC_VERSION')) {
-	return;
-}
-
-$GLOBALS[$GLOBALS['idx_lang']] = array(
+return [
 
 	// F
 	'facteur_description' => '"Cartero" se ocupa de la distribución de correos electrónicos en formato HTML, texto o mixto; vía SMTP o no',
 	'facteur_nom' => 'Cartero',
-	'facteur_slogan' => 'Distribuye sus correos electrónicos'
-);
+	'facteur_slogan' => 'Distribuye sus correos electrónicos',
+];

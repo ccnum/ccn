@@ -3,11 +3,7 @@
 // extrait automatiquement de https://trad.spip.net/tradlang_module/facteur?lang_cible=pt
 // ** ne pas modifier le fichier **
 
-if (!defined('_ECRIRE_INC_VERSION')) {
-	return;
-}
-
-$GLOBALS[$GLOBALS['idx_lang']] = array(
+return [
 
 	// C
 	'config_info_enregistree' => 'A configuração do Carteiro foi gravada corretamente',
@@ -79,5 +75,5 @@ $GLOBALS[$GLOBALS['idx_lang']] = array(
 	// V
 	'valider' => 'Validar',
 	'version_html' => 'Versão HTML.',
-	'version_texte' => 'Versão texto.'
-);
+	'version_texte' => 'Versão texto.',
+];
