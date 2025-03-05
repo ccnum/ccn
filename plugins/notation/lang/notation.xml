@@ -26,6 +26,9 @@
 		<traducteur nom="Cerf" lien="https://trad.spip.net/auteur/cerf" />
 		<traducteur nom="RealET" lien="https://trad.spip.net/auteur/realet" />
 	</langue>
+	<langue code="mg" url="https://trad.spip.net/tradlang_module/notation?lang_cible=mg" total="85" traduits="85" relire="0" modifs="0" nouveaux="0" pourcent="100.00">
+		<traducteur nom="iBesorongola" lien="https://trad.spip.net/auteur/ibesorongola" />
+	</langue>
 	<langue code="nl" url="https://trad.spip.net/tradlang_module/notation?lang_cible=nl" total="85" traduits="84" relire="0" modifs="1" nouveaux="0" pourcent="98.82">
 		<traducteur nom="cerdic" lien="https://trad.spip.net/auteur/cerdic" />
 		<traducteur nom="Hanjo" lien="https://trad.spip.net/auteur/hanjo" />
