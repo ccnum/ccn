@@ -3,11 +3,7 @@
 // extrait automatiquement de https://trad.spip.net/tradlang_module/facteur?lang_cible=sk
 // ** ne pas modifier le fichier **
 
-if (!defined('_ECRIRE_INC_VERSION')) {
-	return;
-}
-
-$GLOBALS[$GLOBALS['idx_lang']] = array(
+return [
 
 	// C
 	'config_info_enregistree' => 'Nastavenia Poštára sa uložili správne',
@@ -76,5 +72,5 @@ $GLOBALS[$GLOBALS['idx_lang']] = array(
 	// V
 	'valider' => 'Potvrdiť',
 	'version_html' => 'HTML verzia.',
-	'version_texte' => 'Textová verzia.'
-);
+	'version_texte' => 'Textová verzia.',
+];

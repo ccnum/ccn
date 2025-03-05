@@ -3,11 +3,7 @@
 // extrait automatiquement de https://trad.spip.net/tradlang_module/facteur?lang_cible=eo
 // ** ne pas modifier le fichier **
 
-if (!defined('_ECRIRE_INC_VERSION')) {
-	return;
-}
-
-$GLOBALS[$GLOBALS['idx_lang']] = array(
+return [
 
 	// C
 	'config_info_enregistree' => 'Leterportistaj agordoj bone registriĝis',
@@ -82,5 +78,5 @@ $GLOBALS[$GLOBALS['idx_lang']] = array(
 	// V
 	'valider' => 'Validigi',
 	'version_html' => 'HTML-versio.',
-	'version_texte' => 'Teksta versio.'
-);
+	'version_texte' => 'Teksta versio.',
+];

@@ -3,11 +3,7 @@
 // extrait automatiquement de https://trad.spip.net/tradlang_module/facteur?lang_cible=fr_tu
 // ** ne pas modifier le fichier **
 
-if (!defined('_ECRIRE_INC_VERSION')) {
-	return;
-}
-
-$GLOBALS[$GLOBALS['idx_lang']] = array(
+return [
 
 	// C
 	'config_info_enregistree' => 'La configuration du facteur a bien été enregistrée',
@@ -23,12 +19,14 @@ $GLOBALS[$GLOBALS['idx_lang']] = array(
 	'email_envoye_par' => 'Envoyé par @site@',
 	'email_test_envoye' => 'L’email de test a correctement été envoyé. Si tu ne le reçois pas correctement, vérifie la configuration de ton serveur ou contacte un administrateur du serveur.',
 	'erreur' => 'Erreur',
+	'erreur_confirm_ip_sans_hostname' => 'Veux-tu vraiment utiliser cette adresse IP comme SMTP Host ?',
 	'erreur_dans_log' => ' : consulte le fichier log pour plus de détails',
 	'erreur_envoi_bloque_constante' => 'Envoi bloqué par la constante <tt>_TEST_EMAIL_DEST</tt>.
 Vérifie ton fichier <tt>mes_options.php</tt>',
 	'erreur_generale' => 'Il y a une ou plusieurs erreurs de configuration. Vérifie le contenu du formulaire.',
 	'erreur_invalid_host' => 'Ce nom d’hôte n’est pas correct',
 	'erreur_invalid_port' => 'Ce numéro de port n’est pas correct',
+	'erreur_ip_sans_hostname' => 'Cette adresse IP ne correspond à aucun nom de domaine.',
 
 	// F
 	'facteur_adresse_envoi_email' => 'Email :',
@@ -97,5 +95,5 @@ Vérifie ton fichier <tt>mes_options.php</tt>',
 	// V
 	'valider' => 'Valider',
 	'version_html' => 'Version HTML.',
-	'version_texte' => 'Version texte.'
-);
+	'version_texte' => 'Version texte.',
+];

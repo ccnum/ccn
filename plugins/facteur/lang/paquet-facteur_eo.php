@@ -3,14 +3,10 @@
 // extrait automatiquement de https://trad.spip.net/tradlang_module/paquet-facteur?lang_cible=eo
 // ** ne pas modifier le fichier **
 
-if (!defined('_ECRIRE_INC_VERSION')) {
-	return;
-}
-
-$GLOBALS[$GLOBALS['idx_lang']] = array(
+return [
 
 	// F
 	'facteur_description' => 'Leterportisto prizorgas la disdonadon de la retmesaĝoj, kun formo HTML-a, teksta aŭ ambaŭ.',
 	'facteur_nom' => 'Leterportisto',
-	'facteur_slogan' => 'Ĝi disdonas viajn retmesaĝojn'
-);
+	'facteur_slogan' => 'Ĝi disdonas viajn retmesaĝojn',
+];
