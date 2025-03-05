@@ -117,7 +117,7 @@ return [
 	'option_fichiers_dimension_autoriser_rotation_label_case' => 'Cocher cette case pour pouvoir intervertir largeur et hauteur maximum',
 	'option_fichiers_hauteur_max_label' => 'Hauteur maximum de l’image (en px)',
 	'option_fichiers_largeur_max_label' => 'Largeur maximum de l’image (en px)',
-	'option_fichiers_mime_image_web_label' => 'Autoriser uniquement les images web (gif, jpg, png)',
+	'option_fichiers_mime_image_web_label' => 'Autoriser uniquement les images web',
 	'option_fichiers_mime_label' => 'Type Mime et extension',
 	'option_fichiers_mime_pas_de_verification_label' => 'Autoriser tous les types et extensions (déconseillé)',
 	'option_fichiers_mime_specifique_label' => 'Autoriser  uniquement les types et extensions cochées ci-dessous',
@@ -157,7 +157,7 @@ return [
 
 	// P
 	'par_defaut' => 'Par défaut :',
-	'plugin_yaml_inactif' => 'Le plugin YAML n‘est pas présent et/ou activé. Il est nécessaire pour voir cette page de documentation.',
+	'plugin_saisies_yaml_inactif' => 'Pour voir cette page de documentation, il est nécessaire d’activer les plugins saisies et yaml.',
 
 	// T
 	'titre_page_verifier_doc' => 'Documentation de l’API de vérification',
@@ -203,5 +203,5 @@ return [
 
 	// V
 	'verification_a_faire' => 'Vérification à effectuer :',
-	'vider_date_nulle' => 'Vider les dates nulles (par ex. 1/1/1970)'
+	'vider_date_nulle' => 'Vider les dates nulles (par ex. 1/1/1970)',
 ];

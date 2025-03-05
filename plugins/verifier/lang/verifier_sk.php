@@ -3,11 +3,7 @@
 // extrait automatiquement de https://trad.spip.net/tradlang_module/verifier?lang_cible=sk
 // ** ne pas modifier le fichier **
 
-if (!defined('_ECRIRE_INC_VERSION')) {
-	return;
-}
-
-$GLOBALS[$GLOBALS['idx_lang']] = array(
+return [
 
 	// E
 	'erreur_code_postal' => 'Toto PSČ je neplatné.',
@@ -133,5 +129,5 @@ $GLOBALS[$GLOBALS['idx_lang']] = array(
 	'type_telephone' => 'Telefónne číslo',
 	'type_telephone_description' => 'Skontroluje, či sa telefónne číslo zhoduje s rozoznávaným formátom telefónnych čísel.',
 	'type_url' => 'Internetová adresa',
-	'type_url_description' => 'Overí, či sa internetová adresa zhoduje s rozoznávaným formátom.'
-);
+	'type_url_description' => 'Overí, či sa internetová adresa zhoduje s rozoznávaným formátom.',
+];

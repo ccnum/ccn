@@ -3,11 +3,7 @@
 // extrait automatiquement de https://trad.spip.net/tradlang_module/verifier?lang_cible=es
 // ** ne pas modifier le fichier **
 
-if (!defined('_ECRIRE_INC_VERSION')) {
-	return;
-}
-
-$GLOBALS[$GLOBALS['idx_lang']] = array(
+return [
 
 	// E
 	'erreur_code_postal' => 'Este código postal es incorrecto',
@@ -112,5 +108,5 @@ $GLOBALS[$GLOBALS['idx_lang']] = array(
 	'type_telephone' => 'Número de teléfono',
 	'type_telephone_description' => 'Comprueba que el número de teléfono corresponde a un patrón reconocido.',
 	'type_url' => 'URL',
-	'type_url_description' => 'Verifica que la url corresponde a un patrón conocido.'
-);
+	'type_url_description' => 'Verifica que la url corresponde a un patrón conocido.',
+];
