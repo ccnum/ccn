@@ -539,7 +539,7 @@ function callClasse(id_classe) {
 					'id_objet': id_classe,
 					'id_rubrique': id_classe,
 					'page': 'rubrique'
-				}, "Classe", "./spip.php?page=rubrique&id_objet=" + id_classe + "&mode=complet&type_objet=classes"
+				}, "Classe", "./spip.php?page=rubrique&id_rubrique=" + id_classe + "&mode=complet&type_objet=classes"
 			);
 		}
 	);
