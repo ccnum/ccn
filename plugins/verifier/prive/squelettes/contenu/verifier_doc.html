@@ -1,7 +1,7 @@
 <h1 class="grostitre"><:verifier:titre_page_verifier_doc:></h1>
 <div class="nettoyeur"></div>
 
-<BOUCLE_plugin_yaml (CONDITION) {si #VAL{_DIR_PLUGIN_YAML}|defined}>
+<BOUCLE_plugin_yaml (CONDITION) {si #VAL{_DIR_PLUGIN_YAML}|defined} {si #VAL{_DIR_PLUGIN_SAISIES}|defined}>
 	<B_verifier>
 		<BOUCLE_verifier (DATA) {source table, #VAL{verifier}|verifier_lister_disponibles}>
 			[(#BOITE_OUVRIR{<h3 id="[verifier_(#CLE)]">[(#ICONE|balise_img) ][(#TITRE)] [\[(#CLE)\]]</h3>, 'simple'})]
@@ -10,13 +10,13 @@
 			<BOUCLE_options (DATA) {source table, #OPTIONS}>
 				<div class="info #VALEUR{saisie}">
 					<ul class="spip">
-						<li><strong>[(#VALEUR{options/label}|sinon{#VALEUR{options/label_case}}|saisies_label)] [\[(#VALEUR{saisie})\]]</strong>[(#VALEUR{options/label}|oui|et{#VALEUR{options/label_case}|oui})[(#VALEUR{options/label_case}|saisies_label)]]
-							[(#VALEUR{options/explication}|oui)<br/>[(#VALEUR{options/explication}|saisies_label)]]
-							[(#VALEUR{options/defaut}|oui)<br/>[<:verifier:par_defaut:> (#VALEUR{options/defaut}|saisies_label)]]
+						<li><strong>[(#VALEUR{options/label}|sinon{#VALEUR{options/label_case}}|appliquer_filtre{saisies_label})] [\[(#VALEUR{saisie})\]]</strong>[(#VALEUR{options/label}|oui|et{#VALEUR{options/label_case}|oui})[(#VALEUR{options/label_case}|appliquer_filtre{saisies_label})]]
+							[(#VALEUR{options/explication}|oui)<br/>[(#VALEUR{options/explication}|appliquer_filtre{saisies_labe})]]
+							[(#VALEUR{options/defaut}|oui)<br/>[<:verifier:par_defaut:> (#VALEUR{options/defaut}|appliquer_filtre{saisies_label})]]
 							<B_verifier_data>
 								<br/><:verifier:data_choix:>
 								<ul class="spip"><BOUCLE_verifier_data (DATA) {source table, #VALEUR{options/data}}>
-									<li class="item data_[(#CLE)]">[<strong>(#CLE)</strong>]<br/>[(#VALEUR|saisies_label)]</li>
+									<li class="item data_[(#CLE)]">[<strong>(#CLE)</strong>]<br/>[(#VALEUR|appliquer_filtre{saisies_label})]</li>
 							</BOUCLE_verifier_data></ul>
 							</B_verifier_data>
 							<B_verifier_info><br/><em><:verifier:verification_a_faire:></em><ul>
@@ -37,5 +37,5 @@
 	<//B_verifier>
 </BOUCLE_plugin_yaml>
 </B_plugin_yaml>
-<:verifier:plugin_yaml_inactif:>
+<:verifier:plugin_saisies_yaml_inactif:>
 <//B_plugin_yaml>

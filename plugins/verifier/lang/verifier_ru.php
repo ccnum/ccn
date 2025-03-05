@@ -3,11 +3,7 @@
 // extrait automatiquement de https://trad.spip.net/tradlang_module/verifier?lang_cible=ru
 // ** ne pas modifier le fichier **
 
-if (!defined('_ECRIRE_INC_VERSION')) {
-	return;
-}
-
-$GLOBALS[$GLOBALS['idx_lang']] = array(
+return [
 
 	// E
 	'erreur_code_postal' => 'Неправильный индекс',
@@ -102,5 +98,5 @@ $GLOBALS[$GLOBALS['idx_lang']] = array(
 	'type_telephone' => 'Номер телефона',
 	'type_telephone_description' => 'Проверить соответствует ли номер телефона формату ввода.',
 	'type_url' => 'URL',
-	'type_url_description' => 'Проверить соответствие ли URL  формат ввода.'
-);
+	'type_url_description' => 'Проверить соответствие ли URL  формат ввода.',
+];

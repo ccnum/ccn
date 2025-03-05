@@ -3,11 +3,7 @@
 // extrait automatiquement de https://trad.spip.net/tradlang_module/verifier?lang_cible=it
 // ** ne pas modifier le fichier **
 
-if (!defined('_ECRIRE_INC_VERSION')) {
-	return;
-}
-
-$GLOBALS[$GLOBALS['idx_lang']] = array(
+return [
 
 	// E
 	'erreur_code_postal' => 'Il CAP non è corretto.',
@@ -83,5 +79,5 @@ $GLOBALS[$GLOBALS['idx_lang']] = array(
 	'type_telephone' => 'Numero telefonico',
 	'type_telephone_description' => 'Verifica che il numero telefonico corrisponda ad uno schema riconosciuto.',
 	'type_url' => 'URL',
-	'type_url_description' => 'Verifica che l’url corrisponda ad uno schema riconosciuto.'
-);
+	'type_url_description' => 'Verifica che l’url corrisponda ad uno schema riconosciuto.',
+];
