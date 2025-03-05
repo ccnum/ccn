@@ -3,11 +3,7 @@
 // extrait automatiquement de https://trad.spip.net/tradlang_module/notation?lang_cible=nl
 // ** ne pas modifier le fichier **
 
-if (!defined('_ECRIRE_INC_VERSION')) {
-	return;
-}
-
-$GLOBALS[$GLOBALS['idx_lang']] = array(
+return [
 
 	// A
 	'acces' => 'Toegankelijkheid', # MODIF
@@ -122,5 +118,5 @@ $GLOBALS[$GLOBALS['idx_lang']] = array(
 	'vote' => 'stem',
 	'voter' => 'Stemmen: ',
 	'votes' => 'stemmen',
-	'votre_note' => 'Jouw beoordeling'
-);
+	'votre_note' => 'Jouw beoordeling',
+];

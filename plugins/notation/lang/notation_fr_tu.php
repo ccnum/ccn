@@ -3,11 +3,7 @@
 // extrait automatiquement de https://trad.spip.net/tradlang_module/notation?lang_cible=fr_tu
 // ** ne pas modifier le fichier **
 
-if (!defined('_ECRIRE_INC_VERSION')) {
-	return;
-}
-
-$GLOBALS[$GLOBALS['idx_lang']] = array(
+return [
 
 	// A
 	'acces' => 'Accès au vote',
@@ -122,5 +118,5 @@ Dans ce cas, on fixe la note sur l’identifiant de l’utilisateur (quand celui
 	'vote' => 'vote',
 	'voter' => 'Voter : ',
 	'votes' => 'votes',
-	'votre_note' => 'Ta note'
-);
+	'votre_note' => 'Ta note',
+];

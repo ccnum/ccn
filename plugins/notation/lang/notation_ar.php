@@ -3,11 +3,7 @@
 // extrait automatiquement de https://trad.spip.net/tradlang_module/notation?lang_cible=ar
 // ** ne pas modifier le fichier **
 
-if (!defined('_ECRIRE_INC_VERSION')) {
-	return;
-}
-
-$GLOBALS[$GLOBALS['idx_lang']] = array(
+return [
 
 	// A
 	'acces' => 'سهولة الوصول', # MODIF
@@ -122,5 +118,5 @@ $GLOBALS[$GLOBALS['idx_lang']] = array(
 	'vote' => 'رأي',
 	'voter' => 'إبداء الرأي:',
 	'votes' => 'اراء',
-	'votre_note' => 'نتيجتك'
-);
+	'votre_note' => 'نتيجتك',
+];
