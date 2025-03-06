@@ -219,6 +219,19 @@ et/ou
 			</ul>
 		</div>
 
+		[(#REM) Actualités]
+		[(#CONST{_PROJET}|!={laclasse}|oui)
+			<div id="menu-actualites" class="bloc_view col">
+				<h3><span>Actualités</span></h3>
+				<ul class="actualites-ul filter clearfix option-set" data-filter-group="classe">
+					[(#MODELE{logo_menu}{valeur=tout}{title=Toutes les actualités}{class=menu_logo_type_sidebarView menu_logo_actualites}{onclick=callActualites();})]
+				</ul>
+				<div class="actualites-inner filter clearfix option-set" data-filter-group="actualites">
+					<INCLURE{fond=noisettes/inc/actus_timeline, nb_actus=5} />
+				</div>
+			</div>
+		]
+
 		<div id="menu-classe" [(#VUE|=={classe}|non) style="display:none;"]>
 			[(#REM) Médias]
 			<div id="menu-medias" class="bloc_view col">
