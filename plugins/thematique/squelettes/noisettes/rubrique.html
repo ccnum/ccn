@@ -85,8 +85,8 @@
 				<BOUCLE_rubAnnee(RUBRIQUES) {racine}{titre LIKE %(#CONST{_annee_scolaire})%} {si #SESSION{role}|=={prof}} {si #GET{motcle}|!={evenements} } >
 					<BOUCLE_filtreTravailEnCours(RUBRIQUES){id_parent} {titre_mot=travail_en_cours}{par date}{0,2}>
 						<BOUCLE_filtreIdRubriques(RUBRIQUES){id_parent} {id_rubrique == #SESSION{idRubriqueUser}} {doublons r}>
-							<div class="sidebar_bubble ressources_classes_around [(#TYPE_OBJET|match{travail_en_cours}|oui) ressources_travail_en_cours] [(#TYPE_OBJET|match{travail_en_cours}|non) ressources_no_color]">
-								<div class="[(#TYPE_OBJET|match{travail_en_cours}|oui) couleur_travail_en_cours[(#ID_RUBRIQUE|nb2col)]] ressources_classes">
+							<div class="sidebar_bubble ressources_classes_around [(#TYPE_OBJET|=={travail_en_cours}|oui) ressources_travail_en_cours] [(#TYPE_OBJET|=={travail_en_cours}|non) ressources_no_color]">
+								<div class="[(#TYPE_OBJET|=={travail_en_cours}|oui) couleur_travail_en_cours[(#ID_RUBRIQUE|nb2col)]] ressources_classes">
 									<a id="ajax_rub_#ID_RUBRIQUE" href="#" class="hac ajax ressources_classe_nom">
 										<strong>#TITRE</strong>
 									</a>
@@ -349,58 +349,56 @@
 			</BOUCLE_sites>
 		</div>
 
+		[(#REM)Pour ouverture directe si id_article ou publier présent]
+		<BOUCLE_rubart(ARTICLES){id_article}>
+			<script type="text/javascript">
 
-	[(#REM)Pour ouverture directe si id_article ou publier présent]
-	<BOUCLE_rubart(ARTICLES){id_article}>
-		<script type="text/javascript">
+		// console.log('Rubrique : (old) AJAX de l\'article ##ID_ARTICLE');
 
-  	// console.log('Rubrique : (old) AJAX de l\'article ##ID_ARTICLE');
+			/*
+			$(function() {
+				$('#ajax_rub_#ID_RUBRIQUE').addClass('selected');
+				$('div#sidebar_main').addClass('chargement');
+				$('#sidebar_main').load('[(#URL_PAGE{article}|parametre_url{id_article,#ID_ARTICLE}|parametre_url{mode,ajax-detail}|html_entity_decode)]'
+				, {limit: 25}, function(){
+					hideSidebarLateral();
+					$('div#sidebar_main').removeClass('chargement');
+					$('#sidebar_main').show('slow');
+					});
+			});
+			*/
+			</script>
+		</BOUCLE_rubart>
 
-  		/*
-		$(function() {
-			$('#ajax_rub_#ID_RUBRIQUE').addClass('selected');
-			$('div#sidebar_main').addClass('chargement');
-			$('#sidebar_main').load('[(#URL_PAGE{article}|parametre_url{id_article,#ID_ARTICLE}|parametre_url{mode,ajax-detail}|html_entity_decode)]'
-			, {limit: 25}, function(){
-				hideSidebarLateral();
-				$('div#sidebar_main').removeClass('chargement');
-				$('#sidebar_main').show('slow');
-				});
-		});
-		*/
-		</script>
-	</BOUCLE_rubart>
+		[(#REM) #TYPE_OBJET|=={travail_en_cours}|oui
+			<script type="text/javascript">
+		// console.log('Rubrique : (old) AJAX de publier avec la rubrique ##ID_RUBRIQUE');
+		/*
+			$(function() {
+				$('#ajax_rub_#ID_RUBRIQUE').addClass('selected');
+				$('div#sidebar_main').addClass('chargement');
+				$('div#sidebar_main').addClass('chargement');
+				$('#sidebar_main').load('[(#URL_PAGE{publier}|parametre_url{id_rubrique,#ID_RUBRIQUE}|parametre_url{mode,ajax-detail}|parametre_url{type_objet,#TYPE_OBJET}|parametre_url{id_consigne,#ID_CONSIGNE}|html_entity_decode)]'
+				, {limit: 25}, function(){
+					hideSidebarLateral();
+					$('div#sidebar_main').removeClass('chargement');
+					$('#sidebar_main').show('slow');
+					});
+			});
+			*/
+			</script>
+		]
 
-	[(#REM) #TYPE_OBJET|=={travail_en_cours}|oui
-		<script type="text/javascript">
-  	// console.log('Rubrique : (old) AJAX de publier avec la rubrique ##ID_RUBRIQUE');
-  	/*
-		$(function() {
-			$('#ajax_rub_#ID_RUBRIQUE').addClass('selected');
-			$('div#sidebar_main').addClass('chargement');
-			$('div#sidebar_main').addClass('chargement');
-			$('#sidebar_main').load('[(#URL_PAGE{publier}|parametre_url{id_rubrique,#ID_RUBRIQUE}|parametre_url{mode,ajax-detail}|parametre_url{type_objet,#TYPE_OBJET}|parametre_url{id_consigne,#ID_CONSIGNE}|html_entity_decode)]'
-			, {limit: 25}, function(){
-				hideSidebarLateral();
-				$('div#sidebar_main').removeClass('chargement');
-				$('#sidebar_main').show('slow');
-				});
-		});
-		*/
-		</script>
-	]
-
-	[(#REM)Pour générer les appels aux scripts crayons en cas de besoin]
-	<BOUCLE_crayon(RUBRIQUES){id_rubrique=#RESTREINT}{tout}>
-  	<div class="#EDIT{titre}" style="display: none;">
-  		<span class="#EDIT{titre}">#TITRE</span>
-  		<span class="#EDIT{logo}">[(#LOGO_RUBRIQUE)]</span>
-  		<span class="#EDIT{texte}">#TEXTE</span>
-  	</div>
-	</BOUCLE_crayon>
-</div>
+		[(#REM)Pour générer les appels aux scripts crayons en cas de besoin]
+		<BOUCLE_crayon(RUBRIQUES){id_rubrique=#RESTREINT}{tout}>
+			<div class="#EDIT{titre}" style="display: none;">
+				<span class="#EDIT{titre}">#TITRE</span>
+				<span class="#EDIT{logo}">[(#LOGO_RUBRIQUE)]</span>
+				<span class="#EDIT{texte}">#TEXTE</span>
+			</div>
+		</BOUCLE_crayon>
+	</div>
 
 </BOUCLE_principale>
-</B_principale>
-	<INCLURE{fond=chargement}{type_objet=#TYPE_OBJET}>
+	<INCLURE{fond=chargement,type_objet=#TYPE_OBJET}>
 <//B_principale>

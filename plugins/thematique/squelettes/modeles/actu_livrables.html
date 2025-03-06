@@ -13,13 +13,13 @@
 					Nouveau document de #GET{titre}<br> sur #GET{titreLivrable}
 				</div>
 				<p class="date">[(#DATE|affdate)]</p>
-				[(#MEDIA|match{'image'}|oui)
+				[(#MEDIA|=={'image'}|oui)
 					<a href="#URL_DOCUMENT" title="[(#TITRE)]"  title="[(#TITRE)]" class="thickbox mediabox" type="#MIME_TYPE">
 					[(#EMBED_DOCUMENT|image_reduire{700}|inserer_attribut{alt,[(#TITRE|couper{80}|texte_backend)]}|inserer_attribut{style,'border:0px solid #000000;'})]
 					</a>
 				]
 
-				[(#MEDIA|match{'image'}|non)
+				[(#MEDIA|=={'image'}|non)
 					<div class="document">
 					[(#LOGO_DOCUMENT|image_reduire{100}|inserer_attribut{style,'border:0px solid #000000;'})]
 						[<span class="spip_doc_titre"><br />(#TITRE|couper{25}|sinon{<span class="ajouter_couleur">Document sans titre</span>})</span>]

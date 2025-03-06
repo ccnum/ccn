@@ -171,7 +171,6 @@ function setContentFromState(state) {
 	if (state.id_objet != "0") {
 
 		// Consigne
-
 		if (state.type_objet == "consignes") {
 			changeTimelineMode('consignes');
 			for (k = 0; k < CCN.consignes.length; k++) {
@@ -182,7 +181,6 @@ function setContentFromState(state) {
 		}
 
 		// Réponse
-
 		if (state.type_objet == "travail_en_cours") {
 			// Si travail en cours est un livrable
 			if ($.urlParam('type') == 'livrables') {
@@ -500,7 +498,6 @@ function callReponse(id_reponse) {
 		}
 	);
 
-
 	var url_travail_en_cours = 'spip.php?page=rubrique&mode=detail&id_rubrique=' + CCN.travailEnCoursId;
 	loadContentInLateralSidebar(url_travail_en_cours, 'rubrique', 'travail_en_cours');
 
@@ -553,7 +550,6 @@ function callClasse(id_classe) {
  * Appelle le chargement des classes
  * dans la sidebar principale
  *
- * @see loadContentInMainSidebar
  * @see loadContentInLateralSidebar
  */
 
@@ -999,10 +995,12 @@ function changeCouleurLogoMenu(val) {
 
 function updateUrl(object, title, url) {
 	currentState = object;
+	console.log(CCN.hash);
 
 	if (CCN.hash != '') {
-		if (CCN.hash.substring(0, 5) == 'forum') { }
-		else {
+		if (CCN.hash.substring(0, 5) == 'forum') {
+
+		} else {
 			History.pushState(object, title, url + '#' + CCN.hash);
 		}
 
