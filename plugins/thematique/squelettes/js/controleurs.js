@@ -11,63 +11,62 @@ $.urlParam = function (name) {
 	}
 }
 
-$().ready(
-	function () {
+$(function () {
 
-		$('#timeline_fixed').on(
-			'click', function (event) {
-				event.stopPropagation();
-				CCN.projet.showWholeTimeline();
-				changeTimelineMode('consignes');
-			}
-		);
+	$('#timeline_fixed').on(
+		'click', function (event) {
+			event.stopPropagation();
+			CCN.projet.showWholeTimeline();
+			changeTimelineMode('consignes');
+		}
+	);
 
-		$(window).on(
-			'resize', function () {
-				onResize();
-			}
-		);
+	$(window).on(
+		'resize', function () {
+			onResize();
+		}
+	);
 
-		onResize();
+	onResize();
 
-		$('#sidebarExpand').on(
-			'click', function () {
-				toggleSidebarExpand();
-			}
-		);
+	$('#sidebarExpand').on(
+		'click', function () {
+			toggleSidebarExpand();
+		}
+	);
 
-		$('#sidebarCache').on(
-			'click', function () {
-				$('body').removeClass('hasSidebarExpanded');
-			}
-		);
+	$('#sidebarCache').on(
+		'click', function () {
+			$('body').removeClass('hasSidebarExpanded');
+		}
+	);
 
-		$("#menu_bas ul a").not('#menu-classes-select ul a').tooltip(
-			{
-				position: {
-					my: "center bottom-4",
-					at: "center top",
-					using: function (position, feedback) {
-						$(this).css(position);
-						$("<div>")
-							.addClass("arrow")
-							.addClass(feedback.vertical)
-							.addClass(feedback.horizontal)
-							.appendTo(this);
-					},
-					collision: "fit",
+	$("#menu_bas ul a").not('#menu-classes-select ul a').tooltip(
+		{
+			position: {
+				my: "center bottom-4",
+				at: "center top",
+				using: function (position, feedback) {
+					$(this).css(position);
+					$("<div>")
+						.addClass("arrow")
+						.addClass(feedback.vertical)
+						.addClass(feedback.horizontal)
+						.appendTo(this);
 				},
-				show: {
-					duration: 100,
-					effect: 'fadeIn'
-				},
-				hide: {
-					duration: 100,
-					effect: 'fadeOut'
-				}
+				collision: "fit",
+			},
+			show: {
+				duration: 100,
+				effect: 'fadeIn'
+			},
+			hide: {
+				duration: 100,
+				effect: 'fadeOut'
 			}
-		);
-	}
+		}
+	);
+}
 );
 
 var antifloodHashChange = false;
@@ -127,7 +126,6 @@ function setContentFromState(state) {
 		CCN.projet.showWholeTimeline();
 	}
 
-
 	if (state.type_objet == "ressources") {
 		changeTimelineMode('consignes');
 		callRessource();
@@ -167,9 +165,7 @@ function setContentFromState(state) {
 		}
 	}
 
-
 	if (state.id_objet != "0") {
-
 		// Consigne
 		if (state.type_objet == "consignes") {
 			changeTimelineMode('consignes');
@@ -247,7 +243,6 @@ function initLocalEvents(parent) {
 /**
  * Gère la mise à jour des styles lorsque l'écran est resizé
  */
-
 function onResize() {
 	$('#crayons-surcharge-styles').text('.crayon-active.markItUpEditor { height: ' + (parseInt($(window).height()) - 228) + 'px !important; } .resizehandle { display:none !important; }');
 }
@@ -256,7 +251,6 @@ function onResize() {
 /**
  * Affiche ou réduit l'affichage plein écran des sidebars.
  */
-
 function toggleSidebarExpand() {
 	if ($('body').hasClass('hasSidebarExpanded')) {
 		$('body').removeClass('hasSidebarExpanded');
@@ -275,7 +269,6 @@ function toggleSidebarExpand() {
 	}
 }
 
-
 /**
  * Définit la largeur de la zone.
  */
@@ -284,7 +277,6 @@ function getLargeurZone() {
 	return $(window).width() * 0.98;
 }
 
-
 /**
  * Définit la hauteur de la zone.
  */
@@ -292,7 +284,6 @@ function getLargeurZone() {
 function getHauteurZone() {
 	return $(window).height() * 0.873;
 }
-
 
 /**
  * Appelle le recalcul des connecteurs.
@@ -304,13 +295,11 @@ function updateTimeline() {
 	updateConnecteurs();
 }
 
-
 /**
  * Change le mode d'affichage de la timeline.
  *
  * @param {string} type - Peut être <tt>consignes</tt>, <tt>blogs</tt> ou <tt>evenements</tt>
  */
-
 function changeTimelineMode(type) {
 	var classCss = {};
 	classCss.consignes = 'show_consignes';
@@ -405,19 +394,15 @@ function showReponseInTimeline(numero) {
 function call(opts) {
 	console.log(opts);
 
-	if (opts.type == 'rubrique') {
-		if (opts.type_objet == 'travail_en_cours') {
-			toggleSidebarExpand();
-			// Classe
-			callClasse(opts.id_rubrique);
-		}
+	if (opts.type == 'rubrique' && opts.type_objet == 'travail_en_cours') {
+		toggleSidebarExpand();
+		// Classe
+		callClasse(opts.id_rubrique);
 	}
 
-	if (opts.type == 'article') {
-		if (opts.type_objet == 'travail_en_cours' && opts.type_entite != null && opts.type_entite == 'reponse') {
-			// Réponse d'une classe
-			callReponse(opts.id_article);
-		}
+	if (opts.type == 'article' && opts.type_objet == 'travail_en_cours' && opts.type_entite != null && opts.type_entite == 'reponse') {
+		// Réponse d'une classe
+		callReponse(opts.id_article);
 	}
 }
 
@@ -995,7 +980,6 @@ function changeCouleurLogoMenu(val) {
 
 function updateUrl(object, title, url) {
 	currentState = object;
-	console.log(CCN.hash);
 
 	if (CCN.hash != '') {
 		if (CCN.hash.substring(0, 5) == 'forum') {
