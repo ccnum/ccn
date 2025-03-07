@@ -625,21 +625,16 @@ body.mobile {
 }
 
 div.texte-presentation {
-	position: relative;
-	clear: both;
-	position: relative;
-	margin: 20px;
-	padding: 0px 20px 15px 20px;
+	margin: 60px;
 }
 
 .texte-presentation div.bord {
 	border-left: 5px #ff6b6b solid;
 	padding: 10px;
-	margin: 20px;
 }
 
 .texte-presentation ul {
-	margin: 20px;
+	margin: 30px;
 }
 
 .texte-presentation ul ul {
