@@ -14,7 +14,7 @@ function formulaires_creer_histoire_saisies_dist($rub_parent, $retour = '') {
 	$articles = sql_allfetsel(
 		'a.id_article,a.titre,c.nom',
 		'spip_articles AS a JOIN spip_auteurs_liens AS b JOIN spip_auteurs AS c ON (a.id_article=b.id_objet AND b.objet=\'article\' AND b.id_auteur=c.id_auteur)',
-		'a.id_rubrique=' . intval($rub_parent)
+		['a.id_rubrique=' . intval($rub_parent), 'a.titre = "Prologue"']
 	);
 	foreach ($articles as $a) {
 		$prologues[$a['id_article']] = $a['titre'] . ' par : ' . $a['nom'];
