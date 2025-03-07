@@ -44,7 +44,10 @@
 				<div class="texte-presentation" style="position: relative; margin: 60px 20px 0px 100px;">
 					[(#SESSION{id_auteur}|oui)
 						[(#ENV{creer}|non)
-							<div class="bord">En tant qu'admin des rubriques suivante, quelle histoire souhaitez vous mettre en place sur ce poste ?</div>
+							<div class="bord">
+								<b>Reprendre une histoire en cours :</b> quelle histoire dans la liste ci-dessous souhaitez-vous lancer sur ce poste ?
+								<i>Seules les histoires des rubriques dont vous êtes administrateur.ice s’affichent ci-dessous.</i>
+							</div>
 							<BOUCLE_admin(RUBRIQUES){titre==jeu}{tout}>
 								<B_admin1>
 								<ul>
@@ -92,7 +95,7 @@
 						[(#ENV{creer}|oui)
 							[(#ENV{creer}|=={ok}|non)
 							<div class="bord">
-								Actuellement dans la rubrique[ (#INFO_TITRE{rubrique,#ENV{creer}}) ] on trouve les prologues suivant et leur utilisation :
+								Actuellement dans la rubrique[ <b>(#INFO_TITRE{rubrique,#ENV{creer}})</b> ] on trouve les prologues suivant et leur utilisation :
 								<ul>
 								<BOUCLE_prologue(ARTICLES){id_rubrique=#ENV{creer}}>
 									<li>
