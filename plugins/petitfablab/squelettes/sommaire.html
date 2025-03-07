@@ -57,7 +57,7 @@
 										<B_admin1112>
 											<ul>
 										<BOUCLE_admin1112(RUBRIQUES){tous}{id_parent=#ID_RUBRIQUE}{par num titre, titre}>
-											<li><a target="_blank" [(#SELF|parametre_url{liste,''}|parametre_url{page,ecriture}|parametre_url{rub_jeu,#ID_RUBRIQUE})]">#TITRE</a></li>
+											<li><a target="_blank" href="[(#SELF|parametre_url{liste,''}|parametre_url{page,ecriture}|parametre_url{rub_jeu,#ID_RUBRIQUE})]">#TITRE</a></li>
 										</BOUCLE_admin1112>
 											</ul>
 										</B_admin1112>
@@ -81,7 +81,7 @@
 									</ul>
 								<//B_admin1>
 							</BOUCLE_admin>
-							<div class="bord">Où souhaitez vous créer des histoires ?</div>
+							<div class="bord">Dans quelle rubrique souhaitez-vous créé votre nouvelle histoire ?</div>
 							<BOUCLE_admin2(RUBRIQUES){titre==jeu}{tout}>
 								<BOUCLE_admin21(RUBRIQUES){id_parent=#ID_RUBRIQUE}{id_auteur=#SESSION{id_auteur}}{par num titre, titre}{'<br />'}>
 									<a href="[(#SELF|parametre_url{creer,#ID_RUBRIQUE})]">#TITRE</a>
