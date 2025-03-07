@@ -18,14 +18,13 @@ RUBRIQUE.HTML > CHAPITRE-VERROUILLE.HTML
 		</BOUCLE_auteur_article>
 	</div>
 
+	[(#SET{ma_regexp, [[:alpha:]]})]
 	[(#ENV{fin}|=={oui}|non)
 		<INCLURE{fond=inclure/logos-script-forum,id_article,class=ecriture-chapitre-liens} />
 		<!-- LONGUEUR DE L' ARTICLE-->
-		[(#SET{ma_regexp, [[:alpha:]]})]
 		<span class="texte-masque">[(#DESCRIPTIF|couper{[(#DESCRIPTIF|textebrut|strlen|moins{400})], ''}|replace{[(#GET{ma_regexp})], x})]</span>
 		[<div class="ecriture-chapitre-nom">(#DESCRIPTIF|cleanCut)</div>]
 	]
-
 </div>
 </BOUCLE_article_verrouille>
 <hr/>
