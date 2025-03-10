@@ -864,7 +864,7 @@ a.verrouille.last-small {
 }
 
 .ecriture-chapitre-liens {
-	width: 140px;
+	width: 180px;
 	margin: 5px 0px 0px 0px;
 	float: left;
 }
@@ -1523,8 +1523,6 @@ a:hover.spip_out {
 	float: left;
 	clear: both;
 }
-
-
 
 /* -------------------- */
 /* LECTURE */
