@@ -173,11 +173,10 @@
 	//PAGINATION & AFFICHAGE DES PAGES
 
 	function pagination(var_compteur) {
-		if(var_compteur%2 == 0) {
+		if (var_compteur%2 == 0) {
 			num_page_gauche = var_compteur-1;
 			num_page_droite = var_compteur;
-		}
-		else {
+		} else {
 			num_page_gauche = var_compteur;
 			num_page_droite = var_compteur+1;
 		}
@@ -190,12 +189,12 @@
 	function next_prev(var_compteur, var_limite) {
 		$('#bt-next').show();
 		$('#bt-prev').show();
-		if(var_compteur >= var_limite-1){
+		if (var_compteur >= var_limite-1) {
 			$('#bt-next').hide();
 		}
-		else {};
-
-		if(var_compteur == 1 | var_compteur == 2){$('#bt-prev').hide();} else {};
+		if (var_compteur == 1 | var_compteur == 2) {
+			$('#bt-prev').hide();
+		};
 	}
 </script>
 
