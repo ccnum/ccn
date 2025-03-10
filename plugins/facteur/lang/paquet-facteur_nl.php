@@ -3,14 +3,10 @@
 // extrait automatiquement de https://trad.spip.net/tradlang_module/paquet-facteur?lang_cible=nl
 // ** ne pas modifier le fichier **
 
-if (!defined('_ECRIRE_INC_VERSION')) {
-	return;
-}
-
-$GLOBALS[$GLOBALS['idx_lang']] = array(
+return [
 
 	// F
 	'facteur_description' => 'Postbode (Facteur) houdt zich bezig met de distributie van email in HTML, tekst of gemengd formaat; al dan niet via SMTP',
 	'facteur_nom' => 'Postbode',
-	'facteur_slogan' => 'Hij verzendt uw mail'
-);
+	'facteur_slogan' => 'Hij verzendt uw mail',
+];

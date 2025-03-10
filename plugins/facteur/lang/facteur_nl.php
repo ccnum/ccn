@@ -3,11 +3,7 @@
 // extrait automatiquement de https://trad.spip.net/tradlang_module/facteur?lang_cible=nl
 // ** ne pas modifier le fichier **
 
-if (!defined('_ECRIRE_INC_VERSION')) {
-	return;
-}
-
-$GLOBALS[$GLOBALS['idx_lang']] = array(
+return [
 
 	// C
 	'config_info_enregistree' => 'De configuratie is opgeslagen',
@@ -96,5 +92,5 @@ Controleer het bestand <tt>mes_options.php</tt>',
 	// V
 	'valider' => 'Bevestigen',
 	'version_html' => 'HTML-versie.',
-	'version_texte' => 'Tekstversie.'
-);
+	'version_texte' => 'Tekstversie.',
+];

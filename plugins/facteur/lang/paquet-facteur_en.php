@@ -3,14 +3,10 @@
 // extrait automatiquement de https://trad.spip.net/tradlang_module/paquet-facteur?lang_cible=en
 // ** ne pas modifier le fichier **
 
-if (!defined('_ECRIRE_INC_VERSION')) {
-	return;
-}
-
-$GLOBALS[$GLOBALS['idx_lang']] = array(
+return [
 
 	// F
 	'facteur_description' => 'Postman delivers emails in HTML, text or mixed format; via SMTP or not',
 	'facteur_nom' => 'Postman',
-	'facteur_slogan' => 'He delivers emails'
-);
+	'facteur_slogan' => 'He delivers emails',
+];

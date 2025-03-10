@@ -3,11 +3,7 @@
 // extrait automatiquement de https://trad.spip.net/tradlang_module/crayons?lang_cible=ca
 // ** ne pas modifier le fichier **
 
-if (!defined('_ECRIRE_INC_VERSION')) {
-	return;
-}
-
-$GLOBALS[$GLOBALS['idx_lang']] = array(
+return [
 
 	// A
 	'activation_barre_impossible' => 'Un altre connector impedeix l’ús del portaplomes a l’espai públic. ',
@@ -72,5 +68,5 @@ $GLOBALS[$GLOBALS['idx_lang']] = array(
 	'update_impossible' => 'L’actualització ha fracassat',
 
 	// V
-	'veuillez_patienter' => 'Si us plau, espereu un moment...'
-);
+	'veuillez_patienter' => 'Si us plau, espereu un moment...',
+];

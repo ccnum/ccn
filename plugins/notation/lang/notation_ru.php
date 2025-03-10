@@ -3,11 +3,7 @@
 // extrait automatiquement de https://trad.spip.net/tradlang_module/notation?lang_cible=ru
 // ** ne pas modifier le fichier **
 
-if (!defined('_ECRIRE_INC_VERSION')) {
-	return;
-}
-
-$GLOBALS[$GLOBALS['idx_lang']] = array(
+return [
 
 	// A
 	'acces' => 'Доступ к голосованию', # MODIF
@@ -116,5 +112,5 @@ $GLOBALS[$GLOBALS['idx_lang']] = array(
 	'vote' => 'Оценка',
 	'voter' => 'Проголосовать : ',
 	'votes' => 'голоса',
-	'votre_note' => 'Оценка'
-);
+	'votre_note' => 'Оценка',
+];

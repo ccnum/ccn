@@ -3,11 +3,7 @@
 // extrait automatiquement de https://trad.spip.net/tradlang_module/crayons?lang_cible=oc_lnc
 // ** ne pas modifier le fichier **
 
-if (!defined('_ECRIRE_INC_VERSION')) {
-	return;
-}
-
-$GLOBALS[$GLOBALS['idx_lang']] = array(
+return [
 
 	// A
 	'annuler' => 'Anullar',
@@ -37,5 +33,5 @@ $GLOBALS[$GLOBALS['idx_lang']] = array(
 	'svp_copier_coller' => 'Desolats, copiatz/empegatz vòstres cambiaments e tornatz començar',
 
 	// V
-	'veuillez_patienter' => 'Mercés d’esperar...'
-);
+	'veuillez_patienter' => 'Mercés d’esperar...',
+];

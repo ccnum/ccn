@@ -3,11 +3,7 @@
 // extrait automatiquement de https://trad.spip.net/tradlang_module/notation?lang_cible=sk
 // ** ne pas modifier le fichier **
 
-if (!defined('_ECRIRE_INC_VERSION')) {
-	return;
-}
-
-$GLOBALS[$GLOBALS['idx_lang']] = array(
+return [
 
 	// A
 	'acces' => 'Prístupnosť', # MODIF
@@ -120,5 +116,5 @@ $GLOBALS[$GLOBALS['idx_lang']] = array(
 	'vote' => 'hodnotenie',
 	'voter' => 'Hodnotiť: ',
 	'votes' => 'hodnotení',
-	'votre_note' => 'Vaša známka'
-);
+	'votre_note' => 'Vaša známka',
+];

@@ -3,11 +3,7 @@
 // extrait automatiquement de https://trad.spip.net/tradlang_module/verifier?lang_cible=nl
 // ** ne pas modifier le fichier **
 
-if (!defined('_ECRIRE_INC_VERSION')) {
-	return;
-}
-
-$GLOBALS[$GLOBALS['idx_lang']] = array(
+return [
 
 	// D
 	'data_choix' => 'Mogelijke keuzes:',
@@ -138,7 +134,6 @@ $GLOBALS[$GLOBALS['idx_lang']] = array(
 
 	// P
 	'par_defaut' => 'Standaard:',
-	'plugin_yaml_inactif' => 'Plugin YAML is niet aanwezig en/of actief. Deze is benodigd om deze bladzijde van de documentatie te tonen.',
 
 	// T
 	'titre_page_verifier_doc' => 'Documentatie van de verificatie-API',
@@ -180,5 +175,5 @@ $GLOBALS[$GLOBALS['idx_lang']] = array(
 	'type_url_description' => 'Controleer of de URL een herkend formaat heeft.',
 
 	// V
-	'verification_a_faire' => 'Uit te voeren verificatie:'
-);
+	'verification_a_faire' => 'Uit te voeren verificatie:',
+];

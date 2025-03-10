@@ -3,11 +3,7 @@
 // extrait automatiquement de https://trad.spip.net/tradlang_module/crayons?lang_cible=km
 // ** ne pas modifier le fichier **
 
-if (!defined('_ECRIRE_INC_VERSION')) {
-	return;
-}
-
-$GLOBALS[$GLOBALS['idx_lang']] = array(
+return [
 
 	// A
 	'annuler' => 'បោះបង់',
@@ -20,5 +16,5 @@ $GLOBALS[$GLOBALS['idx_lang']] = array(
 	'update_impossible' => 'ការបន្ទាន់សម័យ បានបរាជ័យ។',
 
 	// V
-	'veuillez_patienter' => 'កំពុងស្វែងរក ...'
-);
+	'veuillez_patienter' => 'កំពុងស្វែងរក ...',
+];

@@ -3,37 +3,43 @@
 // extrait automatiquement de https://trad.spip.net/tradlang_module/verifier?lang_cible=pt_br
 // ** ne pas modifier le fichier **
 
-if (!defined('_ECRIRE_INC_VERSION')) {
-	return;
-}
+return [
 
-$GLOBALS[$GLOBALS['idx_lang']] = array(
+	// D
+	'data_choix' => 'Opções possíveis:',
 
 	// E
+	'erreur_attribut_class' => 'A sintaxe deste atributo class é inválida.',
 	'erreur_code_postal' => 'Este Cep está incorreto.',
-	'erreur_comparaison_egal' => 'O valor deve ser igual ao campo "@nom_champ@"', # MODIF
-	'erreur_comparaison_egal_type' => 'O valor deve ser igual e do mesmo tipo que o campo "@nom_champ@"', # MODIF
-	'erreur_comparaison_grand' => 'O valor deve ser superior ao campo "@nom_champ@"', # MODIF
-	'erreur_comparaison_grand_egal' => 'O valor deve ser superior ou igual ao campo "@nom_champ@"', # MODIF
-	'erreur_comparaison_petit' => 'O valor deve ser inferior ao campo "@nom_champ@"', # MODIF
-	'erreur_comparaison_petit_egal' => 'O valor deve ser inferior ou igual ao campo "@nom_champ@"', # MODIF
+	'erreur_comparaison_different' => 'O valor deve ser diferente do campo "@nom_champ@".',
+	'erreur_comparaison_different_type' => 'O valor deve ser diferente ou de tipo diferente que o campo "@nom_champ@".',
+	'erreur_comparaison_egal' => 'O valor deve ser igual ao campo "@nom_champ@"',
+	'erreur_comparaison_egal_type' => 'O valor deve ser igual e do mesmo tipo que o campo "@nom_champ@".',
+	'erreur_comparaison_grand' => 'O valor deve ser superior ao do campo "@nom_champ@".',
+	'erreur_comparaison_grand_egal' => 'O valor deve ser superior ou igual ao do campo "@nom_champ@".',
+	'erreur_comparaison_petit' => 'O valor deve ser inferior ao do campo "@nom_champ@".',
+	'erreur_comparaison_petit_egal' => 'O valor deve ser inferior ou igual ao do campo "@nom_champ@".',
 	'erreur_couleur' => 'O código de cor não é válido.',
 	'erreur_date' => 'A data não é válida.',
 	'erreur_date_format' => 'O formato da data não é aceitável.',
+	'erreur_date_format_date_vide' => 'A data deve ser preenchida.',
+	'erreur_date_format_heure_vide' => 'A hora deve ser preenchida.',
 	'erreur_decimal' => 'O valor deve ser um número decimal.',
 	'erreur_decimal_nb_decimales' => 'O número não deve ter mais de @nb_decimales@ algarismos depois da vírgula.',
+	'erreur_dimension_image' => 'O arquivo «@name@» é demasiado grande: @taille@ (máximo @taille_max@).',
 	'erreur_email' => 'O endereço de e-mail <em>@email@</em> não está num formato válido.',
 	'erreur_email_nondispo' => 'O endereço de e-mail <em>@email@</em> já está sendo usado.',
 	'erreur_entier' => 'O valor deve ser um número inteiro.',
 	'erreur_entier_entre' => 'O valor dever ser entre @min@ e @max@.',
-	'erreur_entier_max' => 'O valor deve ser inferior a @max@.', # MODIF
-	'erreur_entier_min' => 'O valor deve ser superior a @min@.', # MODIF
+	'erreur_entier_max' => 'O valor deve ser inferior ou igual a @max@.',
+	'erreur_entier_min' => 'O valor deve ser superior ou igual a @min@.',
 	'erreur_heure' => 'O horário indicado não existe.',
 	'erreur_heure_format' => 'O formato de hora não é aceitável.',
+	'erreur_iban_format' => 'Você deve informar um IBAN válido.',
 	'erreur_id_document' => 'Esta extensão de documento não é válida.',
 	'erreur_id_objet' => 'Este ID não é válido.',
 	'erreur_inconnue_generique' => 'O formato não está correto.',
-	'erreur_isbn' => 'O número ISBN não é válido (ex: 978-2-1234-5680-3 ou 2-1234-5680-X)', # MODIF
+	'erreur_isbn' => 'O número ISBN não é válido (ex: 978-2-1234-5680-3 ou 2-1234-5680-X).',
 	'erreur_isbn_13_X' => 'Um número ISBN-13 não pode terminar em X.',
 	'erreur_isbn_G' => 'O primeiro segmento deve ser igual a 978 ou 979.',
 	'erreur_isbn_nb_caracteres' => 'O número ISBN deve ter 10 ou 13 caractéres, sem contar os traços (atualmente @nb@).',
@@ -41,23 +47,39 @@ $GLOBALS[$GLOBALS['idx_lang']] = array(
 	'erreur_isbn_segment' => 'O segmento "@segment@" tem @nb@ número(s) a mais.',
 	'erreur_isbn_segment_lettre' => 'O segmento "@segment@" não pode conter letras.',
 	'erreur_numerique' => 'O formato do número não é válido.',
-	'erreur_objet' => 'Este objeto não é válido', # MODIF
+	'erreur_objet' => 'Este objeto não é válido.',
+	'erreur_php_file_1' => 'O tamanho do arquivo «@name@» ultrapassa o permitido pelo servidor',
+	'erreur_php_file_2' => 'O tamanho do arquivo «@name@» ultrapassa o permitido pelo formulário',
+	'erreur_php_file_3' => 'O arquivo «@name@» foi parcialmente transferido',
+	'erreur_php_file_6' => 'Um erro do servidor impediu o envio do arquivo «@name@»',
+	'erreur_php_file_7' => 'Um erro do servidor impediu o envio do arquivo «@name@»',
+	'erreur_php_file_88' => 'Um erro do servidor impediu o envio do arquivo «@name@»',
 	'erreur_regex' => 'O formato da expressão não é válido.',
 	'erreur_siren' => 'O número SIREN não é válido.',
 	'erreur_siret' => 'O número SIRET não é válido.',
+	'erreur_slug' => 'Unicamente caracteres alfanuméricos em minúsculas ou «@separateur@».',
+	'erreur_slug_longueur_maxi' => '@nb_max@ caracter(es) no máximo (atualmente @nb@).',
+	'erreur_slug_normaliser_suggerer' => 'Tente «@valeur@».',
 	'erreur_taille_egal' => 'O valor deve ter exatamente @egal@ caracteres (atualmente @nb@).',
 	'erreur_taille_entre' => 'O valor deve ter entre @min@ e @max@ caracteres (atualmente @nb@).',
+	'erreur_taille_fichier' => 'O arquivo «@name@» é muito pesado: @taille@ (máximo @taille_max@).',
 	'erreur_taille_max' => 'O valor deve ter no máximo @max@ caracteres (atualmente @nb@).',
 	'erreur_taille_min' => 'O valor deve ter no mínimo @min@ caracteres (atualmente @nb@).',
 	'erreur_telephone' => 'O número não é válido.',
+	'erreur_type_image' => 'O arquivo «@name@» não é uma imagem web.',
+	'erreur_type_non_autorise' => 'O arquivo «@name@» é de um tipo não autorizado.',
 	'erreur_url' => 'O endereço <em>@url@</em> não é válido.',
-	'erreur_url_protocole' => 'O endereço informado <em>(@url@)</em> deve começar com @protocole@', # MODIF
-	'erreur_url_protocole_exact' => 'O endereço informado <em>(@url@)</em> não começa com um protocolo válido (http:// por exemplo)', # MODIF
+	'erreur_url_protocole' => 'O endereço informado <em>(@url@)</em> deve começar com @protocole@.',
+	'erreur_url_protocole_exact' => 'O endereço informado <em>(@url@)</em> não começa com um protocolo válido (http:// por exemplo).',
 
 	// N
 	'normaliser_option_date' => 'Normalizar a data?',
 	'normaliser_option_date_aucune' => 'Não',
+	'normaliser_option_date_en_date' => 'No formato «Date» (para SQL)',
+	'normaliser_option_date_en_date_ou_datetime' => 'No formato «Date» ou «Datetime» (para SQL) de acordo com o que é esperado na base, ou, por padrão, recebido como entrada',
 	'normaliser_option_date_en_datetime' => 'No formato «Datetime» (do SQL)',
+	'normaliser_option_iban' => 'Normalizar o IBAN ?',
+	'normaliser_option_iban_machine' => 'No formato padrão (sem espaços, maiúsculas)',
 	'normaliser_option_iban_non' => 'Não',
 
 	// O
@@ -67,6 +89,8 @@ $GLOBALS[$GLOBALS['idx_lang']] = array(
 	'option_comparaison_champ_champ_label' => 'Campo',
 	'option_comparaison_champ_comparaison_explication' => 'Tipo de comparação a efetuar',
 	'option_comparaison_champ_comparaison_label' => 'Comparação',
+	'option_comparaison_champ_different' => ' != Diferente',
+	'option_comparaison_champ_different_type' => ' !== Diferente ou de tipo diferente',
 	'option_comparaison_champ_egal' => '== Igual',
 	'option_comparaison_champ_egal_type' => '=== Idêntico (mesmo tipo)',
 	'option_comparaison_champ_grand' => '> Maior',
@@ -77,35 +101,69 @@ $GLOBALS[$GLOBALS['idx_lang']] = array(
 	'option_comparaison_champ_petit_egal' => '<= Menor ou igual',
 	'option_couleur_normaliser_label' => 'Normalizar o código de cor?',
 	'option_couleur_type_hexa' => 'Código de cor no formato hexadecimal',
-	'option_couleur_type_label' => 'Tipo de verificação a efetuar',
-	'option_decimal_nb_decimales_label' => 'Número de décimais depois da vírgula', # MODIF
+	'option_couleur_type_label' => 'Tipo de validação a efetuar',
+	'option_decimal_nb_decimales_label' => 'Número máximo de décimais após a vírgula.',
+	'option_decimal_normaliser' => 'Normalizar no formato informático',
+	'option_decimal_separateur_explication' => 'O ponto será aceito em todos os casos.',
+	'option_decimal_separateur_label' => 'Separador de decimal',
 	'option_email_disponible_label' => 'E-mail disponível',
-	'option_email_disponible_label_case' => 'Verificar se o e-mail já está sendo utilizado por um usuário',
-	'option_email_mode_5322' => 'A verificação mais de acordo com os padrões disponíveis',
-	'option_email_mode_label' => 'Modo de verificação de e-mails',
-	'option_email_mode_normal' => 'Verificação normal do SPIP',
-	'option_email_mode_strict' => 'Verificação menos permissiva',
+	'option_email_disponible_label_case' => 'Validar se o e-mail já está sendo utilizado por um usuário',
+	'option_email_mode_5322' => 'A validação mais de acordo com os padrões disponíveis',
+	'option_email_mode_label' => 'Modo de validação de e-mails',
+	'option_email_mode_normal' => 'Validação normal do SPIP',
+	'option_email_mode_strict' => 'Validação menos permissiva',
 	'option_entier_max_label' => 'Valor máximo',
 	'option_entier_min_label' => 'Valor mínimo',
-	'option_regex_modele_label' => 'O valor deve correspponder à máscara a seguir', # MODIF
-	'option_siren_siret_mode_label' => 'O que você quer verificar?',
+	'option_fichiers_dimension_autoriser_rotation_label' => 'Considerar a rotação da imagem?',
+	'option_fichiers_dimension_autoriser_rotation_label_case' => 'Marcar esta opção para poder trocar a largura e altura máximas',
+	'option_fichiers_hauteur_max_label' => 'Altura máxima da imagem (em px)',
+	'option_fichiers_largeur_max_label' => 'Largura máxima da imagem (em px)',
+	'option_fichiers_mime_image_web_label' => 'Autorizar unicamente as imagens web (gif, jpg, png)',
+	'option_fichiers_mime_label' => 'Type Mime e extensão',
+	'option_fichiers_mime_pas_de_verification_label' => 'Permitir todos os tipos e extensões (desaconselhado)',
+	'option_fichiers_mime_specifique_label' => 'Permitir unicamente os tipos e extensões selecionados abaixo',
+	'option_fichiers_mime_tout_mime_label' => 'Permitir todos os tipos Mime e extensões conhecidas do SPIP',
+	'option_fichiers_taille_max_label' => 'Peso máximo do arquivo (em KB)',
+	'option_fichiers_type_mime_label' => 'Selecionar os tipos MIME permitidos',
+	'option_id_objet_objet_label' => 'Nome do objeto (no singular)',
+	'option_regex_modele_explication' => 'Expressão completa, incluindo os caracteres envolventes e as opções. Para a utilização das expressões, consulte <a href="https://www.php.net/manual/pt_BR/reference.pcre.pattern.syntax.php" class="spip_out" target="_blank" rel="noopener noreferrer">ajuda online do PHP</a>.',
+	'option_regex_modele_label' => 'Expressão a testar',
+	'option_regex_negation_label_case' => 'Validar se a resposta <strong>não corresponde</strong> à expressão',
+	'option_siren_siret_mode_label' => 'O que você quer validar?',
 	'option_siren_siret_mode_siren' => 'O número SIREN',
 	'option_siren_siret_mode_siret' => 'O número SIRET',
+	'option_slug_longueur_maxi_label' => 'Comprimento máximo',
+	'option_slug_normaliser_explication' => 'Normalizar os caracteres acentuados, a pontuação etc.<br>
+Exemplo: «São Paulo, que cidade enorme!» torna-se «sao_paulo_que_cidade_enorme»',
+	'option_slug_normaliser_label' => 'Normalizar o valor',
+	'option_slug_normaliser_suggerer_explication' => 'Por padrão, a normalização ocorre transparentemente, em segundo plano. Você pode fazer uma sugestão simples para ajudar a manter o controle.',
+	'option_slug_normaliser_suggerer_label' => 'Basta fazer uma sugestão.',
+	'option_slug_separateur_explication' => 'Caracter usado para separar as palavras.',
+	'option_slug_separateur_label' => 'Separador',
 	'option_taille_max_label' => 'Tamanho máximo',
 	'option_taille_min_label' => 'Tamanho mínimo',
-	'option_url_mode_complet' => 'Verificação completa do URL',
-	'option_url_mode_label' => 'Modo de verificação dos URLs',
-	'option_url_mode_php_filter' => 'Verificação completa do URL através do filtro FILTER_VALIDATE_URL do php',
-	'option_url_mode_protocole_seul' => 'Verificação apenas da presença de um protocolo',
-	'option_url_protocole_label' => 'Nome do protocolo a ser verificado',
+	'option_url_mode_complet' => 'Validação completa do URL',
+	'option_url_mode_label' => 'Modo de validação dos URLs',
+	'option_url_mode_php_filter' => 'Validação completa do URL através do filtro FILTER_VALIDATE_URL do php',
+	'option_url_mode_protocole_seul' => 'Validação apenas da presença de um protocolo',
+	'option_url_protocole_label' => 'Nome do protocolo a ser validado',
 	'option_url_type_protocole_exact' => 'Informar um protocolo abaixo:',
 	'option_url_type_protocole_ftp' => 'Protocolos ftp: ftp ou sftp',
-	'option_url_type_protocole_label' => 'Tipo de protocolo a ser verificado',
+	'option_url_type_protocole_label' => 'Tipo de protocolo a ser validado',
 	'option_url_type_protocole_mail' => 'Protocolos de e-mail: imap, pop3 ou smtp',
 	'option_url_type_protocole_tous' => 'Todos os protocolos aceitos',
 	'option_url_type_protocole_web' => 'Protocolos web: http ou https',
+	'option_url_type_protocole_webcal' => 'Protocoloss webcal: webcal, http ou https',
+	'options_message_erreur_explication' => 'Deixe em branco, para manter a mensagem padrão.',
+	'options_message_erreur_label' => 'Mensagem de erro se a validação falhar.',
+
+	// P
+	'par_defaut' => 'Padrão:',
 
 	// T
+	'titre_page_verifier_doc' => 'Documentação da API de validação',
+	'type_attribut_class' => 'Atributo class',
+	'type_attribut_class_description' => 'Certifique-se que o valor é um atributo class válido.',
 	'type_code_postal' => 'CEP',
 	'type_code_postal_description' => 'Verifica se o valor é um CEP válido',
 	'type_comparaison_champ' => 'Comparação',
@@ -122,18 +180,29 @@ $GLOBALS[$GLOBALS['idx_lang']] = array(
 	'type_email_disponible_description' => 'Verifica se o endereço de e-mail já está sendo utilizado por outro usuário do sistema.',
 	'type_entier' => 'Número inteiro',
 	'type_entier_description' => 'Verifica se o valor é um número inteiro, com a possibilidade de restringir entre dois valores.',
+	'type_fichiers' => 'Propriedades de arquivo',
+	'type_fichiers_description' => 'Para cada arquivo carregado, verificar certas propriedades',
+	'type_iban' => 'IBAN',
 	'type_id_document' => 'Número de um documento',
 	'type_id_document_description' => 'Verifica se o valor corresponde a um número de documento existente.',
+	'type_id_objet' => 'Número de um objeto',
+	'type_id_objet_description' => 'Verifica se o valor corresponde a um número de objeto existente.',
 	'type_isbn' => 'Número ISBN',
 	'type_isbn_description' => 'Verifica se o valor corresponde a um número ISBN de 10 ou 13 dígitos.',
 	'type_regex' => 'Expressão regular',
-	'type_regex_description' => 'Verifica se o valor corresponde à máscara solicitada. Para a utilização de máscaras, consulte <a href="http://fr2.php.net/manual/fr/reference.pcre.pattern.syntax.php">ajuda online do PHP</a>.',
+	'type_regex_description' => 'Verifica se o valor corresponde à expressão solicitada. Para a utilização de expressões, consulte <a href="https://www.php.net/manual/pt_BR/reference.pcre.pattern.syntax.php">ajuda online do PHP</a>.',
 	'type_siren_siret' => 'SIREN ou SIRET',
 	'type_siren_siret_description' => 'Verifica se o valor é um número válido de <a href="http://fr.wikipedia.org/wiki/SIREN">sistema de identificação do cadastro de empresas (Système d’Identification du Répertoire des ENtreprises)</a> francês.',
+	'type_slug' => 'Identificador informático (slug)',
+	'type_slug_description' => 'Um slug é um texto curto usado para descrever e identificar um recurso. É composto apenas de caracteres alfanuméricos ou um separador (o caracter `_`).',
 	'type_taille' => 'Tamanho',
 	'type_taille_description' => 'Verifica se o tamanho do valor corresponde ao mínimo e/ou ao máximo solicitado.',
 	'type_telephone' => 'Número de telefone',
 	'type_telephone_description' => 'Verifica se o número de telefone corresponde a um esquema reconhecido.',
 	'type_url' => 'URL',
-	'type_url_description' => 'Verifica se o URL corresponde a um esquema reconhecido.'
-);
+	'type_url_description' => 'Verifica se o URL corresponde a um esquema reconhecido.',
+
+	// V
+	'verification_a_faire' => 'Validação a efetuar:',
+	'vider_date_nulle' => 'Zerar as datas nulas (por ex. 1/1/1970)',
+];

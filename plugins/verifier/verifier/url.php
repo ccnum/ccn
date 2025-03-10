@@ -159,7 +159,7 @@ function verifier_url_complet($url, $type_protocole, $protocole) {
 	// GET Query (optional)
 	$urlregex .= '(\?[a-z+&\$_.-][a-z0-9;:@\&%=+\$\|_.-]*)?';
 	// ANCHOR (optional)
-	$urlregex .= '(\#[a-z_.-][a-z0-9+\$_.-]*)?\$# i';
+	$urlregex .= '(\#[a-z_.-][a-z0-9+\$_.-]*)?$#i';
 
 	if (!preg_match($urlregex, $url)) {
 		return _T('verifier:erreur_url', ['url' => echapper_tags($url)]);

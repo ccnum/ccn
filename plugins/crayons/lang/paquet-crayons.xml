@@ -19,6 +19,9 @@
 		<traducteur nom="Cerf" lien="https://trad.spip.net/auteur/cerf" />
 	</langue>
 	<langue code="it" url="https://trad.spip.net/tradlang_module/paquet-crayons?lang_cible=it" total="3" traduits="3" relire="0" modifs="0" nouveaux="0" pourcent="100.00" />
+	<langue code="mg" url="https://trad.spip.net/tradlang_module/paquet-crayons?lang_cible=mg" total="3" traduits="3" relire="0" modifs="0" nouveaux="0" pourcent="100.00">
+		<traducteur nom="iBesorongola" lien="https://trad.spip.net/auteur/ibesorongola" />
+	</langue>
 	<langue code="nl" url="https://trad.spip.net/tradlang_module/paquet-crayons?lang_cible=nl" total="3" traduits="3" relire="0" modifs="0" nouveaux="0" pourcent="100.00">
 		<traducteur nom="Hanjo" lien="https://trad.spip.net/auteur/hanjo" />
 		<traducteur nom="Suske" lien="https://trad.spip.net/auteur/suske" />

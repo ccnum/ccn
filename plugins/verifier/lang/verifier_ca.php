@@ -3,11 +3,7 @@
 // extrait automatiquement de https://trad.spip.net/tradlang_module/verifier?lang_cible=ca
 // ** ne pas modifier le fichier **
 
-if (!defined('_ECRIRE_INC_VERSION')) {
-	return;
-}
-
-$GLOBALS[$GLOBALS['idx_lang']] = array(
+return [
 
 	// E
 	'erreur_date' => 'El format de la data no és correcte.',
@@ -61,5 +57,5 @@ $GLOBALS[$GLOBALS['idx_lang']] = array(
 	'type_taille' => 'Mida',
 	'type_taille_description' => 'Verifica que la mida del valor correspon al mínim i/o al màxim demanat.',
 	'type_telephone' => 'Número de telèfon',
-	'type_telephone_description' => 'Verifica que el número de telèfon correspon a un esquema reconegut.'
-);
+	'type_telephone_description' => 'Verifica que el número de telèfon correspon a un esquema reconegut.',
+];

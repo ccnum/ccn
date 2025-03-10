@@ -1,11 +1,8 @@
 <?php
 // This is a SPIP language file  --  Ceci est un fichier langue de SPIP
 // Fichier source, a modifier dans https://git.spip.net/spip-contrib-extensions/notation.git
-if (!defined('_ECRIRE_INC_VERSION')) {
-	return;
-}
 
-$GLOBALS[$GLOBALS['idx_lang']] = array(
+return [
 
 	// A
 	'acces' => 'Accès au vote',
@@ -120,5 +117,5 @@ $GLOBALS[$GLOBALS['idx_lang']] = array(
 	'vote' => 'vote',
 	'voter' => 'Voter : ',
 	'votes' => 'votes',
-	'votre_note' => 'Votre note'
-);
+	'votre_note' => 'Votre note',
+];

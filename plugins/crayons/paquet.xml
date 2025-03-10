@@ -1,7 +1,7 @@
 <paquet
 	prefix="crayons"
 	categorie="edition"
-	version="3.2.0"
+	version="3.2.1"
 	etat="stable"
 	compatibilite="[4.1.0;4.*]"
 	logo="images/crayon-64.png"

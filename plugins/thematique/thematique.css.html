@@ -1065,6 +1065,69 @@ a:hover {
 	font-size: #GET{font-size1_bas}px;
 }
 
+#menu_bas.zone-menu ul.actualites-ul {
+	width:27px;
+	margin-right:3px;
+}
+
+#menu_bas .actualites-inner {
+	overflow: scroll;
+	height: 27px;
+	display:inline-block;
+	overflow:hidden;
+}
+
+#menu_bas .actualites-actu {
+	cursor:pointer
+}
+
+#menu_bas .actualites-actu:hover {
+	background: rgba(194, 194, 194, 1);
+}
+
+#menu_bas .actualites-actu:last-child {
+	margin-bottom:0;
+}
+#menu_bas .actualites-actu {
+	font-size: 11px;
+	line-height: 14px;
+	height: 27px;
+	background: rgb(204, 204, 204);
+	padding: 7px 10px;
+	box-sizing: border-box;
+	margin-bottom: 5px;
+	border-radius: 0px;
+}
+
+.popup .actualites-actu {
+	background: rgb(224, 224, 224);
+	margin: 7px;
+	border-radius: 2px;
+	padding: 12px 20px;
+	font-size: 14px;
+	line-height: 18px;
+	/* Required for text-overflow to do anything */
+}
+
+.actualites-titre {
+	font-size: 1.2em;
+	font-weight: bold;
+}
+.actualites-texte {
+	text-overflow: ellipsis;
+	max-height: 200px;
+	overflow: hidden;
+	padding: 10px 10px 20px 10px;
+}
+
+.actualites-actu-date {
+	/*text-transform:uppercase;*/
+	font-size:11px;
+	color:gray
+}
+
+#menu_bas .actualites-actu-date, #menu_bas .actualites-texte { display:none; }
+#menu_bas .actualites-titre { font-weight: normal; font-size: 1.em;}
 /* Logos */
 
 #menu_haut.zone-menu span.logo {

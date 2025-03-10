@@ -3,11 +3,7 @@
 // extrait automatiquement de https://trad.spip.net/tradlang_module/notation?lang_cible=es
 // ** ne pas modifier le fichier **
 
-if (!defined('_ECRIRE_INC_VERSION')) {
-	return;
-}
-
-$GLOBALS[$GLOBALS['idx_lang']] = array(
+return [
 
 	// A
 	'acces' => 'Acceso a la votación',
@@ -123,5 +119,5 @@ Si desea garantizar una calificación única, limite el voto solo a las personas
 	'vote' => 'voto',
 	'voter' => 'Votar: ',
 	'votes' => 'votos',
-	'votre_note' => 'Su nota'
-);
+	'votre_note' => 'Su nota',
+];

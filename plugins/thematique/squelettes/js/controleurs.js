@@ -11,63 +11,62 @@ $.urlParam = function (name) {
 	}
 }
 
-$().ready(
-	function () {
+$(function () {
 
-		$('#timeline_fixed').on(
-			'click', function (event) {
-				event.stopPropagation();
-				CCN.projet.showWholeTimeline();
-				changeTimelineMode('consignes');
-			}
-		);
+	$('#timeline_fixed').on(
+		'click', function (event) {
+			event.stopPropagation();
+			CCN.projet.showWholeTimeline();
+			changeTimelineMode('consignes');
+		}
+	);
 
-		$(window).on(
-			'resize', function () {
-				onResize();
-			}
-		);
+	$(window).on(
+		'resize', function () {
+			onResize();
+		}
+	);
 
-		onResize();
+	onResize();
 
-		$('#sidebarExpand').on(
-			'click', function () {
-				toggleSidebarExpand();
-			}
-		);
+	$('#sidebarExpand').on(
+		'click', function () {
+			toggleSidebarExpand();
+		}
+	);
 
-		$('#sidebarCache').on(
-			'click', function () {
-				$('body').removeClass('hasSidebarExpanded');
-			}
-		);
+	$('#sidebarCache').on(
+		'click', function () {
+			$('body').removeClass('hasSidebarExpanded');
+		}
+	);
 
-		$("#menu_bas ul a").not('#menu-classes-select ul a').tooltip(
-			{
-				position: {
-					my: "center bottom-4",
-					at: "center top",
-					using: function (position, feedback) {
-						$(this).css(position);
-						$("<div>")
-							.addClass("arrow")
-							.addClass(feedback.vertical)
-							.addClass(feedback.horizontal)
-							.appendTo(this);
-					},
-					collision: "fit",
+	$("#menu_bas ul a").not('#menu-classes-select ul a').tooltip(
+		{
+			position: {
+				my: "center bottom-4",
+				at: "center top",
+				using: function (position, feedback) {
+					$(this).css(position);
+					$("<div>")
+						.addClass("arrow")
+						.addClass(feedback.vertical)
+						.addClass(feedback.horizontal)
+						.appendTo(this);
 				},
-				show: {
-					duration: 100,
-					effect: 'fadeIn'
-				},
-				hide: {
-					duration: 100,
-					effect: 'fadeOut'
-				}
+				collision: "fit",
+			},
+			show: {
+				duration: 100,
+				effect: 'fadeIn'
+			},
+			hide: {
+				duration: 100,
+				effect: 'fadeOut'
 			}
-		);
-	}
+		}
+	);
+}
 );
 
 var antifloodHashChange = false;
@@ -127,7 +126,6 @@ function setContentFromState(state) {
 		CCN.projet.showWholeTimeline();
 	}
 
-
 	if (state.type_objet == "ressources") {
 		changeTimelineMode('consignes');
 		callRessource();
@@ -167,11 +165,8 @@ function setContentFromState(state) {
 		}
 	}
 
-
 	if (state.id_objet != "0") {
-
 		// Consigne
-
 		if (state.type_objet == "consignes") {
 			changeTimelineMode('consignes');
 			for (k = 0; k < CCN.consignes.length; k++) {
@@ -182,7 +177,6 @@ function setContentFromState(state) {
 		}
 
 		// Réponse
-
 		if (state.type_objet == "travail_en_cours") {
 			// Si travail en cours est un livrable
 			if ($.urlParam('type') == 'livrables') {
@@ -249,7 +243,6 @@ function initLocalEvents(parent) {
 /**
  * Gère la mise à jour des styles lorsque l'écran est resizé
  */
-
 function onResize() {
 	$('#crayons-surcharge-styles').text('.crayon-active.markItUpEditor { height: ' + (parseInt($(window).height()) - 228) + 'px !important; } .resizehandle { display:none !important; }');
 }
@@ -258,7 +251,6 @@ function onResize() {
 /**
  * Affiche ou réduit l'affichage plein écran des sidebars.
  */
-
 function toggleSidebarExpand() {
 	if ($('body').hasClass('hasSidebarExpanded')) {
 		$('body').removeClass('hasSidebarExpanded');
@@ -277,7 +269,6 @@ function toggleSidebarExpand() {
 	}
 }
 
-
 /**
  * Définit la largeur de la zone.
  */
@@ -286,7 +277,6 @@ function getLargeurZone() {
 	return $(window).width() * 0.98;
 }
 
-
 /**
  * Définit la hauteur de la zone.
  */
@@ -294,7 +284,6 @@ function getLargeurZone() {
 function getHauteurZone() {
 	return $(window).height() * 0.873;
 }
-
 
 /**
  * Appelle le recalcul des connecteurs.
@@ -306,13 +295,11 @@ function updateTimeline() {
 	updateConnecteurs();
 }
 
-
 /**
  * Change le mode d'affichage de la timeline.
  *
  * @param {string} type - Peut être <tt>consignes</tt>, <tt>blogs</tt> ou <tt>evenements</tt>
  */
-
 function changeTimelineMode(type) {
 	var classCss = {};
 	classCss.consignes = 'show_consignes';
@@ -407,19 +394,15 @@ function showReponseInTimeline(numero) {
 function call(opts) {
 	console.log(opts);
 
-	if (opts.type == 'rubrique') {
-		if (opts.type_objet == 'travail_en_cours') {
-			toggleSidebarExpand();
-			// Classe
-			callClasse(opts.id_rubrique);
-		}
+	if (opts.type == 'rubrique' && opts.type_objet == 'travail_en_cours') {
+		toggleSidebarExpand();
+		// Classe
+		callClasse(opts.id_rubrique);
 	}
 
-	if (opts.type == 'article') {
-		if (opts.type_objet == 'travail_en_cours' && opts.type_entite != null && opts.type_entite == 'reponse') {
-			// Réponse d'une classe
-			callReponse(opts.id_article);
-		}
+	if (opts.type == 'article' && opts.type_objet == 'travail_en_cours' && opts.type_entite != null && opts.type_entite == 'reponse') {
+		// Réponse d'une classe
+		callReponse(opts.id_article);
 	}
 }
 
@@ -500,7 +483,6 @@ function callReponse(id_reponse) {
 		}
 	);
 
-
 	var url_travail_en_cours = 'spip.php?page=rubrique&mode=detail&id_rubrique=' + CCN.travailEnCoursId;
 	loadContentInLateralSidebar(url_travail_en_cours, 'rubrique', 'travail_en_cours');
 
@@ -539,7 +521,7 @@ function callClasse(id_classe) {
 					'id_objet': id_classe,
 					'id_rubrique': id_classe,
 					'page': 'rubrique'
-				}, "Classe", "./spip.php?page=rubrique&id_objet=" + id_classe + "&mode=complet&type_objet=classes"
+				}, "Classe", "./spip.php?page=rubrique&id_rubrique=" + id_classe + "&mode=complet&type_objet=classes"
 			);
 		}
 	);
@@ -553,7 +535,6 @@ function callClasse(id_classe) {
  * Appelle le chargement des classes
  * dans la sidebar principale
  *
- * @see loadContentInMainSidebar
  * @see loadContentInLateralSidebar
  */
 
@@ -1001,8 +982,9 @@ function updateUrl(object, title, url) {
 	currentState = object;
 
 	if (CCN.hash != '') {
-		if (CCN.hash.substring(0, 5) == 'forum') { }
-		else {
+		if (CCN.hash.substring(0, 5) == 'forum') {
+
+		} else {
 			History.pushState(object, title, url + '#' + CCN.hash);
 		}
 

@@ -3,11 +3,7 @@
 // extrait automatiquement de https://trad.spip.net/tradlang_module/crayons?lang_cible=lb
 // ** ne pas modifier le fichier **
 
-if (!defined('_ECRIRE_INC_VERSION')) {
-	return;
-}
-
-$GLOBALS[$GLOBALS['idx_lang']] = array(
+return [
 
 	// A
 	'annuler' => 'Annuléieren',
@@ -37,5 +33,5 @@ $GLOBALS[$GLOBALS['idx_lang']] = array(
 	'svp_copier_coller' => 'Deet ons leet, kopéiert/pächt är Ännerungen a fänkt nei un',
 
 	// V
-	'veuillez_patienter' => 'Waart weg...'
-);
+	'veuillez_patienter' => 'Waart weg...',
+];

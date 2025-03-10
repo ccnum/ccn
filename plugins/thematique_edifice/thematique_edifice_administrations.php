@@ -34,8 +34,7 @@ function th_migration_annee() {
 	// Traitement de la dernière année
 	$consignes = sql_allfetsel('*', 'spip_rubriques', ['titre =' . sql_quote('Consignes'), 'id_parent="0"']);
 	foreach ($consignes as $consigne) {
-		$article_date = sql_getfetsel('date', 'spip_articles', ['id_secteur=' . intval($consigne['id_rubrique']), 'titre LIKE ' . sql_quote('%Consigne 1%')]);
-		spip_log($article_date, 'test');
+		$article_date = sql_getfetsel('date', 'spip_articles', ['id_secteur=' . intval($consigne['id_rubrique'])], '', '', '0,1');
 		sql_updateq('spip_rubriques', ['id_parent' => $archives, 'id_secteur' => $archives], 'id_rubrique=' . intval($consigne['id_rubrique']));
 	}
 	$travaildesclasses = sql_allfetsel('*', 'spip_rubriques', ['titre =' . sql_quote('Travail des classes'), 'id_parent="0"']);

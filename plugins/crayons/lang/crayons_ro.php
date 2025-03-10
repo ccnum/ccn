@@ -3,11 +3,7 @@
 // extrait automatiquement de https://trad.spip.net/tradlang_module/crayons?lang_cible=ro
 // ** ne pas modifier le fichier **
 
-if (!defined('_ECRIRE_INC_VERSION')) {
-	return;
-}
-
-$GLOBALS[$GLOBALS['idx_lang']] = array(
+return [
 
 	// A
 	'annuler' => 'Anulati',
@@ -37,5 +33,5 @@ $GLOBALS[$GLOBALS['idx_lang']] = array(
 	'svp_copier_coller' => 'Ne pare rau, copiati/lipiti schimbarile dvs. si reincepeti',
 
 	// V
-	'veuillez_patienter' => 'Va rugam sa asteptati'
-);
+	'veuillez_patienter' => 'Va rugam sa asteptati',
+];

@@ -3,14 +3,10 @@
 // extrait automatiquement de https://trad.spip.net/tradlang_module/paquet-crayons?lang_cible=nl
 // ** ne pas modifier le fichier **
 
-if (!defined('_ECRIRE_INC_VERSION')) {
-	return;
-}
-
-$GLOBALS[$GLOBALS['idx_lang']] = array(
+return [
 
 	// C
 	'crayons_description' => 'Snelle aanpassing vanaf de publieke pagina’s van de site.',
 	'crayons_nom' => 'Krijtjes',
-	'crayons_slogan' => 'Snel bewerken vanaf de publieke pagina’s van de site.'
-);
+	'crayons_slogan' => 'Snel bewerken vanaf de publieke pagina’s van de site.',
+];

@@ -858,14 +858,13 @@ a.verrouille.last-small {
 
 .ecriture-chapitre-nom {
 	float: left;
-	width: 140px;
 	font-family: Arial, Helvetica, sans-serif;
 	font-size: 12px;
 	font-style: italic;
 }
 
 .ecriture-chapitre-liens {
-	width: 140px;
+	width: 180px;
 	margin: 5px 0px 0px 0px;
 	float: left;
 }
@@ -955,7 +954,6 @@ hr {
 .script-ecrivain-edit:hover {
 	background-color: #ff7a7a;
 }
-
 
 .script-college {
 	margin: 0px 30px 0px 60px;
@@ -1058,7 +1056,6 @@ a:hover.spip_out {
 	text-align: center;
 	width: 38px;
 }
-
 
 #ecriture-en-cours {
 	float: left;
@@ -1177,7 +1174,6 @@ a:hover.spip_out {
 	text-transform: uppercase;
 	line-height: 25px;
 	color: #FF6B6B;
-
 }
 
 .page-type-texte {
@@ -1294,8 +1290,6 @@ a:hover.spip_out {
 	text-decoration: none;
 }
 
-
-
 .ariaformprop {
 	background-color: #aab0b7;
 	float: left;
@@ -1308,7 +1302,6 @@ a:hover.spip_out {
 .saisie_titre {
 	display: none;
 }
-
 
 .formulaire_spip textarea.markItUpEditor,
 .formulaire_spip li.editer_texte textarea {
@@ -1530,8 +1523,6 @@ a:hover.spip_out {
 	float: left;
 	clear: both;
 }
-
-
 
 /* -------------------- */
 /* LECTURE */

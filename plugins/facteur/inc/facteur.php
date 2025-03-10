@@ -37,7 +37,7 @@ defined('_FACTEUR_DELAI_MAX_ESSAIS_ENVOI_MAIL') || define('_FACTEUR_DELAI_MAX_ES
  *     array $headers : tableau d'en-tetes personalises, une entree par ligne d'en-tete
  *     bool $exceptions : lancer une exception en cas d'erreur (false par defaut)
  *     bool $important : un flag pour signaler les messages important qui necessitent un feedback en cas d'erreur
- * @return bool
+ * @return bool|array
  * @throws Exception
  */
 function facteur_envoyer_mail($destinataires, string $sujet, array $message, int $try = 0) {
@@ -95,6 +95,7 @@ function facteur_envoyer_mail($destinataires, string $sujet, array $message, int
 		$options['exceptions'] = $exceptions;
 	}
 
+	/** @var \SPIP\Facteur\FacteurMail $facteur */
 	$facteur = facteur_factory($options);
 
 
@@ -219,6 +220,7 @@ function facteur_envoyer_mail($destinataires, string $sujet, array $message, int
 	}
 
 	// On passe dans un pipeline pour modifier tout le facteur avant l'envoi
+	/** @var \SPIP\Facteur\FacteurMail $facteur */
 	$facteur = pipeline('facteur_pre_envoi', $facteur);
 
 	// Et c'est parti on envoie enfin

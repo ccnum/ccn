@@ -3,11 +3,7 @@
 // extrait automatiquement de https://trad.spip.net/tradlang_module/crayons?lang_cible=de
 // ** ne pas modifier le fichier **
 
-if (!defined('_ECRIRE_INC_VERSION')) {
-	return;
-}
-
-$GLOBALS[$GLOBALS['idx_lang']] = array(
+return [
 
 	// A
 	'absence_cle_primaire' => 'Kein Primärschlüssel vorhanden!',
@@ -87,5 +83,5 @@ Beispiel: 100. (0 = niemals)',
 	'update_impossible' => 'Das Update ist fehlgeschlagen.',
 
 	// V
-	'veuillez_patienter' => 'Bitte etwas Geduld...'
-);
+	'veuillez_patienter' => 'Bitte etwas Geduld...',
+];

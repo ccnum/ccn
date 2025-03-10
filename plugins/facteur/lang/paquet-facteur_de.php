@@ -3,14 +3,10 @@
 // extrait automatiquement de https://trad.spip.net/tradlang_module/paquet-facteur?lang_cible=de
 // ** ne pas modifier le fichier **
 
-if (!defined('_ECRIRE_INC_VERSION')) {
-	return;
-}
-
-$GLOBALS[$GLOBALS['idx_lang']] = array(
+return [
 
 	// F
 	'facteur_description' => 'Der Postbote befördert Emails im HTML-Format, im Nur-Text-Format oder in beiden, egal ob per SMTP oder nicht.',
 	'facteur_nom' => 'Postbote',
-	'facteur_slogan' => 'Er befördert ihre Emails'
-);
+	'facteur_slogan' => 'Er befördert ihre Emails',
+];
