@@ -3,14 +3,10 @@
 // extrait automatiquement de https://trad.spip.net/tradlang_module/paquet-crayons?lang_cible=ru
 // ** ne pas modifier le fichier **
 
-if (!defined('_ECRIRE_INC_VERSION')) {
-	return;
-}
-
-$GLOBALS[$GLOBALS['idx_lang']] = array(
+return [
 
 	// C
 	'crayons_description' => 'Позволяет редактировать информацию прямо на сайте, не заходя в административную часть.',
 	'crayons_nom' => 'Карандаш (Crayons)',
-	'crayons_slogan' => 'Позволяет редактировать информацию прямо на сайте, не заходя в административную часть'
-);
+	'crayons_slogan' => 'Позволяет редактировать информацию прямо на сайте, не заходя в административную часть',
+];

@@ -13,10 +13,10 @@
 	<licence>GNU/GPL</licence>
 
 	<necessite nom="notifications" />
-	<necessite nom="crayons" />
+	<utilise nom="crayons" />
 	<necessite nom="socialtags" />
-	<necessite nom="jqueryui" compatibilite="[1.8.21;[" />
-	<necessite nom="cextras" compatibilite="[3.0.5;[" />
+	<necessite nom="jqueryui" />
+	<necessite nom="cextras" />
 	<necessite nom="notation" />
 	<necessite nom="spip_bonux" />
 

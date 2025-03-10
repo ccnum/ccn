@@ -3,11 +3,7 @@
 // extrait automatiquement de https://trad.spip.net/tradlang_module/facteur?lang_cible=fa
 // ** ne pas modifier le fichier **
 
-if (!defined('_ECRIRE_INC_VERSION')) {
-	return;
-}
-
-$GLOBALS[$GLOBALS['idx_lang']] = array(
+return [
 
 	// C
 	'config_info_enregistree' => 'پيكربندي پستجي ثبت شده است.',
@@ -75,5 +71,5 @@ $GLOBALS[$GLOBALS['idx_lang']] = array(
 	// V
 	'valider' => 'معتبر كردن',
 	'version_html' => 'نسخه اچ.تي.ام.ال',
-	'version_texte' => 'نسخه متني.'
-);
+	'version_texte' => 'نسخه متني.',
+];

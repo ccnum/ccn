@@ -3,14 +3,10 @@
 // extrait automatiquement de https://trad.spip.net/tradlang_module/paquet-crayons?lang_cible=sk
 // ** ne pas modifier le fichier **
 
-if (!defined('_ECRIRE_INC_VERSION')) {
-	return;
-}
-
-$GLOBALS[$GLOBALS['idx_lang']] = array(
+return [
 
 	// C
 	'crayons_description' => 'Rýchle úpravy z verejne prístupnej stránky.',
 	'crayons_nom' => 'Farbičky',
-	'crayons_slogan' => 'Rýchle úpravy z verejne prístupnej stránky.'
-);
+	'crayons_slogan' => 'Rýchle úpravy z verejne prístupnej stránky.',
+];

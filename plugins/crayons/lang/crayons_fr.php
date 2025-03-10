@@ -1,11 +1,8 @@
 <?php
 // This is a SPIP language file  --  Ceci est un fichier langue de SPIP
 // Fichier source, a modifier dans https://git.spip.net/spip-contrib-extensions/crayons.git
-if (!defined('_ECRIRE_INC_VERSION')) {
-	return;
-}
 
-$GLOBALS[$GLOBALS['idx_lang']] = array(
+return [
 
 	// A
 	'absence_cle_primaire' => 'Pas de clé primaire !',
@@ -86,5 +83,5 @@ $GLOBALS[$GLOBALS['idx_lang']] = array(
 	'update_impossible' => 'La mise à jour a échoué.',
 
 	// V
-	'veuillez_patienter' => 'Veuillez patienter...'
-);
+	'veuillez_patienter' => 'Veuillez patienter...',
+];

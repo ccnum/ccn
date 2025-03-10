@@ -3,11 +3,7 @@
 // extrait automatiquement de https://trad.spip.net/tradlang_module/crayons?lang_cible=fa
 // ** ne pas modifier le fichier **
 
-if (!defined('_ECRIRE_INC_VERSION')) {
-	return;
-}
-
-$GLOBALS[$GLOBALS['idx_lang']] = array(
+return [
 
 	// A
 	'activation_barre_impossible' => 'يك پلاگين ديگر مانع استفاده از چوب قلم در سايت همگاني است.',
@@ -78,5 +74,5 @@ $GLOBALS[$GLOBALS['idx_lang']] = array(
 	'update_impossible' => 'روزآمد نشد.',
 
 	// V
-	'veuillez_patienter' => 'لطفأ صبر کنید ...'
-);
+	'veuillez_patienter' => 'لطفأ صبر کنید ...',
+];

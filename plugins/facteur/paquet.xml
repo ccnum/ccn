@@ -1,9 +1,9 @@
 <paquet
 	prefix="facteur"
 	categorie="communication"
-	version="5.2.0"
+	version="5.2.1"
 	etat="stable"
-	compatibilite="[4.0.0;4.*]"
+	compatibilite="[4.1.0;4.*]"
 	logo="facteur-64.svg"
 	schema="2.0.0"
 	documentation="https://contrib.spip.net/Facteur"

@@ -1,11 +1,8 @@
 <?php
 // This is a SPIP language file  --  Ceci est un fichier langue de SPIP
 // Fichier source, a modifier dans https://git.spip.net/spip-contrib-extensions/facteur.git
-if (!defined('_ECRIRE_INC_VERSION')) {
-	return;
-}
 
-$GLOBALS[$GLOBALS['idx_lang']] = array(
+return [
 
 	// C
 	'config_info_enregistree' => 'La configuration du facteur a bien été enregistrée',
@@ -21,6 +18,7 @@ $GLOBALS[$GLOBALS['idx_lang']] = array(
 	'email_envoye_par' => 'Envoyé par @site@',
 	'email_test_envoye' => 'L’email de test a correctement été envoyé. Si vous ne le recevez pas correctement, vérifiez la configuration de votre serveur ou contactez un administrateur du serveur.',
 	'erreur' => 'Erreur',
+	'erreur_confirm_ip_sans_hostname' => 'Voulez-vous vraiment utiliser cette adresse IP comme SMTP Host ?',
 	'erreur_dans_log' => ' : consultez le fichier log pour plus de détails',
 	'erreur_envoi_bloque_constante' => 'Envoi bloqué par la constante <tt>_TEST_EMAIL_DEST</tt>.
 Vérifiez votre fichier <tt>mes_options.php</tt>',
@@ -28,7 +26,6 @@ Vérifiez votre fichier <tt>mes_options.php</tt>',
 	'erreur_invalid_host' => 'Ce nom d’hôte n’est pas correct',
 	'erreur_invalid_port' => 'Ce numéro de port n’est pas correct',
 	'erreur_ip_sans_hostname' => 'Cette adresse IP ne correspond à aucun nom de domaine.',
-	'erreur_confirm_ip_sans_hostname' => 'Voulez-vous vraiment utiliser cette adresse IP comme SMTP Host ?',
 
 	// F
 	'facteur_adresse_envoi_email' => 'Email :',
@@ -97,5 +94,5 @@ Vérifiez votre fichier <tt>mes_options.php</tt>',
 	// V
 	'valider' => 'Valider',
 	'version_html' => 'Version HTML.',
-	'version_texte' => 'Version texte.'
-);
+	'version_texte' => 'Version texte.',
+];

@@ -3,11 +3,7 @@
 // extrait automatiquement de https://trad.spip.net/tradlang_module/verifier?lang_cible=fr_tu
 // ** ne pas modifier le fichier **
 
-if (!defined('_ECRIRE_INC_VERSION')) {
-	return;
-}
-
-$GLOBALS[$GLOBALS['idx_lang']] = array(
+return [
 
 	// D
 	'data_choix' => 'Choix possibles :',
@@ -80,7 +76,7 @@ $GLOBALS[$GLOBALS['idx_lang']] = array(
 	'normaliser_option_date' => 'Normaliser la date ?',
 	'normaliser_option_date_aucune' => 'Non',
 	'normaliser_option_date_en_date' => 'Au format « Date » (pour SQL)',
-	'normaliser_option_date_en_date_ou_datetime' => 'Au format « Date » ou « Datetime » (pour SQL) selon ce qui est reçu en entrée',
+	'normaliser_option_date_en_date_ou_datetime' => 'Au format « Date » ou « Datetime » (pour SQL) selon ce qui est attendu en base, ou, à défaut, recu en entrée',
 	'normaliser_option_date_en_datetime' => 'Au format « Datetime » (pour SQL)',
 	'normaliser_option_iban' => 'Normaliser l’IBAN ?',
 	'normaliser_option_iban_machine' => 'Au format standard (sans espaces, majuscules)',
@@ -162,7 +158,6 @@ $GLOBALS[$GLOBALS['idx_lang']] = array(
 
 	// P
 	'par_defaut' => 'Par défaut :',
-	'plugin_yaml_inactif' => 'Le plugin YAML n‘est pas présent et/ou activé. Il est nécessaire pour voir cette page de documentation.',
 
 	// T
 	'titre_page_verifier_doc' => 'Documentation de l’API de vérification',
@@ -208,5 +203,5 @@ $GLOBALS[$GLOBALS['idx_lang']] = array(
 
 	// V
 	'verification_a_faire' => 'Vérification à effectuer :',
-	'vider_date_nulle' => 'Vider les dates nulles (par ex. 1/1/1970)'
-);
+	'vider_date_nulle' => 'Vider les dates nulles (par ex. 1/1/1970)',
+];

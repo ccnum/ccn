@@ -3,11 +3,7 @@
 // extrait automatiquement de https://trad.spip.net/tradlang_module/crayons?lang_cible=nl
 // ** ne pas modifier le fichier **
 
-if (!defined('_ECRIRE_INC_VERSION')) {
-	return;
-}
-
-$GLOBALS[$GLOBALS['idx_lang']] = array(
+return [
 
 	// A
 	'absence_cle_primaire' => 'Geen primaire sleutel!',
@@ -87,5 +83,5 @@ $GLOBALS[$GLOBALS['idx_lang']] = array(
 	'update_impossible' => 'De update is niet geslaagd.',
 
 	// V
-	'veuillez_patienter' => 'Een ogenblik geduld…'
-);
+	'veuillez_patienter' => 'Een ogenblik geduld…',
+];

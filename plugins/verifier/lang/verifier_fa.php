@@ -3,11 +3,7 @@
 // extrait automatiquement de https://trad.spip.net/tradlang_module/verifier?lang_cible=fa
 // ** ne pas modifier le fichier **
 
-if (!defined('_ECRIRE_INC_VERSION')) {
-	return;
-}
-
-$GLOBALS[$GLOBALS['idx_lang']] = array(
+return [
 
 	// E
 	'erreur_code_postal' => 'اين كد پستي درست نيست.',
@@ -102,5 +98,5 @@ $GLOBALS[$GLOBALS['idx_lang']] = array(
 	'type_telephone' => 'شماره تلفن',
 	'type_telephone_description' => 'چك كنيد كه شماره‌ي تلفن با فرمت شماره‌ي تلفن جور باشد.',
 	'type_url' => 'يو.آر.ال ',
-	'type_url_description' => 'چك كنيد كه يو.آر.ال با يك فرمت شناخته شده جور باشد. '
-);
+	'type_url_description' => 'چك كنيد كه يو.آر.ال با يك فرمت شناخته شده جور باشد. ',
+];

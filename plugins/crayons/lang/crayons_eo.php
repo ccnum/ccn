@@ -3,11 +3,7 @@
 // extrait automatiquement de https://trad.spip.net/tradlang_module/crayons?lang_cible=eo
 // ** ne pas modifier le fichier **
 
-if (!defined('_ECRIRE_INC_VERSION')) {
-	return;
-}
-
-$GLOBALS[$GLOBALS['idx_lang']] = array(
+return [
 
 	// A
 	'absence_cle_primaire' => 'Neniu ĉefŝlosilo !',
@@ -85,5 +81,5 @@ $GLOBALS[$GLOBALS['idx_lang']] = array(
 	'update_impossible' => 'Ĝisdatigo fiaskis.',
 
 	// V
-	'veuillez_patienter' => 'Bonvolu atendi...'
-);
+	'veuillez_patienter' => 'Bonvolu atendi...',
+];

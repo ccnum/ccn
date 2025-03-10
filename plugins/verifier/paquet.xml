@@ -1,7 +1,6 @@
 <paquet
 	prefix="verifier"
-	categorie="outil"
-	version="3.3.0"
+	version="3.3.1"
 	etat="stable"
 	compatibilite="[4.1.0;4.*]"
 	logo="verifier-xx.svg"
@@ -21,5 +20,5 @@
 
 	<menu nom="verifier_doc" titre="verifier:titre_page_verifier_doc" parent="menu_developpement"  icone="images/verifier-16.png" />
 
-	<utilise nom="yaml" compatibilite="[1.5.0;]" />
+	<utilise nom="yaml" compatibilite="[3.0.1;]" />
 </paquet>

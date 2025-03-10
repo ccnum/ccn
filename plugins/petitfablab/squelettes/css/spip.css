@@ -625,24 +625,19 @@ body.mobile {
 }
 
 div.texte-presentation {
-	position: relative;
-	clear: both;
-	position: relative;
-	margin: 20px;
-	padding: 0px 20px 15px 20px;
+	margin: 60px;
 }
 
 .texte-presentation div.bord {
 	border-left: 5px #ff6b6b solid;
 	padding: 10px;
-	margin: 20px;
 }
 
-.texte-presentation div.bord ul {
-	margin: 20px;
+.texte-presentation ul {
+	margin: 30px;
 }
 
-.texte-presentation div.bord ul ul {
+.texte-presentation ul ul {
 	margin: 0 20px;
 }
 
@@ -1000,9 +995,6 @@ a.verrouille.last-small {
 	font-size: 22px;
 }
 
-
-
-
 .ecriture-chapitre-auteur {
 	width: 200px;
 	float: left;
@@ -1015,8 +1007,6 @@ a.verrouille.last-small {
 
 .ecriture-chapitre-nom {
 	float: left;
-	width: 140px;
-
 	font-size: 12px;
 	font-style: italic;
 }
@@ -1112,7 +1102,6 @@ hr {
 .script-ecrivain-edit:hover {
 	background-color: #ff7a7a;
 }
-
 
 .script-college {
 	margin: 0px 30px 0px 60px;
@@ -1265,7 +1254,6 @@ a:hover.spip_out {
 	text-align: center;
 	padding: 8px 0px 0px 0px;
 	color: #FFF;
-
 	font-size: 14px;
 	font-weight: bold;
 	background-image: url(../img/global/wip-pastille.png);
@@ -1277,7 +1265,6 @@ a:hover.spip_out {
 }
 
 #ecriture-navigation {
-
 	position: absolute;
 	right: 10px;
 	text-align: right;
@@ -1296,7 +1283,6 @@ a:hover.spip_out {
 	border-radius: 20px 20px 20px;
 	behavior: url(../js/PIE.php);
 	color: #FFF;
-
 	font-size: 14px;
 	text-align: center;
 	display: block;
@@ -1331,13 +1317,11 @@ a:hover.spip_out {
 	text-transform: uppercase;
 	line-height: 25px;
 	color: #FF6B6B;
-
 }
 
 .page-type-texte {
 	float: left;
 	font-size: 12px;
-
 	line-height: 17px;
 	margin-top: 20px;
 }
@@ -1356,7 +1340,6 @@ a:hover.spip_out {
 	overflow: auto;
 	width: 730px;
 	height: 100%;
-
 	color: #FFF;
 	background-color: #AAB0B7;
 }
@@ -1366,7 +1349,6 @@ a:hover.spip_out {
 	overflow: auto;
 	width: 730px;
 	height: 100%;
-
 	color: #FFF;
 	background-color: #77818d;
 }
@@ -1381,7 +1363,6 @@ a:hover.spip_out {
 }
 
 .forum-inner-titre {
-
 	font-size: 16px;
 	color: #FFF;
 	font-weight: bold;

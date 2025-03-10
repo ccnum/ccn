@@ -3,11 +3,7 @@
 // extrait automatiquement de https://trad.spip.net/tradlang_module/verifier?lang_cible=de
 // ** ne pas modifier le fichier **
 
-if (!defined('_ECRIRE_INC_VERSION')) {
-	return;
-}
-
-$GLOBALS[$GLOBALS['idx_lang']] = array(
+return [
 
 	// D
 	'data_choix' => 'Auswahlmöglichkeiten:',
@@ -157,7 +153,6 @@ $GLOBALS[$GLOBALS['idx_lang']] = array(
 
 	// P
 	'par_defaut' => 'Standardwert:',
-	'plugin_yaml_inactif' => 'Das Plugin YAML ist nicht vorhanden und/oder aktiviert. Es ist notwendig, um diese Dokumentation anzuzeigen.',
 
 	// T
 	'titre_page_verifier_doc' => 'Dokumentation der  Prüf-API',
@@ -203,5 +198,5 @@ $GLOBALS[$GLOBALS['idx_lang']] = array(
 
 	// V
 	'verification_a_faire' => 'Vorzunehmende Prüfung:',
-	'vider_date_nulle' => 'Leere Nulldaten (z. B. 1.1.1970)'
-);
+	'vider_date_nulle' => 'Leere Nulldaten (z. B. 1.1.1970)',
+];

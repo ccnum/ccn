@@ -3,11 +3,7 @@
 // extrait automatiquement de https://trad.spip.net/tradlang_module/facteur?lang_cible=ru
 // ** ne pas modifier le fichier **
 
-if (!defined('_ECRIRE_INC_VERSION')) {
-	return;
-}
-
-$GLOBALS[$GLOBALS['idx_lang']] = array(
+return [
 
 	// C
 	'config_info_enregistree' => 'Настройки плагина успешно сохранены',
@@ -96,5 +92,5 @@ $GLOBALS[$GLOBALS['idx_lang']] = array(
 	// V
 	'valider' => 'Сохранить',
 	'version_html' => 'В формате HTML',
-	'version_texte' => 'В текстовом формате'
-);
+	'version_texte' => 'В текстовом формате',
+];

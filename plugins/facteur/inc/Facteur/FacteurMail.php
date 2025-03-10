@@ -551,7 +551,7 @@ class FacteurMail extends PHPMailer {
 
 	/**
 	 * Verifier si il faut envoyer le mail d'alerte
-	 * @param mixed $res
+	 * @param bool|array $res
 	 * @return mixed
 	 */
 	protected function sendAlertIfNeeded($res) {
@@ -602,7 +602,7 @@ class FacteurMail extends PHPMailer {
 	/**
 	 * Avant le Send() on force le From et le Charset si besoin
 	 *
-	 * @return bool
+	 * @return bool|array
 	 * @throws Exception
 	 */
 	public function Send() {

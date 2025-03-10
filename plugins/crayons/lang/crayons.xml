@@ -50,6 +50,9 @@
 	<langue code="it_fem" url="https://trad.spip.net/tradlang_module/crayons?lang_cible=it_fem" total="52" traduits="14" relire="0" modifs="0" nouveaux="38" pourcent="26.92" />
 	<langue code="km" url="https://trad.spip.net/tradlang_module/crayons?lang_cible=km" total="52" traduits="5" relire="0" modifs="0" nouveaux="47" pourcent="9.62" />
 	<langue code="lb" url="https://trad.spip.net/tradlang_module/crayons?lang_cible=lb" total="52" traduits="14" relire="0" modifs="0" nouveaux="38" pourcent="26.92" />
+	<langue code="mg" url="https://trad.spip.net/tradlang_module/crayons?lang_cible=mg" total="52" traduits="52" relire="0" modifs="0" nouveaux="0" pourcent="100.00">
+		<traducteur nom="iBesorongola" lien="https://trad.spip.net/auteur/ibesorongola" />
+	</langue>
 	<langue code="nl" url="https://trad.spip.net/tradlang_module/crayons?lang_cible=nl" total="52" traduits="50" relire="0" modifs="2" nouveaux="0" pourcent="96.15">
 		<traducteur nom="Hanjo" lien="https://trad.spip.net/auteur/hanjo" />
 		<traducteur nom="mpossoz" lien="https://trad.spip.net/auteur/mpossoz" />

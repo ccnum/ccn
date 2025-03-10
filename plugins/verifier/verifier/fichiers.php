@@ -147,27 +147,27 @@ function verifier_fichier_mime($valeur, $cle, $options) {
 		$mime_insignifiant = true;
 	}
 
-	if ($options['mime'] == 'specifique') {
+	if ($options['mime'] === 'specifique') {
 		if (!$mime_insignifiant) {
 			if (!in_array($mime_type, $options['mime_specifique'])) {
 				return _T('verifier:erreur_type_non_autorise', ['name' => $valeur['name'][$cle]]);
 			}
 		}
 		$res = sql_select('mime_type', 'spip_types_documents', sql_in('mime_type', $options['mime_specifique']) . ' and extension=' . sql_quote($extension));
-		if (sql_count($res) == 0) {
+		if (sql_count($res) === 0) {
 			return _T('verifier:erreur_type_non_autorise', ['name' => $valeur['name'][$cle]]);
 		}
-	} elseif ($options['mime'] == 'tout_mime') {
+	} elseif ($options['mime'] === 'tout_mime') {
 		if (!$mime_insignifiant) {
 			$res = sql_select('mime_type', 'spip_types_documents', 'mime_type=' . sql_quote($mime_type) . ' and extension=' . sql_quote($extension));
 		} else {
 			$res = sql_select('mime_type', 'spip_types_documents', 'extension=' . sql_quote($extension));
 		}
-		if (sql_count($res) == 0) {
+		if (sql_count($res) === 0) {
 			return _T('verifier:erreur_type_non_autorise', ['name' => $valeur['name'][$cle]]);
 		}
-	} elseif ($options['mime'] == 'image_web') {
-		if (!in_array($mime_type, ['image/gif','image/jpeg','image/png'])) {
+	} elseif ($options['mime'] === 'image_web') {
+		if (!in_array($mime_type, verifier_fichier_mime_type_image_web())) {
 			return _T('verifier:erreur_type_image', ['name' => $valeur['name'][$cle]]);
 		}
 	}
@@ -176,10 +176,23 @@ function verifier_fichier_mime($valeur, $cle, $options) {
 
 
 /**
+ * Lister les mime_type d'image affichable
+ * @param return array
+**/
+function verifier_fichier_mime_type_image_web(): array {
+	static $mime = [];
+	if (!$mime) {
+		include_spip('base/abstract_sql');
+		$mime = sql_allfetsel('mime_type', 'spip_types_documents', ['inclus=\'image\'', 'media_defaut=\'image\'']);
+		$mime = array_column($mime, 'mime_type');
+	}
+	return $mime;
+}
+/**
  * Vérifier la taille d'une saisie d'envoi de fichiers
  *
  * La taille est vérifiée en fonction du paramètre passé en option, sinon en fonction d'une constante:
- *	- _IMG_MAX_SIZE si jpg/png/gif
+ *	- _IMG_MAX_SIZE si image web (sauf svg)
  *	- _DOC_MAX_SIZE si pas jpg/png/gif ou si _IMG_MAX_SIZE n'est pas définie
  *
  * @param array $valeur
@@ -194,11 +207,14 @@ function verifier_fichier_mime($valeur, $cle, $options) {
 function verifier_fichier_taille($valeur, $cle, $options) {
 	$taille = $valeur['size'][$cle];
 	$mime = $valeur['type'][$cle];
+	$image_web = verifier_fichier_mime_type_image_web();
+	// Ne pas limiter la largeur des svg
+	$image_web = array_diff($image_web, ['image/svg+xml']);
 
 	// On commence par déterminer la taille max
 	if (isset($options['taille_max'])) {
 		$taille_max = $options['taille_max'];
-	} elseif (in_array($mime, ['image/gif','image/jpeg','image/png']) && defined('_IMG_MAX_SIZE')) {
+	} elseif (in_array($mime, $image_web) && defined('_IMG_MAX_SIZE')) {
 		$taille_max = _IMG_MAX_SIZE;
 	} elseif (defined('_DOC_MAX_SIZE')) {
 		$taille_max = _DOC_MAX_SIZE;

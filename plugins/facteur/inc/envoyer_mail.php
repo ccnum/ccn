@@ -95,5 +95,6 @@ function inc_envoyer_mail($destinataire, string $sujet, $message, ?string $from 
 		$message['from'] = trim($from);
 	}
 
-	return facteur_envoyer_mail($destinataire, $sujet, $message);
+	$res = facteur_envoyer_mail($destinataire, $sujet, $message);
+	return  $res ? true : false;
 }

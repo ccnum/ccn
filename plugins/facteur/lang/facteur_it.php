@@ -3,11 +3,7 @@
 // extrait automatiquement de https://trad.spip.net/tradlang_module/facteur?lang_cible=it
 // ** ne pas modifier le fichier **
 
-if (!defined('_ECRIRE_INC_VERSION')) {
-	return;
-}
-
-$GLOBALS[$GLOBALS['idx_lang']] = array(
+return [
 
 	// C
 	'config_info_enregistree' => 'La configurazione di Postino è stata registrata',
@@ -96,5 +92,5 @@ $GLOBALS[$GLOBALS['idx_lang']] = array(
 	// V
 	'valider' => 'Confermare',
 	'version_html' => 'Versione HTML.',
-	'version_texte' => 'Versione testo.'
-);
+	'version_texte' => 'Versione testo.',
+];
