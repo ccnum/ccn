@@ -392,7 +392,7 @@ function showReponseInTimeline(numero) {
  */
 
 function call(opts) {
-	console.log(opts);
+	console.log('opts', opts);
 
 	if (opts.type == 'rubrique' && opts.type_objet == 'travail_en_cours') {
 		toggleSidebarExpand();
@@ -400,7 +400,7 @@ function call(opts) {
 		callClasse(opts.id_rubrique);
 	}
 
-	if (opts.type == 'article' && opts.type_objet == 'travail_en_cours' && opts.type_entite != null && opts.type_entite == 'reponse') {
+	if (opts.type == 'article' && opts.type_objet == 'travail_en_cours' && opts.type_entite == 'reponse') {
 		// Réponse d'une classe
 		callReponse(opts.id_article);
 	}
@@ -459,15 +459,23 @@ function callConsigne(id_consigne) {
  */
 
 function callReponse(id_reponse) {
+	console.log('id_reponse', id_reponse);
+	
 	changeTimelineMode('consignes');
 	setFullscreenModeToCols(true);
 
 	var id_consigne = getIdConsigneFromIdReponse(id_reponse);
+	console.log('id_consigne', id_consigne);
+	
 	var id_classe = getIdClasseFromIdReponse(id_reponse);
+	console.log('id_classe', id_classe);
+	
 
 	updateMenuIcon(['consignes-' + id_consigne, 'classes-' + id_classe], 'mainView');
 
 	var url = CCN.projet.url_popup_reponse + "&id_article=" + id_reponse;
+	console.log('url', url);
+	
 	showConsigneInTimeline(id_consigne);
 
 	loadContentInMainSidebar(
@@ -482,11 +490,19 @@ function callReponse(id_reponse) {
 			);
 		}
 	);
+	console.log('load content in main sidebar ended');
+	
 
 	var url_travail_en_cours = 'spip.php?page=rubrique&mode=detail&id_rubrique=' + CCN.travailEnCoursId;
+	console.log('url_travail_en_cours', url_travail_en_cours);
+
+	console.log('load content in lateral sidebar start');
 	loadContentInLateralSidebar(url_travail_en_cours, 'rubrique', 'travail_en_cours');
+	console.log('load content in lateral sidebar end');
 
 	showReponseInTimeline(id_reponse);
+	console.log('end callReponse');
+	
 }
 
 
@@ -979,13 +995,21 @@ function changeCouleurLogoMenu(val) {
  */
 
 function updateUrl(object, title, url) {
+	console.log('updateUrl (callback from loadContentInMainSidebar', object, title, url);
+	
 	currentState = object;
 
+	console.log('CCN.hash', CCN.hash);
+	
 	if (CCN.hash != '') {
-		if (CCN.hash.substring(0, 5) == 'forum') {
+		if (CCN.hash.substring(0, 5) == 'forum') { console.log('forum l-9995'); 
 
 		} else {
+			console.log('!forum l-9998');
+
 			History.pushState(object, title, url + '#' + CCN.hash);
+			console.log('push end l-1001');
+			
 		}
 
 		setTimeout(
@@ -1008,9 +1032,14 @@ function updateUrl(object, title, url) {
 			}, 500
 		);
 	} else {
+		console.log('ccn.hash == empty l-1028');
 		History.pushState(object, title, url);
+		console.log('push end l-1027');
 	}
 	antiPushState = false;
+
+	console.log('updateUrl end l-1031');
+	
 }
 
 
@@ -1059,6 +1088,8 @@ function reload(url) {
  */
 
 function loadContentInMainSidebar(url, typePage, typeObjet, callback) {
+	console.log('loading content in main sidebar', 'url:', url, 'typePage:', typePage, 'typeObjet:', typeObjet);
+	
 
 	$('body').addClass('loading');
 	showSidebar();
@@ -1104,6 +1135,8 @@ function loadContentInMainSidebar(url, typePage, typeObjet, callback) {
  */
 
 function loadContentInLateralSidebar(url, typePage, typeObjet, callback) {
+	console.log('loading content in lateral sidebar', 'url:', url, 'typePage:', typePage, 'typeObjet:', typeObjet);
+
 	console.log(
 		'%c Lateral' + ' %c ' + url + ' ',
 		'background:#FFA000;color:#fff;padding:2px;border-radius:2px;',
