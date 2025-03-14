@@ -529,7 +529,7 @@ function callClasse(id_classe) {
 	console.log('url call classe', url);
 	if (id_classe != '') {
 		// url = CCN.projet.url_popup_classes + '&id_rubrique=' + id_classe + '&type_objet=travail_en_cours';
-		url = CCN.projet.url_popup_classes + '&id_rubrique=' + id_classe + '&type_objet=travail_en_cours';
+		url = CCN.projet.url_popup_classes + '&id_objet=' + id_classe + '&type_objet=travail_en_cours';
 	}
 	loadContentInMainSidebar(
 		url, 'rubrique', 'classes', function () {
@@ -1016,11 +1016,17 @@ function updateUrl(object, title, url) {
 
 		setTimeout(
 			function () {
+				console.log('setTimeout l-1010... I should not be here, probably');
 
 				var anchor = $("#" + CCN.hash);
 
+				console.log('anchor', anchor);
+				console.log('anchor length', anchor.length);
+
 				if (anchor.length > 0) {
 
+					console.log('dans if l-1019');
+					
 					// TODO : cela est appelé deux fois minimum à cause de History.js (donc un trigger('click') sur .triggertoggleshow ne fonctionne pas car il ouvre puis ferme)
 
 					// Forum : ouvre les items
