@@ -72,7 +72,7 @@
 											<B_admin111>
 												<ul>
 											<BOUCLE_admin111(RUBRIQUES){tous}{id_parent=#ID_RUBRIQUE}{par num titre, titre}>
-												<li><a target="_blank" [(#SELF|parametre_url{liste,''}|parametre_url{page,ecriture}|parametre_url{rub_jeu,#ID_RUBRIQUE})]">#TITRE</a></li>
+												<li><a target="_blank" href="[(#SELF|parametre_url{liste,''}|parametre_url{page,ecriture}|parametre_url{rub_jeu,#ID_RUBRIQUE})]">#TITRE</a></li>
 											</BOUCLE_admin111>
 												</ul>
 											</B_admin111>
