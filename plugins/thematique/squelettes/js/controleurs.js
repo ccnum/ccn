@@ -5,7 +5,11 @@ var detailsLivrableOpen = false;
 
 // Verifie les parametres dans l'url
 $.urlParam = function (name) {
+	console.log('urlParam l-106', name);
+	
 	var results = new RegExp('[\?&]' + name + '=([^&#]*)').exec(window.location.href);
+	console.log('urlParam results', results);
+	
 	if (results) {
 		return results[1] || 0;
 	}
@@ -84,10 +88,15 @@ function onHashChange() {
 var currentState = {};
 function setContentFromState(state) {
 
+	console.log('setContentFromState -> initial state l-959', state);
+	
 	if (typeof state.data !== 'object' || state.data == null) {
 		return;
 	}
 	var state = state.data;
+
+	console.log('setContentFromState -> state.data l-967', state);
+	
 
 	if (state.type_objet == undefined) { state.type_objet = ''; }
 	if (state.page == undefined) { state.page = ''; }
@@ -103,6 +112,9 @@ function setContentFromState(state) {
 	if (currentState.id_syndic_article == undefined) { currentState.id_syndic_article = ''; }
 	if (currentState.id_objet == undefined) { currentState.id_objet = ''; }
 
+	console.log('currentState avant merge', currentState);
+	
+
 	isSamePage = true;
 
 	for (var index in state) {
@@ -112,6 +124,8 @@ function setContentFromState(state) {
 		}
 	}
 	currentState = state;
+
+	console.log('currentState après merge', currentState);
 
 	if (isSamePage) { return; }
 
@@ -233,6 +247,70 @@ function setContentFromState(state) {
 	}
 
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 /**
  * Initialise les binds jQuery des sidebars
@@ -520,6 +598,8 @@ function callReponse(id_reponse) {
  */
 
 function callClasse(id_classe) {
+	console.log('id_classe in callClasse function', id_classe);
+	
 	changeTimelineMode('consignes');
 	toggleSidebarExpand();
 	setFullscreenModeToCols(true);
