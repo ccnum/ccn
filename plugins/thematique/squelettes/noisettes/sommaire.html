@@ -210,10 +210,11 @@ et/ou
 				<!-- [(#REM) ON RÉCUPÈRE LA DERNIÈRE RUBRIQUE DES ANNÉES, ON EN TIRE LE DESCRIPTIF ET VOILÀ !] -->
 				<!-- tutu -->
 				<BOUCLE_espace_doc(RUBRIQUES){tout}{racine}{titre==^[20]}{!par titre}{0,1}>
-				<!-- #ID_RUBRIQUE -->
+				[<!-- #ID_RUBRIQUE -->
 				<li class="logo">
-					<a class="logo_menu-doc menu_logo_type_sidebarView" href="[(#DESCRIPTIF|textebrut)]" title="<:thematique:cartable_ligne:>" target="blank"></a>
+					<a class="logo_menu-doc menu_logo_type_sidebarView" href="(#DESCRIPTIF|textebrut)" title="<:thematique:cartable_ligne:>" target="blank"></a>
 				</li>
+				]
 				</BOUCLE_espace_doc>
 			</ul>
 		</div>
