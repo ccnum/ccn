@@ -155,6 +155,7 @@ define('_LOG_FILTRE_GRAVITE', 8);
 define('_DEBUG_SLOW_QUERIES', true);
 define('_BOUCLE_PROFILER', 5000);
 define('_AUTORISER_TELECHARGER_PLUGINS', false);
+define('_TITRER_DOCUMENTS', true);
 // désactiver les notifications de mise à jour
 define('_MAJ_NOTIF_EMAILS', '');
 // des personalisations par projet

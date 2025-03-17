@@ -334,33 +334,26 @@
 			</BOUCLE_rub_classe>
 
 			[(#REM) Ajouter un document]
-
-			[(#AUTORISER{modifier,article,#ID_ARTICLE}|oui)
-				[(#GET{blocs_cplt}|=={non}|non)
-
-				<div class="sidebar_bubble">
-
-					<INCLURE{fond=noisettes/js/accordeon}{nom=bloc_option_doc-#ID_ARTICLE}>
-					<div class="bloc_option_doc nettoyeur">
-						<a id="bloc_option_doc-#ID_ARTICLE" class="hac lien_ajouter bloc_option_doc_adddocument" title="Ajouter un document">
-							Ajouter un document
-						</a>
-						<div class='nettoyeur cache formulaire_spip formulaire_editer_document bloc_option_doc'>
-							Vos documents apparaîtront par ordre de chargement (du premier au dernier document chargé)
-							<INCLURE{fond=formulaires/ajouter_document,ajax,env}/>
-						</div>
-						<INCLURE{fond=prive/squelettes/inclure/colonne-documents,env,ajax=documents} />
-					</div>
-				</div>
-				]
-			]
-
 			[(#GET{blocs_cplt}|=={non}|non)
+				[(#AUTORISER{modifier,article,#ID_ARTICLE}|oui)
+					<div class="sidebar_bubble">
+						<INCLURE{fond=noisettes/js/accordeon,nom=bloc_option_doc-#ID_ARTICLE} />
+						<div class="bloc_option_doc nettoyeur">
+							<a id="bloc_option_doc-#ID_ARTICLE" class="hac lien_ajouter bloc_option_doc_adddocument" title="Ajouter un document">Ajouter un document</a>
+							<div class='nettoyeur cache formulaire_spip formulaire_editer_document bloc_option_doc'>
+								Vos documents apparaîtront par ordre de chargement (du premier au dernier document chargé)
+								<div class="ajax">#FORMULAIRE_JOINDRE_DOCUMENT{new,#ID_ARTICLE,article}</div>
+							</div>
+							<INCLURE{fond=prive/squelettes/inclure/colonne-documents,env,ajax=documents} />
+						</div>
+					</div>
+				]
+
 				[(#REM) Mots-clefs ]
 				[(#AUTORISER{modifier,article,#ID_ARTICLE}|oui)
 					[(#NOM_SITE_SPIP|match{novaterra.laclasse.com}|oui)
 					<div class="sidebar_bubble">
-						<INCLURE{fond=noisettes/js/accordeon}{nom=bloc_motsclefs-#ID_ARTICLE}>
+						<INCLURE{fond=noisettes/js/accordeon,nom=bloc_motsclefs-#ID_ARTICLE}>
 						<div class="bloc_option_doc nettoyeur">
 							<a id="bloc_motsclefs-#ID_ARTICLE" class="hac lien_ajouter bloc_option_doc_adddocument" title="Ajouter à l'encyclopédie" href="#">
 								Ajouter à l'encyclopédie
@@ -414,7 +407,7 @@
 				[(#REM) Données de la classe ]
 				[(#ENV{type_objet}|=={travail_en_cours}|oui)
 					[<div class="sidebar_bubble">
-						<INCLURE{fond=noisettes/js/accordeon, nom=bloc_donnees-#ID_ARTICLE} />
+						<INCLURE{fond=noisettes/js/accordeon,nom=bloc_donnees-#ID_ARTICLE} />
 						<div class="bloc_option_doc nettoyeur">
 							<a id="bloc_donnees-#ID_ARTICLE" class="hac liens_forum bloc_option_doc_about" title="À propos de la classe" href="#">
 								À propos de la classe

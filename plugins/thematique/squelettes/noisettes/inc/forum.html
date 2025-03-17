@@ -21,13 +21,10 @@
 			<//B_forum>
 
 			<INCLURE{fond=noisettes/js/accordeon}{nom=bloc_option_forum-#ID_ARTICLE}>
-
 			<div class="forum_commenter">
-				<a id="bloc_option_forum-#ID_ARTICLE" class="forum_commenter_head hac liens_voir bloc_option_doc_comment" title="Commenter">
-					Commenter
-				</a>
-				<div class='nettoyeur cache bloc_option_forum'>
-					<INCLURE{fond=forum,ajax,id_article,mode=ajax-detail}>
+				<a id="bloc_option_forum-#ID_ARTICLE" class="forum_commenter_head hac liens_voir bloc_option_doc_comment" title="Commenter">Commenter</a>
+				<div class='nettoyeur masquer bloc_option_forum'>
+					<INCLURE{fond=forum,ajax,id_article,mode=ajax-detail} />
 				</div>
 			</div>
 
