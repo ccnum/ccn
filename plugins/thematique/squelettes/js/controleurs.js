@@ -126,6 +126,7 @@ function setContentFromState(state) {
 	currentState = state;
 
 	console.log('currentState après merge', currentState);
+	console.log('placeholder');
 
 	if (isSamePage) { return; }
 
@@ -212,7 +213,12 @@ function setContentFromState(state) {
 
 		// Classe
 		if (state.type_objet == "classes") {
+			console.log('type classe, avant changement de mode', CCN.classes);
+
 			changeTimelineMode('consignes');
+
+			console.log('type classe, après changement de mode', CCN.classes);
+
 			for (k = 0; k < CCN.classes.length; k++) {
 				if (CCN.classes[k].id == state.id_objet) {
 					callClasse(state.id_objet);
