@@ -127,10 +127,15 @@ function setContentFromState(state) {
 
 	console.log('currentState après merge', currentState);
 	console.log('placeholder');
+	console.log('isSamePage ?', isSamePage);
+
 
 	if (isSamePage) { return; }
 
 	antifloodHashChange = true;
+
+	console.log('state type_objet', state.type_objet, 'id_objet', state.id_objet);
+	
 
 	// Ressource
 	if ((state.type_objet == '0'
