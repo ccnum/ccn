@@ -15,7 +15,7 @@
 	<necessite nom="notifications" />
 	<utilise nom="crayons" />
 	<necessite nom="socialtags" />
-	<necessite nom="jqueryui" />
+	<utilise nom="jqueryui" />
 	<necessite nom="cextras" />
 	<necessite nom="notation" />
 	<necessite nom="spip_bonux" />
