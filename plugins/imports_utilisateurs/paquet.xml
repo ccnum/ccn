@@ -11,4 +11,6 @@
 	<nom>Imports Utilisateurs</nom>
 	<auteur>Patrick Vincent</auteur>
 	<licence>GNU/GPL</licence>
+
+	<menu nom="configurer_imports_utilisateurs" titre="imports_utilisateurs:titre_page_importer_user" parent="menu_activite" />
 </paquet>
