@@ -194,21 +194,38 @@ function afficher_si(args) {
 		valeur_champ = '';
 	}
 	valeur = args['valeur'];
+	if (!('modificateur' in args)) {
+		args['modificateur'] = {'fonction' : ''};
+	}
 
 	// Compat historique == > IN pour données tabulaires !
-	if (Array.isArray(valeur_champ) && !args['total']) {
+	if (
+		Array.isArray(valeur_champ)
+		&& (args['modificateur']['fonction'] !== 'total')
+	) {
 		if (args['operateur'] == '==') {
 			args['operateur'] = 'IN';
 		} else if(args['operateur'] == '!=') {
 			args['operateur'] = '!IN';
 		}
 	}
-	// Si on vérifie un total
-	if (args['total']) {
+
+	// Si on vérifie un modificateur 'total' est à appliquer sur la valeur du champ de saisie
+	if (args['modificateur']['fonction'] === 'total') {
 		if (Array.isArray(valeur_champ)) {
 			valeur_champ = valeur_champ.length;
 		} else {
 			valeur_champ = 0;
+		}
+	}
+
+	// Si on vérifie un modificateur 'substr' est à appliquer sur la valeur du champ de saisie
+	if (args['modificateur']['fonction'] === 'substr') {
+		// A priori inutile de tester le type car c'est déjà fait dans la fonction PHP
+		if (args['modificateur']['arguments'][1]) {
+			valeur_champ = valeur_champ.substr(args['modificateur']['arguments'][0], args['modificateur']['arguments'][1]);
+		} else {
+			valeur_champ = valeur_champ.substr(args['modificateur']['arguments'][0]);
 		}
 	}
 

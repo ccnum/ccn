@@ -575,6 +575,9 @@ function saisies_formulaire_fond(array $flux): array {
 function saisies_formulaire_receptionner_set_request_anciennes_valeurs(array $flux): void {
 	include_spip('inc/filtres');
 	$form = $flux['args']['form'] ?? '';
-	$anciennes_valeurs = decoder_contexte_ajax(saisies_request('_anciennes_valeurs'), $form);
-	saisies_set_request('anciennes_valeurs', $anciennes_valeurs);
+	$anciennes_valeurs = saisies_request('_anciennes_valeurs');
+	if ($anciennes_valeurs) {
+		$anciennes_valeurs = decoder_contexte_ajax($anciennes_valeurs, $form);
+		saisies_set_request('anciennes_valeurs', $anciennes_valeurs);
+	}
 }
