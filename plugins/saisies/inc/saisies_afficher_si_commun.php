@@ -36,7 +36,8 @@ function saisies_parser_condition_afficher_si($condition, $no_arobase = null) {
 	$regexp =
 		'(?<negation>!?)' // négation éventuelle
 		. "((?:(?<arobase>@)(?<champ>.+?)(\k<arobase>)))$no_arobase" // @champ_@, optionnel (formidable_ts)
-		. '(?<total>:TOTAL)?' // TOTAL éventuel (pour les champs de type case à cocher)
+		. '(:(?<total>TOTAL))?' // TOTAL éventuel (pour les champs de type case à cocher)
+		. '(:(?<substr>SUBSTR)\(\s*(?<position>-?\d+)\s*(?:,\s*(?<longueur>\d+)\s*)?\))?' // SUBSTR éventuel
 		. '(' // partie operateur + valeur (optionnelle) : debut
 		. '(?:\s*?)' // espaces éventuels après
 		. '(?<operateur>==|!=|IN|!IN|>=|>|<=|<|MATCH|!MATCH)' // opérateur
@@ -64,15 +65,18 @@ function saisies_parser_condition_afficher_si($condition, $no_arobase = null) {
 /**
  * Filtrer le retour d'un parsage d'un test d'afficher_si,
  * pour ne pas garder des infos qui ne servent pas par là suite.
- * IE : si la REGEXP était optimale, on n'aurai pas besoin de cette fonction
+ * IE : si la REGEXP était optimale, on n'aurait pas besoin de cette fonction
  * Note : on garde les fonctions entrées vides, car parfois besoin de distinguer vide de null
  * @param array $parse
  * @return array $parse
  **/
 function saisies_afficher_si_filtrer_parse_condition($parse) {
-	// Pour des raisons de regexp distingue valeur et valeur numerique, mais pas besoin ici
+	// Pour des raisons de regexp distingue valeur (chaine) et valeur numerique, mais pas besoin ici
 	// Supprimer certaines choses dont on n'a pas besoin
+	// - on récupère l'expression dans un index nommé
 	$parse['expression'] = $parse[0];
+
+	// - on supprime des index inutiles ainsi que les index numériques
 	unset($parse['arobase']);
 	unset($parse['guillemet']);
 	foreach ($parse as $cle => $valeur) {
@@ -80,10 +84,38 @@ function saisies_afficher_si_filtrer_parse_condition($parse) {
 			unset($parse[$cle]);
 		}
 	}
+
+	// - si la valeur de comparaison est numérique elle porte l'index 'valeur_numerique' : on la transfère dans un index
+	// normalisé 'valeur'
 	if (($parse['valeur_numerique'] ?? '') !== '') {
 		$parse['valeur'] = $parse['valeur_numerique'];
 		unset($parse['valeur_numerique']);
 	}
+
+	// - si une fonction modificatrice de la valeur du champ de saisie est présent on organise un tableau
+	//   de description de ce modificateur
+	$parse['modificateur'] = [];
+	if (($parse['total'] ?? '') !== '') {
+		$parse['modificateur'] = [
+			'fonction'   => 'total',
+			'type_champ' => 'array'
+		];
+	} elseif (($parse['substr'] ?? '') !== '') {
+		$parse['modificateur'] = [
+			'fonction'   => 'substr',
+			'type_champ' => 'string',
+			'arguments'  => [
+				$parse['position'],
+				$parse['longueur'] ?? null
+			]
+		];
+	}
+	// - La regex fait que ces index sont toujours présents, il faut les supprimer car ils ont été remplacés par
+	//   le modificateur même vide
+	unset($parse['substr']);
+	unset($parse['position']);
+	unset($parse['longueur']);
+
 	return $parse;
 }
 
@@ -116,13 +148,13 @@ function saisies_afficher_si_evaluer_plugin($champ, $negation = '') {
  *	- un string
  *	- un tableau
  *	- un tableau sérializé
- * @param string $total TOTAL si on demande de faire le décompte dans un tableau
+ * @param array  $modificateur Fonctions applicables au champ de saisie pour en modifier la valeur
  * @param string $operateur : l'opérateur
  * @param string $valeur la valeur à tester
  * @param string $negation y-a-t-il un négation avant le test ? '!' si oui
  * @return bool false / true selon la condition
  **/
-function saisies_tester_condition_afficher_si($valeur_champ, $total, $operateur = '', $valeur = '', $negation = '') {
+function saisies_tester_condition_afficher_si($valeur_champ, $modificateur = [], $operateur = '', $valeur = '', $negation = '') {
 	// Si pas operateur ni de valeur on test juste qu'un champ est cochée / validé
 	if (!$operateur && !$valeur) {
 		// En JS `Boolean('0')` renvoie True ;
@@ -159,9 +191,9 @@ function saisies_tester_condition_afficher_si($valeur_champ, $total, $operateur 
 
 	//Et maintenant appeler les sous fonctions qui vont bien
 	if (is_string($valeur_champ)) {
-		$retour = saisies_tester_condition_afficher_si_string($valeur_champ, $operateur, $valeur);
+		$retour = saisies_tester_condition_afficher_si_string($valeur_champ, $modificateur, $operateur, $valeur);
 	} elseif (is_array($valeur_champ)) {
-		$retour = saisies_tester_condition_afficher_si_array($valeur_champ, $total, $operateur, $valeur);
+		$retour = saisies_tester_condition_afficher_si_array($valeur_champ, $modificateur, $operateur, $valeur);
 	}
 	if ($negation) {
 		return !$retour;
@@ -173,11 +205,22 @@ function saisies_tester_condition_afficher_si($valeur_champ, $total, $operateur 
 /**
  * Teste un condition d'afficher_si lorsque la valeur envoyée par le formulaire est une chaîne
  * @param string $valeur_champ la valeur du champ à tester.
+ * @param array  $modificateur Fonctions applicables au champ de saisie pour en modifier la valeur
  * @param string $operateur : l'opérateur:
  * @param string|int $valeur la valeur à tester.
  * @return bool false / true selon la condition
  **/
-function saisies_tester_condition_afficher_si_string($valeur_champ, $operateur, $valeur) {
+function saisies_tester_condition_afficher_si_string($valeur_champ, $modificateur, $operateur, $valeur) {
+	// On scrute le modificateur pour savoir si il y a une fonction qui doit s'appliquer à la valeur du champ
+	// avant de la tester.
+	if (
+		$modificateur
+		&& ($modificateur['type_champ'] === 'string')
+		&& ($modificateur['fonction'] === 'substr')
+	) {
+		$valeur_champ = substr($valeur_champ, $modificateur['arguments'][0], $modificateur['arguments'][1]);
+	}
+
 	if ($operateur === '==') {
 		return $valeur_champ == $valeur;
 	} elseif ($operateur === '!=') {
@@ -194,22 +237,30 @@ function saisies_tester_condition_afficher_si_string($valeur_champ, $operateur, 
 		return preg_match($valeur, $valeur_champ);
 	} elseif ($operateur === '!MATCH') {
 		return !preg_match($valeur, $valeur_champ);
-	} else {//Si mauvaise operateur -> on annule
+	} else {//Si mauvais operateur -> on annule
 		return false;
 	}
 }
 
 /**
  * Teste un condition d'afficher_si lorsque la valeur postée est un tableau
- * @param array $valeur_champ la valeur du champ à tester.
+ * @param array  $valeur_champ la valeur du champ à tester.
+ * @param array  $modificateur Fonctions applicables au champ de saisie pour en modifier la valeur
  * @param string $operateur : l'opérateur:
  * @param string $valeur la valeur à tester pour un IN. Par exemple "23" ou encore "23,25"
  * @return bool false / true selon la condition
  **/
-function saisies_tester_condition_afficher_si_array($valeur_champ, $total, $operateur, $valeur) {
-	if ($total) {//Cas 1 : on demande à compter le nombre total de champ
-		return saisies_tester_condition_afficher_si_string(count($valeur_champ), $operateur, $valeur);
-	} else {//Cas deux : on test une valeur
+function saisies_tester_condition_afficher_si_array($valeur_champ, $modificateur, $operateur, $valeur) {
+	// On scrute le modificateur pour savoir si il y a une fonction qui doit s'appliquer à la valeur du champ
+	// avant de la tester.
+	if (
+		$modificateur
+		&& ($modificateur['type_champ'] === 'array')
+		&& ($modificateur['fonction'] === 'total')
+	) {
+		// Cas 1 : on teste un array
+		return saisies_tester_condition_afficher_si_string(count($valeur_champ), $modificateur, $operateur, $valeur);
+	} else {//Cas deux : on teste une valeur
 		$valeur = explode(',', $valeur);
 		$intersection = array_intersect($valeur_champ, $valeur);
 		if (in_array($operateur, ['==', 'IN'])) {
