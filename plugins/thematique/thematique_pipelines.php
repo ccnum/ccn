@@ -7,7 +7,7 @@ if (!defined('_ECRIRE_INC_VERSION')) {
 // Pre_boucles
 // Retourne les articles et articles syndiqués en lien avec l'année scolaire
 function thematique_pre_boucle($boucle) {
-	$affichage = _affichage;
+	$affichage = '_affichage';
 
 	$annee = _annee_scolaire;
 	$mois = '08';
@@ -34,16 +34,15 @@ function thematique_pre_boucle($boucle) {
 }
 
 function thematique_jqueryui_plugins($scripts) {
-	$scripts[] = 'jquery.ui.core';
-	$scripts[] = 'jquery.ui.widget';
+	$scripts[] = 'jquery.ui.draggable';
+	$scripts[] = 'jquery.ui.tooltip';
+	/*
 	$scripts[] = 'jquery.ui.mouse';
 	$scripts[] = 'jquery.ui.position';
-	$scripts[] = 'jquery.ui.draggable';
 	$scripts[] = 'jquery.ui.droppable';
-	$scripts[] = 'jquery.ui.tooltip';
 	$scripts[] = 'jquery.ui.effect';
 	$scripts[] = 'jquery.ui.effect-bounce';
-
+	*/
 	return $scripts;
 }
 
