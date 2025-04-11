@@ -51,7 +51,7 @@
 																	</a>]
 																	]
 																<a href="#URL_DOCUMENT" title="[(#TITRE)]" class="thickbox mediabox" type="#MIME_TYPE">
-																	[(#FICHIER |image_reduire{500})]
+																	[(#FICHIER|image_reduire{500})]
 																</a>
 																[<span class="spip_doc_titre #EDIT{titre}">(#TITRE|couper{25}|sinon{<span class="ajouter_couleur">ajouter un titre</span>})</span>]
 
@@ -114,13 +114,12 @@
 													<div class="sidebar_bubble">
 														<INCLURE{fond=noisettes/js/accordeon,nom=bloc_option_doc-#ID_ARTICLE}>
 														<div class="bloc_option_doc nettoyeur">
-														<a id="bloc_option_doc-#ID_ARTICLE" class="hac lien_ajouter bloc_option_doc_adddocument" title="Ajouter un document">
-															Ajouter un document
-														</a>
-														<div class='nettoyeur cache formulaire_spip formulaire_editer_document bloc_option_doc'>
-															#FORMULAIRE_JOINDRE_DOCUMENT{new,#ID_ARTICLE,article}
-														</div>
-														<INCLURE{fond=prive/squelettes/inclure/colonne-documents,env,ajax=documents} />
+															<a id="bloc_option_doc-#ID_ARTICLE" class="hac lien_ajouter bloc_option_doc_adddocument" title="Ajouter un document">
+																Ajouter un document
+															</a>
+															<div class='nettoyeur cache formulaire_spip formulaire_editer_document bloc_option_doc'>
+																#FORMULAIRE_JOINDRE_DOCUMENT{new,#ID_ARTICLE,article}
+															</div>
 														</div>
 													</div>
 												]
