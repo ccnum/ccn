@@ -1,7 +1,7 @@
 # https://github.com/ipeos-and-co/docker-spip/tree/master
 FROM php:8.3-apache-bookworm AS base
 ENV SPIP_VERSION 4.4
-ENV SPIP_PACKAGE 4.4.2
+ENV SPIP_PACKAGE 4.4.3
 
 RUN set -eux; \
     apt-get update; \
