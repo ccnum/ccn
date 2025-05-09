@@ -28,36 +28,34 @@
 	[(#GET{mode}|in_array{#LISTE{detail,ajax-detail}}|oui)
 		[(#GET{art_lie}|oui)
 			<div class="reponse_binome_around">
-				<INCLURE{fond=noisettes/reponse_binome_head}{env}{type_objet=#GET{type_objet}}{id_rubrique_lien_bis=#GET{id_rubrique_lien_bis}}{id_rubrique_lien=#GET{id_rubrique_lien}}{id_consigne}{id_article_lien_bis=#GET{art_lie_bis}}{id_article_lien=#GET{art_lie}} />
+				<INCLURE{fond=noisettes/reponse_binome_head, env, type_objet=#GET{type_objet}, id_rubrique_lien_bis=#GET{id_rubrique_lien_bis}, id_rubrique_lien=#GET{id_rubrique_lien}, id_consigne, id_article_lien_bis=#GET{art_lie_bis}, id_article_lien=#GET{art_lie}, ajax} />
 			<div id="reponse_binome_1">
 		]
 
-		<INCLURE{fond=noisettes/#GET{page}}{id_rubrique}{env}{page=#GET{page}}{type_objet=#GET{type_objet}}{id_article=#ID_ARTICLE} />
+			<INCLURE{fond=noisettes/#GET{page}, id_rubrique, env, page=#GET{page}, type_objet=#GET{type_objet}, id_article=#ID_ARTICLE, ajax} />
 
 		[(#GET{art_lie}|oui)
-		</div>
-		<div class="popup popup_separation_binome">
-			<div class="sidebar_bubble separation_binome">Réponse binôme</div>
-			<div class="nettoyeur"></div>
-		</div>
+			</div>
+			<div class="popup popup_separation_binome">
+				<div class="sidebar_bubble separation_binome">Réponse binôme</div>
+				<div class="nettoyeur"></div>
+			</div>
 
-		<div id="reponse_binome_2">
-			<INCLURE{fond=noisettes/#GET{page}}{id_rubrique}{env}{page=#GET{page}}{type_objet=#GET{type_objet}}{id_article=#GET{art_lie}} />
-		</div>
-		]
-
-		[(#GET{art_lie}|oui) </div>]
+			<div id="reponse_binome_2">
+				<INCLURE{fond=noisettes/#GET{page}, id_rubrique, env, page=#GET{page}, type_objet=#GET{type_objet}, id_article=#GET{art_lie}, ajax} />
+			</div>
+		</div>]
 	]
 
 	[(#GET{mode}|=={complet}|oui)
-		<INCLURE{fond=layout, page=sommaire, id_rubrique, env, type_objet=#GET{type_objet}, id_objet=#ID_ARTICLE} />
+		<INCLURE{fond=layout, page=sommaire, id_rubrique, env, type_objet=#GET{type_objet}, id_objet=#ID_ARTICLE, ajax} />
 	]
 
 	[(#GET{mode}|=={ajax}|oui)
 		[(#REM) Type d'admin : 0 : total / autrement : nb de rubriques restreintes / -1 : pas admin / -2 pas connecté]
 		[(#INCLURE{fond=noisettes/fonction/admin,mode=admin,rub})]
 		[(#SET{admin,#SESSION{admin}})]
-		<INCLURE{fond=noisettes/#GET{page}}{type_objet=#GET{type_objet}}{admin=#GET{admin}}{env} />
+		<INCLURE{fond=noisettes/#GET{page}, type_objet=#GET{type_objet}, admin=#GET{admin}, env, ajax} />
 	]
 
 </BOUCLE_principale_article>
