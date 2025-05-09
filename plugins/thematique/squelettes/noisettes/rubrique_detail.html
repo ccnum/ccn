@@ -92,7 +92,7 @@
 	</div>
 	[(#REM) ---------------- Inclusion/iframe des urls liées aux classes ---------------- ]
 
-	[(#SET{tab,[(#DESCRIPTIF*|explode{''})]})]
+	[(#SET{tab,[(#DESCRIPTIF*)]})]
 	<B_tab>
 	<div class="sidebar_bubble cache">
 		<INCLURE{fond=noisettes/js/accordeon, nom=bloc_option_classe_iframe, ajax} />
@@ -102,7 +102,7 @@
 			</a>
 			<div style="clear:both" class='bloc_classe_iframe'>
 				<BOUCLE_tab(DATA){source tableau, #GET{tab}}>
-					<div class="nettoyeur ">
+					<div class="nettoyeur">
 						<iframe src="[(#VALEUR)]" width="100%" style="min-height: 600px;"></iframe>
 					</div>
 				</BOUCLE_tab>
