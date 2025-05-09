@@ -8,7 +8,7 @@
 
 [(#REM) ******************* VARIABLES ***************************** ]
 [(#REM) Annee scolaire]
-	#SET{annee_scolaire,#CONST{_annee_scolaire}}
+#SET{annee_scolaire,#CONST{_annee_scolaire}}
 
 [(#SET{projet,[(#URL_PAGE{xml, mode=projet}|url_absolue|copie_locale)]})]
 
@@ -32,7 +32,7 @@
 [(#REM) ******************* AFFICHAGE ***************************** ]
 
 	<head>
-		<INCLURE{fond=noisettes/inc-head, env}>
+		<INCLURE{fond=noisettes/inc-head, env, ajax}>
 		<meta http-equiv="Pragma" content="no-cache" />
 		<meta http-equiv="Cache-Control" content="no-cache, must-revalidate" />
 		<meta http-equiv="Expires" content="0" />
@@ -51,7 +51,8 @@
 				{chemin=#DOSSIER_SQUELETTE/}
 				{annee_scolaire=#GET{annee_scolaire}}
 				{page}
-				{env, ajax}
+				{env}
+				{ajax}
 			/>
 		]
 		[(#TYPE_OBJET|=={evenements}|oui|et{#GET{admin}|<{0}|oui}|oui)

@@ -46,12 +46,10 @@ function saisies_afficher_si_js($condition, $saisies_par_etapes = []) {
 
 			$negation = $test['negation'] ?? '' ;
 			$champ = $test['champ'] ?? '' ;
-			$total = $test['total'] ?? '';
+			$modificateur = $test['modificateur'] ?? [];
 			$operateur = $test['operateur'] ?? null ;
-			$negation = $test['negation'] ?? '';
 			$booleen = $test['booleen'] ?? '';
 			$valeur = $test['valeur'] ?? null ;
-			$valeur_numerique = $test['valeur_numerique'] ?? '';
 
 			$champ = saisie_nom2name($champ);
 			// Cas des saisies type grille, rechercher le vrai nom de la saisie
@@ -66,17 +64,18 @@ function saisies_afficher_si_js($condition, $saisies_par_etapes = []) {
 				$condition = str_replace($expression, $plugin ? 'true' : 'false', $condition);
 			} elseif (stripos($champ, 'config:') !== false) {
 				$config = saisies_afficher_si_get_valeur_config($champ);
-				$test_modifie = eval('return ' . saisies_tester_condition_afficher_si($config, $total, $operateur, $valeur, $negation) . ';') ? 'true' : 'false';
+				$test_modifie = eval('return ' . saisies_tester_condition_afficher_si($config, $modificateur, $operateur, $valeur, $negation) . ';') ? 'true' : 'false';
 				$condition = str_replace($expression, $test_modifie, $condition);
 			} elseif ($booleen) {
 				$condition = $condition;
 			} else { // et maintenant, on rentre dans le vif du sujet : les champs.
-				if (!saisies_verifier_coherence_afficher_si_par_champ($champ, $saisies_toutes_par_nom)) {//La saisie conditionnante n'existe pas pour ce formulaire > on laisse tomber
+				if (!saisies_verifier_coherence_afficher_si_par_champ($champ, $saisies_toutes_par_nom)) {
+					//La saisie conditionnante n'existe pas pour ce formulaire > on laisse tomber
 					spip_log("Afficher_si incorrect. Champ $champ inexistant", 'saisies' . _LOG_CRITIQUE);
 					$condition = '';
 				} elseif (
-						!isset($saisies_etape_courante_par_nom[$champ])
-						&& !($racine_champ && isset($saisies_etape_courante_par_nom[$racine_champ]))
+					!isset($saisies_etape_courante_par_nom[$champ])
+					&& !($racine_champ && isset($saisies_etape_courante_par_nom[$racine_champ]))
 				) {
 					//Cas 1. La saisie existe bien dans le formulaire, mais pas à l'étape courante.
 					if (isset($saisies_toutes_par_nom[$champ])) {
@@ -85,7 +84,7 @@ function saisies_afficher_si_js($condition, $saisies_par_etapes = []) {
 						$valeur_champ = saisies_get_valeur_saisie($saisies_toutes_par_nom[$racine_champ]);
 						$valeur_champ = $valeur_champ[$sous_champ] ?? '';
 					}
-					$test_modifie = eval('return ' . saisies_tester_condition_afficher_si($valeur_champ, $total, $operateur, $valeur, $negation) . ';') ? 'true' : 'false';
+					$test_modifie = eval('return ' . saisies_tester_condition_afficher_si($valeur_champ, $modificateur, $operateur, $valeur, $negation) . ';') ? 'true' : 'false';
 					$condition = str_replace($expression, $test_modifie, $condition);
 				} else {
 					$type_saisie = $saisies_toutes_par_nom[$champ]['saisie'] ?? $saisies_toutes_par_nom[$racine_champ]['saisie'];

@@ -9,7 +9,8 @@
 			#SET{fl,imports_utilisateurs}
 			#SET{name,file_import}#SET{obli,#ENV**{erreurs/test,''}|?{'',obligatoire}}#SET{defaut,''}#SET{erreurs,#ENV**{erreurs}|table_valeur{#GET{name}}}
 			<li class="editer editer_[(#GET{name})][ (#GET{obli})][ (#GET{erreurs}|oui)erreur]">
-				<label for="#GET{name}">[(#GET{fl}|concat{':label_',#GET{name}}|_T)]</label>[
+				<label for="#GET{name}">[(#GET{fl}|concat{':label_',#GET{name}}|_T)]</label>
+				<explication>Un fichier exemple se trouve ici : <a href="[(#CHEMIN{exemple_import.csv})]">un fichier exemple</a></explication>[
 				<span class='erreur_message'>(#GET{erreurs})</span>
 				]<input type="file" name="#GET{name}" class="file text" id="#GET{name}" [(#HTML5|et{#GET{obli}})required='required']/>
 			</li>

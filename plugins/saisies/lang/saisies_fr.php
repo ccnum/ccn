@@ -11,6 +11,7 @@ return [
 	// B
 	'bouton_parcourir_docs_article' => 'Parcourir l’article',
 	'bouton_parcourir_docs_breve' => 'Parcourir la brève',
+	'bouton_parcourir_docs_objet' => 'Parcourir les images',
 	'bouton_parcourir_docs_rubrique' => 'Parcourir la rubrique',
 	'bouton_parcourir_mediatheque' => 'Parcourir la médiathèque',
 
@@ -316,7 +317,8 @@ return [
 	'saisie_textarea_titre' => 'Bloc de texte',
 	'saisies_aide_memoire' => 'Aide mémoire',
 	'saisies_aplatir_tableau_montrer_groupe' => '@groupe@ : @valeur@',
-
+	'selecteur_document_option_objet_label' => 'Type d\'objet associé aux documents proposés',
+	'selecteur_document_option_id_objet_label' => 'Identifiant d\'objet associé aux documents proposés',
 	// T
 	'titre_page_saisies_doc' => 'Documentation des saisies',
 	'tous_visiteurs' => 'Tous les visiteurs (même non enregistrés)',

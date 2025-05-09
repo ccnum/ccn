@@ -48,6 +48,20 @@ options:
      -  'inclure:saisies/_base/obligatoire.yaml'
 options_dev:
       - 'inclure:saisies/_base/options_dev.yaml'
+      -
+        saisie: 'input'
+        options:
+          nom: 'objet'
+          label: '<:saisies:selecteur_document_option_objet_label:>'
+      -
+        saisie: 'input'
+        options:
+          nom: 'id_objet'
+          label: '<:saisies:selecteur_document_option_id_objet_label:>'
+        verifier:
+          type: 'entier'
+          options:
+            min: 1
 defaut:
  options:
    label: '<:medias:objet_document:>'
