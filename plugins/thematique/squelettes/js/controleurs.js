@@ -6,10 +6,10 @@ var detailsLivrableOpen = false;
 // Verifie les parametres dans l'url
 $.urlParam = function (name) {
 	console.log('urlParam l-106', name);
-	
+
 	var results = new RegExp('[\?&]' + name + '=([^&#]*)').exec(window.location.href);
 	console.log('urlParam results', results);
-	
+
 	if (results) {
 		return results[1] || 0;
 	}
@@ -88,15 +88,10 @@ function onHashChange() {
 var currentState = {};
 function setContentFromState(state) {
 
-	console.log('setContentFromState -> initial state l-959', state);
-	
 	if (typeof state.data !== 'object' || state.data == null) {
 		return;
 	}
 	var state = state.data;
-
-	console.log('setContentFromState -> state.data l-967', state);
-	
 
 	if (state.type_objet == undefined) { state.type_objet = ''; }
 	if (state.page == undefined) { state.page = ''; }
@@ -111,9 +106,6 @@ function setContentFromState(state) {
 	if (currentState.id_article == undefined) { currentState.id_article = ''; }
 	if (currentState.id_syndic_article == undefined) { currentState.id_syndic_article = ''; }
 	if (currentState.id_objet == undefined) { currentState.id_objet = ''; }
-
-	console.log('currentState avant merge', currentState);
-	
 
 	isSamePage = true;
 
@@ -135,7 +127,7 @@ function setContentFromState(state) {
 	antifloodHashChange = true;
 
 	console.log('state type_objet', state.type_objet, 'id_objet', state.id_objet);
-	
+
 
 	// Ressource
 	if ((state.type_objet == '0'
@@ -258,70 +250,6 @@ function setContentFromState(state) {
 	}
 
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 /**
  * Initialise les binds jQuery des sidebars
@@ -549,22 +477,22 @@ function callConsigne(id_consigne) {
 
 function callReponse(id_reponse) {
 	console.log('id_reponse', id_reponse);
-	
+
 	changeTimelineMode('consignes');
 	setFullscreenModeToCols(true);
 
 	var id_consigne = getIdConsigneFromIdReponse(id_reponse);
 	console.log('id_consigne', id_consigne);
-	
+
 	var id_classe = getIdClasseFromIdReponse(id_reponse);
 	console.log('id_classe', id_classe);
-	
+
 
 	updateMenuIcon(['consignes-' + id_consigne, 'classes-' + id_classe], 'mainView');
 
 	var url = CCN.projet.url_popup_reponse + "&id_article=" + id_reponse;
 	console.log('url', url);
-	
+
 	showConsigneInTimeline(id_consigne);
 
 	loadContentInMainSidebar(
@@ -580,7 +508,7 @@ function callReponse(id_reponse) {
 		}
 	);
 	console.log('load content in main sidebar ended');
-	
+
 
 	var url_travail_en_cours = 'spip.php?page=rubrique&mode=detail&id_rubrique=' + CCN.travailEnCoursId;
 	console.log('url_travail_en_cours', url_travail_en_cours);
@@ -591,7 +519,7 @@ function callReponse(id_reponse) {
 
 	showReponseInTimeline(id_reponse);
 	console.log('end callReponse');
-	
+
 }
 
 
@@ -610,7 +538,7 @@ function callReponse(id_reponse) {
 
 function callClasse(id_classe) {
 	console.log('id_classe in callClasse function', id_classe);
-	
+
 	changeTimelineMode('consignes');
 	toggleSidebarExpand();
 	setFullscreenModeToCols(true);
@@ -1089,20 +1017,21 @@ function changeCouleurLogoMenu(val) {
 
 function updateUrl(object, title, url) {
 	console.log('updateUrl (callback from loadContentInMainSidebar', object, title, url);
-	
+
 	currentState = object;
 
 	console.log('CCN.hash', CCN.hash);
-	
+
 	if (CCN.hash != '') {
-		if (CCN.hash.substring(0, 5) == 'forum') { console.log('forum l-9995'); 
+		if (CCN.hash.substring(0, 5) == 'forum') {
+			console.log('forum l-9995');
 
 		} else {
 			console.log('!forum l-9998');
 
 			History.pushState(object, title, url + '#' + CCN.hash);
 			console.log('push end l-1001');
-			
+
 		}
 
 		setTimeout(
@@ -1117,7 +1046,7 @@ function updateUrl(object, title, url) {
 				if (anchor.length > 0) {
 
 					console.log('dans if l-1019');
-					
+
 					// TODO : cela est appelé deux fois minimum à cause de History.js (donc un trigger('click') sur .triggertoggleshow ne fonctionne pas car il ouvre puis ferme)
 
 					// Forum : ouvre les items
@@ -1138,7 +1067,7 @@ function updateUrl(object, title, url) {
 	antiPushState = false;
 
 	console.log('updateUrl end l-1031');
-	
+
 }
 
 
@@ -1188,7 +1117,7 @@ function reload(url) {
 
 function loadContentInMainSidebar(url, typePage, typeObjet, callback) {
 	console.log('loading content in main sidebar', 'url:', url, 'typePage:', typePage, 'typeObjet:', typeObjet);
-	
+
 
 	$('body').addClass('loading');
 	showSidebar();
