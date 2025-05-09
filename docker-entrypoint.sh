@@ -137,9 +137,10 @@ if [ ${PROJET} != "laclasse" ]; then
 fi
 spip plugins:maj:bdd
 
+spip config:ecrire -p bigup max_file_size:${PHP_UPLOAD_MAX_FILESIZE%M}
+spip config:ecrire -p mediabox active:oui
 spip config:ecrire -p notation acces:ide
 spip config:ecrire -p notation change_note:oui
-spip config:ecrire -p mediabox active:oui
 
 # Default mes_options
 rm -rf config/mes_options.php
@@ -154,6 +155,7 @@ define('_LOG_FILTRE_GRAVITE', 8);
 define('_DEBUG_SLOW_QUERIES', true);
 define('_BOUCLE_PROFILER', 5000);
 define('_AUTORISER_TELECHARGER_PLUGINS', false);
+define('_TITRER_DOCUMENTS', true);
 // désactiver les notifications de mise à jour
 define('_MAJ_NOTIF_EMAILS', '');
 // des personalisations par projet

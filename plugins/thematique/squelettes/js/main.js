@@ -95,7 +95,9 @@ function loadProjet(fichier) {
 
 				// Initialise le projet
 				CCN.projet = new Projet();
+				console.log(CCN.projet);
 				CCN.projet.init(dataForProjet);
+				console.log(CCN.projet);
 
 				CCN.couleurBlog = getXMLNodeValue('couleur_blog', xml);
 				CCN.idRubriqueRessources = getXMLNodeValue('id_rubrique_ressources', xml);

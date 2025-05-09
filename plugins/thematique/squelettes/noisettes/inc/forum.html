@@ -1,7 +1,7 @@
 #CACHE{0}
 <div class="sidebar_bubble">
 
-	<INCLURE{fond=noisettes/js/accordeon}{nom=bloc_option_forum_all-#ID_ARTICLE}>
+	<INCLURE{fond=noisettes/js/accordeon, nom=bloc_option_forum_all-#ID_ARTICLE, ajax}>
 
 	<div class="bloc_option_doc nettoyeur">
 		<a id="bloc_option_forum_all-#ID_ARTICLE" class="hac liens_voir bloc_option_doc_comment" title="Forum">
@@ -12,7 +12,7 @@
 			<BOUCLE_forum(FORUMS){id_article}>
 			</BOUCLE_forum>
 				<div class="nettoyeur"></div>
-				<INCLURE{fond=noisettes/ajax/article-forum-detail}{id_article}{admin}>
+				<INCLURE{fond=noisettes/ajax/article-forum-detail, id_article, admin, ajax}>
 				<div class="introduction nettoyeur"></div>
 			</B_forum>
 				<div class="forum_vide">
@@ -20,14 +20,11 @@
 				</div>
 			<//B_forum>
 
-			<INCLURE{fond=noisettes/js/accordeon}{nom=bloc_option_forum-#ID_ARTICLE}>
-
+			<INCLURE{fond=noisettes/js/accordeon, nom=bloc_option_forum-#ID_ARTICLE, ajax}>
 			<div class="forum_commenter">
-				<a id="bloc_option_forum-#ID_ARTICLE" class="forum_commenter_head hac liens_voir bloc_option_doc_comment" title="Commenter">
-					Commenter
-				</a>
-				<div class='nettoyeur cache bloc_option_forum'>
-					<INCLURE{fond=forum,ajax,id_article,mode=ajax-detail}>
+				<a id="bloc_option_forum-#ID_ARTICLE" class="forum_commenter_head hac liens_voir bloc_option_doc_comment" title="Commenter">Commenter</a>
+				<div class='nettoyeur masquer bloc_option_forum'>
+					<INCLURE{fond=forum, id_article, mode=ajax-detail, ajax} />
 				</div>
 			</div>
 

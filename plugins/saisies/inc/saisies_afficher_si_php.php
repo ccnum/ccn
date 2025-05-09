@@ -98,9 +98,9 @@ function saisies_afficher_si_masquees_set_request_empty_string($saisies, $valeur
  * Pose un set_request sur une saisie et toute ses sous-saisies.
  * Utiliser notamment pour annuler toutes les sous saisies d'un fieldeset
  * si le fieldset est masquée à cause d'un afficher_si.
- * @param array $saisie
- * @param null|str|array $val (defaut `''`)
- * @param array $valeurs
+ * @param array             $saisie
+ * @param null|string|array $val (defaut `''`)
+ * @param array             $valeurs
  *     Optionnellement un tableau de valeurs à passer à _request plutôt que GET/POST
  **/
 function saisies_set_request_recursivement($saisie, $val = '', $valeurs = null) {
@@ -123,7 +123,7 @@ function saisies_set_request_recursivement($saisie, $val = '', $valeurs = null) 
  * @param null|array $env
  * @param array $saisies_par_nom
  *   Les saisies déjà classées par nom de champ
- * @return  la valeur du champ ou de la config
+ * @return  null|mixed la valeur du champ ou de la config
  **/
 function saisies_afficher_si_get_valeur_champ($champ, $env, $saisies_par_nom) {
 	$valeur = null;
@@ -198,9 +198,9 @@ function saisies_transformer_condition_afficher_si($condition, $env = null, $sai
 		foreach ($tests as $test) {
 			$expression = $test['expression'];
 			if (!isset($test['booleen'])) {
-				$total = isset($test['total']) ? $test['total'] : '';
-				$operateur = isset($test['operateur']) ? $test['operateur'] : null;
-				$negation = isset($test['negation']) ? $test['negation'] : '';
+				$modificateur = $test['modificateur'] ?? '';
+				$operateur = $test['operateur'] ?? null;
+				$negation = $test['negation'] ?? '';
 
 				if (isset($test['valeur'])) {
 					$valeur = $test['valeur'];
@@ -230,7 +230,7 @@ function saisies_transformer_condition_afficher_si($condition, $env = null, $sai
 					} else {
 						$valeur_champ = $no_arobase;
 					}
-					$test_modifie = saisies_tester_condition_afficher_si($valeur_champ, $total, $operateur, $valeur, $negation) ? 'true' : 'false';
+					$test_modifie = saisies_tester_condition_afficher_si($valeur_champ, $modificateur, $operateur, $valeur, $negation) ? 'true' : 'false';
 					$condition = str_replace($expression, $test_modifie, $condition);
 				} else {
 					$condition = '';// Si champ inexistant, on laisse tomber tout le tests

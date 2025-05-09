@@ -86,7 +86,6 @@
 .formulaire_spip input.text {
 	color: #222 !important;
 	background-color: #FFF !important;
-	width: 100% !important;
 	padding: 10px 9px !important;
 	border: none !important;
 	margin-top: 0 !important;
@@ -615,7 +614,7 @@ a:hover {
 }
 
 .nettoyeur { clear: both; }
-.cache, .zone-menu li a.cache { display: none; }
+.zone-menu li a.cache { display: none; }
 .cache2, .zone-menu li a.cache2 { visibility: hidden; }
 .aligne_centre { text-align: center; margin: 0 auto;}
 .aligne_gauche { text-align: left; }
@@ -3135,10 +3134,11 @@ code, .coloration_code{
 }
 
 /*Suppression de certains champs de la barre d'outils porte plumes*/
-label em.aide, .formulaire_editer_article li.editer_parent, .outil_code, .outil_caracteres, .outil_guillemets, .outil_liste_ol, .outil_quote {display: none;}
+label em.aide, .formulaire_editer_article .editer_parent, .outil_code, .outil_caracteres, .outil_guillemets, .outil_liste_ol, .outil_quote {display: none;}
 
 .formulaire_spip .editer_texte #text_area {height: 250px;}
-.formulaire_spip input.text { width: 290px;}
+.formulaire_spip .editer input,
+.formulaire_spip .editer textarea { width: 380px;}
 
 .erreur_message {color: red;}
 
@@ -3326,9 +3326,13 @@ input[type="file"] {
 
 
 /*Formulaire_joindre_document*/
-.formulaire_editer_document .titrem, .popup .editer_fichier_upload label, .formulaire_editer_document .sourceup, #joindre_mediatheque__new, #joindre_distant__new, #defaultsubmit__new {display:none; }
-div#joindre_mode__new {display: inline;}
-
+.formulaire_joindre_document .titrem,
+.formulaire_joindre_document .sourceup,
+.formulaire_joindre_document #joindre_mediatheque__new,
+.formulaire_joindre_document #joindre_distant__new,
+.formulaire_joindre_document #defaultsubmit__new,
+.formulaire_joindre_document .boutons {display:none;}
+.formulaire_joindre_document #joindre_upload__new {display: inline!important;}
 #spip-admin {display: none;}
 li.editer p.explication, .editer_pgp, .editer_bio, .editer_liens_sites, .saisie_session_nom, .saisie_session_email {display: none;}
 
@@ -3411,9 +3415,8 @@ li a, li a:hover {
 	margin: 0;
 }
 
-#bloc_option_doc .cache,
-.bloc_option_doc .cache {
-	padding:0 10px 20px 20px
+.bloc_option_doc .bloc_option_forum .bloc_option_forum {
+	padding: 0 10px 20px 20px
 }
 
 .bloc_option_doc_adddocument {
@@ -3495,7 +3498,7 @@ li a, li a:hover {
 	color: #a0a0a0;
 }
 
-#formulaire_forum input.text {
+#formulaire_forum input.text, #formulaire_forum textarea {
 	border: solid 1px #E8E8E8 !important;
 	padding: 5px 8px !important;
 	color: #000 !important;
@@ -4410,6 +4413,7 @@ ul#forum, .lien_forum {
 
 /* Rajouter par Pierre K */
 .lity { z-index: 999992; }
+.masquer { display: none; }
 
 /* ---------------------------------------------------------------- */
 /* ------------------------ RESPONSIVE ---------------------------- */
