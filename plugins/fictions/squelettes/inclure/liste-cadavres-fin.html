@@ -1,22 +1,19 @@
 <!--
 SOMMAIRE.HTML > LISTE-CADAVRE-FIN.HTML
 (grille des cadavres affiché à la fin du jeu)
-#EVAL{_annee_scolaire} // #ENV{annee_scolaire}
 -->
-<BOUCLE_annee(RUBRIQUES){titre==#EVAL{_annee_scolaire}}{tout}{0,1}>
-	<BOUCLE_rubriques_toutes(RUBRIQUES){id_parent=#ID_RUBRIQUE}{id_rubrique != 12}{par id_rubrique}>
-		<div class="liste-fin-rubrique">
-			<!--<div class="liste-title">#ID_RUBRIQUE</div>-->
-			<!-- COUVERTURE LIVRE -->
-			<a href="[(#URL_PAGE{lecture, id_rubrique=#ID_RUBRIQUE}|parametre_url{compteur,1})]">
-				[(#LOGO_RUBRIQUE|image_reduire{175,0})]
-			</a>
-			<!-- BOUTON TELECHARGEMENT -->
-			<div class="liste-book-bt">
-				<BOUCLE_doc(DOCUMENTS){id_rubrique}{mode=document}>
-				<a href="#URL_DOCUMENT" title="Télécharger le pdf">#TYPE_DOCUMENT</a>
-				</BOUCLE_doc>
-			</div>
+<BOUCLE_rubriques_toutes(RUBRIQUES){id_parent=#ENV{id_rubrique}}{id_rubrique != 12}{par id_rubrique}>
+	<div class="liste-fin-rubrique">
+		<!--<div class="liste-title">#ID_RUBRIQUE</div>-->
+		<!-- COUVERTURE LIVRE -->
+		<a href="[(#URL_PAGE{lecture, id_rubrique=#ID_RUBRIQUE}|parametre_url{compteur,1})]">
+			[(#LOGO_RUBRIQUE|image_reduire{175,0})]
+		</a>
+		<!-- BOUTON TELECHARGEMENT -->
+		<div class="liste-book-bt">
+			<BOUCLE_doc(DOCUMENTS){id_rubrique}{mode=document}>
+			<a href="#URL_DOCUMENT" title="Télécharger le pdf">#TYPE_DOCUMENT</a>
+			</BOUCLE_doc>
 		</div>
-	</BOUCLE_rubriques_toutes>
-</BOUCLE_annee>
+	</div>
+</BOUCLE_rubriques_toutes>
