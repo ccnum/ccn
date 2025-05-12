@@ -85,11 +85,9 @@
 										<div class="ecriture-chapitre-avatar">[(#LOGO_AUTEUR|image_reduire{42,42})]</div>
 										<div class="ecriture-chapitre-nom">#NOM</div>
 									</BOUCLE_auteur_article2>
-
 									[(#ENV{fin}|=={oui}|non)
-										<INCLURE{fond=logos-script-forum,id_article,class=ecriture-chapitre-liens}>
+										<INCLURE{fond=inclure/logos-script-forum,id_article,class=ecriture-chapitre-liens}>
 									]
-
 								</div>
 							</div>
 							<!-- CONTENT GAUCHE -->
