@@ -1,6 +1,7 @@
 <!--
 SOMMAIRE.HTML > LISTE-CADAVRE-FIN.HTML
 (grille des cadavres affiché à la fin du jeu)
+#EVAL{_annee_scolaire}
 -->
 <BOUCLE_annee(RUBRIQUES){titre==#EVAL{_annee_scolaire}}{tout}{0,1}>
 	<BOUCLE_rubriques_toutes(RUBRIQUES){id_parent=#ID_RUBRIQUE}{id_rubrique != 12}{par id_rubrique}>
