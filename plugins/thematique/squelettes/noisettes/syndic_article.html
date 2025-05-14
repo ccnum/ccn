@@ -2,7 +2,7 @@
 <BOUCLE_principale(SYNDIC_ARTICLES){id_syndic_article}{0,1}>
 
 <div class="popup [popup_(#ENV{type_objet})]">
-	<INCLURE{fond=noisettes/call_sidebar, type_objet=ressources} />
+	<INCLURE{fond=noisettes/call_sidebar, type_objet=ressources, ajax} />
 	<div id="bloc_syndic_article-#ID_ARTICLE" class="bloc_syndic_article [(#GET{police})]">
 		<div class="sidebar_bubble">
 		[(#MODE|!={ajax-detail}|oui)<div class="popup [popup_(#GET{type_objet})]">]
