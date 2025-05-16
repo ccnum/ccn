@@ -52,8 +52,16 @@
 				[<div class="#EDIT{texte} bloc_texte">(#TEXTE|liens_ouvrants)</div>]
 				<BOUCLE_documents_joints(DOCUMENTS) {id_forum} {tout} {doublons}>
 					<div class="forum_around_document">
-						[(#MIME_TYPE|match{image}|oui)<br/><a href="#URL_DOCUMENT" title="[(#TITRE)]" class="[(#EDIT{titre}) ]mediabox" type="#MIME_TYPE">[(#EMBED_DOCUMENT|image_reduire{700}|inserer_attribut{alt,[(#TITRE|couper{80}|texte_backend)]})]</a>]
-						[(#MIME_TYPE|match{image}|non)<br/><div class="doc"><a href="#URL_DOCUMENT" title="[(#TITRE)]" class="[(#EDIT{titre}) ]mediabox" type="#MIME_TYPE">[(#LOGO_DOCUMENT|image_reduire{100}|inserer_attribut{style,'border:0px solid #000000;'})]<span>[(#FICHIER|basename)]</span></a></div>]
+						[(#MIME_TYPE|match{image}|oui)<br/>
+							[(#EMBED_DOCUMENT|inserer_attribut{alt,[(#TITRE|couper{80}|texte_backend)]})]
+						]
+						[(#MIME_TYPE|match{image}|non)<br/>
+						<div class="doc">
+							<a href="#URL_DOCUMENT" title="[(#TITRE)]" class="[(#EDIT{titre}) ]mediabox" type="#MIME_TYPE">
+								[(#LOGO_DOCUMENT|image_reduire{100}|inserer_attribut{style,'border:0px solid #000000;'})]<span>[(#FICHIER|basename)]</span>
+							</a>
+						</div>
+						]
 					</div>
 				</BOUCLE_documents_joints>
 			</div>

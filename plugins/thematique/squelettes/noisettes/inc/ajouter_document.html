@@ -1,19 +1,17 @@
 
 <div class="portfolio" id="documents_portfolio">
 	<BOUCLE_documents_joints(DOCUMENTS){vu=non}{id_article}>
-		<div[ title="(#TITRE)"] class="portfolio_lien">
+		<div [title="(#TITRE)" ]class="portfolio_lien">
 			<a href="[(#URL_DOCUMENT)]" type="#MIME_TYPE" class="mediabox">
 				[<div class="portfolio_logo_around">
 					(#LOGO_DOCUMENT|image_reduire{27})
 				</div>]
-				<div class="portfolio_titre">
-					[(#AUTORISER{modifier,article,#ID_ARTICLE}|oui)
-						[<div class="#EDIT{titre} spip_doc_titre">(#TITRE|sinon{<span class="ajouter_couleur">Ajouter un titre…</span>})</div>]
-					]
-					[(#AUTORISER{modifier,article,#ID_ARTICLE}|non)
-						[<div class="#EDIT{titre} spip_doc_titre">(#TITRE)</div>]
-					]
-				</div>
+				[(#AUTORISER{modifier,article,#ID_ARTICLE}|oui)
+					[<div class="portfolio_titre"><div class="#EDIT{titre} spip_doc_titre">(#TITRE|sinon{<span class="ajouter_couleur">Ajouter un titre…</span>})</div></div>]
+				]
+				[(#AUTORISER{modifier,article,#ID_ARTICLE}|non)
+					[<div class="portfolio_titre"><div class="#EDIT{titre} spip_doc_titre">(#TITRE)</div></div>]
+				]
 			</a>
 		</div>
 
