@@ -9,7 +9,7 @@ et/ou
 <style id="crayons-surcharge-styles"></style>
 <div id="offset"></div>
 <div id="global">
-	<INCLURE{fond=noisettes/inc/no_ie6} />
+	<INCLURE{fond=noisettes/inc/no_ie6, ajax} />
 
 	<div id="menu_haut" class="zone-menu">
 		<INCLURE{fond=noisettes/menu_haut, id_auteur=#SESSION{id_auteur}, env, ajax}>
@@ -19,7 +19,7 @@ et/ou
 		<div id="timeline_responsive">
 			<div id="timeline_fixed"></div>
 			<div id="timeline_wrapin">
-				<INCLURE{fond=livrables} />
+				<INCLURE{fond=livrables, ajax} />
 				<div class="timeline_layer" id="timeline_layer_consignes">
 					<div class="timeline_trigger"></div>
 				</div>
@@ -38,12 +38,12 @@ et/ou
 	</div>
 
 	<div id="zone" class="zone_timeline zone"[ (#VUE|=={classe}|oui) style="display:none;"]>
-		<INCLURE{fond=noisettes/timeline, env} />
+		<INCLURE{fond=noisettes/timeline, env, ajax} />
 	</div>
 
 	[(#REM)
   	<div id="zone_classe" class="zone_classe zone"[ (#VUE|=={classe}|oui) style="display:block;"]>
-  		<INCLURE{fond=noisettes/isotope, env} />
+  		<INCLURE{fond=noisettes/isotope, env, ajax} />
   	</div>
 	]
 
@@ -225,7 +225,7 @@ et/ou
 					[(#MODELE{logo_menu}{valeur=tout}{title=Toutes les actualités}{class=menu_logo_type_sidebarView menu_logo_actualites}{onclick=callActualites();})]
 				</ul>
 				<div class="actualites-inner filter clearfix option-set" data-filter-group="actualites">
-					<INCLURE{fond=noisettes/inc/actus_timeline, nb_actus=5} />
+					<INCLURE{fond=noisettes/inc/actus_timeline, nb_actus=5, ajax} />
 				</div>
 			</div>
 		]

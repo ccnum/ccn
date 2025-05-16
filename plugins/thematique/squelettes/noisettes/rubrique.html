@@ -2,7 +2,7 @@
 #SET{laclasse_rubrique_admin,#CONST{$_COOKIE[_cookie_rubrique]}}
 <BOUCLE_principale(RUBRIQUES){id_rubrique}{tout}>
 	<div class="popup [popup_(#GET{type_objet})]">
-		<INCLURE{fond=noisettes/call_sidebar} />
+		<INCLURE{fond=noisettes/call_sidebar, ajax} />
 		[(#INCLURE{fond=noisettes/fonction/type_role})]
 		<BOUCLE_rub1(HIERARCHIE){id_rubrique}{tout}{0,1}>[(#SET{coul,[(#ID_RUBRIQUE|moins{2})]})]</BOUCLE_rub1>
 		[(#REM) ---------------- titre & logo ---------------- ]
@@ -399,5 +399,5 @@
 	</div>
 
 </BOUCLE_principale>
-	<INCLURE{fond=chargement,type_objet=#TYPE_OBJET}>
+	<INCLURE{fond=chargement, type_objet=#TYPE_OBJET, ajax} />
 <//B_principale>
