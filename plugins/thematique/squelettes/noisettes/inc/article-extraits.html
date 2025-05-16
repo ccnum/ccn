@@ -13,7 +13,7 @@
 
 <BOUCLE_principale(ARTICLES){id_article}>
 
-<INCLURE{fond=noisettes/js/accordeon}{nom=bloc_option_extraits}>
+<INCLURE{fond=noisettes/js/accordeon, nom=bloc_option_extraits, ajax} />
 <div id="bloc_option_extraits" style="clear: both;">
 <ul><li><a class="hac lien_ajouter" title="ajouter un document">
 <img src="[(#CHEMIN{img/logo_editer_on_15.png}|image_reduire{15}|extraire_attribut{src})]">&nbsp;&nbsp;Gérer les extraits</a>
@@ -47,7 +47,7 @@
 					<B_documents_joints_mp3>
 						<br /><br />
 					<BOUCLE_documents_joints_mp3(DOCUMENTS) {id_article=#_principale:ID_ARTICLE} {mode=document} {extension==mp3} {par num titre, date}>
-						<INCLURE{fond=noisettes/bloc/article/doc-flv}{id_document}{id_article=#ID_ARTICLE}{affiche-titre=non}>
+						<INCLURE{fond=noisettes/bloc/article/doc-flv, id_document, id_article=#ID_ARTICLE, affiche-titre=non, ajax} />
 					</BOUCLE_documents_joints_mp3>
 						<br /><p style="color: #cccccc;">Lancer les bandes sons librement en appuyant sur PLAY après avoir déclenché le film muet.</p>
 					</B_documents_joints_mp3>

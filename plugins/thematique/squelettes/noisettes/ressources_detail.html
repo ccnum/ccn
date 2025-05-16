@@ -20,7 +20,7 @@
 
 <div class="popup [popup_(#GET{type_objet})]">
   [(#GET{sous_type}|match{ressources|agora}|non)
-    <INCLURE{fond=noisettes/call_sidebar}{type_objet=ressources}>
+    <INCLURE{fond=noisettes/call_sidebar, type_objet=ressources, ajax}>
   ]
 
 		[(#REM) ---------------- entete publication ---------------- ]
@@ -50,7 +50,7 @@
 
 		<div class="sidebar_bubble">
 
-			<INCLURE{fond=noisettes/js/accordeon}{nom=bloc_option_reponses_consignes_classe-#ID_RUBRIQUE}>
+			<INCLURE{fond=noisettes/js/accordeon, nom=bloc_option_reponses_consignes_classe-#ID_RUBRIQUE, ajax}>
 			<div class="bloc_option_doc nettoyeur">
   				[(#GET{sous_type}|=={ressources}|oui)
 				<a id="bloc_option_reponses_consignes_classe-#ID_RUBRIQUE" class="hac liens_voir bloc_option_doc_ressources" title="Ressources">
