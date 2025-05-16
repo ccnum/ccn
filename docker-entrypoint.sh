@@ -137,6 +137,7 @@ if [ ${PROJET} != "laclasse" ]; then
 fi
 spip plugins:maj:bdd
 
+spip config:ecrire -p bigup charger_public:1
 spip config:ecrire -p bigup max_file_size:${PHP_UPLOAD_MAX_FILESIZE%M}
 spip config:ecrire -p mediabox active:oui
 spip config:ecrire -p notation acces:ide
