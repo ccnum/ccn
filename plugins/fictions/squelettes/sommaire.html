@@ -94,8 +94,11 @@ header('Location: spip.php?page=mobile2');
 						[(#REM) Nous savons quel est le mode d'affichage, il suffit d'appeler le bon squelette en fonction de]
 						[(#REM) cette valeur.]
 						<div id="liste-cadavres">
+							[(#ENV{mode}|non)
 							[(#GET{mode_affichage}|=={fabrication}|oui)<INCLURE{fond=inclure/liste-cadavres-auteur,id_rubrique=#GET{id_rubrique},ajax} />]
 							[(#GET{mode_affichage}|=={fabrication}|non)<INCLURE{fond=inclure/liste-cadavres-fin,id_rubrique=#GET{id_rubrique},ajax} />]
+							]
+							[(#ENV{mode}|oui)<INCLURE{fond=inclure/liste-cadavres-auteur,id_rubrique=#GET{id_rubrique},ajax} />]
 						</div>
 					</div>
 				</div>
