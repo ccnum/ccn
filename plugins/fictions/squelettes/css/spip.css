@@ -1687,6 +1687,7 @@ h1.prologue {
 }
 
 .liste-fin-rubrique {
+	min-height: 21rem;
 	width: 175px;
 	float: left;
 	margin: 0px 9px 20px 0px;
