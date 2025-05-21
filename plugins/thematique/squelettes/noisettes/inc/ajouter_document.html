@@ -1,18 +1,16 @@
 
 <div class="portfolio" id="documents_portfolio">
 	<BOUCLE_documents_joints(DOCUMENTS){vu=non}{id_article}>
-		<div [title="(#TITRE)" ]class="portfolio_lien">
-			[(#MIME_TYPE|match{image}|oui)<br/>
-				[(#EMBED_DOCUMENT|inserer_attribut{alt,[(#TITRE|couper{80}|texte_backend)]})]
-			]
-			[(#MIME_TYPE|match{image}|non)<br/>
-			<div class="doc">
-				<a href="#URL_DOCUMENT" title="[(#TITRE)]" class="[(#EDIT{titre}) ]mediabox" type="#MIME_TYPE">
-					[(#LOGO_DOCUMENT|image_reduire{100}|inserer_attribut{style,'border:0px solid #000000;'})]<span>[(#FICHIER|basename)]</span>
-				</a>
-			</div>
-			]
+		[(#MIME_TYPE|match{image}|oui)
+			[(#MODELE{emb}|inserer_attribut{alt,[(#TITRE|couper{80}|texte_backend)]})]
+		]
+		[(#MIME_TYPE|match{image}|non)
+		<div class="doc">
+			<a href="#URL_DOCUMENT" title="[(#TITRE)]" class="[(#EDIT{titre}) ]mediabox" type="#MIME_TYPE">
+				[(#LOGO_DOCUMENT|image_reduire{100}|inserer_attribut{style,'border:0px solid #000000;'})]<span>[(#FICHIER|basename)]</span>
+			</a>
 		</div>
+		]
 
 		[(#AUTORISER{modifier,article,#ID_ARTICLE}|oui)
 			[<a href="(#URL_ACTION_AUTEUR{dissocier_document,#ID_ARTICLE-article-#ID_DOCUMENT-suppr-safe,#URL_SITE_SPIP/spip.php?article#ID_ARTICLE&var_mode=recalcul})"
