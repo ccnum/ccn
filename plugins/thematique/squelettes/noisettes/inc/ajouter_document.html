@@ -2,7 +2,6 @@
 <div class="portfolio" id="documents_portfolio">
 	<BOUCLE_documents_joints(DOCUMENTS){vu=non}{id_article}>
 		<div [title="(#TITRE)" ]class="portfolio_lien">
-			<a href="[(#URL_DOCUMENT)]" type="#MIME_TYPE" class="mediabox boxIframe" data-box-min-width="90%" data-box-min-height="90%" rel="mesimages">
 				<div class="portfolio_logo_around">
 					[(#MIME_TYPE|match{image}|oui)<br/>
 						[(#EMBED_DOCUMENT|inserer_attribut{alt,[(#TITRE|couper{80}|texte_backend)]})]
@@ -21,7 +20,6 @@
 				[(#AUTORISER{modifier,article,#ID_ARTICLE}|non)
 					[<div class="portfolio_titre"><div class="#EDIT{titre} spip_doc_titre">(#TITRE)</div></div>]
 				]
-			</a>
 		</div>
 
 		[(#AUTORISER{modifier,article,#ID_ARTICLE}|oui)
