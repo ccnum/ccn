@@ -2,24 +2,16 @@
 <div class="portfolio" id="documents_portfolio">
 	<BOUCLE_documents_joints(DOCUMENTS){vu=non}{id_article}>
 		<div [title="(#TITRE)" ]class="portfolio_lien">
-				<div class="portfolio_logo_around">
-					[(#MIME_TYPE|match{image}|oui)<br/>
-						[(#EMBED_DOCUMENT|inserer_attribut{alt,[(#TITRE|couper{80}|texte_backend)]})]
-					]
-					[(#MIME_TYPE|match{image}|non)<br/>
-					<div class="doc">
-						<a href="#URL_DOCUMENT" title="[(#TITRE)]" class="[(#EDIT{titre}) ]mediabox" type="#MIME_TYPE">
-							[(#LOGO_DOCUMENT|image_reduire{100}|inserer_attribut{style,'border:0px solid #000000;'})]<span>[(#FICHIER|basename)]</span>
-						</a>
-					</div>
-					]
-				</div>
-				[(#AUTORISER{modifier,article,#ID_ARTICLE}|oui)
-					[<div class="portfolio_titre"><div class="#EDIT{titre} spip_doc_titre">(#TITRE|sinon{<span class="ajouter_couleur">Ajouter un titre…</span>})</div></div>]
-				]
-				[(#AUTORISER{modifier,article,#ID_ARTICLE}|non)
-					[<div class="portfolio_titre"><div class="#EDIT{titre} spip_doc_titre">(#TITRE)</div></div>]
-				]
+			[(#MIME_TYPE|match{image}|oui)<br/>
+				[(#EMBED_DOCUMENT|inserer_attribut{alt,[(#TITRE|couper{80}|texte_backend)]})]
+			]
+			[(#MIME_TYPE|match{image}|non)<br/>
+			<div class="doc">
+				<a href="#URL_DOCUMENT" title="[(#TITRE)]" class="[(#EDIT{titre}) ]mediabox" type="#MIME_TYPE">
+					[(#LOGO_DOCUMENT|image_reduire{100}|inserer_attribut{style,'border:0px solid #000000;'})]<span>[(#FICHIER|basename)]</span>
+				</a>
+			</div>
+			]
 		</div>
 
 		[(#AUTORISER{modifier,article,#ID_ARTICLE}|oui)
