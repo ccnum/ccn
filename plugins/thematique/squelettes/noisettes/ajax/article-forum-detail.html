@@ -53,7 +53,7 @@
 				<BOUCLE_documents_joints(DOCUMENTS) {id_forum} {tout} {doublons}>
 					<div class="forum_around_document">
 						[(#MIME_TYPE|match{image}|oui)<br/>
-							[(#MODELE{emb, largeur=300}|inserer_attribut{alt,[(#TITRE|couper{80}|texte_backend)]})]
+							[(#MODELE{emb, largeur=300, alt=[(#TITRE|couper{80}|texte_backend)]})]
 						]
 						[(#MIME_TYPE|match{image}|non)<br/>
 						<div class="doc">
