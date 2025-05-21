@@ -1,19 +1,16 @@
 
-<div class="portfolio" id="documents_portfolio">
+<div id="documents_portfolio" class="portfolio">
 	<BOUCLE_documents_joints(DOCUMENTS){vu=non}{id_article}>
-		<div [title="(#TITRE)" ]class="portfolio_lien">
-			<a href="[(#URL_DOCUMENT)]" type="#MIME_TYPE" class="mediabox boxIframe" data-box-min-width="90%" data-box-min-height="90%" rel="mesimages">
-				[<div class="portfolio_logo_around">
-					(#LOGO_DOCUMENT)
-				</div>]
-				[(#AUTORISER{modifier,article,#ID_ARTICLE}|oui)
-					[<div class="portfolio_titre"><div class="#EDIT{titre} spip_doc_titre">(#TITRE|sinon{<span class="ajouter_couleur">Ajouter un titre…</span>})</div></div>]
-				]
-				[(#AUTORISER{modifier,article,#ID_ARTICLE}|non)
-					[<div class="portfolio_titre"><div class="#EDIT{titre} spip_doc_titre">(#TITRE)</div></div>]
-				]
+		[(#MIME_TYPE|match{image}|oui)
+			[(#MODELE{emb, largeur=300, alt=[(#TITRE|couper{80}|texte_backend)]})]
+		]
+		[(#MIME_TYPE|match{image}|non)
+		<div class="doc">
+			<a href="#URL_DOCUMENT" title="[(#TITRE)]" class="[(#EDIT{titre}) ]mediabox" type="#MIME_TYPE">
+				[(#LOGO_DOCUMENT|image_reduire{100}|inserer_attribut{style,'border:0px solid #000000;'})]<span>[(#FICHIER|basename)]</span>
 			</a>
 		</div>
+		]
 
 		[(#AUTORISER{modifier,article,#ID_ARTICLE}|oui)
 			[<a href="(#URL_ACTION_AUTEUR{dissocier_document,#ID_ARTICLE-article-#ID_DOCUMENT-suppr-safe,#URL_SITE_SPIP/spip.php?article#ID_ARTICLE&var_mode=recalcul})"
