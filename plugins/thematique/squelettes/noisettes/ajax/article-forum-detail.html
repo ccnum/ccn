@@ -122,12 +122,6 @@
 									[(#MODELE{emb, largeur=650, alt=[(#TITRE|couper{80}|texte_backend)]})]
 								</div>
 							</BOUCLE_documents_joints3>
-
-							<BOUCLE_documents_joints2(DOCUMENTS) {id_forum} {tout} {doublons}>
-								<div class="portfolio">
-									[<a href="#URL_DOCUMENT" title="[(#TITRE)]" [(#TYPE_DOCUMENT|match{jpg|png|gif}|?{class="thickbox mediabox intervention_thumbnail"})] type="#MIME_TYPE">(#MODELE{emb}|image_reduire{650}|inserer_attribut{alt,[(#TITRE|couper{80}|texte_backend)]}|inserer_attribut{style,'border:0px solid red;'})</a>]
-								</div>
-							</BOUCLE_documents_joints2>
 						</div>
 					</div>
 					<!--[<div id="spip"><a href="(#PARAMETRES_FORUM|url_reponse_forum)"  class="lienss">R&eacute;pondre &agrave; ce message</a></div>]-->
