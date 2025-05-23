@@ -76,7 +76,7 @@
 			<BOUCLE_documents_joints2(DOCUMENTS) {media IN image} {id_article} {tout} {doublons}>
 				<div class="portfolio_grand">
 					<a href="#URL_DOCUMENT" title="[(#TITRE)]" class="thickbox mediabox" type="#MIME_TYPE">
-						[(#EMBED_DOCUMENT|image_reduire{700,500}|inserer_attribut{alt,[(#TITRE|couper{80}|texte_backend)]}|inserer_attribut{style,'border:0px solid #000000;'})]
+						[(#MODELE{emb, largeur=700}|inserer_attribut{alt,[(#TITRE|couper{80}|texte_backend)]}|inserer_attribut{style,'border:0px solid #000000;'})]
 					</a>
 				</div>
 			</BOUCLE_documents_joints2>
@@ -101,7 +101,7 @@
 
 		<BOUCLE_documents_joints(DOCUMENTS) {id_article} {tout} {doublons}>
 			<div class="portfolio">
-				[<br /><a href="#URL_DOCUMENT" title="[(#TITRE)]" [(#TYPE_DOCUMENT|match{jpg|png|gif}|?{class="thickbox mediabox"})] type="#MIME_TYPE">(#EMBED_DOCUMENT|image_reduire{100}|inserer_attribut{alt,[(#TITRE|couper{80}|texte_backend)]}|inserer_attribut{style,'border:0px solid #000000; padding: 30px; float: left; position: relative;'})</a>]
+				[<br /><a href="#URL_DOCUMENT" title="[(#TITRE)]" [(#TYPE_DOCUMENT|match{jpg|png|gif}|?{class="thickbox mediabox"})] type="#MIME_TYPE">(#MODELE{emb, largeur=700, alt=[(#TITRE|couper{80}|texte_backend)], style='border:0px solid #000000; padding: 30px; float: left; position: relative;'})</a>]
 			</div>
 		</BOUCLE_documents_joints>
 

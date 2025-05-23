@@ -15,7 +15,7 @@
 				<p class="date">[(#DATE|affdate)]</p>
 				[(#MEDIA|=={'image'}|oui)
 					<a href="#URL_DOCUMENT" title="[(#TITRE)]"  title="[(#TITRE)]" class="thickbox mediabox" type="#MIME_TYPE">
-					[(#EMBED_DOCUMENT|image_reduire{700}|inserer_attribut{alt,[(#TITRE|couper{80}|texte_backend)]}|inserer_attribut{style,'border:0px solid #000000;'})]
+						[(#MODELE{emb, largeur=700, alt=[(#TITRE|couper{80}|texte_backend)], style='border:0px solid #000000;'})]
 					</a>
 				]
 
