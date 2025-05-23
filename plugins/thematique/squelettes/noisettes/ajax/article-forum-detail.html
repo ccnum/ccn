@@ -53,7 +53,9 @@
 				<BOUCLE_documents_joints(DOCUMENTS) {id_forum} {tout} {doublons}>
 					<div class="forum_around_document">
 						[(#MIME_TYPE|match{image}|oui)
-							[(#MODELE{emb, largeur=300, alt=#TITRE, lien_class=boxIframe boxWidth-700px boxHeight-600px})]
+							<a href="#URL_DOCUMENT" class="mediabox" data-box-min-height="90pc">
+								[(#FICHIER|image_reduire{300})]
+							</a>
 						]
 						[(#MIME_TYPE|match{image}|non)
 						<div class="doc">
