@@ -119,7 +119,7 @@
 							[<div class="#EDIT{texte} bloc_texte">(#TEXTE|liens_ouvrants)</div>]
 							<BOUCLE_documents_joints3(DOCUMENTS) {id_forum} {tout} {doublons}>
 								<div class="portfolio_grand">
-									[<a href="#URL_DOCUMENT" title="[(#TITRE)]" [(#TYPE_DOCUMENT|match{jpg|png|gif}|?{class="thickbox mediabox"})] type="#MIME_TYPE">(#MODELE{emb}|image_reduire{650}|inserer_attribut{alt,[(#TITRE|couper{80}|texte_backend)]})</a>]
+									[(#MODELE{emb, largeur=650, alt=[(#TITRE|couper{80}|texte_backend)]})]
 								</div>
 							</BOUCLE_documents_joints3>
 
