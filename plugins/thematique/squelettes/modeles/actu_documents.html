@@ -10,8 +10,8 @@
 			Nouveau document de #GET{titre}<br>
 			<p class="date">[(#DATE|affdate)]</p>
 			[(#MEDIA|=={'image'}|oui)
-				<a href="#URL_DOCUMENT" title="[(#TITRE)]" title="[(#TITRE)]" class="thickbox mediabox" type="#MIME_TYPE">
-				[(#MODELE{emb, largeur=700, alt=[(#TITRE|couper{80}|texte_backend)], style='border:0px solid #000000;'})]
+				<a href="#URL_DOCUMENT" class="mediabox" type="#MIME_TYPE" data-box-min-height="90pc">
+					[(#FICHIER|image_reduire{300}|inserer_attribut{alt,#TITRE})]
 				</a>
 			]
 
