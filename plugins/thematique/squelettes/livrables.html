@@ -30,7 +30,7 @@
 									</span>
 									<p class="titre #EDIT{titre}">#TITRE</p>
 									<div class="featured-image #EDIT{logo}">
-										[(#LOGO_ARTICLE|image_reduire{800,500}|sinon{<img src="(#CHEMIN{img/presentation/02.png})" height="500px" width="800px" alt="" />})]
+										[(#LOGO_ARTICLE|sinon{#CHEMIN{img/presentation/02.png}}|image_reduire{800,500})]
 									</div>
 									<div class="corps-wrapper">
 										<div class="corps">
