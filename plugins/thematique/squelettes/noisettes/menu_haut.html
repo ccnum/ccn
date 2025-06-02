@@ -34,26 +34,22 @@
 
 <script>
 	$(function(){
-
 		if ($('#menu_haut_titre').width() <= 185) {
 			$('#annee_scolaire_more').hide();
 		}
-
 		$('div[name="annee_scolaire"] input[type="radio"]').on( "change", function() {
 			var valeur = $('div[name=annee_scolaire] input[type=radio]:checked').val()
 			reloadAndSetCookie('', 'laclasse_annee_scolaire', valeur)
 		});
-
 		$('#choix_rubrique_admin input[type="radio"]').on( "change", function() {
 			var valeur = $('div[name=rubrique_admin] input[type=radio]:checked').val()
 			reloadAndSetCookie('', 'laclasse_rubrique_admin', valeur)
 		});
-
 	});
 </script>
 
 <ul id="menu_haut_user" class="bloc_titre">
-	<INCLURE{fond=noisettes/inc/authentification, id_auteur, admin, restreint, type_restreint, ajax} />
+	<INCLURE{fond=noisettes/inc/authentification, id_auteur, admin, restreint, type_restreint} />
 </ul>
 
 [(#RESTREINT|!={0}|oui|et{#RESTREINT|!={''}}|et{#TYPE_RESTREINT|!={''}}|et{#TYPE_RESTREINT|!={travail_en_cours}|oui}|oui)
