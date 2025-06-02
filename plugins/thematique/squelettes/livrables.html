@@ -55,7 +55,8 @@
 													</div>
 												]
 											</BOUCLE_images>
-											<div class="autres-docs">
+											<B_autresDocs>
+												<div class="autres-docs">
 												<BOUCLE_autresDocs(DOCUMENTS){id_article}>
 													[(#MEDIA|=={'audio'}|oui)
 														<div class="audio">
@@ -71,17 +72,18 @@
 													</div>]
 
 													[(#MEDIA|=={'video'}|oui)
-													<div class="video">
-														[(#AUTORISER{modifier,article,#ID_ARTICLE}|oui)
-														[<a href="(#URL_ACTION_AUTEUR{dissocier_document,#ID_ARTICLE-article-#ID_DOCUMENT-suppr-safe,#URL_SITE_SPIP/spip.php?page=article&id_article=#ID_ARTICLE&mode=complet&type=livrables})"
-															class='supprimer_couleur'
-															onClick='return confirmation("Êtes-vous sûr de vouloir supprimer ce document ?")'
-															title='Supprimer ce document'>
-															<div class='action_supprimer'></div>
-														</a>]
+														<div class="video">
+															[(#AUTORISER{modifier,article,#ID_ARTICLE}|oui)
+															[<a href="(#URL_ACTION_AUTEUR{dissocier_document,#ID_ARTICLE-article-#ID_DOCUMENT-suppr-safe,#URL_SITE_SPIP/spip.php?page=article&id_article=#ID_ARTICLE&mode=complet&type=livrables})"
+																class='supprimer_couleur'
+																onClick='return confirmation("Êtes-vous sûr de vouloir supprimer ce document ?")'
+																title='Supprimer ce document'>
+																<div class='action_supprimer'></div>
+															</a>]
+														]
+														[(#MODELE{audio, autostart=false, hauteur=150px, largeur=35%})]
+														</div>
 													]
-													[(#MODELE{audio, autostart=false, hauteur=150px, largeur=35%})]
-													</div> ]
 
 													[(#MEDIA|in_array{#LISTE{image,audio,video}}|non)
 													<div class="fichier">
@@ -104,7 +106,8 @@
 													</div>
 													]
 												</BOUCLE_autresDocs>
-											</div>
+												</div>
+											</B_autresDocs>
 											[(#REM) Ajouter un document]
 											[(#AUTORISER{modifier,article,#ID_ARTICLE}|oui)
 												<div class="sidebar_bubble">
@@ -121,21 +124,19 @@
 											]
 										</div>
 										[(#REM)Permalien - [&annee_scolaire=(#ANNEE_SCOLAIRE)]
-
-											[(#SET{url,#URL_ARTICLE|parametre_url{mode,complet}})]
-											[(#GET{is_agora}|=={oui}|oui)[(#SET{url,#GET{url}|parametre_url{type_objet,agora}})]]
-											<div class="sidebar_bubble">
-												<INCLURE{fond=noisettes/js/accordeon}{nom=bloc_permalien-#ID_ARTICLE}>
-												<div class="bloc_option_doc nettoyeur">
-													<a id="bloc_permalien-#ID_ARTICLE" class="hac liens_forum bloc_option_doc_link" title="Permalien" href="#">
-													Partager le lien
-													</a>
-													<div class="cache">
-														<code><a href="[(#GET{url, type=livrables})]" target="_blank">[(#GET{url}|parametre_url{type,livrables})]</a></code>
-													</div>
+										[(#SET{url,#URL_ARTICLE|parametre_url{mode,complet}})]
+										[(#GET{is_agora}|=={oui}|oui)[(#SET{url,#GET{url}|parametre_url{type_objet,agora}})]]
+										<div class="sidebar_bubble">
+											<INCLURE{fond=noisettes/js/accordeon}{nom=bloc_permalien-#ID_ARTICLE}>
+											<div class="bloc_option_doc nettoyeur">
+												<a id="bloc_permalien-#ID_ARTICLE" class="hac liens_forum bloc_option_doc_link" title="Permalien" href="#">
+												Partager le lien
+												</a>
+												<div class="cache">
+													<code><a href="[(#GET{url, type=livrables})]" target="_blank">[(#GET{url}|parametre_url{type,livrables})]</a></code>
 												</div>
 											</div>
-										]
+										</div>
 										<!-- Footer -->
 										<div class="footer border-bg">
 											#GET{auteur}
