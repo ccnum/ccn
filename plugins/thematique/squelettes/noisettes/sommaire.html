@@ -103,7 +103,6 @@ et/ou
 				]
 
 				[(#REM) Si il n'y a pas de livrables ne pas afficher le bouton]
-
 				#SET{hasLivrable, ''}
 				<BOUCLE_rubAnnee(RUBRIQUES) {racine} {titre LIKE %(#CONST{_annee_scolaire})%} >
 					<BOUCLE_filtreTravailEnCours(RUBRIQUES){id_parent}{titre_mot=travail_en_cours}>
