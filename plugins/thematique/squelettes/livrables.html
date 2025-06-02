@@ -23,8 +23,8 @@
 						</a>
 						<!-- LIVRABLE DETAILS --------------->
 						<div>
-							<div id="livrable[(#ID_ARTICLE)]" class="livrable-details-wrapper" data-id="[(#ID_ARTICLE)]">
-								<div class="livrable-details couleur_travail_en_cours[(#ID_RUBRIQUE|nb2col)]">
+							<div id="livrable[(#ID_ARTICLE)]" class="livrable-details-wrapper" data-id="[(#ID_ARTICLE)]" style="overflow: scroll;">
+								<div class="livrable-details couleur_travail_en_cours[(#ID_RUBRIQUE|nb2col)]" style="overflow: scroll;">
 									<span class="close" onclick="callLivrable(null, 'closeDetails')">
 										<img src="[(#CHEMIN{img/close.svg}|image_reduire{25}|extraire_attribut{src})]">
 									</span>
@@ -32,12 +32,12 @@
 									<div class="featured-image #EDIT{logo}">
 										[(#LOGO_ARTICLE|sinon{#CHEMIN{img/presentation/02.png}}|image_reduire{800,500})]
 									</div>
-									<div class="corps-wrapper">
+									<div class="corps-wrapper" style="overflow: scroll;">
 										<div class="corps">
 											<p class="pitch border-bg #EDIT{soustitre}">"#SOUSTITRE"</p>
 											<div class="texte border-bg #EDIT{texte}">#TEXTE</div>
 											<!-- Affichage documents -->
-											<div class="documents border-bg">
+											<div class="documents border-bg" style="overflow: scroll;">
 												<BOUCLE_images(DOCUMENTS){id_article}>
 													[(#MEDIA|=={image}|oui)
 														<div class="img-container">
