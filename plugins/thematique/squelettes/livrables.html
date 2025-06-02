@@ -9,148 +9,148 @@
 					#SET{desc, #TEXTE}
 					<BOUCLE_filtreLivrable(ARTICLES){id_rubrique}{titre_mot=livrable}{par date}>
 						#SET{hasLivrable, 'true'}
-					<!-- PAGE LIVRABLE -->
-					<a class="livrable-inline" onclick="callLivrable('#ID_ARTICLE', 'openDetails');">
-						<div class="livrable couleur_travail_en_cours[(#ID_RUBRIQUE|nb2col)]" data-id="[(#ID_ARTICLE)]">
-							<div class="header">
-								<h3>#TITRE</h3>
-							</div>
-							<span class="profil">[(#MODELE{logo_carre}{taille=40}{id_rubrique=#ID_RUBRIQUE}{titre=#TITRE})]
-								<h4>#GET{auteur}</h4>
-							</span>
-							<!--<div class="featured-image">[(#LOGO_ARTICLE |image_reduire{500,300})]</div>-->
-						</div>
-					</a>
-					<!-- LIVRABLE DETAILS --------------->
-					<div>
-						<div id="livrable[(#ID_ARTICLE)]" class="livrable-details-wrapper" data-id="[(#ID_ARTICLE)]">
-							<div class="livrable-details couleur_travail_en_cours[(#ID_RUBRIQUE|nb2col)]">
-								<span class="close" onclick="callLivrable(null, 'closeDetails')">
-									<img src="[(#CHEMIN{img/close.svg}|image_reduire{25}|extraire_attribut{src})]">
-								</span>
-								<p class="titre #EDIT{titre}">#TITRE</p>
-								<div class="featured-image #EDIT{logo}">
-									[(#LOGO_ARTICLE|image_reduire{800,500}|sinon{<img src="(#CHEMIN{img/presentation/02.png})" alt="" />})]
+						<!-- PAGE LIVRABLE -->
+						<a class="livrable-inline" onclick="callLivrable('#ID_ARTICLE', 'openDetails');">
+							<div class="livrable couleur_travail_en_cours[(#ID_RUBRIQUE|nb2col)]" data-id="[(#ID_ARTICLE)]">
+								<div class="header">
+									<h3>#TITRE</h3>
 								</div>
-								<div class="corps-wrapper">
-									<div class="corps">
-										<p class="pitch border-bg #EDIT{soustitre}">"#SOUSTITRE"</p>
-										<div class="texte border-bg #EDIT{texte}">#TEXTE</div>
-										<!-- Affichage documents -->
-										<div class="documents border-bg">
-											<BOUCLE_images(DOCUMENTS){id_article}>
-												[(#MEDIA|=={image}|oui)
-													<div class="img-container">
-														[(#AUTORISER{modifier,article,#ID_ARTICLE}|oui)
-														[<a href="(#URL_ACTION_AUTEUR{dissocier_document,#ID_ARTICLE-article-#ID_DOCUMENT-suppr-safe,#URL_SITE_SPIP/spip.php?page=article&id_article=#ID_ARTICLE&mode=complet&type=livrables})"
-															class='supprimer_couleur'
-															onClick='return confirmation("Êtes-vous sûr de vouloir supprimer ce document ?")'
-															title='Supprimer ce document'>
-															<div class='action_supprimer'></div>
-														</a>]
+								<span class="profil">[(#MODELE{logo_carre}{taille=40}{id_rubrique=#ID_RUBRIQUE}{titre=#TITRE})]
+									<h4>#GET{auteur}</h4>
+								</span>
+								<!--<div class="featured-image">[(#LOGO_ARTICLE |image_reduire{500,300})]</div>-->
+							</div>
+						</a>
+						<!-- LIVRABLE DETAILS --------------->
+						<div>
+							<div id="livrable[(#ID_ARTICLE)]" class="livrable-details-wrapper" data-id="[(#ID_ARTICLE)]">
+								<div class="livrable-details couleur_travail_en_cours[(#ID_RUBRIQUE|nb2col)]">
+									<span class="close" onclick="callLivrable(null, 'closeDetails')">
+										<img src="[(#CHEMIN{img/close.svg}|image_reduire{25}|extraire_attribut{src})]">
+									</span>
+									<p class="titre #EDIT{titre}">#TITRE</p>
+									<div class="featured-image #EDIT{logo}">
+										[(#LOGO_ARTICLE|image_reduire{800,500}|sinon{<img src="(#CHEMIN{img/presentation/02.png})" alt="" />})]
+									</div>
+									<div class="corps-wrapper">
+										<div class="corps">
+											<p class="pitch border-bg #EDIT{soustitre}">"#SOUSTITRE"</p>
+											<div class="texte border-bg #EDIT{texte}">#TEXTE</div>
+											<!-- Affichage documents -->
+											<div class="documents border-bg">
+												<BOUCLE_images(DOCUMENTS){id_article}>
+													[(#MEDIA|=={image}|oui)
+														<div class="img-container">
+															[(#AUTORISER{modifier,article,#ID_ARTICLE}|oui)
+															[<a href="(#URL_ACTION_AUTEUR{dissocier_document,#ID_ARTICLE-article-#ID_DOCUMENT-suppr-safe,#URL_SITE_SPIP/spip.php?page=article&id_article=#ID_ARTICLE&mode=complet&type=livrables})"
+																class='supprimer_couleur'
+																onClick='return confirmation("Êtes-vous sûr de vouloir supprimer ce document ?")'
+																title='Supprimer ce document'>
+																<div class='action_supprimer'></div>
+															</a>]
+															]
+															<a href="#URL_DOCUMENT" title="[(#TITRE)]" class="thickbox mediabox" type="#MIME_TYPE">
+																[(#FICHIER|image_reduire{500})]
+															</a>
+															[<span class="spip_doc_titre #EDIT{titre}">(#TITRE|couper{25}|sinon{<span class="ajouter_couleur">ajouter un titre</span>})</span>]
+														</div>
+													]
+												</BOUCLE_images>
+												<B_autresDocs>
+													<div class="autres-docs">
+													<BOUCLE_autresDocs(DOCUMENTS){id_article}>
+														[(#MEDIA|=={'audio'}|oui)
+															<div class="audio">
+																[(#AUTORISER{modifier,article,#ID_ARTICLE}|oui)
+																[<a href="(#URL_ACTION_AUTEUR{dissocier_document,#ID_ARTICLE-article-#ID_DOCUMENT-suppr-safe,#URL_SITE_SPIP/spip.php?page=article&id_article=#ID_ARTICLE&mode=complet&type=livrables})"
+																	class='supprimer_couleur'
+																	onClick='return confirmation("Êtes-vous sûr de vouloir supprimer ce document ?")'
+																	title='Supprimer ce document'>
+																	<div class='action_supprimer'></div>
+																</a>]
+															]
+															[(#MODELE{audio, autostart=false, hauteur=50px, largeur=35%})]
+														</div>]
+
+														[(#MEDIA|=={'video'}|oui)
+															<div class="video">
+																[(#AUTORISER{modifier,article,#ID_ARTICLE}|oui)
+																[<a href="(#URL_ACTION_AUTEUR{dissocier_document,#ID_ARTICLE-article-#ID_DOCUMENT-suppr-safe,#URL_SITE_SPIP/spip.php?page=article&id_article=#ID_ARTICLE&mode=complet&type=livrables})"
+																	class='supprimer_couleur'
+																	onClick='return confirmation("Êtes-vous sûr de vouloir supprimer ce document ?")'
+																	title='Supprimer ce document'>
+																	<div class='action_supprimer'></div>
+																</a>]
+															]
+															[(#MODELE{audio, autostart=false, hauteur=150px, largeur=35%})]
+															</div>
 														]
-														<a href="#URL_DOCUMENT" title="[(#TITRE)]" class="thickbox mediabox" type="#MIME_TYPE">
-															[(#FICHIER|image_reduire{500})]
-														</a>
-														[<span class="spip_doc_titre #EDIT{titre}">(#TITRE|couper{25}|sinon{<span class="ajouter_couleur">ajouter un titre</span>})</span>]
+
+														[(#MEDIA|in_array{#LISTE{image,audio,video}}|non)
+														<div class="fichier">
+															[<a href="#URL_DOCUMENT" target="blank">(#LOGO_DOCUMENT|image_reduire{100}|inserer_attribut{style,'border:0px solid #000000;'}) </a>]
+															[(#AUTORISER{modifier,article,#ID_ARTICLE}|oui)
+																[<span class="spip_doc_titre #EDIT{titre}"><br />(#TITRE|couper{25}|sinon{<span class="ajouter_couleur">ajouter un titre</span>})</span>]
+															]
+															[(#AUTORISER{modifier,article,#ID_ARTICLE}|non)
+																[<span class="spip_doc_titre #EDIT{titre}"><br />(#TITRE|couper{25})</span>]
+															]
+
+															[(#AUTORISER{modifier,article,#ID_ARTICLE}|oui)
+															[<a href="(#URL_ACTION_AUTEUR{dissocier_document,#ID_ARTICLE-article-#ID_DOCUMENT-suppr-safe,#URL_SITE_SPIP/spip.php?page=article&id_article=#ID_ARTICLE&mode=complet&type=livrables})"
+																class='supprimer_couleur'
+																onClick='return confirmation("Êtes-vous sûr de vouloir supprimer ce document ?")'
+																title='Supprimer ce document'>
+																<div class='action_supprimer'></div>
+															</a>]
+															]
+														</div>
+														]
+													</BOUCLE_autresDocs>
+													</div>
+												</B_autresDocs>
+												[(#REM) Ajouter un document]
+												[(#AUTORISER{modifier,article,#ID_ARTICLE}|oui)
+													<div class="sidebar_bubble">
+														<INCLURE{fond=noisettes/js/accordeon,nom=bloc_option_doc-#ID_ARTICLE}>
+														<div class="bloc_option_doc nettoyeur">
+															<a id="bloc_option_doc-#ID_ARTICLE" class="hac lien_ajouter bloc_option_doc_adddocument" title="Ajouter un document">
+																Ajouter un document
+															</a>
+															<div class='nettoyeur cache formulaire_spip formulaire_editer_document bloc_option_doc'>
+																#FORMULAIRE_JOINDRE_DOCUMENT{new,#ID_ARTICLE,article}
+															</div>
+														</div>
 													</div>
 												]
-											</BOUCLE_images>
-											<B_autresDocs>
-												<div class="autres-docs">
-												<BOUCLE_autresDocs(DOCUMENTS){id_article}>
-													[(#MEDIA|=={'audio'}|oui)
-														<div class="audio">
-															[(#AUTORISER{modifier,article,#ID_ARTICLE}|oui)
-															[<a href="(#URL_ACTION_AUTEUR{dissocier_document,#ID_ARTICLE-article-#ID_DOCUMENT-suppr-safe,#URL_SITE_SPIP/spip.php?page=article&id_article=#ID_ARTICLE&mode=complet&type=livrables})"
-																class='supprimer_couleur'
-																onClick='return confirmation("Êtes-vous sûr de vouloir supprimer ce document ?")'
-																title='Supprimer ce document'>
-																<div class='action_supprimer'></div>
-															</a>]
-														]
-														[(#MODELE{audio, autostart=false, hauteur=50px, largeur=35%})]
-													</div>]
-
-													[(#MEDIA|=={'video'}|oui)
-														<div class="video">
-															[(#AUTORISER{modifier,article,#ID_ARTICLE}|oui)
-															[<a href="(#URL_ACTION_AUTEUR{dissocier_document,#ID_ARTICLE-article-#ID_DOCUMENT-suppr-safe,#URL_SITE_SPIP/spip.php?page=article&id_article=#ID_ARTICLE&mode=complet&type=livrables})"
-																class='supprimer_couleur'
-																onClick='return confirmation("Êtes-vous sûr de vouloir supprimer ce document ?")'
-																title='Supprimer ce document'>
-																<div class='action_supprimer'></div>
-															</a>]
-														]
-														[(#MODELE{audio, autostart=false, hauteur=150px, largeur=35%})]
-														</div>
-													]
-
-													[(#MEDIA|in_array{#LISTE{image,audio,video}}|non)
-													<div class="fichier">
-														[<a href="#URL_DOCUMENT" target="blank">(#LOGO_DOCUMENT|image_reduire{100}|inserer_attribut{style,'border:0px solid #000000;'}) </a>]
-														[(#AUTORISER{modifier,article,#ID_ARTICLE}|oui)
-															[<span class="spip_doc_titre #EDIT{titre}"><br />(#TITRE|couper{25}|sinon{<span class="ajouter_couleur">ajouter un titre</span>})</span>]
-														]
-														[(#AUTORISER{modifier,article,#ID_ARTICLE}|non)
-															[<span class="spip_doc_titre #EDIT{titre}"><br />(#TITRE|couper{25})</span>]
-														]
-
-														[(#AUTORISER{modifier,article,#ID_ARTICLE}|oui)
-														[<a href="(#URL_ACTION_AUTEUR{dissocier_document,#ID_ARTICLE-article-#ID_DOCUMENT-suppr-safe,#URL_SITE_SPIP/spip.php?page=article&id_article=#ID_ARTICLE&mode=complet&type=livrables})"
-															class='supprimer_couleur'
-															onClick='return confirmation("Êtes-vous sûr de vouloir supprimer ce document ?")'
-															title='Supprimer ce document'>
-															<div class='action_supprimer'></div>
-														</a>]
-														]
+											</div>
+											[(#REM)Permalien - [&annee_scolaire=(#ANNEE_SCOLAIRE)]
+											[(#SET{url,#URL_ARTICLE|parametre_url{mode,complet}})]
+											[(#GET{is_agora}|=={oui}|oui)[(#SET{url,#GET{url}|parametre_url{type_objet,agora}})]]
+											<div class="sidebar_bubble">
+												<INCLURE{fond=noisettes/js/accordeon}{nom=bloc_permalien-#ID_ARTICLE}>
+												<div class="bloc_option_doc nettoyeur">
+													<a id="bloc_permalien-#ID_ARTICLE" class="hac liens_forum bloc_option_doc_link" title="Permalien" href="#">
+													Partager le lien
+													</a>
+													<div class="cache">
+														<code><a href="[(#GET{url, type=livrables})]" target="_blank">[(#GET{url}|parametre_url{type,livrables})]</a></code>
 													</div>
-													]
-												</BOUCLE_autresDocs>
-												</div>
-											</B_autresDocs>
-											[(#REM) Ajouter un document]
-											[(#AUTORISER{modifier,article,#ID_ARTICLE}|oui)
-												<div class="sidebar_bubble">
-													<INCLURE{fond=noisettes/js/accordeon,nom=bloc_option_doc-#ID_ARTICLE}>
-													<div class="bloc_option_doc nettoyeur">
-														<a id="bloc_option_doc-#ID_ARTICLE" class="hac lien_ajouter bloc_option_doc_adddocument" title="Ajouter un document">
-															Ajouter un document
-														</a>
-														<div class='nettoyeur cache formulaire_spip formulaire_editer_document bloc_option_doc'>
-															#FORMULAIRE_JOINDRE_DOCUMENT{new,#ID_ARTICLE,article}
-														</div>
-													</div>
-												</div>
-											]
-										</div>
-										[(#REM)Permalien - [&annee_scolaire=(#ANNEE_SCOLAIRE)]
-										[(#SET{url,#URL_ARTICLE|parametre_url{mode,complet}})]
-										[(#GET{is_agora}|=={oui}|oui)[(#SET{url,#GET{url}|parametre_url{type_objet,agora}})]]
-										<div class="sidebar_bubble">
-											<INCLURE{fond=noisettes/js/accordeon}{nom=bloc_permalien-#ID_ARTICLE}>
-											<div class="bloc_option_doc nettoyeur">
-												<a id="bloc_permalien-#ID_ARTICLE" class="hac liens_forum bloc_option_doc_link" title="Permalien" href="#">
-												Partager le lien
-												</a>
-												<div class="cache">
-													<code><a href="[(#GET{url, type=livrables})]" target="_blank">[(#GET{url}|parametre_url{type,livrables})]</a></code>
 												</div>
 											</div>
-										</div>
-										<!-- Footer -->
-										<div class="footer border-bg">
-											#GET{auteur}
-											<li class="ccn-logo">
-												<a href="[(#URL_SITE_SPIP)]" title="Accueil"><span class="logo">[(#CHEMIN{img/pictos_blc/[(#NOM_SITE_SPIP)].png}|image_reduire{100})]</span><span>[(#NOM_SITE_SPIP)]</span></a>
-											</li>
-											<p class="classe-desc #EDIT{titre}">[(#GET{desc}|textebrut)]</p>
+											<!-- Footer -->
+											<div class="footer border-bg">
+												#GET{auteur}
+												<li class="ccn-logo">
+													<a href="[(#URL_SITE_SPIP)]" title="Accueil"><span class="logo">[(#CHEMIN{img/pictos_blc/[(#NOM_SITE_SPIP)].png}|image_reduire{100})]</span><span>[(#NOM_SITE_SPIP)]</span></a>
+												</li>
+												<p class="classe-desc #EDIT{titre}">[(#GET{desc}|textebrut)]</p>
+											</div>
 										</div>
 									</div>
 								</div>
 							</div>
 						</div>
-					</div>
 					</BOUCLE_filtreLivrable>
 				</BOUCLE_colleges>
 			</BOUCLE_filtreTravailEnCours>
