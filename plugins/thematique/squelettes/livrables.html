@@ -124,25 +124,16 @@
 													</div>
 												]
 											</div>
-											[(#REM)Permalien - [&annee_scolaire=(#ANNEE_SCOLAIRE)]
-											[(#SET{url,#URL_ARTICLE|parametre_url{mode,complet}})]
-											[(#GET{is_agora}|=={oui}|oui)[(#SET{url,#GET{url}|parametre_url{type_objet,agora}})]]
-											<div class="sidebar_bubble">
-												<INCLURE{fond=noisettes/js/accordeon}{nom=bloc_permalien-#ID_ARTICLE}>
-												<div class="bloc_option_doc nettoyeur">
-													<a id="bloc_permalien-#ID_ARTICLE" class="hac liens_forum bloc_option_doc_link" title="Permalien" href="#">
-													Partager le lien
-													</a>
-													<div class="cache">
-														<code><a href="[(#GET{url, type=livrables})]" target="_blank">[(#GET{url}|parametre_url{type,livrables})]</a></code>
-													</div>
-												</div>
-											</div>
 											<!-- Footer -->
 											<div class="footer border-bg">
 												#GET{auteur}
 												<li class="ccn-logo">
-													<a href="[(#URL_SITE_SPIP)]" title="Accueil"><span class="logo">[(#CHEMIN{img/pictos_blc/[(#NOM_SITE_SPIP)].png}|image_reduire{100})]</span><span>[(#NOM_SITE_SPIP)]</span></a>
+													<a href="[(#URL_SITE_SPIP)]" title="Accueil">
+														<span class="logo">
+															[(#CHEMIN{img/pictos_blc/[(#NOM_SITE_SPIP)].png}|image_reduire{100})]
+														</span>
+														<span>[(#NOM_SITE_SPIP)]</span>
+													</a>
 												</li>
 												<p class="classe-desc #EDIT{titre}">[(#GET{desc}|textebrut)]</p>
 											</div>
