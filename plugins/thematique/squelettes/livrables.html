@@ -23,21 +23,21 @@
 					</a>
 					<!-- LIVRABLE DETAILS --------------->
 					<div>
-						<div id="livrable[(#ID_ARTICLE)]" class="livrable-details-wrapper" style="overflow: scroll;" data-id="[(#ID_ARTICLE)]">
-							<div style="overflow:scroll;" class="livrable-details couleur_travail_en_cours[(#ID_RUBRIQUE|nb2col)]">
-								<span style="overflow:scroll;" class="close" onclick="callLivrable(null, 'closeDetails')">
+						<div id="livrable[(#ID_ARTICLE)]" class="livrable-details-wrapper" data-id="[(#ID_ARTICLE)]">
+							<div class="livrable-details couleur_travail_en_cours[(#ID_RUBRIQUE|nb2col)]">
+								<span class="close" onclick="callLivrable(null, 'closeDetails')">
 									<img src="[(#CHEMIN{img/close.svg}|image_reduire{25}|extraire_attribut{src})]">
 								</span>
-								<div style="overflow:scroll;" class="featured-image #EDIT{logo}">
+								<div class="featured-image #EDIT{logo}">
 									[(#LOGO_ARTICLE|sinon{[<img src="(#CHEMIN{img/presentation/02.png})" alt="" />]}|image_reduire{800,500})]
 								</div>
 								<p class="titre #EDIT{titre}">#TITRE</p>
-								<div style="overflow:scroll;" class="corps-wrapper">
-									<div class="corps" style="overflow:scroll;">
+								<div class="corps-wrapper">
+									<div class="corps">
 										<p class="pitch border-bg #EDIT{soustitre}">"#SOUSTITRE"</p>
-										<div style="overflow:scroll;" class="texte border-bg #EDIT{texte}">#TEXTE</div>
+										<div class="texte border-bg #EDIT{texte}">#TEXTE</div>
 										<!-- Affichage documents -->
-										<div class="documents border-bg" style="overflow:scroll;">
+										<div class="documents border-bg">
 											<BOUCLE_images(DOCUMENTS){id_article}>
 												[(#MEDIA|=={image}|oui)
 													<div class="img-container">
@@ -56,7 +56,7 @@
 													</div>
 												]
 											</BOUCLE_images>
-											<div class="autres-docs" style="overflow:scroll;">
+											<div class="autres-docs">
 												<BOUCLE_autresDocs(DOCUMENTS){id_article}>
 													[(#MEDIA|=={'audio'}|oui)
 														<div class="audio">
@@ -138,12 +138,12 @@
 											</div>
 										]
 										<!-- Footer -->
-										<div class="footer border-bg" style="overflow:scroll;">
+										<div class="footer border-bg">
 											#GET{auteur}
 											<li class="ccn-logo">
 												<a href="[(#URL_SITE_SPIP)]" title="Accueil"><span class="logo">[(#CHEMIN{img/pictos_blc/[(#NOM_SITE_SPIP)].png}|image_reduire{100})]</span><span>[(#NOM_SITE_SPIP)]</span></a>
 											</li>
-											<p style="overflow:scroll;" class="classe-desc #EDIT{titre}">[(#GET{desc}|textebrut)]</p>
+											<p class="classe-desc #EDIT{titre}">[(#GET{desc}|textebrut)]</p>
 										</div>
 									</div>
 								</div>
