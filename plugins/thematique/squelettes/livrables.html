@@ -28,8 +28,9 @@
 								<span class="close" onclick="callLivrable(null, 'closeDetails')">
 									<img src="[(#CHEMIN{img/close.svg}|image_reduire{25}|extraire_attribut{src})]">
 								</span>
+								<p class="titre #EDIT{titre}">#TITRE</p>
 								<div class="featured-image #EDIT{logo}">
-									[(#LOGO_ARTICLE|sinon{[<img src="(#CHEMIN{img/presentation/02.png})" alt="" />]}|image_reduire{800,500})]
+									[(#LOGO_ARTICLE|image_reduire{800,500}|sinon{<img src="(#CHEMIN{img/presentation/02.png})" alt="" />})]
 								</div>
 								<div class="corps-wrapper">
 									<div class="corps">
