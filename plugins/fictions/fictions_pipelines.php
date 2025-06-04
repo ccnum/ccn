@@ -5,8 +5,10 @@ if (!defined('_ECRIRE_INC_VERSION')) {
 }
 
 // cicas
-function fictions_cicas($ci_cas_userid) {
-	spip_log($ci_cas_userid, 'test_fictions');
+function fictions_cicas($flux) {
+	if (is_array($flux) and isset($flux['args'])) {
+		spip_log($flux['args'], 'test_fictions');
+	}
 
-	return $ci_cas_userid;
+	return $flux;
 }

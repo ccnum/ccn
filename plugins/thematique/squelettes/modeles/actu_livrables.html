@@ -14,15 +14,15 @@
 				</div>
 				<p class="date">[(#DATE|affdate)]</p>
 				[(#MEDIA|=={'image'}|oui)
-					<a href="#URL_DOCUMENT" title="[(#TITRE)]"  title="[(#TITRE)]" class="thickbox mediabox" type="#MIME_TYPE">
-					[(#EMBED_DOCUMENT|image_reduire{700}|inserer_attribut{alt,[(#TITRE|couper{80}|texte_backend)]}|inserer_attribut{style,'border:0px solid #000000;'})]
+					<a href="#URL_DOCUMENT" class="mediabox" type="#MIME_TYPE" data-box-min-height="90pc">
+						[(#FICHIER|image_reduire{300}|inserer_attribut{alt,#TITRE})]
 					</a>
 				]
 
 				[(#MEDIA|=={'image'}|non)
 					<div class="document">
 					[(#LOGO_DOCUMENT|image_reduire{100}|inserer_attribut{style,'border:0px solid #000000;'})]
-						[<span class="spip_doc_titre"><br />(#TITRE|couper{25}|sinon{<span class="ajouter_couleur">Document sans titre</span>})</span>]
+					[<span class="spip_doc_titre"><br />(#TITRE|couper{25}|sinon{<span class="ajouter_couleur">Document sans titre</span>})</span>]
 					[(#AUTORISER{modifier,article,#ID_ARTICLE}|non)
 						[<span class="spip_doc_titre"><br />(#TITRE|couper{25})</span>]
 					]
