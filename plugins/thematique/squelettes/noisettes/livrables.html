@@ -1,0 +1,24 @@
+#CACHE{0}
+<BOUCLE_rubAnnee(RUBRIQUES) {racine} {titre LIKE %(#CONST{_annee_scolaire})%}>
+	<BOUCLE_filtreTravailEnCours(RUBRIQUES){id_parent}{titre_mot=travail_en_cours}{par date}>
+		<BOUCLE_colleges(RUBRIQUES){id_parent}>
+			#SET{auteur, #TITRE}
+			#SET{desc, #TEXTE}
+			<BOUCLE_filtreLivrable(ARTICLES){id_rubrique}{titre_mot=livrable}{par date}>
+				<!-- PAGE LIVRABLE -->
+				<a class="livrable-inline" onclick="callLivrable('#ID_ARTICLE', 'openDetails');">
+					<div class="livrable couleur_travail_en_cours[(#ID_RUBRIQUE|nb2col)]" data-id="[(#ID_ARTICLE)]">
+						<div class="header">
+							<h3>#TITRE</h3>
+						</div>
+						<span class="profil">
+							[(#MODELE{logo_carre}{taille=40}{id_rubrique=#ID_RUBRIQUE}{titre=#TITRE})]
+							<h4>#GET{auteur}</h4>
+						</span>
+						<!--<div class="featured-image">[(#LOGO_ARTICLE |image_reduire{500,300})]</div>-->
+					</div>
+				</a>
+			</BOUCLE_filtreLivrable>
+		</BOUCLE_colleges>
+	</BOUCLE_filtreTravailEnCours>
+</BOUCLE_rubAnnee>

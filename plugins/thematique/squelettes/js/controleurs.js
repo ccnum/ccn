@@ -595,11 +595,11 @@ function callLivrables() {
 	changeTimelineMode('consignes');
 	toggleSidebarExpand();
 	setFullscreenModeToCols(true);
-	updateMenuIcon(['classes'], 'sidebarView');
+	updateMenuIcon(['livrables'], 'sidebarView');
 
 	blankMainSidebar('<div class="sidebar_bubble"><div class="fiche_titre couleur_texte_ressources couleur_ressources0"><div class="texte"><div class="titre">Livrables</div></div></div></div><div class="sidebar_bubble sidebar_bubble_blank">Naviguez dans les livrables en cours grâce à la barre latérale sur votre droite.</div>');
 
-	var url_travail_en_cours = 'spip.php?page=rubrique&mode=detail&id_rubrique=' + CCN.travailEnCoursId;
+	var url_travail_en_cours = 'spip.php?page=livrables&mode=detail';
 	loadContentInLateralSidebar(url_travail_en_cours, 'rubrique', 'travail_en_cours');
 }
 
