@@ -19,7 +19,6 @@ et/ou
 		<div id="timeline_responsive">
 			<div id="timeline_fixed"></div>
 			<div id="timeline_wrapin">
-				<INCLURE{fond=livrables, ajax} />
 				<div class="timeline_layer" id="timeline_layer_consignes">
 					<div class="timeline_trigger"></div>
 				</div>
@@ -117,7 +116,7 @@ et/ou
 				</BOUCLE_rubAnnee>
 
 				[(#GET{hasLivrable}|=={oui}|oui)
-					[(#MODELE{logo_menu}{valeur=livrable}{class=menu_logo_livrables logo_menu-cible}{filter=.ressource_livrables}{title=Les projets finis}{onclick=callLivrable(null, 'open');})]
+					[(#MODELE{logo_menu}{valeur=livrable}{class=menu_logo_livrables logo_menu-cible}{filter=.ressource_livrables}{onclick=callLivrables();}{title=Les projets finis})]
 				]
 
 				<BOUCLE_j(DATA){liste tout,blog,evenement,ressources,consignes,travail_en_cours}>
