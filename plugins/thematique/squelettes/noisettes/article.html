@@ -69,12 +69,10 @@
 										});
 									});
 								</script>
-								[(#GET{type_objet}|in_array{#LISTE{livrables}}|oui)
-								<div id="ajax_go_to_consigne_#GET{id_consigne}" class="reponse_goto_consigne">
+								[<div id="ajax_go_to_consigne_#GET{id_consigne}" class="reponse_goto_consigne">
 									<div class="reponse_goto_consigne_label">En réponse à la consigne :</div>
-									#GET{titre_consigne}
-								</div>
-								]
+									(#GET{titre_consigne})
+								</div>]
 							]
 						</div>
 					</div>
