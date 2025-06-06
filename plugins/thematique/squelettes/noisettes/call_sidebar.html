@@ -1,5 +1,5 @@
 #CACHE{0}
-[(#TYPE_OBJET|in_array{#LISTE{ressources,agora}}|oui)
+[(#TYPE_OBJET|in_array{#LISTE{ressources,agora,livrables}}|oui)
 <script type="text/javascript">
 	$(function() {
 		$('.call_sidebar_main').off('click').on('click', function(){
@@ -27,6 +27,9 @@
 			]
 		]
 
+		[(#TYPE_OBJET|=={livrables}|oui)
+			Retour aux livrables
+		]
 		[(#TYPE_OBJET|=={ressources}|oui)
 			Retour aux ressources
 		]

@@ -187,19 +187,11 @@ function setContentFromState(state) {
 
 		// Réponse
 		if (state.type_objet == "travail_en_cours") {
-			// Si travail en cours est un livrable
-			if ($.urlParam('type') == 'livrables') {
-				callLivrable(null, open);
-				callLivrable(state.id_objet);
-				changeTimelineMode('livrables');
-			}
-			else {
-				changeTimelineMode('consignes');
-				for (k = 0; k < CCN.consignes.length; k++) {
-					for (l = 0; l < CCN.consignes[k].reponses.length; l++) {
-						if (CCN.consignes[k].reponses[l].id == state.id_objet) {
-							callReponse(state.id_objet);
-						}
+			changeTimelineMode('consignes');
+			for (k = 0; k < CCN.consignes.length; k++) {
+				for (l = 0; l < CCN.consignes[k].reponses.length; l++) {
+					if (CCN.consignes[k].reponses[l].id == state.id_objet) {
+						callReponse(state.id_objet);
 					}
 				}
 			}
@@ -319,7 +311,6 @@ function changeTimelineMode(type) {
 	classCss.consignes = 'show_consignes';
 	classCss.blogs = 'show_blogs';
 	classCss.evenements = 'show_evenements';
-	classCss.livrables = 'show_livrables';
 
 	if (!$('body').hasClass(classCss[type])) {
 		CCN.projet.showWholeTimeline();
@@ -594,13 +585,16 @@ function callClasses() {
 function callLivrables() {
 	changeTimelineMode('consignes');
 	toggleSidebarExpand();
-	setFullscreenModeToCols(true);
 	updateMenuIcon(['livrables'], 'sidebarView');
 
-	blankMainSidebar('<div class="sidebar_bubble"><div class="fiche_titre couleur_texte_ressources couleur_ressources0"><div class="texte"><div class="titre">Livrables</div></div></div></div><div class="sidebar_bubble sidebar_bubble_blank">Naviguez dans les livrables en cours grâce à la barre latérale sur votre droite.</div>');
+	blankMainSidebar('<div class="sidebar_bubble"><div class="fiche_titre couleur_texte_livrables couleur_livrables0"><div class="texte"><div class="titre">Espace livrables</div></div></div></div><div class="sidebar_bubble sidebar_bubble_blank">Naviguez dans l\'espace livrables grâce à la barre latérale sur votre droite.</div>');
+	setFullscreenModeToCols(true);
 
-	var url_travail_en_cours = 'spip.php?page=livrables&mode=detail';
-	loadContentInLateralSidebar(url_travail_en_cours, 'rubrique', 'travail_en_cours');
+	var url_lateral = CCN.projet.url_popup_livrables;
+	loadContentInLateralSidebar(
+		url_lateral, 'rubrique', 'livrables', function () {
+		}
+	);
 }
 
 
@@ -667,7 +661,6 @@ function callRessource() {
 		url_lateral, 'rubrique', 'ressources', function () {
 		}
 	);
-	console.log('callRessource');
 }
 
 /**
@@ -840,80 +833,6 @@ function callAgora() {
 	);
 
 	console.log('callAgora');
-}
-
-
-/**
- * Gère les événements lors du clic sur un livrable
- *
- * @param {number} id_livrable
- * @param {string} state
- *
- * @example
- * callLivrable(254, null)
- * callLivrable(null, open)
- */
-
-function callLivrable(id_livrable = null, state = null) {
-
-	// Ouvre la page livrables
-	if (state == 'open') {
-		$('.zone-livrables').stop().fadeIn(1000);
-		changeTimelineMode('livrables');
-	}
-
-	// Ouvre le detail d'un livrable
-	else if (state == 'openDetails') {
-		dataId = id_livrable;
-		$(".livrable").css({ 'opacity': '0.4' });
-		$('#livrable' + dataId).stop().fadeIn(500);
-		$('#livrable' + dataId).addClass('active');
-		detailsLivrableOpen = true;
-	}
-
-	// Ferme le detail d'un livrable
-	else if (state == 'closeDetails') {
-		$('.livrable-details-wrapper').fadeOut(500);
-		$('.livrable-details-wrapper').removeClass('active');
-		$(".livrable").css({ 'opacity': '1' });
-		detailsLivrableOpen = false;
-		event.stopPropagation();
-	}
-
-	// Ferme la page livrable
-	else if (state == 'close') {
-		if (detailsLivrableOpen == false) {
-			$('.zone-livrables').stop().fadeOut(1000);
-			$('.logo_menu-consignes').click();
-			changeTimelineMode('consignes');
-		}
-	}
-
-	// Ouvre le detail d'un livrable en fonction de l'url
-	else {
-		changeTimelineMode('livrables');
-		$('.zone-livrables').stop().fadeIn(1000);
-		dataId = id_livrable;
-		$(".livrable").css({ 'opacity': '0.4' });
-		$('#livrable' + dataId).stop().fadeIn(500);
-		$('#livrable' + dataId).addClass('active');
-		detailsLivrableOpen = true;
-	}
-
-	// Genere le lien d'un detail livrable
-	if (id_livrable) {
-		var url = CCN.projet.url_popup_consigne + "&id_article=" + id_livrable;
-		updateUrl(
-			{
-				'type_objet': 'livrables',
-				'id_objet': id_livrable,
-				'id_rubrique': id_livrable,
-				'page': 'article'
-			}, 'Consigne', "./spip.php?page=article&id_article=" + id_livrable + "&mode=complet&type=livrables"
-		);
-		console.log('callLivrable');
-	}
-
 }
 
 /**

@@ -1,6 +1,6 @@
 #CACHE{0}
 <BOUCLE_principale(GROUPES_MOTS){id_groupe}{tout}>
-<div class="popup [popup_(#GET{type_objet})]">
+<div class="popup [popup_(#ENV{type_objet})]">
 
 	<div class="popup_titre">
 		[(#MODE|=={ajax}|non)<!--<img class='img_titre' src="#CHEMIN{images}/puce_titrecouleur#GET{coul}.gif">-->]
