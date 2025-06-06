@@ -1,5 +1,5 @@
 <BOUCLE_principale(MOTS){id_mot}{doublons}{tout}>
-	[(#MODE|!={ajax-detail}|oui)<div class="popup [popup_(#GET{type_objet})]">]
+	[(#MODE|!={ajax-detail}|oui)<div class="popup [popup_(#ENV{type_objet})]">]
 
 		[(#REM) ---------------- entete publication ---------------- ]
 		#SET{type_objet,#TYPE_OBJET}
