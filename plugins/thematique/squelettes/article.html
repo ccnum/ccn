@@ -28,7 +28,9 @@
 	[(#GET{mode}|in_array{#LISTE{detail,ajax-detail}}|oui)
 		[(#GET{art_lie}|oui)
 			<div class="reponse_binome_around">
-				<INCLURE{fond=noisettes/reponse_binome_head, env, type_objet=#GET{type_objet}, id_rubrique_lien_bis=#GET{id_rubrique_lien_bis}, id_rubrique_lien=#GET{id_rubrique_lien}, id_consigne, id_article_lien_bis=#GET{art_lie_bis}, id_article_lien=#GET{art_lie}, ajax} />
+				[(#GET{type_objet}|in_array{#LISTE{livrables}}|oui)
+					<INCLURE{fond=noisettes/reponse_binome_head, env, type_objet=#GET{type_objet}, id_rubrique_lien_bis=#GET{id_rubrique_lien_bis}, id_rubrique_lien=#GET{id_rubrique_lien}, id_consigne, id_article_lien_bis=#GET{art_lie_bis}, id_article_lien=#GET{art_lie}, ajax} />
+				]
 			<div id="reponse_binome_1">
 		]
 
