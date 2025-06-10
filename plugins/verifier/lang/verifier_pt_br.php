@@ -118,7 +118,7 @@ return [
 	'option_fichiers_dimension_autoriser_rotation_label_case' => 'Marcar esta opção para poder trocar a largura e altura máximas',
 	'option_fichiers_hauteur_max_label' => 'Altura máxima da imagem (em px)',
 	'option_fichiers_largeur_max_label' => 'Largura máxima da imagem (em px)',
-	'option_fichiers_mime_image_web_label' => 'Autorizar unicamente as imagens web (gif, jpg, png)',
+	'option_fichiers_mime_image_web_label' => 'Autorizar unicamente as imagens web',
 	'option_fichiers_mime_label' => 'Type Mime e extensão',
 	'option_fichiers_mime_pas_de_verification_label' => 'Permitir todos os tipos e extensões (desaconselhado)',
 	'option_fichiers_mime_specifique_label' => 'Permitir unicamente os tipos e extensões selecionados abaixo',
@@ -159,6 +159,7 @@ Exemplo: «São Paulo, que cidade enorme!» torna-se «sao_paulo_que_cidade_enor
 
 	// P
 	'par_defaut' => 'Padrão:',
+	'plugin_saisies_yaml_inactif' => 'Para ver esta página de documentação, é preciso ativar os plugins saisies et yaml.',
 
 	// T
 	'titre_page_verifier_doc' => 'Documentação da API de validação',
