@@ -3,11 +3,7 @@
 // extrait automatiquement de https://trad.spip.net/tradlang_module/simplog?lang_cible=es
 // ** ne pas modifier le fichier **
 
-if (!defined('_ECRIRE_INC_VERSION')) {
-	return;
-}
-
-$GLOBALS[$GLOBALS['idx_lang']] = array(
+return [
 
 	// A
 	'actualiser' => 'Actualizar la lista',
@@ -45,5 +41,5 @@ $GLOBALS[$GLOBALS['idx_lang']] = array(
 
 	// T
 	'tri_croissant' => 'Orden descendente',
-	'tri_decroissant' => 'Orden descendiente'
-);
+	'tri_decroissant' => 'Orden descendiente',
+];
