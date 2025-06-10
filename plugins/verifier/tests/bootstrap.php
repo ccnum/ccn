@@ -86,3 +86,59 @@ if (!defined('vider_date')) {
 		return $letexte;
 	}
 }
+
+if (!defined('echapper_tags')) {
+	// Sauvagement copiécollé depuis SPIP 5
+	function echapper_tags($texte, $rempl = '') {
+		return preg_replace('/<([^>]*)>/', '&lt;\\1&gt;', $texte);
+	}
+
+}
+if (!defined('email_valide')) {
+	/*
+	 * Copié collé depuis SPIP 5
+	 *
+	*/
+	function email_valide($adresses) {
+		if (is_array($adresses)) {
+			$adresses = array_map('email_valide', $adresses);
+			return array_filter($adresses);
+		}
+
+		$email_valide = 'inc_email_valide_dist';
+		return $email_valide($adresses);
+	}
+}
+
+if (!defined('email_valide')) {
+	/**
+	 * Copié collé depuis SPIP 5
+	 * Vérifier la conformité d'une ou plusieurs adresses email (suivant RFC 822)
+	 *
+	 * @param string $adresses
+	 *      Adresse ou liste d'adresse (separees pas des virgules)
+	 * @return bool|string
+	 *      - false si une des adresses n'est pas conforme,
+	 *      - la normalisation de la dernière adresse donnée sinon
+	 */
+	function inc_email_valide_dist($adresses) {
+		// eviter d'injecter n'importe quoi dans preg_match
+		if (!$adresses || !is_string($adresses)) {
+			return false;
+		}
+
+
+		foreach (explode(',', $adresses) as $v) {
+			// nettoyer certains formats
+			// "Marie Toto <Marie@toto.com>"
+			$adresse = trim(preg_replace(',^[^<>"]*<([^<>"]+)>$,i', '\\1', $v));
+			// RFC 822
+			if (!preg_match('#^[^()<>@,;:\\"/[:space:]]+(@([-_0-9a-z]+\.)*[-_0-9a-z]+)$#i', $adresse)) {
+				return false;
+			}
+		}
+
+		return $adresse;
+	}
+
+}

@@ -113,7 +113,7 @@ return [
 	'option_fichiers_dimension_autoriser_rotation_label_case' => 'Klicken um maximale Breite und Höhe zu tauschen.',
 	'option_fichiers_hauteur_max_label' => 'Maximale Bildhöhe (in px)',
 	'option_fichiers_largeur_max_label' => 'Maximale Bildgröße (in px)',
-	'option_fichiers_mime_image_web_label' => 'Nur Web-Bilder akzeptieren (gif, jpg, png)',
+	'option_fichiers_mime_image_web_label' => 'Nur Web-Bilder akzeptieren (gif, jpg, png)', # MODIF
 	'option_fichiers_mime_label' => 'Mime Type und Dateiendung',
 	'option_fichiers_mime_pas_de_verification_label' => 'Alle Typen und Endungen akzeptieren (nicht empfohlen)',
 	'option_fichiers_mime_specifique_label' => 'Nur die unten ausgewählten Typen und Endungen akzeptieren',

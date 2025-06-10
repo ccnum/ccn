@@ -61,6 +61,34 @@ function verifier_email_dist($valeur, $options = []) {
 }
 
 /**
+ * Une fonction pour explode une liste d'email séparés par une virgule
+ * sans casser des emails qui peuvent eux-même contenir des virgules
+ *
+ * @param $valeur
+ * @return array
+ */
+function verifier_email_explode_emails($valeur) {
+	$p = strpos($valeur, '@');
+	if ( $p !== false && strpos($valeur, ',', $p) !== false ) {
+		if ($parts = preg_split('/(@[^@,]+),/' , $valeur, -1, PREG_SPLIT_DELIM_CAPTURE)) {
+			$adresses = [];
+			while (!empty($parts)) {
+				$left = array_shift($parts);
+				if (!empty($parts)) {
+					$adresses[] = $left . array_shift($parts);
+				} else {
+					$adresses[] = $left;
+				}
+			}
+			$adresses = array_map('trim', $adresses);
+			$adresses = array_filter($adresses);
+			return $adresses;
+		}
+	}
+	return [trim($valeur)];
+}
+
+/**
  * Changement de la RegExp d'origine
  *
  * Respect de la RFC5322
@@ -75,9 +103,10 @@ function verifier_email_rfc5322($valeur) {
 		spip_log("Tentative d'injection de mail : $valeur");
 		return false;
 	}
+	$adresses = verifier_email_explode_emails($valeur);
 	include_spip('inc/is_email');
-	foreach (explode(',', $valeur) as $adresse) {
-		if (!is_email(trim($adresse))) {
+	foreach ($adresses as $adresse) {
+		if (ISEMAIL_VALID !== is_email($adresse, false, ISEMAIL_THRESHOLD)) {
 			return false;
 		}
 	}
@@ -100,11 +129,12 @@ function verifier_email_de_maniere_stricte($valeur) {
 		spip_log("Tentative d'injection de mail : $valeur");
 		return false;
 	}
-	foreach (explode(',', $valeur) as $adresse) {
+	$adresses = verifier_email_explode_emails($valeur);
+	foreach ($adresses as $adresse) {
 		// nettoyer certains formats
 		// "Marie Toto <Marie@toto.com>"
 		$adresse = trim(preg_replace(',^[^<>\"]*<([^<>\"]+)>$,i', '\\1', $adresse));
-		if (!preg_match('/^([A-Za-z0-9]){1}([A-Za-z0-9]|-|_|\.)*@[A-Za-z0-9]([A-Za-z0-9]|-|\.){1,}\.[A-Za-z]{2,4}$/', $adresse)) {
+		if (!preg_match('/^([A-Za-z0-9]){1}([A-Za-z0-9]|-|_|\.)*@[A-Za-z0-9]([A-Za-z0-9]|-|\.){1,}\.[A-Za-z]{2,18}$/', $adresse)) {
 			return false;
 		}
 	}
