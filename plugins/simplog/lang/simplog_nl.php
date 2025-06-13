@@ -3,11 +3,7 @@
 // extrait automatiquement de https://trad.spip.net/tradlang_module/simplog?lang_cible=nl
 // ** ne pas modifier le fichier **
 
-if (!defined('_ECRIRE_INC_VERSION')) {
-	return;
-}
-
-$GLOBALS[$GLOBALS['idx_lang']] = array(
+return [
 
 	// A
 	'actualiser' => 'Werk de lijst bij',
@@ -50,5 +46,5 @@ $GLOBALS[$GLOBALS['idx_lang']] = array(
 
 	// T
 	'tri_croissant' => 'Oplopend sorteren',
-	'tri_decroissant' => 'Aflopend sorteren'
-);
+	'tri_decroissant' => 'Aflopend sorteren',
+];

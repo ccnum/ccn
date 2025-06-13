@@ -26,6 +26,7 @@ if (!defined('_ECRIRE_INC_VERSION')) {
  *     - ftp : ftp ou sftp,
  *     - exact : cf. option protocole
  *   - protocole : nom du protocole (si type_protocole = exact)
+ *   - objets_spip : si `true`, permet les urls d'objets éditoriaux SPIP
  * @return string
  *   Retourne une chaine vide si c'est valide, sinon une chaine expliquant l'erreur.
  */
@@ -58,6 +59,14 @@ function verifier_url_dist($url, $options = []) {
 		$protocole = '' ;
 		if ($type_protocole == 'exact' && $options['protocole']) {
 			$protocole = $options['protocole'];
+		}
+	}
+
+	if ($options['objet_spip'] ?? false) {
+		include_spip('inc/lien');
+		$lien_implicite = str_replace('&amp;', '&', traiter_lien_implicite($url));
+		if ($lien_implicite) {
+			$url = $lien_implicite;
 		}
 	}
 

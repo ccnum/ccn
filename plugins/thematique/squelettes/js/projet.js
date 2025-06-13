@@ -12,7 +12,7 @@ function Projet() {
 	var largeur_mois, premier_mois, nombre_mois, mois_select, mois_rollover, premier_jour, nombre_jours, nombre_jours_vus, premiere_annee, date_debut, date_fin, aujourdhui;
 	var couleur_fond, couleur_1erplan1, couleur_1erplan2, couleur_1erplan3, couleur_blog, image_fond, zoom_consignes;
 	var liste_cy_consignes, liste_y_blogs, liste_y_evenements;
-	var url_popup_consigne, url_popup_reponse, url_popup_reponseajout, url_popup_blog, url_popup_evenement, url_popup_ressources, url_popup_agora, url_popup_classes, url_popup_chat, url_popup_chat2;
+	var url_popup_consigne, url_popup_reponse, url_popup_reponseajout, url_popup_blog, url_popup_livrables, url_popup_evenement, url_popup_ressources, url_popup_agora, url_popup_classes, url_popup_chat, url_popup_chat2;
 	var div_base, div_barre, div_base_context, div_mois;
 	var timeline_parent, timeline, timeline_width;
 
@@ -82,6 +82,7 @@ function Projet() {
 		this.url_popup_reponse = data.url_popup_reponse;
 		this.url_popup_reponseajout = data.url_popup_reponseajout;
 		this.url_popup_blog = data.url_popup_blog;
+		this.url_popup_livrables = data.url_popup_livrables;
 		this.url_popup_evenement = data.url_popup_evenement;
 		this.url_popup_ressources = data.url_popup_ressources;
 		this.url_popup_agora = data.url_popup_agora;

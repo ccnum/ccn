@@ -113,7 +113,7 @@ return [
 	'option_fichiers_dimension_autoriser_rotation_label_case' => 'Click to invert maximum length and height',
 	'option_fichiers_hauteur_max_label' => 'Maximum image height (in px)',
 	'option_fichiers_largeur_max_label' => 'Maximum image width (in px)',
-	'option_fichiers_mime_image_web_label' => 'Allow only web images (gif, jpg, png)',
+	'option_fichiers_mime_image_web_label' => 'Allow only web images (gif, jpg, png)', # MODIF
 	'option_fichiers_mime_label' => 'Mime type and extension',
 	'option_fichiers_mime_pas_de_verification_label' => 'Allow all types and extensions (not recommended)',
 	'option_fichiers_mime_specifique_label' => 'Allow only the types and extensions checked below',

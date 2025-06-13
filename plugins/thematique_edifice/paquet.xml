@@ -9,4 +9,5 @@
 	compatibilite="[4.3.2;4.*]"
 >
 	<nom>Thematiques EDIFICE</nom>
+	<necessite nom="thematique" />
 </paquet>

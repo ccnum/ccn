@@ -84,6 +84,7 @@ function loadProjet(fichier) {
 				dataForProjet.url_popup_reponse = getXMLNodeValue('url_popup_reponse', xml);
 				dataForProjet.url_popup_reponseajout = getXMLNodeValue('url_popup_reponseajout', xml);
 				dataForProjet.url_popup_blog = getXMLNodeValue('url_popup_blog', xml);
+				dataForProjet.url_popup_livrables = getXMLNodeValue('url_popup_livrables', xml);
 				dataForProjet.url_popup_evenement = getXMLNodeValue('url_popup_evenement', xml);
 				dataForProjet.url_popup_ressources = getXMLNodeValue('url_popup_ressources', xml);
 				dataForProjet.url_popup_agora = getXMLNodeValue('url_popup_agora', xml);

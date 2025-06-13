@@ -1,0 +1,44 @@
+<div class="popup popup_livrable">
+	<INCLURE{fond=noisettes/call_sidebar,type_objet, ajax} />
+	[(#INCLURE{fond=noisettes/fonction/type_role})]
+	[(#REM) ---------------- titre & logo ---------------- ]
+	<div class="sidebar_bubble">
+		<div class="fiche_titre">
+			<div class="texte">
+				<div class="titre">Livrables</div>
+			</div>
+		</div>
+	</div>
+	<BOUCLE_rubAnnee(RUBRIQUES) {racine} {titre LIKE %(#CONST{_annee_scolaire})%}>
+		<BOUCLE_filtreTravailEnCours(RUBRIQUES){id_parent}{titre_mot=travail_en_cours}{par date}>
+			<BOUCLE_colleges(RUBRIQUES){id_parent}>
+				#SET{auteur, #TITRE}
+				#SET{desc, #TEXTE}
+				<!-- AFFICHAGE ARTICLES  -->
+				<BOUCLE_filtreLivrable(ARTICLES){id_rubrique}{titre_mot=livrable}{par date}>
+					<script type="text/javascript">
+						$('#ajax#ID_ARTICLE').click(function() {
+							$('#sidebar_main').load('[(#URL_ARTICLE|parametre_url{mode,ajax-detail}|html_entity_decode)]', {limit: 25}, function(){
+								hideSidebarLateral();
+								$('div#sidebar_main').removeClass('chargement');
+								$('#sidebar_main').show('slow');
+							});
+						});
+					</script>
+					<a id="ajax#ID_ARTICLE" href="#" class="hac ajax[ (#EXPOSE)][ (#GET{rub1}|=={#ID_RUBRIQUE}|oui)on]">
+						<div class="livrable couleur_travail_en_cours[(#ID_RUBRIQUE|nb2col)]" data-id="[(#ID_ARTICLE)]">
+							<div class="header">
+								<h3>#TITRE</h3>
+							</div>
+							<span class="profil">
+								[(#MODELE{logo_carre}{id_rubrique=#ID_RUBRIQUE}{titre=#TITRE})]
+								<h4>#GET{auteur}</h4>
+							</span>
+							<!--<div class="featured-image">[(#LOGO_ARTICLE |image_reduire{500,300})]</div>-->
+						</div>
+					</a>
+				</BOUCLE_filtreLivrable>
+			</BOUCLE_colleges>
+		</BOUCLE_filtreTravailEnCours>
+	</BOUCLE_rubAnnee>
+</div>

@@ -145,7 +145,7 @@ return [
 	'option_url_mode_php_filter' => 'Vérification complète de l’url via le filtre FILTER_VALIDATE_URL de php',
 	'option_url_mode_protocole_seul' => 'Vérification uniquement de la présence d’un protocole',
 	'option_url_protocole_label' => 'Nom du protocole à vérifier',
-	'option_url_type_protocole_exact' => 'Saisir un protocole ci-dessous :',
+	'option_url_type_protocole_exact' => 'Autre protocole',
 	'option_url_type_protocole_ftp' => 'Protocoles ftp: ftp ou sftp',
 	'option_url_type_protocole_label' => 'Type de protocole à vérifier',
 	'option_url_type_protocole_mail' => 'Protocoles mail : imap, pop3 ou smtp',
@@ -154,6 +154,7 @@ return [
 	'option_url_type_protocole_webcal' => 'Protocoles webcal: webcal, http ou https',
 	'options_message_erreur_explication' => 'Laisser vide pour garder le message par défaut.',
 	'options_message_erreur_label' => 'Message d’erreur si la vérification échoue.',
+	'option_url_objet_spip_label_case' => 'Autoriser aussi les raccourcis vers des objets SPIP (artxx)',
 
 	// P
 	'par_defaut' => 'Par défaut :',

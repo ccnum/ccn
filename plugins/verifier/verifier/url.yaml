@@ -30,5 +30,12 @@ options:
     options:
       nom: 'protocole'
       label: '<:verifier:option_url_protocole_label:>'
+      afficher_si: '@type_protocole@ == "exact"'
+  -
+    saisie: 'case'
+    options:
+      nom: 'objet_spip'
+      label_case: '<:verifier:option_url_objet_spip_label_case:>'
+      conteneur_class: 'pleine_largeur'
 
 

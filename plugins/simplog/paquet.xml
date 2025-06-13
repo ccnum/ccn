@@ -1,8 +1,8 @@
 <paquet
 	prefix="simplog"
-	version="2.1.0"
+	version="2.2.0"
 	etat="stable"
-	compatibilite="[4.0.0;4.*]"
+	compatibilite="[4.1.0;4.*]"
 	logo="simplog.svg"
 	documentation="https://contrib.spip.net/Simples-Logs"
 >
