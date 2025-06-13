@@ -3,14 +3,10 @@
 // extrait automatiquement de https://trad.spip.net/tradlang_module/paquet-simplog?lang_cible=es
 // ** ne pas modifier le fichier **
 
-if (!defined('_ECRIRE_INC_VERSION')) {
-	return;
-}
-
-$GLOBALS[$GLOBALS['idx_lang']] = array(
+return [
 
 	// S
 	'simplog_description' => 'Una vez el plugin está activado, los administradores tienen la posibilidad de consultar todos los periódicos disponibles en el sitio. Una entrada del menú Mantenimiento permite ir a la página de consulta.',
 	'simplog_nom' => 'Simples Logs',
-	'simplog_slogan' => 'Visualización de los logs SPIP por los administradores'
-);
+	'simplog_slogan' => 'Visualización de los logs SPIP por los administradores',
+];

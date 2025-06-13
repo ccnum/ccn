@@ -3,14 +3,10 @@
 // extrait automatiquement de https://trad.spip.net/tradlang_module/paquet-simplog?lang_cible=de
 // ** ne pas modifier le fichier **
 
-if (!defined('_ECRIRE_INC_VERSION')) {
-	return;
-}
-
-$GLOBALS[$GLOBALS['idx_lang']] = array(
+return [
 
 	// S
 	'simplog_description' => 'Nach Aktivierung dieses Plugins können Admins alle Logdateien der Site einsehen. Ein Unterpunkt des Menüs "Wartung" öffnet die Liste der verfügbaren Logs.',
 	'simplog_nom' => 'Log-Anzeige',
-	'simplog_slogan' => 'Anzeige der SPIP-Logdateien für Admins'
-);
+	'simplog_slogan' => 'Anzeige der SPIP-Logdateien für Admins',
+];

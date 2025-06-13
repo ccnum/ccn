@@ -3,11 +3,7 @@
 // extrait automatiquement de https://trad.spip.net/tradlang_module/simplog?lang_cible=sk
 // ** ne pas modifier le fichier **
 
-if (!defined('_ECRIRE_INC_VERSION')) {
-	return;
-}
-
-$GLOBALS[$GLOBALS['idx_lang']] = array(
+return [
 
 	// A
 	'actualiser' => 'Aktualizovať zoznam',
@@ -46,5 +42,5 @@ $GLOBALS[$GLOBALS['idx_lang']] = array(
 
 	// T
 	'tri_croissant' => 'Zotriediť vzostupne',
-	'tri_decroissant' => 'Zotriediť zostupne'
-);
+	'tri_decroissant' => 'Zotriediť zostupne',
+];

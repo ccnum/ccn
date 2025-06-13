@@ -69,10 +69,10 @@
 										});
 									});
 								</script>
-								<div id="ajax_go_to_consigne_#GET{id_consigne}" class="reponse_goto_consigne">
+								[<div id="ajax_go_to_consigne_#GET{id_consigne}" class="reponse_goto_consigne">
 									<div class="reponse_goto_consigne_label">En réponse à la consigne :</div>
-									#GET{titre_consigne}
-								</div>
+									(#GET{titre_consigne})
+								</div>]
 							]
 						</div>
 					</div>
@@ -199,6 +199,7 @@
 			]
 		]
 
+		[(#ENV{type_objet}|in_array{#LISTE{livrable}}|oui)
 		<div class="sidebar_bubble">
 			<div class="bloc_documents">
 				[(#AUTORISER{modifier,article,#ID_ARTICLE}|oui)
@@ -337,7 +338,7 @@
 				]
 			]
 		</div>
-
+		]
 	[(#AUTORISER{modifier, article, #ID_ARTICLE}|oui)
 		</div>
 	]

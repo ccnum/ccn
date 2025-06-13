@@ -1,7 +1,7 @@
 [(#REM) Réponses de la classe]
 <BOUCLE_principale(RUBRIQUES){id_rubrique}{doublons}{tout}>
 <head> </head>
-<div class="popup [popup_(#GET{type_objet})]">
+<div class="popup [popup_(#ENV{type_objet})]">
 	<INCLURE{fond=noisettes/call_sidebar,type_objet=classes, ajax} />
 	#SET{type_objet,#TYPE_OBJET}
 	[(#TYPE_OBJET|=={travail_en_cours}|et{#MODE|=={ajax}|oui})#SET{type_objet,ressources}]

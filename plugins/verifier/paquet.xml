@@ -1,6 +1,6 @@
 <paquet
 	prefix="verifier"
-	version="3.3.1"
+	version="3.5.0"
 	etat="stable"
 	compatibilite="[4.1.0;4.*]"
 	logo="verifier-xx.svg"
