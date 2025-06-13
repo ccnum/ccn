@@ -6,10 +6,11 @@
 </BOUCLE_getCouleur>
 <BOUCLE_commentaires(FORUMS){id_forum}>
 	<div class="actualites-actu couleur_travail_en_cours[(#GET{IdCouleur}|nb2col)]" onclick="callConsigne(#ID_OBJET);">
-		<span class="profil">[(#MODELE{logo_carre}{taille=40}{id_rubrique=#ID_RUBRIQUE}{titre=#TITRE})]</span>
+		<span class="profil">[(#MODELE{logo_carre}{id_rubrique=#ID_RUBRIQUE}{titre=#TITRE})]</span>
 		Commentaire de &nbsp;<b>#AUTEUR</b> &nbsp; sur &nbsp; <b>#TITRE </b> &nbsp;
 		[<p class="date"> (#DATE|affdate)</p>]
-			<div class="content">[(#TEXTE|couper{80})]<br><br>
+		<div class="content">
+			[(#TEXTE|couper{80})]<br><br>
 			<BOUCLE_images(DOCUMENTS){id_forum}>
 				[(#MEDIA|=={'image'}|oui)
 					<div class="img-container">
