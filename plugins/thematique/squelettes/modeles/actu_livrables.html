@@ -9,7 +9,7 @@
 		<div class="actu-documents">
 			<div class="actualites-actu couleur_travail_en_cours[(#GET{IdCouleur}|nb2col)]">
 				<div onclick="callLivrable(null, 'open');callLivrable(#ID_ARTICLE, 'openDetails');">
-					<span class="profil">[(#MODELE{logo_carre}{taille=40}{id_rubrique=#ID_RUBRIQUE}{titre=#TITRE})]</span>
+					<span class="profil">[(#MODELE{logo_carre}{id_rubrique=#ID_RUBRIQUE}{titre=#TITRE})]</span>
 					Nouveau document de #GET{titre}<br> sur #GET{titreLivrable}
 				</div>
 				<p class="date">[(#DATE|affdate)]</p>
