@@ -44,4 +44,4 @@
 
 [(#GET{logo}|sinon{
 	[(#LOGO_SITE_SPIP|sinon{[<img src="(#CHEMIN{img/picto-classe.jpg})" alt="" />]})]
-}|image_reduire{50,0})]
+}|image_reduire{#ENV{taille,50},0})]
