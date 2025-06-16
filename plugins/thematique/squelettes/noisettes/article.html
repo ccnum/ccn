@@ -18,17 +18,7 @@
 
 			[(#REM) ---------------- Inclusion/iframe des urls liées aux classes ---------------- ]
 			<BOUCLE_rub(RUBRIQUES){id_rubrique}{tout}>
-
-				[(#REM) Hack temporaire pour compter nombre de lignes ]
-
-				[(#DESCRIPTIF*|=={''}|non)
-					[(#DESCRIPTIF*|substr_count{''}|>{1}|non)
-						#SET{classe_iframe, #DESCRIPTIF*}
-					]
-					[(#DESCRIPTIF*|substr_count{''}|>{1}|oui)
-						#SET{classe_iframe, #DESCRIPTIF*|explode{''}|table_valeur{#DESCRIPTIF*|explode{''}|moins{1}}}
-					]
-				]
+				#SET{classe_iframe, #DESCRIPTIF*}
 				#SET{titre_parent, #TITRE}
 				#SET{id_parent, #ID_RUBRIQUE}
 				<BOUCLE_rub00(RUBRIQUES){id_rubrique=#ID_PARENT}{tout}>
@@ -163,7 +153,7 @@
 			]
 		]
 
-		[(#GET{classe_iframe}|textebrut|=={''}|non)
+		[(#GET{classe_iframe}|textebrut|oui)
 			<div class="sidebar_bubble">
 				<INCLURE{fond=noisettes/js/accordeon, nom=bloc_option_classe_iframe, ajax}>
 				<div class="bloc_option_doc nettoyeur bloc_texte">
@@ -180,7 +170,7 @@
 				</div>
 			</div>
 		]
-		[(#REM)Ajouter un texte]
+		[(#REM) Ajouter un texte]
 		[(#GET{blocs_cplt}|=={non}|non)
 			[(#TEXTE|non)
 				[(#AUTORISER{modifier, article, #ID_ARTICLE}|oui)
@@ -199,7 +189,7 @@
 			]
 		]
 
-		[(#ENV{type_objet}|in_array{#LISTE{livrable}}|oui)
+		[(#ENV{type_objet}|in_array{#LISTE{livrable,consignes}}|oui)
 		<div class="sidebar_bubble">
 			<div class="bloc_documents">
 				[(#AUTORISER{modifier,article,#ID_ARTICLE}|oui)
