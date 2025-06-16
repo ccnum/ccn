@@ -170,7 +170,7 @@
 				</div>
 			</div>
 		]
-		[(#REM)Ajouter un texte]
+		[(#REM) Ajouter un texte]
 		[(#GET{blocs_cplt}|=={non}|non)
 			[(#TEXTE|non)
 				[(#AUTORISER{modifier, article, #ID_ARTICLE}|oui)
@@ -189,7 +189,10 @@
 			]
 		]
 
-		[(#ENV{type_objet}|in_array{#LISTE{livrable}}|oui)
+		<div class="sidebar_bubble">
+			#ENV{type_objet}
+		</div>
+		[(#ENV{type_objet}|in_array{#LISTE{livrable,consignes}}|oui)
 		<div class="sidebar_bubble">
 			<div class="bloc_documents">
 				[(#AUTORISER{modifier,article,#ID_ARTICLE}|oui)
