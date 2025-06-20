@@ -8,7 +8,7 @@
 			]
 			[(#MIME_TYPE|match{image}|non)
 			<div class="doc">
-				<a href="#URL_DOCUMENT" title="[(#TITRE)]" class="[(#EDIT{titre}) ]mediabox" type="#MIME_TYPE">
+				<a href="#URL_DOCUMENT" title="[(#TITRE)]" class="mediabox" type="#MIME_TYPE">
 					[(#LOGO_DOCUMENT|image_reduire{100}|inserer_attribut{style,'border:0px solid #000000;'})]<span>[(#FICHIER|basename)]</span>
 				</a>
 			</div>
