@@ -122,6 +122,7 @@ spip plugins:activer socialtags -y
 spip plugins:activer spip_bonux -y
 spip plugins:activer verifier -y
 spip plugins:activer yaml -y
+spip plugins:activer autorite -y
 
 if [ ${SPIP_PLUGINS_CICAS} == true ]; then
 	spip plugins:activer cicas -y
@@ -137,6 +138,9 @@ if [ ${PROJET} != "laclasse" ]; then
 fi
 spip plugins:maj:bdd
 
+spip config:ecrire -p autorite editer_forums:1
+spip config:ecrire -p autorite auteur_mod_email:0
+spip config:ecrire -p autorite auteur_modere_forum:0
 spip config:ecrire -p bigup charger_public:1
 spip config:ecrire -p bigup max_file_size:${PHP_UPLOAD_MAX_FILESIZE%M}
 spip config:ecrire -p mediabox active:oui
