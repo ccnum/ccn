@@ -122,6 +122,7 @@ spip plugins:activer socialtags -y
 spip plugins:activer spip_bonux -y
 spip plugins:activer verifier -y
 spip plugins:activer yaml -y
+spip plugins:activer autorite -y
 
 if [ ${SPIP_PLUGINS_CICAS} == true ]; then
 	spip plugins:activer cicas -y
@@ -142,6 +143,7 @@ spip config:ecrire -p bigup max_file_size:${PHP_UPLOAD_MAX_FILESIZE%M}
 spip config:ecrire -p mediabox active:oui
 spip config:ecrire -p notation acces:ide
 spip config:ecrire -p notation change_note:oui
+spip config:ecrire -p autorite editer_forums:1
 
 # Default mes_options
 rm -rf config/mes_options.php
