@@ -1,0 +1,20 @@
+<div class="formulaire_spip formulaire_configurer formulaire_#FORM">
+
+	[<p class="reponse_formulaire reponse_formulaire_ok">(#ENV*{message_ok})</p>]
+	[<p class="reponse_formulaire reponse_formulaire_erreur">(#ENV*{message_erreur})</p>]
+
+	<form method="post" action="#ENV{action}" enctype="multipart/form-data">
+		<div>
+			#ACTION_FORMULAIRE{#ENV{action}}
+
+			<fieldset>
+				<legend><:tarteaucitron:legend_cookie:></legend>
+				<p class="explication"><:tarteaucitron:cfg_btn_showIcon_explication:></p>
+				<div class="editer-groupe">
+					#GENERER_SAISIES{#ENV{_saisies}}
+				</div>
+			</fieldset>
+			<p class="boutons"><span class="image_loading">&nbsp;</span><input type="submit" class="submit" value="<:bouton_enregistrer:>" /></p>
+		</div>
+	</form>
+</div>

@@ -1,0 +1,28 @@
+#HTTP_HEADER{'Content-Type: text/css'}
+
+#tarteaucitron strong { color: #ffffff; }
+#tarteaucitron #tarteaucitronServices .tarteaucitronLine .tarteaucitronName .tarteaucitron-toggle-group {
+	background: rgba(0, 0, 0, 0.1) !important;
+	padding: 11px 22px;
+	margin: 5px 0;
+	text-transform: uppercase;
+	position: relative;
+	border-radius: 3px;
+	box-shadow: 0 2px 1px rgba(0,0,0,0.1), 0 1px 3px rgba(0,0,0,0.3);
+}
+#tarteaucitron #tarteaucitronServices .tarteaucitronLine .tarteaucitronName .tarteaucitron-toggle-group:hover {
+	box-shadow: 0 2px 3px rgba(0,0,0,0.1), 0 4px 8px rgba(0,0,0,0.3);
+}
+
+
+#tarteaucitron #tarteaucitronServices .tarteaucitronLine .tarteaucitronAsk.tarteaucitronIsDenied .tarteaucitronDeny{
+    background-color: #9C1A1A;
+}
+#tarteaucitron #tarteaucitronServices .tarteaucitronLine .tarteaucitronAsk.tarteaucitronIsAllowed .tarteaucitronAllow{
+    background-color: #1B870B;
+}
+[(#CONFIG{tarteaucitron/groupServices}|oui)
+#tarteaucitronServices .tarteaucitronLine:hover, #tarteaucitron .tarteaucitronHidden:hover ul li {
+	background: rgba(0, 0, 0, 0.2) !important;
+}
+]
