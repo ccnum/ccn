@@ -1,0 +1,16 @@
+<div id="formulaire_#FORM" class="formulaire_spip formulaire_configurer formulaire_#FORM">
+	<div class="box__header">
+		<h3><:tarteaucitron:cfg_titre_activation_services:></h3>
+	</div>
+	[<p class="reponse_formulaire reponse_formulaire_ok">(#ENV*{message_ok})</p>]
+	[<p class="reponse_formulaire reponse_formulaire_erreur">(#ENV*{message_erreur})</p>]
+	<form method="post" action="#ENV{action}">
+		<div>
+			#ACTION_FORMULAIRE
+			<div class="editer-groupe">
+				#GENERER_SAISIES{#ENV{_saisies}}
+			</div>
+			<p class="boutons"><span class="image_loading">&nbsp;</span><input type="submit" class="submit" value="<:bouton_enregistrer:>" /></p>
+		</div>
+	</form>
+</div>

@@ -1,0 +1,12 @@
+<traduction
+	module="paquet-tarteaucitron"
+	id="paquet-tarteaucitron--tarteaucitron-15d93"
+	gestionnaire="salvatore"
+	url="https://trad.spip.net"
+	source="https://git.spip.net/spip-contrib-extensions/tarteaucitron.git"
+	reference="fr">
+	<langue code="de" url="https://trad.spip.net/tradlang_module/paquet-tarteaucitron?lang_cible=de" total="3" traduits="3" relire="0" modifs="0" nouveaux="0" pourcent="100.00">
+		<traducteur nom="klaus++" lien="https://trad.spip.net/auteur/klaus" />
+	</langue>
+	<langue code="fr" url="https://trad.spip.net/tradlang_module/paquet-tarteaucitron?lang_cible=fr" total="3" traduits="3" relire="0" modifs="0" nouveaux="0" pourcent="100.00" />
+</traduction>
