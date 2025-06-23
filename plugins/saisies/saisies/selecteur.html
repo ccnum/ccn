@@ -3,13 +3,24 @@
 
 [(#SET{val,#ENV{valeur_forcee,#ENV{valeur,#ENV{defaut}}}})]
 [(#SET{select,[(#ENV{multiple}|?{0,1})]})]
+
+[(#ENV{blacklist}|oui)
+	#SET{message, L'option blacklist du la saisie selecteur est depréciée, utiliser à la place excludelist}
+	[(#GET{message}|trigger_error{#CONST{E_USER_DEPRECATED}})]
+	[(#GET{message}|spip_log{deprecated_saisie})]
+]
+[(#ENV{whitelist}|oui)
+	#SET{message, L'option whitelist du la saisie selecteur est depréciée, utiliser à la place includelist}
+	[(#GET{message}|trigger_error{#CONST{E_USER_DEPRECATED}})]
+	[(#GET{message}|spip_log{deprecated_saisie})]
+]
 <INCLURE{fond=formulaires/selecteur/generique,
 	selected=#GET{val},
 	name=#ENV{nom},
 	afficher_langue=#ENV{afficher_langue,''},
 	select=#GET{select},
-	whitelist=#ENV{whitelist,#ARRAY},
-	blacklist=#ENV{blacklist,#ARRAY},
+	includelist=#ENV{includelist,#ENV{whitelist,#ARRAY}},
+	excludelist=#ENV{excludelist,#ENV{blacklist,#ARRAY}},
 	racine=#ENV{racine},
 	objet=#ENV{objet,racine},
 	id_objet=#ENV{id_objet,0},

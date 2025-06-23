@@ -190,11 +190,13 @@ function saisies_tester_condition_afficher_si($valeur_champ, $modificateur = [],
 	}
 
 	//Et maintenant appeler les sous fonctions qui vont bien
+	$retour = '';
 	if (is_string($valeur_champ)) {
 		$retour = saisies_tester_condition_afficher_si_string($valeur_champ, $modificateur, $operateur, $valeur);
 	} elseif (is_array($valeur_champ)) {
 		$retour = saisies_tester_condition_afficher_si_array($valeur_champ, $modificateur, $operateur, $valeur);
 	}
+
 	if ($negation) {
 		return !$retour;
 	} else {

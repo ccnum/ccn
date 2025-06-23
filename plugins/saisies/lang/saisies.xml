@@ -5,15 +5,15 @@
 	url="https://trad.spip.net"
 	source="https://git.spip.net/spip-contrib-extensions/saisies.git"
 	reference="fr">
-	<langue code="ar" url="https://trad.spip.net/tradlang_module/saisies?lang_cible=ar" total="298" traduits="16" relire="0" modifs="7" nouveaux="275" pourcent="5.37">
+	<langue code="ar" url="https://trad.spip.net/tradlang_module/saisies?lang_cible=ar" total="301" traduits="16" relire="0" modifs="7" nouveaux="278" pourcent="5.32">
 		<traducteur nom="George" lien="https://trad.spip.net/auteur/george" />
 	</langue>
-	<langue code="ca" url="https://trad.spip.net/tradlang_module/saisies?lang_cible=ca" total="298" traduits="75" relire="0" modifs="19" nouveaux="204" pourcent="25.17" />
-	<langue code="de" url="https://trad.spip.net/tradlang_module/saisies?lang_cible=de" total="298" traduits="180" relire="0" modifs="9" nouveaux="109" pourcent="60.40">
+	<langue code="ca" url="https://trad.spip.net/tradlang_module/saisies?lang_cible=ca" total="301" traduits="75" relire="0" modifs="19" nouveaux="207" pourcent="24.92" />
+	<langue code="de" url="https://trad.spip.net/tradlang_module/saisies?lang_cible=de" total="301" traduits="180" relire="0" modifs="9" nouveaux="112" pourcent="59.80">
 		<traducteur nom="klaus++" lien="https://trad.spip.net/auteur/klaus" />
 		<traducteur nom="Torsten Willmann" lien="https://trad.spip.net/auteur/torsten-willmann" />
 	</langue>
-	<langue code="en" url="https://trad.spip.net/tradlang_module/saisies?lang_cible=en" total="298" traduits="222" relire="2" modifs="11" nouveaux="63" pourcent="74.50">
+	<langue code="en" url="https://trad.spip.net/tradlang_module/saisies?lang_cible=en" total="301" traduits="222" relire="2" modifs="11" nouveaux="66" pourcent="73.75">
 		<traducteur nom="George" lien="https://trad.spip.net/auteur/george" />
 		<traducteur nom="Hanjo" lien="https://trad.spip.net/auteur/hanjo" />
 		<traducteur nom="jack31" lien="https://trad.spip.net/auteur/jack31" />
@@ -21,44 +21,44 @@
 		<traducteur nom="maieul" lien="https://trad.spip.net/auteur/maieul" />
 		<traducteur nom="Paolo" lien="https://trad.spip.net/auteur/paolo" />
 	</langue>
-	<langue code="es" url="https://trad.spip.net/tradlang_module/saisies?lang_cible=es" total="298" traduits="249" relire="0" modifs="6" nouveaux="43" pourcent="83.56">
+	<langue code="es" url="https://trad.spip.net/tradlang_module/saisies?lang_cible=es" total="301" traduits="249" relire="0" modifs="6" nouveaux="46" pourcent="82.72">
 		<traducteur nom="Cerezo" lien="https://trad.spip.net/auteur/cerezo" />
 		<traducteur nom="danielquisbert" lien="https://trad.spip.net/auteur/danielquisbert" />
 		<traducteur nom="kent1" lien="https://trad.spip.net/auteur/kent1" />
 		<traducteur nom="Raquel S. Bujaldón" lien="https://trad.spip.net/auteur/raquel-s-bujaldon" />
 		<traducteur nom="severo" lien="https://trad.spip.net/auteur/severo" />
 	</langue>
-	<langue code="fa" url="https://trad.spip.net/tradlang_module/saisies?lang_cible=fa" total="298" traduits="89" relire="0" modifs="18" nouveaux="191" pourcent="29.87">
+	<langue code="fa" url="https://trad.spip.net/tradlang_module/saisies?lang_cible=fa" total="301" traduits="89" relire="0" modifs="18" nouveaux="194" pourcent="29.57">
 		<traducteur nom="Davood Hossein" lien="https://trad.spip.net/auteur/davood-hossein" />
 	</langue>
-	<langue code="fr" url="https://trad.spip.net/tradlang_module/saisies?lang_cible=fr" total="298" traduits="298" relire="0" modifs="0" nouveaux="0" pourcent="100.00" />
-	<langue code="fr_tu" url="https://trad.spip.net/tradlang_module/saisies?lang_cible=fr_tu" total="298" traduits="298" relire="0" modifs="0" nouveaux="0" pourcent="100.00">
+	<langue code="fr" url="https://trad.spip.net/tradlang_module/saisies?lang_cible=fr" total="301" traduits="301" relire="0" modifs="0" nouveaux="0" pourcent="100.00" />
+	<langue code="fr_tu" url="https://trad.spip.net/tradlang_module/saisies?lang_cible=fr_tu" total="301" traduits="301" relire="0" modifs="0" nouveaux="0" pourcent="100.00">
 		<traducteur nom="beatnick" lien="https://trad.spip.net/auteur/beatnick" />
 		<traducteur nom="Cerf" lien="https://trad.spip.net/auteur/cerf" />
 		<traducteur nom="maieul" lien="https://trad.spip.net/auteur/maieul" />
 		<traducteur nom="RealET" lien="https://trad.spip.net/auteur/realet" />
 	</langue>
-	<langue code="it" url="https://trad.spip.net/tradlang_module/saisies?lang_cible=it" total="298" traduits="234" relire="0" modifs="7" nouveaux="57" pourcent="78.52">
+	<langue code="it" url="https://trad.spip.net/tradlang_module/saisies?lang_cible=it" total="301" traduits="234" relire="0" modifs="7" nouveaux="60" pourcent="77.74">
 		<traducteur nom="Alberto" lien="https://trad.spip.net/auteur/alberto" />
 	</langue>
-	<langue code="mg" url="https://trad.spip.net/tradlang_module/saisies?lang_cible=mg" total="298" traduits="298" relire="0" modifs="0" nouveaux="0" pourcent="100.00">
+	<langue code="mg" url="https://trad.spip.net/tradlang_module/saisies?lang_cible=mg" total="301" traduits="298" relire="0" modifs="0" nouveaux="3" pourcent="99.00">
 		<traducteur nom="iBesorongola" lien="https://trad.spip.net/auteur/ibesorongola" />
 	</langue>
-	<langue code="nl" url="https://trad.spip.net/tradlang_module/saisies?lang_cible=nl" total="298" traduits="174" relire="0" modifs="31" nouveaux="93" pourcent="58.39">
+	<langue code="nl" url="https://trad.spip.net/tradlang_module/saisies?lang_cible=nl" total="301" traduits="174" relire="0" modifs="31" nouveaux="96" pourcent="57.81">
 		<traducteur nom="Hanjo" lien="https://trad.spip.net/auteur/hanjo" />
 		<traducteur nom="maieul" lien="https://trad.spip.net/auteur/maieul" />
 		<traducteur nom="mpossoz" lien="https://trad.spip.net/auteur/mpossoz" />
 	</langue>
-	<langue code="pt_br" url="https://trad.spip.net/tradlang_module/saisies?lang_cible=pt_br" total="298" traduits="298" relire="0" modifs="0" nouveaux="0" pourcent="100.00">
+	<langue code="pt_br" url="https://trad.spip.net/tradlang_module/saisies?lang_cible=pt_br" total="301" traduits="299" relire="0" modifs="0" nouveaux="2" pourcent="99.34">
 		<traducteur nom="placido" lien="https://trad.spip.net/auteur/placido" />
 		<traducteur nom="Ricardo Porto" lien="https://trad.spip.net/auteur/ricardo-porto" />
 	</langue>
-	<langue code="ru" url="https://trad.spip.net/tradlang_module/saisies?lang_cible=ru" total="298" traduits="121" relire="0" modifs="30" nouveaux="147" pourcent="40.60">
+	<langue code="ru" url="https://trad.spip.net/tradlang_module/saisies?lang_cible=ru" total="301" traduits="121" relire="0" modifs="30" nouveaux="150" pourcent="40.20">
 		<traducteur nom="nazar" lien="https://trad.spip.net/auteur/nazar" />
 		<traducteur nom="olly" lien="https://trad.spip.net/auteur/olly" />
 		<traducteur nom="Serge Markitanenko" lien="https://trad.spip.net/auteur/serge-markitanenko" />
 	</langue>
-	<langue code="sk" url="https://trad.spip.net/tradlang_module/saisies?lang_cible=sk" total="298" traduits="134" relire="0" modifs="26" nouveaux="138" pourcent="44.97">
+	<langue code="sk" url="https://trad.spip.net/tradlang_module/saisies?lang_cible=sk" total="301" traduits="134" relire="0" modifs="26" nouveaux="141" pourcent="44.52">
 		<traducteur nom="jaro" lien="https://trad.spip.net/auteur/jaro" />
 	</langue>
 </traduction>
