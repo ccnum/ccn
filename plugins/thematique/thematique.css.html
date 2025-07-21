@@ -2423,7 +2423,6 @@ div.donnees_classe {
 .popup .bloc_texte .spip_documents,
 .popup .bloc_documents .spip_documents {
 	text-align:center;
-	width: 95%;
 }
 
 .popup .portfolio_grand dt.spip_doc_titre {
@@ -3542,16 +3541,22 @@ li a, li a:hover {
 	width:260px;
 	color:black;
 }
+.portfolio .spip_documents {
+	height: 5rem;
+}
+.portfolio .spip_documents a {
+	border: 0;
+	display: inline-block;
+	width: 95%;
+}
 
 .portfolio .action_supprimer {
-	position:absolute;
-	top:0;
-	right:0;
-	float:none;
-	margin:0;
-	bottom:0;
-	width:30px;
-	height:100%;
+	bottom: 0;
+	height: 100%;
+	margin: 0;
+	right: 0;
+	top: 0;
+	width: 3%;
 }
 
 .portfolio .crayon-icones {
@@ -3583,11 +3588,6 @@ li a, li a:hover {
 	background-position: 50% 50% !important;
 	margin-top: 0 !important;
 	background-color: rgba(0, 0, 0, 0) !important;
-}
-
-
-.portfolio a {
-	border:0;
 }
 
 .portfolio_grand {
@@ -3976,11 +3976,6 @@ ul#forum, .lien_forum {
 
 .crayon-html .formulaire_crayon {
 	max-width: none !important;
-}
-
-.formulaire_crayon {
-	width:400px;
-	height:500px;
 }
 
 .socialtags ul li img {
