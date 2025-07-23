@@ -11,7 +11,7 @@ run_as() {
 
 # version_greater A B returns whether A > B
 version_greater() {
-	[ "$(printf '%s\n' "$@" | sort -t '.' -n -k1,1 -k2,2 -k3,3 | head -n 1)" != "$1" ]
+    [ "$(printf '%s\n' "$@" | sort -t '.' -n -k1,1 -k2,2 -k3,3 | head -n 1)" != "$1" ]
 }
 
 wait_for_db() {
@@ -51,9 +51,10 @@ echo 'date.timezone=${PHP_TIMEZONE}'; \
 
 # Configure Apache port
 if [ "${APACHE_PORT}" != "80" ]; then
-	echo "Listen ${APACHE_PORT}" > /etc/apache2/ports.conf
-	sed -i "s/:80>/:${APACHE_PORT}>/g" /etc/apache2/sites-available/000-default.conf
+    echo "Listen ${APACHE_PORT}" > /etc/apache2/ports.conf
+    sed -i "s/:80>/:${APACHE_PORT}>/g" /etc/apache2/sites-available/000-default.conf
 fi
+
 
 if version_greater "$image_version" "$installed_version"; then
 	echo >&2 "SPIP upgrade in $PWD - copying now..."
@@ -106,11 +107,11 @@ if [[ ! -e config/connect.php && ${SPIP_AUTO_INSTALL} = 1 ]]; then
 		--admin-email ${SPIP_ADMIN_EMAIL} \
 		--admin-pass ${SPIP_ADMIN_PASS}" || true
 
-	# Try to depote the repository
-	#if ! spip plugins:svp:depoter https://plugins.spip.net/depots/principal.xml; then
-	#    echo "Warning: Unable to depote repository https://plugins.spip.net/depots/principal.xml"
-		# Optionally handle this error differently, or just continue
-	#fi
+    # Try to depote the repository
+    #if ! spip plugins:svp:depoter https://plugins.spip.net/depots/principal.xml; then
+    #    echo "Warning: Unable to depote repository https://plugins.spip.net/depots/principal.xml"
+        # Optionally handle this error differently, or just continue
+    #fi
 fi
 
 spip plugins:activer cextras -y
@@ -234,3 +235,5 @@ fi
 #        rm IMG.tar.gz
 #    fi
 #fi
+
+exec "$@"
