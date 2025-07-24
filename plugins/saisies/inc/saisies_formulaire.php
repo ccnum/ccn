@@ -41,6 +41,9 @@ function saisies_chercher_formulaire($form, $args, $je_suis_poste = false) {
 		$saisies = false;
 	} else {
 		$saisies = saisies_appliquer_depublie_recursivement($saisies);// Pour le cas des constructeurs
+		if (isset($saisies['options']['prefixe_id'])) {
+			$saisies = saisies_prefixer_id($saisies, $saisies['options']['prefixe_id']);
+		}
 	}
 
 	return $saisies;

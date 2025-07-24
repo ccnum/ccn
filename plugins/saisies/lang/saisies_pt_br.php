@@ -12,6 +12,7 @@ return [
 	// B
 	'bouton_parcourir_docs_article' => 'Procurar na matéria',
 	'bouton_parcourir_docs_breve' => 'Procurar na nota',
+	'bouton_parcourir_docs_objet' => 'Navegar pelas imagens',
 	'bouton_parcourir_docs_rubrique' => 'Procurar na seção',
 	'bouton_parcourir_mediatheque' => 'Procurar na mídiateca',
 

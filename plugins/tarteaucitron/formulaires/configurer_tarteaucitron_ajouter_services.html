@@ -1,0 +1,86 @@
+<div id="formulaire_#FORM"" class="formulaire_spip formulaire_configurer formulaire_#FORM">
+	<div class="box__header">
+		<h3><:tarteaucitron:cfg_titre_ajouter_services:></h3>
+	</div>
+	<div>
+		<ol class="explication">
+			<:tarteaucitron:cfg_explication:>
+		</ol>
+		<div class="editer-groupe">
+			<div class="editer editer_searchService obligatoire saisie_input editer_even">
+				<label class="label" for="champ_searchService"><:tarteaucitron:cfg_titre_recherche_services:></label>
+				<input type="text" name="searchService" class="text" id="champ_searchService" value="" required="required" placeholder="<:tarteaucitron:cfg_titre_placeholder_recherche_services:>" autocomplete="off">
+			</div>
+		</div>
+
+		<div class="image_loading"></div>
+		<fieldset>
+			<legend><:tarteaucitron:cfg_titre_result_recherche_services:></legend>
+			<div id="tac_results"></div>
+		</fieldset>
+	</div>
+</div>
+<script>
+	var tac_url = '?exec=tarteaucitron_liste_services',
+		oldValue = ''
+		services = {};
+
+	$('#formulaire_#FORM').animateLoading();
+
+	$.ajax({
+		url: tac_url,
+		dataType: 'json',
+		success: (data) => {
+			services = data
+		},
+		complete: () => {
+			$('#formulaire_#FORM').endLoading(true)
+		}
+	});
+
+	// Appliquer un délai à l'exécution d'une fonction
+	function delay(fn, ms) {
+		let timer = 0
+		return function(...args) {
+			clearTimeout(timer)
+			timer = setTimeout(fn.bind(this, ...args), ms || 0)
+		}
+	}
+
+	// Fonction de recherche
+	function rechService(search) {
+		if (!search) {
+			$('#tac_results').html('')
+			return false
+		}
+
+		var html = '<ul class="liste-items">'
+		jQuery.each(services, function(service, prop) {
+			var status = ''
+			var properties = Object.entries(prop)
+			jQuery.each(properties, function(i,property) {
+				if (property[0]=='statut') {
+					status = property[1]
+				}
+			})
+			if (service.toLowerCase().indexOf(search) >= 0) {
+				var btn_texte = (status=='inactif') ? '<:tarteaucitron:cfg_installer:>' : '<:tarteaucitron:cfg_desinstaller:>'
+				var action = (status=='inactif') ? 'tarteaucitron_activer_service' : 'tarteaucitron_desactiver_service'
+				html += '<li class="item">' + service + '<a href="?action=' + action + '&service=' + service + '&redirect=?exec=configurer_services" class="btn">' + btn_texte + '</a></li>'
+			}
+		});
+		html += '</ul>'
+
+		$('#tac_results').html(html)
+	}
+
+	// On actualise les résultats de recherche à chaque modification
+	$('#champ_searchService').keyup(delay((e) => {
+		if (e.target.value == oldValue) {
+			e.preventDefault()
+			return false
+		}
+		oldValue = e.target.value
+		rechService(e.target.value)
+	}, 250));
+</script>

@@ -1,0 +1,35 @@
+<paquet
+	prefix="tarteaucitron"
+	categorie="communication"
+	version="1.8.0"
+	etat="stable"
+	compatibilite="[4.1.0;4.*]"
+	logo="prive/themes/spip/images/tarteaucitron-64.png"
+	documentation="https://contrib.spip.net/Tarteaucitron-5292"
+	schema="1.1.1"
+>
+
+	<nom>Tarteaucitron</nom>
+	<!-- Solution de gestion de consentement aux cookies -->
+
+	<auteur>Peetdu</auteur>
+
+	<licence>GNU/GPL</licence>
+	<credit lien="https://tarteaucitron.io/">Tarteaucitron, by Amauri Champeaux, GPL v3 license</credit>
+	<credit lien="https://31mille.net">Logo au format SVG par Philippe Guillot</credit>
+
+	<necessite nom="saisies" compatibilite="[3.43.2;]" />
+	<necessite nom="verifier" compatibilite="[2.0.0;]" />
+
+	<pipeline nom="autoriser" inclure="tarteaucitron_autorisations.php" />
+	<pipeline nom="insert_head" inclure="tarteaucitron_pipelines.php" />
+	<pipeline nom="affichage_final" inclure="tarteaucitron_pipelines.php" />
+	<pipeline nom="porte_plume_barre_pre_charger" inclure="tarteaucitron_pipelines.php" />
+	<pipeline nom="porte_plume_lien_classe_vers_icone" inclure="tarteaucitron_pipelines.php" />
+
+	<menu nom="configurer_tarteaucitron" titre="tarteaucitron:tarteaucitron_titre" parent="menu_squelette" icone="images/tarteaucitron-16.png" action="configurer_affichage" />
+	<onglet nom="configurer_affichage" titre="tarteaucitron:cfg_titre_bandeau" icone="" parent="configurer_tarteaucitron" action="configurer_affichage" />
+	<onglet nom="configurer_services" titre="tarteaucitron:cfg_titre_liste_services" icone="" parent="configurer_tarteaucitron" action="configurer_services" />
+	<onglet nom="configurer_technique" titre="tarteaucitron:cfg_titre_technique" icone="" parent="configurer_tarteaucitron" action="configurer_technique" />
+
+</paquet>

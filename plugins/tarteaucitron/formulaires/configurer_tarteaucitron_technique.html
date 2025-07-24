@@ -1,0 +1,29 @@
+<div class="formulaire_spip formulaire_configurer formulaire_#FORM">
+	[<p class="reponse_formulaire reponse_formulaire_ok">(#ENV*{message_ok})</p>]
+	[<p class="reponse_formulaire reponse_formulaire_erreur">(#ENV*{message_erreur})</p>]
+
+	<form method="post" action="#ENV{action}">
+		<div>
+			#ACTION_FORMULAIRE{#ENV{action}}
+			<fieldset>
+				<legend><:tarteaucitron:cfg_avance:></legend>
+
+				<div class="editer-groupe">
+					[(#SAISIE{input, cookieName, label=<:tarteaucitron:cfg_cookiename:>, placeholder=tarteaucitron})]
+					[(#SAISIE{checkbox, adblocker, label=<:tarteaucitron:cfg_adblocker:>, data=[(#ARRAY{true,<:item_oui:>})]})]
+					[(#SAISIE{checkbox, useExternalCss, label=<:tarteaucitron:cfg_externalcss:>, explication=<:tarteaucitron:cfg_externalcss_explication:>, data=[(#ARRAY{true,<:item_oui:>})]})]
+					[(#SAISIE{input, cookieDomain, label=<:tarteaucitron:cfg_cookiedomain:>, explication=<:tarteaucitron:cfg_cookiedomain_explication:>, placeholder=.my-multisite-domaine.fr})]
+				</div>
+			</fieldset>
+
+			<input type="hidden" name="_meta_casier" value="tarteaucitron" />
+			<p class="boutons"><span class="image_loading">&nbsp;</span><input type="submit" class="submit" value="<:bouton_enregistrer:>" /></p>
+		</div>
+	</form>
+
+	<fieldset>
+		<legend><:tarteaucitron:cfg_nettoyer_iframes:></legend>
+		<p class="explication"><:tarteaucitron:cfg_nettoyer_iframes_explication:></p>
+		<div class="boutons"><a href="/spip.php?action=tarteaucitron_nettoyer_iframes" class="btn"><:tarteaucitron:cfg_nettoyer_iframes_launch:></a></div>
+	</fieldset>
+</div>

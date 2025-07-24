@@ -508,7 +508,7 @@ function saisies_mapper_option($saisies, $options, $callback, $args = [], $recur
 			}
 			// On parcourt récursivement toutes les saisies enfants
 			if (is_array($saisie['saisies'] ?? '') && $recursif) {
-				$saisies[$cle]['saisies'] = saisies_mapper_option($saisie['saisies'], $option, $callback, $args, $recursif);
+				$saisies[$cle]['saisies'] = saisies_mapper_option($saisie['saisies'], $options, $callback, $args, $recursif);
 			}
 		}
 	}
@@ -799,6 +799,36 @@ function saisies_wrapper_fieldset(array $saisies, array $options): array {
 	];
 	if ($options_globales) {
 		$saisies['options'] = $options_globales;
+	}
+	return $saisies;
+}
+
+/**
+ * Ajouter un préfixe aux id html des saisies.
+ * Prend l'id explicite si existant
+ * A défaut, le nom de la saisie
+ * Ajoute le préfixe devant (avec un `_` intercalaire)
+ * Le tout récursivement
+ * @param array $saisies
+ * @param string $prefixe,  le préfixe sans le `_`
+ **/
+function saisies_prefixer_id(array $saisies, string $prefixe): array {
+	$options_globales = $saisies['options'] ?? [];
+	unset($saisies['options']);
+	foreach ($saisies as &$saisie) {
+		$id = $saisie['options']['id'] ?? $saisie['options']['nom'] ?? '';
+		if ($id) {
+			$saisie['options']['id'] = $prefixe . '_' . $id;
+		}
+
+		// Récursion
+		if (isset($saisie['saisies'])) {
+			$saisie['saisies'] = saisies_prefixer_id($saisie['saisies'], $prefixe);
+		}
+
+	}
+	if ($options_globales) {
+		$saisies = array_merge($saisies, ['options' => $options_globales]);
 	}
 	return $saisies;
 }
