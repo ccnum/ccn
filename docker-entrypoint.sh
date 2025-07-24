@@ -152,6 +152,7 @@ spip config:ecrire -p bigup max_file_size:${PHP_UPLOAD_MAX_FILESIZE%M}
 spip config:ecrire -p mediabox active:oui
 spip config:ecrire -p notation acces:ide
 spip config:ecrire -p notation change_note:oui
+spip config:ecrire -p notation publierdans:7
 
 # Default mes_options
 rm -rf config/mes_options.php
