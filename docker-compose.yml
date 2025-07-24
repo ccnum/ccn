@@ -11,7 +11,7 @@ services:
       - MYSQL_PASSWORD=${SPIP_DB_PASS}
 
   app:
-    image: erasme/spip-ccn:helm
+    image: erasme/spip-ccn:custom-port
     restart: always
     env_file:
       - .env
@@ -26,4 +26,4 @@ services:
     links:
       - db:mysql
     ports:
-      - 8880:80
+      - 8005:80

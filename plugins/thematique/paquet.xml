@@ -13,7 +13,8 @@
 	<licence>GNU/GPL</licence>
 
 	<necessite nom="notifications" />
-	<utilise nom="crayons" />
+	<necessite nom="autorite" />
+	<necessite nom="crayons" />
 	<necessite nom="socialtags" />
 	<utilise nom="jqueryui" />
 	<necessite nom="cextras" />

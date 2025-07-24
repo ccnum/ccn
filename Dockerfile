@@ -194,7 +194,10 @@ ENV PHP_POST_MAX_SIZE 40M
 ENV PHP_UPLOAD_MAX_FILESIZE 32M
 ENV PHP_TIMEZONE Europe/Paris
 
-EXPOSE 80
+# Apache
+ENV APACHE_PORT 80
+
+EXPOSE ${APACHE_PORT}
 
 COPY ./plugins /usr/src/spip/plugins/
 COPY ./docker-entrypoint.sh /

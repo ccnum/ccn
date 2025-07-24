@@ -49,6 +49,12 @@ echo 'upload_max_filesize=${PHP_UPLOAD_MAX_FILESIZE}'; \
 echo 'date.timezone=${PHP_TIMEZONE}'; \
 ) > /usr/local/etc/php/conf.d/spip.ini
 
+# Configure Apache port
+if [ "${APACHE_PORT}" != "80" ]; then
+    echo "Listen ${APACHE_PORT}" > /etc/apache2/ports.conf
+    sed -i "s/:80>/:${APACHE_PORT}>/g" /etc/apache2/sites-available/000-default.conf
+fi
+
 
 if version_greater "$image_version" "$installed_version"; then
 	echo >&2 "SPIP upgrade in $PWD - copying now..."
@@ -146,6 +152,7 @@ spip config:ecrire -p bigup max_file_size:${PHP_UPLOAD_MAX_FILESIZE%M}
 spip config:ecrire -p mediabox active:oui
 spip config:ecrire -p notation acces:ide
 spip config:ecrire -p notation change_note:oui
+spip config:ecrire -p notation publierdans:7
 
 # Default mes_options
 rm -rf config/mes_options.php

@@ -1,0 +1,25 @@
+<div class="formulaire_spip formulaire_configurer formulaire_#FORM">
+
+	[<p class="reponse_formulaire reponse_formulaire_ok">(#ENV*{message_ok})</p>]
+	[<p class="reponse_formulaire reponse_formulaire_erreur">(#ENV*{message_erreur})</p>]
+
+	<form method="post" action="#ENV{action}">
+		<div>
+			#ACTION_FORMULAIRE{#ENV{action}}
+
+			<fieldset>
+				<legend><:tarteaucitron:legend_bandeau_principal:></legend>
+				<div class="editer-groupe">
+					[(#SAISIE{checkbox, highprivacy, label=<:tarteaucitron:cfg_afficher_bandeau:>, explication=<:tarteaucitron:cfg_afficher_bandeau_explication:>, attention=<:tarteaucitron:cfg_afficher_bandeau_attention:>, data=[(#ARRAY{true,<:item_oui:>})]})]
+					[(#SAISIE{selection, orientation, option_intro=<:tarteaucitron:cfg_choose_option:>, label=<:tarteaucitron:cfg_placement_bandeau:>, defaut=middle, data=[(#ARRAY{top,<:tarteaucitron:cfg_bandeau_haut_page:>,middle,<:tarteaucitron:cfg_bandeau_milieu:>,bottom,<:tarteaucitron:cfg_bandeau_bas_page:>})]})]
+					[(#SAISIE{radio, boutons, label=<:tarteaucitron:cfg_btn_accetpall:>, explication=<:tarteaucitron:cfg_btn_accetpall_explication:>, attention=<:tarteaucitron:cfg_btn_accetpall_attention:>, data=[(#ARRAY{none,<:tarteaucitron:cfg_btn_aucun:>,both,<:tarteaucitron:cfg_btn_deux:>,acceptallonly,<:tarteaucitron:cfg_btn_acceptonly:>})]})]
+					[(#SAISIE{textarea, lang_alertBigPrivacy, label=<:tarteaucitron:cfg_text_alertbigprivacy:>, explication=<:tarteaucitron:cfg_text_alertbigprivacy_explication:>, rows=2})]
+					[(#SAISIE{checkbox, closePopup, label=<:tarteaucitron:cfg_close_popup:>, explication=<:tarteaucitron:cfg_close_popup_explication:>, data=[(#ARRAY{true,<:item_oui:>})]})]
+				</div>
+			</fieldset>
+
+			<input type="hidden" name="_meta_casier" value="tarteaucitron" />
+			<p class="boutons"><span class="image_loading">&nbsp;</span><input type="submit" class="submit" value="<:bouton_enregistrer:>" /></p>
+		</div>
+	</form>
+</div>

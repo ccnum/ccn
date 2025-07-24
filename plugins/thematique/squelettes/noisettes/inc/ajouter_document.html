@@ -7,20 +7,19 @@
 				</a>
 			]
 			[(#MIME_TYPE|match{image}|non)
-			<div class="doc">
-				<a href="#URL_DOCUMENT" title="[(#TITRE)]" class="mediabox" type="#MIME_TYPE">
+				<a href="#URL_DOCUMENT" title="[(#TITRE)]" [(#EXTENSION|!={docx}|oui)class="mediabox" ]type="#MIME_TYPE">
 					[(#LOGO_DOCUMENT|image_reduire{100}|inserer_attribut{style,'border:0px solid #000000;'})]<span>[(#FICHIER|basename)]</span>
 				</a>
-			</div>
 			]
 
 			[(#AUTORISER{modifier,article,#ID_ARTICLE}|oui)
-				[<a href="(#URL_ACTION_AUTEUR{dissocier_document,#ID_ARTICLE-article-#ID_DOCUMENT-suppr-safe,#URL_SITE_SPIP/spip.php?article#ID_ARTICLE&var_mode=recalcul})"
+				[<div class='action_supprimer'>
+					<a href="(#URL_ACTION_AUTEUR{dissocier_document,#ID_ARTICLE-article-#ID_DOCUMENT-suppr-safe,#URL_SITE_SPIP/spip.php?article#ID_ARTICLE&var_mode=recalcul})"
 					class='supprimer_couleur'
 					onClick='return confirmation("Êtes-vous sûr de vouloir supprimer ce document ?")'
 					title='Supprimer ce document'>
-					<div class='action_supprimer'></div>
-				</a>]
+					</a>
+				</div>]
 			]
 		</div>
 	</BOUCLE_documents_joints>
