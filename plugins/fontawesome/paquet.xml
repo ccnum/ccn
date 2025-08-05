@@ -1,0 +1,22 @@
+<paquet
+	prefix="fontawesome"
+	categorie="squelette"
+	version="1.1.0"
+	etat="stable"
+	compatibilite="[3.2.7;4.*]"
+	logo="img/fontawesome-64.png"
+	documentation="https://fontawesome.com/"
+>
+
+	<nom>Font Awesome</nom>
+	<!-- La version free de Font Awesome en SVG -->
+
+	<auteur lien='https://nursit.com'>Nursit</auteur>
+	<credit lien="https://fontawesome.com/">FontAwesome Free 5.15.4</credit>
+
+	<licence>GNU/GPL</licence>
+
+	<pipeline nom="insert_head_css" inclure="fontawesome_fonctions.php" />
+	<procure nom="fontawesomefree" version="5.15.4" />
+
+</paquet>
