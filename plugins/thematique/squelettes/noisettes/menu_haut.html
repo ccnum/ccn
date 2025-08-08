@@ -1,37 +1,21 @@
 #CACHE{0}
-<ul id="menu_haut_titre" class="bloc_titre">
+<div id="menu_haut_titre" class="bloc_titre">
 	[(#REM)Titre]
-
-	<div id="menu_haut_titre_fixed">
-		<li class="double bloc1">
-			<a href="[(#URL_SITE_SPIP)]" title="Accueil">
-				[<span class="logo">(#CHEMIN{img/pictos_blc/[(#NOM_SITE_SPIP)].png}|image_reduire{100})</span>]
-				[<span class="logo">(#CHEMIN{img/pictos_blc/[(#NOM_SITE_SPIP|replace{' ',''}|strtolower)].svg}|image_reduire{100})</span>]
-				[(#NOM_SITE_SPIP)]
-			</a>
-		</li>
-		<li class="double bloc2">
-			<a href="[(#CONFIG{th/site_ent_url}|sinon{http://www.laclasse.com})]" target="_blank" title="[(#CONFIG{th/site_ent_nom}|sinon{.laclasse.com})]">
-				[(#CONFIG{th/site_ent_nom}|sinon{laclasse.com})]
-			</a>
-		</li>
+	<div class="select" name="annee_scolaire">
+		<input type="radio" value="#ENV{annee_scolaire}" class="first">
+			<label class="first_label">
+				[<span class="logo">(#CHEMIN{img/pictos_blc/[(#NOM_SITE_SPIP)].png}|image_reduire{24})</span>]
+				[<span class="logo">(#CHEMIN{img/pictos_blc/[(#NOM_SITE_SPIP|replace{' ',''}|strtolower)].svg}|image_reduire{24})</span>]
+				[(#NOM_SITE_SPIP) ][(#ENV{annee_scolaire})]-[(#ENV{annee_scolaire}|plus{1})]
+			</label>
+		<BOUCLE_dates(RUBRIQUES){!par titre}{racine}{titre==^[2]}>
+		<input type='radio' value='#TITRE'><label>#TITRE/[(#TITRE|plus{1})]</label>
+		</BOUCLE_dates>
 	</div>
-
-	<div id="menu_haut_titre_more">
-		<div class="select" name="annee_scolaire">
-			<input type="radio" value="#ENV{annee_scolaire}" class="first">
-				<label class="first_label">
-					<span id="annee_scolaire_more">année scolaire </span>
-					<span class="highlight">#ENV{annee_scolaire}/[(#ENV{annee_scolaire}|plus{1})]</span>
-				</label>
-			<BOUCLE_dates(RUBRIQUES){!par titre}{racine}{titre==^[2]}>
-			<input type='radio' value='#TITRE'><label>#TITRE/[(#TITRE|plus{1})]</label>
-			</BOUCLE_dates>
-		</div>
-	</div>
-
-	<!--[(#MODELE{logo_menu}{valeur=aide}{title=Aide}{href=#CHEMIN{img/modeemploi.pdf}})]-->
-</ul>
+</div>
+<div id="menu_haut_user" class="bloc_titre">
+	<INCLURE{fond=noisettes/inc/authentification, id_auteur, admin, restreint, type_restreint} />
+</div>
 
 <script>
 	$(function(){
@@ -49,10 +33,6 @@
 	});
 </script>
 
-<ul id="menu_haut_user" class="bloc_titre">
-	<INCLURE{fond=noisettes/inc/authentification, id_auteur, admin, restreint, type_restreint} />
-</ul>
-
 [(#RESTREINT|!={0}|oui|et{#RESTREINT|!={''}}|et{#TYPE_RESTREINT|!={''}}|et{#TYPE_RESTREINT|!={travail_en_cours}|oui}|oui)
 <ul id="menu_haut_publier_consigne" class="bloc_titre">
 	<li>
@@ -65,16 +45,24 @@
 [(#CONST{_PROJET}|=={laclasse}|oui)
 <ul id="menu_haut_logos" class="bloc_titre">
 	<li>
-		<a href="https://erasme.org/-Classes-culturelles-numeriques-" target="_blank"><img src="#CHEMIN{img/logos/logo_ccn_horizontal.svg}" /></a>
+		[(#CHEMIN{img/logos/ccn.svg}|balise_img)]
 	</li>
 	<li>
-		<a href="https://www.erasme.org" target="_blank"><img src="#CHEMIN{img/logos/logo_erasme_metropole.svg}" /></a>
+		[(#CHEMIN{img/logos/erasme.svg}|balise_img)]
 	</li>
 	<li>
-		<img src="#CHEMIN{img/logos/logo_europe_engage.svg}" />
+		[(#CHEMIN{img/logos/laclasse.svg}|balise_img|image_reduire{130})]
 	</li>
 	<li>
-		<img src="#CHEMIN{img/logos/logo_europe_cofinance.svg}" />
+		[(#CHEMIN{img/logos/metropolelyon.svg}|balise_img|image_reduire{70})]
+	</li>
+	<li>
+		[(#CHEMIN{img/logos/europe.svg}|balise_img)]
+	</li>
+	<li class="aide">
+		<a id="bouton_aide" href="[(#CHEMIN{pdf/tutoriels.pdf})]" class="mediabox boxIframe boxWidth-80% boxHeight-80%[(#TEXTE|=={''}|oui)[logo_menu-(#VALEUR)]]">
+			[(#CHEMIN{img/logo_aide.svg}|balise_img)]
+		</a>
 	</li>
 </ul>
 ]
