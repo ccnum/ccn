@@ -12,7 +12,7 @@
 		[(#TEXTE|nl2br|image_reduire{210,1000})]
 	</div>
 </BOUCLE_article>
-	<BOUCLE_rub(RUBRIQUES){si #ENV{liste}|=={''}}{id_rubrique=#ENV{rub_jeu}}>
+	<BOUCLE_rub(RUBRIQUES){si #ENV{liste}|=={''}}{id_rubrique=#ENV{rub_jeu}}>#ID_PARENT
 		<BOUCLE_article1(ARTICLES){si #ENV{liste}|=={''}}{id_rubrique=#ID_PARENT}{titre LIKE presentation}{tout}{0,1}>
 			[<div id="image-presentation">(#LOGO_ARTICLE|image_reduire{100})</div>]
 			<div id="texte-presentation" class="#EDIT{texte}">
