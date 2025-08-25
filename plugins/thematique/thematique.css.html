@@ -474,7 +474,7 @@ body {
 	color: #ffffff;
 }
 #menu_haut_titre .select:hover .first_label {
-	color: #000000;
+	background-color: #000000;
 }
 #menu_haut_titre .select .first_label:hover {
 	color: #000000;
@@ -490,9 +490,6 @@ body {
 	top: 8px;
 	width: 15px;
 	height: 15px;
-}
-#menu_haut_titre .select:after {
-	background-color: #ffffff;
 }
 
 #zone_bas {
@@ -3674,7 +3671,7 @@ ul#forum, .lien_forum {
 	margin-right:0;
 }
 
-.hasSidebarOpen #sidebarExpand {
+.hasSidebarOpen #sidebarExpand, .hasSidebarOpen #sidebarCache {
 	left:-38px;
 	z-index: 100000;
 }
@@ -3689,7 +3686,7 @@ ul#forum, .lien_forum {
 		 -o-transition:margin 1000ms ease, width 1000ms ease;
 			transition:margin 1000ms ease, width 1000ms ease;
 }
-#sidebarExpand {
+#sidebarExpand,#sidebarCache {
 
 	-webkit-transition:all 1000ms ease, background 500ms ease;
 	 -moz-transition:all 1000ms ease, background 500ms ease;
@@ -3697,7 +3694,6 @@ ul#forum, .lien_forum {
 			transition:all 1000ms ease, background 500ms ease;
 
 	position: absolute;
-	left: 0;
 	top: 5px;
 	height: 33px;
 	width: 33px;
@@ -3706,34 +3702,9 @@ ul#forum, .lien_forum {
 	box-shadow: 0 2px 7px rgba(0,0,0,.3);
 	font-size: 0;
 	line-height: 33px;
-	z-index: -1;
-	background:url(#ENV{chemin}/img/expandIcon_off.png) no-repeat center center white
 }
-
-.hasSidebarExpanded #sidebarExpand {
-	background:url(#ENV{chemin}/img/expandIcon_on.png) no-repeat center center white
-}
-
-#sidebarCache {
-	display:block;
-	position:fixed;
-	background:transparent;
-	pointer-events:none;
-	z-index:1000;
-	left:0;
-	top:0;
-	height:100%;
-	width:100%;
-
-	-webkit-transition:background 1000ms ease;
-	 -moz-transition:background 1000ms ease;
-		 -o-transition:background 1000ms ease;
-			transition:background 1000ms ease;
-}
-
-.hasSidebarExpanded #sidebarCache {
-	background:rgba(0,0,0,.8);
-	pointer-events:all;
+#sidebarExpand .icon, #sidebarCache .icon {
+	display: contents;
 }
 
 .timeline_item {
@@ -3756,7 +3727,7 @@ ul#forum, .lien_forum {
 }
 
 .consigne_haute {
-	z-index:200
+	z-index:200;
 }
 
 .no_event {
