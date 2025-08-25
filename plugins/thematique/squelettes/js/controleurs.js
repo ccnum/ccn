@@ -36,12 +36,16 @@ $(function () {
 	$('#sidebarExpand').on(
 		'click', function () {
 			toggleSidebarExpand();
+			$('#sidebarExpand').addClass('masquer');
+			$('#sidebarCache').removeClass('masquer');
 		}
 	);
 
 	$('#sidebarCache').on(
 		'click', function () {
 			$('body').removeClass('hasSidebarExpanded');
+			$('#sidebarExpand').removeClass('masquer');
+			$('#sidebarCache').addClass('masquer');
 		}
 	);
 
