@@ -9,7 +9,7 @@
 				[(#NOM_SITE_SPIP) ][(#ENV{annee_scolaire})]-[(#ENV{annee_scolaire}|plus{1})]
 			</label>
 		<BOUCLE_dates(RUBRIQUES){!par titre}{racine}{titre==^[2]}>
-		<input type='radio' value='#TITRE'><label>#TITRE/[(#TITRE|plus{1})]</label>
+		<input type='radio' value='#TITRE' [(#ENV{annee_scolaire}|=={#TITRE}|oui)class="actif"]><label>#TITRE/[(#TITRE|plus{1})]</label>
 		</BOUCLE_dates>
 	</div>
 </div>
@@ -51,14 +51,14 @@
 		<a href="https://erasme.org" target="_blank">[(#CHEMIN{img/logos/erasme.svg}|balise_img)]</a>
 	</li>
 	<li>
-		<a href="https://www.laclasse.com/" target="_blank">[(#CHEMIN{img/logos/laclasse.svg}|balise_img|image_reduire{130})]</a>
+		<a href="https://www.laclasse.com/" target="_blank">[(#CHEMIN{img/logos/laclasse.svg}|balise_img|image_reduire{*,30})]</a>
 	</li>
 	<li>
-		<a href="https://www.grandlyon.com/" target="_blank">[(#CHEMIN{img/logos/metropolelyon.svg}|balise_img|image_reduire{70})]</a>
+		<a href="https://www.grandlyon.com/" target="_blank">[(#CHEMIN{img/logos/metropolelyon.svg}|balise_img|image_reduire{*,30})]</a>
 	</li>
 	<li class="aide">
 		<a id="bouton_aide" href="[(#CHEMIN{pdf/tutoriels.pdf})]" class="mediabox boxIframe boxWidth-80% boxHeight-80%[(#TEXTE|=={''}|oui)[logo_menu-(#VALEUR)]]">
-			[(#CHEMIN{img/logo_aide.svg}|balise_img)]
+			[(#CHEMIN{img/logo_aide.svg}|balise_img|image_reduire{*,30})]
 		</a>
 	</li>
 </ul>
