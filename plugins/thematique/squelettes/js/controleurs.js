@@ -40,12 +40,16 @@ $(function () {
 			$('#sidebarCache').removeClass('masquer');
 		}
 	);
-
 	$('#sidebarCache').on(
 		'click', function () {
 			$('body').removeClass('hasSidebarExpanded');
 			$('#sidebarExpand').removeClass('masquer');
 			$('#sidebarCache').addClass('masquer');
+		}
+	);
+	$('#sidebarCache .close').on(
+		'click', function () {
+			$('body').removeClass('hasSidebarOpen hasSidebarExpanded');
 		}
 	);
 
@@ -74,8 +78,7 @@ $(function () {
 			}
 		}
 	);
-}
-);
+});
 
 var antifloodHashChange = false;
 
