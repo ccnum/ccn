@@ -49,8 +49,11 @@ et/ou
 	<div id="loading_feedback">Chargement</div>
 
 	<div id="sidebar">
-		<div id="sidebarCache" class="masquer">#FA_ICON{chevron-right,'',Fermer}</div>
-		<div id="sidebarExpand">#FA_ICON{chevron-left,'',Ouvrir}</div>
+		<div id="sidebarCache" class="masquer">
+			#FA_ICON{chevron-right,'',Réduire}
+			[(#CHEMIN{img/close.svg}|balise_img|inserer_attribut{class,close})]
+		</div>
+		<div id="sidebarExpand">#FA_ICON{chevron-left,'',Agrandir}</div>
 
 		<div id="sidebar_content">
 			<div id="sidebar_main_around">
