@@ -1,17 +1,22 @@
 #CACHE{0}
-[(#SESSION{id_auteur}|oui)
-	<div class="bloc2">
-		<a class='mediabox boxIframe boxWidth-700px boxHeight-600px' href="#URL_PAGE{auteur_editer,id_auteur=#SESSION{id_auteur}}" title="Profil d'auteur">
+<div id="menu_haut_user" class="bloc_titre">
+	<BOUCLE_auteurs(AUTEURS){id_auteur}{tous}>
+		<div class="connecter">
 			[(#CHEMIN{img/logo_connecter_ok.svg}|balise_img|image_reduire{*,22})]
-		</a>
-	</div>
-	<div class="logo li_deconnexion"><a class="ajax logo_menu-deconnecter" href="[(#URL_LOGOUT)]" title="Se déconnecter"></a></div>
-	[(#REM)<INCLURE{fond=noisettes/inc/choix_rubrique_admin2, restreint, admin} />]
-]
-[(#SESSION{id_auteur}|non)
-	<div class="logo">
-		<a href="[(#URL_PAGE{login}|parametre_url{url,#SELF}|parametre_url{cicas,oui})]" class="logo_menu-connecter" title="Se connecter à l'ENT">
-			[(#CHEMIN{img/logo_connecter.svg}|balise_img|image_reduire{24})]
-		</a>
-	</div>
-]
+			<div class="login">#NOM</div>
+			<div class="connecter_plus">
+				<ul>
+					<li><a href="">Voir mon profil</a></li>
+					<li><a href="#URL_LOGOUT">Se déconnecter</a></li>
+				</ul>
+			</div>
+		</div>
+		[(#REM)<INCLURE{fond=noisettes/inc/choix_rubrique_admin2, restreint, admin} />]
+	</BOUCLE_auteurs>
+		<div class="logo">
+			<a href="[(#URL_PAGE{login}|parametre_url{url,#SELF}|parametre_url{cicas,oui})]" class="logo_menu-connecter" title="Se connecter à l'ENT">
+				[(#CHEMIN{img/logo_connecter.svg}|balise_img|image_reduire{24})]
+			</a>
+		</div>
+	<//B_auteurs>
+</div>
