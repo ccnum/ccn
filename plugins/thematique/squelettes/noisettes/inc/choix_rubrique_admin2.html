@@ -28,51 +28,50 @@
 ]
 
 [(#REM) Admin restreint]
-<B_rub_aut2>[(#GET{affiche}|=={oui}|oui)
-<div id="choix_rubrique_admin" name="rubrique_admin" class="select">
-<input type="radio" value="#ENV{restreint}" class="first"><label class="first_label">Je veux publier en tant que / dans <span class="highlight">[(#GET{titre}|couper{30})]</span></label>
-]
-	<div class="choix_rubrique_wrapper">
-		<BOUCLE_rub_aut2(RUBRIQUES auteurs){id_auteur=#SESSION{id_auteur}}{tout}>
-			[(#GET{affiche}|=={oui}|oui)
-			<input type="radio" value="#ID_RUBRIQUE" title="[(#TITRE|attribut_html)]"><label>[(#TITRE|couper{40})]</label>
-			]
-			<BOUCLE_rub4(RUBRIQUES){id_parent=#ID_RUBRIQUE}{tout}>
+<div class="bloc_titre">
+	<B_rub_aut2>[(#GET{affiche}|=={oui}|oui)
+	<div id="choix_rubrique_admin" name="rubrique_admin" class="select">
+	<input type="radio" value="#ENV{restreint}" class="first"><label class="first_label">Je veux publier en tant que / dans <span class="highlight">[(#GET{titre}|couper{30})]</span></label>
+	]
+		<div class="choix_rubrique_wrapper">
+			<BOUCLE_rub_aut2(RUBRIQUES auteurs){id_auteur=#SESSION{id_auteur}}{tout}>
 				[(#GET{affiche}|=={oui}|oui)
-				<input type="radio" value="#ID_RUBRIQUE" title="[(#TITRE|attribut_html)]" [(#ID_RUBRIQUE|=={#ENV{restreint}}|oui) selected ]><label>[(#TITRE|couper{40})]</label>
+				<input type="radio" value="#ID_RUBRIQUE" title="[(#TITRE|attribut_html)]"><label>[(#TITRE|couper{40})]</label>
 				]
-			</BOUCLE_rub4>
-		</BOUCLE_rub_aut2>
-	</div>
-</div>
-</B_rub_aut2>
-
-
-	[(#REM) Admin complet]
-
-	<B_rub2>[(#GET{affiche}|=={oui}|oui)
-		<div id="choix_rubrique_admin" name="rubrique_admin" class="select">
-		<input type="radio" value="#ENV{restreint}" class="first"><label class="first_label">Je veux publier en tant que / dans <span class="highlight">[(#GET{titre}|couper{30})]</span></label>
-		]
-			<div class="choix_rubrique_wrapper">
-				<BOUCLE_rub2(RUBRIQUES){racine}{!par maj}{tout}>
+				<BOUCLE_rub4(RUBRIQUES){id_parent=#ID_RUBRIQUE}{tout}>
 					[(#GET{affiche}|=={oui}|oui)
-					<input type="radio" value="#ID_RUBRIQUE" title="[(#TITRE|attribut_html)]"><label>[(#TITRE|couper{40})]</label>
+					<input type="radio" value="#ID_RUBRIQUE" title="[(#TITRE|attribut_html)]" [(#ID_RUBRIQUE|=={#ENV{restreint}}|oui) selected ]><label>[(#TITRE|couper{40})]</label>
 					]
-					<BOUCLE_rub3(RUBRIQUES){id_parent=#ID_RUBRIQUE}{tout}>
-						[(#GET{affiche}|=={oui}|oui)
-						<input type="radio" value="#ID_RUBRIQUE" title="[(#TITRE|attribut_html)]"><label>[|-(#TITRE|couper{40})]</label>
-						]
-						<BOUCLE_rub5(RUBRIQUES){id_parent=#ID_RUBRIQUE}{tout}>
-						[(#GET{affiche}|=={oui}|oui)
-						<input type="radio" value="#ID_RUBRIQUE" title="[(#TITRE|attribut_html)]"><label>[&nbsp;&nbsp;&nbsp;&nbsp;|-(#TITRE|couper{40})]</label>
-						]
-						</BOUCLE_rub5>
-					</BOUCLE_rub3>
-				</BOUCLE_rub2>
-			</div>
-		[(#GET{affiche}|=={oui}|oui)
+				</BOUCLE_rub4>
+			</BOUCLE_rub_aut2>
 		</div>
-		]
-	</B_rub2>
-<//B_rub_aut2>
+	</div>
+	</B_rub_aut2>
+		[(#REM) Admin complet]
+		<B_rub2>[(#GET{affiche}|=={oui}|oui)
+			<div id="choix_rubrique_admin" name="rubrique_admin" class="select">
+			<input type="radio" value="#ENV{restreint}" class="first"><label class="first_label">Je veux publier en tant que / dans <span class="highlight">[(#GET{titre}|couper{30})]</span></label>
+			]
+				<div class="choix_rubrique_wrapper">
+					<BOUCLE_rub2(RUBRIQUES){racine}{!par maj}{tout}>
+						[(#GET{affiche}|=={oui}|oui)
+						<input type="radio" value="#ID_RUBRIQUE" title="[(#TITRE|attribut_html)]"><label>[(#TITRE|couper{40})]</label>
+						]
+						<BOUCLE_rub3(RUBRIQUES){id_parent=#ID_RUBRIQUE}{tout}>
+							[(#GET{affiche}|=={oui}|oui)
+							<input type="radio" value="#ID_RUBRIQUE" title="[(#TITRE|attribut_html)]"><label>[|-(#TITRE|couper{40})]</label>
+							]
+							<BOUCLE_rub5(RUBRIQUES){id_parent=#ID_RUBRIQUE}{tout}>
+							[(#GET{affiche}|=={oui}|oui)
+							<input type="radio" value="#ID_RUBRIQUE" title="[(#TITRE|attribut_html)]"><label>[&nbsp;&nbsp;&nbsp;&nbsp;|-(#TITRE|couper{40})]</label>
+							]
+							</BOUCLE_rub5>
+						</BOUCLE_rub3>
+					</BOUCLE_rub2>
+				</div>
+			[(#GET{affiche}|=={oui}|oui)
+			</div>
+			]
+		</B_rub2>
+	<//B_rub_aut2>
+</div>
