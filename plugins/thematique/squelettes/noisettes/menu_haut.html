@@ -13,9 +13,7 @@
 		</BOUCLE_dates>
 	</div>
 </div>
-<div id="menu_haut_user" class="bloc_titre">
-	<INCLURE{fond=noisettes/inc/authentification, id_auteur, admin, restreint, type_restreint} />
-</div>
+<INCLURE{fond=noisettes/inc/authentification, id_auteur, admin, restreint, type_restreint} />
 
 <script>
 	$(function(){
@@ -63,5 +61,3 @@
 	</li>
 </ul>
 ]
-[(#REM)Initialisations dont crayons]
-<BOUCLE_auteur(AUTEURS){id_auteur}{tout}><div class="#EDIT{nom} cache">#NOM</div></BOUCLE_auteur>

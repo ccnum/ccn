@@ -36,11 +36,6 @@
 [(#SET{font-size2,#GET{font-size2}|mult{#GET{fontfact}}})]
 [(#SET{font-size3,#GET{font-size3}|mult{#GET{fontfact}}})]
 
-/* --------- Variables ----------- */
-#SET{gris_clair,#ccc}
-#SET{gris_fonce,#999}
-#SET{color_menu_hover,#CFCFCF}
-#SET{blanc,#fff}
 /* ------- */
 
 .crayon-html {
@@ -331,9 +326,6 @@ body {
 	background-color: #000000;
 	height: 40px;
 }
-#menu_haut #menu_haut_user {
-	height: 30px;
-}
 
 #menu_haut_publier_consigne,
 .bloc_view {
@@ -356,38 +348,52 @@ body {
 
 #menu_haut_user {
 	border-left: 1px solid white;
-	padding: 5px;
 }
-
-#menu_haut_titre .bloc1 {
-	overflow:hidden;
-	border-radius:3px 0 0 3px;
+#menu_haut_user .logo img {
+	padding: 10px;
 }
-
-#menu_haut_titre_more {
+#menu_haut_user .connecter {
+	background-color: #FFFFFF;
+	color: #000000;
+	height: 40px;
+	padding-right: 15px;
+}
+#menu_haut_user .connecter::after {
+	content: url('#CHEMIN{img/fleche_down_noir.svg}');
 	position: absolute;
-	top: 0;
-	left: 0;
-	right: 0;
-	background: #FFF;
-	border-radius: 3px 3px 3px 3px;
-	overflow:hidden;
-	z-index: -1;
-	box-shadow: 0 2px 7px transparent;
-
-	-webkit-transition:all 200ms ease-out;
-	 -moz-transition:all 200ms ease-out;
-		 -o-transition:all 200ms ease-out;
-			transition:all 200ms ease-out;
+	right: 5px;
+	top: 17px;
 }
-
-#menu_haut_titre:hover #menu_haut_titre_more {
-	top: 32px;
-	box-shadow: 0 2px 7px rgba(0,0,0,.3);
-	border-radius: 0 0 3px 3px;
-	overflow: visible;
+#menu_haut_user .connecter img {
+	padding: 10px;
 }
-
+#menu_haut_user .connecter .login {
+	float: right;
+	line-height: 40px;
+	padding: 0 10px;
+}
+#menu_haut_user .connecter:hover .connecter_plus {
+	display: contents;
+}
+#menu_haut_user .connecter .connecter_plus {
+	display: none;
+}
+#menu_haut_user .connecter .connecter_plus ul {
+	height: auto;
+	background-color: #FFFFFF;
+}
+#menu_haut_user .connecter .connecter_plus li {
+	display: contents;
+}
+#menu_haut_user .connecter .connecter_plus li a {
+	line-height: 30px;
+	width: 100%;
+	text-align: center;
+}
+#menu_haut_user .connecter .connecter_plus li a:hover {
+	color: #fff;
+	background-color: #000000;
+}
 .bloc_view {
 	width:auto !important;
 	height: 58px;
@@ -452,10 +458,6 @@ body {
 	cursor:pointer;
 }
 
-#menu_haut.zone-menu li.li_deconnexion {
-	width: 35px
-}
-
 #menu_haut select label {
 	height: 22px;
 	line-height: 22px;
@@ -472,20 +474,11 @@ body {
 #menu_haut_titre .select .first_label {
 	color: #ffffff;
 }
-#menu_haut_titre .select .first_label:hover {
-	color: #000000;
-	background-color: #fff;
-}
-#menu_haut_titre .select:after {
-	-webkit-mask: url('#CHEMIN{img/fa/solid/chevron-up.svg}') no-repeat 50% 50%;
-	mask: url('#CHEMIN{img/fa/solid/chevron-up.svg}') no-repeat 50% 50%;
-	-webkit-mask-size: cover;
-	mask-size: cover;
+#menu_haut_titre .select::after {
+	content: url('#CHEMIN{img/fleche_down_blanc.svg}');
 	position: absolute;
-	right: 0;
-	top: 8px;
-	width: 15px;
-	height: 15px;
+	right: 5px;
+	top: 17px;
 }
 
 #zone_bas {
@@ -518,7 +511,6 @@ body {
 	display: none;
 	clear: both;
 }
-
 
 a, label {
 	color: #000000;
@@ -719,10 +711,6 @@ a:hover {
 }
 
 /* Menu Haut */
-#menu_haut.zone-menu .bloc1 a {
-	padding: 0px 15px 0px 15px;
-	display: block;
-}
 
 #menu_haut.zone-menu form {
 	padding: 0px;
@@ -734,27 +722,12 @@ a:hover {
 	display: inline-block;
 }
 
-#menu_haut.zone-menu li a:hover, #menu_haut.zone-menu form:hover {
-	background-color: #7dd6de;
-	color: #fff;
-}
-
-#menu_haut.zone-menu .bloc1, #menu_haut.zone-menu .bloc1 a {
-	color: #fff;
-	font-weight: bold;
-}
-
-#menu_haut.zone-menu .bloc1:hover, #menu_haut.zone-menu .bloc1:hover a, #menu_haut.zone-menu .bloc1:hover a span img {
-	color: #000000;
-	background-color: #GET{color_menu_hover};
-}
-
 #menu_haut.zone-menu .bordure_gauche {
-	border-left: 1px solid #GET{gris_fonce};
+	border-left: 1px solid #999;
 }
 
 #menu_haut.zone-menu .bordure_droite {
-	border-right: 1px solid #GET{gris_fonce};
+	border-right: 1px solid #999;
 }
 
 #menu_haut.zone-menu .col2.droite {
@@ -807,7 +780,7 @@ a:hover {
 	z-index: 2;
 }
 .select input.first + label {
-	height: 35px;
+	height: 40px;
 	font-weight: bold;
 }
 
@@ -1026,7 +999,7 @@ a:hover {
 	position:relative;
 }
 #menu_bas.zone-menu li.logo {
-	background-color: #GET{gris_clair};
+	background-color: #ccc;
 }
 
 #menu_bas.zone-menu li.logo a, #menu_haut.zone-menu li.logo a {
@@ -1042,7 +1015,7 @@ a:hover {
 }
 
 .zone-menu li.logo a:hover {
-	background-color: #GET{gris_fonce};
+	background-color: #999;
 	color: #fff;
 }
 
@@ -1055,7 +1028,7 @@ a:hover {
 	#SET{file,#CHEMIN{img/logo_#NOM_SITE_SPIP_#VALEUR.png}|sinon{#CHEMIN{img/logo_#VALEUR.png}}|sinon{#CHEMIN{prive/vignettes/#VALEUR.png}}|sinon{#CHEMIN{img/logo_voir.png}}}
 	[(#SET{img,#GET{file}|image_gamma{255}|image_reduire{20}|extraire_attribut{src}})]
 	[(#SET{col1,[(#GET{file}|couleur_extraire)]})]
-	#SET{col,#GET{gris_fonce}}
+	#SET{col,#999}
 	[(#GET{col1}|substr{0,2}|=={#GET{col1}|substr{2,2}}|oui|et{#GET{col1}|substr{2,2}|=={#GET{col1}|substr{4,2}}|oui}|non) [(#SET{col,[#(#GET{col1})]})] ]
 	#menu_bas.zone-menu li a.[logo_menu-(#VALEUR)]{background-image: url(#GET{img});}
 	#menu_bas.zone-menu li a.[logo_menu-(#VALEUR)]:hover, .zone-menu li a.[logo_menu-(#VALEUR)].selected, .show_#VALEUR #menu_bas.zone-menu li a.[logo_menu-(#VALEUR)], .show_#VALEUR #menu_bas.zone-menu li a.[menu_logo_(#VALEUR)] {background-color: #GET{col};}
@@ -1064,11 +1037,10 @@ a:hover {
 /* Pictos haut */
 <BOUCLE_vue2(DATA){liste presentation,connecter1,connecter2,prive,ecrire,mdpperdu,inscription,profil-publication}>
 	#SET{file,#CHEMIN{img/logo_#NOM_SITE_SPIP_#VALEUR.png}|sinon{#CHEMIN{img/logo_#VALEUR.svg}}|sinon{#CHEMIN{img/logo_#VALEUR.png}}|sinon{#CHEMIN{prive/vignettes/#VALEUR.png}}|sinon{#CHEMIN{img/logo_voir.png}}}
-	[(#SET{img, #GET{file}|image_sepia{#GET{color_menu_hover}}|extraire_attribut{src}})]
+	[(#SET{img, #GET{file}|image_sepia{#CFCFCF}|extraire_attribut{src}})]
 	[(#SET{img2, #GET{file}|image_gamma{255}|extraire_attribut{src}})]
 	[(#SET{col1, #GET{file}|couleur_extraire})]
-	#SET{col,#000}
-	#SET{col,#GET{color_menu_hover}}
+	#SET{col,#CFCFCF}
 	#menu_haut.zone-menu li a.[logo_menu-(#VALEUR)]{background-color: #fff; background-image: url(#GET{img}); }
 	#menu_haut.zone-menu li a.[logo_menu-(#VALEUR)]:hover{background-color: #GET{col};background-image: url(#GET{img2});  }
 	[(#VALEUR|=={ecrire}|oui)
@@ -2915,7 +2887,7 @@ a.liens_forum:hover { }
 
 /* --- Menu --- */
 #sidebar_lateral .ui-state-active {
-	color: #GET{gris_fonce};
+	color: #999;
 }
 
 #cadre_couleur {
@@ -2979,7 +2951,7 @@ input.crayon-active {
 p.spip_cadre {
 	display: block;
 	background:#EEEEEE none repeat scroll 0%;
-	border-color: #GET{gris_fonce};
+	border-color: #999;
 	border-style:inset inset inset solid;
 	border-width:1px 1px 1px 4px;
 	padding:0.5em 4px 4px;
