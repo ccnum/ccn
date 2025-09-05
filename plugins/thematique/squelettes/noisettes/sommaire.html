@@ -51,9 +51,12 @@ et/ou
 	<div id="sidebar">
 		<div id="sidebarCache" class="masquer">
 			#FA_ICON{chevron-right,'',Réduire}
-			[(#CHEMIN{img/close.svg}|balise_img|inserer_attribut{class,close})]
+			[(#CHEMIN{img/close.svg}|balise_img|inserer_attribut{class,close}|image_reduire{25})]
 		</div>
-		<div id="sidebarExpand">#FA_ICON{chevron-left,'',Agrandir}</div>
+		<div id="sidebarExpand">
+			#FA_ICON{chevron-left,'',Agrandir}
+			[(#CHEMIN{img/close.svg}|balise_img|inserer_attribut{class,close}|image_reduire{25})]
+		</div>
 
 		<div id="sidebar_content">
 			<div id="sidebar_main_around">
