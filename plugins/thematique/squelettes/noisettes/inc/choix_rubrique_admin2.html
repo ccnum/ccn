@@ -14,6 +14,7 @@
 #SET{laclasse_rubrique_admin, #RESTREINT}
 <BOUCLE_rub(RUBRIQUES){id_rubrique=#RESTREINT}{tout}>
 	#SET{titre,#TITRE}
+	#SET{parent, #INFO_TITRE{rubrique,#ID_PARENT}}
 </BOUCLE_rub>
 
 [(#ADMIN|=={1}|oui|et{#RESTREINT}|oui)
@@ -31,7 +32,7 @@
 <div class="bloc_titre">
 	<B_rub_aut2>[(#GET{affiche}|=={oui}|oui)
 	<div id="choix_rubrique_admin" name="rubrique_admin" class="select">
-	<input type="radio" value="#ENV{restreint}" class="first"><label class="first_label">Je veux publier en tant que / dans <span class="highlight">[(#GET{titre}|couper{30})]</span></label>
+	<input type="radio" value="#ENV{restreint}" class="first"><label class="first_label">Publier dans : <span class="highlight">[(#GET{titre}|couper{30})]</span></label>
 	]
 		<div class="choix_rubrique_wrapper">
 			<BOUCLE_rub_aut2(RUBRIQUES auteurs){id_auteur=#SESSION{id_auteur}}{tout}>
@@ -50,7 +51,7 @@
 		[(#REM) Admin complet]
 		<B_rub2>[(#GET{affiche}|=={oui}|oui)
 			<div id="choix_rubrique_admin" name="rubrique_admin" class="select">
-			<input type="radio" value="#ENV{restreint}" class="first"><label class="first_label">Je veux publier en tant que / dans <span class="highlight">[(#GET{titre}|couper{30})]</span></label>
+			<input type="radio" value="#ENV{restreint}" class="first"><label class="first_label">Publier dans : <span class="highlight">[(#GET{titre}|couper{30})]</span></label>
 			]
 				<div class="choix_rubrique_wrapper">
 					<BOUCLE_rub2(RUBRIQUES){racine}{!par maj}{tout}>
@@ -75,3 +76,5 @@
 		</B_rub2>
 	<//B_rub_aut2>
 </div>
+
+[(#REM) pour afficher le formulaire onClick='createReponse(0, #RESTREINT);']

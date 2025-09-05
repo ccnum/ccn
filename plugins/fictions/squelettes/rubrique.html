@@ -131,7 +131,7 @@
 									<!-- Affichage du chapitre N VERROUILLE -->
 									[(#GET{id_cadavre_hidden}|!={#_cadavres:COMPTEUR_BOUCLE}|oui)
 										<!-- precedent chapitre VERROUILLE-->
-										[(#_cadavres:COMPTEUR_BOUCLE|!={#GET{var_max_cadavres}}|oui)<INCLURE{fond=inclure/chapitre-visible, id_article,fin=non}>]
+										[(#_cadavres:COMPTEUR_BOUCLE|!={#GET{var_max_cadavres}}|oui)<INCLURE{fond=inclure/chapitre-visible, id_article, fin=non}>]
 										<!-- dernier chapitre ECRITURE-->
 										[(#_cadavres:COMPTEUR_BOUCLE|=={#GET{var_max_cadavres}}|oui)<INCLURE{fond=inclure/chapitre-ecriture, id_article}>]
 									]

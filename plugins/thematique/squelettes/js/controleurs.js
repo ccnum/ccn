@@ -33,14 +33,19 @@ $(function () {
 
 	onResize();
 
-	$('#sidebarExpand').on(
+	$('#sidebarExpand .icon').on(
 		'click', function () {
 			toggleSidebarExpand();
 			$('#sidebarExpand').addClass('masquer');
 			$('#sidebarCache').removeClass('masquer');
 		}
 	);
-	$('#sidebarCache').on(
+	$('#sidebarExpand .close').on(
+		'click', function () {
+			$('body').removeClass('hasSidebarOpen').removeClass('hasSidebarExpanded');
+		}
+	);
+	$('#sidebarCache .icon').on(
 		'click', function () {
 			$('body').removeClass('hasSidebarExpanded');
 			$('#sidebarExpand').removeClass('masquer');

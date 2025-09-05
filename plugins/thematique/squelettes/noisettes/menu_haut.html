@@ -1,64 +1,58 @@
 #CACHE{0}
-<div id="menu_haut_titre" class="bloc_titre">
-	[(#REM)Titre]
-	<div class="select" name="annee_scolaire">
-		<input type="radio" value="#ENV{annee_scolaire}" class="first">
-			<label class="first_label">
-				[<span class="logo">(#CHEMIN{img/pictos_blc/[(#NOM_SITE_SPIP)].png}|image_reduire{24})</span>]
-				[<span class="logo">(#CHEMIN{img/pictos_blc/[(#NOM_SITE_SPIP|replace{' ',''}|strtolower)].svg}|image_reduire{24})</span>]
-				[(#NOM_SITE_SPIP) ][(#ENV{annee_scolaire})]-[(#ENV{annee_scolaire}|plus{1})]
-			</label>
-		<BOUCLE_dates(RUBRIQUES){!par titre}{racine}{titre==^[2]}>
-		<input type='radio' value='#TITRE' [(#ENV{annee_scolaire}|=={#TITRE}|oui)class="actif"]><label>#TITRE/[(#TITRE|plus{1})]</label>
-		</BOUCLE_dates>
+<div id="menu_haut_gauche" class="gauche">
+	<div id="menu_haut_titre" class="bloc_titre">
+		[(#REM)Titre]
+		<div class="select" name="annee_scolaire">
+			<input type="radio" value="#ENV{annee_scolaire}" class="first">
+				<label class="first_label">
+					<span class="icon icon-site"></span>
+					[(#NOM_SITE_SPIP) ][(#ENV{annee_scolaire})]-[(#ENV{annee_scolaire}|plus{1})]
+					<span class="icon icon-down"></span>
+				</label>
+			<BOUCLE_dates(RUBRIQUES){!par titre}{racine}{titre==^[2]}>
+			<input type='radio' value='#TITRE' [(#ENV{annee_scolaire}|=={#TITRE}|oui)class="actif"]><label>#TITRE/[(#TITRE|plus{1})]</label>
+			</BOUCLE_dates>
+		</div>
 	</div>
+	<INCLURE{fond=noisettes/inc/authentification, id_auteur, admin, restreint, type_restreint} />
+	<INCLURE{fond=noisettes/inc/choix_rubrique_admin2, restreint, admin} />
+
+	<script>
+		$(function(){
+			if ($('#menu_haut_titre').width() <= 185) {
+				$('#annee_scolaire_more').hide();
+			}
+			$('div[name="annee_scolaire"] input[type="radio"]').on( "change", function() {
+				var valeur = $('div[name=annee_scolaire] input[type=radio]:checked').val()
+				reloadAndSetCookie('', 'laclasse_annee_scolaire', valeur)
+			});
+			$('#choix_rubrique_admin input[type="radio"]').on( "change", function() {
+				var valeur = $('div[name=rubrique_admin] input[type=radio]:checked').val()
+				reloadAndSetCookie('', 'laclasse_rubrique_admin', valeur)
+			});
+		});
+	</script>
 </div>
-<INCLURE{fond=noisettes/inc/authentification, id_auteur, admin, restreint, type_restreint} />
-<INCLURE{fond=noisettes/inc/choix_rubrique_admin2, restreint, admin} />
-
-<script>
-	$(function(){
-		if ($('#menu_haut_titre').width() <= 185) {
-			$('#annee_scolaire_more').hide();
-		}
-		$('div[name="annee_scolaire"] input[type="radio"]').on( "change", function() {
-			var valeur = $('div[name=annee_scolaire] input[type=radio]:checked').val()
-			reloadAndSetCookie('', 'laclasse_annee_scolaire', valeur)
-		});
-		$('#choix_rubrique_admin input[type="radio"]').on( "change", function() {
-			var valeur = $('div[name=rubrique_admin] input[type=radio]:checked').val()
-			reloadAndSetCookie('', 'laclasse_rubrique_admin', valeur)
-		});
-	});
-</script>
-
-[(#RESTREINT|!={0}|oui|et{#RESTREINT|!={''}}|et{#TYPE_RESTREINT|!={''}}|et{#TYPE_RESTREINT|!={travail_en_cours}|oui}|oui)
-<ul id="menu_haut_publier_consigne" class="bloc_titre">
-	<li>
-		<a title="Publier un nouvel article" class="logo_menu-ecrire" onClick='createReponse(0, #RESTREINT);'>
-			<div id='reponse_plus2' class='bouton_article_plus'></div>
-		</a>
-	</li>
-</ul>
-]
 [(#CONST{_PROJET}|=={laclasse}|oui)
-<ul id="menu_haut_logos" class="bloc_titre">
-	<li>
-		<a href="https://classeculturellenumerique.org/" target="_blank">[(#CHEMIN{img/logos/ccn.svg}|balise_img)]</a>
-	</li>
-	<li>
-		<a href="https://erasme.org" target="_blank">[(#CHEMIN{img/logos/erasme.svg}|balise_img)]</a>
-	</li>
-	<li>
-		<a href="https://www.laclasse.com/" target="_blank">[(#CHEMIN{img/logos/laclasse.svg}|balise_img|image_reduire{*,30})]</a>
-	</li>
-	<li>
-		<a href="https://www.grandlyon.com/" target="_blank">[(#CHEMIN{img/logos/metropolelyon.svg}|balise_img|image_reduire{*,30})]</a>
-	</li>
-	<li class="aide">
-		<a id="bouton_aide" href="[(#CHEMIN{pdf/tutoriels.pdf})]" class="mediabox boxIframe boxWidth-80% boxHeight-80%[(#TEXTE|=={''}|oui)[logo_menu-(#VALEUR)]]">
-			[(#CHEMIN{img/logo_aide.svg}|balise_img|image_reduire{*,30})]
-		</a>
-	</li>
-</ul>
+<div id="menu_haut_droite">
+	<ul id="menu_haut_logos" class="bloc_titre">
+		<li>
+			<a href="https://classeculturellenumerique.org/" target="_blank">[(#CHEMIN{img/logos/ccn_full.svg}|balise_img)]</a>
+		</li>
+		<li>
+			<a href="https://www.laclasse.com/" target="_blank">[(#CHEMIN{img/logos/laclasse_short.svg}|balise_img|image_reduire{*,28})]</a>
+		</li>
+		<li>
+			<a href="https://erasme.org" target="_blank">[(#CHEMIN{img/logos/erasme.svg}|balise_img)]</a>
+		</li>
+		<li>
+			<a href="https://www.grandlyon.com/" target="_blank">[(#CHEMIN{img/logos/metropolelyon.svg}|balise_img|image_reduire{*,28})]</a>
+		</li>
+		<li class="aide">
+			<a id="bouton_aide" href="[(#CHEMIN{pdf/tutoriels.pdf})]" class="mediabox boxIframe boxWidth-80% boxHeight-80%[(#TEXTE|=={''}|oui)[logo_menu-(#VALEUR)]]">
+				[(#CHEMIN{img/logo_aide.svg}|balise_img|image_reduire{*,30})]
+			</a>
+		</li>
+	</ul>
+</div>
 ]
