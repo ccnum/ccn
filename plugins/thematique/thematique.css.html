@@ -4,6 +4,7 @@
 /* ---------------------------------------------------------------- */
 /* ------------------------ GENERAUX ------------------------------ */
 /* ---------------------------------------------------------------- */
+
 /* --------- Tailles ----------- */
 [(#SET{rapport,1.43})]
 
@@ -232,7 +233,7 @@ body {
 	background-color: transparent;
 	margin: 0px;
 	padding: 0 0 64px 0;
-	font-family: manrope;
+	font-family: 'Manrope';
 	font-size: 18px;
 	color: #000;
 	overflow-x : hidden;
@@ -307,8 +308,10 @@ body {
 	display: inline-block;
 	position: relative;
 	vertical-align: top;
+	height: 40px;
 }
-#menu_haut #menu_haut_gauche,
+#menu_haut #menu_haut_titre,
+#menu_haut #menu_haut_user,
 #menu_haut #menu_haut_logos .aide {
 	background-color: #000;
 	height: 40px;
@@ -327,9 +330,6 @@ body {
 #menu_haut_user .connecter_ok {
 	width: 5.7rem;
 }
-#menu_haut_user .connecter_ok .icon {
-	padding: 5px;
-}
 #menu_haut_user .connecter_ok img {
 	padding: 10px;
 }
@@ -346,18 +346,21 @@ body {
 #menu_haut_user .connecter_ok .connecter_plus ul {
 	height: auto;
 	background-color: #fff;
-	width: 9rem;
+	width: 11rem;
 }
 #menu_haut_user .connecter_ok .connecter_plus li {
 	display: contents;
 }
 #menu_haut_user .connecter_ok .connecter_plus li a {
-	line-height: 30px;
+	line-height: 40px;²
 	width: 100%;
 	text-align: center;
 }
 #menu_haut_user .connecter_ok .connecter_plus li a:hover {
 	color: #fff;
+	background-color: #000;
+}
+#menu_haut_ecrire .icon {
 	background-color: #000;
 }
 .bloc_view {
@@ -428,14 +431,19 @@ body {
 #menu_haut_titre .select .first_label {
 	color: #fff;
 }
+#menu_haut_ecrire .icon:hover {
+	background: #000;
+	color: #fff;
+}
 #menu_haut_titre .select:hover .first_label {
+	background: #fff;
 	color: #000;
 }
 .icon {
 	/* Dimensions */
 	display: inline-block;
-	width: 2rem;
-	height: 2rem;
+	width: 40px;
+	height: 40px;
 
 	/* Couleur de l'icône (modifiable à volonté) */
 	background-color: #fff;
@@ -451,6 +459,9 @@ body {
 }
 .icon-connecter_ok {
 	--svg: url("#CHEMIN{img/logo_connecter_ok.svg}");
+}
+.icon-ecrire {
+	--svg: url("#CHEMIN{img/logo_ecrire.svg}");
 }
 .icon-down {
 	--svg: url("#CHEMIN{img/fleche_down.svg}");

@@ -7,35 +7,35 @@
 <!-- Si aucune rubrique n'est selectionnee par le user alors en choisir une par defaut -->
 <BOUCLE_rubAnnee(RUBRIQUES) {racine}{titre LIKE %(#CONST{_annee_scolaire})%} {si #GET{motcle}|!={evenements} } >
 	<BOUCLE_filtreTravailEnCours(RUBRIQUES){id_parent} {titre_mot=travail_en_cours}{par date}{0,1}>
-		[(#RESTREINT|?{#SESSION_SET{idRubriqueUser,#RESTREINT}, #SESSION_SET{idRubriqueUser,#ID_RUBRIQUE}})]
+		[(#ENV{restreint}|?{#SESSION_SET{idRubriqueUser,#ENV{restreint}}, #SESSION_SET{idRubriqueUser,#ID_RUBRIQUE}})]
 	</BOUCLE_filtreTravailEnCours>
 </BOUCLE_rubAnnee>
 
-#SET{laclasse_rubrique_admin, #RESTREINT}
-<BOUCLE_rub(RUBRIQUES){id_rubrique=#RESTREINT}{tout}>
+#SET{laclasse_rubrique_admin, #ENV{restreint}}
+<BOUCLE_rub(RUBRIQUES){id_rubrique=#ENV{restreint}}{tout}>
 	#SET{titre,#TITRE}
 	#SET{parent, #INFO_TITRE{rubrique,#ID_PARENT}}
 </BOUCLE_rub>
 
-[(#ADMIN|=={1}|oui|et{#RESTREINT}|oui)
+[(#ENV{admin}|=={1}|oui|et{#ENV{restreint}}|oui)
 	[(#GET{titre}|couper{25})]
 ]
 #SET{affiche,non}
-[(#ADMIN|=={0}|oui)
+[(#ENV{admin}|=={0}|oui)
 	#SET{affiche,oui}
 ]
-[(#ADMIN|>{1}|oui)
+[(#ENV{admin}|>{1}|oui)
 	#SET{affiche,oui}
 ]
 
 [(#REM) Admin restreint]
-<div class="bloc_titre">
+<div id="menu_haut_rubrique" class="bloc_titre">
 	<B_rub_aut2>[(#GET{affiche}|=={oui}|oui)
 	<div id="choix_rubrique_admin" name="rubrique_admin" class="select">
 	<input type="radio" value="#ENV{restreint}" class="first"><label class="first_label">Publier dans : <span class="highlight">[(#GET{titre}|couper{30})]</span></label>
 	]
 		<div class="choix_rubrique_wrapper">
-			<BOUCLE_rub_aut2(RUBRIQUES auteurs){id_auteur=#SESSION{id_auteur}}{tout}>
+			<BOUCLE_rub_aut2(RUBRIQUES auteurs){id_auteur}{tout}>
 				[(#GET{affiche}|=={oui}|oui)
 				<input type="radio" value="#ID_RUBRIQUE" title="[(#TITRE|attribut_html)]"><label>[(#TITRE|couper{40})]</label>
 				]
@@ -76,5 +76,8 @@
 		</B_rub2>
 	<//B_rub_aut2>
 </div>
-
-[(#REM) pour afficher le formulaire onClick='createReponse(0, #RESTREINT);']
+[(#ENV{restreint}|!={0}|oui|et{#ENV{restreint}|!={''}}|et{#ENV{type_restreint}|!={''}}|et{#ENV{type_restreint}|!={travail_en_cours}|oui}|oui)
+<div id="menu_haut_ecrire" class="bloc_titre">
+	<a class="icon icon-ecrire" title="Publier un nouvel article" onClick='createReponse(0, #ENV{restreint});'></a>
+</div>
+]
