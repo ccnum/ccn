@@ -1,11 +1,13 @@
 #CACHE{0}
 <div id="menu_haut_gauche" class="gauche">
+	<div id="menu_haut_ccn" class="bloc_titre">
+		<a href="https://classeculturellenumerique.org/" target="_blank">[(#CHEMIN{img/logos/ccn_full.svg}|balise_img)]</a>
+	</div>
 	<div id="menu_haut_titre" class="bloc_titre">
 		[(#REM)Titre]
 		<div class="select" name="annee_scolaire">
 			<input type="radio" value="#ENV{annee_scolaire}" class="first">
 				<label class="first_label">
-					<span class="icon icon-site"></span>
 					[(#NOM_SITE_SPIP) ][(#ENV{annee_scolaire})]-[(#ENV{annee_scolaire}|plus{1})]
 					<span class="icon icon-down"></span>
 				</label>
@@ -36,9 +38,6 @@
 [(#CONST{_PROJET}|=={laclasse}|oui)
 <div id="menu_haut_droite">
 	<ul id="menu_haut_logos" class="bloc_titre">
-		<li>
-			<a href="https://classeculturellenumerique.org/" target="_blank">[(#CHEMIN{img/logos/ccn_full.svg}|balise_img)]</a>
-		</li>
 		<li>
 			<a href="https://www.laclasse.com/" target="_blank">[(#CHEMIN{img/logos/laclasse_short.svg}|balise_img|image_reduire{*,28})]</a>
 		</li>

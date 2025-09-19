@@ -291,6 +291,12 @@ body {
 .bloc_menu_gauche {
 	float: left;
 }
+#menu_haut_ccn {
+	overflow: hidden;
+}
+#menu_haut_ccn a img {
+	margin: 5px;
+}
 #menu_haut_logos {
 	float: right;
 	overflow: hidden;
@@ -313,7 +319,7 @@ body {
 #menu_haut #menu_haut_titre,
 #menu_haut #menu_haut_user,
 #menu_haut #menu_haut_logos .aide {
-	background-color: #000;
+	background-color: #000AFF;
 	height: 40px;
 }
 
@@ -352,7 +358,7 @@ body {
 	display: contents;
 }
 #menu_haut_user .connecter_ok .connecter_plus li a {
-	line-height: 40px;²
+	line-height: 40px;
 	width: 100%;
 	text-align: center;
 }
@@ -436,8 +442,7 @@ body {
 	color: #fff;
 }
 #menu_haut_titre .select:hover .first_label {
-	background: #fff;
-	color: #000;
+	background: #00B749;
 }
 .icon {
 	/* Dimensions */
@@ -465,9 +470,6 @@ body {
 }
 .icon-down {
 	--svg: url("#CHEMIN{img/fleche_down.svg}");
-}
-.icon-site {
-	--svg: url("[(#CHEMIN{img/pictos_sites/[(#NOM_SITE_SPIP|replace{' ',''}|strtolower)].svg})]");
 }
 
 /* Exemple d'interaction */
@@ -4036,14 +4038,6 @@ ul#forum, .lien_forum {
 
 	.choix_rubrique_wrapper {
 		height: max-content !important;
-	}
-
-	.select, .select:hover div, .select input.first + label, .select:hover input, .select:hover label {
-		height: 22px;
-		line-height: 22px;
-	}
-	.select:hover div {
-		top: 22px;
 	}
 
 	.zone-menu form {
