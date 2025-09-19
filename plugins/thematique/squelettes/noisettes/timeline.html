@@ -3,7 +3,7 @@
 	var hash = window.location.hash;
 
 	CCN.urlRoot = "[(#ENV{chemin})]";
-	CCN.urlXml = "spip.php?page=xml&annee_scolaire=#ENV{annee_scolaire}&mode=";
+	CCN.urlXml = "spip.php?page=xml&annee_scolaire=#ENV{annee_scolaire}&mode=projet";
 	CCN.urlImgBlog = "[(#CHEMIN{#ENV{chemin}/img/logo_blog_#NOM_SITE_SPIP.png}|sinon{#ENV{chemin}/img/logo_blog.png}|image_reduire{98}|extraire_attribut{src})]";
 	CCN.urlImgEvenement = "[(#CHEMIN{#ENV{chemin}/img/logo_evenement_#NOM_SITE_SPIP.png}|sinon{#ENV{chemin}/img/logo_evenement.png}|image_reduire{150,94}|extraire_attribut{src})]";
 
