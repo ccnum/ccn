@@ -69,7 +69,7 @@ return [
 	'option_url_mode_php_filter' => 'Полная проверка валидации URL  с помощью PHP фильтра FILTER_VALIDATE_URL',
 	'option_url_mode_protocole_seul' => 'Проверка на существование протокола',
 	'option_url_protocole_label' => 'Название протокола, который нужно проверить',
-	'option_url_type_protocole_exact' => 'Введите названия протокола:',
+	'option_url_type_protocole_exact' => 'Введите названия протокола:', # MODIF
 	'option_url_type_protocole_ftp' => 'Протоколы передачи файлов: FTP or SFTP',
 	'option_url_type_protocole_label' => 'Тип протокола для проверки',
 	'option_url_type_protocole_mail' => 'Почтовые протоколы : imap, pop3 ou smtp',

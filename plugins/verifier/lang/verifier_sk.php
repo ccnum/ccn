@@ -94,7 +94,7 @@ return [
 	'option_url_mode_php_filter' => 'Úplné overenie internetovej adresy pomocou PHP filtra FILTER_VALIDATE_URL',
 	'option_url_mode_protocole_seul' => 'Iba overenie existencie protokolu',
 	'option_url_protocole_label' => 'Názov protokolu, ktorý treba overiť',
-	'option_url_type_protocole_exact' => 'Zadajte protokol:',
+	'option_url_type_protocole_exact' => 'Zadajte protokol:', # MODIF
 	'option_url_type_protocole_ftp' => 'Protokoly na prenos súborov: FTP alebo SFTP',
 	'option_url_type_protocole_label' => 'Typ protokolu, ktorý treba overiť',
 	'option_url_type_protocole_mail' => 'E-mailové protokoly: IMAP, POP3 alebo SMTP',
