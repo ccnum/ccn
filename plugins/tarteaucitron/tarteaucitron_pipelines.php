@@ -46,8 +46,8 @@ function tarteaucitron_insert_head($flux) {
 			<!-- Chargement librairie -->
 			<script type='text/javascript'>
 				// Integration Eulerian / TarteAuCitron
-				tarteaucitron.services['eulerian'] = {
-					'key': 'eulerian',
+				tarteaucitron.services['eulerian-analytics'] = {
+					'key': 'eulerian-analytics',
 					'type': 'analytic',
 					'name': 'Eulerian Analytics',
 					'needConsent': true,
@@ -64,7 +64,7 @@ function tarteaucitron_insert_head($flux) {
 					},
 					'fallback': function () { this.js(); }
 				};
-				(tarteaucitron.job = tarteaucitron.job || []).push('eulerian');
+				(tarteaucitron.job = tarteaucitron.job || []).push('eulerian-analytics');
 			</script>
 			<!-- Fin de chargement librairie Eulerian-->\n";
 		}
@@ -209,8 +209,10 @@ function tarteaucitron_porte_plume_barre_pre_charger($barres) {
 				$nom_modele = substr($nom_fichier, 0, strpos($nom_fichier, '.html'));
 				$prop_modele = substr($nom_modele, 4, strlen($nom_modele) - 4);
 
-				if (property_exists($params_modele, $prop_modele)) {
+				if (is_object($params_modele) && property_exists($params_modele, $prop_modele)) {
 					$params_modele = $params_modele->{$prop_modele};
+				} elseif (is_array($params_modele) && isset($params_modele[$prop_modele])) {
+					$params_modele = $params_modele[$prop_modele];
 				}
 			}
 

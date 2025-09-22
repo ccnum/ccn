@@ -3,11 +3,7 @@
 // extrait automatiquement de https://trad.spip.net/tradlang_module/tarteaucitron?lang_cible=de
 // ** ne pas modifier le fichier **
 
-if (!defined('_ECRIRE_INC_VERSION')) {
-	return;
-}
-
-$GLOBALS[$GLOBALS['idx_lang']] = array(
+return [
 
 	// C
 	'cfg_adblocker' => 'Meldung wenn Adblocker vorhanden',
@@ -122,5 +118,5 @@ Wenn Sie das Skrip ausführen, erfolgt zunächst ein Probelauf. Wenn Sie die Än
 
 	// T
 	'tarteaucitron_titre' => 'Zitronenkuchen',
-	'titre_page_configurer_tarteaucitron' => 'Zitronenkuchen'
-);
+	'titre_page_configurer_tarteaucitron' => 'Zitronenkuchen',
+];

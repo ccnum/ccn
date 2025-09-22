@@ -1,0 +1,32 @@
+{
+    "amnet": {
+        "hasModele": false,
+        "type": "ads",
+        "JS": "(tarteaucitron.job = tarteaucitron.job || []).push('amnet');"
+    },
+    "freewheel": {
+        "hasModele": false,
+        "type": "ads",
+        "JS": "(tarteaucitron.job = tarteaucitron.job || []).push('freewheel');"
+    },
+    "azerion": {
+        "hasModele": false,
+        "type": "ads",
+        "JS": "(tarteaucitron.job = tarteaucitron.job || []).push('azerion');"
+    },
+    "meta": {
+        "hasModele": false,
+        "type": "ads",
+        "JS": "(tarteaucitron.job = tarteaucitron.job || []).push('meta');"
+    },
+    "miq": {
+        "hasModele": false,
+        "type": "ads",
+        "JS": "(tarteaucitron.job = tarteaucitron.job || []).push('miq');"
+    },
+    "while": {
+        "hasModele": false,
+        "type": "ads",
+        "JS": "(tarteaucitron.job = tarteaucitron.job || []).push('while');"
+    }
+}
