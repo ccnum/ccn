@@ -548,7 +548,10 @@ function construire_formulaire_generer_saisie_configurable(array $saisie, array 
 	$identifiant = isset($saisie['identifiant']) ? $saisie['identifiant'] : '';
 
 	// On désactive les onglets
-	unset($saisie['options']['onglet']) ;
+	unset($saisie['options']['onglet']);
+
+	// On désactive les options globales
+	unset($env['_contenu']['options']);
 
 	// On cherche si ya un formulaire de config
 	$formulaire_config = isset($env['erreurs']['configurer_' . $nom]) ? $env['erreurs']['configurer_' . $nom] : '';
@@ -619,38 +622,21 @@ function construire_formulaire_generer_saisie_configurable(array $saisie, array 
 			];
 		}
 
-		// On va ajouter le champ pour la position
-		if (!($chemin_description = saisies_chercher($formulaire_config, "saisie_modifiee_{$nom}[options][description]", true))) {
-			$chemin_description = [0];
-			$formulaire_config = saisies_inserer(
-				$formulaire_config,
-				[
-					'saisie' => 'fieldset',
-					'options' => [
-						'nom' => "saisie_modifiee_{$nom}[options][description]",
-						'label' => _T('saisies:option_groupe_description'),
-
-					],
-					'saisies' => []
-				],
-				0
-			);
-		}
-		$chemin_description[] = 'saisies';
-		$chemin_description[] = '0'; // tout au début
-		$formulaire_config = saisies_inserer(
+		$balise_svg = charger_filtre('balise_svg');
+		$formulaire_config = saisies_inserer_avant(
 			$formulaire_config,
 			[
 				'saisie' => 'position_construire_formulaire',
 				'options' => [
 					'nom' => "saisie_modifiee_{$nom}[position]",
-					'label' => _T('saisies:construire_position_label'),
-					'explication' => _T('saisies:construire_position_explication'),
+					'label' => $balise_svg(chemin_image('saisies-position.svg'), _T('saisies:construire_position_label'), '16x16')
+						. _T('saisies:construire_position_explication'),
 					'formulaire' => $env['_contenu'],
-					'saisie_a_positionner' => $nom
+					'saisie_a_positionner' => $nom,
+					'conteneur_class' => 'constructeur_position',
 				]
 			],
-			$chemin_description
+			[0]
 		);
 
 		// Fieldsets racines en onglets forcés + identifiant stable

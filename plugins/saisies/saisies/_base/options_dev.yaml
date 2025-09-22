@@ -35,6 +35,11 @@
 -
   saisie: 'input'
   options:
+    nom: 'hors_vue'
+    label: '<:saisies:option_hors_vue_label:>'
+-
+  saisie: 'input'
+  options:
     nom: 'env'
     label: '<:saisies:option_env_label:>'
     explication: '<:saisies:option_env_explication:>'

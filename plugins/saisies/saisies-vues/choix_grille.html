@@ -10,7 +10,7 @@
 
 #SET{separateur,'|'}
 
-<BOUCLE_lignes (DATA) {source table,#GET{data_rows}}{'<br>'}>
+<BOUCLE_lignes (DATA) {source table,#GET{data_rows}}{'<br>'} {si #GET{valeur}|oui}>
 	#SET{choix,#ARRAY}
 	#SET{libelles, #VALEUR|explode{'|'}}
 	<B_colonnes>

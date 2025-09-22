@@ -42,6 +42,7 @@ return [
 	'construire_configurer_globales_label' => 'Configurer les options globales',
 	'construire_confirmer_supprimer_champ' => 'Veux-tu vraiment supprimer ce champ ?',
 	'construire_info_nb_champs_masques' => '@nb@ champ(s) masqué(s) le temps de configurer le groupe.',
+	'construire_position_actuelle' => '➡ Position actuelle',
 	'construire_position_explication' => 'Indique devant quel autre champ sera placé celui-ci.',
 	'construire_position_fin_formulaire' => 'À la fin du formulaire',
 	'construire_position_fin_groupe' => 'À la fin du groupe @groupe@',
@@ -128,6 +129,8 @@ Tu trouveras la <a href="https://contrib.spip.net/5080" target="_blank" rel="noo
 	'option_choix_destinataires_explication' => 'Liste de plumes pour une sélection de destinataires par l’internaute, à défaut ce sera la personne qui a installé le site.',
 	'option_choix_destinataires_label' => 'Destinataires possibles',
 	'option_class_label' => 'Classes CSS supplémentaires',
+	'option_cle_secrete_explication' => 'Une clé secrète ne sera pas visible au rechargement du formulaire, mais masquée partiellement. Pour les formulaires de configuration déclarés en saisie PHP, le plugin Saisies récupère automatiquement la clé secrète en base en cas de nouvelle soumission du formulaire.',
+	'option_cle_secrete_label' => 'La saisie est une clé secrète',
 	'option_col2' => 'Deux champs par ligne',
 	'option_col3' => 'Trois champs par ligne',
 	'option_col4' => 'Quatre champs par ligne',
@@ -334,6 +337,9 @@ Tu trouveras la <a href="https://contrib.spip.net/5080" target="_blank" rel="noo
 	'verifier_valeurs_acceptables_explication' => 'Vérifier que la valeur postée se trouve parmi celles autorisées lors de la définition du/des champs. Ne pas utiliser cette option si tu remplis dynamiquement le(s) champs dans tes squelettes ou les remplis grâce à JavaScript.',
 	'verifier_valeurs_acceptables_label' => 'Vérifier les valeurs possibles',
 	'vue_sans_reponse' => '<i>Sans réponse</i>',
+
+	// Y
+	'yaml_necessaire_pour_doc' => 'Le plugin YAML est nécessaire pour l’affichage de cette documentation',
 
 	// Z
 	'z' => 'zzz',
