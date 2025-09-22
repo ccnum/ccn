@@ -4,10 +4,10 @@
    l'autorisation 'incarner' */
 function auth_incarner_dist($login, $password, $serveur = '', $phpauth = false) {
 
-	$login = trim((string)$login);
+	$login = trim((string) $login);
 	// login absent, n'allons pas plus loin
 	if (!$login) {
-		return array();
+		return [];
 	}
 
 	// login inconnu, restons en là
@@ -24,10 +24,10 @@ function auth_incarner_dist($login, $password, $serveur = '', $phpauth = false) 
 	);
 
 	if (!$row) {
-		spip_log ("Manque auteur '$login'", 'incarner' . _LOG_INFO_IMPORTANTE);
-		return array();
+		spip_log("Manque auteur '$login'", 'incarner' . _LOG_INFO_IMPORTANTE);
+		return [];
 	}
-	
+
 	include_spip('inc/autoriser');
 	include_spip('incarner_pipelines');
 
@@ -46,5 +46,5 @@ function auth_incarner_dist($login, $password, $serveur = '', $phpauth = false) 
 	}
 
 	// NIET
-	return array();
+	return [];
 }
