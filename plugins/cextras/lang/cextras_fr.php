@@ -1,11 +1,8 @@
 <?php
 // This is a SPIP language file  --  Ceci est un fichier langue de SPIP
 // Fichier source, a modifier dans https://git.spip.net/spip-contrib-extensions/champs_extras_core.git
-if (!defined('_ECRIRE_INC_VERSION')) {
-	return;
-}
 
-$GLOBALS[$GLOBALS['idx_lang']] = array(
+return [
 
 	// C
 	'cextra_par_defaut' => 'Valeur par défaut',
@@ -17,5 +14,5 @@ $GLOBALS[$GLOBALS['idx_lang']] = array(
 	'type' => '@type@',
 
 	// Z
-	'zbug_balise_argument_non_texte' => 'L’argument @nb@ dans la balise @balise@ doit être de type texte'
-);
+	'zbug_balise_argument_non_texte' => 'L’argument @nb@ dans la balise @balise@ doit être de type texte',
+];
