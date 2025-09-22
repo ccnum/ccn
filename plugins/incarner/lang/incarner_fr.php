@@ -1,7 +1,7 @@
 <?php
 // This is a SPIP language file  --  Ceci est un fichier langue de SPIP
 
-$GLOBALS[$GLOBALS['idx_lang']] = array(
+return [
 
 	// I
 	'incarner_login' => 'Se connecter en tant que @login@',
@@ -25,4 +25,4 @@ vient de prendre l'identité de
 	'reset_incarner' => 'Redevenir @login@',
 
 	'titre_configurer_incarner' => "Configuration des Incarnations",
-);
+];
