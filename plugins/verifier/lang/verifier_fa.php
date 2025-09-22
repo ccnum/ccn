@@ -69,7 +69,7 @@ return [
 	'option_url_mode_php_filter' => 'چك كامل يو.آر.ال از طريق فيلتر FILTER_VALIDATE_URL  پي.اچ.پي',
 	'option_url_mode_protocole_seul' => 'چك كردن انحصاري وجود يك پروتكل ',
 	'option_url_protocole_label' => 'نام پروتكل براي چك كردن',
-	'option_url_type_protocole_exact' => 'يك پروتكل در زير وارد كنيد:',
+	'option_url_type_protocole_exact' => 'يك پروتكل در زير وارد كنيد:', # MODIF
 	'option_url_type_protocole_ftp' => 'پروتكل‌هاي انتقال پرونده: ftp  يا sftp ',
 	'option_url_type_protocole_label' => 'نوع پروتكل براي چك كردن',
 	'option_url_type_protocole_mail' => 'پروتكل‌هاي نامه‌ الكترونيكي: imap, pop3  يا smtp',
