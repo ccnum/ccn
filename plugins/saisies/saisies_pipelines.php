@@ -274,7 +274,6 @@ function saisies_styliser($flux) {
 		// Et qu'il y a des saisies dans le contexte
 		&& isset($flux['args']['contexte']['_saisies'])
 		// Et que le fichier choisi est vide ou n'existe pas
-		&& include_spip('inc/flock')
 		&& ($ext = $flux['args']['ext'])
 		&& lire_fichier($flux['data'] . '.' . $ext, $contenu_squelette)
 		&& !trim($contenu_squelette)
