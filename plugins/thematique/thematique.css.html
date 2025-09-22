@@ -302,12 +302,25 @@ body {
 	overflow: hidden;
 }
 
-#menu_haut_logos img {
-	margin: 6px 6px;
-}
-
 #menu_haut_logos a {
 	background: transparent !important;
+}
+#menu_haut_logos a img {
+	vertical-align: middle;
+	margin-right: 10px;
+	height: 40px;
+}
+#menu_haut_logos .aide {
+	width: 40px;
+}
+#menu_haut_logos .aide a {
+	width: 40px;
+}
+#menu_haut_logos .aide a img {
+	vertical-align: middle;
+	margin-right: 10px;
+	width: 40px;
+	height: 20px;
 }
 
 #menu_haut .bloc_titre {
@@ -317,7 +330,6 @@ body {
 	height: 40px;
 }
 #menu_haut #menu_haut_titre,
-#menu_haut #menu_haut_user,
 #menu_haut #menu_haut_logos .aide {
 	background-color: #000AFF;
 	height: 40px;
@@ -335,6 +347,9 @@ body {
 }
 #menu_haut_user .connecter_ok {
 	width: 5.7rem;
+}
+#menu_haut_user .connecter_ok .icon {
+	background-color: #000;
 }
 #menu_haut_user .connecter_ok img {
 	padding: 10px;
@@ -462,9 +477,6 @@ body {
 .icon-connecter {
 	--svg: url("#CHEMIN{img/logo_connecter.svg}");
 }
-.icon-connecter_ok {
-	--svg: url("#CHEMIN{img/logo_connecter_ok.svg}");
-}
 .icon-ecrire {
 	--svg: url("#CHEMIN{img/logo_ecrire.svg}");
 }
@@ -476,17 +488,6 @@ body {
 .select input:hover + label .icon-down, .select input.actif + label .icon-down, .select:hover input.first + label .icon-down, #menu_haut_user .connecter_ok:hover .icon-down {
 	transform: rotate(180deg);
 }
-
-
-
-
-
-
-
-
-
-
-
 
 #zone_bas {
 	width: 100%;
@@ -1050,9 +1051,10 @@ a:hover {
 	]
 </BOUCLE_vue2>
 
-#menu_haut.zone-menu li a.logo_menu-connecter {
-	height: 30px;
-	width: 29px;
+#menu_haut.zone-menu .icon-connecter {
+	height: 40px;
+	width: 23px;
+	vertical-align: middle;
 }
 #menu_haut.zone-menu li a.logo_menu-deconnecter {
 	background-color: #fff;
@@ -1065,9 +1067,8 @@ a:hover {
 #bouton_aide {
 	background-color: #fff;
 	background-size: contain;
-	background-image: url(#CHEMIN{img/question_mark.png});
 }
-#bouton_aide:hover{
+#bouton_aide:hover {
 	background-color: #7dd6de;
 }
 

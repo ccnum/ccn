@@ -261,5 +261,21 @@ et/ou
 				</ul>
 			</div>
 		</div>
+
+		[(#CONST{_PROJET}|=={laclasse}|oui)
+		<div id="menu_haut_droite" class="none">
+			<ul id="menu_haut_logos" class="bloc_titre">
+				<li>
+					<a href="https://www.laclasse.com/" target="_blank">[(#CHEMIN{img/logos/laclasse_short.svg}|balise_img|image_reduire{*,28})]</a>
+				</li>
+				<li>
+					<a href="https://erasme.org" target="_blank">[(#CHEMIN{img/logos/erasme.svg}|balise_img)]</a>
+				</li>
+				<li>
+					<a href="https://www.grandlyon.com/" target="_blank">[(#CHEMIN{img/logos/metropolelyon.svg}|balise_img|image_reduire{*,28})]</a>
+				</li>
+			</ul>
+		</div>
+		]
 	</div>
 </div>
