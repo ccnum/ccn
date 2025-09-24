@@ -3,11 +3,7 @@
 // extrait automatiquement de https://trad.spip.net/tradlang_module/cextras?lang_cible=en
 // ** ne pas modifier le fichier **
 
-if (!defined('_ECRIRE_INC_VERSION')) {
-	return;
-}
-
-$GLOBALS[$GLOBALS['idx_lang']] = array(
+return [
 
 	// C
 	'cextra_par_defaut' => 'Default value',
@@ -19,5 +15,5 @@ $GLOBALS[$GLOBALS['idx_lang']] = array(
 	'type' => '@type@',
 
 	// Z
-	'zbug_balise_argument_non_texte' => 'The @nb@ argument in the tag @balise@ should be text typed'
-);
+	'zbug_balise_argument_non_texte' => 'The @nb@ argument in the tag @balise@ should be text typed',
+];

@@ -9,13 +9,9 @@
  * @licence    GNU/GPL
  */
 
-// Sécurité
-if (!defined('_ECRIRE_INC_VERSION')) {
-	return;
-}
 
 /**
- * Une date au format JJ/MM/AAAA (avec séparateurs souples : espace / - .)
+ * Une date au format JJ/MM/AAAA ou AAAA/MM/JJ ou MM/JJ/AAAA (avec séparateurs souples : espace / - .)
  * Options :
  * - format : permet de préciser le format de la date  jma pour jour/mois/année (par défaut), mja (pour mois / jour / année), amj (année/mois/jour)
  *
@@ -35,9 +31,12 @@ function verifier_date_dist($valeur, $options = [], &$valeur_normalisee = null) 
 	if (!is_string($valeur) && !is_array($valeur)) {
 		return $erreur;
 	}
-	// Format par defaut
+	// Format par defaut : on tente une autodetection
 	if (!isset($options['format'])) {
-		$options['format'] = 'jma';
+		$options['format'] = verifier_date_format_autodection(
+			$valeur['date'] ?? (is_array($valeur) ? '' : $valeur),
+			'jma'
+		);
 	}
 	$format_php = verifier_date_format_spip2php($options['format']);
 	if (isset($options['normaliser'])) {
@@ -98,7 +97,6 @@ function verifier_date_dist($valeur, $options = [], &$valeur_normalisee = null) 
 		}
 		if ($date->format($format_php) !== $valeur) {//Ce petit coquin de PHP peut avoir transformé 2021-22-03 en 2021-10-22
 			return _T('verifier:erreur_date');
-			;
 		}
 
 		if ($horaire) {
@@ -122,7 +120,7 @@ function verifier_date_dist($valeur, $options = [], &$valeur_normalisee = null) 
 
 	// Normaliser si demandé
 	$ok = '';
-	if (isset($options['normaliser'])) {
+	if (!in_array($options['normaliser'] ?? '', ['', 'aucune'])) {
 		$valeur_normalisee = $normaliser($valeur, $options, $ok);
 	}
 
@@ -183,7 +181,7 @@ function normaliser_date_datetime_dist($valeur, $options, &$erreur) {
 	if (!is_array($valeur)) {
 		if (DateTime::createFromFormat('Y-m-d H:i:s', $valeur)) {
 			return $valeur;
-		}  elseif ($date = DateTime::createFromFormat('Y-m-d', $valeur)) {
+		} elseif (!($options['heure'] ?? '') && $date = DateTime::createFromFormat('Y-m-d', $valeur)) {
 			return $date->format('Y-m-d H:i:s');
 		}
 	}
@@ -193,8 +191,7 @@ function normaliser_date_datetime_dist($valeur, $options, &$erreur) {
 		$date .= (' ' . $options['heure'] . ':00');
 	} elseif (isset($options['fin_de_journee'])) {
 		$date .= ' 23:59:59';
-	}
-	else {
+	} else {
 		$date .= ' 00:00:00';
 	}
 	$format_php_input = verifier_date_format_spip2php($options['format']) . ' H:i:s';
@@ -235,4 +232,31 @@ function verifier_date_format_spip2php(string $format): string {
 		'amj' => 'Y-m-d'
 	];
 	return $equivalence[$format];
+}
+
+/**
+ * Essaie d'autodetecter un format a partir d'un chaine
+ * @param string $valeur la valeur en entrée
+ * @param string $defaut la valeur qu'on renvoie si on ne sait pas
+ * @return string jma/mja/amj
+ * Attention : jma peut être le retour par défaut si on hésite entre mja et jma
+**/
+function verifier_date_format_autodection(string $valeur, $defaut): string {
+	//1. Pas de séparateur dans les 4 premiers caractères ? Alors c'est qu'on commence par une année
+	$debut = substr($valeur, 0, 4);
+	if (is_numeric($debut)) {
+		return 'amj';
+	}
+	//2. Deux premiers caractères > 12, alors on en jma
+	$debut = substr($valeur, 0, 2);
+	if (intval($debut) > 12) {
+		return 'jma';
+	}
+	//2. Caractères en position 3-4 > 12, alors on en mja
+	$milieu = substr($valeur, 3, 2);
+	if (intval($milieu) > 12) {
+		return 'mja';
+	}
+	// A defaut, on renvoi $defaut
+	return $defaut;
 }

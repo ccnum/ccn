@@ -124,7 +124,7 @@ return [
 	'option_url_mode_php_filter' => 'Volledige URL verificatie met het PHP filter FILTER_VALIDATE_URL',
 	'option_url_mode_protocole_seul' => 'Uitsluitend verificatie van het protocol',
 	'option_url_protocole_label' => 'Naam van het te verifiëren protocol',
-	'option_url_type_protocole_exact' => 'Geef hieronder een protocol aan:',
+	'option_url_type_protocole_exact' => 'Geef hieronder een protocol aan:', # MODIF
 	'option_url_type_protocole_ftp' => 'File transfer protocols: FTP of SFTP',
 	'option_url_type_protocole_label' => 'Te verifiëren type protocol',
 	'option_url_type_protocole_mail' => 'Mail protocols: IMAP, POP3 of SMTP',

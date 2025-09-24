@@ -322,6 +322,40 @@
 .formulaire_construire_formulaire .editer.hover {
 	background-color: transparent;
 }
+/* Sélection de la position du champ */
+.formulaire_construire_formulaire .constructeur_position {
+	background-color: var(--spip-color-gray-lightest);
+	margin: 0 0 1em 0;
+	padding-inline-start: 0.75em !important;
+	.editer-label {
+		display: flex !important;
+		gap: 0.5em;
+		margin: 0;
+		padding: 0;
+		svg {
+			flex-shrink: 0;
+			margin-top: 0.25em;
+			* {
+				fill: var(--spip-color-theme-dark);
+				stroke: var(--spip-color-theme-dark);
+			}
+		}
+	}
+	.explication, select {
+		border-radius: var(--spip-form-input-border-radius);
+	}
+	.explication {
+		margin: 0;
+	}
+}
+@media (min-width: 580px) {
+	.formulaire_construire_formulaire .constructeur_position {
+		display: flex;
+		column-gap: var(--spip-form-spacing-x);
+		align-items: center;
+		justify-content: flex-start;
+	}
+}
 /** Indiquer les saisies dépubliées **/
 
 

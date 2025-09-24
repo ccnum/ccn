@@ -6,44 +6,49 @@
 		"cookieName": "[(#CONFIG{tarteaucitron/cookieName}|?{#CONFIG{tarteaucitron/cookieName}, tarteaucitron})]", /* Cookie name */
 
 		"orientation": "#CONFIG{tarteaucitron/orientation, middle}", /* le bandeau doit être en haut (top), au milieu (middle) ou en bas (bottom) ? */
-		"groupServices": [(#CONFIG{tarteaucitron/groupServices}|table_valeur{0}|?{true,false})], /* Group services by category */
-		"closePopup": [(#CONFIG{tarteaucitron/closePopup}|table_valeur{0}|?{true,false})], /* Show a close X on the banner */
+
+		"groupServices": [(#CONFIG{tarteaucitron/groupServices}|implode{','}|sinon{false})], /* Group services by category */
+		"closePopup": [(#CONFIG{tarteaucitron/closePopup}|implode{','}|sinon{false})], /* Show a close X on the banner */
 
 		/* Gestion petit bandeau */
 		"showAlertSmall": [(#CONFIG{tarteaucitron/ouverture}|=={'alertSmall'}|?{true,false})], /* afficher le petit bandeau en bas à droite ? */
-		"cookieslist": [(#CONFIG{tarteaucitron/cookieslist}|table_valeur{0}|?{true,false})], /* Afficher la liste des cookies installés ? */
+		"cookieslist": [(#CONFIG{tarteaucitron/cookieslist}|implode{','}|sinon{false})], /* Afficher la liste des cookies installés ? */
 
 		/* Gestion de la petite icone Cookie */
 		"showIcon": [(#CONFIG{tarteaucitron/ouverture}|=={'image'}|?{true,false})], /* Show cookie Icon or not */
 		["iconSrc" : "(#CONFIG{tarteaucitron/icon})",]
 		"iconPosition": "#CONFIG{tarteaucitron/iconPosition, BottomRight}", /* BottomRight, BottomLeft, TopRight and TopLeft */
 
-		"adblocker": [(#CONFIG{tarteaucitron/adblocker}|table_valeur{0}|?{true,false})], /* Afficher un message si un adblocker est détecté */
+		"adblocker": [(#CONFIG{tarteaucitron/adblocker}|implode{','}|sinon{false})], /* Afficher un message si un adblocker est détecté */
 
 		/* Gestion grand bandeau */
-		"DenyAllCta" : 	[(#CONFIG{tarteaucitron/boutons}|=={both}|?{true,false})], /* Show the deny all button */
+		"DenyAllCta" : [(#CONFIG{tarteaucitron/boutons}|=={both}|?{true,false})], /* Show the deny all button */
 		"AcceptAllCta" : [(#CONFIG{tarteaucitron/boutons}|in_array{#ARRAY{0,both,1,acceptallonly}}|?{true,false})], /* Show the accept all button when highPrivacy on */
-		"highPrivacy": [(#CONFIG{tarteaucitron/highprivacy}|table_valeur{0}|?{true,false})], /* Si true, affiche le bandeau de consentement. Sinon, le consentement est implicite. */
+		"highPrivacy": [(#CONFIG{tarteaucitron/highprivacy}|implode{','}|sinon{false})], /* Si true, affiche le bandeau de consentement. Sinon, le consentement est implicite. */
 
 		"handleBrowserDNTRequest": true, /* If Do Not Track == 1, disallow all */
 
-		"removeCredit": [(#CONFIG{tarteaucitron/removeCredit}|table_valeur{0}|?{true,false})], /* supprimer le lien vers la source ? */
+		"removeCredit": [(#CONFIG{tarteaucitron/removeCredit}|implode{','}|sinon{false})], /* supprimer le lien vers la source ? */
 
-		"useExternalCss": [(#CONFIG{tarteaucitron/useExternalCss}|table_valeur{0}|?{true,false})], /* If false, the tarteaucitron.css file will be loaded */
+		"useExternalCss": [(#CONFIG{tarteaucitron/useExternalCss}|implode{','}|sinon{false})], /* If false, the tarteaucitron.css file will be loaded */
 		"useExternalJs": false, /* If false, the tarteaucitron.js file will be loaded */
 
 		["cookieDomain": "(#CONFIG{tarteaucitron/cookieDomain})", /* Shared cookie for multisite */]
 
-		"moreInfoLink": [(#CONFIG{tarteaucitron/moreInfoLink}|table_valeur{0}|?{true,false})], /* Show more info link */
+		"moreInfoLink": [(#CONFIG{tarteaucitron/moreInfoLink}|implode{','}|sinon{false})], /* Show more info link */
 		["readmoreLink": "/(#CONFIG{tarteaucitron/readmoreLink})", /* Change the default readmore link */]
 
-		"mandatory": [(#CONFIG{tarteaucitron/mandatory}|table_valeur{0}|?{true,false})], /* Show a message about mandatory cookies */
+		"mandatory": [(#CONFIG{tarteaucitron/mandatory}|implode{','}|sinon{false})], /* Show a message about mandatory cookies */
 
+		"googleConsentMode": [(#CONFIG{tarteaucitron/ConsentMode}|implode{','}|sinon{true})], /* Activer le Google Consent Mode v2 pour Google ads & GA4 */
+		"bingConsentMode": [(#CONFIG{tarteaucitron/ConsentMode}|implode{','}|sinon{true})], /* Activer le Bing Consent Mode pour Clarity & Bing Ads */
+		"softConsentMode": false, /* Soft consent mode (le consentement est requis pour charger les tags) */
 	});
 
 	var tarteaucitronCustomText = {
 		["alertBigPrivacy": '(#CONFIG*{tarteaucitron/lang_alertBigPrivacy}|typo|expanser_liens|texte_script|replace{"\n",""}|replace{"\r","<br />"})',]
-		["disclaimer": '(#CONFIG*{tarteaucitron/lang_disclaimer}|typo|expanser_liens|texte_script|replace{"\n",""}|replace{"\r","<br />"})']
+		["disclaimer": '(#CONFIG*{tarteaucitron/lang_disclaimer}|typo|expanser_liens|texte_script|replace{"\n",""}|replace{"\r","<br />"})',]
+		"icon": '<:tarteaucitron:cfg_icon_texte:>'
 	}
 
 	var tarteaucitronForceLanguage = '#LANG';

@@ -208,7 +208,7 @@ class EmailValideTest extends TestCase {
 				[
 					'normal' => true,
 					'rfc5322' => true,
-					'strict' => false,
+					'strict' => true,
 				]
 			],
 			[

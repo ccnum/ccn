@@ -3,11 +3,7 @@
 // extrait automatiquement de https://trad.spip.net/tradlang_module/paquet-cextras?lang_cible=nl
 // ** ne pas modifier le fichier **
 
-if (!defined('_ECRIRE_INC_VERSION')) {
-	return;
-}
-
-$GLOBALS[$GLOBALS['idx_lang']] = array(
+return [
 
 	// C
 	'cextras_description' => 'Biedt een API voor het beheer van nieuw velden in redactionele objecten.
@@ -15,5 +11,5 @@ $GLOBALS[$GLOBALS['idx_lang']] = array(
 					grafische interface biedt voor het beheer van deze nieuwe velden.',
 	'cextras_nom' => 'Extra Velden',
 	'cextras_slogan' => 'API voor het beheer van nieuw velden in redactionele objecten.',
-	'cextras_titre' => 'Extra Velden'
-);
+	'cextras_titre' => 'Extra Velden',
+];

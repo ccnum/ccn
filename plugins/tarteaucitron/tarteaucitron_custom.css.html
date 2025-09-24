@@ -13,13 +13,26 @@
 #tarteaucitron #tarteaucitronServices .tarteaucitronLine .tarteaucitronName .tarteaucitron-toggle-group:hover {
 	box-shadow: 0 2px 3px rgba(0,0,0,0.1), 0 4px 8px rgba(0,0,0,0.3);
 }
-
-
-#tarteaucitron #tarteaucitronServices .tarteaucitronLine .tarteaucitronAsk.tarteaucitronIsDenied .tarteaucitronDeny{
-    background-color: #9C1A1A;
+#tarteaucitronRoot #tarteaucitronAlertBig {
+	background: #333!important;
 }
-#tarteaucitron #tarteaucitronServices .tarteaucitronLine .tarteaucitronAsk.tarteaucitronIsAllowed .tarteaucitronAllow{
-    background-color: #1B870B;
+#tarteaucitronAlertBig #tarteaucitronPersonalize2,
+.tarteaucitronCTAButton,
+#tarteaucitronRoot .tarteaucitronDeny,
+#tarteaucitronAlertBig #tarteaucitronDisclaimerAlert {
+	color: #fff!important;
+}
+#tarteaucitronRoot .tarteaucitronDeny,
+#tarteaucitron #tarteaucitronServices .tarteaucitronLine .tarteaucitronAsk .tarteaucitronDeny {
+    background: #1B870B!important;
+}
+#tarteaucitronAlertBig #tarteaucitronPersonalize2, .tarteaucitronCTAButton,
+#tarteaucitron #tarteaucitronServices .tarteaucitronLine .tarteaucitronAsk .tarteaucitronAllow {
+    background: #9C1A1A!important;
+}
+#tarteaucitronRoot .tarteaucitronAllow {
+	background: #008300!important;
+    color: #fff!important;
 }
 [(#CONFIG{tarteaucitron/groupServices}|oui)
 #tarteaucitronServices .tarteaucitronLine:hover, #tarteaucitron .tarteaucitronHidden:hover ul li {

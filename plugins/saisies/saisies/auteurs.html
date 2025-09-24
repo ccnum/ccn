@@ -39,4 +39,5 @@
 #SET{data, #GET{data}|plus{#ARRAY{#ID_AUTEUR,#NOM}}}
 </BOUCLE_auteurs>
 
-<INCLURE{fond=saisies/#GET{type_saisie}, data=#GET{data}, env}>
+[(#SET{class,[(#ENV{class})] select2})]
+<INCLURE{fond=saisies/#GET{type_saisie}, data=#GET{data}, env, class=#GET{class}}>

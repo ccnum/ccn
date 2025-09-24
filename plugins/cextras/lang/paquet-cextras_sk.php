@@ -3,11 +3,7 @@
 // extrait automatiquement de https://trad.spip.net/tradlang_module/paquet-cextras?lang_cible=sk
 // ** ne pas modifier le fichier **
 
-if (!defined('_ECRIRE_INC_VERSION')) {
-	return;
-}
-
-$GLOBALS[$GLOBALS['idx_lang']] = array(
+return [
 
 	// C
 	'cextras_description' => 'Ponúka jednoduchú aplikáciu, ktorá umožňuje vytvárať nové polia v redakčných objektoch.
@@ -15,5 +11,5 @@ $GLOBALS[$GLOBALS['idx_lang']] = array(
 					grafické rozhranie na riadenie týchto nových polí.',
 	'cextras_nom' => 'Doplnkové polia',
 	'cextras_slogan' => 'Aplikácia na riadenie nových polí v redakčných objektoch',
-	'cextras_titre' => 'Doplnkové polia'
-);
+	'cextras_titre' => 'Doplnkové polia',
+];
