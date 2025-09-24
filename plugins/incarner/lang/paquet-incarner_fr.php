@@ -1,7 +1,7 @@
 <?php
 // This is a SPIP language file  --  Ceci est un fichier langue de SPIP
 
-$GLOBALS[$GLOBALS['idx_lang']] = array(
+return [
 
 	// I
 	'incarner_description' => "Permet aux auteurs autorisés de changer d'utilisateur très facilement.
@@ -11,4 +11,4 @@ Ce plugin ajoute un lien « se connecter en tant que XX » sur chaque page auteu
 ",
 	'incarner_nom' => 'Incarner',
 	'incarner_slogan' => 'Changer rapidement d\'utilisateur durant le développement ou pour aider.',
-);
+];

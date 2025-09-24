@@ -141,7 +141,7 @@ return [
 	'option_url_mode_php_filter' => 'Full URL verification using the PHP filter FILTER_VALIDATE_URL',
 	'option_url_mode_protocole_seul' => 'Verification of the existence of a protocol only',
 	'option_url_protocole_label' => 'Name of the protocol to be verified',
-	'option_url_type_protocole_exact' => 'Enter a protocol below:',
+	'option_url_type_protocole_exact' => 'Enter a protocol below:', # MODIF
 	'option_url_type_protocole_ftp' => 'File transfer protocols: FTP or SFTP',
 	'option_url_type_protocole_label' => 'Type of protocol to be verified',
 	'option_url_type_protocole_mail' => 'Mail protocols: IMAP, POP3 or SMTP',

@@ -1,8 +1,9 @@
+#CACHE{0}
 <datas>
 	<projet>
 		<nom>[(#NOM_SITE_SPIP)]</nom>
-		<date_debut>01/09/#ANNEE_SCOLAIRE</date_debut>
-		<date_fin>01/09/[(#ANNEE_SCOLAIRE|plus{1})]</date_fin>
+		<date_debut>01/09/#ENV{annee_scolaire}</date_debut>
+		<date_fin>01/09/[(#ENV{annee_scolaire}|plus{1})]</date_fin>
 		<couleur_base_texte>#000000</couleur_base_texte>
 		<couleur_1erplan1>#444444</couleur_1erplan1>
 		<couleur_1erplan2>#C0C0C0</couleur_1erplan2>
@@ -19,7 +20,7 @@
 			<BOUCLE_rub(RUBRIQUES){titre_mot=images_background}{par hasard}{0,1}{tout}>
 				[(#REM) Si l'image dans le contenu editorial porte le TITRE de l'année en cours]
 				<BOUCLE_yearImage(DOCUMENTS){id_rubrique}>
-					<BOUCLE_selectYearImage(DOCUMENTS){id_document}{si #CONST{_annee_scolaire}|=={#TITRE}}{si #GET{anneeEnCours}|=={false}}>
+					<BOUCLE_selectYearImage(DOCUMENTS){id_document}{si #ENV{annee_scolaire}|=={#TITRE}}{si #GET{anneeEnCours}|=={false}}>
 						[(#SET{url,[(#URL_DOCUMENT|image_reduire{1600}|extraire_attribut{src})]})]
 						#SET{anneeEnCours, true}
 					</BOUCLE_selectYearImage>

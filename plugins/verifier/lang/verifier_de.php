@@ -11,6 +11,8 @@ return [
 	// E
 	'erreur_attribut_class' => 'Die Syntax dieses Klassenattributs ist ungültig.',
 	'erreur_code_postal' => 'Ungültige Postleitzahl',
+	'erreur_comparaison_different' => 'Der Wert muss sich vom Namen des Felds "@nom_champ@" unterscheiden.',
+	'erreur_comparaison_different_type' => 'Wert oder Datentyp muss sich vom Feld "@nom_champ@" unterscheiden.',
 	'erreur_comparaison_egal' => 'Der Wert muss gleich dem Feld "@nom_champ@" sein.',
 	'erreur_comparaison_egal_type' => 'Der Wert muss  dem Feld "@nom_champ@" entsprechen und vom gleichen Typ sein.',
 	'erreur_comparaison_grand' => 'Der Wert muss größer als das Feld "@nom_champ@" sein.',
@@ -74,6 +76,7 @@ return [
 	'normaliser_option_date' => 'Das Datum normalisieren?',
 	'normaliser_option_date_aucune' => 'Nein',
 	'normaliser_option_date_en_date' => 'Im Format « Date » (für SQL)',
+	'normaliser_option_date_en_date_ou_datetime' => 'Im Format « Date » oder « Datetime » (für SQL), je nach vorausgesetzten Datenformat oder, in der Grundeinstellung, als Ergebnis einer Eingabe ',
 	'normaliser_option_date_en_datetime' => '«Datetime» Format (für SQL)',
 	'normaliser_option_iban' => 'IBAN standardisieren?',
 	'normaliser_option_iban_machine' => 'Im Standardformat (ohne Leerzeichen, Großbuchstaben)',
@@ -86,6 +89,8 @@ return [
 	'option_comparaison_champ_champ_label' => 'Feld',
 	'option_comparaison_champ_comparaison_explication' => 'Vergleichsart',
 	'option_comparaison_champ_comparaison_label' => 'Vergleich',
+	'option_comparaison_champ_different' => ' != Unterschied',
+	'option_comparaison_champ_different_type' => ' !== Wert oder Typ unterschiedlich',
 	'option_comparaison_champ_egal' => '== gleich',
 	'option_comparaison_champ_egal_type' => '=== identisch (gleicher Typ)',
 	'option_comparaison_champ_grand' => '> größer als',
@@ -113,7 +118,7 @@ return [
 	'option_fichiers_dimension_autoriser_rotation_label_case' => 'Klicken um maximale Breite und Höhe zu tauschen.',
 	'option_fichiers_hauteur_max_label' => 'Maximale Bildhöhe (in px)',
 	'option_fichiers_largeur_max_label' => 'Maximale Bildgröße (in px)',
-	'option_fichiers_mime_image_web_label' => 'Nur Web-Bilder akzeptieren (gif, jpg, png)', # MODIF
+	'option_fichiers_mime_image_web_label' => 'Nur Web-Bilder akzeptieren (gif, jpg, png)',
 	'option_fichiers_mime_label' => 'Mime Type und Dateiendung',
 	'option_fichiers_mime_pas_de_verification_label' => 'Alle Typen und Endungen akzeptieren (nicht empfohlen)',
 	'option_fichiers_mime_specifique_label' => 'Nur die unten ausgewählten Typen und Endungen akzeptieren',
@@ -140,8 +145,9 @@ return [
 	'option_url_mode_label' => 'Art der URL-Prüfung',
 	'option_url_mode_php_filter' => 'Vollständige Prüfung des URL mit dem PHP-Filter FILTER_VALIDATE_URL',
 	'option_url_mode_protocole_seul' => 'Nur die Angabe eines Protokolls prüfen',
+	'option_url_objet_spip_label_case' => 'Kurzformen von SPIP-Objekten (artxx) erlauben',
 	'option_url_protocole_label' => 'Names des überprüften Protokolls',
-	'option_url_type_protocole_exact' => 'Geben Sie hier ein Protokoll an:',
+	'option_url_type_protocole_exact' => 'Anderes Protokoll',
 	'option_url_type_protocole_ftp' => 'FTP-Protokolle: ftp oder sftp',
 	'option_url_type_protocole_label' => 'Typ des erforderlichen Protokolls',
 	'option_url_type_protocole_mail' => 'Mail-Protokolle: imap, pop3 oder smtp',
@@ -153,6 +159,7 @@ return [
 
 	// P
 	'par_defaut' => 'Standardwert:',
+	'plugin_saisies_yaml_inactif' => 'Um diese Dokumentation anzuzeigen ist es erfoderlich,die Plugins  saisies und yaml zu aktivieren.',
 
 	// T
 	'titre_page_verifier_doc' => 'Dokumentation der  Prüf-API',

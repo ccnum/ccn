@@ -13,19 +13,20 @@ options:
       label: '<:saisies:option_groupe_description:>'
     saisies:
       -
+        saisie: 'input'
+        options:
+          nom: 'label'
+          obligatoire: 'on'
+          label: '<:saisies:option_label_label:>'
+          explication: '<:saisies:option_label_explication:>'
+          size: 50
+      -
         saisie: 'case'
         options:
           nom: 'horaire'
           label: '<:saisies:option_horaire_label:>'
           label_case: '<:saisies:option_horaire_label_case:>'
           valeur_oui: 'oui'
-      -
-        saisie: 'input'
-        options:
-          nom: 'label'
-          label: '<:saisies:option_label_label:>'
-          explication: '<:saisies:option_label_explication:>'
-          size: 50
       -
         saisie: 'input'
         options:

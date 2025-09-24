@@ -291,9 +291,10 @@ function cextras_formulaire_verifier($flux){
 function cextras_revisions_chercher_label($flux) {
 	$table = table_objet_sql($flux['args']['objet']);
 	$saisies_tables = champs_extras_objet($table);
+	include_spip('inc/saisies');
 	foreach($saisies_tables as $champ){
 		if($champ['options']['nom'] == $flux['args']['champ']){
-			$flux['data'] = $champ['options']['label'];
+			$flux['data'] = saisies_saisie_get_label($champ);
 			break;
 		}
 	}

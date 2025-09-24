@@ -3,11 +3,7 @@
 // extrait automatiquement de https://trad.spip.net/tradlang_module/cextras?lang_cible=eo
 // ** ne pas modifier le fichier **
 
-if (!defined('_ECRIRE_INC_VERSION')) {
-	return;
-}
-
-$GLOBALS[$GLOBALS['idx_lang']] = array(
+return [
 
 	// C
 	'cextra_par_defaut' => 'Defaŭlta valoro',
@@ -19,5 +15,5 @@ $GLOBALS[$GLOBALS['idx_lang']] = array(
 	'type' => '@type@',
 
 	// Z
-	'zbug_balise_argument_non_texte' => 'La argumento @nb@ en la marko @balise@ estu de tipo „teksto“'
-);
+	'zbug_balise_argument_non_texte' => 'La argumento @nb@ en la marko @balise@ estu de tipo „teksto“',
+];

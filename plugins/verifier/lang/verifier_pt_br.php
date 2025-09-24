@@ -147,7 +147,7 @@ Exemplo: «São Paulo, que cidade enorme!» torna-se «sao_paulo_que_cidade_enor
 	'option_url_mode_php_filter' => 'Validação completa do URL através do filtro FILTER_VALIDATE_URL do php',
 	'option_url_mode_protocole_seul' => 'Validação apenas da presença de um protocolo',
 	'option_url_protocole_label' => 'Nome do protocolo a ser validado',
-	'option_url_type_protocole_exact' => 'Informar um protocolo abaixo:',
+	'option_url_type_protocole_exact' => 'Informar um protocolo abaixo:', # MODIF
 	'option_url_type_protocole_ftp' => 'Protocolos ftp: ftp ou sftp',
 	'option_url_type_protocole_label' => 'Tipo de protocolo a ser validado',
 	'option_url_type_protocole_mail' => 'Protocolos de e-mail: imap, pop3 ou smtp',

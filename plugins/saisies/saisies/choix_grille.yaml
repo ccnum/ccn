@@ -15,6 +15,7 @@ options:
         saisie: 'input'
         options:
           nom: 'label'
+          obligatoire: 'on'
           label: '<:saisies:option_label_label:>'
           explication: '<:saisies:option_label_explication:>'
           size: 50

@@ -41,7 +41,7 @@
 [(#REM) cle secrete > on modifie le place holder]
 #SET{placeholder,''}
 [(#ENV{cle_secrete}|oui)
-	#SET{placeholder,#ENV{valeur_forcee,#ENV{valeur,#ENV{default}}}|spip_affiche_mot_de_passe_masque{true}}
+	#SET{placeholder,#ENV{valeur_forcee,#ENV{valeur,#ENV{defaut}}}|spip_affiche_mot_de_passe_masque{true}}
 ]
 [(#ENV{cle_secrete}|non)
 	#SET{placeholder,#ENV{placeholder}}
@@ -59,4 +59,4 @@
 </BOUCLE_selection>
 </datalist>
 </B_selection>
-<input type="#GET{type}" name="#ENV{nom}" class="text[ (#GET{type}|=={text}|non)#GET{type}[ text_(#GET{type})]][ (#ENV{class})]" id="champ_[(#ENV{id,#ENV{nom}}|saisie_nom2classe)]"[ list="(#GET{list_id})"][ value="(#ENV{cle_secrete}|?{'',#ENV{valeur_forcee,#ENV{valeur,#ENV{defaut}}}}|saisies_utf8_restaurer_planes)"][ size="(#ENV{size})"][ minlength="(#ENV{minlength})"][ maxlength="(#ENV{maxlength})"][ disabled="(#ENV{disable})"][ readonly="(#ENV{readonly})"][ placeholder="(#GET{placeholder})"][(#HTML5|oui)[(#ENV{obligatoire}|et{#ENV{obligatoire}|!={non}}|oui) required="required"][ min="(#ENV{min})"][ max="(#ENV{max})"][ step="(#ENV{step})"][(#ENV{autofocus}|et{#ENV{autofocus}|!={non}}|oui) autofocus="autofocus"]][(#GET{val_autocomplete}|find{#ENV{autocomplete}}|oui) autocomplete="#ENV{autocomplete}"][ aria-describedby="(#ENV{describedby})"][ (#ENV*{attributs})] />
+<input type="#GET{type}" name="#ENV{nom}" class="text[ (#GET{type}|=={text}|non)#GET{type}[ text_(#GET{type})]][ (#ENV{class})]" id="champ_[(#ENV{id,#ENV{nom}}|saisie_nom2classe)]"[ list="(#GET{list_id})"][ value="(#ENV{cle_secrete}|?{'',#ENV{valeur_forcee,#ENV{valeur,#ENV{defaut}}}}|saisies_utf8_restaurer_planes)"][ size="(#ENV{size})"][ minlength="(#ENV{minlength})"][ maxlength="(#ENV{maxlength})"][ disabled="(#ENV{disable})"][ readonly="(#ENV{readonly})"][ placeholder="(#GET{placeholder})"][(#HTML5|oui)[(#ENV{obligatoire}|et{#ENV{obligatoire}|!={non}}|oui)[(#ENV{cle_secrete}|et{#GET{placeholder}}|non) required="required"]][ min="(#ENV{min})"][ max="(#ENV{max})"][ step="(#ENV{step})"][(#ENV{autofocus}|et{#ENV{autofocus}|!={non}}|oui) autofocus="autofocus"]][(#GET{val_autocomplete}|find{#ENV{autocomplete}}|oui) autocomplete="#ENV{autocomplete}"][ aria-describedby="(#ENV{describedby})"][ (#ENV*{attributs})] />

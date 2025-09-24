@@ -2,9 +2,11 @@ jQuery(function(){
 	saisies_fieldset_pliable();
 	saisies_fieldset_onglet();
 	saisies_multi_novalidate();
+	SaisiesDateJourMoisAnnee.init();
 	onAjaxLoad(saisies_fieldset_pliable);
 	onAjaxLoad(saisies_fieldset_onglet);
 	onAjaxLoad(saisies_multi_novalidate);
+	onAjaxLoad(saisies_date_jour_mois_annee);
 });
 
 /**
@@ -333,6 +335,122 @@ function saisies_date_jour_mois_annee_changer_date(me, datetime) {
 		date = annee + '-' + mois + '-' + jour;
 	}
 	li.find('.datetime').attr('value', date);
+}
+
+/**
+ * Gestion des saisies date_jour_mois_annee
+ */
+class SaisiesDateJourMoisAnnee {
+	constructor(container) {
+		this.container = container;
+		this.dateWrapper = container.querySelector('[data-composant="date"]');
+		this.dateInput = container.querySelector('[data-composant-input="date"]');
+
+		this.jourInput = container.querySelector('[data-composant-input="jour"]');
+		this.moisInput = container.querySelector('[data-composant-input="mois"]');
+		this.anneeInput = container.querySelector('[data-composant-input="annee"]');
+
+		this.jourWrapper = container.querySelector('[data-composant="jour"]');
+		this.moisWrapper = container.querySelector('[data-composant="mois"]');
+		this.anneeWrapper = container.querySelector('[data-composant="annee"]');
+
+		this.resetBtn = container.querySelector('.btn_reset');
+		this.format = this.dateInput.dataset.format || 'datetime';
+	}
+
+	// Initialiser toutes les saisies
+	static init() {
+		document.querySelectorAll('.saisie_date_jour_mois_annee .composants-date.mode-jour-mois-annee').forEach(container => {
+			if (container.hasAttribute('data-saisies-initialized')) return;
+
+			const instance = new SaisiesDateJourMoisAnnee(container);
+			instance.setup();
+			instance.sync();
+		});
+	}
+
+	// Setup d'une saisie : cacher l'input de date et afficher les autres
+	setup() {
+		this.container.setAttribute('data-saisies-initialized', 'true');
+
+		// Cacher l'input de date
+		this.dateInput.type = 'hidden';
+		this.dateWrapper.classList.add('saisies-visually-hidden');
+
+		// Afficher les autres inputs et le bouton reset
+		[this.jourInput, this.moisInput, this.anneeInput].forEach((input) => {
+			const wrapper = input.closest('[data-composant]');
+			wrapper.removeAttribute('hidden');
+			wrapper.style.removeProperty('display');
+			if (input.dataset.disabled !== 'true') { // certains sont volontairement en disabled
+				input.removeAttribute('disabled');
+			}
+		});
+		this.resetBtn.style.removeProperty('display');
+		this.resetBtn.removeAttribute('hidden');
+	}
+
+	// Synchronisation d'une saisie : synchroniser la date avec les autres inputs
+	// et gestion du bouton reset
+	sync() {
+		const updateDateValue = () => {
+			const jour = this.jourInput.hasAttribute('disabled') ? '' : this.jourInput.value.trim();
+			const mois = this.moisInput.hasAttribute('disabled') ? '' : this.moisInput.value.trim();
+			const annee = this.anneeInput.hasAttribute('disabled') ? '' : this.anneeInput.value.trim();
+
+			const allEmpty = !jour && !mois && !annee;
+			// const someEmpty = !jour || !mois || !annee;
+
+			if (allEmpty) {
+				this.dateInput.value = '';
+				return;
+			}
+
+			// Normaliser
+			// Si des éléments sont en disabled,
+			// en fallback on s'aligne sur les valeurs minimales tolérées par PHP.
+			const j = jour ? jour.padStart(2, '0') : '01';
+			const m = mois ? mois.padStart(2, '0') : '01';
+			const a = annee ? annee.padStart(4, '0') : '0000';
+
+			let value = `${a}-${m}-${j}`;
+			if (this.format === 'datetime') {
+				value += ' 00:00:00';
+			}
+
+			this.dateInput.value = value;
+			this.dateInput.dispatchEvent(new Event('change', { bubbles: true }));
+		};
+
+		[this.jourInput, this.moisInput, this.anneeInput].forEach(input => {
+			input.addEventListener('input', updateDateValue);
+		});
+
+		// Clic sur le bouton reset
+		if (this.resetBtn) {
+			this.resetBtn.addEventListener('click', (e) => {
+				e.preventDefault();
+				[this.jourInput, this.moisInput, this.anneeInput].forEach(input => {
+					if (
+						!input.hasAttribute('readonly')
+						&& !input.hasAttribute('disabled')
+						&& input.dataset.readonly !== 'true'
+						&& input.dataset.disabled !== 'true'
+				) {
+						input.value = '';
+					}
+				});
+				updateDateValue();
+			});
+		}
+
+		// Synchro initiale s'il y a des valeurs par défaut
+		updateDateValue();
+	}
+}
+// Fonction wrapper pour relancer lors de rechargements ajax
+function saisies_date_jour_mois_annee() {
+	SaisiesDateJourMoisAnnee.init();
 }
 
 /** Ne pas valider lors des retours arrières sur multiétape **/
