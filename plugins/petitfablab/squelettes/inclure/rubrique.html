@@ -1,4 +1,4 @@
-<BOUCLE_principale(RUBRIQUES){id_rubrique}{tout}>
+<BOUCLE_principale(RUBRIQUES){id_rubrique}{tous}>
 
 	<div id="ecriture">
 
@@ -18,13 +18,11 @@
 							$('body').unbind( "mousemove");
 							$('.ecriture-chapitre').fadeTo(1000, 1);
 							$('#entete_publication1').fadeTo(3000, 0.2).slideUp(3000);
-
 						});
 					}
 					//window.setTimeout(cache1,5000);
 					//window.setTimeout(cache, 100000);
 				});
-
 			}
 			window.setTimeout(cache, 5000);
 		});
@@ -35,11 +33,10 @@
 				<div class="ecriture-chapitre-picto">
 					<img src="#CHEMIN{img/ecriture/forum-fond-pastille.png}" width="50" height="50" />
 				</div>
-
-					<div class="ecriture-chapitre-titre rouge3">
-						<strong>#INFO</strong>
-						<br />Vous pouvez laisser la place au suivant et recevrez bientôt votre histoire par mail !
-					</div>
+				<div class="ecriture-chapitre-titre rouge3">
+					<strong>#INFO</strong>
+					<br />Vous pouvez laisser la place au suivant et recevrez bientôt votre histoire par mail !
+				</div>
 				<hr />
 			</div>
 		]
@@ -63,7 +60,7 @@
 
 		<!-- PROLOGUE -->
 
-		<BOUCLE_article(ARTICLES){id_article=#DESCRIPTIF*}{titre LIKE prologue%}{tout}{0,1}>
+		<BOUCLE_article(ARTICLES){id_article=#DESCRIPTIF*}{titre LIKE prologue%}{tous}{0,1}>
 			<div class="ecriture-chapitre">
 				<div class="ecriture-chapitre-picto">
 					<div id="open_prologue">
@@ -80,14 +77,14 @@
 				</div>
 
 				<div class="ecriture-chapitre-auteur">
-					<BOUCLE_auteur_article(AUTEURS){id_article}{0,1}{tout}>
+					<BOUCLE_auteur_article(AUTEURS){id_article}{0,1}{tous}>
 						<div class="ecriture-chapitre-avatar">[(#LOGO_AUTEUR|image_reduire{42,42})]</div>
 						<div class="ecriture-chapitre-nom">#NOM</div>
 					</BOUCLE_auteur_article>
 				</div>
 
 				<div class="texte_courant" id="texte_prologue">
-					<p>#TEXTE<br /></p>
+					<p>#TEXTE<br />#PS</p>
 				</div>
 			</div>
 			<hr />
