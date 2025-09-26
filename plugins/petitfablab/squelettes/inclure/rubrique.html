@@ -92,7 +92,7 @@
 
 		<!-- END PROLOGUE -->
 		<!-- Boucle affichage des cadavres -->
-		<BOUCLE_cadavres(ARTICLES){id_rubrique}{par date}{tout}>
+		<BOUCLE_cadavres(ARTICLES){id_rubrique}{par date}{tous}>
 		[(#COMPTEUR_BOUCLE|!={5}|oui)<INCLURE{fond=inclure/chapitre-verrouille,id_article,fin=non}>]
 		[(#COMPTEUR_BOUCLE|=={5}|oui)<INCLURE{fond=inclure/chapitre-visible,id_article}>]
 		</BOUCLE_cadavres>
