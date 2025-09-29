@@ -92,14 +92,18 @@
 
 		<!-- END PROLOGUE -->
 		<!-- Boucle affichage des cadavres -->
-		#SET{nbr_article, 0}<BOUCLE_cadavres(ARTICLES){id_rubrique}{par date}{tous}> </BOUCLE_cadavres>#SET{nbr_article, #TOTAL_BOUCLE}</B_cadavres>
-		[(#GET{nbr_article}|=={5}|oui)<INCLURE{fond=inclure/chapitre-verrouille,id_article,fin=non}>]
-		[(#GET{nbr_article}|<{5}|oui)<INCLURE{fond=inclure/chapitre-visible,id_article}>]
-
-		<div class="ecriture-chapitre-picto">
-			<img src="#CHEMIN{img/ecriture/picto-crayon.png}" width="50" height="50" />
-		</div>
-		#FORMULAIRE_EDITER_ARTICLE{oui, #ID_RUBRIQUE, #SELF|parametre_url{var_mode,recalcul}}
+		<BOUCLE_cadavres(ARTICLES){id_rubrique}{par date}{tous}>
+		[(#COMPTEUR_BOUCLE|!={5}|oui)<INCLURE{fond=inclure/chapitre-verrouille,id_article,fin=non}>]
+		[(#COMPTEUR_BOUCLE|=={5}|oui)<INCLURE{fond=inclure/chapitre-visible,id_article}>]
+		</BOUCLE_cadavres>
+			#SET{total_boucle,#TOTAL_BOUCLE}
+		</B_cadavres>
+		[(#GET{total_boucle}|=={5}|non)
+			<div class="ecriture-chapitre-picto">
+				<img src="#CHEMIN{img/ecriture/picto-crayon.png}" width="50" height="50" />
+			</div>
+			#FORMULAIRE_EDITER_ARTICLE{oui, #ID_RUBRIQUE, #SELF|parametre_url{var_mode,recalcul}}
+		]
 
 	</div>
 	<style>
