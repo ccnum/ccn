@@ -61,5 +61,33 @@ function th_declarer_champs_extras($champs = []) {
 		],
 	];
 
+	$champs['spip_articles']['x'] = [
+		'saisie' => 'input', //Type du champ (voir plugin Saisies)
+		'options' => [
+			'nom' => 'x',
+			'label' => _T('th:x'),
+			'sql' => 'float',
+			'defaut' => '', // Valeur par défaut
+			'restrictions' => [
+				'voir' => ['auteur' => ''], //Tout le monde peut voir
+				'modifier' => ['auteur' => ['auteur' => '']]
+			], //Seuls les webmestres peuvent modifier
+		],
+	];
+
+	$champs['spip_articles']['y'] = [
+		'saisie' => 'input', //Type du champ (voir plugin Saisies)
+		'options' => [
+			'nom' => 'y',
+			'label' => _T('th:_position_y'),
+			'sql' => 'float',
+			'defaut' => '', // Valeur par défaut
+			'restrictions' => [
+				'voir' => ['auteur' => ''], //Tout le monde peut voir
+				'modifier' => ['auteur' => ['auteur' => '']]
+			], //Seuls les webmestres peuvent modifier
+		],
+	];
+
 	return $champs;
 }

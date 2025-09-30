@@ -4,7 +4,7 @@
 	version="3.2.0"
 	etat="stable"
 	logo="th.png"
-	schema="3.0.3"
+	schema="3.0.4"
 	documentation="http://www.laclasse.com"
 	compatibilite="[4.3.2;4.*]"
 >
