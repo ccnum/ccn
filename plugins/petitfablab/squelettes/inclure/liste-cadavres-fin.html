@@ -1,6 +1,6 @@
 <div id="liste-fin">
 	#SET{id_rub,#ARRAY}
-	<BOUCLE_rubriques_toutes(RUBRIQUES){id_rubrique=#ENV{rub_jeu}}{tout}>
+	<BOUCLE_rubriques_toutes(RUBRIQUES){id_parent=#ENV{rub_jeu}}{tout}>
 		<BOUCLE_test(ARTICLES){id_rubrique}> </BOUCLE_test>
 			[(#COMPTEUR_BOUCLE|>={5}|oui)#SET{id_rub,#GET{id_rub}|push{#ID_RUBRIQUE}}]
 		</B_test>
