@@ -8,9 +8,9 @@ SOMMAIRE.HTML > LISTE-CADAVRE-AUTEUR.HTML
 #SET{i,0}
 
 <BOUCLE_rubriques_toutes(RUBRIQUES){id_parent=#ENV{rub_jeu}}{tout}{id_rubrique != 12}{par id_rubrique}>
-	<div class="liste-colonnes">
 	<B_articles_tous>
 	#SET{i,#GET{i}|plus{1}}
+	<div class="liste-colonnes">
 	<div class="liste-title">#ID_RUBRIQUE</div>
 
 	<!-- LISTE CADAVRES -->
@@ -56,5 +56,4 @@ SOMMAIRE.HTML > LISTE-CADAVRE-AUTEUR.HTML
 		]
 		</div>
 	</B_articles_tous>
-	</div>
 </BOUCLE_rubriques_toutes>
