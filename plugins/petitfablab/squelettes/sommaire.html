@@ -14,7 +14,7 @@
 	<div class="global-content">
 		<div class="content">
 			<div class="content-left-small">
-				<INCLURE{fond=inclure/colonne_gauche,rub_jeu=#GET{rub_jeu}, liste} />
+				<INCLURE{fond=inclure/colonne_gauche,id_rubrique=#GET{rub_jeu}, liste} />
 			</div>
 			[(#ENV{liste}|non)
 			<div class="content-right-large">
@@ -31,7 +31,6 @@
 							<INCLURE{fond=inclure/liste-cadavres-visiteur,rub_jeu=#GET{rub_jeu}} />
 						</div>
 						<div class="texte-presentation">
-							<div><br /></div>
 							<div class="bord">Et les histoires terminées :</div>
 							<INCLURE{fond=inclure/liste-cadavres-fin,rub_jeu=#GET{rub_jeu}} />
 						</div>
