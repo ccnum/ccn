@@ -12,7 +12,6 @@ function autoriser_th_configurer_dist($faire, $type, $id, $qui, $opt) {
 	return autoriser('webmestre', $type, $id, $qui, $opt);
 }
 
-
 /**
  * Autorisation de modifier un auteur
  *
@@ -29,7 +28,6 @@ function autoriser_th_configurer_dist($faire, $type, $id, $qui, $opt) {
  **/
 /*
 function autoriser_auteur_modifier($faire, $type, $id, $qui, $opt) {
-
 	// Un redacteur peut modifier ses propres donnees mais ni son login/email
 	// ni son statut (qui sont le cas echeant passes comme option)
 	if ($qui['statut'] == '1comite'  or $qui['statut'] == '6forum') {
@@ -46,7 +44,6 @@ function autoriser_auteur_modifier($faire, $type, $id, $qui, $opt) {
 			return false;
 		}
 	}
-
 	// Un admin restreint peut modifier/creer un auteur non-admin mais il
 	// n'a le droit ni de le promouvoir admin, ni de changer les rubriques
 	if ($qui['restreint']) {
@@ -78,7 +75,6 @@ function autoriser_auteur_modifier($faire, $type, $id, $qui, $opt) {
 			}
 		}
 	}
-
 	// Un admin complet fait ce qu'il veut
 	// sauf se degrader
 	if ($id == $qui['id_auteur'] && (isset($opt['statut']) and $opt['statut'])) {
