@@ -129,6 +129,7 @@ spip plugins:activer spip_bonux -y
 spip plugins:activer verifier -y
 spip plugins:activer yaml -y
 spip plugins:activer autorite -y
+spip plugins:activer simplog -y
 
 if [ ${SPIP_PLUGINS_CICAS} == true ]; then
 	spip plugins:activer cicas -y
