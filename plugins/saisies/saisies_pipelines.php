@@ -477,6 +477,7 @@ function afficher_si_hide(src) {
 **/
 function saisies_saisies_verifier_lister_disponibles(array $flux): array {
 	unset($flux['data']['disponibles']['fichiers']);// CVTUpload s'occupe tout seul de remettre cette verification
+	return $flux;
 }
 
 /**
