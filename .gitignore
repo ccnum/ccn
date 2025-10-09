@@ -23,6 +23,8 @@ SECURITY.md
 spip_loader_list.json
 spip_loader.php
 /spip.*
+plugins/thematique/vendor
+plugins/thematique/ecs.php
 
 dump/
 TMP_SPIP_3
