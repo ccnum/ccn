@@ -42,7 +42,7 @@ function th_declarer_champs_extras($champs = []) {
 			'defaut' => '', // Valeur par défaut
 			'restrictions' => [
 				'voir' => ['auteur' => ''], //Tout le monde peut voir
-				'modifier' => ['auteur' => ['auteur' => '']],
+				'modifier' => ['auteur' => ['webmestre', '0minirezo']],
 			], //Seuls les webmestres peuvent modifier
 		],
 	];
@@ -56,7 +56,7 @@ function th_declarer_champs_extras($champs = []) {
 			'defaut' => '', // Valeur par défaut
 			'restrictions' => [
 				'voir' => ['auteur' => ''], //Tout le monde peut voir
-				'modifier' => ['auteur' => ['auteur' => '']],
+				'modifier' => ['auteur' => ['webmestre', '0minirezo']],
 			], //Seuls les webmestres peuvent modifier
 		],
 	];
@@ -70,7 +70,7 @@ function th_declarer_champs_extras($champs = []) {
 			'defaut' => '', // Valeur par défaut
 			'restrictions' => [
 				'voir' => ['auteur' => ''], //Tout le monde peut voir
-				'modifier' => ['auteur' => ['auteur' => '']],
+				'modifier' => ['auteur' => ['webmestre', '0minirezo']],
 			], //Seuls les webmestres peuvent modifier
 		],
 	];
@@ -84,7 +84,7 @@ function th_declarer_champs_extras($champs = []) {
 			'defaut' => '', // Valeur par défaut
 			'restrictions' => [
 				'voir' => ['auteur' => ''], //Tout le monde peut voir
-				'modifier' => ['auteur' => ['auteur' => '']],
+				'modifier' => ['auteur' => ['webmestre', '0minirezo']],
 			], //Seuls les webmestres peuvent modifier
 		],
 	];
@@ -94,11 +94,11 @@ function th_declarer_champs_extras($champs = []) {
 		'options' => [
 			'nom' => 'id_consigne',
 			'label' => _T('th:id_consigne'),
-			'sql' => 'float',
+			'sql' => 'intval',
 			'defaut' => '', // Valeur par défaut
 			'restrictions' => [
 				'voir' => ['auteur' => ''], //Tout le monde peut voir
-				'modifier' => ['auteur' => ['auteur' => '']],
+				'modifier' => ['auteur' => ['webmestre', '0minirezo']],
 			], //Seuls les webmestres peuvent modifier
 		],
 	];
