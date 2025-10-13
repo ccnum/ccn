@@ -50,7 +50,7 @@ function thematique_upgrade($nom_meta_base_version, $version_cible) {
 	$maj['2.4.0'] = [['th_configurer_rubriques']];
 
 	$maj['3.0.3'] = [['th_ajouter_mots_clef'], ['maj_tables', ['spip_rubriques']]];
-	cextras_api_upgrade(th_declarer_champs_extras(), $maj['3.0.4']);
+	cextras_api_upgrade(th_declarer_champs_extras(), $maj['3.0.6']);
 
 	include_spip('base/upgrade');
 	maj_plugin($nom_meta_base_version, $version_cible, $maj);
