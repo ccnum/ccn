@@ -130,7 +130,7 @@ spip plugins:activer verifier -y
 spip plugins:activer yaml -y
 spip plugins:activer autorite -y
 spip plugins:activer simplog -y
-spip plugins:activer adminer -y
+spip plugins:desactiver adminer -y
 
 if [ ${SPIP_PLUGINS_CICAS} == true ]; then
 	spip plugins:activer cicas -y
@@ -149,12 +149,12 @@ spip plugins:maj:bdd
 spip config:ecrire -p autorite editer_forums:1
 spip config:ecrire -p autorite auteur_mod_email:0
 spip config:ecrire -p autorite auteur_modere_forum:0
+spip config:ecrire -p autorite publierdans:7
 spip config:ecrire -p bigup charger_public:1
 spip config:ecrire -p bigup max_file_size:${PHP_UPLOAD_MAX_FILESIZE%M}
 spip config:ecrire -p mediabox active:oui
 spip config:ecrire -p notation acces:ide
 spip config:ecrire -p notation change_note:oui
-spip config:ecrire -p notation publierdans:7
 
 # Default mes_options
 rm -rf config/mes_options.php
