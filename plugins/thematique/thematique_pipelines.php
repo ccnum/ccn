@@ -81,7 +81,8 @@ function thematique_notifications_destinataires($flux) {
 		spip_log('publication de ' . $flux['args']['quoi'] . ' ' . $flux['args']['id'], 'thematique');
 		$flux['data'][] = $GLOBALS['meta']['email_envoi'];
 		$article = sql_fetsel('*', 'spip_articles', 'id_article=' . intval($flux['args']['id']));
-		if ($article['id_consigne'] == '0') {
+		$titre_rub = sql_getfetsel('titre', 'spip_rubriques', 'id_rubrique=' . intval($article['id_secteur']));
+		if ($article['id_consigne'] == '0' and is_numeric($titre_rub)) {
 			spip_log(
 				'lier à la consigne ' . $article['id_consigne'] . ' et au secteur ' . $article['id_secteur'],
 				'thematique'
