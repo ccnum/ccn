@@ -147,6 +147,7 @@ spip plugins:maj:bdd
 
 spip config:ecrire -p autorite editer_forums:1
 spip config:ecrire -p autorite auteur_mod_email:0
+spip config:ecrire -p autorite auteur_mod_article:1
 spip config:ecrire -p autorite auteur_modere_forum:0
 spip config:ecrire -p autorite publierdans:7
 spip config:ecrire -p bigup charger_public:1
