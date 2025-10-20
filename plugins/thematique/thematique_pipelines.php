@@ -108,9 +108,12 @@ function thematique_notifications_destinataires($flux) {
 			} else {
 				$annee_scolaire = date('Y') - 1;
 			}
-			$id_secteur = sql_getfetsel('id_secteur', 'spip_rubriques', 'titre LIKE %' . intval($annee_scolaire).'%');
+			spip_log('lier à l année ' . $annee_scolaire, 'thematique');
+			$id_secteur = sql_getfetsel('id_secteur', 'spip_rubriques', 'titre LIKE "%' . intval($annee_scolaire).'%"');
+			spip_log('lier au secteur ' . $id_secteur, 'thematique');
 			$rubriques = sql_allfetsel('id_rubrique', 'spip_rubriques', 'id_secteur=' . intval($id_secteur));
 			foreach ($rubriques as $r) {
+				spip_log('lier à la rubrique ' . $r['id_rubrique'], 'thematique');
 				$auteurs_restreint = sql_select(
 					'auteurs.email',
 					'spip_auteurs AS auteurs JOIN spip_auteurs_liens AS lien ON auteurs.id_auteur=lien.id_auteur',
