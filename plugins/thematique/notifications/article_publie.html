@@ -7,13 +7,14 @@
 ]
 <BOUCLE_art(ARTICLES){id_article}{statut?}{tout}>
 #SET{auteurs,#LESAUTEURS}
+<BOUCLE_rubrique(RUBRIQUES){id_rubrique=#ID_SECTEUR}>#SET{titre_secteur, #TITRE}</BOUCLE_rubrique>
 <title>[(#VAL{notifications:article_publie_sujet}|_T{#ARRAY{nom_site_spip,#NOM_SITE_SPIP,titre,#TITRE}}|nettoyer_titre_email)]</title>
 
 <body>
 <div class="header">
 <h1><:notifications:article_valide_titre|trim|trim{-}:></h1>
 <p>
-[(#SET{titre,[<a href="[(#URL_ARTICLE|url_absolue|parametre_url{mode,complet})]"><strong>(#TITRE)</strong></a>]})]
+[(#SET{titre,[<a href="[(#URL_ARTICLE|url_absolue|parametre_url{rub,#GET{titre_secteur}}|parametre_url{mode,complet})]"><strong>(#TITRE)</strong></a>]})]
 [(#VAL{notifications:article_publie_detail}|_T{#ARRAY{titre,#GET{titre},connect_nom,#SESSION{nom}}})]
 </p>
 <hr />
