@@ -475,7 +475,6 @@ function callReponse(id_reponse) {
 	var id_classe = getIdClasseFromIdReponse(id_reponse);
 	console.log('id_classe', id_classe);
 
-
 	updateMenuIcon(['consignes-' + id_consigne, 'classes-' + id_classe], 'mainView');
 
 	var url = CCN.projet.url_popup_reponse + "&id_article=" + id_reponse;

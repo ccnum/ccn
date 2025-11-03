@@ -9,11 +9,11 @@ if (!defined('_ECRIRE_INC_VERSION')) {
 function thematique_pre_boucle($boucle) {
 	$affichage = '_affichage';
 
-	$annee = \_ANNEE_SCOLAIRE;
+	$annee = _ANNEE_SCOLAIRE;
 	$mois = '08';
 	$jour = '01';
 
-	$annee2 = intval(\_ANNEE_SCOLAIRE) + 1;
+	$annee2 = intval(_ANNEE_SCOLAIRE) + 1;
 	$mois2 = '08';
 	$jour2 = '01';
 
