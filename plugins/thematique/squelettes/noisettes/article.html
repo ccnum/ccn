@@ -186,7 +186,7 @@
 			]
 		]
 		<div class="sidebar_bubble masquer">#ENV{type_objet}</div>
-		[(#ENV{type_objet}|in_array{#LISTE{livrable,consignes,travail_en_cours,ressources}}|oui)
+		[(#ENV{type_objet}|in_array{#LISTE{agora,livrable,consignes,ressources,travail_en_cours}}|oui)
 		<div class="sidebar_bubble">
 			<div class="bloc_documents">
 				[(#AUTORISER{modifier,article,#ID_ARTICLE}|oui)
