@@ -18,7 +18,7 @@
 </BOUCLE_publie>
 
 [(#REM) INCLUSION ]
-<INCLURE{fond=inclure/layout_init,ecriture=oui,rub_hist=#ENV{rub_jeu},nb_chap=#GET{chapitres}}>
+<INCLURE{fond=inclure/layout_init,ecriture=oui,rub_hist=#ENV{rub_jeu},nb_chap=#GET{chapitres}} />
 
 <!-- BOOK -->
 <div id="global-ecriture">
@@ -29,9 +29,9 @@
 				<INCLURE{fond=inclure/colonne_gauche,id_rubrique=#ENV{rub_jeu}} />
 			</div>
 			<div class="content-right-large">
-				<INCLURE{fond=inclure/rubrique,id_rubrique=#ENV{rub_jeu},id_art=#ID_ARTICLE,info=#GET{info}}>
+				<INCLURE{fond=inclure/rubrique,id_rubrique=#ENV{rub_jeu},id_art=#ID_ARTICLE,info=#GET{info}} />
 			</div>
 		</div>
 	</div>
 </div>
-<INCLURE{fond=inclure/layout_end,ecriture=oui,rub_hist=#ENV{rub_jeu}}>
+<INCLURE{fond=inclure/layout_end,ecriture=oui,rub_hist=#ENV{rub_jeu}} />

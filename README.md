@@ -57,6 +57,9 @@ Si la pull request est fermée avec le label `#major`, la version sera incrémen
 ### Start the project
 1. Run `docker-compose up` to start the containers in detached mode.
 
+### Nouvelle CCN
+Il faut dans le BO des sites configuré le SMTP
+
 ### ❤️ Humans.txt
 - pierretux
 - pipazoul
