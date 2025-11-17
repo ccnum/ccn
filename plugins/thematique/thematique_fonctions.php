@@ -13,9 +13,6 @@ function balise_ANNEE_SCOLAIRE_dist($p) {
 	return $p;
 }
 
-/* Surcharges Fonctions plugins
-}
- */
 
 /**
  * FONCTIONS
