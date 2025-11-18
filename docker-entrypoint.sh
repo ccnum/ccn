@@ -149,14 +149,14 @@ spip config:ecrire -p autorite auteur_mod_email:0
 spip config:ecrire -p autorite auteur_mod_article:1
 spip config:ecrire -p autorite auteur_modere_forum:0
 spip config:ecrire -p autorite editer_forums:1
-spip config:ecrire -p autorite forum_article:0
 spip config:ecrire -p autorite publierdans:7
-spip config:ecrire -p autorite thread_forum:0
 spip config:ecrire -p bigup charger_public:1
 spip config:ecrire -p bigup max_file_size:${PHP_UPLOAD_MAX_FILESIZE%M}
 spip config:ecrire -p mediabox active:oui
 spip config:ecrire -p notation acces:ide
 spip config:ecrire -p notation change_note:oui
+spip config:ecrire -p notification forum_article:0
+spip config:ecrire -p notification thread_forum:0
 
 # Default mes_options
 rm -rf config/mes_options.php
