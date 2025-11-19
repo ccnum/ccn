@@ -94,7 +94,7 @@ function th_declarer_champs_extras($champs = []) {
 		'options' => [
 			'nom' => 'id_consigne',
 			'label' => _T('th:id_consigne'),
-			'sql' => 'intval',
+			'sql' => "int(5) NOT NULL DEFAULT '0'",
 			'defaut' => '', // Valeur par défaut
 			'restrictions' => [
 				'voir' => ['auteur' => ''], //Tout le monde peut voir
