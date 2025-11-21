@@ -68,4 +68,4 @@ Il faut dans le BO des sites configuré le SMTP
 - Juliette Monaco
 - Patrick Vincent
 - Thomas Graveleine
-- Thomas Neuveu
+- Thomas Neveu
