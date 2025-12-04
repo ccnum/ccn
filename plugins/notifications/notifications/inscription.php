@@ -1,4 +1,5 @@
 <?php
+
 /*
  * Plugin Notifications
  * (c) 2009-2012 SPIP
@@ -6,7 +7,9 @@
  *
  */
 
-if (!defined("_ECRIRE_INC_VERSION")) return;
+if (!defined('_ECRIRE_INC_VERSION')) {
+	return;
+}
 
 /**
  * inscription d'un nouvel auteur => mail aux admins
@@ -17,12 +20,13 @@ if (!defined("_ECRIRE_INC_VERSION")) return;
  */
 function notifications_inscription_dist($quoi, $id_auteur, $options) {
 	if (!isset($GLOBALS['notifications']['inscription'])
-	  OR !$GLOBALS['notifications']['inscription'])
+	  or !$GLOBALS['notifications']['inscription']) {
 		return;
+	}
 
-	$modele = "notifications/inscription";
+	$modele = 'notifications/inscription';
 
-	$destinataires = array();
+	$destinataires = [];
 
 	$where = "statut = '0minirezo'";
 	// notifier uniquement les webmestres ?
@@ -36,18 +40,16 @@ function notifications_inscription_dist($quoi, $id_auteur, $options) {
 		$destinataires[] = $row['email'];
 	}
 
-	$destinataires = pipeline('notifications_destinataires',
-		array(
-			'args' => array('quoi' => $quoi, 'id' => $id_auteur, 'options' => $options)
-		,
-			'data' => $destinataires)
+	$destinataires = pipeline(
+		'notifications_destinataires',
+		[
+			'args' => ['quoi' => $quoi, 'id' => $id_auteur, 'options' => $options],
+			'data' => $destinataires]
 	);
 
 	$envoyer_mail = charger_fonction('envoyer_mail', 'inc'); // pour nettoyer_titre_email
-	$texte = recuperer_fond($modele, array('id_auteur' => $id_auteur));
+	$texte = recuperer_fond($modele, ['id_auteur' => $id_auteur]);
 
 	notifications_envoyer_mails($destinataires, $texte);
 
 }
-
-?>
