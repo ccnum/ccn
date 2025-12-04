@@ -18,10 +18,8 @@
 	#SET{var_id_auteur,#SESSION{id_auteur}}
 	#SET{var_nom_auteur,#SESSION{nom}}
 	<!-- On recupere l'id du chapitre à masquer -->
-	<BOUCLE_max_cadavres(ARTICLES){id_rubrique}{par date}>
-	#SET{var_max_cadavres, #TOTAL_BOUCLE}
-	</BOUCLE_max_cadavres>
-	#SET{id_cadavre_hidden, #GET{var_max_cadavres}|moins{1}}
+	<BOUCLE_max_cadavres(ARTICLES){id_rubrique}{par date}> </BOUCLE_max_cadavres>
+	#SET{id_cadavre_hidden, #TOTAL_BOUCLE|moins{1}}
 	<!-- on recupere l'id de la rubrique de travail -->
 	<BOUCLE_id_zone(spip_auteurs_liens){objet = rubrique}{spip_auteurs_liens.id_auteur = #GET{var_id_auteur}}{0,1}>
 	#SET{var_id_zone, #ID_OBJET}
@@ -70,9 +68,6 @@
 				<div class="content-left-small">
 					<div id="titre_site">
 						<a href="#URL_SITE_SPIP" title="Accueil"><strong>fictions</strong></a><a href="http://www.laclasse.com" title="http://www.laclasse.com">.laclasse.com</a>
-					</div>
-					<div id="ecriture-en-cours">
-						<!--[(#REM) Pas la moindre foutue idée d'à quoi sert ce rubrique-bouton... Je supprile son inclure fond=rubrique-bouton]-->
 					</div>
 					<!-- LISTE CADAVRE SMALL-->
 					<div id="ecriture-liste">
@@ -126,14 +121,14 @@
 								[(#GET{var_id_zone}|=={#ID_RUBRIQUE}|oui)
 
 									<!-- Affichage du chapitre masque N-1 -->
-									[(#GET{id_cadavre_hidden}|=={#_cadavres:COMPTEUR_BOUCLE}|oui)<INCLURE{fond=inclure/chapitre-visible, id_article} />]
+									[(#GET{id_cadavre_hidden}|=={#_cadavres:COMPTEUR_BOUCLE}|oui)<INCLURE{fond=inclure/chapitre-visible,id_article} />]
 
 									<!-- Affichage du chapitre N VERROUILLE -->
 									[(#GET{id_cadavre_hidden}|!={#_cadavres:COMPTEUR_BOUCLE}|oui)
 										<!-- precedent chapitre VERROUILLE-->
-										[(#_cadavres:COMPTEUR_BOUCLE|!={#GET{var_max_cadavres}}|oui)<INCLURE{fond=inclure/chapitre-visible, id_article,fin=non}>]
+										[(#_cadavres:COMPTEUR_BOUCLE|!={#GET{var_max_cadavres}}|oui)<INCLURE{fond=inclure/chapitre-visible,id_article,fin=non}>]
 										<!-- dernier chapitre ECRITURE-->
-										[(#_cadavres:COMPTEUR_BOUCLE|=={#GET{var_max_cadavres}}|oui)<INCLURE{fond=inclure/chapitre-ecriture, id_article}>]
+										[(#_cadavres:COMPTEUR_BOUCLE|=={#GET{var_max_cadavres}}|oui)<INCLURE{fond=inclure/chapitre-ecriture,id_article}>]
 									]
 								]
 
@@ -193,7 +188,7 @@
 </body>
 
 <style>
-	.crayon-html {background-image:url(#CHEMIN{img/global/tooltip-background.png});background-repeat:repeat;}
+	.crayon-html {background-image:url('#CHEMIN{img/global/tooltip-background.png}');background-repeat:repeat;}
 	.crayon-html .formulaire_spip textarea {height:300px;background-color:#FFF;}
 	.formulaire_crayon {width:500px;margin-left:auto;margin-right:auto;margin-top:40px;z-index:9999}
 	.resizehandle{display:none;}
@@ -293,7 +288,6 @@
 		});
 
 		// MODIFS PLUGINS CRAYON
-
 		setInterval(function() {
 			$('.crayon-html').css('top','0px');
 			$('.crayon-html').css('left','0px');
