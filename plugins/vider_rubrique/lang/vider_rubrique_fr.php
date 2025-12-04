@@ -5,7 +5,7 @@ if (!defined('_ECRIRE_INC_VERSION')) {
 	return;
 }
 
-$GLOBALS[$GLOBALS['idx_lang']] = array(
+return [
 	'action_vider' => "Vider cette rubrique",
 	/* Page de Configuration */
 	'configuration_vider_rubrique' => "Configuration du plugin &quot;Vider Rubrique&quot;",
@@ -26,4 +26,4 @@ $GLOBALS[$GLOBALS['idx_lang']] = array(
 	'explication_suppression_document' => "L&#x27;action doit-elle &eacute;galement supprimer les documents li&eacute;s UNIQUEMENT aux articles qui seront supprim&eacute;s ?<br/><em>(non fonctionnel pour l&#x27;instant)</em>",
 	'label_suppression_forums' => "Suppression des forums",
 	'explication_suppression_forums' => "L&#x27;action doit-elle &eacute;galement supprimer les forums li&eacute;s aux articles qui seront supprim&eacute;s ?<br/><em>(non fonctionnel pour l&#x27;instant)</em>",
-);
+];

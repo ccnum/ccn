@@ -28,14 +28,14 @@ function vider_rubrique_boite_infos($flux) {
 		- etc.
 		Là c'est du mode un peu à l'arrache, mais ça fait ce qu'on demande
 	*/
-	if (autoriser("webmestre") && $actif == "oui") {
+	if (autoriser('webmestre') && $actif == 'oui') {
 		if (($id = intval($flux['args']['id'])) && ($type == 'rubrique')) {
-			if ($restreindre == "oui" && !in_array($id, $les_rubriques)) {
+			if ($restreindre == 'oui' && !in_array($id, $les_rubriques)) {
 				return $flux;
 			}
 
-			$contexte = array('id_rubrique' => $id);
-			$flux["data"] .= recuperer_fond("noisettes/bouton_vider_rubrique", $contexte);
+			$contexte = ['id_rubrique' => $id];
+			$flux['data'] .= recuperer_fond('noisettes/bouton_vider_rubrique', $contexte);
 		}
 	}
 
@@ -45,7 +45,7 @@ function vider_rubrique_boite_infos($flux) {
 function vider_rubrique_jqueryui_plugins($plugins) {
 	include_spip('inc/utils');
 	if (test_espace_prive()) {
-		$plugins[] = "jquery.ui.dialog";
+		$plugins[] = 'jquery.ui.dialog';
 	}
 
 	return $plugins;
