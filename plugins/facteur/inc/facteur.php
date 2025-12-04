@@ -368,6 +368,45 @@ function facteur_reprogrammer_ou_dumper_mail_echec(array $arguments, int $try) {
 
 }
 
+
+/**
+ * Une fonction pour transformer un ou des emails en tableau d'emails
+ * accepte en entree
+ * - un unique email
+ * - une liste d'emails au format string, séparés par une virgule
+ * - un tableau d'emails
+ *
+ * La fonction pour explode la liste d'email est tirée du plugin verifier
+ * https://git.spip.net/spip-contrib-extensions/verifier/-/blob/master/verifier/email.php?ref_type=heads#L70
+ *
+ * @param string|array $valeur
+ * @return array
+ */
+function facteur_emails_to_array($valeur) {
+	if (is_array($valeur)) {
+		return array_map('trim', $valeur);
+	}
+	$p = strpos($valeur, '@');
+	if ( $p !== false && strpos($valeur, ',', $p) !== false ) {
+		if ($parts = preg_split('/(@[^@,]+),/' , $valeur, -1, PREG_SPLIT_DELIM_CAPTURE)) {
+			$adresses = [];
+			while (!empty($parts)) {
+				$left = array_shift($parts);
+				if (!empty($parts)) {
+					$adresses[] = $left . array_shift($parts);
+				} else {
+					$adresses[] = $left;
+				}
+			}
+			$adresses = array_map('trim', $adresses);
+			$adresses = array_filter($adresses);
+			return $adresses;
+		}
+	}
+	return [trim($valeur)];
+}
+
+
 /**
  * Prend une liste d'email
  * Explose si nécessaire en tableau
@@ -378,9 +417,7 @@ function facteur_reprogrammer_ou_dumper_mail_echec(array $arguments, int $try) {
  * @return array
 **/
 function facteur_preparer_liste_emails($emails): array {
-	if (!is_array($emails)) {
-		$emails = explode(',', $emails);
-	}
+	$emails = facteur_emails_to_array($emails);
 	$emails = array_map('email_valide', $emails);
 	$emails = array_filter($emails);
 	return $emails;
@@ -402,7 +439,7 @@ function facteur_destinataires(Spip\Facteur\FacteurMail $facteur, array $to, arr
 		if (!_TEST_EMAIL_DEST) {
 			return _T('facteur:erreur_envoi_bloque_constante');
 		} else {
-			$to = [_TEST_EMAIL_DEST];
+			$to = facteur_emails_to_array(_TEST_EMAIL_DEST);
 			$cc = [];
 			$bcc = [];
 		}
