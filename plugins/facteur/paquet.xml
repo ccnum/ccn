@@ -1,7 +1,7 @@
 <paquet
 	prefix="facteur"
 	categorie="communication"
-	version="5.2.1"
+	version="5.3.0"
 	etat="stable"
 	compatibilite="[4.1.0;4.*]"
 	logo="facteur-64.svg"

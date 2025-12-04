@@ -62,18 +62,6 @@ function saisies_saisie_est_gelee(array $description): bool {
 	}
 }
 
-/**
- * @deprecated saisies_verifier_gel_saisie
- * Renommée en saisies_saisie_est_gelee
- * @param array $description
- * @return bool
-**/
-function saisies_verifier_gel_saisie(array $description): bool {
-
-	trigger_error('fonction `saisie_verifier_gel_saisie()` depréciée, utiliser à la place `saisies_saisie_est_gelee()`', E_USER_DEPRECATED);
-	spip_log('fonction `saisie_verifier_gel_saisie()` depréciée, utiliser à la place `saisies_saisie_est_gelee()`', 'deprecated_saisies');
-	return saisies_saisie_est_gelee($description);
-}
 
 /**
  * Renvoie true si la saisie est un conteneur de sous saisies, qu'elle contienne effectivement des sous saisies ou pas

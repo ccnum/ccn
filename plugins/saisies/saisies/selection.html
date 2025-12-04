@@ -72,7 +72,7 @@
 #SET{disabled, #ARRAY}
 [(#ENV{disable_choix,''}|strlen|oui) #SET{disabled, #ENV{disable_choix}|explode{','}}]
 #SET{disabled, #ENV{disable_choix}|saisies_normaliser_liste_choix}
-<select [(#HTML5|oui)[(#ENV{obligatoire}|et{#ENV{obligatoire}|!={non}}|oui) required="required"]] name="#ENV{nom}[(#ENV{multiple}|?{\[\],''})]" id="champ_[(#ENV{id,#ENV{nom}}|saisie_nom2classe)]"[ class="(#ENV{class})"][ disabled="(#ENV{disable})"][ size="(#ENV{size})"][ (#ENV*{attributs})][ multiple="(#ENV{multiple})"]>
+<select [(#ENV{obligatoire,non}|!={non}|oui) required="required"] name="#ENV{nom}[(#ENV{multiple}|?{\[\],''})]" id="#ENV{id}"[ class="(#ENV{class})"][ disabled="(#ENV{disable})"][ size="(#ENV{size})"][ (#ENV*{attributs})][ multiple="(#ENV{multiple})"]>
 
 [(#ENV{cacher_option_intro}|non)<option value="">[(#ENV{option_intro})]</option>]
 <BOUCLE_selection(DATA){source tableau, #GET{data}}>

@@ -10,7 +10,7 @@
 		label=<:plugin:info_langue:>})]
 ]
 [(#SET{valeur,[(#ENV{valeur_forcee,#ENV{valeur,#ENV{defaut,''}}})]})]
-<select name="#ENV{nom}" id="champ_[(#ENV{id,#ENV{nom}}|saisie_nom2classe)]"[ class="(#ENV{class})"][ disabled="(#ENV{disable})"][ (#ENV*{attributs})]>
+<select name="#ENV{nom}" id="#ENV{id}"[ class="(#ENV{class})"][ disabled="(#ENV{disable})"][ (#ENV*{attributs})]>
 [(#ENV{cacher_option_intro}|non)<option value="">[(#ENV{option_intro})]</option>]
 <INCLURE{fond=prive/formulaires/inc-options-langues,name=#ENV{type_lang, changer_lang},default=#GET{valeur}} />
 </select>

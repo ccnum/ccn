@@ -19,7 +19,7 @@
 		multiple=oui})]
 ]
 
-<select name="#ENV{nom}[(#ENV{multiple}|?{\[\]})]" id="champ_[(#ENV{id,#ENV{nom}}|saisie_nom2classe)]"[ class="(#ENV{class})"][(#ENV{multiple}|oui) multiple="multiple" size="[(#ENV{size,#ENV{afficher_tous}|?{4,3}})]"][ disabled="(#ENV{disable})"][ (#ENV*{attributs})]>
+<select name="#ENV{nom}[(#ENV{multiple}|?{\[\]})]" id="#ENV{id}"[ class="(#ENV{class})"][(#ENV{multiple}|oui) multiple="multiple" size="[(#ENV{size,#ENV{afficher_tous}|?{4,3}})]"][ disabled="(#ENV{disable})"][ (#ENV*{attributs})]>
 	[(#ENV{cacher_option_intro}|ou{#ENV{multiple}}|non)
 		<option value="">[(#ENV{option_intro})]</option>]
 		<BOUCLE_statuts_auteurs(DATA){source table, #EVAL{$GLOBALS['liste_des_statuts']}}{valeur!='5poubelle'}>

@@ -50,10 +50,13 @@
 	#SET{disable,#ENV{disable,#ENV{disable_avec_post}}|et{#ENV{disable,#ENV{disable_avec_post}}|!={non}}|?{#ENV{disable}|is_array|?{#ENV{disable,#ARRAY},disabled},''}}
 	#SET{readonly,#ENV{readonly}|et{#ENV{readonly}|!={non}}|?{readonly,''}}
 
+	[(#REM)<!-- Un id html (différent de l'identifiant de la saisie en data-id!) soit explicite, soit calculé à partir du name-->]
+	[(#SET{id,[(#ENV{id}|sinon{champ_[(#GET{nom}|saisie_nom2classe)]})]})]
+
 	[(#REM)<!-- Si la saisie est autonome, ne pas l'encapusler-->]
 	#SET{saisies_autonomes,#VAL|saisies_autonomes}
 	[(#ENV{type_saisie}|in_array{#GET{saisies_autonomes}}|oui)
-		<INCLURE{fond=saisies/#ENV{type_saisie},env,nom=#GET{name},obligatoire=#GET{obligatoire},disable=#GET{disable},readonly=#GET{readonly}} />
+	<INCLURE{fond=saisies/#ENV{type_saisie},env,nom=#GET{name},obligatoire=#GET{obligatoire},disable=#GET{disable},readonly=#GET{readonly},id=#GET{id}} />
 	]
 
 	[(#ENV{type_saisie}|in_array{#GET{saisies_autonomes}}|non)
@@ -61,7 +64,7 @@
 		[(#REM)<!-- définir l'encapsulation de la saisie et du label (problèmatique d'accessibilité)-->]
 		#SET{conteneur_tag,div}
 		#SET{conteneur_label,label}
-		#SET{attribut_for, champ_#ENV{id,#ENV{nom}}|saisie_nom2classe}
+		#SET{attribut_for, #GET{id}}
 		[(#ENV{type_saisie}|in_array{#LISTE{oui_non,radio,checkbox,choix_grille}}|oui)
 			#SET{conteneur_tag,fieldset}
 			#SET{conteneur_label,legend}
@@ -91,7 +94,7 @@
 
 		[(#REM)<!-- gestion des describedby -->]
 		#SET{describedby, ''}
-		[(#ENV*{explication}|oui) #SET{describedby, #GET{describedby}|concat{' ',explication_#ENV{nom}|saisie_nom2classe}} ]
+		[(#ENV*{explication}|oui) #SET{describedby, #GET{describedby}|concat{' ',explication_#GET{id}}} ]
 
 		[(#REM)<!-- et maintenant début de la saisie -->]
 		<!--!inserer_saisie_editer-->
@@ -101,14 +104,15 @@
 			[(#REM)<!-- tout ce qui se trouve avant les champs de form au sens html -->]
 			[<[(#GET{conteneur_label})]  class="editer-label[ (#GET{conteneur_label}|=={legend}|oui)label][ (#ENV{label_class})]"[ for="(#GET{attribut_for})"]>(#ENV*{label})[(#ENV{aide}|oui)#AIDER{#ENV{aide}}][<span class='obligatoire'>(#GET{obligatoire}|oui)[(#ENV*{info_obligatoire}|is_null|?{<:info_obligatoire_02:>,#ENV*{info_obligatoire}})]</span>]</[(#GET{conteneur_label})]>]
 
-			[<span class='erreur_message' id="[erreur_(#ENV{nom}|saisie_nom2classe)]">(#GET{erreur})</span> #SET{describedby, #GET{describedby}|concat{' ',erreur_#ENV{nom}|saisie_nom2classe}} ]
-			[<p class="explication" id="[explication_(#ENV{nom}|saisie_nom2classe)]">(#ENV*{explication})</p>]
+			[<span class='erreur_message' id="[erreur_(#GET{id})]">(#GET{erreur})</span> #SET{describedby, #GET{describedby}|concat{' ',erreur_#GET{id}}} ]
+			[<p class="explication" id="explication_#GET{id}">(#ENV*{explication})</p>]
+
 			[<em class='attention'>(#ENV*{attention})</em>]
 
 			[(#REM)<!-- appeler la saisie proprement dite -->]
-			<INCLURE{fond=saisies/#ENV{type_saisie},env,nom=#GET{name}, disable=#GET{disable},readonly=#GET{readonly},describedby=#GET{describedby}|trim} />
+			<INCLURE{fond=saisies/#ENV{type_saisie},env,nom=#GET{name},id=#GET{id},disable=#GET{disable},readonly=#GET{readonly},describedby=#GET{describedby}|trim} />
 
-			[<p class="explication explication_apres" id="[explication_apres(#ENV{nom}|saisie_nom2classe)]">(#ENV*{explication_apres})</p>]
+			[<p class="explication explication_apres" id="explication_apres_#GET{id}">(#ENV*{explication_apres})</p>]
 
 			[(#REM)<!-- gerer le disable avec post -->]
 			[(#ENV{disable_avec_post}|et{#ENV{disable_avec_post}|!={non}}|et{#ENV{type_saisie}|in_array{#LISTE{case,checkbox}}|non}|oui)<input type='hidden' name='#GET{name}' value="#ENV{valeur,#ENV{defaut}}" />]

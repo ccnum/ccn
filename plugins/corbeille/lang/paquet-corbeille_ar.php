@@ -3,13 +3,9 @@
 // extrait automatiquement de https://trad.spip.net/tradlang_module/paquet-corbeille?lang_cible=ar
 // ** ne pas modifier le fichier **
 
-if (!defined('_ECRIRE_INC_VERSION')) {
-	return;
-}
-
-$GLOBALS[$GLOBALS['idx_lang']] = array(
+return [
 
 	// C
 	'corbeille_nom' => 'سلة المهملات',
-	'corbeille_slogan' => 'إدارة المستندات الموجودة في سلة المهملات' # MODIF
-);
+	'corbeille_slogan' => 'إدارة المستندات الموجودة في سلة المهملات', # MODIF
+];

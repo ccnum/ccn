@@ -28,8 +28,7 @@
 
 [(#SET{filtrer_langue_rubrique,[(#ENV{afficher_rub_dans_langue_interface,0}|oui) #ENV{lang}]})]
 
-[(#REM) Donner a manger à CVT-configurer si aucune valeur définie ]
-<input type="hidden" name="[(#ENV{nom,id_item})][]" id="[champ_(#ENV{nom,id_item})]" value="" disabled="disabled" />
+<input type="hidden" name="[(#ENV{nom,id_item})][]" id="#ENV{id}" value="" disabled="disabled" />
 [(#SET{select,[(#ENV{multiple}|?{0,1})]})]
 <INCLURE{fond=formulaires/selecteur/rubriques,
 	selected=#GET{val},

@@ -121,7 +121,7 @@ return [
 	'option_fichiers_mime_image_web_label' => 'Nur Web-Bilder akzeptieren (gif, jpg, png)',
 	'option_fichiers_mime_label' => 'Mime Type und Dateiendung',
 	'option_fichiers_mime_pas_de_verification_label' => 'Alle Typen und Endungen akzeptieren (nicht empfohlen)',
-	'option_fichiers_mime_specifique_label' => 'Nur die unten ausgewählten Typen und Endungen akzeptieren',
+	'option_fichiers_mime_specifique_label' => 'Nur die unten ausgewählten Typen und Endungen akzeptieren', # MODIF
 	'option_fichiers_mime_tout_mime_label' => 'Alle von SPIP erkannten MIME Types und Endungen akzeptieren',
 	'option_fichiers_taille_max_label' => 'Maximale Dateigröße (in kB)',
 	'option_fichiers_type_mime_label' => 'Akzeptierte MIME Types auswählen',

@@ -29,7 +29,7 @@
 #SET{valeur, #ENV{valeur}|saisies_valeur2tableau}
 
 #SET{disabled, #ENV{disable_choix}|saisies_normaliser_liste_choix}
-<select name="#ENV{nom}[]" id="champ_[(#ENV{id,#ENV{nom}}|saisie_nom2classe)]" multiple="multiple"[ class="(#ENV{class})"][ disabled="(#ENV{disable})"][ size="(#ENV{size,10})"][ (#ENV*{attributs})]>
+<select name="#ENV{nom}[]" id="#ENV{id}" multiple="multiple"[ class="(#ENV{class})"][ disabled="(#ENV{disable})"][ size="(#ENV{size,10})"][ (#ENV*{attributs})]>
 [(#ENV{cacher_option_intro}|non)<option value="">[(#ENV{option_intro})]</option>]
 <BOUCLE_selection(DATA){source tableau, #GET{data}}>
 	<B_cond>

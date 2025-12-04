@@ -18,9 +18,9 @@
 	#SET{var_id_auteur,#SESSION{id_auteur}}
 	#SET{var_nom_auteur,#SESSION{nom}}
 	<!-- On recupere l'id du chapitre à masquer -->
-	<BOUCLE_max_cadavres(ARTICLES){id_rubrique}{par date}>
+	<BOUCLE_max_cadavres(ARTICLES){id_rubrique}{statut IN publie,prop}{par date}> </BOUCLE_max_cadavres>
 	#SET{var_max_cadavres, #TOTAL_BOUCLE}
-	</BOUCLE_max_cadavres>
+	</B_max_cadavres>
 	#SET{id_cadavre_hidden, #GET{var_max_cadavres}|moins{1}}
 	<!-- on recupere l'id de la rubrique de travail -->
 	<BOUCLE_id_zone(spip_auteurs_liens){objet = rubrique}{spip_auteurs_liens.id_auteur = #GET{var_id_auteur}}{0,1}>
@@ -71,9 +71,6 @@
 					<div id="titre_site">
 						<a href="#URL_SITE_SPIP" title="Accueil"><strong>fictions</strong></a><a href="http://www.laclasse.com" title="http://www.laclasse.com">.laclasse.com</a>
 					</div>
-					<div id="ecriture-en-cours">
-						<!--[(#REM) Pas la moindre foutue idée d'à quoi sert ce rubrique-bouton... Je supprile son inclure fond=rubrique-bouton]-->
-					</div>
 					<!-- LISTE CADAVRE SMALL-->
 					<div id="ecriture-liste">
 						[(#SESSION{id_auteur}|oui)<INCLURE{fond=inclure/liste-cadavres-auteur-small} />]
@@ -88,7 +85,6 @@
 									<img src="#CHEMIN{img/ecriture/bt-open-prologue.png}" onmouseover="this.src='#CHEMIN{img/ecriture/bt-open-prologue-hover.png}';"
 										onmouseout="this.src='#CHEMIN{img/ecriture/bt-open-prologue.png}';" width="25" height="25" />
 								</div>
-
 								<div id="close_prologue">
 									<img src="#CHEMIN{img/ecriture/bt-close-prologue.png}" onmouseover="this.src='#CHEMIN{img/ecriture/bt-close-prologue_hover.png}';"
 										onmouseout="this.src='#CHEMIN{img/ecriture/bt-close-prologue.png}';" width="25" height="25" />
@@ -101,15 +97,11 @@
 										<div class="ecriture-chapitre-surtitre">—</div>
 										<div class="ecriture-chapitre-titre">#TITRE</div>
 									</div>
-
 									<div class="ecriture-chapitre-auteur">
-
 									</div>
-
 									<div class="texte_courant #EDIT{texte}" id="texte_prologue">
 										#TEXTE<br />
 									</div>
-
 								</BOUCLE_article>
 							</BOUCLE_annee>
 
@@ -118,68 +110,64 @@
 
 						<!-- END PROLOGUE -->
 						<!-- Boucle affichage des cadavres -->
-						<BOUCLE_cadavres(ARTICLES){id_rubrique}{id_rubrique !=12}{par date}>
+						<BOUCLE_cadavres(ARTICLES){id_rubrique}{statut IN publie,prop}{id_rubrique !=12}{par id_article}>
+							[(#SESSION{webmestre}|=={oui}|non)
 							<!-- L'UTILISATEUR N'EST PAS WEBMESTRE / ECRIVAIN -->
-							#SET{var_oui, oui}
-							[(#SESSION{webmestre}|!={#GET{var_oui}}|oui)
-								<!-- L'utilisateur est sur son espace de travail -->
 								[(#GET{var_id_zone}|=={#ID_RUBRIQUE}|oui)
-
+								<!-- L'utilisateur est sur son espace de travail -->
 									<!-- Affichage du chapitre masque N-1 -->
-									[(#GET{id_cadavre_hidden}|=={#_cadavres:COMPTEUR_BOUCLE}|oui)<INCLURE{fond=inclure/chapitre-visible, id_article} />]
+									[(#GET{id_cadavre_hidden}|=={#_cadavres:COMPTEUR_BOUCLE}|oui)<INCLURE{fond=inclure/chapitre-visible,id_article} />]
 
 									<!-- Affichage du chapitre N VERROUILLE -->
 									[(#GET{id_cadavre_hidden}|!={#_cadavres:COMPTEUR_BOUCLE}|oui)
 										<!-- precedent chapitre VERROUILLE-->
-										[(#_cadavres:COMPTEUR_BOUCLE|!={#GET{var_max_cadavres}}|oui)<INCLURE{fond=inclure/chapitre-visible, id_article,fin=non}>]
+										[(#COMPTEUR_BOUCLE|!={#GET{var_max_cadavres}}|oui)<INCLURE{fond=inclure/chapitre-visible,id_article,fin=non} />]
 										<!-- dernier chapitre ECRITURE-->
-										[(#_cadavres:COMPTEUR_BOUCLE|=={#GET{var_max_cadavres}}|oui)<INCLURE{fond=inclure/chapitre-ecriture, id_article}>]
+										[(#COMPTEUR_BOUCLE|=={#GET{var_max_cadavres}}|oui)<INCLURE{fond=inclure/chapitre-ecriture,id_article} />]
 									]
 								]
 
-								<!-- L'utilisateur n'est pas sur son espace de travail -->
 								[(#GET{var_id_zone}|!={#ID_RUBRIQUE}|oui)
-
-									<!-- Affichage du chapitre masque N-1 -->
+								<!-- L'utilisateur n'est pas sur son espace de travail -->
 									[(#GET{id_cadavre_hidden}|=={#_cadavres:COMPTEUR_BOUCLE}|oui)
-
+									<!-- Affichage du chapitre masque N-1 -->
 										<!-- Si l'utilisateur est l'auteur du chapitre N-1  -->
-										[(#NOM|=={#GET{var_nom_auteur}}|oui)<INCLURE{fond=inclure/chapitre-visible,id_article}>]
+										[(#NOM|=={#GET{var_nom_auteur}}|oui)<INCLURE{fond=inclure/chapitre-visible,id_article} />]
 										<!-- Si l'utilisateur n'est pas l'auteur du chapitre N-1  -->
-										[(#NOM|!={#GET{var_nom_auteur}}|oui)<INCLURE{fond=inclure/chapitre-visible,id_article,fin=non}>]
+										[(#NOM|!={#GET{var_nom_auteur}}|oui)<INCLURE{fond=inclure/chapitre-visible,id_article,fin=non} />]
 									]
 									<!-- Affichage du chapitre masque N VERROUILLE -->
 									[(#GET{id_cadavre_hidden}|!={#_cadavres:COMPTEUR_BOUCLE}|oui)
 										#SET{var_oui, oui}
 										<!-- Si l'utilisateur est webmestre -->
-										[(#SESSION{webmestre}|=={#GET{var_oui}}|oui)
+										[(#SESSION{webmestre}|=={oui}|oui)
 											<!-- precedent chapitre VERROUILLE-->
-											[(#_cadavres:COMPTEUR_BOUCLE|!={#GET{var_max_cadavres}}|oui)<INCLURE{fond=inclure/chapitre-visible,id_article,fin=non}>]
+											[(#COMPTEUR_BOUCLE|!={#GET{var_max_cadavres}}|oui)<INCLURE{fond=inclure/chapitre-visible,id_article,fin=non} />]
 											<!-- dernier chapitre ECRITURE -->
-											[(#_cadavres:COMPTEUR_BOUCLE|=={#GET{var_max_cadavres}}|oui)<INCLURE{fond=inclure/chapitre-ecriture,id_article}>]
+											[(#COMPTEUR_BOUCLE|=={#GET{var_max_cadavres}}|oui)<INCLURE{fond=inclure/chapitre-ecriture,id_article} />]
 										]
 										<!-- Si l'utilisateur n'est pas webmestre -->
-										[(#SESSION{webmestre}|!={#GET{var_oui}}|oui)
+										[(#SESSION{webmestre}|=={oui}|non)
 											<!-- precedent chapitre VERROUILLE-->
-											[(#_cadavres:COMPTEUR_BOUCLE|!={#GET{var_max_cadavres}}|oui)<INCLURE{fond=inclure/chapitre-visible,id_article,fin=non}>]
+											[(#COMPTEUR_BOUCLE|!={#GET{var_max_cadavres}}|oui)<INCLURE{fond=inclure/chapitre-visible,id_article,fin=non} />]
 											<!-- dernier chapitre ECRITURE -->
-											[(#_cadavres:COMPTEUR_BOUCLE|=={#GET{var_max_cadavres}}|oui)<INCLURE{fond=inclure/chapitre-ecriture,fin=oui,id_article}>]
+											[(#COMPTEUR_BOUCLE|=={#GET{var_max_cadavres}}|oui)<INCLURE{fond=inclure/chapitre-ecriture,fin=oui,id_article} />]
 										]
 									]
 								]
 							]
-							<!-- L'UTILISATEUR EST PAS WEBMESTRE / ECRIVAIN -->
-							[(#SESSION{webmestre}|=={#GET{var_oui}}|oui)
+							[(#SESSION{webmestre}|=={oui}|oui)
+							<!-- L'UTILISATEUR EST WEBMESTRE / ECRIVAIN -->
 
 								<!-- Affichage du chapitre masque N-1 -->
-								[(#GET{id_cadavre_hidden}|=={#_cadavres:COMPTEUR_BOUCLE}|oui)<INCLURE{fond=inclure/chapitre-visible, id_article} />]
+								[(#GET{id_cadavre_hidden}|=={#_cadavres:COMPTEUR_BOUCLE}|oui)<INCLURE{fond=inclure/chapitre-visible,id_article} />]
 
 								<!-- Affichage du chapitre N VERROUILLE -->
 								[(#GET{id_cadavre_hidden}|!={#_cadavres:COMPTEUR_BOUCLE}|oui)
 									<!-- precedent chapitre VERROUILLE-->
-									[(#_cadavres:COMPTEUR_BOUCLE|!={#GET{var_max_cadavres}}|oui)<INCLURE{fond=inclure/chapitre-verrouille, id_article, fin=non}>]
+									[(#COMPTEUR_BOUCLE|!={#GET{var_max_cadavres}}|oui)<INCLURE{fond=inclure/chapitre-verrouille,id_article,fin=non} />]
 									<!-- dernier chapitre ECRITURE-->
-									[(#_cadavres:COMPTEUR_BOUCLE|=={#GET{var_max_cadavres}}|oui)<INCLURE{fond=inclure/chapitre-ecriture, id_article}>]
+									[(#COMPTEUR_BOUCLE|=={#GET{var_max_cadavres}}|oui)<INCLURE{fond=inclure/chapitre-ecriture,id_article} />]
 								]
 							]
 						</BOUCLE_cadavres>
@@ -193,7 +181,7 @@
 </body>
 
 <style>
-	.crayon-html {background-image:url(#CHEMIN{img/global/tooltip-background.png});background-repeat:repeat;}
+	.crayon-html {background-image:url('#CHEMIN{img/global/tooltip-background.png}');background-repeat:repeat;}
 	.crayon-html .formulaire_spip textarea {height:300px;background-color:#FFF;}
 	.formulaire_crayon {width:500px;margin-left:auto;margin-right:auto;margin-top:40px;z-index:9999}
 	.resizehandle{display:none;}
@@ -293,7 +281,6 @@
 		});
 
 		// MODIFS PLUGINS CRAYON
-
 		setInterval(function() {
 			$('.crayon-html').css('top','0px');
 			$('.crayon-html').css('left','0px');

@@ -6,7 +6,7 @@
 	source="https://git.spip.net/spip-contrib-extensions/spip-bonux.git"
 	reference="fr">
 	<langue code="ar" url="https://trad.spip.net/tradlang_module/spip_bonux?lang_cible=ar" total="13" traduits="13" relire="0" modifs="0" nouveaux="0" pourcent="100.00">
-		<traducteur nom="George" lien="https://trad.spip.net/auteur/جورج-قندلفت" />
+		<traducteur nom="George" lien="https://trad.spip.net/auteur/george" />
 	</langue>
 	<langue code="de" url="https://trad.spip.net/tradlang_module/spip_bonux?lang_cible=de" total="13" traduits="13" relire="0" modifs="0" nouveaux="0" pourcent="100.00">
 		<traducteur nom="Martin" lien="https://trad.spip.net/auteur/martin" />
@@ -27,6 +27,9 @@
 	</langue>
 	<langue code="ja" url="https://trad.spip.net/tradlang_module/spip_bonux?lang_cible=ja" total="13" traduits="13" relire="0" modifs="0" nouveaux="0" pourcent="100.00">
 		<traducteur nom="origenius" lien="https://trad.spip.net/auteur/origenius" />
+	</langue>
+	<langue code="mg" url="https://trad.spip.net/tradlang_module/spip_bonux?lang_cible=mg" total="13" traduits="13" relire="0" modifs="0" nouveaux="0" pourcent="100.00">
+		<traducteur nom="iBesorongola" lien="https://trad.spip.net/auteur/ibesorongola" />
 	</langue>
 	<langue code="nl" url="https://trad.spip.net/tradlang_module/spip_bonux?lang_cible=nl" total="13" traduits="13" relire="0" modifs="0" nouveaux="0" pourcent="100.00">
 		<traducteur nom="Hanjo" lien="https://trad.spip.net/auteur/hanjo" />

@@ -345,6 +345,16 @@ function saisies_afficher_si_verifier_syntaxe($condition, $tests = []) {
 		if ($liste_sous_tests != array_filter($liste_sous_tests)) {
 			return false;
 		}
+		// pas de condition qui se justaposent sans rien entre (@truc@ @machin@)
+		$linearisation_sous_test = str_replace(
+			array_column($tests, 'expression'),
+			'soustest',
+			$condition
+		);
+		if (preg_match('#soustest[\s\)\(]*soustest#', $linearisation_sous_test)) {
+			return false;
+		}
+
 
 		//Vérifier la syntaxe regexp en cas de MATCH
 		foreach ($tests as $test) {

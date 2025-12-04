@@ -45,7 +45,7 @@ la premiere fois qu'un message est poste (cf. inc/invalideur). ]
 			<BOUCLE_reponse(FORUMS){id_parent}{par date}>
 			<div class="forum-reponse">
 				<div class="forum-reponse-img">
-				[(#LOGO_AUTEUR||image_reduire{42,42})]
+				[(#LOGO_AUTEUR|image_reduire{42,42})]
 				</div>
 				<div class="forum-reponse-texte">
 				<b>#NOM - [(#DATE|jour)] [(#DATE|nom_mois)]  [(#DATE|annee)]</b>

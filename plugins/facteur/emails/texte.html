@@ -1,5 +1,5 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html>
+<html dir="#LANG_DIR" lang="#LANG">
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 	<title>[(#ENV*{sujet})]</title>
@@ -14,12 +14,12 @@
 		#backgroundTable {height: 100% !important;margin: 0;padding: 0;width: 100% !important;}
 		body, .backgroundTable {background-color: #DDDDDD;}
 		#templateContainer {border: 1px solid #CCCCCC;max-width: 600px !important;}
-		h1,.h1,h2,.h2,h3,.h3,h4,.h4 {color: #202020;display: block;font-family: Verdana, Geneva, sans-serif;margin-bottom: 0.5em;text-align: left;}
+		h1,.h1,h2,.h2,h3,.h3,h4,.h4 {color: #202020;display: block;font-family: Verdana, Geneva, sans-serif;margin-bottom: 0.5em;text-align: #LANG_LEFT;}
 		#templateHeader {background-color: #FFFFFF;border-bottom: 0;}
 		#templateContainer, .bodyContent {background-color: #FFFFFF;margin-top: 40px;}
 		.bodyContent {padding:30px;border-bottom:10px solid #GET{siteColor};}
 		.bodyContent .text {max-width: 540px;}
-		.bodyContent div {color: #222222;font-family: Verdana, Geneva, sans-serif;line-height: 150%;text-align: left;}
+		.bodyContent div {color: #222222;font-family: Verdana, Geneva, sans-serif;line-height: 150%;text-align: #LANG_LEFT;}
 		.bodyContent div a:link, .bodyContent div a:visited {color: #336699;font-weight: normal;text-decoration: underline;}
 		.bodyContent img {display: inline;margin-bottom: 10px;max-width: 100%;}
 		.bodyContent img.puce {display: inline;margin-bottom: 0;}
@@ -77,14 +77,14 @@
 										<table border="0" cellpadding="10" cellspacing="0" width="100%">
 											<tr>
 												<td valign="top">
-													<div class='text' style="color:#222222;font-family: Verdana, Geneva, sans-serif;font-size:100%;line-height:150%;text-align:left;word-wrap:break-word;">
+													<div class='text' style="color:#222222;font-family: Verdana, Geneva, sans-serif;font-size:100%;line-height:150%;text-align:#LANG_LEFT;word-wrap:break-word;">
 														[(#ENV*{html,#ENV*{texte}|replace{'<','&lt;'}|facteur_nl2br_si_pas_autobr|propre|replace{'<br />\s*<br />(\s*<br />)+?','<br /> <br />'}|concat{'<br /> <br />'}})]
 													</div>
 												</td>
 											</tr>
 											<tr>
 												<td align="left" valign="top"
-														style="color:#A39F9A !important;font-family: Verdana, Geneva, sans-serif; !important;font-size:90% !important;font-weight:normal !important;font-style:normal !important;text-decoration:none !important;vertical-align:top !important;text-align:left !important;">
+														style="color:#A39F9A !important;font-family: Verdana, Geneva, sans-serif; !important;font-size:90% !important;font-weight:normal !important;font-style:normal !important;text-decoration:none !important;vertical-align:top !important;text-align:#LANG_LEFT !important;">
 													<br />
 													<br />
 													&mdash; #SET{site,<a href="#URL_SITE_SPIP/">#NOM_SITE_SPIP</a>}<:facteur:email_envoye_par{site=#GET{site}}:>

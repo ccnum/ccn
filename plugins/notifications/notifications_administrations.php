@@ -1,4 +1,5 @@
 <?php
+
 /*
  * Plugin Notifications
  * (c) 2009-2012 SPIP
@@ -6,8 +7,9 @@
  *
  */
 
-if (!defined("_ECRIRE_INC_VERSION")) return;
-
+if (!defined('_ECRIRE_INC_VERSION')) {
+	return;
+}
 
 /**
  * Declarer le champ notification_email sur la table forum
@@ -15,11 +17,11 @@ if (!defined("_ECRIRE_INC_VERSION")) return;
  * @param array $tables
  * @return array
  */
-function notifications_declarer_tables_objets_sql($tables){
+function notifications_declarer_tables_objets_sql($tables) {
 
 	// champ notification (editable via le form de forum) :
 	// 0/1 (non abonne/abonne) defaut 1
-	$tables['spip_forum']['field']['notification'] = "tinyint NOT NULL default 1";
+	$tables['spip_forum']['field']['notification'] = 'tinyint NOT NULL default 1';
 	$tables['spip_forum']['champs_editables'][] = 'notification';
 
 	// champ notification_email :
@@ -30,24 +32,21 @@ function notifications_declarer_tables_objets_sql($tables){
 	return $tables;
 }
 
-
 /**
  * maj de table forum
  *
  * @param string $nom_meta_base_version
  * @param string $version_cible
  */
-function notifications_upgrade($nom_meta_base_version,$version_cible){
+function notifications_upgrade($nom_meta_base_version, $version_cible) {
 
-	$maj = array();
-	$maj['create'] = array(
-		array('maj_tables',array('spip_forum')),
-	);
+	$maj = [];
+	$maj['create'] = [['maj_tables', ['spip_forum']]];
 
-	$maj['0.1.3'] = array(
-		array('sql_alter',"TABLE spip_forum CHANGE notification notification_email text DEFAULT '' NOT NULL"),
-		array('maj_tables',array('spip_forum')),
-	);
+	$maj['0.1.3'] = [
+		['sql_alter', "TABLE spip_forum CHANGE notification notification_email text DEFAULT '' NOT NULL"],
+		['maj_tables', ['spip_forum']],
+	];
 
 	include_spip('base/upgrade');
 	maj_plugin($nom_meta_base_version, $version_cible, $maj);
