@@ -1,15 +1,14 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 
-<title>[(#NOM_SITE_SPIP|textebrut)]</title>
-[<meta name="description" content="(#DESCRIPTIF_SITE_SPIP|couper{150}|textebrut)" />]
+	<title>[(#NOM_SITE_SPIP|textebrut)]</title>
+	[<meta name="description" content="(#DESCRIPTIF_SITE_SPIP|couper{150}|textebrut)" />]
 
-<INCLURE{fond=inclure/head} />
-<script type="text/javascript" src="#CHEMIN{js/jquery.nicescroll.min.js}"></script>
-<title>[(#NOM_SITE_SPIP|textebrut)]</title>
-
+	<INCLURE{fond=inclure/head} />
+	<script type="text/javascript" src="#CHEMIN{js/jquery.nicescroll.min.js}"></script>
+	<title>[(#NOM_SITE_SPIP|textebrut)]</title>
 </head>
 
 <body>
@@ -19,7 +18,6 @@
 		#SET{var_auteur_article, #NOM}
 	</BOUCLE_auteur_article>
 
-
 	<BOUCLE_lecture_script(ARTICLES){id_article}>
 		<div id="script-ecrivain-lecture">
 			<div class="script-titre">SCRIPT | #GET{var_auteur_article}</div>
@@ -27,7 +25,7 @@
 			<BOUCLE_doc(DOCUMENTS){id_article}{mode?}>
 			<div style="clear: both; padding: 5px;">
 				<a href="#URL_DOCUMENT" title="<:bouton_telecharger:>" type="#MIME_TYPE">
-					[(#LOGO_DOCUMENT|left||image_reduire{80,60})]
+					[(#LOGO_DOCUMENT|left|image_reduire{80,60})]
 				</a>
 				<?php
 					//phpinfo();

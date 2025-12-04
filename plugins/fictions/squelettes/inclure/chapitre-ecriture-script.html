@@ -10,7 +10,7 @@ RUBRIQUE.HTML > CHAPITRE-ECRITURE-SCRIPT.HTML
 <div class="script-forum-fleche">
 	<img src="#CHEMIN{img/ecriture/fleche_script_ecrivain.png}" width="44" height="17" />
 </div>
-<BOUCLE_article_verrouille_script(ARTICLES){id_article}>
+<BOUCLE_article_verrouille_script(ARTICLES){id_article}{statut=prop}>
 	<div class="script-ecrivain script-ecrivain-edit">
 	    <div class="script-titre">SCRIPT | #GET{var_auteur_article}</div>
 	    <div class="script-texte #EDIT{texte}">#TEXTE</div>
