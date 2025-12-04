@@ -44,6 +44,7 @@ options:
         options:
           nom: 'defaut'
           label: '<:saisies:option_defaut_label:>'
+          explication: '<:saisies:option_defaut_multiple_explication:>'
           rows: 10
           cols: 50
       -  'inclure:saisies/_base/choix_alternatif.yaml'

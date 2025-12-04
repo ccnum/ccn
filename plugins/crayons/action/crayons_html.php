@@ -95,24 +95,45 @@ function controleur_dist($regs, $c = null) {
 	];
 	[$distant, $table] = distant_table($type);
 
+	if ($type === 'meta') {
+		$config = explode('__', $id);
+		$controleurs = [];
+		while (!empty($config)) {
+			$controleurs[] = 'controleurs/' . $type . '_' . implode('_', $config);
+			array_pop($config);
+		}
+		$controleurs[] = 'controleurs/' . $type;
+	} else {
+		$controleurs = [
+			'controleurs/' . $type . '_' . $champ,
+			'controleurs/' . $champ,
+			'controleurs/' . $type,
+		];
+	}
+	spip_log("controleur_dist: cherche " . implode(', ', $controleurs), 'crayons' . _LOG_DEBUG);
+
+	$controleur = '';
+	foreach ($controleurs as $fichier_controleur) {
+		if (find_in_path($fichier_controleur . '.html')) {
+			$controleur = $fichier_controleur;
+			break;
+		}
+	}
+
 	// Si le controleur est un squelette html, on va chercher
 	// les champs qu'il lui faut dans la table demandee
 	// Attention, un controleur multi-tables ne fonctionnera
 	// que si les champs ont le meme nom dans toutes les tables
 	// (par exemple: hyperlien est ok, mais pas nom)
-	if (
-		($fichier = find_in_path(($controleur = 'controleurs/' . $type . '_' . $champ) . '.html'))
-		|| ($fichier = find_in_path(($controleur = 'controleurs/' . $champ) . '.html'))
-	) {
-		if (!lire_fichier($fichier, $controldata)) {
+	if ($controleur) {
+		if (!lire_fichier(find_in_path($controleur . '.html'), $controldata)) {
 			die('erreur lecture controleur');
 		}
 		if (preg_match_all('/\bname=(["\'])#ENV\{name_(\w+)\}\1/', $controldata, $matches, PREG_PATTERN_ORDER)) {
 			$champ = $matches[2];
 		}
-	} else {
-		$controleur = '';
 	}
+	spip_log("controleur_dist: trouve '$controleur' | champ " . json_encode($champ), 'crayons' . _LOG_DEBUG);
 
 	$valeur = valeur_colonne_table($type, $champ, $id);
 

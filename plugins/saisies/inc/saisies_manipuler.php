@@ -375,11 +375,6 @@ function saisies_modifier($saisies, $id_ou_nom_ou_chemin, $modifs, $fusion = fal
 		if ($type = ($modifs['nouveau_type_saisie'] ?? '')) {
 			$modifs['saisie'] = $type;
 			unset($modifs['nouveau_type_saisie']);
-		} elseif ($type = ($modifs['options']['nouveau_type_saisie'] ?? '')) {
-			$modifs['saisie'] = $type;
-			unset($modifs['options']['nouveau_type_saisie']);
-			trigger_error('Dans la fonction saisies_modifier, nouveau_type_saisie doit être appelé à la racine de $modifs. L\'appel dans $options est deprécié et sera supprimé en v6.', E_USER_DEPRECATED);
-			spip_log('Dans la fonction saisies_modifier, nouveau_type_saisie doit être appelé à la racine de $modifs. L\'appel dans $options est deprécié et sera supprimé en v6.', 'deprecated_saisies');
 		}
 		// On remplace tout
 		if (!$fusion) {

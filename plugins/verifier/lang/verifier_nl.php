@@ -108,7 +108,7 @@ return [
 	'option_fichiers_mime_image_web_label' => 'Uitsluitend webafbeelding (gif, jpg, png) toestaan', # MODIF
 	'option_fichiers_mime_label' => 'Mime type en extensie',
 	'option_fichiers_mime_pas_de_verification_label' => 'Alle types en extensies toestaan (wordt afgeraden)',
-	'option_fichiers_mime_specifique_label' => 'Uitsluitend de hieronder aangegeven Mime types autoriseren',
+	'option_fichiers_mime_specifique_label' => 'Uitsluitend de hieronder aangegeven Mime types autoriseren', # MODIF
 	'option_fichiers_mime_tout_mime_label' => 'Alle door SPIP toegelaten Mime types autoriseren',
 	'option_fichiers_taille_max_label' => 'Maximale bestandsgrootte (in kB)',
 	'option_fichiers_type_mime_label' => 'Kruis de toelaten MIME types aan',

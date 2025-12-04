@@ -18,7 +18,8 @@
 	"
 	data-afficher_si="#GET{afficher_si}"
 	>
-	[<p class="explication" id="[explication_(#ENV{nom}|saisies_name_suffixer{choix_alternatif}|saisie_nom2classe)]">(#ENV*{choix_alternatif_explication})</p>]
-	<label class="offscreen" [for="champ:(#GET{nom}|saisie_nom2classe)"]>[(#ENV{choix_alternatif_label}|sinon{<:saisies:option_choix_alternatif_label_defaut:>})]</label>
-	<INCLURE{fond=saisies/input,type=text,nom=#GET{nom},valeur=#ENV{valeur}} />
+	[(#SET{id,#ENV{id}_choix_alternatif})]
+	[<p class="explication" id="explication_#GET{id}">(#ENV*{choix_alternatif_explication})</p>]
+	<label class="offscreen" for="#GET{id}">[(#ENV{choix_alternatif_label}|sinon{<:saisies:option_choix_alternatif_label_defaut:>})]</label>
+	<INCLURE{fond=saisies/input,type=text,nom=#GET{nom},id=#GET{id},valeur=#ENV{valeur}} />
 </div>

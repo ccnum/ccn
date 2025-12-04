@@ -182,7 +182,7 @@ function normaliser_date_datetime_dist($valeur, $options, &$erreur) {
 		if (DateTime::createFromFormat('Y-m-d H:i:s', $valeur)) {
 			return $valeur;
 		} elseif (!($options['heure'] ?? '') && $date = DateTime::createFromFormat('Y-m-d', $valeur)) {
-			return $date->format('Y-m-d H:i:s');
+			return $date->setTime(0, 0, 0, 0)->format('Y-m-d H:i:s');
 		}
 	}
 
@@ -212,7 +212,6 @@ function normaliser_date_datetime_dist($valeur, $options, &$erreur) {
 	if (!$date) {
 		$date = $defaut;
 	}
-
 	return $date;
 }
 

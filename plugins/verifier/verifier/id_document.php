@@ -30,9 +30,24 @@ function verifier_id_document_dist($valeur, $options = []) {
 		// On vérifie déjà qu'il s'agit d'un nombre
 		if (!is_numeric($valeur)) {
 			$erreur = _T('verifier:erreur_id_document');
-		} elseif (!sql_countsel('spip_documents', 'id_document=' . intval($valeur))) {
-			// Puis qu'il y a au moins un document avec cet id
-			$erreur = _T('verifier:erreur_id_document');
+		} else {
+			// construire la clause where
+			$where = ['id_document=' . intval($valeur)];
+			$erreur_details = label_ponctuer(_T('verifier:contraintes_particulieres')) . '<br/>';
+			foreach (['media','extension'] as $w) {
+				if (isset($options[$w])) {
+					$where[] = sql_in_quote($w, is_string($options[$w]) ? explode(',', $options[$w]) : $options[$w]);
+					$erreur_details .= "[ $w : ". (is_string($options[$w]) ? $options[$w] : implode(',', $options[$w])) . ' ] ';
+				}
+			}
+			if (!sql_countsel('spip_documents',  $where)) {
+				// un tel document n'existe pas
+				$erreur = _T('verifier:erreur_id_document');
+				// évoquer les contraintes supplémentaires si définies
+				if (count($where) > 1) {
+					$erreur .= '<br/>' . $erreur_details;
+				}
+			}
 		}
 	}
 

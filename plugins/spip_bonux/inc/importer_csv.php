@@ -118,7 +118,7 @@ function inc_importer_csv_dist($file, $options = []) {
 			importer_csv_importcharset('', $options['charset_source']);
 		}
 		if ($options['head']) {
-			$header = fgetcsv($handle, $options['len'], $options['delim'], $options['enclos']);
+			$header = fgetcsv($handle, $options['len'], $options['delim'], $options['enclos'], '');
 			if ($header) {
 				$header = array_map('importer_csv_importcharset', $header);
 				$header = array_map('importer_csv_nettoie_key', $header);
@@ -133,7 +133,7 @@ function inc_importer_csv_dist($file, $options = []) {
 			}
 		}
 
-		while (($data = fgetcsv($handle, $options['len'], $options['delim'], $options['enclos'])) !== false) {
+		while (($data = fgetcsv($handle, $options['len'], $options['delim'], $options['enclos'], '')) !== false) {
 			$data = array_map('importer_csv_importcharset', $data);
 			if ($options['head'] and isset($header)) {
 				$row = [];

@@ -1,9 +1,8 @@
 #CACHE{24*3600*31,statique}
+[(#REM) a partir de saisies v6, la classe datePicker est ajoutée par défaut pour débrayer le traitement automatique du datepicker bootstrap du privé pour SPIP 4.x]
+[(#ENV{class,datePicker}|setenv{class})]
 [(#REM)
-	Zone de saisie de date utilsant le dateur de Bonux si présent.
-	Sur les sites en HTML5, utilise type="date"
-	sur le input, et type="text" par défaut pour les autres.
-	Pour tous on utilise class="date" et class="heure" pour activer le dateur.
+	Zone de saisie de date avec option heure.
 
 	La valeur fournie peut être :
 	- au format spip jj/mm/aaaa (date uniquement)
@@ -13,10 +12,7 @@
 
 	Pour utiliser les heures, il faut utiliser l'option "horaire=oui".
 
-	La date est proposée à l'affichage au format jj/mm/aaaa.
-
-	La valeur retournée n'est pas nécessairement au format SQL.
-	Le cas échéant, il faut la normaliser avant enregistrement en base.
+	La valeur postée est au format 2025-12-31 ou 2025-12-31T12:30
 ]
 
 [(#REM) Initialisation de la valeur ]
@@ -31,14 +27,14 @@
 
 [(#REM) Si la valeur est un tableau, on considère que c'est date et heure dans un format déjà reconnu (j/m/a ou SQL) ]
 [(#GET{valeur}|is_array|oui)
-	#SET{date, #GET{valeur/date}}
-	#SET{heure, #GET{valeur/heure}}
+	#SET{date, #GET{valeur/date}|affdate{Y-m-d}}
+	#SET{heure, #GET{valeur/heure}|affdate{H:i:s}}
 ]
 
 [(#REM) Si la valeur est une chaîne, on regarde si SQL ]
 [(#GET{valeur}|is_string|oui)
 	[(#REM) Par défaut (date uniquement au format SPIP) la date c'est toute la valeur ]
-	#SET{date, #GET{valeur}}
+	#SET{date, #GET{valeur}|affdate{Y-m-d}}
 	#SET{heure, ''}
 
 	[(#REM) Si c'est bien une date SQL ]
@@ -49,36 +45,31 @@
 			#SET{heure, ''}
 		]
 		[(#GET{valeur}|=={0000-00-00 00:00:00}|non)
-			#SET{date, #GET{valeur}|affdate{d/m/Y}}
+			#SET{date, #GET{valeur}|affdate{Y-m-d}}
 			#SET{heure, #GET{valeur}|affdate{H:i}}
 		]
 	]
 ]
 
-<p hidden id="[format_date_(#ENV{nom}|saisie_nom2classe)]"><:saisies:format_date_attendu:></p>
-#SET{describedby, #ENV{describedby}|concat{' ',format_date_#ENV{nom}|saisie_nom2classe} }
-
-[(#SET{nom,#ENV{nom}[(#ENV{horaire}|?{\[date\]})]})]
-[(#SET{class,[(#ENV{class}) ]date})]
+<p hidden id="format_date_#ENV{id}">[(#ENV{horaire}|?{<:saisies:format_date_heure_attendu:>,<:saisies:format_date_attendu:>})]</p>
+#SET{describedby, #ENV{describedby}|concat{' ',format_date_#ENV{id}} }
+[(#ENV{horaire}|oui)<div class="saisie_datetime">]
 <INCLURE{fond=saisies/input,
 	env,
-	nom=#GET{nom},
+	nom=#ENV{nom}|concat{#ENV{horaire}|?{\[date\]}},
 	describedby=#GET{describedby},
 	valeur=#GET{date},
-	type=text,
-	class=#GET{class}
+	type=date
 	}/>
 [(#ENV{horaire}|oui)
-	[(#SET{nom,#ENV{nom}\[heure\]})]
-	[(#SET{class,[(#ENV{class}) ]heure})]
 	<INCLURE{fond=saisies/input,
 		env,
-		nom=#GET{nom},
+		nom=#ENV{nom}|concat{\[heure\]},
+		describedby=#GET{describedby},
 		valeur=#GET{heure},
+		type=time,
 		size=4,
-		maxlength=5,
-		class=#GET{class}
-		}
-		/>
+		maxlength=5
+		}/>
+</div>
 ]
-[(#ENV{disable}|non|et{#ENV{readonly}|non})<INCLURE{fond=formulaires/dateur/inc-dateur, heure_pas=#ENV{heure_pas,30}} />]

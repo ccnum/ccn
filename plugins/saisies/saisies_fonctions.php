@@ -16,57 +16,6 @@ include_spip('inc/saisies_afficher_si_js');
 // picker_selected (spip 3)
 include_spip('formulaires/selecteur/generique_fonctions');
 
-/**
- * Retourne une balise dev. Maintenu pour compatibilité historique, ne plus utiliser.
- * @deprecated
- * Comportement antérieure :
- * Retournait une balise `div` si on est en SPIP >= 3.1, sinon le texte en parametre.
- * @example `[(#VAL{ul}|saisie_balise_structure_formulaire)]`
- * @see balise_DIV_dist() pour une écriture plus courte.
- * @note Préférer `[(#DIV|sinon{ul})]` dans les squelettes, plus lisible.
- *
- * @param $tag
- *   ul ou li
- * @return string
- *   $tag initial ou div
- */
-function saisie_balise_structure_formulaire($tag) {
-	trigger_error('Le filtre saisie_balise_structure_formulaire est deprécié et sera supprimé en v6 du plugin saisies. Utiliser directement `<div>`.', E_USER_DEPRECATED);
-	spip_log('Le filtre saisie_balise_structure_formulaire est deprécié et sera supprimé en v6 du plugin saisies. Utiliser directement `<div>`.', 'deprecated_saisies');
-	return 'div';
-}
-
-if (
-	!function_exists('balise_DIV_dist')
-) {
-
-	/**
-	 * Compile la balise `DIV` qui retourne simplement le texte `div`
-	 *
-	 * Maintenu pour ne pas casser les squelettes qui s'appuient dessus, mais à ne plus utiliser.
-	 * Servait à la compatibilité entre SPIP 3.0 et SPIP 3.1+
-	 *
-	 * Variante d'écriture, plus courte, que le filtre `saisie_balise_structure_formulaire`
-	 *
-	 * À partir de SPIP 3.1
-	 * - ul.editer-groupe deviennent des div.editer-groupe
-	 * - li.editer devient div.editer
-	 * @deprecated
-	 * @see saisie_balise_structure_formulaire()
-	 * @example
-	 *     `[(#DIV|sinon{ul})]`
-	 *
-	 * @param Pile $p
-	 * @return Pile
-	 */
-	function balise_DIV_dist($p) {
-		$p->code = "'div'";
-		$p->interdire_scripts = false;
-		trigger_error('La balise #DIV est depréciée et sera supprimée en v6 du plugin saisies. Utiliser directement `<div>`.', E_USER_DEPRECATED);
-		spip_log('La balise #DIV est depréciée et sera supprimée en v6 du plugin saisies. Utiliser directement `<div>`.', 'deprecated_saisies');
-		return $p;
-	}
-}
 
 /**
  * Traiter la valeur de la vue en fonction du env

@@ -370,67 +370,84 @@ function vues_dist($type, $modele, $id, $content, $wid) {
 
 	// chercher vues/article_toto.html
 	// sinon vues/toto.html
-	if (
-		find_in_path(($fond = 'vues/' . $type . '_' . $modele) . '.html')
-		|| find_in_path(($fond = 'vues/' . $modele) . '.html')
-		|| find_in_path(($fond = 'vues/' . $type) . '.html')
-	) {
-		$primary = (function_exists('id_table_objet') ? id_table_objet($table) : 'id_' . $table);
-		$contexte = [
-			$primary => $id,
-			'crayon_type' => $type,
-			'crayon_modele' => $modele,
-			'champ' => $modele,
-			'class' => _request('class_' . $wid),
-			'self' => _request('self'),
-			'lang' => $GLOBALS['spip_lang']
-		];
-		$contexte = array_merge($contexte, $content);
-		include_spip('public/assembler');
-		return recuperer_fond($fond, $contexte);
+	$vues = [];
+	if ($type === 'meta') {
+		$config = explode('__', $id);
+		$vues = [];
+		while (!empty($config)) {
+			$vues[] = 'vues/' . $type . '_' . implode('_', $config);
+			array_pop($config);
+		}
+		$vues[] = 'vues/' . $type;
 	} else {
-		// vue par defaut
-		// Par precaution on va rechercher la valeur
-		// dans la base de donnees (meme si a priori la valeur est
-		// ce qu'on vient d'envoyer, il y a nettoyage des caracteres et
-		// eventuellement d'autres filtres de saisie...)
-		$bdd = valeur_colonne_table($type, $modele, $id);
-		if ($bdd !== []) {
-			$valeur = array_pop($bdd);
-		} else {
-			// les champs n'ont pas ete retrouves dans la base
-			// ce qui signifie a priori que nous sommes en face d'une cle primaire compose
-			// et qu'un crayon a modifie un element de cette cle (c'est pas malin !)
-			// dans ce cas, on reaffiche a minima ce qu'on vient de publier
-			// mais il sera impossible de le reediter dans la foulee avec le meme crayon
-			// (car l'identifiant du crayon se base sur l'id).
-			// Il faudra donc recharger la page pour pouvoir reediter.
-			if (is_scalar($id)) {
-				$valeur = $content[$modele] ?? '';
-			}
-		}
-
-		if (!empty($valeur) || is_scalar($valeur) && strlen($valeur)) {
-			// seul spip core sait rendre les donnees
-			if (function_exists('appliquer_traitement_champ')) {
-				$valeur = appliquer_traitement_champ($valeur, $modele, table_objet($table));
-			} else {
-				$valeur = in_array($modele, ['chapo', 'texte', 'descriptif', 'ps', 'bio'])
-					? propre($valeur)
-					: typo($valeur);
-			}
-			$valeur = pipeline('crayons_vue_affichage_final', [
-				'args' => [
-					'type'   => $type,
-					'modele' => $modele,
-					'id'     => $id
-				],
-				'data' => $valeur
-			]);
-		}
-
-		return $valeur;
+		$vues = [
+			'vues/' . $type . '_' . $modele,
+			'vues/' . $modele,
+			'vues/' . $type,
+		];
 	}
+	spip_log("vues_dist: cherche " . implode(', ', $vues), 'crayons' . _LOG_DEBUG);
+
+	foreach ($vues as $fond) {
+		spip_log("vues_dist: trouvé $fond", 'crayons' . _LOG_DEBUG);
+		if (find_in_path($fond . '.html')) {
+			$primary = (function_exists('id_table_objet') ? id_table_objet($table) : 'id_' . $table);
+			$contexte = [
+				$primary => $id,
+				'crayon_type' => $type,
+				'crayon_modele' => $modele,
+				'champ' => $modele,
+				'class' => _request('class_' . $wid),
+				'self' => _request('self'),
+				'lang' => $GLOBALS['spip_lang']
+			];
+			$contexte = array_merge($contexte, $content);
+			include_spip('public/assembler');
+			return recuperer_fond($fond, $contexte);
+		}
+	}
+
+	// vue par defaut
+	// Par precaution on va rechercher la valeur
+	// dans la base de donnees (meme si a priori la valeur est
+	// ce qu'on vient d'envoyer, il y a nettoyage des caracteres et
+	// eventuellement d'autres filtres de saisie...)
+	$bdd = valeur_colonne_table($type, $modele, $id);
+	if ($bdd !== []) {
+		$valeur = array_pop($bdd);
+	} else {
+		// les champs n'ont pas ete retrouves dans la base
+		// ce qui signifie a priori que nous sommes en face d'une cle primaire compose
+		// et qu'un crayon a modifie un element de cette cle (c'est pas malin !)
+		// dans ce cas, on reaffiche a minima ce qu'on vient de publier
+		// mais il sera impossible de le reediter dans la foulee avec le meme crayon
+		// (car l'identifiant du crayon se base sur l'id).
+		// Il faudra donc recharger la page pour pouvoir reediter.
+		if (is_scalar($id)) {
+			$valeur = $content[$modele] ?? '';
+		}
+	}
+
+	if (!empty($valeur) || is_scalar($valeur) && strlen($valeur)) {
+		// seul spip core sait rendre les donnees
+		if (function_exists('appliquer_traitement_champ')) {
+			$valeur = appliquer_traitement_champ($valeur, $modele, table_objet($table));
+		} else {
+			$valeur = in_array($modele, ['chapo', 'texte', 'descriptif', 'ps', 'bio'])
+				? propre($valeur)
+				: typo($valeur);
+		}
+		$valeur = pipeline('crayons_vue_affichage_final', [
+			'args' => [
+				'type'   => $type,
+				'modele' => $modele,
+				'id'     => $id
+			],
+			'data' => $valeur
+		]);
+	}
+
+	return $valeur;
 }
 
 

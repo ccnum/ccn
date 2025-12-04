@@ -21,7 +21,7 @@
 
 #SET{disable_choix, #ENV{disable_choix}|saisies_normaliser_liste_choix}
 #SET{valeur,#ENV{valeur_forcee,#ENV{valeur,#ENV{defaut}}}|strval}
-[(#SET{prefixe,[(#ENV{id,#ENV{nom}}|saisie_nom2classe)]})]
+[(#SET{prefixe,#ENV{id}})]
 
 [(#ENV{choix_alternatif}|oui)
 	#SET{data,#GET{data}|plus{#ARRAY{@choix_alternatif,#ENV{choix_alternatif_label}}}}
@@ -47,7 +47,7 @@
 	[(#REM) Soit c'est un tableau simple ]
 	#SET{disabled, #ENV{disable}|is_string|?{#ENV{disable}, #ENV{disable/#CLE}}}
 	<div class="#ENV{choix,choix}[ (#ENV{choix,choix})_#CLE][ (#GET{disabled}|ou{#CLE|in_array{#GET{disable_choix}}})disabled][ (#ENV{class})]">
-		<input type="radio" name="#ENV{nom}" class="radio"[ (#HTML5|oui)[(#ENV{obligatoire}|et{#ENV{obligatoire}|!={non}}|oui) required="required"]] id="champ_#GET{prefixe}_#GET{compteur_id}" [ (#GET{valeur}|=={#CLE|strval}|oui)checked="checked"] value="#CLE"[(#GET{disabled}|ou{#CLE|in_array{#GET{disable_choix}}}) disabled="disabled"][ readonly="(#ENV{readonly})"][ aria-describedby="(#ENV{describedby})"][ (#ENV*{attributs})] />
+		<input type="radio" name="#ENV{nom}" class="radio"[ (#ENV{obligatoire}|et{#ENV{obligatoire}|!={non}}|oui) required="required"] id="champ_#GET{prefixe}_#GET{compteur_id}" [ (#GET{valeur}|=={#CLE|strval}|oui)checked="checked"] value="#CLE"[(#GET{disabled}|ou{#CLE|in_array{#GET{disable_choix}}}) disabled="disabled"][ readonly="(#ENV{readonly})"][ aria-describedby="(#ENV{describedby})"][ (#ENV*{attributs})] />
 		<label for="champ_#GET{prefixe}_#GET{compteur_id}"[(#GET{valeur}|=={#CLE}|oui)class="on"]>#VALEUR</label>
 	</div>
 	<//B_groupes>

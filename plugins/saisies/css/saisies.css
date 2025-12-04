@@ -51,6 +51,21 @@ fieldset.plie > legend:before{
 .formulaire_spip input.time {
 	width: auto;
 }
+.saisie_date_jour_mois_annee .choix+.choix {margin-left:1em;}
+.saisie_date_jour_mois_annee .choix label{display:block; width:auto;}
+.saisie_date_jour_mois_annee .choix .text{width:auto;}
+
+/* saisie date avec un champ type=date et un champ type=time */
+.saisie_datetime {
+	display: flex;
+	justify-content: flex-start;
+	align-items: flex-start;
+	gap: 1em;
+}
+.formulaire_spip input.date,
+.formulaire_spip input.time {
+	width: auto;
+}
 
 /* avec crayons + formulaire de saisies, éviter un padding à gauche du label */
 .formulaire_crayon .editer-groupe .editer { padding-left:10px; }
