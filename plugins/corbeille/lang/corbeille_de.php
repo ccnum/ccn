@@ -3,11 +3,7 @@
 // extrait automatiquement de https://trad.spip.net/tradlang_module/corbeille?lang_cible=de
 // ** ne pas modifier le fichier **
 
-if (!defined('_ECRIRE_INC_VERSION')) {
-	return;
-}
-
-$GLOBALS[$GLOBALS['idx_lang']] = array(
+return [
 
 	// A
 	'articles_corbeille_tous' => '@nb@ Artikel im Papierkorb',
@@ -26,8 +22,8 @@ $GLOBALS[$GLOBALS['idx_lang']] = array(
 	// E
 	'effacer' => 'Auswahl löschen',
 	'effacer_tout' => 'Alles löschen',
-	'element_supprime' => '@ids@ wurde aus dem Papierkorb gelöscht', # MODIF
-	'elements_supprimes' => '@ids@ wurden aus dem Papierkorb gelöscht', # MODIF
+	'element_supprime' => '@objet@ @ids@ wurde aus dem Papierkorb gelöscht',
+	'elements_supprimes' => '@objet@ @ids@  wurden aus dem Papierkorb gelöscht',
 
 	// F
 	'forums_prives_corbeille_tous' => '@nb@ Forumsbeiträge im Papierkorb',
@@ -39,11 +35,12 @@ $GLOBALS[$GLOBALS['idx_lang']] = array(
 	'readme' => 'Hier können Elemente, die in denPapierkorb geworfen wurden {{endgültig gelöscht}} werden. Sie können ein Element im Papierkorb lassen solange sie wollen. Ein endgültig gelöschtes Element kann nicht wieder hergestellt werden. Seien sie daher vorsichtig.',
 
 	// S
+	'selectionner' => 'auswählen',
 	'signatures_corbeille_tous' => '@nb@ Unterschriften im Papierkorb',
 	'signatures_corbeille_un' => '1 Unterschrift im Papierkorb',
 	'sites_corbeille_tous' => '@nb@ Webseiten im Papierkorb',
 	'sites_corbeille_un' => '1 Webseite im Papierkorb',
 
 	// V
-	'voir_detail' => 'Details zeigen' # MODIF
-);
+	'voir_detail' => 'Details anzeigen',
+];
