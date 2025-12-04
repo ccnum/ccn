@@ -116,7 +116,7 @@ return [
 	'option_fichiers_mime_image_web_label' => 'Allow only web images (gif, jpg, png)', # MODIF
 	'option_fichiers_mime_label' => 'Mime type and extension',
 	'option_fichiers_mime_pas_de_verification_label' => 'Allow all types and extensions (not recommended)',
-	'option_fichiers_mime_specifique_label' => 'Allow only the types and extensions checked below',
+	'option_fichiers_mime_specifique_label' => 'Allow only the types and extensions checked below', # MODIF
 	'option_fichiers_mime_tout_mime_label' => 'Allow all Mime types and known extensions of SPIP',
 	'option_fichiers_taille_max_label' => 'Maximum image weight (in kB)',
 	'option_fichiers_type_mime_label' => 'Select the allowed MIME types',

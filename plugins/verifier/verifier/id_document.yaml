@@ -1,3 +1,24 @@
 
 titre: '<:verifier:type_id_document:>'
 description: '<:verifier:type_id_document_description:>'
+options:
+  -
+    saisie: 'input'
+    options:
+      nom: 'media'
+      label: '<:verifier:option_id_document_media_label:>'
+      placeholder: 'audio,video' 
+    verifier:
+      type: 'regex'
+      options:
+        modele: '/^[a-z]{3,}(,[a-z]{3,})*$/'
+  -
+    saisie: 'input'
+    options:
+      nom: 'extension'
+      label: '<:verifier:option_id_document_extension_label:>'
+      placeholder: 'jpg,png' 
+    verifier:
+      type: 'regex'
+      options:
+        modele: '/^[a-z]{3,}(,[a-z]{3,})*$/'
