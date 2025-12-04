@@ -53,7 +53,7 @@ function selection_valeurs_acceptables($valeur, array $description): bool {
 	$data = array_keys($data);
 	if (isset($options['disable_choix'])) {
 		include_spip('inc/saisies');
-		$disable_choix = saisies_normaliser_disable_choix($options['disable_choix']);
+		$disable_choix = saisies_normaliser_list_choix($options['disable_choix']);
 		$data = array_diff($data, $disable_choix);
 	}
 	return (in_array($valeur, $data));

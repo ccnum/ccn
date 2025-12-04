@@ -19,5 +19,5 @@
 #SET{valeur, #ENV{valeur_forcee,#ENV{valeur,#ENV{defaut}}}}
 #SET{valeur, #GET{valeur}|is_array|?{(#GET{valeur}|saisies_tableau2chaine), #GET{valeur}}}
 #SET{valeur,#GET{valeur}|saisies_utf8_restaurer_planes}
-<textarea name="#ENV{nom}" class="[(#ENV{class}) ][inserer_barre_(#ENV{inserer_barre}) ][(#ENV{previsualisation}|oui)inserer_previsualisation]" id="champ_[(#ENV{id,#ENV{nom}}|saisie_nom2classe)]" rows="[(#ENV{rows,20})]" [cols="(#ENV{cols})"] [ disabled="(#ENV{disable})"][ readonly="(#ENV{readonly})"][ placeholder="(#ENV{placeholder})"][(#ENV{obligatoire}|et{#ENV{obligatoire}|!={non}}|et{#HTML5}|oui) required="required"][ aria-describedby="(#ENV{describedby})"][  maxlength="(#ENV{longueur_max})"][ (#ENV*{attributs})]>
+<textarea name="#ENV{nom}" class="[(#ENV{class}) ][inserer_barre_(#ENV{inserer_barre}) ][(#ENV{previsualisation}|oui)inserer_previsualisation]" id="#ENV{id}" rows="[(#ENV{rows,20})]" [cols="(#ENV{cols})"] [ disabled="(#ENV{disable})"][ readonly="(#ENV{readonly})"][ placeholder="(#ENV{placeholder})"][(#ENV{obligatoire,non}|!={non}|oui) required="required"][ aria-describedby="(#ENV{describedby})"][  maxlength="(#ENV{longueur_max})"][ (#ENV*{attributs})]>
 #GET{valeur}</textarea>

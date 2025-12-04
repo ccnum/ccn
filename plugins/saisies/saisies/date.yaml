@@ -115,3 +115,4 @@ defaut:
     type: 'date'
     options:
       normaliser: 'date_ou_datetime'
+      format: 'amj'
