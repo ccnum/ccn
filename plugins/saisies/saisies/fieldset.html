@@ -18,7 +18,7 @@
 ]
 #SET{erreur_ici,#ENV**{erreurs/#ENV{nom}}}
 
-<fieldset id="champ_[(#ENV{id,#ENV{nom}}|saisie_nom2classe)]" class="avec_sous_saisies fieldset[ fieldset_(#ENV{nom}|saisie_nom2classe)][ (#ENV{conteneur_class,#ENV{li_class}})][ (#ENV{type_saisie}|saisie_type2classe)][ (#GET{classe_pliable})[ (#GET{classe_plie})]][ (#GET{classe_onglet})][ (#GET{classe_onglet_vertical})]"[ data-id="(#ENV{id_saisie})"][ data-afficher_si="(#ENV*{afficher_si}|saisies_afficher_si_js{#ENV{_saisies}})"][ (#ENV*{attributs})]>
+<fieldset id="#ENV{id}" class="avec_sous_saisies fieldset[ fieldset_(#ENV{nom}|saisie_nom2classe)][ (#ENV{conteneur_class,#ENV{li_class}})][ (#ENV{type_saisie}|saisie_type2classe)][ (#GET{classe_pliable})[ (#GET{classe_plie})]][ (#GET{classe_onglet})][ (#GET{classe_onglet_vertical})]"[ data-id="(#ENV{id_saisie})"][ data-afficher_si="(#ENV*{afficher_si}|saisies_afficher_si_js{#ENV{_saisies}})"][ (#ENV*{attributs})]>
 	#ENV*{inserer_debut}
 
 	[<legend>(#ENV*{label})</legend>]

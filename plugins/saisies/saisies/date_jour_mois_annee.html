@@ -37,7 +37,7 @@
 		label=Date de naissance
 	})]
 ]
-#SET{id,#ENV{id,#ENV{nom}}|saisie_nom2classe}
+#SET{id,#ENV{id}}
 #SET{datetime,#ENV{datetime,oui}|in_array{#LISTE{oui,#EVAL{true},1,#EVAL{1}},#EVAL{true}}}
 #SET{defaut_autodater,#ENV{autodater}|?{#VAL{Y-m-d}|concat{#GET{datetime}|?{' H:i:s'}}|date}}
 #SET{valeur,#ENV{valeur,#ENV{valeur_forcee,#ENV{defaut,#GET{defaut_autodater}}}}}
@@ -103,7 +103,7 @@
 			} />
 		]
 	</div>
-	
+
 	[(#REM) Mois ]
 	#SET{saisie_mois,#ENV{hidden_mois}|?{hidden,selection}}
 	#SET{readonly_mois,#ENV{readonly,#ENV{disable_avec_post_mois}}|?{#EVAL{true}}}
@@ -138,7 +138,7 @@
 			} />
 		]
 	</div>
-	
+
 	[(#REM) Année ]
 	<div hidden style="display:none" class="composants-date__composant composants-date__composant_annee[ (#ENV{hidden_annee}|oui)saisies-visually-hidden]" data-composant="annee">
 		[(#ENV{hidden_annee}|non)

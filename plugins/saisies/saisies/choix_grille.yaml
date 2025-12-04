@@ -46,6 +46,13 @@ options:
           nom: 'multiple'
           label: '<:saisies:option_multiple_label:>'
           explication: '<:saisies:option_multiple_explication_choix_grille:>'
+      -
+        saisie: 'input'
+        options:
+          nom: 'disable_choix'
+          label: '<:saisies:option_disable_choix_label:>'
+          explication: '<:saisies:option_disable_choix_grille_explication:>'
+          explication_dev: '<:saisies:option_disable_choix_grille_explication_dev:>'
   -
     saisie: 'fieldset'
     options:
