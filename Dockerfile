@@ -1,7 +1,7 @@
 # https://github.com/ipeos-and-co/docker-spip/tree/master
 FROM php:8.3-apache-trixie AS base
 ENV SPIP_VERSION 4.4
-ENV SPIP_PACKAGE 4.4.6
+ENV SPIP_PACKAGE 4.4.7
 
 RUN set -eux; \
     apt-get update; \

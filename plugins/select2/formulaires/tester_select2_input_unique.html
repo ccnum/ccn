@@ -1,0 +1,70 @@
+
+<div class="formulaire_spip formulaire_#FORM">
+    <h3 class="titrem">Inputs uniques</h3>
+
+    [<p class="reponse_formulaire reponse_formulaire_ok" role="status">(#ENV**{message_ok})</p>]
+    [<p class="reponse_formulaire reponse_formulaire_erreur" role="alert">(#ENV*{message_erreur})</p>]
+
+    <BOUCLE_editable(CONDITION){si #ENV{editable}}>
+    <form method='post' action='#ENV{action}'>
+        #ACTION_FORMULAIRE
+
+        <div class="editer-groupe">
+
+            #SET{prefix,demo-iu-}
+
+			#SET{id,test_list}
+			#SET{val,#ENV{#GET{id}}}
+			<div class="editer pleine_largeur">
+				<label for="#GET{prefix}#GET{id}">Input List</label>
+				<input class="text select2" name="#GET{id}" id="#GET{prefix}#GET{id}" 
+					value="#GET{val}"
+					data-placeholder="Sélectionnez un nombre..."
+					data-data='[{"id": "1", "text": "One"}, {"id": "2", "text": "Two"}, {"id": "3", "text": "Three"}]'
+				/>
+			</div>
+
+			#SET{id,test_list_labeled}
+			#SET{val,#ENV{#GET{id}}}
+			#SET{data,#ARRAY{1,One Labeled,2,Two Labeled,3,Three Labeled}}
+			<div class="editer pleine_largeur">
+				<label for="#GET{prefix}#GET{id}">Input List Labeled</label>
+				<input class="text select2" name="#GET{id}" id="#GET{prefix}#GET{id}" 
+					value="#GET{val}"
+					data-option-label='[(#GET{data}|json_encode)]'
+					data-placeholder="Sélectionnez un nombre..."
+					data-data='[{"id": "1", "text": "One"}, {"id": "2", "text": "Two"}, {"id": "3", "text": "Three"}]'
+				/>
+			</div>
+
+			#SET{id,test_ajax}
+			#SET{val,#ENV{#GET{id}}}
+			<div class="editer pleine_largeur">
+				<label for="#GET{prefix}#GET{id}">Input Ajax Search</label>
+				<input class="text select2" name="#GET{id}" id="#GET{prefix}#GET{id}" 
+					value="#GET{val}"
+					data-placeholder="Sélectionnez une ville..."
+					data-ajax--url="[(#URL_API{select2_autocomplete,demo/city}|attribut_html)]"
+					data-minimum-input-length="1"
+				/>
+			</div>
+
+			#SET{id,test_datalist}
+			#SET{val,#ENV{#GET{id}}}
+			<div class="editer pleine_largeur">
+				<label for="#GET{prefix}#GET{id}">Input List Datalist</label>
+				<input class="text select2" name="#GET{id}" id="#GET{prefix}#GET{id}" 
+					value="#GET{val}"
+					list="datalist-animaux"
+					data-placeholder="Sélectionnez un animal..."
+					data-highlight-search-term="true"
+				/>
+			</div>
+		</div>
+
+		<div class="boutons">
+			<button type="submit">Soumettre (ne fait rien)</button>
+		</div>
+    </form>
+    </BOUCLE_editable>
+</div>

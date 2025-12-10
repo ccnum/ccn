@@ -1,0 +1,143 @@
+
+<div class="formulaire_spip formulaire_#FORM">
+    <h3 class="titrem">Sélections multiples</h3>
+
+    [<p class="reponse_formulaire reponse_formulaire_ok" role="status">(#ENV**{message_ok})</p>]
+    [<p class="reponse_formulaire reponse_formulaire_erreur" role="alert">(#ENV*{message_erreur})</p>]
+
+    <BOUCLE_editable(CONDITION){si #ENV{editable}}>
+    <form method='post' action='#ENV{action}'>
+        #ACTION_FORMULAIRE
+
+        <div class="editer-groupe">
+
+            #SET{prefix,demo-sm-}
+			#SET{id,test_basique}
+			<div class="editer pleine_largeur">
+				<label for="#GET{prefix}#GET{id}">Basique</label>
+				<select class="select2" name="#GET{id}[]" id="#GET{prefix}#GET{id}" multiple>
+					<option value="">Sélectionnez un animal...</option>
+					<INCLURE{fond=formulaires/demo/select2_options_animaux, id=#ENV{#GET{id}}} />
+				</select>
+			</div>
+
+			#SET{id,test_placeholder_clear}
+			<div class="editer pleine_largeur">
+				<label for="#GET{prefix}#GET{id}">Placeholder et Clear</label>
+				<select class="select2" name="#GET{id}[]" id="#GET{prefix}#GET{id}" multiple
+						data-placeholder="Sélectionnez un animal..."
+						data-allow-clear="true">
+					<option value="">Sélectionnez un animal...</option>
+					<INCLURE{fond=formulaires/demo/select2_options_animaux, id=#ENV{#GET{id}}} />
+				</select>
+			</div>
+
+			#SET{id,test_sort_alpha}
+			<div class="editer pleine_largeur">
+				<label for="#GET{prefix}#GET{id}">Sort Alpha</label>
+				<select class="select2" name="#GET{id}[]" id="#GET{prefix}#GET{id}" multiple
+						data-placeholder="Sélectionnez un animal..."
+						data-sort-alpha="true">
+					<option value="">Sélectionnez un animal...</option>
+					<INCLURE{fond=formulaires/demo/select2_options_animaux, id=#ENV{#GET{id}}} />
+				</select>
+			</div>
+
+			#SET{id,test_ajax_search}
+			<div class="editer pleine_largeur">
+				<label for="#GET{prefix}#GET{id}">Ajax Search</label>
+				<select class="select2" name="#GET{id}[]" id="#GET{prefix}#GET{id}" multiple
+						data-placeholder="Sélectionnez une ville..."
+						data-ajax--url="[(#URL_API{select2_autocomplete,demo/city}|attribut_html)]"
+						data-minimum-input-length="1"
+				>
+					<option value="">Sélectionnez une ville...</option>
+				</select>
+			</div>
+
+			#SET{id,test_ajax_search_more}
+			<div class="editer pleine_largeur">
+				<label for="#GET{prefix}#GET{id}">Ajax Search + More</label>
+				<p class="explication">Retourne les 20 premiers résultats, mais scroller demandera les suivants...</p>
+				<select class="select2" name="#GET{id}[]" id="#GET{prefix}#GET{id}" multiple
+						data-placeholder="Sélectionnez une race de chien..."
+						data-ajax--url="[(#URL_API{select2_autocomplete,demo/dogs}|attribut_html)]"
+						data-minimum-input-length="1"
+				>
+					<option value="">Sélectionnez une race de chien...</option>
+				</select>
+			</div>
+
+			#SET{id,test_ajax_search_clear}
+			<div class="editer pleine_largeur">
+				<label for="#GET{prefix}#GET{id}">Ajax Search + Allow Clear</label>
+				<select  class="select2" name="#GET{id}[]" id="#GET{prefix}#GET{id}" multiple
+					data-placeholder="Sélectionnez une race de chien..."
+					data-allow-clear="on"
+					data-ajax--url="[(#URL_API{select2_autocomplete,demo/dogs}|attribut_html)]"
+					data-minimum-input-length="1"
+				/>
+				</select>
+			</div>
+
+			#SET{id,test_tags}
+			<div class="editer pleine_largeur">
+				<label for="#GET{prefix}#GET{id}">Tags</label>
+				<p class="explication">Permet d’ajouter son propre contenu</p>
+				<select class="select2" name="#GET{id}[]" id="#GET{prefix}#GET{id}" multiple
+						data-placeholder="Sélectionnez un animal..."
+						data-tags="true">
+					<option value="">Sélectionnez un animal...</option>
+					<INCLURE{fond=formulaires/demo/select2_options_animaux, id=#ENV{#GET{id}}} />
+				</select>
+			</div>
+
+			#SET{id,test_highlight}
+			<div class="editer pleine_largeur">
+				<label for="#GET{prefix}#GET{id}">Highlighted Search Char</label>
+				<select class="select2" name="#GET{id}[]" id="#GET{prefix}#GET{id}" multiple
+						data-placeholder="Sélectionnez un animal..."
+						data-highlight-search-term="true">
+					<option value="">Sélectionnez un animal...</option>
+					<INCLURE{fond=formulaires/demo/select2_options_animaux, id=#ENV{#GET{id}}} />
+				</select>
+			</div>
+
+			#SET{id,test_on_enter_submit}
+			<div class="editer pleine_largeur">
+				<label for="#GET{prefix}#GET{id}">On Enter Submit</label>
+				<select class="select2" name="#GET{id}[]" id="#GET{prefix}#GET{id}" multiple
+					data-on-enter-submit="true">
+					<INCLURE{fond=formulaires/demo/select2_options_animaux, id=#ENV{#GET{id}}} />
+				</select>
+			</div>
+
+			#SET{id,test_data_list}
+			<div class="editer pleine_largeur">
+				<label for="#GET{prefix}#GET{id}">Data List</label>
+				<select  class="select2" name="#GET{id}[]" id="#GET{prefix}#GET{id}" multiple
+					data-placeholder="Sélectionnez un nombre..."
+					data-data='[{"id": "1", "text": "One"}, {"id": "2", "text": "Two"}, {"id": "3", "text": "Three"}]'
+				/>
+				</select>
+			</div>
+
+			#SET{id,test_data_list_tags}
+			<div class="editer pleine_largeur">
+				<label for="#GET{prefix}#GET{id}">Data List + tags</label>
+				<select  class="select2" name="#GET{id}[]" id="#GET{prefix}#GET{id}" multiple
+					data-placeholder="Sélectionnez un nombre..."
+					data-data='[{"id": "1", "text": "One"}, {"id": "2", "text": "Two"}, {"id": "3", "text": "Three"}]'
+					data-tags="true"
+				/>
+				</select>
+			</div>
+
+		</div>
+
+		<div class="boutons">
+			<button type="submit">Soumettre (ne fait rien)</button>
+		</div>
+    </form>
+    </BOUCLE_editable>
+</div>
