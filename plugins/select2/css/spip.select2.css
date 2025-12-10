@@ -1,0 +1,10 @@
+.select2-dropdown {
+	text-align: left;
+}
+.select2-rendered__match {
+	text-decoration: underline;
+}
+.select2-container--open {
+	z-index: 9999;
+}
+

@@ -1,0 +1,14 @@
+#SET{id,#ENV{id,#LISTE}}
+[(#ENV{id}|et{#ENV{id}|is_array|non})
+    #SET{id,#LISTE{#ENV{id}}}
+]
+<option value="1"[(#VAL{1}|in_any{#GET{id}}|oui) selected]>Chien</option>
+<option value="2"[(#VAL{2}|in_any{#GET{id}}|oui) selected]>Chat</option>
+<option value="3"[(#VAL{3}|in_any{#GET{id}}|oui) selected]>Mouton</option>
+<option value="4"[(#VAL{4}|in_any{#GET{id}}|oui) selected]>Poule</option>
+<option value="5"[(#VAL{5}|in_any{#GET{id}}|oui) selected]>Autruche</option>
+<option value="7"[(#VAL{6}|in_any{#GET{id}}|oui) selected]>Zèbre</option>
+<option value="7"[(#VAL{7}|in_any{#GET{id}}|oui) selected]>Bouvreuil</option>
+<option value="8"[(#VAL{8}|in_any{#GET{id}}|oui) selected]>Épervier</option>
+<option value="9"[(#VAL{9}|in_any{#GET{id}}|oui) selected]>Éléphant</option>
+<option value="10"[(#VAL{10}|in_any{#GET{id}}|oui) selected]>Saumon</option>
