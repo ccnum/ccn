@@ -1,0 +1,143 @@
+[(#AUTORISER{configurer,_select2}|sinon_interdire_acces)]
+
+<h1 class="grostitre"><:select2:titre_page_tester_select2:></h1>
+
+<h2 class="titrem">À base de <code>&lt;select></code></h2>
+
+<div class="gauche">
+	<div class="ajax">#FORMULAIRE_TESTER_SELECT2_SELECT_UNIQUE</div>
+</div>
+
+<div class="droite">
+	<div class="ajax">#FORMULAIRE_TESTER_SELECT2_SELECT_MULTIPLE</div>
+</div>
+
+<div class="nettoyeur"></div>
+
+
+<h2 class="titrem">À base de <code>&lt;input></code></h2>
+
+#ALERTE_OUVRIR{'', info}
+[(#VAL{"
+Les champs `input.select2` ont des attributs data actifs par défaut :
+	
+- `tags`
+- `on-enter-submit`
+- `maximum-selection-length = 1`
+
+Pour autoriser des saisies multiples (et annuler `maximum-selection-length = 1`),
+il faut spécifier un séparateur
+
+- `separator = ','`
+
+"}|propre)]
+#ALERTE_FERMER
+
+<div class="gauche">
+	<div class="ajax">#FORMULAIRE_TESTER_SELECT2_INPUT_UNIQUE</div>
+</div>
+
+<div class="droite">
+	<div class="ajax">#FORMULAIRE_TESTER_SELECT2_INPUT_MULTIPLE</div>
+</div>
+
+<div class="nettoyeur"></div>
+
+
+<script type="text/javascript">
+(() => {
+	const onReady = function(fn) {
+		if (document.readyState !== 'loading') {
+			fn();
+		} else {
+			document.addEventListener('DOMContentLoaded', fn);
+		}
+	}
+
+	const spip_select2_afficher_options = function() {
+		document.querySelectorAll(':where(select, input).select2').forEach(select => {
+			if (
+				Object.keys(select.dataset).length
+				&& !select.parentNode.querySelector('details')
+			) {
+				const details = document.createElement('details');
+				details.classList.add('select2-options');
+				details.appendChild(document.createElement('summary'));
+				details.appendChild(document.createElement('ul'));
+				details.querySelector('summary').textContent = 'Options présentes';
+				Object.keys(select.dataset).forEach(key => {
+					if (['select2On', 'select2Id'].includes(key)) { return; }
+					const code = document.createElement('code');
+					code.textContent = 'data-' + key + ' = "' + select.dataset[key] + '"';
+					const li = document.createElement('li');
+					li.appendChild(code);
+					details.querySelector('ul').appendChild(li);
+				});
+				select.parentNode.querySelector('label').after(details);
+			}
+		});	
+	}
+
+	const spip_select2_afficher_input_value = function() {
+		document.querySelectorAll('input.select2:not([data-show-input-value])').forEach(input => {
+			input.dataset.showInputValue = "on";
+			input.addEventListener('change', function() {
+				const label = input.parentNode.querySelector('label');
+				const small = document.createElement('small');
+				small.classList.add('select2-input-value');
+				small.textContent = 'Input value: ' + input.value;
+				if (label.querySelector('small')) {
+					label.querySelector('small').replaceWith(small);
+				} else {
+					label.appendChild(small);
+				}
+			});
+		})
+	}
+
+	onReady(spip_select2_afficher_options);
+	onReady(spip_select2_afficher_input_value);
+	onAjaxLoad(spip_select2_afficher_options);
+	onAjaxLoad(spip_select2_afficher_input_value);
+
+})();
+
+</script>
+<style>
+
+body.tester_select2 #conteneur {
+  grid-template-areas:
+  "navigation contenu contenu" 
+  "navigation contenu contenu";
+}
+body.tester_select2 #extra {
+  display: none;
+}
+select[data-input-value]:before {
+	content: "Input value: " attr(data-input-value);
+	display:inline-block;
+	border: 2px dashed black;
+	border-radius: 5px;
+}
+
+.select2-options {
+	font-size: .8rem;
+	background: #f6f6f6;
+	padding: .5rem;
+	margin-bottom: .5rem;
+	border-radius: var(--spip-border-radius);
+}
+.select2-options summary { cursor: pointer; }
+.select2-options ul {
+	margin-left: 1.5rem;
+	margin-bottom: 0;
+	list-style:disc;
+}
+.select2-input-value {
+	background-color: #333;
+	color: white;
+	float: inline-end;
+	padding: .1em .5em;
+	border-radius: var(--spip-border-radius);
+}
+</style>
