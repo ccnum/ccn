@@ -1,0 +1,19 @@
+<div class='cadre-formulaire-editer'>
+<div class="entete-formulaire">
+[(#URL_ECRIRE{cioidc_serveurs}|icone_verticale{<:icone_retour:>,rubrique,'',right})]
+
+
+#SET{cioidc_serveur,initial}
+
+[(#ENV{new}|=={oui}|oui)
+[(#SET{cioidc_serveur,nouveau})]
+]
+
+[(#ENV{id_serveur}|intval|>{0}|oui)
+[(#SET{cioidc_serveur,#ENV{id_serveur}})]
+]
+
+<h1><:cioidc:serveur:></h1>
+</div>
+#FORMULAIRE_CIOIDC_SERVEUR{#GET{cioidc_serveur}}
+</div>
