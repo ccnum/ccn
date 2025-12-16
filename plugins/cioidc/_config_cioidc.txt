@@ -1,0 +1,229 @@
+<?php
+
+// =============================================================
+// Ces constantes sont facultatives.
+//
+// Si on souhaite les utiliser, il convient de les recopier :
+// - dans le fichier config/_config_cioidc.php (à créer)
+// - ou bien dans le fichier config/mes_options.php
+// - ou bien dans le fichier d'options d'un autre plugin.
+//
+// ATTENTION : il est inutile se recopier une de ces constantes si la valeur par defaut convient.
+
+
+
+// Pour une authentification avec OpenID Connect mettre 'oidc',
+// pour une authentification hybride OpenID Connect ou SPIP mettre 'hybride',
+// pour une authentification avec SPIP mettre 'spip' (c'est la valeur par defaut)
+// 
+// Remarque : cette constante met en lecture seule les autres champs du formulaire 'Mode d'authentification'
+// 
+// Valeurs possibles : 'oidc' ou 'hybride' ou 'spip'
+// Valeur par défaut : 'spip'
+// Exemple :
+// define('_CIOIDC_MODE_AUTH','oidc');
+
+// Titre du choix entre plusieurs serveurs
+// Valeur par défaut : 'Se connecter avec'
+// Exemple :
+// define('_CIOIDC_TITRE_SE_CONNECTER','Se connecter');
+
+// Intitulé de l'authentification avec SPIP
+// Valeur par défaut : 'Se connecter avec son compte SPIP'
+// Exemple :
+// define('_CIOIDC_NOM_SERVEUR_SPIP','Se connecter avec SPIP');
+
+
+
+
+// Nom du serveur OpenID Connect
+// Exemple :
+// define('_CIOIDC_NOM_SERVEUR','Se connecter avec le serveur A');
+
+// URL du serveur OpenID Connect (adresse utilisee par defaut)
+// sans slash à la fin
+// 
+// Remarque : cette constante met en lecture seule les autres champs du formulaire 'Configuration du serveur ...'
+// 
+// Exemple :
+// define('_CIOIDC_URL_SERVEUR','https://serveur-oidc-a.fr');
+
+// Nom du client (il est enregistré sur le serveur OpenID Connect)
+// Exemple :
+// define('_CIOIDC_CLIENT_NOM','monpremierclient');
+
+// Secret du client (il est enregistré sur le serveur OpenID Connect)
+// Exemple :
+// define('_CIOIDC_CLIENT_SECRET','4KYM6Bcru2eSbhE08nZqZ5y4qcVkPkdj');
+
+// Si l'identifiant est stocke dans le champ login de la table auteur,
+// mettre 'login' (sinon la recherche sera effectuee dans le champs email)
+// Valeurs possibles : 'email' ou 'login'
+// Valeur par défaut : 'email'
+// Exemple :
+// define('_CIOIDC_UID_CHAMP_SPIP','login');
+
+// Claim dans lequel le serveur d'identité stocke l'identifiant
+// Valeurs possibles : 'email' ou 'uid' ou ...
+// Exemple :
+// define('_CIOIDC_UID_CLAIM','email');
+
+// Scopes additionnels (autres que openid) séparés par une virgule
+// Exemple :
+// define('_CIOIDC_SCOPES','email,profile');
+
+// acr (référence de classe de contexte d'authentification)
+// Exemple :
+// define('_CIOIDC_ACR','eidas1');
+
+// Le serveur OpenID Connect accepte-t-il le point d'interrogation dans l'adresse de redirection ? 
+// Attention : Si non, il est nécessaire d'appliquer les consignes qui figurent dans le fichier cioidc\cioidc.php
+// Valeurs possibles : 'oui' ou 'non'
+// Valeur par défaut : 'oui'
+// Exemple :
+// define('_CIOIDC_REDIRECT_URL_AVEC_PI','non');
+
+// Utiliser un serveur proxy 
+// Si oui, le serveur proxy défini dans SPIP sera utilisé (lorsque le plugin interrogera le serveur OpenID Connect)
+// Valeurs possibles : 'oui' ou 'non'
+// Valeur par défaut : 'non'
+// Exemple :
+// define('_CIOIDC_HTTP_PROXY','oui');
+
+// Creer automatiquement les auteurs : 
+// Si l'authentification sur ce serveur a reussi mais que l'auteur n'existe pas dans SPIP,
+// faut-il le creer automatiquement et avec quel statut : redacteur '1comite' ou visiteur ('6forum') ?
+// Valeurs possibles : '' ou '1comite' ou '6forum'
+// Valeur par défaut : ''
+// Exemple :
+// define('_CIOIDC_CREER_AUTEUR','1comite');
+
+// Pour éviter d'interroger la "well known config" du serveur d'authentification à chaque fois
+// il est possible de consulter (en texte brut) la page suivante :
+// https://adresse du serveur OpenID Connect/.well-known/openid-configuration 
+// puis de recopier, dans les 6 constantes ci-dessous, les valeurs correspondantes,
+// par exemple, "authorization_endpoint":"https://adresse du serveur OpenID Connect/user/authorize".
+//
+// Exemple :
+// define('_CIOIDC_AUTHORIZATION_ENDPOINT','https://adresseduserveurOpenIDConnect/auth');
+// define('_CIOIDC_TOKEN_ENDPOINT','https://adresseduserveurOpenIDConnect/token');
+// define('_CIOIDC_USERINFO_ENDPOINT','https://adresseduserveurOpenIDConnect/userinfo');
+// define('_CIOIDC_END_SESSION_ENDPOINT','https://adresseduserveurOpenIDConnect/logout');
+// define('_CIOIDC_JWKS_URI','https://adresseduserveurOpenIDConnect/certs');
+// define('_CIOIDC_TOKEN_ENDPOINT_AUTH_METHODS_SUPPORTED','["client_secret_post", "client_secret_basic"]');
+
+
+
+// Serveurs additionnels
+// La clé dans le tableau est le numéro du serveur additionnel
+// Exemple :
+/*
+define('_CIOIDC_SERVEURS_ADDITIONNELS', array(
+        1 => array(
+            'nom_serveur'=>'Se connecter avec le serveur B',
+            'url_serveur'=>'https://serveur-oidc-b.fr',
+            'client_nom'=>'monsecondclient',
+            'client_secret'=>'Bcru2eSb4KYM6hE08nZqZ5y4qcVkPkdj',
+            'uid_champ_spip'=>'email',
+            'uid_claim'=>'email',
+            'scopes'=>'email',
+            'acr'=>'',
+            'authorization_endpoint'=>'https://serveur-oidc-b.fr/auth',
+            'token_endpoint'=>'https://serveur-oidc-b.fr/token',
+            'userinfo_endpoint'=>'https://serveur-oidc-b.fr/userinfo',
+            'end_session_endpoint'=>'https://serveur-oidc-b.fr/logout',
+            'jwks_uri'=>'https://serveur-oidc-b.fr/certs',
+            'token_endpoint_auth_methods_supported'=>'["client_secret_post", "client_secret_basic"]',
+            'redirect_url_avec_pi'=>'oui',
+            'http_proxy'=>'non',
+            'creer_auteur'=>''
+            ),
+        2 => array(
+            'nom_serveur'=>'Se connecter avec le serveur C',
+            'url_serveur'=>'https://serveur-oidc-c.fr',
+            'client_nom'=>'monautreclient',
+            'client_secret'=>'ZqZ5y4q4KYM6Bcru2eSbhE08ncVkPkdj',
+            'uid_champ_spip'=>'email',
+            'uid_claim'=>'email',
+            'scopes'=>'email',
+            'acr'=>'',
+            'authorization_endpoint'=>'https://serveur-oidc-c.fr/auth',
+            'token_endpoint'=>'https://serveur-oidc-c.fr/token',
+            'userinfo_endpoint'=>'https://serveur-oidc-c.fr/userinfo',
+            'end_session_endpoint'=>'https://serveur-oidc-c.fr/logout',
+            'jwks_uri'=>'https://serveur-oidc-c.fr/certs',
+            'token_endpoint_auth_methods_supported'=>'["client_secret_post", "client_secret_basic"]',
+            'redirect_url_avec_pi'=>'oui',
+            'http_proxy'=>'non',
+            'creer_auteur'=>''
+            )
+));
+*/
+
+
+
+
+// =============================================================
+// Remarque : les paramètres ci-dessous ne peuvent pas etre renseignes dans le formulaire de configuration du plugin
+//
+
+// Tableau des autres URLS du serveur OpenID Connect selon le type de terminaison de l'adresse d'appel du site SPIP.
+// La clé dans le tableau est 0, sauf pour les serveurs additionnels où la clé est le numéro de serveur.
+// Si un sous tableau contient plusieurs lignes, l'ordre de ces lignes est important, car c'est l'ordre d'examen des terminaisons
+// (en effet, l'examen s'arrete a la premiere terminaison qui correspond).
+// Si aucune correspondance est trouvée, c'est l'URL du serveur qui est utilisée (cf. _CIOIDC_URL_SERVEUR).
+// Exemple :
+/*
+define('_CIOIDC_URLS', array(
+        0 => array(
+            '.intranet.domaine.fr'=>'https://serveur-intranet-oidc-a.fr'
+            ),
+        1 => array(
+            '.intranet.domaine.fr'=>'https://serveur-intranet-oidc-b.fr'
+            )
+));
+*/
+
+// Compatibilite avec les anciennes adresses email
+// domaine email dans la table des auteurs de SPIP => domaine email renvoye par le serveur OpenID Connect
+// Exemple :
+// define('_CIOIDC_MAIL_COMPATIBLE',array('equipement.gouv.fr' => 'developpement-durable.gouv.fr'));
+
+// Par defaut, l'ordre de recherche du HOST dans les variables HTTP est : 
+// 'HTTP_X_FORWARDED_HOST', 'HTTP_X_FORWARDED_SERVER', 'HTTP_HOST', 'SERVER_NAME'
+// Si l'hebergeur n'est pas compatible avec cet ordre, on peut definir l'ordre a prendre en compte.
+// Exemple :
+// define('_CIOIDC_HOST_ORDRE',array('HTTP_X_FORWARDED_HOST','HTTP_HOST'));
+
+// Faut-il empêcher de pouvoir remplacer l'identifiant SSO (email ou login)
+// d'un autre auteur avec son propre identifiant SSO (email ou login)
+// (en tenant compte, le cas échéant, de _CIOIDC_MAIL_COMPATIBLE) ?
+// Valeurs possibles : 'oui' ou 'non'
+// Valeur par défaut : 'non'
+// Exemple :
+// define('_CIOIDC_ANTI_HACK','oui');
+
+// Faut-il empêcher un BOT (détecté par SPIP) d'afficher le formulaire de login ?
+// Valeurs possibles : 'oui' ou 'non'
+// Valeur par défaut : 'non'
+// Exemple :
+// define('_CIOIDC_ANTI_BOT','oui');
+
+// La configuration du plugin CIOIDC dans l'espace privé est, par défaut, réservé aux webmestres (au sens SPIP).
+// Il est possible de ne pas la réserver uniquement aux webmestres,
+// et de l'autoriser également aux admin non restreints qui ne sont pas webmestre.
+// Valeurs possibles : 'oui' ou 'non'
+// Valeur par défaut : 'oui'
+// Exemple :
+// define('_CIOIDC_CONFIG_UNIQUEMENT_PAR_WEBMESTRE','non');
+
+// Cas d'un serveur OpenID Connect qui retourne deux identifiants dans le userinfo
+// et que, selon les auteurs, l'un ou l'autre identifiant peut être dans la table des auteurs de SPIP.
+// Si la constante ci-dessous est définie et non vide
+// alors, si l'identifiant (UID claim) n'est pas trouvé dans la table des auteurs de SPIP (UID champ SPIP),
+// une recherche sera à nouveau effectuée avec le contenu de l'identifiant additionnel 
+// (sauf si le contenu des deux identifiants est identique).
+// Valeurs possibles : le nom du claim dans le userinfo qui contient l'identifiant additionnel
+// Valeur par défaut : ''
+// Exemple :
+// define('_CIOIDC_UID_CLAIM_ADDITIONNEL','email_metier');
