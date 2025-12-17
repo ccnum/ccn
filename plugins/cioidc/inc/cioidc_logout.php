@@ -206,7 +206,7 @@ function action_logout_dist() {
 					try {
 						$oidc->signOut($GLOBALS['visiteur_session']['cioidc_id_token'], $ci_url_retour);
 					} catch(Exception $e){
-						spip_log($e, 'cioidc_'._LOG_ERREUR);
+						spip_log($e, 'cioidc');
 
 						$ciredirect = generer_url_public('cioidc_erreur4');
 						include_spip('inc/headers');

@@ -134,7 +134,7 @@ if ($config_oidc) {
 		$attribute = $config_oidc['uid_claim'];
 		$ci_oidc_userid = $user_info->$attribute;
 	} catch(Exception $e){
-		spip_log($e, 'cioidc_'._LOG_ERREUR);
+		spip_log($e, 'cioidc');
 
 		$ciredirect = generer_url_public('cioidc_erreur4');
 		include_spip('inc/headers');

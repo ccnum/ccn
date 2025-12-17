@@ -89,6 +89,7 @@ if ($config_oidc) {
 		$oidc->authenticate();
 
 		$cioidc_id_token = $oidc->getIdToken();
+		spip_log($cioidc_id_token, 'cioidc');
 
 		$user_info = $oidc->requestUserInfo();
 
@@ -102,7 +103,7 @@ if ($config_oidc) {
 		include_spip('inc/cioidc_session');
 		$ciredirect = cioidc_session($ci_oidc_userid, $cioidc_id_token, $ci_id_serveur_auth, $cioidc_tableau_pipeline);
 	} catch(Exception $e){
-		spip_log($e, 'cioidc_'._LOG_ERREUR);
+		spip_log($e, 'cioidc');
 
 		$ciredirect = generer_url_public('cioidc_erreur4');
 		include_spip('inc/headers');
