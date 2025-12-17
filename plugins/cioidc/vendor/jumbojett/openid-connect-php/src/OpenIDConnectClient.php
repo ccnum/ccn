@@ -173,7 +173,7 @@ class OpenIDConnectClient
 
     /**
      * @var mixed holds well-known openid configuration parameters, like policy for MS Azure AD B2C User Flow
-     * @see https://docs.microsoft.com/en-us/azure/active-directory-b2c/user-flow-overview 
+     * @see https://docs.microsoft.com/en-us/azure/active-directory-b2c/user-flow-overview
      */
     private $wellKnownConfigParameters = [];
 
@@ -686,7 +686,7 @@ class OpenIDConnectClient
         } else {
             $protocol = 'http';
         }
-	    
+
         if (isset($_SERVER['HTTP_X_FORWARDED_PORT'])) {
             $port = (int)$_SERVER['HTTP_X_FORWARDED_PORT'];
         } elseif (isset($_SERVER['SERVER_PORT'])) {
@@ -709,7 +709,7 @@ class OpenIDConnectClient
         }
 
         $port = (443 === $port) || (80 === $port) ? '' : ':' . $port;
-	    
+
         $explodedRequestUri = isset($_SERVER['REQUEST_URI']) ? explode('?', $_SERVER['REQUEST_URI']) : [];
         return sprintf('%s://%s%s/%s', $protocol, $host, $port, trim(reset($explodedRequestUri), '/'));
     }
@@ -1273,6 +1273,7 @@ class OpenIDConnectClient
             throw new OpenIDConnectClientException('The communication to retrieve user data has failed with status code '.$this->getResponseCode());
         }
 
+        spip_log($this->getResponseContentType(), 'cioidc');
         // When we receive application/jwt, the UserInfo Response is signed and/or encrypted.
         if ($this->getResponseContentType() === 'application/jwt' ) {
             // Check if the response is encrypted
