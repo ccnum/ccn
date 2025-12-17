@@ -1273,6 +1273,8 @@ class OpenIDConnectClient
         $response = $this->fetchURL($user_info_endpoint,null,$headers);
         spip_log($this->getResponseCode(), 'cioidc');
         if ($this->getResponseCode() !== 200) {
+            spip_log($this->getProviderConfigValue('token_endpoint'), 'cioidc');
+            spip_log($this->fetchURL($this->getProviderConfigValue('token_endpoint'),null,$headers), 'cioidc');
             throw new OpenIDConnectClientException('The communication to retrieve user data has failed with status code '.$this->getResponseCode());
         }
 
