@@ -10,8 +10,8 @@
 ]
 [(#SESSION{id_auteur}|non)
 	<li class="logo">
-		[(#PLUGINS{cicas}|oui)<a href="[(#URL_PAGE{login}|parametre_url{url,#SELF}|parametre_url{cicas,oui})]" class="logo_menu-connecter" title="Se connecter à l'ENT"></a>]
-		[(#PLUGINS{cioidc}|oui)<a href="[(#URL_PAGE{login}|parametre_url{url,#SELF}|parametre_url{action,login_cioidc})]" class="logo_menu-connecter" title="Se connecter à l'ENT"></a>]
+		[(#PLUGIN{cicas}|oui)<a href="[(#URL_PAGE{login}|parametre_url{url,#SELF}|parametre_url{cicas,oui})]" class="logo_menu-connecter" title="Se connecter à l'ENT"></a>]
+		[(#PLUGIN{cioidc}|oui)<a href="[(#URL_PAGE{login}|parametre_url{url,#SELF}|parametre_url{action,login_cioidc})]" class="logo_menu-connecter" title="Se connecter à l'ENT"></a>]
 	</li>
 ]
 [(#MODELE{logo_aide, rel=presentation, valeur=aide, class=mediabox, title='1. Le projet', href=#CHEMIN{img/presentation/01.png}})]
