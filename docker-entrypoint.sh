@@ -136,6 +136,11 @@ if [ ${SPIP_PLUGINS_CICAS} == true ]; then
 	else
 	spip plugins:desactiver cicas -y
 fi
+if [ ${SPIP_PLUGINS_CIOIDC} == true ]; then
+	spip plugins:activer cioidc -y
+	else
+	spip plugins:desactiver cioidc -y
+fi
 if [ ${SPIP_VERSION_SITE} != "thematique" ]; then
 	spip plugins:activer vider_rubrique -y
 fi
