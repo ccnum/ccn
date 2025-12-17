@@ -96,8 +96,11 @@ if ($config_oidc) {
 
 		$attribute = $config_oidc['uid_claim'];
 		$ci_oidc_userid = $user_info->$attribute;
+		spip_log($attribute, 'cioidc');
+		spip_log($ci_oidc_userid, 'cioidc');
 
 		$cioidc_tableau_pipeline = ['args' => [$attribute => $ci_oidc_userid], 'data' => (array) $user_info];
+		spip_log($cioidc_tableau_pipeline, 'cioidc');
 
 		pipeline('cioidc_userinfo', $cioidc_tableau_pipeline);
 
