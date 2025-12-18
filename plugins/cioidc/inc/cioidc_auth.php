@@ -89,7 +89,6 @@ if ($config_oidc) {
 		$oidc->authenticate();
 
 		$cioidc_id_token = $oidc->getIdToken();
-		spip_log($cioidc_id_token, 'cioidc');
 
 		if (!isset($config_oidc['userinfo_endpoint']) && !$config_oidc['userinfo_endpoint']) {
 			$user_info = $oidc->requestUserInfo();
@@ -97,14 +96,10 @@ if ($config_oidc) {
 			$user_info = $oidc->getIdTokenPayload();
 		}
 
-		spip_log($user_info, 'cioidc');
 		$attribute = $config_oidc['uid_claim'];
 		$ci_oidc_userid = $user_info->$attribute;
-		spip_log($attribute, 'cioidc');
-		spip_log($ci_oidc_userid, 'cioidc');
 
 		$cioidc_tableau_pipeline = ['args' => [$attribute => $ci_oidc_userid], 'data' => (array) $user_info];
-		spip_log($cioidc_tableau_pipeline, 'cioidc');
 
 		pipeline('cioidc_userinfo', $cioidc_tableau_pipeline);
 
