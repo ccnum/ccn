@@ -91,8 +91,9 @@ if ($config_oidc) {
 		$cioidc_id_token = $oidc->getIdToken();
 		spip_log($cioidc_id_token, 'cioidc');
 
-		$user_info = $oidc->requestUserInfo();
-		spip_log($user_info, 'cioidc');
+		sqpip_log($oidc->providerConfigParam(), 'cioidc');
+		//$user_info = $oidc->requestUserInfo();
+		//spip_log($user_info, 'cioidc');
 
 		$attribute = $config_oidc['uid_claim'];
 		$ci_oidc_userid = $user_info->$attribute;
