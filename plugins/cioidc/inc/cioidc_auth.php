@@ -93,8 +93,11 @@ if ($config_oidc) {
 
 		if (!isset($config_oidc['userinfo_endpoint']) && !$config_oidc['userinfo_endpoint']) {
 			$user_info = $oidc->requestUserInfo();
+		} else {
+			$user_info = $oidc->getIdTokenPayload();
 		}
 
+		spip_log($user_info, 'cioidc');
 		$attribute = $config_oidc['uid_claim'];
 		$ci_oidc_userid = $user_info->$attribute;
 		spip_log($attribute, 'cioidc');
