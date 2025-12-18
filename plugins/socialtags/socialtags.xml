@@ -20,78 +20,61 @@
 <link>javascript:socialtags_addfavorite('%u','%t');</link>
 <author>bookmark</author>
 <description>(ne fonctionne et ne s'affiche que sur Internet Explorer)</description>
-<category>1</category>
+<category>outil</category>
 </item>
 
 <item>
   <title>Partage par email (mailto)</title>
   <link>mailto:?subject=%t&body=%u</link>
   <author>mail</author>
-  <category>1</category>
+<category>outil</category>
 </item>
 
 <!-- B -->
-<item>
-<title>BarraPunto</title>
-<author>barrapunto</author>
-<link>http://barrapunto.com/submit.pl?subj=%t&amp;story=%u</link>
-<description>Communauté, es</description>
-</item>
-
-<item>
-<title>Bebo</title>
-<author>bebo</author>
-<link>http://www.bebo.com/c/share?Url=%u&amp;Title=%t</link>
-<description>Communauté, fr</description>
-</item>
 
 <item>
 <title>Blogmarks</title>
 <author>blogmarks</author>
-<link>http://blogmarks.net/my/new.php?mini=1&amp;url=%u&amp;title=%t</link>
+<link>https://blogmarks.net/my/new.php?mini=1&amp;url=%u&amp;title=%t</link>
+</item>
+
+<item>
+<title>Bluesky</title>
+<author>bluesky</author>
+<link>https://bsky.app/intent/compose?text=%t%20%u</link><!-- a corriger -->
+<description>Microblogging, X en mieux</description>
+<category>important</category>
 </item>
 
 <item>
 <title>Bookmarks.fr</title>
 <author>bookmarks.fr</author>
-<link>http://www.bookmarks.fr/?action=add&url=%u</link><!-- a corriger -->
+<link>https://www.bookmarks.fr/?action=add&url=%u</link><!-- a corriger -->
+<link>https://www.bookmarks.fr/?action=add&url=%u</link><!-- a corriger -->
 <description>Bookmarks, fr</description>
 </item>
 
 <!-- C -->
-<item>
-<title>CiteULike</title>
-<author>citeulike</author>
-<link>http://www.citeulike.org/posturl?url=%u</link>
-<description>Digg-like, littérature, en-us</description>
-</item>
-
-<item>
-<title>Connotea</title>
-<author>connotea</author>
-<link>http://www.connotea.org/add?continue=return&amp;uri=%u</link>
-<description>Bookmarks, en-us</description>
-</item>
 
 <!-- D -->
 <item>
 <title>Diaspora*</title>
 <author>diaspora</author>
-<link>http://sharetodiaspora.github.io/?title=%t&amp;url=%u</link>
+<link>https://sharetodiaspora.github.io/?title=%t&amp;url=%u</link>
 <description>Partage vers un pod Diaspora*.</description>
 </item>
 
 <item>
 <title>Digg</title>
 <author>digg</author>
-<link>http://digg.com/submit?phase=2&amp;url=%u&amp;title=%t</link>
+<link>https://digg.com/submit?phase=2&amp;url=%u&amp;title=%t</link>
 <description>Agrégateur à la mode.</description>
 </item>
 
 <item>
 <title>Diigo</title>
 <author>diigo</author>
-<link>http://secure.diigo.com/post?url=%u&amp;title=%t</link>
+<link>https://secure.diigo.com/post?url=%u&amp;title=%t</link>
 <description>Portail, communauté, en-us</description>
 </item>
 
@@ -99,67 +82,46 @@
 <item>
 <title>Facebook</title>
 <author>facebook</author>
-<link>http://www.facebook.com/sharer/sharer.php?u=%u&amp;t=%t</link>
-<category>1</category>
+<link>https://www.facebook.com/sharer/sharer.php?u=%u&amp;t=%t</link>
+<category>important</category>
 </item>
-
-<item>
-<title>FriendFeed</title>
-<author>friendfeed</author>
-<link>http://www.friendfeed.com/share?title=%t&amp;link=%u</link>
-</item>
-
 
 <!-- G -->
 
-<item>
-<title>Google bookmarks</title>
-<author>google</author>
-<link>http://www.google.com/bookmarks/mark?op=edit&amp;bkmk=%u&amp;title=%t</link>
-</item>
-
 <!-- H -->
 
-
 <!-- I -->
-<item>
-<title>Identi.ca</title>
-<author>identica</author>
-<link>http://identi.ca/notice/new?status_textarea=%u</link>
-<description>Microblogging</description>
-</item>
 
 <!-- J -->
 <item>
 <title>Jamespot</title>
 <author>jamespot</author>
 <!-- title ne passe pas. A corriger ASAP -->
-<link>http://www.jamespot.com/?action=spotit&amp;url=%u&amp;title=%t&amp;text=%d</link>
+<link>https://www.jamespot.com/?action=spotit&amp;url=%u&amp;title=%t&amp;text=%d</link>
 <description>Portail, communauté, fr</description>
 </item>
-
 
 <!-- L -->
 
 <item>
-<title>linkaGoGo</title>
-<author>linkagogo</author>
-<link>http://linkagogo.com/go/AddNoPopup?url=%u&amp;title=%t</link>
-<description>Bookmarks</description>
+<title>Line</title>
+<author>line-me</author>
+<link>https://linkagogo.com/go/AddNoPopup?url=%u&amp;title=%t</link>
+<description>Messagerie instantanée</description>
 </item>
 
 <item>
-<title>LinkARENA</title>
-<author>linkarena</author>
-<link>http://linkarena.com/bookmarks/addlink/?url=%u</link>
+<title>linkaGoGo</title>
+<author>linkagogo</author>
+<link>https://social-plugins.line.me/lineit/share?url=%u</link>
 <description>Bookmarks</description>
 </item>
 
 <item>
 <title>LinkedIn</title>
 <author>linkedin</author>
-<link>http://www.linkedin.com/shareArticle?mini=true&amp;url=%u&amp;title=%t&amp;source=%u_site&amp;summary=%d</link>
-<category>1</category>
+<link>https://www.linkedin.com/shareArticle?mini=true&amp;url=%u&amp;title=%t&amp;source=%u_site&amp;summary=%d</link>
+<category>important</category>
 </item>
 
 <item>
@@ -172,57 +134,59 @@
 <item>
 <title>Menéame</title>
 <author>meneame</author>
-<link>http://meneame.net/submit.php?url=%u&amp;title=%t</link>
+<link>https://meneame.net/submit.php?url=%u&amp;title=%t</link>
 <description>Digg-like, es</description>
 </item>
 
+<item>
+<title>Mix</title>
+<author>stumbleupon</author>
+<link>https://mail.live.com/default.aspx?rru=compose?subject=%t&amp;body=%u&amp;lc=1033&amp;id=64855&amp;mkt=en-us&amp;cbcxt=mai</link>
+</item>
 
 <item>
 <title>MySpace</title>
 <author>myspace</author>
-<link>http://www.myspace.com/Modules/PostTo/Pages/?u=%u&amp;t=%t</link>
+<link>https://www.myspace.com/Modules/PostTo/Pages/?u=%u&amp;t=%t</link>
 </item>
 
 <!-- N -->
 <item>
 <title>Netvibes</title>
 <author>netvibes</author>
-<link>http://www.netvibes.com/subscribe.php?url=%u</link>
+<link>https://www.netvibes.com/subscribe.php?url=%u</link>
 <description>Blog, news, fr en-us</description>
-</item>
-
-<item>
-<title>Netvouz</title>
-<author>netvouz</author>
-<link>http://www.netvouz.com/action/submitBookmark?url=%u</link>
-<description>Bookmarks</description>
-</item>
-
-<item>
-<title>Newsgator</title>
-<author>newsgator</author>
-<link>http://www.newsgator.com/ngs/subscriber/subext.aspx?url=%u</link>
-<description>Communauté, en-us</description>
 </item>
 
 <item>
 <title>Newsvine</title>
 <author>newsvine</author>
-<link>http://www.newsvine.com/_tools/seed&save?popoff=0&amp;u=%u&amp;h=%t</link>
+<link>https://www.newsvine.com/_tools/seed&amp;save?popoff=0&amp;u=%u&amp;h=%t</link>
 <description>Digg-like, news, en-us</description>
 </item>
 
-<!-- P -->
+<!-- O -->
+
 <item>
-<title>Plaxo</title>
-<author>plaxo</author>
-<link>http://www.plaxo.com/events?share_link=%u&amp;desc=%t</link>
+<title>Odnoklassniki</title>
+<author>odnoklassniki</author>
+<link>https://connect.ok.ru/dk?cmd=WidgetSharePreview&amp;st.cmd=WidgetSharePreview&amp;st.shareUrl=%u&amp;st.client_id=-1</link>
+<description>Reseautage</description>
+</item>
+
+<!-- P -->
+
+<item>
+<title>Pinterest</title>
+<author>pinterest</author>
+<link>https://pinterest.com/pin/create/button/?url=%u&amp;description=%d</link>
+<description>Digg-like, fr en-us etc...</description>
 </item>
 
 <item>
 <title>Plurk</title>
 <author>plurk</author>
-<link>http://www.plurk.com/m?content=%u</link>
+<link>https://www.plurk.com/m?content=%u</link>
 <description>Digg-like, fr en-us etc...</description>
 </item>
 
@@ -230,92 +194,52 @@
 <title>Imprimer la page</title>
 <author>printer</author>
 <link>javascript:window.print()</link>
-<category>1</category>
+<category>outil</category>
 </item>
 
 <!-- R -->
 <item>
 <title>Reddit</title>
 <author>reddit</author>
-<link>http://reddit.com/submit?url=%u&amp;title=%t</link>
+<link>https://reddit.com/submit?url=%u&amp;title=%t</link>
 </item>
 
 <!-- S -->
 <item>
 <title>Seenthis</title>
 <author>seenthis</author>
-<link>http://seenthis.net/#ajouter=%t&url_site=%u&extrait=%d</link>
+<link>https://seenthis.net/#ajouter=%t&url_site=%u&extrait=%d</link>
 <description>Macroblogging</description>
 </item>
 
 <item>
 <title>Slashdot</title>
 <author>slashdot</author>
-<link>http://slashdot.org/bookmark.pl?url=%u&amp;title=%t</link>
-</item>
-
-<item>
-<title>Startaid</title>
-<author>startaid</author>
-<link>http://startaid.com/index.php?st=AddBrowserLink&amp;type=Detail&amp;v=3&amp;urlname=%u&amp;urltitle=%t</link>
-</item>
-
-<item>
-<title>StumbleUpon</title>
-<author>stumbleupon</author>
-<link>http://www.stumbleupon.com/submit?url=%u&amp;title=%t</link>
+<link>https://slashdot.org/submission?url=%u</link>
 </item>
 
 <!-- T -->
-<item>
-<title>Tapemoi !</title>
-<author>tapemoi</author>
-<link>http://www.tapemoi.com/submit.php?url=%u</link>
-<description>Digg-like, fr</description>
-</item>
-
-<item>
-<title>Technorati</title>
-<author>technorati</author>
-<link>http://technorati.com/faves?add=%u</link>
-</item>
-
-<item>
-<title>ThisNext</title>
-<author>thisnext</author>
-<link>http://www.thisnext.com/pick/new/submit/sociable/?url=%u&amp;name=%t</link>
-<description>Digg-like, en-us</description>
-</item>
-
-<item>
-<title>Tip'd</title>
-<author>tipd</author>
-<link>http://tipd.com/submit.php?url=%u</link>
-<description>Digg-like, en-us</description>
-</item>
 
 <item>
 <title>Tumblr</title>
 <author>tumblr</author>
-<link>http://www.tumblr.com/share?v=3&amp;u=%u&amp;t=%t&s=</link>
-<description>Digg-like</description>
-<category>1</category>
+<link>https://www.tumblr.com/share?v=3&amp;u=%u&amp;t=%t&s=</link>
+<description>Blogs</description>
 </item>
 
 <item>
-<title>X</title>
-<author>twitter</author>
-<link>http://twitter.com/intent/tweet?text=%t&amp;url=%u</link>
-<description>Microblogging</description>
-<category>1</category>
+<title>Telegram</title>
+<author>telegram</author>
+<link>https://telegram.me/share/url?url=%u&text=%t</link><!-- a corriger -->
+<description>Messagerie</description>
 </item>
 
 <!-- V -->
+
 <item>
 <title>Viadeo</title>
 <author>viadeo</author>
-<link>http://www.viadeo.com/shareit/share/?url=%u&amp;title=%t</link>
-<category>1</category>
+<link>https://www.viadeo.com/shareit/share/?url=%u&amp;title=%t</link>
 </item>
 
 <item>
@@ -326,33 +250,47 @@
 </item>
 
 <item>
-<title>VisitezMonSite</title>
-<author>visitezmonsite</author>
-<link>http://www.visitezmonsite.com/publier?url=%u&amp;title=%t</link>
-<description>Digg-like, , en-us fr</description>
+<title>VK</title>
+<author>vk</author>
+<link>https://vk.com/share.php?url=%u&amp;title=%t</link>
+<description>Portail, communauté, ru-ru</description>
 </item>
 
 <!-- W -->
 
+<item>
+<title>Weibo</title>
+<author>weibo</author>
+<link>http://service.weibo.com/share/share.php?url=%u&amp;title=%t</link>
+<description>Microblogging, cnm-zh</description>
+</item>
+
+<item>
+<title>Whatsapp</title>
+<author>whatsapp</author>
+<link>https://wa.me/?text=%u&amp;</link>
+<description>Appli de messagerie</description>
+<category>important</category>
+</item>
+
+<!-- X -->
+
+<item>
+<title>X</title>
+<author>twitter</author>
+<link>https://twitter.com/intent/tweet?text=%t&amp;url=%u</link>
+<description>Microblogging</description>
+<category>important</category>
+</item>
+
+<item>
+<title>Xing</title>
+<author>xing</author>
+<link>https://www.xing.com/spi/shares/new?cb=0&amp;url=%t</link>
+<description>Portail, professionel</description>
+</item>
+
 <!-- Y -->
-<item>
-<title>Yahoo! Bookmarks</title>
-<author>yahoobookmarks</author>
-<link>http://bookmarks.yahoo.com/toolbar/savebm?opener=tb&amp;u=%u&amp;t=%t</link>
-</item>
-
-<item>
-<title>Yahoo! Buzz</title>
-<author>buzzyahoo</author>
-<link>http://buzz.yahoo.com/submit?submitUrl=%u&amp;submitHeadline=%t&amp;submitSummary=%d</link>
-</item>
-
-<item>
-<title>Yahoo! MyWeb</title>
-<author>yahoomyweb</author>
-<link>http://myweb2.search.yahoo.com/myresults/bookmarklet?u=%u&amp;t=%t</link>
-<description>Bookmarks</description>
-</item>
 
 </items>
 </channel>
