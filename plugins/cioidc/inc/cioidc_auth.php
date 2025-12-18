@@ -91,7 +91,7 @@ if ($config_oidc) {
 		$cioidc_id_token = $oidc->getIdToken();
 		spip_log($cioidc_id_token, 'cioidc');
 
-		sqpip_log($oidc->providerConfigParam(), 'cioidc');
+		spip_log($oidc->providerConfigParam(), 'cioidc');
 		//$user_info = $oidc->requestUserInfo();
 		//spip_log($user_info, 'cioidc');
 
