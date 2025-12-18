@@ -1262,23 +1262,18 @@ class OpenIDConnectClient
         $schema = 'openid';
 
         $user_info_endpoint .= '?schema=' . $schema;
-        spip_log($user_info_endpoint, 'cioidc');
 
         //The accessToken has to be sent in the Authorization header.
         // Accept json to indicate response type
         $headers = ["Authorization: Bearer $this->accessToken",
             'Accept: application/json'];
-        spip_log($headers, 'cioidc');
 
         $response = $this->fetchURL($user_info_endpoint,null,$headers);
         spip_log($this->getResponseCode(), 'cioidc');
         if ($this->getResponseCode() !== 200) {
-            spip_log($this->getProviderConfigValue('token_endpoint'), 'cioidc');
-            spip_log($this->fetchURL($this->getProviderConfigValue('token_endpoint'),null,$headers), 'cioidc');
             throw new OpenIDConnectClientException('The communication to retrieve user data has failed with status code '.$this->getResponseCode());
         }
 
-        spip_log($this->getResponseContentType(), 'cioidc');
         // When we receive application/jwt, the UserInfo Response is signed and/or encrypted.
         if ($this->getResponseContentType() === 'application/jwt' ) {
             // Check if the response is encrypted
