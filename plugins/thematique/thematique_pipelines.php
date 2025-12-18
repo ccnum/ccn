@@ -128,3 +128,21 @@ function thematique_notifications_destinataires($flux) {
 	}
 	return $flux;
 }
+
+function thematique_cioidc_userinfo($flux) {
+	$id_auteur = sql_getfetsel('id_auteur', 'spip_auteurs', 'email=' . sql_quote($flux['args']['email'])); // Chercher l'auteur qui vient de se loguer
+	// Géré les groupes qui sont dans l'OpenID
+	$droits_spip = [];
+	$groupe_libres = $flux['data']['ENTGroupesLibres'];
+	foreach ($groupe_libres as $g_l) {
+		//$g_l['structure_id']; $g_l['id']; $g_l['name'];
+		if (preg_match('/^(.*)\s(\d{4})$/', $g_l['name'], $matches)) {
+			$ccn = $matches[1];
+			$annee = $matches[2];
+			$droits_spip[] = ['ccn' => $ccn, 'annee' => $annee];
+		}
+	}
+	spip_log($id_auteur.' => '.$droits_spip, 'cioidc');
+
+	return $flux;
+}
