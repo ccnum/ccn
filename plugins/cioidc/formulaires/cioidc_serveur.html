@@ -105,6 +105,20 @@
                     </div>
             </div>
             
+            #SET{name,serveur_sans_userinfo}#SET{erreurs,#ENV*{erreurs}|table_valeur{#GET{name}}}
+            <div class="editer editer_[(#GET{name})][ (#GET{erreurs}|oui)erreur]">
+                        <label for="#GET{name}">[(#VAL{cioidc:}|concat{[(#GET{name})]}|_T)]</label>
+                        <p class="explication">[(#VAL{cioidc:}|concat{[(#GET{name})_explication]}|_T)]</p>
+                    [<span class='erreur_message'>(#GET{erreurs})</span>]
+                    <div class="choix">
+                            <input type="radio" name="#GET{name}" id="#GET{name}_oui" value="oui"
+                            [(#ENV{#GET{name}}|=={oui}|oui)checked="checked"] #GET{disabled} /><label for="#GET{name}_oui"><:item_oui:></label>
+                            &nbsp;&nbsp;
+                            <input type="radio" name="#GET{name}" id="#GET{name}_non" value="non"
+                            [(#ENV{#GET{name}}|=={oui}|non)checked="checked"] #GET{disabled} /><label for="#GET{name}_non"><:item_non:></label>
+                    </div>
+            </div>
+                
             #SET{name,http_proxy}#SET{erreurs,#ENV*{erreurs}|table_valeur{#GET{name}}}
             <div class="editer editer_[(#GET{name})][ (#GET{erreurs}|oui)erreur]">
                         <label for="#GET{name}">[(#VAL{cioidc:}|concat{[(#GET{name})]}|_T)]</label>

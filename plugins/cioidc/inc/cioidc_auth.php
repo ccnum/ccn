@@ -90,10 +90,11 @@ if ($config_oidc) {
 
 		$cioidc_id_token = $oidc->getIdToken();
 
-		if (!isset($config_oidc['userinfo_endpoint']) && !$config_oidc['userinfo_endpoint']) {
-			$user_info = $oidc->requestUserInfo();
-		} else {
+		if (isset($config_oidc['serveur_sans_userinfo']) && $config_oidc['serveur_sans_userinfo'] == 'oui') {
+			// Dans le cas particulier d'un serveur sans userinfo, on recherche les infos dans le token
 			$user_info = $oidc->getIdTokenPayload();
+		} else {
+			$user_info = $oidc->requestUserInfo();
 		}
 
 		$attribute = $config_oidc['uid_claim'];
@@ -106,7 +107,7 @@ if ($config_oidc) {
 		include_spip('inc/cioidc_session');
 		$ciredirect = cioidc_session($ci_oidc_userid, $cioidc_id_token, $ci_id_serveur_auth, $cioidc_tableau_pipeline);
 	} catch(Exception $e){
-		spip_log($e, 'cioidc');
+		spip_log($e, _LOG_ERREUR);
 
 		$ciredirect = generer_url_public('cioidc_erreur4');
 		include_spip('inc/headers');
