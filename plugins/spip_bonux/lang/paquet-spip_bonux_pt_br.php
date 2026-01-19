@@ -3,14 +3,10 @@
 // extrait automatiquement de https://trad.spip.net/tradlang_module/paquet-spip_bonux?lang_cible=pt_br
 // ** ne pas modifier le fichier **
 
-if (!defined('_ECRIRE_INC_VERSION')) {
-	return;
-}
-
-$GLOBALS[$GLOBALS['idx_lang']] = array(
+return [
 
 	// S
 	'spip_bonux_description' => 'Le plugin com brindes legais no pacote!
 	Tabela, contador etc.',
-	'spip_bonux_slogan' => 'O plugin com uma cereja no topo'
-);
+	'spip_bonux_slogan' => 'O plugin com uma cereja no topo',
+];

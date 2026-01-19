@@ -1,11 +1,8 @@
 <?php
 // This is a SPIP language file  --  Ceci est un fichier langue de SPIP
 // Fichier source, a modifier dans https://git.spip.net/spip-contrib-extensions/spip-bonux.git
-if (!defined('_ECRIRE_INC_VERSION')) {
-	return;
-}
 
-$GLOBALS[$GLOBALS['idx_lang']] = array(
+return [
 
 	// A
 	'afficher_calendrier' => 'Afficher le calendrier',
@@ -30,5 +27,5 @@ $GLOBALS[$GLOBALS['idx_lang']] = array(
 	'mois_suivant' => 'Mois suivant',
 
 	// P
-	'pages' => 'Pages'
-);
+	'pages' => 'Pages',
+];
