@@ -14,7 +14,7 @@
             "ptac_adformpagename"
         ],
         "type": "ads",
-        "JS": "tarteaucitron.user.adformpm = 'ptac_adformpm';\n\ntarteaucitron.user.adformpagename = 'ptac_adformpagename';\n(tarteaucitron.job = tarteaucitron.job || []).push('adform');"
+        "JS": "tarteaucitron.user.adformpm = 'ptac_adformpm';\ntarteaucitron.user.adformpagename = 'ptac_adformpagename';\n(tarteaucitron.job = tarteaucitron.job || []).push('adform');"
     },
     "adsense": {
         "hasModele": true,
@@ -39,7 +39,7 @@
         "hasModele": true,
         "params": [],
         "type": "ads",
-        "JS": "<div id=\"afscontainer1\"><\/div>(function(g,o){g[o]=g[o]||function(){(g[o]['q']=g[o]['q']||[]).push(arguments)},g[o]['t']=1*new Date})(window,'_googCsa');\nvar pageOptions = {  'pubId' : 'test client ID', \/\/ Enter your own client-ID here  'query' : 'flowers', \/\/ User query for this page  'styleId': '7824176615' \/\/ Enter your own style ID here};\nvar adblock1 = {  'container' : 'afscontainer1',  'width' : 700};\nvar adblock2 = {  'container' : 'afscontainer2',  'width' : 700};\n_googCsa('ads', pageOptions, adblock1, adblock2);\n(tarteaucitron.job = tarteaucitron.job || []).push('adsensesearch');"
+        "JS": "(function(g,o){g[o]=g[o]||function(){(g[o]['q']=g[o]['q']||[]).push(arguments)},g[o]['t']=1*new Date})(window,'_googCsa');\nvar pageOptions = {  'pubId' : 'test client ID', \/\/ Enter your own client-ID here  'query' : 'flowers', \/\/ User query for this page  'styleId': '7824176615' \/\/ Enter your own style ID here};\nvar adblock1 = {  'container' : 'afscontainer1',  'width' : 700};\nvar adblock2 = {  'container' : 'afscontainer2',  'width' : 700};\n_googCsa('ads', pageOptions, adblock1, adblock2);\n(tarteaucitron.job = tarteaucitron.job || []).push('adsensesearch');"
     },
     "adsensesearchform": {
         "hasModele": false,
@@ -49,7 +49,7 @@
             "ptac_partner-pub-XXXXXXXXXXXX_XXXXXX"
         ],
         "type": "ads",
-        "JS": "<form action=\"ptac_url_destination\" id=\"cse-search-box\" target=\"ptac_target\"><div><input type=\"hidden\" name=\"cx\" value=\"ptac_partner-pub-XXXXXXXXXXXX_XXXXXX\" \/><input type=\"hidden\" name=\"ie\" value=\"UTF-8\" \/><input type=\"text\" name=\"q\" size=\"25\" \/><input type=\"submit\" name=\"sa\" value=\"Search\" \/><\/div><\/form>\n(tarteaucitron.job = tarteaucitron.job || []).push('adsensesearchform');"
+        "JS": "<form action=\"ptac_url_destination\" id=\"cse-search-box\" target=\"ptac_target\"><\/form>\n(tarteaucitron.job = tarteaucitron.job || []).push('adsensesearchform');"
     },
     "adsensesearchresult": {
         "hasModele": true,
@@ -57,7 +57,7 @@
             "ptac_partner-pub-XXXXXXXXXXXXX_XXXXXXX"
         ],
         "type": "ads",
-        "JS": "tarteaucitron.user.adsensesearchresultCx = 'ptac_partner-pub-XXXXXXXXXXXXX_XXXXXXX';\n\n<gcse:searchresults-only id=\"gcse_searchresults\"><\/gcse:searchresults-only>\n(tarteaucitron.job = tarteaucitron.job || []).push('adsensesearchresult');"
+        "JS": "tarteaucitron.user.adsensesearchresultCx = 'ptac_partner-pub-XXXXXXXXXXXXX_XXXXXXX';\n<gcse:searchresults-only id=\"gcse_searchresults\"><\/gcse:searchresults-only>\n(tarteaucitron.job = tarteaucitron.job || []).push('adsensesearchresult');"
     },
     "aduptech_ads": {
         "hasModele": true,
@@ -67,7 +67,7 @@
             "ptac_HEIGHT"
         ],
         "type": "ads",
-        "JS": "static-ads\n<div class=\"aduptech_ads\"     data-placementKey=\"ptac_PLACEMENT_KEY\"><\/div>\nresponse-ads\n<div class=\"aduptech_ads\"     style=\"width:ptac_WIDTH;height:ptac_HEIGHT;\"     data-responsive=\"1\"     data-placementKey=\"ptac_PLACEMENT_KEY\"><\/div>\n(tarteaucitron.job = tarteaucitron.job || []).push('aduptech_ads');"
+        "JS": "static-ads\nresponse-ads\n(tarteaucitron.job = tarteaucitron.job || []).push('aduptech_ads');"
     },
     "aduptech_conversion": {
         "hasModele": true,
@@ -76,7 +76,7 @@
             "ptac_CONVERSION_CODE"
         ],
         "type": "ads",
-        "JS": "<div class=\"aduptech_conversion\"     data-advertiserId=\"ptac_ADVERTISER_ID\"     data-conversionCode=\"ptac_CONVERSION_CODE\"><\/div>\n(tarteaucitron.job = tarteaucitron.job || []).push('aduptech_conversion');"
+        "JS": "\n(tarteaucitron.job = tarteaucitron.job || []).push('aduptech_conversion');"
     },
     "aduptech_retargeting": {
         "hasModele": true,
@@ -86,7 +86,7 @@
             "ptac_PRODUCT_ID"
         ],
         "type": "ads",
-        "JS": "<div class=\"aduptech_retargeting\"     data-account=\"ptac_ACCOUNT_ID\"     product='[\"ptac_PRODUCT_ID\", \"ptac_PRODUCT_ID\"]'     data-track=\"productList\" ><\/div>\n(tarteaucitron.job = tarteaucitron.job || []).push('aduptech_retargeting');"
+        "JS": "\n(tarteaucitron.job = tarteaucitron.job || []).push('aduptech_retargeting');"
     },
     "affilae": {
         "hasModele": true,
@@ -103,7 +103,7 @@
             "ptac_product_id"
         ],
         "type": "ads",
-        "JS": "<div class=\"amazon_product\" data-amazonid=\"ptac_xxxxx-xx\" data-productid=\"ptac_product_id\"><\/div>\n(tarteaucitron.job = tarteaucitron.job || []).push('amazon');"
+        "JS": "\n(tarteaucitron.job = tarteaucitron.job || []).push('amazon');"
     },
     "antvoice": {
         "hasModele": true,
@@ -121,6 +121,15 @@
         "type": "ads",
         "JS": "tarteaucitron.user.bingadsID = 'ptac_bingadsID';\n(tarteaucitron.job = tarteaucitron.job || []).push('bingads');"
     },
+    "clickdimensions": {
+        "hasModele": true,
+        "params": [
+            "ptac_accountKey",
+            "ptac_domain"
+        ],
+        "type": "ads",
+        "JS": "tarteaucitron.user.clickdimensionsAccountKey = 'ptac_accountKey';\ntarteaucitron.user.clickdimensionsDomain = 'ptac_domain';\n(tarteaucitron.job = tarteaucitron.job || []).push('clickdimensions');"
+    },
     "clicmanager": {
         "hasModele": true,
         "params": [
@@ -129,7 +138,7 @@
             "ptac_t"
         ],
         "type": "ads",
-        "JS": "<div class=\"clicmanager-canvas\" data-c=\"ptac_c\" data-s=\"ptac_s\" data-t=\"ptac_t\"><\/div>\n(tarteaucitron.job = tarteaucitron.job || []).push('clicmanager');"
+        "JS": "\n(tarteaucitron.job = tarteaucitron.job || []).push('clicmanager');"
     },
     "criteo": {
         "hasModele": true,
@@ -137,7 +146,7 @@
             "ptac_zoneid"
         ],
         "type": "ads",
-        "JS": "<div class=\"criteo-canvas\" data-zoneid=\"ptac_zoneid\"><\/div>\n(tarteaucitron.job = tarteaucitron.job || []).push('criteo');"
+        "JS": "\n(tarteaucitron.job = tarteaucitron.job || []).push('criteo');"
     },
     "criteoonetag": {
         "hasModele": true,
@@ -162,7 +171,7 @@
             "ptac_height"
         ],
         "type": "ads",
-        "JS": "<div class=\"datingaffiliation-canvas\" data-comfrom=\"ptac_data-comfrom\" data-r=\"ptac_data-r\" data-p=\"ptac_data-p\" data-cf0=\"ptac_data-cf\" data-langue=\"ptac_data-langue\" data-forwardAffiliate=\"ptac_data-forwardAffiliate\" data-cf2=\"ptac_data-cf\" data-cfsa2=\"ptac_data-cfsa\" data-width=\"ptac_width\" data-height=\"ptac_height\"><\/div>\n(tarteaucitron.job = tarteaucitron.job || []).push('datingaffiliation');"
+        "JS": "\n(tarteaucitron.job = tarteaucitron.job || []).push('datingaffiliation');"
     },
     "datingaffiliationpopup": {
         "hasModele": true,
@@ -189,7 +198,7 @@
             "ptac_aabs"
         ],
         "type": "ads",
-        "JS": "<div class=\"datingaffiliationpopup-canvas\" data-comfrom=\"ptac_comfrom\" data-promo=\"ptac_promo\" data-productid=\"ptac_productid\" data-submitconfig=\"ptac_submitconfig\" data-ur=\"ptac_ur\" data-brand=\"ptac_brand\" lang=\"ptac_lang\" data-cf0=\"ptac_cf\" data-cf2=\"ptac_cf\" data-subid1=\"ptac_subid\" data-cfsa2=\"ptac_cfsa\" data-subid2=\"ptac_subid\" data-nicheid=\"ptac_nicheid\" data-degreid=\"ptac_degreid\" data-bt=\"ptac_bt\" data-vis=\"ptac_vis\" data-hid=\"ptac_hid\" data-snd=\"ptac_snd\" data-aabd=\"ptac_aabd\" data-aabs=\"ptac_aabs\"><\/div>\n(tarteaucitron.job = tarteaucitron.job || []).push('datingaffiliationpopup');"
+        "JS": "\n(tarteaucitron.job = tarteaucitron.job || []).push('datingaffiliationpopup');"
     },
     "doubleclick": {
         "hasModele": true,
@@ -209,7 +218,7 @@
             "ptac_data-num"
         ],
         "type": "ads",
-        "JS": "<div class=\"doubleclick_container\" data-id1=\"ptac_data-id\" data-id2=\"ptac_data-id\" data-type=\"ptac_data-type\" data-cat=\"ptac_data-cat\" data-item=\"ptac_data-item\" data-quantity=\"ptac_data-quantity\" data-price=\"ptac_data-price\" data-postage=\"ptac_data-postage\" data-seller=\"ptac_data-seller\" data-gdpr=\"ptac_data-gdpr\" data-gdpr-consent=\"ptac_data-gdpr-consent\" data-ord=\"ptac_data-ord\" data-num=\"ptac_data-num\"><\/div>\n(tarteaucitron.job = tarteaucitron.job || []).push('doubleclick');"
+        "JS": "\n(tarteaucitron.job = tarteaucitron.job || []).push('doubleclick');"
     },
     "equativ": {
         "hasModele": true,
@@ -285,7 +294,7 @@
             "ptac_id"
         ],
         "type": "ads",
-        "JS": "<div class=\"g-partnersbadge\" data-agency-id=\"ptac_id\"><\/div>\n(tarteaucitron.job = tarteaucitron.job || []).push('googlepartners');"
+        "JS": "\n(tarteaucitron.job = tarteaucitron.job || []).push('googlepartners');"
     },
     "klaviyo": {
         "hasModele": true,
@@ -301,7 +310,7 @@
             "ptac_mclic"
         ],
         "type": "ads",
-        "JS": "<div class=\"tac_kwanko\" data-mclic=\"ptac_mclic\"><\/div>\n(tarteaucitron.job = tarteaucitron.job || []).push('kwanko');"
+        "JS": "\n(tarteaucitron.job = tarteaucitron.job || []).push('kwanko');"
     },
     "leadforensics": {
         "hasModele": true,
@@ -329,7 +338,7 @@
             "ptac_referalId"
         ],
         "type": "ads",
-        "JS": "tarteaucitron.user.madmetricsHostname = 'ptac_hostname';\n\ntarteaucitron.user.madmetricsClientId = 'ptac_clientId';\ntarteaucitron.user.madmetricsSiteId = 'ptac_siteId';\ntarteaucitron.user.madmetricsDirectId = 'ptac_directId';\ntarteaucitron.user.madmetricsReferalId = 'ptac_referalId';\n(tarteaucitron.job = tarteaucitron.job || []).push('madmetrics');"
+        "JS": "tarteaucitron.user.madmetricsHostname = 'ptac_hostname';\ntarteaucitron.user.madmetricsClientId = 'ptac_clientId';\ntarteaucitron.user.madmetricsSiteId = 'ptac_siteId';\ntarteaucitron.user.madmetricsDirectId = 'ptac_directId';\ntarteaucitron.user.madmetricsReferalId = 'ptac_referalId';\n(tarteaucitron.job = tarteaucitron.job || []).push('madmetrics');"
     },
     "outbrain": {
         "hasModele": true,
@@ -338,7 +347,7 @@
             "ptac_ID"
         ],
         "type": "ads",
-        "JS": "<div class=\"OUTBRAIN\" data-src=\"ptac_PERMALINK\" data-widget-id=\"ptac_ID\"><\/div>\n(tarteaucitron.job = tarteaucitron.job || []).push('outbrain');"
+        "JS": "\n(tarteaucitron.job = tarteaucitron.job || []).push('outbrain');"
     },
     "outbrainamplify": {
         "hasModele": true,
@@ -365,7 +374,7 @@
             "ptac_ID"
         ],
         "type": "ads",
-        "JS": "tarteaucitron.user.piximediaName = 'ptac_NAME';\n\ntarteaucitron.user.piximediaTag = 'ptac_TAG';\ntarteaucitron.user.piximediaType = 'ptac_type';\ntarteaucitron.user.piximediaId = 'ptac_ID';\n(tarteaucitron.job = tarteaucitron.job || []).push('piximedia');"
+        "JS": "tarteaucitron.user.piximediaName = 'ptac_NAME';\ntarteaucitron.user.piximediaTag = 'ptac_TAG';\ntarteaucitron.user.piximediaType = 'ptac_type';\ntarteaucitron.user.piximediaId = 'ptac_ID';\n(tarteaucitron.job = tarteaucitron.job || []).push('piximedia');"
     },
     "prelinker": {
         "hasModele": true,
@@ -376,7 +385,7 @@
             "ptac_tracker"
         ],
         "type": "ads",
-        "JS": "<div class=\"prelinker-canvas\" data-siteId=\"ptac_siteId\" data-bannerId=\"ptac_bannerId\" data-defaultLanguage=\"ptac_defaultLanguage\" data-tracker=\"ptac_tracker\"><\/div>\n(tarteaucitron.job = tarteaucitron.job || []).push('prelinker');"
+        "JS": "\n(tarteaucitron.job = tarteaucitron.job || []).push('prelinker');"
     },
     "pubdirecte": {
         "hasModele": true,
@@ -385,7 +394,7 @@
             "ptac_ref"
         ],
         "type": "ads",
-        "JS": "<div class=\"pubdirecte-canvas\" data-pid=\"ptac_id\" data-ref=\"ptac_ref\"><\/div>\n(tarteaucitron.job = tarteaucitron.job || []).push('pubdirecte');"
+        "JS": "\n(tarteaucitron.job = tarteaucitron.job || []).push('pubdirecte');"
     },
     "reddit": {
         "hasModele": true,
@@ -396,7 +405,7 @@
             "ptac_IDFA"
         ],
         "type": "ads",
-        "JS": "tarteaucitron.user.redditInit = 'ptac_INIT';\n\ntarteaucitron.user.redditAAID = 'ptac_AAID';\ntarteaucitron.user.redditExternalId = 'ptac_EXTERNAL_ID';\ntarteaucitron.user.redditIDFA = 'ptac_IDFA';\n(tarteaucitron.job = tarteaucitron.job || []).push('reddit');"
+        "JS": "tarteaucitron.user.redditInit = 'ptac_INIT';\ntarteaucitron.user.redditAAID = 'ptac_AAID';\ntarteaucitron.user.redditExternalId = 'ptac_EXTERNAL_ID';\ntarteaucitron.user.redditIDFA = 'ptac_IDFA';\n(tarteaucitron.job = tarteaucitron.job || []).push('reddit');"
     },
     "shareasale": {
         "hasModele": true,
@@ -410,7 +419,7 @@
             "ptac_merchantID"
         ],
         "type": "ads",
-        "JS": "<div class=\"shareasale-canvas\" data-amount=\"ptac_amount\" data-tracking=\"ptac_tracking\" data-transtype=\"ptac_transtype\" data-persale=\"ptac_persale\" data-perlead=\"ptac_perlead\" data-perhit=\"ptac_perhit\" data-merchantID=\"ptac_merchantID\"><\/div>\n(tarteaucitron.job = tarteaucitron.job || []).push('shareasale');"
+        "JS": "\n(tarteaucitron.job = tarteaucitron.job || []).push('shareasale');"
     },
     "skaze": {
         "hasModele": true,
@@ -435,7 +444,7 @@
             "ptac_UPIXEL_ID"
         ],
         "type": "ads",
-        "JS": "tarteaucitron.user.thetradedeskAdvertiserId = 'ptac_ADVERTISER_ID';\n\ntarteaucitron.user.thetradedeskUpixelId = 'ptac_UPIXEL_ID';\n(tarteaucitron.job = tarteaucitron.job || []).push('thetradedesk');"
+        "JS": "tarteaucitron.user.thetradedeskAdvertiserId = 'ptac_ADVERTISER_ID';\ntarteaucitron.user.thetradedeskUpixelId = 'ptac_UPIXEL_ID';\n(tarteaucitron.job = tarteaucitron.job || []).push('thetradedesk');"
     },
     "twenga": {
         "hasModele": true,
@@ -471,7 +480,7 @@
             "ptac_border_color"
         ],
         "type": "ads",
-        "JS": "<div class=\"vcashW\" style=\"width: ptac_widthpx; height: ptac_heightpx;\" data-key=\"ptac_key\" data-tracking=\"ptac_zone\" data-category=\"ptac_category\" data-keyword=\"ptac_keyword\" data-layout=\"ptac_layout\" data-theme=\"ptac_theme\" data-linkColor=\"ptac_link_color\" data-textColor=\"ptac_text_color\" data-backgroundColor=\"ptac_background_color\" data-borderColor=\"ptac_border_color\"><\/div>\n(tarteaucitron.job = tarteaucitron.job || []).push('vshop');"
+        "JS": "\n(tarteaucitron.job = tarteaucitron.job || []).push('vshop');"
     },
     "xandr": {
         "hasModele": true,
@@ -493,7 +502,7 @@
             "ptac_xandrconversionOther"
         ],
         "type": "ads",
-        "JS": "<div id=\"ptac_uniqId\" data-xandrconversionId=\"ptac_xandrconversionId\" data-xandrconversionSeg=\"ptac_xandrconversionSeg\" data-xandrconversionOrderId=\"ptac_xandrconversionOrderId\" data-xandrconversionValue=\"ptac_xandrconversionValue\" data-xandrconversionRedir=\"ptac_xandrconversionRedir\" data-xandrconversionOther=\"ptac_xandrconversionOther\"><\/div>\n(tarteaucitron.job = tarteaucitron.job || []).push('xandrconversion');"
+        "JS": "\n(tarteaucitron.job = tarteaucitron.job || []).push('xandrconversion');"
     },
     "xandrsegment": {
         "hasModele": true,
@@ -509,7 +518,7 @@
             "ptac_xandrsegmentOther"
         ],
         "type": "ads",
-        "JS": "<div id=\"ptac_uniqId\" data-xandrsegmentAdd=\"ptac_xandrsegmentAdd\" data-xandrsegmentAddCode=\"ptac_xandrsegmentAddCode\" data-xandrsegmentRemove=\"ptac_xandrsegmentRemove\" data-xandrsegmentRemoveCode=\"ptac_xandrsegmentRemoveCode\" data-xandrsegmentMember=\"ptac_xandrsegmentMember\" data-xandrsegmentRedir=\"ptac_xandrsegmentRedir\" data-xandrsegmentValue=\"ptac_xandrsegmentValue\" data-xandrsegmentOther=\"ptac_xandrsegmentOther\"><\/div>\n(tarteaucitron.job = tarteaucitron.job || []).push('xandrsegment');"
+        "JS": "\n(tarteaucitron.job = tarteaucitron.job || []).push('xandrsegment');"
     },
     "actistat": {
         "hasModele": false,
@@ -535,7 +544,7 @@
             "ptac_id"
         ],
         "type": "analytic",
-        "JS": "tarteaucitron.user.adobeworkspaceId1 = 'ptac_id';\n\ntarteaucitron.user.adobeworkspaceId2 = 'ptac_id';\ntarteaucitron.user.adobeworkspaceId3 = 'ptac_id';\n(tarteaucitron.job = tarteaucitron.job || []).push('adobeworkspace');"
+        "JS": "tarteaucitron.user.adobeworkspaceId1 = 'ptac_id';\ntarteaucitron.user.adobeworkspaceId2 = 'ptac_id';\ntarteaucitron.user.adobeworkspaceId3 = 'ptac_id';\n(tarteaucitron.job = tarteaucitron.job || []).push('adobeworkspace');"
     },
     "alexa": {
         "hasModele": false,
@@ -569,7 +578,7 @@
             "ptac_noFallback"
         ],
         "type": "analytic",
-        "JS": "tarteaucitron.user.atLibUrl = 'ptac_SMARTTAG_JS_LINK';\n\ntarteaucitron.user.atinternetSendData = 'ptac_sendData';\ntarteaucitron.user.atNoFallback = 'ptac_noFallback';\n(tarteaucitron.job = tarteaucitron.job || []).push('atinternet');"
+        "JS": "tarteaucitron.user.atLibUrl = 'ptac_SMARTTAG_JS_LINK';\ntarteaucitron.user.atinternetSendData = 'ptac_sendData';\ntarteaucitron.user.atNoFallback = 'ptac_noFallback';\n(tarteaucitron.job = tarteaucitron.job || []).push('atinternet');"
     },
     "clarity": {
         "hasModele": false,
@@ -645,7 +654,7 @@
             "ptac_MEASUREMENTID"
         ],
         "type": "analytic",
-        "JS": "tarteaucitron.user.firebaseApiKey = 'ptac_APIKEY';\n\ntarteaucitron.user.firebaseAuthDomain = 'ptac_AUTHDOMAIN';\ntarteaucitron.user.firebaseDatabaseUrl = 'ptac_DATABASEURL';\ntarteaucitron.user.firebaseProjectId = 'ptac_PROJECTID';\ntarteaucitron.user.firebaseStorageBucket = 'ptac_STORAGEBUCKET';\ntarteaucitron.user.firebaseAppId = 'ptac_APPID';\ntarteaucitron.user.firebaseMeasurementId = 'ptac_MEASUREMENTID';\n(tarteaucitron.job = tarteaucitron.job || []).push('firebase');"
+        "JS": "tarteaucitron.user.firebaseApiKey = 'ptac_APIKEY';\ntarteaucitron.user.firebaseAuthDomain = 'ptac_AUTHDOMAIN';\ntarteaucitron.user.firebaseDatabaseUrl = 'ptac_DATABASEURL';\ntarteaucitron.user.firebaseProjectId = 'ptac_PROJECTID';\ntarteaucitron.user.firebaseStorageBucket = 'ptac_STORAGEBUCKET';\ntarteaucitron.user.firebaseAppId = 'ptac_APPID';\ntarteaucitron.user.firebaseMeasurementId = 'ptac_MEASUREMENTID';\n(tarteaucitron.job = tarteaucitron.job || []).push('firebase');"
     },
     "force24": {
         "hasModele": false,
@@ -654,7 +663,7 @@
             "ptac_clientId"
         ],
         "type": "analytic",
-        "JS": "tarteaucitron.user.force24trackingId = 'ptac_trackingId';\n\ntarteaucitron.user.force24clientId = 'ptac_clientId';\n(tarteaucitron.job = tarteaucitron.job || []).push('force24');"
+        "JS": "tarteaucitron.user.force24trackingId = 'ptac_trackingId';\ntarteaucitron.user.force24clientId = 'ptac_clientId';\n(tarteaucitron.job = tarteaucitron.job || []).push('force24');"
     },
     "freshsalescrm": {
         "hasModele": false,
@@ -712,7 +721,7 @@
             "ptac_UNIT_ID"
         ],
         "type": "analytic",
-        "JS": "tarteaucitron.user.hubspotId = 'ptac_API_KEY';\n\ntarteaucitron.user.hubspotBusinessUnitId = 'ptac_UNIT_ID';\n(tarteaucitron.job = tarteaucitron.job || []).push('hubspot');"
+        "JS": "tarteaucitron.user.hubspotId = 'ptac_API_KEY';\ntarteaucitron.user.hubspotBusinessUnitId = 'ptac_UNIT_ID';\n(tarteaucitron.job = tarteaucitron.job || []).push('hubspot');"
     },
     "kameleoon": {
         "hasModele": false,
@@ -725,11 +734,11 @@
     "koban": {
         "hasModele": false,
         "params": [
-            "ptac_KOBEN_URL",
+            "ptac_KOBAN_URL",
             "ptac_KOBAN_API"
         ],
         "type": "analytic",
-        "JS": "tarteaucitron.user.kobanurl = 'ptac_KOBEN_URL';\n        tarteaucitron.user.kobanapi = 'ptac_KOBAN_API';\n(tarteaucitron.job = tarteaucitron.job || []).push('koban');"
+        "JS": "tarteaucitron.user.kobanurl = 'ptac_KOBAN_URL';\ntarteaucitron.user.kobanapi = 'ptac_KOBAN_API';\n(tarteaucitron.job = tarteaucitron.job || []).push('koban');"
     },
     "kompass": {
         "hasModele": false,
@@ -754,7 +763,7 @@
             "ptac_YOUR_MATOMO_URL"
         ],
         "type": "analytic",
-        "JS": "tarteaucitron.user.matomoId = 'ptac_SITE_ID';\n\ntarteaucitron.user.matomoHost = 'ptac_YOUR_MATOMO_URL';\n(tarteaucitron.job = tarteaucitron.job || []).push('matomo');"
+        "JS": "tarteaucitron.user.matomoId = 'ptac_SITE_ID';\ntarteaucitron.user.matomoHost = 'ptac_YOUR_MATOMO_URL';\n(tarteaucitron.job = tarteaucitron.job || []).push('matomo');"
     },
     "matomocloud": {
         "hasModele": false,
@@ -766,7 +775,7 @@
             "ptac_fullTracking"
         ],
         "type": "analytic",
-        "JS": "tarteaucitron.user.matomoId = 'ptac_SITE_ID';\n\ntarteaucitron.user.matomoHost = 'ptac_YOUR_MATOMO_URL';\ntarteaucitron.user.matomoCustomJSPath = 'ptac_JS_PATH';\ntarteaucitron.user.matomoDontTrackPageView = 'ptac_dontTrackPageView';\ntarteaucitron.user.matomoFullTracking = 'ptac_fullTracking';\n(tarteaucitron.job = tarteaucitron.job || []).push('matomocloud');"
+        "JS": "tarteaucitron.user.matomoId = 'ptac_SITE_ID';\ntarteaucitron.user.matomoHost = 'ptac_YOUR_MATOMO_URL';\ntarteaucitron.user.matomoCustomJSPath = 'ptac_JS_PATH';\ntarteaucitron.user.matomoDontTrackPageView = 'ptac_dontTrackPageView';\ntarteaucitron.user.matomoFullTracking = 'ptac_fullTracking';\n(tarteaucitron.job = tarteaucitron.job || []).push('matomocloud');"
     },
     "mautic": {
         "hasModele": false,
@@ -823,7 +832,7 @@
             "ptac_SITE_ID"
         ],
         "type": "analytic",
-        "JS": "tarteaucitron.user.openwebanalyticsHost = 'ptac_HOST';\n\ntarteaucitron.user.openwebanalyticsId = 'ptac_SITE_ID';\n(tarteaucitron.job = tarteaucitron.job || []).push('openwebanalytics');"
+        "JS": "tarteaucitron.user.openwebanalyticsHost = 'ptac_HOST';\ntarteaucitron.user.openwebanalyticsId = 'ptac_SITE_ID';\n(tarteaucitron.job = tarteaucitron.job || []).push('openwebanalytics');"
     },
     "pardot": {
         "hasModele": false,
@@ -832,7 +841,7 @@
             "ptac_piCId"
         ],
         "type": "analytic",
-        "JS": "tarteaucitron.user.piAId = 'ptac_piAId';\n\ntarteaucitron.user.piCId = 'ptac_piCId';\n(tarteaucitron.job = tarteaucitron.job || []).push('pardot');"
+        "JS": "tarteaucitron.user.piAId = 'ptac_piAId';\ntarteaucitron.user.piCId = 'ptac_piCId';\n(tarteaucitron.job = tarteaucitron.job || []).push('pardot');"
     },
     "pianoanalytics": {
         "hasModele": false,
@@ -842,7 +851,7 @@
             "ptac_sendData"
         ],
         "type": "analytic",
-        "JS": "tarteaucitron.user.pianoSite = 'ptac_siteId';\n\ntarteaucitron.user.pianoCollectDomain = 'ptac_collectDomain';\ntarteaucitron.user.pianoSendData = 'ptac_sendData';\n(tarteaucitron.job = tarteaucitron.job || []).push('pianoanalytics');"
+        "JS": "tarteaucitron.user.pianoSite = 'ptac_siteId';\ntarteaucitron.user.pianoCollectDomain = 'ptac_collectDomain';\ntarteaucitron.user.pianoSendData = 'ptac_sendData';\n(tarteaucitron.job = tarteaucitron.job || []).push('pianoanalytics');"
     },
     "piwikpro": {
         "hasModele": false,
@@ -851,7 +860,7 @@
             "ptac_container"
         ],
         "type": "analytic",
-        "JS": "tarteaucitron.user.piwikProId = 'ptac_ID';\n\ntarteaucitron.user.piwikProContainer = 'ptac_container';\n(tarteaucitron.job = tarteaucitron.job || []).push('piwikpro');"
+        "JS": "tarteaucitron.user.piwikProId = 'ptac_ID';\ntarteaucitron.user.piwikProContainer = 'ptac_container';\n(tarteaucitron.job = tarteaucitron.job || []).push('piwikpro');"
     },
     "plausible": {
         "hasModele": false,
@@ -868,7 +877,7 @@
             "ptac_pleziTw"
         ],
         "type": "analytic",
-        "JS": "tarteaucitron.user.pleziTenant = 'ptac_pleziTenant';\n\ntarteaucitron.user.pleziTw = 'ptac_pleziTw';\n(tarteaucitron.job = tarteaucitron.job || []).push('plezi');"
+        "JS": "tarteaucitron.user.pleziTenant = 'ptac_pleziTenant';\ntarteaucitron.user.pleziTw = 'ptac_pleziTw';\n(tarteaucitron.job = tarteaucitron.job || []).push('plezi');"
     },
     "sharpspring": {
         "hasModele": false,
@@ -877,7 +886,7 @@
             "ptac_ID"
         ],
         "type": "analytic",
-        "JS": "tarteaucitron.user.ssAccount = 'ptac_ACCOUNT';\n\ntarteaucitron.user.ssId = 'ptac_ID';\n(tarteaucitron.job = tarteaucitron.job || []).push('sharpspring');"
+        "JS": "tarteaucitron.user.ssAccount = 'ptac_ACCOUNT';\ntarteaucitron.user.ssId = 'ptac_ID';\n(tarteaucitron.job = tarteaucitron.job || []).push('sharpspring');"
     },
     "shinystat": {
         "hasModele": false,
@@ -900,7 +909,7 @@
             "ptac_snapchatEmail"
         ],
         "type": "analytic",
-        "JS": "tarteaucitron.user.snapchatId = 'ptac_snapchatId';\n\ntarteaucitron.user.snapchatEmail = 'ptac_snapchatEmail';\n(tarteaucitron.job = tarteaucitron.job || []).push('snapchat');"
+        "JS": "tarteaucitron.user.snapchatId = 'ptac_snapchatId';\ntarteaucitron.user.snapchatEmail = 'ptac_snapchatEmail';\n(tarteaucitron.job = tarteaucitron.job || []).push('snapchat');"
     },
     "statcounter": {
         "hasModele": false,
@@ -911,7 +920,7 @@
             "ptac_sc_text"
         ],
         "type": "analytic",
-        "JS": "<div class=\"statcounter-canvas\"><\/div>var sc_project = ptac_sc_project, sc_invisible = ptac_sc_invisible, sc_security = \"ptac_sc_security\", sc_text = ptac_sc_text;\n(tarteaucitron.job = tarteaucitron.job || []).push('statcounter');"
+        "JS": "var sc_project = ptac_sc_project, sc_invisible = ptac_sc_invisible, sc_security = \"ptac_sc_security\", sc_text = ptac_sc_text;\n(tarteaucitron.job = tarteaucitron.job || []).push('statcounter');"
     },
     "tiktok": {
         "hasModele": false,
@@ -936,7 +945,7 @@
             "ptac_verizon_pixel_id"
         ],
         "type": "analytic",
-        "JS": "tarteaucitron.user.verizondottagProjectId = 'ptac_verizon_project_id';\n\ntarteaucitron.user.verizondottagPixelId = 'ptac_verizon_pixel_id';\n(tarteaucitron.job = tarteaucitron.job || []).push('verizondottag');"
+        "JS": "tarteaucitron.user.verizondottagProjectId = 'ptac_verizon_project_id';\ntarteaucitron.user.verizondottagPixelId = 'ptac_verizon_pixel_id';\n(tarteaucitron.job = tarteaucitron.job || []).push('verizondottag');"
     },
     "visiblee": {
         "hasModele": false,
@@ -945,7 +954,7 @@
             "ptac_DOMAIN_COM"
         ],
         "type": "analytic",
-        "JS": "tarteaucitron.user.visibleeclientid = 'ptac_CLIENTID';\n\ntarteaucitron.user.visibleedomain = 'ptac_DOMAIN_COM';\n(tarteaucitron.job = tarteaucitron.job || []).push('visiblee');"
+        "JS": "tarteaucitron.user.visibleeclientid = 'ptac_CLIENTID';\ntarteaucitron.user.visibleedomain = 'ptac_DOMAIN_COM';\n(tarteaucitron.job = tarteaucitron.job || []).push('visiblee');"
     },
     "visualrevenue": {
         "hasModele": false,
@@ -1015,7 +1024,7 @@
             "ptac_hash"
         ],
         "type": "analytic",
-        "JS": "tarteaucitron.user.zohoPageSenseProjectId = 'ptac_id';\n\ntarteaucitron.user.zohoPageSenseScriptHash = 'ptac_hash';\n(tarteaucitron.job = tarteaucitron.job || []).push('zohopagesense');"
+        "JS": "tarteaucitron.user.zohoPageSenseProjectId = 'ptac_id';\ntarteaucitron.user.zohoPageSenseScriptHash = 'ptac_hash';\n(tarteaucitron.job = tarteaucitron.job || []).push('zohopagesense');"
     },
     "abtasty": {
         "hasModele": false,
@@ -1040,7 +1049,7 @@
             "ptac_config"
         ],
         "type": "api",
-        "JS": "tarteaucitron.user.dynatraceJSPath = 'ptac_path';\n\ntarteaucitron.user.dynatraceConfig = 'ptac_config';\n(tarteaucitron.job = tarteaucitron.job || []).push('dynatrace');"
+        "JS": "tarteaucitron.user.dynatraceJSPath = 'ptac_path';\ntarteaucitron.user.dynatraceConfig = 'ptac_config';\n(tarteaucitron.job = tarteaucitron.job || []).push('dynatrace');"
     },
     "genially": {
         "hasModele": false,
@@ -1050,7 +1059,7 @@
             "ptac_height"
         ],
         "type": "api",
-        "JS": "<div class=\"tac_genially\" data-geniallyid=\"ptac_geniallyid\" data-width=\"ptac_width\" data-height=\"ptac_height\"><\/div>\n(tarteaucitron.job = tarteaucitron.job || []).push('genially');"
+        "JS": "\n(tarteaucitron.job = tarteaucitron.job || []).push('genially');"
     },
     "geoportail": {
         "hasModele": false,
@@ -1060,7 +1069,7 @@
             "ptac_height"
         ],
         "type": "api",
-        "JS": "<div class=\"geoportail\" data-url=\"ptac_url\" data-width=\"ptac_width\" data-height=\"ptac_height\"><\/div>\n(tarteaucitron.job = tarteaucitron.job || []).push('geoportail');"
+        "JS": "\n(tarteaucitron.job = tarteaucitron.job || []).push('geoportail');"
     },
     "googlefonts": {
         "hasModele": false,
@@ -1083,7 +1092,7 @@
             "ptac_LIBRARIES"
         ],
         "type": "api",
-        "JS": "tarteaucitron.user.googlemapsKey = 'ptac_API_KEY';\n\n<div class=\"googlemaps-canvas\" data-zoom=\"ptac_zoom\" data-latitude=\"ptac_latitude\" data-longitude=\"ptac_longitude\" style=\"width: ptac_widthpx; height: ptac_heightpx;\"><\/div>tarteaucitron.user.mapscallback = 'ptac_callback_function';\ntarteaucitron.user.googlemapsLibraries = 'ptac_LIBRARIES';\n(tarteaucitron.job = tarteaucitron.job || []).push('googlemaps');"
+        "JS": "tarteaucitron.user.googlemapsKey = 'ptac_API_KEY';\ntarteaucitron.user.mapscallback = 'ptac_callback_function';\ntarteaucitron.user.googlemapsLibraries = 'ptac_LIBRARIES';\n(tarteaucitron.job = tarteaucitron.job || []).push('googlemaps');"
     },
     "googlemapssearch": {
         "hasModele": false,
@@ -1094,7 +1103,7 @@
             "ptac_HEIGHT"
         ],
         "type": "api",
-        "JS": "<div class=\"googlemapssearch\" data-search=\"ptac_SEARCHWORDS\" data-api-key=\"ptac_YOUR_GOOGLE_MAP_API_KEY\" data-width=\"ptac_WIDTH\" data-height=\"ptac_HEIGHT\" ><\/div>\n(tarteaucitron.job = tarteaucitron.job || []).push('googlemapssearch');"
+        "JS": "\n(tarteaucitron.job = tarteaucitron.job || []).push('googlemapssearch');"
     },
     "googletagmanager": {
         "hasModele": false,
@@ -1112,7 +1121,7 @@
             "ptac_height"
         ],
         "type": "api",
-        "JS": "<div class=\"tac_helloasso\" data-url=\"ptac_url\" data-width=\"ptac_width\" data-height=\"ptac_height\"><\/div>\n(tarteaucitron.job = tarteaucitron.job || []).push('helloasso');"
+        "JS": "\n(tarteaucitron.job = tarteaucitron.job || []).push('helloasso');"
     },
     "jsapi": {
         "hasModele": false,
@@ -1128,7 +1137,7 @@
             "ptac_height"
         ],
         "type": "api",
-        "JS": "<div class=\"tac_m6meteo\" data-id=\"ptac_id\" data-width=\"ptac_width\" data-height=\"ptac_height\"><\/div>\n(tarteaucitron.job = tarteaucitron.job || []).push('m6meteo');"
+        "JS": "\n(tarteaucitron.job = tarteaucitron.job || []).push('m6meteo');"
     },
     "marketomunchkin": {
         "hasModele": false,
@@ -1154,7 +1163,7 @@
             "ptac_height"
         ],
         "type": "api",
-        "JS": "<div class=\"tac_meteofrance\" data-insee=\"ptac_insee\" data-width=\"ptac_width\" data-height=\"ptac_height\"><\/div>\n(tarteaucitron.job = tarteaucitron.job || []).push('meteofrance');"
+        "JS": "\n(tarteaucitron.job = tarteaucitron.job || []).push('meteofrance');"
     },
     "mtcaptcha": {
         "hasModele": false,
@@ -1196,7 +1205,7 @@
             "ptac_height"
         ],
         "type": "api",
-        "JS": "<div class=\"openstreetmap\" data-url=\"ptac_url\" data-width=\"ptac_width\" data-height=\"ptac_height\"><\/div>\n(tarteaucitron.job = tarteaucitron.job || []).push('openstreetmap');"
+        "JS": "\n(tarteaucitron.job = tarteaucitron.job || []).push('openstreetmap');"
     },
     "pingdom": {
         "hasModele": false,
@@ -1213,7 +1222,7 @@
             "ptac_sitekey"
         ],
         "type": "api",
-        "JS": "tarteaucitron.user.recaptchaapi = 'ptac_XXXXX';\n\n<div class=\"g-recaptcha\" data-sitekey=\"ptac_sitekey\"><\/div>\n(tarteaucitron.job = tarteaucitron.job || []).push('recaptcha');"
+        "JS": "tarteaucitron.user.recaptchaapi = 'ptac_XXXXX';\n(tarteaucitron.job = tarteaucitron.job || []).push('recaptcha');"
     },
     "seamlessaccess": {
         "hasModele": false,
@@ -1254,7 +1263,7 @@
             "ptac_start_zoom"
         ],
         "type": "api",
-        "JS": "<div class=\"timelinejs-canvas\" data-spreadsheet_id=\"ptac_spreadsheet_id\" data-width=\"ptac_width\" data-height=\"ptac_height\" lang=\"ptac_lang_letter\" data-font=\"ptac_font\" data-map=\"ptac_map\" data-start_at_end=\"ptac_start_at_end\" data-hash_bookmark=\"ptac_hash_bookmark\" data-start_at_slide=\"ptac_start_at_slide\" data-start_zoom=\"ptac_start_zoom\"><\/div>\n(tarteaucitron.job = tarteaucitron.job || []).push('timelinejs');"
+        "JS": "\n(tarteaucitron.job = tarteaucitron.job || []).push('timelinejs');"
     },
     "twitterwidgetsapi": {
         "hasModele": false,
@@ -1276,13 +1285,13 @@
             "ptac_disqus_shortname"
         ],
         "type": "comment",
-        "JS": "tarteaucitron.user.disqusShortname = 'ptac_disqus_shortname';\n\n<div id=\"disqus_thread\"><\/div>\n(tarteaucitron.job = tarteaucitron.job || []).push('disqus');"
+        "JS": "tarteaucitron.user.disqusShortname = 'ptac_disqus_shortname';\n(tarteaucitron.job = tarteaucitron.job || []).push('disqus');"
     },
     "facebookcomment": {
         "hasModele": true,
         "params": [],
         "type": "comment",
-        "JS": "comment_light-inline-t2\n<div class=\"fb-comments\" data-numposts=\"5\" data-colorscheme=\"light\" data-href=\"CURRENT_URI\"><\/div>\ncomment_dark-inline-t2\n<div class=\"fb-comments\" data-numposts=\"5\" data-colorscheme=\"dark\" data-href=\"CURRENT_URI\"><\/div>\n(tarteaucitron.job = tarteaucitron.job || []).push('facebookcomment');"
+        "JS": "comment_light-inline-t2\ncomment_dark-inline-t2\n(tarteaucitron.job = tarteaucitron.job || []).push('facebookcomment');"
     },
     "gcmadstorage": {
         "hasModele": false,
@@ -1334,7 +1343,7 @@
             "ptac_URL"
         ],
         "type": "other",
-        "JS": "<div class=\"calendly-inline-widget\" data-url=\"https:\/\/calendly.com\/ptac_URL\/30min\" style=\"min-width:320px;height:1030px;\"><\/div>\n(tarteaucitron.job = tarteaucitron.job || []).push('calendly');"
+        "JS": "\n(tarteaucitron.job = tarteaucitron.job || []).push('calendly');"
     },
     "collectchat": {
         "hasModele": true,
@@ -1367,7 +1376,7 @@
             "ptac_DOMAIN"
         ],
         "type": "other",
-        "JS": "<div class=\"tac_fillout\" data-fillout-id=\"ptac_ID\" data-fillout-embed-type=\"standard\" data-fillout-inherit-parameters data-fillout-dynamic-resize data-fillout-domain=\"ptac_DOMAIN\"><\/div>\n(tarteaucitron.job = tarteaucitron.job || []).push('fillout');"
+        "JS": "\n(tarteaucitron.job = tarteaucitron.job || []).push('fillout');"
     },
     "gagenda": {
         "hasModele": true,
@@ -1377,7 +1386,7 @@
             "ptac_data"
         ],
         "type": "other",
-        "JS": "<div class=\"gagenda_embed\" data-width=\"ptac_width\" data-height=\"ptac_height\" data-data=\"ptac_data\"><\/div>\n(tarteaucitron.job = tarteaucitron.job || []).push('gagenda');"
+        "JS": "\n(tarteaucitron.job = tarteaucitron.job || []).push('gagenda');"
     },
     "gallica": {
         "hasModele": true,
@@ -1386,7 +1395,7 @@
             "ptac_src"
         ],
         "type": "other",
-        "JS": "<div class=\"gallica_player\" data-style=\"ptac_style\" data-src=\"ptac_src\"><\/div>\n(tarteaucitron.job = tarteaucitron.job || []).push('gallica');"
+        "JS": "\n(tarteaucitron.job = tarteaucitron.job || []).push('gallica');"
     },
     "gdocs": {
         "hasModele": true,
@@ -1396,7 +1405,7 @@
             "ptac_id"
         ],
         "type": "other",
-        "JS": "<div class=\"gdocs_embed\" data-width=\"ptac_width\" data-height=\"ptac_height\" id=\"ptac_id\"><\/div>\n(tarteaucitron.job = tarteaucitron.job || []).push('gdocs');"
+        "JS": "\n(tarteaucitron.job = tarteaucitron.job || []).push('gdocs');"
     },
     "gforms": {
         "hasModele": true,
@@ -1406,7 +1415,7 @@
             "ptac_id"
         ],
         "type": "other",
-        "JS": "<div class=\"gforms_embed\" data-width=\"ptac_width\" data-height=\"ptac_height\" id=\"ptac_id\"><\/div>\n(tarteaucitron.job = tarteaucitron.job || []).push('gforms');"
+        "JS": "\n(tarteaucitron.job = tarteaucitron.job || []).push('gforms');"
     },
     "googlesignin": {
         "hasModele": true,
@@ -1431,7 +1440,7 @@
             "ptac_headers"
         ],
         "type": "other",
-        "JS": "<div class=\"gsheets_embed\" data-width=\"ptac_width\" data-height=\"ptac_height\" id=\"ptac_id\" data-headers=\"ptac_headers\"><\/div>\n(tarteaucitron.job = tarteaucitron.job || []).push('gsheets');"
+        "JS": "\n(tarteaucitron.job = tarteaucitron.job || []).push('gsheets');"
     },
     "gslides": {
         "hasModele": true,
@@ -1444,7 +1453,7 @@
             "ptac_delay"
         ],
         "type": "other",
-        "JS": "<div class=\"gslides_embed\" data-width=\"ptac_width\" data-height=\"ptac_height\" id=\"ptac_id\" data-autostart=\"ptac_autostart\" data-loop=\"ptac_loop\" data-delay=\"ptac_delay\"><\/div>\n(tarteaucitron.job = tarteaucitron.job || []).push('gslides');"
+        "JS": "\n(tarteaucitron.job = tarteaucitron.job || []).push('gslides');"
     },
     "hcaptcha": {
         "hasModele": true,
@@ -1452,7 +1461,7 @@
             "ptac_siteKey"
         ],
         "type": "other",
-        "JS": "<div class=\"h-captcha\" data-sitekey=\"ptac_siteKey\"><\/div>\n(tarteaucitron.job = tarteaucitron.job || []).push('hcaptcha');"
+        "JS": "\n(tarteaucitron.job = tarteaucitron.job || []).push('hcaptcha');"
     },
     "maps_noapi": {
         "hasModele": true,
@@ -1462,7 +1471,7 @@
             "ptac_id"
         ],
         "type": "other",
-        "JS": "<div class=\"googlemaps_embed\" data-width=\"ptac_width\" data-height=\"ptac_height\" id=\"ptac_id\"><\/div>\n(tarteaucitron.job = tarteaucitron.job || []).push('maps_noapi');"
+        "JS": "\n(tarteaucitron.job = tarteaucitron.job || []).push('maps_noapi');"
     },
     "posthog": {
         "hasModele": true,
@@ -1471,7 +1480,7 @@
             "ptac_host"
         ],
         "type": "other",
-        "JS": "tarteaucitron.user.posthogApiKey = 'ptac_apiKey';\n\ntarteaucitron.user.posthogHost = 'ptac_host';\n(tarteaucitron.job = tarteaucitron.job || []).push('posthog');"
+        "JS": "tarteaucitron.user.posthogApiKey = 'ptac_apiKey';\ntarteaucitron.user.posthogHost = 'ptac_host';\n(tarteaucitron.job = tarteaucitron.job || []).push('posthog');"
     },
     "robofabrica": {
         "hasModele": true,
@@ -1479,7 +1488,7 @@
             "ptac_uuid"
         ],
         "type": "other",
-        "JS": "tarteaucitron.user.robofabricaUuid = 'ptac_uuid';\n\n<button id=\"inceptive-cw-launch\" type=\"button\" name=\"button\"><\/button>\n(tarteaucitron.job = tarteaucitron.job || []).push('robofabrica');"
+        "JS": "tarteaucitron.user.robofabricaUuid = 'ptac_uuid';\n<button id=\"inceptive-cw-launch\" type=\"button\" name=\"button\"><\/button>\n(tarteaucitron.job = tarteaucitron.job || []).push('robofabrica');"
     },
     "sendinblue": {
         "hasModele": true,
@@ -1510,7 +1519,7 @@
             "ptac_reviewLocale"
         ],
         "type": "other",
-        "JS": "<div class=\"trustpilot-widget\" data-locale=\"ptac_dataLocale\" data-template-id=\"ptac_templateId\" data-businessunit-id=\"ptac_businessunitId\" data-style-height=\"ptac_height\" data-style-width=\"ptac_width\" data-theme=\"ptac_theme\" data-stars=\"ptac_stars\" data-review-languages=\"ptac_reviewLocale\"><\/div>\n(tarteaucitron.job = tarteaucitron.job || []).push('trustpilot');"
+        "JS": "\n(tarteaucitron.job = tarteaucitron.job || []).push('trustpilot');"
     },
     "ubib": {
         "hasModele": true,
@@ -1519,7 +1528,7 @@
             "ptac_hash"
         ],
         "type": "other",
-        "JS": "tarteaucitron.user.ubibId = 'ptac_id';\n\ntarteaucitron.user.ubibHash = 'ptac_hash';\n<div id=\"libchat_ptac_hash\"><\/div>\n(tarteaucitron.job = tarteaucitron.job || []).push('ubib');"
+        "JS": "tarteaucitron.user.ubibId = 'ptac_id';\ntarteaucitron.user.ubibHash = 'ptac_hash';\n(tarteaucitron.job = tarteaucitron.job || []).push('ubib');"
     },
     "addthis": {
         "hasModele": true,
@@ -1527,7 +1536,7 @@
             "ptac_YOUR-PUB-ID"
         ],
         "type": "social",
-        "JS": "tarteaucitron.user.addthisPubId = 'ptac_YOUR-PUB-ID';\n\n<div class=\"addthis_inline_share_toolbox\"><\/div>\n(tarteaucitron.job = tarteaucitron.job || []).push('addthis');"
+        "JS": "tarteaucitron.user.addthisPubId = 'ptac_YOUR-PUB-ID';\n(tarteaucitron.job = tarteaucitron.job || []).push('addthis');"
     },
     "addtoanyfeed": {
         "hasModele": true,
@@ -1535,13 +1544,13 @@
             "ptac_feed_uri"
         ],
         "type": "social",
-        "JS": "tarteaucitron.user.addtoanyfeedUri = 'ptac_feed_uri';\n\nsubscribe-long\n<a class=\"a2a_dd\" href=\"#\" onclick=\"window.open(tarteaucitron.user.addtoanyfeedSubscribeLink)\"><img src=\"\/\/static.addtoany.com\/buttons\/subscribe_171_16.gif\" data-width=\"171\" data-height=\"16\" data-border=\"0\" alt=\"Subscribe\"\/><\/a>\nsubscribe-small\n<a class=\"a2a_dd\" href=\"#\" onclick=\"window.open(tarteaucitron.user.addtoanyfeedSubscribeLink)\"><img src=\"\/\/static.addtoany.com\/buttons\/subscribe_120_16.gif\" data-width=\"120\" data-height=\"16\" data-border=\"0\" alt=\"Subscribe\"\/><\/a>\n(tarteaucitron.job = tarteaucitron.job || []).push('addtoanyfeed');"
+        "JS": "tarteaucitron.user.addtoanyfeedUri = 'ptac_feed_uri';\nsubscribe-long\n<a class=\"a2a_dd\" href=\"#\" onclick=\"window.open(tarteaucitron.user.addtoanyfeedSubscribeLink)\"><img src=\"\/\/static.addtoany.com\/buttons\/subscribe_171_16.gif\" data-width=\"171\" data-height=\"16\" data-border=\"0\" alt=\"Subscribe\"\/><\/a>\nsubscribe-small\n<a class=\"a2a_dd\" href=\"#\" onclick=\"window.open(tarteaucitron.user.addtoanyfeedSubscribeLink)\"><img src=\"\/\/static.addtoany.com\/buttons\/subscribe_120_16.gif\" data-width=\"120\" data-height=\"16\" data-border=\"0\" alt=\"Subscribe\"\/><\/a>\n(tarteaucitron.job = tarteaucitron.job || []).push('addtoanyfeed');"
     },
     "addtoanyshare": {
         "hasModele": true,
         "params": [],
         "type": "social",
-        "JS": "share-long\n<a class=\"a2a_dd\" href=\"https:\/\/www.addtoany.com\/share_save\"><img src=\"\/\/static.addtoany.com\/buttons\/share_save_171_16.png\" data-width=\"171\" data-height=\"16\" data-border=\"0\" alt=\"Share\"\/><\/a>\nshare-small\n<a class=\"a2a_dd\" href=\"https:\/\/www.addtoany.com\/share_save\"><img src=\"\/\/static.addtoany.com\/buttons\/share_save_120_16.png\" data-width=\"120\" data-height=\"16\" data-border=\"0\" alt=\"Share\"\/><\/a>\nshare-link\n<span class=\"tac_addtoanyshare\"><\/span><div class=\"a2a_kit a2a_default_style\"><a class=\"a2a_dd\" href=\"https:\/\/www.addtoany.com\/share_save\">Share<\/a><span class=\"a2a_divider\"><\/span><a class=\"a2a_button_facebook\"><\/a><a class=\"a2a_button_twitter\"><\/a><a class=\"a2a_button_google_plus\"><\/a><\/div>\nshare-button\n<span class=\"tac_addtoanyshare\"><\/span><div class=\"a2a_kit a2a_kit_size_32 a2a_default_style\"><a class=\"a2a_dd\" href=\"https:\/\/www.addtoany.com\/share_save\"><\/a><a class=\"a2a_button_facebook\"><\/a><a class=\"a2a_button_twitter\"><\/a><a class=\"a2a_button_google_plus\"><\/a><\/div>\n(tarteaucitron.job = tarteaucitron.job || []).push('addtoanyshare');"
+        "JS": "share-long\n<a class=\"a2a_dd\" href=\"https:\/\/www.addtoany.com\/share_save\"><img src=\"\/\/static.addtoany.com\/buttons\/share_save_171_16.png\" data-width=\"171\" data-height=\"16\" data-border=\"0\" alt=\"Share\"\/><\/a>\nshare-small\n<a class=\"a2a_dd\" href=\"https:\/\/www.addtoany.com\/share_save\"><img src=\"\/\/static.addtoany.com\/buttons\/share_save_120_16.png\" data-width=\"120\" data-height=\"16\" data-border=\"0\" alt=\"Share\"\/><\/a>\nshare-link\n<span class=\"tac_addtoanyshare\"><\/span>\nshare-button\n<span class=\"tac_addtoanyshare\"><\/span>\n(tarteaucitron.job = tarteaucitron.job || []).push('addtoanyshare');"
     },
     "discord": {
         "hasModele": false,
@@ -1551,7 +1560,7 @@
             "ptac_guildID"
         ],
         "type": "social",
-        "JS": "<div class=\"discord_widget\" data-width=\"ptac_width\" data-height=\"ptac_height\" data-guildID=\"ptac_guildID\"><\/div>\n(tarteaucitron.job = tarteaucitron.job || []).push('discord');"
+        "JS": "\n(tarteaucitron.job = tarteaucitron.job || []).push('discord');"
     },
     "ekomi": {
         "hasModele": true,
@@ -1565,7 +1574,7 @@
         "hasModele": true,
         "params": [],
         "type": "social",
-        "JS": "like_share-inline-t2\n<div class=\"fb-like\" data-layout=\"standard\" data-action=\"like\" data-share=\"true\"><\/div>\nlike-inline-t2\n<div class=\"fb-like\" data-layout=\"standard\" data-action=\"like\" data-share=\"false\"><\/div>\nlike_share-bubble-t2\n<div class=\"fb-like\" data-layout=\"box_count\" data-action=\"like\" data-share=\"true\"><\/div>\nlike-bubble-t2\n<div class=\"fb-like\" data-layout=\"box_count\" data-action=\"like\" data-share=\"false\"><\/div>\nlike_share-horizontal-t2\n<div class=\"fb-like\" data-layout=\"button_count\" data-action=\"like\" data-share=\"true\"><\/div>\nlike-horizontal-t2\n<div class=\"fb-like\" data-layout=\"button_count\" data-action=\"like\" data-share=\"false\"><\/div>\nlike_share-none-t2\n<div class=\"fb-like\" data-layout=\"button\" data-action=\"like\" data-share=\"true\"><\/div>\nlike-none-t2\n<div class=\"fb-like\" data-layout=\"button\" data-action=\"like\" data-share=\"false\"><\/div>\nrecommend_share-inline-t2\n<div class=\"fb-like\" data-layout=\"standard\" data-action=\"recommend\" data-share=\"true\"><\/div>\nrecommend-inline-t2\n<div class=\"fb-like\" data-layout=\"standard\" data-action=\"recommend\" data-share=\"false\"><\/div>\nrecommend_share-bubble-t2\n<div class=\"fb-like\" data-layout=\"box_count\" data-action=\"recommend\" data-share=\"true\"><\/div>\nrecommend-bubble-t2\n<div class=\"fb-like\" data-layout=\"box_count\" data-action=\"recommend\" data-share=\"false\"><\/div>\nrecommend_share-horizontal-t2\n<div class=\"fb-like\" data-layout=\"button_count\" data-action=\"recommend\" data-share=\"true\"><\/div>\nrecommend-horizontal-t2\n<div class=\"fb-like\" data-layout=\"button_count\" data-action=\"recommend\" data-share=\"false\"><\/div>\nrecommend_share-none-t2\n<div class=\"fb-like\" data-layout=\"button\" data-action=\"recommend\" data-share=\"true\"><\/div>\nrecommend-none-t2\n<div class=\"fb-like\" data-layout=\"button\" data-action=\"recommend\" data-share=\"false\"><\/div>\n(tarteaucitron.job = tarteaucitron.job || []).push('facebook');"
+        "JS": "like_share-inline-t2\nlike-inline-t2\nlike_share-bubble-t2\nlike-bubble-t2\nlike_share-horizontal-t2\nlike-horizontal-t2\nlike_share-none-t2\nlike-none-t2\nrecommend_share-inline-t2\nrecommend-inline-t2\nrecommend_share-bubble-t2\nrecommend-bubble-t2\nrecommend_share-horizontal-t2\nrecommend-horizontal-t2\nrecommend_share-none-t2\nrecommend-none-t2\n(tarteaucitron.job = tarteaucitron.job || []).push('facebook');"
     },
     "facebookcustomerchat": {
         "hasModele": false,
@@ -1573,7 +1582,7 @@
             "ptac_ID"
         ],
         "type": "social",
-        "JS": "tarteaucitron.user.facebookChatID = 'ptac_ID';\n\n<div class=\"fb-customerchat\"><\/div>\n(tarteaucitron.job = tarteaucitron.job || []).push('facebookcustomerchat');"
+        "JS": "tarteaucitron.user.facebookChatID = 'ptac_ID';\n(tarteaucitron.job = tarteaucitron.job || []).push('facebookcustomerchat');"
     },
     "facebooklikebox": {
         "hasModele": true,
@@ -1587,7 +1596,7 @@
             "ptac_border"
         ],
         "type": "social",
-        "JS": "likebox-light\n<div class=\"fb-like-box\" data-href=\"ptac_page_url\" data-width=\"ptac_width\" data-height=\"ptac_height\" data-colorscheme=\"light\" data-show-faces=\"ptac_faces\" data-header=\"ptac_header\" data-stream=\"ptac_posts\" data-show-border=\"ptac_border\"><\/div>\nlikebox-dark\n<div class=\"fb-like-box\" style=\"background:#141823\" data-href=\"ptac_page_url\" data-width=\"ptac_width\" data-height=\"ptac_height\" data-colorscheme=\"dark\" data-show-faces=\"ptac_faces\" data-header=\"ptac_header\" data-stream=\"ptac_posts\" data-show-border=\"ptac_border\"><\/div>\n(tarteaucitron.job = tarteaucitron.job || []).push('facebooklikebox');"
+        "JS": "likebox-light\nlikebox-dark\n(tarteaucitron.job = tarteaucitron.job || []).push('facebooklikebox');"
     },
     "facebookpixel": {
         "hasModele": true,
@@ -1607,13 +1616,13 @@
             "ptac_height"
         ],
         "type": "social",
-        "JS": "<div class=\"tac_facebookpost\" data-appId=\"ptac_appId\" data-url=\"ptac_url\" data-show-text=\"ptac_show_text\" data-width=\"ptac_width\" data-height=\"ptac_height\"><\/div>\n(tarteaucitron.job = tarteaucitron.job || []).push('facebookpost');"
+        "JS": "\n(tarteaucitron.job = tarteaucitron.job || []).push('facebookpost');"
     },
     "gplus": {
         "hasModele": true,
         "params": [],
         "type": "social",
-        "JS": "plusone-inline-t0\n<div class=\"g-plusone\" data-size=\"small\" data-annotation=\"inline\" data-width=\"300\"><\/div>\nplusone-inline-t1\n<div class=\"g-plusone\" data-size=\"medium\" data-annotation=\"inline\" data-width=\"300\"><\/div>\nplusone-inline-t2\n<div class=\"g-plusone\" data-annotation=\"inline\" data-width=\"300\"><\/div>\nplusone-inline-t3\n<div class=\"g-plusone\" data-size=\"tall\" data-annotation=\"inline\" data-width=\"300\"><\/div>\nplusone-horizontal-t0\n<div class=\"g-plusone\" data-size=\"small\"><\/div>\nplusone-horizontal-t1\n<div class=\"g-plusone\" data-size=\"medium\"><\/div>\nplusone-horizontal-t2\n<div class=\"g-plusone\"><\/div>\nplusone-bubble-t3\n<div class=\"g-plusone\" data-size=\"tall\"><\/div>\nplusone-none-t0\n<div class=\"g-plusone\" data-size=\"small\" data-annotation=\"none\"><\/div>\nplusone-none-t1\n<div class=\"g-plusone\" data-size=\"medium\" data-annotation=\"none\"><\/div>\nplusone-none-t2\n<div class=\"g-plusone\" data-annotation=\"none\"><\/div>\nplusone-none-t3\n<div class=\"g-plusone\" data-size=\"tall\" data-annotation=\"none\"><\/div>\nshare-inline-t0\n<div class=\"g-plus\" data-action=\"share\" data-height=\"15\"><\/div>\nshare-inline-t1\n<div class=\"g-plus\" data-action=\"share\"><\/div>\nshare-inline-t3\n<div class=\"g-plus\" data-action=\"share\" data-height=\"24\"><\/div>\nshare-horizontal-t0\n<div class=\"g-plus\" data-action=\"share\" data-annotation=\"bubble\" data-height=\"15\"><\/div>\nshare-horizontal-t1\n<div class=\"g-plus\" data-action=\"share\" data-annotation=\"bubble\"><\/div>\nshare-horizontal-t3\n<div class=\"g-plus\" data-action=\"share\" data-annotation=\"bubble\" data-height=\"24\"><\/div>\nshare-bubble-t2\n<div class=\"g-plus\" data-action=\"share\" data-annotation=\"vertical-bubble\" data-height=\"60\"><\/div>\nshare-none-t0\n<div class=\"g-plus\" data-action=\"share\" data-annotation=\"none\" data-height=\"15\"><\/div>\nshare-none-t1\n<div class=\"g-plus\" data-action=\"share\" data-annotation=\"none\"><\/div>\nshare-none-t3\n<div class=\"g-plus\" data-action=\"share\" data-annotation=\"none\" data-height=\"24\"><\/div>\n(tarteaucitron.job = tarteaucitron.job || []).push('gplus');"
+        "JS": "plusone-inline-t0\nplusone-inline-t1\nplusone-inline-t2\nplusone-inline-t3\nplusone-horizontal-t0\nplusone-horizontal-t1\nplusone-horizontal-t2\nplusone-bubble-t3\nplusone-none-t0\nplusone-none-t1\nplusone-none-t2\nplusone-none-t3\nshare-inline-t0\nshare-inline-t1\nshare-inline-t3\nshare-horizontal-t0\nshare-horizontal-t1\nshare-horizontal-t3\nshare-bubble-t2\nshare-none-t0\nshare-none-t1\nshare-none-t3\n(tarteaucitron.job = tarteaucitron.job || []).push('gplus');"
     },
     "gplusbadge": {
         "hasModele": false,
@@ -1624,7 +1633,7 @@
             "ptac_cover"
         ],
         "type": "social",
-        "JS": "page-portrait-light\n<div class=\"g-page\" data-width=\"ptac_width\" data-href=\"\/\/plus.google.com\/u\/0\/ptac_page_id\" data-rel=\"publisher\" data-showtagline=\"ptac_description\" data-showcoverphoto=\"ptac_cover\"><\/div>\npage-portrait-dark\n<div class=\"g-page\" data-theme=\"dark\" data-width=\"ptac_width\" data-href=\"\/\/plus.google.com\/u\/0\/ptac_page_id\" data-rel=\"publisher\" data-showtagline=\"ptac_description\" data-showcoverphoto=\"ptac_cover\"><\/div>\npage-landscape-light\n<div class=\"g-page\" data-layout=\"landscape\" data-width=\"ptac_width\" data-href=\"\/\/plus.google.com\/u\/0\/ptac_page_id\" data-rel=\"publisher\" data-showtagline=\"ptac_description\" data-showcoverphoto=\"ptac_cover\"><\/div>\npage-landscape-dark\n<div class=\"g-page\" data-layout=\"landscape\" data-theme=\"dark\" data-width=\"ptac_width\" data-href=\"\/\/plus.google.com\/u\/0\/ptac_page_id\" data-rel=\"publisher\" data-showtagline=\"ptac_description\" data-showcoverphoto=\"ptac_cover\"><\/div>\nprofil-portrait-light\n<div class=\"g-person\" data-width=\"ptac_width\" data-href=\"\/\/plus.google.com\/u\/0\/ptac_page_id\" data-rel=\"author\" data-showtagline=\"ptac_description\" data-showcoverphoto=\"ptac_cover\"><\/div>\nprofil-portrait-dark\n<div class=\"g-person\" data-theme=\"dark\" data-width=\"ptac_width\" data-href=\"\/\/plus.google.com\/u\/0\/ptac_page_id\" data-rel=\"author\" data-showtagline=\"ptac_description\" data-showcoverphoto=\"ptac_cover\"><\/div>\nprofil-landscape-light\n<div class=\"g-person\" data-layout=\"landscape\" data-width=\"ptac_width\" data-href=\"\/\/plus.google.com\/u\/0\/ptac_page_id\" data-rel=\"author\" data-showtagline=\"ptac_description\" data-showcoverphoto=\"ptac_cover\"><\/div>\nprofil-landscape-dark\n<div class=\"g-person\" data-layout=\"landscape\" data-theme=\"dark\" data-width=\"ptac_width\" data-href=\"\/\/plus.google.com\/u\/0\/ptac_page_id\" data-rel=\"author\" data-showtagline=\"ptac_description\" data-showcoverphoto=\"ptac_cover\"><\/div>\n(tarteaucitron.job = tarteaucitron.job || []).push('gplusbadge');"
+        "JS": "page-portrait-light\npage-portrait-dark\npage-landscape-light\npage-landscape-dark\nprofil-portrait-light\nprofil-portrait-dark\nprofil-landscape-light\nprofil-landscape-dark\n(tarteaucitron.job = tarteaucitron.job || []).push('gplusbadge');"
     },
     "instagram": {
         "hasModele": true,
@@ -1634,7 +1643,7 @@
             "ptac_height"
         ],
         "type": "social",
-        "JS": "<div class=\"instagram_post\" data-postID=\"ptac_postID\" data-width=\"ptac_width\" data-height=\"ptac_height\"><\/div>\n(tarteaucitron.job = tarteaucitron.job || []).push('instagram');"
+        "JS": "\n(tarteaucitron.job = tarteaucitron.job || []).push('instagram');"
     },
     "linkedin": {
         "hasModele": true,
@@ -1655,7 +1664,7 @@
             "ptac_app_id"
         ],
         "type": "social",
-        "JS": "tarteaucitron.user.shareaholicSiteId = 'ptac_site_id';\n\n<div class='shareaholic-canvas' data-app='share_buttons' data-app-id='ptac_app_id'><\/div>\n(tarteaucitron.job = tarteaucitron.job || []).push('shareaholic');"
+        "JS": "tarteaucitron.user.shareaholicSiteId = 'ptac_site_id';\n(tarteaucitron.job = tarteaucitron.job || []).push('shareaholic');"
     },
     "sharethis": {
         "hasModele": true,
@@ -1664,7 +1673,7 @@
             "ptac_services_list_spans"
         ],
         "type": "social",
-        "JS": "tarteaucitron.user.sharethisPublisher = 'ptac_publisher';\n\n<span class=\"tacSharethis\"><\/span>ptac_services_list_spans\n(tarteaucitron.job = tarteaucitron.job || []).push('sharethis');"
+        "JS": "tarteaucitron.user.sharethisPublisher = 'ptac_publisher';\n<span class=\"tacSharethis\"><\/span>ptac_services_list_spans\n(tarteaucitron.job = tarteaucitron.job || []).push('sharethis');"
     },
     "sharethissticky": {
         "hasModele": true,
@@ -1693,7 +1702,7 @@
             "ptac_align"
         ],
         "type": "social",
-        "JS": "<div class=\"twitterembed-canvas\" data-tweetid=\"ptac_tweet_id\" data-width=\"ptac_width\" data-theme=\"ptac_theme\" data-cards=\"ptac_cards\" data-conversation=\"ptac_conversation\" data-align=\"ptac_align\"><\/div>\n(tarteaucitron.job = tarteaucitron.job || []).push('twitterembed');"
+        "JS": "\n(tarteaucitron.job = tarteaucitron.job || []).push('twitterembed');"
     },
     "twittertimeline": {
         "hasModele": true,
@@ -1723,7 +1732,7 @@
             "ptac_elfsightKey"
         ],
         "type": "support",
-        "JS": "<div class=\"elfsight-app-ptac_elfsightKey\"><\/div>\n(tarteaucitron.job = tarteaucitron.job || []).push('elfsight');"
+        "JS": "\n(tarteaucitron.job = tarteaucitron.job || []).push('elfsight');"
     },
     "intercomChat": {
         "hasModele": false,
@@ -1748,7 +1757,7 @@
             "ptac_playbookUuid"
         ],
         "type": "support",
-        "JS": "tarteaucitron.user.pipedriveCompany = 'ptac_companyId';\n\ntarteaucitron.user.pipedriveCompany = 'ptac_playbookUuid';\n(tarteaucitron.job = tarteaucitron.job || []).push('pipedrive');"
+        "JS": "tarteaucitron.user.pipedriveCompany = 'ptac_companyId';\ntarteaucitron.user.pipedriveCompany = 'ptac_playbookUuid';\n(tarteaucitron.job = tarteaucitron.job || []).push('pipedrive');"
     },
     "purechat": {
         "hasModele": false,
@@ -1765,7 +1774,7 @@
             "ptac_dontInit"
         ],
         "type": "support",
-        "JS": "tarteaucitron.user.screebId = 'ptac_id';\n\ntarteaucitron.user.screebDontInit = 'ptac_dontInit';\n(tarteaucitron.job = tarteaucitron.job || []).push('screeb');"
+        "JS": "tarteaucitron.user.screebId = 'ptac_id';\ntarteaucitron.user.screebDontInit = 'ptac_dontInit';\n(tarteaucitron.job = tarteaucitron.job || []).push('screeb');"
     },
     "smartsupp": {
         "hasModele": false,
@@ -1790,7 +1799,7 @@
             "ptac_WidgetID"
         ],
         "type": "support",
-        "JS": "tarteaucitron.user.tawktoId = 'ptac_ID';\n\ntarteaucitron.user.tawktoWidgetId = 'ptac_WidgetID';\n(tarteaucitron.job = tarteaucitron.job || []).push('tawkto');"
+        "JS": "tarteaucitron.user.tawktoId = 'ptac_ID';\ntarteaucitron.user.tawktoWidgetId = 'ptac_WidgetID';\n(tarteaucitron.job = tarteaucitron.job || []).push('tawkto');"
     },
     "tolkaigenii": {
         "hasModele": false,
@@ -1818,7 +1827,7 @@
             "ptac_accent_color"
         ],
         "type": "support",
-        "JS": "tarteaucitron.user.userVoiceApi = 'ptac_YOUR_API_KEY';\n\ncontact-none-t2\nUserVoice=window.UserVoice||[];\nUserVoice.push(['addTrigger', {mode: 'contact', trigger_position: 'ptac_position', trigger_color: 'ptac_color', trigger_background_color: 'ptac_background-color', accent_color: 'ptac_accent_color'}]);\n\nsmartvote-none-t2\nUserVoice=window.UserVoice||[];\nUserVoice.push(['addTrigger', {mode: 'smartvote', trigger_position: 'ptac_position', trigger_color: 'ptac_color', trigger_background_color: 'ptac_background-color', accent_color: 'ptac_accent_color'}]);\n\nsatisfaction-none-t2\nUserVoice=window.UserVoice||[];\nUserVoice.push(['addTrigger', {mode: 'satisfaction', trigger_position: 'ptac_position', trigger_color: 'ptac_color', trigger_background_color: 'ptac_background-color', accent_color: 'ptac_accent_color'}]);\n(tarteaucitron.job = tarteaucitron.job || []).push('uservoice');"
+        "JS": "tarteaucitron.user.userVoiceApi = 'ptac_YOUR_API_KEY';\ncontact-none-t2\nUserVoice=window.UserVoice||[];\nUserVoice.push(['addTrigger', {mode: 'contact', trigger_position: 'ptac_position', trigger_color: 'ptac_color', trigger_background_color: 'ptac_background-color', accent_color: 'ptac_accent_color'}]);\nsmartvote-none-t2\nUserVoice=window.UserVoice||[];\nUserVoice.push(['addTrigger', {mode: 'smartvote', trigger_position: 'ptac_position', trigger_color: 'ptac_color', trigger_background_color: 'ptac_background-color', accent_color: 'ptac_accent_color'}]);\nsatisfaction-none-t2\nUserVoice=window.UserVoice||[];\nUserVoice.push(['addTrigger', {mode: 'satisfaction', trigger_position: 'ptac_position', trigger_color: 'ptac_color', trigger_background_color: 'ptac_background-color', accent_color: 'ptac_accent_color'}]);\n(tarteaucitron.job = tarteaucitron.job || []).push('uservoice');"
     },
     "weply": {
         "hasModele": false,
@@ -1854,7 +1863,7 @@
             "ptac_seek"
         ],
         "type": "video",
-        "JS": "<div class=\"acast_embed\" data-height=\"ptac_height\" data-width=\"ptac_width\" data-id1=\"ptac_id\" data-id2=\"ptac_id\" data-seek=\"ptac_seek\"><\/div>\n(tarteaucitron.job = tarteaucitron.job || []).push('acast');"
+        "JS": "\n(tarteaucitron.job = tarteaucitron.job || []).push('acast');"
     },
     "archive": {
         "hasModele": false,
@@ -1864,7 +1873,7 @@
             "ptac_height"
         ],
         "type": "video",
-        "JS": "<div class=\"archive_player\" data-videoID=\"ptac_videoID\" data-width=\"ptac_width\" data-height=\"ptac_height\"><\/div>\n(tarteaucitron.job = tarteaucitron.job || []).push('archive');"
+        "JS": "\n(tarteaucitron.job = tarteaucitron.job || []).push('archive');"
     },
     "artetv": {
         "hasModele": false,
@@ -1874,7 +1883,7 @@
             "ptac_height"
         ],
         "type": "video",
-        "JS": "<div class=\"artetv_player\" data-json=\"ptac_video_json\" data-width=\"ptac_width\" data-height=\"ptac_height\"><\/div>\n(tarteaucitron.job = tarteaucitron.job || []).push('artetv');"
+        "JS": "\n(tarteaucitron.job = tarteaucitron.job || []).push('artetv');"
     },
     "ausha": {
         "hasModele": false,
@@ -1887,7 +1896,7 @@
             "ptac_useshowid"
         ],
         "type": "video",
-        "JS": "<div class=\"ausha_player\" data-height=\"ptac_data-height\" data-podcast-id=\"ptac_data-podcast-id\" data-player-id=\"ptac_data-player-id\" data-playlist=\"ptac_data-playlist\" data-color=\"ptac_data-color\" data-useshowid=\"ptac_useshowid\"><\/div>\n(tarteaucitron.job = tarteaucitron.job || []).push('ausha');"
+        "JS": "\n(tarteaucitron.job = tarteaucitron.job || []).push('ausha');"
     },
     "bandcamp": {
         "hasModele": false,
@@ -1905,7 +1914,7 @@
             "ptac_height"
         ],
         "type": "video",
-        "JS": "<div class=\"bandcamp_player\" data-albumID=\"ptac_album_id\" size=\"ptac_size\" data-artwork=\"ptac_artwork\" data-transparent=\"ptac_transparent\" data-minimal=\"ptac_minimal\" data-tracklist=\"ptac_tracklist\" data-linkcol=\"ptac_linkcol\" data-package=\"ptac_package\" data-bgcol=\"ptac_bgcol\" data-width=\"ptac_width\" data-height=\"ptac_height\"><\/div>\n(tarteaucitron.job = tarteaucitron.job || []).push('bandcamp');"
+        "JS": "\n(tarteaucitron.job = tarteaucitron.job || []).push('bandcamp');"
     },
     "calameo": {
         "hasModele": false,
@@ -1915,7 +1924,7 @@
             "ptac_height"
         ],
         "type": "video",
-        "JS": "<div class=\"calameo-canvas\" data-id=\"ptac_bkcode\" data-width=\"ptac_width\" data-height=\"ptac_height\"><\/div>\n(tarteaucitron.job = tarteaucitron.job || []).push('calameo');"
+        "JS": "\n(tarteaucitron.job = tarteaucitron.job || []).push('calameo');"
     },
     "calameolibrary": {
         "hasModele": false,
@@ -1925,7 +1934,7 @@
             "ptac_height"
         ],
         "type": "video",
-        "JS": "<div class=\"calameolibrary-canvas\" data-id=\"ptac_id\" data-width=\"ptac_width\" data-height=\"ptac_height\"><\/div>\n(tarteaucitron.job = tarteaucitron.job || []).push('calameolibrary');"
+        "JS": "\n(tarteaucitron.job = tarteaucitron.job || []).push('calameolibrary');"
     },
     "canalu": {
         "hasModele": false,
@@ -1933,7 +1942,7 @@
             "ptac_videoTitle"
         ],
         "type": "video",
-        "JS": "<div class=\"canalu_player\" data-videoTitle=\"ptac_videoTitle\"><\/div>\n(tarteaucitron.job = tarteaucitron.job || []).push('canalu');"
+        "JS": "\n(tarteaucitron.job = tarteaucitron.job || []).push('canalu');"
     },
     "dailymotion": {
         "hasModele": false,
@@ -1946,7 +1955,7 @@
             "ptac_embedType"
         ],
         "type": "video",
-        "JS": "<div class=\"dailymotion_player\" data-videoID=\"ptac_video_id\" data-width=\"ptac_width\" data-height=\"ptac_height\" data-showinfo=\"ptac_showinfo\" data-autoplay=\"ptac_autoplay\" data-embedType=\"ptac_embedType\"><\/div>\n(tarteaucitron.job = tarteaucitron.job || []).push('dailymotion');"
+        "JS": "\n(tarteaucitron.job = tarteaucitron.job || []).push('dailymotion');"
     },
     "deezer": {
         "hasModele": false,
@@ -1960,7 +1969,7 @@
             "ptac_height"
         ],
         "type": "video",
-        "JS": "<div class=\"deezer_player\" data-deezerID=\"ptac_deezerID\" data-theme=\"ptac_theme\" data-embedType=\"ptac_type\" data-radius=\"ptac_radius\" data-tracklist=\"ptac_tracklist\" data-width=\"ptac_width\" data-height=\"ptac_height\"><\/div>\n(tarteaucitron.job = tarteaucitron.job || []).push('deezer');"
+        "JS": "\n(tarteaucitron.job = tarteaucitron.job || []).push('deezer');"
     },
     "fculture": {
         "hasModele": false,
@@ -1970,7 +1979,7 @@
             "ptac_width"
         ],
         "type": "video",
-        "JS": "<div class=\"fculture_embed\" id=\"ptac_id\" data-height=\"ptac_height\" data-width=\"ptac_width\"><\/div>\n(tarteaucitron.job = tarteaucitron.job || []).push('fculture');"
+        "JS": "\n(tarteaucitron.job = tarteaucitron.job || []).push('fculture');"
     },
     "issuu": {
         "hasModele": false,
@@ -1980,7 +1989,7 @@
             "ptac_height"
         ],
         "type": "video",
-        "JS": "<div class=\"issuu_player\" data-issuuID=\"ptac_your_issuu_id\" data-width=\"ptac_width\" data-height=\"ptac_height\"><\/div>\n(tarteaucitron.job = tarteaucitron.job || []).push('issuu');"
+        "JS": "\n(tarteaucitron.job = tarteaucitron.job || []).push('issuu');"
     },
     "mixcloud": {
         "hasModele": false,
@@ -1993,7 +2002,7 @@
             "ptac_id"
         ],
         "type": "video",
-        "JS": "<div class=\"mixcloud_embed\" data-height=\"ptac_height\" data-width=\"ptac_width\" data-hidecover=\"ptac_hidecover\" data-mini=\"ptac_mini\" data-light=\"ptac_light\" id=\"ptac_id\"><\/div>\n(tarteaucitron.job = tarteaucitron.job || []).push('mixcloud');"
+        "JS": "\n(tarteaucitron.job = tarteaucitron.job || []).push('mixcloud');"
     },
     "playplay": {
         "hasModele": false,
@@ -2003,7 +2012,7 @@
             "ptac_height"
         ],
         "type": "video",
-        "JS": "<div class=\"tac_playplay\" data-id=\"ptac_id\" data-width=\"ptac_width\" data-height=\"ptac_height\"><\/div>\n(tarteaucitron.job = tarteaucitron.job || []).push('playplay');"
+        "JS": "\n(tarteaucitron.job = tarteaucitron.job || []).push('playplay');"
     },
     "podcloud": {
         "hasModele": false,
@@ -2013,7 +2022,7 @@
             "ptac_height"
         ],
         "type": "video",
-        "JS": "<div class=\"tac_podcloud\" data-url=\"ptac_url\" data-width=\"ptac_width\" data-height=\"ptac_height\"><\/div>\n(tarteaucitron.job = tarteaucitron.job || []).push('podcloud');"
+        "JS": "\n(tarteaucitron.job = tarteaucitron.job || []).push('podcloud');"
     },
     "prezi": {
         "hasModele": false,
@@ -2023,7 +2032,7 @@
             "ptac_height"
         ],
         "type": "video",
-        "JS": "<div class=\"prezi-canvas\" data-id=\"ptac_slide_id\" data-width=\"ptac_width\" data-height=\"ptac_height\"><\/div>\n(tarteaucitron.job = tarteaucitron.job || []).push('prezi');"
+        "JS": "\n(tarteaucitron.job = tarteaucitron.job || []).push('prezi');"
     },
     "slideshare": {
         "hasModele": false,
@@ -2033,7 +2042,7 @@
             "ptac_height"
         ],
         "type": "video",
-        "JS": "<div class=\"slideshare-canvas\" data-id=\"ptac_slide_id\" data-width=\"ptac_width\" data-height=\"ptac_height\"><\/div>\n(tarteaucitron.job = tarteaucitron.job || []).push('slideshare');"
+        "JS": "\n(tarteaucitron.job = tarteaucitron.job || []).push('slideshare');"
     },
     "soundcloud": {
         "hasModele": false,
@@ -2052,7 +2061,7 @@
             "ptac_artwork"
         ],
         "type": "video",
-        "JS": "<div class=\"soundcloud_player\" data-playable-id=\"ptac_track_or_playlist_id\" data-playable-type=\"ptac_type\" data-height=\"ptac_iframe_height\" data-color=\"ptac_accent_color\" data-auto-play=\"ptac_autoplay\" data-hide-related=\"ptac_hide_related\" data-show-comments=\"ptac_show_comment\" data-show-user=\"ptac_show_user\" data-show-reposts=\"ptac_show_repost\" data-show-teaser=\"ptac_show_teaser\" data-visual=\"ptac_visual\" data-artwork=\"ptac_artwork\"><\/div>\n(tarteaucitron.job = tarteaucitron.job || []).push('soundcloud');"
+        "JS": "\n(tarteaucitron.job = tarteaucitron.job || []).push('soundcloud');"
     },
     "spotify": {
         "hasModele": false,
@@ -2062,7 +2071,7 @@
             "ptac_height"
         ],
         "type": "video",
-        "JS": "<div class=\"spotify_player\" data-spotifyID=\"ptac_spotifyID\" data-width=\"ptac_width\" data-height=\"ptac_height\"><\/div>\n(tarteaucitron.job = tarteaucitron.job || []).push('spotify');"
+        "JS": "\n(tarteaucitron.job = tarteaucitron.job || []).push('spotify');"
     },
     "tiktokvideo": {
         "hasModele": false,
@@ -2081,7 +2090,7 @@
             "ptac_parent"
         ],
         "type": "video",
-        "JS": "<div class=\"twitch_player\" data-videoID=\"ptac_video_id\" data-width=\"ptac_width\" data-height=\"ptac_height\" data-parent=\"ptac_parent\"><\/div>\n(tarteaucitron.job = tarteaucitron.job || []).push('twitch');"
+        "JS": "\n(tarteaucitron.job = tarteaucitron.job || []).push('twitch');"
     },
     "videas": {
         "hasModele": false,
@@ -2091,7 +2100,7 @@
             "ptac_height"
         ],
         "type": "video",
-        "JS": "<div class=\"tac_videas\" data-id=\"ptac_id\" data-width=\"ptac_width\" data-height=\"ptac_height\"><\/div>\n(tarteaucitron.job = tarteaucitron.job || []).push('videas');"
+        "JS": "\n(tarteaucitron.job = tarteaucitron.job || []).push('videas');"
     },
     "vimeo": {
         "hasModele": false,
@@ -2101,7 +2110,7 @@
             "ptac_height"
         ],
         "type": "video",
-        "JS": "<div class=\"vimeo_player\" data-videoID=\"ptac_video_id\" data-width=\"ptac_width\" data-height=\"ptac_height\"><\/div>\n(tarteaucitron.job = tarteaucitron.job || []).push('vimeo');"
+        "JS": "\n(tarteaucitron.job = tarteaucitron.job || []).push('vimeo');"
     },
     "webtvnu": {
         "hasModele": false,
@@ -2109,7 +2118,7 @@
             "ptac_videoID"
         ],
         "type": "video",
-        "JS": "<div class=\"webtvnu_player\" data-videoID=\"ptac_videoID\"><\/div>\n(tarteaucitron.job = tarteaucitron.job || []).push('webtvnu');"
+        "JS": "\n(tarteaucitron.job = tarteaucitron.job || []).push('webtvnu');"
     },
     "youtube": {
         "hasModele": false,
@@ -2130,7 +2139,7 @@
             "ptac_end"
         ],
         "type": "video",
-        "JS": "<div class=\"youtube_player\" data-videoID=\"ptac_video_id\" data-width=\"ptac_width\" data-height=\"ptac_height\" data-theme=\"ptac_theme\" data-rel=\"ptac_rel\" data-controls=\"ptac_controls\" data-showinfo=\"ptac_showinfo\" data-autoplay=\"ptac_autoplay\" data-mute=\"ptac_mute\" srcdoc=\"ptac_srcdoc\" data-loop=\"ptac_loop\" data-loading=\"ptac_loading\" data-start=\"ptac_start\" data-end=\"ptac_end\"><\/div>\n(tarteaucitron.job = tarteaucitron.job || []).push('youtube');"
+        "JS": "\n(tarteaucitron.job = tarteaucitron.job || []).push('youtube');"
     },
     "youtubeapi": {
         "hasModele": false,

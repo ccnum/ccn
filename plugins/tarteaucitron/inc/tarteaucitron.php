@@ -240,7 +240,7 @@ function tarteaucitron_generer_json($data) {
 	function wrap_ptac_in_quotes($js) {
 		return preg_replace_callback(
 			"/(tarteaucitron\.user\.[a-zA-Z0-9_]+)\s*=\s*(ptac_[a-zA-Z0-9_-]+)\s*;/",
-			fn ($matches) => "{$matches[1]} = '{$matches[2]}';",
+			fn($matches) => "{$matches[1]} = '{$matches[2]}';",
 			$js
 		);
 	}
@@ -259,7 +259,6 @@ function tarteaucitron_generer_json($data) {
 			return $code;
 		}
 		return '';
-
 	}
 	// Parcours des catégories
 	foreach ($data as $category => $items) {
@@ -281,7 +280,7 @@ function tarteaucitron_generer_json($data) {
 			$fullJs = trim($jsClean) . "\n" . trim($htmlClean);
 
 			// Remplacer placeholders ###XXX### par ptac_XXX
-			$fullJs = preg_replace_callback($pattern, fn ($m) => formatParam($m[1]), $fullJs);
+			$fullJs = preg_replace_callback($pattern, fn($m) => formatParam($m[1]), $fullJs);
 
 			// Échapper commentaires multi-lignes
 			$fullJs = escape_multiline_comments($fullJs);
@@ -291,6 +290,13 @@ function tarteaucitron_generer_json($data) {
 
 			// Supprimer tous les blocs <s>...</s>
 			$fullJs = preg_replace('#<s>.*?</s>#s', '', $fullJs);
+
+			// Supprimer toutes les div complètes
+			$fullJs = preg_replace(
+				'#<div\b[^>]*>.*?</div>#si',
+				'',
+				$fullJs
+			);
 
 			// Supprimer complètement les fonctions du type tarteaucitron.user.xxxMore = function () { ... };
 			$fullJs = preg_replace(
