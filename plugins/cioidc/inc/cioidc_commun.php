@@ -505,6 +505,7 @@ function cioidc_tableau_des_champs() {
 		'end_session_endpoint',
 		'jwks_uri',
 		'token_endpoint_auth_methods_supported',
+		'serveur_sans_userinfo',
 		'http_proxy',
 		'creer_auteur',
 		'redirect_url_avec_pi'
@@ -524,6 +525,7 @@ function cioidc_tableau_des_valeurs_par_defaut() {
 		'mode_auth' => 'spip',
 		'titre_se_connecter' => _T('cioidc:titre_se_connecter_defaut'),
 		'nom_serveur_spip' => _T('cioidc:nom_serveur_spip_defaut'),
+		'serveur_sans_userinfo' => 'non',
 		'http_proxy' => 'non',
 		'redirect_url_avec_pi' => 'oui',
 		'uid_champ_spip' => 'email',
@@ -826,6 +828,17 @@ function cioidc_filtrer_acr($texte, $verif_only = false) {
 	$tableau = ['_'];
 
 	return cioidc_filtrer_caracteres($texte, $tableau, $verif_only);
+}
+
+/**
+ * Fonction de filtrage
+ *
+ * @param string $texte
+ * @param bool $verif_only
+ * @return bool|string
+ */
+function cioidc_filtrer_serveur_sans_userinfo($texte, $verif_only = false) {
+	return in_array($texte, ['oui', 'non']);
 }
 
 /**

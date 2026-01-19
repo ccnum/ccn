@@ -2,7 +2,7 @@
 
 // This is a SPIP language file  --  Ceci est un fichier langue de SPIP
 
-return [
+$GLOBALS[$GLOBALS['idx_lang']] = [
 	'avertissement' => '<b>CAUTION</b> : It is imperative to first select (below) the authentication mode entitled <b>"OpenID Connect or SPIP"</b> in order to verify, without risk, that the authentication is working correctly. Once this verification has been carried out, we can then select (below) the authentication mode entitled: "OpenID Connect".',
 	'cioidc_titre' => 'Configure OpenID Connect',
 	'cioidc_menu_config' => 'OpenID Connect',
@@ -92,4 +92,6 @@ return [
 	'cicas_actif' => 'The CICAS plugin is active, so <b>the operation of the CIOIDC plugin is suspended</b>. When CICAS is deactivated, the CIOIDC plugin will be able to function.',
     	'qu_est_proconnect' => 'What is ProConnect',
 	'proconnect' => 'ProConnect',
+	'serveur_sans_userinfo' => 'Special case of an OpenID Connect server without userinfo',
+	'serveur_sans_userinfo_explication' => 'If yes, the information will be searched for in the token (instead of userinfo).',
 ];
