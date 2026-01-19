@@ -1,11 +1,11 @@
 <paquet
 	prefix="cicas"
 	categorie="auteur"
-	version="3.2.0"
+	version="3.2.2"
 	etat="test"
-	compatibilite="[3.2.0;]"
+	compatibilite="[4.0.0;4.*]"
 	logo="prive/themes/spip/images/pyramides-32.png"
-	documentation="http://contrib.spip.net/cicas-plugin-d-authentification-avec-CAS-pour-SPIP"	
+	documentation="https://contrib.spip.net/cicas-plugin-d-authentification-avec-CAS-pour-SPIP"	
 >	
 
 	<nom>cicas : Authentification CAS (SSO)</nom>
