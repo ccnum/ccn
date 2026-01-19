@@ -3,14 +3,10 @@
 // extrait automatiquement de https://trad.spip.net/tradlang_module/paquet-spip_bonux?lang_cible=es
 // ** ne pas modifier le fichier **
 
-if (!defined('_ECRIRE_INC_VERSION')) {
-	return;
-}
-
-$GLOBALS[$GLOBALS['idx_lang']] = array(
+return [
 
 	// S
 	'spip_bonux_description' => 'El plugin que lava más SPIP que SPIP, ¡con bonitos regalos dentro!
 	Tableros, contador, etcétera.', # MODIF
-	'spip_bonux_slogan' => 'El plugin que lava más SPIP que SPIP.' # MODIF
-);
+	'spip_bonux_slogan' => 'El plugin que lava más SPIP que SPIP.', # MODIF
+];
