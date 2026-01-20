@@ -121,7 +121,7 @@ return [
 	'option_fichiers_mime_image_web_label' => 'Autoriser uniquement les images web (gif, jpg, png)', # MODIF
 	'option_fichiers_mime_label' => 'Type Mime et extension',
 	'option_fichiers_mime_pas_de_verification_label' => 'Autoriser tous les types et extensions (déconseillé)',
-	'option_fichiers_mime_specifique_label' => 'Autoriser  uniquement les types et extensions cochées ci-dessous',
+	'option_fichiers_mime_specifique_label' => 'Autoriser  uniquement les types et extensions cochées ci-dessous', # MODIF
 	'option_fichiers_mime_tout_mime_label' => 'Autoriser tous les types Mime et extensions connues de SPIP',
 	'option_fichiers_taille_max_label' => 'Poids maximum du fichier (en kio)',
 	'option_fichiers_type_mime_label' => 'Cocher les types MIME autorisés',
@@ -146,7 +146,7 @@ return [
 	'option_url_mode_php_filter' => 'Vérification complète de l’url via le filtre FILTER_VALIDATE_URL de php',
 	'option_url_mode_protocole_seul' => 'Vérification uniquement de la présence d’un protocole',
 	'option_url_protocole_label' => 'Nom du protocole à vérifier',
-	'option_url_type_protocole_exact' => 'Saisir un protocole ci-dessous :',
+	'option_url_type_protocole_exact' => 'Saisir un protocole ci-dessous :', # MODIF
 	'option_url_type_protocole_ftp' => 'Protocoles ftp: ftp ou sftp',
 	'option_url_type_protocole_label' => 'Type de protocole à vérifier',
 	'option_url_type_protocole_mail' => 'Protocoles mail : imap, pop3 ou smtp',

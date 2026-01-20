@@ -283,6 +283,10 @@ function saisies_generer_vue($saisie, $env = [], $env_obligatoire = []) {
 	if (!is_array($saisie)) {
 		return '';
 	}
+	// Et si on est hors vu
+	if ($saisie['options']['hors_vue'] ?? '') {
+		return '';
+	}
 
 	$contexte = [];
 

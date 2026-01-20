@@ -21,15 +21,14 @@ include_spip('inc/utils');
  * Effacer le contenu d'une rubrique
  *
  * @param null $arguments Possibilité d'avoir X ou X:vider_arbo.
- * @return void
  */
 function action_vider_rubrique_dist($arguments = null) {
-	if (is_null($arguments)) {
+	if ($arguments === null) {
 		$securiser_action = charger_fonction('securiser_action', 'inc');
 		$arguments = $securiser_action();
 	}
 
-	$message = "Suppression des articles de la rubrique ";
+	$message = 'Suppression des articles de la rubrique ';
 	$arguments = explode(':', $arguments);
 	$id_rubrique = $arguments[0];
 	$vider_arbo = '';
@@ -37,9 +36,12 @@ function action_vider_rubrique_dist($arguments = null) {
 		$vider_arbo = $arguments[1];
 		$message = "Suppression de l'arborescence complète de la rubrique ";
 	}
-	spip_log($message . $id_rubrique, "vider_rubrique");
+	spip_log($message . $id_rubrique, 'vider_rubrique');
 	if (intval($id_rubrique)) {
-		$contexte = array('id_rubrique' => $id_rubrique, 'vider_arbo' => $vider_arbo);
-		$suppression = recuperer_fond("admin/vider_rubrique", $contexte);
+		$contexte = [
+			'id_rubrique' => $id_rubrique,
+			'vider_arbo' => $vider_arbo,
+		];
+		$suppression = recuperer_fond('admin/vider_rubrique', $contexte);
 	}
 }

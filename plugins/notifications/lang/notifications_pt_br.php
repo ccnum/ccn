@@ -32,7 +32,7 @@ $GLOBALS[$GLOBALS['idx_lang']] = array(
 	'article_refuse_detail' => 'O artigo "@titre@" acabou de ser rejeitado por @connect_nom@.',
 	'article_refuse_sujet' => '[@nom_site_spip@] REJEITA: @titre@',
 	'article_refuse_titre' => 'Artigo rejeitado',
-	'article_valide_date' => 'Sob reversa de mudança, este artigo será publicado',
+	'article_valide_date' => 'Sob reserva de alteração, este artigo será publicado',
 	'article_valide_detail' => 'O artigo "@titre@" foi validado por @connect_nom@.',
 	'article_valide_sujet' => '[@nom_site_spip@] VÁLIDO: @titre@',
 	'article_valide_titre' => 'Artigo validado
@@ -49,7 +49,7 @@ $GLOBALS[$GLOBALS['idx_lang']] = array(
 	'breve_propose_url' => 'Você foi convidado a consultar a notícia curta e dar sua opinião no fórum ao qual ela está ligada. Ela está disponível no endereço:',
 	'breve_publie_detail' => 'A notícia curta "@titre@" acabou de ser publicada por @connect_nom@.',
 	'breve_publie_sujet' => '[@nom_site_spip@] PUBLICA: @titre@',
-	'breve_publie_titre' => 'Notícia curta publicada
+	'breve_publie_titre' => 'Nota publicada
 	--------------',
 
 	// E

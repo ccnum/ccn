@@ -1,0 +1,37 @@
+<svg xmlns="http://www.w3.org/2000/svg" height="64" width="64" viewBox="0 0 618 618">
+  <metadata>
+    <rdf:RDF
+          xmlns:rdf = "http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+          xmlns:rdfs = "http://www.w3.org/2000/01/rdf-schema#"
+          xmlns:dc = "http://purl.org/dc/elements/1.1/" >
+      <rdf:Description
+          dc:title="Pyramides de Gizeh"
+          dc:description=""
+          dc:publisher="Ministère de la Transition Ecologique"
+          dc:creator= "Christophe IMBERTI (cf. CPI art L121-1)"
+          dc:date="2025-09-29"
+          dc:format="image/svg+xml"
+          dc:language="fr" >
+      </rdf:Description>
+    </rdf:RDF>
+  </metadata>
+    
+  <!-- Ciel -->
+  <rect width="618" height="388" fill="#D9E1F0" />
+  
+  <!-- Sol -->
+  <rect y="388" width="618" height="230" fill="#EAC07C" />
+  
+  <!-- Pyramide à droite -->
+  <polygon points="549,285 617,344 617,418 498,418" fill="#C78A57" stroke="#291E1D" stroke-width="5" />
+  <polygon points="549,285 498,418 418,415" fill="#291E1D" />
+
+  <!-- Pyramide au centre -->
+  <polygon points="373,208 590,430 266,430" fill="#C78A57" stroke="#291E1D" stroke-width="5" />
+  <polygon points="373,208 266,430 173,428" fill="#291E1D" />
+
+  <!-- Pyramide à gauche -->
+  <polygon points="163,237 346,447 24,447" fill="#C78A57" stroke="#291E1D" stroke-width="5" />
+  <polygon points="163,237 24,447 0,436 0,410" fill="#291E1D" />
+
+</svg>

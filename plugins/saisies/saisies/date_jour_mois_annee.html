@@ -1,57 +1,170 @@
 #CACHE{24*3600*31,statique}
 [(#REM)
 
-	/!\ Cette saisie nécessite du javascript pour fonctionner.
-		En absence de JS, seul un champ de saisie texte est affiché.
+	⚠️ Cette saisie nécessite du javascript pour fonctionner correctement.
+	En absence de JS, seul un champ de date est affiché.
 
-	Cette saisie cree 3 champs a partir d'une date au format datetime mysql.
-	A chaque modification, un champ cache est modifie, contenant la date au format datetime.
+	Fonctionnement : initialement seul l'input date est visible (type date si format date, datetime-local si datetime),
+	les inputs jour, mois et année sont masqués et désactivés.
+	Ensuite le JS masque l'input date, affiche et active les inputs des autres composants,
+	puis synchronise en direct l'input date avec ces derniers.
+
+	Par défaut, poste au format datetime.
+
+	Si tous les inputs sont vides, la valeur postée sera vide également,
+	comme avec un input de date normal.
+
+	Si l'on souhaite forcer une valeur ou désactiver un des composants,
+	il faut composer avec la valeur par défaut et les options readonly, hidden, et disable propres à chaque composant.
+
+	Quand il y a la même option globalement et pour un composant précis,
+	c'est l'option globale qui prend le pas : readonly > readonly_jour
 
 	Options :
-	- label_(jour|mois|annee)
-	- size_(jour|mois|annee)
-	- maxlength_(jour|mois|annee)
-	- datetime, par défaut oui. Si pas oui, utilisera une date au format aaaa-mm-jj au lieu d'un datetime mysql
+	- datetime : 'oui', true, 1 ou '1' pour utiliser une date au format datetime Y-m-d H:i:s (par défaut)
+	             Toute autre valeur pour une date au format Y-m-d
+	- autodater : valeur évaluée à true pour utiliser la date courante comme date par défaut
+	- label_(jour|mois|annee) : label personnalisé de chaque composant
+	- disable_(jour|mois|annee) : valeur évaluée à true pour passer un des composants en disabled
+	- disable_avec_post_(jour|mois) : valeur évaluée à true pour simuler le readonly sur le jour ou le mois
+	- readonly_annee : valeur évaluée à true pour passer l'année en readonly
+	- hidden_(jour|mois|annee) : valeur évaluée à true pour passer un des composants en hidden
+	- obligatoire_(jour|mois|annee) : valeur évaluée à true pour passer un des composants en required
+	- class_(jour|mois|annee) : classes ajoutées à chaque composant
+	- (min|max|step)_annee : valeur min, max et pas de l'année
 
 	[(#SAISIE{date_jour_mois_annee, date_naissance,
 		label=Date de naissance
 	})]
 ]
-#SET{valeur,#ENV{valeur,#ENV{defaut}}}
-[(#SET{id,[(#ENV**|md5|substr{0,6})]})]
-<input type='text' name="#ENV{nom}" id="#GET{id}" value="[(#GET{valeur}|sinon{0000-00-00[(#ENV{datetime,oui}|=={oui}|oui)00:00:00]})]" class='datetime' />
+#SET{id,#ENV{id}}
+#SET{datetime,#ENV{datetime,oui}|in_array{#LISTE{oui,#EVAL{true},1,#EVAL{1}},#EVAL{true}}}
+#SET{defaut_autodater,#ENV{autodater}|?{#VAL{Y-m-d}|concat{#GET{datetime}|?{' H:i:s'}}|date}}
+#SET{valeur,#ENV{valeur,#ENV{valeur_forcee,#ENV{defaut,#GET{defaut_autodater}}}}}
+#SET{valeur,#GET{valeur}|?{#GET{valeur}|affdate{#GET{datetime}|?{Y-m-d H:i:s,Y-m-d}}}}
 
-<script type='text/javascript'>
-function activer_dateur_#GET{id}() {
-	jour = '\
-		<div class="choix">\
-			[<label for="champ_[(#ENV{nom}|saisie_nom2classe)_jour]">(#ENV{label_jour,<:saisies:label_jour:>})</label>]\
-			<input type="text" name="[(#ENV{nom}|saisie_nom2classe)_jour]" class="text date_jour[ (#ENV{class})]" id="champ_[(#ENV{nom}|saisie_nom2classe)_jour]"[ value="(#GET{valeur}|journum)"][ size="(#ENV{size_jour, 2})"][ maxlength="(#ENV{maxlength_jour, 2})"][ disabled="(#ENV{disable})"][ readonly="(#ENV{readonly})"][(#ENV{obligatoire}|et{#HTML5}|oui) required="required"] onChange="saisies_date_jour_mois_annee_changer_date(this, \'#ENV{datetime,oui}\');" onkeyup="if (this.value.length == 2 && jQuery.inArray(event.keyCode, [9,16]) == -1) {jQuery(this).parent().next().find(\'input\').focus();}" />\
-		</div>\
-	';
+[(#REM) Valeurs des composants.
+        Attention, en cas de valeur vide ou '0000-00-00', affdate retourne '1999-11-30' !
+]
+#SET{jour,#GET{valeur}|?{#GET{valeur}|affdate{d}}}
+#SET{mois,#GET{valeur}|?{#GET{valeur}|affdate{m}}}
+#SET{annee,#GET{valeur}|?{#GET{valeur}|affdate{Y}}}
 
-	mois = '\
-		<div class="choix">\
-			[<label for="champ_[(#ENV{nom}|saisie_nom2classe)_mois]">(#ENV{label_mois,<:saisies:label_mois:>})</label>]\
-			<input type="text" name="[(#ENV{nom}|saisie_nom2classe)_mois]" class="text date_mois[ (#ENV{class})]" id="champ_[(#ENV{nom}|saisie_nom2classe)_mois]"[ value="(#GET{valeur}|mois)"][ size="(#ENV{size_mois, 2})"][ maxlength="(#ENV{maxlength_mois, 2})"][ disabled="(#ENV{disable})"][ readonly="(#ENV{readonly})"][(#ENV{obligatoire}|et{#HTML5}|oui) required="required"] onChange="saisies_date_jour_mois_annee_changer_date(this, \'#ENV{datetime,oui}\');" onkeyup="if (this.value.length == 2 && jQuery.inArray(event.keyCode, [9,16]) == -1) {jQuery(this).parent().next().find(\'input\').focus();}" />\
-		</div>\
-	';
+<div class="composants-date mode-jour-mois-annee" id="conteneur_date_[(#GET{id})]">
 
-	annee = '\
-		<div class="choix">\
-			[<label for="champ_[(#ENV{nom}|saisie_nom2classe)_annee]">(#ENV{label_annee,<:saisies:label_annee:>})</label>]\
-			<input type="text" name="[(#ENV{nom}|saisie_nom2classe)_annee]" class="text date_annee[ (#ENV{class})]" id="champ_[(#ENV{nom}|saisie_nom2classe)_annee]"[ value="(#GET{valeur}|annee)"][ size="(#ENV{size_annee, 4})"][ maxlength="(#ENV{maxlength_annee, 4})"][ disabled="(#ENV{disable})"][ readonly="(#ENV{readonly})"][(#ENV{obligatoire}|et{#HTML5}|oui) required="required"] onChange="saisies_date_jour_mois_annee_changer_date(this, \'#ENV{datetime,oui}\');" />\
-		</div>\
-	';
+	[(#REM) Date complète, masquée et synchronisée en JS ]
+	<div class="composants-date__composant composants-date__composant_date" data-composant="date">
+		<INCLURE{
+			fond=saisies/input,
+			env,
+			nom=#ENV{nom},
+			describedby=#ENV{describedby},
+			valeur=#GET{valeur},
+			type=#GET{datetime}|?{datetime-local,date},
+			disable=#ENV{disable},
+			readonly=#ENV{readonly},
+			obligatoire=#ENV{obligatoire},
+			class=input-date,
+			attributs=#LISTE{data-composant-input=date, data-format=#GET{datetime}|?{datetime,date}}|implode{' '},
+		}/>
+	</div>
 
-	if(!$.browser.msie || parseInt($.browser.version) >= 9)
-		jQuery('##GET{id}')[0].type = 'hidden';
-	else
-		jQuery('##GET{id}').css({'height':'0px','width':'0px','border':'none'});
-	jQuery('##GET{id}').after(jour + mois + annee);
-}
+	[(#REM) Jour ]
+	#SET{saisie_jour,#ENV{hidden_jour}|?{hidden,selection}}
+	#SET{readonly_jour,#ENV{readonly,#ENV{disable_avec_post_jour}}|?{#EVAL{true}}}
+	#SET{simuler_readonly_jour,#GET{saisie_jour}|=={selection}|et{#GET{readonly_jour}}}
+	#SET{disabled_jour,#ENV{disable,#ENV{disable_jour,#GET{readonly_jour}}}|?{#EVAL{true}}}
+	#SET{attributs_jour,#LISTE{
+		data-composant-input=jour,
+		data-disabled=#GET{disabled_jour}|?{true,false}
+	}|implode{' '}}
+	<div hidden style="display:none" class="composants-date__composant composants-date__composant_jour[ (#ENV{hidden_jour}|oui)saisies-visually-hidden]" data-composant="jour">
+		[(#ENV{hidden_jour}|non)
+			[<label class="composants-date__label" for="[champ_(#GET{id})_jour]">(#ENV{label_jour,<:saisies:label_jour:>})</label>]
+		]
+		<INCLURE{
+			fond=saisies/#GET{saisie_jour},
+			env,
+			nom=#ENV{nom}|concat{_jour},
+			valeur=#GET{jour},
+			data=#REM|saisies_lister_date_jours{},
+			disable=disabled,
+			obligatoire=#ENV{obligatoire,#ENV{obligatoire_jour}},
+			class=#VAL{input-jour}|concat{' ',#ENV{class_jour}}|trim{},
+			attributs=#GET{simuler_readonly_jour}|non|?{#GET{attributs_jour}},
+		}/>
+		[(#GET{simuler_readonly_jour}|oui)
+			<INCLURE{
+				fond=saisies/hidden,
+				env,
+				nom=#ENV{nom}|concat{_jour},
+				valeur=#GET{jour},
+				attributs=#GET{attributs_jour},
+			} />
+		]
+	</div>
 
-jQuery(document).ready(function(){
-	activer_dateur_#GET{id}();
-});
-</script>
+	[(#REM) Mois ]
+	#SET{saisie_mois,#ENV{hidden_mois}|?{hidden,selection}}
+	#SET{readonly_mois,#ENV{readonly,#ENV{disable_avec_post_mois}}|?{#EVAL{true}}}
+	#SET{simuler_readonly_mois,#GET{saisie_mois}|=={selection}|et{#GET{readonly_mois}}}
+	#SET{disabled_mois,#ENV{disable,#ENV{disable_mois,#GET{readonly_mois}}}|?{#EVAL{true}}}
+	#SET{attributs_mois,#LISTE{
+		data-composant-input=mois,
+		data-disabled=#GET{disabled_mois}|?{true,false}
+	}|implode{' '}}
+	<div hidden style="display:none" class="composants-date__composant composants-date__composant_mois[ (#ENV{hidden_mois}|oui)saisies-visually-hidden]" data-composant="mois">
+		[(#ENV{hidden_mois}|non)
+			[<label class="composants-date__label" for="[champ_(#GET{id})_mois]">(#ENV{label_mois,<:saisies:label_mois:>})</label>]
+		]
+		<INCLURE{
+			fond=saisies/#GET{saisie_mois},
+			env,
+			nom=#ENV{nom}|concat{_mois},
+			valeur=#GET{mois},
+			data=#REM|saisies_lister_date_noms_mois{},
+			disable=disabled,
+			obligatoire=#ENV{obligatoire,#ENV{obligatoire_mois}},
+			class=#VAL{input-mois}|concat{' ',#ENV{class_mois}}|trim{},
+			attributs=#GET{simuler_readonly_mois}|non|?{#GET{attributs_mois}},
+		}/>
+		[(#GET{simuler_readonly_mois}|oui)
+			<INCLURE{
+				fond=saisies/hidden,
+				env,
+				nom=#ENV{nom}|concat{_mois},
+				valeur=#GET{mois},
+				attributs=#GET{attributs_mois},
+			} />
+		]
+	</div>
+
+	[(#REM) Année ]
+	<div hidden style="display:none" class="composants-date__composant composants-date__composant_annee[ (#ENV{hidden_annee}|oui)saisies-visually-hidden]" data-composant="annee">
+		[(#ENV{hidden_annee}|non)
+			[<label class="composants-date__label" for="[champ_(#GET{id})_annee]">(#ENV{label_annee,<:saisies:label_annee:>})</label>]
+		]
+		<INCLURE{
+			fond=saisies/#ENV{hidden_annee}|?{hidden,input},
+			env,
+			nom=#ENV{nom}|concat{_annee},
+			valeur=#GET{annee},
+			type=number,
+			size=4,
+			min=#ENV{min_annee,0},
+			max=#ENV{max_annee},
+			step=#ENV{step_annee,1},
+			disable=disabled,
+			readonly=#ENV{readonly,#ENV{readonly_annee}},
+			obligatoire=#ENV{obligatoire,#ENV{obligatoire_annee}},
+			class=#VAL{input-annee}|concat{' ',#ENV{class_annee}}|trim{},
+			attributs=#LISTE{data-composant-input=annee, data-disabled=#ENV{disable,#ENV{disable_annee}}|?{true,false}}|implode{' '},
+		}/>
+	</div>
+
+	[(#REM) Bouton pour vider les valeurs, affiché en JS ]
+	<button hidden style="display:none" class="btn btn_reset btn_link" type="button" title="<:saisies:bouton_vider_champs|attribut_html:>">
+		<span class="picto">[(#VAL{saisies_reset_calendrier-xx.svg}|chemin_image|balise_svg)]</span>
+	</button>
+
+</div>

@@ -1,11 +1,8 @@
 <?php
 // This is a SPIP language file  --  Ceci est un fichier langue de SPIP
 // Fichier source, a modifier dans https://git.spip.net/spip-contrib-extensions/champs_extras_core.git
-if (!defined('_ECRIRE_INC_VERSION')) {
-	return;
-}
 
-$GLOBALS[$GLOBALS['idx_lang']] = array(
+return [
 
 	// C
 	'cextras_description' => 'Offre une API simple permettant de créer de nouveaux champs dans les objets éditoriaux.
@@ -13,5 +10,5 @@ $GLOBALS[$GLOBALS['idx_lang']] = array(
 					une interface graphique de gestion de ces nouveaux champs.',
 	'cextras_nom' => 'Champs Extras',
 	'cextras_slogan' => 'API de gestion de nouveaux champs dans les objets éditoriaux.',
-	'cextras_titre' => 'Champs Extras'
-);
+	'cextras_titre' => 'Champs Extras',
+];

@@ -14,9 +14,18 @@ include_spip('inc/cicas_commun');
 
 
 function formulaires_cicas_serveur_charger_dist($id_serveur){
-
+    
 	$valeurs = array();
-	
+        
+	if ( !in_array(_request('exec'), array('cicas_config', 'cicas_serveur')) OR !test_espace_prive() ) {
+		return;
+        }
+
+        $id_serveur = cicas_serveur_id_serveur_safe($id_serveur);
+	if (!$id_serveur) {
+		return;
+        }
+
 	if (!autoriser('configurer', 'configuration'))
 		return;
 		
@@ -79,6 +88,7 @@ function formulaires_cicas_serveur_verifier_dist($id_serveur){
 
 function formulaires_cicas_serveur_traiter_dist($id_serveur){
         $res = array();
+        $id_serveur = cicas_serveur_id_serveur_safe($id_serveur);
 
 	// cas d'un nouveau serveur additionnel
 	if ($id_serveur=='nouveau')
@@ -132,6 +142,20 @@ function formulaires_cicas_serveur_traiter_dist($id_serveur){
 	$res['redirect'] = $redirect;
 	
 	return $res;	
+}
+
+function cicas_serveur_id_serveur_safe($id_serveur) {
+        $id_serveur_safe = '';
+    
+	if (intval($id_serveur)>=1) {
+                $id_serveur_safe = intval($id_serveur);
+	} elseif ($id_serveur == 'initial') {
+                $id_serveur_safe = $id_serveur;
+	} elseif ($id_serveur == 'nouveau') {
+                $id_serveur_safe = $id_serveur;
+	}
+        
+        return $id_serveur_safe;
 }
 
 ?>

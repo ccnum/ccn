@@ -3,11 +3,7 @@
 // extrait automatiquement de https://trad.spip.net/tradlang_module/corbeille?lang_cible=nl
 // ** ne pas modifier le fichier **
 
-if (!defined('_ECRIRE_INC_VERSION')) {
-	return;
-}
-
-$GLOBALS[$GLOBALS['idx_lang']] = array(
+return [
 
 	// A
 	'articles_corbeille_tous' => '@nb@ artikelen in de prullenmand',
@@ -46,5 +42,5 @@ $GLOBALS[$GLOBALS['idx_lang']] = array(
 	'sites_corbeille_un' => '1 site in de prullenmand',
 
 	// V
-	'voir_detail' => 'Zie de details'
-);
+	'voir_detail' => 'Zie de details',
+];

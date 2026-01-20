@@ -1,20 +1,25 @@
 #CACHE{24*3600*31,statique}
-<select name="#ENV{nom}" id="champ_[(#ENV{id,#ENV{nom}}|saisie_nom2classe)]">
+<select name="#ENV{nom}" id="#ENV{id}">
 	#SET{tab,#ENV{formulaire}}
 	#SET{tab_par_nom,#ENV{formulaire}|saisies_lister_par_nom}
 	#SET{indent,0}
 	#SET{liste_parents,#ARRAY{0,''}}
+	#SET{position_actuelle,-2}
 	<BOUCLE_parcours(DATA){source tableau, #GET{tab}}>
 	#SET{saisie,#VALEUR}
-	<option value="#GET{saisie/options/nom}" [(#ENV{valeur,#ENV{saisie_a_positionner}}|=={#GET{saisie/options/nom}}|oui)selected="selected"]>
+	<option value="#GET{saisie/options/nom}" [(#ENV{valeur,#ENV{saisie_a_positionner}}|=={#GET{saisie/options/nom}}|oui)selected="selected"] [(#CLE|moins{1}|=={#GET{position_actuelle}}|oui) disabled="disabled"]>
 		[(#VAL{&nbsp;}|str_repeat{#GET{indent}})]
-		[(#GET{saisie/options/label}
-			|sinon{#GET{saisie/options/label_case}}
-			|sinon{#GET{saisies/options/titre}}
-			|sinon{#GET{saisies/option/texte}}
-			|sinon{#GET{saisie/options/nom}}
-			|sinon{''}
-			|couper{60})]
+		[(#ENV{saisie_a_positionner}|=={#GET{saisie/options/nom}}|?{
+			#SET{position_actuelle,#CLE}
+			<:saisies:construire_position_actuelle:/>
+			,[(#GET{saisie/options/label}
+				|sinon{#GET{saisie/options/label_case}}
+				|sinon{#GET{saisies/options/titre}}
+				|sinon{#GET{saisies/option/texte}}
+				|sinon{#GET{saisie/options/nom}}
+				|sinon{''}
+				|couper{60})]
+			})]
 	</option>
 		<BOUCLE_test_enfants(CONDITION){si #GET{saisie/options/nom}|!={#ENV{saisie_a_positionner}}|et{#GET{saisie/saisies}|is_array}}>
 		#SET{tab,#GET{saisie/saisies}}

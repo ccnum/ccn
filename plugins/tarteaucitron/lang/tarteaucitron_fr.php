@@ -1,6 +1,7 @@
 <?php
 // This is a SPIP language file  --  Ceci est un fichier langue de SPIP
 // Fichier source, a modifier dans https://git.spip.net/spip-contrib-extensions/tarteaucitron.git
+
 return [
 
 	// C
@@ -25,6 +26,8 @@ return [
 	'cfg_choose_option' => 'Choisissez une option',
 	'cfg_close_popup' => 'Afficher un bouton de fermeture sur le bandeau',
 	'cfg_close_popup_explication' => 'Permet au visiteur de fermer le bandeau sans accepter ou refuser',
+	'cfg_consent_mode' => 'Consentement Mode',
+	'cfg_consent_mode_explication' => 'Si vous utilisez des services Google ads & GA4 ou Clarity & Bing Ads, vous pouvez désactiver le "consent mode"',
 	'cfg_cookiedomain' => 'Domaine',
 	'cfg_cookiedomain_explication' => 'Si le cookie est partagé avec d’autres sites du même domaine, veuillez renseigner ce champ.',
 	'cfg_cookiename' => 'Nom du cookie',
@@ -48,6 +51,7 @@ return [
 	'cfg_group_services_explication' => 'Par type de service',
 	'cfg_icon' => 'Icône',
 	'cfg_icon_explication' => 'Choisissez une image carrée de 50px de côté',
+	'cfg_icon_texte' => 'Gestionnaire de cookies - ouverture d’une fenêtre',
 	'cfg_iconposition' => 'Positionner le bouton',
 	'cfg_image' => 'Image',
 	'cfg_installer' => 'Activer',
@@ -116,5 +120,5 @@ return [
 
 	// T
 	'tarteaucitron_titre' => 'Tarteaucitron',
-	'titre_page_configurer_tarteaucitron' => 'Tarteaucitron'
+	'titre_page_configurer_tarteaucitron' => 'Tarteaucitron',
 ];

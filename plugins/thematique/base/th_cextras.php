@@ -15,7 +15,7 @@ function th_declarer_champs_extras($champs = []) {
 			//'disable' => 'disable',
 			'restrictions' => [
 				'voir' => ['auteur' => ''], //Tout le monde peut voir
-				'modifier' => ['auteur' => 'webmestre']
+				'modifier' => ['auteur' => 'webmestre'],
 			], //Seuls les webmestres peuvent modifier
 		],
 	];
@@ -28,7 +28,7 @@ function th_declarer_champs_extras($champs = []) {
 			'defaut' => '', // Valeur par défaut
 			'restrictions' => [
 				'voir' => ['auteur' => ''], //Tout le monde peut voir
-				'modifier' => ['auteur' => ['webmestre', '0minirezo']]
+				'modifier' => ['auteur' => ['webmestre', '0minirezo']],
 			], //Seuls les webmestres peuvent modifier
 		],
 	];
@@ -42,7 +42,7 @@ function th_declarer_champs_extras($champs = []) {
 			'defaut' => '', // Valeur par défaut
 			'restrictions' => [
 				'voir' => ['auteur' => ''], //Tout le monde peut voir
-				'modifier' => ['auteur' => ['auteur' => '']]
+				'modifier' => ['auteur' => ['webmestre', '0minirezo']],
 			], //Seuls les webmestres peuvent modifier
 		],
 	];
@@ -56,7 +56,49 @@ function th_declarer_champs_extras($champs = []) {
 			'defaut' => '', // Valeur par défaut
 			'restrictions' => [
 				'voir' => ['auteur' => ''], //Tout le monde peut voir
-				'modifier' => ['auteur' => ['auteur' => '']]
+				'modifier' => ['auteur' => ['webmestre', '0minirezo']],
+			], //Seuls les webmestres peuvent modifier
+		],
+	];
+
+	$champs['spip_articles']['x'] = [
+		'saisie' => 'input', //Type du champ (voir plugin Saisies)
+		'options' => [
+			'nom' => 'x',
+			'label' => _T('th:position_x'),
+			'sql' => 'float',
+			'defaut' => '', // Valeur par défaut
+			'restrictions' => [
+				'voir' => ['auteur' => ''], //Tout le monde peut voir
+				'modifier' => ['auteur' => ['webmestre', '0minirezo']],
+			], //Seuls les webmestres peuvent modifier
+		],
+	];
+
+	$champs['spip_articles']['y'] = [
+		'saisie' => 'input', //Type du champ (voir plugin Saisies)
+		'options' => [
+			'nom' => 'y',
+			'label' => _T('th:position_y'),
+			'sql' => 'float',
+			'defaut' => '', // Valeur par défaut
+			'restrictions' => [
+				'voir' => ['auteur' => ''], //Tout le monde peut voir
+				'modifier' => ['auteur' => ['webmestre', '0minirezo']],
+			], //Seuls les webmestres peuvent modifier
+		],
+	];
+
+	$champs['spip_articles']['id_consigne'] = [
+		'saisie' => 'input', //Type du champ (voir plugin Saisies)
+		'options' => [
+			'nom' => 'id_consigne',
+			'label' => _T('th:id_consigne'),
+			'sql' => "int(5) NOT NULL DEFAULT '0'",
+			'defaut' => '', // Valeur par défaut
+			'restrictions' => [
+				'voir' => ['auteur' => ''], //Tout le monde peut voir
+				'modifier' => ['auteur' => ['webmestre', '0minirezo']],
 			], //Seuls les webmestres peuvent modifier
 		],
 	];

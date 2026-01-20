@@ -242,16 +242,16 @@ function importer_utilisateurs_importe($filename) {
 		} else {
 			$id_auteur = sql_insertq('spip_auteurs', $champs);
 		}
-		if (is_array(preg_split('[,;]', $admin_rubriques))) {
-			$admin_rubriques = preg_split('[,;]', $admin_rubriques);
+		if (is_array(preg_split('/[,;]/', $admin_rubriques))) {
+			$admin_rubriques = preg_split('/[,;]/', $admin_rubriques);
 			foreach ($admin_rubriques as $a_r) {
 				objet_associer(['id_auteur' => $id_auteur], ['rubrique' => $a_r]);
 			}
 		} else {
 			objet_associer(['id_auteur' => $id_auteur], ['rubrique' => $admin_rubriques]);
 		}
-		if (is_array(preg_split('[,;]', $auteur_articles))) {
-			$auteur_articles = preg_split('[,;]', $auteur_articles);
+		if (is_array(preg_split('/[,;]/', $auteur_articles))) {
+			$auteur_articles = preg_split('/[,;]/', $auteur_articles);
 			foreach ($auteur_articles as $a_r) {
 				objet_associer(['id_auteur' => $id_auteur], ['article' => $a_r]);
 			}

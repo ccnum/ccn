@@ -3,11 +3,7 @@
 // extrait automatiquement de https://trad.spip.net/tradlang_module/spip_bonux?lang_cible=pt_br
 // ** ne pas modifier le fichier **
 
-if (!defined('_ECRIRE_INC_VERSION')) {
-	return;
-}
-
-$GLOBALS[$GLOBALS['idx_lang']] = array(
+return [
 
 	// A
 	'afficher_calendrier' => 'Exibir o calendário',
@@ -32,5 +28,5 @@ $GLOBALS[$GLOBALS['idx_lang']] = array(
 	'mois_suivant' => 'Mês seguinte',
 
 	// P
-	'pages' => 'Päginas'
-);
+	'pages' => 'Päginas',
+];

@@ -33,7 +33,7 @@ Beispiel: 100. (0 = niemals)',
 
 	// L
 	'label_activer_barre_typo' => 'Funktionsleisten für die Stifte aktivieren?',
-	'label_activer_crayons_prive' => 'Stifte im Redaktionssystem aktivieren', # MODIF
+	'label_activer_crayons_prive' => 'Stifte im Redaktionssystem aktivieren',
 	'label_barre_typo' => 'Funktonsleiste',
 	'label_clickhide' => 'Ein Klick außerhalb versteckt den Stift',
 	'label_effets' => 'Effekte wählen',
@@ -54,7 +54,7 @@ Beispiel: 100. (0 = niemals)',
 	'legend_controleur_vignette' => 'Thumbnail wählen:',
 	'legend_controleur_vignette_remplacer' => 'Dieses Miniaturbild ersetzen',
 	'legend_documents' => 'Dokumente hochladen',
-	'legend_editer_prive' => 'Stifte im Redaktionssystem (experimentell)', # MODIF
+	'legend_editer_prive' => 'Stifte im Redaktionssystem',
 	'legend_introduction_article' => 'Einleitender Text des Artikels',
 	'legend_introduction_rubrique' => 'Einführender Text der Rubrik',
 

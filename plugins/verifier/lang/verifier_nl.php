@@ -108,7 +108,7 @@ return [
 	'option_fichiers_mime_image_web_label' => 'Uitsluitend webafbeelding (gif, jpg, png) toestaan', # MODIF
 	'option_fichiers_mime_label' => 'Mime type en extensie',
 	'option_fichiers_mime_pas_de_verification_label' => 'Alle types en extensies toestaan (wordt afgeraden)',
-	'option_fichiers_mime_specifique_label' => 'Uitsluitend de hieronder aangegeven Mime types autoriseren',
+	'option_fichiers_mime_specifique_label' => 'Uitsluitend de hieronder aangegeven Mime types autoriseren', # MODIF
 	'option_fichiers_mime_tout_mime_label' => 'Alle door SPIP toegelaten Mime types autoriseren',
 	'option_fichiers_taille_max_label' => 'Maximale bestandsgrootte (in kB)',
 	'option_fichiers_type_mime_label' => 'Kruis de toelaten MIME types aan',
@@ -124,7 +124,7 @@ return [
 	'option_url_mode_php_filter' => 'Volledige URL verificatie met het PHP filter FILTER_VALIDATE_URL',
 	'option_url_mode_protocole_seul' => 'Uitsluitend verificatie van het protocol',
 	'option_url_protocole_label' => 'Naam van het te verifiëren protocol',
-	'option_url_type_protocole_exact' => 'Geef hieronder een protocol aan:',
+	'option_url_type_protocole_exact' => 'Geef hieronder een protocol aan:', # MODIF
 	'option_url_type_protocole_ftp' => 'File transfer protocols: FTP of SFTP',
 	'option_url_type_protocole_label' => 'Te verifiëren type protocol',
 	'option_url_type_protocole_mail' => 'Mail protocols: IMAP, POP3 of SMTP',

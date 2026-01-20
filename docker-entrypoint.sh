@@ -129,11 +129,17 @@ spip plugins:activer spip_bonux -y
 spip plugins:activer verifier -y
 spip plugins:activer yaml -y
 spip plugins:activer autorite -y
+spip plugins:activer simplog -y
 
 if [ ${SPIP_PLUGINS_CICAS} == true ]; then
 	spip plugins:activer cicas -y
 	else
 	spip plugins:desactiver cicas -y
+fi
+if [ ${SPIP_PLUGINS_CIOIDC} == true ]; then
+	spip plugins:activer cioidc -y
+	else
+	spip plugins:desactiver cioidc -y
 fi
 if [ ${SPIP_VERSION_SITE} != "thematique" ]; then
 	spip plugins:activer vider_rubrique -y
@@ -144,15 +150,18 @@ if [ ${PROJET} != "laclasse" ]; then
 fi
 spip plugins:maj:bdd
 
-spip config:ecrire -p autorite editer_forums:1
 spip config:ecrire -p autorite auteur_mod_email:0
+spip config:ecrire -p autorite auteur_mod_article:1
 spip config:ecrire -p autorite auteur_modere_forum:0
+spip config:ecrire -p autorite editer_forums:1
+spip config:ecrire -p autorite publierdans:7
 spip config:ecrire -p bigup charger_public:1
 spip config:ecrire -p bigup max_file_size:${PHP_UPLOAD_MAX_FILESIZE%M}
 spip config:ecrire -p mediabox active:oui
 spip config:ecrire -p notation acces:ide
 spip config:ecrire -p notation change_note:oui
-spip config:ecrire -p notation publierdans:7
+spip config:ecrire -p notifications forum_article:0
+spip config:ecrire -p notifications thread_forum:0
 
 # Default mes_options
 rm -rf config/mes_options.php

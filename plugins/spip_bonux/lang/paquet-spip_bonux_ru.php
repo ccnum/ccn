@@ -3,13 +3,9 @@
 // extrait automatiquement de https://trad.spip.net/tradlang_module/paquet-spip_bonux?lang_cible=ru
 // ** ne pas modifier le fichier **
 
-if (!defined('_ECRIRE_INC_VERSION')) {
-	return;
-}
-
-$GLOBALS[$GLOBALS['idx_lang']] = array(
+return [
 
 	// S
 	'spip_bonux_description' => 'SPIP Bonux необходим для работы многих других плагинов. Он существенно расширяет возможности SPIP, делая его лучше чем SPIP :)))', # MODIF
-	'spip_bonux_slogan' => 'SPIP Bonux существенно расширяет возможности SPIP, делая его лучше чем SPIP :)))' # MODIF
-);
+	'spip_bonux_slogan' => 'SPIP Bonux существенно расширяет возможности SPIP, делая его лучше чем SPIP :)))', # MODIF
+];

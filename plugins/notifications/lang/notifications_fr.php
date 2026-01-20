@@ -58,6 +58,7 @@ $GLOBALS[$GLOBALS['idx_lang']] = array(
 
 	// F
 	'form_forum_confirmer_email' => 'Pour confirmer votre adresse email, cliquez sur le bouton ci-dessous : ',
+	'form_forum_choisir_password' => 'Pour choisir votre mot de passe, cliquez sur le bouton ci-dessous : ',
 	'forum_prives_auteur' => '<strong>Auteurs</strong> : les auteurs reçoivent les notifications des forums postés sous leurs articles ou leurs messages dans le site privé.',
 	'forum_prives_moderateur' => 'Indiquez ci-dessous l’adresse email du modérateur des forums privés (ou plusieurs, séparées par des virgules).',
 	'forum_prives_thread' => '<strong>Fil de discussion</strong> : les participants au même fil de discussion reçoivent les notifications des forums (privés).',

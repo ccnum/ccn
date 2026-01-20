@@ -1,16 +1,7 @@
 #CACHE{24*3600*31,statique}
 [(#REM)
-
-		Zone de saisie d'adresse mail. Sur les sites en HTML5, utilise type="email"
-		sur le input, et type="text" par défaut pour les autres.
-		Dans ce dernier cas, on renseigne quand même class="email".
-
+		Zone de saisie d'adresse mail.
 ]
-<p hidden id="[format_email_(#ENV{nom}|saisie_nom2classe)]"><:saisies:format_email_attendu:></p>
-#SET{describedby, #ENV{describedby}|concat{' ',format_email_#ENV{nom}|saisie_nom2classe} }
-[(#SET{class,[(#HTML5|?{[(#ENV{class}) ],[(#ENV{class}) ]email})]})]
-<INCLURE{fond=saisies/input,
-			env,
-			describedby=#GET{describedby},
-            type=#HTML5|?{email,text},
-					class=#GET{class}} />
+<p hidden id="format_email_#ENV{id}"><:saisies:format_email_attendu:></p>
+#SET{describedby, #ENV{describedby}|concat{' ',format_email_#ENV{id}} }
+<INCLURE{fond=saisies/input, env, describedby=#GET{describedby}, type=email}>

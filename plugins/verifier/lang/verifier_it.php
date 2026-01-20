@@ -52,7 +52,7 @@ return [
 	'option_url_mode_php_filter' => 'Verifica completa dell’url grazie al filtro FILTER_VALIDATE_URL di php',
 	'option_url_mode_protocole_seul' => 'Verifica solo la presenza di un protocollo',
 	'option_url_protocole_label' => 'Nome del protocollo da verificare',
-	'option_url_type_protocole_exact' => 'Inserisci un protocollo qui sotto:',
+	'option_url_type_protocole_exact' => 'Inserisci un protocollo qui sotto:', # MODIF
 	'option_url_type_protocole_ftp' => 'Protocolli ftp : ftp o sftp',
 	'option_url_type_protocole_label' => 'Tipo di protocollo da verificare',
 	'option_url_type_protocole_mail' => 'Protocolli mail: imap, pop3 o smtp',

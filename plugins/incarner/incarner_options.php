@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Options du plugin Incarner au chargement
  *
@@ -16,7 +17,7 @@ $GLOBALS['liste_des_authentifications']['incarner'] = 'incarner';
  *
  * @return int      id_auteur de l'admin actuellement incarné, ou 0 sinon
  */
-function incarner_racine_incarnation(){
+function incarner_racine_incarnation() {
 	if (
 		(! isset($_COOKIE['spip_cle_incarner']))
 		or (! $cle_actuelle = $_COOKIE['spip_cle_incarner'])
@@ -39,7 +40,6 @@ function incarner_racine_incarnation(){
 	return intval($id_auteur);
 }
 
-
 /**
  * Ajouter un lien dans côté public pour redevenir webmestre
  *
@@ -55,18 +55,14 @@ function incarner_affichage_final($html) {
 	}
 
 	include_spip('base/abstract_sql');
-	$auteur = sql_fetsel(
-		'login,email',
-		'spip_auteurs',
-		'id_auteur=' . intval($id_auteur)
-	);
+	$auteur = sql_fetsel('login,email', 'spip_auteurs', 'id_auteur=' . intval($id_auteur));
 
 	$self = self();
-	include_spip("inc/actions");
-	include_spip("inc/filtres");
+	include_spip('inc/actions');
+	include_spip('inc/filtres');
 
-	$url_rollback = generer_action_auteur('incarner',"rollback", $self);
-	$url_logout = generer_action_auteur('incarner',"logout", $self);
+	$url_rollback = generer_action_auteur('incarner', 'rollback', $self);
+	$url_logout = generer_action_auteur('incarner', 'logout', $self);
 
 	$login_aff = incarner_login_affiche($auteur['login'], $auteur['email']);
 	$quisuisje = incarner_login_affiche(session_get('login'), session_get('email'));
@@ -75,8 +71,10 @@ function incarner_affichage_final($html) {
 	$lien .= '<a class="bouton-incarner" href="' . $url_logout . '">';
 	$lien .= _T('incarner:logout_definitif');
 	$lien .= '</a>';
-	$invite = _T('incarner:reset_incarner', array('login' => $login_aff));
-	$lien .= '<a class="bouton-incarner" href="' . $url_rollback . '" title="' . attribut_html($quisuisje.' : '.$invite) . '">';
+	$invite = _T('incarner:reset_incarner', ['login' => $login_aff]);
+	$lien .= '<a class="bouton-incarner" href="' . $url_rollback . '" title="' . attribut_html(
+		$quisuisje . ' : ' . $invite
+	) . '">';
 	$lien .= $invite;
 	$lien .= '</a>';
 	$lien .= '</div>';
@@ -85,9 +83,7 @@ function incarner_affichage_final($html) {
 	return $html;
 }
 
-
 /**
- * @param $html
  * @return array
  */
 function incarner_affichage_final_prive($html) {
