@@ -14,8 +14,8 @@
 	<BOUCLE_rub(RUBRIQUES){id_rubrique=#ID_RUBRIQUE}{tout}>#SET{titre_parent,#TITRE}</BOUCLE_rub>
 	[(#GET{type_objet}|in_array{#LISTE{consignes|travail_en_cours|ressources|classes}}|oui)
 		<div class="fiche_titre couleur_texte_[(#TYPE_OBJET)] couleur_[(#TYPE_OBJET)][(#MODELE{nb2col}{id_article})]">
-			<div class="photo">[(#MODELE{logo_carre}{id_article})]</div>
 			<div class="texte">
+				<div class="photo">[(#MODELE{logo_carre}{id_article})]</div>
 				<div class="titre">[(#TITRE)]</div>
 				<div class="auteur_date">[(#GET{titre_parent}) - ][<span class="">(#DATE|affdate)</span>]</div>
 			</div>

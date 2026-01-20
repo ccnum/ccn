@@ -1,6 +1,6 @@
 #CACHE{0}
-<div id="menu_haut_gauche" class="gauche">
-	<div id="menu_haut_ccn" class="bloc_titre">
+<div id="menu_haut_gauche">
+	<div id="menu_haut_ccn">
 		<a href="https://classeculturellenumerique.org/" target="_blank">[(#CHEMIN{img/logos/ccn_full.svg}|balise_img)]</a>
 	</div>
 	<div id="menu_haut_titre" class="bloc_titre">
@@ -36,22 +36,11 @@
 	</script>
 </div>
 [(#CONST{_PROJET}|=={laclasse}|oui)
-<div id="menu_haut_droite">
-	<ul id="menu_haut_logos" class="bloc_titre">
-		<li>
-			<a href="https://www.laclasse.com/" target="_blank">[(#CHEMIN{img/logos/laclasse_short.svg}|balise_img|image_reduire{*,28})]</a>
-		</li>
-		<li>
-			<a href="https://erasme.org" target="_blank">[(#CHEMIN{img/logos/erasme.svg}|balise_img)]</a>
-		</li>
-		<li>
-			<a href="https://www.grandlyon.com/" target="_blank">[(#CHEMIN{img/logos/metropolelyon.svg}|balise_img|image_reduire{*,28})]</a>
-		</li>
-		<li class="aide">
-			<a id="bouton_aide" href="[(#CHEMIN{pdf/tutoriels.pdf})]" class="mediabox boxIframe boxWidth-80% boxHeight-80%[(#TEXTE|=={''}|oui)[logo_menu-(#VALEUR)]]">
-				[(#CHEMIN{img/logo_aide.svg}|balise_img|image_reduire{*,30})]
-			</a>
-		</li>
-	</ul>
-</div>
+<ul id="menu_haut_logos">
+	<li class="aide">
+		<a id="bouton_aide" href="[(#CHEMIN{pdf/tutoriels.pdf})]" class="mediabox boxIframe boxWidth-80% boxHeight-80%[(#TEXTE|=={''}|oui)[logo_menu-(#VALEUR)]]">
+			[(#CHEMIN{img/logo_aide.svg}|balise_img|image_reduire{*,30})]
+		</a>
+	</li>
+</ul>
 ]

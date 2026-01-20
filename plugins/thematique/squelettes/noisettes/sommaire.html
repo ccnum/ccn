@@ -48,15 +48,9 @@ et/ou
 
 	<div id="loading_feedback">Chargement</div>
 
+	<div id="sidebarCache"></div>
 	<div id="sidebar">
-		<div id="sidebarCache" class="masquer">
-			#FA_ICON{chevron-right,'',Réduire}
-			[(#CHEMIN{img/close.svg}|balise_img|inserer_attribut{class,close}|image_reduire{25})]
-		</div>
-		<div id="sidebarExpand">
-			#FA_ICON{chevron-left,'',Agrandir}
-			[(#CHEMIN{img/close.svg}|balise_img|inserer_attribut{class,close}|image_reduire{25})]
-		</div>
+		<div id="sidebarExpand" class="sidebarExpandOff"></div>
 
 		<div id="sidebar_content">
 			<div id="sidebar_main_around">
@@ -75,22 +69,9 @@ et/ou
 		</div>
 	</div>
 	<div id="menu_bas" class="clearfix combo-filters zone-menu">
-		[(#REM)Col 1]
-		<!--<h3 class="first">Général</h3>-->
-
-		<!--
-			[(#REM)Vues]
-			<div id="menu-vues" class="bloc_view col">
-				<h3><span>Vues</span></h3>
-				<ul class="filter clearfix option-set vue">
-					[(#MODELE{logo_menu}{valeur=timeline}{class=selected}{title=Vue Ligne de temps})]
-					[(#MODELE{logo_menu}{valeur=classe}{title=Vue Classes})]
-				</ul>
-			</div>
-		-->
 		[(#REM)Timeline]
 		<div id="menu-timeline" class="bloc_view col">
-			<h3><span>Timeline</span></h3>
+			<h3 class="menu-title"><span>Publier</span></h3>
 			<ul class="filter clearfix option-set ressource" data-filter-group="ressource">
 				[(#MODELE{logo_menu}{valeur=consignes}{class=menu_logo_consignes}{onclick=changeTimelineMode('consignes');CCN.projet.showWholeTimeline();}{title=Toutes les consignes})]
 
@@ -133,7 +114,7 @@ et/ou
 
 		[(#REM) Consignes]
 		<div id="menu-consignes" class="bloc_view col">
-			<h3><span>Consignes</span></h3>
+			<h3 class="menu-title"><span>Consignes</span></h3>
 			<ul class="filter clearfix option-set" data-filter-group="consigne">
 				#SET{num,0}
 				<BOUCLE_consignes0(RUBRIQUES mots mots_liens){mots.titre=consignes}{rubriques.id_rubrique=mots_liens.id_objet}>
@@ -156,11 +137,8 @@ et/ou
 
 		[(#REM) Classes]
 		<div id="menu-classes" class="bloc_view col">
-			<h3><span>Classes</span></h3>
+			<h3 class="menu-title"><span>Les 10 classes participantes</span></h3>
 			<ul class="filter clearfix option-set" data-filter-group="classe">
-				[(#MODELE{logo_menu}{valeur=tout}{title=Toutes les classes}{class=menu_logo_consignes menu_logo_classes menu_logo_type_sidebarView}{onclick=callClasses();})]
-				#SET{hasYearRub, false}
-				<!-- Nouveau modele -->
 				<BOUCLE_FiltreAnnee(RUBRIQUES){racine} {titre LIKE %(#CONST{_annee_scolaire})%}>
 					#SET{hasYearRub, true}
 					<BOUCLE_rubMot(RUBRIQUES){id_parent}{titre_mot=travail_en_cours}>
@@ -193,7 +171,7 @@ et/ou
 
 		[(#REM) Ressources]
 		<div id="menu-ressources" class="bloc_view col">
-			<h3><span>Ressources</span></h3>
+			<h3 class="menu-title"><span>Ressources</span></h3>
 			<ul class="filter clearfix option-set ressource" data-filter-group="ressource">
 				#SET{blog,Le blog du projet}
 				[(#NOM_SITE_SPIP|=={novaterra.laclasse.com}|oui) #SET{blog,Le journal du capitaine et le novamag} ]
@@ -210,7 +188,6 @@ et/ou
 
 				<!-- [(#REM) GESTION DU LIEN DE L'ESPACE DOC] -->
 				<!-- [(#REM) ON RÉCUPÈRE LA DERNIÈRE RUBRIQUE DES ANNÉES, ON EN TIRE LE DESCRIPTIF ET VOILÀ !] -->
-				<!-- tutu -->
 				<BOUCLE_espace_doc(RUBRIQUES){tout}{racine}{titre==^[20]}{!par titre}{0,1}>
 				[<!-- #ID_RUBRIQUE -->
 				<li class="logo">
@@ -263,19 +240,17 @@ et/ou
 		</div>
 
 		[(#CONST{_PROJET}|=={laclasse}|oui)
-		<div id="menu_haut_droite" class="none">
-			<ul id="menu_haut_logos" class="bloc_titre">
-				<li>
-					<a href="https://www.laclasse.com/" target="_blank">[(#CHEMIN{img/logos/laclasse_short.svg}|balise_img|image_reduire{*,28})]</a>
-				</li>
-				<li>
-					<a href="https://erasme.org" target="_blank">[(#CHEMIN{img/logos/erasme.svg}|balise_img)]</a>
-				</li>
-				<li>
-					<a href="https://www.grandlyon.com/" target="_blank">[(#CHEMIN{img/logos/metropolelyon.svg}|balise_img|image_reduire{*,28})]</a>
-				</li>
-			</ul>
-		</div>
+		<ul id="menu_bas_logos">
+			<li>
+				<a href="https://www.laclasse.com/" class="logo_service_public" target="_blank">[(#CHEMIN{img/logos/laclasse_short.svg}|balise_img|image_reduire{*,28})]</a>
+			</li>
+			<li>
+				<a href="https://erasme.org" class="logo_service_public" target="_blank">[(#CHEMIN{img/logos/erasme.svg}|balise_img)]</a>
+			</li>
+			<li>
+				<a id="menu_bas_logos_metropole_lyon" href="https://www.grandlyon.com/" class="logo_service_public" target="_blank">[(#CHEMIN{img/logos/metropolelyon.svg}|balise_img|image_reduire{*,40})]</a>
+			</li>
+		</ul>
 		]
 	</div>
 </div>
