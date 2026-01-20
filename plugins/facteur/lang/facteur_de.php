@@ -19,12 +19,14 @@ return [
 	'email_envoye_par' => 'Absender @site@',
 	'email_test_envoye' => 'Die Testmail wurde fehlerfrei verschickt. Falls sie nicht richtig ankommt, bearbeiten sie ihre Serverkonfiguration oder kontaktieren sie den Administrator.',
 	'erreur' => 'Fehler',
+	'erreur_confirm_ip_sans_hostname' => 'Wollen Sie diese IP Adresse wirklich als SMTP Host verwenden ?',
 	'erreur_dans_log' => ' : mehr Details in der Logdatei',
 	'erreur_envoi_bloque_constante' => 'Versand wird durch die Konstante <tt>_TEST_EMAIL_DEST</tt> blockiert.
 Überprüfen sie die Datei <tt>mes_options.php</tt>',
 	'erreur_generale' => 'Konfigurationsfehler. Bitte Inhalt des Formulars korrigieren.',
 	'erreur_invalid_host' => 'falscher Servername',
 	'erreur_invalid_port' => 'falsche Portnummer',
+	'erreur_ip_sans_hostname' => 'Diese IP Adresse entspricht keinem Domainnamen.',
 
 	// F
 	'facteur_adresse_envoi_email' => 'E-Mail :',

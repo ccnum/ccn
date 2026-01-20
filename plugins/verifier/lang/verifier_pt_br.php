@@ -121,7 +121,7 @@ return [
 	'option_fichiers_mime_image_web_label' => 'Autorizar unicamente as imagens web',
 	'option_fichiers_mime_label' => 'Type Mime e extensão',
 	'option_fichiers_mime_pas_de_verification_label' => 'Permitir todos os tipos e extensões (desaconselhado)',
-	'option_fichiers_mime_specifique_label' => 'Permitir unicamente os tipos e extensões selecionados abaixo',
+	'option_fichiers_mime_specifique_label' => 'Permitir unicamente os tipos e extensões selecionados abaixo', # MODIF
 	'option_fichiers_mime_tout_mime_label' => 'Permitir todos os tipos Mime e extensões conhecidas do SPIP',
 	'option_fichiers_taille_max_label' => 'Peso máximo do arquivo (em KB)',
 	'option_fichiers_type_mime_label' => 'Selecionar os tipos MIME permitidos',
@@ -147,7 +147,7 @@ Exemplo: «São Paulo, que cidade enorme!» torna-se «sao_paulo_que_cidade_enor
 	'option_url_mode_php_filter' => 'Validação completa do URL através do filtro FILTER_VALIDATE_URL do php',
 	'option_url_mode_protocole_seul' => 'Validação apenas da presença de um protocolo',
 	'option_url_protocole_label' => 'Nome do protocolo a ser validado',
-	'option_url_type_protocole_exact' => 'Informar um protocolo abaixo:',
+	'option_url_type_protocole_exact' => 'Informar um protocolo abaixo:', # MODIF
 	'option_url_type_protocole_ftp' => 'Protocolos ftp: ftp ou sftp',
 	'option_url_type_protocole_label' => 'Tipo de protocolo a ser validado',
 	'option_url_type_protocole_mail' => 'Protocolos de e-mail: imap, pop3 ou smtp',

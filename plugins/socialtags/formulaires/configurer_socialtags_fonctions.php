@@ -16,11 +16,16 @@ function socialtags_choix() {
 		$a = $service['lesauteurs'];
 		$d = $service['descriptif'] ?? '';
 
-		$category = (count($service['tags'])?textebrut(reset($service['tags'])):'99');
+		$category = (count($service['tags']) ? textebrut(reset($service['tags'])) : '99');
 		$image = '';
-		$img = find_in_path('images/' . $a . '.png');
+		$img = find_in_path('images/' . $a . '.svg');
 		if ($img) {
-			$image = 'data:image/png;base64,'.base64_encode(file_get_contents($img));
+			$image = $img;
+		} else {
+			$img = find_in_path('images/' . $a . '.png');
+			if ($img) {
+				$image = 'data:image/png;base64,' . base64_encode(file_get_contents($img));
+			}
 		}
 		$checked = in_array($a, $cfg) ? ' checked="checked"' : '';
 

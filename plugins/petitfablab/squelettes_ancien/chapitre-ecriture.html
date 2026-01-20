@@ -1,10 +1,7 @@
 <!--
-
 RUBRIQUE.HTML > CHAPITRE-ECRITURE.HTML
-(interface d'�dition d'un chapitre)
-
- -->
-
+(interface d'édition d'un chapitre)
+-->
 <BOUCLE_article(ARTICLES){id_article}>
 <div class="ecriture-chapitre">
 
@@ -19,7 +16,7 @@ RUBRIQUE.HTML > CHAPITRE-ECRITURE.HTML
 
 	<div class="ecriture-chapitre-auteur">
 		<BOUCLE_auteur_article(AUTEURS){id_article}{0,1}>
-			<div class="ecriture-chapitre-avatar">[(#LOGO_AUTEUR||image_reduire{42,42})]</div>
+			<div class="ecriture-chapitre-avatar">[(#LOGO_AUTEUR|image_reduire{42,42})]</div>
 			<div class="ecriture-chapitre-nom">#NOM</div>
 		</BOUCLE_auteur_article>
 	</div>

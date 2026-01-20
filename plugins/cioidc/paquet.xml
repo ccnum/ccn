@@ -1,0 +1,29 @@
+<paquet
+	prefix="cioidc"
+	categorie="auteur"
+	version="1.7.3"
+	etat="stable"
+	compatibilite="[4.0.0;4.*]"
+	logo="prive/themes/spip/images/pyramides-32.png"
+	documentation="https://contrib.spip.net/CIOIDC-OpenID-Connect"
+>
+
+	<nom>cioidc : Authentification OpenID Connect</nom>
+
+	<auteur>Ministère de la Transition écologique et de la Cohésion des Territoires (MTECT) - C. Imberti</auteur>
+
+        <licence lien="http://www.gnu.org/licenses/gpl-3.0.html">GNU/GPLv3</licence>
+	
+	<pipeline nom="recuperer_fond" inclure="cioidc_pipeline.php" />
+	<pipeline nom="pre_edition" inclure="cioidc_pipeline.php" />
+	<pipeline nom="formulaire_verifier" inclure="cioidc_pipeline.php" />
+        <pipeline nom="insert_head_css" inclure="cioidc_pipeline.php" />
+        <pipeline nom="autoriser" inclure="cioidc_autoriser.php" />
+        
+        <pipeline nom="cioidc_auteur" action='' />
+        <pipeline nom="cioidc_redirect_uri" action='' />
+        <pipeline nom="cioidc_userinfo" action='' />
+        
+	<menu nom="configurer_cioidc" titre="cioidc:cioidc_menu_config" parent="menu_configuration" icone="images/cioidc-16.png" />
+	
+</paquet>

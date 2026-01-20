@@ -1,7 +1,7 @@
 <paquet
 	prefix="corbeille"
 	categorie="maintenance"
-	version="4.1.0"
+	version="4.1.1"
 	etat="stable"
 	compatibilite="[4.1.0;4.*]"
 	logo="prive/themes/spip/images/trash-full-32.png"

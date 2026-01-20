@@ -1,0 +1,28 @@
+<paquet
+	prefix="select2"
+	categorie="edition"
+	version="2.1.0"
+	etat="stable"
+	compatibilite="[4.2.0;4.*]"
+	logo="prive/themes/spip/images/select2-64.png"
+	documentation="https://contrib.spip.net/5198"
+>
+
+	<nom>Select2</nom>
+	<!-- Améliore les sélecteurs dans les formulaires -->
+
+	<auteur>Matthieu Marcillaud</auteur>
+
+	<licence>GNU/GPL</licence>
+	<credit lien="https://select2.org/">Select2, by Kevin Brown, MIT license</credit>
+
+	<pipeline nom="jquery_plugins"       inclure="select2_pipelines.php" />
+	<pipeline nom="header_prive"         inclure="select2_pipelines.php" />
+	<pipeline nom="header_prive_css"     inclure="select2_pipelines.php" />
+	<pipeline nom="insert_head"          inclure="select2_pipelines.php" />
+	<pipeline nom="insert_head_css"      inclure="select2_pipelines.php" />
+
+	<menu nom="select2" titre="select2:select2_titre" parent="menu_squelette" icone="images/select2-16.png" action="configurer_select2" />
+	<menu nom="select2" titre="select2:select2_titre" parent="menu_developpement" icone="images/select2-16.png" action="tester_select2" />
+
+</paquet>

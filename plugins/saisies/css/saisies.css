@@ -20,20 +20,52 @@ fieldset.plie > legend:before{
 	content: '◂ ';
 }
 
-/*date triple champs...
-	jour	mois	annee
-	/12/	/10/	/2010/
-*/
-.editer.saisie_date_jour_mois_annee .choix {
-	display: inline-block;
-	background-color:transparent;
-	padding:0;
-	border:0;
+/* Saisie date : conteneur des différents composants potentiels (date, jour, mois, annee, heure) */
+.saisie_date_jour_mois_annee .composants-date {
+	display: flex;
+	justify-content: flex-start;
+	align-items: flex-start;
+	gap: 1ch;
+}
+.saisie_date_jour_mois_annee .composants-date__composant label {
+	display: block;
+}
+.saisie_date_jour_mois_annee .composants-date__composant.visually-hidden {
+	margin-inline-end: -1ch;
+}
+.saisie_date_jour_mois_annee .composants-date .btn_reset {
+	--spip-btn-padding-x: 0.25em;
+	--spip-btn-padding-y: var(--spip-form-input-padding-y, 0.25em);
+	margin-block-start: var(--spip-line-height, 1.4em); /* pour aligner en bas avec les inputs */
+	margin-block-end: 0;
+	opacity: 0.2;
+	padding: var(--spip-btn-padding-y) var(--spip-btn-padding-x);
+}
+.saisie_date_jour_mois_annee .composants-date .btn_reset:is(:hover, :focus, :active) {
+	opacity: 1;
+}
+.saisie_date_jour_mois_annee .composants-date .btn_reset .picto {
+	display: inline-flex;
+}
+.formulaire_spip input.date,
+.formulaire_spip input.time {
+	width: auto;
 }
 .saisie_date_jour_mois_annee .choix+.choix {margin-left:1em;}
 .saisie_date_jour_mois_annee .choix label{display:block; width:auto;}
 .saisie_date_jour_mois_annee .choix .text{width:auto;}
 
+/* saisie date avec un champ type=date et un champ type=time */
+.saisie_datetime {
+	display: flex;
+	justify-content: flex-start;
+	align-items: flex-start;
+	gap: 1em;
+}
+.formulaire_spip input.date,
+.formulaire_spip input.time {
+	width: auto;
+}
 
 /* avec crayons + formulaire de saisies, éviter un padding à gauche du label */
 .formulaire_crayon .editer-groupe .editer { padding-left:10px; }
@@ -157,8 +189,10 @@ fieldset.plie > legend:before{
 	width:100%!important;
 }
 
-
-.afficher_si_masque_chargement, .etapes__item.afficher_si_masque{
+/* Classes utilitaire pour masquer visuellement un élément */
+.saisies-visually-hidden,
+.afficher_si_masque_chargement,
+.etapes__item.afficher_si_masque{
   position: absolute!important;
   width: 1px!important;
   height: 1px!important;

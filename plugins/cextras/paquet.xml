@@ -1,10 +1,10 @@
 <paquet
 	prefix="cextras"
 	categorie="outil"
-	version="4.2.1"
+	version="4.3.0"
 	etat="stable"
-	compatibilite="[4.0.0;4.*]"
-	logo="images/cextras-64.png"
+	compatibilite="[4.1.0;4.*]"
+	logo="cextras.svg"
 	documentation="https://contrib.spip.net/5338"
 >
 

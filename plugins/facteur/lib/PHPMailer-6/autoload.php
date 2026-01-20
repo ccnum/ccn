@@ -32,3 +32,5 @@ function PHPMailerAutoload($classname){
 }
 
 spl_autoload_register('PHPMailerAutoload', true, true);
+
+include_once __DIR__ . DIRECTORY_SEPARATOR  . 'phpmailer_patch.php';

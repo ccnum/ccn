@@ -3,11 +3,7 @@
 // extrait automatiquement de https://trad.spip.net/tradlang_module/socialtags?lang_cible=it
 // ** ne pas modifier le fichier **
 
-if (!defined('_ECRIRE_INC_VERSION')) {
-	return;
-}
-
-$GLOBALS[$GLOBALS['idx_lang']] = array(
+return [
 
 	// C
 	'cfg_activer_javascript' => 'Si prega di abilitare Javascript.',
@@ -73,5 +69,5 @@ $GLOBALS[$GLOBALS['idx_lang']] = array(
 	// T
 	'titre_menu' => 'Social Tags',
 	'titre_mon_badge_facebook' => 'Il mio badge Facebook',
-	'titre_sur_facebook' => 'Su Facebook'
-);
+	'titre_sur_facebook' => 'Su Facebook',
+];

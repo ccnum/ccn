@@ -1,0 +1,32 @@
+<?php
+// This is a SPIP language file  --  Ceci est un fichier langue de SPIP
+// extrait automatiquement de https://trad.spip.net/tradlang_module/spip_bonux?lang_cible=mg
+// ** ne pas modifier le fichier **
+
+return [
+
+	// A
+	'afficher_calendrier' => 'Afficher le calendrier',
+	'annee_precedente' => 'Année précédente',
+	'annee_suivante' => 'Année suivante',
+	'annuler_recherche' => 'Annuler la recherche',
+
+	// B
+	'bouton_fermer' => 'Fermer',
+
+	// E
+	'erreur_date' => 'Cette date est incorrecte',
+	'erreur_date_corrigee' => 'La date a été corrigée',
+	'erreur_heure' => 'Cette heure est incorrecte',
+	'erreur_heure_corrigee' => 'L’heure a été corrigée',
+
+	// I
+	'id_rapide' => 'Ajout rapide',
+
+	// M
+	'mois_precedent' => 'Mois précédent',
+	'mois_suivant' => 'Mois suivant',
+
+	// P
+	'pages' => 'Pages',
+];

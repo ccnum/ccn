@@ -22,7 +22,7 @@
 	</BOUCLE_j1>
 </BOUCLE_jeu>
 
-<INCLURE{fond=inclure/layout_init, pages=oui, home=oui, id_rubrique=#ENV{rub_jeu}, overflow=oui, compteur}>
+<INCLURE{fond=inclure/layout_init, pages=oui, home=oui, id_rubrique=#ENV{rub_jeu}, overflow=oui, compteur} />
 
 <!-- BOOK -->
 <div id="global" style="overflow: auto;">
@@ -92,8 +92,8 @@
 					</div>
 					<h1 class="nettoyeur"></h1>
 					<h2>#TITRE</h2>
-					[(#GET{visible}|=={visible}|oui)<INCLURE{fond=inclure/lecture-texte-visible, id_article}>]
-					[(#GET{visible}|=={visible}|non)<INCLURE{fond=inclure/lecture-texte, id_article}>]
+					[(#GET{visible}|=={visible}|oui)<INCLURE{fond=inclure/lecture-texte-visible, id_article} />]
+					[(#GET{visible}|=={visible}|non)<INCLURE{fond=inclure/lecture-texte, id_article} />]
 				</div>
 				</BOUCLE_lecture_droite>
 			</div>

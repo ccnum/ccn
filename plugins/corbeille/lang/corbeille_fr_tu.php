@@ -3,11 +3,7 @@
 // extrait automatiquement de https://trad.spip.net/tradlang_module/corbeille?lang_cible=fr_tu
 // ** ne pas modifier le fichier **
 
-if (!defined('_ECRIRE_INC_VERSION')) {
-	return;
-}
-
-$GLOBALS[$GLOBALS['idx_lang']] = array(
+return [
 
 	// A
 	'articles_corbeille_tous' => '@nb@ articles dans la corbeille',
@@ -46,5 +42,5 @@ $GLOBALS[$GLOBALS['idx_lang']] = array(
 	'sites_corbeille_un' => '1 site dans la corbeille',
 
 	// V
-	'voir_detail' => 'Voir les détails'
-);
+	'voir_detail' => 'Voir les détails',
+];

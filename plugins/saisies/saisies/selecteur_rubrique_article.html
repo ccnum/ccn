@@ -28,14 +28,8 @@
 [(#SET{filtrer_langue_article,[(#ENV{afficher_art_dans_langue_interface,0}|oui) #ENV{lang}]})]
 [(#SET{filtrer_langue_rubrique,[(#ENV{afficher_rub_dans_langue_interface,0}|oui) #ENV{lang}]})]
 
-[(#REM) input necessaire au tag label for
-	Mais si on le garde, la saisie enregistree en base, n'est pas correcte
-   On pourrait rajouter l'id dans le input cree par Bonux, mais du coup manque la chaine "champ_"
-   Comme ca a l'air un peu tordu tout ca, tant pis pour l'erreur HTML
-   Yffic
-]
-[(#REM) Donner a manger a CFG ou CVT-configurer si aucune valeur definie ]
-<!--keepme: <input type="hidden" name="[(#ENV{nom,id_item})][]" id="[champ_(#ENV{nom,id_item})]" value="" /> -->
+[(#REM) Donner à manger à CVT-configurer si aucune valeur définie ]
+<input type="hidden" name="[(#ENV{nom,id_item})][]" id="#ENV{id}" value="" disabled="disabled" />
 
 [(#SET{select,[(#ENV{multiple}|?{0,1})]})]
 <INCLURE{fond=formulaires/selecteur/articles,

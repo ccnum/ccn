@@ -80,16 +80,13 @@
 		</div>
 		<div class="sidebar_bubble">
 			[(#REM) ---------------- entete publication ---------------- ]
-			<BOUCLE_nb_doc(DOCUMENTS) {id_article} {tout}>
+			<BOUCLE_nb_doc(DOCUMENTS) {id_article}>
 			</BOUCLE_nb_doc>
 				#SET{nb_doc,#TOTAL_BOUCLE}
 			</B_nb_doc>
 				#SET{nb_doc,0}
 			<//B_nb_doc>
-			[(#AUTORISER{modifier, article, #ID_ARTICLE}|oui
-				|et{#TEXTE|non|et{#GET{nb_doc}|=={0}|oui}}
-				|et{#ADMIN|=={-1}|non}
-				|oui)
+			[(#AUTORISER{modifier, article, #ID_ARTICLE}|oui|et{#TEXTE|non|et{#GET{nb_doc}|=={0}|oui}}|et{#ADMIN|=={-1}|non}|oui)
 				<script type="text/javascript">
 					/*
 					$(function() {
@@ -189,7 +186,7 @@
 			]
 		]
 		<div class="sidebar_bubble masquer">#ENV{type_objet}</div>
-		[(#ENV{type_objet}|in_array{#LISTE{livrable,consignes,travail_en_cours}}|oui)
+		[(#ENV{type_objet}|in_array{#LISTE{agora,evenements,livrable,consignes,ressources,travail_en_cours}}|oui)
 		<div class="sidebar_bubble">
 			<div class="bloc_documents">
 				[(#AUTORISER{modifier,article,#ID_ARTICLE}|oui)

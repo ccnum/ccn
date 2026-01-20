@@ -13,10 +13,18 @@
 
 
 
+[(#ENV{url_confirm,''}|oui)
 <p><:notifications:form_forum_confirmer_email:></p>
 <div>
 [<br><center>(#INCLURE{fond=emails/inc-button,url=[(#ENV{url_confirm}|url_absolue)],label=<:notifications:bouton_finir_inscription:>,width=250px})</center><br>]
 </div>
+]
+[(#ENV{url_reset,''}|oui)
+<p><:notifications:form_forum_choisir_password:></p>
+<div>
+[<br><center>(#INCLURE{fond=emails/inc-button,url=[(#ENV{url_reset}|url_absolue)],label=<:notifications:bouton_finir_inscription:>,width=250px})</center><br>]
+</div>
+]
 
 #SET{url_site,#URL_SITE_SPIP/}
 [(#SET{nom_site,[<a href="#GET{url_site}">(#NOM_SITE_SPIP)</a>]})]
@@ -30,8 +38,9 @@
 ]
 
 <ul class="spip">
-<li><:form_forum_login:>[ (#ENV{email,email})]</li>
-<li><:form_forum_pass:>[ (#ENV{pass,pass})]</li>
+<li><:form_forum_login:>[ (#ENV{email,email})]</li>[(#ENV{url_reset,''}|non)
+<li><:form_forum_pass:>[ (#ENV{pass,pass})]</li>][(#ENV{url_reset,''}|oui)#SET{url,#ENV{url_reset}|lien_ou_expose{#ENV{url_reset}}}
+<li><:pass_reset_url{url=#GET{url}}:></li>]
 </ul>
 </body>
 

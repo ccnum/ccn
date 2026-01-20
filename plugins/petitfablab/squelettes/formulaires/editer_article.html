@@ -19,7 +19,7 @@
 				<label for="text_area">Texte<em class="aide"></em></label>[
 				<span class='erreur_message'>(#ENV**{erreurs}|table_valeur{texte})</span>
 				][(#ENV**{_texte_trop_long,''})]
-					<textarea placeholder="TEXTE" class='cadre2 rouge2' name='texte' id='text_area'[ lang='(#LANGUE)'] rows='[(#ENV**{config}|table_valeur{lignes}|plus{2})]' cols='40'>[(#ENV**{texte})]</textarea>
+					<textarea placeholder="TEXTE" class='cadre2 rouge2' name='texte' id='text_area'[ lang='(#LANGUE)'] rows='[(#ENV**{config}|table_valeur{lignes}|plus{2})]' cols='40' maxlength="1000">[(#ENV**{texte})]</textarea>
 			</div>]
 
 			<div class="editer editer_surtitre[ (#ENV**{erreurs}|table_valeur{surtitre}|oui)erreur]">
@@ -31,7 +31,7 @@
 			<div class="editer editer_soustitre[ (#ENV**{erreurs}|table_valeur{soustitre}|oui)erreur]">
 				<label for="soustitre">Email<em class="aide"></em></label>[
 				<span class='erreur_message'>(#ENV**{erreurs}|table_valeur{soustitre})</span>
-				]<input placeholder="Email"  type='text' class='text cadre2 bleu2' name='soustitre' id='soustitre'[ lang='(#LANGUE)'] value="[(#ENV**{soustitre})]" />
+				]<input placeholder="Email" type='text' class='text cadre2 bleu2' name='soustitre' id='soustitre'[ lang='(#LANGUE)'] value="[(#ENV**{soustitre})]" />
 			</div>
 
 			[(#ENV**{config}|table_valeur{articles_ps}|=={non}|?{#ENV**{ps,''},' '}|oui)

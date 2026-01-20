@@ -30,9 +30,6 @@
 
 #SET{data, #ENV*{data, #ENV*{datas}}}
 
-[(#REM) Pas de HTML5, pas de data]
-#SET{data, #HTML5|?{#GET{data}}}
-
 [(#REM)  l'attribut autocomplete ne peut avoir pour valeur que on ou off ]
 #SET{val_autocomplete, #ARRAY}
 #SET{val_autocomplete, #GET{val_autocomplete}|push{on}}
@@ -41,7 +38,7 @@
 [(#REM) cle secrete > on modifie le place holder]
 #SET{placeholder,''}
 [(#ENV{cle_secrete}|oui)
-	#SET{placeholder,#ENV{valeur_forcee,#ENV{valeur,#ENV{default}}}|spip_affiche_mot_de_passe_masque{true}}
+	#SET{placeholder,#ENV{valeur_forcee,#ENV{valeur,#ENV{defaut}}}|spip_affiche_mot_de_passe_masque{true}}
 ]
 [(#ENV{cle_secrete}|non)
 	#SET{placeholder,#ENV{placeholder}}
@@ -52,11 +49,11 @@
 [(#REM) Détecter si le tableau est séquentiel ou associatif, pour choisir s'il faut prendre la clé en valeur
 ]#SET{data_is_sequential,#GET{data}|is_array|?{#GET{data}|array_keys|=={#VAL{0}|range{#GET{data}|count|moins{1}}}}}
 <B_selection>
-[(#SET{list_id,[(#GET{list_id,[champ_(#ENV{nom})_data]})]})]
+[(#SET{list_id,[(#GET{list_id,[(#ENV{id})_data]})]})]
 <datalist id="#GET{list_id}">
 <BOUCLE_selection(DATA){source tableau, #GET{data}}>
 	[<option value="(#GET{data_is_sequential}|?{#VALEUR,#CLE}|attribut_html)">[(#VALEUR|attribut_html)]</option>]
 </BOUCLE_selection>
 </datalist>
 </B_selection>
-<input type="#GET{type}" name="#ENV{nom}" class="text[ (#GET{type}|=={text}|non)#GET{type}[ text_(#GET{type})]][ (#ENV{class})]" id="champ_[(#ENV{id,#ENV{nom}}|saisie_nom2classe)]"[ list="(#GET{list_id})"][ value="(#ENV{cle_secrete}|?{'',#ENV{valeur_forcee,#ENV{valeur,#ENV{defaut}}}}|saisies_utf8_restaurer_planes)"][ size="(#ENV{size})"][ minlength="(#ENV{minlength})"][ maxlength="(#ENV{maxlength})"][ disabled="(#ENV{disable})"][ readonly="(#ENV{readonly})"][ placeholder="(#GET{placeholder})"][(#HTML5|oui)[(#ENV{obligatoire}|et{#ENV{obligatoire}|!={non}}|oui) required="required"][ min="(#ENV{min})"][ max="(#ENV{max})"][ step="(#ENV{step})"][(#ENV{autofocus}|et{#ENV{autofocus}|!={non}}|oui) autofocus="autofocus"]][(#GET{val_autocomplete}|find{#ENV{autocomplete}}|oui) autocomplete="#ENV{autocomplete}"][ aria-describedby="(#ENV{describedby})"][ (#ENV*{attributs})] />
+<input type="#GET{type}" name="#ENV{nom}" class="text[ (#GET{type}|=={text}|non)#GET{type}[ text_(#GET{type})]][ (#ENV{class})]" id="#ENV{id}"[ list="(#GET{list_id})"][ value="(#ENV{cle_secrete}|?{'',#ENV{valeur_forcee,#ENV{valeur,#ENV{defaut}}}}|saisies_utf8_restaurer_planes)"][ size="(#ENV{size})"][ minlength="(#ENV{minlength})"][ maxlength="(#ENV{maxlength})"][ disabled="(#ENV{disable})"][ readonly="(#ENV{readonly})"][ placeholder="(#GET{placeholder})"][(#ENV{obligatoire,non}|!={non}|oui) [(#ENV{cle_secrete}|et{#GET{placeholder}}|non)required="required"]][ min="(#ENV{min})"][ max="(#ENV{max})"][ step="(#ENV{step})"][(#ENV{autofocus}|et{#ENV{autofocus}|!={non}}|oui) autofocus="autofocus"][(#GET{val_autocomplete}|find{#ENV{autocomplete}}|oui) autocomplete="#ENV{autocomplete}"][ aria-describedby="(#ENV{describedby})"][ (#ENV*{attributs})] />

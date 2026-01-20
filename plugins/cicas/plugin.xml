@@ -35,6 +35,6 @@
 		<url>cicas_config</url>
 	</bouton>
 	
-	<necessite id="SPIP" version='[3.2.0;]' />
+	<necessite id="SPIP" version='[4.0.0;4.*]' />
 
 </plugin>

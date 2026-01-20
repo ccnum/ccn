@@ -1,11 +1,8 @@
 <?php
 // This is a SPIP language file  --  Ceci est un fichier langue de SPIP
 // Fichier source, a modifier dans https://git.spip.net/spip-contrib-extensions/socialtags.git
-if (!defined('_ECRIRE_INC_VERSION')) {
-	return;
-}
 
-$GLOBALS[$GLOBALS['idx_lang']] = array(
+return [
 
 	// C
 	'cfg_activer_javascript' => 'SVP, veuillez activer Javascript.',
@@ -75,5 +72,5 @@ $GLOBALS[$GLOBALS['idx_lang']] = array(
 	// T
 	'titre_menu' => 'Social tags',
 	'titre_mon_badge_facebook' => 'Mon badge facebook',
-	'titre_sur_facebook' => 'Sur Facebook'
-);
+	'titre_sur_facebook' => 'Sur Facebook',
+];

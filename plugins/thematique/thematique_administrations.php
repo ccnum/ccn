@@ -34,33 +34,23 @@ function thematique_upgrade($nom_meta_base_version, $version_cible) {
 	];
 	cextras_api_upgrade(th_declarer_champs_extras(), $maj['create']);
 
-	$maj['2.3.3'] = [
-		['th_configurer_site'],
-	];
+	$maj['2.3.3'] = [['th_configurer_site']];
 
 	cextras_api_upgrade(th_declarer_champs_extras(), $maj['2.3.4']);
 
 	$maj['2.3.5'] = [
 		['sql_update', 'spip_auteurs', ['ent_statut' => 'bio']],
-		['sql_update', 'spip_auteurs', ['ent' => 'pgp']]
+		['sql_update', 'spip_auteurs', ['ent' => 'pgp']],
 	];
 
-	$maj['2.3.6'] = [
-		['th_ajouter_mots_clef'],
-	];
+	$maj['2.3.6'] = [['th_ajouter_mots_clef']];
 
-	$maj['2.3.13'] = [
-		['th_configurer_meta'],
-	];
+	$maj['2.3.13'] = [['th_configurer_meta']];
 
-	$maj['2.4.0'] = [
-		['th_configurer_rubriques'],
-	];
+	$maj['2.4.0'] = [['th_configurer_rubriques']];
 
-	$maj['3.0.3'] = [
-		['th_ajouter_mots_clef'],
-		['maj_tables', ['spip_rubriques']],
-	];
+	$maj['3.0.3'] = [['th_ajouter_mots_clef'], ['maj_tables', ['spip_rubriques']]];
+	cextras_api_upgrade(th_declarer_champs_extras(), $maj['3.0.7']);
 
 	include_spip('base/upgrade');
 	maj_plugin($nom_meta_base_version, $version_cible, $maj);
@@ -99,7 +89,6 @@ function th_configurer_meta() {
 	include_spip('inc/config');
 	appliquer_modifs_config(true);
 }
-
 
 function th_configurer_site() {
 
@@ -141,7 +130,6 @@ function th_configurer_site() {
 	ecrire_config('nom_site', $nom_site_spip);
 }
 
-
 function th_ajouter_mots_clef() {
 
 	//Creation mots clefs
@@ -155,7 +143,7 @@ function th_ajouter_mots_clef() {
 				'tables_liees' => 'rubriques',
 				'minirezo' => 'oui',
 				'comite' => 'non',
-				'forum' => 'non'
+				'forum' => 'non',
 			]
 		);
 	}
@@ -183,7 +171,11 @@ function th_ajouter_mots_clef() {
 	}
 
 	//Groupe Presentation_rubriques
-	if (!$id_groupe = sql_getfetsel('id_groupe', 'spip_groupes_mots', "titre='Presentation' AND tables_liees LIKE '%rubriques%'")) {
+	if (!$id_groupe = sql_getfetsel(
+		'id_groupe',
+		'spip_groupes_mots',
+		"titre='Presentation' AND tables_liees LIKE '%rubriques%'"
+	)) {
 		$id_groupe = sql_insertq(
 			'spip_groupes_mots',
 			[
@@ -192,7 +184,7 @@ function th_ajouter_mots_clef() {
 				'tables_liees' => 'rubriques',
 				'minirezo' => 'oui',
 				'comite' => 'non',
-				'forum' => 'non'
+				'forum' => 'non',
 			]
 		);
 	}
@@ -211,7 +203,11 @@ function th_ajouter_mots_clef() {
 	}
 
 	//Groupe Presentation_articles
-	if (!$id_groupe = sql_getfetsel('id_groupe', 'spip_groupes_mots', "titre='Presentation' AND tables_liees LIKE '%articles%'")) {
+	if (!$id_groupe = sql_getfetsel(
+		'id_groupe',
+		'spip_groupes_mots',
+		"titre='Presentation' AND tables_liees LIKE '%articles%'"
+	)) {
 		$id_groupe = sql_insertq(
 			'spip_groupes_mots',
 			[
@@ -220,7 +216,7 @@ function th_ajouter_mots_clef() {
 				'tables_liees' => 'articles',
 				'minirezo' => 'oui',
 				'comite' => 'non',
-				'forum' => 'non'
+				'forum' => 'non',
 			]
 		);
 	}
@@ -245,7 +241,7 @@ function th_ajouter_mots_clef() {
 				'tables_liees' => '',
 				'minirezo' => 'oui',
 				'comite' => 'non',
-				'forum' => 'non'
+				'forum' => 'non',
 			]
 		);
 	}
@@ -259,19 +255,16 @@ function th_configurer_rubriques() {
 		'blogs' => 'Agenda',
 		'evenements' => 'Blog pédagogique',
 		'images_background' => 'Contenu éditorial',
-		'agora' => 'Discuter avec'
+		'agora' => 'Discuter avec',
 	];
 	foreach ($mots as $mot => $titre) {
-		$count = (int)sql_countsel(
+		$count = (int) sql_countsel(
 			'spip_rubriques as sr
 				LEFT JOIN spip_mots_liens as sml
 					ON (sr.id_rubrique = sml.id_objet AND sml.objet = "rubrique")
 				LEFT JOIN spip_mots as sm
 					ON (sml.id_mot = sm.id_mot)',
-			[
-				'sm.titre = "' . $mot . '"',
-				'sr.id_parent = 0'
-			]
+			['sm.titre = "' . $mot . '"', 'sr.id_parent = 0']
 		);
 
 		if ($count < 1) {
@@ -279,11 +272,7 @@ function th_configurer_rubriques() {
 			$id_rubrique = rubrique_inserer(0);
 			rubrique_modifier($id_rubrique, ['titre' => $titre]);
 
-			$id_mot = (int)sql_getfetsel(
-				'id_mot',
-				'spip_mots',
-				'titre = "' . $mot . '"'
-			);
+			$id_mot = (int) sql_getfetsel('id_mot', 'spip_mots', 'titre = "' . $mot . '"');
 
 			include_spip('action/editer_liens');
 			$res = objet_associer(['mots' => $id_mot], ['rubriques' => $id_rubrique]);

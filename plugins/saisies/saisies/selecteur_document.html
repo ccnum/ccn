@@ -15,7 +15,7 @@
   Note : dans les options, il faut definir 'env' a 'oui' pour que le selecteur puisse recuperer id_article, id_rubrique ou id_breve.
 ]
 
-<input type="text" name="#ENV{nom}" class="text[ (#ENV{class})]" id="champ_[(#ENV{id,#ENV{nom}}|saisie_nom2classe)]"[ value="(#ENV{valeur_forcee,#ENV{valeur,#ENV{defaut}}})"][ size="(#ENV{size})"][ maxlength="(#ENV{maxlength})"][ disabled="(#ENV{disable})"][ readonly="(#ENV{readonly})"][(#ENV{obligatoire}|et{#HTML5}|oui) required="required"][ (#ENV*{attributs})] />
+<input type="text" name="#ENV{nom}" class="text[ (#ENV{class})]" id="#ENV{id}"[ value="(#ENV{valeur_forcee,#ENV{valeur,#ENV{defaut}}})"][ size="(#ENV{size})"][ maxlength="(#ENV{maxlength})"][ disabled="(#ENV{disable})"][ readonly="(#ENV{readonly})"][(#ENV{obligatoire,non}|!={non}|oui) required="required"][ (#ENV*{attributs})] />
 
 [(#REM) Si la mediatheque est presente ]
 [(#PLUGIN{medias}|oui)
@@ -70,24 +70,22 @@
 	);"
 /></p>
 
-
-<script type="text/javascript">
+<script>
 	function mediaselect_#ENV{nom}(id){
 		jQuery.modalboxclose();
-
-		[(#REM) Si multiple, on fait une liste à virgules ]
-		[(#ENV{multiple}|=={oui}|oui)
-		var valeur_actuelle = jQuery("#champ_#ENV{id,#ENV{nom}}").val();
-		valeur_actuelle = valeur_actuelle.split(',').filter(Boolean);
-		valeur_actuelle.push(id);
-		valeur_actuelle = valeur_actuelle.join(',');
-		jQuery("#champ_#ENV{id,#ENV{nom}}").val(valeur_actuelle).focus();
-		]
-		[(#ENV{multiple}|=={oui}|non)
-		jQuery("#champ_#ENV{id,#ENV{nom}}").val(id).focus();
-		]
+		const champ = document.getElementById("#ENV{id}");
+		const multiple = [(#ENV{multiple}|=={oui}|?{true,false})];
+		if (multiple) {
+			let val = champ.value ?? '';
+			val = val.split(',').filter( n => { return !isNaN(parseInt(n,10))} );
+			val.push(""+id);
+			champ.value = \[...new Set(val)\].join(',');
+		} else {
+			champ.value = id;
+		}
+	champ.focus();
 	};
 </script>
 
-
 ]
+

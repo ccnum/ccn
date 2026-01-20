@@ -1,0 +1,224 @@
+[(#ENV{id_serveur}|=={initial}|oui)
+
+<div class="formulaire_spip formulaire_configurer formulaire_demandes">
+<h3 class='titrem'><:cioidc:titre_serveur_oidc:></h3>
+]
+
+[(#ENV{id_serveur}|=={initial}|non)
+<div class='formulaire_spip formulaire_editer'>
+]
+	<!-- <br class='bugajaxie' /> -->
+	[<p class='reponse_formulaire reponse_formulaire_ok'>(#ENV*{message_ok})</p>]
+	[<p class='reponse_formulaire reponse_formulaire_erreur'>(#ENV*{message_erreur})</p>]
+	<form method='post' action='#ENV{action}' enctype='multipart/form-data'><div>
+		[(#REM) declarer les hidden qui declencheront le service du formulaire 
+		parametre : url d'action ]
+		#ACTION_FORMULAIRE{#ENV{action}}
+	  <input type='hidden' name='id_serveur' value='#ENV{id_serveur}' />
+	  
+	  #SET{disabled,''}
+	  #SET{required,'required'}
+	  [(#ENV{ciedit}|non)
+		  #SET{disabled,disabled='disabled'}
+        	  #SET{required,''}
+	  ]
+
+        <div class="editer-groupe">
+            #SET{name,nom_serveur}#SET{erreurs,#ENV*{erreurs}|table_valeur{#GET{name}}}
+            <div class="editer editer_[(#GET{name})] [ (#ENV*{erreurs}|table_valeur{[(#GET{name})]}|oui)erreur]">
+                        <label for="#GET{name}">[(#VAL{cioidc:}|concat{[(#GET{name})]}|_T)]</label>
+                        <p class="explication">[(#VAL{cioidc:}|concat{[(#GET{name})_explication]}|_T)]</p>
+                        [<span class='erreur_message'>(#ENV*{erreurs}|table_valeur{[(#GET{name})]})</span>]
+                        <input type='text' class='text' name='[(#GET{name})]' id='[(#GET{name})]' value='[(#ENV{[(#GET{name})]})]' [(#GET{disabled})] [(#GET{required})]/>
+            </div>
+
+            #SET{name,url_serveur}#SET{erreurs,#ENV*{erreurs}|table_valeur{#GET{name}}}
+            <div class="editer editer_[(#GET{name})] [ (#ENV*{erreurs}|table_valeur{[(#GET{name})]}|oui)erreur]">
+                        <label for="#GET{name}">[(#VAL{cioidc:}|concat{[(#GET{name})]}|_T)]</label>
+                        <p class="explication">[(#VAL{cioidc:}|concat{[(#GET{name})_explication]}|_T)]</p>
+                        [<span class='erreur_message'>(#ENV*{erreurs}|table_valeur{[(#GET{name})]})</span>]
+                        <input type='text' class='text' name='[(#GET{name})]' id='[(#GET{name})]' value='[(#ENV{[(#GET{name})]})]' placeholder="https://" [(#GET{disabled})] [(#GET{required})]/>
+            </div>
+
+            #SET{name,client_nom}#SET{erreurs,#ENV*{erreurs}|table_valeur{#GET{name}}}
+            <div class="editer editer_[(#GET{name})] [ (#ENV*{erreurs}|table_valeur{[(#GET{name})]}|oui)erreur]">
+                        <label for="#GET{name}">[(#VAL{cioidc:}|concat{[(#GET{name})]}|_T)]</label>
+                        <p class="explication">[(#VAL{cioidc:}|concat{[(#GET{name})_explication]}|_T)]</p>
+                        [<span class='erreur_message'>(#ENV*{erreurs}|table_valeur{[(#GET{name})]})</span>]
+                        <input type='text' class='text' name='[(#GET{name})]' id='[(#GET{name})]' value='[(#ENV{[(#GET{name})]})]' [(#GET{disabled})] [(#GET{required})]/>
+            </div>
+
+            #SET{name,client_secret}#SET{erreurs,#ENV*{erreurs}|table_valeur{#GET{name}}}
+            <div class="editer editer_[(#GET{name})] [ (#ENV*{erreurs}|table_valeur{[(#GET{name})]}|oui)erreur]">
+                        <label for="#GET{name}">[(#VAL{cioidc:}|concat{[(#GET{name})]}|_T)]</label>
+                        <p class="explication">[(#VAL{cioidc:}|concat{[(#GET{name})_explication]}|_T)]</p>
+                        [<span class='erreur_message'>(#ENV*{erreurs}|table_valeur{[(#GET{name})]})</span>]
+                        <input type='password' class='text' name='[(#GET{name})]' id='[(#GET{name})]' value='[(#ENV{[(#GET{name})]})]' [(#GET{disabled})] [(#GET{required})]/>
+            </div>
+
+            #SET{name,uid_champ_spip}#SET{erreurs,#ENV*{erreurs}|table_valeur{#GET{name}}}
+            <div class="editer">
+                        <label for="#GET{name}">[(#VAL{cioidc:}|concat{[(#GET{name})]}|_T)]</label>
+                        <p class="explication">[(#VAL{cioidc:}|concat{[(#GET{name})_explication]}|_T)]</p>
+                        [<span class='erreur_message'>(#ENV*{erreurs}|table_valeur{[(#GET{name})]})</span>]
+                        <select name="[(#GET{name})]" id="[(#GET{name})]" [(#GET{disabled})] >
+                                <option value="email" [(#ENV{[(#GET{name})]}|=={email}|oui)selected="selected"]><:cioidc:email:></option>
+                                <option value="login" [(#ENV{[(#GET{name})]}|=={login}|oui)selected="selected"]><:cioidc:login:></option>
+                        </select>
+            </div>
+
+            #SET{name,uid_claim}#SET{erreurs,#ENV*{erreurs}|table_valeur{#GET{name}}}
+            <div class="editer">
+                        <label for="#GET{name}">[(#VAL{cioidc:}|concat{[(#GET{name})]}|_T)]</label>
+                        <p class="explication">[(#VAL{cioidc:}|concat{[(#GET{name})_explication]}|_T)]</p>
+                        [<span class='erreur_message'>(#ENV*{erreurs}|table_valeur{[(#GET{name})]})</span>]
+                        <input type='text' class='text' name='[(#GET{name})]' id='[(#GET{name})]' value='[(#ENV{[(#GET{name})]})]' [(#GET{disabled})] [(#GET{required})]/>
+            </div>
+
+            #SET{name,scopes}#SET{erreurs,#ENV*{erreurs}|table_valeur{#GET{name}}}
+            <div class="editer editer_[(#GET{name})] [ (#ENV*{erreurs}|table_valeur{[(#GET{name})]}|oui)erreur]">
+                        <label for="#GET{name}">[(#VAL{cioidc:}|concat{[(#GET{name})]}|_T)]</label>
+                        <p class="explication">[(#VAL{cioidc:}|concat{[(#GET{name})_explication]}|_T)]</p>
+                        [<span class='erreur_message'>(#ENV*{erreurs}|table_valeur{[(#GET{name})]})</span>]
+                        <input type='text' class='text' name='[(#GET{name})]' id='[(#GET{name})]' value='[(#ENV{[(#GET{name})]})]' [(#GET{disabled})]/>
+            </div>
+
+            #SET{name,acr}#SET{erreurs,#ENV*{erreurs}|table_valeur{#GET{name}}}
+            <div class="editer">
+                        <label for="#GET{name}">[(#VAL{cioidc:}|concat{[(#GET{name})]}|_T)]</label>
+                        <p class="explication">[(#VAL{cioidc:}|concat{[(#GET{name})_explication]}|_T)]</p>
+                        [<span class='erreur_message'>(#ENV*{erreurs}|table_valeur{[(#GET{name})]})</span>]
+                        <input type='text' class='text' name='[(#GET{name})]' id='[(#GET{name})]' value='[(#ENV{[(#GET{name})]})]' [(#GET{disabled})]/>
+            </div>
+
+            #SET{name,redirect_url_avec_pi}#SET{erreurs,#ENV*{erreurs}|table_valeur{#GET{name}}}
+            <div class="editer editer_[(#GET{name})][ (#GET{erreurs}|oui)erreur]">
+                        <label for="#GET{name}">[(#VAL{cioidc:}|concat{[(#GET{name})]}|_T)]</label>
+                        <p class="explication">[(#VAL{cioidc:}|concat{[(#GET{name})_explication]}|_T)]</p>
+                    [<span class='erreur_message'>(#GET{erreurs})</span>]
+                    <div class="choix">
+                            <input type="radio" name="#GET{name}" id="#GET{name}_oui" value="oui"
+                            [(#ENV{#GET{name}}|=={non}|non)checked="checked"] #GET{disabled} /><label for="#GET{name}_oui"><:item_oui:></label>
+                            &nbsp;&nbsp;
+                            <input type="radio" name="#GET{name}" id="#GET{name}_non" value="non"
+                            [(#ENV{#GET{name}}|=={non}|oui)checked="checked"] #GET{disabled} /><label for="#GET{name}_non"><:item_non:></label>
+                    </div>
+            </div>
+            
+            #SET{name,serveur_sans_userinfo}#SET{erreurs,#ENV*{erreurs}|table_valeur{#GET{name}}}
+            <div class="editer editer_[(#GET{name})][ (#GET{erreurs}|oui)erreur]">
+                        <label for="#GET{name}">[(#VAL{cioidc:}|concat{[(#GET{name})]}|_T)]</label>
+                        <p class="explication">[(#VAL{cioidc:}|concat{[(#GET{name})_explication]}|_T)]</p>
+                    [<span class='erreur_message'>(#GET{erreurs})</span>]
+                    <div class="choix">
+                            <input type="radio" name="#GET{name}" id="#GET{name}_oui" value="oui"
+                            [(#ENV{#GET{name}}|=={oui}|oui)checked="checked"] #GET{disabled} /><label for="#GET{name}_oui"><:item_oui:></label>
+                            &nbsp;&nbsp;
+                            <input type="radio" name="#GET{name}" id="#GET{name}_non" value="non"
+                            [(#ENV{#GET{name}}|=={oui}|non)checked="checked"] #GET{disabled} /><label for="#GET{name}_non"><:item_non:></label>
+                    </div>
+            </div>
+                
+            #SET{name,http_proxy}#SET{erreurs,#ENV*{erreurs}|table_valeur{#GET{name}}}
+            <div class="editer editer_[(#GET{name})][ (#GET{erreurs}|oui)erreur]">
+                        <label for="#GET{name}">[(#VAL{cioidc:}|concat{[(#GET{name})]}|_T)]</label>
+                        <p class="explication">[(#VAL{cioidc:}|concat{[(#GET{name})_explication]}|_T)]</p>
+                    [<span class='erreur_message'>(#GET{erreurs})</span>]
+                    <div class="choix">
+                            <input type="radio" name="#GET{name}" id="#GET{name}_oui" value="oui"
+                            [(#ENV{#GET{name}}|=={oui}|oui)checked="checked"] #GET{disabled} /><label for="#GET{name}_oui"><:item_oui:></label>
+                            &nbsp;&nbsp;
+                            <input type="radio" name="#GET{name}" id="#GET{name}_non" value="non"
+                            [(#ENV{#GET{name}}|=={oui}|non)checked="checked"] #GET{disabled} /><label for="#GET{name}_non"><:item_non:></label>
+                    </div>
+            </div>
+                
+            #SET{name,creer_auteur}#SET{erreurs,#ENV*{erreurs}|table_valeur{#GET{name}}}
+            <div class="editer">
+                        <label for="#GET{name}">[(#VAL{cioidc:}|concat{[(#GET{name})]}|_T)]</label>
+                        <p class="explication">[(#VAL{cioidc:}|concat{[(#GET{name})_explication]}|_T)]</p>
+                        [<span class='erreur_message'>(#ENV*{erreurs}|table_valeur{[(#GET{name})]})</span>]
+                        <select name="[(#GET{name})]" id="[(#GET{name})]" [(#GET{disabled})]>
+                                <option value="" [(#ENV{[(#GET{name})]}|non)selected="selected"]><:cioidc:pas_creer_auteur:></option>
+                                <option value="0minirezo" [(#ENV{[(#GET{name})]}|=={0minirezo}|oui)selected="selected"]><:cioidc:creer_administrateur:></option>
+                                <option value="1comite" [(#ENV{[(#GET{name})]}|=={1comite}|oui)selected="selected"]><:cioidc:creer_redacteur:></option>
+                                <option value="6forum" [(#ENV{[(#GET{name})]}|=={6forum}|oui)selected="selected"]><:cioidc:creer_visiteur:></option>
+                        </select>
+            </div>
+
+            
+            <fieldset>    
+                <legend><:cioidc:optimisation:></legend>
+                <p class="explication"><:cioidc:optimisation_explication:></p>
+                
+            #SET{name,authorization_endpoint}#SET{erreurs,#ENV*{erreurs}|table_valeur{#GET{name}}}
+            <div class="editer editer_[(#GET{name})] [ (#ENV*{erreurs}|table_valeur{[(#GET{name})]}|oui)erreur]">
+                        <label for="#GET{name}">[(#VAL{cioidc:}|concat{[(#GET{name})]}|_T)]</label>
+                        <p class="explication">[(#VAL{cioidc:}|concat{[(#GET{name})_explication]}|_T)]</p>
+                        [<span class='erreur_message'>(#ENV*{erreurs}|table_valeur{[(#GET{name})]})</span>]
+                        <input type='text' class='text' name='[(#GET{name})]' id='[(#GET{name})]' value='[(#ENV{[(#GET{name})]})]' placeholder="https://" [(#GET{disabled})]/>
+            </div>
+
+            #SET{name,token_endpoint}#SET{erreurs,#ENV*{erreurs}|table_valeur{#GET{name}}}
+            <div class="editer editer_[(#GET{name})] [ (#ENV*{erreurs}|table_valeur{[(#GET{name})]}|oui)erreur]">
+                        <label for="#GET{name}">[(#VAL{cioidc:}|concat{[(#GET{name})]}|_T)]</label>
+                        <p class="explication">[(#VAL{cioidc:}|concat{[(#GET{name})_explication]}|_T)]</p>
+                        [<span class='erreur_message'>(#ENV*{erreurs}|table_valeur{[(#GET{name})]})</span>]
+                        <input type='text' class='text' name='[(#GET{name})]' id='[(#GET{name})]' value='[(#ENV{[(#GET{name})]})]' placeholder="https://" [(#GET{disabled})]/>
+            </div>
+
+            #SET{name,userinfo_endpoint}#SET{erreurs,#ENV*{erreurs}|table_valeur{#GET{name}}}
+            <div class="editer editer_[(#GET{name})] [ (#ENV*{erreurs}|table_valeur{[(#GET{name})]}|oui)erreur]">
+                        <label for="#GET{name}">[(#VAL{cioidc:}|concat{[(#GET{name})]}|_T)]</label>
+                        <p class="explication">[(#VAL{cioidc:}|concat{[(#GET{name})_explication]}|_T)]</p>
+                        [<span class='erreur_message'>(#ENV*{erreurs}|table_valeur{[(#GET{name})]})</span>]
+                        <input type='text' class='text' name='[(#GET{name})]' id='[(#GET{name})]' value='[(#ENV{[(#GET{name})]})]' placeholder="https://" [(#GET{disabled})]/>
+            </div>
+
+            #SET{name,end_session_endpoint}#SET{erreurs,#ENV*{erreurs}|table_valeur{#GET{name}}}
+            <div class="editer editer_[(#GET{name})] [ (#ENV*{erreurs}|table_valeur{[(#GET{name})]}|oui)erreur]">
+                        <label for="#GET{name}">[(#VAL{cioidc:}|concat{[(#GET{name})]}|_T)]</label>
+                        <p class="explication">[(#VAL{cioidc:}|concat{[(#GET{name})_explication]}|_T)]</p>
+                        [<span class='erreur_message'>(#ENV*{erreurs}|table_valeur{[(#GET{name})]})</span>]
+                        <input type='text' class='text' name='[(#GET{name})]' id='[(#GET{name})]' value='[(#ENV{[(#GET{name})]})]' placeholder="https://" [(#GET{disabled})]/>
+            </div>
+
+            #SET{name,jwks_uri}#SET{erreurs,#ENV*{erreurs}|table_valeur{#GET{name}}}
+            <div class="editer editer_[(#GET{name})] [ (#ENV*{erreurs}|table_valeur{[(#GET{name})]}|oui)erreur]">
+                        <label for="#GET{name}">[(#VAL{cioidc:}|concat{[(#GET{name})]}|_T)]</label>
+                        <p class="explication">[(#VAL{cioidc:}|concat{[(#GET{name})_explication]}|_T)]</p>
+                        [<span class='erreur_message'>(#ENV*{erreurs}|table_valeur{[(#GET{name})]})</span>]
+                        <input type='text' class='text' name='[(#GET{name})]' id='[(#GET{name})]' value='[(#ENV{[(#GET{name})]})]' placeholder="https://" [(#GET{disabled})]/>
+            </div>
+
+            #SET{name,token_endpoint_auth_methods_supported}#SET{erreurs,#ENV*{erreurs}|table_valeur{#GET{name}}}
+            <div class="editer editer_[(#GET{name})] [ (#ENV*{erreurs}|table_valeur{[(#GET{name})]}|oui)erreur]">
+                        <label for="#GET{name}">[(#VAL{cioidc:}|concat{[(#GET{name})]}|_T)]</label>
+                        <p class="explication">[(#VAL{cioidc:}|concat{[(#GET{name})_explication]}|_T)]</p>
+                        [<span class='erreur_message'>(#ENV*{erreurs}|table_valeur{[(#GET{name})]})</span>]
+                        <input type='text' class='text' name='[(#GET{name})]' id='[(#GET{name})]' value='[(#ENV{[(#GET{name})]})]' [(#GET{disabled})]/>
+            </div>
+
+            </fieldset>    
+                
+        </div>
+	  
+	[(#ENV{ciedit}|oui)
+	  <p class='boutons'><input type='submit' class='submit' value='<:bouton_enregistrer:>' /></p>
+	]
+	</div></form>	
+</div>
+
+[(#ENV{id_serveur}|=={initial}|non)
+[(#ENV{id_serveur}|>{0}|oui)
+
+[(#ENV{ciedit}|oui)
+<div>
+[(#URL_ACTION_AUTEUR{supprimer_serveur_oidc,#ENV{id_serveur},#URL_ECRIRE{cioidc_serveurs}}|icone_horizontale{<:cioidc:supprimer_serveur_oidc:>,groupe_mots,del})]
+
+</div>
+<div style='clear:both;'></div>	
+]
+<br />	
+]
+]

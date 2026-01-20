@@ -6,7 +6,7 @@
 				<li class="item rubrique"><a href="[(#ID_RUBRIQUE|generer_objet_url{rubrique})]">[(#CHEMIN_IMAGE{rubrique-16.png}|balise_img) ][(#TITRE|sinon{<:info_sans_titre:>})]</a></li>
 			</BOUCLE_restreint>
 		</ul>
-		[<p class="pagination">(#PAGINATION{prive})</p>]
+		[<nav class="pagination">(#PAGINATION{prive})</nav>]
 	</div>
 </B_restreint>
 [(#STATUT|=={0minirezo}|oui)

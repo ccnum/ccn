@@ -16,6 +16,7 @@ options:
         saisie: 'input'
         options:
           nom: 'label'
+          obligatoire: 'on'
           label: '<:saisies:option_label_label:>'
           explication: '<:saisies:option_label_explication:>'
           size: 50
@@ -43,6 +44,7 @@ options:
         options:
           nom: 'defaut'
           label: '<:saisies:option_defaut_label:>'
+          explication: '<:saisies:option_defaut_multiple_explication:>'
           rows: 10
           cols: 50
       -  'inclure:saisies/_base/choix_alternatif.yaml'

@@ -6,10 +6,6 @@
  * @package SPIP\Saisies\Pipelines
  **/
 
-// Sécurité
-if (!defined('_ECRIRE_INC_VERSION')) {
-	return;
-}
 
 /**
  * Préambule, les constantes pour afficher_si
@@ -30,11 +26,11 @@ if (!defined('_SAISIES_AFFICHER_SI_JS_HIDE')) {
 function saisies_header_prive($flux) {
 	foreach (['javascript/saisies.js', 'javascript/saisies_afficher_si.js'] as $script) {
 		$js = timestamp(find_in_path($script));
-		$flux .= "\n<script type='text/javascript' src='$js'></script>\n";
+		$flux .= "\n<script src='$js'></script>\n";
 	}
 	$js = timestamp(find_in_path('javascript/saisies_textarea_counter.js'));
-	$flux .= '<script type="text/javascript">saisies_caracteres_restants = "' . _T('saisies:caracteres_restants') . '";</script>';
-	$flux .= "\n<script type='text/javascript' src='$js'></script>\n";
+	$flux .= '<script>saisies_caracteres_restants = "' . _T('saisies:caracteres_restants') . '";</script>';
+	$flux .= "\n<script src='$js'></script>\n";
 	$flux .= afficher_si_definir_fonctions();
 	include_spip('inc/filtres');
 	$css = timestamp(find_in_path('css/saisies.css'));
@@ -108,20 +104,20 @@ function saisies_generer_head($html_content = '', $tester_saisies = false) {
 	$ins_js = '';
 	// JS général
 	$js = timestamp(find_in_path('javascript/saisies.js'));
-	$ins_js .= "\n<script type='text/javascript' src='$js'></script>\n";
+	$ins_js .= "\n<script src='$js'></script>\n";
 
 
 	// si on a une saisie de type textarea avec maxlength, on va charger un script
 	if (!$tester_saisies || (strpos($html_content, 'textarea') !== false && strpos($html_content, 'maxlength') !== false)) {
 		$js = timestamp(find_in_path('javascript/saisies_textarea_counter.js'));
-		$ins_js .= '<script type="text/javascript">saisies_caracteres_restants = "' . _T('saisies:caracteres_restants') . '";</script>';
-		$ins_js .= "\n<script type='text/javascript' src='$js'></script>\n";
+		$ins_js .= '<script>saisies_caracteres_restants = "' . _T('saisies:caracteres_restants') . '";</script>';
+		$ins_js .= "\n<script src='$js'></script>\n";
 	}
 	// Afficher_si
 	if (!$tester_saisies || strpos($html_content, 'afficher_si') !== false) {
 		$ins_js .= afficher_si_definir_fonctions();
 		$js = timestamp(find_in_path('javascript/saisies_afficher_si.js'));
-		$ins_js .= "\n<script type='text/javascript' src='$js'></script>\n";
+		$ins_js .= "\n<script src='$js'></script>\n";
 	}
 
 	$flux = $flux . $ins_js;
@@ -274,7 +270,6 @@ function saisies_styliser($flux) {
 		// Et qu'il y a des saisies dans le contexte
 		&& isset($flux['args']['contexte']['_saisies'])
 		// Et que le fichier choisi est vide ou n'existe pas
-		&& include_spip('inc/flock')
 		&& ($ext = $flux['args']['ext'])
 		&& lire_fichier($flux['data'] . '.' . $ext, $contenu_squelette)
 		&& !trim($contenu_squelette)
@@ -477,7 +472,9 @@ function afficher_si_hide(src) {
  * @return array $flux
 **/
 function saisies_saisies_verifier_lister_disponibles(array $flux): array {
+	$flux['data']['indisponibles']['fichiers'] = $flux['data']['disponibles']['fichiers'];
 	unset($flux['data']['disponibles']['fichiers']);// CVTUpload s'occupe tout seul de remettre cette verification
+	return $flux;
 }
 
 /**

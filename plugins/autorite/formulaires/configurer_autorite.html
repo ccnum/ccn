@@ -14,8 +14,8 @@
 		<p><:autorite:deja_defini:></p>
 		<ul class="spip">
 			<li>
-				<tt>[(#CONFIG{autorite_erreurs}|unserialize|join{'</tt></li>
-			<li><tt>'})]</tt></li>
+				<tt>[(#CONFIG{autorite_erreurs}|?{#CONFIG{autorite_erreurs}|unserialize|implode{'</tt></li>
+			<li><tt>'}})]</tt></li>
 		</ul>
 		<p><:autorite:deja_defini_suite:></p>
 	</div>

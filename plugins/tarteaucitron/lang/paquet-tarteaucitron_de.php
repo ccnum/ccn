@@ -3,15 +3,11 @@
 // extrait automatiquement de https://trad.spip.net/tradlang_module/paquet-tarteaucitron?lang_cible=de
 // ** ne pas modifier le fichier **
 
-if (!defined('_ECRIRE_INC_VERSION')) {
-	return;
-}
-
-$GLOBALS[$GLOBALS['idx_lang']] = array(
+return [
 
 	// T
 	'tarteaucitron_description' => 'Für SPIP angepasste Version des Moduls für Cookie-Einverständniserklärungen tarteaucitron.js (kostenlose Version). <br />
 Das Plugin ermöglicht Cookies von Drittabietern (Google Analytics, Facebook Pixel, etc.) zu (de)aktivieren und bietet Besuchern der Website ein Interface zur Verwaltung der persönlichen Einstellungen zu Cookies dieser Anbieter.',
 	'tarteaucitron_nom' => 'Zitronenkuchen',
-	'tarteaucitron_slogan' => 'DSGVO-konformer Cookiemanager'
-);
+	'tarteaucitron_slogan' => 'DSGVO-konformer Cookiemanager',
+];

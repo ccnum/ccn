@@ -1,0 +1,23 @@
+[(#BOITE_OUVRIR{[<:select2:select2_titre:>(#CHEMIN_IMAGE{select2-24.png}|balise_img{'',cadre-icone})],simple})]
+	<p>[(#VAL{paquet-select2:select2_description}|_T)]</p>
+#BOITE_FERMER
+
+[(#SET{liste,#LISTE{
+	#ARRAY{
+		exec,configurer_select2,
+		libelle,select2:titre_page_configurer_select2,
+		icone,cfg-16,
+	},
+	#ARRAY{
+		exec,tester_select2,
+		libelle,select2:titre_page_tester_select2,
+		icone,warning-16,
+	},
+}})]
+<ul class='liste_items sous_navigation'>
+	<BOUCLE_menu(DATA){source tableau,#GET{liste}}>
+	<li class="item[(#ENV{exec}|=={#EXEC}|oui)on]">
+		[(#URL_ECRIRE{#EXEC}|icone_horizontale{[(#LIBELLE|_T)], #ICONE})]
+	</li>
+	</BOUCLE_menu>
+</ul>

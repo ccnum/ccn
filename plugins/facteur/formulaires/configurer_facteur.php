@@ -67,7 +67,9 @@ function formulaires_configurer_facteur_charger_dist() {
 
 	if (defined('_TEST_EMAIL_DEST')) {
 		if (_TEST_EMAIL_DEST) {
-			$valeurs['_message_warning'] = _T('facteur:info_envois_forces_vers_email', ['email' => _TEST_EMAIL_DEST]);
+			include_spip('inc/facteur');
+			$dest_forces = facteur_emails_to_array(_TEST_EMAIL_DEST);
+			$valeurs['_message_warning'] = _T('facteur:info_envois_forces_vers_email', ['email' => implode(', ', $dest_forces)]);
 		}
 		else {
 			$valeurs['_message_warning'] = _T('facteur:info_envois_bloques_constante');

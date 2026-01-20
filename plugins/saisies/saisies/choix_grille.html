@@ -30,15 +30,8 @@
 [(#REM) valeur doit être un tableau ! ]
 #SET{valeur, #ENV{valeur_forcee, #ENV{valeur}}|saisies_valeur2tableau}
 
-[(#REM) lorsque qu'on donne un 'disabled' qui est une chaine,
-	il faut la transformer en tableau. Ce tableau est vide si la chaine valait ''
-	sinon une clé 0 serait considérée disabled à tord
-]
-#SET{disabled, #ENV{disable}}
-[(#GET{disabled}|is_string|oui)
-	[(#GET{disabled}|strlen|non) #SET{disabled,#ARRAY} ]
-	[(#GET{disabled}|oui) #SET{disabled,#ARRAY|push{#GET{disabled}}} ]
-]
+#SET{disabled, #ENV{disable_choix}|saisies_normaliser_liste_choix}
+
 <B_lignes>
 <div class="choix_grille_wrapper">
 <table class="spip choix_grille" role="presentation">
@@ -47,7 +40,7 @@
 	<tr>
 		<th></th>
 		<BOUCLE_colonnes_entete (DATA) {source table, #ENV{data_cols}}>
-		<th scope="col" id="choix_grille_reponse_[(#ENV{id,#ENV{nom}}|saisie_nom2classe)]_[(#CLE)]">#VALEUR</th>
+		<th scope="col" id="choix_grille_reponse_#ENV{id}_[(#CLE)]">#VALEUR</th>
 		</BOUCLE_colonnes_entete>
 		[(#GET{utiliser_label_droite}|oui)<td></td>]
 	</tr>
@@ -57,7 +50,7 @@
 		<B_colonnes>
 		<tr>
 			#SET{libelles, #VALEUR|explode{'|'}}
-			<th scope="row" id="choix_grille_question_[(#ENV{id,#ENV{nom}}|saisie_nom2classe)]_[(#CLE)]">[(#GET{libelles}|table_valeur{0})]</th>
+			<th scope="row" id="choix_grille_question_#ENV{id}_[(#CLE)]">[(#GET{libelles}|table_valeur{0})]</th>
 			<BOUCLE_colonnes (DATA) {source table, #ENV{data_cols}}>
 			<td>
 				#SET{type, radio}
@@ -73,7 +66,8 @@
 					#SET{coche, #CLE|in_array{#GET{valeur/#_lignes:CLE}|saisies_chaine2tableau}}
 				]
 				<label>
-					<input type="#GET{type}"[ (#ENV{disabled}|oui)disabled="disabled"] name="#GET{name}" value="#CLE"[ (#GET{coche}|oui)checked="checked"] aria-labelledby="choix_grille_question_[(#ENV{id,#ENV{nom}}|saisie_nom2classe)]_[(#_lignes:CLE)] choix_grille_reponse_[(#ENV{id,#ENV{nom}}|saisie_nom2classe)]_[(#CLE)]"[ (#HTML5|et{#ENV{obligatoire}}|et{#ENV{multiple}|non}|oui)required="required"][ (#ENV*{attributs})]/>
+
+					<input type="#GET{type}"[ (#ENV{disabled}|ou{#GET{disabled}|find{#_lignes:CLE/#CLE}}|oui)disabled="disabled"] name="#GET{name}" value="#CLE"[ (#GET{coche}|oui)checked="checked"] aria-labelledby="choix_grille_question_#ENV{id}_[(#_lignes:CLE)] choix_grille_reponse_#ENV{id}_[(#CLE)]"[ (#ENV{obligatoire,non}|!={non}|et{#ENV{multiple}|non}|oui)required="required"][ (#ENV*{attributs})]/>
 				</label>
 			</td>
 			</BOUCLE_colonnes>

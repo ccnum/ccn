@@ -7,12 +7,12 @@
 	[(#ENV{_etape}|oui)formulaire_multietapes]
 	[(#ENV**{_saisies/options/conteneur_class})]"
 	[(#ENV{_saisies}|saisies_dont_avec_option{afficher_si}|oui) data-avec-afficher_si="true"]
-																															[id="(#ENV{_saisies/options/conteneur_id}|sinon{#ENV{formulaire_sign}})"]
+	[id="(#ENV{_saisies/options/conteneur_id}|sinon{#ENV{formulaire_sign}})"]
 	>
 	#ENV**{_saisies/options/inserer_debut}
-	[<div class="reponse_formulaire reponse_formulaire_ok"[(#HTML5|oui) role="status"]>(#ENV**{message_ok})</div>]
+	[<div class="reponse_formulaire reponse_formulaire_ok" role="status">(#ENV**{message_ok})</div>]
 	[(#ENV{erreurs/_previsu}|non)
-		[<div class="reponse_formulaire reponse_formulaire_erreur"[(#HTML5|oui) role="alert"]>(#ENV**{message_erreur})</div>]
+		[<div class="reponse_formulaire reponse_formulaire_erreur" role="alert">(#ENV**{message_erreur})</div>]
 	]
 	[(#ENV{editable}|oui)
 	[(#ENV{_saisies}|et{#ENV{_saisies}|count}|oui)

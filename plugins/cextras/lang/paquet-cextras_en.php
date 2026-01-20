@@ -3,11 +3,7 @@
 // extrait automatiquement de https://trad.spip.net/tradlang_module/paquet-cextras?lang_cible=en
 // ** ne pas modifier le fichier **
 
-if (!defined('_ECRIRE_INC_VERSION')) {
-	return;
-}
-
-$GLOBALS[$GLOBALS['idx_lang']] = array(
+return [
 
 	// C
 	'cextras_description' => 'Provides a simple API to create new fields on the editorial objects.
@@ -15,5 +11,5 @@ It is the base for other plugins including "Extras Fields Interface" which provi
 a graphical interface to manage these new fields.',
 	'cextras_nom' => 'Extra fields',
 	'cextras_slogan' => 'Create new edit fields for SPIP objects',
-	'cextras_titre' => 'Extra fields'
-);
+	'cextras_titre' => 'Extra fields',
+];

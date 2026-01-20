@@ -9,6 +9,7 @@ use PHPUnit\Framework\TestCase;
  * @covers normaliser_date_datetime_dist()
  * @covers normaliser_date_date_dist()
  * @covers normaliser_date_date_ou_datetime_dist()
+ * @covers verifier_date_format_autodection()
  * @uses verifier_date_format_spip2php()
  * @internal
  */
@@ -63,9 +64,13 @@ class DateTest extends TestCase {
 		//mja
 		['2021-03-22 00:00:00','03/22/2021',['format' => 'mja'], ''],
 
-		// Avec les heures
+		// Avec les heures : on test 2 fois, histoire que si jamais c'est lancé à l'heure pile indiqué ca fasse pas un faux positifs, en esperant qu'on mette pas 10h pile entre les 2 tests (ce serait un ordinateur très très très lent)
 		//Amj
 		['2021-03-22 20:00:00','2021/03/22', ['heure' => '20:00', 'format' => 'amj'], ''],
+		['2021-03-22 10:00:00','2021/03/22', ['heure' => '10:00', 'format' => 'amj'], ''],
+		//Amj avec trait de séparation
+		['2021-03-22 20:00:00','2021-03-22', ['heure' => '20:00', 'format' => 'amj'], ''],
+		['2021-03-22 10:00:00','2021-03-22', ['heure' => '10:00', 'format' => 'amj'], ''],
 	];
 
 	}
@@ -159,6 +164,52 @@ class DateTest extends TestCase {
 	public function testNormaliserDateDateOuDatetime($expected, $input, $options = []) {
 		$erreurs = '';
 		$actual = normaliser_date_date_ou_datetime_dist($input, $options, $erreurs);
+		$this->assertEquals($expected, $actual);
+	}
+
+	public static function dataVerifierDateFormatAutodection() {
+		return [
+			'amj' => [
+				// Expected
+				'amj',
+				// Provided
+				'2022-01-01'
+			],
+			'amj2' => [
+				// Expected
+				'amj',
+				// Provided
+				'2022/01/01'
+			],
+			'jma_sur' => [
+				// Expected
+				'jma',
+				// Provided
+				'31-10-2022'
+			],
+			'mja_sur' => [
+				// Expected
+				'mja',
+				// Provided
+				'10-31-2022'
+			],
+			'on_sait_pas' => [
+				// Expected
+				'',
+				// Provided
+				'10-10-2022',
+				'jma'
+			],
+		];
+	}
+
+
+	/**
+		* @dataProvider dataVerifierDateFormatAutodection
+	 */
+	public function testVerifierDateFormatAutodection($expected, $input, $defaut='') {
+		$erreurs = '';
+		$actual = verifier_date_format_autodection($input, $defaut);
 		$this->assertEquals($expected, $actual);
 	}
 }
