@@ -1,21 +1,14 @@
 #CACHE{0}
 <div id="menu_haut_user" class="bloc_titre">
 	<BOUCLE_auteurs(AUTEURS){id_auteur}{tous}>
-		<div class="connecter_ok">
-			<div class="gauche"><span class="icon icon-connecter"></span></div>
-			<div class="gauche"><span class="icon icon-down"></span></div>
-			<div class="connecter_plus">
-				<ul>
-					<li><a href="">Voir mon profil</a></li>
-					<li><a href="#URL_LOGOUT">Se déconnecter</a></li>
-				</ul>
-			</div>
+		<div id="choix_rubrique_user" name="rubrique_user" class="select">
+			<input type="radio" class="first"><label class="first_label"><span class="icon icon-connecter"></span>#NOM<span class="icon icon-down"></span></label>
+			<div class="user-option mon-profil"><a href="" title="Mon profil CCN">Mon profil CCN</a></div>
+			<div class="user-option me-deconnecter"><a href="#URL_LOGOUT"title="Me déconnecter"><span class="icon icon-logout"></span>Me déconnecter</a></div>
 		</div>
 	</BOUCLE_auteurs>
 		<div class="connecter">
-			<a href="[(#URL_PAGE{login}|parametre_url{url,#SELF}|parametre_url{cicas,oui})]" class="logo_menu-connecter" title="Se connecter à l'ENT">
-				<span class="icon icon-connecter"></span>
-			</a>
+			<a href="[(#URL_PAGE{login}|parametre_url{url,#SELF}|parametre_url{cicas,oui})]" class="logo_menu-connecter" title="Se connecter à l'ENT"><span class="icon icon-connecter"></span>Me connecter</a>
 		</div>
 	<//B_auteurs>
 </div>

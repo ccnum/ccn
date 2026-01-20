@@ -44,8 +44,8 @@
 				]
 
 				<div class="fiche_titre couleur_texte_[(#ENV{type_objet})] couleur_[(#ENV{type_objet})][(#MODELE{nb2col}{id_article})]">
-					<div class="photo">[(#MODELE{logo_carre}{id_article})]</div>
 					<div class="texte">
+						<div class="photo">[(#MODELE{logo_carre}{id_article})]</div>
 						<div class="#EDIT{titre} titre">[(#TITRE)]</div>
 						<div class="auteur_date">
 							[<div id="ajax_go_to_classe_#GET{id_parent}" class="reponse_goto_classe[(#ENV{type_objet}|in_array{#LISTE{travail_en_cours,classes}}|oui) pointer]">(#GET{titre_parent})</div>]

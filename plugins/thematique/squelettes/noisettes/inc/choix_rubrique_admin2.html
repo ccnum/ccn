@@ -29,10 +29,14 @@
 ]
 
 [(#REM) Admin restreint]
+[(#GET{affiche}|=={oui}|oui)
 <div id="menu_haut_rubrique" class="bloc_titre">
 	<B_rub_aut2>[(#GET{affiche}|=={oui}|oui)
 	<div id="choix_rubrique_admin" name="rubrique_admin" class="select">
-	<input type="radio" value="#ENV{restreint}" class="first"><label class="first_label">Publier dans : <span class="highlight">[(#GET{titre}|couper{30})]</span></label>
+	<input type="radio" value="#ENV{restreint}" class="first">
+		<label class="first_label">Publier dans : <span class="highlight">[(#GET{titre}|couper{30})]</span>
+			<span class="icon icon-down"></span>
+		</label>
 	]
 		<div class="choix_rubrique_wrapper">
 			<BOUCLE_rub_aut2(RUBRIQUES auteurs){id_auteur}{tout}>
@@ -51,7 +55,9 @@
 		[(#REM) Admin complet]
 		<B_rub2>[(#GET{affiche}|=={oui}|oui)
 			<div id="choix_rubrique_admin" name="rubrique_admin" class="select">
-			<input type="radio" value="#ENV{restreint}" class="first"><label class="first_label">Publier dans : <span class="highlight">[(#GET{titre}|couper{30})]</span></label>
+			<input type="radio" value="#ENV{restreint}" class="first">
+				<label class="first_label">Publier dans : <span class="highlight">[(#GET{titre}|couper{30})]</span><span class="icon icon-down"></span>
+				</label>
 			]
 				<div class="choix_rubrique_wrapper">
 					<BOUCLE_rub2(RUBRIQUES){racine}{!par maj}{tout}>
@@ -76,8 +82,9 @@
 		</B_rub2>
 	<//B_rub_aut2>
 </div>
+]
 [(#ENV{restreint}|!={0}|oui|et{#ENV{restreint}|!={''}}|et{#ENV{type_restreint}|!={''}}|et{#ENV{type_restreint}|!={travail_en_cours}|oui}|oui)
 <div id="menu_haut_ecrire" class="bloc_titre">
-	<a class="icon icon-ecrire" title="Publier un nouvel article" onClick='createReponse(0, #ENV{restreint});'></a>
+	<a title="Publier un nouvel article" onClick='createReponse(0, #ENV{restreint});'><span class="icon icon-ecrire"></span></a>
 </div>
 ]
