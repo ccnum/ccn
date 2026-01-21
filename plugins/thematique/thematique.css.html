@@ -725,42 +725,35 @@ a:hover {
 .couleur_texte_consignes {
 	color: black;
 }
-/*Jaune*/
 .couleur_consignes1, .zone-menu li.logo a.hover_couleur_consignes1:hover, .zone-menu li.logo a.hover_couleur_consignes1.selected {
-	background-color: #F44336;
+	background-color: var(--color-tonic);
 }
-/*Vert*/
 .couleur_consignes2, .zone-menu li.logo a.hover_couleur_consignes2:hover, .zone-menu li.logo a.hover_couleur_consignes2.selected {
-	background-color: #E91E63;
+	background-color: var(--color-tonic);
 }
-/*Bleu*/
 .couleur_consignes3, .zone-menu li.logo a.hover_couleur_consignes3:hover, .zone-menu li.logo a.hover_couleur_consignes3.selected {
-	background-color: #9C27B0;
+	background-color: var(--color-tonic);
 }
 .couleur_consignes4, .zone-menu li.logo a.hover_couleur_consignes4:hover, .zone-menu li.logo a.hover_couleur_consignes4.selected {
-	background-color: #673AB7;
+	background-color: var(--color-tonic);
 }
-/*Jaune*/
 .couleur_consignes5, .zone-menu li.logo a.hover_couleur_consignes5:hover, .zone-menu li.logo a.hover_couleur_consignes5.selected {
-	background-color: #3F51B5;
+	background-color: var(--color-tonic);
 }
-/*Violet*/
 .couleur_consignes6, .zone-menu li.logo a.hover_couleur_consignes6:hover, .zone-menu li.logo a.hover_couleur_consignes6.selected {
-	background-color: #2196F3;
+	background-color: var(--color-tonic);
 }
 .couleur_consignes7, .zone-menu li.logo a.hover_couleur_consignes7:hover, .zone-menu li.logo a.hover_couleur_consignes7.selected {
-	background-color: #009688;
+	background-color: var(--color-tonic);
 }
 .couleur_consignes8, .zone-menu li.logo a.hover_couleur_consignes8:hover, .zone-menu li.logo a.hover_couleur_consignes8.selected {
-	background-color: #4CAF50;
+	background-color: var(--color-tonic);
 }
-/*Bleu clair*/
 .couleur_consignes9, .zone-menu li.logo a.hover_couleur_consignes9:hover, .zone-menu li.logo a.hover_couleur_consignes9.selected {
-	background-color: #3F51B5;
+	background-color: var(--color-tonic);
 }
-/*Rose*/
 .couleur_consignes0, .zone-menu li.logo a.hover_couleur_consignes0:hover, .zone-menu li.logo a.hover_couleur_consignes0.selected {
-	background-color: #607D8B;
+	background-color: var(--color-tonic);
 }
 
 
@@ -1158,7 +1151,6 @@ a:hover {
 	display: block;
 	background-position: center;
 	background-repeat: no-repeat;
-	color: #fff;
 	position: relative;
 }
 
@@ -2377,8 +2369,6 @@ div.donnees_classe {
 
 .popup .fiche_titre .auteur_date {
 	background: rgba(0,0,0,.06);
-	margin: 20px -20px -40px;
-	padding: 15px 20px;
 	color: rgba(255,255,255,.8);
 	text-transform: uppercase;
 	letter-spacing: 1px;
@@ -2486,15 +2476,6 @@ div.donnees_classe {
 	max-height: calc(100vh - 157px);
 }
 
-.popup .sidebar_bubble:first-of-type {
-	background: rgba(0,0,0,0);
-  	border-color: rgba(0,0,0,0);
-	position: sticky;
-	top: 0;
-	z-index: 10;
-	border-top: 0;
-}
-
 .popup .sidebar_bubble.sidebar_bubble_empty {
 	background: rgba(255,255,255,.4);
 	box-shadow: none;
@@ -2582,6 +2563,10 @@ div.donnees_classe {
 	border-radius: 4px;
 	margin: 5px 15px 5px 15px;
 	padding: 10px 20px;
+}
+
+#entete_contenu.popup_new_article {
+	margin-inline: -40px;
 }
 
 .popup_new_article .formulaire_spip {
@@ -2867,6 +2852,10 @@ div.donnees_classe {
 	width: 100%;
 	height: 100%;
 	overflow: auto;
+}
+
+.sidebar_main_around_full {
+	width: 100% !important;
 }
 
 .sidebar_lateral_around_hide {
@@ -3418,9 +3407,7 @@ li.editer p.explication, .editer_pgp, .editer_bio, .editer_liens_sites, .saisie_
 #bloc_texte, .bloc_texte {
 	font-size: 13px;
 	line-height: 17px;
-	<!-- padding: 20px 40px 20px 40px; -->
-	padding-top: 20px;
-	padding-bottom: 20px;
+	padding: 20px 40px 20px 40px;
 }
 
 .intervention_item #bloc_texte,.intervention_item .bloc_texte {
@@ -3829,6 +3816,7 @@ ul#forum, .lien_forum {
 	border: none;
 	width: 100%;
 	max-height: 100%;
+    height: calc(100vh - 76.78px - 80px);
 	z-index: 10000;
 	position: relative;
 	overflow: hidden;

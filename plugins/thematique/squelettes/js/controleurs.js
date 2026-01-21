@@ -20,6 +20,7 @@ function closeModal() {
 		.removeClass('hasSidebarExpanded');
 	$('#sidebarCache').removeClass('sidebarCacheOn');
 	hideSidebar();
+	hideSidebarLateral();
 }
 
 $(function () {
@@ -423,6 +424,8 @@ function call(opts) {
 
 function callConsigne(id_consigne) {
 
+	reduceSidebar();
+	hideSidebarLateral();
 	changeTimelineMode('consignes');
 
 	var url = CCN.projet.url_popup_consigne + "&id_article=" + id_consigne;
@@ -522,7 +525,6 @@ function callReponse(id_reponse) {
 
 function callClasse(id_classe) {
 	console.log('id_classe in callClasse function', id_classe);
-
 	changeTimelineMode('consignes');
 	setFullscreenModeToCols(true);
 	updateMenuIcon(['classes', 'classes-' + id_classe], 'sidebarView');
@@ -533,6 +535,7 @@ function callClasse(id_classe) {
 		// url = CCN.projet.url_popup_classes + '&id_rubrique=' + id_classe + '&type_objet=travail_en_cours';
 		url = CCN.projet.url_popup_classes + '&id_objet=' + id_classe + '&type_objet=travail_en_cours';
 	}
+	expandSidebar();
 	loadContentInMainSidebar(
 		url, 'rubrique', 'classes', function () {
 			updateUrl(
@@ -562,7 +565,7 @@ function callClasses() {
 	changeTimelineMode('consignes');
 	setFullscreenModeToCols(true);
 	updateMenuIcon(['classes'], 'sidebarView');
-	$('#sidebarCache').addClass('sidebarCacheOn');
+	expandSidebar();
 	blankMainSidebar([
 		`<div class="sidebar_bubble">`,
 			`<div class="fiche_titre couleur_texte_ressources couleur_ressources0">`,
@@ -590,9 +593,8 @@ function callClasses() {
 
 function callLivrables() {
 	changeTimelineMode('consignes');
-	$('#sidebarCache').addClass('sidebarCacheOn');
 	updateMenuIcon(['livrables'], 'sidebarView');
-
+	expandSidebar();
 	blankMainSidebar([
 		`<div class="sidebar_bubble">`,
 			`<div class="fiche_titre couleur_texte_livrables couleur_livrables0">`,
@@ -633,6 +635,8 @@ function callLivrables() {
  */
 
 function callArticleBlog(id_article) {
+	reduceSidebar();
+	hideSidebarLateral();
 	changeTimelineMode('blogs');
 	setFullscreenModeToCols(false);
 	updateMenuIcon(['blogs'], 'mainView');
@@ -669,8 +673,8 @@ function callArticleBlog(id_article) {
 
 function callRessource() {
 	changeTimelineMode('consignes');
-	$('#sidebarCache').addClass('sidebarCacheOn');
 	updateMenuIcon(['ressources'], 'sidebarView');
+	expandSidebar();
 	blankMainSidebar([
 		`<div class="sidebar_bubble">`,
 		`<div class="fiche_titre couleur_texte_ressources couleur_ressources0">`,
@@ -706,11 +710,13 @@ function callRessource() {
  */
 
 function callRessourceArticle(id_article, type_objet) {
+	hideSidebarLateral();
 	changeTimelineMode('consignes');
 	setFullscreenModeToCols(true);
 	updateMenuIcon([type_objet], 'sidebarView');
-
+	
 	var url = "./spip.php?page=article&id_article=" + id_article + "&mode=ajax-detail";
+	reduceSidebar();
 	loadContentInMainSidebar(
 		url, 'article', type_objet, function () {
 			updateUrl(
@@ -743,6 +749,7 @@ function callRessourceSyndicArticle(id_syndic_article, type_objet) {
 	setFullscreenModeToCols(true);
 	updateMenuIcon([type_objet], 'sidebarView');
 
+	expandSidebar();
 	var url = "./spip.php?page=syndic_article&id_syndic_article=" + id_syndic_article + "&mode=ajax-detail";
 	loadContentInMainSidebar(
 		url, 'syndic_article', type_objet, function () {
@@ -761,7 +768,6 @@ function callRessourceSyndicArticle(id_syndic_article, type_objet) {
 		url_lateral, 'rubrique', type_objet, function () {
 		}
 	);
-
 	console.log('callRessourceSyndicArticle');
 }
 
@@ -780,6 +786,8 @@ function callRessourceRubrique(id_rubrique, type_objet) {
 	changeTimelineMode('consignes');
 	setFullscreenModeToCols(true);
 	updateMenuIcon([type_objet], 'sidebarView');
+	reduceSidebar();
+	hideSidebarLateral();
 
 	var url = "./spip.php?page=rubrique&id_rubrique=" + id_rubrique + "&mode=ajax-detail";
 	loadContentInMainSidebar(
@@ -818,7 +826,9 @@ function callArticleEvenement(id_objet, type_objet) {
 	changeTimelineMode('evenements');
 	setFullscreenModeToCols(false);
 	updateMenuIcon(['evenements'], 'mainView');
-
+	
+	reduceSidebar();
+	hideSidebarLateral();
 	var url = CCN.projet.url_popup_evenement + "&page=" + type_objet + "&id_" + type_objet + "=" + id_objet;
 	loadContentInMainSidebar(
 		url, 'article', 'evenements', function () {
@@ -852,7 +862,7 @@ function callArticleEvenement(id_objet, type_objet) {
 function callAgora() {
 	changeTimelineMode('consignes');
 	updateMenuIcon(['agora'], 'sidebarView');
-	$('#sidebarCache').addClass('sidebarCacheOn');
+	expandSidebar();
 	blankMainSidebar([
 		`<div class="sidebar_bubble">`,
 			`<div class="fiche_titre couleur_texte_ressources couleur_ressources0">`,
@@ -884,16 +894,16 @@ function callAgora() {
  * @todo Documenter
  */
 function createReponse(id_consigne, id_rubrique_classe, numero) {
-
 	changeTimelineMode('consignes');
-
+	
+	reduceSidebar();
+	hideSidebarLateral();
 	var url = CCN.projet.url_popup_reponseajout + "&id_consigne=" + id_consigne + "&id_rubrique=" + id_rubrique_classe; // TODO Check infinite loading icon
 	loadContentInMainSidebar(
 		url,
 		'article',
 		'blogs',
 	);
-	hideSidebarLateral();
 
 	console.log('createReponse');
 }
@@ -1098,13 +1108,9 @@ function reload(url) {
 
 function loadContentInMainSidebar(url, typePage, typeObjet, callback) {
 	console.log('loading content in main sidebar', 'url:', url, 'typePage:', typePage, 'typeObjet:', typeObjet);
-
-
-	reduceSidebar();
 	$('#sidebarCache').addClass('sidebarCacheOn');
 	$('body').addClass('loading');
 	showSidebar();
-	hideSidebarLateral();
 	emptyMainSidebar();
 
 	console.log(
@@ -1156,8 +1162,6 @@ function loadContentInLateralSidebar(url, typePage, typeObjet, callback) {
 	);
 
 	$('body').addClass('loading');
-	showSidebar();
-	//emptyLateralSidebar();
 
 	$('#sidebar_lateral_inner').load(
 		url, function (response, status, xhr) {
@@ -1249,6 +1253,7 @@ function blankMainSidebar(msg) {
 	var message = (msg) ? msg : '';
 	$('#sidebar_main_inner').html('<div class="popup popup_blank">' + message + '</div>');
 	$('#sidebarCloseButton').on('click', closeModal);
+	$('#sidebarCache').addClass('sidebarCacheOn');
 	showSidebar();
 }
 
@@ -1258,8 +1263,7 @@ function blankMainSidebar(msg) {
  * @see loadContentInLateralSidebar
  */
 function showSidebarLateral() {
-	console.log('A showSidebarLateral');
-	$('body').addClass('hasSidebarLateralVisible');
+	$('#sidebar_main_around').removeClass('sidebar_main_around_full');
 	$('#sidebar_lateral_around').removeClass('sidebar_lateral_around_hide');
 }
 
@@ -1269,8 +1273,7 @@ function showSidebarLateral() {
  * @see loadContentInLateralSidebar
  */
 function hideSidebarLateral() {
-	console.log('B hideSidebarLateral')
-	$('body').removeClass('hasSidebarLateralVisible');
+	$('#sidebar_main_around').addClass('sidebar_main_around_full');
 	$('#sidebar_lateral_around').addClass('sidebar_lateral_around_hide');
 }
 
@@ -1281,7 +1284,6 @@ function hideSidebarLateral() {
  */
 
 function showSidebar() {
-	console.log('C showSidebarCache');
 	$('body').addClass('hasSidebarOpen');
 	$('#sidebar').addClass('show');
 	updateTimeline();
@@ -1294,7 +1296,6 @@ function showSidebar() {
  */
 
 function hideSidebar() {
-	console.log('D hideSidebar');
 	$('body').removeClass('hasSidebarOpen');
 	$('#sidebar').removeClass('show');
 	updateTimeline();

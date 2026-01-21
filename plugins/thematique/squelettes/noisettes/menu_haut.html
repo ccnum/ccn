@@ -36,11 +36,5 @@
 	</script>
 </div>
 [(#CONST{_PROJET}|=={laclasse}|oui)
-<ul id="menu_haut_logos">
-	<li class="aide">
-		<a id="bouton_aide" href="[(#CHEMIN{pdf/tutoriels.pdf})]" class="mediabox boxIframe boxWidth-80% boxHeight-80%[(#TEXTE|=={''}|oui)[logo_menu-(#VALEUR)]]">
-			[(#CHEMIN{img/logo_aide.svg}|balise_img|image_reduire{*,30})]
-		</a>
-	</li>
-</ul>
+	[(#MODELE{logo_aide, rel=presentation, valeur=aide, class=mediabox, title='1. Le projet', href=#CHEMIN{img/presentation/01.png}})]
 ]
