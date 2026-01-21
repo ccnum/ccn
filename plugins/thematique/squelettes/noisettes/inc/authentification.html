@@ -1,17 +1,30 @@
 #CACHE{0}
+<div id="menu_haut_user" class="bloc_titre">
 [(#SESSION{id_auteur}|oui)
-	<li class="bloc2">
-		<a class='mediabox boxIframe boxWidth-700px boxHeight-600px' href="#URL_PAGE{auteur_editer,id_auteur=#SESSION{id_auteur}}" title="Profil d'auteur">
-			[(#SESSION{nom}|couper{10})]
-		</a>
-	</li>
-	<li class="logo li_deconnexion"><a class="ajax logo_menu-deconnecter" href="[(#URL_LOGOUT)]" title="Se déconnecter"></a></li>
-	<INCLURE{fond=noisettes/inc/choix_rubrique_admin2, restreint, admin} />
+	<div id="choix_rubrique_user" name="rubrique_user" class="select">
+		<input type="radio" class="first"><label class="first_label"><span class="icon icon-connecter"></span>[(#SESSION{nom}|couper{10})]<span class="icon icon-down"></span></label>
+		<div class="user-option mon-profil"><a href="#URL_PAGE{auteur_editer,id_auteur=#SESSION{id_auteur}}" title="Mon profil CCN">Mon profil CCN</a></div>
+		<div class="user-option me-deconnecter"><a href="[(#URL_LOGOUT)]"title="Me déconnecter"><span class="icon icon-logout"></span>Me déconnecter</a></div>
+	</div>
 ]
 [(#SESSION{id_auteur}|non)
-	<li class="logo">
-		[(#PLUGIN{cicas}|oui)<a href="[(#URL_PAGE{login}|parametre_url{url,#SELF}|parametre_url{cicas,oui})]" class="logo_menu-connecter" title="Se connecter à l'ENT"></a>]
-		[(#PLUGIN{cioidc}|oui)<a href="[(#URL_PAGE{login}|parametre_url{url,#SELF}|parametre_url{action,login_cioidc})]" class="logo_menu-connecter" title="Se connecter à l'ENT"></a>]
-	</li>
+	<div class="connecter">
+		[(#PLUGIN{cicas}|oui)
+			<a href="[(#URL_PAGE{login}|parametre_url{url,#SELF}|parametre_url{cicas,oui})]"
+				class="logo_menu-connecter"
+				title="Se connecter à l'ENT"
+			>
+				<span class="icon icon-connecter"></span>Me connecter
+			</a>
+		]
+		[(#PLUGIN{cioidc}|oui)
+			<a href="[(#URL_PAGE{login}|parametre_url{url,#SELF}|parametre_url{action,login_cioidc})]"
+				class="logo_menu-connecter"
+				title="Se connecter à l'ENT"
+			>
+				<span class="icon icon-connecter"></span>Me connecter
+			</a>
+		]
+	</div>
 ]
-[(#MODELE{logo_aide, rel=presentation, valeur=aide, class=mediabox, title='1. Le projet', href=#CHEMIN{img/presentation/01.png}})]
+</div>
