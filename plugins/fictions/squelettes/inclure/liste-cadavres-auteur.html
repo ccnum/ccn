@@ -13,7 +13,7 @@ ID / NOM AUTEUR
 	<div class="liste-colonnes">
 		<div class="liste-title">#GET{i}</div>
 		<!-- LISTE CADAVRES -->
-		<BOUCLE_articles_publie(ARTICLES){id_rubrique}{statut=publie}{par date}>
+		<BOUCLE_articles_tous(ARTICLES){id_rubrique}{statut IN publie,prop}{par id_article}>
 			<!-- mettre boucle ci-dessus par date -->
 			<div class="liste-link">
 			<!-- TOOL TIP CONTENT -->
@@ -33,41 +33,18 @@ ID / NOM AUTEUR
 					<div id="liste-tooltip-bulle">
 					</div>
 				</div>
-				<a href="#_articles_publie:URL_RUBRIQUE" class="liste-link-single auteur [(#_articles_publie:COMPTEUR_BOUCLE|=={#_articles_publie:TOTAL_BOUCLE}|?{'last',''})]"></a>
-			</div>
-		<div class="liste-link-spacer-5"></div>
-		</BOUCLE_articles_publie>
-		<BOUCLE_articles_prop(ARTICLES){id_rubrique}{statut=prop}{par date}>
-			<!-- mettre boucle ci-dessus par date -->
-			<div class="liste-link">
-			<!-- TOOL TIP CONTENT -->
-				<div class="liste-tooltip-content">
-					<div id="liste-tooltip-content">
-						<div class="liste-tooltip-num-cadavre">Histoire #GET{i}</div>
-						<!--<div class="liste-tooltip-num-chapitre">#SURTITRE</div>-->
-						<div class="liste-tooltip-titre-chapitre">#TITRE</div>
-						<BOUCLE_auteur_tous_prop(AUTEURS){id_article = #ID_ARTICLE}{0,1}>
-							<div class="liste-tooltip-photo">[(#LOGO_AUTEUR|image_reduire{42,42})]</div>
-							<div class="liste-tooltip-auteur">#NOM</div>
-							<div class="liste-tooltip-auteur">
-								[(#DESCRIPTIF|cleanCut)]<br />
-							</div>
-						</BOUCLE_auteur_tous_prop>
-					</div>
-					<div id="liste-tooltip-bulle">
-					</div>
-				</div>
 
-				<BOUCLE_auteur_prop(AUTEURS){id_article = #ID_ARTICLE}{id_auteur=#SESSION{id_auteur}}{0,1}>
-					<a href="#_articles_prop:URL_RUBRIQUE" class="liste-link-single auteur [(#_articles_prop:COMPTEUR_BOUCLE|=={#_articles_prop:TOTAL_BOUCLE}|?{'last',''})]"></a>
-				</BOUCLE_auteur_prop>
-					<BOUCLE_auteur_prop1(AUTEURS){id_article = #ID_ARTICLE}{0,1}>
-						<a href="#_articles_prop:URL_RUBRIQUE" class="liste-link-single [(#NOM|=={#GET{var_nom_auteur}}|?{'auteur','verrouille'})] [(#_articles_prop:COMPTEUR_BOUCLE|=={#_articles_prop:TOTAL_BOUCLE}|?{'last',''})]"></a>
-					</BOUCLE_auteur_prop1>
-				<//B_auteur_prop>
+				<BOUCLE_auteur_actif(AUTEURS){id_article = #ID_ARTICLE}{id_auteur=#SESSION{id_auteur}}{0,1}>
+					<a href="#_articles_tous:URL_RUBRIQUE" class="liste-link-single auteur [(#_articles_tous:COMPTEUR_BOUCLE|=={#_articles_tous:TOTAL_BOUCLE}|?{'last',''})]"></a>
+				</BOUCLE_auteur_actif>
+					<BOUCLE_auteur_actif1(AUTEURS){id_article = #ID_ARTICLE}{0,1}>
+						<a href="#_articles_tous:URL_RUBRIQUE" class="liste-link-single [(#NOM|=={#GET{var_nom_auteur}}|?{'auteur','verrouille'})] [(#_articles_tous:COMPTEUR_BOUCLE|=={#_articles_tous:TOTAL_BOUCLE}|?{'last',''})]"></a>
+					</BOUCLE_auteur_actif1>
+				<//B_auteur_actif>
+
 			</div>
 		<div class="liste-link-spacer-5"></div>
-		</BOUCLE_articles_prop>
+		</BOUCLE_articles_tous>
 	<!-- FIN LISTE CADAVRES -->
 	</div>
 </BOUCLE_rubriques_toutes>
