@@ -37,7 +37,7 @@ ID / NOM AUTEUR
 					<a href="#_articles_publie:URL_RUBRIQUE" class="liste-link-single auteur [(#_articles_publie:COMPTEUR_BOUCLE|=={#_articles_publie:TOTAL_BOUCLE}|?{'last',''})]"></a>
 				</BOUCLE_auteur_actif>
 					<BOUCLE_auteur_actif1(AUTEURS){id_article = #ID_ARTICLE}{0,1}>
-						<a href="#_articles_publie:URL_RUBRIQUE" class="liste-link-single [(#NOM|=={#GET{var_nom_auteur}}|?{'auteur','verrouille'})] [(#_articles_publie:COMPTEUR_BOUCLE|=={#_articles_publie:TOTAL_BOUCLE}|?{'last',''})]"></a>
+						<a href="#_articles_publie:URL_RUBRIQUE" class="liste-link-single [(#_articles_publie:COMPTEUR_BOUCLE|=={#_articles_publie:TOTAL_BOUCLE}|?{'last',''})]"></a>
 					</BOUCLE_auteur_actif1>
 				<//B_auteur_actif>
 			</div>
