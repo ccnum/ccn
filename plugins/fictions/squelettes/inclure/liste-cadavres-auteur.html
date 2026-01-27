@@ -33,13 +33,7 @@ ID / NOM AUTEUR
 					<div id="liste-tooltip-bulle">
 					</div>
 				</div>
-				<BOUCLE_auteur_actif(AUTEURS){id_article = #ID_ARTICLE}{id_auteur=#SESSION{id_auteur}}{0,1}>
-					<a href="#_articles_publie:URL_RUBRIQUE" class="liste-link-single auteur [(#_articles_publie:COMPTEUR_BOUCLE|=={#_articles_publie:TOTAL_BOUCLE}|?{'last',''})]"></a>
-				</BOUCLE_auteur_actif>
-					<BOUCLE_auteur_actif1(AUTEURS){id_article = #ID_ARTICLE}{0,1}>
-						<a href="#_articles_publie:URL_RUBRIQUE" class="liste-link-single [(#_articles_publie:COMPTEUR_BOUCLE|=={#_articles_publie:TOTAL_BOUCLE}|?{'last',''})]"></a>
-					</BOUCLE_auteur_actif1>
-				<//B_auteur_actif>
+				<a href="#_articles_publie:URL_RUBRIQUE" class="liste-link-single auteur [(#_articles_publie:COMPTEUR_BOUCLE|=={#_articles_publie:TOTAL_BOUCLE}|?{'last',''})]"></a>
 			</div>
 		<div class="liste-link-spacer-5"></div>
 		</BOUCLE_articles_publie>
