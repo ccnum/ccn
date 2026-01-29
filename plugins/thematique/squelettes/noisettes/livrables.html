@@ -19,6 +19,7 @@
 					<script type="text/javascript">
 						$('#ajax#ID_ARTICLE').click(function() {
 							$('#sidebar_main').load('[(#URL_ARTICLE|parametre_url{mode,ajax-detail}|html_entity_decode)]', {limit: 25}, function(){
+
 								let bgColor = $('#sidebar_main .fiche_titre')
 									.first()
 									.css('background-color');
@@ -27,20 +28,33 @@
 										.first()
 										.css('background-color');
 								}
-								console.log('bgCOLOR', bgColor)
-								const closeButton = `
+
+								const $originalLikeForm = $(
+									'#sidebar_main_inner .formulaire_jaime_flottant',
+								);
+
+								const $closeButton = $(`
 									<div style="
 										display: flex;
 										width: 100%;
-										justify-content: flex-end;
+										justify-content: ${$originalLikeForm.length ? 'space-between' : 'flex-end'};
 										background-color: ${bgColor};
+										align-items: center;
 									">
-										<div id="sidebarCloseButton" style="width: fit-content;">
+										<div
+											id="sidebarCloseButton"
+											style="width: fit-content;margin-bottom:-50px;"
+										>
 											<span class="icon icon-close"></span>
 										</div>
 									</div>
-								`;
-								$('#sidebar_main .sidebar_bubble').first().prepend(closeButton);						
+								`);
+
+								if ($originalLikeForm.length) {
+									$closeButton.prepend($originalLikeForm.detach());
+								}
+
+								$('#sidebar_main .sidebar_bubble').first().prepend($closeButton);
 								$('#sidebarCloseButton').on('click', closeModal);
 								$('div#sidebar_main').removeClass('chargement');
 								$('#sidebar_main').show('slow');
@@ -59,8 +73,8 @@
 							<!--<div class="featured-image">[(#LOGO_ARTICLE |image_reduire{500,300})]</div>-->
 						</div>
 					</a>
-				</BOUCLE_filtreLivrable>
-			</BOUCLE_colleges>
-		</BOUCLE_filtreTravailEnCours>
-	</BOUCLE_rubAnnee>
+					</BOUCLE_filtreLivrable>
+					</BOUCLE_colleges>
+					</BOUCLE_filtreTravailEnCours>
+					</BOUCLE_rubAnnee>
 </div>
