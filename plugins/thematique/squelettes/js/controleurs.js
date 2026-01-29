@@ -1318,53 +1318,53 @@ function loadContentInMainSidebar(
 		$('#sidebar_content').scrollTop(0);
 		initLocalEvents($('#sidebar_main_inner'));
 
-		let bgColor = $('#sidebar_main_inner .fiche_titre')
-			.first()
-			.css('background-color');
-		if (!bgColor) {
-			bgColor = $('#sidebar_main_inner .popup_titre')
-				.first()
-				.css('background-color');
-		}
+		// let bgColor = $('#sidebar_main_inner .fiche_titre')
+		// 	.first()
+		// 	.css('background-color');
+		// if (!bgColor) {
+		// 	bgColor = $('#sidebar_main_inner .popup_titre')
+		// 		.first()
+		// 		.css('background-color');
+		// }
 
-		const $originalLikeForm = $(
-			'#sidebar_main_inner .formulaire_jaime_flottant',
-		);
+		// const $originalLikeForm = $(
+		// 	'#sidebar_main_inner .formulaire_jaime_flottant',
+		// );
 
-		const $closeButton = $(`
-			<div 
-				id="sidebarCloseButtonContainer"
-				style="
-					display: flex;
-					justify-content: ${$originalLikeForm.length ? 'space-between' : 'flex-end'};
-					background-color: ${bgColor};
-					align-items: center;
-			">
-				<div
-					id="sidebarCloseButton"
-					style="width: fit-content;margin-bottom:-60px;"
-				>
-					<span class="icon icon-close"></span>
-				</div>
-			</div>
-		`);
+		// const $closeButton = $(`
+		// 	<div 
+		// 		id="sidebarCloseButtonContainer"
+		// 		style="
+		// 			display: flex;
+		// 			justify-content: ${$originalLikeForm.length ? 'space-between' : 'flex-end'};
+		// 			background-color: ${bgColor};
+		// 			align-items: center;
+		// 	">
+		// 		<div
+		// 			id="sidebarCloseButton"
+		// 			style="width: fit-content;margin-bottom:-60px;"
+		// 		>
+		// 			<span class="icon icon-close"></span>
+		// 		</div>
+		// 	</div>
+		// `);
 
 		// if ($originalLikeForm.length) {
 		// 	$closeButton.prepend($originalLikeForm.detach());
 		// }
 
-		$('#sidebar_main_inner .sidebar_bubble').first().prepend($closeButton);
-		$('#sidebarCloseButton').on('click', closeModal);
+		// $('#sidebar_main_inner .sidebar_bubble').first().prepend($closeButton);
+		// $('#sidebarCloseButton').on('click', closeModal);
 
-		if (blackCloseButton) {
-			// Code spécifique pour gérer la position de la modalCloseIcon
-			$('#sidebarCloseButton').css('margin-bottom', '-75px');
-			// Code spécifique pour gérer la couleur de modalCloseIcon
-			$('#sidebarCloseButton .icon.icon-close').css(
-				'filter',
-				'invert(1)',
-			);
-		}
+		// if (blackCloseButton) {
+		// 	// Code spécifique pour gérer la position de la modalCloseIcon
+		// 	$('#sidebarCloseButton').css('margin-bottom', '-75px');
+		// 	// Code spécifique pour gérer la couleur de modalCloseIcon
+		// 	$('#sidebarCloseButton .icon.icon-close').css(
+		// 		'filter',
+		// 		'invert(1)',
+		// 	);
+		// }
 
 		if (callback) {
 			callback(response);
