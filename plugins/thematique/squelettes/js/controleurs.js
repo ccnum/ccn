@@ -452,7 +452,7 @@ function callConsigne(id_consigne) {
 	// - Modal contenu principale
 	var url = `${CCN.projet.url_popup_consigne}&id_article=${id_consigne}`;
 	showConsigneInTimeline(id_consigne);
-	loadContentInMainSidebar(url, 'article', 'consignes', function () {
+	loadContentInMainSidebar(url, 'article', 'consignes', false, function () {
 		updateUrl(
 			{
 				type_objet: 'consignes',
@@ -501,20 +501,26 @@ function callReponse(id_reponse) {
 	// - Modal principale
 	var url = `${CCN.projet.url_popup_reponse}&id_article=${id_reponse}`;
 	showConsigneInTimeline(id_consigne);
-	loadContentInMainSidebar(url, 'article', 'travail_en_cours', function () {
-		updateUrl(
-			{
-				type_objet: 'travail_en_cours',
-				id_objet: id_reponse,
-				id_article: id_reponse,
-				page: 'article',
-			},
-			'Réponse',
-			'./spip.php?page=article&id_article=' +
-				id_reponse +
-				'&mode=complet',
-		);
-	});
+	loadContentInMainSidebar(
+		url,
+		'article',
+		'travail_en_cours',
+		false,
+		function () {
+			updateUrl(
+				{
+					type_objet: 'travail_en_cours',
+					id_objet: id_reponse,
+					id_article: id_reponse,
+					page: 'article',
+				},
+				'Réponse',
+				'./spip.php?page=article&id_article=' +
+					id_reponse +
+					'&mode=complet',
+			);
+		},
+	);
 	// - Modal latérale
 	var url_travail_en_cours = `spip.php?page=rubrique&mode=detail&id_rubrique=${CCN.travailEnCoursId}`;
 	loadContentInLateralSidebar(
@@ -558,7 +564,7 @@ function callClasse(id_classe) {
 		// url = `${CCN.projet.url_popup_classes}&id_rubrique=${id_classe}&type_objet=travail_en_cours`;
 		url = `${CCN.projet.url_popup_classes}&id_objet=${id_classe}&type_objet=travail_en_cours`;
 	}
-	loadContentInMainSidebar(url, 'rubrique', 'classes', function () {
+	loadContentInMainSidebar(url, 'rubrique', 'classes', false, function () {
 		updateUrl(
 			{
 				type_objet: 'classes',
@@ -716,7 +722,7 @@ function callArticleBlog(id_article) {
 	// (B) Paramétrage de la modal
 	// - Modal principale
 	var url = `${CCN.projet.url_popup_blog}&page=article&id_article=${id_article}`;
-	loadContentInMainSidebar(url, 'article', 'blogs', function () {
+	loadContentInMainSidebar(url, 'article', 'blogs', false, function () {
 		updateUrl(
 			{
 				type_objet: 'blogs',
@@ -816,7 +822,7 @@ function callRessourceArticle(id_article, type_objet) {
 	// (B) Paramétrage de la modal
 	// - Modal principale
 	var url = `./spip.php?page=article&id_article=${id_article}&mode=ajax-detail`;
-	loadContentInMainSidebar(url, 'article', type_objet, function () {
+	loadContentInMainSidebar(url, 'article', type_objet, false, function () {
 		updateUrl(
 			{
 				type_objet: type_objet,
@@ -862,17 +868,23 @@ function callRessourceSyndicArticle(id_syndic_article, type_objet) {
 	// (B) Paramétrage de la modal
 	// - Modal principale
 	var url = `./spip.php?page=syndic_article&id_syndic_article=${id_syndic_article}&mode=ajax-detail`;
-	loadContentInMainSidebar(url, 'syndic_article', type_objet, function () {
-		updateUrl(
-			{
-				type_objet: type_objet,
-				id_syndic_article: id_syndic_article,
-				page: 'article',
-			},
-			'Ressources',
-			`./spip.php?page=syndic_article&id_syndic_article=${id_syndic_article}&type_objet=${type_objet}&mode=complet`,
-		);
-	});
+	loadContentInMainSidebar(
+		url,
+		'syndic_article',
+		type_objet,
+		false,
+		function () {
+			updateUrl(
+				{
+					type_objet: type_objet,
+					id_syndic_article: id_syndic_article,
+					page: 'article',
+				},
+				'Ressources',
+				`./spip.php?page=syndic_article&id_syndic_article=${id_syndic_article}&type_objet=${type_objet}&mode=complet`,
+			);
+		},
+	);
 	// - Modal latérale
 	var url_lateral =
 		type_objet == 'ressources'
@@ -913,7 +925,7 @@ function callRessourceRubrique(id_rubrique, type_objet) {
 	// (B) Paramétrage de la modal
 	// - Modal principale
 	var url = `./spip.php?page=rubrique&id_rubrique=${id_rubrique}&mode=ajax-detail`;
-	loadContentInMainSidebar(url, 'rubrique', type_objet, function () {
+	loadContentInMainSidebar(url, 'rubrique', type_objet, false, function () {
 		updateUrl(
 			{
 				type_objet: type_objet,
@@ -967,7 +979,7 @@ function callArticleEvenement(id_objet, type_objet) {
 	// (B) Paramétrage de la modal
 	// - Modal principale
 	var url = `${CCN.projet.url_popup_evenement}&page=${type_objet}&id_${type_objet}=${id_objet}`;
-	loadContentInMainSidebar(url, 'article', 'evenements', function () {
+	loadContentInMainSidebar(url, 'article', 'evenements', false, function () {
 		updateUrl(
 			{
 				type_objet: 'evenements',
@@ -1060,7 +1072,7 @@ function createReponse(id_consigne, id_rubrique_classe, numero) {
 	// (B) Paramétrage de la modal
 	// - Modal principale
 	const url = `${CCN.projet.url_popup_reponseajout}&id_consigne=${id_consigne}&id_rubrique=${id_rubrique_classe}`;
-	loadContentInMainSidebar(url, 'article', 'blogs');
+	loadContentInMainSidebar(url, 'article', 'blogs', true);
 	// - Propriété propre à l'affichage de la modal
 	setModalProperties({
 		isColumn: false,
@@ -1284,7 +1296,13 @@ function reload(url) {
  * @todo Loading et son callback
  */
 
-function loadContentInMainSidebar(url, typePage, typeObjet, callback) {
+function loadContentInMainSidebar(
+	url,
+	typePage,
+	typeObjet,
+	blackCloseButton,
+	callback,
+) {
 	emptyMainSidebar();
 	$('body').addClass('loading');
 	showSidebar();
@@ -1314,16 +1332,17 @@ function loadContentInMainSidebar(url, typePage, typeObjet, callback) {
 		);
 
 		const $closeButton = $(`
-			<div style="
-				display: flex;
-				width: 100%;
-				justify-content: ${$originalLikeForm.length ? 'space-between' : 'flex-end'};
-				background-color: ${bgColor};
-				align-items: center;
+			<div 
+				id="sidebarCloseButtonContainer"
+				style="
+					display: flex;
+					justify-content: ${$originalLikeForm.length ? 'space-between' : 'flex-end'};
+					background-color: ${bgColor};
+					align-items: center;
 			">
 				<div
 					id="sidebarCloseButton"
-					style="width: fit-content;margin-bottom:-50px;"
+					style="width: fit-content;margin-bottom:-60px;"
 				>
 					<span class="icon icon-close"></span>
 				</div>
@@ -1336,6 +1355,16 @@ function loadContentInMainSidebar(url, typePage, typeObjet, callback) {
 
 		$('#sidebar_main_inner .sidebar_bubble').first().prepend($closeButton);
 		$('#sidebarCloseButton').on('click', closeModal);
+
+		if (blackCloseButton) {
+			// Code spécifique pour gérer la position de la modalCloseIcon
+			$('#sidebarCloseButton').css('margin-bottom', '-75px');
+			// Code spécifique pour gérer la couleur de modalCloseIcon
+			$('#sidebarCloseButton .icon.icon-close').css(
+				'filter',
+				'invert(1)',
+			);
+		}
 
 		if (callback) {
 			callback(response);
@@ -1377,7 +1406,9 @@ function loadContentInLateralSidebar(url, typePage, typeObjet, callback) {
 		$('body').removeClass('loading');
 		$('#sidebar_content').scrollTop(0);
 		initLocalEvents($('#sidebar_lateral_inner'));
-		$('#sidebar_lateral_inner .fiche_titre').addClass('fiche_titre_secondaire');
+		$('#sidebar_lateral_inner .fiche_titre').addClass(
+			'fiche_titre_secondaire',
+		);
 		if (callback) {
 			callback(response);
 		}

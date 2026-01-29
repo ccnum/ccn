@@ -33,16 +33,18 @@
 									'#sidebar_main .formulaire_jaime_flottant',
 								);
 								const $closeButton = $(`
-									<div style="
-										display: flex;
-										width: 100%;
-										justify-content: ${$originalLikeForm.length ? 'space-between' : 'flex-end'};
-										background-color: ${bgColor};
-										align-items: center;
+									<div
+										id="sidebarCloseButtonContainer"
+										style="
+											display: flex;
+											width: 100%;
+											justify-content: ${$originalLikeForm.length ? 'space-between' : 'flex-end'};
+											background-color: ${bgColor};
+											align-items: center;
 									">
 										<div
 											id="sidebarCloseButton"
-											style="width: fit-content;margin-bottom:-50px;"
+											style="width: fit-content;margin-bottom:-60px;"
 										>
 											<span class="icon icon-close"></span>
 										</div>
