@@ -19,7 +19,29 @@
 					<script type="text/javascript">
 						$('#ajax#ID_ARTICLE').click(function() {
 							$('#sidebar_main').load('[(#URL_ARTICLE|parametre_url{mode,ajax-detail}|html_entity_decode)]', {limit: 25}, function(){
-								hideSidebarLateral();
+								let bgColor = $('#sidebar_main .fiche_titre')
+									.first()
+									.css('background-color');
+								if (!bgColor) {
+									bgColor = $('#sidebar_main .popup_titre')
+										.first()
+										.css('background-color');
+								}
+								console.log('bgCOLOR', bgColor)
+								const closeButton = `
+									<div style="
+										display: flex;
+										width: 100%;
+										justify-content: flex-end;
+										background-color: ${bgColor};
+									">
+										<div id="sidebarCloseButton" style="width: fit-content;">
+											<span class="icon icon-close"></span>
+										</div>
+									</div>
+								`;
+								$('#sidebar_main .sidebar_bubble').first().prepend(closeButton);						
+								$('#sidebarCloseButton').on('click', closeModal);
 								$('div#sidebar_main').removeClass('chargement');
 								$('#sidebar_main').show('slow');
 							});

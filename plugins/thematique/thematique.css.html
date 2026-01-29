@@ -525,18 +525,41 @@ body {
 	}
 }
 
-.logo_menu-doc {
+#menu_bas.zone-menu li a.logo_menu-doc {
+	background-size: 25px;
+	&:hover {
+		background-color: var(--color-tonic);
+	}
+}
+
+#menu_bas.zone-menu li a.logo_menu-doc::before {
 	background-image: url(#ENV{chemin}/img/logo_doc.png);
-	background-size: 25px;
 }
 
-.logo_menu-cible {
-	background-image: url(#ENV{chemin}/img/logo_cible.png);
-	background-size: 25px;
+#menu_bas.zone-menu li.logo a.logo_menu-doc.selected::before,
+#menu_bas.zone-menu li.logo a.logo_menu-doc:hover::before {
+    filter: invert(1) sepia(1);
 }
 
-.logo_menu-cible.selected {
-	background-color: #999;
+#menu_bas.zone-menu li a.logo_menu-cible {
+	background-size: 25px;
+	&:hover {
+		background-color: var(--color-tonic);
+	}
+}
+
+#menu_bas.zone-menu li a.logo_menu-cible.selected {
+	background-color: var(--color-tonic);
+}
+
+#menu_bas.zone-menu li a.logo_menu-cible::before {
+	background-image: url([(#CHEMIN{img/logo_cible.png}|image_gamma{255}|image_reduire{20}|extraire_attribut{src})]);
+	filter: brightness(0) saturate(100%) invert(13%) sepia(51%) saturate(1781%) hue-rotate(215deg) brightness(90%) contrast(98%);
+}
+
+#menu_bas.zone-menu li.logo a.logo_menu-cible.selected::before,
+#menu_bas.zone-menu li.logo a.logo_menu-cible:hover::before {
+	filter: none;
 }
 
 .logo_menu_classe_image {
@@ -702,7 +725,11 @@ a:hover {
 
 .fiche_titre {
 	color: white;
-	background-color: #5c6a6f;
+	background-color: #657d88;
+}
+
+.fiche_titre_secondaire {
+	background-color: #5f6b6f !important;
 }
 
 .vert	{ color: #58AB27; }
@@ -723,37 +750,44 @@ a:hover {
 /* --------- Intervenants --------- */
 
 .couleur_texte_consignes {
-	color: black;
+	color:black;
 }
+/*Jaune*/
 .couleur_consignes1, .zone-menu li.logo a.hover_couleur_consignes1:hover, .zone-menu li.logo a.hover_couleur_consignes1.selected {
-	background-color: var(--color-tonic);
+	background-color:#F44336;
 }
+/*Vert*/
 .couleur_consignes2, .zone-menu li.logo a.hover_couleur_consignes2:hover, .zone-menu li.logo a.hover_couleur_consignes2.selected {
-	background-color: var(--color-tonic);
+	background-color:#E91E63;
 }
+/*Bleu*/
 .couleur_consignes3, .zone-menu li.logo a.hover_couleur_consignes3:hover, .zone-menu li.logo a.hover_couleur_consignes3.selected {
-	background-color: var(--color-tonic);
+	background-color:#9C27B0;
 }
 .couleur_consignes4, .zone-menu li.logo a.hover_couleur_consignes4:hover, .zone-menu li.logo a.hover_couleur_consignes4.selected {
-	background-color: var(--color-tonic);
+	background-color:#673AB7;
 }
+/*Jaune*/
 .couleur_consignes5, .zone-menu li.logo a.hover_couleur_consignes5:hover, .zone-menu li.logo a.hover_couleur_consignes5.selected {
-	background-color: var(--color-tonic);
+	background-color:#3F51B5;
 }
+/*Violet*/
 .couleur_consignes6, .zone-menu li.logo a.hover_couleur_consignes6:hover, .zone-menu li.logo a.hover_couleur_consignes6.selected {
-	background-color: var(--color-tonic);
+	background-color:#2196F3;
 }
 .couleur_consignes7, .zone-menu li.logo a.hover_couleur_consignes7:hover, .zone-menu li.logo a.hover_couleur_consignes7.selected {
-	background-color: var(--color-tonic);
+	background-color:#009688;
 }
 .couleur_consignes8, .zone-menu li.logo a.hover_couleur_consignes8:hover, .zone-menu li.logo a.hover_couleur_consignes8.selected {
-	background-color: var(--color-tonic);
+	background-color:#4CAF50;
 }
+/*Bleu clair*/
 .couleur_consignes9, .zone-menu li.logo a.hover_couleur_consignes9:hover, .zone-menu li.logo a.hover_couleur_consignes9.selected {
-	background-color: var(--color-tonic);
+	background-color:#3F51B5;
 }
+/*Rose*/
 .couleur_consignes0, .zone-menu li.logo a.hover_couleur_consignes0:hover, .zone-menu li.logo a.hover_couleur_consignes0.selected {
-	background-color: var(--color-tonic);
+	background-color:#607D8B;
 }
 
 
@@ -1089,7 +1123,7 @@ a:hover {
 }
 
 .popup {
-	max-height: calc(100vh - 157px);
+	max-height: calc(100vh - 90px - (54px*2));
 }
 
 .popup .actualites-actu {
@@ -1148,6 +1182,8 @@ a:hover {
 	margin: 0px auto;
 	font-size: 12px;
 	text-align: center;
+	font-weight: bold;
+	color: var(--color-default);
 	display: block;
 	background-position: center;
 	background-repeat: no-repeat;
@@ -1163,23 +1199,18 @@ a:hover {
 	bottom: 0;
     background-repeat: no-repeat;
     background-position: center;
-	filter: brightness(0) saturate(100%) invert(13%) sepia(51%) saturate(1781%) hue-rotate(215deg) brightness(90%) contrast(98%);
     pointer-events: none;
-}
-
-#menu_bas.zone-menu li.logo a.selected::before,
-#menu_bas.zone-menu li.logo a:hover::before {
-    filter: none;
 }
 
 .zone-menu li.logo a:hover {
 	background-color: #999;
-	color: #fff;
+	color: #fff !important;
 }
 
 .zone-menu li.logo a.selected {
 	cursor: default;
 	border: 0px solid #fff;
+	color: #fff !important;
 }
 
 <BOUCLE_vue(DATA){liste tout,timeline,classe,blog,evenement,ressource,consigne,consignes,ressources,evenements,blogs,classes,article_evt,texte,image,son,video,autre,date,notation,descendant,ascendant,agora,forum,ressource_classes,reponse}>
@@ -1191,6 +1222,12 @@ a:hover {
 	
 	#menu_bas.zone-menu li a.[logo_menu-(#VALEUR)]::before {
 		background-image: url(#GET{img});
+		filter: brightness(0) saturate(100%) invert(13%) sepia(51%) saturate(1781%) hue-rotate(215deg) brightness(90%) contrast(98%);
+	}
+
+	#menu_bas.zone-menu li a.[logo_menu-(#VALEUR)].selected::before,
+	#menu_bas.zone-menu li a.[logo_menu-(#VALEUR)]:hover::before {
+		filter: none;
 	}
 
 	#menu_bas.zone-menu li a.[logo_menu-(#VALEUR)]:hover,
@@ -1400,10 +1437,7 @@ a:hover {
 
 /*--- Notations ---*/
 .formulaire_jaime_flottant {
-	top: 45px;
-	z-index: 100;
-	position: absolute;
-	right: 10px;
+	margin-bottom: -65px;
 }
 
 .formulaire_notation {
@@ -1416,11 +1450,10 @@ a:hover {
 	margin-right: 10px;
 }
 
-.formulaire_jaime form .submit.jaime,.formulaire_jaime form .submit.jaimeplus, .formulaire_jaime .dejavote, div.jaimeplus {
-	background-image: url([(#CHEMIN{img/logo_notation.svg}|image_reduire{25}|extraire_attribut{src})]);
-	background-position: center;
-	background-repeat: no-repeat;
-	background-size: 18px auto;
+.formulaire_jaime form .submit.jaime,
+.formulaire_jaime form .submit.jaimeplus,
+.formulaire_jaime .dejavote,
+div.jaimeplus {
 	width: 35px;
 	height: 35px;
 	color: rgba(0, 0, 0, 0);
@@ -1435,20 +1468,57 @@ a:hover {
 	transition: all 100ms ease;
 }
 
-.formulaire_jaime form .submit.jaime:hover {
-	background-color: white;
+/* --------- Mise en place de l'icone en before pour gérer ses changements de couleurs --------- */
+.btn_jaime,
+.btn_jaimeplus {
+    position: relative;
+    display: inline-block;
+    width: 35px;
+    height: 35px;
+	margin-right: 0.5rem;
+}
+.btn_jaime::before,
+.btn_jaimeplus::before {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: calc(100% - 10px);
+    height: calc(100% - 10px);
+    background-repeat: no-repeat;
+    background-position: center;
+	background-size: calc(100% - 10px) calc(100% - 10px);
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+}
+/* --------- Mise en place des icones selon les interactions--------- */
+.btn_jaime::before,
+.btn_jaimeplus::before {
 	background-image: url([(#CHEMIN{img/logo_notation.svg}|image_reduire{25}|extraire_attribut{src})]);
 }
-
+.btn_jaimeplus:hover::before {
+	background-image: url([(#CHEMIN{img/logo_notation_bas.svg}|image_reduire{25}|extraire_attribut{src})]);
+}
+.btn_jaime:hover::before {
+	filter: invert(1);
+}
+.btn_jaimeplus::before {
+	filter: invert(1);
+}
+/* --------- Mise en place du fond selon les interactions --------- */
+.formulaire_jaime form .submit.jaime {
+	background-color: #fff;
+}
+.formulaire_jaime form .submit.jaime:hover {
+	background-color: var(--color-hover);
+}
 .formulaire_jaime form .submit.jaimeplus:hover,
 .formulaire_jaime .dejavote:hover,
 div.jaimeplus:hover {
-	background-color: white;
-	background-image: url([(#CHEMIN{img/logo_notation_bas.svg}|image_reduire{25}|extraire_attribut{src})]);
+	background-color: red;
 }
 
 .formulaire_jaime form .submit.jaimeplus {
-	background-image: url([(#CHEMIN{img/logo_notation_bas.svg}|image_reduire{25}|extraire_attribut{src})]);
 	background-color: rgba(0,0,0,.2);
 }
 
@@ -2038,7 +2108,7 @@ div.donnees_classe {
 
 
 #sidebar_main_around {
-/* margin-top: 34px; */
+	z-index: 1;
 	margin-top: 0;
 }
 
@@ -2150,6 +2220,18 @@ div.donnees_classe {
 	-moz-transition: all 500ms ease;
 	-o-transition: all 500ms ease;
 	transition: all 500ms ease;
+}
+
+.article_evenement_container .article_evenement::before {
+	content: "";
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	background: var(--color-tonic);
+	clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%);
+	z-index: -1;
 }
 
 .show_evenements .article_evenement_container .article_evenement {
@@ -2329,6 +2411,7 @@ div.donnees_classe {
 
 .popup .bloc_publier_repondre .bloc_texte {
 	padding-top: 0;
+	padding-bottom: 0;
 }
 
 /* Bloc de titre principal de la modalbox */
@@ -2473,7 +2556,7 @@ div.donnees_classe {
 }
 
 .popup_blank {
-	max-height: calc(100vh - 157px);
+	max-height: calc(100vh - 90px - (54px*2));
 }
 
 .popup .sidebar_bubble.sidebar_bubble_empty {
@@ -2871,12 +2954,12 @@ div.donnees_classe {
 }
 
 .modeCols.hasSidebarOpen.hasSidebarExpanded #sidebar_lateral_around {
-    max-height: calc(100vh - 157px);
+    max-height: calc(100vh - 90px - (54px*2));
     height: fit-content;
 }
 
 .modeFullscreen.hasSidebarOpen.hasSidebarExpanded #sidebar_lateral_around {
-    max-height: calc(100vh - 157px);
+    max-height: calc(100vh - 90px - (54px*2));
     height: fit-content;
 	display: none;
 }
@@ -2894,7 +2977,7 @@ div.donnees_classe {
 .hasSidebarExpanded #sidebar_lateral {
 	right: 0;
 	width: 100%;
-	max-height: calc(100vh - 157px);
+	max-height: calc(100vh - 90px - (54px*2));
 }
 
 #loading_feedback {
@@ -3223,19 +3306,25 @@ input[type="file"] {
 .bloc_option_doc .submit,
 .popup_new_article .submit,
 .formulaire_spip .submit {
-	margin-top: 10px;
-	background: #9e3d6b;
+	margin-top: 6px;
+	background: var(--color-tonic);
 	color: #fff;
 	text-align: center;
 	border: none;
-	border-radius: 3px;
+	border-radius: 5px;
 	padding: 10px 15px;
 	font-size: 12px;
 	text-transform: uppercase;
 	letter-spacing: 1px;
 	font-weight: 500;
-	/* width: 100%; */
-	border-bottom: solid 2px rgba(12, 12, 12, 0.49);
+	cursor: pointer;
+	&:hover {
+		background-color: var(--color-hover);
+	}
+}
+
+p.boutons:has(input[type="submit"]) {
+	text-align: center;
 }
 
 /*Formulaires edition auteur*/
@@ -3580,13 +3669,17 @@ li a, li a:hover {
 	color: black;
 }
 .portfolio .spip_documents {
-	height: 5rem;
+	height: 7rem;
 }
-.portfolio .spip_documents a {
+.portfolio .spip_documents a:not(.supprimer_couleur) {
 	border: 0;
 	display: inline-block;
 	height: 100%;
-	width: 95%;
+	width: 90%;
+	&:hover {
+		background-color: var(--color-hover);
+		color: #fff;
+	}
 }
 
 .portfolio .action_supprimer {
@@ -3595,7 +3688,8 @@ li a, li a:hover {
 	margin: 0;
 	right: 0;
 	top: 0;
-	width: 3%;
+	width: 10%;
+	cursor: pointer;
 }
 
 .portfolio .crayon-icones {
@@ -3716,8 +3810,20 @@ ul#forum, .lien_forum {
 	transition: all 2000ms ease;
 }
 
-.hasSidebarOpen.hasSidebarExpanded #timeline_responsive {
-	right: calc((100% - 175px)/100*30);
+.hasSidebarOpen.hasSidebarExpanded #timeline_responsive:not(.focus) {
+	right: calc((100% - 175px)*0.3);
+}
+
+
+#timeline_responsive.focus  {
+	right: 40%;
+}
+
+#timeline_layer_consignes,
+#timeline_layer_blogs,
+#timeline_layer_evenements,
+#timeline_layer_livrables {
+	top: 32px;
 }
 
 #timeline_wrapin {
@@ -3725,7 +3831,7 @@ ul#forum, .lien_forum {
 	top: 40px;
 	bottom: 80px;
 	left: 0;
-	width: 100% !important;
+	width: 100%;
 	z-index: 900;
 
 	-webkit-transition: all 2000ms ease;
@@ -3796,14 +3902,13 @@ ul#forum, .lien_forum {
 
 #sidebar {
 	position: fixed;
-	top: 80px;
+	top: calc(54px *2);
 	right: 0;
 	bottom: 0;
-	max-height: calc(100% - 76.78px - 80px);
+	max-height: calc(100% - 76.78px - (54px*2));
 	width: 550px;
 	z-index: 4000;
 	margin-right: -600px;
-	<!-- margin-right: calc(-40vw); -->
 	height: fit-content;
 
 	-webkit-transition: margin 1000ms ease, width 1000ms ease;
@@ -3815,8 +3920,8 @@ ul#forum, .lien_forum {
 #sidebar_content {
 	border: none;
 	width: 100%;
-	max-height: 100%;
-    height: calc(100vh - 76.78px - 80px);
+    height: calc(100vh - 90px - (54px * 2));
+    max-height: calc(100vh - 90px - (54px * 2));
 	z-index: 10000;
 	position: relative;
 	overflow: hidden;
@@ -3865,7 +3970,7 @@ ul#forum, .lien_forum {
 #sidebarExpand {
 	position: absolute;
 	left: -40px;
-	top: 0;
+	top: 1px;
 	height: 40px;
 	width: 40px;
 	background: #fff;
