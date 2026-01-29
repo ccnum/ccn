@@ -525,6 +525,22 @@ body {
 	}
 }
 
+#menu_bas.zone-menu li a.logo_menu-ressource {
+	background-size: 25px;
+	&:hover {
+		background-color: var(--color-tonic);
+	}
+}
+
+#menu_bas.zone-menu li a.logo_menu-ressource::before {
+	background-image: url(#ENV{chemin}/img/logo_ressource.png);
+}
+
+#menu_bas.zone-menu li.logo a.logo_menu-ressource.selected::before,
+#menu_bas.zone-menu li.logo a.logo_menu-ressource:hover::before {
+    filter: invert(1) sepia(1);
+}
+
 #menu_bas.zone-menu li a.logo_menu-doc {
 	background-size: 25px;
 	&:hover {
@@ -754,42 +770,41 @@ a:hover {
 }
 /*Jaune*/
 .couleur_consignes1, .zone-menu li.logo a.hover_couleur_consignes1:hover, .zone-menu li.logo a.hover_couleur_consignes1.selected {
-	background-color:#F44336;
+	background-color:#7D7BFD;
 }
 /*Vert*/
 .couleur_consignes2, .zone-menu li.logo a.hover_couleur_consignes2:hover, .zone-menu li.logo a.hover_couleur_consignes2.selected {
-	background-color:#E91E63;
+	background-color:#7D7BFD;
 }
 /*Bleu*/
 .couleur_consignes3, .zone-menu li.logo a.hover_couleur_consignes3:hover, .zone-menu li.logo a.hover_couleur_consignes3.selected {
-	background-color:#9C27B0;
+	background-color:#7D7BFD;
 }
 .couleur_consignes4, .zone-menu li.logo a.hover_couleur_consignes4:hover, .zone-menu li.logo a.hover_couleur_consignes4.selected {
-	background-color:#673AB7;
+	background-color:#7D7BFD;
 }
 /*Jaune*/
 .couleur_consignes5, .zone-menu li.logo a.hover_couleur_consignes5:hover, .zone-menu li.logo a.hover_couleur_consignes5.selected {
-	background-color:#3F51B5;
+	background-color:#7D7BFD;
 }
 /*Violet*/
 .couleur_consignes6, .zone-menu li.logo a.hover_couleur_consignes6:hover, .zone-menu li.logo a.hover_couleur_consignes6.selected {
-	background-color:#2196F3;
+	background-color:#7D7BFD;
 }
 .couleur_consignes7, .zone-menu li.logo a.hover_couleur_consignes7:hover, .zone-menu li.logo a.hover_couleur_consignes7.selected {
-	background-color:#009688;
+	background-color:#7D7BFD;
 }
 .couleur_consignes8, .zone-menu li.logo a.hover_couleur_consignes8:hover, .zone-menu li.logo a.hover_couleur_consignes8.selected {
-	background-color:#4CAF50;
+	background-color:#7D7BFD;
 }
 /*Bleu clair*/
 .couleur_consignes9, .zone-menu li.logo a.hover_couleur_consignes9:hover, .zone-menu li.logo a.hover_couleur_consignes9.selected {
-	background-color:#3F51B5;
+	background-color:#7D7BFD;
 }
 /*Rose*/
 .couleur_consignes0, .zone-menu li.logo a.hover_couleur_consignes0:hover, .zone-menu li.logo a.hover_couleur_consignes0.selected {
-	background-color:#607D8B;
+	background-color:#7D7BFD;
 }
-
 
 /* --------- Classes --------- */
 
@@ -800,28 +815,28 @@ a:hover {
 	background-color: #00D154;
 }
 .couleur_travail_en_cours2, .zone-menu li.logo a.hover_couleur_travail_en_cours2:hover, .zone-menu li.logo a.hover_couleur_travail_en_cours2.selected {
-	background-color: #F4E453;
+	background-color: #4A35B1;
 }
 .couleur_travail_en_cours3, .zone-menu li.logo a.hover_couleur_travail_en_cours3:hover, .zone-menu li.logo a.hover_couleur_travail_en_cours3.selected {
 	background-color: #4DDF87;
 }
 .couleur_travail_en_cours4, .zone-menu li.logo a.hover_couleur_travail_en_cours4:hover, .zone-menu li.logo a.hover_couleur_travail_en_cours4.selected {
-	background-color: #FBF0B8;
+	background-color: #AF8CE3;
 }
 .couleur_travail_en_cours5, .zone-menu li.logo a.hover_couleur_travail_en_cours5:hover, .zone-menu li.logo a.hover_couleur_travail_en_cours5.selected {
-	background-color: #CFC147;
+	background-color: #6582F6;
 }
 .couleur_travail_en_cours6, .zone-menu li.logo a.hover_couleur_travail_en_cours6:hover, .zone-menu li.logo a.hover_couleur_travail_en_cours6.selected {
-	background-color: #99EDBA;
+	background-color: #33AB63;
 }
 .couleur_travail_en_cours7, .zone-menu li.logo a.hover_couleur_travail_en_cours7:hover, .zone-menu li.logo a.hover_couleur_travail_en_cours7.selected {
 	background-color: #4D49FC;
 }
 .couleur_travail_en_cours8, .zone-menu li.logo a.hover_couleur_travail_en_cours8:hover, .zone-menu li.logo a.hover_couleur_travail_en_cours8.selected {
-	background-color: #1F7C4F;
+	background-color: #1F7C3E;
 }
 .couleur_travail_en_cours9, .zone-menu li.logo a.hover_couleur_travail_en_cours9:hover, .zone-menu li.logo a.hover_couleur_travail_en_cours9.selected {
-	background-color: #B8BBFF;
+	background-color: #72C2E4;
 }
 .couleur_travail_en_cours0, .zone-menu li.logo a.hover_couleur_travail_en_cours0:hover, .zone-menu li.logo a.hover_couleur_travail_en_cours0.selected {
 	background-color: #7D7BFD;
@@ -1213,7 +1228,7 @@ a:hover {
 	color: #fff !important;
 }
 
-<BOUCLE_vue(DATA){liste tout,timeline,classe,blog,evenement,ressource,consigne,consignes,ressources,evenements,blogs,classes,article_evt,texte,image,son,video,autre,date,notation,descendant,ascendant,agora,forum,ressource_classes,reponse}>
+<BOUCLE_vue(DATA){liste tout,timeline,classe,blog,evenement,consigne,consignes,ressources,evenements,blogs,classes,article_evt,texte,image,son,video,autre,date,notation,descendant,ascendant,agora,forum,ressource_classes,reponse}>
 	#SET{file,#CHEMIN{img/logo_#NOM_SITE_SPIP_#VALEUR.png}|sinon{#CHEMIN{img/logo_#VALEUR.png}}|sinon{#CHEMIN{prive/vignettes/#VALEUR.png}}|sinon{#CHEMIN{img/logo_voir.png}}}
 	[(#SET{img,#GET{file}|image_gamma{255}|image_reduire{20}|extraire_attribut{src}})]
 	[(#SET{col1,[(#GET{file}|couleur_extraire)]})]
@@ -1437,7 +1452,7 @@ a:hover {
 
 /*--- Notations ---*/
 .formulaire_jaime_flottant {
-	margin-bottom: -65px;
+	margin-bottom: -60px;
 }
 
 .formulaire_notation {
@@ -1454,42 +1469,36 @@ a:hover {
 .formulaire_jaime form .submit.jaimeplus,
 .formulaire_jaime .dejavote,
 div.jaimeplus {
-	width: 35px;
-	height: 35px;
-	color: rgba(0, 0, 0, 0);
+	width: 30px;
+	height: 30px;
+	color: transparent;
 	float: left;
 	border: none;
-	border-radius: 50%;
-	background-color: transparent;
+	background: none;
 	cursor: pointer;
-	-webkit-transition: all 100ms ease;
-	-moz-transition: all 100ms ease;
-	-o-transition: all 100ms ease;
 	transition: all 100ms ease;
 }
 
-/* --------- Mise en place de l'icone en before pour gérer ses changements de couleurs --------- */
+/* --------- Bouton icône --------- */
 .btn_jaime,
 .btn_jaimeplus {
-    position: relative;
-    display: inline-block;
-    width: 35px;
-    height: 35px;
+	position: relative;
+	display: inline-block;
+	width: 30px;
+	height: 30px;
 	margin-right: 0.5rem;
 }
+
+/* --------- Icône --------- */
 .btn_jaime::before,
 .btn_jaimeplus::before {
-    content: "";
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    width: calc(100% - 10px);
-    height: calc(100% - 10px);
-    background-repeat: no-repeat;
-    background-position: center;
-	background-size: calc(100% - 10px) calc(100% - 10px);
-    transform: translate(-50%, -50%);
-    pointer-events: none;
+	content: "";
+	position: absolute;
+	inset: 0;
+	background-repeat: no-repeat;
+	background-position: center;
+	background-size: 100% 100%;
+	pointer-events: none;
 }
 /* --------- Mise en place des icones selon les interactions--------- */
 .btn_jaime::before,
@@ -1498,34 +1507,6 @@ div.jaimeplus {
 }
 .btn_jaimeplus:hover::before {
 	background-image: url([(#CHEMIN{img/logo_notation_bas.svg}|image_reduire{25}|extraire_attribut{src})]);
-}
-.btn_jaime:hover::before {
-	filter: invert(1);
-}
-.btn_jaimeplus::before {
-	filter: invert(1);
-}
-/* --------- Mise en place du fond selon les interactions --------- */
-.formulaire_jaime form .submit.jaime {
-	background-color: #fff;
-}
-.formulaire_jaime form .submit.jaime:hover {
-	background-color: var(--color-hover);
-}
-.formulaire_jaime form .submit.jaimeplus:hover,
-.formulaire_jaime .dejavote:hover,
-div.jaimeplus:hover {
-	background-color: red;
-}
-
-.formulaire_jaime form .submit.jaimeplus {
-	background-color: rgba(0,0,0,.2);
-}
-
-.formulaire_jaime .dejavote,
-.formulaire_jaime form .submit.jaimeplus,
-div.jaimeplus {
-	background-color: #00c800;
 }
 
 .formulaire_jaime form {
@@ -2487,11 +2468,11 @@ div.donnees_classe {
 	display: block;
 	margin-left: auto;
 	margin-right: auto;
+	padding-top: 15px;
 }
 
 .popup .spip_documents a[type="application/pdf"] img {
 	clear: both;
-	padding-top: 15px;
 }
 
 .popup .portfolio_grand .spip_doc_titre,
