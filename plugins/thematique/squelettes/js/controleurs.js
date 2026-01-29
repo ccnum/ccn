@@ -1349,9 +1349,9 @@ function loadContentInMainSidebar(
 			</div>
 		`);
 
-		if ($originalLikeForm.length) {
-			$closeButton.prepend($originalLikeForm.detach());
-		}
+		// if ($originalLikeForm.length) {
+		// 	$closeButton.prepend($originalLikeForm.detach());
+		// }
 
 		$('#sidebar_main_inner .sidebar_bubble').first().prepend($closeButton);
 		$('#sidebarCloseButton').on('click', closeModal);
