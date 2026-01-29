@@ -1505,7 +1505,7 @@ div.jaimeplus {
 .btn_jaimeplus::before {
 	background-image: url([(#CHEMIN{img/logo_notation.svg}|image_reduire{25}|extraire_attribut{src})]);
 }
-.btn_jaimeplus:hover::before {
+.btn_jaimeplus:not(.no-interactive):hover::before {
 	background-image: url([(#CHEMIN{img/logo_notation_bas.svg}|image_reduire{25}|extraire_attribut{src})]);
 }
 
