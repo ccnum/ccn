@@ -23,11 +23,11 @@
 			<input type="hidden" name="notation_id_donnees" id="id_donnees[(#ENV*{_form_id})]" value="[(#ENV*{_id_objet})]" />
 			<input type="hidden" name="content" id="content[(#ENV*{_form_id})]" value="" />
 			[(#ENV{id_notation}|non)
-			<span class="btn_jaimeplus no-interactive">
+			<span class="btn_jaimeplus">
 				<button type="submit" class="submit jaime" name="jaime[(#ENV*{_form_id})]" value="X"><:notation:jaime:></button>
 			</span>
 			][(#ENV{id_notation}|oui)
-			<span class="btn_jaimeplus no-interactive">
+			<span class="btn_jaimeplus">
 				<button type="submit" class="submit jaimeplus" name="retirer[(#ENV*{_form_id})]" value="X"><:notation:jaimeplus|attribut_html:></button>
 			</span>
 			]

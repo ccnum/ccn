@@ -33,7 +33,9 @@
 	</form>
 	]
 	[(#ENV**{editable}|non)
-		<div class="submit jaimeplus"></div>
+		<span class="btn_jaimeplus no-interactive">
+			<div class="submit jaimeplus"></div>
+		</span>
 	]
 
 	[<div class="[(#PLUGIN{bootstrap}|?{badge,note})]">(#GET{total})</div>]
