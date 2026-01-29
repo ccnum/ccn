@@ -32,7 +32,7 @@
 								const $originalLikeForm = $(
 									'#sidebar_main .formulaire_jaime_flottant',
 								);
-								const closeButton = $(`
+								const $closeButton = $(`
 									<div style="
 										display: flex;
 										width: 100%;
@@ -52,7 +52,7 @@
 								if ($originalLikeForm.length) {
 									$closeButton.prepend($originalLikeForm.detach());
 								}
-								$('#sidebar_main .sidebar_bubble').first().prepend(closeButton);						
+								$('#sidebar_main .sidebar_bubble').first().prepend($closeButton);						
 								$('#sidebarCloseButton').on('click', closeModal);
 								$('div#sidebar_main').removeClass('chargement');
 								$('#sidebar_main').show('slow');
