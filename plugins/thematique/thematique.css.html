@@ -507,7 +507,7 @@ body {
 	padding: 10px 16px 12.8px 16px;
     background: white;
     align-items: center;
-    z-index: 2000;
+    z-index: 999;
 }
 
 #menu_bas > :last-child {
@@ -4233,6 +4233,7 @@ ul#forum, .lien_forum {
 	display: block;
 	height: initial;
 	width: 100%;
+	max-height: calc(100vh - 82.8px - 60px);
 }
 
 .choix_rubrique_wrapper {
