@@ -5,113 +5,105 @@ PAGE-TYPE.HTML
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-
-<title>[(#NOM_SITE_SPIP|textebrut)]</title>
-[<meta name="description" content="(#DESCRIPTIF_SITE_SPIP|couper{150}|textebrut)" />]
-<INCLURE{fond=inclure/head} />
-
-<script type="text/javascript" src="#CHEMIN{js/jquery.nicescroll.min.js}"></script>
-<meta name="viewport" content="width=980, user-scalable=no" />
-
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+	<title>[(#NOM_SITE_SPIP|textebrut)]</title>
+	[<meta name="description" content="(#DESCRIPTIF_SITE_SPIP|couper{150}|textebrut)" />]
+	<INCLURE{fond=inclure/head} />
+	<script type="text/javascript" src="#CHEMIN{js/jquery.nicescroll.min.js}"></script>
+	<meta name="viewport" content="width=980, user-scalable=no" />
 </head>
-
 <body>
-<div id="liste-tooltip">
-</div>
-
-<!-- BOUTON CONNEXION -->
-<INCLURE{fond=inclure/authentification} />
-
-<!-- ELEMENTS GRAPHIQUES-->
-<div id="book-top-left"><img src="#CHEMIN{img/global/border-book-top-left.png}" width="14" height="16" /></div>
-<div id="book-top-right"><img src="#CHEMIN{img/global/border-book-top-right.png}" width="14" height="16" /></div>
-<div id="book-bottom-left"><img src="#CHEMIN{img/global/border-book-bottom-left.png}" width="14" height="16" /></div>
-<div id="book-bottom-right"><img src="#CHEMIN{img/global/border-book-bottom-right.png}" width="14" height="16" /></div>
-
-
-<div id="book-middle-top-ecriture"><img src="#CHEMIN{img/global/book-middle-top.png}" width="300" height="6" /></div>
-<div id="book-middle-bottom-ecriture"><img src="#CHEMIN{img/global/book-middle-bottom.png}" width="300" height="5" /></div>
-
-<div class="stitches-ecriture">
-<div class="stitches-inner"><img src="#CHEMIN{img/global/stitches.png}" width="5" height="86" /></div>
-<div class="stitches-inner"><img src="#CHEMIN{img/global/stitches.png}" width="5" height="86" /></div>
-<div class="stitches-inner"><img src="#CHEMIN{img/global/stitches.png}" width="5" height="86" /></div>
-</div>
-
-<!-- RETOUR INDEX -->
-<div id="bouton-retour">
-<a href="#URL_SITE_SPIP"><img src="#CHEMIN{img/global/bt-retour.png}" onmouseover="this.src='#CHEMIN{img/global/bt-retour-hover.png}';" onmouseout="this.src='#CHEMIN{img/global/bt-retour.png}';" width="54" height="54" /></a>
-</div>
-
-<!-- BOOK -->
-<div id="global-ecriture">
-
-		<div id="global-spacer">
+	<div id="liste-tooltip">
 	</div>
 
-		<div class="global-content">
+	<!-- BOUTON CONNEXION -->
+	<INCLURE{fond=inclure/authentification} />
 
-		   <div class="content">
-		   <BOUCLE_annee(RUBRIQUES){titre==#EVAL{_annee_scolaire}}{tout}{0,1}>
-			<BOUCLE_art(ARTICLES){id_rubrique}{titre LIKE presentation}{tout}{0,1}>
+	<!-- ELEMENTS GRAPHIQUES-->
+	<div id="book-top-left"><img src="#CHEMIN{img/global/border-book-top-left.png}" width="14" height="16" /></div>
+	<div id="book-top-right"><img src="#CHEMIN{img/global/border-book-top-right.png}" width="14" height="16" /></div>
+	<div id="book-bottom-left"><img src="#CHEMIN{img/global/border-book-bottom-left.png}" width="14" height="16" /></div>
+	<div id="book-bottom-right"><img src="#CHEMIN{img/global/border-book-bottom-right.png}" width="14" height="16" /></div>
 
-			 <div class="content-left-small">
-				<div id="titre_site">
-					<a href="#URL_SITE_SPIP" title="Accueil"><strong>fictions</strong></a><a href="http://www.laclasse.com" title="http://www.laclasse.com">.laclasse.com</a>
-				</div>
-				<div id="image-presentation">[(#LOGO_ARTICLE||image_reduire{100})]</div>
-				<div id="texte-presentation" class="#EDIT{texte}">
-				  [(#TEXTE)]
-				</div>
-			 </div>
+	<div id="book-middle-top-ecriture"><img src="#CHEMIN{img/global/book-middle-top.png}" width="300" height="6" /></div>
+	<div id="book-middle-bottom-ecriture"><img src="#CHEMIN{img/global/book-middle-bottom.png}" width="300" height="5" /></div>
 
-			</BOUCLE_art>
-			</BOUCLE_annee>
+	<div class="stitches-ecriture">
+		<div class="stitches-inner"><img src="#CHEMIN{img/global/stitches.png}" width="5" height="86" /></div>
+		<div class="stitches-inner"><img src="#CHEMIN{img/global/stitches.png}" width="5" height="86" /></div>
+		<div class="stitches-inner"><img src="#CHEMIN{img/global/stitches.png}" width="5" height="86" /></div>
+	</div>
 
-		   <div class="content-right-large">
-			<BOUCLE_page_article(ARTICLES){id_article}>
-				<!-- TEXTE PAGE -->
-				<div id="page-type">
-					<div class="page-type-titre">
-					#TITRE
-					</div>
-					<div class="page-type-texte #EDIT{texte}">
-					#TEXTE
-					</div>
-				</div>
+	<!-- RETOUR INDEX -->
+	<div id="bouton-retour">
+		<a href="#URL_SITE_SPIP">
+			<img src="#CHEMIN{img/global/bt-retour.png}" onmouseover="this.src='#CHEMIN{img/global/bt-retour-hover.png}';" onmouseout="this.src='#CHEMIN{img/global/bt-retour.png}';" width="54" height="54" />
+		</a>
+	</div>
 
-			</BOUCLE_page_article>
-
-			</div>
-
-		   </div>
-
-		   </div>
-
+	<!-- BOOK -->
+	<div id="global-ecriture">
+		<div id="global-spacer">
 		</div>
-
-
-
-
-
-</div>
-
-<INCLURE{fond=footer} />
+		<div class="global-content">
+			<div class="content">
+			<BOUCLE_annee(RUBRIQUES){titre==#EVAL{_annee_scolaire}}{tout}{0,1}>
+				<BOUCLE_art(ARTICLES){id_rubrique}{titre LIKE presentation}{tout}{0,1}>
+				<div class="content-left-small">
+					<div id="titre_site">
+						<a href="#URL_SITE_SPIP" title="Accueil"><strong>fictions</strong></a><a href="http://www.laclasse.com" title="http://www.laclasse.com">.laclasse.com</a>
+					</div>
+					<div id="image-presentation">[(#LOGO_ARTICLE||image_reduire{100})]</div>
+					<div id="texte-presentation" class="#EDIT{texte}">
+						[(#TEXTE)]
+					</div>
+				</div>
+				</BOUCLE_art>
+			</BOUCLE_annee>
+			<div class="content-right-large">
+				<BOUCLE_page_article(ARTICLES){id_article}>
+					<!-- TEXTE PAGE -->
+					<div id="page-type">
+						<div class="page-type-titre">
+							#TITRE
+						</div>
+						<div class="page-type-texte #EDIT{texte}">
+							#TEXTE
+						</div>
+					</div>
+				</BOUCLE_page_article>
+			</div>
+		</div>
+	</div>
+	<INCLURE{fond=footer} />
 </body>
-
-
 
 <script type="text/javascript">
 $(document).ready(function() {
-
-// RESIZE
+	// RESIZE
  	window.onresize = resize_global_content;
 	resize_global_content();
-
-// NICESCROLL
+	// NICESCROLL
 	$(".global-content").niceScroll({cursorcolor:"#ff6b6b", cursoropacitymin:'0.2',cursoropacitymax:'1', scrollspeed:'100', cursorborder:'0px'});
 	$('#ascrail2000').css({'cursor':'pointer'});
+	//
+	$('.liste-link').mouseover(function() {
+		var offset = $(this).offset();
+		var content_tooltip = $(this).find('.liste-tooltip-content').html();
+		$('#liste-tooltip').show();
+		$('#liste-tooltip').html(content_tooltip);
+		var hauteur_tooltip = $('#liste-tooltip-content').height();
+		$('#liste-tooltip').height(hauteur_tooltip);
+		var toptooltip = Math.round(offset.top);
+		toptooltip = toptooltip - hauteur_tooltip;
+		var lefttooltip = Math.round(offset.left);
+		lefttooltip -= 95;
+		$('#liste-tooltip').css('top', toptooltip -5);
+		$('#liste-tooltip').css('left', lefttooltip + 2);
+	});
+	$('.liste-link').mouseout(function() {
+		$('#liste-tooltip').hide();
+	});
 
 });
 
