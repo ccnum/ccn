@@ -452,18 +452,25 @@ function callConsigne(id_consigne) {
 	// - Modal contenu principale
 	var url = `${CCN.projet.url_popup_consigne}&id_article=${id_consigne}`;
 	showConsigneInTimeline(id_consigne);
-	loadContentInMainSidebar(url, 'article', 'consignes', false, function () {
-		updateUrl(
-			{
-				type_objet: 'consignes',
-				id_objet: id_consigne,
-				id_rubrique: id_consigne,
-				page: 'article',
-			},
-			'Consigne',
-			`./spip.php?page=article&id_article=${id_consigne}&mode=complet`,
-		);
-	});
+	loadContentInMainSidebar(
+		url,
+		'article',
+		'consignes',
+		false,
+		false,
+		function () {
+			updateUrl(
+				{
+					type_objet: 'consignes',
+					id_objet: id_consigne,
+					id_rubrique: id_consigne,
+					page: 'article',
+				},
+				'Consigne',
+				`./spip.php?page=article&id_article=${id_consigne}&mode=complet`,
+			);
+		},
+	);
 	// - Propriété propre à l'affichage de la modal
 	setModalProperties({
 		isColumn: false,
@@ -506,6 +513,7 @@ function callReponse(id_reponse) {
 		'article',
 		'travail_en_cours',
 		false,
+		true,
 		function () {
 			updateUrl(
 				{
@@ -564,20 +572,27 @@ function callClasse(id_classe) {
 		// url = `${CCN.projet.url_popup_classes}&id_rubrique=${id_classe}&type_objet=travail_en_cours`;
 		url = `${CCN.projet.url_popup_classes}&id_objet=${id_classe}&type_objet=travail_en_cours`;
 	}
-	loadContentInMainSidebar(url, 'rubrique', 'classes', false, function () {
-		updateUrl(
-			{
-				type_objet: 'classes',
-				id_objet: id_classe,
-				id_rubrique: id_classe,
-				page: 'rubrique',
-			},
-			'Classe',
-			'./spip.php?page=rubrique&id_objet=' +
-				id_classe +
-				'&mode=complet&type_objet=classes',
-		);
-	});
+	loadContentInMainSidebar(
+		url,
+		'rubrique',
+		'classes',
+		false,
+		true,
+		function () {
+			updateUrl(
+				{
+					type_objet: 'classes',
+					id_objet: id_classe,
+					id_rubrique: id_classe,
+					page: 'rubrique',
+				},
+				'Classe',
+				'./spip.php?page=rubrique&id_objet=' +
+					id_classe +
+					'&mode=complet&type_objet=classes',
+			);
+		},
+	);
 	// - Modal latérale
 	var url_travail_en_cours = `spip.php?page=rubrique&mode=detail&id_rubrique=${CCN.travailEnCoursId}`;
 	loadContentInLateralSidebar(
@@ -722,18 +737,25 @@ function callArticleBlog(id_article) {
 	// (B) Paramétrage de la modal
 	// - Modal principale
 	var url = `${CCN.projet.url_popup_blog}&page=article&id_article=${id_article}`;
-	loadContentInMainSidebar(url, 'article', 'blogs', false, function () {
-		updateUrl(
-			{
-				type_objet: 'blogs',
-				id_objet: id_article,
-				id_article: id_article,
-				page: 'article',
-			},
-			'Blog',
-			`./spip.php?page=article&id_article=${id_article}&mode=complet`,
-		);
-	});
+	loadContentInMainSidebar(
+		url,
+		'article',
+		'blogs',
+		false,
+		false,
+		function () {
+			updateUrl(
+				{
+					type_objet: 'blogs',
+					id_objet: id_article,
+					id_article: id_article,
+					page: 'article',
+				},
+				'Blog',
+				`./spip.php?page=article&id_article=${id_article}&mode=complet`,
+			);
+		},
+	);
 	// - Propriété propre à l'affichage de la modal
 	setModalProperties({
 		isColumn: false,
@@ -822,17 +844,24 @@ function callRessourceArticle(id_article, type_objet) {
 	// (B) Paramétrage de la modal
 	// - Modal principale
 	var url = `./spip.php?page=article&id_article=${id_article}&mode=ajax-detail`;
-	loadContentInMainSidebar(url, 'article', type_objet, false, function () {
-		updateUrl(
-			{
-				type_objet: type_objet,
-				id_article: id_article,
-				page: 'article',
-			},
-			'Ressources',
-			`./spip.php?page=article&id_article=${id_article}&type_objet=${type_objet}&mode=complet`,
-		);
-	});
+	loadContentInMainSidebar(
+		url,
+		'article',
+		type_objet,
+		false,
+		false,
+		function () {
+			updateUrl(
+				{
+					type_objet: type_objet,
+					id_article: id_article,
+					page: 'article',
+				},
+				'Ressources',
+				`./spip.php?page=article&id_article=${id_article}&type_objet=${type_objet}&mode=complet`,
+			);
+		},
+	);
 	// [?]DEAD CODE[?]
 	// - Modal latérale
 	var url_lateral =
@@ -872,6 +901,7 @@ function callRessourceSyndicArticle(id_syndic_article, type_objet) {
 		url,
 		'syndic_article',
 		type_objet,
+		false,
 		false,
 		function () {
 			updateUrl(
@@ -925,21 +955,28 @@ function callRessourceRubrique(id_rubrique, type_objet) {
 	// (B) Paramétrage de la modal
 	// - Modal principale
 	var url = `./spip.php?page=rubrique&id_rubrique=${id_rubrique}&mode=ajax-detail`;
-	loadContentInMainSidebar(url, 'rubrique', type_objet, false, function () {
-		updateUrl(
-			{
-				type_objet: type_objet,
-				id_rubrique: id_rubrique,
-				page: 'rubrique',
-			},
-			'Ressources',
-			'./spip.php?page=rubrique&id_rubrique=' +
-				id_rubrique +
-				'&type_objet=' +
-				type_objet +
-				'&mode=complet',
-		);
-	});
+	loadContentInMainSidebar(
+		url,
+		'rubrique',
+		type_objet,
+		false,
+		false,
+		function () {
+			updateUrl(
+				{
+					type_objet: type_objet,
+					id_rubrique: id_rubrique,
+					page: 'rubrique',
+				},
+				'Ressources',
+				'./spip.php?page=rubrique&id_rubrique=' +
+					id_rubrique +
+					'&type_objet=' +
+					type_objet +
+					'&mode=complet',
+			);
+		},
+	);
 	// [?]DEAD CODE[?]
 	// - Modal latérale
 	var url_lateral =
@@ -979,17 +1016,24 @@ function callArticleEvenement(id_objet, type_objet) {
 	// (B) Paramétrage de la modal
 	// - Modal principale
 	var url = `${CCN.projet.url_popup_evenement}&page=${type_objet}&id_${type_objet}=${id_objet}`;
-	loadContentInMainSidebar(url, 'article', 'evenements', false, function () {
-		updateUrl(
-			{
-				type_objet: 'evenements',
-				id_article: id_objet,
-				page: type_objet,
-			},
-			'Événement',
-			`./spip.php?page=${type_objet}&id_article=${id_objet}&mode=complet`,
-		);
-	});
+	loadContentInMainSidebar(
+		url,
+		'article',
+		'evenements',
+		false,
+		false,
+		function () {
+			updateUrl(
+				{
+					type_objet: 'evenements',
+					id_article: id_objet,
+					page: type_objet,
+				},
+				'Événement',
+				`./spip.php?page=${type_objet}&id_article=${id_objet}&mode=complet`,
+			);
+		},
+	);
 	// - Propriété propre à l'affichage de la modal
 	setModalProperties({
 		isColumn: false,
@@ -1072,7 +1116,7 @@ function createReponse(id_consigne, id_rubrique_classe, numero) {
 	// (B) Paramétrage de la modal
 	// - Modal principale
 	const url = `${CCN.projet.url_popup_reponseajout}&id_consigne=${id_consigne}&id_rubrique=${id_rubrique_classe}`;
-	loadContentInMainSidebar(url, 'article', 'blogs', true);
+	loadContentInMainSidebar(url, 'article', 'blogs', true, false);
 	// - Propriété propre à l'affichage de la modal
 	setModalProperties({
 		isColumn: false,
@@ -1301,6 +1345,7 @@ function loadContentInMainSidebar(
 	typePage,
 	typeObjet,
 	blackCloseButton,
+	replaceClasseIcon,
 	callback,
 ) {
 	emptyMainSidebar();
@@ -1364,6 +1409,24 @@ function loadContentInMainSidebar(
 				'filter',
 				'invert(1)',
 			);
+		}
+
+		if (replaceClasseIcon) {
+			const $fiche = $('#sidebar_main_inner .fiche_titre');
+			const $img = $fiche.find('img.spip_logo');
+
+			const extractFicheTitreClass = $fiche.attr('class').split(' ');
+			const find = extractFicheTitreClass.find((x) =>
+				x.includes('couleur_travail_en_cours'),
+			);
+			if (find && $img.attr('src').includes('logo_rvb_bleu')) {
+				const classeNumber = find.match(
+					/couleur_travail_en_cours(.+)/,
+				)[1];
+				const logoClasseNumber = (parseInt(classeNumber) % 10) + 1;
+				const logoSrc = `plugins/thematique/squelettes/img/logo_classe_${logoClasseNumber}.png`;
+				$img.attr('src', logoSrc);
+			}
 		}
 
 		if (callback) {
