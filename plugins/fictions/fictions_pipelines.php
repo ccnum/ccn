@@ -4,23 +4,14 @@ if (!defined('_ECRIRE_INC_VERSION')) {
 	return;
 }
 
-// cicas
-function fictions_cicas($flux) {
-	if (is_array($flux) and isset($flux['args'])) {
-		spip_log($flux['args'], 'test_fictions');
-	}
-
-	return $flux;
-}
-
 function fictions_post_edition($flux) {
-	spip_log($flux['args'], 'test');
 	if (
 		$flux['args']['action'] == 'modifier'
 		and !isset($flux['args']['data'])
 		and $table = $flux['args']['table']
 		and $id_objet = $flux['args']['id_objet']
 		and $flux['args']['champs_anciens']['statut'] == 'prop'
+		and $flux['args']['champs_anciens']['descriptif'] != ''
 		and $table = 'spip_articles'
 		and $id_rubrique = $flux['args']['champs_anciens']['id_rubrique']
 	) {
