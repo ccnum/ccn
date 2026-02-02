@@ -3,6 +3,7 @@
 if (!defined('_ECRIRE_INC_VERSION')) {
 	return;
 }
+include_spip('action/editer_liens');
 
 // Pre_boucles
 // Retourne les articles et articles syndiqués en lien avec l'année scolaire
@@ -130,7 +131,7 @@ function thematique_notifications_destinataires($flux) {
 }
 
 function thematique_cioidc_userinfo($flux) {
-	$id_auteur = sql_getfetsel('id_auteur', 'spip_auteurs', 'email=' . sql_quote($flux['args']['email'])); // Chercher l'auteur qui vient de se loguer
+	$auteur = sql_fetsel('id_auteur,nom', 'spip_auteurs', 'email=' . sql_quote($flux['args']['email'])); // Chercher l'auteur qui vient de se loguer
 	// Géré les groupes qui sont dans l'OpenID
 	$droits_spip = [];
 	$groupe_libres = $flux['data']['ENTGroupesLibres'];
@@ -142,7 +143,17 @@ function thematique_cioidc_userinfo($flux) {
 			$droits_spip[] = ['ccn' => $ccn, 'annee' => $annee];
 		}
 	}
-	spip_log($id_auteur.' => '.$droits_spip, 'cioidc');
+	$classes_groupes = $flux['data']['ENTClassesGroupes'];
+	foreach ($classes_groupes as $c_g) {
+		//$c_g['member_type']; $c_g['group_id']; $c_g['group_structure_id']; $c_g['group_name']; $c_g['group_type'];
+		$droits_spip[] = ['type' => $c_g['member_type']];
+	}
+	spip_log($auteur['id_auteur'] . ' / ' . $auteur['nom'] . ' => ' . $droits_spip, 'cioidc');
+	if ($droits_spip['type'] == 'ENS') {
+		// Rattaché le prof sur la rubrique "Blog pédagogique"
+		$blog = sql_getfetsel('id_rubrique', 'spip_rubriques', 'titre = ' . sql_quote('Blog pédagogique'));
+		objet_associer(['id_auteur' => $auteur['id_auteur']], ['rubrique' => $blog]);
+	}
 
 	return $flux;
 }
