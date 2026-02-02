@@ -513,6 +513,7 @@ function callReponse(id_reponse) {
 		'article',
 		'travail_en_cours',
 		false,
+		// replaceClasseIcon
 		true,
 		function () {
 			updateUrl(
@@ -577,6 +578,7 @@ function callClasse(id_classe) {
 		'rubrique',
 		'classes',
 		false,
+		// replaceClasseIcon
 		true,
 		function () {
 			updateUrl(
@@ -1105,18 +1107,19 @@ function callAgora() {
  * @param {number} id_consigne
  * @param {number} id_rubrique_classe
  * @param {number} numero
+ * @param {boolean} blackCloseButton
  *
  * @todo Documenter
  */
 
-function createReponse(id_consigne, id_rubrique_classe, numero) {
+function createReponse(blackCloseButton, id_consigne, id_rubrique_classe, numero) {
 	// (A) Paramétrage de la vue principale
 	// - Timeline
 	changeTimelineMode('consignes');
 	// (B) Paramétrage de la modal
 	// - Modal principale
 	const url = `${CCN.projet.url_popup_reponseajout}&id_consigne=${id_consigne}&id_rubrique=${id_rubrique_classe}`;
-	loadContentInMainSidebar(url, 'article', 'blogs', true, false);
+	loadContentInMainSidebar(url, 'article', 'blogs', blackCloseButton, false);
 	// - Propriété propre à l'affichage de la modal
 	setModalProperties({
 		isColumn: false,
@@ -1334,6 +1337,8 @@ function reload(url) {
  * @param {string} url - URL de la page à charger avec AJAX
  * @param {string} typePage - Type du contenu SPIP : <tt>article</tt>, <tt>rubrique</tt>…
  * @param {string} typeObjet - Type de l'objet principal de la page : <tt>consignes</tt>, <tt>travail_en_cours</tt>, <tt>blogs</tt>, <tt>evenements</tt>, <tt>ressources</tt>, <tt>classes</tt>…
+ * @param {boolean} blackCloseButton - Définit si oui ou non, le bouton de fermeture de la modal apparait en noir (true)/ en blanc (false)
+ * @param {boolean} replaceClasseIcon - Définit si oui ou non, l'icone de la classe doit être remplacer par une icône d'animal
  *
  * @see loadContentInLateralSidebar
  *
@@ -1402,8 +1407,6 @@ function loadContentInMainSidebar(
 		$('#sidebarCloseButton').on('click', closeModal);
 
 		if (blackCloseButton) {
-			// Code spécifique pour gérer la position de la modalCloseIcon
-			$('#sidebarCloseButton').css('margin-bottom', '-75px');
 			// Code spécifique pour gérer la couleur de modalCloseIcon
 			$('#sidebarCloseButton .icon.icon-close').css(
 				'filter',
