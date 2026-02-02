@@ -161,10 +161,10 @@ et/ou
 						<BOUCLE_rubLoop(RUBRIQUES){id_parent}{tous}>
 							<BOUCLE_filterDate(ARTICLES){id_rubrique}{date>=#CONST{_date_debut}}{date<=#CONST{_date_fin}}>
 							</BOUCLE_filterDate>
-								[(#MODELE{logo_menu_classe}{valeur=#TITRE}{filter=.#ID_RUBRIQUE}{title=[(#_rubLoop:TITRE)]}{class=menu_logo_classes-#ID_RUBRIQUE hover_couleur_travail_en_cours[(#ID_RUBRIQUE|nb2col)]}{classcouleur=couleur_travail_en_cours[(#ID_RUBRIQUE|nb2col)]}{texte=[(#_rubLoop:TITRE|couper{2})]})]
+								[(#MODELE{logo_menu_classe, valeur=#TITRE, filter=.#ID_RUBRIQUE, title=[(#_rubLoop:TITRE)], class=menu_logo_classes-#ID_RUBRIQUE hover_couleur_travail_en_cours[(#ID_RUBRIQUE|nb2col)], classcouleur=couleur_travail_en_cours[(#ID_RUBRIQUE|nb2col)], texte=[(#_rubLoop:TITRE|couper{2})]})]
 							</B_filterDate>
 								[(#_rubLoop:DATE|substr{0,10}|replace{-,.}|>={#CONST{_date_debut}}|oui|et{#_rubLoop:DATE|substr{0,10}|replace{-,.}|<={#CONST{_date_fin}}|oui}|oui)
-									[(#MODELE{logo_menu_classe}{valeur=#ID_RUBRIQUE}{filter=.#ID_RUBRIQUE}{title=[(#_rubLoop:TITRE)]}{class=menu_logo_classes-#ID_RUBRIQUE hover_couleur_travail_en_cours[(#ID_RUBRIQUE|nb2col)]}{classcouleur=couleur_travail_en_cours[(#ID_RUBRIQUE|nb2col)]}{texte=[(#_rubLoop:TITRE|couper{2})]})]
+									[(#MODELE{logo_menu_classe, valeur=#ID_RUBRIQUE, filter=.#ID_RUBRIQUE, title=[(#_rubLoop:TITRE)], class=menu_logo_classes-#ID_RUBRIQUE hover_couleur_travail_en_cours[(#ID_RUBRIQUE|nb2col)], classcouleur=couleur_travail_en_cours[(#ID_RUBRIQUE|nb2col)], texte=[(#_rubLoop:TITRE|couper{2})]})]
 								]
 							<//B_filterDate>
 						</BOUCLE_rubLoop>
@@ -174,10 +174,10 @@ et/ou
 					<BOUCLE_c3(RUBRIQUES){id_parent}{tous}>
 						<BOUCLE_a3(ARTICLES){id_rubrique}{date>=#CONST{_date_debut}}{date<=#CONST{_date_fin}}>
 						</BOUCLE_a3>
-							[(#MODELE{logo_menu_classe}{valeur=#ID_RUBRIQUE}{filter=.#ID_RUBRIQUE}{title=[(#_c3:TITRE)]}{class=menu_logo_classes-#ID_RUBRIQUE hover_couleur_travail_en_cours[(#ID_RUBRIQUE|nb2col)]}{classcouleur=couleur_travail_en_cours[(#ID_RUBRIQUE|nb2col)]}{texte=[(#_c3:TITRE|couper{2})]})]
+							[(#MODELE{logo_menu_classe, valeur=#ID_RUBRIQUE, filter=.#ID_RUBRIQUE, title=[(#_c3:TITRE)], class=menu_logo_classes-#ID_RUBRIQUE hover_couleur_travail_en_cours[(#ID_RUBRIQUE|nb2col)], classcouleur=couleur_travail_en_cours[(#ID_RUBRIQUE|nb2col)], texte=[(#_c3:TITRE|couper{2})]})]
 						</B_a3>
 							[(#_c3:DATE|substr{0,10}|replace{-,.}|>={#CONST{_date_debut}}|oui|et{#_c3:DATE|substr{0,10}|replace{-,.}|<={#CONST{_date_fin}}|oui}|oui)
-								[(#MODELE{logo_menu_classe, valeur=#ID_RUBRIQUE, filter=.#ID_RUBRIQUE, title=[(#_c3:TITRE)], class=menu_logo_classes-#ID_RUBRIQUE hover_couleur_travail_en_cours[(#ID_RUBRIQUE|nb2col)]}{classcouleur=couleur_travail_en_cours[(#ID_RUBRIQUE|nb2col)]}{texte=[(#_c3:TITRE|couper{2})]})]
+								[(#MODELE{logo_menu_classe, valeur=#ID_RUBRIQUE, filter=.#ID_RUBRIQUE, title=[(#_c3:TITRE)], class=menu_logo_classes-#ID_RUBRIQUE hover_couleur_travail_en_cours[(#ID_RUBRIQUE|nb2col)], classcouleur=couleur_travail_en_cours[(#ID_RUBRIQUE|nb2col)], texte=[(#_c3:TITRE|couper{2})]})]
 							]
 						<//B_a3>
 					</BOUCLE_c3>
@@ -196,15 +196,14 @@ et/ou
 				[(#NOM_SITE_SPIP|=={aqueduc.laclasse.com}|oui) #SET{blog,Le blog de Flavie Jones} ]
 				[(#NOM_SITE_SPIP|=={theatre.laclasse.com}|oui) #SET{blog,L'agenda} ]
 
-				[(#MODELE{logo_menu}{valeur=ressource}{class=menu_logo_ressources menu_logo_type_sidebarView}{filter=.ressource_ressources}{onclick=callRessource();}{title=Ressources})]
-				[(#MODELE{logo_menu}{valeur=agora}{class=menu_logo_agora menu_logo_type_sidebarView}{filter=.ressource_agora}{title=L'espace de discussion}{onclick=callAgora();})]
+				[(#MODELE{logo_menu, valeur=ressource, class=menu_logo_ressources menu_logo_type_sidebarView, filter=.ressource_ressources, onclick=callRessource();, title=Ressources})]
+				[(#MODELE{logo_menu, valeur=agora, class=menu_logo_agora menu_logo_type_sidebarView, filter=.ressource_agora, title=L'espace de discussion, onclick=callAgora();})]
 
 				[(#REM)Espace Doc]
 				[(#ENV{restreint}|?{#SET{docId,#ENV{restreint}}, #SET{docId,false}})]
 
 				<!-- [(#REM) GESTION DU LIEN DE L'ESPACE DOC] -->
 				<!-- [(#REM) ON RÉCUPÈRE LA DERNIÈRE RUBRIQUE DES ANNÉES, ON EN TIRE LE DESCRIPTIF ET VOILÀ !] -->
-				<!-- tutu -->
 				<BOUCLE_espace_doc(RUBRIQUES){tous}{racine}{titre==^[20]}{!par titre}{0,1}>
 				[<!-- #ID_RUBRIQUE -->
 				<li class="logo">

@@ -535,7 +535,7 @@ function callClasse(id_classe) {
 	console.log('url call classe', url);
 	if (id_classe != '') {
 		// url = CCN.projet.url_popup_classes + '&id_rubrique=' + id_classe + '&type_objet=travail_en_cours';
-		url = CCN.projet.url_popup_classes + '&id_objet=' + id_classe + '&type_objet=travail_en_cours';
+		url = CCN.projet.url_popup_classes + '&id_rubrique=' + id_classe + '&type_objet=classes';
 	}
 	loadContentInMainSidebar(
 		url, 'rubrique', 'classes', function () {
@@ -545,7 +545,7 @@ function callClasse(id_classe) {
 					'id_objet': id_classe,
 					'id_rubrique': id_classe,
 					'page': 'rubrique'
-				}, "Classe", "./spip.php?page=rubrique&id_objet=" + id_classe + "&mode=complet&type_objet=classes"
+				}, "Classe", "./spip.php?page=rubrique&id_rubrique=" + id_classe + "&mode=complet&type_objet=classes"
 			);
 		}
 	);
