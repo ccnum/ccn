@@ -23,6 +23,5 @@
 
 	<utilise nom="cicas" />
 
-	<pipeline nom="cicas" inclure="fictions_pipelines.php" />
 	<pipeline nom="post_edition" inclure="fictions_pipelines.php" />
 </paquet>

@@ -570,8 +570,12 @@ function callClasse(id_classe) {
 	// - Modal principale
 	var url = CCN.projet.url_popup_classes;
 	if (id_classe != '') {
-		// url = `${CCN.projet.url_popup_classes}&id_rubrique=${id_classe}&type_objet=travail_en_cours`;
-		url = `${CCN.projet.url_popup_classes}&id_objet=${id_classe}&type_objet=travail_en_cours`;
+		// url = CCN.projet.url_popup_classes + '&id_rubrique=' + id_classe + '&type_objet=travail_en_cours';
+		url =
+			CCN.projet.url_popup_classes +
+			'&id_rubrique=' +
+			id_classe +
+			'&type_objet=classes';
 	}
 	loadContentInMainSidebar(
 		url,
@@ -589,7 +593,7 @@ function callClasse(id_classe) {
 					page: 'rubrique',
 				},
 				'Classe',
-				'./spip.php?page=rubrique&id_objet=' +
+				'./spip.php?page=rubrique&id_rubrique=' +
 					id_classe +
 					'&mode=complet&type_objet=classes',
 			);
@@ -1112,7 +1116,12 @@ function callAgora() {
  * @todo Documenter
  */
 
-function createReponse(blackCloseButton, id_consigne, id_rubrique_classe, numero) {
+function createReponse(
+	blackCloseButton,
+	id_consigne,
+	id_rubrique_classe,
+	numero,
+) {
 	// (A) Paramétrage de la vue principale
 	// - Timeline
 	changeTimelineMode('consignes');
