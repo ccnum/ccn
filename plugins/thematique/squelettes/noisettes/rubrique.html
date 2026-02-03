@@ -129,25 +129,88 @@
 				</BOUCLE_rubAnnee>
 				<br />
 
-				<BOUCLE_sous_articles1(ARTICLES) {id_rubrique} {tout} {par num titre} {doublons}>
-					<script type="text/javascript">
-						$('#ajax#ID_ARTICLE').click(function() {
-							$('div#sidebar_main').addClass('chargement');
-							$('#menug li a.selected').removeClass('selected');
-							$('#ajax_rub_#ID_RUBRIQUE').addClass('selected');
-							$('#sidebar_main').load('[(#URL_PAGE{article}|parametre_url{id_article,#ID_ARTICLE}|parametre_url{mode,ajax-detail}|html_entity_decode)]', {limit: 25},
-							function(){
-								hideSidebarLateral();
-								$('div#sidebar_main').removeClass('chargement');
-								$('#sidebar_main').show('slow');
+				<div class="sidebar_bubble">
+					<ul class="rubrique_ul">
+					<BOUCLE_sous_articles1(ARTICLES) {id_rubrique} {tout} {par num titre} {doublons}>
+						<script type="text/javascript">
+							$('#ajax#ID_ARTICLE').click(function() {
+								$('div#sidebar_main').addClass('chargement');
+								$('#menug li a.selected').removeClass('selected');
+								$('#ajax_rub_#ID_RUBRIQUE').addClass('selected');
+								$('#sidebar_main').load('[(#URL_PAGE{article}|parametre_url{id_article,#ID_ARTICLE}|parametre_url{mode,ajax-detail}|html_entity_decode)]', {limit: 25},
+								function(){
+									hideSidebarLateral();
+									// <<<START ADD CLOSE MODAL BUTTON>>>
+									let bgColor = $('#sidebar_main .fiche_titre')
+										.first()
+										.css('background-color');
+									if (!bgColor) {
+										bgColor = $('#sidebar_main .popup_titre')
+											.first()
+											.css('background-color');
+									}
+
+									const $originalLikeForm = $(
+										'#sidebar_main .formulaire_jaime_flottant',
+									);
+									const $closeButton = $(`
+										<div
+											id="sidebarCloseButtonContainer"
+											style="
+												display: flex;
+												width: 100%;
+												justify-content: ${$originalLikeForm.length ? 'space-between' : 'flex-end'};
+												background-color: ${bgColor};
+												align-items: center;
+										">
+											<div
+												id="sidebarCloseButton"
+												style="width: fit-content;margin-bottom:-60px;"
+											>
+												<span class="icon icon-close"></span>
+											</div>
+										</div>
+									`);
+
+									if ($originalLikeForm.length) {
+										$closeButton.prepend($originalLikeForm.detach());
+									}
+									$('#sidebar_main .sidebar_bubble').first().prepend($closeButton);
+									$('#sidebarCloseButton').on('click', closeModal);
+									// <<<END ADD CLOSE MODAL BUTTON>>>
+									$('div#sidebar_main').removeClass('chargement');
+									$('#sidebar_main').show('slow');
+								});
 							});
-						});
+						</script>
+							<li>
+								<a id="ajax#ID_ARTICLE" href="#" class="ressources_classe_nom ajax [(#EXPOSE) [(#GET{art1}|=={#ID_ARTICLE}|oui)gauche_menu_on]]">[(#TITRE|couper{80})]</a>
+							</li>
+					</BOUCLE_sous_articles1>
+					<script>
+						(function () {
+							const $mainFiche = $('#sidebar_main_inner .fiche_titre').first();
+							const $sidebarFiche = $('#sidebar_lateral .fiche_titre').first();
+
+							if (!$mainFiche.length || !$sidebarFiche.length) return;
+
+							const mainFicheClasse = ($mainFiche.attr('class') || '')
+								.split(' ')
+								.find(c => c.startsWith('couleur_travail_en_cours'));
+
+							if (mainFicheClasse) {
+								$sidebarFiche.addClass(mainFicheClasse);
+								$rubriqueUl = $('.rubrique_ul').first().addClass(mainFicheClasse);
+							}
+
+							const src = $mainFiche.find('.photo img').attr('src');
+							if (src) {
+								$sidebarFiche.find('.photo img').attr('src', src);
+							}
+						})();
 					</script>
-					<div class="sidebar_bubble">
-						<a id="ajax#ID_ARTICLE" href="#" class="ressources_classe_nom ajax [(#EXPOSE) [(#GET{art1}|=={#ID_ARTICLE}|oui)gauche_menu_on]]">[- (#TITRE|couper{80})]</a>
-					</div>
-				</BOUCLE_sous_articles1>
-				<br />
+					</ul>
+				</div>
 				</B_sous_articles1>
 			<//B_rubriques_ordre>
 

@@ -17,9 +17,10 @@
 				<!-- AFFICHAGE ARTICLES  -->
 				<BOUCLE_filtreLivrable(ARTICLES){id_rubrique}{titre_mot=livrable}{par date}>
 					<script type="text/javascript">
-						$('#ajax#ID_ARTICLE').click(function() {
-							$('#sidebar_main').load('[(#URL_ARTICLE|parametre_url{mode,ajax-detail}|html_entity_decode)]', {limit: 25}, function(){
+						$('#ajax#ID_ARTICLE').click(function () {
+							$('#sidebar_main').load('[(#URL_ARTICLE|parametre_url{mode,ajax-detail}|html_entity_decode)]', { limit: 25 }, function () {
 
+								// <<<START ADD CLOSE MODAL BUTTON>>>
 								let bgColor = $('#sidebar_main .fiche_titre')
 									.first()
 									.css('background-color');
@@ -54,8 +55,29 @@
 								if ($originalLikeForm.length) {
 									$closeButton.prepend($originalLikeForm.detach());
 								}
-								$('#sidebar_main .sidebar_bubble').first().prepend($closeButton);						
+								$('#sidebar_main .sidebar_bubble').first().prepend($closeButton);
 								$('#sidebarCloseButton').on('click', closeModal);
+								// <<<END ADD CLOSE MODAL BUTTON>>>
+
+								// <<<START REPLACE CLASSE ICON>>>
+								const $fiche = $('.fiche_titre').first();
+								const $img = $fiche.find('.photo img');
+								if ($img.attr('src').includes('logo_rvb_bleu')) {
+									const findClassLivrable = $fiche
+										.attr('class')
+										.split(' ')
+										.find((c) => c.startsWith('couleur_travail_en_cours'));
+									const classeNumber = findClassLivrable
+										? findClassLivrable.replace('couleur_travail_en_cours', '')
+										: null;
+									if (classeNumber) {
+										const logoClasseNumber = (classeNumber % 10) + 1;
+										const logoSrc = `plugins/thematique/squelettes/img/logo_classe_${logoClasseNumber}.png`;
+										$img.attr('src', logoSrc);
+									}
+								}
+								// <<<END REPLACE CLASSE ICON>>>
+
 								$('div#sidebar_main').removeClass('chargement');
 								$('#sidebar_main').show('slow');
 							});
@@ -73,6 +95,27 @@
 							<!--<div class="featured-image">[(#LOGO_ARTICLE |image_reduire{500,300})]</div>-->
 						</div>
 					</a>
+					<script>
+						$livrables = $('.livrable');
+						$('.livrable').each(function () {
+							const $livrable = $(this);
+							const $img = $livrable.find('.profil img');
+							if ($img.attr('src')?.includes('logo_rvb_bleu')) {
+								const findClassLivrable = $livrable
+									.attr('class')
+									.split(' ')
+									.find((c) => c.startsWith('couleur_travail_en_cours'));
+								const classeNumber = findClassLivrable
+									? findClassLivrable.replace('couleur_travail_en_cours', '')
+									: null;
+								if (classeNumber) {
+									const logoClasseNumber = (classeNumber % 10) + 1;
+									const logoSrc = `plugins/thematique/squelettes/img/logo_classe_${logoClasseNumber}.png`;
+									$img.attr('src', logoSrc);
+								}
+							}
+						});
+					</script>
 				</BOUCLE_filtreLivrable>
 			</BOUCLE_colleges>
 		</BOUCLE_filtreTravailEnCours>
