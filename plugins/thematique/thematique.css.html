@@ -3017,18 +3017,19 @@ div.donnees_classe {
 }
 
 .ressources_classe_nom {
-	font-size: 16px;
-	line-height: 21px;
 	color: #fff;
-	padding: 20px 20px;
-	clear: both;
-	display: block;
-	background: rgba(0,0,0,.1);
+    display: block;
+    padding: 8px 20px 8px 20px;
+    margin: 0px 0px;
+    border-radius: 1px;
+    line-height: 16px;
+    font-size: 13px;
+	text-decoration: none !important;
 }
 
 .ressources_classe_nom:hover {
 	background: rgba(0,0,0,.2);
-	color: white;
+	color: #fff;
 }
 
 .ressources_classes ul {
@@ -3656,12 +3657,11 @@ li a, li a:hover {
 	color: black;
 }
 .portfolio .spip_documents {
-	height: 7rem;
+	height: fit-content;
 }
 .portfolio .spip_documents a:not(.supprimer_couleur) {
 	border: 0;
 	display: inline-block;
-	height: 100%;
 	width: 90%;
 	&:hover {
 		background-color: var(--color-hover);
@@ -4263,10 +4263,11 @@ ul#forum, .lien_forum {
 	display: flex;
 	flex-direction: column;
 	align-items: center;
-	border-radius: 10px;
+	border-radius: 5px;
 	box-shadow: 0 2px 7px rgba(0,0,0,.3);
-	height: 220px;
-	margin: 15px 15px 0 15px;
+	height: fit-content;
+    margin-bottom: 10px;
+    margin-top: 10px;
 	cursor: pointer;
 }
 
@@ -4285,11 +4286,17 @@ ul#forum, .lien_forum {
 	display: flex;
 	flex-direction: column;
 	pointer-events: none;
+    width: 100%;
+    gap: 10px;
+	border-radius: 15px;
 }
 
 .livrable .profil img {
-	border-radius: 50%;
+	border-radius: 15px;
 	margin: auto;
+	width: 50px;
+	height: 50px;
+	background: #fff;
 }
 
 .livrable h3 {
@@ -4305,7 +4312,10 @@ ul#forum, .lien_forum {
 	font-size: 15px;
 	color: white;
 	text-align: center;
+	background: black;
 	padding: 15px;
+	border-bottom-left-radius: 5px;
+	border-bottom-right-radius: 5px;
 }
 
 #debug-nav {

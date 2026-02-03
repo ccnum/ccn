@@ -536,6 +536,7 @@ function callReponse(id_reponse) {
 		url_travail_en_cours,
 		'rubrique',
 		'travail_en_cours',
+		false,
 	);
 	// - Propriété propre à l'affichage de la modal
 	setModalProperties({
@@ -605,6 +606,7 @@ function callClasse(id_classe) {
 		url_travail_en_cours,
 		'rubrique',
 		'travail_en_cours',
+		false,
 	);
 	// - Propriété propre à l'affichage de la modal
 	setModalProperties({
@@ -656,6 +658,7 @@ function callClasses() {
 		url_travail_en_cours,
 		'rubrique',
 		'travail_en_cours',
+		false,
 	);
 	// - Propriété propre à l'affichage de la modal
 	setModalProperties({
@@ -708,6 +711,7 @@ function callLivrables() {
 		url_lateral,
 		'rubrique',
 		'livrables',
+		true,
 		function () {},
 	);
 	// - Propriété propre à l'affichage de la modal
@@ -767,7 +771,7 @@ function callArticleBlog(id_article) {
 		isColumn: false,
 		showLateralContent: false,
 		isExpand: false,
-		showTransparentBackground: true,
+		showTransparentBackground: false,
 	});
 }
 
@@ -819,6 +823,7 @@ function callRessource() {
 		url_lateral,
 		'rubrique',
 		'ressources',
+		false,
 		function () {},
 	);
 	// - Propriété propre à l'affichage de la modal
@@ -930,6 +935,7 @@ function callRessourceSyndicArticle(id_syndic_article, type_objet) {
 		url_lateral,
 		'rubrique',
 		type_objet,
+		false,
 		function () {},
 	);
 	// - Propriété propre à l'affichage de la modal
@@ -1045,7 +1051,7 @@ function callArticleEvenement(id_objet, type_objet) {
 		isColumn: false,
 		showLateralContent: false,
 		isExpand: false,
-		showTransparentBackground: true,
+		showTransparentBackground: false,
 	});
 }
 
@@ -1096,6 +1102,7 @@ function callAgora() {
 		url_lateral,
 		'rubrique',
 		'agora',
+		false,
 		function () {},
 	);
 	// - Propriété propre à l'affichage de la modal
@@ -1426,18 +1433,37 @@ function loadContentInMainSidebar(
 		if (replaceClasseIcon) {
 			const $fiche = $('#sidebar_main_inner .fiche_titre');
 			const $img = $fiche.find('img.spip_logo');
-
 			const extractFicheTitreClass = $fiche.attr('class').split(' ');
-			const find = extractFicheTitreClass.find((x) =>
-				x.includes('couleur_travail_en_cours'),
-			);
-			if (find && $img.attr('src').includes('logo_rvb_bleu')) {
-				const classeNumber = find.match(
-					/couleur_travail_en_cours(.+)/,
-				)[1];
-				const logoClasseNumber = (parseInt(classeNumber) % 10) + 1;
-				const logoSrc = `plugins/thematique/squelettes/img/logo_classe_${logoClasseNumber}.png`;
-				$img.attr('src', logoSrc);
+
+			const getClasseNumber = (prefix) => {
+				const found = extractFicheTitreClass.find((c) =>
+					c.startsWith(prefix),
+				);
+				return found ? found.replace(prefix, '') : null;
+			};
+
+			let classeNumber =
+				getClasseNumber('couleur_travail_en_cours') ??
+				getClasseNumber('couleur_classes');
+
+			if (classeNumber) {
+				classeNumber = parseInt(classeNumber, 10);
+
+				// Ajout de la classe travail_en_cours si absente
+				if (
+					!extractFicheTitreClass.some((c) =>
+						c.startsWith('couleur_travail_en_cours'),
+					)
+				) {
+					$fiche.addClass(`couleur_travail_en_cours${classeNumber}`);
+				}
+
+				// Changement du logo si nécessaire
+				if ($img.attr('src')?.includes('logo_rvb_bleu')) {
+					const logoClasseNumber = (classeNumber % 10) + 1;
+					const logoSrc = `plugins/thematique/squelettes/img/logo_classe_${logoClasseNumber}.png`;
+					$img.attr('src', logoSrc);
+				}
 			}
 		}
 
@@ -1460,13 +1486,20 @@ function loadContentInMainSidebar(
  * @param {string} url - URL de la page à charger avec AJAX
  * @param {string} typePage - Type du contenu SPIP : <tt>article</tt>, <tt>rubrique</tt>…
  * @param {string} typeObjet - Type de l'objet principal de la page : <tt>consignes</tt>, <tt>travail_en_cours</tt>, <tt>blogs</tt>, <tt>evenements</tt>, <tt>ressources</tt>, <tt>classes</tt>…
+ * @param {boolean} replaceClasseIcon - Définit si oui ou non, l'icone de la classe doit être remplacer par une icône d'animal
  *
  * @see loadContentInMainSidebar
  *
  * @todo Loading et son callback
  */
 
-function loadContentInLateralSidebar(url, typePage, typeObjet, callback) {
+function loadContentInLateralSidebar(
+	url,
+	typePage,
+	typeObjet,
+	replaceClasseIcon,
+	callback,
+) {
 	showSidebarLateral();
 
 	console.log(
@@ -1484,6 +1517,27 @@ function loadContentInLateralSidebar(url, typePage, typeObjet, callback) {
 		$('#sidebar_lateral_inner .fiche_titre').addClass(
 			'fiche_titre_secondaire',
 		);
+		if (replaceClasseIcon) {
+			$livrables = $('.livrable');
+			$('.livrable').each(function () {
+				const $livrable = $(this);
+				const $img = $livrable.find('.profil img');
+				if ($img.attr('src')?.includes('logo_rvb_bleu')) {
+					const findClassLivrable = $livrable
+						.attr('class')
+						.split(' ')
+						.find((c) => c.startsWith('couleur_travail_en_cours'));
+					const classeNumber = findClassLivrable
+						? findClassLivrable.replace('couleur_travail_en_cours', '')
+						: null;
+					if (classeNumber) {
+						const logoClasseNumber = (classeNumber % 10) + 1;
+						const logoSrc = `plugins/thematique/squelettes/img/logo_classe_${logoClasseNumber}.png`;
+						$img.attr('src', logoSrc);
+					}
+				}
+			});
+		}
 		if (callback) {
 			callback(response);
 		}
