@@ -200,7 +200,7 @@
 
 							if (mainFicheClasse) {
 								$sidebarFiche.addClass(mainFicheClasse);
-								$rubriqueUl = $('.rubrique_ul').first().addClass(mainFicheClasse);
+								$('.rubrique_ul').first().addClass('ressources_rubrique').find('li a').css('color', 'black');
 							}
 
 							const src = $mainFiche.find('.photo img').attr('src');

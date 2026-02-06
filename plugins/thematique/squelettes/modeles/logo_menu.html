@@ -10,7 +10,7 @@
 ]
 <li class="logo">
     <a [href="(#HREF)"] [rel="(#REL)"] [data-filter-value="(#FILTER)"] [data-option-value="(#OPTION)"] [onClick="(#ONCLICK)"]
-        class="[(#TEXTE|=={''}|oui)[logo_menu-(#VALEUR)]] #CLASS" title="[(#TITLE|sinon{#VALEUR})]" style="#STYLE">
+        class="[(#TEXTE|=={''}|oui)[logo_menu-(#VALEUR)]] #CLASS" aria-label="[(#TITLE|sinon{#VALEUR})]" data-tip="[(#TITLE|sinon{#VALEUR})]" style="#STYLE">
         [(#TEXTE*|sinon{&nbsp;})]
     </a>
 </li>

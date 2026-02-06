@@ -10,8 +10,8 @@
 ]
 <li class="logo">
 	<a [href="(#HREF)"] [rel="(#REL)"] [data-filter-value="(#FILTER)"] [data-option-value="(#OPTION)"]
-		onClick="callClasse(#ID_RUBRIQUE);" class="[(#TEXTE|=={''}|oui)[logo_menu-(#VALEUR)]] #CLASS logo_menu_classe"
-		title="<BOUCLE_titre_rubrique(RUBRIQUES){id_rubrique}{tous}>#TITRE</BOUCLE_titre_rubrique>">
+		onClick="callClasse(#ID_RUBRIQUE);" class="[(#TEXTE|=={''}|oui)[logo_menu-(#VALEUR)]] #CLASS logo_menu_classe tooltip"
+		data-tip="<BOUCLE_titre_rubrique(RUBRIQUES){id_rubrique}{tous}>#TITRE</BOUCLE_titre_rubrique>">
 		#SET{logo_url, #MODELE{logo_carre}{id_rubrique}{taille=35}|extraire_attribut{src}}
 		#SET{CLASSCOULEUREXTRACT,#ENV{classcouleur}}
 		#SET{numero_cycle, (#GET{CLASSCOULEUREXTRACT}|replace{.*en_cours(\d+)$,\1}|intval|modulo{10}|plus{1})}
@@ -19,7 +19,14 @@
 		#SET{logo_if_oui, plugins/thematique/squelettes/img/logo_classe_#GET{numero_cycle}.png}
 		#SET{logo_if_non, #GET{logo_url}}
 		#SET{logo_final, #GET{logo_match_bool}|=={oui}|?{#GET{logo_if_oui},#GET{logo_if_non}}}
-		<div class="logo_menu_classe_image #CLASSCOULEUR" style="background-image:url([(#GET{logo_final})])">
+		[(#GET{logo_match_bool}|=={oui}|oui)
+			#SET{logo_bg_size,30px}
+		]
+		[(#GET{logo_match_bool}|=={non}|oui)
+			#SET{logo_bg_size,100% auto}
+		]
+		<div class="logo_menu_classe_image #CLASSCOULEUR"
+			style="background-image:url([(#GET{logo_final})]); background-size:[(#GET{logo_bg_size})];">
 			[(#TEXTE*|sinon{&nbsp;})]
 		</div>
 	</a>
