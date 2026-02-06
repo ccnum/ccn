@@ -242,7 +242,7 @@ body {
 	margin: 0px;
 	padding: 0 0 82px 0;
 	font-family: 'Ubuntu';
-	font-size: 18px;
+	font-size: 19px;
 	color: #000;
 	overflow-x : hidden;
 }
@@ -364,7 +364,7 @@ body {
 		.user-option {
 			display: flex;
 			align-items: center;
-			height: 40px;
+			height: 50px;
 		}
 	}
 	.user-option {
@@ -430,9 +430,10 @@ body {
 		width: 30px;
 	}
 	&:hover {
+	background-color: var(--color-hover);
 		.icon {
 			background-color: #fff !important;
-		}	
+		}
 	}
 }
 
@@ -460,8 +461,11 @@ body {
 	> .aide {
 		background-color: var(--color-tonic);
 		cursor: pointer;
-		width: 40px;
+		width: 54px;
 		height: 100%;
+		&:hover {
+			background-color: var(--color-hover);
+		}
 		> a {
 			width: 100%;
 			background-color: unset;
@@ -474,6 +478,7 @@ body {
 }
 
 #menu_bas_logos {
+	padding-top: 20px;
 	padding-right: 10px;
 	> li {
 		height: fit-content !important;
@@ -501,13 +506,14 @@ body {
     position: fixed;
     bottom: 0;
     left: 0;
-	width: calc(100vw - (2*1rem));
+	width: calc(100vw - 10px - 10px);
     display: flex;
     gap: 1.5rem;
-	padding: 10px 16px 12.8px 16px;
+	padding: 0px 10px 20.8px 10px;
     background: white;
     align-items: center;
     z-index: 999;
+	height: 77px;
 }
 
 #menu_bas > :last-child {
@@ -523,62 +529,6 @@ body {
 	> h3 {
 		white-space: nowrap;
 	}
-}
-
-#menu_bas.zone-menu li a.logo_menu-ressource {
-	background-size: 25px;
-	&:hover {
-		background-color: var(--color-tonic);
-	}
-}
-
-#menu_bas.zone-menu li a.logo_menu-ressource::before {
-	background-image: url(#ENV{chemin}/img/logo_ressource.png);
-}
-
-#menu_bas.zone-menu li.logo a.logo_menu-ressource.selected {
-	background-color: var(--color-tonic);
-}
-#menu_bas.zone-menu li.logo a.logo_menu-ressource.selected::before,
-#menu_bas.zone-menu li.logo a.logo_menu-ressource:hover::before {
-    filter: invert(1) sepia(1);
-}
-
-#menu_bas.zone-menu li a.logo_menu-doc {
-	background-size: 25px;
-	&:hover {
-		background-color: var(--color-tonic);
-	}
-}
-
-#menu_bas.zone-menu li a.logo_menu-doc::before {
-	background-image: url(#ENV{chemin}/img/logo_doc.png);
-}
-
-#menu_bas.zone-menu li.logo a.logo_menu-doc.selected::before,
-#menu_bas.zone-menu li.logo a.logo_menu-doc:hover::before {
-    filter: invert(1) sepia(1);
-}
-
-#menu_bas.zone-menu li a.logo_menu-cible {
-	background-size: 25px;
-	&:hover {
-		background-color: var(--color-tonic);
-	}
-}
-
-#menu_bas.zone-menu li a.logo_menu-cible.selected {
-	background-color: var(--color-tonic);
-}
-
-#menu_bas.zone-menu li a.logo_menu-cible::before {
-	background-image: url([(#CHEMIN{img/logo_cible.png}|image_gamma{255}|image_reduire{20}|extraire_attribut{src})]);
-	filter: brightness(0) saturate(100%) invert(13%) sepia(51%) saturate(1781%) hue-rotate(215deg) brightness(90%) contrast(98%);
-}
-
-#menu_bas.zone-menu li.logo a.logo_menu-cible.selected::before,
-#menu_bas.zone-menu li.logo a.logo_menu-cible:hover::before {
-	filter: none;
 }
 
 .logo_menu_classe_image {
@@ -969,9 +919,10 @@ a:hover {
 	z-index: 2;
 }
 .select input.first + label {
+	text-transform: uppercase;
 	height: var(--header-height);
 	line-height: var(--header-height);
-	font-weight: bold;
+	font-weight: 500;
 	color: var(--color-default);
 	padding: 0 15px 0 25px;
 }
@@ -980,14 +931,14 @@ a:hover {
 	color: #fff;
 }
 .select:hover input {
-	min-height: 40px;
+	min-height: 50px;
 	min-width: 100%;
-	height: 40px;
+	height: 50px;
 	width: 100%;
 }
 /*Déplie le carroussel*/
 .select:hover label {
-	height: 40px;
+	height: 50px;
 	line-height: 40px;
 	background-color: #fff;
 	-ms-transition: height 250ms ease-in-out, line-height 250ms ease-in-out;
@@ -1056,7 +1007,7 @@ a:hover {
 }
 
 #menu_bas.zone-menu li, #menu_bas.zone-menu form {
-	height: 35px;
+	height: 40px;
 	line-height: 31px;
 }
 
@@ -1198,7 +1149,7 @@ a:hover {
 	height: 100%;
 	width: 100%;
 	margin: 0px auto;
-	font-size: 12px;
+	font-size: 20px;
 	text-align: center;
 	font-weight: bold;
 	color: var(--color-default);
@@ -1206,6 +1157,11 @@ a:hover {
 	background-position: center;
 	background-repeat: no-repeat;
 	position: relative;
+}
+
+#menu_bas.zone-menu #menu-consignes li.logo a {
+	padding-top: 5px;
+    height: calc(100% - 5px);
 }
 
 #menu_bas.zone-menu li.logo a::before {
@@ -1231,15 +1187,93 @@ a:hover {
 	color: #fff !important;
 }
 
-<BOUCLE_vue(DATA){liste tout,timeline,classe,blog,evenement,consigne,consignes,ressources,evenements,blogs,classes,article_evt,texte,image,son,video,autre,date,notation,descendant,ascendant,agora,forum,ressource_classes,reponse}>
+.tooltip,
+.tooltip_bottom,
+.tooltip_bottom_left {
+  position: relative;
+}
+.tooltip::after,
+.tooltip_bottom::after,
+.tooltip_bottom_left::after {
+  content: attr(data-tip);
+  position: absolute;
+  background: #3C3C4A;
+  color: #fff;
+  padding: 0 10px;
+  border-radius: 8px;
+  font-size: 12px;
+  white-space: nowrap;
+  z-index: 9999;
+
+  opacity: 0;
+  pointer-events: none;
+  transition: transform 0.2s ease, opacity 0.2s ease;
+}
+
+.tooltip::after {
+  left: 0;
+  top: -5px;
+  transform: translate(0, -100%) scale(0);
+  transform-origin: bottom left;
+  padding: 0px 10px;
+}
+.tooltip:hover::after {
+  transform: translate(0, -100%) scale(1);
+  opacity: 1;
+}
+.tooltip_bottom::after {
+  left: 0;
+  top: 100%;
+  transform: translate(0, 0) scale(0);
+  transform-origin: top left;
+  padding: 10px;
+}
+.tooltip_bottom:hover::after {
+  transform: translate(0, 5px) scale(1);
+  opacity: 1;
+}
+.tooltip_bottom_left::after {
+  top: calc(100% + 10px);
+  right: 1;
+  transform: scale(0);
+  transform-origin: top right;
+  padding: 10px;
+}
+.tooltip_bottom_left:hover::after {
+  transform: scale(1);
+  opacity: 1;
+}
+
+<BOUCLE_logos(DATA){liste consignes, blog, evenement, cible, ressource, agora, doc}>
+	#menu_bas.zone-menu li a.logo_menu-#VALEUR:hover {
+		background-color: var(--color-tonic);
+	}
+	#menu_bas.zone-menu li a.logo_menu-#VALEUR.selected {
+		background-color: var(--color-tonic);
+	}
+	#menu_bas.zone-menu li a.logo_menu-#VALEUR::before {
+		background-size: 35px;
+		background-image: url(#ENV{chemin}/img/logo_#VALEUR.png);
+	}
+	#menu_bas.zone-menu li.logo a.logo_menu-#VALEUR.selected::before,
+	#menu_bas.zone-menu li.logo a.logo_menu-#VALEUR:hover::before {
+		background-image: url(#ENV{chemin}/img/logo_[(#VALEUR)_white].png);
+	}
+</BOUCLE_logos>
+#menu_bas.zone-menu li a.logo_menu-agora::before {
+	background-size: 45px;
+}
+
+<BOUCLE_vue(DATA){liste tout,timeline,classe,consigne,ressources,evenements,blogs,classes,article_evt,texte,image,son,video,autre,date,notation,descendant,ascendant,forum,ressource_classes,reponse}>
 	#SET{file,#CHEMIN{img/logo_#NOM_SITE_SPIP_#VALEUR.png}|sinon{#CHEMIN{img/logo_#VALEUR.png}}|sinon{#CHEMIN{prive/vignettes/#VALEUR.png}}|sinon{#CHEMIN{img/logo_voir.png}}}
-	[(#SET{img,#GET{file}|image_gamma{255}|image_reduire{20}|extraire_attribut{src}})]
+	[(#SET{img,#GET{file}|image_gamma{255}|image_reduire{25}|extraire_attribut{src}})]
 	[(#SET{col1,[(#GET{file}|couleur_extraire)]})]
 	#SET{col,var(--color-tonic)}
 	[(#GET{col1}|substr{0,2}|=={#GET{col1}|substr{2,2}}|oui|et{#GET{col1}|substr{2,2}|=={#GET{col1}|substr{4,2}}|oui}|non) [(#SET{col,[#(#GET{col1})]})] ]
 	
 	#menu_bas.zone-menu li a.[logo_menu-(#VALEUR)]::before {
 		background-image: url(#GET{img});
+		background-size: 30px;
 		filter: brightness(0) saturate(100%) invert(13%) sepia(51%) saturate(1781%) hue-rotate(215deg) brightness(90%) contrast(98%);
 	}
 
@@ -3815,8 +3849,8 @@ ul#forum, .lien_forum {
 
 #timeline_wrapin {
 	position: absolute;
-	top: 40px;
-	bottom: 80px;
+	top: 55px;
+	bottom: 100px;
 	left: 0;
 	width: 100%;
 	z-index: 900;
@@ -3907,8 +3941,8 @@ ul#forum, .lien_forum {
 #sidebar_content {
 	border: none;
 	width: 100%;
-    height: calc(100vh - 90px - (54px * 2));
-    max-height: calc(100vh - 90px - (54px * 2));
+    height: calc(100vh - 100px - (54px * 2));
+    max-height: calc(100vh - 100px - (54px * 2));
 	z-index: 10000;
 	position: relative;
 	overflow: hidden;
@@ -3939,18 +3973,19 @@ ul#forum, .lien_forum {
 	height: 100%;
 	display: none;
 	z-index: 2001;
-	background: rgba(0,0,0,0.5)
+	background: rgba(0,0,0,0.5);
+	cursor: pointer;
 }
 .sidebarCacheOn {
 	display: block !important;
 }
 .sidebarExpandOff {
-	&::after {
+	&::before {
 		background: url("#CHEMIN{img/expand-off.svg}");
 	}
 }
 .sidebarExpandOn {
-	&::after {
+	&::before {
 		background: url("#CHEMIN{img/expand-on.svg}");
 	}
 }
@@ -3965,7 +4000,7 @@ ul#forum, .lien_forum {
 	line-height: 33px;
 	cursor: pointer;
 	z-index: 100000;
-	&::after {
+	&::before {
 		content: '';
 		position: absolute;
 		height: 40px;
@@ -3976,7 +4011,7 @@ ul#forum, .lien_forum {
 	}
 	&:hover {
 		background: var(--color-hover);
-		&::after {
+		&::before {
 			filter: brightness(0) saturate(100%) invert(100%) sepia(100%) saturate(1%) hue-rotate(214deg) brightness(107%) contrast(102%);
 		}
 	}
@@ -4019,7 +4054,7 @@ ul#forum, .lien_forum {
 }
 
 #menu_bas.zone-menu li.logo, #menu_haut.zone-menu li.logo {
-	width: 31px;
+	width: 36px;
 }
 
 /* TO DO */
@@ -4235,8 +4270,8 @@ ul#forum, .lien_forum {
 #choix_rubrique_admin:hover > .choix_rubrique_wrapper {
 	display: block;
 	height: initial;
-	width: 100%;
-	max-height: calc(100vh - 82.8px - 60px);
+	width: fit-content;
+	max-height: calc(100vh - 82.8px - 70px);
 }
 
 .choix_rubrique_wrapper {
@@ -4345,26 +4380,7 @@ ul#forum, .lien_forum {
 		margin-top: 0.5%;
 	}
 
-	#menu_bas {
-		height: 60px;
-	}
-
 	.zone-menu h3 { font-size: #GET{font-size1_bas}px; padding: 2px;}
-	#menu_bas.zone-menu li, #menu_bas.zone-menu form {
-		width: 27px;
-		height: 27px;
-		line-height: 27px;
-	}
-
-	#menu_bas.zone-menu li.logo, #menu_haut.zone-menu li.logo {
-		width: 27px;
-		font-size: 0;
-	}
-
-	#menu_haut.zone-menu li.logo {
-		font-size: 0;
-		width: 33px;
-	}
 
 	.choix_rubrique_wrapper {
 		height: max-content !important;

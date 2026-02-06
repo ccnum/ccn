@@ -73,7 +73,7 @@ et/ou
 		<div id="menu-timeline" class="bloc_view col">
 			<h3 class="menu-title"><span>Publier</span></h3>
 			<ul class="filter clearfix option-set ressource" data-filter-group="ressource">
-				[(#MODELE{logo_menu}{valeur=consignes}{class=menu_logo_consignes}{onclick=changeTimelineMode('consignes');CCN.projet.showWholeTimeline();}{title=Toutes les consignes})]
+				[(#MODELE{logo_menu}{valeur=consignes}{class=tooltip menu_logo_consignes}{onclick=changeTimelineMode('consignes');CCN.projet.showWholeTimeline();}{title=Toutes les consignes})]
 
 				#SET{blog, Agenda}
 				[(#NOM_SITE_SPIP|=={novaterra.laclasse.com}|oui) #SET{blog,Le journal du capitaine et le novamag} ]
@@ -81,11 +81,11 @@ et/ou
 				[(#NOM_SITE_SPIP|=={miam.laclasse.com}|oui) #SET{blog,Le blog du potager} ]
 				[(#NOM_SITE_SPIP|=={aqueduc.laclasse.com}|oui) #SET{blog,Le blog de Flavie Jones} ]
 				[(#NOM_SITE_SPIP|=={theatre.laclasse.com}|oui) #SET{blog,L'agenda} ]
-				[(#MODELE{logo_menu}{valeur=blog}{class=menu_logo_blogs}{filter=.ressource_blogs}{onclick=changeTimelineMode('blogs');}{title=#GET{blog}})]
+				[(#MODELE{logo_menu}{valeur=blog}{class=tooltip menu_logo_blogs}{filter=.ressource_blogs}{onclick=changeTimelineMode('blogs');}{title=#GET{blog}})]
 
 				[(#INCLURE{fond=noisettes/fonction/type_role})]
 				[(#SESSION{role}|in_array{#LISTE{prof,intervenant,admin}}|oui)
-					[(#MODELE{logo_menu}{valeur=evenement}{class=menu_logo_evenements}{filter=.ressource_evenements}{onclick=changeTimelineMode('evenements');}{title=Le blog pédagogique})]
+					[(#MODELE{logo_menu}{valeur=evenement}{class=tooltip menu_logo_evenements}{filter=.ressource_evenements}{onclick=changeTimelineMode('evenements');}{title=Le blog pédagogique})]
 				]
 
 				[(#REM) Si il n'y a pas de livrables ne pas afficher le bouton]
@@ -103,7 +103,7 @@ et/ou
 				</BOUCLE_rubAnnee>
 
 				[(#GET{hasLivrable}|=={oui}|oui)
-					[(#MODELE{logo_menu}{valeur=livrable}{class=menu_logo_livrables logo_menu-cible}{filter=.ressource_livrables}{onclick=callLivrables();}{title=Les projets finis})]
+					[(#MODELE{logo_menu}{valeur=livrable}{class=tooltip menu_logo_livrables logo_menu-cible}{filter=.ressource_livrables}{onclick=callLivrables();}{title=Les projets finis})]
 				]
 
 				<BOUCLE_j(DATA){liste tout,blog,evenement,ressources,consignes,travail_en_cours}>
@@ -137,10 +137,56 @@ et/ou
 
 		[(#REM) Classes]
 		<div id="menu-classes" class="bloc_view col">
-			<h3 class="menu-title"><span>Les 10 classes participantes</span></h3>
+			#SET{nb_classes,0}
+			#SET{hasYearRub,false}
+			[(#REM) =================== ]
+			[(#REM) COMPTEUR - BOUCLE 1 ]
+			[(#REM) =================== ]
+			<BOUCLE_FiltreAnnee_compteur(RUBRIQUES){racine}{titre LIKE %(#CONST{_annee_scolaire})%}>
+				#SET{hasYearRub,true}
+				<BOUCLE_rubMot_compteur(RUBRIQUES){id_parent}{titre_mot=travail_en_cours}>
+					<BOUCLE_rubLoop_compteur(RUBRIQUES){id_parent}{tous}>
+						<BOUCLE_filterDate_compteur(ARTICLES){id_rubrique}{date>=#CONST{_date_debut}}{date<=#CONST{_date_fin}}>
+						</BOUCLE_filterDate_compteur>
+							#SET{nb_classes,#GET{nb_classes}|plus{1}}
+						</B_filterDate_compteur>
+							[(#_rubLoop_compteur:DATE|substr{0,10}|replace{-,.}|>={#CONST{_date_debut}}|oui|et{#_rubLoop_compteur:DATE|substr{0,10}|replace{-,.}|<={#CONST{_date_fin}}|oui}|oui)
+								#SET{nb_classes,#GET{nb_classes}|plus{1}}
+							]
+						<//B_filterDate_compteur>
+					</BOUCLE_rubLoop_compteur>
+				</BOUCLE_rubMot_compteur>
+			</BOUCLE_FiltreAnnee_compteur>
+			[(#REM) =================== ]
+			[(#REM) COMPTEUR - BOUCLE 2 ]
+			[(#REM) =================== ]
+			<BOUCLE_r3_compteur(RUBRIQUES){titre_mot==travail_en_cours}{tous}{si #GET{hasYearRub}|=={false}}{!par date}>
+				<BOUCLE_c3_compteur(RUBRIQUES){id_parent}{tous}>
+					<BOUCLE_a3_compteur(ARTICLES){id_rubrique}{date>=#CONST{_date_debut}}{date<=#CONST{_date_fin}}>
+					</BOUCLE_a3_compteur>
+						#SET{nb_classes,#GET{nb_classes}|plus{1}}
+					</B_a3_compteur>
+						[(#_c3_compteur:DATE|substr{0,10}|replace{-,.}|>={#CONST{_date_debut}}|oui|et{#_c3_compteur:DATE|substr{0,10}|replace{-,.}|<={#CONST{_date_fin}}|oui}|oui)
+							#SET{nb_classes,#GET{nb_classes}|plus{1}}
+						]
+					<//B_a3_compteur>
+				</BOUCLE_c3_compteur>
+			</BOUCLE_r3_compteur>
+			[(#REM) =============== ]
+			[(#REM) AFFICHAGE TOTAL ]
+			[(#REM) =============== ]
+			<h3 class="menu-title">
+				<span>Les [(#GET{nb_classes}|sinon{0})] classes participantes</span>
+			</h3>
+			[(#REM) ======================= ]
+			[(#REM) AFFICHAGE LISTE CLASSES ]
+			[(#REM) ======================= ]
 			<ul class="filter clearfix option-set" data-filter-group="classe">
-				<BOUCLE_FiltreAnnee(RUBRIQUES){racine} {titre LIKE %(#CONST{_annee_scolaire})%}>
-					#SET{hasYearRub, true}
+				[(#REM) ======== ]
+				[(#REM) BOUCLE 1 ]
+				[(#REM) ======== ]
+				<BOUCLE_FiltreAnnee(RUBRIQUES){racine}{titre LIKE %(#CONST{_annee_scolaire})%}>
+					#SET{hasYearRub,true}
 					<BOUCLE_rubMot(RUBRIQUES){id_parent}{titre_mot=travail_en_cours}>
 						<BOUCLE_rubLoop(RUBRIQUES){id_parent}{tous}>
 							<BOUCLE_filterDate(ARTICLES){id_rubrique}{date>=#CONST{_date_debut}}{date<=#CONST{_date_fin}}>
@@ -154,6 +200,9 @@ et/ou
 						</BOUCLE_rubLoop>
 					</BOUCLE_rubMot>
 				</BOUCLE_FiltreAnnee>
+				[(#REM) ======== ]
+				[(#REM) BOUCLE 2 ]
+				[(#REM) ======== ]
 				<BOUCLE_r3(RUBRIQUES){titre_mot==travail_en_cours}{tous}{si #GET{hasYearRub}|=={false}}{!par date}>
 					<BOUCLE_c3(RUBRIQUES){id_parent}{tous}>
 						<BOUCLE_a3(ARTICLES){id_rubrique}{date>=#CONST{_date_debut}}{date<=#CONST{_date_fin}}>
@@ -180,8 +229,8 @@ et/ou
 				[(#NOM_SITE_SPIP|=={aqueduc.laclasse.com}|oui) #SET{blog,Le blog de Flavie Jones} ]
 				[(#NOM_SITE_SPIP|=={theatre.laclasse.com}|oui) #SET{blog,L'agenda} ]
 
-				[(#MODELE{logo_menu, valeur=ressource, class=menu_logo_ressources menu_logo_type_sidebarView, filter=.ressource_ressources, onclick=callRessource();, title=Ressources})]
-				[(#MODELE{logo_menu, valeur=agora, class=menu_logo_agora menu_logo_type_sidebarView, filter=.ressource_agora, title=L'espace de discussion, onclick=callAgora();})]
+				[(#MODELE{logo_menu, valeur=ressource, class=tooltip menu_logo_ressources menu_logo_type_sidebarView, filter=.ressource_ressources, onclick=callRessource();, title=Ressources})]
+				[(#MODELE{logo_menu, valeur=agora, class=tooltip menu_logo_agora menu_logo_type_sidebarView, filter=.ressource_agora, title=Espace de discussion, onclick=callAgora();})]
 
 				[(#REM)Espace Doc]
 				[(#ENV{restreint}|?{#SET{docId,#ENV{restreint}}, #SET{docId,false}})]
@@ -191,7 +240,7 @@ et/ou
 				<BOUCLE_espace_doc(RUBRIQUES){tous}{racine}{titre==^[20]}{!par titre}{0,1}>
 				[<!-- #ID_RUBRIQUE -->
 				<li class="logo">
-					<a class="logo_menu-doc menu_logo_type_sidebarView" href="(#DESCRIPTIF|textebrut)" title="<:thematique:cartable_ligne:>" target="blank"></a>
+					<a class="logo_menu-doc menu_logo_type_sidebarView tooltip" href="(#DESCRIPTIF|textebrut)" aria-label="<:thematique:cartable_ligne:>" data-tip="<:thematique:cartable_ligne:>" target="blank"></a>
 				</li>
 				]
 				</BOUCLE_espace_doc>

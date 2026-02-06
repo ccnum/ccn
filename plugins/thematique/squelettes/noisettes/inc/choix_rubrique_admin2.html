@@ -34,7 +34,7 @@
 	<B_rub_aut2>[(#GET{affiche}|=={oui}|oui)
 	<div id="choix_rubrique_admin" name="rubrique_admin" class="select">
 	<input type="radio" value="#ENV{restreint}" class="first">
-		<label class="first_label">Publier dans : <span class="highlight">[(#GET{titre}|couper{30})]</span>
+		<label class="first_label">Publier dans <span class="highlight">[(#GET{titre}|couper{30})]</span>
 			<span class="icon icon-down"></span>
 		</label>
 	]
@@ -56,7 +56,7 @@
 		<B_rub2>[(#GET{affiche}|=={oui}|oui)
 			<div id="choix_rubrique_admin" name="rubrique_admin" class="select">
 			<input type="radio" value="#ENV{restreint}" class="first">
-				<label class="first_label">Publier dans : <span class="highlight">[(#GET{titre}|couper{30})]</span><span class="icon icon-down"></span>
+				<label class="first_label">Publier dans <span class="highlight">[(#GET{titre}|couper{30})]</span><span class="icon icon-down"></span>
 				</label>
 			]
 				<div class="choix_rubrique_wrapper">
@@ -84,7 +84,7 @@
 </div>
 ]
 [(#ENV{restreint}|!={0}|oui|et{#ENV{restreint}|!={''}}|et{#ENV{type_restreint}|!={''}}|et{#ENV{type_restreint}|!={travail_en_cours}|oui}|oui)
-<div id="menu_haut_ecrire" class="bloc_titre">
-	<a title="Publier un nouvel article" onClick='createReponse(true, 0, #ENV{restreint});'><span class="icon icon-ecrire"></span></a>
+<div id="menu_haut_ecrire" class="bloc_titre tooltip_bottom" data-tip="Publier un nouvel article" aria-label="Publier un nouvel article">
+	<a onClick='createReponse(true, 0, #ENV{restreint});'><span class="icon icon-ecrire"></span></a>
 </div>
 ]
