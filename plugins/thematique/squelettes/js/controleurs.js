@@ -643,7 +643,7 @@ function callClasses() {
 			'<div class="titre">Travail en cours</div>',
 			'</div>',
 
-			'<div id="sidebarCloseButton">',
+			'<div id="sidebarCloseButton" class="tooltip_left" data-tip="Fermer la modale" aria-label="Fermer la modale">',
 			'<span class="icon icon-close"></span>',
 			'</div>',
 
@@ -695,7 +695,7 @@ function callLivrables() {
 			'<div class="titre">Espace livrables</div>',
 			'</div>',
 
-			'<div id="sidebarCloseButton">',
+			'<div id="sidebarCloseButton" class="tooltip_left" data-tip="Fermer la modale" aria-label="Fermer la modale">',
 			'<span class="icon icon-close"></span>',
 			'</div>',
 
@@ -808,7 +808,7 @@ function callRessource() {
 			'<div class="titre">Espace ressources</div>',
 			'</div>',
 
-			'<div id="sidebarCloseButton">',
+			'<div id="sidebarCloseButton" class="tooltip_left" data-tip="Fermer la modale" aria-label="Fermer la modale">',
 			'<span class="icon icon-close"></span>',
 			'</div>',
 
@@ -1087,7 +1087,7 @@ function callAgora() {
 			'<div class="titre">Agora</div>',
 			'</div>',
 
-			'<div id="sidebarCloseButton">',
+			'<div id="sidebarCloseButton" class="tooltip_left" data-tip="Fermer la modale" aria-label="Fermer la modale">',
 			'<span class="icon icon-close"></span>',
 			'</div>',
 
@@ -1408,6 +1408,9 @@ function loadContentInMainSidebar(
 			">
 				<div
 					id="sidebarCloseButton"
+					class="tooltip_bottom_left"
+					data-tip="Fermer la modale"
+					aria-label="Fermer la modale"
 					style="width: fit-content;margin-bottom:-60px;"
 				>
 					<span class="icon icon-close"></span>

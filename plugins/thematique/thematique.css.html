@@ -1189,12 +1189,15 @@ a:hover {
 
 .tooltip,
 .tooltip_bottom,
-.tooltip_bottom_left {
+.tooltip_bottom_left,
+.tooltip_left {
   position: relative;
 }
+
 .tooltip::after,
 .tooltip_bottom::after,
-.tooltip_bottom_left::after {
+.tooltip_bottom_left::after,
+.tooltip_left::after {
   content: attr(data-tip);
   position: absolute;
   background: #3C3C4A;
@@ -1210,6 +1213,7 @@ a:hover {
   transition: transform 0.2s ease, opacity 0.2s ease;
 }
 
+/* TOOLTIP TOP */
 .tooltip::after {
   left: 0;
   top: -5px;
@@ -1221,6 +1225,8 @@ a:hover {
   transform: translate(0, -100%) scale(1);
   opacity: 1;
 }
+
+/* TOOLTIP BOTTOM */
 .tooltip_bottom::after {
   left: 0;
   top: 100%;
@@ -1232,15 +1238,30 @@ a:hover {
   transform: translate(0, 5px) scale(1);
   opacity: 1;
 }
+
+/* TOOLTIP BOTTOM LEFT */
 .tooltip_bottom_left::after {
   top: calc(100% + 10px);
-  right: 1;
+  right: 0;
   transform: scale(0);
   transform-origin: top right;
   padding: 10px;
 }
 .tooltip_bottom_left:hover::after {
   transform: scale(1);
+  opacity: 1;
+}
+
+/* TOOLTIP LEFT */
+.tooltip_left::after {
+  top: 50%;
+  right: calc(100%);
+  transform: translate(0, -50%) scale(0);
+  transform-origin: center right;
+  padding: 10px;
+}
+.tooltip_left:hover::after {
+  transform: translate(0, -50%) scale(1);
   opacity: 1;
 }
 
