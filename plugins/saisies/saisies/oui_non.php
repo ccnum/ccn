@@ -6,11 +6,13 @@
  * @package SPIP\Saisies\oui_non
  **/
 
-// Sécurité
-if (!defined('_ECRIRE_INC_VERSION')) {
-	return;
-}
 
+function oui_non_get_markup(array $saisie): array {
+	return [
+		'conteneur_tag' => 'fieldset',
+		'conteneur_label' => 'legend',
+	];
+}
 
 /**
  * Vérifie que la valeur postée

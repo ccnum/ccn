@@ -120,13 +120,13 @@ options:
       nom: 'validation'
       label: '<:saisies:option_groupe_validation:>'
     saisies:
+      -  'inclure:saisies/_base/obligatoire.yaml'
       -
         saisie: 'input'
         options:
           nom: 'longueur_max'
           label: '<:saisies:option_maxlength_label:>'
           explication: '<:saisies:option_maxlength_explication:>'
-      -  'inclure:saisies/_base/obligatoire.yaml'
 options_dev:
       - 'inclure:saisies/_base/options_dev.yaml'
 defaut:

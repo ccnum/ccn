@@ -7,10 +7,7 @@
  **/
 
 
-// Sécurité
-if (!defined('_ECRIRE_INC_VERSION')) {
-	return;
-}
+
 
 /**
  * Un fieldset, c'est une saisie contenante
