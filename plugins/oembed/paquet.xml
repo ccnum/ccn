@@ -1,7 +1,7 @@
 <paquet
 	prefix="oembed"
 	categorie="multimedia"
-	version="3.4.0"
+	version="3.5.0"
 	etat="stable"
 	compatibilite="[4.1.0;4.*]"
 	logo="prive/themes/spip/images/oembed-64.svg"

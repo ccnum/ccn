@@ -6,9 +6,6 @@
  *
  */
 
-if (!defined('_ECRIRE_INC_VERSION')) {
-	return;
-}
 
 /**
  * Lister les providers connus
@@ -123,6 +120,37 @@ function oembed_lister_providers($avec_provider_interdits = false) {
 		$providers = array_filter($providers);
 	}
 
+	return $providers;
+}
+
+/**
+ * Reçois un tableau de providers et renvoie les expression régulières (sans marqueur)
+ * correspondant aux clés
+ * utilisé pour remplir _IFRAME_SAFE_DOMAINS
+ * Par rapport au tableau fourni en entré, on prend que les clés, et on supprime
+ *  - marqueur regexp
+ *  - marqueur protocole
+ *  - chemin au sein d'un domaine
+ * Et on transforme si besoin les joker en joker regexp
+ * @param array $providers tableau issue de oembed_lister_providers
+ * @param string mark d'expression régulière à échappé
+ * @return array $tableau marqué
+**/
+function oembed_allowed_domains(array $providers): array {
+	$providers = array_keys($providers);
+	$providers = array_map(function ($p) {
+		$is_regexp = (substr($p, 0, 1) === '#');
+		if ($is_regexp) {
+			$p = preg_replace(',#.*$u,', '#', $p);
+			$p = trim($p, '#');
+		} else {
+			$p = str_replace('*', '(.+)', $p);
+		}
+		$p = str_replace(['https://' ,'http://', 'https?://', 'http\:', 'https\:'], '', $p);
+		$part = explode('/', $p);
+		$p = $part[0];
+		return $p;
+	}, $providers);
 	return $providers;
 }
 
