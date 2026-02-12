@@ -39,6 +39,14 @@ function verifier_email_dist($valeur, $options = []) {
 		return _T('verifier:erreur_email_nondispo', ['email' => echapper_tags($valeur)]);
 	}
 
+	//Si on n'autorise qu'un seul email
+	if ($options['unique'] ?? false) {
+		$emails = verifier_email_explode_emails($valeur);
+		if (count($emails) > 1) {
+			return _T('verifier:erreur_email_unique');
+		}
+	}
+
 	// Choix du mode de verification de la syntaxe des courriels
 	if (!in_array($options['mode'] ?? '', ['normal','rfc5322','strict'])) {
 		$mode = 'normal';
@@ -55,9 +63,10 @@ function verifier_email_dist($valeur, $options = []) {
 
 	if (!$fonction_verif($valeur)) {
 		return _T('verifier:erreur_email', ['email' => echapper_tags($valeur)]);
-	} else {
-		return '';
 	}
+
+
+	return '';
 }
 
 /**
@@ -135,6 +144,17 @@ function verifier_email_de_maniere_stricte($valeur) {
 		// "Marie Toto <Marie@toto.com>"
 		$adresse = trim(preg_replace(',^[^<>\"]*<([^<>\"]+)>$,i', '\\1', $adresse));
 		if (!preg_match('/^([A-Za-z0-9]){1}([A-Za-z0-9]|-|_|\.)*@[A-Za-z0-9]([A-Za-z0-9]|-|\.){1,}\.[A-Za-z]{2,18}$/', $adresse)) {
+			return false;
+		}
+		if (strpos($adresse, '.@') !== false) {
+			return false;
+		}
+		if (strpos($adresse, '..') !== false) {
+			return false;
+		}
+		// Vérifier qu'avant le @ on 64 charactère ou moins
+		$explode = explode('@', $adresse);
+		if (strlen($explode[0]) > 64) {
 			return false;
 		}
 	}
