@@ -3,13 +3,9 @@
 // extrait automatiquement de https://trad.spip.net/tradlang_module/paquet-oembed?lang_cible=es
 // ** ne pas modifier le fichier **
 
-if (!defined('_ECRIRE_INC_VERSION')) {
-	return;
-}
-
-$GLOBALS[$GLOBALS['idx_lang']] = array(
+return [
 
 	// O
 	'oembed_description' => 'oEmbed cliente/proveedor para SPIP.',
-	'oembed_slogan' => 'oEmbed cliente/proveedor para SPIP'
-);
+	'oembed_slogan' => 'oEmbed cliente/proveedor para SPIP',
+];

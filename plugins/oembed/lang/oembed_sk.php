@@ -3,11 +3,7 @@
 // extrait automatiquement de https://trad.spip.net/tradlang_module/oembed?lang_cible=sk
 // ** ne pas modifier le fichier **
 
-if (!defined('_ECRIRE_INC_VERSION')) {
-	return;
-}
-
-$GLOBALS[$GLOBALS['idx_lang']] = array(
+return [
 
 	// A
 	'aucun_provider' => 'Žiaden poskytovateľ',
@@ -41,5 +37,5 @@ $GLOBALS[$GLOBALS['idx_lang']] = array(
 	'titre_configuration_avancee_providers' => 'Dostať sa k podrobným nastaveniam poskytovateľov v oEmbede',
 	'titre_configurer_oembed' => 'Nastaviť oEmbed',
 	'titre_configurer_providers' => 'oEmbedu – Poskytovatelia',
-	'titre_oembed' => 'oEmbed'
-);
+	'titre_oembed' => 'oEmbed',
+];
