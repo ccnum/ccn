@@ -12,6 +12,7 @@ return [
 
 	// E
 	'erreur_attribut_class' => 'La syntaxe de cet attribut class est invalide.',
+	'erreur_email_unique' => 'Une seule adresse possible',
 	'erreur_code_postal' => 'Ce code postal est incorrect.',
 	'erreur_comparaison_different' => 'La valeur doit être différente du champ "@nom_champ@".',
 	'erreur_comparaison_different_type' => 'La valeur doit être différente ou de type différent que le champ "@nom_champ@".',
@@ -114,6 +115,7 @@ return [
 	'option_email_mode_label' => 'Mode de vérification des courriels',
 	'option_email_mode_normal' => 'Vérification normale de SPIP',
 	'option_email_mode_strict' => 'Vérification moins permissive',
+	'option_email_unique_label_case' => 'Ne pas autoriser à mettre plusieurs adresses',
 	'option_entier_max_label' => 'Valeur maximum',
 	'option_entier_min_label' => 'Valeur minimum',
 	'option_fichiers_dimension_autoriser_rotation_label' => 'Tenir compte d’une rotation de l’image ?',
@@ -145,8 +147,8 @@ return [
 	'option_slug_separateur_label' => 'Séparateur',
 	'option_taille_max_label' => 'Taille maximum',
 	'option_taille_min_label' => 'Taille minimum',
+	'option_telephone_pays_explication' => 'Sur deux lettres (exemple : FR)',
 	'option_telephone_pays_label' => 'Code pays à vérifier',
-	'option_telephone_pays_explication' => 'Sur deux lettres (exemple : FR)',
 	'option_url_mode_complet' => 'Vérification complète de l’url',
 	'option_url_mode_label' => 'Mode de vérification des urls',
 	'option_url_mode_php_filter' => 'Vérification complète de l’url via le filtre FILTER_VALIDATE_URL de php',

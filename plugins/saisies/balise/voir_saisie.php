@@ -6,11 +6,6 @@
  * @package SPIP\Saisies\Balises
  **/
 
-// Sécurité
-if (!defined('_ECRIRE_INC_VERSION')) {
-	return;
-}
-
 /**
  * Compile la balise `#VOIR_SAISIE` qui retourne le code HTML de la vue d'une saisie indiquée
  *

@@ -6,10 +6,6 @@
  * @package SPIP\Saisies\Balises
  */
 
-// Sécurité
-if (!defined('_ECRIRE_INC_VERSION')) {
-	return;
-}
 
 /**
  * Compile la balise `#CONFIGURER_SAISIE`

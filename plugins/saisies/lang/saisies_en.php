@@ -39,6 +39,7 @@ Load javascript and CSS on all pages, in the &lt;head&gt; tag',
 	'construire_configurer_globales_label' => 'Configure global options',
 	'construire_confirmer_supprimer_champ' => 'Do you really want to delete this field?',
 	'construire_info_nb_champs_masques' => '@nb@ hidden field(s) the time to set up the group.',
+	'construire_position_actuelle' => '➡ Current position',
 	'construire_position_explication' => 'Specify before which other field this one should be placed.',
 	'construire_position_fin_formulaire' => 'At the end of the form',
 	'construire_position_fin_groupe' => 'At the end of the group @groupe@',
@@ -116,8 +117,8 @@ You will find <a href="https://contrib.spip.net/5080" target="_blank" rel="noope
 	'option_cols_explication' => 'Field width in characters. This option is not always applied/used because the CSS styles of your site may override it.',
 	'option_cols_label' => 'Width',
 	'option_conteneur_class_label' => 'Additional CSS classes on the container',
-	'option_datas_explication' => 'You must specify a choice for each row in the form of "key|label of the choice".<br />The key must be unique, short, unambiguous and not prone to be changed later.<br />', # MODIF
-	'option_datas_grille_explication' => 'You must indicate one choice per line in the form "key|choice label" or "key|left label|right label"<br />The key must be unique, short, clear and must not be changed afterwards.<br />', # MODIF
+	'option_datas_explication' => 'You must specify a choice for each row in the form of "key|label of the choice".<br />The key must be unique, short, unambiguous and not prone to be changed later.',
+	'option_datas_grille_explication' => 'You must indicate one choice per line in the form "key|choice label" or "key|left label|right label"<br />The key must be unique, short, clear and must not be changed afterwards.',
 	'option_datas_label' => 'List of the available choices',
 	'option_datas_sous_groupe_explication' => 'You can indicate a choice by line using the format "key|Label" of the choice. <br />The key must be unique, brief, clear and must not be changed afterwards.<br />You can indicate the start of a subgroup using the format "*Subgroup title". To end a subgroup you can start another one, or put a line containing only  "/*".',
 	'option_defaut_label' => 'Default value',
@@ -142,7 +143,7 @@ You will find <a href="https://contrib.spip.net/5080" target="_blank" rel="noope
 	'option_horaire_label' => 'Schedule',
 	'option_horaire_label_case' => 'Allow to fill in the time',
 	'option_id_groupe_label' => 'Keyword group',
-	'option_info_obligatoire_explication' => 'You can change the default required indication: <i>[Required]</i>. To keep the default information, leave it blank. To display nothing, put a text composed only of space.',
+	'option_info_obligatoire_explication' => 'You can change the default required indication: <i>[Required]</i>. To keep the default information, leave it blank. To display nothing, put a text composed only of space.', # MODIF
 	'option_info_obligatoire_label' => 'Indication of obligation',
 	'option_inserer_barre_choix_edition' => 'complete editing toolbar',
 	'option_inserer_barre_choix_forum' => 'forums toolbar',
@@ -166,7 +167,7 @@ You will find <a href="https://contrib.spip.net/5080" target="_blank" rel="noope
 	'option_nom_label' => 'Field name',
 	'option_obligatoire_label' => 'Required field',
 	'option_onglet_label' => 'Tab',
-	'option_onglet_label_case' => 'Display as a tab.', # MODIF
+	'option_onglet_label_case' => 'Display as a tab.',
 	'option_option_destinataire_intro_label' => 'Label of first choice empty (in list format)',
 	'option_option_intro_label' => 'Label for the first empty choice',
 	'option_option_statut_label' => 'Show the status',
@@ -267,7 +268,7 @@ You will find <a href="https://contrib.spip.net/5080" target="_blank" rel="noope
 	'verifier_saisies_option_data_sous_groupes_interdits' => 'Incorrect syntax. Subgroups are not allowed.',
 	'verifier_saisies_option_data_verifier_cles_erreurs' => 'Incorrect syntax. Some keys do not meet the criteria.',
 	'verifier_valeurs_acceptables_explication' => 'Check that the posted value is among those allowed when defining fields. Do not use this option if you dynamically fill fields in your templates or fill them with javascript.', # MODIF
-	'verifier_valeurs_acceptables_label' => 'Check the acceptable values', # MODIF
+	'verifier_valeurs_acceptables_label' => 'Check the feasible values',
 	'vue_sans_reponse' => '<i>(no data entered)</i>',
 
 	// Z

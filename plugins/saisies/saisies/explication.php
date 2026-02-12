@@ -7,10 +7,7 @@
  **/
 
 
-// Sécurité
-if (!defined('_ECRIRE_INC_VERSION')) {
-	return;
-}
+
 
 /**
  * Une explication, ca n'est pas un champ

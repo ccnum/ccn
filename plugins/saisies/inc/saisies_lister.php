@@ -6,10 +6,7 @@
  * @return SPIP\Saisies\Listes
  **/
 
-// Sécurité
-if (!defined('_ECRIRE_INC_VERSION')) {
-	return;
-}
+
 
 /**
  * Prend la description complète du contenu d'un formulaire et retourne
@@ -471,7 +468,6 @@ function saisies_autonomes() {
 
 	return $saisies_autonomes;
 }
-
 
 /**
  * Cherche une saisie par son id, son nom ou son chemin et renvoie soit la saisie, soit son chemin

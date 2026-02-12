@@ -6,9 +6,12 @@
  * @package SPIP\valeurs\radio
  **/
 
-// Sécurité
-if (!defined('_ECRIRE_INC_VERSION')) {
-	return;
+
+function radio_get_markup(array $saisie): array {
+	return [
+		'conteneur_tag' => 'fieldset',
+		'conteneur_label' => 'legend',
+	];
 }
 
 /**

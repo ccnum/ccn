@@ -5,6 +5,9 @@
 
 return [
 
+	// C
+	'contraintes_particulieres' => 'Contraintes particulières',
+
 	// D
 	'data_choix' => 'Choix possibles :',
 
@@ -121,10 +124,12 @@ return [
 	'option_fichiers_mime_image_web_label' => 'Autoriser uniquement les images web',
 	'option_fichiers_mime_label' => 'Type Mime et extension',
 	'option_fichiers_mime_pas_de_verification_label' => 'Autoriser tous les types et extensions (déconseillé)',
-	'option_fichiers_mime_specifique_label' => 'Autoriser  uniquement les types et extensions cochées ci-dessous', # MODIF
+	'option_fichiers_mime_specifique_label' => 'Autoriser uniquement les types et extensions cochées ci-dessous',
 	'option_fichiers_mime_tout_mime_label' => 'Autoriser tous les types Mime et extensions connues de SPIP',
 	'option_fichiers_taille_max_label' => 'Poids maximum du fichier (en kio)',
 	'option_fichiers_type_mime_label' => 'Cocher les types MIME autorisés',
+	'option_id_document_extension_label' => 'Présicer la liste des extensions autorisées (sérapées par une virgule)',
+	'option_id_document_media_label' => 'Présicer la liste des types de media autorisés (sérapés par une virgule)',
 	'option_id_objet_objet_label' => 'Nom de l’objet (au singulier)',
 	'option_regex_modele_explication' => 'Masque complet, y compris les caractères encadrants et les options. Pour l’utilisation des masques, reportes-toi à <a href="http://fr2.php.net/manual/fr/reference.pcre.pattern.syntax.php" class="spip_out" target="_blank" rel="noopener noreferrer">l’aide en ligne de PHP</a>.',
 	'option_regex_modele_label' => 'Masque à tester',
@@ -141,6 +146,8 @@ return [
 	'option_slug_separateur_label' => 'Séparateur',
 	'option_taille_max_label' => 'Taille maximum',
 	'option_taille_min_label' => 'Taille minimum',
+	'option_telephone_pays_explication' => 'Sur deux lettres (exemple : FR)',
+	'option_telephone_pays_label' => 'Code pays à vérifier',
 	'option_url_mode_complet' => 'Vérification complète de l’url',
 	'option_url_mode_label' => 'Mode de vérification des urls',
 	'option_url_mode_php_filter' => 'Vérification complète de l’url via le filtre FILTER_VALIDATE_URL de php',

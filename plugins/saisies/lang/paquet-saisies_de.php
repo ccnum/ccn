@@ -6,7 +6,7 @@
 return [
 
 	// S
-	'saisies_description' => 'Dieses Plugin erleichtert die Erstellung von Eingabefeldern für Formulare und bietet einen Tag #SAISIE. Das erzeugte HTML ist mit der Nomenklatur der von SPIP vorgeschlagenen Formulare kompatibel.',
+	'saisies_description' => 'Dieses Plugin erleichtert die Erstellung von Eingabefeldern für Formulare und bietet einen Tag #SAISIE. Das erzeugte HTML ist mit der Nomenklatur der von SPIP vorgeschlagenen Formulare kompatibel.', # MODIF
 	'saisies_nom' => 'Eingabefelder für Formulare',
 	'saisies_slogan' => 'Unkompliziertes Erstellen von Eingabefeldern für Formulare.',
 ];

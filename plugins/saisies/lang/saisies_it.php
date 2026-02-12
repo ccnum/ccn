@@ -146,7 +146,7 @@ Troverai la <a href="https://contrib.spip.net/5080" target="_blank" rel="noopene
 	'option_horaire_label' => 'Orario',
 	'option_horaire_label_case' => 'Consenti anche l’inserimento dell’ora',
 	'option_id_groupe_label' => 'Gruppo di parole',
-	'option_info_obligatoire_explication' => 'E’ possibile modificare l’indicazione di obbligo per impostazione predefinita: <i>[Obbligatorio]</i>. Per mantenere le informazioni di default, non inserire niente. Per non visualizzare niente, metti un testo composto solo da spazio.',
+	'option_info_obligatoire_explication' => 'E’ possibile modificare l’indicazione di obbligo per impostazione predefinita: <i>[Obbligatorio]</i>. Per mantenere le informazioni di default, non inserire niente. Per non visualizzare niente, metti un testo composto solo da spazio.', # MODIF
 	'option_info_obligatoire_label' => 'Indicazione obbligatorio',
 	'option_inserer_barre_choix_edition' => 'barra del testo completa',
 	'option_inserer_barre_choix_forum' => 'barra dei forum',

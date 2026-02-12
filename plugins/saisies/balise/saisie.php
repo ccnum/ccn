@@ -6,9 +6,6 @@
  * @package SPIP\Saisies\Balises
  **/
 
-if (!defined('_ECRIRE_INC_VERSION')) {
-	return;
-}
 
 // pour ne pas interferer avec d'eventuelles futures fonctions du core
 // on met le tout dans une classe ; les fonctions sont autonomes.

@@ -1,9 +1,6 @@
 <?php
 
-// Sécurité
-if (!defined('_ECRIRE_INC_VERSION')) {
-	return;
-}
+
 
 function construire_configuration_saisie($saisie, $avec_nom = 'non') {
 	include_spip('inc/yaml');

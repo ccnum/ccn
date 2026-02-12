@@ -34,6 +34,8 @@
 		obligatoire=oui})]
 
 ]
+#SET{saisie,#ENV**|unserialize|saisies_saisie_from_env}
+
 [(#REM)<!-- on ne génère une saisie que si elle a un nom -->]
 [(#ENV{nom}|oui)
 
@@ -45,8 +47,16 @@
 	[(#SET{name,#ENV{nom}|saisie_nom2name})]
 	[(#SET{nom,#ENV{nom}|saisie_name2nom})]
 
-	[(#REM)<!-- caractère obligatoire, désactivé ou readonly de la saisie-->]
+	[(#REM)<!-- caractère obligatoire (facultatif), désactivé ou readonly de la saisie-->]
 	#SET{obligatoire,#ENV{obligatoire}|et{#ENV{obligatoire}|!={non}}|?{obligatoire,''}}
+
+	#SET{facultatif,''}
+	[(#ENV{_saisies/options/obligatoire_defaut}|oui)
+		[(#ENV{facultatif}|oui)
+			#SET{facultatif,'facultatif'}
+		]
+	]
+
 	#SET{disable,#ENV{disable,#ENV{disable_avec_post}}|et{#ENV{disable,#ENV{disable_avec_post}}|!={non}}|?{#ENV{disable}|is_array|?{#ENV{disable,#ARRAY},disabled},''}}
 	#SET{readonly,#ENV{readonly}|et{#ENV{readonly}|!={non}}|?{readonly,''}}
 
@@ -62,17 +72,11 @@
 	[(#ENV{type_saisie}|in_array{#GET{saisies_autonomes}}|non)
 
 		[(#REM)<!-- définir l'encapsulation de la saisie et du label (problèmatique d'accessibilité)-->]
-		#SET{conteneur_tag,div}
-		#SET{conteneur_label,label}
+		#SET{markup,#GET{saisie}|saisies_saisie_get_markup}
+		#SET{conteneur_tag,#GET{markup/conteneur_tag}}
+		#SET{conteneur_label,#GET{markup/conteneur_label}}
 		#SET{attribut_for, #GET{id}}
-		[(#ENV{type_saisie}|in_array{#LISTE{oui_non,radio,checkbox,choix_grille}}|oui)
-			#SET{conteneur_tag,fieldset}
-			#SET{conteneur_label,legend}
-			#SET{attribut_for,''}
-		]
-		[(#ENV{type_saisie}|=={case}|et{#ENV{label_case}|oui}|et{#ENV{label}|oui})
-			#SET{conteneur_tag,fieldset}
-			#SET{conteneur_label,legend}
+		[(#GET{conteneur_label}|!={label}|oui)
 			#SET{attribut_for,''}
 		]
 
@@ -98,11 +102,21 @@
 
 		[(#REM)<!-- et maintenant début de la saisie -->]
 		<!--!inserer_saisie_editer-->
-		<[(#GET{conteneur_tag})] class="editer editer_[(#ENV{nom}|saisie_nom2classe)][ (#GET{obligatoire})][ (#GET{erreur}|oui)erreur][ (#GET{disable}|oui)disabled][ (#ENV{conteneur_class,#ENV{li_class}})][ (#ENV{type_saisie}|saisie_type2classe)]"[ data-id="(#ENV{id_saisie})"][ data-afficher_si="(#ENV*{afficher_si}|saisies_afficher_si_js{#ENV{_saisies}})"]>
+		<[(#GET{conteneur_tag})] class="editer editer_[(#ENV{nom}|saisie_nom2classe)][ (#GET{obligatoire})][ (#GET{facultatif})][ (#GET{erreur}|oui)erreur][ (#GET{disable}|oui)disabled][ (#ENV{conteneur_class,#ENV{li_class}})][ (#ENV{type_saisie}|saisie_type2classe)]"[ data-id="(#ENV{id_saisie})"][ data-afficher_si="(#ENV*{afficher_si}|saisies_afficher_si_js{#ENV{_saisies}})"]>
 			#ENV**{inserer_debut}
 
 			[(#REM)<!-- tout ce qui se trouve avant les champs de form au sens html -->]
-			[<[(#GET{conteneur_label})]  class="editer-label[ (#GET{conteneur_label}|=={legend}|oui)label][ (#ENV{label_class})]"[ for="(#GET{attribut_for})"]>(#ENV*{label})[(#ENV{aide}|oui)#AIDER{#ENV{aide}}][<span class='obligatoire'>(#GET{obligatoire}|oui)[(#ENV*{info_obligatoire}|is_null|?{<:info_obligatoire_02:>,#ENV*{info_obligatoire}})]</span>]</[(#GET{conteneur_label})]>]
+			[
+				<[(#GET{conteneur_label})]  class="editer-label[ (#GET{conteneur_label}|=={legend}|oui)label][ (#ENV{label_class})]"[ for="(#GET{attribut_for})"]>(#ENV*{label})[(#ENV{aide}|oui)#AIDER{#ENV{aide}}]
+				[(#ENV{_saisies/options/obligatoire_defaut}|non)
+					[<span class='obligatoire'>(#GET{obligatoire}|oui)[(#ENV*{info_obligatoire}|is_null|?{<:info_obligatoire_02:>,#ENV*{info_obligatoire}})]</span>]
+				]
+				[(#GET{facultatif}|oui)
+					<span
+						class='facultatif'>[(#ENV*{info_facultatif}|is_null|?{<:saisies:info_facultatif:>,#ENV*{info_facultatif}})]</span>
+				]
+				</[(#GET{conteneur_label})]>
+			]
 
 			[<span class='erreur_message' id="[erreur_(#GET{id})]">(#GET{erreur})</span> #SET{describedby, #GET{describedby}|concat{' ',erreur_#GET{id}}} ]
 			[<p class="explication" id="explication_#GET{id}">(#ENV*{explication})</p>]

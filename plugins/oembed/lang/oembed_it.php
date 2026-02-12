@@ -3,11 +3,7 @@
 // extrait automatiquement de https://trad.spip.net/tradlang_module/oembed?lang_cible=it
 // ** ne pas modifier le fichier **
 
-if (!defined('_ECRIRE_INC_VERSION')) {
-	return;
-}
-
-$GLOBALS[$GLOBALS['idx_lang']] = array(
+return [
 
 	// A
 	'aucun_provider' => 'Nessun provider',
@@ -45,5 +41,5 @@ $GLOBALS[$GLOBALS['idx_lang']] = array(
 	'titre_configuration_avancee_providers' => 'Accedi alla configurazione avanzata dei provider oEmbed',
 	'titre_configurer_oembed' => 'Configura oEmbed',
 	'titre_configurer_providers' => 'Provider oEmbed',
-	'titre_oembed' => 'oEmbed'
-);
+	'titre_oembed' => 'oEmbed',
+];

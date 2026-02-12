@@ -3,14 +3,17 @@
 /**
  * Fonctions spécifiques à une saisie
  *
- * @package SPIP\Saisies\case
+ * @package SPIP\Saisies\choix_grille
  **/
 
-// Sécurité
-if (!defined('_ECRIRE_INC_VERSION')) {
-	return;
-}
 
+
+function choix_grille_get_markup(array $saisie): array {
+	return [
+		'conteneur_tag' => 'fieldset',
+		'conteneur_label' => 'legend',
+	];
+}
 
 /**
  * Vérifie que la valeur postée
