@@ -1,7 +1,7 @@
 <paquet
 	prefix="saisies"
 	categorie="outil"
-	version="6.0.3"
+	version="6.1.1"
 	etat="stable"
 	compatibilite="[4.1.0;4.*.*]"
 	logo="saisies.svg"

@@ -188,7 +188,7 @@ Indique as opções em forma de tabela, exemplo: <code>["opção1","opção3"]</
 	'option_id_explication' => 'Será automaticamente prefixado por <code>champ_</code>.',
 	'option_id_groupe_label' => 'Grupo de palavras',
 	'option_id_label' => 'Atributo <code>id</code> da entrada',
-	'option_info_obligatoire_explication' => 'Você pode alterar o valor padrão da indicação de obrigatoriedade: <i>[Obrigatório]</i>. Para manter a informação padrão, deixar vazio. Para não exibir nada, insira apenas um espaço.',
+	'option_info_obligatoire_explication' => 'Você pode alterar o valor padrão da indicação de obrigatoriedade: <i>[Obrigatório]</i>. Para manter a informação padrão, deixar vazio. Para não exibir nada, insira apenas um espaço.', # MODIF
 	'option_info_obligatoire_label' => 'Indicação de obrigatoriedade',
 	'option_inserer_barre_choix_edition' => 'barra de formatação completa',
 	'option_inserer_barre_choix_forum' => 'barra dos fóruns',

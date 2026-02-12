@@ -16,7 +16,9 @@
 	}
 )]
 [(#ENV{type_choix}|=={radio}|oui)
-	#SET{data,#ARRAY{'',#VAL{saisies:saisie_champ_option_aucun}|_T}|array_merge{#GET{data}}}
+	[(#ENV{cacher_option_intro}|non)
+		#SET{data,#ARRAY{'',#VAL{saisies:saisie_champ_option_aucun}|_T}|array_merge{#GET{data}}}
+	]
 ]
 [(#GET{data}|ou{#ENV{obligatoire}}|oui)
 	<INCLURE{fond=saisies/_base,env,type_saisie=#ENV{type_choix,radio},data=#GET{data},option_intro=<:saisies:saisie_champ_option_aucun:>}>

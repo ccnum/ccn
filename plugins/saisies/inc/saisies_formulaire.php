@@ -6,10 +6,7 @@
  * @package SPIP\Saisies\Saisies
  **/
 
-// Sécurité
-if (!defined('_ECRIRE_INC_VERSION')) {
-	return;
-}
+
 
 
 /**
@@ -41,6 +38,7 @@ function saisies_chercher_formulaire($form, $args, $je_suis_poste = false) {
 		$saisies = false;
 	} else {
 		$saisies = saisies_appliquer_depublie_recursivement($saisies);// Pour le cas des constructeurs
+		$saisies = saisies_appliquer_option_globale_obligatoire_defaut($saisies);
 		if (isset($saisies['options']['prefixe_id'])) {
 			$saisies = saisies_prefixer_id($saisies, $saisies['options']['prefixe_id']);
 		}
@@ -172,4 +170,97 @@ function saisies_determiner_options_demandees_resumer_etapes_futures(array $opti
 		$options[] = 'label';
 	}
 	return $options;
+}
+
+/**
+ * @internal
+ * Ne jamais appeler directement, seule la fonction
+ * @saisies_appliquer_option_globale_obligatoire_defaut fait appel à cette
+ * fonctions.
+ * Prend un tableau de saisies
+ * Regarde si l'option globale `obligatoire_defaut` est activée
+ * Dans ce cas
+ * Activer obligatoire sur chaque champ, sauf ceux qui sont marqués comme
+ * facultatif, ce qui permet
+ *		1) D'avoir le required facilement sans avoir à faire des tests complexes
+ *		dans le squelette de chaque type de saisie
+ *		2) De faire la vérification côté PHP si besoin
+**/
+function saisies_activer_option_globale_obligatoire_defaut(array $saisies): array {
+	// Enlever les options globales avant de boucler
+	$options_globales = $saisies['options'];
+	unset($saisies['options']);
+
+	// Une petite function anonyme pour bien faire les choses, que l'on
+	$f = function(array $saisies, $callback): array {
+		foreach ($saisies as &$saisie) {
+			if (saisies_saisie_est_champ($saisie)) {
+				$saisie['options']['obligatoire'] = 'on';
+				if ($saisie['options']['facultatif'] ?? '') {
+					unset($saisie['options']['obligatoire']);
+				}
+			}
+			if (isset($saisie['saisies'])) {
+				$saisie['saisies'] = $callback($saisie['saisies'], $callback);
+			}
+		}
+		return $saisies;
+	};
+
+	// Et l'on appelle cette fonction en la passant à elle même
+	$saisies = $f($saisies, $f);
+	// Rétablir les options globales
+	$saisies = array_merge(['options' => $options_globales], $saisies);
+	return $saisies;
+}
+
+
+/**
+ * @internal
+ * Ne jamais appeler directement, seule la fonction
+ * @saisies_appliquer_option_globale_obligatoire_defaut fait appel à cette
+ * fonctions.
+ * Prend un tableau de saisies, informe que tous les champs sont obligatoires, sauf mentions contraires
+ *
+**/
+function saisies_informer_option_globale_obligatoire_defaut(array $saisies): array {
+	$texte = $saisies['options']['obligatoire_defaut_texte'] ?? '';
+	if (!$texte) {
+		$texte = _T('saisies:option_globale_obligatoire_defaut_texte');
+	}
+	$saisie = [
+		'saisie' => 'explication',
+		'options' => [
+			'nom' => '@obligatoire_defaut_texte',
+			'texte' => $texte,
+			'alerte_type' => 'info',
+			'alerte_role' => 'alert',
+			'hors_constructeur' => 'true',
+		]
+	];
+	$saisies = saisies_inserer_avant($saisies, $saisie, [0]);
+	return $saisies;
+}
+
+
+/**
+ * Si l'option globale 'obligatoire' est activée
+ * Appliquer obligatoire à tous les champs, sauf les facultatifs
+ * et informe que les champs sont obligatoires
+**/
+function saisies_appliquer_option_globale_obligatoire_defaut(array $saisies): array {
+	if ($saisies['options']['obligatoire_defaut'] ?? '') {
+		$saisies = saisies_activer_option_globale_obligatoire_defaut($saisies);
+		$saisies = saisies_informer_option_globale_obligatoire_defaut($saisies);
+		$saisies = saisies_ajouter_option_globale_conteneur_class($saisies, 'obligatoire_defaut');
+	}
+	return $saisies;
+}
+
+/**
+ * Inserer une classe CSS au conteneur globale des saisies
+ **/
+function saisies_ajouter_option_globale_conteneur_class(array $saisies, string $class): array {
+	$saisies['options']['conteneur_class'] = trim(($saisies['options']['conteneur_class'] ?? '') . " $class");
+	return $saisies;
 }

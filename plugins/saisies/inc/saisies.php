@@ -6,10 +6,7 @@
  * @package SPIP\Saisies\Saisies
  **/
 
-// Sécurité
-if (!defined('_ECRIRE_INC_VERSION')) {
-	return;
-}
+
 
 // Différentes méthodes pour trouver les saisies
 include_spip('inc/saisies_lister');

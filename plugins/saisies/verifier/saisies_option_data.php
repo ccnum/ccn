@@ -6,10 +6,7 @@
  * @plugin     saisies
  */
 
-// Sécurité
-if (!defined('_ECRIRE_INC_VERSION')) {
-	return;
-}
+
 /**
  * Vérifier qu'une saisie est sous forme d'une chaine transformable en tableau de data
  * C'est-à-dire de la forme cle|valeur

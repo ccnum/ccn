@@ -14,19 +14,19 @@
  * 	string  // nom du mois dans la langue courante : janvier, février, etc.
  * >
  */
-function saisies_lister_date_noms_mois(?string $locale): array {
-	$locale = $locale ?: $GLOBALS['spip_lang'] ?? '';
-	$locale = strstr($locale, '_', true) ?: $locale; // fr_tu → fr
-	$formatter = new IntlDateFormatter($locale, IntlDateFormatter::LONG, IntlDateFormatter::NONE, null, null, 'LLLL');
-	$mois = [];
+function saisies_lister_date_noms_mois(): array {
+	include_spip('inc/filtres_dates');
+
+	$noms_mois = [];
 	for ($i = 1; $i <= 12; $i++) {
-		$m = (string) $i;
-		$key = str_pad($m, 2, 0, STR_PAD_LEFT);
-		$date = DateTime::createFromFormat('!m', $i); // ! to reset Y/M/D
-		$mois[$key] = $formatter->format($date);
+		// Nb : on pourrait faire directement _T('date_mois_$i'),
+		// mais mieux vaut utiliser la fonction façade.
+		$mois = str_pad((string) $i, 2, 0, STR_PAD_LEFT);
+		$fake_date = "1970-$mois-01";
+		$noms_mois[$mois] = affdate($fake_date, 'nom_mois');
 	}
 
-	return $mois;
+	return $noms_mois;
 }
 
 /**

@@ -6,9 +6,6 @@
  * @package SPIP\Saisies\afficher_si_js\defaut
  **/
 
-if (!defined('_ECRIRE_INC_VERSION')) {
-	return;
-}
 /**
  * Generation du js d'afficher_si par défaut
  * @param array $parse analyse syntaxique du tests à effectuer (sous tableau de résultat de saisies_parser_condition_afficher_si())

@@ -178,7 +178,7 @@ return [
 	'option_id_explication' => 'Sera automatiquement préfixé par <code>champ_</code>.',
 	'option_id_groupe_label' => 'Groupe de mots',
 	'option_id_label' => 'Attribut <code>id</code> de la saisie',
-	'option_info_obligatoire_explication' => 'Vous pouvez modifier l’indication d’obligation par défaut : <i>[Obligatoire]</i>. Pour garder l’information par défaut, ne rien mettre. Pour ne rien afficher, mettre un texte composé uniquement d’espace.',
+	'option_info_obligatoire_explication' => 'Vous pouvez modifier l’indication d’obligation par défaut : <i>[Obligatoire]</i>. Pour garder l’information par défaut, ne rien mettre. Pour ne rien afficher, mettre un texte composé uniquement d’espace.', # MODIF
 	'option_info_obligatoire_label' => 'Indication d’obligation',
 	'option_inserer_barre_choix_edition' => 'barre d’édition complète',
 	'option_inserer_barre_choix_forum' => 'barre des forums',
