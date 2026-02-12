@@ -195,7 +195,7 @@ class DateTest extends TestCase {
 			],
 			'on_sait_pas' => [
 				// Expected
-				'',
+				'jma',
 				// Provided
 				'10-10-2022',
 				'jma'
