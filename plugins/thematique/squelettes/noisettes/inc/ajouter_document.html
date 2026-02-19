@@ -72,7 +72,7 @@
 					.filter(function () {
 						return $(this).find('a.mediabox[type^="image/"]').length > 0;
 					});
-				if ($imagesDocs.length <= 1) return;
+				if (!$imagesDocs.length) return;
 				// If more than 1, create a Image Swiper
 				const $swiperContainer = $(`
 					<div class="swiper">
