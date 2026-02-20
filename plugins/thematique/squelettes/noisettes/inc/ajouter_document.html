@@ -128,6 +128,7 @@
 					const $doc = $(this);
 					const $link = $doc.find('a.mediabox[type="application/pdf"]').first();
 					const pdfUrl = $link.attr("href");
+					const pdfName = decodeURIComponent(pdfUrl.split("/").pop());
 					const $imgSrc = $link.find("img").first().attr("src");
 					const $container = $('<div class="swiper-pdf-container"></div>');
 					// Generate Container which will contain loader and PDF Swiper
@@ -136,7 +137,7 @@
 					const $loader = $(`
 						<div class="swiper-pdf-loader">
 							<img src="${$imgSrc}"/>
-							<span>Chargement PDF...</span>
+							<span>Chargement de "${pdfName}"" ...</span>
 						</div>
 					`);
 					$container.append($loader);
@@ -158,7 +159,12 @@
 					try {
 						pdf = await pdfjsLib.getDocument(pdfUrl).promise;
 					} catch (e) {
-						$container.html(`<p style="color:red">Erreur PDF : ${pdfUrl}</p>`);
+						$container.html(`
+							<div class="swiper-pdf-loader">
+								<img src="${$imgSrc}"/>
+								<span>Erreur lors du chargement de "${pdfName}"</span>
+							</div>
+						`);
 						return;
 					}
 					// For every PDF page, generate a slide which contains page converted to canvas.
