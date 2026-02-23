@@ -35,7 +35,7 @@
 		</a>
 	</div>
 	[(#TITRE|=={'Blog pédagogique'}|non)<INCLURE{fond=inclure/rubrique,id_rubrique} />]
-	[(#TITRE|=={'Blog pédagogique'}|oui)<INCLURE{fond=inclure/rubrique-blogpeda,id_rubrique,id_article} />]
+	[(#TITRE|=={'Blog pédagogique'}|et{#SESSION{id_auteur}|oui}|oui)<INCLURE{fond=inclure/rubrique-blogpeda,id_rubrique,id_article} />]
 
 	<INCLURE{fond=footer} />
 </body>
