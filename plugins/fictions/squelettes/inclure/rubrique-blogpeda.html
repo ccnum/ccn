@@ -29,19 +29,7 @@
 							<div class="texte_courant #EDIT{texte}">
 								[(#TEXTE|image_reduire{300})]<br />
 							</div>
-							<div class="forum">
-								<BOUCLE_forum(FORUMS){id_article}>
-									<div class="nettoyeur"></div>
-									[<div class="#EDIT{titre} titre">(#TITRE)</div>]
-									[<div class="#EDIT{texte} bloc_texte">(#TEXTE|liens_ouvrants)</div>]
-									<div class="introduction nettoyeur"></div>
-								</BOUCLE_forum>
-									<div class="forum_vide">
-									Personne n'a encore commenté.
-									</div>
-								<//B_forum>
-								[<div class="ajax">(#FORMULAIRE_FORUM)</div>]
-							</div>
+							<INCLURE{fond=inclure/forum,id_article} />
 						</BOUCLE_article>
 							<BOUCLE_article_default(ARTICLES){!par date}{0,1}>
 								<div class="ecriture-chapitre-texte">
@@ -53,19 +41,7 @@
 								<div class="texte_courant #EDIT{texte}">
 									[(#TEXTE|image_reduire{300})]<br />
 								</div>
-								<div class="forum">
-									<BOUCLE_forum(FORUMS){id_article}>
-										<div class="nettoyeur"></div>
-										[<div class="#EDIT{titre} titre">(#TITRE)</div>]
-										[<div class="#EDIT{texte} bloc_texte">(#TEXTE|liens_ouvrants)</div>]
-										<div class="introduction nettoyeur"></div>
-									</BOUCLE_forum>
-										<div class="forum_vide">
-										Personne n'a encore commenté.
-										</div>
-									<//B_forum>
-									[<div class="ajax">(#FORMULAIRE_FORUM)</div>]
-								</div>
+								<INCLURE{fond=inclure/forum,id_article} />
 							</BOUCLE_article_default>
 						<//B_article>
 					</div>
