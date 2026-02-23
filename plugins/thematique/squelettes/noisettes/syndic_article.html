@@ -9,8 +9,8 @@
 
 			[(#REM) ---------------- titre & logo ----------------
 			<div class="fiche_titre couleur_texte_[(#TYPE_OBJET)] couleur_[(#TYPE_OBJET)][(#MODELE{nb2col}{id_article})]">
-				<div class="photo">[(#MODELE{logo_carre}{id_rubrique=#ID_RUBRIQUE})]</div>
 				<div class="texte">
+					<div class="photo">[(#MODELE{logo_carre}{id_rubrique=#ID_RUBRIQUE})]</div>
 					<div class="#EDIT{titre} titre">[(#TITRE)]</div>
 					<div class="auteur_date">[(#NOM) - ][(#DATE|affdate)]</div>
 				</div>
