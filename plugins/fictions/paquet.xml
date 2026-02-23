@@ -12,12 +12,12 @@
 	<auteur>Patrick Vincent</auteur>
 	<licence>GNU/GPL</licence>
 
-	<necessite nom="notifications" />
-	<necessite nom="crayons" />
-	<necessite nom="socialtags" />
-	<necessite nom="jqueryui" compatibilite="[1.8.21;[" />
 	<necessite nom="cextras" compatibilite="[3.0.5;[" />
+	<necessite nom="crayons" />
+	<necessite nom="jqueryui" compatibilite="[1.8.21;[" />
 	<necessite nom="notation" />
+	<necessite nom="notifications" />
+	<necessite nom="socialtags" />
 	<necessite nom="spip_bonux" />
 	<necessite nom="vider_rubrique" />
 
