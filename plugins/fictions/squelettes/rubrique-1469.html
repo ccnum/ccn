@@ -1,0 +1,75 @@
+<BOUCLE_principale(RUBRIQUES){id_rubrique}{tout}>
+<!DOCTYPE html>
+<html lang="fr" xml:lang="fr" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+	<title>[(#NOM_SITE_SPIP|textebrut)]</title>
+	[<meta name="description" content="(#DESCRIPTIF_SITE_SPIP|couper{150}|textebrut)" />]
+	<INCLURE{fond=inclure/head} />
+	<script type="text/javascript" src="#CHEMIN{js/jquery.nicescroll.min.js}"></script>
+	<script type="text/javascript" src="#CHEMIN{js/jquery.scrollTo-1.4.2-min.js}"></script>
+	<meta name="viewport" content="width=980, user-scalable=no" />
+</head>
+<body>
+	<!-- TOOLTIP -->
+	<div id="liste-tooltip">
+	</div>
+	<!-- BOUTON CONNEXION -->
+	<INCLURE{fond=inclure/authentification} />
+	<!-- ELEMENTS GRAPHIQUES-->
+	<div id="book-top-left"><img src="#CHEMIN{img/global/border-book-top-left.png}" width="14" height="16" /></div>
+	<div id="book-top-right"><img src="#CHEMIN{img/global/border-book-top-right.png}" width="14" height="16" /></div>
+	<div id="book-bottom-left"><img src="#CHEMIN{img/global/border-book-bottom-left.png}" width="14" height="16" /></div>
+	<div id="book-bottom-right"><img src="#CHEMIN{img/global/border-book-bottom-right.png}" width="14" height="16" /></div>
+	<div id="book-middle-top-ecriture"><img src="#CHEMIN{img/global/book-middle-top.png}" width="300" height="6" /></div>
+	<div id="book-middle-bottom-ecriture"><img src="#CHEMIN{img/global/book-middle-bottom.png}" width="300" height="5" /></div>
+
+	<div class="stitches-ecriture">
+		<div class="stitches-inner"><img src="#CHEMIN{img/global/stitches.png}" width="5" height="86" /></div>
+		<div class="stitches-inner"><img src="#CHEMIN{img/global/stitches.png}" width="5" height="86" /></div>
+		<div class="stitches-inner"><img src="#CHEMIN{img/global/stitches.png}" width="5" height="86" /></div>
+	</div>
+
+	<!-- RETOUR INDEX -->
+	<div id="bouton-retour">
+		<a href="#URL_SITE_SPIP">
+			<img src="#CHEMIN{img/global/bt-retour.png}" onmouseover="this.src='#CHEMIN{img/global/bt-retour-hover.png}';"
+				onmouseout="this.src='#CHEMIN{img/global/bt-retour.png}';" width="54" height="54" />
+		</a>
+	</div>
+
+	<!-- BOOK -->
+	<div id="global-ecriture">
+		<div id="global-spacer">
+		</div>
+		<div class="global-content">
+			<div class="content">
+				<div class="content-left-small">
+					<div id="titre_site">
+						<a href="#URL_SITE_SPIP" title="Accueil"><strong>fictions</strong></a><a href="http://www.laclasse.com" title="http://www.laclasse.com">.laclasse.com</a>
+					</div>
+					<div id="ecriture-liste">
+						<BOUCLE_articles(ARTICLES){id_rubrique}>
+							<a href="[(#SELF|parametre_url{id_article,#ID_ARTICLE})]">#TITRE</a>
+						</BOUCLE_articles>
+					</div>
+				</div>
+				<div class="content-right-large">
+					<BOUCLE_art_env(ARTICLES){id_article}>
+							#TITRE
+							#TEXTE
+					</BOUCLE_art_env>
+						<BOUCLE_art_dernier(ARTICLES){!par date}{0,1}>
+							#TITRE
+							#TEXTE
+						</BOUCLE_art_dernier>
+					<//B_art_env>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<INCLURE{fond=footer} />
+</body>
+</html>
+</BOUCLE_principale>
