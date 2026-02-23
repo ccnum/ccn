@@ -156,7 +156,7 @@ Encontrará la <a href="https://contrib.spip.net/5080" target="_blank" rel="noop
 	'option_id_explication' => 'Tendrá automáticamente el prefijo <code>campo_</code>.',
 	'option_id_groupe_label' => 'Grupo de palabras-claves',
 	'option_id_label' => 'Atributo <code>id</code> de la entrada',
-	'option_info_obligatoire_explication' => 'Puede cambiar la indicación de requisito predeterminada: <i>[Obligatorio]</i>. Para mantener la información predeterminada, no deje nada. Para mostrar nada, coloque un texto compuesto solo de espacios.',
+	'option_info_obligatoire_explication' => 'Puede cambiar la indicación de requisito predeterminada: <i>[Obligatorio]</i>. Para mantener la información predeterminada, no deje nada. Para mostrar nada, coloque un texto compuesto solo de espacios.', # MODIF
 	'option_info_obligatoire_label' => 'Indicación de campo obligatorio',
 	'option_inserer_barre_choix_edition' => 'Barra de edición completa',
 	'option_inserer_barre_choix_forum' => 'barra de los foros',

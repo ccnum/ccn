@@ -9,10 +9,7 @@
  * @package SPIP\Saisies\Saisies_request
  **/
 
-// Sécurité
-if (!defined('_ECRIRE_INC_VERSION')) {
-	return;
-}
+
 
 
 

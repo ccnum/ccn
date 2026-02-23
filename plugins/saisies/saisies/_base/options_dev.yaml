@@ -43,3 +43,9 @@
     nom: 'env'
     label: '<:saisies:option_env_label:>'
     explication: '<:saisies:option_env_explication:>'
+-
+  saisie: 'input'
+  options:
+    nom: 'ajax'
+    label: '<:saisies:option_ajax_label:>'
+    explication: '<:saisies:option_ajax_explication:>'

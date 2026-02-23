@@ -4,17 +4,38 @@
     nom: 'obligatoire'
     label_case: '<:saisies:option_obligatoire_label:>'
     conteneur_class: 'pleine_largeur'
+    afficher_si: '!@_options_globales[obligatoire_defaut]@'
+    afficher_si_avec_post: 'on'
 -
   saisie: 'input'
   options:
     nom: 'info_obligatoire'
     label: '<:saisies:option_info_obligatoire_label:>'
     explication: '<:saisies:option_info_obligatoire_explication:>'
-    afficher_si: '@obligatoire@'
+    afficher_si: '@obligatoire@ && !@_options_globales[obligatoire_defaut]@'
+    afficher_si_avec_post: 'on'
 -
   saisie: 'input'
   options:
     nom: 'erreur_obligatoire'
     label: '<:saisies:option_erreur_obligatoire_label:>'
     explication: '<:saisies:option_erreur_obligatoire_explication:>'
-    afficher_si: '@obligatoire@'
+    afficher_si: '@obligatoire@ || (@_options_globales[obligatoire_defaut]@  && !@facultatif@)'
+    afficher_si_avec_post: 'on'
+-
+  saisie: 'case'
+  options:
+    nom: 'facultatif'
+    label_case: '<:saisies:option_facultatif_label:>'
+    explication_dev: '<:saisies:option_facultatif_explication_dev:>'
+    conteneur_class: 'pleine_largeur'
+    afficher_si: '@_options_globales[obligatoire_defaut]@'
+    afficher_si_avec_post: 'on'
+-
+  saisie: 'input'
+  options:
+    nom: 'info_facultatif'
+    label: '<:saisies:option_info_facultatif_label:>'
+    explication_dev: '<:saisies:option_info_facultatif_explication_dev:>'
+    afficher_si: '@_options_globales[obligatoire_defaut]@ && @facultatif@'
+    afficher_si_avec_post: 'on'

@@ -6,11 +6,28 @@
  * @package SPIP\Saisies\case
  **/
 
-// Sécurité
-if (!defined('_ECRIRE_INC_VERSION')) {
-	return;
-}
 
+/**
+ * Le markup de la saisie case est variable.
+ * Si on a à la fois label + label_case, alors on on est en fieldset + legend
+ * sinon on est en div + label
+**/
+function case_get_markup(array $saisie): array {
+	if (
+		($saisie['options']['label_case'] ?? '')
+		&& ($saisie['options']['label'] ?? '')
+	) {
+		return [
+			'conteneur_tag' => 'fieldset',
+			'conteneur_label' => 'legend',
+		];
+	} else {
+		return [
+			'conteneur_tag' => 'div',
+			'conteneur_label' => 'label',
+		];
+	}
+}
 
 /**
  * Vérifie que la valeur postée

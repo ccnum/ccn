@@ -25,6 +25,14 @@ class EmailValideTest extends TestCase {
 					'strict' => true,
 				]
 			],
+			['simple@example.com,othersimple@example.com',
+				[
+					'normal' => true,
+					'rfc5322' => true,
+					'strict' => true,
+				],
+				['multiple' => true]
+			],
 			[
 				'very.common@example.com',
 				[
@@ -630,7 +638,7 @@ class EmailValideTest extends TestCase {
 
 	public static function dataEmailsInvalides() {
 
-		$datas = [
+		$data = [
 			// Source https://en.wikipedia.org/wiki/Email_address#Valid_email_addresses
 			[
 				'abc.example.com', // (no @ character)
@@ -639,165 +647,177 @@ class EmailValideTest extends TestCase {
 					'rfc5322' => false,
 					'strict' => false,
 				],
+			],
+			[
 				'a@b@c@example.com', // (only one @ is allowed outside quotation marks)
 				[
 					'normal' => false,
 					'rfc5322' => false,
 					'strict' => false,
 				],
+			],
+			[
 				'a"b(c)d,e:f;g<h>i[j\k]l@example.com', // (none of the special characters in this local-part are allowed outside quotation marks)
 				[
 					'normal' => false,
 					'rfc5322' => false,
 					'strict' => false,
 				],
+			],
+			[
 				'just"not"right@example.com', // (quoted strings must be dot separated or be the only element making up the local-part)
 				[
 					'normal' => false,
 					'rfc5322' => false,
 					'strict' => false,
 				],
+			],
+			[
 				'this is"not\allowed@example.com', // (spaces, quotes, and backslashes may only exist when within quoted strings and preceded by a backslash)
 				[
 					'normal' => false,
 					'rfc5322' => false,
 					'strict' => false,
 				],
+			],
+			[
 				'this\ still\"not\\allowed@example.com', // (even if escaped (preceded by a backslash), spaces, quotes, and backslashes must still be contained by quotes)
 				[
 					'normal' => false,
 					'rfc5322' => false,
 					'strict' => false,
 				],
+			],
+			[
 				'1234567890123456789012345678901234567890123456789012345678901234+x@example.com', // (local-part is longer than 64 characters)
 				[
-					'normal' => false,
+					'normal' => true,//SPIP is more permissive
 					'rfc5322' => false,
 					'strict' => false,
 				],
+			],
+			'i.like.underscores@but_they_are_not_allowed_in_this_part' => [
 				'i.like.underscores@but_they_are_not_allowed_in_this_part', // (underscore is not allowed in domain part)
 				[
-					'normal' => false,
+					'normal' => true,//SPIP is more permissive
 					'rfc5322' => false,
 					'strict' => false,
 				],
-
-
-				// https://github.com/apache/commons-validator/blob/master/src/test/java/org/apache/commons/validator/routines/EmailValidatorTest.java
+			],
+			// https://github.com/apache/commons-validator/blob/master/src/test/java/org/apache/commons/validator/routines/EmailValidatorTest.java
+			[
+				'jsmith@apache.',
 				[
-					'jsmith@apache.',
-					[
-						'normal' => false,
-						'rfc5322' => false,
-						'strict' => false,
-					]
-				],
+					'normal' => false,
+					'rfc5322' => false,
+					'strict' => false,
+				]
+			],
+			[
+				'jsmith@apache.c',
 				[
-					'jsmith@apache.c',
-					[
-						'normal' => false,
-						'rfc5322' => false,
-						'strict' => false,
-					]
-				],
+					'normal' => true,
+					'rfc5322' => true,
+					'strict' => false,
+				]
+			],
+			[
+				'someone@yahoo.mu-seum',
 				[
-					'someone@yahoo.mu-seum',
-					[
-						'normal' => false,
-						'rfc5322' => false,
-						'strict' => false,
-					]
-				],
+					'normal' => true,
+					'rfc5322' => true,
+					'strict' => false,
+				]
+			],
+			[
+				'joe.@apache.org', // . not allowed at end of local part
 				[
-					'joe.@apache.org', // . not allowed at end of local part
-					[
-						'normal' => false,
-						'rfc5322' => false,
-						'strict' => false,
-					]
-				],
+					'normal' => true,//SPIP is more permissive
+					'rfc5322' => false,
+					'strict' => false,
+				]
+			],
+			[
+				'.joe@apache.org', // . not allowed at start of local part
 				[
-					'.joe@apache.org', // . not allowed at start of local part
-					[
-						'normal' => false,
-						'rfc5322' => false,
-						'strict' => false,
-					]
-				],
+					'normal' => true,//SPIP is more permissive
+					'rfc5322' => false,
+					'strict' => false,
+				]
+			],
+			[
+				'.@apache.org', // . not allowed alone
 				[
-					'.@apache.org', // . not allowed alone
-					[
-						'normal' => false,
-						'rfc5322' => false,
-						'strict' => false,
-					]
-				],
+					'normal' => true,//SPIP is more permissive
+					'rfc5322' => false,
+					'strict' => false,
+				]
+			],
+			[
+				'joe..ok@apache.org', // .. not allowed embedded
 				[
-					'joe..ok@apache.org', // .. not allowed embedded
-					[
-						'normal' => false,
-						'rfc5322' => false,
-						'strict' => false,
-					]
-				],
+					'normal' => true,//SPIP is more permissive
+					'rfc5322' => false,
+					'strict' => false,
+				]
+			],
+			[
+				'..@apache.org', //.. not allowed alone
 				[
-					'..@apache.org', //.. not allowed alone
-					[
-						'normal' => false,
-						'rfc5322' => false,
-						'strict' => false,
-					]
-				],
+					'normal' => true,//SPIP is more permissive
+					'rfc5322' => false,
+					'strict' => false,
+				]
+			],
+			[
+				'joe(@apache.org',
 				[
-					'joe(@apache.org',
-					[
-						'normal' => false,
-						'rfc5322' => false,
-						'strict' => false,
-					]
-				],
+					'normal' => false,
+					'rfc5322' => false,
+					'strict' => false,
+				]
+			],
+			[
+				'joe)@apache.org',
 				[
-					'joe)@apache.org',
-					[
-						'normal' => false,
-						'rfc5322' => false,
-						'strict' => false,
-					]
-				],
+					'normal' => false,
+					'rfc5322' => false,
+					'strict' => false,
+				]
+			],
+			[
+				'joe,@apache.org',
 				[
-					'joe,@apache.org',
-					[
-						'normal' => false,
-						'rfc5322' => false,
-						'strict' => false,
-					]
-				],
+					'normal' => false,
+					'rfc5322' => false,
+					'strict' => false,
+				]
+			],
+			[
+				'joe;@apache.org',
 				[
-					'joe;@apache.org',
-					[
-						'normal' => false,
-						'rfc5322' => false,
-						'strict' => false,
-					]
-				],
+					'normal' => false,
+					'rfc5322' => false,
+					'strict' => false,
+				]
+			],
+			[
+				'john56789.john56789.john56789.john56789.john56789.john56789.john5@example.com',
 				[
-					'john56789.john56789.john56789.john56789.john56789.john56789.john5@example.com',
-					[
-						'normal' => false,
-						'rfc5322' => false,
-						'strict' => false,
-					]
-				],
+					'normal' => true,//SPIP is more permissive
+					'rfc5322' => false,
+					'strict' => false,
+				]
+			],
+			[
+				'Abc@def@example.com',
 				[
-					'Abc@def@example.com',
-					[
-						'normal' => false,
-						'rfc5322' => false,
-						'strict' => false,
-					]
-				],
-
-				// Autres cas rencontrés ?
+					'normal' => false,
+					'rfc5322' => false,
+					'strict' => false,
+				]
+			],
+			// Autres cas rencontrés ?
 				/*
 				[
 					'nom+prenom@example.com',
@@ -807,66 +827,52 @@ class EmailValideTest extends TestCase {
 						'strict' => true,
 					]
 				],*/
-			],
 
 		];
+		$data2 = [];
+		foreach ($data as $d) {
+			$data2[$d[0]] = $d;
+		}
 
-		return $datas;
+		// Maintenant testons des cas avec options spécifiques
+		$data2['unique'] = [
+			// Plusieurs emails
+			'a@a.fr,b@b.fr',
+			// Ne passe jamais
+			[
+				'normal' => false,
+				'rfc5322' => false,
+				'stricte' => false
+			],
+			// Car on ne veut qu'un email
+			[
+				'unique' => 'on',
+			]
+		];
+		return $data2;
 	}
 
 
 	/**
 	 * @dataProvider dataEmailsValides
 	 **/
-	function testEmailValideNormal($valeur, $expected) {
-		$erreur = verifier_email_dist($valeur, ['mode' => 'normal']);
-		$actual = ($erreur == '' ? true : false);
-		$this->assertEquals($expected['normal'], $actual);
+	function testEmailValide($valeur, $expected_by_type, array $other_options = []) {
+		foreach ($expected_by_type as $type => $expected) {
+			$erreur = verifier_email_dist($valeur, array_merge(['mode' => $type],  $other_options));
+			$actual = ($erreur == '' ? true : false);
+			$this->assertEquals($expected, $actual);
+		}
 	}
 
 	/**
 	 * @dataProvider dataEmailsInvalides
 	 **/
-	function testEmailInvalideNormal($valeur, $expected) {
-		$erreur = verifier_email_dist($valeur, ['mode' => 'normal']);
-		$actual = ($erreur == '' ? true : false);
-		$this->assertEquals($expected['normal'], $actual);
+	function testEmailInvalide($valeur, $expected_by_type, array $other_options = []) {
+		foreach ($expected_by_type as $type => $expected) {
+			$erreur = verifier_email_dist($valeur, ['mode' => $type] + $other_options);
+			$actual = ($erreur == '' ? true : false);
+			$this->assertEquals($expected, $actual);
+		}
 	}
 
-	/**
-	 * @dataProvider dataEmailsValides
-	 **/
-	function testEmailValideRfc5322($valeur, $expected) {
-		$erreur = verifier_email_dist($valeur, ['mode' => 'rfc5322']);
-		$actual = ($erreur == '' ? true : false);
-		$this->assertEquals($expected['rfc5322'], $actual);
-	}
-
-	/**
-	 * @dataProvider dataEmailsInvalides
-	 **/
-	function testEmailInvalideRfc5322($valeur, $expected) {
-		$erreur = verifier_email_dist($valeur, ['mode' => 'rfc5322']);
-		$actual = ($erreur == '' ? true : false);
-		$this->assertEquals($expected['rfc5322'], $actual);
-	}
-
-
-	/**
-	 * @dataProvider dataEmailsValides
-	 **/
-	function testEmailValideStrict($valeur, $expected) {
-		$erreur = verifier_email_dist($valeur, ['mode' => 'strict']);
-		$actual = ($erreur == '' ? true : false);
-		$this->assertEquals($expected['strict'], $actual);
-	}
-
-	/**
-	 * @dataProvider dataEmailsInvalides
-	 **/
-	function testEmailInvalideStrict($valeur, $expected) {
-		$erreur = verifier_email_dist($valeur, ['mode' => 'strict']);
-		$actual = ($erreur == '' ? true : false);
-		$this->assertEquals($expected['strict'], $actual);
-	}
 }

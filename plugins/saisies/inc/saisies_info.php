@@ -130,3 +130,29 @@ function saisies_saisie_get_label(array $saisie): string {
 	}
 	return $saisie['options']['label'] ?? '';
 }
+
+/**
+ * Renvoie les markups de base de la saisie
+ * - le conteneur du tag
+ * - le conteneur du label
+ * - faut-il un attribut for
+ * @param array $saisie (description complète de la saisie)
+ * @return array{
+ *	conteneur_tag: string,
+ *	conteneur_label: string,
+ *	}
+**/
+function saisies_saisie_get_markup(array $saisie): array {
+	$type = $saisie['saisie'] ?? '';
+	if (include_spip("saisies/$type")) {
+		$f = $type . '_get_markup';
+		if (function_exists($f)) {
+			return $f($saisie);
+		}
+	}
+
+	return [
+		'conteneur_tag' => 'div',
+		'conteneur_label' => 'label',
+	];
+}

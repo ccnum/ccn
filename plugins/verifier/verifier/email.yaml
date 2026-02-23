@@ -15,6 +15,12 @@ options:
   -
     saisie: 'case'
     options:
+      nom: 'unique'
+      label_case: '<:verifier:option_email_unique_label_case:>'
+      conteneur_class: 'pleine_largeur'
+  -
+    saisie: 'case'
+    options:
       nom: 'disponible'
       label: '<:verifier:option_email_disponible_label:>'
       label_case: '<:verifier:option_email_disponible_label_case:>'

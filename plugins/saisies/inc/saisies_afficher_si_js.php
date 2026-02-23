@@ -7,10 +7,7 @@
  * @package SPIP\Saisies\Afficher_si_js
  **/
 
-// Sécurité
-if (!defined('_ECRIRE_INC_VERSION')) {
-	return;
-}
+
 
 include_spip('inc/saisies_afficher_si_commun');
 include_spip('inc/saisies_lister');

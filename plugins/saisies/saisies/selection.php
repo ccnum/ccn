@@ -6,10 +6,7 @@
  * @package SPIP\valeurs\selection
  **/
 
-// Sécurité
-if (!defined('_ECRIRE_INC_VERSION')) {
-	return;
-}
+
 
 /**
  * Vérifie que la valeur postée

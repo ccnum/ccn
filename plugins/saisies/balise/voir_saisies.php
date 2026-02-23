@@ -6,10 +6,6 @@
  * @package SPIP\Saisies\Balises
  **/
 
-// Sécurité
-if (!defined('_ECRIRE_INC_VERSION')) {
-	return;
-}
 
 /**
  * Compile la balise `#VOIR_SAISIES` qui retourne le code HTML des vues de formulaire,

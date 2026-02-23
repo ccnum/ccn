@@ -180,7 +180,7 @@ Die vollständige Dokumentation zur Syntax finden Sie unter <a href="https://con
 	'option_id_groupe_label' => 'Schlagwortgruppe',
 	'option_id_label' => 'Attribut <code>id</code> der Eingabe',
 	'option_info_obligatoire_explication' => 'Sie können die Standardbezeichnung für Pflichtfelder ändern:<i>[Pflichtfeld]</i>.
-Um den Standard beizubehalten, setzen Sie nichts. Um nichts anzuzeigen, setzen Sie einen Text, der nur aus Leerzeichen besteht. ',
+Um den Standard beizubehalten, setzen Sie nichts. Um nichts anzuzeigen, setzen Sie einen Text, der nur aus Leerzeichen besteht. ', # MODIF
 	'option_info_obligatoire_label' => 'Pflichtfeld-Anzeige',
 	'option_inserer_barre_choix_edition' => 'Vollständige Symbolleiste "Bearbeiten"',
 	'option_inserer_barre_choix_forum' => 'Symbolleiste "Foren"',

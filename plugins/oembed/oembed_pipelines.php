@@ -317,6 +317,7 @@ function oembed_pre_propre($texte) {
 					if ($wrap_embed_html = charger_fonction('wrap_embed_html', 'inc', true)) {
 						$emb = $wrap_embed_html($match[2], $emb);
 					}
+					$emb = protege_js_modeles($emb);
 					$replace[$match[0]] = $match[1] . echappe_html("<html>$emb</html>") . $match[3];
 				}
 			}

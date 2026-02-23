@@ -1,7 +1,5 @@
 <?php
 
-if (!defined('_ECRIRE_INC_VERSION')) { return;
-}
 
 /**
  * Sérialise les réponses à un champ extra de type `choix_grille` pour encodage en base.
