@@ -5,12 +5,6 @@
 		#SET{id_art,#ID_ARTICLE}
 	</BOUCLE_id_forum>
 </BOUCLE_annee>
-#SET{url_blog_auteur, ''}
-<BOUCLE_rubrique_contenant_annees(RUBRIQUES){titre_mot=rubrique-contenant-annees}>
-	<BOUCLE_rubrique_annee(RUBRIQUES){id_parent}{!par titre}{titre==^[2]}{0,1}>
-		#SET{url_blog_auteur, #TEXTE}
-	</BOUCLE_rubrique_annee>
-</BOUCLE_rubrique_contenant_annees>
 
 <script>
 	function reload_cookie(url,cookie_nom,cookie_valeur) {
@@ -50,17 +44,16 @@
 			]
 			[(#SESSION{id_auteur}|non)<a href="[(#PLUGIN{CICAS}|oui|?{'?url=spip.php%3Fpage%3Dsommaire&cicas=oui','?page=login&url=.%2F'})]" class="">Se connecter</a>&nbsp;&nbsp;|<a href="http://www.laclasse.com/pls/public/!page.laclasse?contexte=QUESTION&rubrique=0">Mot de passe oublié ?</a>]
 
-			<!-- [(#REM) GESTION DU LIEN DE L'ESPACE DOC] -->
-			<!-- [(#REM) ON RÉCUPÈRE LA DERNIÈRE RUBRIQUE DES ANNÉES, ON EN TIRE LE DESCRIPTIF ET VOILÀ !] -->
-			<!-- [(#REM) Pensez à activer les descriptifs dans les rubriques : ecrire/?exec=configurer_contenu ] -->
-			<BOUCLE_rubriques(RUBRIQUES){tout}{racine}{titre==Collèges}>
-				<BOUCLE_espace_doc(RUBRIQUES){titre==^[20]}{!par titre}{0,1}>
+			<BOUCLE_espace_doc(RUBRIQUES){titre==#EVAL{_annee_scolaire}}>
 				<!-- #ID_RUBRIQUE -->
-					<a href="[(#DESCRIPTIF|textebrut)]">Espace doc</a>
-				</BOUCLE_espace_doc>
-			</BOUCLE_rubriques>
-
-			[<a href="(#GET{url_blog_auteur}|extraire_attribut{href})">Blog de l'auteur</a>]
+				<a href="[(#DESCRIPTIF|textebrut)]">Espace doc</a>
+				[<a href="(#TEXTE|extraire_attribut{href})">Blog de l'auteur</a>]
+			</BOUCLE_espace_doc>
+			[(#SESSION{id_auteur}|oui)
+			<BOUCLE_blog(RUBRIQUES){titre = 'Blog pédagogique'}{tout}>
+				<a href="#URL_RUBRIQUE">#TITRE</a>
+			</BOUCLE_blog>
+			]
 		</div>
 
 		<div id="footer-nav">
