@@ -41,6 +41,17 @@
 									[(#TEXTE|image_reduire{300})]<br />
 								</div>
 								<div class="forum">
+									<BOUCLE_forum(FORUMS){id_article}>
+									</BOUCLE_forum>
+										<div class="nettoyeur"></div>
+										[<div class="#EDIT{titre} titre">(#TITRE)</div>]
+										[<div class="#EDIT{texte} bloc_texte">(#TEXTE|liens_ouvrants)</div>]
+										<div class="introduction nettoyeur"></div>
+									</B_forum>
+										<div class="forum_vide">
+										Personne n'a encore commenté.
+										</div>
+									<//B_forum>
 									[<div class="ajax">(#FORMULAIRE_FORUM)</div>]
 								</div>
 							</BOUCLE_article_default>
