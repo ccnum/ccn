@@ -141,7 +141,6 @@ function oembed_allowed_domains(array $providers): array {
 	$providers = array_map(function ($p) {
 		$is_regexp = (substr($p, 0, 1) === '#');
 		if ($is_regexp) {
-			$p = preg_replace(',#.*$u,', '#', $p);
 			$p = trim($p, '#');
 		} else {
 			$p = str_replace('*', '(.+)', $p);
