@@ -79,6 +79,7 @@ return [
 
 	// I
 	'info_configurer_saisies' => 'Page de test des Saisies',
+	'info_facultatif' => '(facultatif)',
 
 	// L
 	'label_annee' => 'Année',
@@ -107,6 +108,8 @@ return [
 	'option_afficher_si_remplissage_uniquement_explication' => 'En cochant cette case, l’affichage conditionnel s’appliquera uniquement lors du remplissage du formulaire, pas lors de l’affichage des résultats.',
 	'option_afficher_si_remplissage_uniquement_label' => 'Uniquement lors du remplissage',
 	'option_afficher_si_remplissage_uniquement_label_case' => 'Masquer la saisie uniquement lors du remplissage',
+	'option_ajax_label' => 'Ajaxer la saisie.',
+	'option_ajax_explication' => 'Charger la saisie dans un fragment ajax, dont on transmet l\'identifiant, afin de pouvoir la manipuler (la recharger) depuis un écouteur de changement sur une autre, par exemple. Fournit uniquement l\'encapsulation ajax, pas de code supplémentaire.',
 	'option_attention_explication' => 'Un message plus important que l’explication.',
 	'option_attention_label' => 'Avertissement',
 	'option_attribut_title_label' => 'Valeur en attribut title',
@@ -172,8 +175,11 @@ return [
 	'option_explication_apres_label' => 'Explication après le champ',
 	'option_explication_explication' => 'Si besoin, une courte phrase décrivant l’objet du champ.',
 	'option_explication_label' => 'Explication',
+	'option_facultatif_explication_dev' => 'Ne sert que si l’option globale `obligatoire_defaut` n’est pas activée.',
+	'option_facultatif_label' => 'Champ facultatif',
 	'option_forcer_select_explication' => 'Si un groupe de mots est sélectionné, il s’agira par défaut d’une saisie radio ou checkbox, en fonction du paramètre du groupe de mot clé : <em>"On ne peut sélectionner qu’<b>un seul</b> mot-clé à la fois dans ce groupe."</em>. Vous pouvez forcer l’utilisation d’un select.',
 	'option_forcer_select_label_case' => 'Forcer l’utilisation d’un select',
+	'option_globale_obligatoire_defaut_texte' => 'Sauf mention contraire, tous les champs sont obligatoires.',
 	'option_groupe_affichage' => 'Affichage',
 	'option_groupe_conditions' => 'Conditions',
 	'option_groupe_description' => 'Description',
@@ -187,7 +193,10 @@ return [
 	'option_id_explication' => 'Sera automatiquement préfixé par <code>champ_</code>.',
 	'option_id_groupe_label' => 'Groupe de mots',
 	'option_id_label' => 'Attribut <code>id</code> de la saisie',
-	'option_info_obligatoire_explication' => 'Vous pouvez modifier l’indication d’obligation par défaut : <i>[Obligatoire]</i>. Pour garder l’information par défaut, ne rien mettre. Pour ne rien afficher, mettre un texte composé uniquement d’espace.',
+	'option_info_facultatif_explication' => 'Vous pouvez modifier l’indication de caractère facultatif par défaut : <i>[Facultatif]</i>. Pour garder l’information par défaut, ne rien mettre.',
+	'option_info_facultatif_explication_dev' => 'Ne sert que si l’option globale `obligatoire_defaut` n’est pas activée. Vous pouvez modifier l’indication de caractère facultatif par défaut : <i>[Facultatif]</i>. Pour garder l’information par défaut, ne rien mettre.',
+	'option_info_facultatif_label' => 'Indication du caractère facultatif',
+	'option_info_obligatoire_explication' => 'Vous pouvez modifier l’indication d’obligation par défaut : <i>[Obligatoire]</i>. Pour garder l’information par défaut, ne rien mettre.',
 	'option_info_obligatoire_label' => 'Indication d’obligation',
 	'option_inserer_barre_choix_edition' => 'barre d’édition complète',
 	'option_inserer_barre_choix_forum' => 'barre des forums',

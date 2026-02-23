@@ -40,5 +40,5 @@ return [
 	'titre_configuration_avancee_providers' => 'Accéder à la configuration avancée des fournisseurs oEmbed',
 	'titre_configurer_oembed' => 'Configurer oEmbed',
 	'titre_configurer_providers' => 'Providers oEmbed',
-	'titre_oembed' => 'oEmbed'
+	'titre_oembed' => 'oEmbed',
 ];

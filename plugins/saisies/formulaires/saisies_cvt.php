@@ -1,9 +1,6 @@
 <?php
 
-// Sécurité
-if (!defined('_ECRIRE_INC_VERSION')) {
-	return;
-}
+
 
 function formulaires_saisies_cvt_saisies_dist() {
 	include_spip('inc/saisies');

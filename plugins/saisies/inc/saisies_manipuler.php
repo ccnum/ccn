@@ -6,10 +6,7 @@
  * @return SPIP\Saisies\Manipuler
  **/
 
-// Sécurité
-if (!defined('_ECRIRE_INC_VERSION')) {
-	return;
-}
+
 
 /**
  * Supprimer une saisie dont on donne l'identifiant, le nom ou le chemin.
@@ -426,6 +423,7 @@ function saisies_encapsuler_noms(array $saisies, string $prefixe, bool $recursif
 		$saisies,
 		'nom',
 		function ($nom) use ($prefixe) {
+			$nom = \saisie_nom2name($nom);
 			// Soit c'est déjà un tableau : machin[truc]
 			if (($pos = strpos($nom, '[')) !== false) {
 				$nom = "{$prefixe}[" . substr_replace($nom, ']', $pos, 0);
@@ -811,7 +809,7 @@ function saisies_prefixer_id(array $saisies, string $prefixe): array {
 	$options_globales = $saisies['options'] ?? [];
 	unset($saisies['options']);
 	foreach ($saisies as &$saisie) {
-		$id = $saisie['options']['id'] ?? $saisie['options']['nom'] ?? '';
+		$id = $saisie['options']['id'] ?? saisie_nom2classe($saisie['options']['nom'] ?? '');
 		if ($id) {
 			$saisie['options']['id'] = $prefixe . '_' . $id;
 		}

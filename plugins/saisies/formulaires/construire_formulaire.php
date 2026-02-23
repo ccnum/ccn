@@ -1,9 +1,6 @@
 <?php
 
-// Sécurité
-if (!defined('_ECRIRE_INC_VERSION')) {
-	return;
-}
+
 
 include_spip('inc/saisies');
 /**
@@ -59,7 +56,7 @@ function formulaires_construire_formulaire_charger($identifiant, $formulaire_ini
 	$contexte['_message_attention'] = _T('saisies:construire_attention_modifie');
 
 	// On passe ça pour l'affichage
-	$contexte['_contenu'] = $formulaire_actuel;
+	$contexte['_contenu'] = saisies_appliquer_option_globale_obligatoire_defaut($formulaire_actuel);
 
 	// On passe ça pour la récup plus facile des champs
 	$contexte['_saisies_par_nom'] = saisies_lister_par_nom($formulaire_actuel);
@@ -132,7 +129,7 @@ function formulaires_construire_formulaire_verifier($identifiant, $formulaire_in
 	if ($configurer_globales || $enregistrer_globales) {
 		$options['options_globales'] = saisies_fieldsets_en_onglets($options['options_globales'], $identifiant, true);
 		$options['options_globales'] = saisies_transformer_option($options['options_globales'], 'conteneur_class', '#(.*)#', '\1 pleine_largeur');
-		array_walk_recursive($options['options_globales'], 'construire_formulaire_transformer_nom', 'options_globales[@valeur@]');
+		$options['options_globales'] = saisies_encapsuler_noms($options['options_globales'], 'options_globales');
 		array_walk_recursive($options['options_globales'], 'construire_formulaire_transformer_afficher_si', 'options_globales');
 		$erreurs['configurer_globales'] = $options['options_globales'];
 
@@ -169,10 +166,12 @@ function formulaires_construire_formulaire_verifier($identifiant, $formulaire_in
 
 		$saisie = $saisies_actuelles[$nom_ou_id];
 		$formulaire_config = $saisies_disponibles[$saisie['saisie']]['options'];
+
+
 		// Ajouter l'option pour depublier la saisie
 		$formulaire_config = construire_formulaire_config_inserer_option_depublie($formulaire_config);
 
-		array_walk_recursive($formulaire_config, 'construire_formulaire_transformer_nom', "saisie_modifiee_{$nom}[options][@valeur@]");
+		$formulaire_config = saisies_encapsuler_noms($formulaire_config, "saisie_modifiee_{$nom}[options]");
 		array_walk_recursive($formulaire_config, 'construire_formulaire_transformer_afficher_si', "saisie_modifiee_{$nom}[options]");
 		$formulaire_config = saisie_identifier(['saisies' => $formulaire_config]);
 		$formulaire_config = $formulaire_config['saisies'];
@@ -276,7 +275,7 @@ function formulaires_construire_formulaire_verifier($identifiant, $formulaire_in
 						],
 						'saisies' => $verif['options']
 					];
-					array_walk_recursive($groupe, 'construire_formulaire_transformer_nom', "saisie_modifiee_{$nom}[verifier][$type_verif][@valeur@]");
+					$groupe = saisies_encapsuler_noms([$groupe], "saisie_modifiee_{$nom}[verifier][$type_verif]")[0];
 					array_walk_recursive($groupe, 'construire_formulaire_transformer_afficher_si', "saisie_modifiee_{$nom}[verifier][$type_verif]");
 					$verif_options[$type_verif] = $groupe;
 				}
@@ -285,6 +284,7 @@ function formulaires_construire_formulaire_verifier($identifiant, $formulaire_in
 				$verif_options = array_merge([$saisie_liste_verif], $verif_options);
 			}
 		}
+
 
 		// Permettre d'intégrer des saisies et fieldset au formulaire de configuration.
 		// Si des vérifications sont à faire, elles seront prises en compte
@@ -300,6 +300,14 @@ function formulaires_construire_formulaire_verifier($identifiant, $formulaire_in
 			],
 		]);
 
+		// Ajouter en champ caché les infos sur les options globales,
+		// pour pouvoir faire des afficher_si
+		include_spip('inc/saisies_options_globales');
+		$formulaire_config = construire_formulaire_config_inserer_options_globales(
+			$formulaire_config,
+			$formulaire_actuel,
+			saisies_options_globales_lister_disponibles()
+		);
 
 		// Si la saisie possede un identifiant, on l'ajoute
 		// au formulaire de configuration pour ne pas le perdre en route
@@ -453,7 +461,6 @@ function formulaires_construire_formulaire_traiter($identifiant, $formulaire_ini
 			}
 			set_request('_saisie_deplacee_par_select', $nom);
 		}
-
 		// On regarde s'il y a des options de vérification à modifier
 		$verifier_format_api = [];
 		if (isset($saisie_modifiee['verifier']['type'])) {
@@ -468,8 +475,9 @@ function formulaires_construire_formulaire_traiter($identifiant, $formulaire_ini
 
 		// On récupère les options postées en enlevant les chaines vides
 		$saisie_modifiee['options'] = array_filter($saisie_modifiee['options'], 'saisie_option_contenu_vide');
-
-
+		// On supprime aussi la clé `_options_globales`
+		// qui ne servait que pour les afficher_si
+		unset($saisie_modifiee['options']['_options_globales']);
 		// On modifie enfin
 		$formulaire_actuel = saisies_modifier($formulaire_actuel, $nom, $saisie_modifiee);
 	}
@@ -488,24 +496,7 @@ function formulaires_construire_formulaire_traiter($identifiant, $formulaire_ini
 	return $retours;
 }
 
-/**
- * Permet de modifier l'option `nom` d'une saisie.
- * Fonction de callback pour array_walk_recursive().
- * @internal
- * @param string &$valeur
- *	la valeur du tableau d'options
- * @param string $cle
- *	la clé du tableau, permet de savoir si on traite une option `nom` ou pas
- * @param string $transformation
- *	 chaine contenant notamment `@valeur@`, le `@valeur@` sera remplacé par la valeur original de `$valeur`, puis le tout reinjecté dans `$&valeur`.
- * @return void
- *
-**/
-function construire_formulaire_transformer_nom(&$valeur, string $cle, string $transformation) {
-	if ($cle == 'nom' && is_string($valeur)) {
-		$valeur = str_replace('@valeur@', $valeur, $transformation);
-	}
-}
+
 
 /**
  * Permet de transformer les `afficher_si` présent au sein d'un YAML décrivant les options d'une saisie (abstraite)
@@ -526,11 +517,30 @@ function construire_formulaire_transformer_nom(&$valeur, string $cle, string $tr
  * @return void
 **/
 function construire_formulaire_transformer_afficher_si(&$valeur, string $cle, $name_html) {
-	if ($cle == 'afficher_si' && is_string($valeur)) {
+	if ($cle === 'afficher_si' && is_string($valeur)) {
 		$matches = [];
 		preg_match_all('#@(.*)@#U', $valeur, $matches, PREG_PATTERN_ORDER);
-		foreach ($matches as $champ_potentiel) {
-			$nouveau_champ_potentiel = preg_replace('#@((?!saisie_modifiee)(?!config:)(?!plugin:).*)@#U', '@' . $name_html . '[${1}]@', $champ_potentiel);
+		foreach ($matches[0] as $champ_potentiel) {
+			if (
+				strpos($champ_potentiel, '@saisie_modifiee') === 0
+				||
+				strpos($champ_potentiel, '@config:') === 0
+				||
+				strpos($champ_potentiel, '@plugin:') === 0
+			) {
+				continue;
+			}
+			if (strpos($champ_potentiel, '[')) {
+				$champ_potentiel_sans_arobase = str_replace('@', '', $champ_potentiel);
+				$champ_potentiel_sans_arobase = saisie_name2nom($champ_potentiel_sans_arobase);
+				$nouveau_champ_potentiel = '@' . $name_html;
+				foreach (explode('/', $champ_potentiel_sans_arobase) as $niveau) {
+					$nouveau_champ_potentiel .= '[' . $niveau . ']';
+				}
+				$nouveau_champ_potentiel .= '@';
+			} else {
+				$nouveau_champ_potentiel = preg_replace('#@(.*)@#U', '@' . $name_html . '[${1}]@', $champ_potentiel);
+			}
 			$valeur = str_replace($champ_potentiel, $nouveau_champ_potentiel, $valeur);
 		}
 	}
@@ -573,7 +583,7 @@ function construire_formulaire_generer_saisie_configurable(array $saisie, array 
 	$saisie['options']['constructeur'] = true;
 
 	// On ajoute les boutons d'actions, mais seulement s'il n'y a pas de configuration de lancée
-	if (!$env['erreurs']) {
+	if (!$env['erreurs'] && !($saisie['options']['hors_constructeur'] ?? '')) {
 		$saisie['options']['conteneur_class'] .= ' actionable';
 		$saisie = saisies_inserer_html(
 			$saisie,
@@ -786,3 +796,32 @@ function construire_formulaire_config_inserer_option_depublie(array $saisies): a
 	return $saisies;
 }
 
+/**
+ * Sur le formulaire de config d'une saisie particulière,
+ * insérer les options globales du constructeur de formulaire courant
+ * en champs cachés
+ * @param array $formulaire_config le formulaire pour configurer une saisie
+ * @param array $formulaire_actuel le formulaire que l'internaute est en
+ * @param array $options_globales_disponibles toutes les options possibles
+ * train de construire
+**/
+function construire_formulaire_config_inserer_options_globales(array $formulaire_config, array $formulaire_actuel, array $options_globales_disponibles): array {
+
+	// Tant que la valeur d'une options globales n'est pas définie, elle vaut ''
+	$options_globales_disponibles = array_map(fn($x) => '', $options_globales_disponibles);
+	$options_globales = array_merge(
+		$options_globales_disponibles,
+		$formulaire_actuel['options'] ?? []
+	);
+	foreach ($options_globales as $nom => $valeur) {
+		$saisie = [
+			'saisie' => 'hidden',
+			'options' => [
+				'nom' => "_options_globales[$nom]",
+				'valeur_forcee' => $valeur
+			]
+		];
+		$formulaire_config = saisies_inserer($formulaire_config, $saisie);
+	}
+	return $formulaire_config;
+}

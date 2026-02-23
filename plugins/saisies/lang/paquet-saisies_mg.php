@@ -8,7 +8,7 @@ return [
 	// S
 	'saisies_description' => 'Ce plugin permet de faciliter l’écriture de champs de formulaires en proposant une
 	balise #SAISIE. Le HTML généré est compatible avec la nomenclature des formulaires
-	proposée par SPIP.',
+	proposée par SPIP.', # MODIF
 	'saisies_nom' => 'Saisies pour formulaires',
 	'saisies_slogan' => 'Écrire facilement des champs de formulaires.',
 ];

@@ -6,11 +6,6 @@
  * @return SPIP\Saisies\Afficher
  **/
 
-// Sécurité
-if (!defined('_ECRIRE_INC_VERSION')) {
-	return;
-}
-
 /**
  * Indique si une saisie peut être affichée.
  *
@@ -256,10 +251,22 @@ function saisies_generer_html($champ, $env = []) {
 	if (is_array($champ['saisies'] ?? '')) {
 		$contexte['saisies'] = $champ['saisies'];
 	}
+
+	// Et enfin on passe la saisie elle meme en contexte
+	$contexte['saisie'] = $champ;
+
+	// avec un ajaxid éventuel
+	$options_recuperer_fond = [];
+	if($contexte['ajax'] ?? null) {
+		$options_recuperer_fond['ajax'] = $contexte['ajax'];
+		unset($contexte['ajax']);
+	}
+
 	// On génère la saisie
 	return recuperer_fond(
 		'saisies/_base',
-		$contexte
+		$contexte,
+		$options_recuperer_fond
 	);
 }
 

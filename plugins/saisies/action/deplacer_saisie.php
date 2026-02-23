@@ -6,10 +6,6 @@
  * @package SPIP\Saisies\Action
  */
 
-if (!defined('_ECRIRE_INC_VERSION')) {
-	return;
-}
-
 /**
  * Action de déplacement de saisies dans le constructeur de formulaires
  *

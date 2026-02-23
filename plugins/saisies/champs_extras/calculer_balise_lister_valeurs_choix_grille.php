@@ -1,8 +1,5 @@
 <?php
 
-if (!defined('_ECRIRE_INC_VERSION')) {
-	return;
-}
 
 /**
  * Déclaration de la balise LISTER_VALEURS pour la saisie `choix_grille`

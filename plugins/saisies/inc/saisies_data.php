@@ -7,10 +7,7 @@
  * @package SPIP\Saisies\Data
  **/
 
-// Sécurité
-if (!defined('_ECRIRE_INC_VERSION')) {
-	return;
-}
+
 
 /**
  * Aplatit une description chaînée, en supprimant les sous-groupes.

@@ -122,7 +122,7 @@ Je vindt <a href="https://contrib.spip.net/5080" target="_blank"  rel="noopener 
 	'option_horaire_label' => 'Uurrooster',
 	'option_horaire_label_case' => 'Ook het uurrooster opnemen',
 	'option_id_groupe_label' => 'Trefwoordengroep',
-	'option_info_obligatoire_explication' => 'Je kan de standaard indicatie van verplichting aanpassen: <i>[Verplicht]</i>. Doe niets wanneer de standaardwaarde wilt behouden. En wil je niets aangeven, vul dan uitsluitend een spatie in.',
+	'option_info_obligatoire_explication' => 'Je kan de standaard indicatie van verplichting aanpassen: <i>[Verplicht]</i>. Doe niets wanneer de standaardwaarde wilt behouden. En wil je niets aangeven, vul dan uitsluitend een spatie in.', # MODIF
 	'option_info_obligatoire_label' => 'Indicatie verplichting',
 	'option_inserer_barre_choix_edition' => 'edit toolbar compleet',
 	'option_inserer_barre_choix_forum' => 'forum toolbar',

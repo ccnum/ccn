@@ -11,9 +11,13 @@
 	#SET{label,#LABEL_CASE}
 ]
 <h3 class="h3 spip" id="option_#CLE">[(#GET{label}|?{#GET{label} [ ((#CLE))], #CLE})]</h3>
+
+#SET{description,#EXPLICATION|sinon{#EXPLICATION_DEV}|sinon{#LABEL|?{#LABEL_CASE}}}
 [<p class="description">
-	<strong>Description :</strong> (#EXPLICATION|sinon{#LABEL|?{#LABEL_CASE}})
-	[<br /><strong>Description pour les devs :</strong> (#EXPLICATION_DEV)]
+<strong>Description :</strong> (#GET{description})
+	[(#GET{description}|!={#EXPLICATION_DEV}|oui)
+		[<br /><strong>Description pour les devs :</strong> (#EXPLICATION_DEV)]
+	]
 </p>]
 [<p class="attention">
 	<strong>Attention :</strong> (#ATTENTION)

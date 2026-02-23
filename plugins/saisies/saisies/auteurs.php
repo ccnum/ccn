@@ -6,10 +6,7 @@
  * @package SPIP\Saisies\auteurs
  **/
 
-// Sécurité
-if (!defined('_ECRIRE_INC_VERSION')) {
-	return;
-}
+
 
 
 /**

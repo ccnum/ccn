@@ -15,6 +15,7 @@ return [
 	'bouton_parcourir_docs_objet' => 'Parcourir les images',
 	'bouton_parcourir_docs_rubrique' => 'Parcourir la rubrique',
 	'bouton_parcourir_mediatheque' => 'Parcourir la médiathèque',
+	'bouton_vider_champs' => 'Vider les champs',
 
 	// C
 	'caracteres_restants' => 'caractères restants',
@@ -73,6 +74,7 @@ return [
 	'fichier_erreur_explication_renvoi_alternative' => 'Tu peux renvoyer un nouveau fichier, ou bien soumettre le formulaire tel quel, l’ancien fichier n’est pas conservé.',
 	'fichier_erreur_explication_renvoi_pas_alternative' => 'Tu dois envoyer un autre fichier.',
 	'format_date_attendu' => 'Saisir une date au format jj/mm/aaaa.',
+	'format_date_heure_attendu' => 'Saisir une date au format jj/mm/aaaa et une heure au format hh:mm.',
 	'format_email_attendu' => 'Saisir une adresse email au format toi@fournisseur.fr',
 	'formulaires_aucun_champ' => 'Il n’y a pour l’instant aucun champ de saisie pour ce formulaire.',
 
@@ -146,6 +148,7 @@ Tu trouveras la <a href="https://contrib.spip.net/5080" target="_blank" rel="noo
 	'option_datas_sous_groupe_explication' => 'Tu dois indiquez un choix par ligne sous la forme "cle|Label" du choix. <br />La clé doit être unique, brève, claire et ne doit plus être modifiée par la suite.<br />Tu peux indiquer le début d’un sous-groupe sous la forme "*Titre du sous-groupe". Pour finir un sous-groupe tu peux en entamez un autre, ou bien mettre une ligne contenant uniquement "/*".',
 	'option_datas_sous_groupe_explication_dev' => 'Fournir une liste de choix sous la forme d’un tableau PHP (<code>array()</code>) ou SPIP (<code>#ARRAY</code>) sous forme <code>"clé" => "valeur"</code>.<br />Vous pouvez regrouper en sous groupe. Pour ce faire, la <code>clé</code> doit être le titre du sous groupe, et la valeur doit être elle-même un tableau associatif de type <code>"clé" => "valeur"</code>.',
 	'option_defaut_label' => 'Valeur par défaut',
+	'option_defaut_multiple_explication' => 'Mettre une clé par ligne.',
 	'option_defaut_session_explication' => 'Mettre le champ de session à utiliser. Si ce champ existe dans la session courante, sa valeur l’emportera sur la valeur par défaut.',
 	'option_defaut_session_label' => 'Valeur par défaut depuis la session de l’internaute',
 	'option_depublie_choix_explication' => 'Un choix dépublié ne sera plus proposé pour les nouveaux formulaires. Il restera visible si on modifie un enregistrement qui contenait ce choix.<br /> Indiquer les choix séparés par une virgule, exemple : <code>choix1,choix3</code>.',
@@ -157,6 +160,8 @@ Tu trouveras la <a href="https://contrib.spip.net/5080" target="_blank" rel="noo
 	'option_disable_avec_post_label' => 'Désactiver mais poster',
 	'option_disable_choix_explication' => 'Indiquer les choix séparés par une virgule, exemple : <code>choix1,choix3</code>.',
 	'option_disable_choix_explication_dev' => 'Indiquer les choix sous forme de tableau, exemple : <code>["choix1","choix3"]</code>.',
+	'option_disable_choix_grille_explication' => 'Indiquer les choix sous la forme <code>cledeligne/cledecolonne</code>,  séparés par une virgule, exemple : <code>Banane/Rouge,Pomme/Bleu</code>, pour désactiver la colonne Rouge de la ligne Banane et la colonne Bleu, de la ligne Pomme.',
+	'option_disable_choix_grille_explication_dev' => 'Indiquer les choix sous forme de tableau de chaine de type <code>cledeligne/cledecolonne</code> exemple : <code>[\'Banane/Rouge\',\'Pomme/Bleu\']</code>, pour désactiver la colonne Rouge de la ligne Banane et la colonne Bleu, de la ligne Pomme.',
 	'option_disable_choix_label' => 'Désactiver certains choix',
 	'option_disable_explication' => 'Le champ ne peut plus obtenir le focus.',
 	'option_disable_label' => 'Désactiver le champ',
@@ -179,10 +184,11 @@ Tu trouveras la <a href="https://contrib.spip.net/5080" target="_blank" rel="noo
 	'option_heure_pas_label' => 'Intervalle des minutes dans le menu d’aide à la saisie',
 	'option_horaire_label' => 'Horaire',
 	'option_horaire_label_case' => 'Permettre de saisie aussi l’horaire',
+	'option_hors_vue_label' => 'Ne pas afficher dans les vues des saisies',
 	'option_id_explication' => 'Sera automatiquement préfixé par <code>champ_</code>.',
 	'option_id_groupe_label' => 'Groupe de mots',
 	'option_id_label' => 'Attribut <code>id</code> de la saisie',
-	'option_info_obligatoire_explication' => 'Tu peux modifier l’indication d’obligation par défaut : <i>[Obligatoire]</i>. Pour garder l’information par défaut, ne rien mettre. Pour ne rien afficher, mettre un texte composé uniquement d’espace.',
+	'option_info_obligatoire_explication' => 'Tu peux modifier l’indication d’obligation par défaut : <i>[Obligatoire]</i>. Pour garder l’information par défaut, ne rien mettre. Pour ne rien afficher, mettre un texte composé uniquement d’espace.', # MODIF
 	'option_info_obligatoire_label' => 'Indication d’obligation',
 	'option_inserer_barre_choix_edition' => 'barre d’édition complète',
 	'option_inserer_barre_choix_forum' => 'barre des forums',
