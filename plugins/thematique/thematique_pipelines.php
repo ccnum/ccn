@@ -157,3 +157,16 @@ function thematique_cioidc_userinfo($flux) {
 
 	return $flux;
 }
+
+function thematique_optimiser($flux) {
+	include_spip('base/abstract_sql');
+
+	// Mettre à la poubelle tous les auteurs "forum"
+	sql_updateq(
+		'spip_auteurs',
+		array('statut' => '5poubelle'),
+		"statut='6forum'"
+	);
+
+	return $flux;
+}
