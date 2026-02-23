@@ -144,9 +144,6 @@ fi
 if [ ${SPIP_VERSION_SITE} != "thematique" ]; then
 	spip plugins:activer vider_rubrique -y
 fi
-if [ ${SPIP_VERSION_SITE} != "fictions" ]; then
-	spip plugins:activer squelettes_par_rubrique -y
-fi
 spip plugins:activer ${SPIP_VERSION_SITE} -y
 if [ ${PROJET} != "laclasse" ]; then
 	spip plugins:activer thematique_${PROJET} -y

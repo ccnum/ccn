@@ -1,0 +1,58 @@
+<BOUCLE_principale(RUBRIQUES){id_rubrique}>
+
+	<!-- NAVIGATION ANCRE-->
+	<div id="ecriture-navigation">
+		<a href="#" id="nav-top"><img src="#CHEMIN{img/ecriture/fleche-top.png}" width="9" height="12" /></a>
+		<a href="#" id="nav-script">script</a>
+		<a href="#" id="nav-forum">forum</a>
+		<a href="#" id="nav-ecrire">écrire</a>
+	</div>
+
+	<!-- BOOK -->
+	<div id="global-ecriture">
+		<div id="global-spacer">
+		</div>
+		<div class="global-content">
+			<div class="content">
+				<div class="content-left-small">
+					<div id="titre_site">
+						<a href="#URL_SITE_SPIP" title="Accueil"><strong>fictions</strong></a><a href="http://www.laclasse.com" title="http://www.laclasse.com">.laclasse.com</a>
+					</div>
+					<!-- LISTE CADAVRE SMALL-->
+					<div id="ecriture-liste">
+						<BOUCLE_art(ARTICLES){id_rubrique}>
+							<a href="[(#SELF|parametre_url{id_article,#ID_ARTICLE})]">#TITRE</a>
+						</BOUCLE_art>
+					</div>
+				</div>
+				<div class="content-right-large">
+					<div id="ecriture">
+						<BOUCLE_article(ARTICLES){id_article}>
+							<div class="ecriture-chapitre-texte">
+								<div class="ecriture-chapitre-surtitre">—</div>
+								<div class="ecriture-chapitre-titre">#TITRE</div>
+							</div>
+							<div class="ecriture-chapitre-auteur">
+							</div>
+							<div class="texte_courant #EDIT{texte}" id="texte_prologue">
+								#TEXTE<br />
+							</div>
+						</BOUCLE_article>
+							<BOUCLE_article_default(ARTICLES){!par date}{0,1}>
+								<div class="ecriture-chapitre-texte">
+									<div class="ecriture-chapitre-surtitre">—</div>
+									<div class="ecriture-chapitre-titre">#TITRE</div>
+								</div>
+								<div class="ecriture-chapitre-auteur">
+								</div>
+								<div class="texte_courant #EDIT{texte}" id="texte_prologue">
+									#TEXTE<br />
+								</div>
+							</BOUCLE_article_default>
+						<//B_article>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</BOUCLE_principale>
