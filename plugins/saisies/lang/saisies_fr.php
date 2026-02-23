@@ -108,6 +108,8 @@ return [
 	'option_afficher_si_remplissage_uniquement_explication' => 'En cochant cette case, l’affichage conditionnel s’appliquera uniquement lors du remplissage du formulaire, pas lors de l’affichage des résultats.',
 	'option_afficher_si_remplissage_uniquement_label' => 'Uniquement lors du remplissage',
 	'option_afficher_si_remplissage_uniquement_label_case' => 'Masquer la saisie uniquement lors du remplissage',
+	'option_ajax_label' => 'Ajaxer la saisie.',
+	'option_ajax_explication' => 'Charger la saisie dans un fragment ajax, dont on transmet l\'identifiant, afin de pouvoir la manipuler (la recharger) depuis un écouteur de changement sur une autre, par exemple. Fournit uniquement l\'encapsulation ajax, pas de code supplémentaire.',
 	'option_attention_explication' => 'Un message plus important que l’explication.',
 	'option_attention_label' => 'Avertissement',
 	'option_attribut_title_label' => 'Valeur en attribut title',
