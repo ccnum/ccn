@@ -3716,7 +3716,7 @@ li a, li a:hover {
 	> .spip_documents {
 		display: flex;
 		align-items: stretch;
-		> a.mediabox {
+		> a {
 			flex: 0 0 90%;
 			text-align: center;
 			height: auto;
@@ -3845,6 +3845,9 @@ li a, li a:hover {
 .swiper-pdf-loader img,
 .swiper-pdf-loader span {
   animation: blink 3s infinite;
+}
+.swiper-pdf-loader span {
+	text-align: center;
 }
 
 @keyframes blink {
