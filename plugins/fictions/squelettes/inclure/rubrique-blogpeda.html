@@ -1,13 +1,5 @@
 <BOUCLE_principale(RUBRIQUES){id_rubrique}>
 
-	<!-- NAVIGATION ANCRE-->
-	<div id="ecriture-navigation">
-		<a href="#" id="nav-top"><img src="#CHEMIN{img/ecriture/fleche-top.png}" width="9" height="12" /></a>
-		<a href="#" id="nav-script">script</a>
-		<a href="#" id="nav-forum">forum</a>
-		<a href="#" id="nav-ecrire">écrire</a>
-	</div>
-
 	<!-- BOOK -->
 	<div id="global-ecriture">
 		<div id="global-spacer">
@@ -34,8 +26,8 @@
 							</div>
 							<div class="ecriture-chapitre-auteur">
 							</div>
-							<div class="texte_courant #EDIT{texte}" id="texte_prologue">
-								#TEXTE<br />
+							<div class="texte_courant #EDIT{texte}">
+								[(#TEXTE|image_reduire{300})]<br />
 							</div>
 						</BOUCLE_article>
 							<BOUCLE_article_default(ARTICLES){!par date}{0,1}>
@@ -45,8 +37,8 @@
 								</div>
 								<div class="ecriture-chapitre-auteur">
 								</div>
-								<div class="texte_courant #EDIT{texte}" id="texte_prologue">
-									#TEXTE<br />
+								<div class="texte_courant #EDIT{texte}">
+									[(#TEXTE|image_reduire{300})]<br />
 								</div>
 							</BOUCLE_article_default>
 						<//B_article>
