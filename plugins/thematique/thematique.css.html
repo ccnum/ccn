@@ -3717,7 +3717,7 @@ li a, li a:hover {
 		display: flex;
 		align-items: stretch;
 		> a {
-			flex: 0 0 90%;
+			flex: 0 0 100%;
 			text-align: center;
 			height: auto;
 			padding-bottom: 15px;
@@ -3734,6 +3734,11 @@ li a, li a:hover {
 					background-color: var(--color-hover);
 					color: #fff;
 				}
+			}
+		}
+		&:has(> .action_supprimer) {
+			> a {
+				flex: 0 0 90%;
 			}
 		}
 		> .action_supprimer {
