@@ -15,25 +15,17 @@
 						<BOUCLE_art(ARTICLES){id_rubrique}>
 							<a href="[(#SELF|parametre_url{id_article,#ID_ARTICLE})]">#TITRE</a>
 						</BOUCLE_art>
+							<a href="[(#SELF|parametre_url{id_article,new})]">Nouvel article</a>
 					</div>
 				</div>
 				<div class="content-right-large">
 					<div id="ecriture">
-						<BOUCLE_article(ARTICLES){id_article}>
-							<div class="ecriture-chapitre-texte">
-								<div class="ecriture-chapitre-surtitre">—</div>
-								<div class="ecriture-chapitre-titre">#TITRE</div>
-							</div>
-							<div class="ecriture-chapitre-auteur">
-							</div>
-							<div class="texte_courant #EDIT{texte}">
-								[(#TEXTE|image_reduire{300})]<br />
-							</div>
-							<INCLURE{fond=inclure/forum,id_article} />
-						</BOUCLE_article>
-							<BOUCLE_article_default(ARTICLES){!par date}{0,1}>
+						[(#ENV{id_article}|=={new}|oui)
+							<div class="ajax">#FORMULAIRE_EDITER_ARTICLE{oui, #ID_RUBRIQUE, #SELF|parametre_url{var_mode,recalcul}}</div>
+						]
+						[(#ENV{id_article}|=={new}|non)
+							<BOUCLE_article(ARTICLES){id_article}>
 								<div class="ecriture-chapitre-texte">
-									<div class="ecriture-chapitre-surtitre">—</div>
 									<div class="ecriture-chapitre-titre">#TITRE</div>
 								</div>
 								<div class="ecriture-chapitre-auteur">
@@ -42,8 +34,20 @@
 									[(#TEXTE|image_reduire{300})]<br />
 								</div>
 								<INCLURE{fond=inclure/forum,id_article} />
-							</BOUCLE_article_default>
-						<//B_article>
+							</BOUCLE_article>
+								<BOUCLE_article_default(ARTICLES){!par date}{0,1}>
+									<div class="ecriture-chapitre-texte">
+										<div class="ecriture-chapitre-titre">#TITRE</div>
+									</div>
+									<div class="ecriture-chapitre-auteur">
+									</div>
+									<div class="texte_courant #EDIT{texte}">
+										[(#TEXTE|image_reduire{300})]<br />
+									</div>
+									<INCLURE{fond=inclure/forum,id_article} />
+								</BOUCLE_article_default>
+							<//B_article>
+						]
 					</div>
 				</div>
 			</div>
