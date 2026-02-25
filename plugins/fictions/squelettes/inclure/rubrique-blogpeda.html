@@ -12,14 +12,16 @@
 					</div>
 					<!-- LISTE CADAVRE SMALL-->
 					<div id="ecriture-liste">
+						<ul>
 						<BOUCLE_art(ARTICLES){id_rubrique}>
-							<a href="[(#SELF|parametre_url{id_article,#ID_ARTICLE})]">#TITRE</a>
+							<li><a href="[(#SELF|parametre_url{id_article,#ID_ARTICLE})]">#TITRE</a></li>
 						</BOUCLE_art>
-							<a href="[(#SELF|parametre_url{id_article,new})]">Nouvel article</a>
+							<li><a href="[(#SELF|parametre_url{id_article,new})]">Nouvel article</a></li>
+						</ul>
 					</div>
 				</div>
 				<div class="content-right-large">
-					<div id="ecriture">
+					<div id="ecriture #ENV{id_article}">
 						[(#ENV{id_article}|=={new}|oui)
 							<div class="ajax">#FORMULAIRE_EDITER_ARTICLE{oui, #ID_RUBRIQUE, #SELF|parametre_url{var_mode,recalcul}}</div>
 						]
