@@ -167,6 +167,11 @@
 			.end();
 
 
+		// Les alertes sur les suppressions
+		function ecouter_supprimer_saisies() {
+			$('.supprimer_saisie').unbind('click').on('click', function(){return confirm('<:saisies:construire_confirmer_supprimer_champ:>')});
+		}
+		onAjaxLoad(ecouter_supprimer_saisies);
 		// On déplie toujours les fieldsets plés par défaut
 		$('.fieldset.plie').each(function(){
 			$(this)
