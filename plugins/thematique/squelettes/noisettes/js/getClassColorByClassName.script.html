@@ -1,0 +1,23 @@
+<script>
+	/**
+	 * Fonction pour récupérer la couleur d'une classe depuis le menu-classes en se basant sur le nom de la classe 
+	 * 
+	 * @param {string} className - Nom de la classe
+	 */
+	function getClassColorByClassName(className) {
+		const $ulClasses = $('#menu-classes').find('ul').first();
+		let classColor = null;
+		$ulClasses.find('li.logo a').each(function () {
+			const dataTipClassName = $(this).attr('data-tip');
+			if (dataTipClassName === className) {
+				classColor = $(this)
+					.find('div')
+					.attr('class')
+					?.split(' ')
+					.find((c) => c.startsWith('couleur_travail_en_cours'));
+				return false;
+			}
+		});
+		return classColor;
+	}
+</script>

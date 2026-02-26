@@ -1,0 +1,25 @@
+<script>
+	/**
+	 * Fonction pour récupérer le backgroundImage d'une classe depuis le menu-classes en se basant sur le nom de la classe 
+	 * 
+	 * @param {string} className - Nom de la classe
+	 * @param {boolean} sliceUrl - Extraire url("")
+	 */
+	function getClassIconByClassName(className, sliceUrl) {
+		const $ulClasses = $('#menu-classes').find('ul').first();
+		let bgImage = null;
+		$ulClasses.find('li.logo a').each(function () {
+			const dataTipClassName = $(this).attr('data-tip');
+			if (dataTipClassName === className) {
+				bgImage = $(this)
+					.find('.logo_menu_classe_image')
+					.css('background-image');
+				return false;
+			}
+		});
+		if (bgImage && sliceUrl) {
+			bgImage = bgImage.slice(5, -2);
+		}
+		return bgImage;
+	}
+</script>

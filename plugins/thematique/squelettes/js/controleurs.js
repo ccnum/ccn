@@ -536,7 +536,6 @@ function callReponse(id_reponse) {
 		url_travail_en_cours,
 		'rubrique',
 		'travail_en_cours',
-		false,
 	);
 	// - Propriété propre à l'affichage de la modal
 	setModalProperties({
@@ -606,7 +605,6 @@ function callClasse(id_classe) {
 		url_travail_en_cours,
 		'rubrique',
 		'travail_en_cours',
-		false,
 	);
 	// - Propriété propre à l'affichage de la modal
 	setModalProperties({
@@ -658,7 +656,6 @@ function callClasses() {
 		url_travail_en_cours,
 		'rubrique',
 		'travail_en_cours',
-		false,
 	);
 	// - Propriété propre à l'affichage de la modal
 	setModalProperties({
@@ -711,7 +708,6 @@ function callLivrables() {
 		url_lateral,
 		'rubrique',
 		'livrables',
-		true,
 		function () {},
 	);
 	// - Propriété propre à l'affichage de la modal
@@ -823,7 +819,6 @@ function callRessource() {
 		url_lateral,
 		'rubrique',
 		'ressources',
-		false,
 		function () {},
 	);
 	// - Propriété propre à l'affichage de la modal
@@ -935,7 +930,6 @@ function callRessourceSyndicArticle(id_syndic_article, type_objet) {
 		url_lateral,
 		'rubrique',
 		type_objet,
-		false,
 		function () {},
 	);
 	// - Propriété propre à l'affichage de la modal
@@ -1102,7 +1096,6 @@ function callAgora() {
 		url_lateral,
 		'rubrique',
 		'agora',
-		false,
 		function () {},
 	);
 	// - Propriété propre à l'affichage de la modal
@@ -1500,7 +1493,6 @@ function loadContentInLateralSidebar(
 	url,
 	typePage,
 	typeObjet,
-	replaceClasseIcon,
 	callback,
 ) {
 	showSidebarLateral();
@@ -1520,27 +1512,6 @@ function loadContentInLateralSidebar(
 		$('#sidebar_lateral_inner .fiche_titre').addClass(
 			'fiche_titre_secondaire',
 		);
-		if (replaceClasseIcon) {
-			$livrables = $('.livrable');
-			$('.livrable').each(function () {
-				const $livrable = $(this);
-				const $img = $livrable.find('.profil img');
-				if ($img.attr('src')?.includes('logo_rvb_bleu')) {
-					const findClassLivrable = $livrable
-						.attr('class')
-						.split(' ')
-						.find((c) => c.startsWith('couleur_travail_en_cours'));
-					const classeNumber = findClassLivrable
-						? findClassLivrable.replace('couleur_travail_en_cours', '')
-						: null;
-					if (classeNumber) {
-						const logoClasseNumber = (classeNumber % 10) + 1;
-						const logoSrc = `plugins/thematique/squelettes/img/logo_classe_${logoClasseNumber}.png`;
-						$img.attr('src', logoSrc);
-					}
-				}
-			});
-		}
 		if (callback) {
 			callback(response);
 		}
