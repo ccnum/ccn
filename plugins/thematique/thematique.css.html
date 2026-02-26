@@ -2017,15 +2017,21 @@ div.donnees_classe {
 
 .classe_consigne {
 	margin: 10px;
-	padding: 0 0 15px 0;
 	text-align: left;
 	border-radius: 3px;
+	opacity: 0.9;
+	&:hover {
+		opacity: 1;
+	}
+    background: #7D7BFD;
+	color: #fff;
 }
 .classe_consigne_reponse {
 	padding: 15px 15px 15px 17px;
 	position: relative;
 	font-size: 0;
 	cursor: pointer;
+	border-radius: 3px;
 }
 
 .classe_consigne_reponse_photo {
@@ -2054,9 +2060,8 @@ div.donnees_classe {
 
 .classe_consigne_reponse_consigne {
 	background: rgba(0,0,0,.2);
-	padding: 15px 15px 15px 54px;
+	padding: 15px 15px 15px 69px;
 	color: #fff;
-	margin: 0 15px;
 	cursor: pointer;
 }
 .classe_consigne_reponse_date {
@@ -2079,12 +2084,15 @@ div.donnees_classe {
 
 
 .classe_consigne_reponse_classe {
-	margin: 10px -15px -30px -15px;
+	margin: 10px -15px -15px -15px;
 	background: rgba(0,0,0,0.1);
-	padding: 9px 15px 9px 68px;
+	padding-left: 68px;
+	padding-top: 5px;
+	padding-bottom: 5px;
 	font-size: 9px;
 	text-transform: uppercase;
 	letter-spacing: 1px;
+    color: rgba(255, 255, 255, 0.59);
 }
 
 .bloc_option_reponses_consignes_classe.cache {padding: 0 !important}

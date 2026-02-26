@@ -33,33 +33,17 @@
 
 			[(#REM) ---------------- Titre & logo ---------------- ]
 			[(#ENV{type_objet}|in_array{#LISTE{consignes,travail_en_cours,ressources,classes,agora}}|oui)
-				[(#ENV{type_objet}|in_array{#LISTE{travail_en_cours,classes}}|oui)
-				<script type="text/javascript">
-					$(function() {
-						$('#ajax_go_to_classe_#GET{id_parent}').on('click',function() {
-							callClasse('#GET{id_parent}');
-						});
-					});
-				</script>
-				]
-
+				[(#ENV{type_objet}|in_array{#LISTE{travail_en_cours,classes}}|oui)]
 				<div class="fiche_titre couleur_texte_[(#ENV{type_objet})] couleur_[(#ENV{type_objet})][(#MODELE{nb2col}{id_article})]">
 					<div class="texte">
 						<div class="photo">[(#MODELE{logo_carre}{id_article})]</div>
 						<div class="#EDIT{titre} titre">[(#TITRE)]</div>
 						<div class="auteur_date">
-							[<div id="ajax_go_to_classe_#GET{id_parent}" class="reponse_goto_classe[(#ENV{type_objet}|in_array{#LISTE{travail_en_cours,classes}}|oui) pointer]">(#GET{titre_parent})</div>]
+							[<div id="ajax_go_to_classe_#GET{id_parent}" onclick="callClasse('#GET{id_parent}')" class="reponse_goto_classe[(#ENV{type_objet}|in_array{#LISTE{travail_en_cours,classes}}|oui) pointer]">(#GET{titre_parent})</div>]
 							[<div class="#EDIT{date}">(#DATE|affdate)</div>]
 
 							[(#ENV{type_objet}|=={travail_en_cours}|oui)
-								<script type="text/javascript">
-									$(function() {
-										$('#ajax_go_to_consigne_#GET{id_consigne}').on('click',function() {
-											callConsigne('#GET{id_consigne}');
-										});
-									});
-								</script>
-								[<div id="ajax_go_to_consigne_#GET{id_consigne}" class="reponse_goto_consigne">
+								[<div id="ajax_go_to_consigne_#GET{id_consigne}" onclick="callConsigne('#GET{id_consigne}')" class="reponse_goto_consigne">
 									<div class="reponse_goto_consigne_label">En réponse à la consigne :</div>
 									(#GET{titre_consigne})
 								</div>]

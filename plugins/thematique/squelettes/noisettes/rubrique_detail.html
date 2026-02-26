@@ -47,23 +47,9 @@
 				<BOUCLE_rubrique(RUBRIQUES){titre_mot=consignes}{!par id_rubrique}{tout}>
 					<BOUCLE_consigne(ARTICLES){branche}{par date}{date>=#CONST{_date_debut}}{date<=#CONST{_date_fin}}>
 						#SET{id_to_check,#_principale:ID_RUBRIQUE}
-							<script type="text/javascript">
-								$(function() {
-									$('#ajax_go_to_consigne_#ID_ARTICLE').on('click',function() {
-										callConsigne('#ID_ARTICLE');
-									});
-								});
-							</script>
 							<BOUCLE_reponse(ARTICLES){id_consigne=#ID_ARTICLE}{id_rubrique=#_principale:ID_RUBRIQUE}>
-								<script type="text/javascript">
-									$(function() {
-										$('#ajax_go_to_reponse_#ID_ARTICLE').on('click',function() {
-											callReponse('#ID_ARTICLE');
-										});
-									});
-								</script>
 								<div class="classe_consigne couleur_[(#TYPE_OBJET)][(#GET{id_to_check}|substr{[(#GET{id_to_check}|strlen|moins{1})],1})]">
-									<div id="ajax_go_to_reponse_#ID_ARTICLE" class="classe_consigne_reponse">
+									<div id="ajax_go_to_reponse_#ID_ARTICLE" class="classe_consigne_reponse" onclick="callReponse('#ID_ARTICLE')">
 										<div class="classe_consigne_reponse_photo">[(#MODELE{logo_carre}{id_rubrique})]</div>
 										<div class="classe_consigne_reponse_titre">[(#TITRE)]</div>
 									</div>
@@ -73,7 +59,7 @@
 									</div>
 								</div>
 							</BOUCLE_reponse>
-								<div id="ajax_go_to_consigne_#ID_ARTICLE" class="classe_consigne consigne_no_reponse">
+								<div id="ajax_go_to_consigne_#ID_ARTICLE" class="classe_consigne consigne_no_reponse" onclick="callConsigne('#ID_ARTICLE')">
 									<div class="classe_consigne_reponse">
 										<div class="classe_consigne_reponse_photo"></div>
 										<div class="classe_consigne_reponse_titre">La classe n'a pas encore répondu à cette consigne.</div>
