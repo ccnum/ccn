@@ -101,7 +101,7 @@ function Consigne() {
 		this.hauteur = $(this.div_base).outerHeight();
 
 		// Préparation bouton réponse plus (crayon)
-		this.div_reponse_plus = $("<div class='bouton_reponse_consigne' onclick='createReponse(" + this.id + "," + CCN.idRestreint + "," + this.numero + ");'><img src='" + CCN.urlRoot + "img/reponse_plus.png' title='Répondre à la consigne'>Répondre à la consigne</div>");
+		this.div_reponse_plus = $("<div class='bouton_reponse_consigne' onclick='createReponse(false," + this.id + "," + CCN.idRestreint + "," + this.numero + ");'><img src='" + CCN.urlRoot + "img/reponse_plus.png' title='Répondre à la consigne'>Répondre à la consigne</div>");
 		this.div_reponse_see = $("<div class='bouton_reponse_consigne'><img src='" + CCN.urlRoot + "img/reponse_plus.png' title='Accéder à ma réponse'> Accéder à ma réponse</div>");
 
 		this.div_base.append(this.div_reponse_plus);

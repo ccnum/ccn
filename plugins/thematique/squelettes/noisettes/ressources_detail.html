@@ -70,15 +70,7 @@
 								});
 							</script>
 							<BOUCLE_article(ARTICLES){id_rubrique}{par date}>
-								<div class="ressource_article" id="ajax_go_to_ressources_article_#ID_ARTICLE">#TITRE</div>
-
-								<script type="text/javascript">
-									$(function() {
-										$('#ajax_go_to_ressources_article_#ID_ARTICLE').on('click',function() {
-											callRessourceArticle('#ID_ARTICLE','#GET{sous_type}');
-										});
-									});
-								</script>
+								<div class="ressource_article" id="ajax_go_to_ressources_article_#ID_ARTICLE" onclick="callRessourceArticle('#ID_ARTICLE','#GET{sous_type}')">#TITRE</div>
 							</BOUCLE_article>
 						</div>
 					</BOUCLE_rubrique>
@@ -86,40 +78,20 @@
 					<BOUCLE_sites(SITES){id_rubrique=#ID_RUBRIQUE}{tout}>
 
 					<div class="ressources_rubrique">
-						<div class="ressource_rubrique_titre" id="ajax_go_to_ressources_rubrique_#ID_RUBRIQUE"><h3>#NOM_SITE</h3></div>
-						<script type="text/javascript">
-							$(function() {
-								$('#ajax_go_to_ressources_rubrique_#ID_RUBRIQUE').on('click',function() {
-								//	callRessourceRubrique('#ID_RUBRIQUE');
-								});
-							});
-						</script>
+						<div class="ressource_rubrique_titre" id="ajax_go_to_ressources_rubrique_#ID_RUBRIQUE" onclick="callRessourceRubrique('#ID_RUBRIQUE')">
+							<h3>#NOM_SITE</h3>
+						</div>
 						<BOUCLE_article_sites(SYNDIC_ARTICLES){id_rubrique}{par date}>
-							<div class="ressource_article" id="ajax_go_to_ressources_syndic_article_#ID_SYNDIC_ARTICLE">#TITRE</div>
-
-							<script type="text/javascript">
-								$(function() {
-									$('#ajax_go_to_ressources_syndic_article_#ID_SYNDIC_ARTICLE').on('click',function() {
-										callRessourceSyndicArticle('#ID_SYNDIC_ARTICLE','#GET{sous_type}');
-									});
-								});
-							</script>
+							<div class="ressource_article" id="ajax_go_to_ressources_syndic_article_#ID_SYNDIC_ARTICLE" onclick="callRessourceSyndicArticle('#ID_SYNDIC_ARTICLE','#GET{sous_type}')">#TITRE</div>
 						</BOUCLE_article_sites>
 					</div>
 					</BOUCLE_sites>
 
 					<B_article2>
 						<div class="ressources_rubrique">
-					<BOUCLE_article2(ARTICLES){id_rubrique}{par date}>
-						<div class="ressource_article" id="ajax_go_to_ressources_article_#ID_ARTICLE">#TITRE</div>
-						<script type="text/javascript">
-						$(function() {
-							$('#ajax_go_to_ressources_article_#ID_ARTICLE').on('click',function() {
-								callRessourceArticle('#ID_ARTICLE','#GET{sous_type}');
-							});
-						});
-						</script>
-					</BOUCLE_article2>
+							<BOUCLE_article2(ARTICLES){id_rubrique}{par date}>
+								<div class="ressource_article" id="ajax_go_to_ressources_article_#ID_ARTICLE" onclick="callRessourceArticle('#ID_ARTICLE','#GET{sous_type}')">#TITRE</div>
+							</BOUCLE_article2>
 						</div>
 					</B_article2>
 

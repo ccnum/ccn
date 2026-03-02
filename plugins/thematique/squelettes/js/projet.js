@@ -170,7 +170,7 @@ function Projet() {
 
 		this.showRangeOfTimeline(CCN.projet.nombre_jours, 0, 0);
 
-		$('body').removeClass('hasSidebarOpen highlightReponse');
+		//$('body').removeClass('hasSidebarOpen highlightReponse');
 
 		this.mois_select = -1;
 		this.mois_rollover = -1;

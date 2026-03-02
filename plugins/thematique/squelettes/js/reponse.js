@@ -63,12 +63,14 @@ function Reponse() {
 
 		var date_texte = this.date.substring(0, 2) + " " + CCN.nomMois[parseFloat(this.date.substring(3, 5)) - 1];
 
+		const vignette = this.data.vignette.includes('logo_rvb_bleu') ? `plugins/thematique/squelettes/img/logo_classe_${(parseInt(coul)%10)+1}.png`: this.data.vignette;
+
 		this.div_texte = $('<div/>')
 			.attr('id', 'reponse' + this.id)
 			.attr('class', 'reponse couleur_texte_travail_en_cours couleur_travail_en_cours' + coul)
 			.html(
 				"<div class=\"picto_nombre_commentaires\">" + this.nombre_commentaires + "</div> " +
-				"<div class=\"photo\"><img src=\"" + this.data.vignette + "\" /></div> " +
+				"<div class=\"photo\"><img src=\"" + vignette + "\" /></div> " +
 				"<div class=\"texte\">" +
 				"<div class=\"titre\" class=\"\">" + this.titre + "</div> " +
 				"<div class=\"auteur_date\">" + this.nom_classe + " - " + date_texte + "</div> " +
