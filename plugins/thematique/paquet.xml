@@ -31,4 +31,5 @@
 	<pipeline nom="jqueryui_plugins" inclure="thematique_pipelines.php" />
 	<pipeline nom="notifications_destinataires" inclure="thematique_pipelines.php" />
 	<pipeline nom="cioidc_userinfo" inclure="thematique_pipelines.php" />
+	<pipeline nom="optimiser" inclure="thematique_pipelines.php" />
 </paquet>

@@ -1,3 +1,5 @@
+<script src="#CHEMIN{noisettes/js/addCloseModal.script}"></script>
+<INCLURE{fond=noisettes/js/addCloseModal.script}>
 #CACHE{0}
 #SET{laclasse_rubrique_admin,#CONST{$_COOKIE[_cookie_rubrique]}}
 <BOUCLE_principale(RUBRIQUES){id_rubrique}{tout}>
@@ -8,8 +10,8 @@
 		[(#REM) ---------------- titre & logo ---------------- ]
 		<div class="sidebar_bubble">
 			<div class="fiche_titre">
-				<div class="photo #EDIT{logo}">[(#MODELE{logo_carre}{id_rubrique})]</div>
 				<div class="texte">
+					<div class="photo #EDIT{logo}">[(#MODELE{logo_carre}{id_rubrique})]</div>
 					<div class="titre #EDIT{titre}">[(#TITRE)]</div>
 					<!--<div class="auteur_date">[(#NOM) - ][(#DATE|affdate)]</div>-->
 				</div>
@@ -129,25 +131,51 @@
 				</BOUCLE_rubAnnee>
 				<br />
 
-				<BOUCLE_sous_articles1(ARTICLES) {id_rubrique} {tout} {par num titre} {doublons}>
-					<script type="text/javascript">
-						$('#ajax#ID_ARTICLE').click(function() {
-							$('div#sidebar_main').addClass('chargement');
-							$('#menug li a.selected').removeClass('selected');
-							$('#ajax_rub_#ID_RUBRIQUE').addClass('selected');
-							$('#sidebar_main').load('[(#URL_PAGE{article}|parametre_url{id_article,#ID_ARTICLE}|parametre_url{mode,ajax-detail}|html_entity_decode)]', {limit: 25},
-							function(){
-								hideSidebarLateral();
-								$('div#sidebar_main').removeClass('chargement');
-								$('#sidebar_main').show('slow');
+				<div class="sidebar_bubble">
+					<ul class="rubrique_ul">
+					<BOUCLE_sous_articles1(ARTICLES) {id_rubrique} {tout} {par num titre} {doublons}>
+						<script type="text/javascript">
+							$('#ajax#ID_ARTICLE').click(function() {
+								$('div#sidebar_main').addClass('chargement');
+								$('#menug li a.selected').removeClass('selected');
+								$('#ajax_rub_#ID_RUBRIQUE').addClass('selected');
+								$('#sidebar_main').load('[(#URL_PAGE{article}|parametre_url{id_article,#ID_ARTICLE}|parametre_url{mode,ajax-detail}|html_entity_decode)]', {limit: 25},
+								function(){
+									hideSidebarLateral();
+									addCloseModal();
+									$('div#sidebar_main').removeClass('chargement');
+									$('#sidebar_main').show('slow');
+								});
 							});
-						});
+						</script>
+							<li>
+								<a id="ajax#ID_ARTICLE" href="#" class="ressources_classe_nom ajax [(#EXPOSE) [(#GET{art1}|=={#ID_ARTICLE}|oui)gauche_menu_on]]">[(#TITRE|couper{80})]</a>
+							</li>
+					</BOUCLE_sous_articles1>
+					<script>
+						(function () {
+							const $mainFiche = $('#sidebar_main_inner .fiche_titre').first();
+							const $sidebarFiche = $('#sidebar_lateral .fiche_titre').first();
+
+							if (!$mainFiche.length || !$sidebarFiche.length) return;
+
+							const mainFicheClasse = ($mainFiche.attr('class') || '')
+								.split(' ')
+								.find(c => c.startsWith('couleur_travail_en_cours'));
+
+							if (mainFicheClasse) {
+								$sidebarFiche.addClass(mainFicheClasse);
+								$('.rubrique_ul').first().addClass('ressources_rubrique').find('li a').css('color', 'black');
+							}
+
+							const src = $mainFiche.find('.photo img').attr('src');
+							if (src) {
+								$sidebarFiche.find('.photo img').attr('src', src);
+							}
+						})();
 					</script>
-					<div class="sidebar_bubble">
-						<a id="ajax#ID_ARTICLE" href="#" class="ressources_classe_nom ajax [(#EXPOSE) [(#GET{art1}|=={#ID_ARTICLE}|oui)gauche_menu_on]]">[- (#TITRE|couper{80})]</a>
-					</div>
-				</BOUCLE_sous_articles1>
-				<br />
+					</ul>
+				</div>
 				</B_sous_articles1>
 			<//B_rubriques_ordre>
 

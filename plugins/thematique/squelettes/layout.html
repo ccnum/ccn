@@ -36,7 +36,15 @@
 		<meta http-equiv="Pragma" content="no-cache" />
 		<meta http-equiv="Cache-Control" content="no-cache, must-revalidate" />
 		<meta http-equiv="Expires" content="0" />
+		<link href="https://fonts.cdnfonts.com/css/manrope" rel="stylesheet">
+		<link href="https://fonts.googleapis.com/css2?family=Ubuntu:wght@300;400;500;700&display=swap" rel="stylesheet">
 		<link rel="stylesheet" type="text/css" href="[(#URL_PAGE{thematique.css}|parametre_url{chemin,#DOSSIER_SQUELETTE}|parametre_url{type_objet,#TYPE_OBJET})]">
+		<!-- Swiper CSS -->
+		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.css" />
+		<!-- Swiper JS -->
+		<script src="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.js"></script>
+		<!-- PDF.js -->
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
 	</head>
 	<body>
 		[(#TYPE_OBJET|=={evenements}|oui|et{#GET{admin}|<{0}|oui}|non)

@@ -1,5 +1,8 @@
+<INCLURE{fond=noisettes/js/getClassIconByClassName.script}>
+<INCLURE{fond=noisettes/js/getClassColorByClassName.script}>
 <div class="bloc_option_doc nettoyeur">
-	<a id="bloc_option_reponses_consignes_classe-#ID_ARTICLE" class="hac liens_voir bloc_option_doc_reply" title="Réponses des classes">
+	<a id="bloc_option_reponses_consignes_classe-#ID_ARTICLE" class="hac liens_voir bloc_option_doc_reply"
+		title="Réponses des classes">
 		Réponses des classes
 	</a>
 
@@ -7,26 +10,45 @@
 		<div class="nettoyeur"></div>
 
 		<BOUCLE_reponse(ARTICLES){id_consigne=#ID_ARTICLE}>
-			<script type="text/javascript">
-				$(function() {
-					$('#ajax_go_to_reponse_#ID_ARTICLE').on('click',function() {
-						callReponse('#ID_ARTICLE');
-					});
-				});
-			</script>
-
 			[(#REM) [(#ID_RUBRIQUE|substr{[(#GET{id_to_check}|strlen|moins{1})],1})]]
 			<div class="classe_consigne couleur_[(#TYPE_OBJET)]">
-				<div id="ajax_go_to_reponse_#ID_ARTICLE" class="classe_consigne_reponse">
+				<div id="ajax_go_to_reponse_#ID_ARTICLE" class="classe_consigne_reponse"
+					onclick="callReponse('#ID_ARTICLE')">
 					<div class="classe_consigne_reponse_photo">[(#MODELE{logo_carre}{id_rubrique})]</div>
 					<div class="classe_consigne_reponse_titre">[(#TITRE)]</div>
 					<div class="classe_consigne_reponse_classe">
 						<BOUCLE_classe_de_la_reponse(RUBRIQUES){id_rubrique}{si #TYPE_OBJET|=={consignes}|oui}>
 							#TITRE
-						</BOUCLE_classe_de_la_reponse>
+							</BOUCLE_classe_de_la_reponse>
 					</div>
 				</div>
 			</div>
-		</BOUCLE_reponse>
+			<script>
+				$(function () {
+					const $bloc = $(`#ajax_go_to_reponse_${#ID_ARTICLE}`);
+					if (!$bloc.length) return;
+					const className = $bloc.find('.classe_consigne_reponse_classe').text().trim();
+					if (className) {
+						// const $img = $fiche.find('.photo img');
+						const classIcon = getClassIconByClassName(className, false);
+						if (classIcon) {
+							$bloc
+							.find('.classe_consigne_reponse_photo')
+							.css({
+								'background-image': classIcon,
+								'background-size': '100% auto',
+								'background-repeat': 'no-repeat',
+								'background-position': 'center',
+							})
+							.empty();
+						}
+						const classColor = getClassColorByClassName(className);
+						if (classColor) {
+							$bloc.addClass(classColor);
+						}
+					}
+				});
+			</script>
+			</BOUCLE_reponse>
 	</div>
 </div>
