@@ -1,0 +1,58 @@
+<BOUCLE_principale(RUBRIQUES){id_rubrique}>
+
+	<!-- BOOK -->
+	<div id="global-ecriture">
+		<div id="global-spacer">
+		</div>
+		<div class="global-content">
+			<div class="content">
+				<div class="content-left-small">
+					<div id="titre_site">
+						<a href="#URL_SITE_SPIP" title="Accueil"><strong>fictions</strong></a><a href="http://www.laclasse.com" title="http://www.laclasse.com">.laclasse.com</a>
+					</div>
+					<!-- LISTE CADAVRE SMALL-->
+					<div id="ecriture-liste">
+						<ul>
+						<BOUCLE_art(ARTICLES){id_rubrique}>
+							<li><a href="[(#SELF|parametre_url{id_article,#ID_ARTICLE})]">#TITRE</a></li>
+						</BOUCLE_art>
+							<li><a href="[(#SELF|parametre_url{id_article,new})]">Nouvel article</a></li>
+						</ul>
+					</div>
+				</div>
+				<div class="content-right-large">
+					<div id="ecriture">
+						[(#ENV{id_article}|=={0}|oui)
+							<div class="ajax">#FORMULAIRE_EDITER_ARTICLE{oui, #ID_RUBRIQUE, #SELF|parametre_url{var_mode,recalcul}}</div>
+						]
+						[(#ENV{id_article}|=={0}|non)
+							<BOUCLE_article(ARTICLES){id_article}>
+								<div class="ecriture-chapitre-texte">
+									<div class="ecriture-chapitre-titre">#TITRE</div>
+								</div>
+								<div class="ecriture-chapitre-auteur">
+								</div>
+								<div class="texte_courant #EDIT{texte}">
+									[(#TEXTE|image_reduire{300})]<br />
+								</div>
+								<INCLURE{fond=inclure/forum,id_article} />
+							</BOUCLE_article>
+								<BOUCLE_article_default(ARTICLES){!par date}{0,1}>
+									<div class="ecriture-chapitre-texte">
+										<div class="ecriture-chapitre-titre">#TITRE</div>
+									</div>
+									<div class="ecriture-chapitre-auteur">
+									</div>
+									<div class="texte_courant #EDIT{texte}">
+										[(#TEXTE|image_reduire{300})]<br />
+									</div>
+									<INCLURE{fond=inclure/forum,id_article} />
+								</BOUCLE_article_default>
+							<//B_article>
+						]
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</BOUCLE_principale>

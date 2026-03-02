@@ -1372,7 +1372,20 @@ function loadContentInMainSidebar(
 		'background:#009688;color:#fff;padding:2px;display:block;margin-top:5px;border-radius:2px;',
 	);
 
-	$('#sidebar_main_inner').load(url, function (response) {
+	$('#sidebar_main_inner').load(url, function (response, status, xhr) {
+
+		console.log("Load status:", status);
+		console.log("HTTP status:", xhr.status);
+
+		if (status === "error") {
+			console.error("Erreur de chargement :", xhr.status, xhr.statusText);
+			return;
+		}
+
+		if (!response || response.trim() === "") {
+			console.warn("Réponse vide !");
+		}
+
 		$('body').removeClass('loading');
 		$('#sidebar_content').scrollTop(0);
 		initLocalEvents($('#sidebar_main_inner'));
@@ -1466,11 +1479,6 @@ function loadContentInMainSidebar(
 		if (callback) {
 			callback(response);
 		}
-		console.log(
-			'%c Main %c Loaded ',
-			'background:#8BC34A;color:#fff;padding:2px;border-radius:2px;',
-			'background:#009688;color:#fff;padding:2px;display:block;margin-top:5px;border-radius:2px;',
-		);
 
 		antifloodHashChange = false;
 	});
