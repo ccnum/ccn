@@ -1,0 +1,38 @@
+<script>
+	function activateSidebarCacheTooltip() {
+        document.addEventListener("DOMContentLoaded", function() {
+			const tooltip = document.getElementById("tooltip-sidebarCache");
+			const sidebarCache = document.getElementById("sidebarCache");
+
+			if (!tooltip || !sidebarCache) return;
+
+			sidebarCache.addEventListener("mousemove", function(e) {
+
+				tooltip.style.display = "block";
+				tooltip.textContent = "Fermer la modale";
+
+				const offset = 12;
+				let x = e.clientX + offset;
+				let y = e.clientY + offset;
+
+				const width = tooltip.offsetWidth;
+				const height = tooltip.offsetHeight;
+
+				if (x + width > window.innerWidth) {
+				x = e.clientX - width - offset;
+				}
+
+				if (y + height > window.innerHeight) {
+				y = e.clientY - height - offset;
+				}
+
+				tooltip.style.left = x + "px";
+				tooltip.style.top = y + "px";
+			});
+
+			sidebarCache.addEventListener("mouseleave", function() {
+				tooltip.style.display = "none";
+			});
+		});
+    }
+</script>
