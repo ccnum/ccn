@@ -40,6 +40,7 @@
 :root {
 	--color-hover: #00B749;
 	--color-tonic: #000AFF;
+	--color-consigne: #7D7BFD;
 	--color-default: #1E2055;
 	--header-height: 54px;
 	--footer-height: 107px;
@@ -727,40 +728,40 @@ a:hover {
 }
 /*Jaune*/
 .couleur_consignes1, .zone-menu li.logo a.hover_couleur_consignes1:hover, .zone-menu li.logo a.hover_couleur_consignes1.selected {
-	background-color:#7D7BFD;
+	background-color:var(--color-consigne);
 }
 /*Vert*/
 .couleur_consignes2, .zone-menu li.logo a.hover_couleur_consignes2:hover, .zone-menu li.logo a.hover_couleur_consignes2.selected {
-	background-color:#7D7BFD;
+	background-color:var(--color-consigne);
 }
 /*Bleu*/
 .couleur_consignes3, .zone-menu li.logo a.hover_couleur_consignes3:hover, .zone-menu li.logo a.hover_couleur_consignes3.selected {
-	background-color:#7D7BFD;
+	background-color:var(--color-consigne);
 }
 .couleur_consignes4, .zone-menu li.logo a.hover_couleur_consignes4:hover, .zone-menu li.logo a.hover_couleur_consignes4.selected {
-	background-color:#7D7BFD;
+	background-color:var(--color-consigne);
 }
 /*Jaune*/
 .couleur_consignes5, .zone-menu li.logo a.hover_couleur_consignes5:hover, .zone-menu li.logo a.hover_couleur_consignes5.selected {
-	background-color:#7D7BFD;
+	background-color:var(--color-consigne);
 }
 /*Violet*/
 .couleur_consignes6, .zone-menu li.logo a.hover_couleur_consignes6:hover, .zone-menu li.logo a.hover_couleur_consignes6.selected {
-	background-color:#7D7BFD;
+	background-color:var(--color-consigne);
 }
 .couleur_consignes7, .zone-menu li.logo a.hover_couleur_consignes7:hover, .zone-menu li.logo a.hover_couleur_consignes7.selected {
-	background-color:#7D7BFD;
+	background-color:var(--color-consigne);
 }
 .couleur_consignes8, .zone-menu li.logo a.hover_couleur_consignes8:hover, .zone-menu li.logo a.hover_couleur_consignes8.selected {
-	background-color:#7D7BFD;
+	background-color:var(--color-consigne);
 }
 /*Bleu clair*/
 .couleur_consignes9, .zone-menu li.logo a.hover_couleur_consignes9:hover, .zone-menu li.logo a.hover_couleur_consignes9.selected {
-	background-color:#7D7BFD;
+	background-color:var(--color-consigne);
 }
 /*Rose*/
 .couleur_consignes0, .zone-menu li.logo a.hover_couleur_consignes0:hover, .zone-menu li.logo a.hover_couleur_consignes0.selected {
-	background-color:#7D7BFD;
+	background-color:var(--color-consigne);
 }
 
 /* --------- Classes --------- */
@@ -796,7 +797,7 @@ a:hover {
 	background-color: #72C2E4 !important;
 }
 .couleur_travail_en_cours0, .zone-menu li.logo a.hover_couleur_travail_en_cours0:hover, .zone-menu li.logo a.hover_couleur_travail_en_cours0.selected {
-	background-color: #7D7BFD !important;
+	background-color: var(--color-consigne) !important;
 }
 
 /* Interventions */
@@ -2023,7 +2024,7 @@ div.donnees_classe {
 	&:hover {
 		opacity: 1;
 	}
-    background: #7D7BFD;
+    background: var(--color-consigne);
 	color: #fff;
 }
 .classe_consigne_reponse {
@@ -3470,7 +3471,7 @@ p.boutons:has(input[type="submit"]) {
 
 .bloc_previsu {
 	background: white;
-	padding: 20px;
+	padding-top: 20px;
 	border-radius: 4px;
 }
 
@@ -3819,7 +3820,7 @@ li a, li a:hover {
 }
 
 .swiper-pagination-bullet:not(.swiper-pagination-bullet-active) {
-  background: #7D7BFD !important;
+  background: var(--color-consigne) !important;
   opacity: 1 !important;
 }
 
@@ -3878,6 +3879,10 @@ li a, li a:hover {
 	display: block;
 }
 
+.swiper-pdf-comment-container {
+    width: 300px;
+}
+
 /* -------- Swiper END ----------*/
 
 .portfolio .crayon-icones {
@@ -3912,6 +3917,25 @@ li a, li a:hover {
 
 .portfolio_grand {
 	position: relative;
+}
+
+.portfolio_grand_comment_file {
+    display: flex;
+    align-items: center;
+    padding: 0.5rem;
+	gap: 0.5rem;
+    border-radius: 10px;
+    background-color: #000;
+	&:hover {
+		background-color: var(--color-hover)
+	}
+	span {
+		max-width: 300px;
+		display: inline-block;
+		white-space: nowrap;
+		overflow: hidden;
+		text-overflow: ellipsis;
+	}
 }
 
 .titre_bloc {
