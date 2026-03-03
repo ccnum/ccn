@@ -1,3 +1,4 @@
+<INCLURE{fond=noisettes/js/sidebarCacheTooltip.script}>
 #CACHE{48*3600}
 [(#REM)Page principale - Pour vue de détail forcée à l'ouverture :
 -#ENV{type_objet} : consignes, travail_en_cours, blogs, evenements, ressources
@@ -48,7 +49,11 @@ et/ou
 
 	<div id="loading_feedback">Chargement</div>
 
+	<div id="tooltip-sidebarCache" class="tooltip-sidebarCache"></div>
 	<div id="sidebarCache"></div>
+	<script>
+		activateSidebarCacheTooltip();
+	</script>
 	<div id="sidebar">
 		<div id="sidebarExpand" class="sidebarExpandOff tooltip" data-tip="Agrandir/Réduire la modale" aria-label="Agrandir/Réduire la modale"></div>
 
