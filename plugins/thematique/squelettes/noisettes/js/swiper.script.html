@@ -92,7 +92,6 @@
 
 		$documents_portfolio.prepend($swiperContainer);
 
-		console.log('===>initImagesSwiper END')
 		// Initialize Swiper
 		initFlipSwiper($swiperContainer[0]);
 	}
@@ -204,6 +203,7 @@
 					.append(canvas);
 
 				$slide.append($linkClone);
+				$linkClone.mediabox();
 
 				// Clone delete button if it's present
 				if ($btnSupprimer.length) {
