@@ -225,4 +225,113 @@
 			});
 		});
 	}
+
+	async function initPdfSwipersInComment($portfolio_grand) {
+		// Check if PDF.js is correctly loaded
+		if (!window.pdfjsLib) return;
+
+		pdfjsLib.GlobalWorkerOptions.workerSrc =
+			'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+
+		// Get all spip_documents PDF
+		const $pdfDocs = $portfolio_grand
+			.find('a.mediabox[type="application/pdf"]');
+
+		if (!$pdfDocs) return;
+
+		const pdfUrl = $pdfDocs.attr('href');
+		const pdfName = decodeURIComponent(pdfUrl?.split('/')?.pop());
+		const $imgSrc = $pdfDocs.find('img').first().attr('src');
+
+		const $container = $('<div class="swiper-pdf-comment-container"></div>');
+		$pdfDocs.before($container);
+
+		// Generate Loader
+		const $loader = $(`
+			<div class="swiper-pdf-loader">
+				<img src="${$imgSrc}"/>
+				<span>Chargement de "${pdfName}" ...</span>
+			</div>
+		`);
+		$container.append($loader);
+
+		// Generate PDF Swiper
+		const $pdfSwiper = $(`
+			<div class="pdf-swiper swiper" style="display:none;">
+				<div class="swiper-wrapper"></div>
+				<div class="swiper-button-prev-custom pdf-prev"></div>
+				<div class="swiper-button-next-custom pdf-next"></div>
+				<div class="swiper-pagination pdf-pagination"></div>
+			</div>
+		`);
+		// Delete old display
+		$pdfDocs.remove();
+		$container.append($pdfSwiper);
+
+		let pdf;
+
+		// Try to load PDF...
+		try {
+			pdf = await pdfjsLib.getDocument(pdfUrl).promise;
+			// ... if not, display error message
+		} catch (e) {
+			$container.html(`
+				<div class="swiper-pdf-loader">
+					<img src="${$imgSrc}"/>
+					<span>Erreur lors du chargement de "${pdfName}"</span>
+				</div>
+			`);
+			return;
+		}
+
+		// For every PDF page, generate a slide which contains page converted to canvas.
+		for (let pageNum = 1; pageNum <= pdf.numPages; pageNum++) {
+			console.log('pageNum', pageNum)
+			// Convert PDF page to canvas
+			const page = await pdf.getPage(pageNum);
+			const viewport = page.getViewport({ scale: 1 });
+
+			const canvas = document.createElement('canvas');
+			canvas.width = viewport.width;
+			canvas.height = viewport.height;
+
+			await page.render({
+				canvasContext: canvas.getContext('2d'),
+				viewport,
+			}).promise;
+
+			$(canvas).css({
+				maxWidth: '100%',
+				height: 'auto',
+				display: 'block',
+				margin: '0 auto',
+			});
+
+			// Generate Slide
+			const $slide = $('<div class="swiper-slide"></div>');
+
+			// Clone old link to attach old action on current Slide with corresponding page
+			const $linkClone = $pdfDocs
+				.clone(false)
+				.attr('href', pdfUrl + '#page=' + pageNum)
+				.empty()
+				.append(canvas);
+
+			$slide.append($linkClone);
+			$linkClone.mediabox();
+
+			$pdfSwiper.find('.swiper-wrapper').append($slide);
+		}
+
+		// Hide Loader and display PDF Swiper
+		$loader.remove();
+		$pdfSwiper.show();
+
+		// Initialize Swiper
+		initFlipSwiper($pdfSwiper[0], {
+			nextSelector: '.pdf-next',
+			prevSelector: '.pdf-prev',
+			paginationSelector: '.pdf-pagination',
+		});
+	}
 </script>
