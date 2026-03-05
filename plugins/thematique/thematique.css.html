@@ -1103,7 +1103,7 @@ a:hover {
 }
 
 .popup {
-	max-height: calc(100vh - 90px - (54px*2));
+	max-height: calc(100vh - 100px - (54px*2));
 }
 
 .popup .actualites-actu {
@@ -3498,9 +3498,13 @@ p.boutons:has(input[type="submit"]) {
 	margin-top: 5px;
 }
 
-.intervention_new_answer {
+.intervention_new_answer:has(.login-forum-bloc) {
+	background-color: #f5f5f5;
+    margin: 0px;
+    padding: 0px 16px;
 	.login-forum-bloc {
 		margin-right: -10px;
+        margin-bottom: -10px;
 		padding-left: 0;
 		padding-right: 0;
 	}

@@ -9,7 +9,12 @@
 		<!-- <p class="explication"><:forum_vous_enregistrer:> <:forum_vous_inscrire:></p> -->
 		<p class="retour">
 			<div class="login-forum-buttons">
-				<a href="[(#URL_PAGE{login}|parametre_url{url,#SELF})]"><span class="icon icon-connecter"></span>Me connecter</a>
+				[(#PLUGIN{cicas}|oui)
+					<a href="[(#URL_PAGE{login}|parametre_url{url,#SELF}|parametre_url{cicas,oui})]"><span class="icon icon-connecter"></span>Me connecter</a>
+				]
+				[(#PLUGIN{cioidc}|oui)
+					<a href="[(#URL_PAGE{login}|parametre_url{url,#SELF}|parametre_url{action,login_cioidc})]"><span class="icon icon-connecter"></span>Me connecter</a>
+				]
 				<a href="(#ENV{inscription})&amp;mode=6forum[(&amp;id_rubrique=(#ENV{id_rubrique})]&amp;focus=nom_inscription" target="spip_pass" onclick="javascript:window.open(this.href, 'spip_pass', 'scrollbars=yes, resizable=yes, width=480, height=340'); return false;"><span class="icon icon-s-enregistrer"></span><:login_sinscrire:></a>
 			</div>
 			<div class="login-forum-password">
