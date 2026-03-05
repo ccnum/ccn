@@ -72,6 +72,8 @@ function thematique_insert_head($flux) {
 }
 
 function thematique_notifications_destinataires($flux) {
+	$id_article = null;
+
 	if (
 		isset($flux['args']['id'])
 		and isset($flux['args']['quoi'])
@@ -79,6 +81,19 @@ function thematique_notifications_destinataires($flux) {
 		and $flux['args']['options']['statut'] === 'publie'
 		and $flux['args']['options']['statut_ancien'] !== 'publie'
 	) {
+		$id_article = intval($flux['args']['id']);
+	}
+
+	if (
+		isset($flux['args']['quoi'])
+		and $flux['args']['quoi'] === 'forumvalide'
+		and isset($flux['args']['options']['forum']['objet'])
+		and $flux['args']['options']['forum']['objet'] === 'article'
+	) {
+		$id_article = intval($flux['args']['options']['forum']['id_objet']);
+	}
+
+	if ($id_article) {
 		spip_log('publication de ' . $flux['args']['quoi'] . ' ' . $flux['args']['id'], 'thematique');
 		$flux['data'][] = $GLOBALS['meta']['email_envoi'];
 		$article = sql_fetsel('*', 'spip_articles', 'id_article=' . intval($flux['args']['id']));
