@@ -11,8 +11,8 @@
 							[<small class="comment-auteur"><:par_auteur:> <span>(#SESSION{session_nom}|safehtml|sinon{[(#SESSION{nom}|typo)]}|sinon{<span class="erreur_message blink">?</span>})</span></small>]
 						</div>
 						<div class="comment-content">
-							[<div class="comment-texte">(#ENV*{texte}|lignes_longues)</div>]
-							[<div class="comment-notes">(#ENV*{notes}|lignes_longues)</div>]
+							[<div class="comment-texte">(#ENV*{texte})</div>]
+							[<div class="comment-notes">(#ENV*{notes})</div>]
 							[<p class="#EDIT{hyperlien} hyperlien"><:voir_en_ligne:> : <a href="(#ENV{url_site}|attribut_html)" class="spip_out">[(#ENV*{nom_site}|sinon{[(#ENV{url_site}|couper{80})]})]</a></p>]
 							[<div class="comment-doc"><:medias:info_document:> : (#ENV{ajouter_document}|table_valeur{name})</div>]
 							<B_mots><p class="comment-mots"><:forum:forum_avez_selectionne:> <BOUCLE_mots(MOTS){id_mot IN #ENV**{ajouter_mot}}{par num type}{par type}{par num titre}{par titre}{', '}>#TITRE</BOUCLE_mots></p></B_mots>
