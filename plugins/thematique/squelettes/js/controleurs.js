@@ -188,6 +188,7 @@ function setContentFromState(state) {
 			for (k = 0; k < CCN.consignes.length; k++) {
 				if (CCN.consignes[k].id == state.id_objet) {
 					callConsigne(state.id_objet);
+					break;
 				}
 			}
 		}
@@ -195,10 +196,11 @@ function setContentFromState(state) {
 		// Réponse
 		if (state.type_objet == 'travail_en_cours') {
 			changeTimelineMode('consignes');
-			for (k = 0; k < CCN.consignes.length; k++) {
+			outer: for (k = 0; k < CCN.consignes.length; k++) {
 				for (l = 0; l < CCN.consignes[k].reponses.length; l++) {
 					if (CCN.consignes[k].reponses[l].id == state.id_objet) {
 						callReponse(state.id_objet);
+						break outer;
 					}
 				}
 			}
@@ -215,6 +217,7 @@ function setContentFromState(state) {
 			for (k = 0; k < CCN.classes.length; k++) {
 				if (CCN.classes[k].id == state.id_objet) {
 					callClasse(state.id_objet);
+					break;
 				}
 			}
 		}

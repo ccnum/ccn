@@ -97,13 +97,15 @@ function formulaires_public_editer_article_traiter_dist(
 
 	// Publication de l'article
 	include_spip('action/editer_objet');
-	if ($id_consigne != 0) {
-		sql_updateq('spip_articles', ['id_consigne' => $id_consigne], 'id_article=' . intval($res['id_article']));
-		objet_instituer('article', $res['id_article'], ['statut' => 'publie']);
-	} else {
-		$statut = sql_getfetsel('statut', 'spip_articles', 'id_article=' . intval($id_consigne));
-		if ($statut !== 'publie') {
+	if (!empty($res['id_article'])) {
+		if ($id_consigne != 0) {
+			sql_updateq('spip_articles', ['id_consigne' => $id_consigne], 'id_article=' . intval($res['id_article']));
 			objet_instituer('article', $res['id_article'], ['statut' => 'publie']);
+		} else {
+			$statut = sql_getfetsel('statut', 'spip_articles', 'id_article=' . intval($res['id_article']));
+			if ($statut !== 'publie') {
+				objet_instituer('article', $res['id_article'], ['statut' => 'publie']);
+			}
 		}
 	}
 	return $res;
