@@ -1,4 +1,7 @@
 <script>
+	const PDFJS_WORKER_SRC =
+		'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+
 	/**
 	 * Swiper core
 	 */
@@ -103,8 +106,7 @@
 		// Check if PDF.js is correctly loaded
 		if (!window.pdfjsLib) return;
 
-		pdfjsLib.GlobalWorkerOptions.workerSrc =
-			'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+		pdfjsLib.GlobalWorkerOptions.workerSrc = PDFJS_WORKER_SRC;
 
 		// Get all spip_documents PDF
 		const $pdfDocs = $documents_portfolio
@@ -122,8 +124,9 @@
 			const $doc = $(this);
 			const $link = $doc.find('a.mediabox[type="application/pdf"]').first();
 			const pdfUrl = $link.attr('href');
-			const pdfName = decodeURIComponent(pdfUrl.split('/').pop());
-			const $imgSrc = $link.find('img').first().attr('src');
+			if (!pdfUrl) return;
+			const pdfName = decodeURIComponent(pdfUrl?.split('/')?.pop());
+			const $imgSrc = $link.find('img').first().attr('src') ?? '';
 
 			const $container = $('<div class="swiper-pdf-container"></div>');
 			// Generate Container which will contain loader and PDF Swiper
@@ -230,14 +233,13 @@
 		// Check if PDF.js is correctly loaded
 		if (!window.pdfjsLib) return;
 
-		pdfjsLib.GlobalWorkerOptions.workerSrc =
-			'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+		pdfjsLib.GlobalWorkerOptions.workerSrc = PDFJS_WORKER_SRC;
 
 		// Get all spip_documents PDF
 		const $pdfDocs = $portfolio_grand
 			.find('a.mediabox[type="application/pdf"]');
 
-		if (!$pdfDocs) return;
+		if (!$pdfDocs.length) return;
 
 		const pdfUrl = $pdfDocs.attr('href');
 		const pdfName = decodeURIComponent(pdfUrl?.split('/')?.pop());
@@ -286,7 +288,6 @@
 
 		// For every PDF page, generate a slide which contains page converted to canvas.
 		for (let pageNum = 1; pageNum <= pdf.numPages; pageNum++) {
-			console.log('pageNum', pageNum)
 			// Convert PDF page to canvas
 			const page = await pdf.getPage(pageNum);
 			const viewport = page.getViewport({ scale: 1 });
