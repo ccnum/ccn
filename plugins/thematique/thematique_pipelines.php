@@ -97,6 +97,9 @@ function thematique_notifications_destinataires($flux) {
 		spip_log('publication de ' . $flux['args']['quoi'] . ' ' . $flux['args']['id'], 'thematique');
 		$flux['data'][] = $GLOBALS['meta']['email_envoi'];
 		$article = sql_fetsel('*', 'spip_articles', 'id_article=' . intval($flux['args']['id']));
+		if (!$article) {
+			return $flux;
+		}
 		$titre_rub = sql_getfetsel('titre', 'spip_rubriques', 'id_rubrique=' . intval($article['id_secteur']));
 		if ($article['id_consigne'] == '0' and is_numeric($titre_rub)) {
 			spip_log(
@@ -125,7 +128,7 @@ function thematique_notifications_destinataires($flux) {
 				$annee_scolaire = date('Y') - 1;
 			}
 			spip_log('lier à l année ' . $annee_scolaire, 'thematique');
-			$id_secteur = sql_getfetsel('id_secteur', 'spip_rubriques', 'titre LIKE "%' . intval($annee_scolaire).'%"');
+			$id_secteur = sql_getfetsel('id_secteur', 'spip_rubriques', 'titre LIKE ' . sql_quote('%' . intval($annee_scolaire) . '%'));
 			spip_log('lier au secteur ' . $id_secteur, 'thematique');
 			$rubriques = sql_allfetsel('id_rubrique', 'spip_rubriques', 'id_secteur=' . intval($id_secteur));
 			foreach ($rubriques as $r) {

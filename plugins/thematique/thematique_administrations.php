@@ -130,121 +130,52 @@ function th_configurer_site() {
 	ecrire_config('nom_site', $nom_site_spip);
 }
 
+function th_ajouter_mot($titre, $id_groupe) {
+	if (!sql_getfetsel('id_mot', 'spip_mots', "titre=" . sql_quote($titre) . " AND id_groupe=" . intval($id_groupe))) {
+		sql_insertq('spip_mots', ['titre' => $titre, 'id_groupe' => $id_groupe]);
+	}
+}
+
+function th_ajouter_groupe_mots($titre, $tables_liees, $condition_extra = '') {
+	$condition = "titre=" . sql_quote($titre);
+	if ($condition_extra) {
+		$condition .= " AND $condition_extra";
+	}
+	if (!$id_groupe = sql_getfetsel('id_groupe', 'spip_groupes_mots', $condition)) {
+		$id_groupe = sql_insertq('spip_groupes_mots', [
+			'titre'       => $titre,
+			'unseul'      => 'non',
+			'tables_liees' => $tables_liees,
+			'minirezo'    => 'oui',
+			'comite'      => 'non',
+			'forum'       => 'non',
+		]);
+	}
+	return $id_groupe;
+}
+
 function th_ajouter_mots_clef() {
 
-	//Creation mots clefs
-	//Groupe Contenus
-	if (!$id_groupe = sql_getfetsel('id_groupe', 'spip_groupes_mots', "titre='Contenus'")) {
-		$id_groupe = sql_insertq(
-			'spip_groupes_mots',
-			[
-				'titre' => 'Contenus',
-				'unseul' => 'non',
-				'tables_liees' => 'rubriques',
-				'minirezo' => 'oui',
-				'comite' => 'non',
-				'forum' => 'non',
-			]
-		);
+	// Groupe Contenus
+	$id_groupe = th_ajouter_groupe_mots('Contenus', 'rubriques');
+	foreach (['travail_en_cours', 'consignes', 'evenements', 'blogs', 'ressources', 'images_background', 'agora'] as $mot) {
+		th_ajouter_mot($mot, $id_groupe);
 	}
 
-	if (!$id_mot = sql_getfetsel('id_mot', 'spip_mots', "titre='travail_en_cours' AND id_groupe=$id_groupe")) {
-		$id = sql_insertq('spip_mots', ['titre' => 'travail_en_cours', 'id_groupe' => $id_groupe]);
-	}
-	if (!$id_mot = sql_getfetsel('id_mot', 'spip_mots', "titre='consignes' AND id_groupe=$id_groupe")) {
-		$id = sql_insertq('spip_mots', ['titre' => 'consignes', 'id_groupe' => $id_groupe]);
-	}
-	if (!$id_mot = sql_getfetsel('id_mot', 'spip_mots', "titre='evenements' AND id_groupe=$id_groupe")) {
-		$id = sql_insertq('spip_mots', ['titre' => 'evenements', 'id_groupe' => $id_groupe]);
-	}
-	if (!$id_mot = sql_getfetsel('id_mot', 'spip_mots', "titre='blogs' AND id_groupe=$id_groupe")) {
-		$id = sql_insertq('spip_mots', ['titre' => 'blogs', 'id_groupe' => $id_groupe]);
-	}
-	if (!$id_mot = sql_getfetsel('id_mot', 'spip_mots', "titre='ressources' AND id_groupe=$id_groupe")) {
-		$id = sql_insertq('spip_mots', ['titre' => 'ressources', 'id_groupe' => $id_groupe]);
-	}
-	if (!$id_mot = sql_getfetsel('id_mot', 'spip_mots', "titre='images_background' AND id_groupe=$id_groupe")) {
-		$id = sql_insertq('spip_mots', ['titre' => 'images_background', 'id_groupe' => $id_groupe]);
-	}
-	if (!$id_mot = sql_getfetsel('id_mot', 'spip_mots', "titre='agora' AND id_groupe=$id_groupe")) {
-		$id = sql_insertq('spip_mots', ['titre' => 'agora', 'id_groupe' => $id_groupe]);
+	// Groupe Presentation_rubriques
+	$id_groupe = th_ajouter_groupe_mots('Presentation', 'rubriques', "tables_liees LIKE '%rubriques%'");
+	foreach (['blog', 'pas_une', 'laclasse.com', 'trombinoscope'] as $mot) {
+		th_ajouter_mot($mot, $id_groupe);
 	}
 
-	//Groupe Presentation_rubriques
-	if (!$id_groupe = sql_getfetsel(
-		'id_groupe',
-		'spip_groupes_mots',
-		"titre='Presentation' AND tables_liees LIKE '%rubriques%'"
-	)) {
-		$id_groupe = sql_insertq(
-			'spip_groupes_mots',
-			[
-				'titre' => 'Presentation',
-				'unseul' => 'non',
-				'tables_liees' => 'rubriques',
-				'minirezo' => 'oui',
-				'comite' => 'non',
-				'forum' => 'non',
-			]
-		);
+	// Groupe Presentation_articles
+	$id_groupe = th_ajouter_groupe_mots('Presentation', 'articles', "tables_liees LIKE '%articles%'");
+	foreach (['laclasse.com', 'sommaire_edito', 'livrable'] as $mot) {
+		th_ajouter_mot($mot, $id_groupe);
 	}
 
-	if (!$id_mot = sql_getfetsel('id_mot', 'spip_mots', "titre='blog' AND id_groupe=$id_groupe")) {
-		$id_mot_defaut = sql_insertq('spip_mots', ['titre' => 'blog', 'id_groupe' => $id_groupe]);
-	}
-	if (!$id_mot = sql_getfetsel('id_mot', 'spip_mots', "titre='pas_une' AND id_groupe=$id_groupe")) {
-		$id_mot_fin = sql_insertq('spip_mots', ['titre' => 'pas_une', 'id_groupe' => $id_groupe]);
-	}
-	if (!$id_mot = sql_getfetsel('id_mot', 'spip_mots', "titre='laclasse.com' AND id_groupe=$id_groupe")) {
-		$id_veille_defaut = sql_insertq('spip_mots', ['titre' => 'laclasse.com', 'id_groupe' => $id_groupe]);
-	}
-	if (!$id_mot = sql_getfetsel('id_mot', 'spip_mots', "titre='trombinoscope' AND id_groupe=$id_groupe")) {
-		$id_veille_defaut = sql_insertq('spip_mots', ['titre' => 'trombinoscope', 'id_groupe' => $id_groupe]);
-	}
-
-	//Groupe Presentation_articles
-	if (!$id_groupe = sql_getfetsel(
-		'id_groupe',
-		'spip_groupes_mots',
-		"titre='Presentation' AND tables_liees LIKE '%articles%'"
-	)) {
-		$id_groupe = sql_insertq(
-			'spip_groupes_mots',
-			[
-				'titre' => 'Presentation',
-				'unseul' => 'non',
-				'tables_liees' => 'articles',
-				'minirezo' => 'oui',
-				'comite' => 'non',
-				'forum' => 'non',
-			]
-		);
-	}
-
-	if (!$id_mot = sql_getfetsel('id_mot', 'spip_mots', "titre='laclasse.com' AND id_groupe=$id_groupe")) {
-		$id_veille_defaut = sql_insertq('spip_mots', ['titre' => 'laclasse.com', 'id_groupe' => $id_groupe]);
-	}
-	if (!$id_mot = sql_getfetsel('id_mot', 'spip_mots', "titre='sommaire_edito' AND id_groupe=$id_groupe")) {
-		$id_veille_defaut = sql_insertq('spip_mots', ['titre' => 'sommaire_edito', 'id_groupe' => $id_groupe]);
-	}
-	if (!$id_mot = sql_getfetsel('id_mot', 'spip_mots', "titre='livrable' AND id_groupe=$id_groupe")) {
-		$id_veille_defaut = sql_insertq('spip_mots', ['titre' => 'livrable', 'id_groupe' => $id_groupe]);
-	}
-
-	//Groupe Sites
-	if (!$id_groupe = sql_getfetsel('id_groupe', 'spip_groupes_mots', "titre='site'")) {
-		$id_groupe = sql_insertq(
-			'spip_groupes_mots',
-			[
-				'titre' => 'site',
-				'unseul' => 'non',
-				'tables_liees' => '',
-				'minirezo' => 'oui',
-				'comite' => 'non',
-				'forum' => 'non',
-			]
-		);
-	}
+	// Groupe Sites
+	th_ajouter_groupe_mots('site', '');
 }
 
 function th_configurer_rubriques() {
