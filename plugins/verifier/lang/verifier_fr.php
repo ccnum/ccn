@@ -12,7 +12,6 @@ return [
 
 	// E
 	'erreur_attribut_class' => 'La syntaxe de cet attribut class est invalide.',
-	'erreur_email_unique' => 'Une seule adresse possible',
 	'erreur_code_postal' => 'Ce code postal est incorrect.',
 	'erreur_comparaison_different' => 'La valeur doit être différente du champ "@nom_champ@".',
 	'erreur_comparaison_different_type' => 'La valeur doit être différente ou de type différent que le champ "@nom_champ@".',
@@ -32,6 +31,7 @@ return [
 	'erreur_dimension_image' => 'Le fichier « @name@ » est trop grand : @taille@ (maximum @taille_max@).',
 	'erreur_email' => 'L’adresse de courriel <em>@email@</em> n’a pas un format valide.',
 	'erreur_email_nondispo' => 'L’adresse de courriel <em>@email@</em> est déjà utilisée.',
+	'erreur_email_unique' => 'Une seule adresse possible',
 	'erreur_entier' => 'La valeur doit être un entier.',
 	'erreur_entier_entre' => 'La valeur doit être comprise entre @min@ et @max@.',
 	'erreur_entier_max' => 'La valeur doit être inférieure ou égale à @max@.',

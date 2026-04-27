@@ -143,7 +143,7 @@ function verifier_email_de_maniere_stricte($valeur) {
 		// nettoyer certains formats
 		// "Marie Toto <Marie@toto.com>"
 		$adresse = trim(preg_replace(',^[^<>\"]*<([^<>\"]+)>$,i', '\\1', $adresse));
-		if (!preg_match('/^([A-Za-z0-9]){1}([A-Za-z0-9]|-|_|\.)*@[A-Za-z0-9]([A-Za-z0-9]|-|\.){1,}\.[A-Za-z]{2,18}$/', $adresse)) {
+		if (!preg_match('/^([A-Za-z0-9]){1}([A-Za-z0-9]|-|_|\.|\+)*@[A-Za-z0-9]([A-Za-z0-9]|-|\.){1,}\.[A-Za-z]{2,18}$/', $adresse)) {
 			return false;
 		}
 		if (strpos($adresse, '.@') !== false) {
