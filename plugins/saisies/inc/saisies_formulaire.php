@@ -17,6 +17,13 @@
  * @return array Retourne les saisies du formulaire sinon false
  */
 function saisies_chercher_formulaire($form, $args, $je_suis_poste = false) {
+	static $cache = [];
+
+	$hash = json_encode(['form' => $form, 'args' => $args, 'je_suis_poste' => $je_suis_poste]);
+	if (isset($cache[$hash])) {
+		return $cache[$hash];
+	}
+
 	$saisies = [];
 
 	if ($fonction_saisies = charger_fonction('saisies', 'formulaires/' . $form, true)) {
@@ -42,6 +49,11 @@ function saisies_chercher_formulaire($form, $args, $je_suis_poste = false) {
 		if (isset($saisies['options']['prefixe_id'])) {
 			$saisies = saisies_prefixer_id($saisies, $saisies['options']['prefixe_id']);
 		}
+	}
+
+	// Mettre en cache au cas où
+	if ($saisies['options']['chercher_formulaire_cache'] ?? false) {
+		$cache[$hash] = $saisies;
 	}
 
 	return $saisies;

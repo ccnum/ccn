@@ -6,9 +6,9 @@
 return [
 
 	// S
-	'saisies_description' => 'This plugin makes it easier to write form fields by providing a #SAISIE tag. 
-		The generated HTML is compatible with the classification of forms
-		proposed by SPIP.', # MODIF
+	'saisies_description' => 'This plugin facilitates the writing of form fields by providing a
+formalism for describing entries and their validations. The generated HTML is compatible with the form nomenclature
+proposed by SPIP. ',
 	'saisies_nom' => 'Entries for forms',
 	'saisies_slogan' => 'Create easily forms fields.',
 ];

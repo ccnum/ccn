@@ -15,6 +15,7 @@ return [
 	'bouton_parcourir_docs_objet' => 'Bilder durchsuchen',
 	'bouton_parcourir_docs_rubrique' => 'Rubrik durchsuchen',
 	'bouton_parcourir_mediatheque' => 'Mediathek durchsuchen',
+	'bouton_vider_champs' => 'Felder leeren',
 
 	// C
 	'caracteres_restants' => 'verbleibende Zeichen ',
@@ -42,6 +43,7 @@ return [
 	'construire_configurer_globales_label' => 'Globale Optionen konfigurieren ',
 	'construire_confirmer_supprimer_champ' => 'Wollen Sie dieses Feld wirklich löschen?',
 	'construire_info_nb_champs_masques' => '@nb@ Feld/er während der Konfiguration der Gruppe ausgeblendet.',
+	'construire_position_actuelle' => '➡ Aktuelle Position',
 	'construire_position_explication' => 'Geben Sie an, vor welchem anderen Feld dieses erscheinen soll.',
 	'construire_position_fin_formulaire' => 'Am Ende des Formulars',
 	'construire_position_fin_groupe' => 'Am Ende der Gruppe @groupe@',
@@ -72,11 +74,13 @@ return [
 	'fichier_erreur_explication_renvoi_alternative' => 'Sie können eine neue Datei senden oder das Formular unverändert absenden. Die alte Datei bleibt dann nicht erhalten.',
 	'fichier_erreur_explication_renvoi_pas_alternative' => 'Sie müssen eine andere Datei senden.',
 	'format_date_attendu' => 'Geben Sie ein Datum im Format tt/mm/jjjj ein.',
+	'format_date_heure_attendu' => 'Geben Sie ein Datum im Format TT/MM/JJJJ und eine Uhrzeit im Format HH:MM ein.',
 	'format_email_attendu' => 'Geben Sie eine E-Mail-Adresse im Format ihrname@domain.tld ein.',
 	'formulaires_aucun_champ' => 'Derzeit gibt es kein Eingabefeld für dieses Formular.',
 
 	// I
 	'info_configurer_saisies' => 'Testseite der Eingabefelder.',
+	'info_facultatif' => '(optional)',
 
 	// L
 	'label_annee' => 'Jahr',
@@ -105,6 +109,8 @@ Die vollständige Dokumentation zur Syntax finden Sie unter <a href="https://con
 	'option_afficher_si_remplissage_uniquement_explication' => 'Bei Aktivierung wird die bedingte Anzeige nur während des Ausfüllens angewendet, nicht beim Anzeigen der Ergebnisse.',
 	'option_afficher_si_remplissage_uniquement_label' => 'Nur während des Ausfüllens',
 	'option_afficher_si_remplissage_uniquement_label_case' => 'Eingabe nur beim Ausfüllen ausblenden',
+	'option_ajax_explication' => 'Laden Sie die Eingabe in ein Ajax-Fragment, dessen ID übertragen wird, um sie beispielsweise über einen Änderungs-Listener auf einem anderen Fragment bearbeiten (neu laden) zu können. Bietet nur die Ajax-Kapselung, keinen zusätzlichen Code.',
+	'option_ajax_label' => 'Eingabe Ajaxen.',
 	'option_attention_explication' => 'Nachricht wichtiger als Meldung',
 	'option_attention_label' => 'Achtung',
 	'option_attribut_title_label' => 'Wert im Attribut Titel',
@@ -128,6 +134,8 @@ Die vollständige Dokumentation zur Syntax finden Sie unter <a href="https://con
 	'option_choix_destinataires_explication' => 'Liste von Autoren und Autorinnen für eine Auswahl von Empfängern durch den Internetnutzer, andernfalls ist es die Person, die die Seite installiert hat.',
 	'option_choix_destinataires_label' => 'Mögliche Empfänger',
 	'option_class_label' => 'Zusätzliche CSS-Klassen',
+	'option_cle_secrete_explication' => 'Ein geheimer Schlüssel ist beim erneuten Laden des Formulars nicht sichtbar, sondern teilweise ausgeblendet. Bei Konfigurationsformularen, die als PHP-Eingabe deklariert sind, ruft das Plugin „Eingaben” den geheimen Schlüssel bei erneuter Übermittlung des Formulars automatisch aus der Datenbank ab.',
+	'option_cle_secrete_label' => 'Die Eingabe ist ein geheimer Schlüssel.',
 	'option_col2' => 'Zwei Felder pro Zeile',
 	'option_col3' => 'Drei Felder pro Zeile',
 	'option_col4' => 'Vier Felder pro Zeile',
@@ -143,6 +151,7 @@ Die vollständige Dokumentation zur Syntax finden Sie unter <a href="https://con
 	'option_datas_sous_groupe_explication' => 'Sie müssen eine Auswahl pro Zeile in der Form "Schlüssel|Label" der Auswahl angeben.<br />Der Schlüssel muss einmalig, kurz und klar sein und darf später nicht mehr geändert werden.<br /> Den Beginn einer Untergruppe können Sie in der Form "*Titel der Untergruppe" angeben. Um eine Untergruppe zu beenden, können Sie eine neue Untergruppe beginnen oder eine Zeile einfügen, die nur "/*" enthält.',
 	'option_datas_sous_groupe_explication_dev' => 'Stellen Sie eine Auswahlliste in Form einer PHP-Tabelle (<code>array()</code>) oder SPIP (<code>#ARRAY</code>) im Format <code>„Schlüssel“ => „Wert“</code> bereit. Sie können diese in Untergruppen zusammenfassen. Dazu muss der <code>Schlüssel</code> der Titel der Untergruppe sein und der Wert muss selbst ein assoziatives Array vom Typ <code>„Schlüssel” => „Wert”</code> sein.',
 	'option_defaut_label' => 'Standardwert',
+	'option_defaut_multiple_explication' => 'Geben Sie einen Schlüssel pro Zeile ein.',
 	'option_defaut_session_explication' => 'Geben Sie das zu verwendende Session-Feld ein. Wenn dieses Feld in der aktuellen Sitzung vorhanden ist, hat sein Wert Vorrang vor dem Standardwert.',
 	'option_defaut_session_label' => 'Standardwert aus der Session des Besuchers',
 	'option_depublie_choix_explication' => 'Eine deaktivierte Auswahl wird in neuen Formularen nicht mehr angeboten. Sie bleibt sichtbar, wenn ein Datensatz geändert wird, der diese Auswahl enthielt. Trennen Sie die Auswahlmöglichkeiten durch ein Komma, Beispiel: <code>Auswahl1,Auswahl3</code>.',
@@ -154,6 +163,8 @@ Die vollständige Dokumentation zur Syntax finden Sie unter <a href="https://con
 	'option_disable_avec_post_label' => 'Senden trotz Deaktivierung',
 	'option_disable_choix_explication' => 'Geben Sie die Auswahlmöglichkeiten durch Kommas getrennt an, Beispiel: <code>Auswahl1,Auswahl3</code>.',
 	'option_disable_choix_explication_dev' => 'Geben Sie die Auswahlmöglichkeiten in Form einer Tabelle an, Beispiel: <code>[„Auswahl1“,„Auswahl3“]</code>.',
+	'option_disable_choix_grille_explication' => 'Geben Sie die Auswahl nicht in der Form <code>Zeilen-Schlüssel/Spalten-Schlüssel</code> an,  getrennt durch ein Komma, Beispiel: <code>Banane/Rot,Apfel/Blau</code>, um die Spalte Rot der Zeile Banane und die Spalte Blau der Zeile Apfel zu deaktivieren. In den Eingabebereichen speichern',
+	'option_disable_choix_grille_explication_dev' => 'Geben Sie die Auswahl in Form einer Ketten-Tabelle vom Typ <code>Zeilen-Schlüssel/Spalten-Schlüssel</code> an, Beispiel: <code>[‚Banane/Rot‘,\'Apfel/Blau\']</code>, um die Spalte Rot der Zeile Banane und die Spalte Blau der Zeile Apfel zu deaktivieren.',
 	'option_disable_choix_label' => 'Bestimmte Optionen deaktivieren',
 	'option_disable_explication' => 'Das Feld erhält keinen Fokus.',
 	'option_disable_label' => 'Feld deaktivieren',
@@ -165,8 +176,11 @@ Die vollständige Dokumentation zur Syntax finden Sie unter <a href="https://con
 	'option_explication_apres_label' => 'Erläuterung nach dem Feld',
 	'option_explication_explication' => 'Falls erforderlich kurze Beschreibung des Feldobjekts',
 	'option_explication_label' => 'Erläuterung',
+	'option_facultatif_explication_dev' => 'Wird nur verwendet, wenn die globale Option `obligatoire_defaut` nicht aktiviert ist.',
+	'option_facultatif_label' => 'Optionales Feld',
 	'option_forcer_select_explication' => 'Wenn eine Wortgruppe ausgewählt ist, handelt es sich standardmäßig um ein Radio- oder Checkbox-Feld, je nach Einstellung der Wortgruppe: <em>„In dieser Gruppe kann jeweils nur <b>ein</b> Schlagwort ausgewählt werden.“</em>. Sie können die Verwendung eines Auswahlfeldes (select) erzwingen.',
 	'option_forcer_select_label_case' => 'Die Verwendung eines select erzwingen',
+	'option_globale_obligatoire_defaut_texte' => 'Sofern nicht anders angegeben, sind alle Felder Pflichtfelder.',
 	'option_groupe_affichage' => 'Anzeige',
 	'option_groupe_conditions' => 'Bedingungen',
 	'option_groupe_description' => 'Beschreibung',
@@ -176,11 +190,14 @@ Die vollständige Dokumentation zur Syntax finden Sie unter <a href="https://con
 	'option_heure_pas_label' => 'Dauer der Zeitintervalle in Minuten bei der Eingabe',
 	'option_horaire_label' => 'Zeit',
 	'option_horaire_label_case' => 'Eingabe der Uhrzeit ebenfalls ermöglichen',
+	'option_hors_vue_label' => 'Nicht in den Eingabebereichen anzeigen',
 	'option_id_explication' => 'Präfix <code>champ_</code> wird automatisch eingefügt.',
 	'option_id_groupe_label' => 'Schlagwortgruppe',
 	'option_id_label' => 'Attribut <code>id</code> der Eingabe',
-	'option_info_obligatoire_explication' => 'Sie können die Standardbezeichnung für Pflichtfelder ändern:<i>[Pflichtfeld]</i>.
-Um den Standard beizubehalten, setzen Sie nichts. Um nichts anzuzeigen, setzen Sie einen Text, der nur aus Leerzeichen besteht. ', # MODIF
+	'option_info_facultatif_explication' => 'Sie können die standardmäßige Angabe „optional“ ändern: <i>[Optional]</i>. Um die Standardangabe beizubehalten, geben Sie nichts ein.',
+	'option_info_facultatif_explication_dev' => 'Wird nur verwendet, wenn die globale Option `obligatoire_defaut` nicht aktiviert ist. Sie können die Angabe „optional” standardmäßig ändern: <i>[Facultatif]</i>. Um die Standardangabe beizubehalten, geben Sie nichts ein.',
+	'option_info_facultatif_label' => 'Angabe des fakultativen Charakters',
+	'option_info_obligatoire_explication' => 'Sie können die Standardangabe zur Verpflichtung ändern: <i>[Obligatorisch]</i>. Um die Standardangabe beizubehalten, geben Sie nichts ein.',
 	'option_info_obligatoire_label' => 'Pflichtfeld-Anzeige',
 	'option_inserer_barre_choix_edition' => 'Vollständige Symbolleiste "Bearbeiten"',
 	'option_inserer_barre_choix_forum' => 'Symbolleiste "Foren"',
@@ -335,6 +352,9 @@ Um den Standard beizubehalten, setzen Sie nichts. Um nichts anzuzeigen, setzen S
 	'verifier_valeurs_acceptables_explication' => 'Überprüfen Sie, ob der eingegebene Wert zu den bei der Definition des Feldes/der Felder zulässigen Werten gehört. Verwenden Sie diese Option nicht, wenn Sie die Felder in Ihren Skeletten dynamisch oder mit JavaScript ausfüllen.',
 	'verifier_valeurs_acceptables_label' => 'Mögliche Werte überprüfen',
 	'vue_sans_reponse' => '<i>Ohne Antwort</i>',
+
+	// Y
+	'yaml_necessaire_pour_doc' => 'Das YAML-Plugin ist für die Anzeige dieser Dokumentation erforderlich.',
 
 	// Z
 	'z' => 'Zzz',

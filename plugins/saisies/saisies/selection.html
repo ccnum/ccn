@@ -45,7 +45,6 @@
 		#SET{valeur,#GET{valeur}|saisies_valeur2tableau}
 	]
 ]
-
 #SET{data,#GET{data}|saisies_depublier_data{#ENV{depublie_choix},#ENV{valeur}}}
 [(#ENV{choix_alternatif}|oui)
 	#SET{data,#GET{data}|plus{#ARRAY{@choix_alternatif,#ENV{choix_alternatif_label}}}}
@@ -57,13 +56,10 @@
 		]
 	]
 	[(#ENV{multiple}|non)
-		[(#ENV{choix_alternatif}|oui)
-			#SET{data,#GET{data}|array_merge{#ARRAY{@choix_alternatif,#ENV{choix_alternatif_label}}}}
-			[(#GET{valeur}|oui)
-				[(#GET{data/#GET{valeur}}|non)
-					#SET{valeur_choix_alternatif,#GET{valeur}}
-					#SET{valeur,@choix_alternatif}
-				]
+		[(#GET{valeur}|oui)
+			[(#GET{data/#GET{valeur}}|non)
+				#SET{valeur_choix_alternatif,#GET{valeur}}
+				#SET{valeur,@choix_alternatif}
 			]
 		]
 	]

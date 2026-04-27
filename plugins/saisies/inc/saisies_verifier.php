@@ -96,7 +96,7 @@ function saisies_verifier($formulaire, $saisies_masquees_empty_string = true, $e
 					if (!$options) {//Sécurité, si jamais ''
 						$options = [];
 					}
-					$options = array_merge($options, ['_saisie' => $saisie]);
+					$options = array_merge($options, ['_saisie' => $saisie, '_saisies' => &$formulaire]);
 					if ($erreur_eventuelle = $verif_fonction($valeur, $verifier['type'], $options, $normaliser)) {
 						if (isset($erreurs[$champ])) {
 							$erreurs[$champ] .= '<br />' . $erreur_eventuelle;
@@ -147,7 +147,7 @@ function saisies_verifier($formulaire, $saisies_masquees_empty_string = true, $e
 
 	// Vérifier que les valeurs postées sont acceptables, à savoir par exemple que pour un select, ce soit ce qu'on a proposé. On vérifie cela en tout dernier, après le vidage des afficher_si car certainses saisies peuvent avoir des valeurs acceptables qui dépendant des afficher_si (exemple : les saisies calculs).  Si jamais on a une valeur innacceptable, c'est que la personne a triché sur le POST en truandant le HTML, donc on s'en fiche si en retour son formulaire d'erreur n'est pas cohérent.
 	if ($formulaire['options']['verifier_valeurs_acceptables'] ?? '') {
-		$erreurs = saisies_verifier_valeurs_acceptables($saisies_etape_courante_apres_verification_afficher_si_par_nom, $erreurs);
+		$erreurs = saisies_verifier_valeurs_acceptables($saisies_etape_courante_apres_verification_afficher_si_par_nom, $erreurs, $formulaire);
 	}
 	return $erreurs;
 }
@@ -156,13 +156,14 @@ function saisies_verifier($formulaire, $saisies_masquees_empty_string = true, $e
  * Vérifier que les valeurs postées sont acceptables,
  * c'est-à-dire qu'elles ont été proposées lors de la conception de la saisie.
  * Typiquement pour une saisie radio, vérifier que les gens n'ont pas postée une autre fleur.
- * @param $saisies array tableau général des saisies, déjà aplati, classé par nom de champ
- * @param $erreurs array tableau des erreurs
+ * @param array $saisies_par_nom tableau général des saisies de l'étape courante, déjà aplati, classé par nom de champ
+ * @param array $erreurs tableau des erreurs
+ * @param array $saisies_toutes toutes les saisies du formulaire, quelque soit les étapes et les afficher_si, selon l'arboresence (tableau de saisies original)
  * @return array table des erreurs modifiés
  **/
-function saisies_verifier_valeurs_acceptables($saisies, $erreurs) {
+function saisies_verifier_valeurs_acceptables($saisies_par_nom, $erreurs, $saisies_toutes = []) {
 	$verifier = charger_fonction('valeurs_acceptables', 'verifier');
-	foreach ($saisies as $saisie => $description) {
+	foreach ($saisies_par_nom as $saisie => $description) {
 		// Pas la peine de vérifier si par ailleurs il y a déjà une erreur
 		if (isset($erreurs[$saisie])) {
 			continue;
@@ -173,7 +174,7 @@ function saisies_verifier_valeurs_acceptables($saisies, $erreurs) {
 		if (!saisies_saisie_est_champ($description)) {
 			continue;
 		}
-		if ($erreur = $verifier($valeur, ['_saisie' => $description])) {
+		if ($erreur = $verifier($valeur, ['_saisie' => $description, '_saisies' => &$saisies_toutes])) {
 			$erreurs[$saisie] = $erreur;
 		}
 	}
