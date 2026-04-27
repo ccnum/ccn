@@ -132,6 +132,14 @@
 
 <!-- M -->
 <item>
+<title>Mastodon</title>
+<author>mastodon</author>
+<link>https://share.joinmastodon.org/#text=%t%20%u</link>
+<description>Microblogging</description>
+<category>important</category>
+</item>
+
+<item>
 <title>Menéame</title>
 <author>meneame</author>
 <link>https://meneame.net/submit.php?url=%u&amp;title=%t</link>
