@@ -333,6 +333,9 @@ if (
 
 				// changement pour quel type d'objet?
 				$objet = _request('exec');
+				if (!$objet) {
+					return false;
+				}
 				$cle_primaire = id_table_objet($objet);
 				$id_objet = _request($cle_primaire);
 
