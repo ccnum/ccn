@@ -306,7 +306,8 @@ function formulaires_construire_formulaire_verifier($identifiant, $formulaire_in
 		$formulaire_config = construire_formulaire_config_inserer_options_globales(
 			$formulaire_config,
 			$formulaire_actuel,
-			saisies_options_globales_lister_disponibles()
+			saisies_options_globales_lister_disponibles(),
+			"saisie_modifiee_{$nom}[options]"
 		);
 
 		// Si la saisie possede un identifiant, on l'ajoute
@@ -803,9 +804,10 @@ function construire_formulaire_config_inserer_option_depublie(array $saisies): a
  * @param array $formulaire_config le formulaire pour configurer une saisie
  * @param array $formulaire_actuel le formulaire que l'internaute est en
  * @param array $options_globales_disponibles toutes les options possibles
+ * @param string $prefixe à mettre en début de `nom` des saisies cachées
  * train de construire
 **/
-function construire_formulaire_config_inserer_options_globales(array $formulaire_config, array $formulaire_actuel, array $options_globales_disponibles): array {
+function construire_formulaire_config_inserer_options_globales(array $formulaire_config, array $formulaire_actuel, array $options_globales_disponibles, string $prefixe): array {
 
 	// Tant que la valeur d'une options globales n'est pas définie, elle vaut ''
 	$options_globales_disponibles = array_map(fn($x) => '', $options_globales_disponibles);
@@ -817,7 +819,7 @@ function construire_formulaire_config_inserer_options_globales(array $formulaire
 		$saisie = [
 			'saisie' => 'hidden',
 			'options' => [
-				'nom' => "_options_globales[$nom]",
+				'nom' => "{$prefixe}[_options_globales][$nom]",
 				'valeur_forcee' => $valeur
 			]
 		];

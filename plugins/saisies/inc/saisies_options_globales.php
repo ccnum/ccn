@@ -32,5 +32,7 @@ function saisies_options_globales_lister_disponibles(): array {
 		'afficher_si_avec_post' => [],
 		'obligatoire_defaut' => [],
 		'inserer_a_la_place' => [],
+		'chercher_formulaire_cache' => [],
+		'afficher_si_conteneur_extra' => []
 	];
 }

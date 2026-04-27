@@ -5,7 +5,8 @@
  *
  * @package SPIP\Saisies\Balises
  **/
-
+use Spip\Compilateur\Noeud\Champ;
+use Spip\Compilateur\Noeud\Texte;
 
 // pour ne pas interferer avec d'eventuelles futures fonctions du core
 // on met le tout dans une classe ; les fonctions sont autonomes.

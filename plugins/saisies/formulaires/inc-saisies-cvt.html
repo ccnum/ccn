@@ -22,7 +22,13 @@
 		]
 		[(#ENV{editable}|oui)
 		[(#ENV{_saisies}|et{#ENV{_saisies}|count}|oui)
-		<form method="post" action="[(#ENV{action}|ancre_url{#ENV{_saisies/options/conteneur_id}|sinon{#ENV{formulaire_sign}}})]" enctype="multipart/form-data"[ data-resume_etapes_futures="(#ENV{_resume_etapes_futures}|json_encode|attribut_html)"]><div>
+		<form method="post"
+			action="[(#ENV{action}|ancre_url{#ENV{_saisies/options/conteneur_id}|sinon{#ENV{formulaire_sign}}})]"
+			enctype="multipart/form-data"
+			[ data-resume_etapes_futures="(#ENV{_resume_etapes_futures}|json_encode|attribut_html)"]
+			[ data-afficher_si_conteneur_extra="(#ENV{_saisies/options/afficher_si_conteneur_extra}|attribut_html)"]
+		>
+			<div>
 					[(#REM) declarer les hidden qui declencheront le service du formulaire
 					parametre : url d'action ]
 					#ACTION_FORMULAIRE{#ENV{action}}
