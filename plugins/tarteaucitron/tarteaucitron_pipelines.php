@@ -31,7 +31,7 @@ function tarteaucitron_insert_head($flux) {
 		$css = produire_fond_statique('tarteaucitron_custom.css');
 		$flux .= "<link rel='stylesheet' href='" . $css . "' type='text/css' />";
 
-		$tarteaucitron = find_in_path('lib/tarteaucitron/tarteaucitron.js');
+		$tarteaucitron = find_in_path('lib/tarteaucitron/tarteaucitron.min.js');
 		$tarteaucitron_config = recuperer_fond('javascript/tarteaucitron_config');
 		// Note importante : ici on ajoute un id à la déclaration du script pour que celui-ci ne soit pas compressé par le Compresseur de SPIP si ce dernier est activé.
 		$flux .= "<script type='text/javascript' src='$tarteaucitron' id='tauc'></script>\n"
@@ -80,100 +80,109 @@ function tarteaucitron_insert_head($flux) {
  * @return mixed
  */
 function tarteaucitron_affichage_final($html) {
-	if ($GLOBALS['html'] and !test_espace_prive() and tarteaucitron_actif()) {
-		$ajouter_services = '<script type="text/javascript">';
-		$json_source = find_in_path('json/services.json');
-		$json = file_get_contents($json_source);
-		$parsed_json = json_decode($json);
-		$services_actifs = lire_config('tarteaucitron/services');
 
-		$valeurs = [];
-		// Tester la présence d'un formulaire formidable dans la page article
-		if (strpos($html, 'class="formulaire_spip formulaire_formidable') !== false) {
-			$formulaire = 'oui';
-		}
-		// Récupérer le nombre de résultats dans la recherche
-		$re = '#recherche__total">(\n)?(\t)?(\t)?(?P<digit>\d+)#';
-		if (preg_match($re, $html, $matches)) {
-			$valeurs['nbr_resultats'] = $matches['digit'];
-		}
-
-		foreach ($GLOBALS['contexte'] as $k => &$v) {
-			if (
-				preg_match(',^id_(\w+)$,S', $k, $r)
-				and ($id = intval($v)) > 0
-			) {
-				$valeurs[$k] = $id;
-			} elseif ($k === 'type-page') {
-				if (isset($v)) {
-					$valeurs['page'] = $v;
-				}
-			} elseif ($k === 'max') {
-				$valeurs['resultat_page'] = $v;
-			} elseif ($k === 'max_articles') {
-				$valeurs['pagination'] = $v;
-			} else {
-				$valeurs[$k] = $v;
-			}
-		}
-		$eulerian = '';
-		foreach ($services_actifs as $service => $params) {
-			if (isset($parsed_json->{$service}->{'JS'})) {
-				$codejs = $parsed_json->{$service}->{'JS'};
-
-				if (is_array($params)) {
-					$i = 0;
-					foreach ($params as $param => $value) {
-						$codejs = preg_replace('#ptac_' . $param . '#', $value, $codejs);
-						$service_plus = '';
-						if (find_in_path('services/' . $service . '.html') and $i == '0') {
-							$service_plus = recuperer_fond('services/' . $service, $valeurs);
-						}
-						$codejs = preg_replace(
-							"/tarteaucitron.user.(.*)More = function \(\) { \/\* (.*) \*\/ };/",
-							$service_plus,
-							$codejs
-						);
-						$i++;
-					}
-				}
-
-				if (defined('_TAC_SITE_ENTITY') and $service == 'eulerian') {
-					$info_plus = '';
-					if (defined('_TAC_SITE_REGION')) {
-						$info_plus .= "window.EA_datalayer.push('site_region', '" . _TAC_SITE_REGION . "');\n";
-					}
-					if (defined('_TAC_SITE_DEPARTMENT')) {
-						$info_plus .= "window.EA_datalayer.push('site_department', '" . _TAC_SITE_DEPARTMENT . "');\n";
-					}
-					if (defined('_TAC_SITE_TARGET')) {
-						$info_plus .= "window.EA_datalayer.push('site_target', '" . _TAC_SITE_TARGET . "');\n";
-					}
-					$fichier = 'eulerian_';
-					$fichier .= ($valeurs['page'] ?? 'sommaire');
-					$fichier .= (isset($formulaire) ? '_formulaire' : '');
-					$fichier .= (isset($valeurs['id_formulaires_reponse']) ? '_formulaire_confirmation' : '');
-					$handle = find_in_path('services/' . $fichier . '.html');
-					if ($handle) {
-						$eulerian .= "(function(){
-							window.EA_datalayer = [];
-							window.EA_datalayer.push('site_entity', '" . _TAC_SITE_ENTITY . "');
-							window.EA_datalayer.push('site_type', 'standard');
-							" . $info_plus . recuperer_fond('services/' . $fichier, $valeurs) . '
-							window.EA_push(window.EA_datalayer);
-						})();';
-					}
-				} else {
-					$ajouter_services .= $codejs . "\n";
-				}
-			}
-		}
-
-		$ajouter_services .= $eulerian;
-		$ajouter_services .= '</script>';
-
-		$html = str_replace('</body>', $ajouter_services . '</body>', $html);
+	if (!$GLOBALS['html'] || test_espace_prive() || !tarteaucitron_actif()) {
+		return $html;
 	}
+
+	// Charger le JSON des services
+	$json_source = find_in_path('json/services.json');
+	$json = file_get_contents($json_source);
+	$parsed_json = json_decode($json);
+
+	$services_actifs = lire_config('tarteaucitron/services');
+	$valeurs = [];
+
+	// Détecter formulaire Formidable
+	if (strpos($html, 'class="formulaire_spip formulaire_formidable') !== false) {
+		$formulaire = 'oui';
+	}
+
+	// Récupérer le nombre de résultats de recherche
+	if (preg_match('#recherche__total">(\n)?(\t)?(\t)?(?P<digit>\d+)#', $html, $matches)) {
+		$valeurs['nbr_resultats'] = $matches['digit'];
+	}
+
+	// Contexte global SPIP
+	foreach ($GLOBALS['contexte'] as $k => $v) {
+		if (preg_match(',^id_(\w+)$,S', $k, $r) && ($id = intval($v)) > 0) {
+			$valeurs[$k] = $id;
+		} elseif ($k === 'type-page' && isset($v)) {
+			$valeurs['page'] = $v;
+		} elseif ($k === 'max') {
+			$valeurs['resultat_page'] = $v;
+		} elseif ($k === 'max_articles') {
+			$valeurs['pagination'] = $v;
+		} else {
+			$valeurs[$k] = $v;
+		}
+	}
+
+	$script_global = "<script type=\"text/javascript\">\n";
+
+	foreach ($services_actifs as $service => $params) {
+		if (!isset($parsed_json->{$service}->{'JS'})) {
+			continue;
+		}
+
+		$codejs = $parsed_json->{$service}->{'JS'};
+
+		// Remplacement des placeholders ptac_*
+		if (is_array($params)) {
+			foreach ($params as $param => $value) {
+				$codejs = str_replace('ptac_' . $param, $value, $codejs);
+			}
+		}
+
+		// Modèle HTML pour fonctions More
+		if (find_in_path('services/' . $service . '.html')) {
+			$service_plus = recuperer_fond('services/' . $service, $valeurs);
+			$codejs = preg_replace(
+				"/tarteaucitron.user\.(.*)More\s*=\s*function\s*\(\)\s*\{.*?\};/s",
+				$service_plus,
+				$codejs
+			);
+		}
+
+		$script_global .= $codejs . "\n";
+	}
+
+	// Eulerian / datalayer (spécial)
+	if (defined('_TAC_SITE_ENTITY')) {
+		$info_plus = '';
+		if (defined('_TAC_SITE_REGION')) {
+			$info_plus .= "window.EA_datalayer.push('site_region', '" . _TAC_SITE_REGION . "');\n";
+		}
+		if (defined('_TAC_SITE_DEPARTMENT')) {
+			$info_plus .= "window.EA_datalayer.push('site_department', '" . _TAC_SITE_DEPARTMENT . "');\n";
+		}
+		if (defined('_TAC_SITE_TARGET')) {
+			$info_plus .= "window.EA_datalayer.push('site_target', '" . _TAC_SITE_TARGET . "');\n";
+		}
+
+		$fichier = 'eulerian_';
+		$fichier .= ($valeurs['page'] ?? 'sommaire');
+		$fichier .= (isset($formulaire) ? '_formulaire' : '');
+		$fichier .= (isset($valeurs['id_formulaires_reponse']) ? '_formulaire_confirmation' : '');
+
+		if ($handle = find_in_path('services/' . $fichier . '.html')) {
+			$script_global .= "(function(){
+                window.EA_datalayer = [];
+                window.EA_datalayer.push('site_entity', '" . _TAC_SITE_ENTITY . "');
+                window.EA_datalayer.push('site_type', 'standard');
+                window.EA_datalayer.push('site_target', 'contenu');
+                $info_plus
+                " . recuperer_fond('services/' . $fichier, $valeurs) . "
+                window.EA_push(window.EA_datalayer);
+            })();\n";
+		}
+	}
+
+	$script_global .= "</script>\n";
+
+	// Injecter avant </body>
+	$html = str_replace('</body>', $script_global . '</body>', $html);
+
 	return $html;
 }
 

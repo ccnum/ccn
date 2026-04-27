@@ -211,43 +211,31 @@ function tarteaucitron_generer_modeles($data) {
 function tarteaucitron_generer_json($data) {
 
 	$dir_json = _DIR_PLUGIN_TARTEAUCITRON . 'json/';
+	$dir_modeles = _DIR_PLUGIN_TARTEAUCITRON . 'modeles/';
+
 	if (!is_dir($dir_json)) {
 		sous_repertoire(_DIR_PLUGIN_TARTEAUCITRON, 'json');
 	}
+
 	$services = [];
 	$pattern = '/###(.+?)###/';
 
-	// Transforme un placeholder en ptac_PARAM
+	/* ===============================
+	   HELPERS
+	================================ */
+
 	function formatParam($param) {
 		$param = preg_replace('/\(.*?\)/', '', $param);
 		$param = preg_replace('/[0-9\[\]]/', '', $param);
 		$param = preg_replace('/[^a-zA-Z_-]/', '_', $param);
 		$param = preg_replace('/_+/', '_', $param);
 		$param = trim($param, '_');
+		$param = strtolower($param);
 		return 'ptac_' . $param;
-	}
-
-	// Protéger les commentaires multi-lignes /* ... */
-	function escape_multiline_comments($code) {
-		return preg_replace_callback('/\/\*.*?\*\//s', function ($m) {
-			$text = substr($m[0], 2, -2);
-			$text = trim($text);
-			return '\/\* ' . $text . ' *\/';
-		}, $code);
-	}
-
-	// Entourer les ptac_XXX non quotés de quotes
-	function wrap_ptac_in_quotes($js) {
-		return preg_replace_callback(
-			"/(tarteaucitron\.user\.[a-zA-Z0-9_]+)\s*=\s*(ptac_[a-zA-Z0-9_-]+)\s*;/",
-			fn($matches) => "{$matches[1]} = '{$matches[2]}';",
-			$js
-		);
 	}
 
 	function normalizeCode($code) {
 		if (is_array($code)) {
-			// Aplatir le tableau récursivement
 			$flat = [];
 			array_walk_recursive($code, function ($v) use (&$flat) {
 				if (is_string($v)) {
@@ -255,97 +243,160 @@ function tarteaucitron_generer_json($data) {
 				}
 			});
 			return implode("\n", $flat);
-		} elseif (is_string($code)) {
-			return $code;
 		}
-		return '';
+		return is_string($code) ? $code : '';
 	}
-	// Parcours des catégories
+
+	function cleanHtml($html) {
+		if (!$html) {
+			return '';
+		}
+
+		libxml_use_internal_errors(true);
+
+		$dom = new DOMDocument();
+
+		$dom->loadHTML(
+			'<?xml encoding="UTF-8">' . $html,
+			LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD
+		);
+
+		$xpath = new DOMXPath($dom);
+
+		// ❌ supprimer balises inutiles
+		foreach (['script', 'style', 's'] as $tag) {
+			while (($nodes = $dom->getElementsByTagName($tag))->length) {
+				$nodes->item(0)
+					->parentNode->removeChild($nodes->item(0));
+			}
+		}
+
+		// ❌ supprimer nœuds texte qui sont des slugs-libellés (ex: "static-ads", "share-long", "share-bubble-t2")
+		foreach (iterator_to_array($xpath->query('//text()')) as $node) {
+			if (preg_match('/^[a-z0-9]+(-[a-z0-9]+)+$/i', trim($node->nodeValue))) {
+				$node->parentNode->removeChild($node);
+			}
+		}
+
+		// ❌ supprimer éléments dont tout le contenu texte est un slug-libellé
+		foreach (iterator_to_array($xpath->query('//*')) as $node) {
+			if (!$node->parentNode) {
+				continue;
+			}
+			$text = trim($node->textContent);
+			if ($text !== '' && preg_match('/^[a-z0-9]+(-[a-z0-9]+)+$/i', $text)) {
+				$node->parentNode->removeChild($node);
+			}
+		}
+
+		// ❌ supprimer <p> vides après nettoyage des slugs
+		foreach (iterator_to_array($xpath->query('//p')) as $node) {
+			if (!$node->parentNode) {
+				continue;
+			}
+			if (trim($node->textContent) === '') {
+				$node->parentNode->removeChild($node);
+			}
+		}
+
+		$htmlClean = $dom->saveHTML();
+
+		// ❌ retirer la déclaration XML ajoutée pour l'encodage
+		$htmlClean = preg_replace('/<\?xml[^>]*>\s*/i', '', $htmlClean);
+
+		// ❌ nettoyer <p> autour des <div>
+		$htmlClean = preg_replace('/<p>\s*(<div[^>]*>.*?<\/div>)\s*<\/p>/is', '$1', $htmlClean);
+
+		libxml_clear_errors();
+
+		return trim($htmlClean);
+	}
+
+	function cleanJs($js) {
+
+		// ❌ balises <s>...</s> (code barré/commenté dans le JSON source)
+		$js = preg_replace('/<s>.*?<\/s>/is', '', $js);
+
+		// ❌ assignments avec objet vide ou commentaire seul : tarteaucitron.user.x = { /* ... */ };
+		$js = preg_replace('/tarteaucitron\.user\.[a-zA-Z0-9_]+\s*=\s*\{[^{}]*\/\*[^*]*\*\/[^{}]*\}\s*;?\n?/s', '', $js);
+
+		// wrap ptac
+		$js = preg_replace_callback(
+			"/(tarteaucitron\.user\.[a-zA-Z0-9_]+)\s*=\s*(ptac_[a-z0-9_-]+)\s*;/i",
+			fn ($m) => "{$m[1]} = '{$m[2]}';",
+			$js
+		);
+
+		// ❌ fonctions inutiles
+		$js = preg_replace("/tarteaucitron\.user\.[a-zA-Z0-9_]+More\s*=\s*function\s*\([^)]*\)\s*\{.*?\};/s", '', $js);
+
+		// ❌ anciens push
+		$js = preg_replace("/\(tarteaucitron\.job\s*=\s*tarteaucitron\.job\s*\|\|\s*\[\]\)\.push\([^)]+\);?/i", '', $js);
+
+		// ❌ labels restants
+		$js = preg_replace('/\b[a-z]+(_[a-z]+)*-(inline|bubble|horizontal|none)-t\d+\b/i', '', $js);
+
+		// ❌ meta / html parasites
+		$js = preg_replace('/<meta[^>]*>/i', '', $js);
+		$js = preg_replace('/<!DOCTYPE.*?>/is', '', $js);
+		$js = preg_replace('/<\/?(html|body|head)[^>]*>/i', '', $js);
+
+		// ❌ commentaires de ligne entière (// ...)
+		$js = preg_replace('/^\s*\/\/.*$/m', '', $js);
+
+		// lignes vides
+		$js = preg_replace('/\n{2,}/', "\n", $js);
+
+		return trim($js);
+	}
+
+	/* ===============================
+	   MAIN LOOP
+	================================ */
+
 	foreach ($data as $category => $items) {
+
 		if (!is_array($items)) {
 			continue;
 		}
 
 		foreach ($items as $serviceName => $serviceData) {
-			$jsCode = $serviceData['code']['js'] ?? '';
-			$htmlCode = $serviceData['code']['html'] ?? '';
 
-			$jsClean = normalizeCode($jsCode);
-			$htmlClean = normalizeCode($htmlCode);
+			$jsCode = normalizeCode($serviceData['code']['js'] ?? '');
+			$htmlCode = cleanHtml(normalizeCode($serviceData['code']['html'] ?? ''));
 
-			// Supprimer balises <script>
-			$htmlClean = preg_replace('/<\/?script\b[^>]*>/i', '', $htmlClean);
-
-			// Combiner JS + HTML
-			$fullJs = trim($jsClean) . "\n" . trim($htmlClean);
-
-			// Remplacer placeholders ###XXX### par ptac_XXX
-			$fullJs = preg_replace_callback($pattern, fn($m) => formatParam($m[1]), $fullJs);
-
-			// Échapper commentaires multi-lignes
-			$fullJs = escape_multiline_comments($fullJs);
-
-			// Wrap ptac_XXX en quotes
-			$fullJs = wrap_ptac_in_quotes($fullJs);
-
-			// Supprimer tous les blocs <s>...</s>
-			$fullJs = preg_replace('#<s>.*?</s>#s', '', $fullJs);
-
-			// Supprimer toutes les div complètes
-			$fullJs = preg_replace(
-				'#<div\b[^>]*>.*?</div>#si',
-				'',
-				$fullJs
-			);
-
-			// Supprimer complètement les fonctions du type tarteaucitron.user.xxxMore = function () { ... };
-			$fullJs = preg_replace(
-				"/tarteaucitron\.user\.[a-zA-Z0-9_]+More\s*=\s*function\s*\([^)]*\)\s*\{.*?\};/s",
-				'',
-				$fullJs
-			);
-
-			// Ajouter \n après chaque ; sauf à l'intérieur de style=""
-			$fullJs = preg_replace_callback(
-				'/style=".*?"|;/',
-				function ($m) {
-					if ($m[0] === ';') {
-						return ";\n"; // ajouter retour à la ligne
-					}
-					return $m[0]; // garder style="" tel quel
-				},
-				$fullJs
-			);
-
-			// Ajouter push final
-			$fullJs = trim($fullJs);
-			$fullJs .= "\n(tarteaucitron.job = tarteaucitron.job || []).push('{$serviceName}');";
-
-			// Définir hasModele
-			$hasModele = in_array($category, ['analytic', 'api', 'support', 'video']) ? false : !empty($params ?? []);
-
-			// Extraire params depuis le JS + HTML
-			preg_match_all($pattern, $jsClean . ' ' . $htmlClean, $matches);
+			// 🔍 params
+			preg_match_all($pattern, $jsCode . ' ' . $htmlCode, $matches);
 			$params = array_map('formatParam', array_unique($matches[1] ?? []));
 
+			// 🔁 remplacement placeholders dans JS
+			$jsCode = preg_replace_callback($pattern, fn ($m) => formatParam($m[1]), $jsCode);
+
+			// 🔁 remplacement placeholders dans HTML
+			$htmlCode = preg_replace_callback($pattern, fn ($m) => formatParam($m[1]), $htmlCode);
+
+			// 🧼 nettoyage JS
+			$fullJs = cleanJs($jsCode);
+
+			// ➕ push unique
+			$fullJs .= "\n(tarteaucitron.job = tarteaucitron.job || []).push('{$serviceName}');";
+
+			// 📁 modèle existant ?
+			$modele_file = $dir_modeles . 'tac_' . strtolower($serviceName) . '.html';
+
 			$services[$serviceName] = [
-				'hasModele' => $hasModele,
+				'hasModele' => file_exists($modele_file),
 				'params' => $params,
 				'type' => $category,
 				'JS' => $fullJs,
+				'HTML' => $htmlCode,
 			];
 		}
 	}
 
-	$newJson = json_encode($services, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
-
-	// Nom du fichier de sortie
 	$file = $dir_json . 'services.json';
 
-	// Sauvegarde du fichier
-	if (file_put_contents($file, $newJson) === false) {
-		die("❌ Impossible d’écrire dans $file");
-	}
+	file_put_contents($file, json_encode($services, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE));
 
 	echo "✅ Fichier généré avec succès : $file\n";
 }
