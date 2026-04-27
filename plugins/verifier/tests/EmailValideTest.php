@@ -15,7 +15,7 @@ class EmailValideTest extends TestCase {
 
 	public static function dataEmailsValides() {
 
-		$datas = [
+		$data = [
 			// Source https://en.wikipedia.org/wiki/Email_address#Valid_email_addresses
 			[
 				'simple@example.com',
@@ -70,7 +70,7 @@ class EmailValideTest extends TestCase {
 				[
 					'normal' => true,
 					'rfc5322' => true,
-					'strict' => false,
+					'strict' => true,
 				]
 			],
 			[
@@ -256,7 +256,7 @@ class EmailValideTest extends TestCase {
 				[
 					'normal' => true,
 					'rfc5322' => true,
-					'strict' => false,
+					'strict' => true,
 				]
 			],
 			[
@@ -633,7 +633,15 @@ class EmailValideTest extends TestCase {
 
 		];
 
-		return $datas;
+		$data2 = [];
+		// Et on met tout cela a plat pour pouvoir savoir précisement lequel pose problème
+		foreach ($data as $value) {
+			foreach ($value[1] as $sub_type => $expected) {
+				$key = $value[0];
+				$data2["{$key}/{$sub_type}"] = [$value[0], $expected, array_merge(['mode' => $sub_type], $value[2] ?? [])];
+			}
+		}
+		return $data2;
 	}
 
 	public static function dataEmailsInvalides() {
@@ -696,7 +704,7 @@ class EmailValideTest extends TestCase {
 					'strict' => false,
 				],
 			],
-			'i.like.underscores@but_they_are_not_allowed_in_this_part' => [
+			[
 				'i.like.underscores@but_they_are_not_allowed_in_this_part', // (underscore is not allowed in domain part)
 				[
 					'normal' => true,//SPIP is more permissive
@@ -849,30 +857,33 @@ class EmailValideTest extends TestCase {
 				'unique' => 'on',
 			]
 		];
-		return $data2;
+		$data3 = [];
+		// Et on met tout cela a plat pour pouvoir savoir précisement lequel pose problème
+		foreach ($data2 as $key => $value) {
+			foreach ($value[1] as $sub_type => $expected) {
+				$data3["{$key}/{$sub_type}"] = [$key, $expected, array_merge(['mode' => $sub_type], $value[2] ?? [])];
+			}
+		}
+		return $data3;
 	}
 
 
 	/**
 	 * @dataProvider dataEmailsValides
 	 **/
-	function testEmailValide($valeur, $expected_by_type, array $other_options = []) {
-		foreach ($expected_by_type as $type => $expected) {
-			$erreur = verifier_email_dist($valeur, array_merge(['mode' => $type],  $other_options));
-			$actual = ($erreur == '' ? true : false);
-			$this->assertEquals($expected, $actual);
-		}
+	function testEmailValide($valeur, bool $expected, array $options = []) {
+		$erreur = verifier_email_dist($valeur, $options);
+		$actual = ($erreur == '' ? true : false);
+		$this->assertEquals($expected, $actual);
 	}
 
 	/**
 	 * @dataProvider dataEmailsInvalides
 	 **/
-	function testEmailInvalide($valeur, $expected_by_type, array $other_options = []) {
-		foreach ($expected_by_type as $type => $expected) {
-			$erreur = verifier_email_dist($valeur, ['mode' => $type] + $other_options);
-			$actual = ($erreur == '' ? true : false);
-			$this->assertEquals($expected, $actual);
-		}
+	function testEmailInvalide($valeur, bool $expected, array $options = []) {
+		$erreur = verifier_email_dist($valeur, $options);
+		$actual = ($erreur == '' ? true : false);
+		$this->assertEquals($expected, $actual);
 	}
 
 }
