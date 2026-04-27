@@ -17,6 +17,7 @@ composer.*
 htaccess.txt
 index.php
 LICENSE
+phpcs.xml.dist
 plugins-dist.json
 rector.php
 SECURITY.md
