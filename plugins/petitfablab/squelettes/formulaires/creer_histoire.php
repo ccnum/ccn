@@ -37,10 +37,22 @@ function formulaires_creer_histoire_saisies_dist($rub_parent, $retour = '') {
 function formulaires_creer_histoire_traiter_dist($rub_parent, $retour = '') {
 
 	$prologues = _request('prologue');
+	if (!is_array($prologues) || empty($prologues)) {
+		return ['message_erreur' => _T('petitfablab:creer_histoire_prologue')];
+	}
+
 	$rub = [];
 	foreach ($prologues as $id_prologue) {
+		$id_prologue = intval($id_prologue);
+		if (!$id_prologue) {
+			continue;
+		}
+
 		// Rubrique
 		$id_rub = rubrique_inserer($rub_parent);
+		if (!$id_rub) {
+			continue;
+		}
 		$rub[] = $id_rub;
 		autoriser_exception('modifier', 'rubrique', $id_rub);
 		objet_modifier('rubrique', $id_rub, ["titre" => "Histoire " . $id_rub, "descriptif" => $id_prologue]);
