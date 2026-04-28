@@ -11,7 +11,7 @@ function valider_chapitre($id_article, $id_rubrique) {
 
 	$envoyer_mail = charger_fonction('envoyer_mail', 'inc');
 	// mail
-	$bcc = sql_getfetsel("soustitre", "spip_articles", "id_article = " . $id_article);
+	$bcc = sql_getfetsel("soustitre", "spip_articles", "id_article = " . intval($id_article));
 	$sujet = 'Vous venez d\'écrire un chapitre !';
 	$html = "Bonjour,";
 	$html .= "<br />Merci d'avoir participé au petit fablab d'écriture !";
@@ -72,6 +72,7 @@ function valider_chapitre($id_article, $id_rubrique) {
 
 function annee_rub($idr) {
 
+	$annee_scolaire = 0;
 	$date = sql_getfetsel('maj', 'spip_rubriques', 'id_rubrique=' . intval($idr));
 
 	if ($date != '') {
@@ -86,14 +87,17 @@ function annee_rub($idr) {
 }
 
 function balise_ANNEE_SCOLAIRE_dist($p) {
-	if ((isset($_GET['annee_scolaire'])) && ($_GET['annee_scolaire'] != 0) && ($_GET['annee_scolaire'] != '')) {
-		$p->code = $_GET['annee_scolaire'];
-	} else {
-		if (date('m') >= 8) {
-			$p->code = date('Y');
-		} else {
-			$p->code = date('Y') - 1;
+	if (isset($_GET['annee_scolaire'])) {
+		$_annee = intval($_GET['annee_scolaire']);
+		if ($_annee > 2011 && $_annee < 2100) {
+			$p->code = $_annee;
+			return $p;
 		}
+	}
+	if (intval(date('m')) >= 8) {
+		$p->code = intval(date('Y'));
+	} else {
+		$p->code = intval(date('Y')) - 1;
 	}
 	return $p;
 }
@@ -156,7 +160,7 @@ function afficher_options_date($annee, $mois, $annee_scolaire) {
 		$annee_actuelle = date('Y') - 1;
 	}
 	if ($mois < 8) {
-		$annee = $annee--;
+		$annee--;
 	}
 	for ($i = $annee_actuelle; $i >= $annee; $i--) {
 		$j = $i + 1;
