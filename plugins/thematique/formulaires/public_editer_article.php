@@ -92,13 +92,19 @@ function formulaires_public_editer_article_traiter_dist(
 		$row,
 		$hidden
 	);
-	// Ajout du champ id_consigne
-	$id_consigne = _request('id_consigne');
+	// Ajout du champ id_consigne — vérifié en base pour éviter un id fantôme
+	$id_consigne = intval(_request('id_consigne'));
+	if ($id_consigne > 0) {
+		$existe = sql_getfetsel('id_article', 'spip_articles', 'id_article=' . $id_consigne);
+		if (!$existe) {
+			$id_consigne = 0;
+		}
+	}
 
 	// Publication de l'article
 	include_spip('action/editer_objet');
 	if (!empty($res['id_article'])) {
-		if ($id_consigne != 0) {
+		if ($id_consigne > 0) {
 			sql_updateq('spip_articles', ['id_consigne' => $id_consigne], 'id_article=' . intval($res['id_article']));
 			objet_instituer('article', $res['id_article'], ['statut' => 'publie']);
 		} else {
