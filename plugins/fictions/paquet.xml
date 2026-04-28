@@ -12,6 +12,7 @@
 	<auteur>Patrick Vincent</auteur>
 	<licence>GNU/GPL</licence>
 
+	<necessite nom="ccn" />
 	<necessite nom="cextras" compatibilite="[3.0.5;[" />
 	<necessite nom="crayons" />
 	<necessite nom="jqueryui" compatibilite="[1.8.21;[" />

@@ -1,0 +1,13 @@
+<paquet
+	prefix="ccn"
+	categorie="squelette"
+	version="1.0.0"
+	etat="stable"
+	compatibilite="[4.3.2;4.*]"
+	documentation="http://www.laclasse.com"
+>
+	<nom>CCN</nom>
+	<auteur>Erasme</auteur>
+	<licence>GNU/GPL</licence>
+	<description>Plugin commun aux sites CCN — gestion de l'année scolaire partagée entre thematique, fictions et petitfablab</description>
+</paquet>

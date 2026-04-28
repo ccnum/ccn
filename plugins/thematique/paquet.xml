@@ -12,6 +12,7 @@
 	<auteur>Patrick Vincent</auteur>
 	<licence>GNU/GPL</licence>
 
+	<necessite nom="ccn" />
 	<necessite nom="notifications" />
 	<necessite nom="autorite" />
 	<necessite nom="crayons" />

@@ -70,46 +70,8 @@ function valider_chapitre($id_article, $id_rubrique) {
 	}
 }
 
-function annee_rub($idr) {
-
-	$annee_scolaire = 0;
-	$date = sql_getfetsel('maj', 'spip_rubriques', 'id_rubrique=' . intval($idr));
-
-	if ($date != '') {
-		$annee_scolaire = intval(substr($date, 0, 4));
-		$mois_scolaire = intval(substr($date, 5, 2));
-		if ($mois_scolaire < 9) {
-			$annee_scolaire--;
-		}
-	}
-
-	return $annee_scolaire;
-}
-
-function balise_ANNEE_SCOLAIRE_dist($p) {
-	if (isset($_GET['annee_scolaire'])) {
-		$_annee = intval($_GET['annee_scolaire']);
-		if ($_annee > 2011 && $_annee < 2100) {
-			$p->code = $_annee;
-			return $p;
-		}
-	}
-	if (intval(date('m')) >= 8) {
-		$p->code = intval(date('Y'));
-	} else {
-		$p->code = intval(date('Y')) - 1;
-	}
-	return $p;
-}
-
-function balise_ANNEE_ACTUELLE_dist($p) {
-	if (date('m') >= 8) {
-		$p->code = date('Y');
-	} else {
-		$p->code = date('Y') - 1;
-	}
-	return $p;
-}
+// annee_rub, balise_ANNEE_SCOLAIRE_dist, balise_ANNEE_ACTUELLE_dist, afficher_options_date
+// sont définis par le plugin ccn (ccn_fonctions.php)
 
 function balise_NOM_AUTEUR_dist($p) {
 	$p->code = "'Violaine Schwartz'";
@@ -143,32 +105,3 @@ function filtre_cleanCut($string, $length = 380, $cutString = '(...)') {
 	return $cutString . substr($str, stripos($str, ' '));
 }
 
-/**
- * La fonction prend la date actuelle et l'année scolaire et tente de déduire quelle option rendre
- * sélectionnée par défaut.
- *
- * @param  $annee
- * @param  $mois
- * @param  $annee_scolaire
- * @return string
- */
-function afficher_options_date($annee, $mois, $annee_scolaire) {
-	$texte = '';
-	if (date('m') >= 8) {
-		$annee_actuelle = date('Y');
-	} else {
-		$annee_actuelle = date('Y') - 1;
-	}
-	if ($mois < 8) {
-		$annee--;
-	}
-	for ($i = $annee_actuelle; $i >= $annee; $i--) {
-		$j = $i + 1;
-		$texte .= "<option style='' value='$i'";
-		if ($i == $annee_scolaire) {
-			$texte .= ' selected ';
-		}
-		$texte .= ">$i/$j</option>";
-	}
-	return $texte;
-}
