@@ -1,8 +1,8 @@
 <?php
 
 function balise_ANNEE_SCOLAIRE_dist($p) {
-	// _ANNEE_SCOLAIRE est déjà calculé et validé dans thematique_options.php
-	$p->code = '_ANNEE_SCOLAIRE';
+	// _annee_scolaire est déjà calculé et validé dans thematique_options.php
+	$p->code = '_annee_scolaire';
 	return $p;
 }
 
