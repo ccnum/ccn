@@ -5,6 +5,7 @@ include_spip('base/abstract_sql');
 
 function annee_rub($idr) {
 
+    $annee_scolaire = 0;
     $date = sql_getfetsel('maj', 'spip_rubriques', 'id_rubrique=' . intval($idr));
 
     if ($date != '') {
@@ -19,14 +20,17 @@ function annee_rub($idr) {
 }
 
 function balise_ANNEE_SCOLAIRE_dist($p) {
-    if ((isset($_GET['annee_scolaire'])) && ($_GET['annee_scolaire'] != 0) && ($_GET['annee_scolaire'] != '')) {
-        $p->code = $_GET['annee_scolaire'];
-    } else {
-        if (date('m') >= 8) {
-            $p->code = date('Y');
-        } else {
-            $p->code = date('Y') - 1;
+    if (isset($_GET['annee_scolaire'])) {
+        $_annee = intval($_GET['annee_scolaire']);
+        if ($_annee > 2011 && $_annee < 2100) {
+            $p->code = $_annee;
+            return $p;
         }
+    }
+    if (intval(date('m')) >= 8) {
+        $p->code = intval(date('Y'));
+    } else {
+        $p->code = intval(date('Y')) - 1;
     }
     return $p;
 }
@@ -67,7 +71,8 @@ function cleanCut($string, $length = 380, $cutString = '(...)') {
         return $string;
     }
     $str = substr($string, strlen($string) - $length - 7, strlen($string));
-    return $cutString . substr($str, stripos($str, ' '));
+    $pos = stripos($str, ' ');
+    return $cutString . ($pos !== false ? substr($str, $pos) : $str);
 }
 
 /**
@@ -87,7 +92,7 @@ function afficher_options_date($annee, $mois, $annee_scolaire) {
         $annee_actuelle = date('Y') - 1;
     }
     if ($mois < 8) {
-        $annee = $annee--;
+        $annee--;
     }
     for ($i = $annee_actuelle; $i >= $annee; $i--) {
         $j = $i + 1;
@@ -228,13 +233,16 @@ function recupererDernieresLignesChapitres($texteChapitre = '', $nbDeDerniersCar
     if (strlen($texteChapitre) < $nbDeDerniersCaracteresAAfficher) {
         return $texteChapitre;
     }
-    return $chaineAConcatenerAuDebut . substr($texteChapitre, strlen($texteChapitre) - $nbDeDerniersCaracteresAAfficher, -1);
+    return $chaineAConcatenerAuDebut . substr($texteChapitre, -$nbDeDerniersCaracteresAAfficher);
 }
 
 
 function anneeAAfficher($derniereRubriqueAnneeTrouveeDansSpip = '') {
     if (isset($_GET['annee_scolaire'])) {
-        return $_GET['annee_scolaire'];
+        $_annee = intval($_GET['annee_scolaire']);
+        if ($_annee > 2011 && $_annee < 2100) {
+            return $_annee;
+        }
     }
-    return  $derniereRubriqueAnneeTrouveeDansSpip;
+    return $derniereRubriqueAnneeTrouveeDansSpip;
 }
