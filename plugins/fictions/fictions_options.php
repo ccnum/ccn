@@ -13,6 +13,7 @@ define('_cookie_annee_scolaire', 'laclasse_annee_scolaire');
 
 function annee_rub1($idr) {
 
+	$annee_scolaire = 0;
 	$date = sql_getfetsel('id_rubrique', 'spip_rubriques', 'id_rubrique=' . intval($idr));
 
 	if ($date != '') {
@@ -27,26 +28,25 @@ function annee_rub1($idr) {
 }
 
 // ANNEE
-if ((isset($_COOKIE['_cookie_annee_scolaire']))
-	&& ($_COOKIE['_cookie_annee_scolaire'] != 0)
-	&& ($_COOKIE['_cookie_annee_scolaire'] != '')
-	&& ($_COOKIE['_cookie_annee_scolaire'] > 2011)
-) {
-	$annee_scolaire = $_COOKIE['_cookie_annee_scolaire'];
+$_annee_cookie = isset($_COOKIE['_cookie_annee_scolaire']) ? intval($_COOKIE['_cookie_annee_scolaire']) : 0;
+if ($_annee_cookie > 2011 && $_annee_cookie < 2100) {
+	$annee_scolaire = $_annee_cookie;
 } else {
-	if (date('m') >= '08') {
-		$annee_scolaire = date('Y');
+	if (intval(date('m')) >= 8) {
+		$annee_scolaire = intval(date('Y'));
 	} else {
-		$annee_scolaire = date('Y') - 1;
+		$annee_scolaire = intval(date('Y')) - 1;
 	}
 }
+unset($_annee_cookie);
 
-if ((isset($_GET['annee_scolaire']))
-	&& ($_GET['annee_scolaire'] != 0)
-	&& ($_GET['annee_scolaire'] != '')
-) {
-	$annee_scolaire = $_GET['annee_scolaire'];
-	setcookie('_cookie_annee_scolaire', $annee_scolaire);
+if (isset($_GET['annee_scolaire'])) {
+	$_annee_get = intval($_GET['annee_scolaire']);
+	if ($_annee_get > 2011 && $_annee_get < 2100) {
+		$annee_scolaire = $_annee_get;
+		setcookie('_cookie_annee_scolaire', $annee_scolaire, 0, '/');
+	}
+	unset($_annee_get);
 }
 
 //Hack temporaire d'indexation d'année
