@@ -130,6 +130,7 @@ spip plugins:activer verifier -y
 spip plugins:activer yaml -y
 spip plugins:activer autorite -y
 spip plugins:activer simplog -y
+spip plugins:activer ccn -y
 
 if [ ${SPIP_PLUGINS_CICAS} == true ]; then
 	spip plugins:activer cicas -y
@@ -144,7 +145,6 @@ fi
 if [ ${SPIP_VERSION_SITE} != "thematique" ]; then
 	spip plugins:activer vider_rubrique -y
 fi
-spip plugins:activer ccn -y
 spip plugins:activer ${SPIP_VERSION_SITE} -y
 if [ ${PROJET} != "laclasse" ]; then
 	spip plugins:activer thematique_${PROJET} -y
