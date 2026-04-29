@@ -358,12 +358,12 @@ function loadConsignes(fichier) {
 								answer_id_of_current_classe = dataForReponse.id;
 
 								nb_classe_reponse++;
-								nb_classe_commentaires += nombre_commentaires_reponse;
+								nb_classe_commentaires += dataForReponse.nombre_commentaires;
 							}
 						} else {
 							if (CCN.idRestreint == dataForReponse.classe_id) {
 								nb_classe_reponse++;
-								nb_classe_commentaires += nombre_commentaires_reponse;
+								nb_classe_commentaires += dataForReponse.nombre_commentaires;
 							}
 						}
 						indexReponseInConsigne++;
@@ -419,7 +419,7 @@ function loadBlog(fichier) {
 					dataForArticleBlog.titre = dataForArticleBlog.titre.replace("[", "<");
 					dataForArticleBlog.titre = dataForArticleBlog.titre.replace("]", ">");
 					dataForArticleBlog.y = getXMLNodeValue('y', xmlArticlesBlog[i]);
-					dataForArticleBlog.date = getXMLNodeValue('date', xmlArticlesBlog[i]);;
+					dataForArticleBlog.date = getXMLNodeValue('date', xmlArticlesBlog[i]);
 
 					if (indexY >= CCN.projet.liste_y_blogs.length) {
 						indexY = 0;

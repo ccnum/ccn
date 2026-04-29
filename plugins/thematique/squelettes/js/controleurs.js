@@ -1034,7 +1034,6 @@ function reloadAndSetCookie(url, cookie_nom, cookie_valeur) {
 function reload(url) {
 	if (url == 'self') {
 		location.reload(true);
-		window.location.reload();
 	} else {
 		window.location.href = url;
 	}
