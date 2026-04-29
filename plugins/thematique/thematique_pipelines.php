@@ -148,10 +148,11 @@ function thematique_cioidc_userinfo($flux) {
 	$auteur = sql_fetsel('id_auteur,nom', 'spip_auteurs', 'email=' . sql_quote($flux['args']['email'])); // Chercher l'auteur qui vient de se loguer
 	// Géré les groupes qui sont dans l'OpenID
 	$droits_spip = [];
+	$is_enseignant = false;
 	$groupe_libres = $flux['data']['ENTGroupesLibres'];
 	foreach ($groupe_libres as $g_l) {
-		//$g_l['structure_id']; $g_l['id']; $g_l['name'];
-		if (preg_match('/^(.*)\s(\d{4})$/', $g_l['name'], $matches)) {
+		//$g_l->structure_id; $g_l->id; $g_l->name;
+		if (preg_match('/^(.*)\s(\d{4})$/', $g_l->name, $matches)) {
 			$ccn = $matches[1];
 			$annee = $matches[2];
 			$droits_spip[] = ['ccn' => $ccn, 'annee' => $annee];
@@ -159,11 +160,14 @@ function thematique_cioidc_userinfo($flux) {
 	}
 	$classes_groupes = $flux['data']['ENTClassesGroupes'];
 	foreach ($classes_groupes as $c_g) {
-		//$c_g['member_type']; $c_g['group_id']; $c_g['group_structure_id']; $c_g['group_name']; $c_g['group_type'];
-		$droits_spip[] = ['type' => $c_g['member_type']];
+		//$c_g->member_type; $c_g->group_id; $c_g->group_structure_id; $c_g->group_name; $c_g->group_type;
+		$droits_spip[] = ['type' => $c_g->member_type];
+		if ($c_g->member_type == 'ENS') {
+			$is_enseignant = true;
+		}
 	}
-	spip_log($auteur['id_auteur'] . ' / ' . $auteur['nom'] . ' => ' . $droits_spip, 'cioidc');
-	if ($droits_spip['type'] == 'ENS') {
+	spip_log($auteur['id_auteur'] . ' / ' . $auteur['nom'] . ' => ' . json_encode($droits_spip), 'cioidc');
+	if ($is_enseignant) {
 		// Rattaché le prof sur la rubrique "Blog pédagogique"
 		$blog = sql_getfetsel('id_rubrique', 'spip_rubriques', 'titre = ' . sql_quote('Blog pédagogique'));
 		objet_associer(['id_auteur' => $auteur['id_auteur']], ['rubrique' => $blog]);
