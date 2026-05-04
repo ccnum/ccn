@@ -30,7 +30,7 @@ function fictions_post_edition($flux) {
 		}
 	}
 
-	if ($blog && $blog == $id_rubrique && $statut === 'prepa') {
+	if ($blog && $blog === $id_rubrique && $statut === 'prepa') {
 		sql_updateq('spip_articles', ['statut' => 'publie'], 'id_article=' . $id_objet);
 	}
 

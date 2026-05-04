@@ -119,7 +119,7 @@
 								</BOUCLE_lecture_titre_rubrique_droite>
 								<div class="lecture-chapitre-auteur">
 									<BOUCLE_auteur_article(AUTEURS){id_article}{0,1}>
-										<div class="ecriture-chapitre-avatar">[(#LOGO_AUTEUR||image_reduire{42,42})]</div>
+										<div class="ecriture-chapitre-avatar">[(#LOGO_AUTEUR|image_reduire{42,42})]</div>
 										<div class="ecriture-chapitre-nom">#NOM</div>
 									</BOUCLE_auteur_article>
 									[(#ENV{fin}|=={oui}|non)
@@ -160,15 +160,14 @@ $(document).ready(function() {
 	$('#ascrail2000').css({'cursor':'pointer'});
 
 // AFFICHAGES DES PAGES
-	var compteur = '#ENV{compteur}';
-	compteur = parseFloat(compteur);
+	var compteur = parseFloat('#ENV{compteur}');
 	var num_page_gauche;
 	var num_page_droite;
-	var num_page_limite = $('.content-left > div').size;
+	var num_page_limite = $('.content-left > div').length;
 
 	$('.lecture-page').hide();
 	pagination(compteur);
-	next_prev(compteur,num_page_limite);
+	next_prev(compteur, num_page_limite);
 
 
 // BOUTON PAGE SUIVANTE
@@ -176,13 +175,13 @@ $('#bt-prev').click(function(event) {
 	event.preventDefault();
 	compteur -= 2;
 	pagination(compteur);
-	next_prev(compteur,num_page_limite);
+	next_prev(compteur, num_page_limite);
 });
 $('#bt-next').click(function(event) {
 	event.preventDefault();
 	compteur += 2;
 	pagination(compteur);
-	next_prev(compteur,num_page_limite);
+	next_prev(compteur, num_page_limite);
 });
 
 // ROLLOVER AUTEUR
@@ -208,39 +207,37 @@ $('.lecture-tooltip').mouseout(function() {
 
 // RESIZE
 function resize_global_content() {
-	h = $(window).height();
-	h -=61;
+	var h = $(window).height() - 61;
 	$('.global-content').height(h);
-	stitches_margin = ((h-60) - 258)/4;
-	$(".stitches-inner").css({'margin-top':stitches_margin});
+	var stitches_margin = ((h - 60) - 258) / 4;
+	$(".stitches-inner").css({'margin-top': stitches_margin});
 }
 
 //PAGINATION & AFFICHAGE DES PAGES
 
 function pagination(var_compteur) {
-	if(var_compteur%2 == 0) {
-		num_page_gauche = var_compteur-1;
+	if (var_compteur % 2 === 0) {
+		num_page_gauche = var_compteur - 1;
 		num_page_droite = var_compteur;
-	}
-	else {
+	} else {
 		num_page_gauche = var_compteur;
-		num_page_droite = var_compteur+1;
+		num_page_droite = var_compteur + 1;
 	}
 	$('.lecture-page').hide();
-	$('#page-gauche-'+num_page_gauche).show();
-	$('#page-droite-'+num_page_droite).show();
+	$('#page-gauche-' + num_page_gauche).show();
+	$('#page-droite-' + num_page_droite).show();
 }
 
 // AFFICHAGE DES BOUTONS
 function next_prev(var_compteur, var_limite) {
 	$('#bt-next').show();
 	$('#bt-prev').show();
-	if(var_compteur >= var_limite-1){
+	if (var_compteur >= var_limite - 1) {
 		$('#bt-next').hide();
 	}
-	else {};
-
-	if(var_compteur == 1 || var_compteur == 2){$('#bt-prev').hide();} else {};
+	if (var_compteur === 1 || var_compteur === 2) {
+		$('#bt-prev').hide();
+	}
 }
 </script>
 
