@@ -96,9 +96,7 @@ function loadProjet(fichier) {
 
 				// Initialise le projet
 				CCN.projet = new Projet();
-				console.log(CCN.projet);
 				CCN.projet.init(dataForProjet);
-				console.log(CCN.projet);
 
 				CCN.couleurBlog = getXMLNodeValue('couleur_blog', xml);
 				CCN.idRubriqueRessources = getXMLNodeValue('id_rubrique_ressources', xml);
@@ -644,8 +642,6 @@ function initTimeline() {
 			var title = $(this).data("title");
 			if ($(this).hasClass("description")) {
 			$(this).css({position: 'absolute', top:'50%', color: 'red' })
-			console.log("Description");
-			console.log($(this).parent());
 			$(this).parent();
 			return "<p class='desc'>" + title + "</p>";
 			}
@@ -668,7 +664,6 @@ function initTimeline() {
 			$('.logo_menu-aide').on("click",
 				function () {
 					$(".ccn-aide").mediabox({ open: true });
-					console.log('test');
 				}
 			)
 

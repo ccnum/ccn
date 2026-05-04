@@ -31,9 +31,6 @@ function cutHex(h) {
 	return (h.charAt(0) == "#") ? h.substring(1, 7) : h
 }
 
-function log(message) {
-	console.log(message);
-}
 
 /**
  *  Retourne la valeur du noeud XML demandé.
