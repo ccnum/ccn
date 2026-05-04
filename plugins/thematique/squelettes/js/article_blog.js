@@ -81,7 +81,6 @@ function ArticleBlog() {
 						yy = ui.position.top / y_parent;
 						$.get(
 							"spip.php?page=ajax&mode=article-sauve-coordonnees", { id_objet: _thisId, type_objet: "article", X: 0, Y: yy }, function (data) {
-								console.log(data);
 							}
 						);
 					}
