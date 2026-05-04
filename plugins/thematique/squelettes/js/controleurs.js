@@ -15,6 +15,19 @@ $.urlParam = function (name) {
 
 $(function () {
 
+	$(document).on('click', '.js-call-consigne', function () {
+		callConsigne($(this).data('id-objet'));
+	});
+
+	$(document).on('click', '.js-call-reponse', function () {
+		callReponse($(this).data('id-article'));
+	});
+
+	$(document).on('click', '.js-call-livrable', function () {
+		callLivrable(null, 'open');
+		callLivrable($(this).data('id-article'), 'openDetails');
+	});
+
 	$('#timeline_fixed').on(
 		'click', function (event) {
 			event.stopPropagation();
