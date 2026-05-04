@@ -1,5 +1,3 @@
-function confirmation(txt)
-{
-    var x = window.confirm(txt);
-    return x;
+function confirmation(txt) {
+    return window.confirm(txt);
 }

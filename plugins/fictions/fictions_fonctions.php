@@ -29,121 +29,45 @@ function balise_LECTURE_dist($p) {
 
 // FUNCTION CLEANCUT
 function cleanCut($string, $length = 380, $cutString = '(...)') {
-    if (strlen($string) <= $length) {
+    // Si la chaîne est plus courte que la longueur maximale, on la retourne telle quelle
+    if (mb_strlen($string) <= $length) {
         return $string;
     }
-    $str = substr($string, strlen($string) - $length - 7, strlen($string));
-    $pos = stripos($str, ' ');
-    return $cutString . ($pos !== false ? substr($str, $pos) : $str);
+
+    // On prend la fin de la chaîne en commençant à la position calculée
+    $start = mb_strlen($string) - $length + mb_strlen($cutString);
+    $str = mb_substr($string, max(0, $start));
+
+    // On cherche le premier espace pour couper proprement
+    $pos = mb_strpos($str, ' ');
+
+    // Si on trouve un espace, on coupe à cet endroit, sinon on prend toute la fin
+    if ($pos !== false) {
+        $result = $cutString . mb_substr($str, $pos);
+    } else {
+        $result = $cutString . $str;
+    }
+
+    return $result;
 }
 
 /**
- * Cette fonction reçoit une chaîne de caractère (un chapitre complet) et doit en retrancher les X derniers caractères.
- * X étant l'entier reçu en deuxième argument. Puis chaque caractère doit être remplacé par un x.
+ * Reçoit un chapitre complet et masque les X derniers caractères en remplaçant
+ * toutes les lettres (y compris les caractères accentués) par 'X'.
  *
- * -> si le chapitre contient moins de caractères que le nb de caractères à tronquer, on ne renvoie qu'une chaîne vide.
+ * Si le chapitre contient moins de caractères que le nb à tronquer, retourne une chaîne vide.
  *
  * @param  string $texteAMasquer
  * @param  int    $nbDeCaracteresATronquerALaFin
  * @return string
  */
 function masquerTexteChapitre(string $texteAMasquer = '', int $nbDeCaracteresATronquerALaFin = 325): string {
-    if (strlen($texteAMasquer) < $nbDeCaracteresATronquerALaFin) {
+    if (mb_strlen($texteAMasquer) < $nbDeCaracteresATronquerALaFin) {
         return '';
     }
-    $texteTronque = substr($texteAMasquer, 0, strlen($texteAMasquer) - $nbDeCaracteresATronquerALaFin);
+    $texteTronque = mb_substr($texteAMasquer, 0, mb_strlen($texteAMasquer) - $nbDeCaracteresATronquerALaFin);
 
-    // Remplace tous les caractères sauf les diacritiques.
-    // Les RegEx ne semblent pas vouloir fonctionner :/ Je soupçonne un pb d'encodage iso-latin/utf-8. AU SECOURS !
-    $caracteresAMasquer = [
-        'à',
-        'ä',
-        'â',
-        'À',
-        'Ä',
-        'Â',
-        'ç',
-        'Ç',
-        'é',
-        'è',
-        'ë',
-        'ê',
-        'É',
-        'È',
-        'Ë',
-        'Ê',
-        'î',
-        'ï',
-        'Î',
-        'Ï',
-        'ô',
-        'ö',
-        'Ô',
-        'Ö',
-        'ù',
-        'û',
-        'ü',
-        'Ù',
-        'û',
-        'ü',
-        'ŷ',
-        'ÿ',
-        'Ŷ',
-        'Ÿ',
-        'a',
-        'b',
-        'c',
-        'd',
-        'e',
-        'f',
-        'g',
-        'h',
-        'i',
-        'j',
-        'k',
-        'l',
-        'm',
-        'n',
-        'o',
-        'p',
-        'q',
-        'r',
-        's',
-        't',
-        'u',
-        'v',
-        'w',
-        'x',
-        'y',
-        'z',
-        'A',
-        'B',
-        'C',
-        'D',
-        'E',
-        'F',
-        'G',
-        'H',
-        'I',
-        'J',
-        'K',
-        'L',
-        'M',
-        'N',
-        'O',
-        'P',
-        'Q',
-        'R',
-        'S',
-        'T',
-        'U',
-        'V',
-        'W',
-        'X',
-        'Y',
-        'Z  ',
-    ];
-    return str_replace($caracteresAMasquer, 'X', $texteTronque);
+    return preg_replace('/\p{L}/u', 'X', $texteTronque);
 }
 
 /**
@@ -161,11 +85,11 @@ function masquerTexteChapitre(string $texteAMasquer = '', int $nbDeCaracteresATr
  * @param  int    $nbDeDerniersCaracteresAAfficher
  * @return string
  */
-function recupererDernieresLignesChapitres($texteChapitre = '', $nbDeDerniersCaracteresAAfficher = 325, $chaineAConcatenerAuDebut = '(...)') {
-    if (strlen($texteChapitre) < $nbDeDerniersCaracteresAAfficher) {
+function recupererDernieresLignesChapitres(string $texteChapitre = '', int $nbDeDerniersCaracteresAAfficher = 325, string $chaineAConcatenerAuDebut = '(...)'): string {
+    if (mb_strlen($texteChapitre) < $nbDeDerniersCaracteresAAfficher) {
         return $texteChapitre;
     }
-    return $chaineAConcatenerAuDebut . substr($texteChapitre, -$nbDeDerniersCaracteresAAfficher);
+    return $chaineAConcatenerAuDebut . mb_substr($texteChapitre, -$nbDeDerniersCaracteresAAfficher);
 }
 
 
