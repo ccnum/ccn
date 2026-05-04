@@ -87,7 +87,6 @@ function ArticleEvenement() {
 						$.get(
 							"spip.php?page=ajax&mode=article-sauve-coordonnees", { id_objet: _thisId, type_objet: _thisTypeObjet, X: 0, Y: yy },
 							function (data) {
-								console.log(data);
 							}
 						);
 					}
