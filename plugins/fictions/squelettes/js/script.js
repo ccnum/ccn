@@ -2,6 +2,19 @@ function confirmation(txt) {
     return window.confirm(txt);
 }
 
+// Rollover générique : lit data-src-hover sur l'img pour le state hover
+$(document).ready(function() {
+    $('.btn-rollover').on('mouseenter', function() {
+        var hover = $(this).data('src-hover');
+        if (hover) {
+            $(this).data('src-normal', $(this).attr('src')).attr('src', hover);
+        }
+    }).on('mouseleave', function() {
+        var normal = $(this).data('src-normal');
+        if (normal) $(this).attr('src', normal);
+    });
+});
+
 function resize_global_content() {
     var h = $(window).height() - 61;
     $('.global-content').height(h);
