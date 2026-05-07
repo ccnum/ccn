@@ -30,8 +30,9 @@
 	<!-- RETOUR INDEX -->
 	<div id="bouton-retour">
 		<a href="#URL_SITE_SPIP">
-			<img src="#CHEMIN{img/global/bt-retour.png}" alt="Retour à l'accueil" onmouseover="this.src='#CHEMIN{img/global/bt-retour-hover.png}';"
-				onmouseout="this.src='#CHEMIN{img/global/bt-retour.png}';" width="54" height="54" />
+			<img src="#CHEMIN{img/global/bt-retour.png}" alt="Retour à l'accueil"
+				class="btn-rollover" data-src-hover="#CHEMIN{img/global/bt-retour-hover.png}"
+				width="54" height="54" />
 		</a>
 	</div>
 	[(#TITRE|=={'Blog pédagogique'}|non)<INCLURE{fond=inclure/rubrique,id_rubrique} />]

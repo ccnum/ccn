@@ -13,27 +13,27 @@
 		<!-- SCRIPT -->
 		[(#GET{script}|oui)
 			<a href="#URL_PAGE{lecture-script,id_article=#ID_ARTICLE}" class="mediabox boxIframe boxWidth-520px boxHeight-80pc">
-				<img src="[(#CHEMIN{img/lecture/bt_script_hover.png})]" onmouseover="this.src='#CHEMIN{img/lecture/bt_script_hover.png}';"
-					onmouseout="this.src='[(#CHEMIN{img/lecture/bt_script_hover.png})]';" width="30" height="30" title="accéder à la fiche script" />
+				<img src="[(#CHEMIN{img/lecture/bt_script_hover.png})]" width="30" height="30" title="accéder à la fiche script" />
 			</a>
 		]
 		[(#GET{script}|non)
 			<a href="#URL_PAGE{lecture-script,id_article=#ID_ARTICLE}" class="mediabox boxIframe boxWidth-520px boxHeight-80pc">
-				<img src="[(#CHEMIN{img/lecture/bt_script.png})]" onmouseover="this.src='#CHEMIN{img/lecture/bt_script_hover.png}';"
-					onmouseout="this.src='[(#CHEMIN{img/lecture/bt_script.png})]';" width="30" height="30" title="fiche script vide" />
+				<img src="[(#CHEMIN{img/lecture/bt_script.png})]"
+					class="btn-rollover" data-src-hover="#CHEMIN{img/lecture/bt_script_hover.png}"
+					width="30" height="30" title="fiche script vide" />
 			</a>
 		]
 		<!-- FORUM -->
 		[(#GET{forum}|oui)
 			<a href="#URL_SITE_SPIP/?page=[(#SESSION{id_auteur}|non|?{'lecture-',''})]forum&id_article=#ID_ARTICLE" class="mediabox boxIframe boxWidth-730px boxHeight-97pc">
-				<img src="[(#CHEMIN{img/lecture/bt_forum_hover.png})]" onmouseover="this.src='#CHEMIN{img/lecture/bt_forum_hover.png}';"
-					onmouseout="this.src='[(#CHEMIN{img/lecture/bt_forum_hover.png})]';" width="30" height="30" title="voir le forum"/>
+				<img src="[(#CHEMIN{img/lecture/bt_forum_hover.png})]" width="30" height="30" title="voir le forum"/>
 			</a>
 		]
 		[(#GET{forum}|non)
 			<a href="#URL_SITE_SPIP/?page=[(#SESSION{id_auteur}|non|?{'lecture-',''})]forum&id_article=#ID_ARTICLE" class="mediabox boxIframe boxWidth-730px boxHeight-97pc">
-				<img src="[(#CHEMIN{img/lecture/bt_forum.png})]" onmouseover="this.src='#CHEMIN{img/lecture/bt_forum_hover.png}';"
-					onmouseout="this.src='[(#CHEMIN{img/lecture/bt_forum.png})]';" width="30" height="30" title="accéder au forum" />
+				<img src="[(#CHEMIN{img/lecture/bt_forum.png})]"
+					class="btn-rollover" data-src-hover="#CHEMIN{img/lecture/bt_forum_hover.png}"
+					width="30" height="30" title="accéder au forum" />
 			</a>
 		]
 	[(#CLASS|=={nodiv}|non)</div>]

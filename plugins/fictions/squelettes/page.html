@@ -37,7 +37,9 @@ PAGE-TYPE.HTML
 	<!-- RETOUR INDEX -->
 	<div id="bouton-retour">
 		<a href="#URL_SITE_SPIP">
-			<img src="#CHEMIN{img/global/bt-retour.png}" onmouseover="this.src='#CHEMIN{img/global/bt-retour-hover.png}';" onmouseout="this.src='#CHEMIN{img/global/bt-retour.png}';" width="54" height="54" />
+			<img src="#CHEMIN{img/global/bt-retour.png}" alt="Retour à l'accueil"
+				class="btn-rollover" data-src-hover="#CHEMIN{img/global/bt-retour-hover.png}"
+				width="54" height="54" />
 		</a>
 	</div>
 
@@ -80,40 +82,24 @@ PAGE-TYPE.HTML
 
 <script type="text/javascript">
 $(document).ready(function() {
-	// RESIZE
- 	window.onresize = resize_global_content;
+	window.onresize = resize_global_content;
 	resize_global_content();
-	// NICESCROLL
+
 	$(".global-content").niceScroll({cursorcolor:"#ff6b6b", cursoropacitymin:'0.2',cursoropacitymax:'1', scrollspeed:'100', cursorborder:'0px'});
 	$('#ascrail2000').css({'cursor':'pointer'});
-	//
+
 	$('.liste-link').mouseover(function() {
 		var offset = $(this).offset();
 		var content_tooltip = $(this).find('.liste-tooltip-content').html();
-		$('#liste-tooltip').show();
-		$('#liste-tooltip').html(content_tooltip);
+		$('#liste-tooltip').show().html(content_tooltip);
 		var hauteur_tooltip = $('#liste-tooltip-content').height();
 		$('#liste-tooltip').height(hauteur_tooltip);
-		var toptooltip = Math.round(offset.top);
-		toptooltip = toptooltip - hauteur_tooltip;
-		var lefttooltip = Math.round(offset.left);
-		lefttooltip -= 95;
-		$('#liste-tooltip').css('top', toptooltip -5);
-		$('#liste-tooltip').css('left', lefttooltip + 2);
+		$('#liste-tooltip').css('top', Math.round(offset.top) - hauteur_tooltip - 5);
+		$('#liste-tooltip').css('left', Math.round(offset.left) - 95 + 2);
 	});
 	$('.liste-link').mouseout(function() {
 		$('#liste-tooltip').hide();
 	});
-
 });
-
-// RESIZE
-function resize_global_content() {
-	h = $(window).height();
-	h -=61;
-	$('.global-content').height(h);
-	stitches_margin = ((h-60) - 258)/4;
-	$(".stitches-inner").css({'margin-top':stitches_margin});
-}
 </script>
 </html>
