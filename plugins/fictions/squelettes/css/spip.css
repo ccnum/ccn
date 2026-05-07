@@ -1022,6 +1022,14 @@ a:hover.spip_out {
 	background-color: #000;
 }
 
+#close-script-ecrivain {
+	background-image: url('../img/ecriture/bt-moins.png');
+}
+
+#open-script-college.is-open {
+	background-image: url('../img/ecriture/bt-moins.png');
+}
+
 .forum_bt {
 	margin: 0px 30px 30px 60px;
 	width: 475px;
