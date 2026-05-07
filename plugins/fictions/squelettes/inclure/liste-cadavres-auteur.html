@@ -8,7 +8,7 @@ ID / NOM AUTEUR
 #SET{var_nom_auteur,#SESSION{nom}}
 #SET{i,0}
 
-<BOUCLE_rubriques_toutes(RUBRIQUES){id_parent=#ENV{id_rubrique}}{id_rubrique != 12}{par titre}>
+<BOUCLE_rubriques_toutes(RUBRIQUES){id_parent=#ENV{id_rubrique}}{id_rubrique != #EVAL{_FICTIONS_ID_BLOG_PEDA}}{par titre}>
 	#SET{i,#GET{i}|plus{1}}
 	<div class="liste-colonnes">
 		<div class="liste-title">#GET{i}</div>
@@ -26,7 +26,7 @@ ID / NOM AUTEUR
 							<div class="liste-tooltip-photo">[(#LOGO_AUTEUR|image_reduire{42,42})]</div>
 							<div class="liste-tooltip-auteur">#NOM</div>
 							<div class="liste-tooltip-auteur">
-								[(#DESCRIPTIF|cleanCut)]<br />
+								[(#DESCRIPTIF|textebrut|recupererDernieresLignesChapitres{380})]<br />
 							</div>
 						</BOUCLE_auteur_tous>
 					</div>
