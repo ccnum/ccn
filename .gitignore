@@ -28,6 +28,7 @@ plugins/thematique/vendor
 plugins/thematique/ecs.php
 
 dump/
+db_data/
 TMP_SPIP_3
 .env
 helm/custom.yaml
