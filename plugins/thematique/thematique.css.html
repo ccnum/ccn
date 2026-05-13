@@ -6,22 +6,11 @@
 /* ---------------------------------------------------------------- */
 
 /* --------- Tailles ----------- */
-[(#SET{rapport,1.43})]
-
-[(#SET{font-size1,[(#GET{rapport}|mult{13}|round)]})]
-[(#SET{font-size1_bas,[(#GET{rapport}|mult{12}|round)]})]
-[(#SET{font-size2,[(#GET{rapport}|mult{16}|round)]})]
-[(#SET{font-size3,[(#GET{rapport}|mult{25}|round)]})]
-
 [(#SET{largeur_col,30%})]
-
 [(#SET{largeur_souscol,30%})]
-
-[(#SET{line-height1,[(#GET{rapport}|mult{16}|round)]})]
 [(#SET{line-height1,13})]
 
 /* --------- Font ----------- */
-
 [(#SET{font-size1,10})]
 [(#SET{font-size1_bas,9})]
 [(#SET{font-size2,13})]
@@ -223,16 +212,8 @@ option, select, form {
 	font-size: #GET{font-size1}px;
 	-webkit-appearance: none;
 	vertical-align: middle;
-	-webkit-box-sizing: border-box;
-	-moz-box-sizing: border-box;
 	box-sizing: border-box;
-	-webkit-background-clip: padding;
-	-moz-background-clip: padding;
 	background-clip: padding-box;
-	-webkit-border-radius: 0;
-	-moz-border-radius: 0;
-	-ms-border-radius: 0;
-	-o-border-radius: 0;
 	border-radius: 0;
 	padding: 0px;
 	margin: 0px;
@@ -661,7 +642,7 @@ body {
 
 #connexion {
 	width: 90%;
-	margin-top: 4px 20px 5px;
+	margin: 4px 20px 5px;
 	display: none;
 	clear: both;
 }
@@ -733,41 +714,10 @@ a:hover {
 	color:black;
 }
 /*Jaune*/
-.couleur_consignes1, .zone-menu li.logo a.hover_couleur_consignes1:hover, .zone-menu li.logo a.hover_couleur_consignes1.selected {
-	background-color:var(--color-consigne);
-}
-/*Vert*/
-.couleur_consignes2, .zone-menu li.logo a.hover_couleur_consignes2:hover, .zone-menu li.logo a.hover_couleur_consignes2.selected {
-	background-color:var(--color-consigne);
-}
-/*Bleu*/
-.couleur_consignes3, .zone-menu li.logo a.hover_couleur_consignes3:hover, .zone-menu li.logo a.hover_couleur_consignes3.selected {
-	background-color:var(--color-consigne);
-}
-.couleur_consignes4, .zone-menu li.logo a.hover_couleur_consignes4:hover, .zone-menu li.logo a.hover_couleur_consignes4.selected {
-	background-color:var(--color-consigne);
-}
-/*Jaune*/
-.couleur_consignes5, .zone-menu li.logo a.hover_couleur_consignes5:hover, .zone-menu li.logo a.hover_couleur_consignes5.selected {
-	background-color:var(--color-consigne);
-}
-/*Violet*/
-.couleur_consignes6, .zone-menu li.logo a.hover_couleur_consignes6:hover, .zone-menu li.logo a.hover_couleur_consignes6.selected {
-	background-color:var(--color-consigne);
-}
-.couleur_consignes7, .zone-menu li.logo a.hover_couleur_consignes7:hover, .zone-menu li.logo a.hover_couleur_consignes7.selected {
-	background-color:var(--color-consigne);
-}
-.couleur_consignes8, .zone-menu li.logo a.hover_couleur_consignes8:hover, .zone-menu li.logo a.hover_couleur_consignes8.selected {
-	background-color:var(--color-consigne);
-}
-/*Bleu clair*/
-.couleur_consignes9, .zone-menu li.logo a.hover_couleur_consignes9:hover, .zone-menu li.logo a.hover_couleur_consignes9.selected {
-	background-color:var(--color-consigne);
-}
-/*Rose*/
-.couleur_consignes0, .zone-menu li.logo a.hover_couleur_consignes0:hover, .zone-menu li.logo a.hover_couleur_consignes0.selected {
-	background-color:var(--color-consigne);
+[class^="couleur_consignes"],
+.zone-menu li.logo a[class^="hover_couleur_consignes"]:hover,
+.zone-menu li.logo a[class^="hover_couleur_consignes"].selected {
+	background-color: var(--color-consigne);
 }
 
 /* --------- Classes --------- */
@@ -952,9 +902,6 @@ a:hover {
 	height: 50px;
 	line-height: 50px;
 	background-color: #fff;
-	-ms-transition: height 250ms ease-in-out, line-height 250ms ease-in-out;
-	-moz-transition: height 250ms ease-in-out, line-height 250ms ease-in-out;
-	-o-transition: height 250ms ease-in-out, line-height 250ms ease-in-out;
 	-webkit-transition: height 250ms ease-in-out, line-height 250ms ease-in-out;
 	transition: height 250ms ease-in-out, line-height 250ms ease-in-out;
 
@@ -1074,7 +1021,6 @@ a:hover {
 }
 
 #menu_bas .actualites-inner {
-	overflow: scroll;
 	height: 27px;
 	display: inline-block;
 	overflow: hidden;
@@ -1088,7 +1034,7 @@ a:hover {
 	background: rgba(194, 194, 194, 1);
 }
 
-#menu_bas .actualites-actu: last-child {
+#menu_bas .actualites-actu:last-child {
 	margin-bottom: 0;
 }
 #menu_bas .actualites-actu {
@@ -1134,7 +1080,7 @@ a:hover {
 }
 
 #menu_bas .actualites-actu-date, #menu_bas .actualites-texte { display: none; }
-#menu_bas .actualites-titre { font-weight: normal; font-size: 1.em;}
+#menu_bas .actualites-titre { font-weight: normal; font-size: 1em; }
 /* Logos */
 
 #menu_haut.zone-menu span.logo {
@@ -1601,7 +1547,7 @@ div.jaimeplus {
 	padding: 4px 8px;
 	color: white;
 	border-radius: 0px;
-	font-size: #GET{font-size1};
+	font-size: #GET{font-size1}px;
 	font-weight: normal;
 	border: solid 1px white;
 }
@@ -1626,11 +1572,7 @@ div.jaimeplus {
 	bottom: 6px;
 	width: 25px;
 	height: 25px;
-	-webkit-transform: rotate(45deg);
-	-moz-transform: rotate(45deg);
-	-ms-transform: rotate(45deg);
-	-o-transform: rotate(45deg);
-	tranform: rotate(45deg);
+	transform: rotate(45deg);
 }
 .arrow.top {
 	top: -20px;
@@ -2173,16 +2115,14 @@ div.donnees_classe {
 	box-sizing: border-box;
 	transform: scale(0.4);
 	-webkit-transition: transform 500ms ease;
-	 -moz-transition: transform 500ms ease;
-		 -o-transition: transform 500ms ease;
-			transition: transform 500ms ease;
+				transition: transform 500ms ease;
 }
 
 .show_blogs .article_blog_container{
 	transform: scale(1);
 }
 
-.article_blog_container: before {
+.article_blog_container::before {
 	content: "";
 	display: block;
 	position: absolute;
@@ -2193,12 +2133,10 @@ div.donnees_classe {
 	left: 6%;
 	bottom: 6%;
 	-webkit-transition: all 500ms ease;
-	 -moz-transition: all 500ms ease;
-		 -o-transition: all 500ms ease;
-			transition: all 500ms ease;
+				transition: all 500ms ease;
 }
 
-.show_blogs .article_blog_container: before {
+.show_blogs .article_blog_container::before {
 
 }
 
@@ -2213,9 +2151,7 @@ div.donnees_classe {
 	background: #E91E63;
 	border-radius: 50%;
 	-webkit-transition: all 500ms ease;
-	 -moz-transition: all 500ms ease;
-		 -o-transition: all 500ms ease;
-			transition: all 500ms ease;
+				transition: all 500ms ease;
 }
 
 .show_blogs .article_blog_container .article_blog {
@@ -2229,16 +2165,14 @@ div.donnees_classe {
 	box-sizing: border-box;
 	transform: scale(0.4);
 	-webkit-transition: transform 500ms ease;
-	 -moz-transition: transform 500ms ease;
-		 -o-transition: transform 500ms ease;
-			transition: transform 500ms ease;
+				transition: transform 500ms ease;
 }
 
 .show_evenements .article_evenement_container{
 	transform: scale(1);
 }
 
-.article_evenement_container: before {
+.article_evenement_container::before {
 	content: "";
 	display: block;
 	position: absolute;
@@ -2249,13 +2183,11 @@ div.donnees_classe {
 	left: 25px;
 	bottom: 0;
 	-webkit-transition: all 500ms ease;
-	-moz-transition: all 500ms ease;
-	-o-transition: all 500ms ease;
 	transition: all 500ms ease;
 	transform: rotate(45deg) skew(-10deg, -10deg);
 }
 
-.show_evenements .article_evenement_container: before {
+.show_evenements .article_evenement_container::before {
 
 }
 
@@ -2271,8 +2203,6 @@ div.donnees_classe {
 	box-sizing: border-box;
 	background: rgba(0, 0, 0, 0);
 	-webkit-transition: all 500ms ease;
-	-moz-transition: all 500ms ease;
-	-o-transition: all 500ms ease;
 	transition: all 500ms ease;
 }
 
@@ -2343,9 +2273,7 @@ div.donnees_classe {
 	border-radius: 50%;
 	transform: scale(0);
 	-webkit-transition: all 500ms ease;
-	 -moz-transition: all 500ms ease;
-		 -o-transition: all 500ms ease;
-			transition: all 500ms ease;
+				transition: all 500ms ease;
 }
 
 .show_blogs .article_blog .picto_nombre_commentaires {
@@ -2360,9 +2288,7 @@ div.donnees_classe {
 	margin-top: 2px;
 	display: block;
 	-webkit-transition: all 500ms ease;
-	 -moz-transition: all 500ms ease;
-		 -o-transition: all 500ms ease;
-			transition: all 500ms ease;
+				transition: all 500ms ease;
 }
 
 .show_blogs .article_blog_date,
@@ -2926,9 +2852,7 @@ div.donnees_classe {
 	box-sizing: border-box;
 	overflow: auto;
 	-webkit-transition: right 500ms ease-in-out, width 500ms ease-in-out;
-	 -moz-transition: right 500ms ease-in-out, width 500ms ease-in-out;
-		 -o-transition: right 500ms ease-in-out, width 500ms ease-in-out;
-			transition: right 500ms ease-in-out, width 500ms ease-in-out;
+				transition: right 500ms ease-in-out, width 500ms ease-in-out;
 	z-index: 10000000;
 }
 
@@ -2958,9 +2882,7 @@ div.donnees_classe {
 	font-size: 13px;
 	max-height: 100%;
 	-webkit-transition: opacity 500ms ease;
-	 -moz-transition: opacity 500ms ease;
-		 -o-transition: opacity 500ms ease;
-			transition: opacity 500ms ease;
+				transition: opacity 500ms ease;
 	position: relative;
 	top: 0;
 }
@@ -2968,9 +2890,7 @@ div.donnees_classe {
 #sidebar_main_around {
 
 	-webkit-transition: width 500ms ease-in-out;
-	 -moz-transition: width 500ms ease-in-out;
-		 -o-transition: width 500ms ease-in-out;
-			transition: width 500ms ease-in-out;
+				transition: width 500ms ease-in-out;
 
 	width: 100%;
 }
@@ -3000,8 +2920,6 @@ div.donnees_classe {
 
 #sidebar_lateral_around {
 	-webkit-transition: all 300ms ease;
-	-moz-transition: all 300ms ease;
-	-o-transition: all 300ms ease;
 	transition: all 300ms ease;
 	width: 30%;
 }
@@ -3051,9 +2969,7 @@ div.donnees_classe {
 	border-radius: 50%;
 	box-shadow: 0 7px 15px rgba(0, 0, 0, 0.47);
 	-webkit-transition: all 300ms ease;
-	 -moz-transition: all 300ms ease;
-		 -o-transition: all 300ms ease;
-			transition: all 300ms ease;
+				transition: all 300ms ease;
 	transform: scale(0);
 }
 
@@ -3237,16 +3153,12 @@ a.liens_forum:hover { }
 {	background-color: #fff;
 	border: 3px solid #fff;
 	box-shadow: 2px 2px 6px #ccc;
-	-moz-box-shadow: 2px 2px 6px #ccc;
-	-webkit-box-shadow: 2px 2px 6px #ccc;
 }
 
 .ombre_portee_bande
 {	background-color: #fff;
 	border: 3px solid #fff;
 	box-shadow: 2px 2px 6px #ccc;
-	-moz-box-shadow: 2px 2px 6px #ccc;
-	-webkit-box-shadow: 2px 2px 6px #ccc;
 	margin-left: 5px;
 	margin-right: 5px;
 }
@@ -4099,8 +4011,6 @@ ul#forum, .lien_forum {
 	right: 0;
 
 	-webkit-transition: all 2000ms ease;
-	-moz-transition: all 2000ms ease;
-	-o-transition: all 2000ms ease;
 	transition: all 2000ms ease;
 }
 
@@ -4129,8 +4039,6 @@ ul#forum, .lien_forum {
 	z-index: 900;
 
 	-webkit-transition: all 2000ms ease;
-	-moz-transition: all 2000ms ease;
-	-o-transition: all 2000ms ease;
 	transition: all 2000ms ease;
 }
 
@@ -4168,11 +4076,11 @@ ul#forum, .lien_forum {
 	overflow: hidden;
 }
 
-#timeline_wrapin .mois: nth-child(even) {
+#timeline_wrapin .mois:nth-child(even) {
 	background: rgba(0,0,0,.03);
 }
 
-#timeline_wrapin .mois: last-child() {
+#timeline_wrapin .mois:last-child {
 	border-right: none;
 }
 #timeline_wrapin .mois_label {
@@ -4206,9 +4114,7 @@ ul#forum, .lien_forum {
 	height: fit-content;
 
 	-webkit-transition: margin 1000ms ease, width 1000ms ease;
-	 -moz-transition: margin 1000ms ease, width 1000ms ease;
-		 -o-transition: margin 1000ms ease, width 1000ms ease;
-			transition: margin 1000ms ease, width 1000ms ease;
+				transition: margin 1000ms ease, width 1000ms ease;
 }
 
 #sidebar_content {
@@ -4235,9 +4141,7 @@ ul#forum, .lien_forum {
 	z-index: 100000;
 
 	-webkit-transition: margin 1000ms ease, width 1000ms ease;
-	 -moz-transition: margin 1000ms ease, width 1000ms ease;
-		 -o-transition: margin 1000ms ease, width 1000ms ease;
-			transition: margin 1000ms ease, width 1000ms ease;
+				transition: margin 1000ms ease, width 1000ms ease;
 }
 
 .tooltip-sidebarCache {
@@ -4320,9 +4224,7 @@ ul#forum, .lien_forum {
 	position: absolute;
 
 	-webkit-transition: opacity 500ms ease;
-	 -moz-transition: opacity 500ms ease;
-		 -o-transition: opacity 500ms ease;
-			transition: opacity 500ms ease;
+				transition: opacity 500ms ease;
 }
 
 .timeline_item.hide {
@@ -4377,8 +4279,6 @@ ul#forum, .lien_forum {
 	border-radius: 5px;
 
 	-webkit-transition: opacity 300ms ease;
-	-moz-transition: opacity 300ms ease;
-	-o-transition: opacity 300ms ease;
 	transition: opacity 300ms ease;
 }
 
@@ -4505,9 +4405,7 @@ ul#forum, .lien_forum {
 	opacity: .2;
 
 	-webkit-transition: opacity 300ms ease;
-	 -moz-transition: opacity 300ms ease;
-		 -o-transition: opacity 300ms ease;
-			transition: opacity 300ms ease;
+				transition: opacity 300ms ease;
 
 	position: absolute;
 	z-index: 100;
@@ -4540,9 +4438,7 @@ ul#forum, .lien_forum {
 .show_blogs .connecteur_timeline,
 .show_evenements .connecteur_timeline {
 	-webkit-transition: opacity 300ms ease;
-	 -moz-transition: opacity 300ms ease;
-		 -o-transition: opacity 300ms ease;
-			transition: opacity 300ms ease;
+				transition: opacity 300ms ease;
 	opacity: 0;
 }
 .bloc_classe_iframe, .bloc_classe_iframe iframe {
