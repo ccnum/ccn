@@ -13,10 +13,8 @@
 [(#SET{font-size2,[(#GET{rapport}|mult{16}|round)]})]
 [(#SET{font-size3,[(#GET{rapport}|mult{25}|round)]})]
 
-[(#SET{largeur_col,[(#ENV{largeur}|div{3.2}|round)]px})]
 [(#SET{largeur_col,30%})]
 
-[(#SET{largeur_souscol,[(#GET{largeur_col}|div{4}|round)]px})]
 [(#SET{largeur_souscol,30%})]
 
 [(#SET{line-height1,[(#GET{rapport}|mult{16}|round)]})]
@@ -323,6 +321,9 @@ body {
 }
 #menu_haut #menu_haut_titre {
 	background-color: var(--color-tonic);
+	&:hover {
+		background-color: var(--color-hover);
+	}
 }
 
 .bloc_view {
@@ -374,7 +375,6 @@ body {
 	}
 	.user-option {
 		display: none;
-		position: unset;
 		padding: 0 1rem;
 		width: calc(100% - 2rem);
 	}
@@ -948,7 +948,7 @@ a:hover {
 	width: 100%;
 }
 /*Déplie le carroussel*/
-.select:hover label {
+.select:hover label:not(.first_label) {
 	height: 50px;
 	line-height: 50px;
 	background-color: #fff;

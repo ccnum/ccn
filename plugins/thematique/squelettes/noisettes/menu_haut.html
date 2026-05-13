@@ -11,9 +11,11 @@
 					[(#NOM_SITE_SPIP) ][(#ENV{annee_scolaire})]-[(#ENV{annee_scolaire}|plus{1})]
 					<span class="icon icon-down"></span>
 				</label>
-			<BOUCLE_dates(RUBRIQUES){!par titre}{racine}{titre==^[2]}>
-			<input type='radio' value='#TITRE' [(#ENV{annee_scolaire}|=={#TITRE}|oui)class="actif"]><label>#TITRE/[(#TITRE|plus{1})]</label>
-			</BOUCLE_dates>
+			<div>
+				<BOUCLE_dates(RUBRIQUES){!par titre}{racine}{titre==^[2]}>
+				<input type='radio' value='#TITRE' [(#ENV{annee_scolaire}|=={#TITRE}|oui)class="actif"]><label>#TITRE/[(#TITRE|plus{1})]</label>
+				</BOUCLE_dates>
+			</div>
 		</div>
 	</div>
 	<INCLURE{fond=noisettes/inc/authentification, id_auteur, admin, restreint, type_restreint} />
