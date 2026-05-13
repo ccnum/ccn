@@ -5,34 +5,47 @@ $(function(){
 afficher_si_current_data = '';
 function afficher_si_init() {
 	$('form:not([data-afficher_si-init])').each(function(){
+		form = $(this);
 		// Seulement si au moins un afficher_si dedans !
 		if (this.hasAttribute('data-resume_etapes_futures')) {
 			var resume_etapes_futures = this.getAttribute('data-resume_etapes_futures');
 		} else {
 			var resume_etapes_futures = '';
 		}
-		if ($(this).find('[data-afficher_si]').length !== 0 || resume_etapes_futures) {
-			form = $(this);
+		let conteneur_extra = '';
+		let react = [form];
+		if (this.hasAttribute('data-afficher_si_conteneur_extra')) {
+			conteneur_extra = this.getAttribute('data-afficher_si_conteneur_extra');
+			react.push($(conteneur_extra));
+		}
+
+		if ($(this).find('[data-afficher_si]').length !== 0 || resume_etapes_futures || conteneur_extra) {
 			form.find('.formulaire_spip__etapes').each(function() {
 				$(this).css('min-height', $(this).height());
 			});
 			afficher_si_init_chemin_etapes(form);
 
 			afficher_si_set_current_data(form);
-			form.find('[data-afficher_si]').each(function(){
-				condition = verifier_afficher_si($(this), true);
-				animer_afficher_si($(this), condition, true);
-			}
-			);
+
+			react.forEach(function (r) {
+				r.find('[data-afficher_si]').each(function() {
+					condition = verifier_afficher_si($(this), true);
+					animer_afficher_si($(this), condition, true);
+				});
+			});
 			afficher_si_set_etapes_presentation_courante(form);
 			afficher_si_set_etape_suivante(form);
 
-			// Un écouteur sur les champs qui conditionent d'autres champs
+			// Un écouteur sur les champs qui conditionnent d'autres champs
 			$(this).find('textarea, input, select').each(function () {
 				var name = $(this).attr('name');
 				if (name) {
 					name = afficher_si_normaliser_name(name);
-					if (form.find('[data-afficher_si*=\''+name+'\']').length || resume_etapes_futures.includes(name)) {
+					if (
+						form.find('[data-afficher_si*=\''+name+'\']').length
+						|| resume_etapes_futures.includes(name)
+						|| $(conteneur_extra).find('[data-afficher_si*=\''+name+'\']').length
+					) {
 						$(this).on('input change', function() {
 							afficher_si_onchange($(this));
 						});
@@ -63,14 +76,23 @@ function afficher_si_onchange($champ) {
 	// Seulement si ce champ a un name
 	if (name = $champ.attr('name')) {
 		var form = $champ.parents('form');
+
+		let react = [form];
+		if (form.attr('data-afficher_si_conteneur_extra')) {
+			conteneur_extra = form.attr('data-afficher_si_conteneur_extra');
+			react.push($(conteneur_extra));
+		}
+
 		var name = afficher_si_normaliser_name(name);
 		afficher_si_set_current_data(form);
 
-		// Si un autre champ utilise celui-ci dans une condition
-		form.find('[data-afficher_si*=\''+name+'\']').each(function(){
+		// Si un autre champ (ou pas) utilise celui-ci dans une condition
+		react.forEach(function (r) {
+			r.find('[data-afficher_si*=\''+name+'\']').each(function(){
 			condition = verifier_afficher_si($(this));
 			animer_afficher_si($(this), condition);
-		})
+			})
+		});
 		afficher_si_set_etapes_presentation_courante(form, name);
 		afficher_si_set_etape_suivante(form, name);
 	}

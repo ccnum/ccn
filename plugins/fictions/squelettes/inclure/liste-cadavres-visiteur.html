@@ -5,7 +5,7 @@ SOMMAIRE.HTML > LISTE-CADAVRE-AUTEUR.HTML
 #CACHE{0}
 #SET{i,0}
 <BOUCLE_annee(RUBRIQUES){titre==#EVAL{_annee_scolaire}}{tout}{0,1}>
-	<BOUCLE_rubriques_toutes(RUBRIQUES){id_parent=#ID_RUBRIQUE}{id_rubrique != 12}{par titre}>
+	<BOUCLE_rubriques_toutes(RUBRIQUES){id_parent=#ID_RUBRIQUE}{id_rubrique != #EVAL{_FICTIONS_ID_BLOG_PEDA}}{par titre}>
 	#SET{i,#GET{i}|plus{1}}
 	<div class="liste-colonnes">
 		<div class="liste-title">#GET{i}</div>
@@ -23,7 +23,7 @@ SOMMAIRE.HTML > LISTE-CADAVRE-AUTEUR.HTML
 							<div class="liste-tooltip-photo">[(#LOGO_AUTEUR|image_reduire{42,42})]</div>
 							<div class="liste-tooltip-auteur">#NOM</div>
 							<div class="liste-tooltip-auteur">
-								[(#DESCRIPTIF|cleanCut)]<br />
+								[(#DESCRIPTIF|textebrut|recupererDernieresLignesChapitres{380})]<br />
 							</div>
 						</BOUCLE_auteur_tous>
 					</div>

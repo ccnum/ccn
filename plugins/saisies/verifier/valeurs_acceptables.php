@@ -17,6 +17,7 @@
 function verifier_valeurs_acceptables_dist($valeur, $options) {
 	include_spip('inc/saisies_verifier');
 	$description = $options['_saisie'] ?? [];
+	$saisies = $options['_saisies'] ?? [];
 	if (!$description) {
 		return '';
 	}
@@ -26,7 +27,7 @@ function verifier_valeurs_acceptables_dist($valeur, $options) {
 	if (include_spip("saisies/$type")) {
 		$f = $type . '_valeurs_acceptables';
 		if (function_exists($f)) {
-			if (!$f($valeur, $description)) {
+			if (!$f($valeur, $description, $saisies)) {
 				$erreur = _T('saisies:erreur_valeur_inacceptable');
 				$valeur = json_encode($valeur);
 				spip_log("Tentative de poste de valeur innaceptable pour $saisie de type $type. Valeur postée : $valeur", 'saisies' . _LOG_AVERTISSEMENT);

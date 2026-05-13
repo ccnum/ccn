@@ -96,9 +96,7 @@ function loadProjet(fichier) {
 
 				// Initialise le projet
 				CCN.projet = new Projet();
-				console.log(CCN.projet);
 				CCN.projet.init(dataForProjet);
-				console.log(CCN.projet);
 
 				CCN.couleurBlog = getXMLNodeValue('couleur_blog', xml);
 				CCN.idRubriqueRessources = getXMLNodeValue('id_rubrique_ressources', xml);
@@ -358,12 +356,12 @@ function loadConsignes(fichier) {
 								answer_id_of_current_classe = dataForReponse.id;
 
 								nb_classe_reponse++;
-								nb_classe_commentaires += nombre_commentaires_reponse;
+								nb_classe_commentaires += dataForReponse.nombre_commentaires;
 							}
 						} else {
 							if (CCN.idRestreint == dataForReponse.classe_id) {
 								nb_classe_reponse++;
-								nb_classe_commentaires += nombre_commentaires_reponse;
+								nb_classe_commentaires += dataForReponse.nombre_commentaires;
 							}
 						}
 						indexReponseInConsigne++;
@@ -419,7 +417,7 @@ function loadBlog(fichier) {
 					dataForArticleBlog.titre = dataForArticleBlog.titre.replace("[", "<");
 					dataForArticleBlog.titre = dataForArticleBlog.titre.replace("]", ">");
 					dataForArticleBlog.y = getXMLNodeValue('y', xmlArticlesBlog[i]);
-					dataForArticleBlog.date = getXMLNodeValue('date', xmlArticlesBlog[i]);;
+					dataForArticleBlog.date = getXMLNodeValue('date', xmlArticlesBlog[i]);
 
 					if (indexY >= CCN.projet.liste_y_blogs.length) {
 						indexY = 0;
@@ -644,8 +642,6 @@ function initTimeline() {
 			var title = $(this).data("title");
 			if ($(this).hasClass("description")) {
 			$(this).css({position: 'absolute', top:'50%', color: 'red' })
-			console.log("Description");
-			console.log($(this).parent());
 			$(this).parent();
 			return "<p class='desc'>" + title + "</p>";
 			}
@@ -668,7 +664,6 @@ function initTimeline() {
 			$('.logo_menu-aide').on("click",
 				function () {
 					$(".ccn-aide").mediabox({ open: true });
-					console.log('test');
 				}
 			)
 

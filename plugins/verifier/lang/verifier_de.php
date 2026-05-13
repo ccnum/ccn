@@ -5,6 +5,9 @@
 
 return [
 
+	// C
+	'contraintes_particulieres' => 'Besondere Einschränkungen',
+
 	// D
 	'data_choix' => 'Auswahlmöglichkeiten:',
 
@@ -29,6 +32,7 @@ return [
 	'erreur_dimension_image' => 'Die Datei « @name@ » ist zu groß: @taille@ (Maximum @taille_max@).',
 	'erreur_email' => 'Die Mailadresse  <em>@email@</em> hat einen Syntaxfehler.',
 	'erreur_email_nondispo' => 'Die Mailadresse <em>@email@</em>  wird bereits verwendet.',
+	'erreur_email_unique' => 'Nur eine Adresse möglich',
 	'erreur_entier' => 'Der Wert muß eine ganze Zahl sein.',
 	'erreur_entier_entre' => 'Der Wert muß zwischen  @min@ und @max@ liegen.',
 	'erreur_entier_max' => 'Der Wert muss kleiner oder gleich @max@ sein.',
@@ -112,6 +116,7 @@ return [
 	'option_email_mode_label' => 'Art der Mailprüfung',
 	'option_email_mode_normal' => 'Normale SPIP-Prüfung',
 	'option_email_mode_strict' => 'Strengere Prüfung',
+	'option_email_unique_label_case' => 'Nicht zulassen, dass mehrere Adressen angegeben werden',
 	'option_entier_max_label' => 'Maximalwert',
 	'option_entier_min_label' => 'Minimalwert',
 	'option_fichiers_dimension_autoriser_rotation_label' => 'Soll das Bild rotiert werden?',
@@ -121,10 +126,12 @@ return [
 	'option_fichiers_mime_image_web_label' => 'Nur Web-Bilder akzeptieren (gif, jpg, png)',
 	'option_fichiers_mime_label' => 'Mime Type und Dateiendung',
 	'option_fichiers_mime_pas_de_verification_label' => 'Alle Typen und Endungen akzeptieren (nicht empfohlen)',
-	'option_fichiers_mime_specifique_label' => 'Nur die unten ausgewählten Typen und Endungen akzeptieren', # MODIF
+	'option_fichiers_mime_specifique_label' => 'Nur die unten angekreuzten Typen und Erweiterungen zulassen',
 	'option_fichiers_mime_tout_mime_label' => 'Alle von SPIP erkannten MIME Types und Endungen akzeptieren',
 	'option_fichiers_taille_max_label' => 'Maximale Dateigröße (in kB)',
 	'option_fichiers_type_mime_label' => 'Akzeptierte MIME Types auswählen',
+	'option_id_document_extension_label' => 'Geben Sie die Liste der zulässigen Erweiterungen an (durch Kommas getrennt).Présicer la liste des extensions autorisées (sérapées par une virgule)',
+	'option_id_document_media_label' => 'Geben Sie die Liste der zulässigen Medientypen an (durch Kommas getrennt).',
 	'option_id_objet_objet_label' => 'Objektname (einzigartig)',
 	'option_regex_modele_explication' => 'Vollständiges Muster, einschließlich umschließender Zeichen und Optionen. Zur Verwendung von Masken siehe <a href="https://www.php.net/manual/de/reference.pcre.pattern.syntax.php" class="spip_out" target="_blank" rel=" noopener noreferrer" PHP-Online-Hilfe</a>',
 	'option_regex_modele_label' => 'Muster zum Testen',
@@ -141,6 +148,8 @@ return [
 	'option_slug_separateur_label' => 'Trennzeichen',
 	'option_taille_max_label' => 'Maximalgröße',
 	'option_taille_min_label' => 'Minimalgröße',
+	'option_telephone_pays_explication' => 'Auf zwei Buchstaben (Beispiel: FR)',
+	'option_telephone_pays_label' => 'Zu überprüfender Ländercode',
 	'option_url_mode_complet' => 'Vollständige Prüfung des URL',
 	'option_url_mode_label' => 'Art der URL-Prüfung',
 	'option_url_mode_php_filter' => 'Vollständige Prüfung des URL mit dem PHP-Filter FILTER_VALIDATE_URL',

@@ -9,6 +9,8 @@ services:
       - MYSQL_DATABASE=${SPIP_DB_NAME}
       - MYSQL_USER=${SPIP_DB_LOGIN}
       - MYSQL_PASSWORD=${SPIP_DB_PASS}
+    volumes:
+      - ./db_data:/var/lib/mysql
 
   app:
     image: erasme/spip-ccn:custom-port
