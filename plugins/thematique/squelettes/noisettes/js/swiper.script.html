@@ -120,12 +120,12 @@
 		if (!$pdfDocs.length) return;
 
 		// Create a Slide for each PDF
-		$pdfDocs.each(async function () {
-			const $doc = $(this);
+		for (const docEl of $pdfDocs.toArray()) {
+			const $doc = $(docEl);
 			const $link = $doc.find('a.mediabox[type="application/pdf"]').first();
 			const pdfUrl = $link.attr('href');
-			if (!pdfUrl) return;
-			const pdfName = decodeURIComponent(pdfUrl?.split('/')?.pop());
+			if (!pdfUrl) continue;
+			const pdfName = decodeURIComponent(pdfUrl.split('/').pop());
 			const $imgSrc = $link.find('img').first().attr('src') ?? '';
 
 			const $container = $('<div class="swiper-pdf-container"></div>');
@@ -170,7 +170,7 @@
 					<span>Erreur lors du chargement de "${pdfName}"</span>
 				</div>
 			`);
-				return;
+				continue;
 			}
 
 			// For every PDF page, generate a slide which contains page converted to canvas.
@@ -226,7 +226,7 @@
 				prevSelector: '.pdf-prev',
 				paginationSelector: '.pdf-pagination',
 			});
-		});
+		}
 	}
 
 	async function initPdfSwipersInComment($portfolio_grand) {
@@ -242,7 +242,7 @@
 		if (!$pdfDocs.length) return;
 
 		const pdfUrl = $pdfDocs.attr('href');
-		const pdfName = decodeURIComponent(pdfUrl?.split('/')?.pop());
+		const pdfName = decodeURIComponent(pdfUrl.split('/').pop());
 		const $imgSrc = $pdfDocs.find('img').first().attr('src');
 
 		const $container = $('<div class="swiper-pdf-comment-container"></div>');
