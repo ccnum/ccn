@@ -143,7 +143,7 @@
 					</a>
 					<div style="clear:both" class='bloc_classe_iframe'>
 						[(#AUTORISER{modifier,rubrique,#ID_RUBRIQUE}|oui)
-							[<a class="spip_doc_titre" href="[(#GET{classe_iframe}|replace{embed,})]" target="_blank">(#GET{classe_iframe}|replace{embed,})</a>]
+							[<a class="spip_doc_titre" href="[(#GET{classe_iframe}|replace{embed,})]" target="_blank" rel="noopener noreferrer">(#GET{classe_iframe}|replace{embed,})</a>]
 						]
 						<div class="nettoyeur"></div>
 						<iframe src="[(#GET{classe_iframe}|textebrut)]" width="100%" height="100%"></iframe>
@@ -203,7 +203,6 @@
 			]
 
 			[(#REM) ---------------- Blocs complémentaires ---------------- ]
-			<!--<div class="nettoyeur"><br /></div>-->
 
 			[(#REM)On exclut le cas où on est dans la zone ajax-detail d'une rubrique - Désactivé temporairement car c'est quand même utile pour les classes]
 			[(#MODE|=={ajax-detail}|et{#ENV{type_objet}|=={travail_en_cours}}|oui) #SET{blocs_cplt,non0} ]
@@ -247,44 +246,6 @@
 					]
 				]
 
-				<!--
-				[(#REM)Permalien - [&annee_scolaire=(#ANNEE_SCOLAIRE)]
-
-					[(#GET{is_agora}|=={oui}|non)[(#SET{url,[(#URL_ARTICLE|concat{&mode=complet})]})]]
-					[(#GET{is_agora}|=={oui}|oui)[(#SET{url,[(#URL_ARTICLE|concat{&type_objet=agora&mode=complet})]})]]
-					[
-					<div class="sidebar_bubble">
-						<INCLURE{fond=noisettes/js/accordeon}{nom=bloc_permalien-#ID_ARTICLE}>
-						<div class="bloc_option_doc nettoyeur">
-							<a id="bloc_permalien-#ID_ARTICLE" class="hac liens_forum bloc_option_doc_link" title="Permalien" href="#">
-								Partager le lien
-							</a>
-							<div class="cache">
-								<code><a href="#URL_SITE_SPIP/(#GET{url})" target="_blank">#URL_SITE_SPIP/#GET{url}</a></code>
-							</div>
-						</div>
-					</div>
-					]
-					]
-				-->
-
-				<!--
-				[(#REM)Liens sociaux]
-					[(#PLUGIN{SOCIALTAGS}|oui)
-
-					<div class="sidebar_bubble">
-						<INCLURE{fond=noisettes/js/accordeon}{nom=bloc_reseaux-#ID_ARTICLE}>
-						<div class="bloc_option_doc nettoyeur">
-							<a id="bloc_reseaux-#ID_ARTICLE" class="hac liens_forum bloc_option_doc_social" title="Réseaux sociaux" href="#">
-								Réseaux sociaux
-							</a>
-							<div class="cache">
-								<div class="reseaux"></div>
-							</div>
-						</div>
-					</div>
-					]
-				-->
 				[(#REM) Données de la classe ]
 				[(#ENV{type_objet}|=={travail_en_cours}|oui)
 					[<div class="sidebar_bubble">

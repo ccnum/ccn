@@ -109,9 +109,6 @@ et/ou
 					[(#MODELE{logo_menu}{valeur=livrable}{class=tooltip menu_logo_livrables logo_menu-cible}{filter=.ressource_livrables}{onclick=callLivrables();}{title=Les projets finis})]
 				]
 
-				<BOUCLE_j(DATA){liste tout,blog,evenement,ressources,consignes,travail_en_cours}>
-					<!--<li><a href="#ressource-[(#VALEUR)]" data-filter-value="[(#VALEUR|=={tous}|non)[.ressource_(#VALEUR)s]]" onClick="showhide_articles_[(#VALEUR)]();" class="couleur_grille [(#COMPTEUR_BOUCLE|=={1}|oui) selected]" title="[(#VALEUR)]" style="background-image: url([(#CHEMIN{img/logo_[(#VALEUR)]_grand_#NOM_SITE_SPIP.png}|sinon{[(#CHEMIN{img/logo_[(#VALEUR)]_grand.png})]}|sinon{#CHEMIN{img/logo_voir.png}}|image_gamma{255}|image_reduire{#GET{taille_bloc_option}}|extraire_attribut{src})]);">&nbsp;</a></li>-->
-				</BOUCLE_j>
 			</ul>
 		</div>
 
@@ -238,12 +235,9 @@ et/ou
 				[(#REM)Espace Doc]
 				[(#ENV{restreint}|?{#SET{docId,#ENV{restreint}}, #SET{docId,false}})]
 
-				<!-- [(#REM) GESTION DU LIEN DE L'ESPACE DOC] -->
-				<!-- [(#REM) ON RÉCUPÈRE LA DERNIÈRE RUBRIQUE DES ANNÉES, ON EN TIRE LE DESCRIPTIF ET VOILÀ !] -->
 				<BOUCLE_espace_doc(RUBRIQUES){tous}{racine}{titre==^[20]}{!par titre}{0,1}>
-				[<!-- #ID_RUBRIQUE -->
-				<li class="logo">
-					<a class="logo_menu-doc menu_logo_type_sidebarView tooltip" href="(#DESCRIPTIF|textebrut)" aria-label="<:thematique:cartable_ligne:>" data-tip="<:thematique:cartable_ligne:>" target="blank"></a>
+				[<li class="logo">
+					<a class="logo_menu-doc menu_logo_type_sidebarView tooltip" href="(#DESCRIPTIF|textebrut)" aria-label="<:thematique:cartable_ligne:>" data-tip="<:thematique:cartable_ligne:>" target="_blank" rel="noopener noreferrer"></a>
 				</li>
 				]
 				</BOUCLE_espace_doc>
@@ -294,13 +288,13 @@ et/ou
 		[(#CONST{_PROJET}|=={laclasse}|oui)
 		<ul id="menu_bas_logos">
 			<li>
-				<a href="https://www.laclasse.com/" class="logo_service_public" target="_blank">[(#CHEMIN{img/logos/laclasse_short.svg}|balise_img|image_reduire{*,28})]</a>
+				<a href="https://www.laclasse.com/" class="logo_service_public" target="_blank" rel="noopener noreferrer">[(#CHEMIN{img/logos/laclasse_short.svg}|balise_img|image_reduire{*,28})]</a>
 			</li>
 			<li>
-				<a href="https://erasme.org" class="logo_service_public" target="_blank">[(#CHEMIN{img/logos/erasme.svg}|balise_img)]</a>
+				<a href="https://erasme.org" class="logo_service_public" target="_blank" rel="noopener noreferrer">[(#CHEMIN{img/logos/erasme.svg}|balise_img)]</a>
 			</li>
 			<li>
-				<a id="menu_bas_logos_metropole_lyon" href="https://www.grandlyon.com/" class="logo_service_public" target="_blank">[(#CHEMIN{img/logos/metropolelyon.svg}|balise_img|image_reduire{*,40})]</a>
+				<a id="menu_bas_logos_metropole_lyon" href="https://www.grandlyon.com/" class="logo_service_public" target="_blank" rel="noopener noreferrer">[(#CHEMIN{img/logos/metropolelyon.svg}|balise_img|image_reduire{*,40})]</a>
 			</li>
 		</ul>
 		]
