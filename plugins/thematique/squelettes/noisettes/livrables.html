@@ -20,7 +20,7 @@
 				<!-- AFFICHAGE ARTICLES  -->
 				<BOUCLE_filtreLivrable(ARTICLES){id_rubrique}{titre_mot=livrable}{par date}>
 					<script type="text/javascript">
-						$('#ajax#ID_ARTICLE').click(function () {
+						$('#ajax#ID_ARTICLE').on('click', function () {
 							$('#sidebar_main').load('[(#URL_ARTICLE|parametre_url{mode,ajax-detail}|html_entity_decode)]', { limit: 25 }, function () {
 								addCloseModal();	
 								// <<<START REPLACE CLASSE ICON>>>

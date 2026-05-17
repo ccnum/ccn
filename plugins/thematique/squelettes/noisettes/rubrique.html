@@ -48,7 +48,7 @@
 
 				<BOUCLE_sous_articles0(ARTICLES) {id_rubrique} {tout} {!par date} {doublons}>
 					<script type="text/javascript">
-						$('#ajax#ID_ARTICLE').click(function() {
+						$('#ajax#ID_ARTICLE').on('click', function() {
 							$('div#sidebar_main').addClass('chargement');
 							$('#menug li a.selected').removeClass('selected');
 							$('#ajax_rub_#ID_RUBRIQUE').addClass('selected');
@@ -92,7 +92,7 @@
 										<strong>#TITRE</strong>
 									</a>
 									<script type="text/javascript">
-										$('#ajax_rub_#ID_RUBRIQUE').click(function() {
+										$('#ajax_rub_#ID_RUBRIQUE').on('click', function() {
 											call({
 												'type':'rubrique',
 												'type_objet':'travail_en_cours',
@@ -106,7 +106,7 @@
 										<!-- AFFICHAGE ARTICLES  -->
 										<BOUCLE_sous_articlesTest(ARTICLES) {id_rubrique == #GET{laclasse_rubrique_admin}} {par num titre} {doublons}>
 											<script type="text/javascript">
-												$('#ajax#ID_ARTICLE').click(function() {
+												$('#ajax#ID_ARTICLE').on('click', function() {
 													call({
 														'type':'article',
 														'type_objet':'travail_en_cours',
@@ -134,7 +134,7 @@
 					<ul class="rubrique_ul">
 					<BOUCLE_sous_articles1(ARTICLES) {id_rubrique} {tout} {par num titre} {doublons}>
 						<script type="text/javascript">
-							$('#ajax#ID_ARTICLE').click(function() {
+							$('#ajax#ID_ARTICLE').on('click', function() {
 								$('div#sidebar_main').addClass('chargement');
 								$('#menug li a.selected').removeClass('selected');
 								$('#ajax_rub_#ID_RUBRIQUE').addClass('selected');
@@ -189,7 +189,7 @@
 
 			<BOUCLE_rubriques(RUBRIQUES) {id_parent} {par num titre, titre}{tout} {doublons r}>
 				<script type="text/javascript">
-					$('#ajax_rub_#ID_RUBRIQUE').click(function() {
+					$('#ajax_rub_#ID_RUBRIQUE').on('click', function() {
 						call({
 							'type':'rubrique',
 							'type_objet':'#TYPE_OBJET',
@@ -208,7 +208,7 @@
 						[(#REM)Rubriques]
 						<BOUCLE_sous_rubriques(RUBRIQUES) {id_parent} {par num titre, titre} {doublons r}>
 							<script type="text/javascript">
-								$('#ajax_rub_#ID_RUBRIQUE').click(function() {
+								$('#ajax_rub_#ID_RUBRIQUE').on('click', function() {
 									call({
 										'type':'rubrique',
 										'type_objet':'travail_en_cours',
@@ -225,7 +225,7 @@
 									<ul>
 									<BOUCLE_sous_rubriques00(RUBRIQUES) {id_parent} {tout} {par titre} {doublons r}>
 										<script type="text/javascript">
-											$('#ajax_rub_#ID_RUBRIQUE').click(function() {
+											$('#ajax_rub_#ID_RUBRIQUE').on('click', function() {
 												call({
 													'type':'rubrique',
 													'type_objet':'travail_en_cours',
@@ -259,7 +259,7 @@
 							]
 							<BOUCLE_sous_articles2(ARTICLES) {id_rubrique} {tout} {!par date} {doublons}>
 							<script type="text/javascript">
-								$('#ajax#ID_ARTICLE').click(function() {
+								$('#ajax#ID_ARTICLE').on('click', function() {
 									call({
 										'type':'article',
 										'type_objet':'travail_en_cours',
@@ -283,7 +283,7 @@
 							]
 							<BOUCLE_sous_articles3(ARTICLES) {id_rubrique}{par num titre} {doublons}>
 								<script type="text/javascript">
-									$('#ajax#ID_ARTICLE').click(function() {
+									$('#ajax#ID_ARTICLE').on('click', function() {
 										call({
 											'type':'article',
 											'type_objet':'travail_en_cours',
@@ -310,7 +310,7 @@
 
 						<BOUCLE_sous_articles(ARTICLES) {id_rubrique}{!par date} {doublons}>
 							<script type="text/javascript">
-								$('#ajax#ID_ARTICLE').click(function() {
+								$('#ajax#ID_ARTICLE').on('click', function() {
 									call({
 										'type':'article',
 										'type_objet':'travail_en_cours',
@@ -341,7 +341,7 @@
 							[(#TAGS|oui)
 								[(#SET{dest,[(#TAGS|extraire_attribut{href})]})]
 								<script type="text/javascript">
-									$('#ajax#ID_SYNDIC_ARTICLE').click(function() {
+									$('#ajax#ID_SYNDIC_ARTICLE').on('click', function() {
 										$('#menug li a.selected').removeClass('selected');
 										$('#ajax_rub_#ID_SYNDIC').addClass('selected');
 										$('div#sidebar_main').addClass('chargement');
@@ -356,7 +356,7 @@
 							]
 							[(#TAGS|non)
 								<script type="text/javascript">
-									$('#ajax#ID_SYNDIC_ARTICLE').click(function() {
+									$('#ajax#ID_SYNDIC_ARTICLE').on('click', function() {
 										$('#menug li a.selected').removeClass('selected');
 										$('#ajax_rub_#ID_SYNDIC').addClass('selected');
 										$('div#sidebar_main').addClass('chargement');
@@ -374,46 +374,6 @@
 				</li>
 			</BOUCLE_sites>
 		</div>
-
-		[(#REM)Pour ouverture directe si id_article ou publier présent]
-		<BOUCLE_rubart(ARTICLES){id_article}>
-			<script type="text/javascript">
-
-		// console.log('Rubrique : (old) AJAX de l\'article ##ID_ARTICLE');
-
-			/*
-			$(function() {
-				$('#ajax_rub_#ID_RUBRIQUE').addClass('selected');
-				$('div#sidebar_main').addClass('chargement');
-				$('#sidebar_main').load('[(#URL_PAGE{article}|parametre_url{id_article,#ID_ARTICLE}|parametre_url{mode,ajax-detail}|html_entity_decode)]'
-				, {limit: 25}, function(){
-					hideSidebarLateral();
-					$('div#sidebar_main').removeClass('chargement');
-					$('#sidebar_main').show('slow');
-					});
-			});
-			*/
-			</script>
-		</BOUCLE_rubart>
-
-		[(#REM) #TYPE_OBJET|=={travail_en_cours}|oui
-			<script type="text/javascript">
-		// console.log('Rubrique : (old) AJAX de publier avec la rubrique ##ID_RUBRIQUE');
-		/*
-			$(function() {
-				$('#ajax_rub_#ID_RUBRIQUE').addClass('selected');
-				$('div#sidebar_main').addClass('chargement');
-				$('div#sidebar_main').addClass('chargement');
-				$('#sidebar_main').load('[(#URL_PAGE{publier}|parametre_url{id_rubrique,#ID_RUBRIQUE}|parametre_url{mode,ajax-detail}|parametre_url{type_objet,#TYPE_OBJET}|parametre_url{id_consigne,#ID_CONSIGNE}|html_entity_decode)]'
-				, {limit: 25}, function(){
-					hideSidebarLateral();
-					$('div#sidebar_main').removeClass('chargement');
-					$('#sidebar_main').show('slow');
-					});
-			});
-			*/
-			</script>
-		]
 
 		[(#REM)Pour générer les appels aux scripts crayons en cas de besoin]
 		<BOUCLE_crayon(RUBRIQUES){id_rubrique=#RESTREINT}{tout}>

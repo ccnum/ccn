@@ -68,12 +68,9 @@ document.addEventListener("DOMContentLoaded", function() {
     const params = new URLSearchParams(window.location.search);
     const id_consigne = params.get("id_article");
     const depuis = params.get("depuis");
-console.log(id_consigne);
-console.log(depuis);
 
     // On n'agit que si le mode est "email"
     if (depuis === "email") {
-console.log(id_consigne);
 		callConsigne(id_consigne);
     }
 });
