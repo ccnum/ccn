@@ -29,9 +29,8 @@ function Reponse() {
 		this.y = this.data.y;
 		this.index = this.data.index;
 		this.nom_classe = '';
-		this.connecteur;
 
-		for (k = 0; k < this.data.classes.length; ++k) {
+		for (var k = 0; k < this.data.classes.length; ++k) {
 			if (this.classe_id == this.data.classes[k].id) {
 				this.nom_classe = this.data.classes[k].nom;
 			}
@@ -46,8 +45,7 @@ function Reponse() {
 	 */
 	this.initDOM = function () {
 
-		var coul = "" + this.classe_id + "";
-		coul = coul.substr(coul.length - 1, 1);
+		var coul = String(this.classe_id).slice(-1);
 
 		this.div_base = $('<div/>')
 			.attr('id', 'reponse_haute' + this.id)
@@ -94,7 +92,6 @@ function Reponse() {
 		CCN.projet.timeline_fixed.append(this.connecteur);
 
 		var _thisId = this.id;
-		var _thisIdObjet = this.id;
 
 		this.div_texte.on(
 			'click', function () {
@@ -120,7 +117,7 @@ function Reponse() {
 					stop: function (event, ui) {
 						yy = (ui.offset.top - CCN.projet.timeline.offset().top) / CCN.projet.timeline.height();
 
-						$.get("spip.php?page=ajax&mode=article-sauve-coordonnees", { id_objet: _thisIdObjet, type_objet: "article", X: 0, Y: yy });
+						$.get("spip.php?page=ajax&mode=article-sauve-coordonnees", { id_objet: _thisId, type_objet: "article", X: 0, Y: yy });
 						$(this).removeClass('no_event');
 						this.y = yy;
 						$(this).css({ 'top': (yy * 100) + '%' });

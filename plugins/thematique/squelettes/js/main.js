@@ -40,7 +40,6 @@ function initCCN() {
 	CCN.timelineLayerEvenements = $('#timeline_layer_evenements');
 	CCN.timelineLayerLivrables = $('#livrables');
 
-	// Charge le projet
 	loadProjet(CCN.urlXml + "projet");
 }
 
@@ -94,7 +93,6 @@ function loadProjet(fichier) {
 
 				dataForProjet.image_fond = (hasXMLNodeValue('image_fond', xml)) ? getXMLNodeValue('image_fond', xml) : '';
 
-				// Initialise le projet
 				CCN.projet = new Projet();
 				CCN.projet.init(dataForProjet);
 
@@ -102,7 +100,6 @@ function loadProjet(fichier) {
 				CCN.idRubriqueRessources = getXMLNodeValue('id_rubrique_ressources', xml);
 				CCN.idRubriqueAgora = getXMLNodeValue('id_rubrique_agora', xml);
 
-				// Lance le chargement des classes
 				loadClasses(CCN.urlXml + "classes");
 			}
 		}
@@ -127,15 +124,11 @@ function loadClasses(fichier) {
 
 				var xmlClasses = xml.getElementsByTagName("classe");
 
-				// Pour chaque classe, on ajoute une entrée dans le tableau `CCN.classes`
-
-				for (i = 0; i < xmlClasses.length; ++i) {
+				for (var i = 0; i < xmlClasses.length; ++i) {
 					var dataForClasse = {};
 
 					dataForClasse.id = parseFloat(getXMLNodeValue('id', xmlClasses[i]));
 					dataForClasse.nom = getXMLNodeValue('nom', xmlClasses[i]);
-
-					// Initialise la classe
 
 					var nouvelleClasse = new Classe();
 					nouvelleClasse.init(dataForClasse);
@@ -146,15 +139,11 @@ function loadClasses(fichier) {
 
 				var xmlIntervenants = xml.getElementsByTagName("intervenant");
 
-				// Pour chaque intervenant, on ajoute une entrée dans le tableau `CCN.intervenants`
-
-				for (i = 0; i < xmlIntervenants.length; ++i) {
+				for (var i = 0; i < xmlIntervenants.length; ++i) {
 					var dataForIntervenant = {};
 
 					dataForIntervenant.id = parseFloat(getXMLNodeValue('id', xmlIntervenants[i]));
 					dataForIntervenant.nom = getXMLNodeValue('nom', xmlIntervenants[i]);
-
-					// Initialise la classe
 
 					var nouvelIntervenant = new Intervenant();
 					nouvelIntervenant.init(dataForIntervenant);
@@ -165,7 +154,6 @@ function loadClasses(fichier) {
 
 				CCN.travailEnCoursId = parseFloat(getXMLNodeValue('travail_en_cours_id', xml));
 
-				// Lance le chargement des consignes
 				loadConsignes(CCN.urlXml + "consignes");
 			}
 		}
@@ -191,17 +179,14 @@ function loadConsignes(fichier) {
 				var xmlConsignes = xml.getElementsByTagName("consigne");
 				var indexY = 0;
 
-				// Pour chaque consigne, on ajoute une entrée dans le tableau `CCN.consignes`
-
-				for (i = 0; i < xmlConsignes.length; ++i) {
+				for (var i = 0; i < xmlConsignes.length; ++i) {
 
 					var dataForConsigne = {};
 
 					dataForConsigne.id = parseFloat(getXMLNodeValue('id', xmlConsignes[i]));
 					dataForConsigne.intervenant_id = parseFloat(getXMLNodeValue('intervenant_id', xmlConsignes[i]));
 					dataForConsigne.titre = getXMLNodeValue('titre', xmlConsignes[i]);
-					dataForConsigne.titre = dataForConsigne.titre.replace("[", "<");
-					dataForConsigne.titre = dataForConsigne.titre.replace("]", ">");
+					dataForConsigne.titre = dataForConsigne.titre.replaceAll("[", "<").replaceAll("]", ">");
 					dataForConsigne.image = getXMLNodeValue('image', xmlConsignes[i]);
 					dataForConsigne.y = getXMLNodeValue('y', xmlConsignes[i]);
 
@@ -221,23 +206,21 @@ function loadConsignes(fichier) {
 					dataForConsigne.date.setMonth(parseFloat(dataForConsigne.date_texte.substring(3, 5)) - 1);
 					dataForConsigne.date.setFullYear(parseFloat(dataForConsigne.date_texte.substring(6, 10)));
 					dataForConsigne.jour_consigne = parseFloat(Math.round((dataForConsigne.date) / (24 * 60 * 60 * 1000)));
-					dataForConsigne.nombre_jours = dataForConsigne.jour_consigne - CCN.projet.premier_jour; // Compte des jours avec le premier jour de la CCN comme 0
+					dataForConsigne.nombre_jours = dataForConsigne.jour_consigne - CCN.projet.premier_jour;
 
 					while (dataForConsigne.nombre_jours < 0) {
 						dataForConsigne.nombre_jours += 365
 					}
 
-					xmlReponses = xmlConsignes[i].getElementsByTagName("reponse");
+					var xmlReponses = xmlConsignes[i].getElementsByTagName("reponse");
 
 					dataForConsigne.nombre_reponses = (xmlReponses) ? xmlReponses.length : 0;
 					dataForConsigne.reponses = [];
 
-					// Calcul nombre de jour max + totaux commentaires de la consigne à partir des réponses
-
 					var liste_jours_max = [];
 					dataForConsigne.nombre_commentaires = 0;
 
-					for (j = 0; j < xmlReponses.length; j++) {
+					for (var j = 0; j < xmlReponses.length; j++) {
 						var date_texte_reponse = getXMLNodeValue('date', xmlReponses[j]);
 						var date_jours_max = new Date();
 
@@ -256,7 +239,7 @@ function loadConsignes(fichier) {
 
 					dataForConsigne.nombre_jours_max = 0;
 
-					for (j = 0; j < liste_jours_max.length; j++) {
+					for (var j = 0; j < liste_jours_max.length; j++) {
 						if (dataForConsigne.nombre_jours_max < liste_jours_max[j]) {
 							dataForConsigne.nombre_jours_max = liste_jours_max[j];
 						}
@@ -276,15 +259,15 @@ function loadConsignes(fichier) {
 					// Calcul du positionnement y intelligent des réponses (TO DO)
 					var liste_y = [];
 
-					for (j = 0; j < xmlReponses.length; j++) {
+					for (var j = 0; j < xmlReponses.length; j++) {
 						if (j == 0) {
 							var rd = Math.floor(Math.random() * xmlReponses.length);
 							liste_y.push(rd);
 						} else {
-							for (k = 0; k < 15; k++) {
+							for (var k = 0; k < 15; k++) {
 								var meme = 0;
 								var rd = Math.floor(Math.random() * xmlReponses.length);
-								for (l = 0; l < j; l++) {
+								for (var l = 0; l < j; l++) {
 									if (rd == liste_y[l]) {
 										meme++;
 									}
@@ -305,21 +288,19 @@ function loadConsignes(fichier) {
 					var hauteur_utile_reponses = CCN.projet.hauteur - nouvelleConsigne.hauteur - 140;
 					var hauteur_max_reponses = hauteur_utile_reponses / liste_y.length;
 
-					// Nouvelles réponses ajoutées à la consigne en cours de traitement
 					var nb_classe_reponse = 0;
 					var nb_classe_commentaires = 0;
 					var indexReponseInConsigne = 0;
 					var has_current_classe_already_answer = false;
 					var answer_id_of_current_classe = null;
 
-					for (j = 0; j < xmlReponses.length; j++) {
+					for (var j = 0; j < xmlReponses.length; j++) {
 						var dataForReponse = {};
 
 						dataForReponse.id = parseFloat(getXMLNodeValue('id', xmlReponses[j]));
 						dataForReponse.classe_id = parseFloat(getXMLNodeValue('classe_id', xmlReponses[j]));
 						dataForReponse.titre = getXMLNodeValue('texte', xmlReponses[j]);
-						dataForReponse.titre = dataForReponse.titre.replace("[", "<");
-						dataForReponse.titre = dataForReponse.titre.replace("]", ">");
+						dataForReponse.titre = dataForReponse.titre.replaceAll("[", "<").replaceAll("]", ">");
 						dataForReponse.date = getXMLNodeValue('date', xmlReponses[j]);
 						dataForReponse.date_date = new Date();
 						dataForReponse.date_date.setDate(parseFloat(dataForReponse.date.substring(0, 2)));
@@ -337,19 +318,16 @@ function loadConsignes(fichier) {
 						if ((dataForReponse.y === 0) || (dataForReponse.y > 0.8) || (dataForReponse.y < -0.2)) {
 							dataForReponse.y = (liste_y[j]) / (xmlReponses.length);
 						}
-						/*dataForReponse.y = (liste_y[j])/(xmlReponses.length+5)+0.12;*/
 
 						dataForReponse.consigne = nouvelleConsigne;
 						dataForReponse.classes = CCN.classes;
 						dataForReponse.numero = indexReponse;
 						dataForReponse.index = indexReponseInConsigne;
 
-						// Initialise la réponse de la consigne
 						var nouvelleReponse = new Reponse();
 						nouvelleReponse.init(dataForReponse);
 						nouvelleConsigne.reponses.push(nouvelleReponse);
 
-						// Sélection de la classe prime sur classe logguée
 						if (CCN.classeSelection > 0) {
 							if (CCN.classeSelection == dataForReponse.classe_id) {
 								has_current_classe_already_answer = true;
@@ -368,19 +346,16 @@ function loadConsignes(fichier) {
 						indexReponse++;
 					}
 
-					// Ajoute le bouton de réponse si pas encore de réponse de la classe
 					if (has_current_classe_already_answer) {
 						//  nouvelleConsigne.showMyReponseButtonInTimeline(answer_id_of_current_classe);
 					} else {
 						nouvelleConsigne.showNewReponseButtonInTimeline();
 					}
 
-					// Consigne suivante
 					CCN.consignes.push(nouvelleConsigne);
 					indexConsigne++;
 				}
 
-				// Lance le chargement des articles de blog
 				loadBlog(CCN.urlXml + "articles_blog");
 			}
 		}
@@ -405,17 +380,15 @@ function loadBlog(fichier) {
 
 				var xmlArticlesBlog = xml.getElementsByTagName("article");
 				var indexY = 0;
-				for (i = 0; i < xmlArticlesBlog.length; i++) {
+				for (var i = 0; i < xmlArticlesBlog.length; i++) {
 
 					var dataForArticleBlog = {};
 
-					// Nouvel article de blog
 					dataForArticleBlog.id = getXMLNodeValue('id', xmlArticlesBlog[i]);
 					dataForArticleBlog.type_objet = getXMLNodeValue('type_objet', xmlArticlesBlog[i]);
 					dataForArticleBlog.id_objet = getXMLNodeValue('id_objet', xmlArticlesBlog[i]);
 					dataForArticleBlog.titre = getXMLNodeValue('titre', xmlArticlesBlog[i]);
-					dataForArticleBlog.titre = dataForArticleBlog.titre.replace("[", "<");
-					dataForArticleBlog.titre = dataForArticleBlog.titre.replace("]", ">");
+					dataForArticleBlog.titre = dataForArticleBlog.titre.replaceAll("[", "<").replaceAll("]", ">");
 					dataForArticleBlog.y = getXMLNodeValue('y', xmlArticlesBlog[i]);
 					dataForArticleBlog.date = getXMLNodeValue('date', xmlArticlesBlog[i]);
 
@@ -450,8 +423,6 @@ function loadBlog(fichier) {
 					indexArticleBlog++;
 				}
 
-				// Lance le chargement des articles d'événements
-
 				loadEvenements(CCN.urlXml + "articles_evenement");
 			}
 		}
@@ -477,9 +448,7 @@ function loadEvenements(fichier) {
 				var xmlArticlesEvenement = xml.getElementsByTagName("article");
 				var indexY = 0;
 
-				for (i = 0; i < xmlArticlesEvenement.length; i++) {
-
-					// Nouvel article d'événement
+				for (var i = 0; i < xmlArticlesEvenement.length; i++) {
 
 					var dataForEvenement = {};
 
@@ -488,8 +457,7 @@ function loadEvenements(fichier) {
 					dataForEvenement.id_objet = getXMLNodeValue('id_objet', xmlArticlesEvenement[i]);
 					dataForEvenement.titre = getXMLNodeValue('titre', xmlArticlesEvenement[i]);
 					dataForEvenement.y = getXMLNodeValue('y', xmlArticlesEvenement[i]);
-					dataForEvenement.titre = dataForEvenement.titre.replace("[", "<");
-					dataForEvenement.titre = dataForEvenement.titre.replace("]", ">");
+					dataForEvenement.titre = dataForEvenement.titre.replaceAll("[", "<").replaceAll("]", ">");
 
 					if (indexY >= CCN.projet.liste_y_evenements.length) {
 						indexY = 0;
@@ -514,8 +482,6 @@ function loadEvenements(fichier) {
 					dataForEvenement.numero = indexArticleEvenement;
 					dataForEvenement.index = indexArticleEvenement;
 
-					// Initialise l'article d'événement
-
 					var nouvelArticleEvenement = new ArticleEvenement();
 					nouvelArticleEvenement.init(dataForEvenement);
 
@@ -523,14 +489,6 @@ function loadEvenements(fichier) {
 
 					indexArticleEvenement++;
 				}
-
-				////////////////////////////////////////////////////////////////
-				//
-				//  Chargement xmls terminé -> démarrage de l'application
-				//
-				////////////////////////////////////////////////////////////////
-
-				// Initialise la vue à l'ouverture selon les arguments dans l'url
 
 				initTimeline();
 			}
@@ -547,8 +505,6 @@ function loadEvenements(fichier) {
 function initTimeline() {
 
 	window.onpopstate = onHashChange;
-
-	// Premier update pour initialiser certaines variables dont on a besoin
 
 	CCN.projet.initTimelineMonths();
 	CCN.projet.showWholeTimeline();
@@ -603,23 +559,16 @@ function initTimeline() {
 		}
 	}
 
-	// Ouverture au chargement d'un article, article événement, consigne ou réponse
+	// Ouverture de la popup projet si première fois
 
 	if (CCN.idObjetToShowAtInit == 0) {
-		// Ouverture de la popup projet si première fois
-		$().ready(
-			function () {
-				if (document.cookie.indexOf('visited=true') === -1) {
-					var expires = new Date();
-					expires.setDate(expires.getDate() + 30);
-					document.cookie = "visited=true; expires=" + expires.toUTCString();
-					//$('.presentation').mediabox({width:'900px',height: '600px',slideshow:true, slideshowSpeed: 5000, transition:"fade", loop:false, open: true}); (TO DO ?)
-				}
-			}
-		);
+		if (document.cookie.indexOf('visited=true') === -1) {
+			var expires = new Date();
+			expires.setDate(expires.getDate() + 30);
+			document.cookie = "visited=true; expires=" + expires.toUTCString();
+		}
 	}
 
-	//  CCN.projet.showWholeTimeline();
 	setContentFromState(
 		{
 			data: {
@@ -633,55 +582,22 @@ function initTimeline() {
 		}
 	);
 
-	// Les listeners pour l'affichage timeline
-
-	$().ready(
+	// Silder colorbox d'aide
+	$(".ccn-aide").mediabox({ width: '80%', height: 'auto', href: $(this).attr('href'), current: "{current}/{total}" });
+	$('.logo_menu-aide').on("click",
 		function () {
-			// Listener popups
-			/*$('.cache .mediabox').mediabox({width:'80%',height: '80%', className:"aide-ccn", slideshow:true, slideshowSpeed: 5000, transition:"fade", loop:false, title: function(){
-			var title = $(this).data("title");
-			if ($(this).hasClass("description")) {
-			$(this).css({position: 'absolute', top:'50%', color: 'red' })
-			$(this).parent();
-			return "<p class='desc'>" + title + "</p>";
-			}
-			else {
-
-			return "<p class='lol'>" + title + "</p>";
-			}
-
-			$(".aide-ccn .cboxLoadedContent").each(function(){
-
-			if ($(this).hasClass("description")) {
-
-			}
-			$("#cboxTitle").hasClass('description').html("TESTETSTETSTSSTSTS");
-			});
-
-			}});*/
-			// Silder colorbox d'aide
-			$(".ccn-aide").mediabox({ width: '80%', height: 'auto', href: $(this).attr('href'), current: "{current}/{total}" });
-			$('.logo_menu-aide').on("click",
-				function () {
-					$(".ccn-aide").mediabox({ open: true });
-				}
-			)
-
-			//$('.presentation').mediabox({ width:'80%',height: '80%',slideshow:true, slideshowSpeed: 5000, transition:"fade", loop:false});
-			$('.profil').mediabox({ width: '80%', height: '80%' });
-
-			window.addEventListener(
-				"resize", function (event) {
-					updateTimeline();
-				}, false
-			);
-
+			$(".ccn-aide").mediabox({ open: true });
 		}
 	);
-}
 
-// C'est parti
-// window.onload = init();
+	$('.profil').mediabox({ width: '80%', height: '80%' });
+
+	window.addEventListener(
+		"resize", function (event) {
+			updateTimeline();
+		}, false
+	);
+}
 
 $(function () {
 	initCCN();

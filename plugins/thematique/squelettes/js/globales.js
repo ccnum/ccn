@@ -1,7 +1,7 @@
 var CCN = {};
 
-CCN.nomMois = new Array("Janv.", "Fév.", "Mars", "Avril", "Mai", "Juin", "Juil.", "Août", "Sept.", "Oct.", "Nov.", "Déc.");
-CCN.nomCompletMois = new Array("janvier", "février", "mars", "avril", "mai", "juin", "juillet", "août", "septembre", "octobre", "novembre", "décembre");
+CCN.nomMois = ["Janv.", "Fév.", "Mars", "Avril", "Mai", "Juin", "Juil.", "Août", "Sept.", "Oct.", "Nov.", "Déc."];
+CCN.nomCompletMois = ["janvier", "février", "mars", "avril", "mai", "juin", "juillet", "août", "septembre", "octobre", "novembre", "décembre"];
 CCN.travailEnCoursId;
 CCN.couleurBlog;
 CCN.dureeTransition;
@@ -71,8 +71,8 @@ function getJsonFromUrl(query) {
 			}
 			part = part.split("+").join(" "); // replace every + with space, regexp-free version
 			var eq = part.indexOf("=");
-			var key = eq > -1 ? part.substr(0, eq) : part;
-			var val = eq > -1 ? decodeURIComponent(part.substr(eq + 1)) : "";
+			var key = eq > -1 ? part.slice(0, eq) : part;
+			var val = eq > -1 ? decodeURIComponent(part.slice(eq + 1)) : "";
 			var from = key.indexOf("[");
 			if (from == -1) {
 				result[decodeURIComponent(key)] = val;

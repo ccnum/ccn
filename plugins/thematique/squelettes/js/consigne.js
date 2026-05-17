@@ -34,7 +34,7 @@ function Consigne() {
 		this.intervenant_nom = '';
 		this.nombre_jours_max = this.data.nombre_jours_max;
 
-		for (k = 0; k < this.data.intervenants.length; k++) {
+		for (var k = 0; k < this.data.intervenants.length; k++) {
 			if (this.data.intervenant_id == this.data.intervenants[k].id) {
 				this.intervenant_nom = this.data.intervenants[k].nom;
 			}
@@ -226,12 +226,12 @@ function Consigne() {
 		$('.reponse_haute_consigne_parent' + this.id).removeClass('hide');
 
 		// (TODO*1) Cache les articles de blog
-		for (i = 0; i < CCN.articlesBlog.length; i++) {
+		for (var i = 0; i < CCN.articlesBlog.length; i++) {
 			$(CCN.articlesBlog[i].div_base).hide();
 		}
 
 		// (TODO*2) Cache les articles d'événement
-		for (i = 0; i < CCN.articlesEvenement.length; i++) {
+		for (var i = 0; i < CCN.articlesEvenement.length; i++) {
 			$(CCN.articlesEvenement[i].div_base).hide();
 		}
 

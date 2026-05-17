@@ -47,28 +47,26 @@ function Projet() {
 		this.timeline = $('#timeline_wrapin');
 		this.timeline_width = 100; // Pourcentage
 
-		this.setIntervalConnecteurs;
-
 		// Liste y consignes
 
-		var liste_y = data.liste_y_consignes.split(",");
+		var liste_y_consignes = data.liste_y_consignes.split(",");
 		this.liste_y_consignes = [];
-		for (i = 0; i < liste_y.length; i++) {
-			this.liste_y_consignes.push(parseFloat(liste_y[i]));
+		for (var i = 0; i < liste_y_consignes.length; i++) {
+			this.liste_y_consignes.push(parseFloat(liste_y_consignes[i]));
 		}
 
 		// Liste y articles de blog
-		var liste_y = data.liste_y_blogs.split(",");
+		var liste_y_blogs = data.liste_y_blogs.split(",");
 		this.liste_y_blogs = [];
-		for (i = 0; i < liste_y.length; i++) {
-			this.liste_y_blogs.push(parseFloat(liste_y[i]));
+		for (var i = 0; i < liste_y_blogs.length; i++) {
+			this.liste_y_blogs.push(parseFloat(liste_y_blogs[i]));
 		}
 
 		// Liste y articles d'événement
-		var liste_y = data.liste_y_evenements.split(",");
+		var liste_y_evenements = data.liste_y_evenements.split(",");
 		this.liste_y_evenements = [];
-		for (i = 0; i < liste_y.length; i++) {
-			this.liste_y_evenements.push(parseFloat(liste_y[i]));
+		for (var i = 0; i < liste_y_evenements.length; i++) {
+			this.liste_y_evenements.push(parseFloat(liste_y_evenements[i]));
 		}
 
 		// Canvas général
@@ -175,7 +173,7 @@ function Projet() {
 		this.mois_select = -1;
 		this.mois_rollover = -1;
 
-		for (i = 0; i < CCN.consignes.length; i++) {
+		for (var i = 0; i < CCN.consignes.length; i++) {
 			CCN.consignes[i].showConsignePastille();
 			CCN.consignes[i].select = false;
 		}
@@ -184,14 +182,12 @@ function Projet() {
 		$('.reponse_haute').addClass('hide');
 
 		// affiche tous les articles de blog
-		for (i = 0; i < CCN.articlesBlog.length; i++) {
+		for (var i = 0; i < CCN.articlesBlog.length; i++) {
 			$(CCN.articlesBlog[i].div_base).fadeIn(3000);
-			//articles_blog[i].div_base.style.visibility = "visible";
 		}
 		// affiche tous les articles d'événement
-		for (i = 0; i < CCN.articlesEvenement.length; i++) {
+		for (var i = 0; i < CCN.articlesEvenement.length; i++) {
 			$(CCN.articlesEvenement[i].div_base).fadeIn(3000);
-			//articles_evenement[i].div_base.style.visibility = "visible";
 		}
 
 		this.setTimelineZoom();
@@ -228,7 +224,7 @@ function Projet() {
 		var annee = this.premiere_annee;
 
 		// On parcourt chaque mois
-		for (i = 0; i < this.nombre_mois; i++) {
+		for (var i = 0; i < this.nombre_mois; i++) {
 
 			// Si on entre dans une nouvelle année
 			if (mois == 0) {

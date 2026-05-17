@@ -61,7 +61,6 @@ function ArticleBlog() {
 		CCN.timelineLayerBlogs.prepend(this.div_base);
 
 		var _thisId = this.id_objet;
-		var _thisTypeObjet = this.type_objet;
 
 		this.div_texte.on(
 			'click', function () {
@@ -77,8 +76,8 @@ function ArticleBlog() {
 						$(this).children('div').children('div').removeAttr("onClick");
 					},
 					stop: function (event, ui) {
-						y_parent = $(this).parent().height();
-						yy = ui.position.top / y_parent;
+						var y_parent = $(this).parent().height();
+						var yy = ui.position.top / y_parent;
 						$.get(
 							"spip.php?page=ajax&mode=article-sauve-coordonnees", { id_objet: _thisId, type_objet: "article", X: 0, Y: yy }, function (data) {
 							}

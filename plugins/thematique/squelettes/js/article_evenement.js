@@ -82,8 +82,8 @@ function ArticleEvenement() {
 						$(this).children('div').children('div').removeAttr("onClick");
 					},
 					stop: function (event, ui) {
-						y_parent = $(this).parent().height();
-						yy = ui.position.top / y_parent;
+						var y_parent = $(this).parent().height();
+						var yy = ui.position.top / y_parent;
 						$.get(
 							"spip.php?page=ajax&mode=article-sauve-coordonnees", { id_objet: _thisId, type_objet: _thisTypeObjet, X: 0, Y: yy },
 							function (data) {

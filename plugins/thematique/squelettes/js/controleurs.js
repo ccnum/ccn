@@ -102,7 +102,7 @@ function setContentFromState(state) {
 	if (typeof state.data !== 'object' || state.data == null) {
 		return;
 	}
-	var state = state.data;
+	state = state.data;
 
 	if (state.type_objet == undefined) { state.type_objet = ''; }
 	if (state.page == undefined) { state.page = ''; }
@@ -118,7 +118,7 @@ function setContentFromState(state) {
 	if (currentState.id_syndic_article == undefined) { currentState.id_syndic_article = ''; }
 	if (currentState.id_objet == undefined) { currentState.id_objet = ''; }
 
-	isSamePage = true;
+	var isSamePage = true;
 
 	for (var index in state) {
 		if (state[index] != currentState[index]) {
@@ -1089,29 +1089,16 @@ function loadContentInLateralSidebar(url, typePage, typeObjet, callback) {
  * Update le menu
  */
 function updateMenuIcon(ids, mode) {
-	if (mode == 'timelineMode') {
+	if (mode == 'timelineMode' || mode == 'mainView') {
 		$('#menu_bas .logo a').removeClass('selected');
-		for (var i in ids) {
+		for (var i = 0; i < ids.length; i++) {
 			$('.menu_logo_' + ids[i]).addClass('selected');
 		}
 	}
 
-	// mainView :
-	// on clean tous les items
-	// et on active les ids
-	if (mode == 'mainView') {
-		$('#menu_bas .logo a').removeClass('selected');
-		for (var i in ids) {
-			$('.menu_logo_' + ids[i]).addClass('selected');
-		}
-	}
-
-	// sidebarView :
-	// on clean uniquement les items sidebarView
-	// et on active les ids
 	if (mode == 'sidebarView') {
 		$('#menu_bas .logo a.menu_logo_type_sidebarView').removeClass('selected');
-		for (var i in ids) {
+		for (var i = 0; i < ids.length; i++) {
 			$('.menu_logo_' + ids[i]).addClass('selected');
 		}
 	}
