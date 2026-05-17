@@ -71,22 +71,6 @@
 				#SET{nb_doc,0}
 			<//B_nb_doc>
 			[(#AUTORISER{modifier, article, #ID_ARTICLE}|oui|et{#TEXTE|non|et{#GET{nb_doc}|=={0}|oui}}|et{#ADMIN|=={-1}|non}|oui)
-				<script type="text/javascript">
-					/*
-					$(function() {
-						$('.bloc_article').fadeTo('fast', 0.2);
-						$('#entete_publication').delay(1000).slideDown('slow');
-						function cache() {
-							$('.bloc_article').fadeTo('fast', 1);
-							$('#entete_publication').fadeTo(4000, 0.8, function(){
-								//$(this).slideUp(1000);
-							});
-						}
-						$('#entete_publication').click(cache);
-						window.setTimeout(cache, 2000);
-					});
-					*/
-				</script>
 				<div class="popup_titre">
 					<div class="date" id="entete_publication" style="display: block;">
 						Etape 2 : vous pouvez ajouter un texte et des documents à votre article<br />
@@ -261,13 +245,6 @@
 					</div>]
 				]
 
-				[(#REM) Bloc suppression ]
-				[(#AUTORISER{modifier, article, #ID_ARTICLE})
-					[(#SET{confirmation,Étes-vous sûr de vouloir supprimer l\'article [\'(#TITRE|attribut_html)\']})]
-					<!--
-					<INCLURE{fond=noisettes/objet/objet-supprimer}{objet=article}{id_objet=#ID_ARTICLE}{id_parent=#ID_RUBRIQUE}{confirmation=#GET{confirmation}}{url=#URL_PAGE{sommaire_recharge}}>
-					-->
-				]
 			]
 		</div>
 		]

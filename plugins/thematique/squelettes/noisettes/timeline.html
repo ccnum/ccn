@@ -19,6 +19,6 @@
 	CCN.idRubriqueToShowAtInit = '[(#SELF|parametre_url{id_rubrique})]';
 	CCN.idArticleToShowAtInit = '[(#SELF|parametre_url{id_article})]';
 	CCN.idSyndicArticleToShowAtInit = '[(#SELF|parametre_url{id_syndic_article})]';
-	CCN.hash = (hash.length > 0) ? hash.substr(1,hash.length) : '';
+	CCN.hash = (hash.length > 0) ? hash.slice(1) : '';
 
 </script>

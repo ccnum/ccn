@@ -5,10 +5,8 @@
 <!-- Début Forum-->
 
 	<script type="text/javascript">
-		$(function(){
-			$('.triggertoggleshow').off('click').on('click', function(){
-				$(this).closest('.intervention_item_around').find('.toggleshow').slideToggle(300);
-			});
+		$('.triggertoggleshow').off('click').on('click', function(){
+			$(this).closest('.intervention_item_around').find('.toggleshow').slideToggle(300);
 		});
 	</script>
 
@@ -143,16 +141,13 @@
 								</div>
 							</BOUCLE_documents_joints3>
 							<script>
-								$(function () {
-									const $portfolio_grand_list = $('.portfolio_grand');
-									$portfolio_grand_list.each(function(_index, portfolio_grand) {
-										initPdfSwipersInComment($(portfolio_grand));
-									});
+								const $portfolio_grand_list = $('.portfolio_grand');
+								$portfolio_grand_list.each(function(_index, portfolio_grand) {
+									initPdfSwipersInComment($(portfolio_grand));
 								});
 							</script>
 						</div>
 					</div>
-					<!--[<div id="spip"><a href="(#PARAMETRES_FORUM|url_reponse_forum)"  class="lienss">R&eacute;pondre &agrave; ce message</a></div>]-->
 				</BOUCLE_forums_fils>
 
 			</ul>

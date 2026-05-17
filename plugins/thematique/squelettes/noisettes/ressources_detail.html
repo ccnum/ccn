@@ -62,10 +62,8 @@
 						<div class="ressources_rubrique">
 							<div class="ressource_rubrique_titre" id="rubrique_#ID_RUBRIQUE"><h3>#TITRE</h3></div>
 							<script type="text/javascript">
-								$(function() {
-									$('#ajax_go_to_ressources_rubrique_#ID_RUBRIQUE').on('click',function() {
-										callRessourceRubrique('#ID_RUBRIQUE','#GET{sous_type}');
-									});
+								$('#ajax_go_to_ressources_rubrique_#ID_RUBRIQUE').on('click',function() {
+									callRessourceRubrique('#ID_RUBRIQUE','#GET{sous_type}');
 								});
 							</script>
 							<BOUCLE_article(ARTICLES){id_rubrique}{par date}>

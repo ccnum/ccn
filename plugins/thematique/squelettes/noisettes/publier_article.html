@@ -1,22 +1,6 @@
 #CACHE{0}
 <div class="popup [popup_(#ENV{type_objet})]">
 	[(#ID_ARTICLE|non)
-		<script type="text/javascript">
-  		/*
-			$(function() {
-				$('#entete_contenu').fadeTo('fast', 0.2);
-				$('#entete_publication').delay(1000).slideDown('slow');
-				function cache() {
-					$('#entete_contenu').fadeTo('fast', 1);
-					$('#entete_publication').fadeTo(4000, 0.8, function(){
-						//$(this).slideUp(1000);
-					});
-				}
-				$('#entete_publication').click(cache);
-				window.setTimeout(cache, 2000);
-			});
-			*/
-		</script>
 		[(#REM) [(#INCLURE{fond=noisettes/fonction/type_objet,id_rubrique})] ]
 		[(#SET{type_objet,#SESSION{type}})]
 
