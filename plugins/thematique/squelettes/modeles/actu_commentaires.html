@@ -5,7 +5,7 @@
 	</BOUCLE_getCouleur1>
 </BOUCLE_getCouleur>
 <BOUCLE_commentaires(FORUMS){id_forum}>
-	<div class="actualites-actu couleur_travail_en_cours[(#GET{IdCouleur}|nb2col)]" onclick="callConsigne(#ID_OBJET);">
+	<div class="actualites-actu couleur_travail_en_cours[(#GET{IdCouleur}|nb2col)] js-call-consigne" data-id-objet="#ID_OBJET">
 		<span class="profil">[(#MODELE{logo_carre, taille=17}{id_rubrique=#ID_RUBRIQUE}{titre=#TITRE})]</span>
 		<span class="actualites-titre">Commentaire de &nbsp;<b>#AUTEUR</b> &nbsp; sur &nbsp; <b>#TITRE </b></span>
 		[<p class="actualites-actu-date"> (#DATE|affdate)</p>]
@@ -35,5 +35,3 @@
 		<div class="arrow-down"></div>
 	</div>
 </BOUCLE_commentaires>
-
-

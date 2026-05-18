@@ -5,7 +5,7 @@ RUBRIQUE.HTML > CHAPITRE-VISIBLE.HTML
 <BOUCLE_article_verrouille(ARTICLES){id_article}>
 <div class="ecriture-chapitre">
 	<div class="ecriture-chapitre-picto">
-		<img src="#CHEMIN{img/ecriture/picto-oeil.png}" width="50" height="50" />
+		<img src="#CHEMIN{img/ecriture/picto-oeil.png}" alt="Chapitre visible" width="50" height="50" />
 	</div>
 	<div class="ecriture-chapitre-texte">
 		<div class="ecriture-chapitre-surtitre rose">#SURTITRE</div>
@@ -22,18 +22,16 @@ RUBRIQUE.HTML > CHAPITRE-VISIBLE.HTML
 
 <!-- TEXTE  -->
 <div class="texte_courant">
-	<!-- LONGUEUR DE L' ARTICLE-->
-	#SET{ma_regexp, [[:alpha:]]}
-	<span class="texte-masque">[(#DESCRIPTIF|couper{[(#DESCRIPTIF|textebrut|strlen|moins{400})], ''}|replace{#GET{ma_regexp}, x})]</span>
-	<span>[(#DESCRIPTIF|cleanCut)]</span>
+	<span class="texte-masque">[(#DESCRIPTIF|textebrut|masquerTexteChapitre{400})]</span>
+	<span>[(#DESCRIPTIF|textebrut|recupererDernieresLignesChapitres{400})]</span>
 </div>
 <!-- SCRIPT  -->
 <div class="script-forum-fleche">
-	<img src="#CHEMIN{img/ecriture/fleche_script_ecrivain.png}" width="44" height="17" />
+	<img src="#CHEMIN{img/ecriture/fleche_script_ecrivain.png}" alt="" width="44" height="17" />
 </div>
 <div class="script-ecrivain">
-	<div class="script-open-close" id="open-script-ecrivain" style="display: block; background-image: url('#CHEMIN{img/ecriture/bt-plus.png}');"></div>
-	<div class="script-open-close" id="close-script-ecrivain" style="display: block; background-image: url('#CHEMIN{img/ecriture/bt-moins.png}');"></div>
+	<div class="script-open-close" id="open-script-ecrivain"></div>
+	<div class="script-open-close" id="close-script-ecrivain"></div>
 	<div class="script-titre">SCRIPT | #GET{var_auteur_article}</div>
 	<div class="script-texte #EDIT{texte}" id="slideup-script-ecrivain">
 		[(#TEXTE)]

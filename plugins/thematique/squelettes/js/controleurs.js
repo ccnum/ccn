@@ -5,10 +5,8 @@ var detailsLivrableOpen = false;
 
 // Verifie les parametres dans l'url
 $.urlParam = function (name) {
-	console.log('urlParam l-106', name);
 
 	var results = new RegExp('[\?&]' + name + '=([^&#]*)').exec(window.location.href);
-	console.log('urlParam results', results);
 
 	if (results) {
 		return results[1] || 0;
@@ -16,6 +14,19 @@ $.urlParam = function (name) {
 }
 
 $(function () {
+
+	$(document).on('click', '.js-call-consigne', function () {
+		callConsigne($(this).data('id-objet'));
+	});
+
+	$(document).on('click', '.js-call-reponse', function () {
+		callReponse($(this).data('id-article'));
+	});
+
+	$(document).on('click', '.js-call-livrable', function () {
+		callLivrable(null, 'open');
+		callLivrable($(this).data('id-article'), 'openDetails');
+	});
 
 	$('#timeline_fixed').on(
 		'click', function (event) {
@@ -117,14 +128,11 @@ function setContentFromState(state) {
 	}
 	currentState = state;
 
-	console.log('placeholder');
-	console.log('isSamePage ?', isSamePage);
 
 	if (isSamePage) { return; }
 
 	antifloodHashChange = true;
 
-	console.log('state type_objet', state.type_objet, 'id_objet', state.id_objet);
 
 	// Ressource
 	if ((state.type_objet == '0'
@@ -181,6 +189,7 @@ function setContentFromState(state) {
 			for (k = 0; k < CCN.consignes.length; k++) {
 				if (CCN.consignes[k].id == state.id_objet) {
 					callConsigne(state.id_objet);
+					break;
 				}
 			}
 		}
@@ -188,10 +197,11 @@ function setContentFromState(state) {
 		// Réponse
 		if (state.type_objet == "travail_en_cours") {
 			changeTimelineMode('consignes');
-			for (k = 0; k < CCN.consignes.length; k++) {
+			outer: for (k = 0; k < CCN.consignes.length; k++) {
 				for (l = 0; l < CCN.consignes[k].reponses.length; l++) {
 					if (CCN.consignes[k].reponses[l].id == state.id_objet) {
 						callReponse(state.id_objet);
+						break outer;
 					}
 				}
 			}
@@ -199,15 +209,14 @@ function setContentFromState(state) {
 
 		// Classe
 		if (state.type_objet == "classes") {
-			console.log('type classe, avant changement de mode', CCN.classes);
 
 			changeTimelineMode('consignes');
 
-			console.log('type classe, après changement de mode', CCN.classes);
 
 			for (k = 0; k < CCN.classes.length; k++) {
 				if (CCN.classes[k].id == state.id_objet) {
 					callClasse(state.id_objet);
+					break;
 				}
 			}
 		}
@@ -397,7 +406,6 @@ function showReponseInTimeline(numero) {
  */
 
 function call(opts) {
-	console.log('opts', opts);
 
 	if (opts.type == 'rubrique' && opts.type_objet == 'travail_en_cours') {
 		toggleSidebarExpand();
@@ -446,7 +454,6 @@ function callConsigne(id_consigne) {
 		}
 	);
 
-	console.log('callConsigne');
 }
 
 
@@ -464,21 +471,17 @@ function callConsigne(id_consigne) {
  */
 
 function callReponse(id_reponse) {
-	console.log('id_reponse', id_reponse);
 
 	changeTimelineMode('consignes');
 	setFullscreenModeToCols(true);
 
 	var id_consigne = getIdConsigneFromIdReponse(id_reponse);
-	console.log('id_consigne', id_consigne);
 
 	var id_classe = getIdClasseFromIdReponse(id_reponse);
-	console.log('id_classe', id_classe);
 
 	updateMenuIcon(['consignes-' + id_consigne, 'classes-' + id_classe], 'mainView');
 
 	var url = CCN.projet.url_popup_reponse + "&id_article=" + id_reponse;
-	console.log('url', url);
 
 	showConsigneInTimeline(id_consigne);
 
@@ -494,18 +497,13 @@ function callReponse(id_reponse) {
 			);
 		}
 	);
-	console.log('load content in main sidebar ended');
 
 
 	var url_travail_en_cours = 'spip.php?page=rubrique&mode=detail&id_rubrique=' + CCN.travailEnCoursId;
-	console.log('url_travail_en_cours', url_travail_en_cours);
 
-	console.log('load content in lateral sidebar start');
 	loadContentInLateralSidebar(url_travail_en_cours, 'rubrique', 'travail_en_cours');
-	console.log('load content in lateral sidebar end');
 
 	showReponseInTimeline(id_reponse);
-	console.log('end callReponse');
 
 }
 
@@ -524,7 +522,6 @@ function callReponse(id_reponse) {
  */
 
 function callClasse(id_classe) {
-	console.log('id_classe in callClasse function', id_classe);
 
 	changeTimelineMode('consignes');
 	toggleSidebarExpand();
@@ -532,7 +529,6 @@ function callClasse(id_classe) {
 	updateMenuIcon(['classes', 'classes-' + id_classe], 'sidebarView');
 
 	var url = CCN.projet.url_popup_classes;
-	console.log('url call classe', url);
 	if (id_classe != '') {
 		// url = CCN.projet.url_popup_classes + '&id_rubrique=' + id_classe + '&type_objet=travail_en_cours';
 		url = CCN.projet.url_popup_classes + '&id_objet=' + id_classe + '&type_objet=travail_en_cours';
@@ -692,7 +688,6 @@ function callRessourceArticle(id_article, type_objet) {
 	);
 
 	var url_lateral = (type_objet == 'ressources') ? CCN.projet.url_popup_ressources : CCN.projet.url_popup_agora;
-	console.log('callRessourceArticle');
 }
 
 /**
@@ -730,7 +725,6 @@ function callRessourceSyndicArticle(id_syndic_article, type_objet) {
 		}
 	);
 
-	console.log('callRessourceSyndicArticle');
 }
 
 /**
@@ -763,7 +757,6 @@ function callRessourceRubrique(id_rubrique, type_objet) {
 	);
 
 	var url_lateral = (type_objet == 'ressources') ? CCN.projet.url_popup_ressources : CCN.projet.url_popup_agora;
-	console.log('callRessourceRubrique');
 }
 
 
@@ -800,7 +793,6 @@ function callArticleEvenement(id_objet, type_objet) {
 		}
 	);
 
-	console.log('callArticleEvenement');
 }
 
 
@@ -831,7 +823,6 @@ function callAgora() {
 		}
 	);
 
-	console.log('callAgora');
 }
 
 /**
@@ -848,7 +839,6 @@ function createReponse(id_consigne, id_rubrique_classe, numero) {
 	var url = CCN.projet.url_popup_reponseajout + "&id_consigne=" + id_consigne + "&id_rubrique=" + id_rubrique_classe; // TODO Check infinite loading icon
 	loadContentInMainSidebar(url, 'article', 'blogs');
 
-	console.log('createReponse');
 }
 
 
@@ -950,36 +940,27 @@ function changeCouleurLogoMenu(val) {
  */
 
 function updateUrl(object, title, url) {
-	console.log('updateUrl (callback from loadContentInMainSidebar', object, title, url);
 
 	currentState = object;
 
-	console.log('CCN.hash', CCN.hash);
 
 	if (CCN.hash != '') {
 		if (CCN.hash.substring(0, 5) == 'forum') {
-			console.log('forum l-9995');
 
 		} else {
-			console.log('!forum l-9998');
 
 			History.pushState(object, title, url + '#' + CCN.hash);
-			console.log('push end l-1001');
 
 		}
 
 		setTimeout(
 			function () {
-				console.log('setTimeout l-1010... I should not be here, probably');
 
 				var anchor = $("#" + CCN.hash);
 
-				console.log('anchor', anchor);
-				console.log('anchor length', anchor.length);
 
 				if (anchor.length > 0) {
 
-					console.log('dans if l-1019');
 
 					// TODO : cela est appelé deux fois minimum à cause de History.js (donc un trigger('click') sur .triggertoggleshow ne fonctionne pas car il ouvre puis ferme)
 
@@ -994,13 +975,10 @@ function updateUrl(object, title, url) {
 			}, 500
 		);
 	} else {
-		console.log('ccn.hash == empty l-1028');
 		History.pushState(object, title, url);
-		console.log('push end l-1027');
 	}
 	antiPushState = false;
 
-	console.log('updateUrl end l-1031');
 
 }
 
@@ -1031,7 +1009,6 @@ function reloadAndSetCookie(url, cookie_nom, cookie_valeur) {
 function reload(url) {
 	if (url == 'self') {
 		location.reload(true);
-		window.location.reload();
 	} else {
 		window.location.href = url;
 	}
@@ -1050,24 +1027,12 @@ function reload(url) {
  */
 
 function loadContentInMainSidebar(url, typePage, typeObjet, callback) {
-	console.log('loading content in main sidebar', 'url:', url, 'typePage:', typePage, 'typeObjet:', typeObjet);
-
-
 	$('body').addClass('loading');
 	showSidebar();
 	hideSidebarLateral();
 	emptyMainSidebar();
 
-	console.log(
-		'%c Main' + ' %c ' + url + ' ',
-		'background:#8BC34A;color:#fff;padding:2px;border-radius:2px;',
-		'background:#009688;color:#fff;padding:2px;display:block;margin-top:5px;border-radius:2px;'
-	);
-
 	$('#sidebar_main_inner').load(url, function (response, status, xhr) {
-
-		console.log("Load status:", status);
-		console.log("HTTP status:", xhr.status);
 
 		if (status === "error") {
 			console.error("Erreur de chargement :", xhr.status, xhr.statusText);
@@ -1103,14 +1068,6 @@ function loadContentInMainSidebar(url, typePage, typeObjet, callback) {
  */
 
 function loadContentInLateralSidebar(url, typePage, typeObjet, callback) {
-	console.log('loading content in lateral sidebar', 'url:', url, 'typePage:', typePage, 'typeObjet:', typeObjet);
-
-	console.log(
-		'%c Lateral' + ' %c ' + url + ' ',
-		'background:#FFA000;color:#fff;padding:2px;border-radius:2px;',
-		'background:#009688;color:#fff;padding:2px;display:block;margin-top:5px;border-radius:2px;'
-	);
-
 	$('body').addClass('loading');
 	showSidebar();
 	//emptyLateralSidebar();
@@ -1124,11 +1081,6 @@ function loadContentInLateralSidebar(url, typePage, typeObjet, callback) {
 				callback(response);
 			}
 			antifloodHashChange = false;
-			console.log(
-				'%c Lateral' + ' %c Loaded ',
-				'background:#FFA000;color:#fff;padding:2px;border-radius:2px;',
-				'background:#009688;color:#fff;padding:2px;display:block;margin-top:5px;border-radius:2px;'
-			);
 		}
 	);
 }

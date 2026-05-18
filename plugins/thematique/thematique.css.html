@@ -1196,7 +1196,7 @@ a:hover {
 	#menu_haut.zone-menu li a.[logo_menu-(#VALEUR)]{background-color: #fff; background-image: url(#GET{img});}
 	#menu_haut.zone-menu li a.[logo_menu-(#VALEUR)]:hover{background-color: #GET{col};background-image: url(#GET{img2});}
 	[(#VALEUR|=={ecrire}|oui)
-	.zone-menu li a.[logo_menu-(#VALEUR)], .zone-menu li a.[logo_menu-(#VALEUR)]:hover{background-color: [#(#GET{col1};)]}
+	.zone-menu li a.[logo_menu-(#VALEUR)], .zone-menu li a.[logo_menu-(#VALEUR)]:hover{background-color: [#(#GET{col1})];}
 	]
 </BOUCLE_vue2>
 
@@ -1625,6 +1625,7 @@ div.donnees_classe {
 
 .consigne .titre {
 	color:white;
+	font-size: 17px;
 	line-height:1.1 !important;
 	font-weight:bold
 }
