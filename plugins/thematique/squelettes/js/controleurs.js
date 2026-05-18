@@ -516,7 +516,6 @@ function callReponse(id_reponse) {
  */
 
 function callClasse(id_classe) {
-
 	changeTimelineMode('consignes');
 	toggleSidebarExpand();
 	setFullscreenModeToCols(true);
@@ -1089,6 +1088,8 @@ function updateMenuIcon(ids, mode) {
 
 	if (mode == 'sidebarView') {
 		$('#menu_bas .logo a.menu_logo_type_sidebarView').removeClass('selected');
+		// Je retire aussi les "selected" sur les images de classes.
+		$('#menu_bas .logo a.logo_menu_classe').removeClass('selected');
 		for (var i = 0; i < ids.length; i++) {
 			$('.menu_logo_' + ids[i]).addClass('selected');
 		}
