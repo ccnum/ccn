@@ -41,7 +41,8 @@ function cutHex(h) {
  */
 
 function getXMLNodeValue(tagName, xml) {
-	return xml.getElementsByTagName(tagName)[0].childNodes[0].nodeValue;
+	var node = xml.getElementsByTagName(tagName)[0];
+	return node && node.childNodes[0] ? node.childNodes[0].nodeValue : null;
 }
 
 /**
@@ -53,7 +54,8 @@ function getXMLNodeValue(tagName, xml) {
  */
 
 function hasXMLNodeValue(tagName, xml) {
-	return xml.getElementsByTagName(tagName)[0].childNodes[0];
+	var node = xml.getElementsByTagName(tagName)[0];
+	return node ? node.childNodes[0] : null;
 }
 
 /**
