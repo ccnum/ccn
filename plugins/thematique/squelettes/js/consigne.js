@@ -17,7 +17,7 @@ function Consigne() {
 		this.intervenant_id = this.data.intervenant_id;
 		this.numero = this.data.numero;
 		this.titre = this.data.titre;
-		this.date = this.data.date;
+
 		this.nombre_reponses = this.data.nombre_reponses;
 		this.reponses_id = this.data.reponses;
 		this.nombre_commentaires = this.data.nombre_commentaires;
@@ -26,9 +26,7 @@ function Consigne() {
 		this.y = this.data.y; // Entre 0 et 1
 		this.image = this.data.image;
 		this.select = false;
-		this.date_texte = this.data.date_texte.substring(0, 2) + " "
-			+ CCN.nomMois[parseFloat(this.data.date_texte.substring(3, 5)) - 1] + " "
-			+ this.data.date_texte.substring(6, 10);
+
 		this.taille_titre = 9 + 12 * CCN.projet.zoom_consignes / (0.3 * this.data.nombre_reponses + 1);
 		this.reponses = [];
 		this.intervenant_nom = '';
@@ -88,7 +86,7 @@ function Consigne() {
 			"<div class=\"photo\"><img src=\"" + this.data.image + "\" /></div> " +
 			"<div class=\"texte\">" +
 			"<div class=\"titre\" style=\"font-size:" + this.taille_titre + "px;line-height:" + (this.taille_titre - 2) + "px;\">" + this.titre + "</div> " +
-			"<div class=\"auteur_date\">" + this.intervenant_nom + "<!-- - " + this.date_texte + "-->" +
+			"<div class=\"auteur_date\">" + this.intervenant_nom +
 			"<div class=\"picto_nombre_reponses\">" + reponses_puces + "</div>" +
 			"</div> " +
 			"</div>" +
@@ -110,7 +108,6 @@ function Consigne() {
 		CCN.timelineLayerConsignes.prepend(this.div_base);
 
 		var _thisId = this.id;
-		var _thisIdObjet = this.id;
 
 		this.div_titre.on(
 			'click', function () {
@@ -132,7 +129,7 @@ function Consigne() {
 				stop: function (event, ui) {
 					yy = (ui.offset.top - CCN.projet.timeline.offset().top) / CCN.projet.timeline.height();
 
-					$.get("spip.php?page=ajax&mode=article-sauve-coordonnees", { id_objet: _thisIdObjet, type_objet: "article", X: 0, Y: yy });
+					$.get("spip.php?page=ajax&mode=article-sauve-coordonnees", { id_objet: _thisId, type_objet: "article", X: 0, Y: yy });
 					$(this).removeClass('no_event');
 
 					this.y = yy;
