@@ -29,7 +29,7 @@ function Consigne() {
 		this.date_texte = this.data.date_texte.substring(0, 2) + " "
 			+ CCN.nomMois[parseFloat(this.data.date_texte.substring(3, 5)) - 1] + " "
 			+ this.data.date_texte.substring(6, 10);
-		this.taille_titre = 9 + 12 * CCN.projet.zoom_consignes / (0.3 * this.data.nombre_reponses + 1);
+		this.taille_titre = Math.round(9 + 12 * CCN.projet.zoom_consignes / (0.3 * this.data.nombre_reponses + 1));
 		this.reponses = [];
 		this.intervenant_nom = '';
 		this.nombre_jours_max = this.data.nombre_jours_max;
