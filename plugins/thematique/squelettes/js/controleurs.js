@@ -687,7 +687,6 @@ function callRessourceArticle(id_article, type_objet) {
 		}
 	);
 
-	var url_lateral = (type_objet == 'ressources') ? CCN.projet.url_popup_ressources : CCN.projet.url_popup_agora;
 }
 
 /**
@@ -756,7 +755,6 @@ function callRessourceRubrique(id_rubrique, type_objet) {
 		}
 	);
 
-	var url_lateral = (type_objet == 'ressources') ? CCN.projet.url_popup_ressources : CCN.projet.url_popup_agora;
 }
 
 
@@ -852,10 +850,10 @@ function createReponse(id_consigne, id_rubrique_classe, numero) {
  * @see callReponse
  */
 function getIdConsigneFromIdReponse(id_reponse) {
-	for (var index_consigne in CCN.consignes) {
-		for (var index_reponse in CCN.consignes[index_consigne].reponses) {
-			if (CCN.consignes[index_consigne].reponses[index_reponse].id == id_reponse) {
-				return CCN.consignes[index_consigne].id;
+	for (var i = 0; i < CCN.consignes.length; i++) {
+		for (var j = 0; j < CCN.consignes[i].reponses.length; j++) {
+			if (CCN.consignes[i].reponses[j].id == id_reponse) {
+				return CCN.consignes[i].id;
 			}
 		}
 	}
@@ -875,10 +873,10 @@ function getIdConsigneFromIdReponse(id_reponse) {
  */
 
 function getIdClasseFromIdReponse(id_reponse) {
-	for (var index_consigne in CCN.consignes) {
-		for (var index_reponse in CCN.consignes[index_consigne].reponses) {
-			if (CCN.consignes[index_consigne].reponses[index_reponse].id == id_reponse) {
-				return CCN.consignes[index_consigne].reponses[index_reponse].classe_id;
+	for (var i = 0; i < CCN.consignes.length; i++) {
+		for (var j = 0; j < CCN.consignes[i].reponses.length; j++) {
+			if (CCN.consignes[i].reponses[j].id == id_reponse) {
+				return CCN.consignes[i].reponses[j].classe_id;
 			}
 		}
 	}
@@ -1070,6 +1068,7 @@ function loadContentInMainSidebar(url, typePage, typeObjet, callback) {
 function loadContentInLateralSidebar(url, typePage, typeObjet, callback) {
 	$('body').addClass('loading');
 	showSidebar();
+	showSidebarLateral();
 	//emptyLateralSidebar();
 
 	$('#sidebar_lateral_inner').load(
