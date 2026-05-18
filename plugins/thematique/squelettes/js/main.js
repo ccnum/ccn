@@ -100,7 +100,11 @@ function loadProjet(fichier) {
 				CCN.idRubriqueRessources = getXMLNodeValue('id_rubrique_ressources', xml);
 				CCN.idRubriqueAgora = getXMLNodeValue('id_rubrique_agora', xml);
 
-				loadClasses(CCN.urlXml + "classes");
+				$.when(
+					loadClasses(CCN.urlXml + "classes"),
+					loadBlog(CCN.urlXml + "articles_blog"),
+					loadEvenements(CCN.urlXml + "articles_evenement")
+				).done(initTimeline);
 			}
 		}
 	);
@@ -115,49 +119,34 @@ function loadProjet(fichier) {
  */
 
 function loadClasses(fichier) {
-	$.ajax(
-		{
-			url: fichier,
-			dataType: 'text',
-			success: function (xml) {
-				xml = $.parseXML(xml.trim());
+	return $.ajax({url: fichier, dataType: 'text'}).then(function (xml) {
+		xml = $.parseXML(xml.trim());
 
-				var xmlClasses = xml.getElementsByTagName("classe");
-
-				for (var i = 0; i < xmlClasses.length; ++i) {
-					var dataForClasse = {};
-
-					dataForClasse.id = parseFloat(getXMLNodeValue('id', xmlClasses[i]));
-					dataForClasse.nom = getXMLNodeValue('nom', xmlClasses[i]);
-
-					var nouvelleClasse = new Classe();
-					nouvelleClasse.init(dataForClasse);
-
-					CCN.classes.push(nouvelleClasse);
-					indexClasse++;
-				}
-
-				var xmlIntervenants = xml.getElementsByTagName("intervenant");
-
-				for (var i = 0; i < xmlIntervenants.length; ++i) {
-					var dataForIntervenant = {};
-
-					dataForIntervenant.id = parseFloat(getXMLNodeValue('id', xmlIntervenants[i]));
-					dataForIntervenant.nom = getXMLNodeValue('nom', xmlIntervenants[i]);
-
-					var nouvelIntervenant = new Intervenant();
-					nouvelIntervenant.init(dataForIntervenant);
-
-					CCN.intervenants.push(nouvelIntervenant);
-					indexIntervenant++;
-				}
-
-				CCN.travailEnCoursId = parseFloat(getXMLNodeValue('travail_en_cours_id', xml));
-
-				loadConsignes(CCN.urlXml + "consignes");
-			}
+		var xmlClasses = xml.getElementsByTagName("classe");
+		for (var i = 0; i < xmlClasses.length; ++i) {
+			var dataForClasse = {};
+			dataForClasse.id = parseFloat(getXMLNodeValue('id', xmlClasses[i]));
+			dataForClasse.nom = getXMLNodeValue('nom', xmlClasses[i]);
+			var nouvelleClasse = new Classe();
+			nouvelleClasse.init(dataForClasse);
+			CCN.classes.push(nouvelleClasse);
+			indexClasse++;
 		}
-	);
+
+		var xmlIntervenants = xml.getElementsByTagName("intervenant");
+		for (var i = 0; i < xmlIntervenants.length; ++i) {
+			var dataForIntervenant = {};
+			dataForIntervenant.id = parseFloat(getXMLNodeValue('id', xmlIntervenants[i]));
+			dataForIntervenant.nom = getXMLNodeValue('nom', xmlIntervenants[i]);
+			var nouvelIntervenant = new Intervenant();
+			nouvelIntervenant.init(dataForIntervenant);
+			CCN.intervenants.push(nouvelIntervenant);
+			indexIntervenant++;
+		}
+
+		CCN.travailEnCoursId = parseFloat(getXMLNodeValue('travail_en_cours_id', xml));
+		return loadConsignes(CCN.urlXml + "consignes");
+	});
 }
 
 
@@ -169,14 +158,10 @@ function loadClasses(fichier) {
  */
 
 function loadConsignes(fichier) {
-	$.ajax(
-		{
-			url: fichier,
-			dataType: 'text',
-			success: function (xml) {
-				xml = $.parseXML(xml.trim());
+	return $.ajax({url: fichier, dataType: 'text'}).then(function (xml) {
+		xml = $.parseXML(xml.trim());
 
-				var xmlConsignes = xml.getElementsByTagName("consigne");
+		var xmlConsignes = xml.getElementsByTagName("consigne");
 				var indexY = 0;
 
 				for (var i = 0; i < xmlConsignes.length; ++i) {
@@ -355,30 +340,21 @@ function loadConsignes(fichier) {
 					CCN.consignes.push(nouvelleConsigne);
 					indexConsigne++;
 				}
-
-				loadBlog(CCN.urlXml + "articles_blog");
-			}
-		}
-	);
+	});
 }
 
 
 /**
  *  Charge le XML des articles du blog
- *  puis appelle le chargement des événements
  *
  * @param {string} fichier - URL du fichier
  */
 
 function loadBlog(fichier) {
-	$.ajax(
-		{
-			url: fichier,
-			dataType: 'text',
-			success: function (xml) {
-				xml = $.parseXML(xml.trim());
+	return $.ajax({url: fichier, dataType: 'text'}).then(function (xml) {
+		xml = $.parseXML(xml.trim());
 
-				var xmlArticlesBlog = xml.getElementsByTagName("article");
+		var xmlArticlesBlog = xml.getElementsByTagName("article");
 				var indexY = 0;
 				for (var i = 0; i < xmlArticlesBlog.length; i++) {
 
@@ -422,11 +398,7 @@ function loadBlog(fichier) {
 
 					indexArticleBlog++;
 				}
-
-				loadEvenements(CCN.urlXml + "articles_evenement");
-			}
-		}
-	);
+	});
 }
 
 
@@ -438,14 +410,10 @@ function loadBlog(fichier) {
  */
 
 function loadEvenements(fichier) {
-	$.ajax(
-		{
-			url: fichier,
-			dataType: 'text',
-			success: function (xml) {
-				xml = $.parseXML(xml.trim());
+	return $.ajax({url: fichier, dataType: 'text'}).then(function (xml) {
+		xml = $.parseXML(xml.trim());
 
-				var xmlArticlesEvenement = xml.getElementsByTagName("article");
+		var xmlArticlesEvenement = xml.getElementsByTagName("article");
 				var indexY = 0;
 
 				for (var i = 0; i < xmlArticlesEvenement.length; i++) {
@@ -489,11 +457,7 @@ function loadEvenements(fichier) {
 
 					indexArticleEvenement++;
 				}
-
-				initTimeline();
-			}
-		}
-	);
+	});
 }
 
 
