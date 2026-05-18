@@ -924,7 +924,7 @@ function updateConnecteurs() {
  */
 function changeCouleurLogoMenu(val) {
 	var color = $(val).css('background-color');
-	$(val).parent().parent().parent().children("h3").css('background-color', color);
+	$(val).closest('li').children('h3').css('background-color', color);
 }
 
 /**
