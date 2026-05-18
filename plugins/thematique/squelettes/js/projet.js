@@ -6,16 +6,6 @@
 
 function Projet() {
 
-	var x, xx, x_dest, dx;
-	var y, yy, y_dest, dy;
-	var largeur, hauteur, fps, frame, dzoom, x_barre, largeur_barre;
-	var largeur_mois, premier_mois, nombre_mois, mois_select, mois_rollover, premier_jour, nombre_jours, nombre_jours_vus, premiere_annee, date_debut, date_fin, aujourdhui;
-	var couleur_fond, couleur_1erplan1, couleur_1erplan2, couleur_1erplan3, couleur_blog, image_fond, zoom_consignes;
-	var liste_cy_consignes, liste_y_blogs, liste_y_evenements;
-	var url_popup_consigne, url_popup_reponse, url_popup_reponseajout, url_popup_blog, url_popup_livrables, url_popup_evenement, url_popup_ressources, url_popup_agora, url_popup_classes, url_popup_chat, url_popup_chat2;
-	var div_base, div_barre, div_base_context, div_mois;
-	var timeline_parent, timeline, timeline_width;
-
 	/**
 	 * Initialise le projet.
 	 *

@@ -250,12 +250,6 @@ function setContentFromState(state) {
 }
 
 /**
- * Initialise les binds jQuery des sidebars
- */
-function initLocalEvents(parent) {
-}
-
-/**
  * Gère la mise à jour des styles lorsque l'écran est resizé
  */
 function onResize() {
@@ -1043,7 +1037,6 @@ function loadContentInMainSidebar(url, typePage, typeObjet, callback) {
 
 		$('body').removeClass('loading');
 		$('#sidebar_content').scrollTop(0);
-		initLocalEvents($('#sidebar_main_inner'));
 
 		if (callback) {
 			callback(response);
@@ -1075,7 +1068,6 @@ function loadContentInLateralSidebar(url, typePage, typeObjet, callback) {
 		url, function (response, status, xhr) {
 			$('body').removeClass('loading');
 			$('#sidebar_content').scrollTop(0);
-			initLocalEvents($('#sidebar_lateral_inner'));
 			if (callback) {
 				callback(response);
 			}
