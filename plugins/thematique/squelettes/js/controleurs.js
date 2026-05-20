@@ -516,6 +516,7 @@ function callReponse(id_reponse) {
  */
 
 function callClasse(id_classe) {
+
 	changeTimelineMode('consignes');
 	toggleSidebarExpand();
 	setFullscreenModeToCols(true);
@@ -680,6 +681,7 @@ function callRessourceArticle(id_article, type_objet) {
 		}
 	);
 
+	var url_lateral = (type_objet == 'ressources') ? CCN.projet.url_popup_ressources : CCN.projet.url_popup_agora;
 }
 
 /**
@@ -748,6 +750,7 @@ function callRessourceRubrique(id_rubrique, type_objet) {
 		}
 	);
 
+	var url_lateral = (type_objet == 'ressources') ? CCN.projet.url_popup_ressources : CCN.projet.url_popup_agora;
 }
 
 

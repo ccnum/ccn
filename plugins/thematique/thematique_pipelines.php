@@ -10,11 +10,11 @@ include_spip('action/editer_liens');
 function thematique_pre_boucle($boucle) {
 	$affichage = '_affichage';
 
-	$annee = _annee_scolaire;
+	$annee = constant('_annee_scolaire');
 	$mois = '08';
 	$jour = '01';
 
-	$annee2 = intval(_annee_scolaire) + 1;
+	$annee2 = intval(constant('_annee_scolaire')) + 1;
 	$mois2 = '08';
 	$jour2 = '01';
 
@@ -126,7 +126,7 @@ function thematique_notifications_destinataires($flux) {
 			}
 		} else {
 			spip_log('lier au secteur ' . $article['id_secteur'], 'thematique');
-			$annee_scolaire = intval(_annee_scolaire);
+			$annee_scolaire = intval(constant('_annee_scolaire'));
 			spip_log('lier à l année ' . $annee_scolaire, 'thematique');
 			$id_secteur = sql_getfetsel('id_secteur', 'spip_rubriques', 'titre LIKE ' . sql_quote('%' . $annee_scolaire . '%'));
 			spip_log('lier au secteur ' . $id_secteur, 'thematique');
@@ -149,46 +149,67 @@ function thematique_notifications_destinataires($flux) {
 }
 
 function thematique_cioidc_userinfo($flux) {
-	$auteur = sql_fetsel('id_auteur,nom', 'spip_auteurs', 'email=' . sql_quote($flux['args']['email'])); // Chercher l'auteur qui vient de se loguer
-	// Géré les groupes qui sont dans l'OpenID
-	$droits_spip = [];
-	$is_enseignant = false;
-	$groupe_libres = $flux['data']['ENTGroupesLibres'];
-	foreach ($groupe_libres as $g_l) {
-		//$g_l->structure_id; $g_l->id; $g_l->name;
-		if (preg_match('/^(.*)\s(\d{4})$/', $g_l->name, $matches)) {
-			$ccn = $matches[1];
-			$annee = $matches[2];
-			$droits_spip[] = ['ccn' => $ccn, 'annee' => $annee];
-		}
+	$auteur = sql_fetsel('id_auteur,nom', 'spip_auteurs', 'email=' . sql_quote($flux['args']['email']));
+	if (!$auteur) {
+		return $flux;
 	}
-	$classes_groupes = $flux['data']['ENTClassesGroupes'];
-	foreach ($classes_groupes as $c_g) {
+
+	$is_enseignant = false;
+	$classes_a_lier = [];
+
+	// Trouver le secteur de l'année scolaire en cours (ex: "2025")
+	$annee_scolaire = intval(constant('_annee_scolaire'));
+	$id_secteur = sql_getfetsel(
+		'id_rubrique',
+		'spip_rubriques',
+		'titre LIKE ' . sql_quote('%' . $annee_scolaire . '%') . ' AND id_parent=0'
+	);
+
+	// Trouver la rubrique "Travail des classes" sous ce secteur
+	$id_travail_classes = null;
+	if ($id_secteur) {
+		$id_travail_classes = sql_getfetsel(
+			'id_rubrique',
+			'spip_rubriques',
+			'titre LIKE ' . sql_quote('%Travail des classes%') . ' AND id_secteur=' . intval($id_secteur)
+		);
+	}
+
+	foreach ($flux['data']['ENTClassesGroupes'] ?? [] as $c_g) {
 		//$c_g->member_type; $c_g->group_id; $c_g->group_structure_id; $c_g->group_name; $c_g->group_type;
-		$droits_spip[] = ['type' => $c_g->member_type];
 		if ($c_g->member_type == 'ENS') {
 			$is_enseignant = true;
+			// Chercher la rubrique de classe (ex: "3EME2") sous "Travail des classes" de l'année en cours
+			if ($id_travail_classes && !empty($c_g->group_name)) {
+				$id_classe = sql_getfetsel(
+					'id_rubrique',
+					'spip_rubriques',
+					'titre LIKE ' . sql_quote('%' . $c_g->group_name . '%') . ' AND id_parent=' . intval($id_travail_classes)
+				);
+				if ($id_classe) {
+					$classes_a_lier[] = $id_classe;
+				}
+			}
 		}
 	}
-	spip_log($auteur['id_auteur'] . ' / ' . $auteur['nom'] . ' => ' . json_encode($droits_spip), 'cioidc');
-	if ($is_enseignant) {
-		// Rattaché le prof sur la rubrique "Blog pédagogique"
-		$blog = sql_getfetsel('id_rubrique', 'spip_rubriques', 'titre = ' . sql_quote('Blog pédagogique'));
-		objet_associer(['id_auteur' => $auteur['id_auteur']], ['rubrique' => $blog]);
-	}
 
-	return $flux;
-}
-
-function thematique_optimiser($flux) {
-	include_spip('base/abstract_sql');
-
-	// Mettre à la poubelle tous les auteurs "forum"
-	sql_updateq(
-		'spip_auteurs',
-		array('statut' => '5poubelle'),
-		"statut='6forum'"
+	spip_log(
+		$auteur['id_auteur'] . ' / ' . $auteur['nom'] . ' => enseignant:' . ($is_enseignant ? 'oui' : 'non') . ' classes:' . implode(
+			',',
+			$classes_a_lier
+		),
+		'cioidc'
 	);
+
+	if ($is_enseignant) {
+		$blog = sql_getfetsel('id_rubrique', 'spip_rubriques', 'titre = ' . sql_quote('Blog pédagogique'));
+		if ($blog) {
+			objet_associer(['id_auteur' => $auteur['id_auteur']], ['rubrique' => $blog]);
+		}
+		foreach ($classes_a_lier as $id_classe) {
+			objet_associer(['id_auteur' => $auteur['id_auteur']], ['rubrique' => $id_classe]);
+		}
+	}
 
 	return $flux;
 }

@@ -26,8 +26,9 @@ function Consigne() {
 		this.y = this.data.y; // Entre 0 et 1
 		this.image = this.data.image;
 		this.select = false;
-
-		this.taille_titre = 9 + 12 * CCN.projet.zoom_consignes / (0.3 * this.data.nombre_reponses + 1);
+		this.date_texte = this.data.date_texte.substring(0, 2) + " "
+			+ CCN.nomMois[parseFloat(this.data.date_texte.substring(3, 5)) - 1] + " "
+			+ this.data.date_texte.substring(6, 10);
 		this.reponses = [];
 		this.intervenant_nom = '';
 		this.nombre_jours_max = this.data.nombre_jours_max;
@@ -85,8 +86,8 @@ function Consigne() {
 			"<div class=\"picto_nombre_commentaires\">" + this.data.nombre_commentaires + "</div> " +
 			"<div class=\"photo\"><img src=\"" + this.data.image + "\" /></div> " +
 			"<div class=\"texte\">" +
-			"<div class=\"titre\" style=\"font-size:" + this.taille_titre + "px;line-height:" + (this.taille_titre - 2) + "px;\">" + this.titre + "</div> " +
-			"<div class=\"auteur_date\">" + this.intervenant_nom +
+			"<div class=\"titre\">" + this.titre + "</div> " +
+			"<div class=\"auteur_date\">" + this.intervenant_nom + "<!-- - " + this.date_texte + "-->" +
 			"<div class=\"picto_nombre_reponses\">" + reponses_puces + "</div>" +
 			"</div> " +
 			"</div>" +

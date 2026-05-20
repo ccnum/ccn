@@ -28,5 +28,6 @@ if (isset($_GET['annee_scolaire'])) {
 
 $annee_scolaire = intval($annee_scolaire);
 define('_annee_scolaire', $annee_scolaire);
+define('_cookie_annee_scolaire', 'laclasse_annee_scolaire');
 define('_date_debut', $annee_scolaire . '-09-01');
 define('_date_fin', ($annee_scolaire + 1) . '-09-01');
