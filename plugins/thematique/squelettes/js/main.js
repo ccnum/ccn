@@ -546,39 +546,13 @@ function initTimeline() {
 		}
 	);
 
-	// Les listeners pour l'affichage timeline
-
-	$().ready(
+	// Silder colorbox d'aide
+	$(".ccn-aide").mediabox({ width: '80%', height: 'auto', href: $(this).attr('href'), current: "{current}/{total}" });
+	$('.logo_menu-aide').on("click",
 		function () {
-			// Listener popups
-			/*$('.cache .mediabox').mediabox({width:'80%',height: '80%', className:"aide-ccn", slideshow:true, slideshowSpeed: 5000, transition:"fade", loop:false, title: function(){
-			var title = $(this).data("title");
-			if ($(this).hasClass("description")) {
-			$(this).css({position: 'absolute', top:'50%', color: 'red' })
-			$(this).parent();
-			return "<p class='desc'>" + title + "</p>";
-			}
-			else {
-
-			return "<p class='lol'>" + title + "</p>";
-			}
-
-			$(".aide-ccn .cboxLoadedContent").each(function(){
-
-			if ($(this).hasClass("description")) {
-
-			}
-			$("#cboxTitle").hasClass('description').html("TESTETSTETSTSSTSTS");
-			});
-
-			}});*/
-			// Silder colorbox d'aide
-			$(".ccn-aide").mediabox({ width: '80%', height: 'auto', href: $(this).attr('href'), current: "{current}/{total}" });
-			$('.logo_menu-aide').on("click",
-				function () {
-					$(".ccn-aide").mediabox({ open: true });
-				}
-			)
+			$(".ccn-aide").mediabox({ open: true });
+		}
+	);
 
 	$('.profil').mediabox({ width: '80%', height: '80%' });
 
