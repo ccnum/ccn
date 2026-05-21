@@ -548,7 +548,7 @@ body {
 
 #menu_haut select label {
 	height: 22px;
-	line-height: 22px;
+	line-height: 50px;
 }
 
 #menu_haut_titre .select:hover input:not(.first) {
@@ -866,9 +866,9 @@ a:hover {
 	display: block;
 	padding: 0 15px;
 	word-wrap: break-word;
-	white-space: nowrap;
+	white-space: normal;
 	text-overflow: ellipsis;
-	overflow: hidden;
+	/* overflow: hidden; */
 	font-weight: normal;
 	color: var(--color-default);
 }
@@ -888,18 +888,18 @@ a:hover {
 	padding: 0 15px 0 25px;
 }
 .select input:hover + label {
-	background-color: var(--color-hover);
+	background-color: var(--color-hover) !important;
 	color: #fff;
 }
 .select:hover input {
 	min-height: 50px;
 	min-width: 100%;
-	height: 50px;
+	height: auto;
 	width: 100%;
 }
 /*Déplie le carroussel*/
 .select:hover label:not(.first_label) {
-	height: 50px;
+	height: auto;
 	line-height: 50px;
 	background-color: #fff;
 	-webkit-transition: height 250ms ease-in-out, line-height 250ms ease-in-out;
@@ -4453,7 +4453,7 @@ ul#forum, .lien_forum {
 #choix_rubrique_admin:hover > .choix_rubrique_wrapper {
 	display: block;
 	height: initial;
-	width: fit-content;
+	width: 30rem;
 	max-height: calc(100vh - 82.8px - 70px);
 }
 

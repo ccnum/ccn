@@ -2,11 +2,18 @@
 [(#SESSION{id_auteur}|oui)
 <div id="menu_haut_user" class="bloc_titre">
 	<div id="choix_rubrique_user" name="rubrique_user" class="select">
-		<input type="radio" class="first"><label class="first_label"><span
-				class="icon icon-connecter"></span>[(#SESSION{nom})]<span
-				class="icon icon-down"></span></label>
-		<div class="user-option me-deconnecter"><a href="[(#URL_LOGOUT)]" title="Me déconnecter"><span
-					class="icon icon-logout"></span>Me déconnecter</a></div>
+		<input type="radio" class="first">
+      <label class="first_label">
+        <span class="icon icon-connecter"></span>
+          [(#SESSION{nom})]
+        <span class="icon icon-down"></span>
+      </label>
+		  <div class="user-option me-deconnecter">
+        <a href="[(#URL_LOGOUT)]" title="Me déconnecter">
+          <span class="icon icon-logout"></span>
+            Me déconnecter
+        </a>
+      </div>
 	</div>
 </div>
 ]
