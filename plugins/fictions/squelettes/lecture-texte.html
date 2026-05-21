@@ -203,17 +203,15 @@
 			next_prev(compteur, num_page_limite);
 		});
 
-		$('.lecture-tooltip').mouseover(function() {
-			var offset = $(this).offset();
-			$('#liste-tooltip').show().html($(this).prev().html());
+		function showLectureTooltip(el) {
+			var offset = $(el).offset();
+			$('#liste-tooltip').show().html($(el).prev().html());
 			var hauteur_tooltip = $('#liste-tooltip-content').height();
 			$('#liste-tooltip').height(hauteur_tooltip);
-			$('#liste-tooltip').css('top', 75);
-			$('#liste-tooltip').css('left', Math.round(offset.left) - 100 + 2);
-		});
-		$('.lecture-tooltip').mouseout(function() {
-			$('#liste-tooltip').hide();
-		});
+			$('#liste-tooltip').css('top', 75).css('left', Math.round(offset.left) - 100 + 2);
+		}
+		$('.lecture-tooltip').on('mouseover focus', function() { showLectureTooltip(this); });
+		$('.lecture-tooltip').on('mouseout blur', function() { $('#liste-tooltip').hide(); });
 	});
 </script>
 </html>

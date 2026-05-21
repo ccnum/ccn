@@ -88,18 +88,17 @@ $(document).ready(function() {
 	$(".global-content").niceScroll({cursorcolor:"#ff6b6b", cursoropacitymin:'0.2',cursoropacitymax:'1', scrollspeed:'100', cursorborder:'0px'});
 	$('#ascrail2000').css({'cursor':'pointer'});
 
-	$('.liste-link').mouseover(function() {
-		var offset = $(this).offset();
-		var content_tooltip = $(this).find('.liste-tooltip-content').html();
+	function showTooltipListeLink(el) {
+		var offset = $(el).offset();
+		var content_tooltip = $(el).find('.liste-tooltip-content').html();
 		$('#liste-tooltip').show().html(content_tooltip);
 		var hauteur_tooltip = $('#liste-tooltip-content').height();
 		$('#liste-tooltip').height(hauteur_tooltip);
 		$('#liste-tooltip').css('top', Math.round(offset.top) - hauteur_tooltip - 5);
 		$('#liste-tooltip').css('left', Math.round(offset.left) - 95 + 2);
-	});
-	$('.liste-link').mouseout(function() {
-		$('#liste-tooltip').hide();
-	});
+	}
+	$('.liste-link').on('mouseover focus', function() { showTooltipListeLink(this); });
+	$('.liste-link').on('mouseout blur', function() { $('#liste-tooltip').hide(); });
 });
 </script>
 </html>

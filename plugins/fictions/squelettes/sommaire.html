@@ -104,23 +104,18 @@ $(document).ready(function() {
 	$(".global-content").niceScroll({cursorcolor:"#ff6b6b", cursoropacitymin:'0.2',cursoropacitymax:'1', scrollspeed:'100', cursorborder:'0px'});
 	$('#ascrail2000').css({'cursor':'pointer'});
 	//
-	$('.liste-link').mouseover(function() {
-		var offset = $(this).offset();
-		var content_tooltip = $(this).find('.liste-tooltip-content').html();
-		$('#liste-tooltip').show();
-		$('#liste-tooltip').html(content_tooltip);
+	function showTooltipListeLink(el) {
+		var offset = $(el).offset();
+		var content_tooltip = $(el).find('.liste-tooltip-content').html();
+		$('#liste-tooltip').show().html(content_tooltip);
 		var hauteur_tooltip = $('#liste-tooltip-content').height();
 		$('#liste-tooltip').height(hauteur_tooltip);
-		var toptooltip = Math.round(offset.top);
-		toptooltip = toptooltip - hauteur_tooltip;
-		var lefttooltip = Math.round(offset.left);
-		lefttooltip -= 95;
-		$('#liste-tooltip').css('top', toptooltip -5);
-		$('#liste-tooltip').css('left', lefttooltip + 2);
-	});
-	$('.liste-link').mouseout(function() {
-		$('#liste-tooltip').hide();
-	});
+		var toptooltip = Math.round(offset.top) - hauteur_tooltip;
+		var lefttooltip = Math.round(offset.left) - 95;
+		$('#liste-tooltip').css('top', toptooltip - 5).css('left', lefttooltip + 2);
+	}
+	$('.liste-link').on('mouseover focus', function() { showTooltipListeLink(this); });
+	$('.liste-link').on('mouseout blur', function() { $('#liste-tooltip').hide(); });
 
 });
 

@@ -62,18 +62,17 @@
 		$('#ascrail2000').css({'cursor':'pointer'});
 
 		// Tooltip liste
-		$('.liste-link-small').mouseover(function() {
-			var offset = $(this).offset();
-			var content_tooltip = $(this).find('.liste-tooltip-content').html();
+		function showTooltipListeLinkSmall(el) {
+			var offset = $(el).offset();
+			var content_tooltip = $(el).find('.liste-tooltip-content').html();
 			$('#liste-tooltip').show().html(content_tooltip);
 			var hauteur_tooltip = $('#liste-tooltip-content').height();
 			$('#liste-tooltip').height(hauteur_tooltip);
 			$('#liste-tooltip').css('top', Math.round(offset.top) - hauteur_tooltip - 5);
 			$('#liste-tooltip').css('left', Math.round(offset.left) - 108 + 2);
-		});
-		$('.liste-link-small').mouseout(function() {
-			$('#liste-tooltip').hide();
-		});
+		}
+		$('.liste-link-small').on('mouseover focus', function() { showTooltipListeLinkSmall(this); });
+		$('.liste-link-small').on('mouseout blur', function() { $('#liste-tooltip').hide(); });
 
 		// Navigation par ancre
 		var $scrollTarget = $('.global-content');
