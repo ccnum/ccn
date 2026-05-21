@@ -1,0 +1,25 @@
+<!-- Document copié depuis plugins-dist/medias/formulaires/joindre_document.html -->
+[(#ENV{editable})
+<div class='formulaire_spip formulaire_joindre formulaire_joindre_document' id='formulaire_joindre_document-#ENV{id,new}'>
+	[(#ENV{_mode}|=={image}|oui)
+	<h3 class='titrem'>[(#CHEMIN_IMAGE{image-24.png}|balise_img{'',cadre-icone})][(#ENV{id,new}|intval|?{<:medias:bouton_remplacer_image:>,<:medias:bouton_ajouter_image:>}) #AIDER{ins_img}]</h3>
+	][(#ENV{_mode}|=={document}|oui)
+	<h3 class='titrem'>[(#CHEMIN_IMAGE{doc-24.png}|balise_img{'',cadre-icone})][(#ENV{id,new}|intval|?{<:medias:bouton_remplacer_document:>,<:medias:bouton_ajouter_document:>}) #AIDER{ins_doc}]</h3>
+	][(#ENV{_mode}|=={choix}|oui)
+	<h3 class='titrem'>[(#CHEMIN_IMAGE{doc-24.png}|balise_img{'',cadre-icone})][(#ENV{id,new}|intval|?{<:medias:bouton_remplacer_image_document:>,<:medias:bouton_ajouter_image_document:>}) #AIDER{ins_doc}]</h3>
+	]
+	<span class="image_loading"></span>
+	[<div class="reponse_formulaire reponse_formulaire_ok" role="status">(#ENV**{message_ok})</div>]
+	[<div class="reponse_formulaire reponse_formulaire_erreur" role="alert">(#ENV**{message_erreur})</div>]
+	
+	<form action="#ENV{action}#formulaire_joindre_document-#ENV{id,new}" method="post" enctype='multipart/form-data'><div>
+		#ACTION_FORMULAIRE
+		
+		[(#INCLURE{fond=formulaires/inc-upload_document, env, mediatheque=#ENV{objet,''}|et{#ENV{id_objet,''}}|et{#ENV{proposer_media}}})]
+		
+	</div></form>
+</div>]
+[(#REM) @deprecated 4.0 - SPIP 4.1 ]
+[(#ENV{_galerie,''}|joindre_document_galerie_valide|oui)
+		[(#INCLURE{fond=#ENV{_galerie}, env, ajax})]
+]
