@@ -29,9 +29,13 @@
 [<link rel="icon" type="image/x-icon" href="(#CHEMIN{favicon.ico})" />
 [<link rel="shortcut icon" type="image/x-icon" href="(#CHEMIN{favicon.ico})" />]]
 
-[(#REM)Liens ouvrants]
+[(#REM)Liens ouvrants — RGAA 13.3 : signaler l'ouverture dans un nouvel onglet]
 <script type="text/javascript">
 	$(document).ready(function() {
-		$('a.spip_out,a.spip_url,a.spip_documents').attr("target", "_blank");
+		$('a.spip_out,a.spip_url,a.spip_documents').each(function() {
+			$(this).attr('target', '_blank')
+			       .attr('rel', 'noopener noreferrer')
+			       .attr('title', ($(this).attr('title') || $(this).text()).trim() + ' (nouvelle fenêtre)');
+		});
 	});
 </script>
