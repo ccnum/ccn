@@ -50,7 +50,8 @@ function Consigne() {
 	 * Crée l'élément DOM et l'intègre dans la timeline.
 	 */
 	this.initDOM = function () {
-		const coul = String(this.data.intervenant_id).slice(-1);
+		var coul = "" + this.data.intervenant_id + "";
+		coul = coul.substr(coul.length - 1, 1);
 
 		this.div_titre = $('<div/>')
 			.attr('id', 'consigne' + this.id)
@@ -81,27 +82,44 @@ function Consigne() {
 			reponses_puces += '<div class="reponse_puce disabled"></div>';
 		}
 
-		const divPictoComm = $('<div class="picto_nombre_commentaires">').text(this.data.nombre_commentaires);
-		const divPhoto = $('<div class="photo">').append($('<img>').attr('src', this.data.image));
-		const divTitre = $('<div class="titre">').text(this.titre);
-		const divAuteurDate = $('<div class="auteur_date">').text(this.intervenant_nom)
-			.append($('<div class="picto_nombre_reponses">').html(reponses_puces));
-		const divTexte = $('<div class="texte">').append(divTitre).append(divAuteurDate);
-		this.div_titre.append(divPictoComm).append(divPhoto).append(divTexte).append($('<div class="nettoyeur">'));
-		this.div_base.append(this.div_titre);
+		this.div_base = $(`
+			<div id="consigne_haute${this.id}"
+				class="timeline_item consigne_haute"
+				style="top:${this.y * 100}%; left:${this.x / CCN.projet.nombre_jours * 100}%;">
+				<div id="consigne${this.id}"
+					class="consigne couleur_texte_consignes couleur_consignes${coul}"
+					data-id="${this.id}"
+					data-index="${this.numero}">
+					<div class="picto_nombre_commentaires">${this.data.nombre_commentaires}</div>
+					<div class="photo"><img src="${this.data.image}" /></div>
+					<div class="texte">
+						<div class="titre">${this.titre}</div>
+						<div class="auteur_date">${this.intervenant_nom}<!-- - ${this.date_texte}-->
+							<div class="picto_nombre_reponses">${reponses_puces}</div>
+						</div>
+					</div>
+					<div class="nettoyeur"></div>
+				</div>
+				<div class="bouton_reponse_consigne"
+					onclick="createReponse(false,${this.id},${CCN.idRestreint},${this.numero});">
+					<img src="${CCN.urlRoot}img/reponse_plus.png" title="Répondre à la consigne">
+					Répondre à la consigne
+				</div>
+				<div class="bouton_reponse_consigne">
+					<img src="${CCN.urlRoot}img/reponse_plus.png" title="Accéder à ma réponse">
+					Accéder à ma réponse
+				</div>
+			</div>
+		`);
 
-		// Calcul des tailles des consignes
-		this.largeur = $(this.div_base).outerWidth();
-		this.hauteur = $(this.div_base).outerHeight();
-
-		// Préparation bouton réponse plus (crayon)
-		this.div_reponse_plus = $("<div class='bouton_reponse_consigne' onclick='createReponse(false," + this.id + "," + CCN.idRestreint + "," + this.numero + ");'><img src='" + CCN.urlRoot + "img/reponse_plus.png' title='Répondre à la consigne'>Répondre à la consigne</div>");
-		this.div_reponse_see = $("<div class='bouton_reponse_consigne'><img src='" + CCN.urlRoot + "img/reponse_plus.png' title='Accéder à ma réponse'> Accéder à ma réponse</div>");
-
-		this.div_base.append(this.div_reponse_plus);
-		this.div_base.append(this.div_reponse_see);
+		this.div_titre = this.div_base.find(`#consigne${this.id}`);
+		this.div_reponse_plus = this.div_base.find('.bouton_reponse_consigne').eq(0);
+		this.div_reponse_see = this.div_base.find('.bouton_reponse_consigne').eq(1);
 
 		CCN.timelineLayerConsignes.prepend(this.div_base);
+
+		this.largeur = this.div_base.outerWidth();
+		this.hauteur = this.div_base.outerHeight();
 
 		const _thisId = this.id;
 
@@ -111,9 +129,8 @@ function Consigne() {
 			}
 		);
 
-		// Draggable (admin)
 		if (CCN.admin == 0) {
-			$(this.div_base).draggable({
+			this.div_base.draggable({
 				axis: "y",
 				start: function (event, ui) {
 					$(this).addClass('no_event');
@@ -121,15 +138,12 @@ function Consigne() {
 				drag: function (event, ui) {
 					updateConnecteurs();
 				},
-
 				stop: function (event, ui) {
 					const yy = (ui.offset.top - CCN.projet.timeline.offset().top) / CCN.projet.timeline.height();
 
 					$.post("spip.php?page=ajax&mode=article-sauve-coordonnees", { id_objet: _thisId, type_objet: "article", X: 0, Y: yy });
 					$(this).removeClass('no_event');
-
 					this.y = yy;
-
 					$(this).css({ 'top': (yy * 100) + '%' });
 				}
 			});

@@ -55,28 +55,38 @@ function Reponse() {
 
 		const date_texte = this.date.substring(0, 2) + " " + CCN.nomMois[parseFloat(this.date.substring(3, 5)) - 1];
 
-		const vignette = this.data.vignette.includes('logo_rvb_bleu') ? `plugins/thematique/squelettes/img/logo_classe_${(parseInt(coul)%10)+1}.png`: this.data.vignette;
+		const vignette = this.data.vignette.includes('logo_rvb_bleu') 
+			? `plugins/thematique/squelettes/img/logo_classe_${(parseInt(coul)%10)+1}.png`
+			: this.data.vignette;
 
-		this.div_texte = $('<div/>')
-			.attr('id', 'reponse' + this.id)
-			.attr('class', 'reponse couleur_texte_travail_en_cours couleur_travail_en_cours' + coul);
+		this.div_base = $(`
+			<div id="reponse_haute${this.id}"
+				class="timeline_item reponse_haute reponse_haute_consigne_parent${this.consigne.id} hide"
+				data-consigne-id="${this.consigne.id}"
+				data-reponse-id="${this.id}"
+				style="top:${this.y * 100}%; left:${this.x_absolu / CCN.projet.nombre_jours * 100}%;">
+				<div id="reponse${this.id}"
+					class="reponse couleur_texte_travail_en_cours couleur_travail_en_cours${coul}">
+					<div class="picto_nombre_commentaires">${this.nombre_commentaires}</div>
+					<div class="photo"><img src="${vignette}" /></div>
+					<div class="texte">
+						<div class="titre">${this.titre}</div>
+						<div class="auteur_date">${this.nom_classe} - ${date_texte}</div>
+					</div>
+					<div class="nettoyeur"></div>
+				</div>
+			</div>
+		`);
 
-		const divPictoComm = $('<div class="picto_nombre_commentaires">').text(this.nombre_commentaires);
-		const divPhoto = $('<div class="photo">').append($('<img>').attr('src', vignette));
-		const divTitre = $('<div class="titre">').text(this.titre);
-		const divAuteurDate = $('<div class="auteur_date">').text(this.nom_classe + ' - ' + date_texte);
-		const divTexte = $('<div class="texte">').append(divTitre).append(divAuteurDate);
-		this.div_texte.append(divPictoComm).append(divPhoto).append(divTexte).append($('<div class="nettoyeur">'));
-		this.connecteur = $(
-			'<div/>', {
-			'id': 'connecteur_consigne_' + this.consigne.id + '_reponse_' + this.id,
-			'class': 'connecteur_timeline couleur_travail_en_cours' + coul + ' hide',
-			'data-consigne-id': this.consigne.id,
-			'data-reponse-id': this.id
-		}
-		);
+		this.div_texte = this.div_base.find(`#reponse${this.id}`);
 
-		this.div_base.append(this.div_texte);
+		this.connecteur = $(`
+			<div id="connecteur_consigne_${this.consigne.id}_reponse_${this.id}"
+				class="connecteur_timeline couleur_travail_en_cours${coul} hide"
+				data-consigne-id="${this.consigne.id}"
+				data-reponse-id="${this.id}">
+			</div>
+		`);
 
 		CCN.timelineLayerConsignes.prepend(this.div_base);
 		CCN.projet.timeline_fixed.append(this.connecteur);
@@ -89,11 +99,9 @@ function Reponse() {
 			}
 		);
 
-		// Calcul de la hauteur de la consigne
-		this.largeur = $(this.div_base).outerWidth();
-		this.hauteur = $(this.div_base).outerHeight() + 7;
+		this.largeur = this.div_base.outerWidth();
+		this.hauteur = this.div_base.outerHeight() + 7;
 
-		// Draggable
 		if (CCN.admin == 0) {
 			$(this.div_base).draggable(
 				{
