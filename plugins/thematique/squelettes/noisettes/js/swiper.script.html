@@ -1,4 +1,6 @@
 <script>
+	(function() {
+		
 	const PDFJS_WORKER_SRC =
 		'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
 
@@ -235,18 +237,15 @@
 
 		pdfjsLib.GlobalWorkerOptions.workerSrc = PDFJS_WORKER_SRC;
 
-		// Get all spip_documents PDF
-		const $pdfDocs = $portfolio_grand
-			.find('a.mediabox[type="application/pdf"]');
+		if ($portfolio_grand.length !== 1) return;
 
-		if (!$pdfDocs.length) return;
 
-		const pdfUrl = $pdfDocs.attr('href');
+		const pdfUrl = $portfolio_grand.attr('href');
 		const pdfName = decodeURIComponent(pdfUrl.split('/').pop());
-		const $imgSrc = $pdfDocs.find('img').first().attr('src');
+		const $imgSrc = ""
 
 		const $container = $('<div class="swiper-pdf-comment-container"></div>');
-		$pdfDocs.before($container);
+		$portfolio_grand.before($container);
 
 		// Generate Loader
 		const $loader = $(`
@@ -267,7 +266,7 @@
 			</div>
 		`);
 		// Delete old display
-		$pdfDocs.remove();
+		$portfolio_grand.remove();
 		$container.append($pdfSwiper);
 
 		let pdf;
@@ -312,7 +311,7 @@
 			const $slide = $('<div class="swiper-slide"></div>');
 
 			// Clone old link to attach old action on current Slide with corresponding page
-			const $linkClone = $pdfDocs
+			const $linkClone = $portfolio_grand
 				.clone(false)
 				.attr('href', pdfUrl + '#page=' + pageNum)
 				.empty()
@@ -335,4 +334,11 @@
 			paginationSelector: '.pdf-pagination',
 		});
 	}
+
+	// Expose functions globally
+	window.initFlipSwiper = initFlipSwiper;
+	window.initImagesSwiper = initImagesSwiper;
+	window.initPdfSwipers = initPdfSwipers;
+	window.initPdfSwipersInComment = initPdfSwipersInComment;
+})();
 </script>

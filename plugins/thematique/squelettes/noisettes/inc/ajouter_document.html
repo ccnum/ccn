@@ -9,13 +9,21 @@
 				</a>
 				]
 				[(#MIME_TYPE|match{image}|non)
-				<a href="#URL_DOCUMENT" title="[(#TITRE)]" [(#EXTENSION|!={docx}|oui)class="mediabox"
-					]type="#MIME_TYPE">
-					[(#LOGO_DOCUMENT|image_reduire{100}|inserer_attribut{style,'border:0px solid
-					#000000;'})]<span>[(#FICHIER|basename)]</span>
-				</a>
+					[(#MIME_TYPE|match{'application/pdf'}|oui)
+						<a href="#URL_DOCUMENT" class="mediabox" type="#MIME_TYPE" data-box-min-height="90pc">
+							[(#LOGO_DOCUMENT|image_reduire{100}|inserer_attribut{style,'border:0px solid #000000;'}|inserer_attribut{alt,#TITRE})]
+							<span>[(#FICHIER|basename)]</span>
+						</a>
+					]
+					[(#MIME_TYPE|match{'application/pdf'}|non)
+						<a href="#URL_DOCUMENT" title="[(#TITRE)]" [(#EXTENSION|!={docx}|oui)class="mediabox"
+							]type="#MIME_TYPE">
+							[(#LOGO_DOCUMENT|image_reduire{100}|inserer_attribut{style,'border:0px solid
+							#000000;'})]<span>[(#FICHIER|basename)]</span>
+						</a>
+					]
+				
 				]
-
 				[(#AUTORISER{modifier,article,#ID_ARTICLE}|oui)
 				[<div class='action_supprimer'>
 					<a href="(#URL_ACTION_AUTEUR{dissocier_document,#ID_ARTICLE-article-#ID_DOCUMENT-suppr-safe,#URL_SITE_SPIP/spip.php?article#ID_ARTICLE&var_mode=recalcul})"
@@ -26,7 +34,7 @@
 				</div>]
 				]
 			</div>
-			</BOUCLE_documents_joints>
+		</BOUCLE_documents_joints>
 	</div>
 
 	<script>
