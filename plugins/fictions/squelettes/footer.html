@@ -64,10 +64,10 @@
 			</BOUCLE_page_footer>
 			<a href="http://www.laclasse.com/">Laclasse.com</a>&nbsp;&nbsp;|&nbsp;&nbsp;
 			[(#REM)[(#SESSION{login}|oui)<a href="#URL_SITE_SPIP?scenario=jeu">Vers la version jeu</a>&nbsp;&nbsp;|]]
-			<span id="annee_scolaire" title="Choisir l'année scolaire">
-				Année scolaire :
+			<span id="annee_scolaire">
 				<form name="annee_scolaire" style="display:inline;">
-					<select onchange="reload_cookie('[(#URL_SITE_SPIP)]','[(#EVAL{_cookie_annee_scolaire})]',document.annee_scolaire.annee_scolaire.value)" name="annee_scolaire">
+					<label for="select_annee_scolaire">Année scolaire :</label>
+					<select id="select_annee_scolaire" name="annee_scolaire" onchange="reload_cookie('[(#URL_SITE_SPIP)]','[(#EVAL{_cookie_annee_scolaire})]',this.value)">
 						<option value="#">---</option>
 						<BOUCLE_vieux(ARTICLES){par date}{date!=0000-00-00 00:00:00}{0,1}{tout}>
 						<option value="[(#DATE|annee)]">[(#DATE|annee|afficher_options_date{[(#DATE|mois)],#EVAL{_annee_scolaire}})]</option>
