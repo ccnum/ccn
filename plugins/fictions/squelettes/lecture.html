@@ -89,7 +89,7 @@
 
 								<div class="lecture-chapitre-auteur">
 									<BOUCLE_auteur_article2(AUTEURS){id_article}{0,1}>
-										<div class="ecriture-chapitre-avatar">[(#LOGO_AUTEUR|image_reduire{42,42})]</div>
+										<div class="ecriture-chapitre-avatar">[(#LOGO_AUTEUR|image_reduire{42,42}|inserer_attribut{alt,#NOM})]</div>
 										<div class="ecriture-chapitre-nom">#NOM</div>
 									</BOUCLE_auteur_article2>
 									[(#ENV{fin}|=={oui}|non)
@@ -124,7 +124,7 @@
 								</BOUCLE_lecture_titre_rubrique_droite>
 								<div class="lecture-chapitre-auteur">
 									<BOUCLE_auteur_article(AUTEURS){id_article}{0,1}>
-										<div class="ecriture-chapitre-avatar">[(#LOGO_AUTEUR|image_reduire{42,42})]</div>
+										<div class="ecriture-chapitre-avatar">[(#LOGO_AUTEUR|image_reduire{42,42}|inserer_attribut{alt,#NOM})]</div>
 										<div class="ecriture-chapitre-nom">#NOM</div>
 									</BOUCLE_auteur_article>
 									[(#ENV{fin}|=={oui}|non)
