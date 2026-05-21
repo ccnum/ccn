@@ -168,6 +168,27 @@ select {
 }
 
 /* -------------------- */
+/* ACCESSIBILITE */
+/* -------------------- */
+
+.skip-link {
+	position: absolute;
+	left: -9999px;
+	top: 0;
+	z-index: 9999;
+	background: #fff;
+	color: #000;
+	padding: 8px 16px;
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 14px;
+	text-decoration: underline;
+}
+
+.skip-link:focus {
+	left: 0;
+}
+
+/* -------------------- */
 /* STRUCTURE */
 /* -------------------- */
 
