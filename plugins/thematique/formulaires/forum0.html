@@ -96,9 +96,9 @@
 	<:lien_supprimer:></label>
 	</div>]
 	<div>
-	[<label for="ajouter_document">(#ENV{formats_documents_forum}|join{', '})</label>]
 	<input class='file' type="file" name="ajouter_document" id="ajouter_document"[
 	accept="(#ENV{formats_documents_forum}|join{','})"] />
+	[<small>Formats autorisés : (#ENV{formats_documents_forum}|join{', '}) — max. (#CONFIG{bigup/max_file_size}) Mo</small>]
 	</div>
 
 	<script type='text/javascript'>
