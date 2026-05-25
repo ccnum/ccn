@@ -9,4 +9,5 @@
 	<nom>CCN</nom>
 	<auteur>Erasme</auteur>
 	<licence>GNU/GPL</licence>
+	<pipeline nom="formulaire_verifier" inclure="ccn_pipelines.php" />
 </paquet>
