@@ -26,7 +26,7 @@ function thematique_pre_boucle($boucle) {
 		if ((!isset($boucle->modificateur['tout'])) && (!strstr(
 			$_SERVER['REQUEST_URI'],
 			'/ecrire'
-		)) && (!$affichage == 'unepage')) {
+		)) && ($affichage != 'unepage')) {
 			$boucle->where[] = [
 				"'AND'",
 				["'>='", "'$date'", ("'\"$annee-$mois-$jour\"'")],
