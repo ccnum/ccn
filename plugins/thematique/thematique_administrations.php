@@ -82,7 +82,7 @@ function th_configurer_meta() {
 	ecrire_meta('accepter_visiteurs', 'oui');
 
 	ecrire_meta('forums_publics', 'abo');
-	ecrire_meta('formats_documents_forum', 'gif, jpg, png, mp3, pdf');
+	ecrire_meta('formats_documents_forum', '.pdf,.jpg,.jpeg,.png,.gif');
 
 	ecrire_meta('type_urls', 'simple');
 
@@ -131,24 +131,24 @@ function th_configurer_site() {
 }
 
 function th_ajouter_mot($titre, $id_groupe) {
-	if (!sql_getfetsel('id_mot', 'spip_mots', "titre=" . sql_quote($titre) . " AND id_groupe=" . intval($id_groupe))) {
+	if (!sql_getfetsel('id_mot', 'spip_mots', 'titre=' . sql_quote($titre) . ' AND id_groupe=' . intval($id_groupe))) {
 		sql_insertq('spip_mots', ['titre' => $titre, 'id_groupe' => $id_groupe]);
 	}
 }
 
 function th_ajouter_groupe_mots($titre, $tables_liees, $condition_extra = '') {
-	$condition = "titre=" . sql_quote($titre);
+	$condition = 'titre=' . sql_quote($titre);
 	if ($condition_extra) {
 		$condition .= " AND $condition_extra";
 	}
 	if (!$id_groupe = sql_getfetsel('id_groupe', 'spip_groupes_mots', $condition)) {
 		$id_groupe = sql_insertq('spip_groupes_mots', [
-			'titre'       => $titre,
-			'unseul'      => 'non',
+			'titre' => $titre,
+			'unseul' => 'non',
 			'tables_liees' => $tables_liees,
-			'minirezo'    => 'oui',
-			'comite'      => 'non',
-			'forum'       => 'non',
+			'minirezo' => 'oui',
+			'comite' => 'non',
+			'forum' => 'non',
 		]);
 	}
 	return $id_groupe;
@@ -158,7 +158,15 @@ function th_ajouter_mots_clef() {
 
 	// Groupe Contenus
 	$id_groupe = th_ajouter_groupe_mots('Contenus', 'rubriques');
-	foreach (['travail_en_cours', 'consignes', 'evenements', 'blogs', 'ressources', 'images_background', 'agora'] as $mot) {
+	foreach ([
+		'travail_en_cours',
+		'consignes',
+		'evenements',
+		'blogs',
+		'ressources',
+		'images_background',
+		'agora',
+	] as $mot) {
 		th_ajouter_mot($mot, $id_groupe);
 	}
 

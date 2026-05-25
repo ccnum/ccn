@@ -6,7 +6,7 @@
 ]<div class='joindre_mode#GET{domid}' id='joindre_upload#GET{domid}'>
 			[
 			<span class='erreur_message'>(#ENV**{erreurs}|table_valeur{fichier_upload})</span>
-			]<input class='file multi' type="file" name="fichier_upload[]" value='#ENV{fichier_upload}' id="fichier_upload#GET{domid}" accept="application/pdf,image/*" size='14' />
+			]<input class='file multi' type="file" name="fichier_upload[]" value='#ENV{fichier_upload}' id="fichier_upload#GET{domid}" accept="[(#CONFIG{formats_documents_forum})]" size='14' />
 
 	<div class='sourceup'>
 		[(#REM)
