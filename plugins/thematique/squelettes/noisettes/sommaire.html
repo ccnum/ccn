@@ -76,7 +76,7 @@ et/ou
 		<div id="menu-timeline" class="bloc_view col">
 			<h3 class="menu-title"><span>Publier</span></h3>
 			<ul class="filter clearfix option-set ressource" data-filter-group="ressource">
-				[(#MODELE{logo_menu}{valeur=consignes}{class=tooltip menu_logo_consignes}{onclick=changeTimelineMode('consignes');CCN.projet.showWholeTimeline();}{title=Toutes les consignes})]
+				[(#MODELE{logo_menu}{valeur=consignes}{class=tooltip menu_logo_consignes}{onclick=changeTimelineMode('consignes');CCN.projet.showWholeTimeline();}{title=Les missions})]
 
 				#SET{blog, Agenda}
 				[(#NOM_SITE_SPIP|=={novaterra.laclasse.com}|oui) #SET{blog,Le journal du capitaine et le novamag} ]
@@ -114,7 +114,7 @@ et/ou
 
 		[(#REM) Consignes]
 		<div id="menu-consignes" class="bloc_view col">
-			<h3 class="menu-title"><span>Consignes</span></h3>
+			<h3 class="menu-title"><span>Missions</span></h3>
 			<ul class="filter clearfix option-set" data-filter-group="consigne">
 				#SET{num,0}
 				<BOUCLE_consignes0(RUBRIQUES mots mots_liens){mots.titre=consignes}{rubriques.id_rubrique=mots_liens.id_objet}>
