@@ -25,10 +25,13 @@
 /* ------- */
 
 :root {
+	font-family: Poppins;
 	--color-hover: #00B749;
 	--color-tonic: #000AFF;
 	--color-consigne: #7D7BFD;
 	--color-default: #1E2055;
+	--color-jaune: #FFCD00;
+	--color-bleu-fond: #DEE0FF;
 	--header-height: 54px;
 	--footer-height: 107px;
 }
@@ -1659,10 +1662,12 @@ div.donnees_classe {
 .consigne {
 	margin: 0;
 	padding: 10px;
-	box-shadow: 0 2px 7px rgba(0,0,0,.3);
-	border-radius: 3px;
+	border-radius: 5px;
 	position: relative;
-	width: 200px;
+	z-index: 1;
+	box-sizing: border-box;
+	border: 2px solid var(--color-tonic);
+	background-color: white;
 }
 .consigne_haute:hover {
 	z-index: 3000;
@@ -1673,12 +1678,10 @@ div.donnees_classe {
 }
 
 .consigne .photo {
-	box-shadow: 0px 2px 7px rgba(0, 0, 0, 0.4);
-	width: 50px;
-	height: 50px;
-	border-radius: 3px;
+	width: 25px;
+	height: 25px;
+	border-radius: 12px;
 	overflow: hidden;
-	margin: -30px auto 0 auto;
 }
 
 .consigne .photo img {
@@ -1687,9 +1690,7 @@ div.donnees_classe {
 }
 
 .consigne .titre {
-	color:white;
 	font-size: 17px;
-	line-height:1.1 !important;
 	font-weight:bold
 }
 
@@ -1699,16 +1700,8 @@ div.donnees_classe {
 	padding: 10px 10px;
 	text-transform: uppercase;
 	letter-spacing: 1px;
-	color: rgba(255, 255, 255, 0.6);
 	background: rgba(0,0,0,0.07);
 	margin: 12px -10px 8px;
-}
-
-.consigne .texte {
-	width: 100%;
-	color: #FFF;
-	text-align: center;
-	padding-top: 10px;
 }
 
 .consigne .titre_taille1 {
@@ -1727,41 +1720,48 @@ div.donnees_classe {
 	font-size: 32px;
 }
 
+.consigne .texte {
+	display: flex;
+	flex-direction: column;
+	gap: 10px;
+}
+
+.consigne .texte .first-row {
+	display: flex;
+	align-items: center;
+	gap: 10px;
+}
+
+.consigne .texte .second-row {
+	height: auto;
+}
+
 .consigne .texte .liens {
-	margin-top: 10px;
 	font-size: 11px;
 }
 
 .consigne .texte .liens:hover {
-	margin-top: 10px;
 	font-size: 11px;
 	text-decoration: underline;
 	color: black;
 }
 
 .consigne .picto_nombre_reponses {
-	background-repeat: no-repeat;
+	display: grid;
+	grid-template-columns: repeat(5, max-content);
+	grid-template-rows: repeat(2, auto);
+	justify-content: center;
+	gap: 4px;
 	z-index: 10;
-	padding: 7px 0 6px 0;
 	font-size: 14px;
 	font-weight: bold;
-	text-align: center;
-	background: rgba(255, 255, 255, 0.95);
-	margin-top: 5px;
-	border-radius: 0 0 3px 3px;
-	position: absolute;
-	bottom: 0;
-	left: 0;
-	right: 0;
 }
 
 .consigne .reponse_puce {
-	width: 8px;
-	height: 8px;
+	width: 21px;
+	aspect-ratio: 1 / 1; /* fait coincider la hauteur et la largeur */
 	/* background: rgb(255, 255, 255); */
-	margin: 0px 5px 1px 5px;
-	display: inline-block;
-	border-radius: 50%;
+	border-radius: 50%;  /* div circulaire */
 }
 
 .consigne .reponse_puce.disabled {
@@ -1955,7 +1955,24 @@ div.donnees_classe {
 	border-radius: 50%;
 }
 
+.consigne .etiquette-etape {
+	position: absolute;
+	top: -30px;
+	left: 15px;
+	padding: 7px;
+	background-color: var(--color-bleu-fond);
+	color: var(--color-tonic);
+	border: 1px solid var(--color-tonic);
+	font-size: 14px;
+	transform: rotate(-3deg);
+}
 
+.consigne_haute.derniere-etape .etiquette-etape {
+	/* Changement de couleur sur dernière consigne */
+	background-color: var(--color-tonic);
+	color: white;
+	border: 1px solid white;
+}
 
 
 
@@ -4238,6 +4255,17 @@ ul#forum, .lien_forum {
 
 .consigne_haute {
 	z-index: 200;
+	overflow: visible;
+	height: auto;
+}
+
+.card-bg {
+  position: absolute;
+  top: -7px;
+  left: -7px;
+  width: calc(100% + 14px);
+  height: calc(100% + 14px);
+  z-index: -1;
 }
 
 .no_event {

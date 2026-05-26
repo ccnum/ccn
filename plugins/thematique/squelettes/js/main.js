@@ -304,7 +304,34 @@ function loadConsignes(fichier) {
 					CCN.consignes.push(nouvelleConsigne);
 					indexConsigne++;
 				}
+				post_process_DOM_after_all_consignes_created()
 	});
+}
+
+function getDernièreConsigneHaute(){
+	// Récupère toutes les consignes
+	const consignes = document.querySelectorAll('.consigne[data-index]');
+	if(consignes.length === 0) return
+	
+	// Trouve celle avec le data-index le plus élevé
+	const consigneMax = [...consignes].reduce((a, b) =>
+		parseInt(a.dataset.index) > parseInt(b.dataset.index) ? a : b
+	);
+	//remontée dans le DOM
+	const consigneHaute = $(consigneMax).closest('.consigne_haute');
+	return consigneHaute;
+}
+
+function post_process_DOM_after_all_consignes_created() {
+	console.log("post_process_DOM_after_all_consignes_created")
+	const derniereConsigneHaute = getDernièreConsigneHaute()
+	derniereConsigneHaute.addClass("derniere-etape")
+	const cestLaDerniereConsigneDeLAnnee = false;
+	if(cestLaDerniereConsigneDeLAnnee) {
+		derniereConsigneHaute.innerText = "PROJETS FINAUX !";
+		derniereConsigneHaute.querySelector("logo-etiquette").src = "${CCN.urlRoot}img/sparks.svg"
+		// <img class="card-bg" src="${CCN.urlRoot}img/cards_background.svg" />
+	}
 }
 /**
  *  Charge le XML des articles du blog

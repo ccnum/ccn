@@ -84,18 +84,29 @@ function Consigne() {
 
 		this.div_base = $(`
 			<div id="consigne_haute${this.id}"
-				class="timeline_item consigne_haute"
-				style="top:${this.y * 100}%; left:${this.x / CCN.projet.nombre_jours * 100}%;">
+				 class="timeline_item consigne_haute"
+				 style="top:${this.y * 100}%; left:${this.x / CCN.projet.nombre_jours * 100}%;"
+			>
+				<img class="card-bg" src="${CCN.urlRoot}img/cards_background.svg" />
 				<div id="consigne${this.id}"
 					class="consigne couleur_texte_consignes couleur_consignes${coul}"
 					data-id="${this.id}"
-					data-index="${this.numero}">
+					data-index="${this.numero}"
+				>
 					<div class="picto_nombre_commentaires">${this.data.nombre_commentaires}</div>
-					<div class="photo"><img src="${this.data.image}" /></div>
+					<div class="etiquette-etape">
+						<img class="logo-etiquette" src="${CCN.urlRoot}img/location-check.svg" />
+						Étape N°${this.numero+1}
+					</div>
 					<div class="texte">
-						<div class="titre">${this.titre}</div>
-						<div class="auteur_date">${this.intervenant_nom}<!-- - ${this.date_texte}-->
-							<div class="picto_nombre_reponses">${reponses_puces}</div>
+						<div class="first-row">
+							<div class="photo"><img src="${this.data.image}" /></div>
+							<div class="titre">${this.titre}</div>
+						</div>
+						<div class="second-row">
+							<div class="picto_nombre_reponses">
+								${reponses_puces}
+							</div>
 						</div>
 					</div>
 					<div class="nettoyeur"></div>
@@ -115,6 +126,7 @@ function Consigne() {
 		this.div_titre = this.div_base.find(`#consigne${this.id}`);
 		this.div_reponse_plus = this.div_base.find('.bouton_reponse_consigne').eq(0);
 		this.div_reponse_see = this.div_base.find('.bouton_reponse_consigne').eq(1);
+		
 
 		CCN.timelineLayerConsignes.prepend(this.div_base);
 
