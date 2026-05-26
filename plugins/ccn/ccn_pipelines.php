@@ -3,13 +3,16 @@ if (!defined('_ECRIRE_INC_VERSION')) { return; }
 
 define('_CCN_EXTENSIONS_UPLOAD', 'pdf,jpg,jpeg,png,gif,webp');
 
-function ccn_formulaire_verifier($erreurs, $args) {
+function ccn_formulaire_verifier($flux) {
+	$erreurs = $flux['data'];
+	$args = $flux['args'];
+
 	if ($args[0] !== 'joindre_document' || count($erreurs) || _request('joindre_mediatheque')) {
-		return $erreurs;
+		return $flux;
 	}
 
 	if (empty($_FILES['fichier_upload']['name'])) {
-		return $erreurs;
+		return $flux;
 	}
 
 	$extensions_autorisees = explode(',', _CCN_EXTENSIONS_UPLOAD);
@@ -22,5 +25,6 @@ function ccn_formulaire_verifier($erreurs, $args) {
 		}
 	}
 
-	return $erreurs;
+	$flux['data'] = $erreurs;
+	return $flux;
 }
