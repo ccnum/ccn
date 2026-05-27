@@ -141,6 +141,7 @@ function setContentFromState(state) {
 			&& state.id_objet == '')
 	) {
 		CCN.projet.showWholeTimeline();
+		return;
 	}
 
 	if (state.type_objet == "ressources") {
@@ -223,13 +224,11 @@ function setContentFromState(state) {
 
 		// Article de blog
 		if (state.type_objet == "blogs") {
-			changeTimelineMode('blogs');
 			callArticleBlog(state.id_objet, "article");
 		}
 
 		// Article d'événement
 		if (state.type_objet == "evenements") {
-			changeTimelineMode('evenements');
 			callArticleEvenement(state.id_objet, "article");
 		}
 	}

@@ -471,7 +471,6 @@ function initTimeline() {
 	window.onpopstate = onHashChange;
 
 	CCN.projet.initTimelineMonths();
-	CCN.projet.showWholeTimeline();
 
 	updateConnecteurs();
 
@@ -533,15 +532,21 @@ function initTimeline() {
 		}
 	}
 
+	//  CCN.projet.showWholeTimeline();
+	
+	// Initialiser les valeurs par défaut pour l'accueil
+	var typePopupToShow = (typeof CCN.typePopupToShowAtInit !== 'undefined' && CCN.typePopupToShowAtInit) ? CCN.typePopupToShowAtInit : '';
+	var idObjetToShow = (typeof CCN.idObjetToShowAtInit !== 'undefined' && CCN.idObjetToShowAtInit) ? CCN.idObjetToShowAtInit : '0';
+	
 	setContentFromState(
 		{
 			data: {
-				'type_objet': CCN.typePopupToShowAtInit,
-				'id_objet': CCN.idObjetToShowAtInit,
-				'page': CCN.pageToShowAtInit,
-				'id_rubrique': CCN.idRubriqueToShowAtInit,
-				'id_article': CCN.idArticleToShowAtInit,
-				'id_syndic_article': CCN.idSyndicArticleToShowAtInit
+				'type_objet': typePopupToShow,
+				'id_objet': idObjetToShow,
+				'page': CCN.pageToShowAtInit || '',
+				'id_rubrique': CCN.idRubriqueToShowAtInit || '',
+				'id_article': CCN.idArticleToShowAtInit || '',
+				'id_syndic_article': CCN.idSyndicArticleToShowAtInit || ''
 			}
 		}
 	);
