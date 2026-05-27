@@ -39,28 +39,26 @@ function Projet() {
 
 		// Liste y consignes
 
-		var liste_y_consignes = data.liste_y_consignes.split(",");
+		const liste_y_consignes = data.liste_y_consignes.split(",");
 		this.liste_y_consignes = [];
-		for (var i = 0; i < liste_y_consignes.length; i++) {
+		for (let i = 0; i < liste_y_consignes.length; i++) {
 			this.liste_y_consignes.push(parseFloat(liste_y_consignes[i]));
 		}
 
 		// Liste y articles de blog
-		var liste_y_blogs = data.liste_y_blogs.split(",");
+		const liste_y_blogs = data.liste_y_blogs.split(",");
 		this.liste_y_blogs = [];
-		for (var i = 0; i < liste_y_blogs.length; i++) {
+		for (let i = 0; i < liste_y_blogs.length; i++) {
 			this.liste_y_blogs.push(parseFloat(liste_y_blogs[i]));
 		}
 
 		// Liste y articles d'événement
-		var liste_y_evenements = data.liste_y_evenements.split(",");
+		const liste_y_evenements = data.liste_y_evenements.split(",");
 		this.liste_y_evenements = [];
-		for (var i = 0; i < liste_y_evenements.length; i++) {
+		for (let i = 0; i < liste_y_evenements.length; i++) {
 			this.liste_y_evenements.push(parseFloat(liste_y_evenements[i]));
 		}
 
-		// Canvas général
-		this.image_fond = new Image();
 		if (data.image_fond.length > 1) {
 			this.timeline_parent.css({ 'background-image': 'url(' + data.image_fond + ')' });
 		}
@@ -83,12 +81,12 @@ function Projet() {
 	 * Définit les variables de temps
 	 */
 	this.initTimeVariables = function (date_debut, date_fin) {
-		var jd1 = parseFloat(date_debut.substring(0, 2));
-		var md1 = parseFloat(date_debut.substring(3, 5));
-		var yd1 = parseFloat(date_debut.substring(6, 10));
-		var jd2 = parseFloat(date_fin.substring(0, 2));
-		var md2 = parseFloat(date_fin.substring(3, 5));
-		var yd2 = parseFloat(date_fin.substring(6, 10));
+		const jd1 = parseFloat(date_debut.substring(0, 2));
+		const md1 = parseFloat(date_debut.substring(3, 5));
+		const yd1 = parseFloat(date_debut.substring(6, 10));
+		const jd2 = parseFloat(date_fin.substring(0, 2));
+		const md2 = parseFloat(date_fin.substring(3, 5));
+		const yd2 = parseFloat(date_fin.substring(6, 10));
 		this.date_debut = new Date();
 		this.date_debut.setDate(jd1);
 		this.date_debut.setMonth(md1 - 1);
@@ -120,7 +118,7 @@ function Projet() {
 		// Nombre de jours ajoutés au nombre de jours à afficher
 		// pour que les blocs les plus à droite soient visibles
 
-		var offset_bloc_width = 20;
+		const offset_bloc_width = 20;
 
 		this.nombre_jours_vus_dest = nombre_jours_vus_dest + offset_bloc_width;
 		this.x_dest = x_dest;
@@ -130,8 +128,6 @@ function Projet() {
 
 		this.setTimelineZoom();
 	}
-
-
 	/**
 	 * Affiche la totalité de l'année.
 	 *
@@ -151,8 +147,6 @@ function Projet() {
 				}
 			}, 'CCN', './'
 		);
-
-
 		$('#menu-consignes .filter a, #menu-classes .filter a').removeClass('selected');
 		$('#menu-consignes .logo_menu-tout, #menu-classes .logo_menu-tout').addClass('selected');
 
@@ -163,7 +157,7 @@ function Projet() {
 		this.mois_select = -1;
 		this.mois_rollover = -1;
 
-		for (var i = 0; i < CCN.consignes.length; i++) {
+		for (let i = 0; i < CCN.consignes.length; i++) {
 			CCN.consignes[i].showConsignePastille();
 			CCN.consignes[i].select = false;
 		}
@@ -172,11 +166,11 @@ function Projet() {
 		$('.reponse_haute').addClass('hide');
 
 		// affiche tous les articles de blog
-		for (var i = 0; i < CCN.articlesBlog.length; i++) {
+		for (let i = 0; i < CCN.articlesBlog.length; i++) {
 			$(CCN.articlesBlog[i].div_base).fadeIn(3000);
 		}
 		// affiche tous les articles d'événement
-		for (var i = 0; i < CCN.articlesEvenement.length; i++) {
+		for (let i = 0; i < CCN.articlesEvenement.length; i++) {
 			$(CCN.articlesEvenement[i].div_base).fadeIn(3000);
 		}
 
@@ -184,8 +178,6 @@ function Projet() {
 
 		$('.connecteur_timeline').addClass('hide');
 	}
-
-
 	/**
 	 * Applique les paramètres de zoom de la timeline.
 	 *
@@ -210,20 +202,13 @@ function Projet() {
 
 		// width, height, etc
 
-		var mois = this.premier_mois;
-		var annee = this.premiere_annee;
+		let mois = this.premier_mois;
 
-		// On parcourt chaque mois
-		for (var i = 0; i < this.nombre_mois; i++) {
+		for (let i = 0; i < this.nombre_mois; i++) {
 
-			// Si on entre dans une nouvelle année
-			if (mois == 0) {
-				var texte = CCN.nomCompletMois[mois] + " ";//+annee+" ";
-			} else {
-				var texte = CCN.nomCompletMois[mois] + " ";
-			}
+			const texte = CCN.nomCompletMois[mois] + " ";
 
-			var mois_DOM = $(
+			const mois_DOM = $(
 				'<div/>', {
 				'class': 'mois'
 			}
@@ -233,10 +218,7 @@ function Projet() {
 
 			mois++;
 
-			// Si on entre dans une nouvelle année
-
 			if (mois >= 12) {
-				annee++;
 				mois = 0;
 			}
 		}

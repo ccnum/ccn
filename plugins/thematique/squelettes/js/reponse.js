@@ -6,10 +6,6 @@
 
 function Reponse() {
 
-	// Membres
-	var id, classe_id, titre, date, nombre_commentaires, x, y;
-	var div_base, div_texte, div_commentaires, connecteur;
-
 	/**
 	 * Initialise la réponse.
 	 *
@@ -30,7 +26,7 @@ function Reponse() {
 		this.index = this.data.index;
 		this.nom_classe = '';
 
-		for (var k = 0; k < this.data.classes.length; ++k) {
+		for (let k = 0; k < this.data.classes.length; ++k) {
 			if (this.classe_id == this.data.classes[k].id) {
 				this.nom_classe = this.data.classes[k].nom;
 			}
@@ -38,14 +34,12 @@ function Reponse() {
 
 		this.initDOM();
 	}
-
-
 	/**
 	 * Crée l'élément DOM et l'intègre dans la timeline.
 	 */
 	this.initDOM = function () {
 
-		var coul = String(this.classe_id).slice(-1);
+		const coul = String(this.classe_id).slice(-1);
 
 		this.div_base = $('<div/>')
 			.attr('id', 'reponse_haute' + this.id)
@@ -59,7 +53,7 @@ function Reponse() {
 				}
 			);
 
-		var date_texte = this.date.substring(0, 2) + " " + CCN.nomMois[parseFloat(this.date.substring(3, 5)) - 1];
+		const date_texte = this.date.substring(0, 2) + " " + CCN.nomMois[parseFloat(this.date.substring(3, 5)) - 1];
 
 		const vignette = this.data.vignette.includes('logo_rvb_bleu') ? `plugins/thematique/squelettes/img/logo_classe_${(parseInt(coul)%10)+1}.png`: this.data.vignette;
 
@@ -75,8 +69,6 @@ function Reponse() {
 				"</div>" +
 				"<div class=\"nettoyeur\"></div>"
 			);
-
-
 		this.connecteur = $(
 			'<div/>', {
 			'id': 'connecteur_consigne_' + this.consigne.id + '_reponse_' + this.id,
@@ -91,7 +83,7 @@ function Reponse() {
 		CCN.timelineLayerConsignes.prepend(this.div_base);
 		CCN.projet.timeline_fixed.append(this.connecteur);
 
-		var _thisId = this.id;
+		const _thisId = this.id;
 
 		this.div_texte.on(
 			'click', function () {
@@ -115,7 +107,7 @@ function Reponse() {
 						updateConnecteurs();
 					},
 					stop: function (event, ui) {
-						yy = (ui.offset.top - CCN.projet.timeline.offset().top) / CCN.projet.timeline.height();
+						const yy = (ui.offset.top - CCN.projet.timeline.offset().top) / CCN.projet.timeline.height();
 
 						$.get("spip.php?page=ajax&mode=article-sauve-coordonnees", { id_objet: _thisId, type_objet: "article", X: 0, Y: yy });
 						$(this).removeClass('no_event');
@@ -133,7 +125,7 @@ function Reponse() {
 	 * @param {Object} data - Données à affecter à l'instance
 	 */
 	this.showInTimeline = function () {
-		var reponse_DOM = $('.reponse_haute[data-reponse-id="' + this.id + '"]');
+		const reponse_DOM = $('.reponse_haute[data-reponse-id="' + this.id + '"]');
 
 		$('body').addClass('highlightReponse');
 		$('.reponse_haute, .connecteur_timeline').removeClass('current_select');

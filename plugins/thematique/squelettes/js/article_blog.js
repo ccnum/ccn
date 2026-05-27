@@ -6,9 +6,6 @@
 
 function ArticleBlog() {
 
-	var id, titre, date, nombre_commentaires, x, y, type_objet, left, top;
-	var div_base, div_texte, div_commentaires;
-
 	/**
 	 * Initialise l'article de blog.
 	 *
@@ -39,9 +36,9 @@ function ArticleBlog() {
 
 		this.div_base.append(this.img);
 
-		var date_texte = this.date.substring(0, 2) + " " + CCN.nomMois[parseFloat(this.date.substring(3, 5)) - 1];
+		const date_texte = this.date.substring(0, 2) + " " + CCN.nomMois[parseFloat(this.date.substring(3, 5)) - 1];
 
-		var html = "<div id='article_blog" + this.id + "' class='article_blog";
+		let html = "<div id='article_blog" + this.id + "' class='article_blog";
 		if ((this.titre.match("gazette")) || (this.titre.match("novamag")) || (this.titre.match("magazine"))) {
 			html = html + " article_blog2";
 		}
@@ -60,7 +57,7 @@ function ArticleBlog() {
 
 		CCN.timelineLayerBlogs.prepend(this.div_base);
 
-		var _thisId = this.id_objet;
+		const _thisId = this.id_objet;
 
 		this.div_texte.on(
 			'click', function () {
@@ -76,8 +73,8 @@ function ArticleBlog() {
 						$(this).children('div').children('div').removeAttr("onClick");
 					},
 					stop: function (event, ui) {
-						var y_parent = $(this).parent().height();
-						var yy = ui.position.top / y_parent;
+						const y_parent = $(this).parent().height();
+						const yy = ui.position.top / y_parent;
 						$.get(
 							"spip.php?page=ajax&mode=article-sauve-coordonnees", { id_objet: _thisId, type_objet: "article", X: 0, Y: yy }, function (data) {
 							}

@@ -1,4 +1,4 @@
-var CCN = {};
+let CCN = {};
 
 CCN.nomMois = ["Janv.", "Fév.", "Mars", "Avril", "Mai", "Juin", "Juil.", "Août", "Sept.", "Oct.", "Nov.", "Déc."];
 CCN.nomCompletMois = ["janvier", "février", "mars", "avril", "mai", "juin", "juillet", "août", "septembre", "octobre", "novembre", "décembre"];
@@ -30,8 +30,6 @@ function hexToB(h) {
 function cutHex(h) {
 	return (h.charAt(0) == "#") ? h.substring(1, 7) : h
 }
-
-
 /**
  *  Retourne la valeur du noeud XML demandé.
  *
@@ -41,7 +39,7 @@ function cutHex(h) {
  */
 
 function getXMLNodeValue(tagName, xml) {
-	var node = xml.getElementsByTagName(tagName)[0];
+	const node = xml.getElementsByTagName(tagName)[0];
 	return node && node.childNodes[0] ? node.childNodes[0].nodeValue : null;
 }
 
@@ -54,7 +52,7 @@ function getXMLNodeValue(tagName, xml) {
  */
 
 function hasXMLNodeValue(tagName, xml) {
-	var node = xml.getElementsByTagName(tagName)[0];
+	const node = xml.getElementsByTagName(tagName)[0];
 	return node ? node.childNodes[0] : null;
 }
 
@@ -63,7 +61,7 @@ function hasXMLNodeValue(tagName, xml) {
  * Voir : http://stackoverflow.com/questions/8486099/how-do-i-parse-a-url-query-parameters-in-javascript
  */
 function getJsonFromUrl(query) {
-	var result = {};
+	const result = {};
 
 	query = query.substring(query.indexOf("?") + 1);
 	query.split("&").forEach(
@@ -72,15 +70,15 @@ function getJsonFromUrl(query) {
 				return;
 			}
 			part = part.split("+").join(" "); // replace every + with space, regexp-free version
-			var eq = part.indexOf("=");
-			var key = eq > -1 ? part.slice(0, eq) : part;
-			var val = eq > -1 ? decodeURIComponent(part.slice(eq + 1)) : "";
-			var from = key.indexOf("[");
+			const eq = part.indexOf("=");
+			let key = eq > -1 ? part.slice(0, eq) : part;
+			const val = eq > -1 ? decodeURIComponent(part.slice(eq + 1)) : "";
+			const from = key.indexOf("[");
 			if (from == -1) {
 				result[decodeURIComponent(key)] = val;
 			} else {
-				var to = key.indexOf("]");
-				var index = decodeURIComponent(key.substring(from + 1, to));
+				const to = key.indexOf("]");
+				const index = decodeURIComponent(key.substring(from + 1, to));
 				key = decodeURIComponent(key.substring(0, from));
 				if (!result[key]) {
 					result[key] = [];

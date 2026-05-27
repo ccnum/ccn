@@ -33,7 +33,7 @@ function Consigne() {
 		this.intervenant_nom = '';
 		this.nombre_jours_max = this.data.nombre_jours_max;
 
-		for (var k = 0; k < this.data.intervenants.length; k++) {
+		for (let k = 0; k < this.data.intervenants.length; k++) {
 			if (this.data.intervenant_id == this.data.intervenants[k].id) {
 				this.intervenant_nom = this.data.intervenants[k].nom;
 			}
@@ -50,8 +50,7 @@ function Consigne() {
 	 * Crée l'élément DOM et l'intègre dans la timeline.
 	 */
 	this.initDOM = function () {
-		var coul = "" + this.data.intervenant_id + "";
-		coul = coul.substr(coul.length - 1, 1);
+		const coul = String(this.data.intervenant_id).slice(-1);
 
 		this.div_titre = $('<div/>')
 			.attr('id', 'consigne' + this.id)
@@ -69,16 +68,16 @@ function Consigne() {
 				}
 			);
 
-		var reponses_puces = '';
+		let reponses_puces = '';
 
-		for (var j = 1; j <= this.data.nombre_reponses; j++) {
+		for (let j = 1; j <= this.data.nombre_reponses; j++) {
 			if (j <= this.data.classes.length) {
-				var couleur = this.reponses_id[j - 1].substr(this.reponses_id[j - 1].length - 1);
+				const couleur = this.reponses_id[j - 1].slice(-1);
 				reponses_puces += '<div class="reponse_puce couleur_travail_en_cours' + couleur + '"></div>';
 			}
 		}
 
-		for (var j = 1; j <= this.data.classes.length - this.data.nombre_reponses; j++) {
+		for (let j = 1; j <= this.data.classes.length - this.data.nombre_reponses; j++) {
 			reponses_puces += '<div class="reponse_puce disabled"></div>';
 		}
 
@@ -108,7 +107,7 @@ function Consigne() {
 
 		CCN.timelineLayerConsignes.prepend(this.div_base);
 
-		var _thisId = this.id;
+		const _thisId = this.id;
 
 		this.div_titre.on(
 			'click', function () {
@@ -128,7 +127,7 @@ function Consigne() {
 				},
 
 				stop: function (event, ui) {
-					yy = (ui.offset.top - CCN.projet.timeline.offset().top) / CCN.projet.timeline.height();
+					const yy = (ui.offset.top - CCN.projet.timeline.offset().top) / CCN.projet.timeline.height();
 
 					$.get("spip.php?page=ajax&mode=article-sauve-coordonnees", { id_objet: _thisId, type_objet: "article", X: 0, Y: yy });
 					$(this).removeClass('no_event');
@@ -195,22 +194,25 @@ function Consigne() {
 	 * @see showConsigneInTimeline
 	 * @see callConsigne
 	 *
-	 * @todo *1 : Vérifier
-	 * @todo *2 : Vérifier
-	 * @todo *3 : Améliorer l'arrêt du <tt>clearInterval</tt>
 	 */
 	this.showInTimeline = function () {
 
-		CCN.projet.setIntervalConnecteurs = setInterval(
-			function () {
-				updateConnecteurs();
-			}, 1
-		);
+		let rafId;
+		const rafEnd = Date.now() + 2300;
+
+		function rafConnecteurs() {
+			updateConnecteurs();
+			if (Date.now() < rafEnd) {
+				rafId = requestAnimationFrame(rafConnecteurs);
+			}
+		}
+		rafId = requestAnimationFrame(rafConnecteurs);
+		CCN.projet.rafConnecteurs = rafId;
 
 		$('.connecteur_timeline').addClass('hide');
 		$('.connecteur_timeline[data-consigne-id="' + this.id + '"]').removeClass('hide');
 
-		var y_dest = 0;
+		const y_dest = 0;
 
 		this.hideConsignePastille();
 
@@ -219,26 +221,16 @@ function Consigne() {
 		$('.consigne_haute').not('#consigne_haute' + this.id).addClass('hide');
 		$('.reponse_haute').not('.reponse_haute_consigne_parent' + this.id).addClass('hide');
 
-		// On ouvre les réponses
 		$('#consigne_haute' + this.id).removeClass('hide');
 		$('.reponse_haute_consigne_parent' + this.id).removeClass('hide');
 
-		// (TODO*1) Cache les articles de blog
-		for (var i = 0; i < CCN.articlesBlog.length; i++) {
+		for (let i = 0; i < CCN.articlesBlog.length; i++) {
 			$(CCN.articlesBlog[i].div_base).hide();
 		}
 
-		// (TODO*2) Cache les articles d'événement
-		for (var i = 0; i < CCN.articlesEvenement.length; i++) {
+		for (let i = 0; i < CCN.articlesEvenement.length; i++) {
 			$(CCN.articlesEvenement[i].div_base).hide();
 		}
-
-		// (TODO*3) Interrompre le clearInterval
-		setTimeout(
-			function () {
-				clearInterval(CCN.projet.setIntervalConnecteurs);
-			}, 2300
-		);
 
 		this.select = true;
 	}

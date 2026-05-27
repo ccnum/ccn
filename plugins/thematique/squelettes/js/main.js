@@ -1,11 +1,7 @@
-var indexClasse;
-var indexConsigne;
-var indexReponse;
-var indexArticleBlog;
-var indexArticleEvenement;
-var indexIntervenant;
-
-
+let indexConsigne;
+let indexReponse;
+let indexArticleBlog;
+let indexArticleEvenement;
 /**
  * Première fonction initialisant le document
  * et les variables globales, puis appelant
@@ -15,12 +11,10 @@ var indexIntervenant;
  */
 
 function initCCN() {
-	indexClasse = 0;
 	indexConsigne = 0;
 	indexReponse = 0;
 	indexArticleBlog = 0;
 	indexArticleEvenement = 0;
-	indexIntervenant = 0;
 
 	CCN.classes = [];
 	CCN.intervenants = [];
@@ -42,8 +36,6 @@ function initCCN() {
 
 	loadProjet(CCN.urlXml + "projet");
 }
-
-
 /**
  *  Charge le XML du projet,
  *  initialise le projet
@@ -60,7 +52,7 @@ function loadProjet(fichier) {
 			success: function (xml) {
 				xml = $.parseXML(xml.trim());
 
-				var dataForProjet = {};
+				const dataForProjet = {};
 
 				dataForProjet.date_debut = getXMLNodeValue('date_debut', xml);
 				dataForProjet.date_fin = getXMLNodeValue('date_fin', xml);
@@ -109,8 +101,6 @@ function loadProjet(fichier) {
 		}
 	);
 }
-
-
 /**
  *  Charge le XML des classes (liste)
  *  puis appelle le chargement des consignes.
@@ -122,34 +112,30 @@ function loadClasses(fichier) {
 	return $.ajax({url: fichier, dataType: 'text'}).then(function (xml) {
 		xml = $.parseXML(xml.trim());
 
-		var xmlClasses = xml.getElementsByTagName("classe");
-		for (var i = 0; i < xmlClasses.length; ++i) {
-			var dataForClasse = {};
+		const xmlClasses = xml.getElementsByTagName("classe");
+		for (let i = 0; i < xmlClasses.length; ++i) {
+			const dataForClasse = {};
 			dataForClasse.id = parseFloat(getXMLNodeValue('id', xmlClasses[i]));
 			dataForClasse.nom = getXMLNodeValue('nom', xmlClasses[i]);
-			var nouvelleClasse = new Classe();
+			const nouvelleClasse = new Classe();
 			nouvelleClasse.init(dataForClasse);
 			CCN.classes.push(nouvelleClasse);
-			indexClasse++;
 		}
 
-		var xmlIntervenants = xml.getElementsByTagName("intervenant");
-		for (var i = 0; i < xmlIntervenants.length; ++i) {
-			var dataForIntervenant = {};
+		const xmlIntervenants = xml.getElementsByTagName("intervenant");
+		for (let i = 0; i < xmlIntervenants.length; ++i) {
+			const dataForIntervenant = {};
 			dataForIntervenant.id = parseFloat(getXMLNodeValue('id', xmlIntervenants[i]));
 			dataForIntervenant.nom = getXMLNodeValue('nom', xmlIntervenants[i]);
-			var nouvelIntervenant = new Intervenant();
+			const nouvelIntervenant = new Intervenant();
 			nouvelIntervenant.init(dataForIntervenant);
 			CCN.intervenants.push(nouvelIntervenant);
-			indexIntervenant++;
 		}
 
 		CCN.travailEnCoursId = parseFloat(getXMLNodeValue('travail_en_cours_id', xml));
 		return loadConsignes(CCN.urlXml + "consignes");
 	});
 }
-
-
 /**
  *  Charge le XML des consignes et des réponses
  *  puis appelle le chargement des articles du blog
@@ -161,12 +147,12 @@ function loadConsignes(fichier) {
 	return $.ajax({url: fichier, dataType: 'text'}).then(function (xml) {
 		xml = $.parseXML(xml.trim());
 
-		var xmlConsignes = xml.getElementsByTagName("consigne");
-				var indexY = 0;
+		const xmlConsignes = xml.getElementsByTagName("consigne");
+				let indexY = 0;
 
-				for (var i = 0; i < xmlConsignes.length; ++i) {
+				for (let i = 0; i < xmlConsignes.length; ++i) {
 
-					var dataForConsigne = {};
+					const dataForConsigne = {};
 
 					dataForConsigne.id = parseFloat(getXMLNodeValue('id', xmlConsignes[i]));
 					dataForConsigne.intervenant_id = parseFloat(getXMLNodeValue('intervenant_id', xmlConsignes[i]));
@@ -197,26 +183,26 @@ function loadConsignes(fichier) {
 						dataForConsigne.nombre_jours += 365
 					}
 
-					var xmlReponses = xmlConsignes[i].getElementsByTagName("reponse");
+					const xmlReponses = xmlConsignes[i].getElementsByTagName("reponse");
 
 					dataForConsigne.nombre_reponses = (xmlReponses) ? xmlReponses.length : 0;
 					dataForConsigne.reponses = [];
 
-					var liste_jours_max = [];
+					const liste_jours_max = [];
 					dataForConsigne.nombre_commentaires = 0;
 
-					for (var j = 0; j < xmlReponses.length; j++) {
-						var date_texte_reponse = getXMLNodeValue('date', xmlReponses[j]);
-						var date_jours_max = new Date();
+					for (let j = 0; j < xmlReponses.length; j++) {
+						const date_texte_reponse = getXMLNodeValue('date', xmlReponses[j]);
+						const date_jours_max = new Date();
 
 						date_jours_max.setDate(parseFloat(date_texte_reponse.substring(0, 2)));
 						date_jours_max.setMonth(parseFloat(date_texte_reponse.substring(3, 5)) - 1);
 						date_jours_max.setFullYear(parseFloat(date_texte_reponse.substring(6, 10)));
 
-						var jours = parseFloat(Math.round((date_jours_max) / (24 * 60 * 60 * 1000))) - dataForConsigne.jour_consigne;
+						const jours = parseFloat(Math.round((date_jours_max) / (24 * 60 * 60 * 1000))) - dataForConsigne.jour_consigne;
 						liste_jours_max.push(jours);
 
-						var nombre_commentaires_reponse = parseFloat(getXMLNodeValue('commentaires', xmlReponses[j]));
+						const nombre_commentaires_reponse = parseFloat(getXMLNodeValue('commentaires', xmlReponses[j]));
 						dataForConsigne.nombre_commentaires += nombre_commentaires_reponse;
 
 						dataForConsigne.reponses.push(getXMLNodeValue('classe_id', xmlReponses[j]));
@@ -224,7 +210,7 @@ function loadConsignes(fichier) {
 
 					dataForConsigne.nombre_jours_max = 0;
 
-					for (var j = 0; j < liste_jours_max.length; j++) {
+					for (let j = 0; j < liste_jours_max.length; j++) {
 						if (dataForConsigne.nombre_jours_max < liste_jours_max[j]) {
 							dataForConsigne.nombre_jours_max = liste_jours_max[j];
 						}
@@ -238,21 +224,21 @@ function loadConsignes(fichier) {
 					dataForConsigne.intervenants = CCN.intervenants;
 					dataForConsigne.numero = indexConsigne;
 
-					var nouvelleConsigne = new Consigne();
+					const nouvelleConsigne = new Consigne();
 					nouvelleConsigne.init(dataForConsigne);
 
 					// Calcul du positionnement y intelligent des réponses (TO DO)
-					var liste_y = [];
+					const liste_y = [];
 
-					for (var j = 0; j < xmlReponses.length; j++) {
+					for (let j = 0; j < xmlReponses.length; j++) {
 						if (j == 0) {
-							var rd = Math.floor(Math.random() * xmlReponses.length);
+							const rd = Math.floor(Math.random() * xmlReponses.length);
 							liste_y.push(rd);
 						} else {
-							for (var k = 0; k < 15; k++) {
-								var meme = 0;
-								var rd = Math.floor(Math.random() * xmlReponses.length);
-								for (var l = 0; l < j; l++) {
+							for (let k = 0; k < 15; k++) {
+								let meme = 0;
+								const rd = Math.floor(Math.random() * xmlReponses.length);
+								for (let l = 0; l < j; l++) {
 									if (rd == liste_y[l]) {
 										meme++;
 									}
@@ -269,18 +255,11 @@ function loadConsignes(fichier) {
 						liste_y.push(liste_y[0]);
 					}
 
-					// TO DO
-					var hauteur_utile_reponses = CCN.projet.hauteur - nouvelleConsigne.hauteur - 140;
-					var hauteur_max_reponses = hauteur_utile_reponses / liste_y.length;
+					let indexReponseInConsigne = 0;
+					let has_current_classe_already_answer = false;
 
-					var nb_classe_reponse = 0;
-					var nb_classe_commentaires = 0;
-					var indexReponseInConsigne = 0;
-					var has_current_classe_already_answer = false;
-					var answer_id_of_current_classe = null;
-
-					for (var j = 0; j < xmlReponses.length; j++) {
-						var dataForReponse = {};
+					for (let j = 0; j < xmlReponses.length; j++) {
+						const dataForReponse = {};
 
 						dataForReponse.id = parseFloat(getXMLNodeValue('id', xmlReponses[j]));
 						dataForReponse.classe_id = parseFloat(getXMLNodeValue('classe_id', xmlReponses[j]));
@@ -297,7 +276,6 @@ function loadConsignes(fichier) {
 
 						dataForReponse.vignette = (hasXMLNodeValue('vignette', xmlReponses[j])) ? getXMLNodeValue('vignette', xmlReponses[j]) : '';
 
-						// Positionnement en hauteur (TO DO)
 						dataForReponse.y = parseFloat(getXMLNodeValue('y', xmlReponses[j]));
 
 						if ((dataForReponse.y === 0) || (dataForReponse.y > 0.8) || (dataForReponse.y < -0.2)) {
@@ -309,31 +287,19 @@ function loadConsignes(fichier) {
 						dataForReponse.numero = indexReponse;
 						dataForReponse.index = indexReponseInConsigne;
 
-						var nouvelleReponse = new Reponse();
+						const nouvelleReponse = new Reponse();
 						nouvelleReponse.init(dataForReponse);
 						nouvelleConsigne.reponses.push(nouvelleReponse);
 
-						if (CCN.classeSelection > 0) {
-							if (CCN.classeSelection == dataForReponse.classe_id) {
-								has_current_classe_already_answer = true;
-								answer_id_of_current_classe = dataForReponse.id;
-
-								nb_classe_reponse++;
-								nb_classe_commentaires += dataForReponse.nombre_commentaires;
-							}
-						} else {
-							if (CCN.idRestreint == dataForReponse.classe_id) {
-								nb_classe_reponse++;
-								nb_classe_commentaires += dataForReponse.nombre_commentaires;
-							}
+						if (CCN.classeSelection > 0 && CCN.classeSelection == dataForReponse.classe_id) {
+							has_current_classe_already_answer = true;
 						}
+
 						indexReponseInConsigne++;
 						indexReponse++;
 					}
 
-					if (has_current_classe_already_answer) {
-						//  nouvelleConsigne.showMyReponseButtonInTimeline(answer_id_of_current_classe);
-					} else {
+					if (!has_current_classe_already_answer) {
 						nouvelleConsigne.showNewReponseButtonInTimeline();
 					}
 
@@ -342,8 +308,6 @@ function loadConsignes(fichier) {
 				}
 	});
 }
-
-
 /**
  *  Charge le XML des articles du blog
  *
@@ -354,54 +318,53 @@ function loadBlog(fichier) {
 	return $.ajax({url: fichier, dataType: 'text'}).then(function (xml) {
 		xml = $.parseXML(xml.trim());
 
-		var xmlArticlesBlog = xml.getElementsByTagName("article");
-				var indexY = 0;
-				for (var i = 0; i < xmlArticlesBlog.length; i++) {
+		const xmlArticlesBlog = xml.getElementsByTagName("article");
+		let indexY = 0;
 
-					var dataForArticleBlog = {};
+		for (let i = 0; i < xmlArticlesBlog.length; i++) {
 
-					dataForArticleBlog.id = getXMLNodeValue('id', xmlArticlesBlog[i]);
-					dataForArticleBlog.type_objet = getXMLNodeValue('type_objet', xmlArticlesBlog[i]);
-					dataForArticleBlog.id_objet = getXMLNodeValue('id_objet', xmlArticlesBlog[i]);
-					dataForArticleBlog.titre = getXMLNodeValue('titre', xmlArticlesBlog[i]);
-					dataForArticleBlog.titre = dataForArticleBlog.titre.replaceAll("[", "<").replaceAll("]", ">");
-					dataForArticleBlog.y = getXMLNodeValue('y', xmlArticlesBlog[i]);
-					dataForArticleBlog.date = getXMLNodeValue('date', xmlArticlesBlog[i]);
+			const dataForArticleBlog = {};
 
-					if (indexY >= CCN.projet.liste_y_blogs.length) {
-						indexY = 0;
-					}
+			dataForArticleBlog.id = getXMLNodeValue('id', xmlArticlesBlog[i]);
+			dataForArticleBlog.type_objet = getXMLNodeValue('type_objet', xmlArticlesBlog[i]);
+			dataForArticleBlog.id_objet = getXMLNodeValue('id_objet', xmlArticlesBlog[i]);
+			dataForArticleBlog.titre = getXMLNodeValue('titre', xmlArticlesBlog[i]);
+			dataForArticleBlog.titre = dataForArticleBlog.titre.replaceAll("[", "<").replaceAll("]", ">");
+			dataForArticleBlog.y = getXMLNodeValue('y', xmlArticlesBlog[i]);
+			dataForArticleBlog.date = getXMLNodeValue('date', xmlArticlesBlog[i]);
 
-					if (dataForArticleBlog.y == 0) {
-						dataForArticleBlog.y = CCN.projet.liste_y_blogs[indexY];
-					}
+			if (indexY >= CCN.projet.liste_y_blogs.length) {
+				indexY = 0;
+			}
 
-					indexY++;
+			if (dataForArticleBlog.y == 0) {
+				dataForArticleBlog.y = CCN.projet.liste_y_blogs[indexY];
+			}
 
-					var date = new Date();
+			indexY++;
 
-					date.setDate(parseFloat(dataForArticleBlog.date.substring(0, 2)));
-					date.setMonth(parseFloat(dataForArticleBlog.date.substring(3, 5)) - 1);
-					date.setFullYear(parseFloat(dataForArticleBlog.date.substring(6, 10)));
+			const date = new Date();
 
-					var jour_article = parseFloat(Math.round((date) / (24 * 60 * 60 * 1000)));
-					dataForArticleBlog.nombre_jours = jour_article - CCN.projet.premier_jour;
-					dataForArticleBlog.nombre_commentaires = parseFloat(getXMLNodeValue('commentaires', xmlArticlesBlog[i]));
+			date.setDate(parseFloat(dataForArticleBlog.date.substring(0, 2)));
+			date.setMonth(parseFloat(dataForArticleBlog.date.substring(3, 5)) - 1);
+			date.setFullYear(parseFloat(dataForArticleBlog.date.substring(6, 10)));
 
-					dataForArticleBlog.numero = indexArticleBlog;
-					dataForArticleBlog.index = indexArticleBlog;
+			const jour_article = parseFloat(Math.round((date) / (24 * 60 * 60 * 1000)));
+			dataForArticleBlog.nombre_jours = jour_article - CCN.projet.premier_jour;
+			dataForArticleBlog.nombre_commentaires = parseFloat(getXMLNodeValue('commentaires', xmlArticlesBlog[i]));
 
-					var nouvelArticleBlog = new ArticleBlog();
-					nouvelArticleBlog.init(dataForArticleBlog);
+			dataForArticleBlog.numero = indexArticleBlog;
+			dataForArticleBlog.index = indexArticleBlog;
 
-					CCN.articlesBlog.push(nouvelArticleBlog);
+			const nouvelArticleBlog = new ArticleBlog();
+			nouvelArticleBlog.init(dataForArticleBlog);
 
-					indexArticleBlog++;
-				}
+			CCN.articlesBlog.push(nouvelArticleBlog);
+
+			indexArticleBlog++;
+		}
 	});
 }
-
-
 /**
  *  Charge le XML des événements
  *  puis appelle initTimeline
@@ -413,54 +376,52 @@ function loadEvenements(fichier) {
 	return $.ajax({url: fichier, dataType: 'text'}).then(function (xml) {
 		xml = $.parseXML(xml.trim());
 
-		var xmlArticlesEvenement = xml.getElementsByTagName("article");
-				var indexY = 0;
+		const xmlArticlesEvenement = xml.getElementsByTagName("article");
+		let indexY = 0;
 
-				for (var i = 0; i < xmlArticlesEvenement.length; i++) {
+		for (let i = 0; i < xmlArticlesEvenement.length; i++) {
 
-					var dataForEvenement = {};
+			const dataForEvenement = {};
 
-					dataForEvenement.id = getXMLNodeValue('id', xmlArticlesEvenement[i]);
-					dataForEvenement.type_objet = getXMLNodeValue('type_objet', xmlArticlesEvenement[i]);
-					dataForEvenement.id_objet = getXMLNodeValue('id_objet', xmlArticlesEvenement[i]);
-					dataForEvenement.titre = getXMLNodeValue('titre', xmlArticlesEvenement[i]);
-					dataForEvenement.y = getXMLNodeValue('y', xmlArticlesEvenement[i]);
-					dataForEvenement.titre = dataForEvenement.titre.replaceAll("[", "<").replaceAll("]", ">");
+			dataForEvenement.id = getXMLNodeValue('id', xmlArticlesEvenement[i]);
+			dataForEvenement.type_objet = getXMLNodeValue('type_objet', xmlArticlesEvenement[i]);
+			dataForEvenement.id_objet = getXMLNodeValue('id_objet', xmlArticlesEvenement[i]);
+			dataForEvenement.titre = getXMLNodeValue('titre', xmlArticlesEvenement[i]);
+			dataForEvenement.y = getXMLNodeValue('y', xmlArticlesEvenement[i]);
+			dataForEvenement.titre = dataForEvenement.titre.replaceAll("[", "<").replaceAll("]", ">");
 
-					if (indexY >= CCN.projet.liste_y_evenements.length) {
-						indexY = 0;
-					}
-					if (dataForEvenement.y == 0) {
-						dataForEvenement.y = CCN.projet.liste_y_evenements[indexY];
-					}
+			if (indexY >= CCN.projet.liste_y_evenements.length) {
+				indexY = 0;
+			}
+			if (dataForEvenement.y == 0) {
+				dataForEvenement.y = CCN.projet.liste_y_evenements[indexY];
+			}
 
-					indexY++;
+			indexY++;
 
-					dataForEvenement.date = getXMLNodeValue('date', xmlArticlesEvenement[i]);
-					var date = new Date();
+			dataForEvenement.date = getXMLNodeValue('date', xmlArticlesEvenement[i]);
+			const date = new Date();
 
-					date.setDate(parseFloat(dataForEvenement.date.substring(0, 2)));
-					date.setMonth(parseFloat(dataForEvenement.date.substring(3, 5)) - 1);
-					date.setFullYear(parseFloat(dataForEvenement.date.substring(6, 10)));
+			date.setDate(parseFloat(dataForEvenement.date.substring(0, 2)));
+			date.setMonth(parseFloat(dataForEvenement.date.substring(3, 5)) - 1);
+			date.setFullYear(parseFloat(dataForEvenement.date.substring(6, 10)));
 
-					var jour_article = parseFloat(Math.round((date) / (24 * 60 * 60 * 1000)));
-					dataForEvenement.nombre_jours = jour_article - CCN.projet.premier_jour;
-					dataForEvenement.nombre_commentaires = parseFloat(getXMLNodeValue('commentaires', xmlArticlesEvenement[i]));
+			const jour_article = parseFloat(Math.round((date) / (24 * 60 * 60 * 1000)));
+			dataForEvenement.nombre_jours = jour_article - CCN.projet.premier_jour;
+			dataForEvenement.nombre_commentaires = parseFloat(getXMLNodeValue('commentaires', xmlArticlesEvenement[i]));
 
-					dataForEvenement.numero = indexArticleEvenement;
-					dataForEvenement.index = indexArticleEvenement;
+			dataForEvenement.numero = indexArticleEvenement;
+			dataForEvenement.index = indexArticleEvenement;
 
-					var nouvelArticleEvenement = new ArticleEvenement();
-					nouvelArticleEvenement.init(dataForEvenement);
+			const nouvelArticleEvenement = new ArticleEvenement();
+			nouvelArticleEvenement.init(dataForEvenement);
 
-					CCN.articlesEvenement.push(nouvelArticleEvenement);
+			CCN.articlesEvenement.push(nouvelArticleEvenement);
 
-					indexArticleEvenement++;
-				}
+			indexArticleEvenement++;
+		}
 	});
 }
-
-
 /**
  *  Initialise la vue, la timeline,
  *  définit les événements attribués aux éléments de la timeline.
@@ -501,11 +462,11 @@ function initTimeline() {
 	// Zoom sur la date au chargement de la page
 
 	if (CCN.dateToShowAtInit != "0") {
-		var jd = parseFloat(CCN.dateToShowAtInit.substring(0, 2));
-		var md = parseFloat(CCN.dateToShowAtInit.substring(3, 5));
-		var yd = parseFloat(CCN.dateToShowAtInit.substring(6, 10));
+		const jd = parseFloat(CCN.dateToShowAtInit.substring(0, 2));
+		const md = parseFloat(CCN.dateToShowAtInit.substring(3, 5));
+		const yd = parseFloat(CCN.dateToShowAtInit.substring(6, 10));
 
-		date = new Date();
+		const date = new Date();
 		date.setDate(jd);
 		date.setMonth(md - 1);
 		date.setFullYear(yd);
@@ -513,7 +474,7 @@ function initTimeline() {
 		// On est dans le temps du projet ?
 
 		if (Math.round(date) >= Math.round(CCN.projet.date_debut) && Math.round(date) <= Math.round(CCN.projet.date_fin)) {
-			var mois = Math.round((date - CCN.projet.date_debut) / (24 * 60 * 60 * 30.5 * 1000));
+			const mois = Math.round((date - CCN.projet.date_debut) / (24 * 60 * 60 * 30.5 * 1000));
 			CCN.projet.mois_select = mois;
 			if (mois < CCN.projet.nombre_mois / 2) {
 				CCN.projet.showRangeOfTimeline(90, (mois * CCN.projet.largeur_mois), 0);
@@ -527,7 +488,7 @@ function initTimeline() {
 
 	if (CCN.idObjetToShowAtInit == 0) {
 		if (document.cookie.indexOf('visited=true') === -1) {
-			var expires = new Date();
+			const expires = new Date();
 			expires.setDate(expires.getDate() + 30);
 			document.cookie = "visited=true; expires=" + expires.toUTCString();
 		}
@@ -558,7 +519,7 @@ function initTimeline() {
 
 	window.addEventListener(
 		"resize", function (event) {
-			updateTimeline();
+			updateConnecteurs();
 		}, false
 	);
 }

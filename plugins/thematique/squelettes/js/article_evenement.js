@@ -6,9 +6,6 @@
 
 function ArticleEvenement() {
 
-	var id, titre, date, nombre_commentaires, x, y, type_objet, left, top;
-	var div_base, div_texte, div_commentaires;
-
 	/**
 	 * Initialise l'événement.
 	 *
@@ -42,14 +39,14 @@ function ArticleEvenement() {
 
 		this.div_base.append(this.img);
 
-		var date_texte = this.date.substring(0, 2) + " " + CCN.nomMois[parseFloat(this.date.substring(3, 5)) - 1];
+		const date_texte = this.date.substring(0, 2) + " " + CCN.nomMois[parseFloat(this.date.substring(3, 5)) - 1];
 
 		// Trim text if too long
 		if (this.titre.length > 25) {
 			this.titre = this.titre.substring(0, 25) + "(...)";
 		}
 
-		var html = "<div id='article_evenement" + this.id + "' class='article_evenement'>";
+		let html = "<div id='article_evenement" + this.id + "' class='article_evenement'>";
 		html += "<div class='article_evenement_inner'><div class='article_evenement_texte'><b>" + this.titre + "</b><br/><span class='article_evenement_date'>" + date_texte + "</span></div></div>";
 
 		if (this.nombre_commentaires > 0) {
@@ -65,8 +62,8 @@ function ArticleEvenement() {
 
 		CCN.timelineLayerEvenements.prepend(this.div_base);
 
-		var _thisId = this.id_objet;
-		var _thisTypeObjet = this.type_objet;
+		const _thisId = this.id_objet;
+		const _thisTypeObjet = this.type_objet;
 
 		this.div_texte.on(
 			'click', function () {
@@ -82,8 +79,8 @@ function ArticleEvenement() {
 						$(this).children('div').children('div').removeAttr("onClick");
 					},
 					stop: function (event, ui) {
-						var y_parent = $(this).parent().height();
-						var yy = ui.position.top / y_parent;
+						const y_parent = $(this).parent().height();
+						const yy = ui.position.top / y_parent;
 						$.get(
 							"spip.php?page=ajax&mode=article-sauve-coordonnees", { id_objet: _thisId, type_objet: _thisTypeObjet, X: 0, Y: yy },
 							function (data) {

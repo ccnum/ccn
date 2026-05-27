@@ -6,8 +6,6 @@
 
 function Classe() {
 
-	var id, nom;
-
 	/**
 	 * Initialise la classe.
 	 *

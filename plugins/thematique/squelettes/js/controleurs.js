@@ -1,12 +1,9 @@
-var vue = 'timeline';
-var canShowConsigneSidebar = false;
-var antiPushState = false;
-var detailsLivrableOpen = false;
+let canShowConsigneSidebar = false;
 
 // Verifie les parametres dans l'url
 $.urlParam = function (name) {
 
-	var results = new RegExp('[\?&]' + name + '=([^&#]*)').exec(window.location.href);
+	const results = new RegExp('[\?&]' + name + '=([^&#]*)').exec(window.location.href);
 
 	if (results) {
 		return results[1] || 0;
@@ -84,7 +81,7 @@ $(function () {
 }
 );
 
-var antifloodHashChange = false;
+let antifloodHashChange = false;
 
 function onHashChange() {
 	if (antifloodHashChange == false) {
@@ -96,7 +93,7 @@ function onHashChange() {
  * Initialise la vue depuis l'URL donnée
  * ou depuis l'état de l'historique donné
  */
-var currentState = {};
+let currentState = {};
 function setContentFromState(state) {
 
 	if (typeof state.data !== 'object' || state.data == null) {
@@ -118,22 +115,18 @@ function setContentFromState(state) {
 	if (currentState.id_syndic_article == undefined) { currentState.id_syndic_article = ''; }
 	if (currentState.id_objet == undefined) { currentState.id_objet = ''; }
 
-	var isSamePage = true;
+	let isSamePage = true;
 
-	for (var index in state) {
+	for (const index in state) {
 		if (state[index] != currentState[index]) {
 			isSamePage = false;
 			break;
 		}
 	}
 	currentState = state;
-
-
 	if (isSamePage) { return; }
 
 	antifloodHashChange = true;
-
-
 	// Ressource
 	if ((state.type_objet == '0'
 		&& state.id_objet == '0')
@@ -144,7 +137,6 @@ function setContentFromState(state) {
 	}
 
 	if (state.type_objet == "ressources") {
-		changeTimelineMode('consignes');
 		callRessource();
 
 		if (state.page == 'rubrique') {
@@ -164,7 +156,6 @@ function setContentFromState(state) {
 
 	// Agora
 	if (state.type_objet == "agora") {
-		changeTimelineMode('consignes');
 		callAgora();
 
 		if (state.page == 'rubrique') {
@@ -185,8 +176,7 @@ function setContentFromState(state) {
 	if (state.id_objet != "0") {
 		// Consigne
 		if (state.type_objet == "consignes") {
-			changeTimelineMode('consignes');
-			for (k = 0; k < CCN.consignes.length; k++) {
+			for (let k = 0; k < CCN.consignes.length; k++) {
 				if (CCN.consignes[k].id == state.id_objet) {
 					callConsigne(state.id_objet);
 					break;
@@ -196,9 +186,8 @@ function setContentFromState(state) {
 
 		// Réponse
 		if (state.type_objet == "travail_en_cours") {
-			changeTimelineMode('consignes');
-			outer: for (k = 0; k < CCN.consignes.length; k++) {
-				for (l = 0; l < CCN.consignes[k].reponses.length; l++) {
+			outer: for (let k = 0; k < CCN.consignes.length; k++) {
+				for (let l = 0; l < CCN.consignes[k].reponses.length; l++) {
 					if (CCN.consignes[k].reponses[l].id == state.id_objet) {
 						callReponse(state.id_objet);
 						break outer;
@@ -209,11 +198,7 @@ function setContentFromState(state) {
 
 		// Classe
 		if (state.type_objet == "classes") {
-
-			changeTimelineMode('consignes');
-
-
-			for (k = 0; k < CCN.classes.length; k++) {
+			for (let k = 0; k < CCN.classes.length; k++) {
 				if (CCN.classes[k].id == state.id_objet) {
 					callClasse(state.id_objet);
 					break;
@@ -223,13 +208,11 @@ function setContentFromState(state) {
 
 		// Article de blog
 		if (state.type_objet == "blogs") {
-			changeTimelineMode('blogs');
 			callArticleBlog(state.id_objet, "article");
 		}
 
 		// Article d'événement
 		if (state.type_objet == "evenements") {
-			changeTimelineMode('evenements');
 			callArticleEvenement(state.id_objet, "article");
 		}
 	}
@@ -255,8 +238,6 @@ function setContentFromState(state) {
 function onResize() {
 	$('#crayons-surcharge-styles').text('.crayon-active.markItUpEditor { height: ' + (parseInt($(window).height()) - 228) + 'px !important; } .resizehandle { display:none !important; }');
 }
-
-
 /**
  * Affiche ou réduit l'affichage plein écran des sidebars.
  */
@@ -295,22 +276,12 @@ function getHauteurZone() {
 }
 
 /**
- * Appelle le recalcul des connecteurs.
- *
- * @see updateConnecteurs
- */
-
-function updateTimeline() {
-	updateConnecteurs();
-}
-
-/**
  * Change le mode d'affichage de la timeline.
  *
  * @param {string} type - Peut être <tt>consignes</tt>, <tt>blogs</tt> ou <tt>evenements</tt>
  */
 function changeTimelineMode(type) {
-	var classCss = {};
+	const classCss = {};
 	classCss.consignes = 'show_consignes';
 	classCss.blogs = 'show_blogs';
 	classCss.evenements = 'show_evenements';
@@ -318,7 +289,7 @@ function changeTimelineMode(type) {
 	if (!$('body').hasClass(classCss[type])) {
 		CCN.projet.showWholeTimeline();
 
-		for (var index in classCss) {
+		for (const index in classCss) {
 			$('body').removeClass(classCss[index]);
 		}
 
@@ -330,8 +301,6 @@ function changeTimelineMode(type) {
 	$('#menu_bas .logo a.menu_logo_type_sidebarView').removeClass('selected');
 
 }
-
-
 /**
  * Gère les événements lors du click sur une consigne et appelle {@link consigne#showInTimeline}.
  *
@@ -346,17 +315,12 @@ function changeTimelineMode(type) {
  */
 
 function showConsigneInTimeline(numero) {
-	for (var index_consigne in CCN.consignes) {
-		if (CCN.consignes[index_consigne].id == numero) {
-			//  CCN.projet.showWholeTimeline();
-			CCN.consignes[index_consigne].showInTimeline();
+	for (const consigne of CCN.consignes) {
+		if (consigne.id == numero) {
+			consigne.showInTimeline();
 		}
 	}
-
-	// TODO : icones
 }
-
-
 /**
  * Gère les événements lors du click sur une réponse et appelle {@link reponse#showInTimeline}.
  *
@@ -371,16 +335,14 @@ function showConsigneInTimeline(numero) {
  */
 
 function showReponseInTimeline(numero) {
-	for (var index_consigne in CCN.consignes) {
-		for (var index_reponse in CCN.consignes[index_consigne].reponses) {
-			if (CCN.consignes[index_consigne].reponses[index_reponse].id == numero) {
-				CCN.consignes[index_consigne].reponses[index_reponse].showInTimeline();
+	for (const consigne of CCN.consignes) {
+		for (const reponse of consigne.reponses) {
+			if (reponse.id == numero) {
+				reponse.showInTimeline();
 			}
 		}
 	}
 }
-
-
 /**
  * Redirige vers la fonction la plus appropriée
  * pour charger l'élément
@@ -430,7 +392,7 @@ function callConsigne(id_consigne) {
 
 	changeTimelineMode('consignes');
 
-	var url = CCN.projet.url_popup_consigne + "&id_article=" + id_consigne;
+	const url = CCN.projet.url_popup_consigne + "&id_article=" + id_consigne;
 	showConsigneInTimeline(id_consigne);
 	setFullscreenModeToCols(false);
 	updateMenuIcon(['consignes-' + id_consigne], 'mainView');
@@ -449,8 +411,6 @@ function callConsigne(id_consigne) {
 	);
 
 }
-
-
 /**
  * Appelle le chargement de la réponse
  * dans la sidebar principale et appelle
@@ -469,13 +429,13 @@ function callReponse(id_reponse) {
 	changeTimelineMode('consignes');
 	setFullscreenModeToCols(true);
 
-	var id_consigne = getIdConsigneFromIdReponse(id_reponse);
+	const id_consigne = getIdConsigneFromIdReponse(id_reponse);
 
-	var id_classe = getIdClasseFromIdReponse(id_reponse);
+	const id_classe = getIdClasseFromIdReponse(id_reponse);
 
 	updateMenuIcon(['consignes-' + id_consigne, 'classes-' + id_classe], 'mainView');
 
-	var url = CCN.projet.url_popup_reponse + "&id_article=" + id_reponse;
+	const url = CCN.projet.url_popup_reponse + "&id_article=" + id_reponse;
 
 	showConsigneInTimeline(id_consigne);
 
@@ -491,17 +451,13 @@ function callReponse(id_reponse) {
 			);
 		}
 	);
-
-
-	var url_travail_en_cours = 'spip.php?page=rubrique&mode=detail&id_rubrique=' + CCN.travailEnCoursId;
+	const url_travail_en_cours = 'spip.php?page=rubrique&mode=detail&id_rubrique=' + CCN.travailEnCoursId;
 
 	loadContentInLateralSidebar(url_travail_en_cours, 'rubrique', 'travail_en_cours');
 
 	showReponseInTimeline(id_reponse);
 
 }
-
-
 /**
  * Appelle le chargement de la classe
  * dans la sidebar principale et appelle
@@ -522,9 +478,8 @@ function callClasse(id_classe) {
 	setFullscreenModeToCols(true);
 	updateMenuIcon(['classes', 'classes-' + id_classe], 'sidebarView');
 
-	var url = CCN.projet.url_popup_classes;
+	let url = CCN.projet.url_popup_classes;
 	if (id_classe != '') {
-		// url = CCN.projet.url_popup_classes + '&id_rubrique=' + id_classe + '&type_objet=travail_en_cours';
 		url = CCN.projet.url_popup_classes + '&id_objet=' + id_classe + '&type_objet=travail_en_cours';
 	}
 	loadContentInMainSidebar(
@@ -540,11 +495,9 @@ function callClasse(id_classe) {
 		}
 	);
 
-	var url_travail_en_cours = 'spip.php?page=rubrique&mode=detail&id_rubrique=' + CCN.travailEnCoursId;
+	const url_travail_en_cours = 'spip.php?page=rubrique&mode=detail&id_rubrique=' + CCN.travailEnCoursId;
 	loadContentInLateralSidebar(url_travail_en_cours, 'rubrique', 'travail_en_cours');
 }
-
-
 /**
  * Appelle le chargement des classes
  * dans la sidebar principale
@@ -560,7 +513,7 @@ function callClasses() {
 
 	blankMainSidebar('<div class="sidebar_bubble"><div class="fiche_titre couleur_texte_ressources couleur_ressources0"><div class="texte"><div class="titre">Travail en cours</div></div></div></div><div class="sidebar_bubble sidebar_bubble_blank">Naviguez dans l\'espace travail en cours grâce à la barre latérale sur votre droite.</div>');
 
-	var url_travail_en_cours = 'spip.php?page=rubrique&mode=detail&id_rubrique=' + CCN.travailEnCoursId;
+	const url_travail_en_cours = 'spip.php?page=rubrique&mode=detail&id_rubrique=' + CCN.travailEnCoursId;
 	loadContentInLateralSidebar(url_travail_en_cours, 'rubrique', 'travail_en_cours');
 }
 
@@ -579,14 +532,12 @@ function callLivrables() {
 	blankMainSidebar('<div class="sidebar_bubble"><div class="fiche_titre couleur_texte_livrables couleur_livrables0"><div class="texte"><div class="titre">Espace livrables</div></div></div></div><div class="sidebar_bubble sidebar_bubble_blank">Naviguez dans l\'espace livrables grâce à la barre latérale sur votre droite.</div>');
 	setFullscreenModeToCols(true);
 
-	var url_lateral = CCN.projet.url_popup_livrables;
+	const url_lateral = CCN.projet.url_popup_livrables;
 	loadContentInLateralSidebar(
 		url_lateral, 'rubrique', 'livrables', function () {
 		}
 	);
 }
-
-
 /**
  * Appelle le chargement de l'article de blog
  * dans la sidebar principale et appelle
@@ -607,7 +558,7 @@ function callArticleBlog(id_article) {
 	setFullscreenModeToCols(false);
 	updateMenuIcon(['blogs'], 'mainView');
 
-	var url = CCN.projet.url_popup_blog + "&page=article&id_article=" + id_article;
+	const url = CCN.projet.url_popup_blog + "&page=article&id_article=" + id_article;
 	loadContentInMainSidebar(
 		url, 'article', 'blogs', function () {
 			updateUrl(
@@ -621,8 +572,6 @@ function callArticleBlog(id_article) {
 		}
 	);
 }
-
-
 /**
  * Appelle le chargement de la ressource
  * dans la sidebar principale et appelle
@@ -645,7 +594,7 @@ function callRessource() {
 	blankMainSidebar('<div class="sidebar_bubble"><div class="fiche_titre couleur_texte_ressources couleur_ressources0"><div class="texte"><div class="titre">Espace ressources</div></div></div></div><div class="sidebar_bubble sidebar_bubble_blank">Naviguez dans l\'espace ressources grâce à la barre latérale sur votre droite.</div>');
 	setFullscreenModeToCols(true);
 
-	var url_lateral = CCN.projet.url_popup_ressources;
+	const url_lateral = CCN.projet.url_popup_ressources;
 	loadContentInLateralSidebar(
 		url_lateral, 'rubrique', 'ressources', function () {
 		}
@@ -668,7 +617,7 @@ function callRessourceArticle(id_article, type_objet) {
 	setFullscreenModeToCols(true);
 	updateMenuIcon([type_objet], 'sidebarView');
 
-	var url = "./spip.php?page=article&id_article=" + id_article + "&mode=ajax-detail";
+	const url = "./spip.php?page=article&id_article=" + id_article + "&mode=ajax-detail";
 	loadContentInMainSidebar(
 		url, 'article', type_objet, function () {
 			updateUrl(
@@ -680,8 +629,6 @@ function callRessourceArticle(id_article, type_objet) {
 			);
 		}
 	);
-
-	var url_lateral = (type_objet == 'ressources') ? CCN.projet.url_popup_ressources : CCN.projet.url_popup_agora;
 }
 
 /**
@@ -700,7 +647,7 @@ function callRessourceSyndicArticle(id_syndic_article, type_objet) {
 	setFullscreenModeToCols(true);
 	updateMenuIcon([type_objet], 'sidebarView');
 
-	var url = "./spip.php?page=syndic_article&id_syndic_article=" + id_syndic_article + "&mode=ajax-detail";
+	const url = "./spip.php?page=syndic_article&id_syndic_article=" + id_syndic_article + "&mode=ajax-detail";
 	loadContentInMainSidebar(
 		url, 'syndic_article', type_objet, function () {
 			updateUrl(
@@ -712,13 +659,6 @@ function callRessourceSyndicArticle(id_syndic_article, type_objet) {
 			);
 		}
 	);
-
-	var url_lateral = (type_objet == 'ressources') ? CCN.projet.url_popup_ressources : CCN.projet.url_popup_agora;
-	loadContentInLateralSidebar(
-		url_lateral, 'rubrique', type_objet, function () {
-		}
-	);
-
 }
 
 /**
@@ -737,7 +677,7 @@ function callRessourceRubrique(id_rubrique, type_objet) {
 	setFullscreenModeToCols(true);
 	updateMenuIcon([type_objet], 'sidebarView');
 
-	var url = "./spip.php?page=rubrique&id_rubrique=" + id_rubrique + "&mode=ajax-detail";
+	const url = "./spip.php?page=rubrique&id_rubrique=" + id_rubrique + "&mode=ajax-detail";
 	loadContentInMainSidebar(
 		url, 'rubrique', type_objet, function () {
 			updateUrl(
@@ -749,11 +689,7 @@ function callRessourceRubrique(id_rubrique, type_objet) {
 			);
 		}
 	);
-
-	var url_lateral = (type_objet == 'ressources') ? CCN.projet.url_popup_ressources : CCN.projet.url_popup_agora;
 }
-
-
 /**
  * Appelle le chargement de l'événement
  * dans la sidebar principale et appelle
@@ -774,7 +710,7 @@ function callArticleEvenement(id_objet, type_objet) {
 	setFullscreenModeToCols(false);
 	updateMenuIcon(['evenements'], 'mainView');
 
-	var url = CCN.projet.url_popup_evenement + "&page=" + type_objet + "&id_" + type_objet + "=" + id_objet;
+	const url = CCN.projet.url_popup_evenement + "&page=" + type_objet + "&id_" + type_objet + "=" + id_objet;
 	loadContentInMainSidebar(
 		url, 'article', 'evenements', function () {
 			updateUrl(
@@ -788,8 +724,6 @@ function callArticleEvenement(id_objet, type_objet) {
 	);
 
 }
-
-
 /**
  * Appelle le chargement de l'agora
  * dans la sidebar principale et appelle
@@ -811,7 +745,7 @@ function callAgora() {
 	blankMainSidebar('<div class="sidebar_bubble"><div class="fiche_titre couleur_texte_ressources couleur_ressources0"><div class="texte"><div class="titre">Agora</div></div></div></div><div class="sidebar_bubble sidebar_bubble_blank">Naviguez dans Agora grâce à la barre latérale sur votre droite.</div>');
 	setFullscreenModeToCols(true);
 
-	var url_lateral = CCN.projet.url_popup_agora;
+	const url_lateral = CCN.projet.url_popup_agora;
 	loadContentInLateralSidebar(
 		url_lateral, 'rubrique', 'agora', function () {
 		}
@@ -830,12 +764,10 @@ function createReponse(id_consigne, id_rubrique_classe, numero) {
 
 	changeTimelineMode('consignes');
 
-	var url = CCN.projet.url_popup_reponseajout + "&id_consigne=" + id_consigne + "&id_rubrique=" + id_rubrique_classe; // TODO Check infinite loading icon
+	const url = CCN.projet.url_popup_reponseajout + "&id_consigne=" + id_consigne + "&id_rubrique=" + id_rubrique_classe; // TODO Check infinite loading icon
 	loadContentInMainSidebar(url, 'article', 'blogs');
 
 }
-
-
 /**
  * Cherche l'ID de la consigne parente à une réponse de classe
  * grâce à l'ID de la réponse
@@ -846,8 +778,8 @@ function createReponse(id_consigne, id_rubrique_classe, numero) {
  * @see callReponse
  */
 function getIdConsigneFromIdReponse(id_reponse) {
-	for (var i = 0; i < CCN.consignes.length; i++) {
-		for (var j = 0; j < CCN.consignes[i].reponses.length; j++) {
+	for (let i = 0; i < CCN.consignes.length; i++) {
+		for (let j = 0; j < CCN.consignes[i].reponses.length; j++) {
 			if (CCN.consignes[i].reponses[j].id == id_reponse) {
 				return CCN.consignes[i].id;
 			}
@@ -855,8 +787,6 @@ function getIdConsigneFromIdReponse(id_reponse) {
 	}
 	return null;
 }
-
-
 
 /**
  * Cherche l'ID de la classe parente à une réponse de classe
@@ -869,8 +799,8 @@ function getIdConsigneFromIdReponse(id_reponse) {
  */
 
 function getIdClasseFromIdReponse(id_reponse) {
-	for (var i = 0; i < CCN.consignes.length; i++) {
-		for (var j = 0; j < CCN.consignes[i].reponses.length; j++) {
+	for (let i = 0; i < CCN.consignes.length; i++) {
+		for (let j = 0; j < CCN.consignes[i].reponses.length; j++) {
 			if (CCN.consignes[i].reponses[j].id == id_reponse) {
 				return CCN.consignes[i].reponses[j].classe_id;
 			}
@@ -891,19 +821,19 @@ function updateConnecteurs() {
 	$('.connecteur_timeline').each(
 		function () {
 
-			var connecteur_consigne = $('#consigne_haute' + $(this).data('consigne-id'));
-			var connecteur_reponse = $('#reponse_haute' + $(this).data('reponse-id'));
+			const connecteur_consigne = $('#consigne_haute' + $(this).data('consigne-id'));
+			const connecteur_reponse = $('#reponse_haute' + $(this).data('reponse-id'));
 
-			var connecteur = $(this);
+			const connecteur = $(this);
 
-			var x1 = connecteur_consigne.offset().left + connecteur_consigne.outerWidth() - 5;
-			var y1 = connecteur_consigne.offset().top + CCN.projet.timeline.offset().top + 5;
-			var x2 = connecteur_reponse.offset().left + 5;
-			var y2 = connecteur_reponse.offset().top + CCN.projet.timeline.offset().top + 5;
+			const x1 = connecteur_consigne.offset().left + connecteur_consigne.outerWidth() - 5;
+			const y1 = connecteur_consigne.offset().top + CCN.projet.timeline.offset().top + 5;
+			const x2 = connecteur_reponse.offset().left + 5;
+			const y2 = connecteur_reponse.offset().top + CCN.projet.timeline.offset().top + 5;
 
-			var length = Math.sqrt((x1 - x2) * (x1 - x2) + (y1 - y2) * (y1 - y2));
-			var angle = Math.atan2(y2 - y1, x2 - x1) * 180 / Math.PI;
-			var transform = 'rotate(' + angle + 'deg)';
+			const length = Math.sqrt((x1 - x2) * (x1 - x2) + (y1 - y2) * (y1 - y2));
+			const angle = Math.atan2(y2 - y1, x2 - x1) * 180 / Math.PI;
+			const transform = 'rotate(' + angle + 'deg)';
 
 			connecteur.css(
 				{
@@ -925,7 +855,7 @@ function updateConnecteurs() {
  * @todo  Améliorer la récupération de la couleur ?
  */
 function changeCouleurLogoMenu(val) {
-	var color = $(val).css('background-color');
+	const color = $(val).css('background-color');
 	$(val).closest('li').children('h3').css('background-color', color);
 }
 
@@ -936,8 +866,6 @@ function changeCouleurLogoMenu(val) {
 function updateUrl(object, title, url) {
 
 	currentState = object;
-
-
 	if (CCN.hash != '') {
 		if (CCN.hash.substring(0, 5) == 'forum') {
 
@@ -950,12 +878,8 @@ function updateUrl(object, title, url) {
 		setTimeout(
 			function () {
 
-				var anchor = $("#" + CCN.hash);
-
-
+				const anchor = $("#" + CCN.hash);
 				if (anchor.length > 0) {
-
-
 					// TODO : cela est appelé deux fois minimum à cause de History.js (donc un trigger('click') sur .triggertoggleshow ne fonctionne pas car il ouvre puis ferme)
 
 					// Forum : ouvre les items
@@ -971,12 +895,7 @@ function updateUrl(object, title, url) {
 	} else {
 		History.pushState(object, title, url);
 	}
-	antiPushState = false;
-
-
 }
-
-
 /**
  * Met à jour le cookie et recharge la page.
  *
@@ -987,11 +906,8 @@ function updateUrl(object, title, url) {
 
 function reloadAndSetCookie(url, cookie_nom, cookie_valeur) {
 	document.cookie = cookie_nom + "=" + cookie_valeur;
-	url = url + '/?rub=' + cookie_valeur;
-	reload(url);
+	reload(url + '/?rub=' + cookie_valeur);
 }
-
-
 /**
  * Gère le rechargement de la page.
  *
@@ -1084,17 +1000,16 @@ function loadContentInLateralSidebar(url, typePage, typeObjet, callback) {
 function updateMenuIcon(ids, mode) {
 	if (mode == 'timelineMode' || mode == 'mainView') {
 		$('#menu_bas .logo a').removeClass('selected');
-		for (var i = 0; i < ids.length; i++) {
-			$('.menu_logo_' + ids[i]).addClass('selected');
+		for (const id of ids) {
+			$('.menu_logo_' + id).addClass('selected');
 		}
 	}
 
 	if (mode == 'sidebarView') {
 		$('#menu_bas .logo a.menu_logo_type_sidebarView').removeClass('selected');
-		// Je retire aussi les "selected" sur les images de classes.
 		$('#menu_bas .logo a.logo_menu_classe').removeClass('selected');
-		for (var i = 0; i < ids.length; i++) {
-			$('.menu_logo_' + ids[i]).addClass('selected');
+		for (const id of ids) {
+			$('.menu_logo_' + id).addClass('selected');
 		}
 	}
 }
@@ -1136,8 +1051,8 @@ function setFullscreenModeToCols(setCols) {
  */
 
 function blankMainSidebar(msg) {
-	var message = (msg) ? msg : '';
-	$('#sidebar_main_inner').html('<div class="popup popup_blank">' + msg + '</div>');
+	const message = msg || '';
+	$('#sidebar_main_inner').html('<div class="popup popup_blank">' + message + '</div>');
 }
 
 /**
@@ -1167,5 +1082,5 @@ function hideSidebarLateral() {
 function showSidebar() {
 	$('body').addClass('hasSidebarOpen');
 	$('#sidebar').addClass('show');
-	updateTimeline();
+	updateConnecteurs();
 }
