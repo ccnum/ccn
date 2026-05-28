@@ -95,7 +95,7 @@ function Consigne() {
 				>
 					<div class="picto_nombre_commentaires">${this.data.nombre_commentaires}</div>
 					<div class="etiquette-etape">
-						<img class="logo-etiquette" src="${CCN.urlRoot}img/location-check.svg" />
+						<img class="logo-etiquette" src="" />
 						Étape N°${this.numero+1}
 					</div>
 					<div class="texte">

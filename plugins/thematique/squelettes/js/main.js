@@ -329,8 +329,10 @@ function post_process_DOM_after_all_consignes_created() {
 	const cestLaDerniereConsigneDeLAnnee = false;
 	if(cestLaDerniereConsigneDeLAnnee) {
 		derniereConsigneHaute.innerText = "PROJETS FINAUX !";
-		derniereConsigneHaute.querySelector("logo-etiquette").src = "${CCN.urlRoot}img/sparks.svg"
+		derniereConsigneHaute.find(".logo-etiquette").first().attr("src", `${CCN.urlRoot}img/sparks.svg`)
 		// <img class="card-bg" src="${CCN.urlRoot}img/cards_background.svg" />
+	} else {
+		derniereConsigneHaute.find(".logo-etiquette").first().attr("src", `${CCN.urlRoot}img/location-check.svg`) 
 	}
 }
 /**
