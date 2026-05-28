@@ -354,7 +354,7 @@ body {
 		.user-option {
 			display: flex;
 			align-items: center;
-			height: 50px;
+			height: var(--header-height);
 		}
 	}
 	.user-option {
@@ -847,15 +847,15 @@ a:hover {
 }
 
 .select,
-.select div {
+.select > div {
 	background: #fff;
 	color: #bbb;
 }
-.select div {
+.select > div {
 	width: 100%;
 	border-width: 0;
 }
-.select div.choix_rubrique_wrapper {
+.select > div.choix_rubrique_wrapper {
 	width: auto;
 }
 .select:hover div {
