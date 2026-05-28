@@ -60,7 +60,8 @@ function Projet() {
 		}
 
 		if (data.image_fond.length > 1) {
-			this.timeline_parent.css({ 'background-image': 'url(' + data.image_fond + ')' });
+			const safeUrl = data.image_fond.replace(/\\/g, '\\\\').replace(/"/g, '\\"');
+			this.timeline_parent.css({ 'background-image': 'url("' + safeUrl + '")' });
 		}
 
 		// Urls
