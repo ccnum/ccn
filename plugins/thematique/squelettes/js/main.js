@@ -323,7 +323,6 @@ function getDernièreConsigneHaute(){
 }
 
 function post_process_DOM_after_all_consignes_created() {
-	console.log("post_process_DOM_after_all_consignes_created")
 	const derniereConsigneHaute = getDernièreConsigneHaute()
 	derniereConsigneHaute.addClass("derniere-etape")
 	const cestLaDerniereConsigneDeLAnnee = false;
