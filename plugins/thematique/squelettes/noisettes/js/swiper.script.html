@@ -1,8 +1,10 @@
 <script>
 	(function() {
 		
-	const PDFJS_WORKER_SRC =
-		'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+	const pdfScript = document.querySelector('script[src*="pdf.min.js"]');
+	const PDFJS_WORKER_SRC = pdfScript
+		? pdfScript.src.replace('pdf.min.js', 'pdf.worker.min.js')
+		: 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
 
 	/**
 	 * Swiper core
@@ -135,12 +137,9 @@
 			$doc.before($container);
 
 			// Generate Loader
-			const $loader = $(`
-			<div class="swiper-pdf-loader">
-				<img src="${$imgSrc}"/>
-				<span>Chargement de "${pdfName}" ...</span>
-			</div>
-		`);
+			const $loader = $('<div class="swiper-pdf-loader">');
+			if ($imgSrc) { $('<img>').attr('src', $imgSrc).appendTo($loader); }
+			$('<span>').text('Chargement de "' + pdfName + '" ...').appendTo($loader);
 			$container.append($loader);
 
 			// Extract delete button before deleting old display
@@ -166,12 +165,10 @@
 				pdf = await pdfjsLib.getDocument(pdfUrl).promise;
 				// ... if not, display error message
 			} catch (e) {
-				$container.html(`
-				<div class="swiper-pdf-loader">
-					<img src="${$imgSrc}"/>
-					<span>Erreur lors du chargement de "${pdfName}"</span>
-				</div>
-			`);
+				const $erreur = $('<div class="swiper-pdf-loader">');
+				if ($imgSrc) { $('<img>').attr('src', $imgSrc).appendTo($erreur); }
+				$('<span>').text('Erreur lors du chargement de "' + pdfName + '"').appendTo($erreur);
+				$container.empty().append($erreur);
 				continue;
 			}
 
@@ -248,12 +245,9 @@
 		$portfolio_grand.before($container);
 
 		// Generate Loader
-		const $loader = $(`
-			<div class="swiper-pdf-loader">
-				<img src="${$imgSrc}"/>
-				<span>Chargement de "${pdfName}" ...</span>
-			</div>
-		`);
+		const $loader = $('<div class="swiper-pdf-loader">');
+		if ($imgSrc) { $('<img>').attr('src', $imgSrc).appendTo($loader); }
+		$('<span>').text('Chargement de "' + pdfName + '" ...').appendTo($loader);
 		$container.append($loader);
 
 		// Generate PDF Swiper
@@ -276,12 +270,10 @@
 			pdf = await pdfjsLib.getDocument(pdfUrl).promise;
 			// ... if not, display error message
 		} catch (e) {
-			$container.html(`
-				<div class="swiper-pdf-loader">
-					<img src="${$imgSrc}"/>
-					<span>Erreur lors du chargement de "${pdfName}"</span>
-				</div>
-			`);
+			const $erreur = $('<div class="swiper-pdf-loader">');
+			if ($imgSrc) { $('<img>').attr('src', $imgSrc).appendTo($erreur); }
+			$('<span>').text('Erreur lors du chargement de "' + pdfName + '"').appendTo($erreur);
+			$container.empty().append($erreur);
 			return;
 		}
 
