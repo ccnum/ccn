@@ -59,16 +59,14 @@ function Reponse() {
 
 		this.div_texte = $('<div/>')
 			.attr('id', 'reponse' + this.id)
-			.attr('class', 'reponse couleur_texte_travail_en_cours couleur_travail_en_cours' + coul)
-			.html(
-				"<div class=\"picto_nombre_commentaires\">" + this.nombre_commentaires + "</div> " +
-				"<div class=\"photo\"><img src=\"" + vignette + "\" /></div> " +
-				"<div class=\"texte\">" +
-				"<div class=\"titre\" class=\"\">" + this.titre + "</div> " +
-				"<div class=\"auteur_date\">" + this.nom_classe + " - " + date_texte + "</div> " +
-				"</div>" +
-				"<div class=\"nettoyeur\"></div>"
-			);
+			.attr('class', 'reponse couleur_texte_travail_en_cours couleur_travail_en_cours' + coul);
+
+		const divPictoComm = $('<div class="picto_nombre_commentaires">').text(this.nombre_commentaires);
+		const divPhoto = $('<div class="photo">').append($('<img>').attr('src', vignette));
+		const divTitre = $('<div class="titre">').text(this.titre);
+		const divAuteurDate = $('<div class="auteur_date">').text(this.nom_classe + ' - ' + date_texte);
+		const divTexte = $('<div class="texte">').append(divTitre).append(divAuteurDate);
+		this.div_texte.append(divPictoComm).append(divPhoto).append(divTexte).append($('<div class="nettoyeur">'));
 		this.connecteur = $(
 			'<div/>', {
 			'id': 'connecteur_consigne_' + this.consigne.id + '_reponse_' + this.id,
@@ -109,7 +107,7 @@ function Reponse() {
 					stop: function (event, ui) {
 						const yy = (ui.offset.top - CCN.projet.timeline.offset().top) / CCN.projet.timeline.height();
 
-						$.get("spip.php?page=ajax&mode=article-sauve-coordonnees", { id_objet: _thisId, type_objet: "article", X: 0, Y: yy });
+						$.post("spip.php?page=ajax&mode=article-sauve-coordonnees", { id_objet: _thisId, type_objet: "article", X: 0, Y: yy });
 						$(this).removeClass('no_event');
 						this.y = yy;
 						$(this).css({ 'top': (yy * 100) + '%' });

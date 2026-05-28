@@ -81,17 +81,13 @@ function Consigne() {
 			reponses_puces += '<div class="reponse_puce disabled"></div>';
 		}
 
-		this.div_titre.html(
-			"<div class=\"picto_nombre_commentaires\">" + this.data.nombre_commentaires + "</div> " +
-			"<div class=\"photo\"><img src=\"" + this.data.image + "\" /></div> " +
-			"<div class=\"texte\">" +
-			"<div class=\"titre\">" + this.titre + "</div> " +
-			"<div class=\"auteur_date\">" + this.intervenant_nom + "<!-- - " + this.date_texte + "-->" +
-			"<div class=\"picto_nombre_reponses\">" + reponses_puces + "</div>" +
-			"</div> " +
-			"</div>" +
-			"<div class=\"nettoyeur\"></div>"
-		);
+		const divPictoComm = $('<div class="picto_nombre_commentaires">').text(this.data.nombre_commentaires);
+		const divPhoto = $('<div class="photo">').append($('<img>').attr('src', this.data.image));
+		const divTitre = $('<div class="titre">').text(this.titre);
+		const divAuteurDate = $('<div class="auteur_date">').text(this.intervenant_nom)
+			.append($('<div class="picto_nombre_reponses">').html(reponses_puces));
+		const divTexte = $('<div class="texte">').append(divTitre).append(divAuteurDate);
+		this.div_titre.append(divPictoComm).append(divPhoto).append(divTexte).append($('<div class="nettoyeur">'));
 		this.div_base.append(this.div_titre);
 
 		// Calcul des tailles des consignes
@@ -129,7 +125,7 @@ function Consigne() {
 				stop: function (event, ui) {
 					const yy = (ui.offset.top - CCN.projet.timeline.offset().top) / CCN.projet.timeline.height();
 
-					$.get("spip.php?page=ajax&mode=article-sauve-coordonnees", { id_objet: _thisId, type_objet: "article", X: 0, Y: yy });
+					$.post("spip.php?page=ajax&mode=article-sauve-coordonnees", { id_objet: _thisId, type_objet: "article", X: 0, Y: yy });
 					$(this).removeClass('no_event');
 
 					this.y = yy;

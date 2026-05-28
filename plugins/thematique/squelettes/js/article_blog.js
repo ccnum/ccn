@@ -38,20 +38,17 @@ function ArticleBlog() {
 
 		const date_texte = this.date.substring(0, 2) + " " + CCN.nomMois[parseFloat(this.date.substring(3, 5)) - 1];
 
-		let html = "<div id='article_blog" + this.id + "' class='article_blog";
-		if ((this.titre.match("gazette")) || (this.titre.match("novamag")) || (this.titre.match("magazine"))) {
-			html = html + " article_blog2";
-		}
-		html = html + "'><div class=\"article_blog_inner\"><b>" + this.titre + "</b><br/><span class=\"article_blog_date\">" + date_texte + "</span></div>";
-
+		const articleBlogClass = 'article_blog' +
+			((this.titre.match("gazette") || this.titre.match("novamag") || this.titre.match("magazine")) ? ' article_blog2' : '');
+		const divInner = $('<div class="article_blog_inner">')
+			.append($('<b>').text(this.titre))
+			.append('<br/>')
+			.append($('<span class="article_blog_date">').text(date_texte));
+		const divArticleBlog = $('<div>').attr('id', 'article_blog' + this.id).attr('class', articleBlogClass).append(divInner);
 		if (this.nombre_commentaires > 0) {
-			html += "<div class=\"picto_nombre_commentaires\">" + this.nombre_commentaires + "</div>";
+			divArticleBlog.append($('<div class="picto_nombre_commentaires">').text(this.nombre_commentaires));
 		}
-		html += "</div>";
-
-		this.div_texte = $('<div/>')
-			.attr('class', '')
-			.html(html);
+		this.div_texte = $('<div/>').attr('class', '').append(divArticleBlog);
 
 		this.div_base.append(this.div_texte);
 
@@ -75,10 +72,7 @@ function ArticleBlog() {
 					stop: function (event, ui) {
 						const y_parent = $(this).parent().height();
 						const yy = ui.position.top / y_parent;
-						$.get(
-							"spip.php?page=ajax&mode=article-sauve-coordonnees", { id_objet: _thisId, type_objet: "article", X: 0, Y: yy }, function (data) {
-							}
-						);
+						$.post("spip.php?page=ajax&mode=article-sauve-coordonnees", { id_objet: _thisId, type_objet: "article", X: 0, Y: yy });
 					}
 				}
 			);

@@ -157,7 +157,6 @@ function loadConsignes(fichier) {
 					dataForConsigne.id = parseFloat(getXMLNodeValue('id', xmlConsignes[i]));
 					dataForConsigne.intervenant_id = parseFloat(getXMLNodeValue('intervenant_id', xmlConsignes[i]));
 					dataForConsigne.titre = getXMLNodeValue('titre', xmlConsignes[i]);
-					dataForConsigne.titre = dataForConsigne.titre.replaceAll("[", "<").replaceAll("]", ">");
 					dataForConsigne.image = getXMLNodeValue('image', xmlConsignes[i]);
 					dataForConsigne.y = getXMLNodeValue('y', xmlConsignes[i]);
 
@@ -264,7 +263,6 @@ function loadConsignes(fichier) {
 						dataForReponse.id = parseFloat(getXMLNodeValue('id', xmlReponses[j]));
 						dataForReponse.classe_id = parseFloat(getXMLNodeValue('classe_id', xmlReponses[j]));
 						dataForReponse.titre = getXMLNodeValue('texte', xmlReponses[j]);
-						dataForReponse.titre = dataForReponse.titre.replaceAll("[", "<").replaceAll("]", ">");
 						dataForReponse.date = getXMLNodeValue('date', xmlReponses[j]);
 						dataForReponse.date_date = new Date();
 						dataForReponse.date_date.setDate(parseFloat(dataForReponse.date.substring(0, 2)));
@@ -329,7 +327,6 @@ function loadBlog(fichier) {
 			dataForArticleBlog.type_objet = getXMLNodeValue('type_objet', xmlArticlesBlog[i]);
 			dataForArticleBlog.id_objet = getXMLNodeValue('id_objet', xmlArticlesBlog[i]);
 			dataForArticleBlog.titre = getXMLNodeValue('titre', xmlArticlesBlog[i]);
-			dataForArticleBlog.titre = dataForArticleBlog.titre.replaceAll("[", "<").replaceAll("]", ">");
 			dataForArticleBlog.y = getXMLNodeValue('y', xmlArticlesBlog[i]);
 			dataForArticleBlog.date = getXMLNodeValue('date', xmlArticlesBlog[i]);
 
@@ -388,7 +385,6 @@ function loadEvenements(fichier) {
 			dataForEvenement.id_objet = getXMLNodeValue('id_objet', xmlArticlesEvenement[i]);
 			dataForEvenement.titre = getXMLNodeValue('titre', xmlArticlesEvenement[i]);
 			dataForEvenement.y = getXMLNodeValue('y', xmlArticlesEvenement[i]);
-			dataForEvenement.titre = dataForEvenement.titre.replaceAll("[", "<").replaceAll("]", ">");
 
 			if (indexY >= CCN.projet.liste_y_evenements.length) {
 				indexY = 0;

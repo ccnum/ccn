@@ -46,17 +46,16 @@ function ArticleEvenement() {
 			this.titre = this.titre.substring(0, 25) + "(...)";
 		}
 
-		let html = "<div id='article_evenement" + this.id + "' class='article_evenement'>";
-		html += "<div class='article_evenement_inner'><div class='article_evenement_texte'><b>" + this.titre + "</b><br/><span class='article_evenement_date'>" + date_texte + "</span></div></div>";
-
+		const divTexteInner = $('<div class="article_evenement_texte">')
+			.append($('<b>').text(this.titre))
+			.append('<br/>')
+			.append($('<span class="article_evenement_date">').text(date_texte));
+		const divInner = $('<div class="article_evenement_inner">').append(divTexteInner);
+		const divArticleEvenement = $('<div>').attr('id', 'article_evenement' + this.id).attr('class', 'article_evenement').append(divInner);
 		if (this.nombre_commentaires > 0) {
-			html += "<div class=\"picto_nombre_commentaires\">" + this.nombre_commentaires + "</div>";
+			divArticleEvenement.append($('<div class="picto_nombre_commentaires">').text(this.nombre_commentaires));
 		}
-		html += "</div>";
-
-		this.div_texte = $('<div/>')
-			.attr('class', '')
-			.html(html);
+		this.div_texte = $('<div/>').attr('class', '').append(divArticleEvenement);
 
 		this.div_base.append(this.div_texte);
 
@@ -81,11 +80,7 @@ function ArticleEvenement() {
 					stop: function (event, ui) {
 						const y_parent = $(this).parent().height();
 						const yy = ui.position.top / y_parent;
-						$.get(
-							"spip.php?page=ajax&mode=article-sauve-coordonnees", { id_objet: _thisId, type_objet: _thisTypeObjet, X: 0, Y: yy },
-							function (data) {
-							}
-						);
+						$.post("spip.php?page=ajax&mode=article-sauve-coordonnees", { id_objet: _thisId, type_objet: _thisTypeObjet, X: 0, Y: yy });
 					}
 				}
 			);
