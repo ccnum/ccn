@@ -41,18 +41,6 @@ function Reponse() {
 
 		const coul = String(this.classe_id).slice(-1);
 
-		this.div_base = $('<div/>')
-			.attr('id', 'reponse_haute' + this.id)
-			.attr('class', 'timeline_item reponse_haute reponse_haute_consigne_parent' + this.consigne.id + ' hide')
-			.attr('data-consigne-id', this.consigne.id)
-			.attr('data-reponse-id', this.id)
-			.css(
-				{
-					'top': (this.y * 100) + '%',
-					'left': (this.x_absolu / CCN.projet.nombre_jours * 100) + '%'
-				}
-			);
-
 		const date_texte = this.date.substring(0, 2) + " " + CCN.nomMois[parseFloat(this.date.substring(3, 5)) - 1];
 
 		const vignette = this.data.vignette.includes('logo_rvb_bleu') 
@@ -70,8 +58,8 @@ function Reponse() {
 					<div class="picto_nombre_commentaires">${this.nombre_commentaires}</div>
 					<div class="photo"><img src="${vignette}" /></div>
 					<div class="texte">
-						<div class="titre">${this.titre}</div>
-						<div class="auteur_date">${this.nom_classe} - ${date_texte}</div>
+						<div class="titre">${escHtml(this.titre)}</div>
+						<div class="auteur_date">${escHtml(this.nom_classe)} - ${date_texte}</div>
 					</div>
 					<div class="nettoyeur"></div>
 				</div>

@@ -53,22 +53,6 @@ function Consigne() {
 		var coul = "" + this.data.intervenant_id + "";
 		coul = coul.substr(coul.length - 1, 1);
 
-		this.div_titre = $('<div/>')
-			.attr('id', 'consigne' + this.id)
-			.attr('class', 'consigne couleur_texte_consignes couleur_consignes' + coul)
-			.attr('data-id', this.id)
-			.attr('data-index', this.numero);
-
-		this.div_base = $('<div/>')
-			.attr('id', 'consigne_haute' + this.id)
-			.attr('class', 'timeline_item consigne_haute')
-			.css(
-				{
-					'top': (this.y * 100) + '%',
-					'left': (this.x / CCN.projet.nombre_jours * 100) + '%'
-				}
-			);
-
 		let reponses_puces = '';
 
 		for (let j = 1; j <= this.data.nombre_reponses; j++) {
@@ -101,7 +85,7 @@ function Consigne() {
 					<div class="texte">
 						<div class="first-row">
 							<div class="photo"><img src="${this.data.image}" /></div>
-							<div class="titre">${this.titre}</div>
+							<div class="titre">${escHtml(this.titre)}</div>
 						</div>
 						<div class="second-row">
 							<div class="picto_nombre_reponses">
