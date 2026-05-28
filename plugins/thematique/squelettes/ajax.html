@@ -6,12 +6,10 @@ Paramètres :
 - page : vue (page)
 ]
 
-[(#REM)
-	[(#MODE|match{timeline|classe}|oui)
+[(#MODE|match{timeline|classe}|oui)
 	<INCLURE{fond=noisettes/#MODE}{env}>
-	]
 ]
 
-[(#MODE|match{timeline|classe}|non)
+[(#MODE|match{article-sauve-coordonnees|article-sauve-mot|article-forum-detail}|oui)
 	<INCLURE{fond=noisettes/ajax/#MODE}{env}>
 ]
