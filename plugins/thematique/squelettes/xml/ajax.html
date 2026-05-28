@@ -5,4 +5,6 @@ Paramètres :
 - mode : page
 ]
 
-<INCLURE{fond=noisettes/ajax/#MODE, env, ajax} />
+[(#MODE|match{article-sauve-coordonnees|article-sauve-mot|article-forum-detail}|oui)
+	<INCLURE{fond=noisettes/ajax/#MODE}{env}>
+]
