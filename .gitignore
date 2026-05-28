@@ -4,7 +4,7 @@
 .htaccess
 config/
 ecrire
-IMG
+/IMG
 local
 plugins/auto
 plugins-dist

@@ -328,7 +328,7 @@ function post_process_DOM_after_all_consignes_created() {
 	derniereConsigneHaute.addClass("derniere-etape")
 	const cestLaDerniereConsigneDeLAnnee = false;
 	if(cestLaDerniereConsigneDeLAnnee) {
-		derniereConsigneHaute.innerText = "PROJETS FINAUX !";
+		derniereConsigneHaute.find(".texte-etiquette").first().text("PROJETS FINAUX !");
 		derniereConsigneHaute.find(".logo-etiquette").first().attr("src", `${CCN.urlRoot}img/sparks.svg`)
 		// <img class="card-bg" src="${CCN.urlRoot}img/cards_background.svg" />
 	} else {
