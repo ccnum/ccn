@@ -268,7 +268,7 @@ body {
 #menu_haut {
 	width: 100%;
 	background-color: #fff;
-	z-index: 1000;
+	z-index: 4100;
 	position: fixed;
 	height: var(--header-height);
 	display: flex;
@@ -864,9 +864,8 @@ a:hover {
 	z-index: 4;
 }
 
-.select label {
-	height: 0;
-	display: block;
+.select label:not(.first_label) {
+	display: none;
 	padding: 0 15px;
 	word-wrap: break-word;
 	white-space: normal;
@@ -897,12 +896,12 @@ a:hover {
 .select:hover input {
 	min-height: 50px;
 	min-width: 100%;
-	height: auto;
 	width: 100%;
+	display: block;
 }
 /*Déplie le carroussel*/
 .select:hover label:not(.first_label) {
-	height: auto;
+	display: block;
 	line-height: 50px;
 	background-color: #fff;
 	-webkit-transition: height 250ms ease-in-out, line-height 250ms ease-in-out;
