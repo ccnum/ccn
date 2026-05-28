@@ -486,7 +486,7 @@ function initTimeline() {
 		if (document.cookie.indexOf('visited=true') === -1) {
 			const expires = new Date();
 			expires.setDate(expires.getDate() + 30);
-			document.cookie = "visited=true; expires=" + expires.toUTCString();
+			document.cookie = "visited=true; expires=" + expires.toUTCString() + "; SameSite=Strict; Secure";
 		}
 	}
 

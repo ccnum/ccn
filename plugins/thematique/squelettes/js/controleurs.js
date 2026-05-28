@@ -3,7 +3,8 @@ let canShowConsigneSidebar = false;
 // Verifie les parametres dans l'url
 $.urlParam = function (name) {
 
-	const results = new RegExp('[\?&]' + name + '=([^&#]*)').exec(window.location.href);
+	const escapedName = name.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+	const results = new RegExp('[?&]' + escapedName + '=([^&#]*)').exec(window.location.href);
 
 	if (results) {
 		return results[1] || 0;
@@ -117,7 +118,7 @@ function setContentFromState(state) {
 
 	let isSamePage = true;
 
-	for (const index in state) {
+	for (const index of Object.keys(state)) {
 		if (state[index] != currentState[index]) {
 			isSamePage = false;
 			break;
@@ -390,6 +391,7 @@ function call(opts) {
 
 function callConsigne(id_consigne) {
 
+	if (!Number.isInteger(Number(id_consigne))) return;
 	changeTimelineMode('consignes');
 
 	const url = CCN.projet.url_popup_consigne + "&id_article=" + id_consigne;
@@ -426,6 +428,7 @@ function callConsigne(id_consigne) {
 
 function callReponse(id_reponse) {
 
+	if (!Number.isInteger(Number(id_reponse))) return;
 	changeTimelineMode('consignes');
 	setFullscreenModeToCols(true);
 
@@ -473,6 +476,7 @@ function callReponse(id_reponse) {
 
 function callClasse(id_classe) {
 
+	if (id_classe !== '' && !Number.isInteger(Number(id_classe))) return;
 	changeTimelineMode('consignes');
 	toggleSidebarExpand();
 	setFullscreenModeToCols(true);
@@ -554,6 +558,7 @@ function callLivrables() {
  */
 
 function callArticleBlog(id_article) {
+	if (!Number.isInteger(Number(id_article))) return;
 	changeTimelineMode('blogs');
 	setFullscreenModeToCols(false);
 	updateMenuIcon(['blogs'], 'mainView');
@@ -613,6 +618,7 @@ function callRessource() {
  */
 
 function callRessourceArticle(id_article, type_objet) {
+	if (!Number.isInteger(Number(id_article))) return;
 	changeTimelineMode('consignes');
 	setFullscreenModeToCols(true);
 	updateMenuIcon([type_objet], 'sidebarView');
@@ -643,6 +649,7 @@ function callRessourceArticle(id_article, type_objet) {
  */
 
 function callRessourceSyndicArticle(id_syndic_article, type_objet) {
+	if (!Number.isInteger(Number(id_syndic_article))) return;
 	changeTimelineMode('consignes');
 	setFullscreenModeToCols(true);
 	updateMenuIcon([type_objet], 'sidebarView');
@@ -673,6 +680,7 @@ function callRessourceSyndicArticle(id_syndic_article, type_objet) {
  */
 
 function callRessourceRubrique(id_rubrique, type_objet) {
+	if (!Number.isInteger(Number(id_rubrique))) return;
 	changeTimelineMode('consignes');
 	setFullscreenModeToCols(true);
 	updateMenuIcon([type_objet], 'sidebarView');
@@ -706,6 +714,7 @@ function callRessourceRubrique(id_rubrique, type_objet) {
  */
 
 function callArticleEvenement(id_objet, type_objet) {
+	if (!Number.isInteger(Number(id_objet))) return;
 	changeTimelineMode('evenements');
 	setFullscreenModeToCols(false);
 	updateMenuIcon(['evenements'], 'mainView');
@@ -878,15 +887,17 @@ function updateUrl(object, title, url) {
 		setTimeout(
 			function () {
 
-				const anchor = $("#" + CCN.hash);
-				if (anchor.length > 0) {
-					// TODO : cela est appelé deux fois minimum à cause de History.js (donc un trigger('click') sur .triggertoggleshow ne fonctionne pas car il ouvre puis ferme)
+				if (/^[\w-]+$/.test(CCN.hash)) {
+					const anchor = $("#" + CCN.hash);
+					if (anchor.length > 0) {
+						// TODO : cela est appelé deux fois minimum à cause de History.js (donc un trigger('click') sur .triggertoggleshow ne fonctionne pas car il ouvre puis ferme)
 
-					// Forum : ouvre les items
-					anchor.find('.toggleshow').show();
-					anchor.closest('.intervention_item_around').find('.toggleshow').show();
+						// Forum : ouvre les items
+						anchor.find('.toggleshow').show();
+						anchor.closest('.intervention_item_around').find('.toggleshow').show();
 
-					$('#sidebar_content, #sidebar_main_inner, #sidebar_lateral_inner').animate({ scrollTop: anchor.offset().top - 60 }, 'slow');
+						$('#sidebar_content, #sidebar_main_inner, #sidebar_lateral_inner').animate({ scrollTop: anchor.offset().top - 60 }, 'slow');
+					}
 				}
 
 				CCN.hash = '';
@@ -905,8 +916,8 @@ function updateUrl(object, title, url) {
  */
 
 function reloadAndSetCookie(url, cookie_nom, cookie_valeur) {
-	document.cookie = cookie_nom + "=" + cookie_valeur;
-	reload(url + '/?rub=' + cookie_valeur);
+	document.cookie = cookie_nom + "=" + encodeURIComponent(cookie_valeur) + "; SameSite=Strict; Secure";
+	reload(url + '/?rub=' + encodeURIComponent(cookie_valeur));
 }
 /**
  * Gère le rechargement de la page.
@@ -917,9 +928,9 @@ function reloadAndSetCookie(url, cookie_nom, cookie_valeur) {
  */
 
 function reload(url) {
-	if (url == 'self') {
+	if (url === 'self') {
 		location.reload(true);
-	} else {
+	} else if (url.startsWith('/') || url.startsWith(window.location.origin)) {
 		window.location.href = url;
 	}
 }
@@ -945,12 +956,12 @@ function loadContentInMainSidebar(url, typePage, typeObjet, callback) {
 	$('#sidebar_main_inner').load(url, function (response, status, xhr) {
 
 		if (status === "error") {
-			console.error("Erreur de chargement :", xhr.status, xhr.statusText);
+			if (CCN.debug) { console.error("Erreur de chargement :", xhr.status, xhr.statusText); }
 			return;
 		}
 
 		if (!response || response.trim() === "") {
-			console.warn("Réponse vide !");
+			if (CCN.debug) { console.warn("Réponse vide !"); }
 		}
 
 		$('body').removeClass('loading');
