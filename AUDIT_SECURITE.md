@@ -1,8 +1,8 @@
 # Audit de sécurité — Plugin SPIP `thematique`
 
-**Date** : 2026-05-27
-**Périmètre** : JavaScript (`squelettes/js/`), squelettes SPIP (`squelettes/`), formulaires, pipelines PHP
-**Outil** : Revue manuelle du code source
+**Date** : 2026-05-28
+**Périmètre** : JavaScript (`squelettes/js/`), squelettes SPIP (`squelettes/`), templates XML, PHP (pipelines, formulaires, administrations, autoriser)
+**Outil** : Revue manuelle complète du code source
 
 ---
 
@@ -10,182 +10,66 @@
 
 | Sévérité  | Nombre |
 |-----------|--------|
-| Critique  | 3      |
-| Élevée    | 4      |
-| Moyenne   | 3      |
-| Faible    | 3      |
-| **Total** | **13** |
+| Critique  | 1      |
+| Élevée    | 2      |
+| Moyenne   | 1      |
+| Faible    | 1      |
+| **Total** | **5**  |
 
-> Les faux-positifs signalés par des outils automatiques ont été écartés après vérification :
-> les templates `article-sauve-coordonnees.html` et `article-sauve-mot.html` sont protégés par des
-> whitelists SPIP (`match{article|syndic_article}`) et `sql_insertq` paramétré — aucune injection SQL.
-> Les formulaires SPIP utilisent `#ACTION_FORMULAIRE{}` qui génère un token CSRF automatique.
+> **Périmètre PHP** : `thematique_pipelines.php`, `thematique_autoriser.php`, `thematique_administrations.php`, `thematique_options.php`, `formulaires/public_editer_article.php`, `base/th_cextras.php`, `base/th_install.php` — aucune injection SQL détectée ; toutes les valeurs passées à `sql_*` sont protégées par `intval()` ou `sql_quote()`.
+>
+> **Templates ajax SPIP** : `noisettes/ajax/article-sauve-coordonnees.html` et `noisettes/ajax/article-sauve-mot.html` — non vulnérables à l'injection SQL (confirmés par la revue précédente). Les formulaires SPIP utilisent `#ACTION_FORMULAIRE{}` (token CSRF automatique).
 
 ---
 
 ## Critique
 
-### S1 — XSS DOM : transformation `[ ]` → `< >` + insertion dans `.html()`
+### N1 — XSS DOM : `pdfName` et `$imgSrc` non échappés dans des template literals
 
-**Fichiers** : `squelettes/js/main.js` lignes 160, 267, 332, 391
-
-```js
-dataForConsigne.titre = dataForConsigne.titre.replaceAll("[", "<").replaceAll("]", ">");
-dataForReponse.titre  = dataForReponse.titre.replaceAll("[", "<").replaceAll("]", ">");
-dataForArticleBlog.titre = dataForArticleBlog.titre.replaceAll("[", "<").replaceAll("]", ">");
-dataForEvenement.titre   = dataForEvenement.titre.replaceAll("[", "<").replaceAll("]", ">");
-```
-
-Ces données sont ensuite injectées via `.html()` dans le DOM (consigne.js:84, reponse.js:63,
-article_blog.js:44, article_evenement.js:52) sans aucun échappement supplémentaire.
-
-**Risque** : Tout utilisateur ayant le droit d'éditer un titre dans SPIP (enseignant, admin restreint)
-peut y écrire `[script]alert(document.cookie)[/script]`. Ce contenu est converti en
-`<script>alert(document.cookie)</script>` puis injecté dans le DOM de tous les visiteurs.
-
-**Correction suggérée** : Remplacer `.html()` par `.text()` pour les données textuelles pures, ou
-utiliser `document.createElement` + `.textContent` pour les nœuds qui ne nécessitent pas de HTML.
-Si du HTML limité est voulu, utiliser une whitelist (DOMPurify).
-
----
-
-### S2 — XSS DOM : données XML serveur non échappées dans `.html()`
-
-**Fichiers** :
-- `squelettes/js/consigne.js` lignes 84–94 : `this.titre`, `this.data.image`, `this.intervenant_nom`
-- `squelettes/js/reponse.js` lignes 63–71 : `this.titre`, `this.nom_classe`, `vignette`
-- `squelettes/js/article_blog.js` lignes 43–53 : `this.titre`
-- `squelettes/js/article_evenement.js` lignes 45–58 : `this.titre`
+**Fichier** : `squelettes/noisettes/js/swiper.script.html` — fonctions `initPdfSwipers`, `initPdfSwipersInComment`
 
 ```js
-// Exemple dans consigne.js
-this.div_titre.html(
-    "<div class=\"photo\"><img src=\"" + this.data.image + "\" /></div>" +
-    "<div class=\"titre\">" + this.titre + "</div>"
-);
+const pdfName = decodeURIComponent(pdfUrl.split('/').pop());
+
+// Injecté tel quel dans .html() via template literal
+const $loader = $(`
+    <div class="swiper-pdf-loader">
+        <span>Chargement de "${pdfName}" ...</span>
+    </div>
+`);
+$container.html(`
+    <div class="swiper-pdf-loader">
+        <span>Erreur lors du chargement de "${pdfName}"</span>
+    </div>
+`);
 ```
 
-**Risque** : Ces valeurs proviennent du XML SPIP. Si un champ `image` ou `titre` en base contient
-`" onerror="alert(1)` ou du HTML arbitraire, il sera injecté brut dans le DOM.
-Ce vecteur est aggravé par S1 (la transformation des crochets amplifie la surface).
+**Risque** : `pdfName` est décodé depuis l'URL du fichier PDF (nom du fichier uploadé). Si SPIP ne sanitise pas suffisamment les noms de fichiers lors de l'upload, un fichier nommé `"><img src=x onerror=alert(1)>.pdf` produirait une XSS pour tous les utilisateurs consultant l'article contenant ce document.
 
-**Correction suggérée** : Construire les nœuds DOM avec jQuery (`.attr()`, `.text()`) plutôt que par
-concaténation de chaînes dans `.html()`.
+Le même problème existe avec `$imgSrc` interpolé dans `<img src="${$imgSrc}"/>`.
+
+**Correction suggérée** : Construire les éléments DOM avec jQuery plutôt que par template literal.
 
 ```js
-// Avant
-this.div_titre.html('<div class="titre">' + this.titre + '</div>');
-
-// Après
-const divTitre = $('<div class="titre">').text(this.titre);
-this.div_titre.append(divTitre);
-```
-
----
-
-### S3 — XSS Reflected : variables ENV injectées dans `<script>` sans échappement JS
-
-**Fichier** : `squelettes/noisettes/timeline.html` lignes 12–21
-
-```html
-<script language="Javascript">
-    CCN.typeRestreint       = '[(#ENV{type_restreint})]';
-    CCN.dateToShowAtInit    = '[(#ENV{vue_date,0})]';
-    CCN.typePopupToShowAtInit = '[(#ENV{type_objet,0})]';
-    CCN.idObjetToShowAtInit = '[(#ENV{id_objet,0})]';
-    CCN.pageToShowAtInit    = '[(#SELF|parametre_url{page})]';
-    CCN.idRubriqueToShowAtInit    = '[(#SELF|parametre_url{id_rubrique})]';
-    CCN.idArticleToShowAtInit     = '[(#SELF|parametre_url{id_article})]';
-    CCN.idSyndicArticleToShowAtInit = '[(#SELF|parametre_url{id_syndic_article})]';
-</script>
-```
-
-SPIP encode les entités HTML (`<`, `>`, `"`) mais **ne protège pas contre l'injection dans un
-contexte JavaScript**. Le caractère `\` n'est pas échappé. En conséquence :
-
-- `?type_objet=\\'; alert(document.cookie); //` produit dans le script rendu :
-  `CCN.typePopupToShowAtInit = '\\'; alert(document.cookie); //'`
-- Le `\\` est un backslash littéral, la quote `'` ferme la chaîne JS, et `alert(...)` s'exécute.
-
-**Vecteur** : lien forgé envoyé à un utilisateur connecté → XSS reflected → vol de session SPIP.
-
-**Correction suggérée** : Utiliser `|json_encode` (filtre SPIP) pour les valeurs interpolées dans JS.
-
-```html
-CCN.typePopupToShowAtInit = [(#ENV{type_objet,0}|json_encode)];
+const $loader = $('<div class="swiper-pdf-loader">');
+$('<span>').text('Chargement de "' + pdfName + '" ...').appendTo($loader);
 ```
 
 ---
 
 ## Élevée
 
-### S4 — Opérations d'écriture en base via requête GET (absence de protection CSRF)
+### N2 — Routage AJAX sans whitelist dans `xml/ajax.html` (S6 bis)
 
-**Fichiers** :
-- `squelettes/js/consigne.js:132`
-- `squelettes/js/reponse.js:112`
-- `squelettes/js/article_blog.js:79`
-- `squelettes/js/article_evenement.js:85`
-
-```js
-$.get("spip.php?page=ajax&mode=article-sauve-coordonnees",
-    { id_objet: _thisId, type_objet: "article", X: 0, Y: yy });
-```
-
-Le verbe HTTP GET ne doit jamais provoquer d'effets de bord. Ces requêtes modifient les colonnes `X`
-et `Y` en base de données. Un attaquant peut déclencher ces modifications à distance via une balise
-`<img>` sur un site tiers, sans que la victime connectée ne le remarque.
-
-**Correction suggérée** : Passer à `$.post()` avec le token CSRF SPIP (`spip_action` ou le token
-formulaire) ; ou utiliser un nonce one-time côté serveur.
-
----
-
-### S5 — Cookie applicatif créé sans flags de sécurité
-
-**Fichier** : `squelettes/js/controleurs.js:908`
-
-```js
-function reloadAndSetCookie(url, cookie_nom, cookie_valeur) {
-    document.cookie = cookie_nom + "=" + cookie_valeur;
-    reload(url + '/?rub=' + cookie_valeur);
-}
-```
-
-Le cookie est créé sans :
-- `HttpOnly` → lisible et modifiable par JavaScript (vol par XSS)
-- `Secure` → transmis en clair sur HTTP
-- `SameSite=Strict` → envoyé lors de requêtes cross-site (CSRF)
-
-Le même problème existe pour le cookie de visite dans `main.js:491–494`.
-
-**Correction suggérée** :
-```js
-document.cookie = `${cookie_nom}=${encodeURIComponent(cookie_valeur)}; SameSite=Strict; Secure`;
-```
-Pour les cookies sensibles, les créer côté serveur avec `HttpOnly`.
-
----
-
-### S6 — Endpoints AJAX exposés sans whitelist exhaustive
-
-**Fichier** : `squelettes/ajax.html:15–17`
+**Fichier** : `squelettes/xml/ajax.html`
 
 ```
-[(#MODE|match{timeline|classe}|non)
-    <INCLURE{fond=noisettes/ajax/#MODE}{env}>
-]
+<INCLURE{fond=noisettes/ajax/#MODE, env, ajax} />
 ```
 
-La logique est inversée : tout `MODE` qui ne correspond **pas** à `timeline` ou `classe` est routé
-vers `noisettes/ajax/#MODE`. Cela expose automatiquement tout nouveau fichier créé sous
-`noisettes/ajax/` sans qu'aucune décision explicite ne soit prise.
+Le fichier `squelettes/ajax.html` a été corrigé en whitelist (commit `d13af81`), mais `xml/ajax.html` conserve l'ancien pattern ouvert. Toute valeur de `#MODE` non filtrée y route vers `noisettes/ajax/#MODE`.
 
-Actuellement exposés : `article-sauve-coordonnees`, `article-sauve-mot`, `article-forum-detail`.
-Chacun a ses propres contrôles (`#AUTORISER`), mais l'architecture crée un risque d'exposition
-accidentelle.
-
-**Correction suggérée** : Utiliser une whitelist explicite des modes autorisés.
+**Correction suggérée** : Appliquer la même whitelist que dans `ajax.html`.
 
 ```
 [(#MODE|match{article-sauve-coordonnees|article-sauve-mot|article-forum-detail}|oui)
@@ -195,168 +79,64 @@ accidentelle.
 
 ---
 
-### S7 — Open redirect non validé
+### N3 — Chargement de PDF.js depuis un CDN tiers sans Subresource Integrity
 
-**Fichier** : `squelettes/js/controleurs.js:919–925`
+**Fichier** : `squelettes/noisettes/js/swiper.script.html` ligne 5
 
 ```js
-function reload(url) {
-    if (url == 'self') {
-        location.reload(true);
-    } else {
-        window.location.href = url;
-    }
-}
+const PDFJS_WORKER_SRC =
+    'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
 ```
 
-`url` est passé par `reloadAndSetCookie(url, ...)`. Si ce paramètre peut être influencé par un
-attaquant (via XSS ou une autre entrée), la redirection peut pointer vers un domaine arbitraire.
+Ce worker est chargé dynamiquement via `pdfjsLib.GlobalWorkerOptions.workerSrc`. Si le CDN est compromis ou si le fichier est altéré, il s'exécute dans le contexte de la page avec accès complet au DOM. Il n'y a pas de vérification d'intégrité (SRI).
 
-**Correction suggérée** : Valider que l'URL est relative ou appartient au même domaine avant
-d'appliquer la redirection.
+**Correction suggérée** : Auto-héberger le worker dans `squelettes/js/` ou ajouter un hash SRI.
 
 ```js
-function reload(url) {
-    if (url === 'self') {
-        location.reload(true);
-    } else if (url.startsWith('/') || url.startsWith(window.location.origin)) {
-        window.location.href = url;
-    }
-}
+// Option 1 : path local
+const PDFJS_WORKER_SRC = '[(#CHEMIN{js/pdf.worker.min.js})]';
+
+// Option 2 : integrity sur le CDN (hash SHA-256 du fichier)
+// pdfjsLib.GlobalWorkerOptions.workerSrc ne supporte pas SRI nativement ;
+// préférer l'option 1.
 ```
 
 ---
 
 ## Moyenne
 
-### S8 — CSS Selector injection via fragment d'URL (`CCN.hash`)
+### N4 — `background-image` construit par concaténation depuis les données XML
 
-**Fichier** : `squelettes/js/controleurs.js:881`
+**Fichier** : `squelettes/js/projet.js` ligne 63
 
 ```js
-// timeline.html:22
-CCN.hash = (hash.length > 0) ? hash.slice(1) : '';
-
-// controleurs.js:881
-const anchor = $("#" + CCN.hash);
+this.timeline_parent.css({ 'background-image': 'url(' + data.image_fond + ')' });
 ```
 
-`CCN.hash` est dérivé de `window.location.hash` (fragment d'URL, contrôlé par le client).
-La valeur est passée directement à `$()` comme sélecteur CSS. Selon la version de jQuery,
-un hash contenant des caractères spéciaux (`[`, `]`, `.`, `#`) peut entraîner des erreurs
-silencieuses ou un comportement non intentionnel du sélecteur.
+`data.image_fond` provient du nœud `<image_fond>` du flux XML (`xml/projet.html`), lui-même généré par SPIP. La valeur est contrôlée par le serveur, mais elle est injectée sans échappement dans une valeur CSS. Sur des navigateurs anciens, `url(javascript:...)` dans une propriété CSS background-image peut déclencher du code. Sur des navigateurs modernes ce vecteur est bloqué, mais la concaténation brute peut casser le rendu si la valeur contient des parenthèses ou des guillemets.
 
-**Correction suggérée** :
-```js
-// Valider que le hash ne contient que des caractères sûrs pour un id HTML
-if (/^[\w-]+$/.test(CCN.hash)) {
-    const anchor = $("#" + CCN.hash);
-}
-```
-
----
-
-### S9 — Injection de métacaractères RegExp dans `$.urlParam`
-
-**Fichier** : `squelettes/js/controleurs.js:6`
+**Correction suggérée** : Échapper la valeur pour le contexte CSS URL.
 
 ```js
-$.urlParam = function (name) {
-    const results = new RegExp('[\?&]' + name + '=([^&#]*)').exec(window.location.href);
-    ...
-}
-```
-
-`name` est injecté sans échappement dans une expression régulière. Si cette fonction est appelée
-avec une valeur contrôlée par l'utilisateur contenant des métacaractères regex (`(`, `)`, `+`,
-`*`, `{`…), le comportement est imprévisible (résultats erronés, voire ReDoS avec une chaîne
-crafée).
-
-**Correction suggérée** :
-```js
-$.urlParam = function (name) {
-    const escapedName = name.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-    const results = new RegExp('[?&]' + escapedName + '=([^&#]*)').exec(window.location.href);
-    ...
-}
-```
-
----
-
-### S10 — `for...in` sur un objet d'état (prototype pollution)
-
-**Fichier** : `squelettes/js/controleurs.js:120–125`
-
-```js
-for (const index in state) {
-    if (state[index] != currentState[index]) {
-        isSamePage = false;
-        break;
-    }
-}
-```
-
-`for...in` itère sur toutes les propriétés énumérables, **y compris celles héritées de
-`Object.prototype`**. Si une bibliothèque tierce ou une extension navigateur pollue le prototype,
-la comparaison `isSamePage` peut être contournée, déclenchant des rechargements ou des
-comportements inattendus.
-
-**Correction suggérée** :
-```js
-for (const index of Object.keys(state)) {
-    ...
-}
+const imageUrl = CSS.escape
+    ? 'url("' + data.image_fond.replace(/"/g, '\\"') + '")'
+    : 'url(' + data.image_fond + ')';
+this.timeline_parent.css({ 'background-image': imageUrl });
 ```
 
 ---
 
 ## Faible
 
-### S11 — Exposition de détails techniques dans la console navigateur
+### N5 — Absence de `#CACHE{0}` dans `xml/articles_evenement.html` malgré `#SESSION`
 
-**Fichier** : `squelettes/js/controleurs.js:948–953`
+**Fichier** : `squelettes/xml/articles_evenement.html`
 
-```js
-console.error("Erreur de chargement :", xhr.status, xhr.statusText);
-console.warn("Réponse vide !");
-```
+Ce template utilise `[(#SESSION{statut}|=={0minirezo}|oui)` pour filtrer le contenu selon le statut de session, mais ne déclare pas `#CACHE{0}`. Si le cache SPIP est actif et que ce template est mis en cache, un utilisateur non connecté pourrait recevoir la réponse d'un utilisateur connecté (et voir des articles réservés aux enseignants).
 
-Les codes d'erreur HTTP et messages exposés dans la console facilitent la reconnaissance pour un
-attaquant (identification des endpoints valides, codes d'état, structure interne).
+SPIP détecte normalement `#SESSION` et force le cache à 0 automatiquement, mais l'absence de déclaration explicite est une mauvaise pratique.
 
-**Correction suggérée** : Supprimer ou conditionner ces logs à un mode debug (`CCN.debug === true`).
-
----
-
-### S12 — Cookie de visite sans flags de sécurité
-
-**Fichier** : `squelettes/js/main.js:491–494`
-
-```js
-document.cookie = "visited=true; expires=" + expires.toUTCString();
-```
-
-Même problème que S5 : pas de `Secure`, `SameSite`, ni `HttpOnly`. Ce cookie est modifiable par
-JavaScript et transmissible en clair.
-
----
-
-### S13 — IDs non validés numériquement côté client avant envoi AJAX
-
-**Fichiers** : multiple call-sites dans `controleurs.js`
-
-```js
-const url = CCN.projet.url_popup_consigne + "&id_article=" + id_consigne;
-```
-
-Les identifiants `id_consigne`, `id_reponse`, `id_classe` sont passés dans les URLs AJAX sans
-vérification `parseInt()` / `isNaN()` côté client. La validation est présente côté serveur
-(SPIP + `intval()`), mais un contrôle client ajouterait une couche de défense.
-
-**Correction suggérée** :
-```js
-if (!Number.isInteger(Number(id_consigne))) return;
-```
+**Correction suggérée** : Ajouter `#CACHE{0}` en première ligne, comme dans les autres templates XML du plugin.
 
 ---
 
@@ -364,26 +144,19 @@ if (!Number.isInteger(Number(id_consigne))) return;
 
 | Priorité | Action |
 |----------|--------|
-| 🔴 Immédiat | Remplacer `.html(chaîne_concaténée)` par construction DOM jQuery (S1, S2) |
-| 🔴 Immédiat | Utiliser `\|json_encode` pour les variables ENV dans `<script>` (S3) |
-| 🟠 Court terme | Passer les sauvegardes de coordonnées en POST avec token CSRF (S4) |
-| 🟠 Court terme | Ajouter les flags `Secure`, `SameSite=Strict` sur tous les cookies JS (S5, S12) |
-| 🟠 Court terme | Convertir `ajax.html` en whitelist explicite des modes (S6) |
-| 🟡 Moyen terme | Valider `url` avant redirection dans `reload()` (S7) |
-| 🟡 Moyen terme | Sanitiser `CCN.hash` avant usage dans `$()` (S8) |
-| 🟡 Moyen terme | Échapper `name` dans `$.urlParam` (S9) |
-| 🟢 Amélioration | Remplacer `for...in` par `Object.keys()` dans `setContentFromState` (S10) |
-| 🟢 Amélioration | Conditionner les `console.error/warn` à un flag debug (S11) |
+| 🔴 Immédiat | Construire les nœuds DOM avec jQuery dans `swiper.script.html` (N1) |
+| 🟠 Court terme | Ajouter la whitelist dans `xml/ajax.html` (N2) |
+| 🟠 Court terme | Auto-héberger le worker PDF.js (N3) |
+| 🟡 Moyen terme | Échapper `image_fond` dans le contexte CSS (N4) |
+| 🟢 Amélioration | Ajouter `#CACHE{0}` explicite dans `articles_evenement.html` (N5) |
 
 ---
 
 ## Éléments hors périmètre / non vulnérables (confirmés)
 
-- **`article-sauve-coordonnees.html`** : pas d'injection SQL — `#TYPE_OBJET` est whitelisté par
-  `match{article|syndic_article}` et `$id_objet` est revalidé par `sql_getfetsel` avant l'UPDATE.
-- **`article-sauve-mot.html`** : pas d'injection SQL — `#TYPE_OBJET` whitelisté à `blogs`,
-  `sql_insertq` utilise des paramètres liés.
-- **Formulaires SPIP** (`forum0.html`, `public_editer_article.html`) : protection CSRF assurée
-  par la balise `#ACTION_FORMULAIRE{}` qui génère un token one-time automatique.
-- **`ajax.html` `#INCLURE`** : pas de LFI au sens classique — SPIP résout les chemins de templates
-  uniquement dans les répertoires de squelettes déclarés (pas d'accès au système de fichiers).
+- **`article-sauve-coordonnees.html`** : pas d'injection SQL — `#TYPE_OBJET` est whitelisté par `match{article|syndic_article}` et `$id_objet` est revalidé par `sql_getfetsel` avant l'UPDATE.
+- **`article-sauve-mot.html`** : pas d'injection SQL — `#TYPE_OBJET` whitelisté à `blogs`, `sql_insertq` utilise des paramètres liés.
+- **Formulaires SPIP** (`forum0.html`, `public_editer_article.html`) : protection CSRF assurée par `#ACTION_FORMULAIRE{}`.
+- **`ajax.html` `#INCLURE`** : pas de LFI — SPIP résout les chemins uniquement dans les répertoires de squelettes déclarés.
+- **PHP pipelines/formulaires** : toutes les valeurs passées à `sql_*` sont protégées par `intval()` ou `sql_quote()`.
+- **Clés de session SPIP** affichées dans les templates (ex : `#SESSION{nom}`) : SPIP échappe automatiquement les valeurs de session dans le contexte HTML.
