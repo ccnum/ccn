@@ -52,7 +52,6 @@ function Consigne() {
 	this.initDOM = function () {
 		var coul = "" + this.data.intervenant_id + "";
 		coul = coul.substr(coul.length - 1, 1);
-
 		let reponses_puces = '';
 
 		for (let j = 1; j <= this.data.nombre_reponses; j++) {
@@ -85,7 +84,7 @@ function Consigne() {
 					<div class="texte">
 						<div class="first-row">
 							<div class="photo"><img src="${this.data.image}" /></div>
-							<div class="titre">${escHtml(this.titre)}</div>
+							<div class="titre"></div>
 						</div>
 						<div class="second-row">
 							<div class="picto_nombre_reponses">
@@ -107,10 +106,11 @@ function Consigne() {
 			</div>
 		`);
 
-		this.div_titre = this.div_base.find(`#consigne${this.id}`);
+		this.div_consigne = this.div_base.find(`#consigne${this.id}`);
 		this.div_reponse_plus = this.div_base.find('.bouton_reponse_consigne').eq(0);
 		this.div_reponse_see = this.div_base.find('.bouton_reponse_consigne').eq(1);
 		
+		this.div_base.find(`.titre`).html(this.titre)
 
 		CCN.timelineLayerConsignes.prepend(this.div_base);
 
@@ -119,7 +119,7 @@ function Consigne() {
 
 		const _thisId = this.id;
 
-		this.div_titre.on(
+		this.div_consigne.on(
 			'click', function () {
 				callConsigne(_thisId);
 			}
