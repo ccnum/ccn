@@ -25,7 +25,6 @@
 /* ------- */
 
 :root {
-	font-family: Poppins;
 	--color-hover: #00B749;
 	--color-tonic: #000AFF;
 	--color-consigne: #7D7BFD;
@@ -74,7 +73,7 @@
 }
 
 .crayon-active.markItUpEditor {
-	color: black !important;
+	color: var(--color-default) !important;
 }
 .resizehandle_boutons {
 	margin: 0 !important;
@@ -228,9 +227,10 @@ body {
 	background-color: transparent;
 	margin: 0px;
 	padding: 0 0 82px 0;
-	font-family: 'Ubuntu';
-	font-size: 19px;
-	color: #000;
+	font-family: 'Poppins';
+	font-size: 16px;
+	font-weight: 500;
+	color: var(--color-default);
 	overflow-x : hidden;
 }
 
@@ -389,7 +389,7 @@ body {
 	}
 }
 #menu_haut_rubrique {
-	.icon-down {
+	.icon {
 		background-color: var(--color-default);
 	}
 	> .select:hover {
@@ -452,21 +452,7 @@ body {
 	margin-left: auto;
 	height: 100%;
 	> .aide {
-		background-color: var(--color-tonic);
 		cursor: pointer;
-		width: 54px;
-		height: 100%;
-		&:hover {
-			background-color: var(--color-hover);
-		}
-		> a {
-			width: 100%;
-			background-color: unset;
-			margin: auto;
-			> img {
-				vertical-align: middle;
-			}
-		}
 	}
 }
 
@@ -559,7 +545,7 @@ body {
 }
 
 #menu_haut_titre .select:hover input:not(.first) {
-	background-color: #000;
+	background-color: var(--color-default);
 	color: #fff;
 }
 #menu_haut_titre .select {
@@ -569,7 +555,7 @@ body {
 	color: #fff;
 }
 #menu_haut_ecrire .icon:hover {
-	background: #000;
+	background: var(--color-default);
 	color: #fff;
 }
 #menu_haut_titre .select:hover .first_label {
@@ -601,6 +587,12 @@ body {
 }
 .icon-ecrire {
 	--svg: url("#CHEMIN{img/logo_ecrire.svg}");
+}
+.icon-publier {
+	--svg: url("#CHEMIN{img/logo_ecrire_plein.svg}");
+}
+.icon-aide {
+	--svg: url("#CHEMIN{img/logo_aide_et_info.svg}");
 }
 .icon-down {
 	--svg: url("#CHEMIN{img/fleche_down.svg}");
@@ -655,7 +647,7 @@ body {
 }
 
 a, label {
-	color: #000;
+	color: var(--color-default);
 	text-decoration: none;
 }
 
@@ -703,7 +695,7 @@ a:hover {
 .vert	{ color: #58AB27; }
 .bleu_clair { color: #F2F8FB; }
 .blanc	{ color: #fff; }
-.noir	{ color: #000; }
+.noir	{ color: var(--color-default); }
 .gris	{ color: #646b70; }
 .arriere_blanc {background-color: #fff;}
 
@@ -718,7 +710,7 @@ a:hover {
 /* --------- Intervenants --------- */
 
 .couleur_texte_consignes {
-	color:black;
+	color:var(--color-default);
 }
 /*Jaune*/
 [class^="couleur_consignes"],
@@ -825,7 +817,7 @@ a:hover {
 }
 
 #menu_haut.zone-menu li a {
-	color: #000;
+	color: var(--color-default);
 	height: 40px;
 	display: inline-block;
 }
@@ -1149,13 +1141,6 @@ a:hover {
 	color: #fff !important;
 }
 
-.tooltip,
-.tooltip_bottom,
-.tooltip_bottom_left,
-.tooltip_left {
-  position: relative;
-}
-
 .tooltip::after,
 .tooltip_bottom::after,
 .tooltip_bottom_left::after,
@@ -1300,9 +1285,18 @@ a:hover {
 #menu_haut.zone-menu li a.logo_menu-deconnecter:hover {
 	background-color: #7dd6de;
 }
+#bouton_aide .icon-aide {
+	height: 40px;
+	width: 23px;
+	background-color: var(--color-default);
+	margin-right: 1rem;
+}
 #bouton_aide {
 	background-color: #fff;
 	background-size: contain;
+	display: flex;
+	align-items: center;
+	padding: 0px 11px;
 }
 #bouton_aide:hover {
 	background-color: #7dd6de;
@@ -1338,15 +1332,6 @@ a:hover {
 	background-image: url(#ENV{chemin}/img/reponse_classe.png);
 }
 
-.reponse_p {
-	float: left;
-	white-space: nowrap;
-	font-size: #GET{font-size1}px;
-	color: #000;
-	margin-left: 30px;
-	margin-top: 2px;
-}
-
 .reponse_plus {
 	float: left;
 	white-space: nowrap;
@@ -1355,19 +1340,6 @@ a:hover {
 	font-weight: bold;
 	margin-left: 41px;
 	margin-top: 2px;
-}
-
-.commentaires {
-	z-index: 2;
-	width: 25px;
-	height: 25px;
-	color: #000;
-	font-size: #GET{font-size1}px;
-	font-weight: bold;
-	text-align: center;
-	/*display: table-cell;*/
-	vertical-align: middle;
-	background-image: url(#ENV{chemin}/img/commentaire.png);
 }
 
 .intervention .action_supprimer {
@@ -1745,7 +1717,7 @@ div.donnees_classe {
 .consigne .texte .liens:hover {
 	font-size: 11px;
 	text-decoration: underline;
-	color: black;
+	color: var(--color-default);
 }
 
 .consigne .picto_nombre_reponses {
@@ -2893,7 +2865,7 @@ div.donnees_classe {
 
 #sidebar_lateral .ressources_header_titre {
 	font-size: 22px;
-	color: #000;
+	color: var(--color-default);
 	margin: 5px 0 25px 0;
 }
 
@@ -3117,7 +3089,7 @@ a.liens_forum:hover { }
 #cboxTitle {
 	font-size: 15px;
 	font-weight: bold;
-	color: #000;
+	color: var(--color-default);
 }
 #cboxLoadedContent {
 	margin-top: 10px;
@@ -3136,7 +3108,7 @@ a.liens_forum:hover { }
 #slide1 p {
 	position: absolute;
 	text-align: center;
-	color: black;
+	color: var(--color-default);
 	font-size: 1.7vw;
 	top: 50%;
 	transform: translateY(-50%);
@@ -3151,19 +3123,6 @@ a.liens_forum:hover { }
 /* --- Menu --- */
 #sidebar_lateral .ui-state-active {
 	color: #999;
-}
-
-#cadre_couleur {
-	/*background-color: #fff;*/
-	color: #000;
-	padding-left: 5px;
-	padding-right: 5px;
-	display: inline;
-}
-
-.popup_consigne #cadre_couleur, .popup_reponse #cadre_couleur, .popup_travail_en_cours #cadre_couleur {
-	background-color: #000;
-	color: #fff;
 }
 
 .popup_consigne .formulaire_formidable .submit {display: none;}
@@ -3200,7 +3159,7 @@ a.liens_forum:hover { }
 
 input.crayon-active {
 	background-color: #ccc;
-	color: #000;
+	color: var(--color-default);
 }
 
 .crayon-html li.editer_logo {
@@ -3344,12 +3303,12 @@ p.boutons:has(input[type="submit"]) {
 
 .crayon-html fieldset .legend {
 	font-size: 14px;
-	color: black;
+	color: var(--color-default);
 }
 
 .editer-groupe {
 	font-size: 14px !important;
-	color: black !important;
+	color: var(--color-default) !important;
 	line-height: 18px !important;
 }
 
@@ -3545,7 +3504,7 @@ li.editer p.explication, .editer_pgp, .editer_bio, .editer_liens_sites, .saisie_
 .bloc_article.monospace {color: white; }
 .bloc_article.monospace p { font-family: Courier, "Courier New", FreeMono, "Liberation Mono", monospace; font-size: 1.1em; }
 .bloc_article.monospace .bloc_article_h, .bloc_article.monospace .bloc_article_b { visibility: hidden; }
-.bloc_article.monospace .bloc_article_m { width: 497px; background-image: url(); background-color: black; padding: 20px 15px 20px 20px; margin-left: 6px; -moz-border-radius: 10px;}
+.bloc_article.monospace .bloc_article_m { width: 497px; background-image: url(); background-color: var(--color-default); padding: 20px 15px 20px 20px; margin-left: 6px; -moz-border-radius: 10px;}
 .bloc_article.monospace #bloc_texte p: first-letter, .bloc_article.monospace .bloc_consigne p: first-letter {
 	font-size: 100%;
 	font-weight: normal;
@@ -3592,7 +3551,7 @@ li a, li a:hover {
 #bloc_option_doc > a, .bloc_option_doc > a, .titre_bubble {
 	display: block;
 	padding: 18px 30px 18px 60px;
-	color: #000;
+	color: var(--color-default);
 	background-color: #F5F5F5;
 	background-repeat: no-repeat;
 	background-position: 20px 50%;
@@ -3690,7 +3649,7 @@ li a, li a:hover {
 #formulaire_forum input.text, #formulaire_forum textarea {
 	border: solid 1px #E8E8E8 !important;
 	padding: 5px 8px !important;
-	color: #000 !important;
+	color: var(--color-default) !important;
 	margin: 0 !important;
 	border-radius: 2px !important;
 }
@@ -3734,7 +3693,7 @@ li a, li a:hover {
 	vertical-align: middle;
 	font-size: 14px;
 	width: 260px;
-	color: black;
+	color: var(--color-default);
 }
 .portfolio {
 	> .spip_documents {
@@ -3780,7 +3739,7 @@ li a, li a:hover {
 
 /* -------- Swiper START ----------*/
 .swiper {
-	background-color: #000;
+	background-color: var(--color-default);
 }
 
 .swiper-slide .action_supprimer {
@@ -3867,8 +3826,8 @@ li a, li a:hover {
   position: relative;
   font-size: 16px;
   color: #fff;
-  font-family: 'Ubuntu';
-  background: #000;
+  font-family: 'Poppins';
+  background: var(--color-default);
 }
 
 .swiper-pdf-loader img,
@@ -3942,7 +3901,7 @@ donc je passe de 300px à 30rem. */
     padding: 0.5rem;
 	gap: 0.5rem;
     border-radius: 5px;
-    background-color: #000;
+    background-color: var(--color-default);
 	&:hover {
 		background-color: var(--color-hover)
 	}
@@ -4001,7 +3960,7 @@ ul#forum, .lien_forum {
 }
 .syndic_article_lire_suite:hover {
 	background: rgb(210, 210, 210);
-	color: black;
+	color: var(--color-default);
 }
 
 #sidebar_main_inner > .syndic_article_lire_suite {
@@ -4431,7 +4390,7 @@ ul#forum, .lien_forum {
 }
 
 #cboxOverlay {
-	background: black !important
+	background: var(--color-default) !important
 }
 
 .timeline_layer {
@@ -4551,7 +4510,7 @@ ul#forum, .lien_forum {
 
 .livrable h3 {
 	color: white;
-	background: black;
+	background: var(--color-default);
 	padding: 8px;
 	margin: 10px;
 	font-size: 1rem;
@@ -4562,7 +4521,7 @@ ul#forum, .lien_forum {
 	font-size: 15px;
 	color: white;
 	text-align: center;
-	background: black;
+	background: var(--color-default);
 	padding: 15px;
 	border-bottom-left-radius: 5px;
 	border-bottom-right-radius: 5px;

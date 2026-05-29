@@ -32,33 +32,35 @@
 [(#GET{affiche}|=={oui}|oui)
 <div id="menu_haut_rubrique" class="bloc_titre">
 	<B_rub_aut2>
-		[(#GET{affiche}|=={oui}|oui)
-			<div id="choix_rubrique_admin" name="rubrique_admin" class="select">
-				<input type="radio" value="#ENV{restreint}" class="first">
-				<label class="first_label">
-					<span class="icon icon-ecrire"></span>
-					Publier
-					<span class="highlight">[(#GET{titre})]</span>
-					<span class="icon icon-down"></span>
-				</label>
-		]
-				<div class="choix_rubrique_wrapper">
-					<BOUCLE_rub_aut2(RUBRIQUES auteurs){id_auteur}{tout}>
-						[(#GET{affiche}|=={oui}|oui)
-							<input type="radio" value="#ID_RUBRIQUE" title="[(#TITRE|attribut_html)]">
-							<label>[(#TITRE)]</label>
-						]
-						<BOUCLE_rub4(RUBRIQUES){id_parent=#ID_RUBRIQUE}{tout}>
+		<div class="select">
+			[(#GET{affiche}|=={oui}|oui)
+				<div id="choix_rubrique_admin" name="rubrique_admin" class="select">
+					<input type="radio" value="#ENV{restreint}" class="first">
+					<label class="first_label">
+						<span class="icon icon-publier"></span>
+						Publier
+						<span class="highlight">[(#GET{titre})]</span>
+						<span class="icon icon-down"></span>
+					</label>
+			]
+					<div class="choix_rubrique_wrapper">
+						<BOUCLE_rub_aut2(RUBRIQUES auteurs){id_auteur}{tout}>
 							[(#GET{affiche}|=={oui}|oui)
-								<input type="radio" value="#ID_RUBRIQUE" title="[(#TITRE|attribut_html)]" [(#ID_RUBRIQUE|=={#ENV{restreint}}|oui) selected ]>
+								<input type="radio" value="#ID_RUBRIQUE" title="[(#TITRE|attribut_html)]">
 								<label>[(#TITRE)]</label>
 							]
-						</BOUCLE_rub4>
-					</BOUCLE_rub_aut2>
+							<BOUCLE_rub4(RUBRIQUES){id_parent=#ID_RUBRIQUE}{tout}>
+								[(#GET{affiche}|=={oui}|oui)
+									<input type="radio" value="#ID_RUBRIQUE" title="[(#TITRE|attribut_html)]" [(#ID_RUBRIQUE|=={#ENV{restreint}}|oui) selected ]>
+									<label>[(#TITRE)]</label>
+								]
+							</BOUCLE_rub4>
+						</BOUCLE_rub_aut2>
+					</div>
+			[(#GET{affiche}|=={oui}|oui)
 				</div>
-		[(#GET{affiche}|=={oui}|oui)
-			</div>
-		]
+			]
+		</div>
 	</B_rub_aut2>
 		[(#REM) Admin complet]
 		<B_rub2>
@@ -66,7 +68,7 @@
 				<div id="choix_rubrique_admin" name="rubrique_admin" class="select">
 					<input type="radio" value="#ENV{restreint}" class="first">
 					<label class="first_label">
-						<span class="icon icon-ecrire"></span>
+						<span class="icon icon-publier"></span>
 						Publier
 						<span class="highlight">[(#GET{titre})]</span>
 						<span class="icon icon-down"></span>
