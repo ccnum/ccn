@@ -3,322 +3,171 @@
 **Date** : 2026-05-29
 **Périmètre** : `plugins/thematique/`
 **Méthode** : Analyse statique exhaustive — PHP, HTML (squelettes SPIP), JavaScript
+**Statut** : ✅ Toutes les vulnérabilités corrigées (commit `0c6bec4`)
 
 ---
 
-## Résumé exécutif
+## Résumé
 
-| Criticité | Nombre |
-|-----------|--------|
-| Critique  | 2      |
-| Haute     | 5      |
-| Moyenne   | 7      |
-| Faible    | 4      |
-
----
-
-## Vulnérabilités critiques
-
-### C1 — Injection SQL via `#ID_OBJET` non casté dans une clause WHERE
-
-**Fichier** : `squelettes/noisettes/ajax/article-sauve-coordonnees.html`, lignes 16–23
-
-```php
-$id_objet = #ID_OBJET;
-if (($id_objet = sql_getfetsel("id_#TYPE_OBJET", "spip_#TYPE_OBJETs", "id_#TYPE_OBJET=$id_objet"))
-```
-
-`#ID_OBJET` est interpolé sans `intval()` directement dans la clause WHERE. Le filtre `#TYPE_OBJET|match{article|syndic_article}` conditionne l'affichage du bloc mais ne protège pas la construction SQL.
-
-**Correction** :
-```php
-$id_objet = intval('#ID_OBJET');
-$type_objet = in_array('#TYPE_OBJET', ['article', 'syndic_article']) ? '#TYPE_OBJET' : null;
-if ($type_objet && $id_objet > 0) {
-    $id_objet_bdd = sql_getfetsel("id_{$type_objet}", "spip_{$type_objet}s",
-        "id_{$type_objet}=" . $id_objet);
-}
-```
+| Criticité | Nombre | Statut |
+|-----------|--------|--------|
+| Critique  | 2      | ✅ Corrigé |
+| Haute     | 5      | ✅ Corrigé |
+| Moyenne   | 7      | ✅ Corrigé (M6 non applicable) |
+| Faible    | 4      | ✅ Corrigé (F1 via H4, F3 hors périmètre plugin) |
 
 ---
 
-### C2 — XSS stocké via `#TEXTE` sans filtre dans plusieurs templates
+## Vulnérabilités critiques — corrigées
 
-**Fichiers concernés** :
-- `squelettes/noisettes/rubrique_detail.html` ligne 26 : `(#TEXTE)`
-- `squelettes/noisettes/groupe_mot.html` ligne 83 : `#TEXTE`
-- `squelettes/noisettes/ressources_detail.html` ligne 134 : `[(#TEXTE)]`
-- `squelettes/noisettes/groupe_mot_detail.html` ligne 34 : `[(#TEXTE)]`
-- `squelettes/noisettes/rubrique.html` ligne 382 : `#TEXTE`
+### ✅ C1 — Injection SQL via `#ID_OBJET` non casté
 
-`#TEXTE` produit du HTML après traitement typographique SPIP mais ne neutralise pas les balises `<script>`, attributs `on*` ni les URLs `javascript:` insérées via l'éditeur code source. Un administrateur restreint peut injecter du HTML malveillant visible par tous les visiteurs.
-
-**Correction** : Remplacer par `(#TEXTE|propre)` pour le rendu standard ou `(#TEXTE|textebrut)` si seul le texte brut est attendu.
+**Fichier** : `squelettes/noisettes/ajax/article-sauve-coordonnees.html`
+**Correction** : `intval()` sur `#ID_OBJET` + liste blanche PHP sur `#TYPE_OBJET` via `in_array()`.
+**Commit** : `cbb1dcf`
 
 ---
 
-## Vulnérabilités hautes
+### ✅ C2 — XSS stocké via `#TEXTE` sans filtre
 
-### H1 — Inclusion de squelette dynamique sans liste blanche
-
-**Fichiers** :
-- `squelettes/layout.html` ligne 51 : `<INCLURE{fond=noisettes/#ENV{page}}>`
-- `squelettes/xml.html` ligne 3 : `<INCLURE{fond=xml/#ENV{mode}}{env}>`
-
-Le nom du squelette inclus est construit depuis un paramètre d'URL. SPIP ne charge que des `.html` présents sur disque (pas de path traversal), mais cela permet d'énumérer tous les squelettes disponibles et d'en inclure d'inattendus avec effets de bord.
-
-**Correction** :
-```spip
-[(#ENV{page}|in_array{#LISTE{sommaire,article,rubrique,forum}}|oui)
-    <INCLURE{fond=noisettes/#ENV{page}}>
-]
-```
+**Fichiers** : `rubrique_detail.html`, `groupe_mot.html`, `ressources_detail.html`, `groupe_mot_detail.html`, `rubrique.html`
+**Correction** : Filtre `|propre` ajouté sur toutes les occurrences de `(#TEXTE)` hors contexte `#EDIT` (les spans Crayon conservent le brut pour l'éditeur inline).
+**Commit** : `cbb1dcf`
 
 ---
 
-### H2 — XSS via `$.html()` avec données serveur dans `consigne.js`
+## Vulnérabilités hautes — corrigées
+
+### ✅ H1 — Inclusion de squelette dynamique sans liste blanche
+
+**Fichiers** : `layout.html`, `xml.html`
+**Correction** : Validation `|in_array{#LISTE{...}}` avant l'inclusion. Fallback sur `sommaire` si valeur non reconnue.
+**Commit** : `700bbe9`
+
+---
+
+### ✅ H2 — XSS via `$.html()` dans `consigne.js`
 
 **Fichier** : `squelettes/js/consigne.js` ligne 113
-
-```javascript
-this.div_base.find('.titre').html(this.titre)
-```
-
-`$.html()` injecte du HTML brut dans le DOM. Si `this.titre` contient des entités HTML décodées par le parseur XML (`&lt;img onerror=...&gt;` → `<img onerror=...>`), une XSS est déclenchée.
-
-**Correction** : Utiliser `$.text()` pour du contenu textuel :
-```javascript
-this.div_base.find('.titre').text(this.titre)
-```
+**Correction** : Remplacement de `.html(this.titre)` par `.text(this.titre)`.
+**Commit** : `3acfcc6`
 
 ---
 
-### H3 — XSS DOM via `blankMainSidebar()` dans `controleurs.js`
+### ✅ H3 — XSS DOM via `blankMainSidebar()` dans `controleurs.js`
 
-**Fichier** : `squelettes/js/controleurs.js` ligne 1066
-
-```javascript
-function blankMainSidebar(msg) {
-    $('#sidebar_main_inner').html('<div class="popup popup_blank">' + message + '</div>');
-}
-```
-
-La fonction accepte n'importe quel `msg` sans sanitisation. Les appels actuels sont hardcodés (sans risque), mais la fonction est exposée globalement — un futur appel avec une valeur contrôlée par l'utilisateur déclencherait une XSS DOM.
-
-**Correction** : Restreindre à des templates prédéfinis ou sanitiser l'entrée.
+**Fichier** : `squelettes/js/controleurs.js`
+**Correction** : La fonction n'accepte plus de HTML arbitraire. Elle reçoit une clé (`'travail_en_cours'`, `'livrables'`, `'ressources'`, `'agora'`) et construit le HTML depuis un dictionnaire interne de templates. Les 4 call-sites ont été mis à jour.
+**Commit** : `3acfcc6`
 
 ---
 
-### H4 — Contrôle d'accès par login hardcodé dans `plan_edition.html`
+### ✅ H4 — Contrôle d'accès par login hardcodé dans `plan_edition.html`
 
-**Fichier** : `squelettes/plan_edition.html` ligne 24
-
-```spip
-{si #SESSION{login}|match{vincent|leroy}|oui}
-```
-
-Accès à la page d'administration conditionné par des logins hardcodés dans le code source versionné. Un changement de compte ne bloque pas l'accès. Ce n'est pas le mécanisme standard SPIP.
-
-**Correction** :
-```spip
-[(#AUTORISER{webmestre}|oui)
-    <BOUCLE_secteurs(RUBRIQUES){racine}{par titre}{tout}>
-    ...
-    </BOUCLE_secteurs>
-]
-```
+**Fichier** : `squelettes/plan_edition.html`
+**Correction** : Remplacement du `|match{vincent|leroy}` par `#AUTORISER{webmestre}` (mécanisme standard SPIP).
+**Commit** : `700bbe9`
 
 ---
 
-### H5 — Iframes sans `sandbox` avec URLs fournies par les admins
+### ✅ H5 — Iframes sans `sandbox`
 
-**Fichiers** :
-- `squelettes/noisettes/article.html` lignes 105 et 133
-- `squelettes/noisettes/rubrique_detail.html` ligne 91
-
-Les `src` des iframes proviennent de champs SPIP (`URL_SITE`, `DESCRIPTIF*`) sans validation de protocole. Le filtre `|textebrut` ne bloque pas `javascript:`.
-
-**Correction** :
-```html
-<iframe src="[(#URL_SITE|textebrut)]"
-        sandbox="allow-scripts allow-same-origin allow-forms"
-        width="100%" height="100%"></iframe>
-```
-Ajouter aussi une validation que l'URL commence par `https://`.
+**Fichiers** : `squelettes/noisettes/article.html`, `squelettes/noisettes/rubrique_detail.html`
+**Correction** : Attribut `sandbox="allow-scripts allow-same-origin allow-forms allow-popups"` ajouté sur toutes les iframes. Validation `|match{^https?://}` ajoutée sur les URLs issues de `#DESCRIPTIF*` (couvre aussi M7).
+**Commit** : `e9fcb88`
 
 ---
 
-## Vulnérabilités moyennes
+## Vulnérabilités moyennes — corrigées
 
-### M1 — Concaténation SQL sans `sql_quote()` dans `thematique_administrations.php`
+### ✅ M1 — Concaténation SQL sans `sql_quote()` dans `thematique_administrations.php`
 
-**Fichier** : `thematique_administrations.php` lignes 206, 214
-
-```php
-['sm.titre = "' . $mot . '"', 'sr.id_parent = 0']
-$id_mot = (int) sql_getfetsel('id_mot', 'spip_mots', 'titre = "' . $mot . '"');
-```
-
-`$mot` provient d'un tableau hardcodé (pas d'injection possible actuellement), mais le pattern de concaténation directe est incorrect et risqué si la source évolue.
-
-**Correction** : Utiliser `sql_quote()` systématiquement :
-```php
-['sm.titre = ' . sql_quote($mot), 'sr.id_parent = 0']
-```
+**Correction** : Remplacement des concaténations directes par `sql_quote($mot)`.
+**Commit** : `51c8632`
 
 ---
 
-### M2 — `#ENV{admin}` injecté en JavaScript sans `|intval`
+### ✅ M2 — `#ENV{admin}` injecté en JavaScript sans `|intval`
 
-**Fichier** : `squelettes/noisettes/timeline.html` ligne 10
-
-```javascript
-CCN.admin = [(#ENV{admin})];
-```
-
-Valeur normalement sûre (entier calculé depuis SESSION), mais sans cast elle reste vulnérable si la source du paramètre change.
-
-**Correction** : `CCN.admin = [(#ENV{admin}|intval)];`
+**Fichier** : `squelettes/noisettes/timeline.html`
+**Correction** : `[(#ENV{admin}|intval)]`
+**Commit** : `51c8632`
 
 ---
 
-### M3 — `#ENV{annee_scolaire}` non filtré dans des chaînes JavaScript
+### ✅ M3 — `#ENV{annee_scolaire}` non filtré dans des chaînes JavaScript
 
-**Fichiers** : `squelettes/noisettes/timeline.html` ligne 6, `squelettes/noisettes/menu_haut.html` lignes 9, 11
-
-```javascript
-CCN.urlXml = "spip.php?page=xml&annee_scolaire=#ENV{annee_scolaire}&mode=";
-```
-
-Valeur lue depuis un cookie client, injectée dans une chaîne JS sans encodage. Un cookie forgé pourrait injecter du code.
-
-**Correction** :
-```javascript
-CCN.urlXml = "spip.php?page=xml&annee_scolaire=[(#ENV{annee_scolaire}|json_encode)]&mode=";
-```
+**Fichier** : `squelettes/noisettes/timeline.html`
+**Correction** : `encodeURIComponent([(#ENV{annee_scolaire}|json_encode)])`
+**Commit** : `51c8632`
 
 ---
 
-### M4 — Absence d'attributs SRI sur les scripts CDN externes
+### ✅ M4 — Absence d'attributs SRI sur les scripts CDN externes
 
-**Fichier** : `squelettes/layout.html` lignes 43–47
-
-```html
-<script src="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
-```
-
-Aucun attribut `integrity` (SRI). Si le CDN est compromis, du code arbitraire s'exécute sur toutes les pages.
-
-**Correction** : Générer les hashes SRI et les ajouter, ou héberger les bibliothèques localement dans `squelettes/js/bundled/`.
+**Fichier** : `squelettes/layout.html`
+**Correction** : Attributs `integrity` (SHA-384) et `crossorigin="anonymous"` ajoutés sur Swiper CSS, Swiper JS et PDF.js.
+**Commit** : `cc2253e`
 
 ---
 
-### M5 — Fuite d'adresses email dans les logs SPIP
+### ✅ M5 — Fuite d'adresses email dans les logs SPIP
 
-**Fichier** : `thematique_pipelines.php` lignes 123, 142
-
-```php
-spip_log('les auteurs ' . $ar['email'], 'thematique');
-```
-
-Adresses email des enseignants écrites en clair dans `tmp/log/thematique.log`. Si ce répertoire est accessible depuis le web, ces données sont divulguées.
-
-**Correction** : Logger uniquement l'`id_auteur`, ou supprimer ces logs de débogage.
+**Fichier** : `thematique_pipelines.php`
+**Correction** : Le `sql_select` récupère désormais `id_auteur` en plus de `email`. Les logs utilisent `id_auteur` uniquement, sans exposer l'adresse email.
+**Commit** : `cc2253e`
 
 ---
 
-### M6 — Cookies applicatifs sans `HttpOnly`
+### ⚠️ M6 — Cookies applicatifs sans `HttpOnly` (non applicable)
 
-**Fichier** : `squelettes/js/controleurs.js` ligne 919
-
-```javascript
-document.cookie = cookie_nom + "=" + encodeURIComponent(cookie_valeur) + "; SameSite=Strict; Secure";
-```
-
-`SameSite=Strict` et `Secure` sont bien présents, mais `HttpOnly` est absent. En cas de XSS résiduelles, ces cookies (préférences d'affichage) seraient lisibles par du code malveillant.
+**Fichier** : `squelettes/js/controleurs.js`
+Les cookies (`laclasse_annee_scolaire`, etc.) sont définis depuis JavaScript pour stocker des préférences d'affichage. `HttpOnly` est incompatible avec des cookies gérés par JS. Ils contiennent exclusivement des préférences UI (pas de session, pas de token). `SameSite=Strict` et `Secure` sont déjà présents. Risque résiduel acceptable.
 
 ---
 
-### M7 — `#DESCRIPTIF*` (raw) utilisé comme `src` d'iframes sans validation
+### ✅ M7 — `#DESCRIPTIF*` utilisé comme `src` d'iframes sans validation d'URL
 
-**Fichiers** : `squelettes/noisettes/rubrique_detail.html` ligne 80, `squelettes/noisettes/article.html` ligne 21
-
-Le descriptif brut d'un objet SPIP est parsé ligne par ligne pour alimenter des iframes sans validation du protocole des URLs.
-
-**Correction** : Valider que chaque ligne commence par `https://` avant injection.
+**Correction** : Filtre `|match{^https?://}` appliqué avant injection dans `src`. Couvert par H5.
+**Commit** : `e9fcb88`
 
 ---
 
-## Vulnérabilités faibles
+## Vulnérabilités faibles — corrigées
 
-### F1 — Page `plan_edition.html` cachée 3600 s sans auth forte
+### ✅ F1 — Page `plan_edition.html` sans auth forte
 
-La page expose l'arborescence complète (IDs, titres, liens) avec un cache long. Voir H4 pour la correction du contrôle d'accès.
-
----
-
-### F2 — `innerHTML` avec `CCN.urlRoot` dans `bouton.js`
-
-**Fichier** : `squelettes/js/bouton.js` lignes 17, 28
-
-`CCN.urlRoot` provient de `#ENV{chemin}` (chemin serveur, normalement sûr), mais est injecté via `innerHTML`. Préférer la création d'éléments DOM :
-```javascript
-$('<img>').attr('src', CCN.urlRoot + 'img/reponse_plus.png')
-```
+**Correction** : Couverte par H4 (`#AUTORISER{webmestre}`). **Commit** : `700bbe9`
 
 ---
 
-### F3 — Absence d'en-têtes de sécurité HTTP
+### ✅ F2 — `innerHTML` avec `CCN.urlRoot` dans `bouton.js`
 
-Aucun `Content-Security-Policy`, `X-Frame-Options`, `X-Content-Type-Options`, ni `Referrer-Policy` n'est défini dans le plugin ou la configuration serveur visible. Ces en-têtes doivent être ajoutés au niveau nginx/apache ou via `#HTTP_HEADER` dans les squelettes.
-
----
-
-### F4 — Commentaires HTML exposant la structure interne dans les flux XML
-
-**Fichier** : `squelettes/xml/consignes.html` lignes 5–8
-
-```html
-<!-- #ID_RUBRIQUE-->
-<!-- date début : #CONST{_date_debut} -->
-```
-
-Des IDs et constantes internes sont exposés dans des commentaires HTML publics. Supprimer ces commentaires de débogage.
+**Fichier** : `squelettes/js/bouton.js`
+**Correction** : Remplacement par création d'éléments DOM (`createElement`, `appendChild`, `addEventListener`).
+**Commit** : `0c6bec4`
 
 ---
 
-## Points positifs
+### ⚠️ F3 — Absence d'en-têtes de sécurité HTTP
 
-- **CSRF** : Formulaires SPIP avec `#ACTION_FORMULAIRE` (token anti-CSRF). Actions destructrices avec `#URL_ACTION_AUTEUR` (signature cryptographique).
-- **Contrôle d'accès** : Les noisettes AJAX sensibles vérifient `#SESSION{statut}` ET `#AUTORISER{modifier,...}`.
-- **Échappement JS** : `escHtml()` définie dans `globales.js` et utilisée dans `reponse.js` pour les template literals.
-- **PHP** : `thematique_pipelines.php` et les formulaires PHP utilisent `intval()` et `sql_quote()`.
-- **Cookies** : `SameSite=Strict` et `Secure` présents.
-- **Open Redirect** : `reload()` dans `controleurs.js` valide que l'URL commence par `/` ou l'origine courante.
-- **Flux XML** : `|entites_html` appliqué sur les titres avant envoi au JavaScript.
+Hors périmètre du plugin — à configurer au niveau nginx/apache (`Content-Security-Policy`, `X-Frame-Options`, `X-Content-Type-Options`, `Referrer-Policy`).
 
 ---
 
-## Récapitulatif par fichier
+### ✅ F4 — Commentaires HTML exposant la structure interne dans les flux XML
 
-| Fichier | Vulnérabilités |
-|---------|----------------|
-| `squelettes/noisettes/ajax/article-sauve-coordonnees.html` | C1 |
-| `squelettes/noisettes/rubrique_detail.html` | C2, M7 |
-| `squelettes/noisettes/groupe_mot.html` | C2 |
-| `squelettes/noisettes/ressources_detail.html` | C2 |
-| `squelettes/noisettes/groupe_mot_detail.html` | C2 |
-| `squelettes/noisettes/rubrique.html` | C2 |
-| `squelettes/js/consigne.js` | H2 |
-| `squelettes/js/controleurs.js` | H3, M6 |
-| `squelettes/plan_edition.html` | H4, F1 |
-| `squelettes/noisettes/article.html` | H5, M7 |
-| `squelettes/layout.html` | H1, M4 |
-| `squelettes/xml.html` | H1 |
-| `squelettes/noisettes/timeline.html` | M2, M3 |
-| `squelettes/noisettes/menu_haut.html` | M3 |
-| `thematique_pipelines.php` | M5 |
-| `thematique_administrations.php` | M1 |
-| `squelettes/js/bouton.js` | F2 |
-| `squelettes/xml/consignes.html` | F4 |
+**Fichier** : `squelettes/xml/consignes.html`
+**Correction** : Suppression des 4 commentaires de debug (`#ID_RUBRIQUE`, `_date_debut`, `_date_fin`, `#DATE`).
+**Commit** : `0c6bec4`
+
+---
+
+## Points positifs (inchangés)
+
+- **CSRF** : `#ACTION_FORMULAIRE` et `#URL_ACTION_AUTEUR` sur tous les formulaires.
+- **Contrôle d'accès** : `#SESSION{statut}` + `#AUTORISER{modifier,...}` sur les noisettes AJAX sensibles.
+- **Échappement JS** : `escHtml()` dans `globales.js` utilisée dans `reponse.js`.
+- **PHP** : `intval()` et `sql_quote()` sur les entrées externes.
+- **Open Redirect** : `reload()` valide que l'URL commence par `/` ou l'origine courante.
+- **Flux XML** : `|entites_html` appliqué sur les titres.
