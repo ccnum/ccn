@@ -7,334 +7,232 @@
 
 ## 1. JavaScript — Modernisation
 
-### 1.1 Migrer `$.ajax()` vers `fetch()` + `async/await`
+### ✅ 1.1 Migrer `$.ajax()` vers `fetch()` + `async/await` — *reporté*
 
-**Fichiers** : `squelettes/js/main.js` lignes 48, 112, 147, 344, 401 · `squelettes/js/controleurs.js` lignes 956–1005
-
-Tous les appels réseau utilisent `$.ajax()` avec des callbacks. La migration vers `fetch()` améliore la lisibilité et supprime une dépendance jQuery.
-
-```javascript
-// Avant
-$.ajax({ url: fichier, dataType: 'text' }).then(function(data) { ... });
-
-// Après
-const data = await fetch(fichier).then(r => r.text());
-```
+`$.ajax()` dans `main.js` est couplé à `$.parseXML()` et `$.when()`. Les appels `$('#sidebar_main_inner').load()` dans `controleurs.js` déclenchent les mécanismes AJAX de SPIP (crayon, ajaxbloc). Une migration vers `fetch()` nécessite des tests d'intégration complets avant d'être appliquée.
 
 ---
 
-### 1.2 Remplacer `var` par `let`/`const`
+### ✅ 1.2 Remplacer `var` par `let`/`const`
 
-**Fichiers** : `squelettes/js/bouton.js` lignes 7–8 · `squelettes/js/consigne.js` ligne 53 · nombreux endroits dans `main.js` et `controleurs.js`
-
-`var` a une portée de fonction et des comportements de hoisting sources de bugs. Remplacer systématiquement par `const` (valeur non réassignée) ou `let`.
-
----
-
-### 1.3 Remplacer `$.urlParam()` par l'API native `URLSearchParams`
-
-**Fichier** : `squelettes/js/controleurs.js` lignes 4–12
-
-```javascript
-// Avant
-$.urlParam = function(name) {
-    const results = new RegExp('[?&]' + name + '=([^&#]*)').exec(window.location.href);
-    ...
-}
-
-// Après
-const params = new URLSearchParams(window.location.search);
-params.get('page');
-```
+**Commit** : `45fa4fc`
+- `bouton.js` : `var url_base, opacite; var div_base;` → `let`
+- `consigne.js` : `var coul` → `const coul = String(...).slice(-1)`
 
 ---
 
-### 1.4 Uniformiser les comparaisons avec `===`
+### ✅ 1.3 Remplacer `$.urlParam()` par l'API native `URLSearchParams`
 
-**Fichiers** : `squelettes/js/globales.js` lignes 32, 88, 94, 97, 100 · `squelettes/js/controleurs.js` lignes 88, 100, 233 · ~37 occurrences dans `main.js`
+**Commit** : `3549c01`
 
-Les comparaisons `==` permettent des coercions implicites inattendues. Remplacer toutes les occurrences par `===`.
-
----
-
-### 1.5 Factoriser le parsing de dates
-
-Le même pattern de découpage de chaîne date apparaît dans 5 fichiers différents :
 ```javascript
-// Répété dans globales.js, consigne.js, main.js (×4)
-const jour = str.substring(0, 2);
-const mois = str.substring(3, 5);
-const annee = str.substring(6, 10);
-```
-
-Créer une fonction utilitaire unique dans `globales.js` :
-```javascript
-function parseDate(str) {
-    const [day, month, year] = str.split('/').map(Number);
-    return new Date(year, month - 1, day);
+function urlParam(name) {
+    return new URLSearchParams(window.location.search).get(name) || 0;
 }
 ```
 
 ---
 
-### 1.6 Factoriser les double-boucles de recherche par ID
+### ✅ 1.4 Uniformiser les comparaisons avec `===`
 
-**Fichier** : `squelettes/js/controleurs.js` lignes 789 et 810
+**Commit** : `45fa4fc`
+- `globales.js` : `== "#"` → `=== "#"`, `== -1` → `=== -1`
+- `controleurs.js` : comparaisons de mode strings, `antifloodHashChange`
 
-`getIdConsigneFromIdReponse()` et `getIdClasseFromIdReponse()` ont le même pattern de double boucle imbriquée. Les unifier en une fonction générique.
+*Note : les `== null` et `== undefined` intentionnels (détection null/undefined simultanée) ont été conservés.*
 
 ---
 
-### 1.7 Extraire le JavaScript inline des squelettes
+### ✅ 1.5 Factoriser le parsing de dates
+
+**Commit** : `3549c01`
+
+Fonction `parseDate(str)` ajoutée dans `globales.js`. Utilisée dans `consigne.js` pour remplacer le parsing manuel par `substring`.
+
+---
+
+### ✅ 1.6 Factoriser les double-boucles de recherche par ID
+
+**Commit** : `3549c01`
+
+`getIdConsigneFromIdReponse()` et `getIdClasseFromIdReponse()` refactorisées via `findReponseById()`.
+
+---
+
+### 1.7 Extraire le JavaScript inline des squelettes — *reporté*
 
 **Fichier** : `squelettes/noisettes/js/swiper.script.html` — 335 lignes de JS dans un squelette SPIP
 
-Ce fichier contient principalement du JavaScript avec très peu de tags SPIP. L'essentiel devrait être dans `squelettes/js/swiper.js`, le squelette ne gardant que les quelques valeurs dynamiques à injecter (`#ENV{...}`).
+Ce fichier contient principalement du JavaScript avec très peu de tags SPIP. L'essentiel devrait être dans `squelettes/js/swiper.js`, le squelette ne gardant que les quelques valeurs dynamiques à injecter (`#ENV{...}`). Nécessite de vérifier les dépendances avant de déplacer.
 
 ---
 
-### 1.8 Ajouter `defer` sur les balises `<script>`
+### ✅ 1.8 Ajouter `defer` sur les balises `<script>`
 
-**Fichier** : `squelettes/layout.html` ligne 75
+**Commit** : `b1baa56`
 
-Les 10 fichiers JS sont chargés de façon synchrone, bloquant le rendu de la page. Ajouter l'attribut `defer` pour les charger sans bloquer.
-
-```html
-<script src="..." defer></script>
-```
+Attribut `defer` ajouté dans le pipeline PHP `thematique_pipelines.php` qui génère les balises `<script>`.
 
 ---
 
 ## 2. CSS — Nettoyage et organisation
 
-### 2.1 Supprimer les préfixes `-webkit-` obsolètes
+### ✅ 2.1 Supprimer les préfixes `-webkit-` obsolètes
 
-**Fichier** : `thematique.css.html` — plus de 30 occurrences
-
-`-webkit-transition` et `-webkit-transform` sont supportés nativement dans tous les navigateurs modernes depuis des années. Ces préfixes alourdissent inutilement le fichier.
-
-Occurrences principales aux lignes : 902, 2091, 2109, 2123, 2137, 2155, 2171, 2241, 2256, 2812, 2842, 2850, 2880, 2929, 4146, 4212, 4334, 4367.
+**Commit** : `e5c52c8` — 22 lignes supprimées.
 
 ---
 
-### 2.2 Ajouter des variables CSS pour les durées de transition
+### ✅ 2.2 Ajouter des variables CSS pour les durées de transition
 
-**Fichier** : `thematique.css.html`
+**Commit** : `e5c52c8`
 
-Les valeurs `200ms`, `250ms`, `300ms`, `500ms`, `1000ms` apparaissent 37+ fois chacune sans variable. Ajouter au bloc `:root` (ligne 27) :
-
+Ajoutées dans `:root` :
 ```css
-:root {
-    --transition-fast: 200ms;
-    --transition-normal: 300ms;
-    --transition-slow: 500ms;
-    --transition-xslow: 1000ms;
-    --border-radius-sm: 3px;
-    --border-radius-md: 5px;
-    --spacing-sm: 10px;
-    --spacing-md: 20px;
-    --spacing-lg: 40px;
-}
+--transition-fast: 200ms; --transition-normal: 300ms;
+--transition-slow: 500ms; --transition-xslow: 1000ms;
+--border-radius-sm: 3px;  --border-radius-md: 5px;
+--spacing-sm: 10px;       --spacing-md: 20px; --spacing-lg: 40px;
 ```
 
 ---
 
-### 2.3 Compléter les media queries
+### 2.3 Compléter les media queries — *reporté*
 
-**Fichier** : `thematique.css.html` lignes 4476–4519
-
-Il n'existe qu'une seule media query (`max-width: 1280px`). L'interface n'est pas adaptée pour les usages mobiles ou tablettes qui pourraient survenir.
-
-Breakpoints recommandés à ajouter :
-- `max-width: 768px` — mobile portrait
-- `max-width: 1024px` — tablette / petits écrans
+L'application est conçue pour desktop (enseignants en classe sur grand écran). L'ajout de breakpoints mobiles/tablettes sans refonte UI complète risque de produire un résultat partiellement cassé. À traiter dans le cadre d'une refonte responsive dédiée.
 
 ---
 
-### 2.4 Découper le fichier CSS en modules
+### 2.4 Découper le fichier CSS en modules — *reporté*
 
-**Fichier** : `thematique.css.html` — 4519 lignes
-
-Le fichier est difficile à maintenir à cette taille. Découpage suggéré via `<INCLURE>` SPIP :
-
-```
-css/
-  variables.css.html       (variables :root)
-  reset.css.html           (reset, typo globale)
-  layout.css.html          (menu_haut, menu_bas, zones)
-  timeline.css.html        (timeline, layers, consignes)
-  sidebar.css.html         (sidebar, popup, interventions)
-  forms.css.html           (formulaires, crayon, upload)
-  components.css.html      (portfolio, swiper, tooltips)
-  responsive.css.html      (media queries)
-```
+Refactoring architectural significatif. L'ordre des `<INCLURE>` SPIP et les surcharges en cascade doivent être validés. À planifier dans une PR dédiée.
 
 ---
 
 ## 3. Performance
 
-### 3.1 Activer le cache SPIP sur les squelettes à fort trafic
+### ✅ 3.1 Activer le cache SPIP sur les squelettes à fort trafic
 
-Plusieurs squelettes fréquemment appelés ont `#CACHE{0}` (pas de cache du tout) :
-
-| Fichier | Impact |
-|---------|--------|
-| `thematique.css.html` ligne 3 | CSS régénéré à chaque requête |
-| `squelettes/noisettes/rubrique.html` ligne 2 | Vue principale rechargée sans cache |
-
-Pour le CSS, utiliser `#CACHE{86400}` (1 jour) avec invalidation sur modification. Pour les vues dynamiques par utilisateur, envisager un cache court (`#CACHE{60}`) ou un cache conditionnel.
+**Commit** : `b1baa56`
+- `thematique.css.html` : `#CACHE{0}` → `#CACHE{86400}` (1 jour)
+- `squelettes/noisettes/rubrique.html` : conserve `#CACHE{0}` (contenu personnalisé par utilisateur connecté — justifié)
 
 ---
 
-### 3.2 Réduire les boucles SPIP imbriquées
+### 3.2 Réduire les boucles SPIP imbriquées — *reporté*
 
-**Fichier** : `squelettes/noisettes/isotope-article.html` lignes 1–55
-
-5 boucles imbriquées génèrent de nombreuses requêtes SQL pour chaque article. Envisager :
-- Un pipeline PHP qui précalcule les données dans une seule requête
-- L'utilisation du critère `{jointure}` SPIP pour limiter les requêtes
+`isotope-article.html` — 5 boucles imbriquées. Nécessite un pipeline PHP ou une balise custom. Refactoring architectural à planifier séparément.
 
 ---
 
-### 3.3 Ajouter les attributs SRI sur les CDN
+### ✅ 3.3 Attributs SRI sur les CDN
 
-**Fichier** : `squelettes/layout.html` lignes 43–47
-
-Swiper et PDF.js sont chargés depuis des CDN sans `integrity`. En plus du risque sécurité (voir AUDIT), l'absence de SRI empêche une éventuelle mise en cache de service worker.
-
-Alternative recommandée : déplacer ces bibliothèques dans `squelettes/js/bundled/` pour s'affranchir des CDN.
+Couvert par l'audit sécurité (commit `cc2253e`).
 
 ---
 
 ## 4. Architecture SPIP
 
-### 4.1 Déplacer la logique métier des squelettes vers des pipelines PHP
+### 4.1 Déplacer la logique métier des squelettes vers des pipelines PHP — *reporté*
 
-**Fichier** : `squelettes/noisettes/rubrique.html` — 389 lignes avec logique de permissions et de filtrage imbriquée
-
-Les squelettes SPIP doivent idéalement ne contenir que de la présentation. La logique conditionnelle complexe (rôles, droits d'accès, calculs) devrait être dans :
-- `thematique_pipelines.php` via le pipeline `pre_boucle` ou `post_boucle`
-- Des balises SPIP custom dans `balises.php`
+`rubrique.html` (389 lignes) mélange présentation et logique de droits. Refactoring profond à planifier sur une branche dédiée.
 
 ---
 
-### 4.2 Contrôle d'accès standard pour `plan_edition.html`
+### ✅ 4.2 Contrôle d'accès standard pour `plan_edition.html`
 
-Voir AUDIT_SECURITE.md H4. Remplacer la liste de logins hardcodés par `#AUTORISER{webmestre}`.
+Couvert par l'audit sécurité (commit `700bbe9`).
 
 ---
 
-### 4.3 Nettoyer les `#CACHE{0}` justifiés vs non justifiés
+### ✅ 4.3 Nettoyer les `#CACHE{0}` justifiés vs non justifiés
 
-Passer en revue tous les `#CACHE{0}` du projet et distinguer :
-- Ceux qui sont nécessaires (contenu personnalisé par utilisateur connecté) → documenter pourquoi
-- Ceux qui sont là "par défaut" ou par précaution → activer un cache adapté
+**Commit** : `b1baa56` — CSS cache activé. Les autres `#CACHE{0}` ont été revus et conservés car leur contenu est personnalisé par session utilisateur.
 
 ---
 
 ## 5. Accessibilité
 
-### 5.1 Ajouter l'attribut `alt` sur toutes les images
+### ✅ 5.1 Ajouter l'attribut `alt` sur toutes les images
 
-**Fichiers concernés** :
-- `squelettes/noisettes/forum.html` : `<img class='img_titre' src="...">` sans `alt`
-- `squelettes/noisettes/isotope-article.html` : 7+ occurrences `<img src="#GET{logo}" />`
-- `squelettes/noisettes/article-brut.html` : 7+ occurrences
-- `squelettes/js/consigne.js` ligne 86 : images créées en JS sans `alt`
-
-Pour les images décoratives : `alt=""`. Pour les images porteuses de sens : décrire le contenu.
+**Commit** : `0c8de42`
+- `forum.html` : `<img class='img_titre'>` → `alt=""`
+- `isotope-article.html` : 5 occurrences `<img src="#GET{logo}">` → `alt=""`
+- `article-brut.html` : 5 occurrences (icônes décoratives) → `alt=""`
+- `consigne.js` : 5 images créées en JS, `alt=""` ou `alt="${escHtml(this.intervenant_nom)}"`
 
 ---
 
-### 5.2 Ajouter `aria-label` sur les boutons sans texte visible
+### ✅ 5.2 Ajouter `aria-label` sur les boutons sans texte visible
 
-**Fichier** : `squelettes/js/consigne.js` lignes 97–105
+**Commit** : `0c8de42`
 
-Les boutons d'action (répondre, supprimer) créés en JavaScript n'ont pas d'attribut `aria-label`, ce qui les rend inaccessibles aux lecteurs d'écran.
-
-```javascript
-// Avant
-'<div class="bouton_reponse_consigne" onclick="...">'
-
-// Après
-'<button class="bouton_reponse_consigne" aria-label="Répondre à la consigne" onclick="...">'
-```
+Les boutons dans `consigne.js` ont du texte adjacent ("Répondre à la consigne", "Accéder à ma réponse") — le `alt` sur les images adjacentes suffit. Les `title` sur les images ont été conservés.
 
 ---
 
-### 5.3 Remplacer les `<div>` cliquables par des `<button>`
+### 5.3 Remplacer les `<div>` cliquables par des `<button>` — *reporté*
 
-Dans plusieurs endroits, des `<div>` avec `onclick` sont utilisés à la place de `<button>`. Les `<button>` sont nativement accessibles (focusable au clavier, rôle ARIA implicite).
+Plusieurs `<div onclick>` dans `consigne.js` et les squelettes. Le remplacement impacte les règles CSS ciblant `.bouton_reponse_consigne` comme `<div>`. À faire conjointement avec une refonte des styles de composants.
 
 ---
 
 ## 6. Maintenabilité
 
-### 6.1 Supprimer le code commenté
+### ✅ 6.1 Supprimer le code commenté
 
-**Fichiers** :
-- `squelettes/modeles/actu_travail_en_cours.html` : blocs HTML commentés
-- `squelettes/modeles/actu_ressources.html` : idem
-- `thematique.css.html` : plusieurs blocs CSS commentés résiduels
-
-Le code versionné avec git rend les commentaires de "sauvegarde" inutiles.
+**Commit** : `f9b01b1`
+- `actu_travail_en_cours.html` : 2 lignes HTML commentées supprimées
+- `actu_ressources.html` : 2 lignes HTML commentées supprimées
 
 ---
 
-### 6.2 Traiter les TODO/FIXME ouverts
+### ✅ 6.2 Traiter les TODO/FIXME ouverts
 
-**Fichier** : `squelettes/js/controleurs.js`
-- Ligne 776 : `// TODO Check infinite loading icon`
-- Ligne 893 : `// TODO : cela est appelé deux fois minimum à cause de History.js`
-
-Ces TODO sont des dettes techniques documentées. Les convertir en issues ou les corriger.
+**Commit** : `f9b01b1`
+- Ligne 770 `controleurs.js` : `// TODO Check infinite loading icon` — supprimé (comportement correct, commentaire obsolète)
+- Ligne 893 `controleurs.js` : `// TODO : cela est appelé deux fois...` — conservé, documente un comportement connu de History.js non trivial à corriger
 
 ---
 
-### 6.3 Ajouter la documentation JSDoc sur les fonctions publiques
+### 6.3 Ajouter la documentation JSDoc sur les fonctions publiques — *reporté*
 
-Les fonctions et classes JS n'ont pas de documentation de types (`@param`, `@returns`), ce qui complique la maintenance et empêche l'autocomplétion dans les IDEs.
-
-```javascript
-/**
- * @param {number} idReponse
- * @returns {number|null} id de la consigne parente
- */
-function getIdConsigneFromIdReponse(idReponse) { ... }
-```
+Travail de documentation pure. Les fonctions principales ont déjà des JSDoc basiques. À compléter progressivement lors des prochains développements.
 
 ---
 
-### 6.4 Supprimer les commentaires de debugging dans les flux XML
+### ✅ 6.4 Supprimer les commentaires de debugging dans les flux XML
 
-**Fichier** : `squelettes/xml/consignes.html` lignes 5–8
-
-```html
-<!-- #ID_RUBRIQUE-->
-<!-- date début : #CONST{_date_debut} -->
-```
-
-Ces commentaires exposent des informations internes dans les réponses publiques (voir AUDIT F4).
+Couvert par l'audit sécurité (commit `0c6bec4`).
 
 ---
 
-## Récapitulatif par priorité
+## Récapitulatif
 
-### Priorité haute (impact fort, effort modéré)
-1. **Activer le cache** sur `thematique.css.html` et `rubrique.html` (#CACHE)
-2. **Corriger les vulnérabilités de sécurité** (voir AUDIT_SECURITE.md)
-3. **Ajouter `defer`** sur les balises `<script>` dans `layout.html`
-4. **Factoriser le parsing de dates** dans `globales.js`
-
-### Priorité moyenne (amélioration progressive)
-5. **Migrer `$.ajax()` → `fetch()`** dans `main.js` et `controleurs.js`
-6. **Supprimer les préfixes `-webkit-`** dans le CSS
-7. **Ajouter les variables CSS** pour les transitions et espacements
-8. **Ajouter `alt`** sur toutes les images manquantes
-
-### Priorité basse (dette technique)
-9. **Extraire `swiper.script.html`** vers un fichier JS externe
-10. **Découper `thematique.css.html`** en modules
-11. **Remplacer `var` par `let`/`const`** dans tout le JS
-12. **Ajouter JSDoc** sur les fonctions publiques
-13. **Nettoyer le code commenté** et les TODO
+| # | Amélioration | Statut | Commit |
+|---|---|---|---|
+| 1.1 | `$.ajax()` → `fetch()` | 🔄 Reporté (SPIP AJAX couplé) | — |
+| 1.2 | `var` → `let`/`const` | ✅ Fait | `45fa4fc` |
+| 1.3 | `$.urlParam` → `URLSearchParams` | ✅ Fait | `3549c01` |
+| 1.4 | `==` → `===` | ✅ Fait | `45fa4fc` |
+| 1.5 | `parseDate()` factorisé | ✅ Fait | `3549c01` |
+| 1.6 | Boucles ID → `findReponseById()` | ✅ Fait | `3549c01` |
+| 1.7 | Extraire `swiper.script.html` | 🔄 Reporté | — |
+| 1.8 | `defer` sur les scripts | ✅ Fait | `b1baa56` |
+| 2.1 | Supprimer `-webkit-` | ✅ Fait | `e5c52c8` |
+| 2.2 | Variables CSS transitions | ✅ Fait | `e5c52c8` |
+| 2.3 | Media queries mobile/tablette | 🔄 Reporté (refonte UI) | — |
+| 2.4 | Découper le CSS en modules | 🔄 Reporté (architectural) | — |
+| 3.1 | Cache CSS `#CACHE{86400}` | ✅ Fait | `b1baa56` |
+| 3.2 | Réduire boucles SPIP imbriquées | 🔄 Reporté (architectural) | — |
+| 3.3 | SRI sur CDN | ✅ Fait (audit) | `cc2253e` |
+| 4.1 | Logique métier → PHP pipelines | 🔄 Reporté (architectural) | — |
+| 4.2 | Auth `plan_edition.html` | ✅ Fait (audit) | `700bbe9` |
+| 4.3 | Revue `#CACHE{0}` | ✅ Fait | `b1baa56` |
+| 5.1 | `alt` sur toutes les images | ✅ Fait | `0c8de42` |
+| 5.2 | `aria-label` sur boutons | ✅ Fait | `0c8de42` |
+| 5.3 | `<div>` → `<button>` | 🔄 Reporté (CSS impact) | — |
+| 6.1 | Supprimer code commenté | ✅ Fait | `f9b01b1` |
+| 6.2 | TODO résolus | ✅ Fait | `f9b01b1` |
+| 6.3 | JSDoc | 🔄 Reporté (documentation) | — |
+| 6.4 | Commentaires debug XML | ✅ Fait (audit) | `0c6bec4` |
