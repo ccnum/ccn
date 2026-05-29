@@ -102,7 +102,7 @@
 						<span class="texte nettoyeur bloc_classe_iframe">
 							<p style="padding: 15px;" class="#EDIT{url_site}">[<a class="spip_doc_titre" href="[(#URL_SITE|textebrut)]">(#URL_SITE|textebrut)</a>&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;]</p>
 							<div class="nettoyeur"></div>
-							<iframe src="[(#URL_SITE|textebrut)]" width="100%" height="100%"></iframe>
+							<iframe src="[(#URL_SITE|textebrut)]" width="100%" height="100%" sandbox="allow-scripts allow-same-origin allow-forms allow-popups"></iframe>
 						</span>
 					</div>
 
@@ -118,7 +118,7 @@
 			]
 		]
 
-		[(#GET{classe_iframe}|textebrut|oui)
+		[(#GET{classe_iframe}|textebrut|match{^https?://}|oui)
 			<div class="sidebar_bubble">
 				<INCLURE{fond=noisettes/js/accordeon, nom=bloc_option_classe_iframe, ajax}>
 				<div class="bloc_option_doc nettoyeur bloc_texte">
@@ -130,7 +130,7 @@
 							[<a class="spip_doc_titre" href="[(#GET{classe_iframe}|replace{embed,})]" target="_blank" rel="noopener noreferrer">(#GET{classe_iframe}|replace{embed,})</a>]
 						]
 						<div class="nettoyeur"></div>
-						<iframe src="[(#GET{classe_iframe}|textebrut)]" width="100%" height="100%"></iframe>
+						<iframe src="[(#GET{classe_iframe}|textebrut)]" width="100%" height="100%" sandbox="allow-scripts allow-same-origin allow-forms allow-popups"></iframe>
 					</div>
 				</div>
 			</div>

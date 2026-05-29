@@ -88,7 +88,7 @@
 			<div style="clear:both" class='bloc_classe_iframe'>
 				<BOUCLE_tab(DATA){source tableau, #GET{tab}}>
 					<div class="nettoyeur">
-						<iframe src="[(#VALEUR)]" width="100%" style="min-height: 600px;"></iframe>
+						[(#VALEUR|match{^https?://}|oui)<iframe src="[(#VALEUR|textebrut)]" width="100%" style="min-height: 600px;" sandbox="allow-scripts allow-same-origin allow-forms allow-popups"></iframe>]
 					</div>
 				</BOUCLE_tab>
 			</div>
