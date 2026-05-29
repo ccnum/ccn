@@ -3,11 +3,11 @@
 	var hash = window.location.hash;
 
 	CCN.urlRoot = "[(#ENV{chemin})]";
-	CCN.urlXml = "spip.php?page=xml&annee_scolaire=#ENV{annee_scolaire}&mode=";
+	CCN.urlXml = "spip.php?page=xml&annee_scolaire=" + encodeURIComponent([(#ENV{annee_scolaire}|json_encode)]) + "&mode=";
 	CCN.urlImgBlog = "[(#CHEMIN{#ENV{chemin}/img/logo_blog_#NOM_SITE_SPIP.png}|sinon{#ENV{chemin}/img/logo_blog.png}|image_reduire{98}|extraire_attribut{src})]";
 	CCN.urlImgEvenement = "[(#CHEMIN{#ENV{chemin}/img/logo_evenement_#NOM_SITE_SPIP.png}|sinon{#ENV{chemin}/img/logo_evenement.png}|image_reduire{150,94}|extraire_attribut{src})]";
 
-	CCN.admin = [(#ENV{admin})];
+	CCN.admin = [(#ENV{admin}|intval)];
 	CCN.idRestreint = [(#ENV{restreint}|sinon{0})];
 	CCN.typeRestreint = [(#ENV{type_restreint}|json_encode)];
 	CCN.classeSelection = [(#ENV{restreint}|sinon{0})];
