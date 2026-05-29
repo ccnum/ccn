@@ -115,12 +115,12 @@ function thematique_notifications_destinataires($flux) {
 			foreach ($rubriques as $r) {
 				spip_log('dans les sous rubriques ' . $r['id_rubrique'], 'thematique');
 				$auteurs_restreint = sql_select(
-					'auteurs.email',
+					'auteurs.id_auteur, auteurs.email',
 					'spip_auteurs AS auteurs JOIN spip_auteurs_liens AS lien ON auteurs.id_auteur=lien.id_auteur',
 					["lien.objet='rubrique'", 'lien.id_objet=' . intval($r['id_rubrique']), "auteurs.statut='0minirezo'"]
 				);
 				foreach ($auteurs_restreint as $ar) {
-					spip_log('les auteurs ' . $ar['email'], 'thematique');
+					spip_log('auteur id=' . intval($ar['id_auteur']), 'thematique');
 					$flux['data'][] = $ar['email'];
 				}
 			}
@@ -134,12 +134,12 @@ function thematique_notifications_destinataires($flux) {
 			foreach ($rubriques as $r) {
 				spip_log('lier à la rubrique ' . $r['id_rubrique'], 'thematique');
 				$auteurs_restreint = sql_select(
-					'auteurs.email',
+					'auteurs.id_auteur, auteurs.email',
 					'spip_auteurs AS auteurs JOIN spip_auteurs_liens AS lien ON auteurs.id_auteur=lien.id_auteur',
 					["lien.objet='rubrique'", 'lien.id_objet=' . intval($r['id_rubrique']), "auteurs.statut='0minirezo'"]
 				);
 				foreach ($auteurs_restreint as $ar) {
-					spip_log('les auteurs ' . $ar['email'], 'thematique');
+					spip_log('auteur id=' . intval($ar['id_auteur']), 'thematique');
 					$flux['data'][] = $ar['email'];
 				}
 			}
