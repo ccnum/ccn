@@ -7,14 +7,14 @@
 			[(#SET{texte,[(#TEXTE|couper{80}|sinon{[(#TITRE|couper{80})]})]})]
 			<h3 class="symbol">#MOYENNE[(#GET{texte})]</h3>
 		</a>
-		<h2 class="name"><img src="#GET{logo}" />[<span>(#TITRE|couper{30})</span>]</h2>
+		<h2 class="name"><img src="#GET{logo}" alt="" />[<span>(#TITRE|couper{30})</span>]</h2>
 	</div>
 
 	<BOUCLE_documents_joints1(DOCUMENTS) {media IN audio2} {id_article} {tout} {doublons}>
 		<div class="element big square [(#ENV{class_coul})] [(#ENV{class})] #ID_RUBRIQUE #MEDIA" date="[(#DATE|annee)][(#DATE|mois)][(#DATE|jour)]" notation="#GET{note,0}">
 			<div class="picto" style="background-image: url('#GET{logo}');"></div>
 			[(#MODELE{audio2, autostart=false, hauteur=150, largeur=150})]
-			<h2 class="name"><img src="#GET{logo}" />[<span>(#_principale:TITRE|couper{30})</span>]</h2>
+			<h2 class="name"><img src="#GET{logo}" alt="" />[<span>(#_principale:TITRE|couper{30})</span>]</h2>
 		</div>
 	</BOUCLE_documents_joints1>
 
@@ -24,7 +24,7 @@
 			<p class="vignette">
 			[(#LOGO_DOCUMENT|image_gamma{254}|image_reduire{70}|inserer_attribut{style,'border:0px solid #000000;'})]
 			</p>
-			<h2 class="name"><img src="#GET{logo}" />[<span>(#_principale:TITRE|couper{30})</span>]</h2>
+			<h2 class="name"><img src="#GET{logo}" alt="" />[<span>(#_principale:TITRE|couper{30})</span>]</h2>
 		</div>
 	</BOUCLE_documents_joints0>
 
@@ -35,7 +35,7 @@
 				<a href="[(#URL_DOCUMENT|image_reduire{1500}|extraire_attribut{src})]" type="#MIME_TYPE" class="colorbox_isotope" style="text-decoration:none;" date="[(#DATE|annee)][(#DATE|mois)][(#DATE|jour)]" notation="#GET{note,0}">
 					[(#LOGO_DOCUMENT|image_nb|image_recadre{70,70,center}|inserer_attribut{style,'border:0px solid #000000;'})]
 				</a>
-				<h2 class="name"><img src="#GET{logo}" />[<span>(#_principale:TITRE|couper{30})</span>]</h2>
+				<h2 class="name"><img src="#GET{logo}" alt="" />[<span>(#_principale:TITRE|couper{30})</span>]</h2>
 			</p>
 		</div>
 	</BOUCLE_documents_joints2>
@@ -47,7 +47,7 @@
 				<a href="#URL_DOCUMENT" title="[(#TITRE)]" type="#MIME_TYPE" class="colorbox_isotope" style="text-decoration:none;">
 					[(#LOGO_DOCUMENT|image_reduire{64}|image_gamma{254}|inserer_attribut{style,'border:0px solid #000000;'})]
 				</a>
-			<h2 class="name"><img src="#GET{logo}" /><span>[(#TITRE|couper{30}|sinon{[(#_principale:TITRE|couper{30})]})]</span></h2>
+			<h2 class="name"><img src="#GET{logo}" alt="" /><span>[(#TITRE|couper{30}|sinon{[(#_principale:TITRE|couper{30})]})]</span></h2>
 			</p>
 		</div>
 	</BOUCLE_documents_joints3>

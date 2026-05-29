@@ -49,8 +49,7 @@ function Consigne() {
 	 * Crée l'élément DOM et l'intègre dans la timeline.
 	 */
 	this.initDOM = function () {
-		const coul = String(this.data.intervenant_id);
-		coul = coul.substr(coul.length - 1, 1);
+		const coul = String(this.data.intervenant_id).slice(-1);
 		let reponses_puces = '';
 
 		for (let j = 1; j <= this.data.nombre_reponses; j++) {
@@ -69,7 +68,7 @@ function Consigne() {
 				 class="timeline_item consigne_haute"
 				 style="top:${this.y * 100}%; left:${this.x / CCN.projet.nombre_jours * 100}%;"
 			>
-				<img class="card-bg" src="${CCN.urlRoot}img/cards_background.svg" />
+				<img class="card-bg" src="${CCN.urlRoot}img/cards_background.svg" alt="" />
 				<div id="consigne${this.id}"
 					class="consigne couleur_texte_consignes couleur_consignes${coul}"
 					data-id="${this.id}"
@@ -77,12 +76,12 @@ function Consigne() {
 				>
 					<div class="picto_nombre_commentaires">${this.data.nombre_commentaires}</div>
 					<div class="etiquette-etape">
-						<img class="logo-etiquette" src="" />
+						<img class="logo-etiquette" src="" alt="" />
 						<span class="texte-etiquette">Étape N°${this.numero+1}</span>
 					</div>
 					<div class="texte">
 						<div class="first-row">
-							<div class="photo"><img src="${this.data.image}" /></div>
+							<div class="photo"><img src="${this.data.image}" alt="${escHtml(this.intervenant_nom)}" /></div>
 							<div class="titre"></div>
 						</div>
 						<div class="second-row">
@@ -95,11 +94,11 @@ function Consigne() {
 				</div>
 				<div class="bouton_reponse_consigne"
 					onclick="createReponse(false,${this.id},${CCN.idRestreint},${this.numero});">
-					<img src="${CCN.urlRoot}img/reponse_plus.png" title="Répondre à la consigne">
+					<img src="${CCN.urlRoot}img/reponse_plus.png" alt="" title="Répondre à la consigne">
 					Répondre à la consigne
 				</div>
 				<div class="bouton_reponse_consigne">
-					<img src="${CCN.urlRoot}img/reponse_plus.png" title="Accéder à ma réponse">
+					<img src="${CCN.urlRoot}img/reponse_plus.png" alt="" title="Accéder à ma réponse">
 					Accéder à ma réponse
 				</div>
 			</div>
