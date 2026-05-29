@@ -1564,24 +1564,6 @@ div.jaimeplus {
 
 /* -- SocialTags -- */
 div.socialtags {
-	/*
-	bottom: 0px;
-	height: 50px;
-	margin-bottom: 60px;
-	top: auto;
-	bottom: 0px;
-	margin-bottom: 40px;
-	height: 40px;
-	right: 25px;
-	position: absolute;
-	*/
-	margin-left: 0;
-	padding: 0;
-}
-
-/* Surcharge de socialtags.css */
-
-div.socialtags {
 	margin: 2px 0 0px 0;
 	padding: 0;
 	clear: both;
@@ -2128,10 +2110,6 @@ div.donnees_classe {
 				transition: all 500ms ease;
 }
 
-.show_blogs .article_blog_container::before {
-
-}
-
 .article_blog_container .article_blog{
 	font-size: 12px;
 	color: transparent;
@@ -2177,10 +2155,6 @@ div.donnees_classe {
 	-webkit-transition: all 500ms ease;
 	transition: all 500ms ease;
 	transform: rotate(45deg) skew(-10deg, -10deg);
-}
-
-.show_evenements .article_evenement_container::before {
-
 }
 
 .article_evenement_container .article_evenement{
@@ -2795,14 +2769,6 @@ div.donnees_classe {
 	padding-bottom: 30px
 }
 
-#ressources_wrap {
-}
-
-#sidebar_lateral,
-#sidebar_main {
-}
-
-
 .call_sidebar_main {
 	position: absolute;
 	right: 7px;
@@ -3065,13 +3031,9 @@ li > .ressources_classe_nom {
 	}
 
 a.lien_ajouter { cursor: pointer; color: #58ab27; padding-right: 25px; font-weight: normal;}
-a.lien_ajouter:hover { }
-
 a.liens_voir { cursor: pointer; color: #333; font-weight: normal;}
-a.liens_voir:hover { }
 
 a.liens_voir2 { cursor: pointer; color: #333; font-weight: normal;}
-a.liens_voir2:hover { }
 
 a.liens_supprimer { cursor: pointer; color: red; font-weight: normal;}
 a.liens_supprimer:hover { }
@@ -3083,25 +3045,6 @@ a.liens_forum:hover { }
 /*--- Google doc --- */
 #docs-chrome, #docs-header, #docs-bar {
 	visibility: hidden;
-}
-
-/* -- Surcharges Colorbox -- */
-#cboxTitle {
-	font-size: 15px;
-	font-weight: bold;
-	color: var(--color-default);
-}
-#cboxLoadedContent {
-	margin-top: 10px;
-}
-#cboxClose, #cboxClose:hover {
-	top: -4px;
-	right: -6px;
-	background-image: url(#ENV{chemin}/img/close.png);
-	background-position: 0px 0px;
-	width: 30px;
-	height: 30px;
-	z-index: 2000px;
 }
 
 /* --- Silder d'aide --- */
@@ -3318,10 +3261,6 @@ p.boutons:has(input[type="submit"]) {
 	border-radius: 3px;
 	margin-top: 4px;
 	clear: both;
-}
-
-#cboxLoadedContent {
-	padding: 10px;
 }
 
 /*Forum*/
@@ -4311,23 +4250,19 @@ ul#forum, .lien_forum {
 	vertical-align: middle;
 }
 
-// Rules for sizing the icon.
+/* Rules for sizing the icon. */
 .material-icons.md-18 { font-size: 18px; }
 .material-icons.md-24 { font-size: 24px; }
 .material-icons.md-36 { font-size: 36px; }
 .material-icons.md-48 { font-size: 48px; }
 
-// Rules for using icons as black on a light background.
+/* Rules for using icons as black on a light background. */
 .material-icons.md-dark { color: rgba(0, 0, 0, 0.54); }
 .material-icons.md-dark.md-inactive { color: rgba(0, 0, 0, 0.26); }
 
-// Rules for using icons as white on a dark background.
+/* Rules for using icons as white on a dark background. */
 .material-icons.md-light { color: rgba(255, 255, 255, 1); }
 .material-icons.md-light.md-inactive { color: rgba(255, 255, 255, 0.3); }
-
-#cboxOverlay {
-	background: rgba(0,0,0,.9) !important;
-}
 
 .crayon-html .formulaire_crayon {
 	max-width: none !important;
