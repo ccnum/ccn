@@ -203,7 +203,7 @@ function th_configurer_rubriques() {
 					ON (sr.id_rubrique = sml.id_objet AND sml.objet = "rubrique")
 				LEFT JOIN spip_mots as sm
 					ON (sml.id_mot = sm.id_mot)',
-			['sm.titre = "' . $mot . '"', 'sr.id_parent = 0']
+			['sm.titre = ' . sql_quote($mot), 'sr.id_parent = 0']
 		);
 
 		if ($count < 1) {
@@ -211,7 +211,7 @@ function th_configurer_rubriques() {
 			$id_rubrique = rubrique_inserer(0);
 			rubrique_modifier($id_rubrique, ['titre' => $titre]);
 
-			$id_mot = (int) sql_getfetsel('id_mot', 'spip_mots', 'titre = "' . $mot . '"');
+			$id_mot = (int) sql_getfetsel('id_mot', 'spip_mots', 'titre = ' . sql_quote($mot));
 
 			include_spip('action/editer_liens');
 			$res = objet_associer(['mots' => $id_mot], ['rubriques' => $id_rubrique]);
