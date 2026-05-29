@@ -1,4 +1,4 @@
 #HTTP_HEADER{Content-Type: text/xml;}<?xml version="1.0" encoding="#CHARSET"?>
-[(#ENV{mode}|oui)
+[(#ENV{mode}|in_array{#LISTE{consignes,classes,projet,articles_blog,articles_evenement,ajax}}|oui)
 <INCLURE{fond=xml/#ENV{mode}}{env}>
 ]

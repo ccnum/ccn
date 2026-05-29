@@ -21,7 +21,8 @@
 			<h1><:plan_site:></h1>
 		</div>
 
-		<BOUCLE_secteurs(RUBRIQUES) {racine} {par titre}{tout} {si #SESSION{login}|match{vincent|leroy}|oui}>
+		[(#AUTORISER{webmestre}|non)<p>Accès réservé aux webmestres.</p>]
+		<BOUCLE_secteurs(RUBRIQUES) {racine} {par titre}{tout} {si #AUTORISER{webmestre}|oui}>
 
 		<h2>
 			<span class="#EDIT{id_rubrique}" style="color: red;" title="#ID_RUBRIQUE">#ID_RUBRIQUE | </span>
