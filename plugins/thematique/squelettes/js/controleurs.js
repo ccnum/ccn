@@ -515,7 +515,7 @@ function callClasses() {
 	setFullscreenModeToCols(true);
 	updateMenuIcon(['classes'], 'sidebarView');
 
-	blankMainSidebar('<div class="sidebar_bubble"><div class="fiche_titre couleur_texte_ressources couleur_ressources0"><div class="texte"><div class="titre">Travail en cours</div></div></div></div><div class="sidebar_bubble sidebar_bubble_blank">Naviguez dans l\'espace travail en cours grâce à la barre latérale sur votre droite.</div>');
+	blankMainSidebar('travail_en_cours');
 
 	const url_travail_en_cours = 'spip.php?page=rubrique&mode=detail&id_rubrique=' + CCN.travailEnCoursId;
 	loadContentInLateralSidebar(url_travail_en_cours, 'rubrique', 'travail_en_cours');
@@ -533,7 +533,7 @@ function callLivrables() {
 	toggleSidebarExpand();
 	updateMenuIcon(['livrables'], 'sidebarView');
 
-	blankMainSidebar('<div class="sidebar_bubble"><div class="fiche_titre couleur_texte_livrables couleur_livrables0"><div class="texte"><div class="titre">Espace livrables</div></div></div></div><div class="sidebar_bubble sidebar_bubble_blank">Naviguez dans l\'espace livrables grâce à la barre latérale sur votre droite.</div>');
+	blankMainSidebar('livrables');
 	setFullscreenModeToCols(true);
 
 	const url_lateral = CCN.projet.url_popup_livrables;
@@ -596,7 +596,7 @@ function callRessource() {
 	toggleSidebarExpand();
 	updateMenuIcon(['ressources'], 'sidebarView');
 
-	blankMainSidebar('<div class="sidebar_bubble"><div class="fiche_titre couleur_texte_ressources couleur_ressources0"><div class="texte"><div class="titre">Espace ressources</div></div></div></div><div class="sidebar_bubble sidebar_bubble_blank">Naviguez dans l\'espace ressources grâce à la barre latérale sur votre droite.</div>');
+	blankMainSidebar('ressources');
 	setFullscreenModeToCols(true);
 
 	const url_lateral = CCN.projet.url_popup_ressources;
@@ -751,7 +751,7 @@ function callAgora() {
 	toggleSidebarExpand();
 	updateMenuIcon(['agora'], 'sidebarView');
 
-	blankMainSidebar('<div class="sidebar_bubble"><div class="fiche_titre couleur_texte_ressources couleur_ressources0"><div class="texte"><div class="titre">Agora</div></div></div></div><div class="sidebar_bubble sidebar_bubble_blank">Naviguez dans Agora grâce à la barre latérale sur votre droite.</div>');
+	blankMainSidebar('agora');
 	setFullscreenModeToCols(true);
 
 	const url_lateral = CCN.projet.url_popup_agora;
@@ -1061,9 +1061,16 @@ function setFullscreenModeToCols(setCols) {
  * @see loadContentInMainSidebar
  */
 
-function blankMainSidebar(msg) {
-	const message = msg || '';
-	$('#sidebar_main_inner').html('<div class="popup popup_blank">' + message + '</div>');
+const _blankMainSidebarTemplates = {
+	'travail_en_cours': '<div class="sidebar_bubble"><div class="fiche_titre couleur_texte_ressources couleur_ressources0"><div class="texte"><div class="titre">Travail en cours</div></div></div></div><div class="sidebar_bubble sidebar_bubble_blank">Naviguez dans l\'espace travail en cours grâce à la barre latérale sur votre droite.</div>',
+	'livrables':        '<div class="sidebar_bubble"><div class="fiche_titre couleur_texte_livrables couleur_livrables0"><div class="texte"><div class="titre">Espace livrables</div></div></div></div><div class="sidebar_bubble sidebar_bubble_blank">Naviguez dans l\'espace livrables grâce à la barre latérale sur votre droite.</div>',
+	'ressources':       '<div class="sidebar_bubble"><div class="fiche_titre couleur_texte_ressources couleur_ressources0"><div class="texte"><div class="titre">Espace ressources</div></div></div></div><div class="sidebar_bubble sidebar_bubble_blank">Naviguez dans l\'espace ressources grâce à la barre latérale sur votre droite.</div>',
+	'agora':            '<div class="sidebar_bubble"><div class="fiche_titre couleur_texte_ressources couleur_ressources0"><div class="texte"><div class="titre">Agora</div></div></div></div><div class="sidebar_bubble sidebar_bubble_blank">Naviguez dans Agora grâce à la barre latérale sur votre droite.</div>',
+};
+
+function blankMainSidebar(key) {
+	const html = _blankMainSidebarTemplates[key] || '';
+	$('#sidebar_main_inner').html('<div class="popup popup_blank">' + html + '</div>');
 }
 
 /**

@@ -110,7 +110,7 @@ function Consigne() {
 		this.div_reponse_plus = this.div_base.find('.bouton_reponse_consigne').eq(0);
 		this.div_reponse_see = this.div_base.find('.bouton_reponse_consigne').eq(1);
 		
-		this.div_base.find(`.titre`).html(this.titre)
+		this.div_base.find(`.titre`).text(this.titre)
 
 		CCN.timelineLayerConsignes.prepend(this.div_base);
 
