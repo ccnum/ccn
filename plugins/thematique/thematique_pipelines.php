@@ -69,7 +69,7 @@ function thematique_insert_head($flux) {
 	];
 
 	foreach ($scripts as $script) {
-		$flux .= "<script src='" . find_in_path($script) . "'></script>\n";
+		$flux .= "<script src='" . find_in_path($script) . "' defer></script>\n";
 	}
 
 	return $flux;
