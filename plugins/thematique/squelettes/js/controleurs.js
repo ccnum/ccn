@@ -767,7 +767,7 @@ function createReponse(id_consigne, id_rubrique_classe, numero) {
 
 	changeTimelineMode('consignes');
 
-	const url = CCN.projet.url_popup_reponseajout + "&id_consigne=" + id_consigne + "&id_rubrique=" + id_rubrique_classe; // TODO Check infinite loading icon
+	const url = CCN.projet.url_popup_reponseajout + "&id_consigne=" + id_consigne + "&id_rubrique=" + id_rubrique_classe;
 	loadContentInMainSidebar(url, 'article', 'blogs');
 
 }
