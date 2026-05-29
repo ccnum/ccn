@@ -29,7 +29,7 @@ function hexToB(h) {
 	return parseInt((cutHex(h)).substring(4, 6), 16)
 }
 function cutHex(h) {
-	return (h.charAt(0) == "#") ? h.substring(1, 7) : h
+	return (h.charAt(0) === "#") ? h.substring(1, 7) : h
 }
 
 function escHtml(s) {
@@ -85,7 +85,7 @@ function getJsonFromUrl(query) {
 			let key = eq > -1 ? part.slice(0, eq) : part;
 			const val = eq > -1 ? decodeURIComponent(part.slice(eq + 1)) : "";
 			const from = key.indexOf("[");
-			if (from == -1) {
+			if (from === -1) {
 				result[decodeURIComponent(key)] = val;
 			} else {
 				const to = key.indexOf("]");

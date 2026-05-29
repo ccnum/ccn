@@ -49,7 +49,7 @@ function Consigne() {
 	 * Crée l'élément DOM et l'intègre dans la timeline.
 	 */
 	this.initDOM = function () {
-		var coul = "" + this.data.intervenant_id + "";
+		const coul = String(this.data.intervenant_id);
 		coul = coul.substr(coul.length - 1, 1);
 		let reponses_puces = '';
 

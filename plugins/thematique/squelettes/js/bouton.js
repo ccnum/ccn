@@ -4,8 +4,8 @@
 function bouton() {
 
 	// membres
-	var url_base, opacite;
-	var div_base;
+	let url_base, opacite;
+	let div_base;
 
 	// méthode init
 	this.init = function (projet, canvas, type) {
