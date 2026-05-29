@@ -1,8 +1,6 @@
 <?php
 if (!defined('_ECRIRE_INC_VERSION')) { return; }
 
-define('_CCN_EXTENSIONS_UPLOAD', 'pdf,jpg,jpeg,png,gif,webp');
-
 function ccn_formulaire_verifier($flux) {
 	$erreurs = $flux['data'];
 	$args = $flux['args'];
@@ -15,10 +13,14 @@ function ccn_formulaire_verifier($flux) {
 		return $flux;
 	}
 
-	$extensions_autorisees = explode(',', _CCN_EXTENSIONS_UPLOAD);
+	$formats = trim($GLOBALS['meta']['formats_documents_forum'] ?? '');
+	$extensions_autorisees = $formats
+		? array_filter(preg_split(',[^a-zA-Z0-9/+_],', $formats))
+		: [];
+
 	foreach ((array) $_FILES['fichier_upload']['name'] as $nom) {
 		$ext = strtolower(pathinfo($nom, PATHINFO_EXTENSION));
-		if (!in_array($ext, $extensions_autorisees)) {
+		if ($extensions_autorisees && !in_array($ext, $extensions_autorisees)) {
 			$erreurs['message_erreur'] = 'Extension non autorisée : .' . $ext
 				. '. Formats acceptés : ' . implode(', ', $extensions_autorisees);
 			break;

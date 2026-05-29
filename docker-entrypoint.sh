@@ -163,7 +163,7 @@ spip config:ecrire -p notation acces:ide
 spip config:ecrire -p notation change_note:oui
 spip config:ecrire -p notifications forum_article:0
 spip config:ecrire -p notifications thread_forum:0
-spip config:ecrire formats_documents_forum:".pdf,.jpg,.jpeg,.png,.gif"
+spip config:ecrire formats_documents_forum:".pdf,.jpg,.jpeg,.png,.gif,.mp4"
 
 # Default mes_options
 rm -rf config/mes_options.php
