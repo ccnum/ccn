@@ -79,7 +79,7 @@ $(function () {
 let antifloodHashChange = false;
 
 function onHashChange() {
-	if (antifloodHashChange == false) {
+	if (antifloodHashChange === false) {
 		setContentFromState(History.getState());
 	}
 }
@@ -997,14 +997,14 @@ function loadContentInLateralSidebar(url, typePage, typeObjet, callback) {
  * Update le menu
  */
 function updateMenuIcon(ids, mode) {
-	if (mode == 'timelineMode' || mode == 'mainView') {
+	if (mode === 'timelineMode' || mode === 'mainView') {
 		$('#menu_bas .logo a').removeClass('selected');
 		for (const id of ids) {
 			$('.menu_logo_' + id).addClass('selected');
 		}
 	}
 
-	if (mode == 'sidebarView') {
+	if (mode === 'sidebarView') {
 		$('#menu_bas .logo a.menu_logo_type_sidebarView').removeClass('selected');
 		$('#menu_bas .logo a.logo_menu_classe').removeClass('selected');
 		for (const id of ids) {
