@@ -12,15 +12,17 @@ X,Y
 		[(#AUTORISER{modifier, #TYPE_OBJET, #ID_OBJET}|oui)
 		  Est autorise
 			<?php
-				$id_objet = #ID_OBJET;
+				$id_objet = intval('#ID_OBJET');
+				$type_objet = '#TYPE_OBJET';
+				if (!in_array($type_objet, ['article', 'syndic_article'])) { return; }
 				$x = #ENV{X};
 				$y = #ENV{Y};
-				if (($id_objet = sql_getfetsel("id_#TYPE_OBJET", "spip_#TYPE_OBJETs", "id_#TYPE_OBJET=$id_objet"))
+				if (($id_objet = sql_getfetsel("id_{$type_objet}", "spip_{$type_objet}s", "id_{$type_objet}=" . $id_objet))
 				&&(is_numeric($x))
 				&&(is_numeric($y)))
-				{ sql_updateq("spip_#TYPE_OBJETs",
+				{ sql_updateq("spip_{$type_objet}s",
 					array("X" => $x, "Y" => $y),
-					"id_#TYPE_OBJET=$id_objet");
+					"id_{$type_objet}=" . $id_objet);
 				}
 			?>
 		]

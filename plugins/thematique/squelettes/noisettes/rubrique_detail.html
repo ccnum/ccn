@@ -23,7 +23,7 @@
 	[(#REM) ---------------- Texte (descriptif) ---------------- ]
 	[<div class="sidebar_bubble">
 		<div class="bloc_texte #EDIT{texte}">
-			(#TEXTE)
+			(#TEXTE|propre)
 		</div>
 	</div>]
 	[(#AUTORISER{modifier,rubrique,#ID_RUBRIQUE}|et{#TEXTE|=={''}|oui}|oui)
