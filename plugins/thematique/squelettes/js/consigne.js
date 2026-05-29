@@ -26,9 +26,8 @@ function Consigne() {
 		this.y = this.data.y; // Entre 0 et 1
 		this.image = this.data.image;
 		this.select = false;
-		this.date_texte = this.data.date_texte.substring(0, 2) + " "
-			+ CCN.nomMois[parseFloat(this.data.date_texte.substring(3, 5)) - 1] + " "
-			+ this.data.date_texte.substring(6, 10);
+		const d = parseDate(this.data.date_texte);
+		this.date_texte = d.getDate() + " " + CCN.nomMois[d.getMonth()] + " " + d.getFullYear();
 		this.reponses = [];
 		this.intervenant_nom = '';
 		this.nombre_jours_max = this.data.nombre_jours_max;

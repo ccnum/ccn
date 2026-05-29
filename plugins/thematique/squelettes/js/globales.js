@@ -104,3 +104,14 @@ function getJsonFromUrl(query) {
 	);
 	return result;
 }
+
+/**
+ * Parse une date au format JJ/MM/AAAA en objet Date.
+ *
+ * @param {string} str - Date au format "JJ/MM/AAAA"
+ * @returns {Date}
+ */
+function parseDate(str) {
+	const [day, month, year] = str.split('/').map(Number);
+	return new Date(year, month - 1, day);
+}

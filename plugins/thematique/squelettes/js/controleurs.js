@@ -1,14 +1,8 @@
 let canShowConsigneSidebar = false;
 
-// Verifie les parametres dans l'url
-$.urlParam = function (name) {
-
-	const escapedName = name.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-	const results = new RegExp('[?&]' + escapedName + '=([^&#]*)').exec(window.location.href);
-
-	if (results) {
-		return results[1] || 0;
-	}
+// Vérifie les paramètres dans l'url
+function urlParam(name) {
+	return new URLSearchParams(window.location.search).get(name) || 0;
 }
 
 $(function () {
@@ -778,19 +772,16 @@ function createReponse(id_consigne, id_rubrique_classe, numero) {
 
 }
 /**
- * Cherche l'ID de la consigne parente à une réponse de classe
- * grâce à l'ID de la réponse
+ * Cherche la réponse correspondant à un id_reponse dans CCN.consignes.
  *
- * @param   {number} id_reponse - ID de la réponse
- * @returns {number} Id de la consigne
- *
- * @see callReponse
+ * @param   {number} id_reponse
+ * @returns {{consigne: object, reponse: object}|null}
  */
-function getIdConsigneFromIdReponse(id_reponse) {
-	for (let i = 0; i < CCN.consignes.length; i++) {
-		for (let j = 0; j < CCN.consignes[i].reponses.length; j++) {
-			if (CCN.consignes[i].reponses[j].id == id_reponse) {
-				return CCN.consignes[i].id;
+function findReponseById(id_reponse) {
+	for (const consigne of CCN.consignes) {
+		for (const reponse of consigne.reponses) {
+			if (reponse.id === id_reponse) {
+				return { consigne, reponse };
 			}
 		}
 	}
@@ -798,24 +789,21 @@ function getIdConsigneFromIdReponse(id_reponse) {
 }
 
 /**
- * Cherche l'ID de la classe parente à une réponse de classe
- * grâce à l'ID de la réponse
- *
- * @param   {number} id_reponse - ID de la réponse
- * @returns {number} Id de la classe
- *
- * @see callReponse
+ * @param {number} id_reponse
+ * @returns {number|null} Id de la consigne parente
  */
+function getIdConsigneFromIdReponse(id_reponse) {
+	const found = findReponseById(id_reponse);
+	return found ? found.consigne.id : null;
+}
 
+/**
+ * @param {number} id_reponse
+ * @returns {number|null} Id de la classe parente
+ */
 function getIdClasseFromIdReponse(id_reponse) {
-	for (let i = 0; i < CCN.consignes.length; i++) {
-		for (let j = 0; j < CCN.consignes[i].reponses.length; j++) {
-			if (CCN.consignes[i].reponses[j].id == id_reponse) {
-				return CCN.consignes[i].reponses[j].classe_id;
-			}
-		}
-	}
-	return null;
+	const found = findReponseById(id_reponse);
+	return found ? found.reponse.classe_id : null;
 }
 
 /**
