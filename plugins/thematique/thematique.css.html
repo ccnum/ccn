@@ -33,6 +33,15 @@
 	--color-bleu-fond: #DEE0FF;
 	--header-height: 54px;
 	--footer-height: 107px;
+	--transition-fast: 200ms;
+	--transition-normal: 300ms;
+	--transition-slow: 500ms;
+	--transition-xslow: 1000ms;
+	--border-radius-sm: 3px;
+	--border-radius-md: 5px;
+	--spacing-sm: 10px;
+	--spacing-md: 20px;
+	--spacing-lg: 40px;
 }
 
 .crayon-active.text {
@@ -903,7 +912,6 @@ a:hover {
 	display: block;
 	line-height: 50px;
 	background-color: #fff;
-	-webkit-transition: height 250ms ease-in-out, line-height 250ms ease-in-out;
 	transition: height 250ms ease-in-out, line-height 250ms ease-in-out;
 
 }
@@ -2092,7 +2100,6 @@ div.donnees_classe {
 	padding: 0;
 	box-sizing: border-box;
 	transform: scale(0.4);
-	-webkit-transition: transform 500ms ease;
 				transition: transform 500ms ease;
 }
 
@@ -2110,7 +2117,6 @@ div.donnees_classe {
 	z-index: -1;
 	left: 6%;
 	bottom: 6%;
-	-webkit-transition: all 500ms ease;
 				transition: all 500ms ease;
 }
 
@@ -2124,7 +2130,6 @@ div.donnees_classe {
 	left: 0;
 	background: #E91E63;
 	border-radius: 50%;
-	-webkit-transition: all 500ms ease;
 				transition: all 500ms ease;
 }
 
@@ -2138,7 +2143,6 @@ div.donnees_classe {
 	padding: 0;
 	box-sizing: border-box;
 	transform: scale(0.4);
-	-webkit-transition: transform 500ms ease;
 				transition: transform 500ms ease;
 }
 
@@ -2156,7 +2160,6 @@ div.donnees_classe {
 	z-index: -1;
 	left: 25px;
 	bottom: 0;
-	-webkit-transition: all 500ms ease;
 	transition: all 500ms ease;
 	transform: rotate(45deg) skew(-10deg, -10deg);
 }
@@ -2172,7 +2175,6 @@ div.donnees_classe {
 	padding: 0 30px;
 	box-sizing: border-box;
 	background: rgba(0, 0, 0, 0);
-	-webkit-transition: all 500ms ease;
 	transition: all 500ms ease;
 }
 
@@ -2242,7 +2244,6 @@ div.donnees_classe {
 	text-align: center;
 	border-radius: 50%;
 	transform: scale(0);
-	-webkit-transition: all 500ms ease;
 				transition: all 500ms ease;
 }
 
@@ -2257,7 +2258,6 @@ div.donnees_classe {
 	font-size: 10px;
 	margin-top: 2px;
 	display: block;
-	-webkit-transition: all 500ms ease;
 				transition: all 500ms ease;
 }
 
@@ -2813,7 +2813,6 @@ div.donnees_classe {
 	padding: 0;
 	box-sizing: border-box;
 	overflow: auto;
-	-webkit-transition: right 500ms ease-in-out, width 500ms ease-in-out;
 				transition: right 500ms ease-in-out, width 500ms ease-in-out;
 	z-index: 10000000;
 }
@@ -2843,7 +2842,6 @@ div.donnees_classe {
 	width: 100%;
 	font-size: 13px;
 	max-height: 100%;
-	-webkit-transition: opacity 500ms ease;
 				transition: opacity 500ms ease;
 	position: relative;
 	top: 0;
@@ -2851,7 +2849,6 @@ div.donnees_classe {
 
 #sidebar_main_around {
 
-	-webkit-transition: width 500ms ease-in-out;
 				transition: width 500ms ease-in-out;
 
 	width: 100%;
@@ -2881,7 +2878,6 @@ div.donnees_classe {
 }
 
 #sidebar_lateral_around {
-	-webkit-transition: all 300ms ease;
 	transition: all 300ms ease;
 	width: 30%;
 }
@@ -2930,7 +2926,6 @@ div.donnees_classe {
 	overflow: hidden;
 	border-radius: 50%;
 	box-shadow: 0 7px 15px rgba(0, 0, 0, 0.47);
-	-webkit-transition: all 300ms ease;
 				transition: all 300ms ease;
 	transform: scale(0);
 }
@@ -3934,7 +3929,6 @@ ul#forum, .lien_forum {
 	bottom: 0;
 	right: 0;
 
-	-webkit-transition: all 2000ms ease;
 	transition: all 2000ms ease;
 }
 
@@ -3962,7 +3956,6 @@ ul#forum, .lien_forum {
 	width: 100%;
 	z-index: 900;
 
-	-webkit-transition: all 2000ms ease;
 	transition: all 2000ms ease;
 }
 
@@ -4037,7 +4030,6 @@ ul#forum, .lien_forum {
 	margin-right: -600px;
 	height: fit-content;
 
-	-webkit-transition: margin 1000ms ease, width 1000ms ease;
 				transition: margin 1000ms ease, width 1000ms ease;
 }
 
@@ -4064,7 +4056,6 @@ ul#forum, .lien_forum {
 	width: calc(100% - 175px);
 	z-index: 100000;
 
-	-webkit-transition: margin 1000ms ease, width 1000ms ease;
 				transition: margin 1000ms ease, width 1000ms ease;
 }
 
@@ -4147,7 +4138,6 @@ ul#forum, .lien_forum {
 	z-index: 100; /* Minimum, surcharge par le JS */
 	position: absolute;
 
-	-webkit-transition: opacity 500ms ease;
 				transition: opacity 500ms ease;
 }
 
@@ -4213,7 +4203,6 @@ ul#forum, .lien_forum {
 	height: 2px; /* Line width of 3 */
 	border-radius: 5px;
 
-	-webkit-transition: opacity 300ms ease;
 	transition: opacity 300ms ease;
 }
 
@@ -4335,7 +4324,6 @@ ul#forum, .lien_forum {
 .timeline_layer {
 	opacity: .2;
 
-	-webkit-transition: opacity 300ms ease;
 				transition: opacity 300ms ease;
 
 	position: absolute;
@@ -4368,7 +4356,6 @@ ul#forum, .lien_forum {
 
 .show_blogs .connecteur_timeline,
 .show_evenements .connecteur_timeline {
-	-webkit-transition: opacity 300ms ease;
 				transition: opacity 300ms ease;
 	opacity: 0;
 }
