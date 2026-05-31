@@ -37,7 +37,7 @@ function balise_ANNEE_SCOLAIRE_dist($p) {
 }
 
 function balise_ANNEE_ACTUELLE_dist($p) {
-	if (intval(date('m')) >= 8) {
+	if (intval(date('m')) >= 9) {
 		$p->code = intval(date('Y'));
 	} else {
 		$p->code = intval(date('Y')) - 1;
@@ -47,12 +47,12 @@ function balise_ANNEE_ACTUELLE_dist($p) {
 
 function afficher_options_date($annee, $mois, $annee_scolaire) {
 	$texte = '';
-	if (intval(date('m')) >= 8) {
+	if (intval(date('m')) >= 9) {
 		$annee_actuelle = intval(date('Y'));
 	} else {
 		$annee_actuelle = intval(date('Y')) - 1;
 	}
-	if ($mois < 8) {
+	if ($mois < 9) {
 		$annee--;
 	}
 	for ($i = $annee_actuelle; $i >= $annee; $i--) {
