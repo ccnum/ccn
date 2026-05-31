@@ -36,6 +36,21 @@ function balise_ANNEE_SCOLAIRE_dist($p) {
 	return $p;
 }
 
+function balise_COOKIE_ANNEE_SCOLAIRE_dist($p) {
+	$p->code = '_cookie_annee_scolaire';
+	return $p;
+}
+
+function balise_DATE_DEBUT_SCOLAIRE_dist($p) {
+	$p->code = '_date_debut';
+	return $p;
+}
+
+function balise_DATE_FIN_SCOLAIRE_dist($p) {
+	$p->code = '_date_fin';
+	return $p;
+}
+
 function balise_ANNEE_ACTUELLE_dist($p) {
 	if (intval(date('m')) >= 8) {
 		$p->code = intval(date('Y'));

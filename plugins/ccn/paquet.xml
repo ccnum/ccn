@@ -3,10 +3,13 @@
 	categorie="squelette"
 	version="1.0.0"
 	etat="stable"
+	logo="th.png"
 	compatibilite="[4.3.2;4.*]"
 	documentation="http://www.laclasse.com"
 >
 	<nom>CCN</nom>
 	<auteur>Erasme</auteur>
 	<licence>GNU/GPL</licence>
+
+	<menu nom="configurer_ccn" titre="ccn:ccn_menu_config" parent="menu_configuration" icone="images/th.png" />
 </paquet>
