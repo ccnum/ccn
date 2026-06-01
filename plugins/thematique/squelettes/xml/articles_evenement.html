@@ -1,7 +1,7 @@
 #CACHE{0}
 <datas>
 	<BOUCLE_rubrique(RUBRIQUES){titre_mot=evenements}{tout}>
-		<BOUCLE_article(ARTICLES){branche}{par date}{date>=#CONST{_date_debut}}{date<=#CONST{_date_fin}}{tout}>
+		<BOUCLE_article(ARTICLES){branche}{par date}{date>=#CONST{_DATE_DEBUT}}{date<=#CONST{_DATE_FIN}}{tout}>
 			#SET{total,0}<BOUCLE_forum(FORUMS){id_article}> </BOUCLE_forum>#SET{total,#TOTAL_BOUCLE}</B_forum>
 			[(#SESSION{statut}|=={0minirezo}|oui)
 			<article>
@@ -15,7 +15,7 @@
 			</article>
 			]
 		</BOUCLE_article>
-		<BOUCLE_syndic(SYNDIC_ARTICLES){branche}{par date}{date>=#CONST{_date_debut}}{date<=#CONST{_date_fin}}{tout}>
+		<BOUCLE_syndic(SYNDIC_ARTICLES){branche}{par date}{date>=#CONST{_DATE_DEBUT}}{date<=#CONST{_DATE_FIN}}{tout}>
 			[(#REM)Pour exclure les doublons ou articles qui bouclent depuis le WP]
 			<BOUCLE_exclusion(ARTICLES){titre=#TITRE}>
 			</BOUCLE_exclusion>

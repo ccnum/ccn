@@ -12,7 +12,7 @@
 			</div>
 		</div>
 	</div>
-	<BOUCLE_rubAnnee(RUBRIQUES) {racine} {titre LIKE %(#CONST{_annee_scolaire})%}>
+	<BOUCLE_rubAnnee(RUBRIQUES) {racine} {titre LIKE %(#CONST{_ANNEE_SCOLAIRE})%}>
 		<BOUCLE_filtreTravailEnCours(RUBRIQUES){id_parent}{titre_mot=travail_en_cours}{par date}>
 			<BOUCLE_colleges(RUBRIQUES){id_parent}>
 				#SET{auteur, #TITRE}

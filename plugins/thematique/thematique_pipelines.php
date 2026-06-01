@@ -10,11 +10,11 @@ include_spip('action/editer_liens');
 function thematique_pre_boucle($boucle) {
 	$affichage = '_affichage';
 
-	$annee = constant('_annee_scolaire');
+	$annee = constant('_ANNEE_SCOLAIRE');
 	$mois = '08';
 	$jour = '01';
 
-	$annee2 = intval(constant('_annee_scolaire')) + 1;
+	$annee2 = intval(constant('_ANNEE_SCOLAIRE')) + 1;
 	$mois2 = '08';
 	$jour2 = '01';
 
@@ -126,7 +126,7 @@ function thematique_notifications_destinataires($flux) {
 			}
 		} else {
 			spip_log('lier au secteur ' . $article['id_secteur'], 'thematique');
-			$annee_scolaire = intval(constant('_annee_scolaire'));
+			$annee_scolaire = intval(constant('_ANNEE_SCOLAIRE'));
 			spip_log('lier à l année ' . $annee_scolaire, 'thematique');
 			$id_secteur = sql_getfetsel('id_secteur', 'spip_rubriques', 'titre LIKE ' . sql_quote('%' . $annee_scolaire . '%'));
 			spip_log('lier au secteur ' . $id_secteur, 'thematique');
@@ -158,7 +158,7 @@ function thematique_cioidc_userinfo($flux) {
 	$classes_a_lier = [];
 
 	// Trouver le secteur de l'année scolaire en cours (ex: "2025")
-	$annee_scolaire = intval(constant('_annee_scolaire'));
+	$annee_scolaire = intval(constant('_ANNEE_SCOLAIRE'));
 	$id_secteur = sql_getfetsel(
 		'id_rubrique',
 		'spip_rubriques',
