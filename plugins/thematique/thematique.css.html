@@ -72,7 +72,7 @@
 
 .crayon-html .formulaire_spip {
 	z-index: 10000;
-	background: #fff;
+	background: white;
 	width: 80%;
 	max-width: 40%;
 	transform: translateX(-50%);
@@ -90,7 +90,7 @@
 
 .formulaire_spip input.text {
 	color: #222 !important;
-	background-color: #FFF !important;
+	background-color: white !important;
 	padding: 10px 9px !important;
 	border: none !important;
 	margin-top: 0 !important;
@@ -103,7 +103,7 @@
 	position: absolute !important;
 	right: 0px !important;
 	left: 0px !important;
-	background: #FFF !important;
+	background: white !important;
 	padding: 3px 0px 0px 0px !important;
 	box-shadow: 0 4px 8px rgba(0,0,0,0.3);
 }
@@ -145,7 +145,7 @@
 }
 
 .crayon .crayon-icones em.crayon-crayon {
-	background-color: #FFF !important;
+	background-color: white !important;
 	width: 30px !important;
 	height: 30px !important;
 	background-position: center center !important;
@@ -276,7 +276,7 @@ body {
 
 #menu_haut {
 	width: 100%;
-	background-color: #fff;
+	background-color: white;
 	z-index: 4100;
 	position: fixed;
 	height: var(--header-height);
@@ -316,6 +316,7 @@ body {
 	background-color: var(--color-tonic);
 	&:hover {
 		background-color: var(--color-hover);
+		color: var(--color-default);
 	}
 }
 
@@ -323,12 +324,12 @@ body {
 	background-color: white;
 }
 #menu_haut_titre .select:hover .first_label .icon {
-	background-color: #fff;
+	background-color: var(--color-default);
 }
 #menu_haut_titre {
 	> .select:hover {
 		.icon-down {
-			background-color: #fff;
+			background-color: white;
 		}
 	}
 }
@@ -354,11 +355,11 @@ body {
 	> .select:hover {
 		.first_label {
 			background-color: var(--color-hover);
-			color: #fff;
+			color:  var(--color-default);
 		}
 		.icon-connecter,
 		.icon-down {
-			background-color: #fff;
+			background-color: var(-color-default);
 		}
 		.user-option {
 			display: flex;
@@ -373,11 +374,11 @@ body {
 	}
 	.user-option:hover {
 		.icon {
-			background-color: #fff;
+			background-color: var(--color-default);
 		}
 		background-color: var(--color-hover);
 		a {
-			color: #fff;
+			color: var(--color-default);
 		}
 	}
 	.connecter {
@@ -389,10 +390,10 @@ body {
 		&:hover {
 			background-color: var(--color-hover);
 			.icon-connecter {
-				background-color: #fff;
+				background-color: white;
 			}
 			a {
-				color: #fff;
+				color: white;
 			}
 		}
 	}
@@ -408,10 +409,10 @@ body {
 		background-color: var(--color-hover);
 		.first_label {
 			background-color: var(--color-hover);
-			color: #fff;
+			color: var(--color-default);
 		}
 		.icon-down {
-			background-color: #fff;
+			background-color: var(--color-default);
 		}
 	}
 }
@@ -432,13 +433,13 @@ body {
 		height: var(--header-height);
 	}
 	.icon-ecrire {
-		background-color: #fff;
+		background-color: white;
 		width: 30px;
 	}
 	&:hover {
 	background-color: var(--color-hover);
 		.icon {
-			background-color: #fff !important;
+			background-color: white !important;
 		}
 	}
 }
@@ -559,20 +560,21 @@ body {
 
 #menu_haut_titre .select:hover input:not(.first) {
 	background-color: var(--color-default);
-	color: #fff;
+	color: white;
 }
 #menu_haut_titre .select {
 	background: transparent;
 }
 #menu_haut_titre .select .first_label {
-	color: #fff;
+	color: white;
 }
 #menu_haut_ecrire .icon:hover {
 	background: var(--color-default);
-	color: #fff;
+	color: white;
 }
 #menu_haut_titre .select:hover .first_label {
 	background: var(--color-hover);
+	color: var(--color-default);
 }
 .icon {
 	/* Dimensions */
@@ -581,7 +583,7 @@ body {
 	height: 40px;
 
 	/* Couleur de l'icône (modifiable à volonté) */
-	background-color: #fff;
+	background-color: white;
 
 	/* Application du masque SVG */
 	mask: var(--svg) no-repeat center;
@@ -666,6 +668,7 @@ a, label {
 
 input {
 	font-size: #GET{font-size1}px;
+	font-family: inherit;
 	padding: 2px;
 }
 
@@ -707,10 +710,9 @@ a:hover {
 
 .vert	{ color: #58AB27; }
 .bleu_clair { color: #F2F8FB; }
-.blanc	{ color: #fff; }
 .noir	{ color: var(--color-default); }
 .gris	{ color: #646b70; }
-.arriere_blanc {background-color: #fff;}
+.arriere_blanc {background-color: white;}
 
 .couleur_blogs { background-color: #fc0078;}
 [.couleur_blogs { background-color: (#NOM_SITE_SPIP|match{air|novaterra}|oui) #7e7e7e ; }]
@@ -844,7 +846,7 @@ a:hover {
 }
 
 #menu_haut.zone-menu .col2.droite {
-	border-left: 1px solid	#fff;
+	border-left: 1px solid	white;
 }
 
 /* Select */
@@ -857,7 +859,7 @@ a:hover {
 
 .select,
 .select > div {
-	background: #fff;
+	background: white;
 	color: #bbb;
 }
 .select > div {
@@ -899,7 +901,7 @@ a:hover {
 }
 .select input:hover + label {
 	background-color: var(--color-hover) !important;
-	color: #fff;
+	color: var(--color-default);
 }
 .select:hover input {
 	min-height: 50px;
@@ -911,7 +913,7 @@ a:hover {
 .select:hover label:not(.first_label) {
 	display: block;
 	line-height: 50px;
-	background-color: #fff;
+	background-color: white;
 	transition: height 250ms ease-in-out, line-height 250ms ease-in-out;
 
 }
@@ -993,7 +995,7 @@ a:hover {
 }
 
 #menu_bas.zone-menu h3 span {
-	background: #FFF;
+	background: white;
 	z-index: 10;
 	position: relative;
 	padding: 0 5px;
@@ -1144,13 +1146,13 @@ a:hover {
 
 .zone-menu li.logo a:hover {
 	background-color: #999;
-	color: #fff !important;
+	color: white !important;
 }
 
 .zone-menu li.logo a.selected {
 	cursor: default;
-	border: 0px solid #fff;
-	color: #fff !important;
+	border: 0px solid white;
+	color: white !important;
 }
 
 .tooltip::after,
@@ -1160,7 +1162,7 @@ a:hover {
   content: attr(data-tip);
   position: absolute;
   background: #3C3C4A;
-  color: #fff;
+  color: white;
   padding: 0 10px;
   border-radius: 8px;
   font-size: 12px;
@@ -1277,7 +1279,7 @@ a:hover {
 	[(#SET{img2, #GET{file}|image_gamma{255}|extraire_attribut{src}})]
 	[(#SET{col1, #GET{file}|couleur_extraire})]
 	#SET{col,#CFCFCF}
-	#menu_haut.zone-menu li a.[logo_menu-(#VALEUR)]{background-color: #fff; background-image: url(#GET{img}); }
+	#menu_haut.zone-menu li a.[logo_menu-(#VALEUR)]{background-color: white; background-image: url(#GET{img}); }
 	#menu_haut.zone-menu li a.[logo_menu-(#VALEUR)]:hover{background-color: #GET{col};background-image: url(#GET{img2}); }
 	[(#VALEUR|=={ecrire}|oui)
 	.zone-menu li a.[logo_menu-(#VALEUR)], .zone-menu li a.[logo_menu-(#VALEUR)]:hover{background-color: [#(#GET{col1})];}
@@ -1290,7 +1292,7 @@ a:hover {
 	vertical-align: middle;
 }
 #menu_haut.zone-menu li a.logo_menu-deconnecter {
-	background-color: #fff;
+	background-color: white;
 	background-size: contain;
 	background-image: url(#CHEMIN{img/thumb-close.png});
 }
@@ -1304,7 +1306,7 @@ a:hover {
 	margin-right: 1rem;
 }
 #bouton_aide {
-	background-color: #fff;
+	background-color: white;
 	background-size: contain;
 	display: flex;
 	align-items: center;
@@ -1359,7 +1361,7 @@ a:hover {
 	z-index: 1000;
 	right: 1px;
 	top: 5px;
-	background-color: #fff;
+	background-color: white;
 	border-radius: 50%;
 	width: 30px;
 	height: 30px;
@@ -1519,7 +1521,7 @@ div.jaimeplus {
 	font-weight: bold;
 	vertical-align: middle;
 	text-align: center;
-	color: #fff;
+	color: white;
 	margin: 0;
 }
 
@@ -1642,7 +1644,7 @@ div.donnees_classe {
 }
 
 .photo {
-	background-color: #fff;
+	background-color: white;
 }
 
 .consigne .photo {
@@ -1741,7 +1743,7 @@ div.donnees_classe {
 	content: "";
 	display: block;
 	border: solid 7px rgba(0, 0, 0, 0);
-	border-bottom-color: #FFF;
+	border-bottom-color: white;
 	left: 50%;
 	margin-left: -7px;
 	top: -14px;
@@ -1752,7 +1754,7 @@ div.donnees_classe {
 	left: 10px;
 	right: 10px;
 	height: 33px;
-	background: #FFF;
+	background: white;
 	border-radius: 3px;
 	box-shadow: 0 2px 7px rgba(0,0,0,0.3);
 	z-index: 10;
@@ -1836,7 +1838,7 @@ div.donnees_classe {
 
 .intervention_auteur {
 	font-size: 17px;
-	color: #fff;
+	color: white;
 	display: inline-block;
 	vertical-align: middle;
 	line-height: 20px;
@@ -1959,7 +1961,7 @@ div.donnees_classe {
 		opacity: 1;
 	}
     background: var(--color-consigne);
-	color: #fff;
+	color: white;
 }
 .classe_consigne_reponse {
 	padding: 15px 15px 15px 17px;
@@ -1976,7 +1978,7 @@ div.donnees_classe {
 	box-shadow: 0 3px 15px rgba(0, 0, 0, 0.3);
 	border-radius: 3px;
 	overflow: hidden;
-	background: #fff;
+	background: white;
 	margin-right: 15px;
 	vertical-align: middle;
 }
@@ -1996,7 +1998,7 @@ div.donnees_classe {
 .classe_consigne_reponse_consigne {
 	background: rgba(0,0,0,.2);
 	padding: 15px 15px 15px 69px;
-	color: #fff;
+	color: white;
 	cursor: pointer;
 }
 .classe_consigne_reponse_date {
@@ -2013,7 +2015,7 @@ div.donnees_classe {
 .classe_consigne_reponse_consigne_titre {
 	font-size: 15px;
 	line-height: 19px;
-	color: #fff;
+	color: white;
 }
 
 
@@ -2070,7 +2072,7 @@ div.donnees_classe {
 	text-transform: initial;
 	letter-spacing: 0;
 	font-size: 13px;
-	color: #fff;
+	color: white;
 	line-height: 16px;
 	cursor: pointer;
 }
@@ -2650,7 +2652,7 @@ div.donnees_classe {
 	margin: 0;
 	padding: 50px 40px 30px 40px;
 	background: #e91e63;
-	color: #fff;
+	color: white;
 	text-align: center;
 }
 
@@ -2694,7 +2696,7 @@ div.donnees_classe {
 	margin: 0;
 	padding: 50px 40px 30px 40px;
 	background: rgb(71, 152, 154);
-	color: #fff;
+	color: white;
 	text-align: center;
 }
 
@@ -2947,7 +2949,7 @@ div.donnees_classe {
 	padding: 0 0 15px 0;
 	border-radius: 3px;
 	margin-top: 0;
-	color: #fff;
+	color: white;
 	text-decoration: none !important
 }
 
@@ -2956,7 +2958,7 @@ div.donnees_classe {
 }
 
 .ressources_classe_nom {
-	color: #fff;
+	color: white;
     display: block;
     padding: 8px 20px 8px 20px;
     margin: 0px 0px;
@@ -2972,7 +2974,7 @@ li > .ressources_classe_nom {
 
 .ressources_classe_nom:hover {
 	background: rgba(0,0,0,.2);
-	color: #fff;
+	color: white;
 }
 
 .ressources_classes ul {
@@ -2983,7 +2985,7 @@ li > .ressources_classe_nom {
 	margin-top: 0px;
 }
 .ressources_classe_consignes a {
-	color: #fff;
+	color: white;
 	display: block;
 	padding: 8px 20px 8px 20px;
 	margin: 0px 0px;
@@ -3068,17 +3070,17 @@ a.liens_forum:hover { }
 }
 
 .popup_consigne .formulaire_formidable .submit {display: none;}
-.popup_consigne .formulaire_formidable textarea { color: #fff; }
+.popup_consigne .formulaire_formidable textarea { color: white; }
 
 .ombre_portee
-{	background-color: #fff;
-	border: 3px solid #fff;
+{	background-color: white;
+	border: 3px solid white;
 	box-shadow: 2px 2px 6px #ccc;
 }
 
 .ombre_portee_bande
-{	background-color: #fff;
-	border: 3px solid #fff;
+{	background-color: white;
+	border: 3px solid white;
 	box-shadow: 2px 2px 6px #ccc;
 	margin-left: 5px;
 	margin-right: 5px;
@@ -3199,7 +3201,7 @@ input[type="file"] {
 .formulaire_spip .submit {
 	margin-top: 6px;
 	background: var(--color-tonic);
-	color: #fff;
+	color: white;
 	text-align: center;
 	border: none;
 	border-radius: 5px;
@@ -3372,7 +3374,7 @@ p.boutons:has(input[type="submit"]) {
 			border-radius: 5px;
 			text-transform: uppercase;
 			background-color: var(--color-tonic);
-			color: #fff;
+			color: white;
             font-weight: bold;
 			flex: 1;
 			&:hover {
@@ -3449,7 +3451,7 @@ li.editer p.explication, .editer_pgp, .editer_bio, .editer_liens_sites, .saisie_
 	color: white;
 }
 .bloc_article.monospace a.lienss, .bloc_article.monospace a.lienss:hover, .bloc_article.monospace a.lienss: visited {
-	color: #fff;
+	color: white;
 }
 
 .bloc_article.sans-serif p { }
@@ -3764,7 +3766,7 @@ li a, li a:hover {
   background: #f5f5f5;
   position: relative;
   font-size: 16px;
-  color: #fff;
+  color: white;
   font-family: 'Poppins';
   background: var(--color-default);
 }
@@ -4066,7 +4068,7 @@ ul#forum, .lien_forum {
   pointer-events: none;
   display: none;
   background: #3C3C4A;
-  color: #fff;
+  color: white;
   border-radius: 8px;
   font-size: 12px;
   white-space: nowrap;
@@ -4102,7 +4104,7 @@ ul#forum, .lien_forum {
 	top: 1px;
 	height: 40px;
 	width: 40px;
-	background: #fff;
+	background: white;
 	font-size: 0;
 	line-height: 33px;
 	cursor: pointer;
@@ -4434,7 +4436,7 @@ ul#forum, .lien_forum {
 	margin: auto;
 	width: 50px;
 	height: 50px;
-	background: #fff;
+	background: white;
 }
 
 .livrable h3 {
