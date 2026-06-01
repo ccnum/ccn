@@ -7,7 +7,7 @@
 		<consigne>
 			<id>#ID_ARTICLE</id>
 			<intervenant_id>#ID_RUBRIQUE</intervenant_id>
-			<titre>[(#TITRE|couper{40}|wordwrap{23,<br />}|entites_html)]</titre>
+			<titre>[(#TITRE|entites_html)]</titre>
 			<date>[(#DATE|affdate{'d'})]/[(#DATE|affdate{'m'})]/[(#DATE|affdate{'Y'})]</date>
 			<annee_scolaire>#CONST{_ANNEE_SCOLAIRE}</annee_scolaire>
 			<image>[(#MODELE{logo_carre}{id_rubrique}|extraire_attribut{src})]</image>
