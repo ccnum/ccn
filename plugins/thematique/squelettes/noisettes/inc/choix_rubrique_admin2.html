@@ -39,7 +39,7 @@
 					<label class="first_label">
 						<span class="icon icon-publier"></span>
 						Publier
-						<span class="highlight">[(#GET{titre})]</span>
+						[(#GET{titre}|?{<span class="highlight">#GET{titre}</span>,})]
 						<span class="icon icon-down"></span>
 					</label>
 			]
