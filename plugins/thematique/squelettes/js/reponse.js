@@ -15,7 +15,7 @@ function Reponse() {
 		this.data = data;
 		this.id = this.data.id;
 		this.classe_id = this.data.classe_id;
-		this.titre = this.data.titre;
+		this.titre = decodeHtmlEntities(this.data.titre);
 		this.consigne = this.data.consigne;
 		this.date = this.data.date;
 		this.date_date = this.data.date_date;

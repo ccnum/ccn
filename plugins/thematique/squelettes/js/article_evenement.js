@@ -16,7 +16,7 @@ function ArticleEvenement() {
 		this.id = this.data.id;
 		this.type_objet = this.data.type_objet;
 		this.id_objet = this.data.id_objet;
-		this.titre = this.data.titre;
+		this.titre = decodeHtmlEntities(this.data.titre);
 		this.date = this.data.date;
 		this.nombre_commentaires = this.data.nombre_commentaires;
 		this.x = this.data.nombre_jours;

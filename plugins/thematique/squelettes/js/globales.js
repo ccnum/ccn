@@ -41,6 +41,12 @@ function escHtml(s) {
 		.replace(/'/g, '&#x27;');
 }
 
+function decodeHtmlEntities(str) {
+	const el = document.createElement('textarea');
+	el.innerHTML = str;
+	return el.value;
+}
+
 /**
  *  Retourne la valeur du noeud XML demandé.
  *
