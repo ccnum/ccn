@@ -6,9 +6,13 @@
 <link rel="alternate" type="application/rss+xml" href="#URL_PAGE{backend}" title="Dernières publications">
 <link rel="alternate" type="application/rss+xml" href="#URL_PAGE{rss_maj}" title="Dernières mises à jour">
 <link rel="alternate" type="application/rss+xml" href="#URL_PAGE{rss_forum}" title="Derniers commentaires dans le forum">
-<link rel="icon" sizes="98x98" href="[(#CHEMIN{img/pictos_sites/[(#NOM_SITE_SPIP|replace{' ',''}|strtolower)].svg}|sinon{#CHEMIN{th.png}})]">
 <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 #INSERT_HEAD
+
+[(#REM) Favicon forcée pour tous les navigateurs ]
+[<link rel="icon" type="image/svg+xml" href="[(#CHEMIN{img/pictos_sites/[(#NOM_SITE_SPIP|replace{' ',''}|strtolower)].svg})]" />]
+[<link rel="shortcut icon" type="image/svg+xml" href="[(#CHEMIN{img/pictos_sites/[(#NOM_SITE_SPIP|replace{' ',''}|strtolower)].svg})]" />]
+[<link rel="apple-touch-icon" href="[(#CHEMIN{img/pictos_sites/[(#NOM_SITE_SPIP|replace{' ',''}|strtolower)].svg})]" />]
 
 [(#REM)Fonctions JS spécifiques projet
 [(#PAGE|=={sommaire}|oui)

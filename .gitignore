@@ -14,7 +14,6 @@ squelettes-dist
 tmp
 /vendor
 composer.*
-htaccess.txt
 index.php
 LICENSE
 phpcs.xml.dist
