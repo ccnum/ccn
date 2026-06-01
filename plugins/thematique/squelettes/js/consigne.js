@@ -16,7 +16,7 @@ function Consigne() {
 		this.id = this.data.id;
 		this.intervenant_id = this.data.intervenant_id;
 		this.numero = this.data.numero;
-		this.titre = this.data.titre;
+		this.titre = decodeHtmlEntities(this.data.titre);
 
 		this.nombre_reponses = this.data.nombre_reponses;
 		this.reponses_id = this.data.reponses;
