@@ -238,7 +238,6 @@ body {
 	padding: 0 0 82px 0;
 	font-family: 'Poppins';
 	font-size: 13px;
-	font-weight: 500;
 	color: var(--color-default);
 	overflow-x : hidden;
 }
@@ -319,6 +318,19 @@ body {
 		background-color: var(--color-hover);
 		color: var(--color-default);
 	}
+}
+
+.bloc_titre label + div {
+	border-radius: 0px 0px 5px 5px;
+	overflow: hidden;
+}
+.bloc_titre label {
+	cursor: pointer;
+}
+
+#menu_haut_rubrique.bloc_titre label + div {
+	border-radius: 0;
+	overflow-y: auto;
 }
 
 .bloc_view {
@@ -406,6 +418,9 @@ body {
 		width: 23px;
 		margin-right: 1rem;
 	}
+	.icon-down {
+		width: 40px;
+	}
 	> .select:hover {
 		background-color: var(--color-hover);
 		.first_label {
@@ -420,6 +435,7 @@ body {
 
 .first_label {
 	white-space: nowrap;
+	font-weight: 500;
 }
 
 #menu_haut_ecrire {
@@ -858,7 +874,6 @@ a:hover {
 	z-index: 1000;
 }
 
-.select,
 .select > div {
 	background: white;
 	color: #bbb;
@@ -888,33 +903,26 @@ a:hover {
 
 .select input {
 	opacity: 0;
-	cursor: pointer;
 	position: absolute;
+	width: 0;
+	height: 0;
 	z-index: 2;
 }
 .select input.first + label {
 	text-transform: uppercase;
 	height: var(--header-height);
 	line-height: var(--header-height);
-	font-weight: 500;
 	color: var(--color-default);
 	padding: 0 15px 0 25px;
 }
-.select input:hover + label {
+.select label:hover {
 	background-color: var(--color-hover) !important;
 	color: var(--color-default);
-}
-.select:hover input {
-	min-height: 50px;
-	min-width: 100%;
-	width: 100%;
-	display: block;
 }
 /*Déplie le carroussel*/
 .select:hover label:not(.first_label) {
 	display: block;
 	line-height: 50px;
-	background-color: white;
 	transition: height 250ms ease-in-out, line-height 250ms ease-in-out;
 
 }
