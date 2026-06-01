@@ -18,8 +18,8 @@ function annee_rub($idr) {
 }
 
 function balise_ANNEE_SCOLAIRE_dist($p) {
-	// _annee_scolaire est calculé et validé dans ccn_options.php
-	$p->code = '_annee_scolaire';
+	// _ANNEE_SCOLAIRE est calculé et validé dans ccn_options.php
+	$p->code = '_ANNEE_SCOLAIRE';
 	return $p;
 }
 

@@ -44,7 +44,7 @@
 			<div style="clear:both" class='bloc_option_reponses_consignes_classe'>
 				<div class="nettoyeur"></div>
 				<BOUCLE_rubrique(RUBRIQUES){titre_mot=consignes}{!par id_rubrique}{tout}>
-					<BOUCLE_consigne(ARTICLES){branche}{par date}{date>=#CONST{_date_debut}}{date<=#CONST{_date_fin}}>
+					<BOUCLE_consigne(ARTICLES){branche}{par date}{date>=#CONST{_DATE_DEBUT}}{date<=#CONST{_DATE_FIN}}>
 						#SET{id_to_check,#_principale:ID_RUBRIQUE}
 							<BOUCLE_reponse(ARTICLES){id_consigne=#ID_ARTICLE}{id_rubrique=#_principale:ID_RUBRIQUE}>
 								<div class="classe_consigne couleur_[(#TYPE_OBJET)][(#GET{id_to_check}|substr{[(#GET{id_to_check}|strlen|moins{1})],1})]">

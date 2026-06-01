@@ -1,6 +1,6 @@
 #CACHE{0}
 #SET{id_art,0}
-<BOUCLE_annee(RUBRIQUES){titre==#EVAL{_annee_scolaire}}{tout}{0,1}>
+<BOUCLE_annee(RUBRIQUES){titre==#EVAL{_ANNEE_SCOLAIRE}}{tout}{0,1}>
 	<BOUCLE_id_forum(ARTICLES){titre_mot==agora}{id_rubrique}{0,1}>
 		#SET{id_art,#ID_ARTICLE}
 	</BOUCLE_id_forum>
@@ -46,7 +46,7 @@
 			]
 			[(#SESSION{id_auteur}|non)<a href="[(#PLUGIN{CICAS}|oui|?{'?url=spip.php%3Fpage%3Dsommaire&cicas=oui','?page=login&url=.%2F'})]" class="">Se connecter</a>&nbsp;&nbsp;|<a href="http://www.laclasse.com/pls/public/!page.laclasse?contexte=QUESTION&rubrique=0">Mot de passe oublié ?</a>]
 
-			<BOUCLE_espace_doc(RUBRIQUES){titre==#EVAL{_annee_scolaire}}>
+			<BOUCLE_espace_doc(RUBRIQUES){titre==#EVAL{_ANNEE_SCOLAIRE}}>
 				<!-- #ID_RUBRIQUE -->
 				<a href="[(#DESCRIPTIF|textebrut)]">Espace doc</a>
 				[<a href="(#TEXTE|extraire_attribut{href})">Blog de l'auteur</a>]
@@ -67,10 +67,10 @@
 			<span id="annee_scolaire">
 				<form name="annee_scolaire" style="display:inline;">
 					<label for="select_annee_scolaire">Année scolaire :</label>
-					<select id="select_annee_scolaire" name="annee_scolaire" onchange="reload_cookie('[(#URL_SITE_SPIP)]','[(#EVAL{_cookie_annee_scolaire})]',this.value)">
+					<select id="select_annee_scolaire" name="annee_scolaire" onchange="reload_cookie('[(#URL_SITE_SPIP)]','[(#EVAL{_COOKIE_ANNEE_SCOLAIRE})]',this.value)">
 						<option value="#">---</option>
 						<BOUCLE_vieux(ARTICLES){par date}{date!=0000-00-00 00:00:00}{0,1}{tout}>
-						<option value="[(#DATE|annee)]">[(#DATE|annee|afficher_options_date{[(#DATE|mois)],#EVAL{_annee_scolaire}})]</option>
+						<option value="[(#DATE|annee)]">[(#DATE|annee|afficher_options_date{[(#DATE|mois)],#EVAL{_ANNEE_SCOLAIRE}})]</option>
 						</BOUCLE_vieux>
 						<option value="2011">2011/2012</option>
 						<option value="2010">2010/2011</option>

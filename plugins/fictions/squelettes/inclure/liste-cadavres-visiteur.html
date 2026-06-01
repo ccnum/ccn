@@ -4,7 +4,7 @@ SOMMAIRE.HTML > LISTE-CADAVRE-AUTEUR.HTML
 -->
 #CACHE{0}
 #SET{i,0}
-<BOUCLE_annee(RUBRIQUES){titre==#EVAL{_annee_scolaire}}{tout}{0,1}>
+<BOUCLE_annee(RUBRIQUES){titre==#EVAL{_ANNEE_SCOLAIRE}}{tout}{0,1}>
 	<BOUCLE_rubriques_toutes(RUBRIQUES){id_parent=#ID_RUBRIQUE}{id_rubrique != #EVAL{_FICTIONS_ID_BLOG_PEDA}}{par titre}>
 	#SET{i,#GET{i}|plus{1}}
 	<div class="liste-colonnes">

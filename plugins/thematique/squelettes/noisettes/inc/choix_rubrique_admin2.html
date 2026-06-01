@@ -5,7 +5,7 @@
 ]
 
 <!-- Si aucune rubrique n'est selectionnee par le user alors en choisir une par defaut -->
-<BOUCLE_rubAnnee(RUBRIQUES) {racine}{titre LIKE %(#CONST{_annee_scolaire})%} {si #GET{motcle}|!={evenements} } >
+<BOUCLE_rubAnnee(RUBRIQUES) {racine}{titre LIKE %(#CONST{_ANNEE_SCOLAIRE})%} {si #GET{motcle}|!={evenements} } >
 	<BOUCLE_filtreTravailEnCours(RUBRIQUES){id_parent} {titre_mot=travail_en_cours}{par date}{0,1}>
 		[(#ENV{restreint}|?{#SESSION_SET{idRubriqueUser,#ENV{restreint}}, #SESSION_SET{idRubriqueUser,#ID_RUBRIQUE}})]
 	</BOUCLE_filtreTravailEnCours>

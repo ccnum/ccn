@@ -32,7 +32,7 @@
 		<div class="stitches-inner"><img src="#CHEMIN{img/global/stitches.png}" width="5" height="86"  alt=""/></div>
 		<div class="stitches-inner"><img src="#CHEMIN{img/global/stitches.png}" width="5" height="86"  alt=""/></div>
 	</div>
-	<BOUCLE_annee(RUBRIQUES){titre==#EVAL{_annee_scolaire}}{tout}{0,1}>#SET{id_rubrique,#ID_RUBRIQUE}
+	<BOUCLE_annee(RUBRIQUES){titre==#EVAL{_ANNEE_SCOLAIRE}}{tout}{0,1}>#SET{id_rubrique,#ID_RUBRIQUE}
 		<BOUCLE_article(ARTICLES){id_rubrique}{titre LIKE presentation}{tout}{0,1}>
 		<!-- BOOK -->
 		<div id="global-ecriture">
@@ -69,7 +69,7 @@
 						[(#REM) Par défaut, les années sont en mode visualisation.]
 						#SET{mode_affichage,visualisation}
 						<BOUCLE_rubrique_contenant_annees_2(RUBRIQUES){titre_mot=rubrique-contenant-annees}>
-							<BOUCLE_rubrique_annee_2(RUBRIQUES){id_parent}{titre=#EVAL{_annee_scolaire}}>
+							<BOUCLE_rubrique_annee_2(RUBRIQUES){id_parent}{titre=#EVAL{_ANNEE_SCOLAIRE}}>
 								<BOUCLE_mots_clef_annee(MOTS){id_rubrique}>
 								[(#REM) Si le mot-clef est associé à l'année qu'on souhaite afficher, on passe la variable]
 								[(#REM) de mode en « fabrication ».]
