@@ -9,7 +9,7 @@ $_annee_cookie = isset($_COOKIE['laclasse_annee_scolaire']) ? intval($_COOKIE['l
 if ($_annee_cookie > 2011 && $_annee_cookie < 2100) {
 	$annee_scolaire = $_annee_cookie;
 } else {
-	if (intval(date('m')) >= 8) {
+	if (intval(date('m')) >= 9) {
 		$annee_scolaire = intval(date('Y'));
 	} else {
 		$annee_scolaire = intval(date('Y')) - 1;
@@ -27,7 +27,7 @@ if (isset($_GET['annee_scolaire'])) {
 }
 
 $annee_scolaire = intval($annee_scolaire);
-define('_annee_scolaire', $annee_scolaire);
-define('_cookie_annee_scolaire', 'laclasse_annee_scolaire');
-define('_date_debut', $annee_scolaire . '-09-01');
-define('_date_fin', ($annee_scolaire + 1) . '-09-01');
+define('_ANNEE_SCOLAIRE', $annee_scolaire);
+define('_COOKIE_ANNEE_SCOLAIRE', 'laclasse_annee_scolaire');
+define('_DATE_DEBUT', $annee_scolaire . '-09-01');
+define('_DATE_FIN', ($annee_scolaire + 1) . '-09-01');
