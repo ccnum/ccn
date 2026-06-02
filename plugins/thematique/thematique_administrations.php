@@ -214,7 +214,7 @@ function th_configurer_rubriques() {
 			$id_mot = (int) sql_getfetsel('id_mot', 'spip_mots', 'titre = ' . sql_quote($mot));
 
 			include_spip('action/editer_liens');
-			$res = objet_associer(['mots' => $id_mot], ['rubriques' => $id_rubrique]);
+			objet_associer(['mots' => $id_mot], ['rubriques' => $id_rubrique]);
 		}
 	}
 }

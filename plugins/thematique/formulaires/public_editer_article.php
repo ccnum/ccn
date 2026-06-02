@@ -43,6 +43,18 @@ function formulaires_public_editer_article_charger_dist(
 	if (is_array($valeurs)) {
 		unset($valeurs['id_rubrique']);
 	}
+	// Pré-cocher la case si le mot-clé "livrable" est déjà associé à cet article
+	if (is_array($valeurs) && intval($id_article) > 0) {
+		$id_mot = sql_getfetsel('id_mot', 'spip_mots', "titre='livrable'");
+		if ($id_mot) {
+			$lie = sql_getfetsel(
+				'id_objet',
+				'spip_mots_liens',
+				'id_mot=' . intval($id_mot) . " AND objet='article' AND id_objet=" . intval($id_article)
+			);
+			$valeurs['attendre_livrable'] = $lie ? 'oui' : '';
+		}
+	}
 	return $valeurs;
 }
 
@@ -111,6 +123,18 @@ function formulaires_public_editer_article_traiter_dist(
 			$statut = sql_getfetsel('statut', 'spip_articles', 'id_article=' . intval($res['id_article']));
 			if ($statut !== 'publie') {
 				objet_instituer('article', $res['id_article'], ['statut' => 'publie']);
+			}
+		}
+
+		// Case cochée par l'intervenant sur la consigne → associe/dissocie le mot-clé livrable
+		$id_mot_livrable = sql_getfetsel('id_mot', 'spip_mots', "titre='livrable'");
+		if ($id_mot_livrable) {
+			include_spip('action/editer_liens');
+			$id_art = intval($res['id_article']);
+			if (_request('attendre_livrable') === 'oui') {
+				objet_associer(['mots' => intval($id_mot_livrable)], ['articles' => $id_art]);
+			} else {
+				objet_dissocier(['mots' => intval($id_mot_livrable)], ['articles' => $id_art]);
 			}
 		}
 	}
