@@ -70,15 +70,18 @@
 	z-index: 1;
 }
 
+.crayon-html {
+	display: flex;
+	justify-content: center;
+	align-items: flex-start;
+	padding-top: 60px;
+}
+
 .crayon-html .formulaire_spip {
 	z-index: 10000;
 	background: white;
 	width: 80%;
 	max-width: 40%;
-	transform: translateX(-50%);
-	position: absolute;
-	left: 50%;
-	top: 60px;
 }
 
 .crayon-active.markItUpEditor {
@@ -162,7 +165,9 @@
 }
 
 .markItUp .markItUpHeader {
-	display: block;
+	display: flex;
+	justify-content: space-between;
+	align-items: stretch;
 	margin: 0;
 	padding: 0 10px;
 	background: #CCC;
@@ -170,14 +175,9 @@
 	border-radius: 0;
 }
 .markItUp .markItUpTabs {
-	text-align: right;
 	padding: 0;
-	margin-bottom: 0;
-	top: 0px;
+	margin: 0;
 	overflow: hidden;
-	position: absolute;
-	right: 0;
-	clear: right;
 	z-index: 5;
 }
 .markItUp .markItUpTabs a {
