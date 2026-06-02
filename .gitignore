@@ -1,7 +1,6 @@
 .ddev
 .vscode
 .env
-.htaccess
 config/
 ecrire
 /IMG
