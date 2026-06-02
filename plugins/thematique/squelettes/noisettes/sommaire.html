@@ -91,23 +91,7 @@ et/ou
 					[(#MODELE{logo_menu}{valeur=evenement}{class=tooltip menu_logo_evenements}{filter=.ressource_evenements}{onclick=changeTimelineMode('evenements');}{title=Le blog pédagogique})]
 				]
 
-				[(#REM) Si il n'y a pas de livrables ne pas afficher le bouton]
-				#SET{hasLivrable, ''}
-				<BOUCLE_rubAnnee(RUBRIQUES) {racine} {titre LIKE %(#CONST{_ANNEE_SCOLAIRE})%} >
-					<BOUCLE_filtreTravailEnCours(RUBRIQUES){id_parent}{titre_mot=travail_en_cours}>
-						<BOUCLE_getRubTravail(RUBRIQUES){id_rubrique}>
-							<BOUCLE_getRubColleges(RUBRIQUES){id_parent}>
-								<BOUCLE_getLivrable(ARTICLES){id_rubrique}{titre_mot=livrable}>
-									#SET{hasLivrable, oui}
-								</BOUCLE_getLivrable>
-							</BOUCLE_getRubColleges>
-						</BOUCLE_getRubTravail>
-					</BOUCLE_filtreTravailEnCours>
-				</BOUCLE_rubAnnee>
-
-				[(#GET{hasLivrable}|=={oui}|oui)
-					[(#MODELE{logo_menu}{valeur=livrable}{class=tooltip menu_logo_livrables logo_menu-cible}{filter=.ressource_livrables}{onclick=callLivrables();}{title=Les projets finis})]
-				]
+				[(#MODELE{logo_menu}{valeur=livrable}{class=tooltip menu_logo_livrables logo_menu-cible}{filter=.ressource_livrables}{onclick=callLivrables();}{title=Les projets finis})]
 
 			</ul>
 		</div>
