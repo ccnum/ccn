@@ -6,7 +6,10 @@
 et/ou
 -#ENV{vue_date} : 01/10/2011
 ]
-
+<div id="zone" class="zone_timeline zone"[ (#VUE|=={classe}|oui) style="display:none;"]>
+	<INCLURE{fond=noisettes/timeline, env, ajax} />
+</div>
+<div id="loading_feedback">Chargement</div>
 <style id="crayons-surcharge-styles"></style>
 <div id="offset"></div>
 <div id="global">
@@ -33,44 +36,29 @@ et/ou
 				<div id="timeline_background"></div>
 			</div>
 		</div>
-	</div>
-
-	<div id="zone" class="zone_timeline zone"[ (#VUE|=={classe}|oui) style="display:none;"]>
-		<INCLURE{fond=noisettes/timeline, env, ajax} />
-	</div>
-
-	[(#REM)
-  	<div id="zone_classe" class="zone_classe zone"[ (#VUE|=={classe}|oui) style="display:block;"]>
-  		<INCLURE{fond=noisettes/isotope, env, ajax} />
-  	</div>
-	]
-
-	<div id="loading_feedback">Chargement</div>
-
-	<div id="tooltip-sidebarCache" class="tooltip-sidebarCache"></div>
-	<div id="sidebarCache"></div>
-	<script>
-		activateSidebarCacheTooltip();
-	</script>
-	<div id="sidebar">
-		<div id="sidebarExpand" class="sidebarExpandOff tooltip" data-tip="Agrandir/Réduire la modale" aria-label="Agrandir/Réduire la modale"></div>
-
-		<div id="sidebar_content">
-			<div id="sidebar_main_around">
-				<div id="sidebar_main">
-					<div id="sidebar_main_inner" class="sidebar_content_inner">
+		<div id="sidebar">
+			<div id="sidebarExpand" class="sidebarExpandOff tooltip" data-tip="Agrandir/Réduire la modale" aria-label="Agrandir/Réduire la modale"></div>
+			<div id="sidebar_content">
+				<div id="sidebar_main_around">
+					<div id="sidebar_main">
+						<div id="sidebar_main_inner" class="sidebar_content_inner">
+						</div>
 					</div>
 				</div>
-			</div>
 
-			<div id="sidebar_lateral_around">
-				<div id="sidebar_lateral">
-					<div id="sidebar_lateral_inner" class="sidebar_lateral_inner">
+				<div id="sidebar_lateral_around">
+					<div id="sidebar_lateral">
+						<div id="sidebar_lateral_inner" class="sidebar_lateral_inner">
+						</div>
 					</div>
 				</div>
 			</div>
 		</div>
 	</div>
+
+	
+
+	
 	<div id="menu_bas" class="clearfix combo-filters zone-menu">
 		[(#REM)Timeline]
 		<div id="menu-timeline" class="bloc_view col">

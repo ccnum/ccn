@@ -213,6 +213,7 @@
 	list-style: none;
 	padding: 0px;
 	margin: 0px;
+	transition: all 500ms ease;
 }
 
 embed, iframe, object {
@@ -235,7 +236,6 @@ option, select, form {
 body {
 	background-color: transparent;
 	margin: 0px;
-	padding: 0 0 82px 0;
 	font-family: 'Poppins';
 	font-size: 13px;
 	color: var(--color-default);
@@ -244,7 +244,9 @@ body {
 
 /* --------- Blocs --------- */
 #global {
-	margin: 0%;
+	display: grid;
+  	grid-template-rows: auto 1fr auto;
+	min-height: 100vh;
 	width: 100%;
 }
 
@@ -518,13 +520,13 @@ body {
     bottom: 0;
     left: 0;
 	width: calc(100vw - 10px - 10px);
+	height: var(--footer-height);
     display: flex;
     gap: 1.5rem;
-	padding: 0px 10px 20.8px 10px;
+	padding: 10px;
     background: white;
     align-items: center;
     z-index: 999;
-	height: 77px;
 }
 
 #menu_bas > :last-child {
@@ -1027,7 +1029,6 @@ a:hover {
 }
 
 #menu_bas .col {
-	padding: 6px 6px 0px 6px;
 	display: inline-block;
 	vertical-align: top;
 }
@@ -1070,7 +1071,7 @@ a:hover {
 }
 
 .popup {
-	max-height: calc(100vh - 100px - (54px*2));
+	max-height: calc(100vh - var(--header-height));
 }
 
 .popup .actualites-actu {
@@ -2111,7 +2112,7 @@ div.donnees_classe {
 	padding: 0;
 	box-sizing: border-box;
 	transform: scale(0.4);
-				transition: transform 500ms ease;
+	transition: transform 500ms ease;
 }
 
 .show_blogs .article_blog_container{
@@ -2128,7 +2129,7 @@ div.donnees_classe {
 	z-index: -1;
 	left: 6%;
 	bottom: 6%;
-				transition: all 500ms ease;
+	transition: all 500ms ease;
 }
 
 .article_blog_container .article_blog{
@@ -2141,7 +2142,7 @@ div.donnees_classe {
 	left: 0;
 	background: #E91E63;
 	border-radius: 50%;
-				transition: all 500ms ease;
+	transition: all 500ms ease;
 }
 
 .show_blogs .article_blog_container .article_blog {
@@ -2154,7 +2155,7 @@ div.donnees_classe {
 	padding: 0;
 	box-sizing: border-box;
 	transform: scale(0.4);
-				transition: transform 500ms ease;
+	transition: transform 500ms ease;
 }
 
 .show_evenements .article_evenement_container{
@@ -2255,7 +2256,7 @@ div.donnees_classe {
 	text-align: center;
 	border-radius: 50%;
 	transform: scale(0);
-				transition: all 500ms ease;
+	transition: all 500ms ease;
 }
 
 .show_blogs .article_blog .picto_nombre_commentaires {
@@ -2269,7 +2270,7 @@ div.donnees_classe {
 	font-size: 10px;
 	margin-top: 2px;
 	display: block;
-				transition: all 500ms ease;
+	transition: all 500ms ease;
 }
 
 .show_blogs .article_blog_date,
@@ -2824,7 +2825,7 @@ div.donnees_classe {
 	padding: 0;
 	box-sizing: border-box;
 	overflow: auto;
-				transition: right 500ms ease-in-out, width 500ms ease-in-out;
+	transition: right 500ms ease-in-out, width 500ms ease-in-out;
 	z-index: 10000000;
 }
 
@@ -2853,15 +2854,13 @@ div.donnees_classe {
 	width: 100%;
 	font-size: 13px;
 	max-height: 100%;
-				transition: opacity 500ms ease;
+	transition: opacity 500ms ease;
 	position: relative;
 	top: 0;
 }
 
 #sidebar_main_around {
-
-				transition: width 500ms ease-in-out;
-
+	transition: width 500ms ease-in-out;
 	width: 100%;
 }
 
@@ -2937,7 +2936,7 @@ div.donnees_classe {
 	overflow: hidden;
 	border-radius: 50%;
 	box-shadow: 0 7px 15px rgba(0, 0, 0, 0.47);
-				transition: all 300ms ease;
+	transition: all 300ms ease;
 	transform: scale(0);
 }
 
@@ -3922,37 +3921,30 @@ ul#forum, .lien_forum {
 /* * * * * * * * * * * * * * * * * * * * * */
 
 #timeline {
-	position: absolute;
-	top: 0;
-	left: 0;
-	right: 0;
-	bottom: 0;
+	position: relative;
+	display: flex;
+	width: 100%;
 	background: #eee;
-	font-size: 0;
-	overflow: hidden;
-	background-size: cover;
-
-	z-index: 999
+	height: calc(100vh - var(--header-height) - var(--footer-height));
 }
 
 #timeline_responsive {
-	position: absolute;
-	top: 0;
-	left: 0;
-	bottom: 0;
-	right: 0;
-
-	transition: all 2000ms ease;
+	flex: 1;
+	position: relative;
+	transition: all 500ms ease;
 }
 
-.hasSidebarOpen.hasSidebarExpanded #timeline_responsive:not(.focus) {
-	right: calc((100% - 175px)*0.3);
+.hasSidebarOpen #timeline_responsive {
+    width: calc(100% - 550px); /* largeur de la sidebar */
+    flex: none;
+}
+
+.hasSidebarExpanded #timeline_responsive {
+    width: calc(175px); /* seul le menu latéral reste visible */
+    flex: none;
 }
 
 
-#timeline_responsive.focus  {
-	right: 40%;
-}
 
 #timeline_layer_consignes,
 #timeline_layer_blogs,
@@ -3968,8 +3960,7 @@ ul#forum, .lien_forum {
 	left: 0;
 	width: 100%;
 	z-index: 900;
-
-	transition: all 2000ms ease;
+	transition: all 500ms ease;
 }
 
 #timeline_fixed {
@@ -4034,27 +4025,22 @@ ul#forum, .lien_forum {
 
 #sidebar {
 	position: fixed;
-	top: calc(54px *2);
+	top: var(--header-height);
 	right: 0;
-	bottom: 0;
-	max-height: calc(100% - 76.78px - (54px*2));
 	width: 550px;
 	z-index: 4000;
-	margin-right: -600px;
-	height: fit-content;
-
-				transition: margin 1000ms ease, width 1000ms ease;
+	height: 100%;
+	transform: translateX(100%); 
+	transition: transform 500ms ease-in-out, width 500ms ease; 	
 }
 
 #sidebar_content {
 	border: none;
 	width: 100%;
-    height: calc(100vh - 100px - (54px * 2));
-    max-height: calc(100vh - 100px - (54px * 2));
-	z-index: 10000;
-	position: relative;
+    z-index: 10000;
 	overflow: hidden;
 	display: flex;
+	height: calc(100vh - var(--header-height));
 }
 
 #sidebar_content_inner {
@@ -4062,14 +4048,12 @@ ul#forum, .lien_forum {
 }
 
 .hasSidebarOpen #sidebar {
-	margin-right: 0;
+	transform: translateX(0);
 }
 
 .hasSidebarExpanded #sidebar {
 	width: calc(100% - 175px);
 	z-index: 100000;
-
-				transition: margin 1000ms ease, width 1000ms ease;
 }
 
 .tooltip-sidebarCache {
@@ -4086,7 +4070,9 @@ ul#forum, .lien_forum {
 }
 
 #sidebarCache {
-	position: absolute;
+	position: fixed;
+    top: 0;
+    left: 0;
 	width: 100%;
 	height: 100%;
 	display: none;
@@ -4094,6 +4080,7 @@ ul#forum, .lien_forum {
 	background: rgba(0,0,0,0.5);
 	cursor: pointer;
 }
+
 .sidebarCacheOn {
 	display: block !important;
 }
@@ -4151,8 +4138,7 @@ ul#forum, .lien_forum {
 	cursor: pointer;
 	z-index: 100; /* Minimum, surcharge par le JS */
 	position: absolute;
-
-				transition: opacity 500ms ease;
+	transition: opacity 500ms ease;
 }
 
 .timeline_item.hide {
@@ -4337,9 +4323,7 @@ ul#forum, .lien_forum {
 
 .timeline_layer {
 	opacity: .2;
-
-				transition: opacity 300ms ease;
-
+	transition: opacity 300ms ease;
 	position: absolute;
 	z-index: 100;
 	top: 0;
@@ -4487,7 +4471,6 @@ ul#forum, .lien_forum {
 
 	#sidebar {
 		width: 450px;
-		margin-right: -490px;
 	}
 
 	#zone {
