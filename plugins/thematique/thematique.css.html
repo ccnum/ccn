@@ -213,7 +213,6 @@
 	list-style: none;
 	padding: 0px;
 	margin: 0px;
-	transition: all 500ms ease;
 }
 
 embed, iframe, object {
@@ -1094,6 +1093,77 @@ a:hover {
 	overflow: hidden;
 	padding: 10px 10px 20px 10px;
 }
+
+/* ================================================================ */
+/* ----------------------- SELECTBOX STYLING ---------------------- */
+/* ================================================================ */
+
+.select {
+	position: relative;
+	display: inline-block;
+	width: auto;
+	height: 100%;
+}
+
+.select-toggle {
+	background: transparent;
+	border: none;
+	cursor: pointer;
+	padding: 0 12px;
+	display: flex;
+	align-items: center;
+	font-size: inherit;
+	font-family: inherit;
+	color: inherit;
+	white-space: nowrap;
+	height: 100%;
+}
+
+.select-options {
+	list-style: none;
+	margin: 0;
+	padding: 0;
+	position: absolute;
+	top: 100%;
+	left: 0;
+	background: white;
+	border: 1px solid #ccc;
+	border-radius: 2px;
+	min-width: 100%;
+	width: 100%;
+	z-index: 100;
+	display: none;
+	box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+}
+
+.select.open .select-options {
+	display: block;
+}
+
+.select-option {
+	list-style: none;
+	padding: 0 12px;
+	cursor: pointer;
+	white-space: nowrap;
+	height: 32px;
+	display: flex;
+	align-items: center;
+	width: 100%;
+	box-sizing: border-box;
+}
+
+.select-option:hover {
+	background-color: #f0f0f0;
+}
+
+.select-option.actif {
+	background-color: #e8f4f8;
+	font-weight: bold;
+}
+
+/* ================================================================ */
+/* ----------------------- END SELECTBOX STYLING ------------------- */
+/* ================================================================ */
 
 .actualites-actu-date {
 	/*text-transform: uppercase;*/

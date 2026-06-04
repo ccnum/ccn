@@ -1,44 +1,46 @@
 #CACHE{0}
 [(#SESSION{id_auteur}|oui)
 <div id="menu_haut_user" class="bloc_titre">
-	<div id="choix_rubrique_user" name="rubrique_user" class="select">
-		<input type="radio" class="first">
-      <label class="first_label">
-        <span class="icon icon-connecter"></span>
-          [(#SESSION{nom})]
-        <span class="icon icon-down"></span>
-      </label>
-		  <div class="user-option me-deconnecter">
-        <a href="[(#URL_LOGOUT)]" title="Me déconnecter"
-           style="display: flex; align-items: center;">
-          <div class="icon icon-logout"></div>
-          <div>Me déconnecter</div>
-        </a>
-      </div>
+	<div id="choix_rubrique_user" name="rubrique_user" class="select selectbox" data-select-name="rubrique_user">
+		<button type="button" class="select-toggle first_label">
+			<span class="icon icon-connecter"></span>
+			[(#SESSION{nom})]
+			<span class="icon icon-down"></span>
+		</button>
+		<ul class="select-options">
+			<li class="select-option me-deconnecter">
+				<a href="[(#URL_LOGOUT)]" title="Me déconnecter" style="display: flex; align-items: center;">
+					<div class="icon icon-logout"></div>
+					<div>Me déconnecter</div>
+				</a>
+			</li>
+		</ul>
 	</div>
 </div>
 ]
 [(#SESSION{id_auteur}|non)
-  [(#PLUGIN{cicas}|oui)
-  <div id="menu_haut_user" class="bloc_titre">
-    <div class="connecter">
-      <a href="[(#URL_PAGE{login}|parametre_url{url,#SELF}|parametre_url{cicas,oui})]" 
-         class="logo_menu-connecter"
-         title="Se connecter à l'ENT">
-        <span class="icon icon-connecter"></span>Me connecter
-      </a>
-    </div>
-  </div>
-  ]
-  [(#PLUGIN{cioidc}|oui)
-  <div id="menu_haut_user" class="bloc_titre">
-    <div class="connecter">
-      <a href="[(#URL_PAGE{login}|parametre_url{url,#SELF}|parametre_url{action,login_cioidc})]" 
-         class="logo_menu-connecter"
-         title="Se connecter à l'ENT">
-        <span class="icon icon-connecter"></span>Me connecter
-      </a>
-    </div>
-  </div>
-  ]
+<div id="menu_haut_user" class="bloc_titre">
+	<div id="choix_connexion" name="connexion" class="select selectbox" data-select-name="connexion">
+		<button type="button" class="select-toggle first_label">
+			<span class="icon icon-connecter"></span>Me connecter
+			<span class="icon icon-down"></span>
+		</button>
+		<ul class="select-options">
+			[(#PLUGIN{cicas}|oui)
+				<li class="select-option">
+					<a href="[(#URL_PAGE{login}|parametre_url{url,#SELF}|parametre_url{cicas,oui})]" title="Se connecter à l'ENT">
+						Se connecter à l'ENT (CICAS)
+					</a>
+				</li>
+			]
+			[(#PLUGIN{cioidc}|oui)
+				<li class="select-option">
+					<a href="[(#URL_PAGE{login}|parametre_url{url,#SELF}|parametre_url{action,login_cioidc})]" title="Se connecter à l'ENT">
+						Se connecter à l'ENT (OpenID)
+					</a>
+				</li>
+			]
+		</ul>
+	</div>
+</div>
 ]

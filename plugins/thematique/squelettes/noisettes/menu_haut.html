@@ -5,17 +5,21 @@
 	</div>
 	<div id="menu_haut_titre" class="bloc_titre">
 		[(#REM)Titre]
-		<div class="select" name="annee_scolaire">
-			<input type="radio" value="#ENV{annee_scolaire}" class="first">
-				<label class="first_label">
-					<span>[(#NOM_SITE_SPIP) ][(#ENV{annee_scolaire})]-[(#ENV{annee_scolaire}|plus{1})]</span>
-					<span class="icon icon-down"></span>
-				</label>
-			<div>
+		<div class="select selectbox" name="annee_scolaire" data-select-name="annee_scolaire">
+			<button type="button" class="select-toggle first_label">
+				<span>[(#NOM_SITE_SPIP) ][(#ENV{annee_scolaire})]-[(#ENV{annee_scolaire}|plus{1})]</span>
+				<span class="icon icon-down"></span>
+			</button>
+			<ul class="select-options">
 				<BOUCLE_dates(RUBRIQUES){!par titre}{racine}{titre==^[2]}>
-				<input type='radio' value='#TITRE' [(#ENV{annee_scolaire}|=={#TITRE}|oui)class="actif"]><label>#TITRE/[(#TITRE|plus{1})]</label>
+				[(#ENV{annee_scolaire}|=={#TITRE}|oui)
+					<li class="select-option actif" data-value="#TITRE">#TITRE/[(#TITRE|plus{1})]</li>
+				]
+				[(#ENV{annee_scolaire}|!={#TITRE}|oui)
+					<li class="select-option" data-value="#TITRE">#TITRE/[(#TITRE|plus{1})]</li>
+				]
 				</BOUCLE_dates>
-			</div>
+			</ul>
 		</div>
 	</div>
 	<INCLURE{fond=noisettes/inc/authentification, id_auteur, admin, restreint, type_restreint} />
@@ -26,14 +30,88 @@
 			if ($('#menu_haut_titre').width() <= 185) {
 				$('#annee_scolaire_more').hide();
 			}
-			$('div[name="annee_scolaire"] input[type="radio"]').on( "change", function() {
-				var valeur = $('div[name=annee_scolaire] input[type=radio]:checked').val()
-				reloadAndSetCookie('', 'laclasse_annee_scolaire', valeur)
-			});
-			$('#choix_rubrique_admin input[type="radio"]').on( "change", function() {
-				var valeur = $('div[name=rubrique_admin] input[type=radio]:checked').val()
-				reloadAndSetCookie('', 'laclasse_rubrique_admin', valeur)
-			});
+
+			var closeTimeout;
+
+			function closeAllSelects(){ 
+				$('.select.open').removeClass('open'); 
+			}
+
+			function initSelectbox($roots){
+				$roots.each(function(){
+					var $sel = $(this);
+					if ($sel.hasClass('initialized')) return;
+					$sel.addClass('initialized');
+					var $toggle = $sel.find('.select-toggle').first();
+					var $options = $sel.find('.select-options').first();
+					if (!$toggle.length){
+						// transform radio-based select inside
+						var $inputs = $sel.find('input[type=radio]');
+						var labelHtml = $sel.find('label.first_label').html() || $sel.find('label').first().html() || '';
+						$toggle = $('<button type="button" class="select-toggle first_label">'+labelHtml+'<span class="icon icon-down"></span></button>');
+						$options = $('<ul class="select-options"></ul>');
+						$inputs.each(function(){
+							var $in = $(this);
+							var $lab = $in.next('label');
+							var val = $in.val() || '';
+							var text = $lab.html() || $lab.text() || val;
+							var $li = $('<li class="select-option" data-value="'+val+'">'+text+'</li>');
+							if ($in.is(':checked') || $in.attr('selected')) $li.addClass('actif');
+							$options.append($li);
+						});
+						$sel.append($toggle).append($options);
+						// keep original radios hidden for progressive enhancement
+						$sel.find('input[type=radio], label').hide();
+					}
+
+					// Click to toggle
+					$toggle.on('click', function(e){ 
+						e.stopPropagation(); 
+						closeAllSelects(); 
+						$sel.toggleClass('open'); 
+					});
+
+					// Hover to open
+					$sel.on('mouseenter', function(){
+						clearTimeout(closeTimeout);
+						closeAllSelects();
+						$sel.addClass('open');
+					});
+
+					$sel.on('mouseleave', function(){
+						closeTimeout = setTimeout(function(){
+							$sel.removeClass('open');
+						}, 200);
+					});
+
+					// Click on option
+					$options.on('click', '.select-option', function(e){
+						e.stopPropagation();
+						var $li = $(this);
+						var val = $li.data('value');
+						var text = $li.html();
+						// update visible label (first span)
+						$toggle.contents().filter(function(){ return this.nodeType==3; }).first().replaceWith(text);
+						$options.find('.select-option').removeClass('actif');
+						$li.addClass('actif');
+						$sel.removeClass('open');
+						// keep underlying radios in sync if present
+						$sel.find('input[type=radio]').prop('checked', false);
+						$sel.find('input[type=radio][value="'+val+'"]').prop('checked', true);
+						// react to known select names
+						var name = $sel.attr('data-select-name') || $sel.attr('name');
+						if (name=='annee_scolaire') reloadAndSetCookie('', 'laclasse_annee_scolaire', val);
+						else if (name=='rubrique_admin') reloadAndSetCookie('', 'laclasse_rubrique_admin', val);
+					});
+				});
+			}
+
+			// initialize: prefer explicit selectbox markup, but also transform legacy radios
+			initSelectbox($('.select.selectbox'));
+			initSelectbox($('.select').not('.selectbox'));
+
+			// close on outside click
+			$(document).on('click', function(){ closeAllSelects(); });
 		});
 	</script>
 </div>
