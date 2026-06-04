@@ -193,6 +193,7 @@ function Projet() {
 				'left': (-(this.x_dest * 100 / this.nombre_jours) * this.timeline_width / 100) + '%'
 			}
 		);
+
 	}
 
 	/**

@@ -32,4 +32,10 @@
 			tooltip.style.display = "none";
 		});
 	}
+
+	if (document.readyState === "loading") {
+		document.addEventListener("DOMContentLoaded", activateSidebarCacheTooltip);
+	} else {
+		activateSidebarCacheTooltip();
+	}
 </script>

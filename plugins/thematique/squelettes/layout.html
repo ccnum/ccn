@@ -52,6 +52,8 @@
 			integrity="sha384-/1qUCSGwTur9vjf/z9lmu/eCUYbpOTgSjmpbMQZ1/CtX2v/WcAIKqRv+U1DUCG6e"
 			crossorigin="anonymous"></script>
 	</head>
+	<div id="tooltip-sidebarCache" class="tooltip-sidebarCache"></div>
+	<div id="sidebarCache"></div>
 	<body>
 		[(#TYPE_OBJET|=={evenements}|oui|et{#GET{admin}|<{0}|oui}|non)
 			[(#ENV{page}|in_array{#LISTE{sommaire,article,rubrique,rubrique_detail,forum,groupe_mot,groupe_mot_detail,ressources_detail,timeline,isotope,livrables,auteur_editer,publier_article,syndic_article,reponses_classes,menu_haut,call_sidebar}}|non)#SET{page,sommaire}]

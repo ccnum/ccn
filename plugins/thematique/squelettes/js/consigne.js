@@ -124,12 +124,17 @@ function Consigne() {
 		);
 
 		if (CCN.admin == 0) {
+			// Mémorise le left% initial
+			const leftPercent = this.x / CCN.projet.nombre_jours * 100;
+
 			this.div_base.draggable({
 				axis: "y",
 				start: function (event, ui) {
 					$(this).addClass('no_event');
 				},
 				drag: function (event, ui) {
+					// jQuery UI va écrire un left en px — on le réécrit en % immédiatement
+					ui.position.left = CCN.projet.timeline.width() * leftPercent / 100;
 					updateConnecteurs();
 				},
 				stop: function (event, ui) {
@@ -138,7 +143,11 @@ function Consigne() {
 					$.post("spip.php?page=ajax&mode=article-sauve-coordonnees", { id_objet: _thisId, type_objet: "article", X: 0, Y: yy });
 					$(this).removeClass('no_event');
 					this.y = yy;
-					$(this).css({ 'top': (yy * 100) + '%' });
+					// Réécrit les deux coords en %
+					$(this).css({
+						top:  (yy * 100) + '%',
+						left: leftPercent + '%'
+					});
 				}
 			});
 		}
@@ -239,3 +248,4 @@ function Consigne() {
 		this.select = true;
 	}
 }
+
