@@ -16,6 +16,94 @@ function ccn_boite_infos($flux) {
 	return $flux;
 }
 
+function ccn_post_edition($flux) {
+	if (
+		($flux['args']['type'] ?? '') !== 'document'
+		or ($flux['args']['action'] ?? '') !== 'ajouter_document'
+		or empty($flux['data']['fichier'])
+	) {
+		return $flux;
+	}
+
+	include_spip('inc/getdocument');
+	$fichier = _DIR_RACINE . get_spip_doc($flux['data']['fichier']);
+	if (!file_exists($fichier)) {
+		return $flux;
+	}
+
+	$ext = strtolower($flux['data']['extension'] ?? pathinfo($fichier, PATHINFO_EXTENSION));
+	$id_document = intval($flux['args']['id_objet']);
+
+	if (in_array($ext, ['jpg', 'jpeg', 'png', 'webp'])) {
+		ccn_compresser_image($fichier, $ext);
+	} elseif (in_array($ext, ['mp4', 'mov', 'avi', 'mkv', 'webm'])) {
+		ccn_compresser_video($fichier);
+	} else {
+		return $flux;
+	}
+
+	if (file_exists($fichier)) {
+		sql_updateq('spip_documents', ['taille' => filesize($fichier)], 'id_document=' . $id_document);
+	}
+
+	return $flux;
+}
+
+function ccn_compresser_image($fichier, $ext) {
+	if (!function_exists('imagecreatefromjpeg')) {
+		return;
+	}
+	switch ($ext) {
+		case 'jpg':
+		case 'jpeg':
+			if ($img = @imagecreatefromjpeg($fichier)) {
+				imagejpeg($img, $fichier, 85);
+				imagedestroy($img);
+			}
+			break;
+		case 'png':
+			if ($img = @imagecreatefrompng($fichier)) {
+				imagesavealpha($img, true);
+				imagepng($img, $fichier, 7);
+				imagedestroy($img);
+			}
+			break;
+		case 'webp':
+			if ($img = @imagecreatefromwebp($fichier)) {
+				imagewebp($img, $fichier, 85);
+				imagedestroy($img);
+			}
+			break;
+	}
+}
+
+function ccn_compresser_video($fichier) {
+	if (!function_exists('exec')) {
+		return;
+	}
+	$ffmpeg = trim((string) shell_exec('which ffmpeg 2>/dev/null'));
+	if (!$ffmpeg) {
+		return;
+	}
+	$tmp = $fichier . '.ccn_tmp.mp4';
+	exec(
+		$ffmpeg . ' -y -i ' . escapeshellarg($fichier)
+		. ' -vcodec libx264 -crf 28 -acodec aac '
+		. escapeshellarg($tmp) . ' 2>/dev/null',
+		$out,
+		$code
+	);
+	if ($code === 0 and file_exists($tmp)) {
+		if (filesize($tmp) < filesize($fichier)) {
+			rename($tmp, $fichier);
+		} else {
+			unlink($tmp);
+		}
+	} elseif (file_exists($tmp)) {
+		unlink($tmp);
+	}
+}
+
 function ccn_formulaire_verifier($flux) {
 	$erreurs = $flux['data'];
 	$args = $flux['args'];
