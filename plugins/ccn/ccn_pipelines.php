@@ -1,6 +1,27 @@
 <?php
 if (!defined('_ECRIRE_INC_VERSION')) { return; }
 
+function ccn_recuperer_fond($flux) {
+	if ($flux['args']['fond'] !== 'prive/objets/infos/auteur') {
+		return $flux;
+	}
+
+	$id_auteur = intval($flux['args']['contexte']['id'] ?? 0);
+	if (!$id_auteur) {
+		return $flux;
+	}
+
+	$source = sql_getfetsel('source', 'spip_auteurs', 'id_auteur=' . $id_auteur);
+	if (!$source) {
+		return $flux;
+	}
+
+	$injection = '<p style="margin-top:.5em">Source d\'authentification : <code>' . spip_htmlspecialchars($source) . '</code></p>';
+	$flux['data'] = str_replace('</div><!--nb_elements-->', $injection . '</div><!--nb_elements-->', $flux['data']);
+
+	return $flux;
+}
+
 function ccn_formulaire_verifier($flux) {
 	$erreurs = $flux['data'];
 	$args = $flux['args'];
