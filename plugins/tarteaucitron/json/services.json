@@ -11,10 +11,11 @@
     "adform": {
         "hasModele": true,
         "params": [
-            "ptac_adformpm"
+            "ptac_adformpm",
+            "ptac_adformpagename"
         ],
         "type": "ads",
-        "JS": "tarteaucitron.user.adformpm = 'ptac_adformpm';\n(tarteaucitron.job = tarteaucitron.job || []).push('adform');",
+        "JS": "tarteaucitron.user.adformpm = 'ptac_adformpm';\ntarteaucitron.user.adformpagename = 'ptac_adformpagename';\n(tarteaucitron.job = tarteaucitron.job || []).push('adform');",
         "HTML": ""
     },
     "adsense": {
@@ -146,10 +147,11 @@
     "clickdimensions": {
         "hasModele": true,
         "params": [
-            "ptac_accountkey"
+            "ptac_accountkey",
+            "ptac_domain"
         ],
         "type": "ads",
-        "JS": "tarteaucitron.user.clickdimensionsAccountKey = 'ptac_accountkey';\n(tarteaucitron.job = tarteaucitron.job || []).push('clickdimensions');",
+        "JS": "tarteaucitron.user.clickdimensionsAccountKey = 'ptac_accountkey';\ntarteaucitron.user.clickdimensionsDomain = 'ptac_domain';\n(tarteaucitron.job = tarteaucitron.job || []).push('clickdimensions');",
         "HTML": ""
     },
     "clicmanager": {
@@ -286,9 +288,19 @@
     },
     "googleadwordsconversion": {
         "hasModele": true,
-        "params": [],
+        "params": [
+            "ptac_id",
+            "ptac_label",
+            "ptac_language",
+            "ptac_format",
+            "ptac_color",
+            "ptac_value",
+            "ptac_currency",
+            "ptac_custom",
+            "ptac_custom"
+        ],
         "type": "ads",
-        "JS": "\n(tarteaucitron.job = tarteaucitron.job || []).push('googleadwordsconversion');",
+        "JS": "tarteaucitron.user.adwordsconversionId = 'ptac_id';tarteaucitron.user.adwordsconversionLabel = 'ptac_label';tarteaucitron.user.adwordsconversionLanguage  = 'ptac_language';tarteaucitron.user.adwordsconversionFormat = 'ptac_format';tarteaucitron.user.adwordsconversionColor = 'ptac_color';tarteaucitron.user.adwordsconversionValue = 'ptac_value';tarteaucitron.user.adwordsconversionCurrency = 'ptac_currency';tarteaucitron.user.adwordsconversionCustom1 = 'ptac_custom';tarteaucitron.user.adwordsconversionCustom2 = 'ptac_custom';\n(tarteaucitron.job = tarteaucitron.job || []).push('googleadwordsconversion');",
         "HTML": ""
     },
     "googleadwordsremarketing": {
@@ -348,10 +360,15 @@
     "madmetrics": {
         "hasModele": true,
         "params": [
-            "ptac_hostname"
+            "ptac_hostname",
+            "ptac_clientid",
+            "ptac_siteid",
+            "ptac_directid",
+            "ptac_referalid",
+            "ptac_llmid"
         ],
         "type": "ads",
-        "JS": "tarteaucitron.user.madmetricsHostname = 'ptac_hostname';\n(tarteaucitron.job = tarteaucitron.job || []).push('madmetrics');",
+        "JS": "tarteaucitron.user.madmetricsHostname = 'ptac_hostname';\ntarteaucitron.user.madmetricsClientId = 'ptac_clientid';tarteaucitron.user.madmetricsSiteId = 'ptac_siteid';tarteaucitron.user.madmetricsDirectId = 'ptac_directid';tarteaucitron.user.madmetricsReferalId = 'ptac_referalid';tarteaucitron.user.madmetricsLlmId = 'ptac_llmid';\n(tarteaucitron.job = tarteaucitron.job || []).push('madmetrics');",
         "HTML": ""
     },
     "outbrain": {
@@ -385,10 +402,13 @@
     "piximedia": {
         "hasModele": true,
         "params": [
-            "ptac_name"
+            "ptac_name",
+            "ptac_tag",
+            "ptac_type",
+            "ptac_id"
         ],
         "type": "ads",
-        "JS": "tarteaucitron.user.piximediaName = 'ptac_name';\n(tarteaucitron.job = tarteaucitron.job || []).push('piximedia');",
+        "JS": "tarteaucitron.user.piximediaName = 'ptac_name';\ntarteaucitron.user.piximediaTag = 'ptac_tag';tarteaucitron.user.piximediaType = 'ptac_type';tarteaucitron.user.piximediaId = 'ptac_id';\n(tarteaucitron.job = tarteaucitron.job || []).push('piximedia');",
         "HTML": ""
     },
     "prelinker": {
@@ -416,10 +436,13 @@
     "reddit": {
         "hasModele": true,
         "params": [
-            "ptac_init"
+            "ptac_init",
+            "ptac_aaid",
+            "ptac_external_id",
+            "ptac_idfa"
         ],
         "type": "ads",
-        "JS": "tarteaucitron.user.redditInit = 'ptac_init';\n(tarteaucitron.job = tarteaucitron.job || []).push('reddit');",
+        "JS": "tarteaucitron.user.redditInit = 'ptac_init';\ntarteaucitron.user.redditAAID = 'ptac_aaid';tarteaucitron.user.redditExternalId = 'ptac_external_id';tarteaucitron.user.redditIDFA = 'ptac_idfa';\n(tarteaucitron.job = tarteaucitron.job || []).push('reddit');",
         "HTML": ""
     },
     "shareasale": {
@@ -458,17 +481,21 @@
     "thetradedesk": {
         "hasModele": true,
         "params": [
-            "ptac_advertiser_id"
+            "ptac_advertiser_id",
+            "ptac_upixel_id"
         ],
         "type": "ads",
-        "JS": "tarteaucitron.user.thetradedeskAdvertiserId = 'ptac_advertiser_id';\n(tarteaucitron.job = tarteaucitron.job || []).push('thetradedesk');",
+        "JS": "tarteaucitron.user.thetradedeskAdvertiserId = 'ptac_advertiser_id';\ntarteaucitron.user.thetradedeskUpixelId = 'ptac_upixel_id';\n(tarteaucitron.job = tarteaucitron.job || []).push('thetradedesk');",
         "HTML": ""
     },
     "twenga": {
         "hasModele": true,
-        "params": [],
+        "params": [
+            "ptac_id",
+            "ptac_locale"
+        ],
         "type": "ads",
-        "JS": "\n(tarteaucitron.job = tarteaucitron.job || []).push('twenga');",
+        "JS": "tarteaucitron.user.twengaId = 'ptac_id';tarteaucitron.user.twengaLocale = 'ptac_locale';\n(tarteaucitron.job = tarteaucitron.job || []).push('twenga');",
         "HTML": ""
     },
     "twitteruwt": {
@@ -562,10 +589,12 @@
     "adobeworkspace": {
         "hasModele": false,
         "params": [
+            "ptac_id",
+            "ptac_id",
             "ptac_id"
         ],
         "type": "analytic",
-        "JS": "tarteaucitron.user.adobeworkspaceId1 = 'ptac_id';\n(tarteaucitron.job = tarteaucitron.job || []).push('adobeworkspace');",
+        "JS": "tarteaucitron.user.adobeworkspaceId1 = 'ptac_id';\ntarteaucitron.user.adobeworkspaceId2 = 'ptac_id';tarteaucitron.user.adobeworkspaceId3 = 'ptac_id';\n(tarteaucitron.job = tarteaucitron.job || []).push('adobeworkspace');",
         "HTML": ""
     },
     "amplitude": {
@@ -583,16 +612,18 @@
             "ptac_ua-xxxxxxxx-x"
         ],
         "type": "analytic",
-        "JS": "tarteaucitron.user.analyticsUa = 'ptac_ua-xxxxxxxx-x';                tarteaucitron.user.analyticsAnonymizeIp = true;\n(tarteaucitron.job = tarteaucitron.job || []).push('analytics');",
+        "JS": "tarteaucitron.user.analyticsUa = 'ptac_ua-xxxxxxxx-x';\n(tarteaucitron.job = tarteaucitron.job || []).push('analytics');",
         "HTML": ""
     },
     "atinternet": {
         "hasModele": false,
         "params": [
-            "ptac_smarttag_js_link"
+            "ptac_smarttag_js_link",
+            "ptac_senddata",
+            "ptac_nofallback"
         ],
         "type": "analytic",
-        "JS": "tarteaucitron.user.atLibUrl = 'ptac_smarttag_js_link';\n(tarteaucitron.job = tarteaucitron.job || []).push('atinternet');",
+        "JS": "tarteaucitron.user.atLibUrl = 'ptac_smarttag_js_link';\ntarteaucitron.user.atinternetSendData = 'ptac_senddata';tarteaucitron.user.atNoFallback = 'ptac_nofallback';\n(tarteaucitron.job = tarteaucitron.job || []).push('atinternet');",
         "HTML": ""
     },
     "clarity": {
@@ -661,19 +692,26 @@
     "firebase": {
         "hasModele": false,
         "params": [
-            "ptac_apikey"
+            "ptac_apikey",
+            "ptac_authdomain",
+            "ptac_databaseurl",
+            "ptac_projectid",
+            "ptac_storagebucket",
+            "ptac_appid",
+            "ptac_measurementid"
         ],
         "type": "analytic",
-        "JS": "tarteaucitron.user.firebaseApiKey = 'ptac_apikey';\n(tarteaucitron.job = tarteaucitron.job || []).push('firebase');",
+        "JS": "tarteaucitron.user.firebaseApiKey = 'ptac_apikey';\ntarteaucitron.user.firebaseAuthDomain = 'ptac_authdomain';tarteaucitron.user.firebaseDatabaseUrl = 'ptac_databaseurl';tarteaucitron.user.firebaseProjectId = 'ptac_projectid';tarteaucitron.user.firebaseStorageBucket = 'ptac_storagebucket';tarteaucitron.user.firebaseAppId = 'ptac_appid';tarteaucitron.user.firebaseMeasurementId = 'ptac_measurementid';\n(tarteaucitron.job = tarteaucitron.job || []).push('firebase');",
         "HTML": ""
     },
     "force24": {
         "hasModele": false,
         "params": [
-            "ptac_trackingid"
+            "ptac_trackingid",
+            "ptac_clientid"
         ],
         "type": "analytic",
-        "JS": "tarteaucitron.user.force24trackingId = 'ptac_trackingid';\n(tarteaucitron.job = tarteaucitron.job || []).push('force24');",
+        "JS": "tarteaucitron.user.force24trackingId = 'ptac_trackingid';\ntarteaucitron.user.force24clientId = 'ptac_clientid';\n(tarteaucitron.job = tarteaucitron.job || []).push('force24');",
         "HTML": ""
     },
     "freshsalescrm": {
@@ -723,18 +761,22 @@
     },
     "hotjar": {
         "hasModele": false,
-        "params": [],
+        "params": [
+            "ptac_hotjarid",
+            "ptac_hotjarsv"
+        ],
         "type": "analytic",
-        "JS": "\n(tarteaucitron.job = tarteaucitron.job || []).push('hotjar');",
+        "JS": "tarteaucitron.user.hotjarId = 'ptac_hotjarid';tarteaucitron.user.HotjarSv = 'ptac_hotjarsv';\n(tarteaucitron.job = tarteaucitron.job || []).push('hotjar');",
         "HTML": ""
     },
     "hubspot": {
         "hasModele": false,
         "params": [
-            "ptac_api_key"
+            "ptac_api_key",
+            "ptac_unit_id"
         ],
         "type": "analytic",
-        "JS": "tarteaucitron.user.hubspotId = 'ptac_api_key';\n(tarteaucitron.job = tarteaucitron.job || []).push('hubspot');",
+        "JS": "tarteaucitron.user.hubspotId = 'ptac_api_key';\ntarteaucitron.user.hubspotBusinessUnitId = 'ptac_unit_id';\n(tarteaucitron.job = tarteaucitron.job || []).push('hubspot');",
         "HTML": ""
     },
     "kameleoon": {
@@ -749,10 +791,11 @@
     "koban": {
         "hasModele": false,
         "params": [
-            "ptac_koban_url"
+            "ptac_koban_url",
+            "ptac_koban_api"
         ],
         "type": "analytic",
-        "JS": "tarteaucitron.user.kobanurl = 'ptac_koban_url';\n(tarteaucitron.job = tarteaucitron.job || []).push('koban');",
+        "JS": "tarteaucitron.user.kobanurl = 'ptac_koban_url';\ntarteaucitron.user.kobanapi = 'ptac_koban_api';\n(tarteaucitron.job = tarteaucitron.job || []).push('koban');",
         "HTML": ""
     },
     "kompass": {
@@ -776,19 +819,24 @@
     "matomo": {
         "hasModele": false,
         "params": [
-            "ptac_site_id"
+            "ptac_site_id",
+            "ptac_your_matomo_url"
         ],
         "type": "analytic",
-        "JS": "tarteaucitron.user.matomoId = 'ptac_site_id';\n(tarteaucitron.job = tarteaucitron.job || []).push('matomo');",
+        "JS": "tarteaucitron.user.matomoId = 'ptac_site_id';\ntarteaucitron.user.matomoHost = 'ptac_your_matomo_url';\n(tarteaucitron.job = tarteaucitron.job || []).push('matomo');",
         "HTML": ""
     },
     "matomocloud": {
         "hasModele": false,
         "params": [
-            "ptac_site_id"
+            "ptac_site_id",
+            "ptac_your_matomo_url",
+            "ptac_js_path",
+            "ptac_donttrackpageview",
+            "ptac_fulltracking"
         ],
         "type": "analytic",
-        "JS": "tarteaucitron.user.matomoId = 'ptac_site_id';\n(tarteaucitron.job = tarteaucitron.job || []).push('matomocloud');",
+        "JS": "tarteaucitron.user.matomoId = 'ptac_site_id';\ntarteaucitron.user.matomoHost = 'ptac_your_matomo_url';tarteaucitron.user.matomoCustomJSPath = 'ptac_js_path';tarteaucitron.user.matomoDontTrackPageView = 'ptac_donttrackpageview';tarteaucitron.user.matomoFullTracking = 'ptac_fulltracking';\n(tarteaucitron.job = tarteaucitron.job || []).push('matomocloud');",
         "HTML": ""
     },
     "matomoheatmap": {
@@ -827,9 +875,13 @@
     },
     "microsoftcampaignanalytics": {
         "hasModele": false,
-        "params": [],
+        "params": [
+            "ptac_uuid",
+            "ptac_domainid",
+            "ptac_actionid"
+        ],
         "type": "analytic",
-        "JS": "\n(tarteaucitron.job = tarteaucitron.job || []).push('microsoftcampaignanalytics');",
+        "JS": "tarteaucitron.user.microsoftcampaignanalyticsUUID = 'ptac_uuid';tarteaucitron.user.microsoftcampaignanalyticsdomaineId = 'ptac_domainid';tarteaucitron.user.microsoftcampaignanalyticsactionId = 'ptac_actionid';\n(tarteaucitron.job = tarteaucitron.job || []).push('microsoftcampaignanalytics');",
         "HTML": ""
     },
     "mixpanel": {
@@ -851,37 +903,42 @@
     "openwebanalytics": {
         "hasModele": false,
         "params": [
-            "ptac_host"
+            "ptac_host",
+            "ptac_site_id"
         ],
         "type": "analytic",
-        "JS": "tarteaucitron.user.openwebanalyticsHost = 'ptac_host';\n(tarteaucitron.job = tarteaucitron.job || []).push('openwebanalytics');",
+        "JS": "tarteaucitron.user.openwebanalyticsHost = 'ptac_host';\ntarteaucitron.user.openwebanalyticsId = 'ptac_site_id';\n(tarteaucitron.job = tarteaucitron.job || []).push('openwebanalytics');",
         "HTML": ""
     },
     "pardot": {
         "hasModele": false,
         "params": [
-            "ptac_piaid"
+            "ptac_piaid",
+            "ptac_picid"
         ],
         "type": "analytic",
-        "JS": "tarteaucitron.user.piAId = 'ptac_piaid';\n(tarteaucitron.job = tarteaucitron.job || []).push('pardot');",
+        "JS": "tarteaucitron.user.piAId = 'ptac_piaid';\ntarteaucitron.user.piCId = 'ptac_picid';\n(tarteaucitron.job = tarteaucitron.job || []).push('pardot');",
         "HTML": ""
     },
     "pianoanalytics": {
         "hasModele": false,
         "params": [
-            "ptac_siteid"
+            "ptac_siteid",
+            "ptac_collectdomain",
+            "ptac_senddata"
         ],
         "type": "analytic",
-        "JS": "tarteaucitron.user.pianoSite = 'ptac_siteid';\n(tarteaucitron.job = tarteaucitron.job || []).push('pianoanalytics');",
+        "JS": "tarteaucitron.user.pianoSite = 'ptac_siteid';\ntarteaucitron.user.pianoCollectDomain = 'ptac_collectdomain';tarteaucitron.user.pianoSendData = 'ptac_senddata';\n(tarteaucitron.job = tarteaucitron.job || []).push('pianoanalytics');",
         "HTML": ""
     },
     "piwikpro": {
         "hasModele": false,
         "params": [
-            "ptac_id"
+            "ptac_id",
+            "ptac_container"
         ],
         "type": "analytic",
-        "JS": "tarteaucitron.user.piwikProId = 'ptac_id';\n(tarteaucitron.job = tarteaucitron.job || []).push('piwikpro');",
+        "JS": "tarteaucitron.user.piwikProId = 'ptac_id';\ntarteaucitron.user.piwikProContainer = 'ptac_container';\n(tarteaucitron.job = tarteaucitron.job || []).push('piwikpro');",
         "HTML": ""
     },
     "plausible": {
@@ -896,19 +953,21 @@
     "plezi": {
         "hasModele": false,
         "params": [
-            "ptac_plezitenant"
+            "ptac_plezitenant",
+            "ptac_plezitw"
         ],
         "type": "analytic",
-        "JS": "tarteaucitron.user.pleziTenant = 'ptac_plezitenant';\n(tarteaucitron.job = tarteaucitron.job || []).push('plezi');",
+        "JS": "tarteaucitron.user.pleziTenant = 'ptac_plezitenant';\ntarteaucitron.user.pleziTw = 'ptac_plezitw';\n(tarteaucitron.job = tarteaucitron.job || []).push('plezi');",
         "HTML": ""
     },
     "sharpspring": {
         "hasModele": false,
         "params": [
-            "ptac_account"
+            "ptac_account",
+            "ptac_id"
         ],
         "type": "analytic",
-        "JS": "tarteaucitron.user.ssAccount = 'ptac_account';\n(tarteaucitron.job = tarteaucitron.job || []).push('sharpspring');",
+        "JS": "tarteaucitron.user.ssAccount = 'ptac_account';\ntarteaucitron.user.ssId = 'ptac_id';\n(tarteaucitron.job = tarteaucitron.job || []).push('sharpspring');",
         "HTML": ""
     },
     "shinystat": {
@@ -930,10 +989,11 @@
     "snapchat": {
         "hasModele": false,
         "params": [
-            "ptac_snapchatid"
+            "ptac_snapchatid",
+            "ptac_snapchatemail"
         ],
         "type": "analytic",
-        "JS": "tarteaucitron.user.snapchatId = 'ptac_snapchatid';\n(tarteaucitron.job = tarteaucitron.job || []).push('snapchat');",
+        "JS": "tarteaucitron.user.snapchatId = 'ptac_snapchatid';\ntarteaucitron.user.snapchatEmail = 'ptac_snapchatemail';\n(tarteaucitron.job = tarteaucitron.job || []).push('snapchat');",
         "HTML": ""
     },
     "statcounter": {
@@ -946,10 +1006,11 @@
     "teambrain": {
         "hasModele": false,
         "params": [
-            "ptac_url"
+            "ptac_url",
+            "ptac_proxy"
         ],
         "type": "analytic",
-        "JS": "tarteaucitron.user.teambrainUrl = 'ptac_url';\n(tarteaucitron.job = tarteaucitron.job || []).push('teambrain');",
+        "JS": "tarteaucitron.user.teambrainUrl = 'ptac_url';\ntarteaucitron.user.teambrainProxyUrl = 'ptac_proxy';\n(tarteaucitron.job = tarteaucitron.job || []).push('teambrain');",
         "HTML": ""
     },
     "tiktok": {
@@ -964,10 +1025,11 @@
     "usercom": {
         "hasModele": false,
         "params": [
-            "ptac_id"
+            "ptac_id",
+            "ptac_apikey"
         ],
         "type": "analytic",
-        "JS": "tarteaucitron.user.userId = 'ptac_id';\n(tarteaucitron.job = tarteaucitron.job || []).push('usercom');",
+        "JS": "tarteaucitron.user.userId = 'ptac_id';\ntarteaucitron.user.userApiKey = 'ptac_apikey';\n(tarteaucitron.job = tarteaucitron.job || []).push('usercom');",
         "HTML": ""
     },
     "userpilot": {
@@ -982,19 +1044,21 @@
     "verizondottag": {
         "hasModele": false,
         "params": [
-            "ptac_verizon_project_id"
+            "ptac_verizon_project_id",
+            "ptac_verizon_pixel_id"
         ],
         "type": "analytic",
-        "JS": "tarteaucitron.user.verizondottagProjectId = 'ptac_verizon_project_id';\n(tarteaucitron.job = tarteaucitron.job || []).push('verizondottag');",
+        "JS": "tarteaucitron.user.verizondottagProjectId = 'ptac_verizon_project_id';\ntarteaucitron.user.verizondottagPixelId = 'ptac_verizon_pixel_id';\n(tarteaucitron.job = tarteaucitron.job || []).push('verizondottag');",
         "HTML": ""
     },
     "visiblee": {
         "hasModele": false,
         "params": [
-            "ptac_clientid"
+            "ptac_clientid",
+            "ptac_domain_com"
         ],
         "type": "analytic",
-        "JS": "tarteaucitron.user.visibleeclientid = 'ptac_clientid';\n(tarteaucitron.job = tarteaucitron.job || []).push('visiblee');",
+        "JS": "tarteaucitron.user.visibleeclientid = 'ptac_clientid';\ntarteaucitron.user.visibleedomain = 'ptac_domain_com';\n(tarteaucitron.job = tarteaucitron.job || []).push('visiblee');",
         "HTML": ""
     },
     "visualrevenue": {
@@ -1033,9 +1097,18 @@
     },
     "wysistat": {
         "hasModele": false,
-        "params": [],
+        "params": [
+            "ptac_nom",
+            "ptac_frame",
+            "ptac_prm",
+            "ptac_compteurextranet",
+            "ptac_page",
+            "ptac_roi",
+            "ptac_profiling",
+            "ptac_compte"
+        ],
         "type": "analytic",
-        "JS": "\n(tarteaucitron.job = tarteaucitron.job || []).push('wysistat');",
+        "JS": "tarteaucitron.user.wysistat = {\"cli\": \"ptac_nom\", \"frm\": \"ptac_frame\", \"prm\": \"ptac_prm\", \"ce\": \"ptac_compteurextranet\", \"page\": \"ptac_page\", \"roi\": \"ptac_roi\", \"prof\": \"ptac_profiling\", \"cpt\": \"ptac_compte\"};\n(tarteaucitron.job = tarteaucitron.job || []).push('wysistat');",
         "HTML": ""
     },
     "wysistathightrack": {
@@ -1059,10 +1132,11 @@
     "zohopagesense": {
         "hasModele": false,
         "params": [
-            "ptac_id"
+            "ptac_id",
+            "ptac_hash"
         ],
         "type": "analytic",
-        "JS": "tarteaucitron.user.zohoPageSenseProjectId = 'ptac_id';\n(tarteaucitron.job = tarteaucitron.job || []).push('zohopagesense');",
+        "JS": "tarteaucitron.user.zohoPageSenseProjectId = 'ptac_id';\ntarteaucitron.user.zohoPageSenseScriptHash = 'ptac_hash';\n(tarteaucitron.job = tarteaucitron.job || []).push('zohopagesense');",
         "HTML": ""
     },
     "abtasty": {
@@ -1086,10 +1160,11 @@
     "dynatrace": {
         "hasModele": true,
         "params": [
-            "ptac_path"
+            "ptac_path",
+            "ptac_config"
         ],
         "type": "api",
-        "JS": "tarteaucitron.user.dynatraceJSPath = 'ptac_path';\n(tarteaucitron.job = tarteaucitron.job || []).push('dynatrace');",
+        "JS": "tarteaucitron.user.dynatraceJSPath = 'ptac_path';\ntarteaucitron.user.dynatraceConfig = 'ptac_config';\n(tarteaucitron.job = tarteaucitron.job || []).push('dynatrace');",
         "HTML": ""
     },
     "genially": {
@@ -1127,6 +1202,8 @@
         "hasModele": true,
         "params": [
             "ptac_api_key",
+            "ptac_callback_function",
+            "ptac_libraries",
             "ptac_zoom",
             "ptac_latitude",
             "ptac_longitude",
@@ -1134,7 +1211,7 @@
             "ptac_height"
         ],
         "type": "api",
-        "JS": "tarteaucitron.user.googlemapsKey = 'ptac_api_key';\n(tarteaucitron.job = tarteaucitron.job || []).push('googlemaps');",
+        "JS": "tarteaucitron.user.googlemapsKey = 'ptac_api_key';\ntarteaucitron.user.mapscallback = 'ptac_callback_function';tarteaucitron.user.googlemapsLibraries = 'ptac_libraries';\n(tarteaucitron.job = tarteaucitron.job || []).push('googlemaps');",
         "HTML": "<div class=\"googlemaps-canvas\" data-zoom=\"ptac_zoom\" data-latitude=\"ptac_latitude\" data-longitude=\"ptac_longitude\" style=\"width: ptac_widthpx; height: ptac_heightpx;\"><\/div>"
     },
     "googlemapssearch": {
@@ -1564,10 +1641,11 @@
     "posthog": {
         "hasModele": true,
         "params": [
-            "ptac_apikey"
+            "ptac_apikey",
+            "ptac_host"
         ],
         "type": "other",
-        "JS": "tarteaucitron.user.posthogApiKey = 'ptac_apikey';\n(tarteaucitron.job = tarteaucitron.job || []).push('posthog');",
+        "JS": "tarteaucitron.user.posthogApiKey = 'ptac_apikey';\ntarteaucitron.user.posthogHost = 'ptac_host';\n(tarteaucitron.job = tarteaucitron.job || []).push('posthog');",
         "HTML": ""
     },
     "robofabrica": {
@@ -1620,7 +1698,7 @@
             "ptac_hash"
         ],
         "type": "other",
-        "JS": "tarteaucitron.user.ubibId = 'ptac_id';\n(tarteaucitron.job = tarteaucitron.job || []).push('ubib');",
+        "JS": "tarteaucitron.user.ubibId = 'ptac_id';\ntarteaucitron.user.ubibHash = 'ptac_hash';\n(tarteaucitron.job = tarteaucitron.job || []).push('ubib');",
         "HTML": "<div id=\"libchat_ptac_hash\"><\/div>"
     },
     "addthis": {
@@ -1878,10 +1956,11 @@
     "pipedrive": {
         "hasModele": false,
         "params": [
-            "ptac_companyid"
+            "ptac_companyid",
+            "ptac_playbookuuid"
         ],
         "type": "support",
-        "JS": "tarteaucitron.user.pipedriveCompany = 'ptac_companyid';\n(tarteaucitron.job = tarteaucitron.job || []).push('pipedrive');",
+        "JS": "tarteaucitron.user.pipedriveCompany = 'ptac_companyid';\ntarteaucitron.user.pipedriveCompany = 'ptac_playbookuuid';\n(tarteaucitron.job = tarteaucitron.job || []).push('pipedrive');",
         "HTML": ""
     },
     "purechat": {
@@ -1896,10 +1975,11 @@
     "screeb": {
         "hasModele": false,
         "params": [
-            "ptac_id"
+            "ptac_id",
+            "ptac_dontinit"
         ],
         "type": "support",
-        "JS": "tarteaucitron.user.screebId = 'ptac_id';\n(tarteaucitron.job = tarteaucitron.job || []).push('screeb');",
+        "JS": "tarteaucitron.user.screebId = 'ptac_id';\ntarteaucitron.user.screebDontInit = 'ptac_dontinit';\n(tarteaucitron.job = tarteaucitron.job || []).push('screeb');",
         "HTML": ""
     },
     "smartsupp": {
@@ -1923,10 +2003,11 @@
     "tawkto": {
         "hasModele": false,
         "params": [
-            "ptac_id"
+            "ptac_id",
+            "ptac_widgetid"
         ],
         "type": "support",
-        "JS": "tarteaucitron.user.tawktoId = 'ptac_id';\n(tarteaucitron.job = tarteaucitron.job || []).push('tawkto');",
+        "JS": "tarteaucitron.user.tawktoId = 'ptac_id';\ntarteaucitron.user.tawktoWidgetId = 'ptac_widgetid';\n(tarteaucitron.job = tarteaucitron.job || []).push('tawkto');",
         "HTML": ""
     },
     "tolkaigenii": {
