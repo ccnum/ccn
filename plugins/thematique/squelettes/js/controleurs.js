@@ -709,6 +709,7 @@ function callRessourceRubrique(id_rubrique, type_objet) {
 
 function callArticleEvenement(id_objet, type_objet) {
 	if (!Number.isInteger(Number(id_objet))) return;
+	if (!['article', 'syndic_article'].includes(type_objet)) return;
 	changeTimelineMode('evenements');
 	setFullscreenModeToCols(false);
 	updateMenuIcon(['evenements'], 'mainView');

@@ -59,9 +59,8 @@ function Projet() {
 			this.liste_y_evenements.push(parseFloat(liste_y_evenements[i]));
 		}
 
-		if (data.image_fond.length > 1) {
-			const safeUrl = data.image_fond.replace(/\\/g, '\\\\').replace(/"/g, '\\"');
-			this.timeline_parent.css({ 'background-image': 'url("' + safeUrl + '")' });
+		if (data.image_fond.length > 1 && /^[\w.\/\-]+$/.test(data.image_fond)) {
+			this.timeline_parent.css({ 'background-image': 'url("' + encodeURI(data.image_fond) + '")' });
 		}
 
 		// Urls
