@@ -245,7 +245,12 @@ body.mobile {
 	position: relative;
 	overflow: auto;
 	width: 968px;
+	scrollbar-width: thin;
+	scrollbar-color: #ff6b6b transparent;
 }
+.global-content::-webkit-scrollbar { width: 6px; }
+.global-content::-webkit-scrollbar-track { background: transparent; }
+.global-content::-webkit-scrollbar-thumb { background-color: #ff6b6b; border-radius: 3px; }
 
 .content {
 	width: 960px;
