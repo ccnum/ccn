@@ -12,6 +12,7 @@ sites
 squelettes-dist
 tmp
 /vendor
+CHANGELOG.md
 composer.*
 index.php
 LICENSE

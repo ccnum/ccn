@@ -1,5 +1,21 @@
 # Changelog
 
+## 4.4.15 - 2026-05-22
+
+- Mise à jour des dépendances (ecrire, dump)
+
+## 4.4.14 - 2026-05-12
+
+- Mise à jour des dépendances (ecrire, prive, aide, archiviste, bigup, compagnon, dump, images, medias, revisions, safehtml, sites, statistiques, svp)
+
+## 4.4.13 - 2026-03-06
+
+- Mise à jour des dépendances (ecrire) -- Compatibilité PHP 7.4
+
+## 4.4.12 - 2026-03-06
+
+- Mise à jour des dépendances (ecrire, prive, compresseur, revisions, urls)
+
 ## 4.4.11 - 2026-02-27
 
 - Mise à jour des dépendances (ecrire, prive, tw)
