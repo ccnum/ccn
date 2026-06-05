@@ -59,7 +59,7 @@ function Projet() {
 			this.liste_y_evenements.push(parseFloat(liste_y_evenements[i]));
 		}
 
-		if (data.image_fond.length > 1 && /^[\w.\/\-]+$/.test(data.image_fond)) {
+		if (data.image_fond && !data.image_fond.includes('..') && !/^https?:\/\//i.test(data.image_fond)) {
 			this.timeline_parent.css({ 'background-image': 'url("' + encodeURI(data.image_fond) + '")' });
 		}
 

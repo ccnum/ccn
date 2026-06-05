@@ -129,8 +129,7 @@ function Consigne() {
 		);
 
 		if (CCN.admin == 0) {
-			// Mémorise le left% initial
-			const leftPercent = this.x / CCN.projet.nombre_jours * 100;
+			const leftPercent = CCN.projet.nombre_jours > 0 ? this.x / CCN.projet.nombre_jours * 100 : 0;
 
 			this.div_base.draggable({
 				axis: "y",
