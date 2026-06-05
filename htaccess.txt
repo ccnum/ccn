@@ -112,14 +112,13 @@ RewriteRule ^[^\.]+(\.html)?$		spip.php [QSA,E=url_propre:$0,L]
 # Fichiers "standards" (si absents de la racine)
 #
 RewriteRule ^robots[.]txt$      spip.php?page=robots.txt [QSA,L]
-RewriteRule ^favicon\.ico$ favicon.php [QSA,L]
+RewriteRule ^favicon[.]ico$      spip.php?page=favicon.ico [QSA,L]
 RewriteRule ^sitemap[.]xml$      spip.php?page=sitemap.xml [QSA,L]
 ##
 
 # Favicon pour itrucs
 # Si vous avez le plugin filtres_images et qu'une méthode de retouche a été configurée, vous pouvez décommenter la ligne ci-dessous.
 #RewriteRule ^apple-touch-icon(-(\d+x\d+))?(-precomposed)?[.]png$	spip.php?page=apple-touch-icon.png&size=$2 [QSA,L]
-
 
 
 <IfModule mod_expires.c>
