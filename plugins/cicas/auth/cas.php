@@ -12,6 +12,16 @@ if (!defined('_ECRIRE_INC_VERSION')) {
 }
 
 /**
+ * Point d'entrée requis par charger_fonction('cas', 'auth').
+ * Sans cette fonction, charger_fonction() retourne false et auth_administrer()
+ * court-circuite avant même de chercher auth_cas_modifier_pass().
+ * L'authentification CAS se fait via SSO, pas par login/pass — on retourne [].
+ */
+function auth_cas_dist($login, $pass = '', $serveur = '', $phpauth = false, $fichier_cles = ''): array {
+	return [];
+}
+
+/**
  * Modifier le mot de passe d'un auteur dont la source est 'cas'.
  *
  * Les comptes CAS peuvent avoir un mot de passe SPIP de secours (champ pass non vide).
