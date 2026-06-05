@@ -1235,7 +1235,12 @@ a:hover.spip_out {
 	font-family: Arial, Helvetica, sans-serif;
 	color: #FFF;
 	background-color: #AAB0B7;
+	scrollbar-width: thin;
+	scrollbar-color: #FFF transparent;
 }
+#forum::-webkit-scrollbar { width: 6px; }
+#forum::-webkit-scrollbar-track { background: transparent; }
+#forum::-webkit-scrollbar-thumb { background-color: #FFF; border-radius: 3px; }
 
 #forum-lecture {
 	position: relative;
