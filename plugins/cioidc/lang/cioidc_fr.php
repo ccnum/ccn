@@ -1,8 +1,5 @@
 <?php
-
-// This is a SPIP language file  --  Ceci est un fichier langue de SPIP
-
-$GLOBALS[$GLOBALS['idx_lang']] = [
+return [
 	'avertissement' => '<b>ATTENTION</b> : Il est imp&eacute;ratif de s&eacute;lectionner en premier (ci-dessous) le mode d\'authentification intitul&eacute; <b>"OpenID Connect ou SPIP"</b> afin de v&eacute;rifier, sans risque, le bon fonctionnement de l\'authentification. Une fois cette v&eacute;rification effectu&eacute;e on pourra alors s&eacute;lectionner (ci-dessous) le mode d\'authentification intitul&eacute; "OpenID Connect".',
 	'cioidc_titre' => 'Configurer OpenID Connect',
 	'cioidc_menu_config' => 'OpenID Connect',

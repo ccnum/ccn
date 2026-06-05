@@ -20,7 +20,7 @@ function cioidc_recuperer_fond($flux) {
 		// ajout d'une securite anti BOT (via la constante _CIOIDC_ANTI_BOT)
 		include_spip('inc/cioidc_commun');
 		cioidc_charger_fichier_parametrage();
-		
+
 		if (defined('_CIOIDC_ANTI_BOT') && _CIOIDC_ANTI_BOT == 'oui' && _IS_BOT) {
 			include_spip('inc/headers');
 			redirige_par_entete(generer_url_public('404'));
@@ -46,13 +46,23 @@ function cioidc_recuperer_fond($flux) {
 							$titre = '<h2 class="cioidc_h2">' . cioidc_titre_se_connecter() . '</h2>';
 
 							$lien = parametre_url($self, 'cioidc', 'oui');
-							$replace = '<li>' . cioidc_html_lien_serveur($lien, $config_oidc['url_serveur'], $config_oidc['nom_serveur'], 'cioidc_lien_serveur') . '</li>';
+							$replace = '<li>' . cioidc_html_lien_serveur(
+								$lien,
+								$config_oidc['url_serveur'],
+								$config_oidc['nom_serveur'],
+								'cioidc_lien_serveur'
+							) . '</li>';
 
 							// serveurs additionnels
 							$serveurs = cioidc_lire_serveurs_additionnels();
 							foreach ($serveurs as $id_serveur => $serveur) {
 								$lien = parametre_url($self, 'cioidc', intval($id_serveur));
-								$replace .= '<li><p class="cioidc_ou">ou</p>' . cioidc_html_lien_serveur($lien, $serveur['url_serveur'], $serveur['nom_serveur'], 'cioidc_lien_serveur') . '</li>';
+								$replace .= '<li><p class="cioidc_ou">ou</p>' . cioidc_html_lien_serveur(
+									$lien,
+									$serveur['url_serveur'],
+									$serveur['nom_serveur'],
+									'cioidc_lien_serveur'
+								) . '</li>';
 							}
 
 							$replace = '<div class="cioidc_choix_serveur">' . $titre . '<ul class="cioidc_choix_serveur_liste">' . $replace . '</ul></div>';
@@ -81,22 +91,42 @@ function cioidc_recuperer_fond($flux) {
 						// ajout du lien vers l'authentification CIOIDC
 						if (cioidc_nombre_serveurs_additionnels() >= 1) {
 							$lien = parametre_url($self, 'cioidc', 'oui');
-							$replace .= '<li>' . cioidc_html_lien_serveur($lien, $config_oidc['url_serveur'], $config_oidc['nom_serveur'], 'cioidc_lien_serveur') . '</li>';
+							$replace .= '<li>' . cioidc_html_lien_serveur(
+								$lien,
+								$config_oidc['url_serveur'],
+								$config_oidc['nom_serveur'],
+								'cioidc_lien_serveur'
+							) . '</li>';
 
 							// serveurs additionnels
 							$serveurs = cioidc_lire_serveurs_additionnels();
 							foreach ($serveurs as $id_serveur => $serveur) {
 								$lien = parametre_url($self, 'cioidc', intval($id_serveur));
-								$replace .= '<li><p class="cioidc_ou">ou</p>' . cioidc_html_lien_serveur($lien, $serveur['url_serveur'], $serveur['nom_serveur'], 'cioidc_lien_serveur') . '</li>';
+								$replace .= '<li><p class="cioidc_ou">ou</p>' . cioidc_html_lien_serveur(
+									$lien,
+									$serveur['url_serveur'],
+									$serveur['nom_serveur'],
+									'cioidc_lien_serveur'
+								) . '</li>';
 							}
 						} else {
 							$lien = parametre_url($self, 'cioidc', 'oui');
-							$replace .= '<li>' . cioidc_html_lien_serveur($lien, $config_oidc['url_serveur'], $config_oidc['nom_serveur'], 'cioidc_lien_serveur') . '</li>';
+							$replace .= '<li>' . cioidc_html_lien_serveur(
+								$lien,
+								$config_oidc['url_serveur'],
+								$config_oidc['nom_serveur'],
+								'cioidc_lien_serveur'
+							) . '</li>';
 						}
 
 						$lien = parametre_url($self, 'cioidc', 'spip');
 						$intitule_auth_spip = cioidc_nom_serveur_spip();
-						$replace .= '<li><p class="cioidc_ou">ou</p>' . cioidc_html_lien_serveur($lien, '', $intitule_auth_spip, 'cioidc_lien_serveur') . '</li>';
+						$replace .= '<li><p class="cioidc_ou">ou</p>' . cioidc_html_lien_serveur(
+							$lien,
+							'',
+							$intitule_auth_spip,
+							'cioidc_lien_serveur'
+						) . '</li>';
 
 						$titre = '<h2 class="cioidc_h2">' . cioidc_titre_se_connecter() . '</h2>';
 						$replace = '<div class="cioidc_choix_serveur">' . $titre . '<ul class="cioidc_choix_serveur_liste">' . $replace . '</ul></div>';
@@ -113,21 +143,20 @@ function cioidc_recuperer_fond($flux) {
 /**
  * Anti hack
  *
- * @param array $tableau
  * @return array
  */
 function cioidc_pre_edition($flux) {
 
 	if (
-			isset($flux['args']['action'])
-			&& $flux['args']['action'] == 'modifier'
-			&& isset($flux['args']['table']) && $flux['args']['table'] == 'spip_auteurs'
+		isset($flux['args']['action'])
+		&& $flux['args']['action'] == 'modifier'
+		&& isset($flux['args']['table']) && $flux['args']['table'] == 'spip_auteurs'
 	) {
 		include_spip('inc/cioidc_commun');
 		cioidc_charger_fichier_parametrage();
-		
+
 		if (defined('_CIOIDC_ANTI_HACK') && _CIOIDC_ANTI_HACK == 'oui' && !defined('_DIR_PLUGIN_CICAS')) {
-		// on ne doit pas pouvoir remplacer l'identifiant SSO (email ou login) d'un autre auteur avec son propre identifiant SSO (email ou login)
+			// on ne doit pas pouvoir remplacer l'identifiant SSO (email ou login) d'un autre auteur avec son propre identifiant SSO (email ou login)
 			$id_auteur = intval($flux['args']['id_objet']);
 			if ($id_auteur > 0) {
 				include_spip('inc/texte');
@@ -283,7 +312,9 @@ function cioidc_ecrire_memo($id_auteur, $id_sso, $cioidc_uid = 'email') {
 		$option_fopen = 'ab';
 
 		// supprimer le fichier s'il est trop gros
-		$taille_max = ( (defined('_CIOIDC_TAILLE_MAX') && intval(_CIOIDC_TAILLE_MAX) > 0) ? intval(_CIOIDC_TAILLE_MAX) : 150); // en Ko
+		$taille_max = ((defined('_CIOIDC_TAILLE_MAX') && intval(_CIOIDC_TAILLE_MAX) > 0) ? intval(
+			_CIOIDC_TAILLE_MAX
+		) : 150); // en Ko
 		if (@file_exists($fichier) && @filesize($fichier) > ($taille_max * 1024)) {
 			$option_fopen = 'w';
 		}
@@ -348,7 +379,9 @@ function cioidc_fichier_memo() {
 
 	$memo_nom = 'cioidc_memo';
 	$memo_suffix = '.txt';
-	$memo_dir = ((defined('_DIR_LOG') && defined('_DIR_PLUGIN_CIMS')) ? _DIR_LOG : _DIR_RACINE . _NOM_TEMPORAIRES_INACCESSIBLES);
+	$memo_dir = ((defined('_DIR_LOG') && defined(
+		'_DIR_PLUGIN_CIMS'
+	)) ? _DIR_LOG : _DIR_RACINE . _NOM_TEMPORAIRES_INACCESSIBLES);
 	if (defined('_DIR_PLUGIN_CIMS') && function_exists($f_racine = 'cims_racine_dossier')) {
 		$memo_dir = $f_racine(_NOM_TEMPORAIRES_INACCESSIBLES) . _NOM_TEMPORAIRES_INACCESSIBLES;
 	}
@@ -357,8 +390,8 @@ function cioidc_fichier_memo() {
 		$repertoire = _CIOIDC_REPERTOIRE;
 		// securite
 		if (
-				(strpos($repertoire, '../') === false)
-				&& !(preg_match(',^\w+://,', $repertoire))
+			(strpos($repertoire, '../') === false)
+			&& !(preg_match(',^\w+://,', $repertoire))
 		) {
 			if (substr($repertoire, 0, 1) == '/') {
 				$repertoire = substr($repertoire, 1);
@@ -374,7 +407,7 @@ function cioidc_fichier_memo() {
 	}
 
 	$fichier_memo = $memo_dir . $memo_nom . $memo_suffix;
-	
+
 	return $fichier_memo;
 }
 
@@ -404,7 +437,10 @@ function cioidc_unicite_email($new_email, $id_auteur) {
 			$mon_domaine_mail = strtolower($mon_tableau_email[1]);
 
 			foreach ($cioidc_mail_compatible as $cle => $valeur) {
-				if (sql_countsel('spip_auteurs', "(email='" . $mon_nom_mail . '@' . $cle . "' OR email='" . $mon_nom_mail . '@' . $valeur . "') AND id_auteur<>" . $id_auteur) > 0) {
+				if (sql_countsel(
+					'spip_auteurs',
+					"(email='" . $mon_nom_mail . '@' . $cle . "' OR email='" . $mon_nom_mail . '@' . $valeur . "') AND id_auteur<>" . $id_auteur
+				) > 0) {
 					$return = false;
 					break;
 				}
@@ -423,21 +459,23 @@ function cioidc_unicite_email($new_email, $id_auteur) {
  */
 function cioidc_formulaire_verifier($flux) {
 	// Remarque : id_auteur figure dans $flux['args']['args'][0]
-	if ($GLOBALS['spip_version_branche'] >= 4 && !defined('_DIR_PLUGIN_CICAS')) {
+	if (!defined('_DIR_PLUGIN_CICAS')) {
 		if (
-				isset($flux['args']['form'])
-				&& $flux['args']['form'] == 'editer_auteur'
-				&& isset($flux['args']['args'][0])
-				&& $flux['args']['args'][0]
+			isset($flux['args']['form'])
+			&& $flux['args']['form'] == 'editer_auteur'
+			&& isset($flux['args']['args'][0])
+			&& $flux['args']['args'][0]
 		) {
 			if (
-					isset($GLOBALS['visiteur_session']['id_auteur'])
-					&& $GLOBALS['visiteur_session']['id_auteur'] == $flux['args']['args'][0]
-					&& isset($GLOBALS['visiteur_session']['statut'])
+				isset($GLOBALS['visiteur_session']['id_auteur'])
+				&& $GLOBALS['visiteur_session']['id_auteur'] == $flux['args']['args'][0]
+				&& isset($GLOBALS['visiteur_session']['statut'])
 			) {
 				if (
-						$GLOBALS['visiteur_session']['statut'] == '1comite'
-						|| ($GLOBALS['visiteur_session']['statut'] == '0minirezo' && liste_rubriques_auteur($GLOBALS['visiteur_session']['id_auteur']))
+					$GLOBALS['visiteur_session']['statut'] == '1comite'
+					|| ($GLOBALS['visiteur_session']['statut'] == '0minirezo' && liste_rubriques_auteur(
+						$GLOBALS['visiteur_session']['id_auteur']
+					))
 				) {
 					// email modifié ?
 					$old_email = '';
@@ -453,9 +491,9 @@ function cioidc_formulaire_verifier($flux) {
 						$tableau_config = cioidc_lire_meta(0, false, true);
 
 						if (
-								!isset($tableau_config['uid_champ_spip'])
-								|| $tableau_config['uid_champ_spip'] == ''
-								|| $tableau_config['uid_champ_spip'] == 'email'
+							!isset($tableau_config['uid_champ_spip'])
+							|| $tableau_config['uid_champ_spip'] == ''
+							|| $tableau_config['uid_champ_spip'] == 'email'
 						) {
 							$flux['data'] = ['email' => _T('cioidc:email_non_modifiable')];
 						}
@@ -476,11 +514,7 @@ function cioidc_formulaire_verifier($flux) {
  * @return string
  */
 function cioidc_insert_head_css($flux) {
-	if ($GLOBALS['spip_version_branche'] >= 4) {
-		$css = direction_css(find_in_path('_css/cioidc2.css'), lang_dir());
-	} else {
-		$css = direction_css(find_in_path('_css/cioidc_spip3.css'), lang_dir());
-	}
+	$css = direction_css(find_in_path('_css/cioidc2.css'), lang_dir());
 	$flux .= '<link rel="stylesheet" href="' . $css . '" type="text/css" />';
 	return $flux;
 }

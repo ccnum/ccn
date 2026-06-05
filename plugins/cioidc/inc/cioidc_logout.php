@@ -20,11 +20,12 @@ if (!defined('_ECRIRE_INC_VERSION')) {
 	return;
 }
 
-
 // include the class autoloader
 require_once __DIR__ . '/../vendor/autoload.php';
 
 use Jumbojett\OpenIDConnectClient;
+
+use Spip\Afficher\Minipage\Admin as MinipageAdmin;    
 
 include_spip('inc/cioidc_commun');
 include_spip('inc/cookie');
@@ -38,17 +39,16 @@ include_spip('inc/cookie');
  * Déconnecte l'utilisateur en cours et le redirige sur l'URL indiquée par
  * l'argument de l'action sécurisée, et sinon sur la page d'accueil
  * de l'espace public.
- *
  */
 function action_logout_dist() {
 	$logout = _request('logout');
 	$url = securiser_redirect_action(_request('url'));
 
-//------- Debut ajout CI -----
+	//------- Debut ajout CI -----
 	// cas particulier, logout dans l'espace public
-//	if ($logout == 'public' and !$url) {
-//		$url = url_de_base();
-//	}
+	//	if ($logout == 'public' and !$url) {
+	//		$url = url_de_base();
+	//	}
 	// configuration OIDC
 
 	$ci_id_serveur_auth = 0;
@@ -71,13 +71,13 @@ function action_logout_dist() {
 			$ciauthoidc = true;
 		}
 	}
-//------- Fin ajout CI -----
+	//------- Fin ajout CI -----
 	// seul le loge peut se deloger (mais id_auteur peut valoir 0 apres une restauration avortee)
 	if (
-			isset($GLOBALS['visiteur_session']['id_auteur'])
-			&& is_numeric($GLOBALS['visiteur_session']['id_auteur'])
-			// des sessions anonymes avec id_auteur=0 existent, mais elle n'ont pas de statut : double check
-			&& isset($GLOBALS['visiteur_session']['statut'])
+		isset($GLOBALS['visiteur_session']['id_auteur'])
+		&& is_numeric($GLOBALS['visiteur_session']['id_auteur'])
+		// des sessions anonymes avec id_auteur=0 existent, mais elle n'ont pas de statut : double check
+		&& isset($GLOBALS['visiteur_session']['statut'])
 	) {
 		// il faut un jeton pour fermer la session (eviter les CSRF)
 		if (
@@ -88,13 +88,16 @@ function action_logout_dist() {
 			$action = generer_url_action('logout', "jeton=$jeton");
 			$action = parametre_url($action, 'logout', _request('logout'));
 			$action = parametre_url($action, 'url', _request('url'));
-			include_spip('inc/minipres');
 			include_spip('inc/filtres');
 			$texte = bouton_action(_T('spip:icone_deconnecter'), $action);
 			$texte = "<div class='boutons'>$texte</div>";
 			$texte .= '<script type="text/javascript">document.write("<style>body{visibility:hidden;}</style>");window.document.forms[0].submit();</script>';
-			$res = minipres(_T('spip:icone_deconnecter'), $texte, ['all_inline' => true]);
-			echo $res;
+
+                        $minipage = new MinipageAdmin();
+                        echo $minipage->page(
+                                $texte,
+                                ['titre' => _T('spip:icone_deconnecter')]
+                        );
 
 			return;
 		}
@@ -105,19 +108,14 @@ function action_logout_dist() {
 		if (isset($_COOKIE['spip_session'])) {
 			$session = charger_fonction('session', 'inc');
 			$session($GLOBALS['visiteur_session']['id_auteur']);
-			// SPIP 3.2 n'accepte pas un tableau pour les options dans spip_setcookie
-			if ($GLOBALS['spip_version_branche'] >= 4.2) {
-				spip_setcookie('spip_session', $_COOKIE['spip_session'], [
-					'expires' => time() - 3600,
-					'httponly' => true,
-				]);
-			} else {
-				spip_setcookie('spip_session', $_COOKIE['spip_session'], time() - 3600);
-			}
+                        spip_setcookie('spip_session', $_COOKIE['spip_session'], [
+                                'expires' => time() - 3600,
+                                'httponly' => true,
+                        ]);
 		}
 
-//------- Debut ajout CI -----
-//
+		//------- Debut ajout CI -----
+		//
 		// si authentification http, et que la personne est loge,
 		// pour se deconnecter, il faut proposer un nouveau formulaire de connexion http
 		/*
@@ -137,32 +135,21 @@ function action_logout_dist() {
 		  }
 		 */
 
-
 		if ($ciauthoidc) {
 			include_spip('inc/cioidc_commun');
 
 			// Enlever les cookies
 			if (isset($_COOKIE['cioidc_sso'])) {
-				// SPIP 3.2 n'accepte pas l'option 'httponly'
-				if ($GLOBALS['spip_version_branche'] >= 4.2) {
-					spip_setcookie('cioidc_sso', '', [
-						'expires' => time() - 3600,
-						'httponly' => true,
-					]);
-				} else {
-					spip_setcookie('cioidc_sso', '', time() - 3600);
-				}
+                                spip_setcookie('cioidc_sso', '', [
+                                        'expires' => time() - 3600,
+                                        'httponly' => true,
+                                ]);
 			}
 			if (isset($_COOKIE['cioidc_choix'])) {
-				// SPIP 3.2 n'accepte pas l'option 'httponly'
-				if ($GLOBALS['spip_version_branche'] >= 4.2) {
-					spip_setcookie('cioidc_choix', '', [
-						'expires' => time() - 3600,
-						'httponly' => true,
-					]);
-				} else {
-					spip_setcookie('cioidc_choix', '', time() - 3600);
-				}
+                                spip_setcookie('cioidc_choix', '', [
+                                        'expires' => time() - 3600,
+                                        'httponly' => true,
+                                ]);
 			}
 
 			// Determiner l'url retour
@@ -205,38 +192,30 @@ function action_logout_dist() {
 				if (isset($GLOBALS['visiteur_session']['cioidc_id_token'])) {
 					try {
 						$oidc->signOut($GLOBALS['visiteur_session']['cioidc_id_token'], $ci_url_retour);
-					} catch(Exception $e){
+					} catch (Exception $e) {
 						spip_log($e, _LOG_ERREUR);
 
 						$ciredirect = generer_url_public('cioidc_erreur4');
 						include_spip('inc/headers');
 						redirige_par_entete($ciredirect);
-					}					
+					}
 				}
 			}
 		}
-//------- Fin ajout CI -----
+		//------- Fin ajout CI -----
 	}
 
-//------- Debut ajout CI -----
+	//------- Debut ajout CI -----
 	if (!$ciauthoidc) {
-//------- Fin ajout CI -----
+	//------- Fin ajout CI -----
 		// Rediriger en contrant le cache navigateur (Safari3)
 		include_spip('inc/headers');
-//------- Debut ajout CI -----
-		if ($GLOBALS['spip_version_branche'] >= 4.2) {
-//------- Fin ajout CI -----
-			redirige_par_entete($url
-			? parametre_url($url, 'var_hasard', uniqid(random_int(0, mt_getrandmax())), '&')
-			: generer_url_public('login'));
-//------- Debut ajout CI -----
-		} else {
-			redirige_par_entete($url ? parametre_url($url, 'var_hasard', uniqid(rand()), '&') : generer_url_public('login'));
-		}
-//------- Fin ajout CI -----
-//------- Debut ajout CI -----
+                redirige_par_entete($url
+                ? parametre_url($url, 'var_hasard', uniqid(random_int(0, mt_getrandmax())), '&')
+                : generer_url_public('login'));
+	//------- Debut ajout CI -----
 	}
-//------- Fin ajout CI -----
+	//------- Fin ajout CI -----
 }
 
 /**
@@ -247,15 +226,12 @@ function action_logout_dist() {
  * @return string
  */
 function generer_jeton_logout($session, $alea = null) {
-	if (is_null($alea)) {
+	if ($alea === null) {
 		include_spip('inc/acces');
 		$alea = charger_aleas();
 	}
 
-	$jeton = md5($session['date_session']
-			. $session['id_auteur']
-			. $session['statut']
-			. $alea);
+	$jeton = md5($session['date_session'] . $session['id_auteur'] . $session['statut'] . $alea);
 
 	return $jeton;
 }

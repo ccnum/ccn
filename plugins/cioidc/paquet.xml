@@ -1,9 +1,9 @@
 <paquet
 	prefix="cioidc"
 	categorie="auteur"
-	version="1.7.5"
+	version="1.8.0"
 	etat="stable"
-	compatibilite="[4.1.0;5.*]"
+	compatibilite="[4.2.0;5.*]"
 	logo="prive/themes/spip/images/pyramides-32.png"
 	documentation="https://contrib.spip.net/CIOIDC-OpenID-Connect"
 >

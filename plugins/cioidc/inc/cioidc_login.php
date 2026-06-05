@@ -7,7 +7,9 @@
  * @license GNU/GPLv3
  */
 
-if (!defined('_ECRIRE_INC_VERSION')) {
+if (!defined(
+	'_ECRIRE_INC_VERSION'
+)) {
 	return;
 }
 
@@ -30,13 +32,7 @@ use Jumbojett\OpenIDConnectClient;
 
 // memoriser l'adresse de redirection
 include_spip('inc/cookie');
-// SPIP 3.2 n'accepte pas l'option 'httponly'
-if ($GLOBALS['spip_version_branche'] >= 4.2) {
-	spip_setcookie('cioidc_redirect', cioidc_self(), ['httponly' => true]);
-} else {
-	spip_setcookie('cioidc_redirect', cioidc_self());
-}
-
+spip_setcookie('cioidc_redirect', cioidc_self(), ['httponly' => true]);
 
 // pour la solution hybride :
 // poser un cookie si l'utilisateur a cliqué sur le lien "Utiliser l'authentification centralisée"
@@ -45,25 +41,13 @@ if ($request_cioidc) {
 	if ($request_cioidc == 'oui' || intval($request_cioidc) >= 1) {
 		if (!isset($_COOKIE['cioidc_sso'])) {
 			$ci_id_random = mt_rand(1, 999999);
-
-			// SPIP 3.2 n'accepte pas l'option 'httponly'
-			if ($GLOBALS['spip_version_branche'] >= 4.2) {
-				spip_setcookie('cioidc_sso', $ci_id_random, ['httponly' => true]);
-			} else {
-				spip_setcookie('cioidc_sso', $ci_id_random);
-			}
+                        spip_setcookie('cioidc_sso', $ci_id_random, ['httponly' => true]);
 		}
 		if (!isset($_COOKIE['cioidc_choix'])) {
-			// SPIP 3.2 n'accepte pas l'option 'httponly'
-			if ($GLOBALS['spip_version_branche'] >= 4.2) {
-				spip_setcookie('cioidc_choix', intval($request_cioidc), ['httponly' => true]);
-			} else {
-				spip_setcookie('cioidc_choix', intval($request_cioidc));
-			}
+                        spip_setcookie('cioidc_choix', intval($request_cioidc), ['httponly' => true]);
 		}
 	}
 }
-
 
 // configuration OIDC
 
@@ -88,7 +72,9 @@ if ($config_oidc) {
 	);
 
 	// Well Known Config (pour éviter d'interroger à chaque fois le serveur d'authentification)
-	$well_known_config = cioidc_well_known_config($ci_id_serveur_auth);
+	$well_known_config = cioidc_well_known_config(
+		$ci_id_serveur_auth
+	);
 	if ($well_known_config) {
 		foreach ($well_known_config as $key => $value) {
 			$oidc->providerConfigParam([$key => $value]);
@@ -132,13 +118,13 @@ if ($config_oidc) {
 		// recuperer userinfo
 		$user_info = $oidc->requestUserInfo();
 		$attribute = $config_oidc['uid_claim'];
-		$ci_oidc_userid = $user_info->$attribute;
-	} catch(Exception $e){
+		$ci_oidc_userid = $user_info->{$attribute};
+	} catch (Exception $e) {
 		spip_log($e, _LOG_ERREUR);
-		
+
 		$ciredirect = generer_url_public('cioidc_erreur4');
 		include_spip('inc/headers');
 		redirige_par_entete($ciredirect);
 	}
-	
+
 }

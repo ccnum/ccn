@@ -48,7 +48,7 @@ function autoriser_configurercioidc_menu_dist($faire, $type, $id, $qui, $opt) {
 function autoriser_cioidc_configurer(string $faire, string $type, $id, array $qui, array $opt): bool {
 	if (defined('_CIOIDC_CONFIG_UNIQUEMENT_PAR_WEBMESTRE') && _CIOIDC_CONFIG_UNIQUEMENT_PAR_WEBMESTRE == 'non') {
 		return autoriser('configurer');
-	} else {
-		return autoriser('webmestre');
 	}
+	return autoriser('webmestre');
+
 }
