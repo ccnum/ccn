@@ -8,7 +8,7 @@ include_spip('action/editer_liens');
 // Pre_boucles
 // Retourne les articles et articles syndiqués en lien avec l'année scolaire
 function thematique_pre_boucle($boucle) {
-	$affichage = '_affichage';
+	$affichage = defined('_affichage') ? constant('_affichage') : null;
 
 	$annee = constant('_ANNEE_SCOLAIRE');
 	$mois = '08';
