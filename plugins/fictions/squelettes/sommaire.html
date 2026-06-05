@@ -5,7 +5,6 @@
 	<title>[(#NOM_SITE_SPIP|textebrut)]</title>
 	[<meta name="description" content="(#DESCRIPTIF_SITE_SPIP|couper{150}|textebrut)" />]
 	<INCLURE{fond=inclure/head} />
-	<script type="text/javascript" src="#CHEMIN{js/jquery.nicescroll.min.js}"></script>
 	<meta name="viewport" content="width=980" />
 </head>
 <body>
@@ -103,8 +102,6 @@ $(document).ready(function() {
  	window.onresize = resize_global_content;
 	resize_global_content();
 	// NICESCROLL
-	$(".global-content").niceScroll({cursorcolor:"#ff6b6b", cursoropacitymin:'0.2',cursoropacitymax:'1', scrollspeed:'100', cursorborder:'0px'});
-	$('#ascrail2000').css({'cursor':'pointer'});
 	//
 	function showTooltipListeLink(el) {
 		var offset = $(el).offset();
