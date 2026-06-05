@@ -7,7 +7,9 @@
  * @license GNU/GPLv3
  */
 
-if (!defined('_ECRIRE_INC_VERSION')) {
+if (!defined(
+	'_ECRIRE_INC_VERSION'
+)) {
 	return;
 }
 
@@ -16,7 +18,7 @@ include_spip('inc/cioidc_commun');
 
 function action_supprimer_serveur_oidc($id_serveur = null) {
 
-	if (is_null($id_serveur)) {
+	if ($id_serveur === null) {
 		$securiser_action = charger_fonction('securiser_action', 'inc');
 		$id_serveur = $securiser_action();
 	}
