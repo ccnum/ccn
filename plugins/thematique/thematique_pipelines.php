@@ -8,8 +8,6 @@ include_spip('action/editer_liens');
 // Pre_boucles
 // Retourne les articles et articles syndiqués en lien avec l'année scolaire
 function thematique_pre_boucle($boucle) {
-	$affichage = defined('_affichage') ? constant('_affichage') : null;
-
 	$annee = constant('_ANNEE_SCOLAIRE');
 	$mois = '08';
 	$jour = '01';
@@ -18,15 +16,9 @@ function thematique_pre_boucle($boucle) {
 	$mois2 = '08';
 	$jour2 = '01';
 
-	$date_debut = $annee . '.' . $mois . '.' . $jour;
-	$date_fin = $annee2 . '.' . $mois2 . '.' . $jour2;
-
 	if (($boucle->type_requete == 'articles') || ($boucle->type_requete == 'syndic_articles')) {
 		$date = $boucle->id_table . '.date';
-		if ((!isset($boucle->modificateur['tout'])) && (!strstr(
-			$_SERVER['REQUEST_URI'],
-			'/ecrire'
-		)) && ($affichage != 'unepage')) {
+		if ((!isset($boucle->modificateur['tout'])) && (!strstr($_SERVER['REQUEST_URI'], '/ecrire'))) {
 			$boucle->where[] = [
 				"'AND'",
 				["'>='", "'$date'", ("'\"$annee-$mois-$jour\"'")],
