@@ -1,12 +1,12 @@
 <paquet
 	prefix="tarteaucitron"
 	categorie="communication"
-	version="1.9.9"
+	version="1.9.13"
 	etat="stable"
 	compatibilite="[4.1.0;4.*]"
 	logo="prive/themes/spip/images/tarteaucitron-64.png"
 	documentation="https://contrib.spip.net/Tarteaucitron-5292"
-	schema="1.1.1"
+	schema="1.2.0"
 >
 
 	<nom>Tarteaucitron</nom>
@@ -20,6 +20,7 @@
 
 	<necessite nom="saisies" compatibilite="[3.43.2;]" />
 	<necessite nom="verifier" compatibilite="[2.0.0;]" />
+	<necessite nom="yaml" compatibilite="[3.1.2;]" />
 
 	<pipeline nom="autoriser" inclure="tarteaucitron_autorisations.php" />
 	<pipeline nom="insert_head" inclure="tarteaucitron_pipelines.php" />
