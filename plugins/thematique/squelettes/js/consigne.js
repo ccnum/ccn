@@ -92,8 +92,7 @@ function Consigne() {
 					</div>
 					<div class="nettoyeur"></div>
 				</div>
-				<div class="bouton_reponse_consigne"
-					onclick="createReponse(false,${this.id},${CCN.idRestreint},${this.numero});">
+				<div class="bouton_reponse_consigne">
 					<img src="${CCN.urlRoot}img/reponse_plus.png" alt="" title="Répondre à la consigne">
 					Répondre à la consigne
 				</div>
@@ -116,6 +115,12 @@ function Consigne() {
 		this.hauteur = this.div_base.outerHeight();
 
 		const _thisId = this.id;
+		const _thisIdRestreint = parseInt(CCN.idRestreint, 10);
+		const _thisNumero = parseInt(this.numero, 10);
+
+		this.div_reponse_plus.on('click', function () {
+			createReponse(false, _thisId, _thisIdRestreint, _thisNumero);
+		});
 
 		this.div_consigne.on(
 			'click', function () {
