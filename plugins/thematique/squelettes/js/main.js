@@ -325,6 +325,7 @@ function getDernièreConsigneHaute(){
 function post_process_DOM_after_all_consignes_created() {
 	const derniereConsigneHaute = getDernièreConsigneHaute()
 	derniereConsigneHaute.addClass("derniere-etape")
+	derniereConsigneHaute.find(".card-bg").show();
 	const cestLaDerniereConsigneDeLAnnee = false;
 	if(cestLaDerniereConsigneDeLAnnee) {
 		derniereConsigneHaute.find(".texte-etiquette").first().text("PROJETS FINAUX !");

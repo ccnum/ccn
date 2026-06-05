@@ -9,11 +9,9 @@
 		const $ulClasses = $('#menu-classes').find('ul').first();
 		let bgImage = null;
 		$ulClasses.find('li.logo a').each(function () {
-			const dataTipClassName = $(this).attr('data-tip');
+			const dataTipClassName = $(this).attr('data-tip').trim();
 			if (dataTipClassName === className) {
-				bgImage = $(this)
-					.find('.logo_menu_classe_image')
-					.css('background-image');
+				bgImage = $(this).css('background-image');
 				return false;
 			}
 		});
@@ -22,4 +20,5 @@
 		}
 		return bgImage;
 	}
+	
 </script>

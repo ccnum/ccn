@@ -19,7 +19,7 @@ function Consigne() {
 		this.titre = decodeHtmlEntities(this.data.titre);
 
 		this.nombre_reponses = this.data.nombre_reponses;
-		this.reponses_id = this.data.reponses;
+		this.reponses_id = this.data.reponses.map(Number);
 		this.nombre_commentaires = this.data.nombre_commentaires;
 		this.nombre_jours = this.data.nombre_jours;
 		this.x = this.data.nombre_jours;
@@ -51,24 +51,31 @@ function Consigne() {
 	this.initDOM = function () {
 		const coul = String(this.data.intervenant_id).slice(-1);
 		let reponses_puces = '';
-
-		for (let j = 1; j <= this.data.nombre_reponses; j++) {
-			if (j <= this.data.classes.length) {
-				const couleur = this.reponses_id[j - 1].slice(-1);
-				reponses_puces += '<div class="reponse_puce couleur_travail_en_cours' + couleur + '"></div>';
+		const reponsesTriees = [...this.reponses_id].sort();
+		this.data.classes.forEach((classe, index) => {
+			const couleurId = classe.id%10;
+			let disabled = "disabled";
+			let backgroundImage = "";
+			let couleur_travail_en_cours = ""
+			if(this.reponses_id.includes(classe.id)) {
+				backgroundImage = getClassIconByClassName(classe.nom, false);
+				disabled = ""
+				couleur_travail_en_cours = `couleur_travail_en_cours${couleurId}`
 			}
-		}
-
-		for (let j = 1; j <= this.data.classes.length - this.data.nombre_reponses; j++) {
-			reponses_puces += '<div class="reponse_puce disabled"></div>';
-		}
-
+			reponses_puces += `<div class='reponse_puce ${disabled} ${couleur_travail_en_cours} tooltip'
+									style='background-image: ${backgroundImage}'
+									data-tip='${classe.nom}'>
+								</div>`;
+		})
 		this.div_base = $(`
 			<div id="consigne_haute${this.id}"
 				 class="timeline_item consigne_haute"
 				 style="top:${this.y * 100}%; left:${this.x / CCN.projet.nombre_jours * 100}%;"
 			>
-				<img class="card-bg" src="${CCN.urlRoot}img/cards_background.svg" alt="" />
+				<img class="card-bg" 
+					 src="${CCN.urlRoot}img/cards_background.svg" 
+					 alt="" 
+					 style="display: none"/>
 				<div id="consigne${this.id}"
 					class="consigne couleur_texte_consignes couleur_consignes${coul}"
 					data-id="${this.id}"
