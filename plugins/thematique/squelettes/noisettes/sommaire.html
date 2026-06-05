@@ -64,7 +64,7 @@ et/ou
 		<div id="menu-timeline" class="bloc_view col">
 			<h3 class="menu-title"><span>Publier</span></h3>
 			<ul class="filter clearfix option-set ressource" data-filter-group="ressource">
-				[(#MODELE{logo_menu}{valeur=consignes}{class=tooltip menu_logo_consignes}{onclick=changeTimelineMode('consignes');CCN.projet.showWholeTimeline();}{title=Les missions})]
+				[(#MODELE{logo_menu}{valeur=consignes}{class=tooltip menu_logo_consignes}{onclick=changeTimelineMode('consignes');CCN.projet.showWholeTimeline();}{title=Missions})]
 
 				#SET{blog, Agenda}
 				[(#NOM_SITE_SPIP|=={novaterra.laclasse.com}|oui) #SET{blog,Le journal du capitaine et le novamag} ]
@@ -79,7 +79,7 @@ et/ou
 					[(#MODELE{logo_menu}{valeur=evenement}{class=tooltip menu_logo_evenements}{filter=.ressource_evenements}{onclick=changeTimelineMode('evenements');}{title=Le blog pédagogique})]
 				]
 
-				[(#MODELE{logo_menu}{valeur=livrable}{class=tooltip menu_logo_livrables logo_menu-cible}{filter=.ressource_livrables}{onclick=callLivrables();}{title=Les projets finis})]
+				[(#MODELE{logo_menu}{valeur=livrable}{class=tooltip menu_logo_livrables logo_menu-cible}{filter=.ressource_livrables}{onclick=callLivrables();}{title=Projets finis})]
 
 			</ul>
 		</div>
