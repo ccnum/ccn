@@ -19,6 +19,12 @@ CCN.timelineLayerConsignes;
 CCN.timelineLayerBlogs;
 CCN.timelineLayerEvenements;
 
+const CLASS_ICONS = ['🦋', '🦓', '🦊', '🐟', '🐱', '🦌', '🐝', '🦉', '🐜', '🦔'];
+
+function getClassIcon(index) {
+    return CLASS_ICONS[index % CLASS_ICONS.length];
+}
+
 function hexToR(h) {
 	return parseInt((cutHex(h)).substring(0, 2), 16)
 }

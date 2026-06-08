@@ -1,24 +1,32 @@
 <script>
-	/**
-	 * Fonction pour récupérer le backgroundImage d'une classe depuis le menu-classes en se basant sur le nom de la classe 
-	 * 
-	 * @param {string} className - Nom de la classe
-	 * @param {boolean} sliceUrl - Extraire url("")
-	 */
-	function getClassIconByClassName(className, sliceUrl) {
+	// function getClassIconNumberByClassName(className) {
+	// 	const $ulClasses = $('#menu-classes').find('ul').first();
+	// 	let icon = null;
+	// 	$ulClasses.find('li.logo a').each(function () {
+	// 		if ($(this).attr('data-tip').trim() === className) {
+	// 			// Récupère le content du ::before défini en CSS
+	// 			icon = window.getComputedStyle(this, '::before').getPropertyValue('content');
+	// 			// getComputedStyle retourne la valeur avec guillemets, ex: '"🦁"'
+	// 			icon = icon.replace(/^["']|["']$/g, '').trim();
+	// 			return false;
+	// 		}
+	// 	});
+	// 	return icon || null;
+	// }
+
+	function getClassIconNumberByClassName(className) {
 		const $ulClasses = $('#menu-classes').find('ul').first();
-		let bgImage = null;
-		$ulClasses.find('li.logo a').each(function () {
-			const dataTipClassName = $(this).attr('data-tip').trim();
-			if (dataTipClassName === className) {
-				bgImage = $(this).css('background-image');
+		let iconNumber = null;
+		$ulClasses.find('li.logo').each(function () {
+			const $a = $(this).find('a').first();
+			if ($a.attr('data-tip').trim() === className) {
+				const logo_classe_classes = $a.attr('class').split(' ').filter(c => c.startsWith('logo_classe_'));
+				if(logo_classe_classes.length == 1) {
+					iconNumber = Number(logo_classe_classes[0].split("logo_classe_")[1])
+				}
 				return false;
 			}
 		});
-		if (bgImage && sliceUrl) {
-			bgImage = bgImage.replace(/^url\(["']?|["']?\)$/g, '');
-		}
-		return bgImage;
+		return iconNumber || null;
 	}
-	
 </script>

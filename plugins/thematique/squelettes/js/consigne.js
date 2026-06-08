@@ -50,23 +50,25 @@ function Consigne() {
 	 */
 	this.initDOM = function () {
 		const coul = String(this.data.intervenant_id).slice(-1);
+		const classes_triees = [...this.data.classes].sort((c1, c2)=>c1.id-c2.id);
 		let reponses_puces = '';
-		const reponsesTriees = [...this.reponses_id].sort();
-		this.data.classes.forEach((classe, index) => {
-			const couleurId = classe.id%10;
-			let disabled = "disabled";
-			let backgroundImage = "";
-			let couleur_travail_en_cours = ""
-			if(this.reponses_id.includes(classe.id)) {
-				backgroundImage = getClassIconByClassName(classe.nom, false);
-				disabled = ""
-				couleur_travail_en_cours = `couleur_travail_en_cours${couleurId}`
+		classes_triees.forEach((classe, index) => {
+			let disabled = 'disabled';
+			let iconSpan = '';
+			if (this.reponses_id.includes(classe.id)) {
+				disabled = '';
+				iconSpan = `<span aria-hidden="true" style="font-size:min(70cqw,70cqh)" class="bgc_classe_${index}">
+					${getClassIcon(index)}
+				</span>`;
 			}
-			reponses_puces += `<div class='reponse_puce ${disabled} ${couleur_travail_en_cours} tooltip'
-									style='background-image: ${backgroundImage}'
-									data-tip='${classe.nom}'>
-								</div>`;
-		})
+
+			reponses_puces += `
+				<div class='reponse_puce ${disabled} tooltip logo'
+					data-tip='${classe.nom}'
+					style='display:flex;align-items:center;justify-content:center;container-type:size;'>
+					${iconSpan}
+				</div>`;
+		});
 		this.div_base = $(`
 			<div id="consigne_haute${this.id}"
 				 class="timeline_item consigne_haute"

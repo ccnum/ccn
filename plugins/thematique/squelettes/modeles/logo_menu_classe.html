@@ -7,6 +7,8 @@
 -style
 -onclick
 -texte
+-NUMERO
+-ICONE
 ]
 <li class="logo #CLASSCOULEUR" style="position: relative;">
     #SET{logo_url, #MODELE{logo_carre}{id_rubrique}{taille=35}|extraire_attribut{src}}
@@ -29,16 +31,11 @@
 		onClick="callClasse(#ID_RUBRIQUE);"
 		class="[(#TEXTE|=={''}|oui)[logo_menu-(#VALEUR)]] #CLASS logo_menu_classe tooltip"
         style="
-            display: block;
+            display: flex;
+            align-items: center;
+            justify-content: center;
             width: 100%;
             height: 100%;
-            padding: 8px 4px;
-            background-image: url([(#GET{logo_final})]);
-            background-size: [(#GET{logo_bg_size})];
-            background-repeat: no-repeat;
-            background-position: center;
-            background-origin: content-box;
-            background-clip: content-box;
             box-sizing: border-box;
         "
 		data-tip="
@@ -46,5 +43,8 @@
 				#TITRE
 			</BOUCLE_titre_rubrique>
 		">
+		<span aria-hidden="true" style="font-size:min(70cqw,70cqh)" class="icon bgc_classe_#ENV{NUMERO}">
+			#ENV{ICONE}
+		</span>
     </a>
 </li>

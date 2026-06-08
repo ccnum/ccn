@@ -86,7 +86,7 @@
 					<BOUCLE_filtreTravailEnCours(RUBRIQUES){id_parent} {titre_mot=travail_en_cours}{par date}{0,2}>
 						<BOUCLE_filtreIdRubriques(RUBRIQUES){id_parent} {id_rubrique == #SESSION{idRubriqueUser}} {doublons r}>
 							<div class="sidebar_bubble ressources_classes_around [(#TYPE_OBJET|=={travail_en_cours}|oui) ressources_travail_en_cours] [(#TYPE_OBJET|=={travail_en_cours}|non) ressources_no_color]">
-								<div class="[(#TYPE_OBJET|=={travail_en_cours}|oui) couleur_travail_en_cours[(#ID_RUBRIQUE|nb2col)]] ressources_classes">
+								<div class="[(#TYPE_OBJET|=={travail_en_cours}|oui) bgc_classe_[(#ID_RUBRIQUE|nb2col)]] ressources_classes">
 									<a id="ajax_rub_#ID_RUBRIQUE" href="#" class="hac ajax ressources_classe_nom">
 										<strong>#TITRE</strong>
 									</a>
@@ -199,7 +199,7 @@
 					});
 			  	</script>
 				<div class="sidebar_bubble ressources_classes_around [(#TYPE_OBJET|match{travail_en_cours}|oui) ressources_travail_en_cours] [(#TYPE_OBJET|match{travail_en_cours}|non) ressources_no_color]">
-  					<div class="[(#TYPE_OBJET|match{travail_en_cours}|oui) couleur_travail_en_cours[(#ID_RUBRIQUE|nb2col)]] ressources_classes">
+  					<div class="[(#TYPE_OBJET|match{travail_en_cours}|oui) bgc_classe_[(#ID_RUBRIQUE|nb2col)]] ressources_classes">
 						<a id="ajax_rub_#ID_RUBRIQUE" href="#" class="hac ajax ressources_classe_nom [ (#EXPOSE)][ (#GET{rub1}|=={#ID_RUBRIQUE}|?{ on })]">
 							[<strong>(#TITRE|couper{80})</strong>]
 						</a>
