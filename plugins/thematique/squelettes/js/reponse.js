@@ -54,7 +54,7 @@ function Reponse() {
 				data-reponse-id="${this.id}"
 				style="top:${this.y * 100}%; left:${this.x_absolu / CCN.projet.nombre_jours * 100}%;">
 				<div id="reponse${this.id}"
-					class="reponse couleur_texte_travail_en_cours couleur_travail_en_cours${coul}">
+					class="reponse couleur_texte_travail_en_cours bgc_classe_${coul}">
 					<div class="picto_nombre_commentaires">${this.nombre_commentaires}</div>
 					<div class="photo"><img src="${vignette}" /></div>
 					<div class="texte">
@@ -70,7 +70,7 @@ function Reponse() {
 
 		this.connecteur = $(`
 			<div id="connecteur_consigne_${this.consigne.id}_reponse_${this.id}"
-				class="connecteur_timeline couleur_travail_en_cours${coul} hide"
+				class="connecteur_timeline bgc_classe_${coul} hide"
 				data-consigne-id="${this.consigne.id}"
 				data-reponse-id="${this.id}">
 			</div>

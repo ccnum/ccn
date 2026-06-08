@@ -27,25 +27,33 @@
 				$(function () {
 					const $bloc = $(`#ajax_go_to_reponse_${#ID_ARTICLE}`);
 					if (!$bloc.length) return;
+
 					const className = $bloc.find('.classe_consigne_reponse_classe').text().trim();
-					if (className) {
-						// const $img = $fiche.find('.photo img');
-						const classIcon = getClassIconByClassName(className, false);
-						if (classIcon) {
-							$bloc
-							.find('.classe_consigne_reponse_photo')
-							.css({
-								'background-image': classIcon,
-								'background-size': '100% auto',
-								'background-repeat': 'no-repeat',
-								'background-position': 'center',
-							})
-							.empty();
-						}
-						const classColor = getClassColorByClassName(className);
-						if (classColor) {
-							$bloc.addClass(classColor);
-						}
+					if (!className) return;
+
+					const classIcon = getClassIconNumberByClassName(className);
+					if (classIcon) {
+						$bloc.find('.classe_consigne_reponse_photo')
+							.empty()
+							.append(
+								$('<span>')
+									.attr('aria-hidden', 'true')
+									.css({
+										'display': 'flex',
+										'align-items': 'center',
+										'justify-content': 'center',
+										'width': '100%',
+										'height': '100%',
+										'font-size': '24px',
+										'line-height': '1',
+									})
+									.text(classIcon)
+							);
+					}
+
+					const classColor = getClassColorByClassName(className);
+					if (classColor) {
+						$bloc.addClass(classColor);
 					}
 				});
 			</script>
