@@ -4121,6 +4121,10 @@ ul#forum, .lien_forum {
 	transform: translateX(0);
 }
 
+.hasSidebarOpen #sidebarExpand {
+	display: block;
+}
+
 .hasSidebarExpanded #sidebar {
 	width: calc(100% - 175px);
 	z-index: 100000;
@@ -4165,6 +4169,7 @@ ul#forum, .lien_forum {
 	}
 }
 #sidebarExpand {
+	display: none;
 	position: absolute;
 	left: -40px;
 	top: 1px;
