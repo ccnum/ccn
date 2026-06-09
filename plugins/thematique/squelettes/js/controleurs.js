@@ -233,25 +233,25 @@ function setContentFromState(state) {
 function onResize() {
 	$('#crayons-surcharge-styles').text('.crayon-active.markItUpEditor { height: ' + (parseInt($(window).height()) - 228) + 'px !important; } .resizehandle { display:none !important; }');
 }
-/**
- * Affiche ou réduit l'affichage plein écran des sidebars.
- */
+
+function expandSidebar() {
+    if ($('body').hasClass('hasSidebarExpanded')) return; // déjà ouvert
+    
+    $('body').addClass('hasSidebarExpanded');
+}
+
+function collapseSidebar() {
+    if (!$('body').hasClass('hasSidebarExpanded')) return; // déjà fermé
+    
+    $('body').removeClass('hasSidebarExpanded');
+}
+
 function toggleSidebarExpand() {
-	if ($('body').hasClass('hasSidebarExpanded')) {
-		$('body').removeClass('hasSidebarExpanded');
-
-		if ($('body').hasClass('hadSidebarLateralVisible')) {
-			$('body').removeClass('hadSidebarLateralVisible');
-			showSidebarLateral();
-		}
-	} else {
-		$('body').addClass('hasSidebarExpanded');
-
-		if ($('body').hasClass('hasSidebarLateralVisible')) {
-			$('body').addClass('hadSidebarLateralVisible');
-		}
-		hideSidebarLateral();
-	}
+    if ($('body').hasClass('hasSidebarExpanded')) {
+        collapseSidebar();
+    } else {
+        expandSidebar();
+    }
 }
 
 /**
@@ -435,7 +435,6 @@ function callReponse(id_reponse) {
 	const url = CCN.projet.url_popup_reponse + "&id_article=" + id_reponse;
 
 	showConsigneInTimeline(id_consigne);
-
 	loadContentInMainSidebar(
 		url, 'article', 'travail_en_cours', function () {
 			updateUrl(
@@ -449,8 +448,6 @@ function callReponse(id_reponse) {
 		}
 	);
 	const url_travail_en_cours = 'spip.php?page=rubrique&mode=detail&id_rubrique=' + CCN.travailEnCoursId;
-
-	loadContentInLateralSidebar(url_travail_en_cours, 'rubrique', 'travail_en_cours');
 
 	showReponseInTimeline(id_reponse);
 
@@ -494,7 +491,6 @@ function callClasse(id_classe) {
 	);
 
 	const url_travail_en_cours = 'spip.php?page=rubrique&mode=detail&id_rubrique=' + CCN.travailEnCoursId;
-	loadContentInLateralSidebar(url_travail_en_cours, 'rubrique', 'travail_en_cours');
 }
 /**
  * Appelle le chargement des classes
@@ -512,7 +508,6 @@ function callClasses() {
 	blankMainSidebar('travail_en_cours');
 
 	const url_travail_en_cours = 'spip.php?page=rubrique&mode=detail&id_rubrique=' + CCN.travailEnCoursId;
-	loadContentInLateralSidebar(url_travail_en_cours, 'rubrique', 'travail_en_cours');
 }
 
 /**
@@ -531,10 +526,6 @@ function callLivrables() {
 	setFullscreenModeToCols(true);
 
 	const url_lateral = CCN.projet.url_popup_livrables;
-	loadContentInLateralSidebar(
-		url_lateral, 'rubrique', 'livrables', function () {
-		}
-	);
 }
 /**
  * Appelle le chargement de l'article de blog
@@ -594,10 +585,6 @@ function callRessource() {
 	setFullscreenModeToCols(true);
 
 	const url_lateral = CCN.projet.url_popup_ressources;
-	loadContentInLateralSidebar(
-		url_lateral, 'rubrique', 'ressources', function () {
-		}
-	);
 }
 
 /**
@@ -750,10 +737,6 @@ function callAgora() {
 	setFullscreenModeToCols(true);
 
 	const url_lateral = CCN.projet.url_popup_agora;
-	loadContentInLateralSidebar(
-		url_lateral, 'rubrique', 'agora', function () {
-		}
-	);
 
 }
 
@@ -939,7 +922,6 @@ function reload(url) {
 function loadContentInMainSidebar(url, typePage, typeObjet, callback) {
 	$('body').addClass('loading');
 	showSidebar();
-	hideSidebarLateral();
 	emptyMainSidebar();
 
 	$('#sidebar_main_inner').load(url, function (response, status, xhr) {
@@ -962,36 +944,6 @@ function loadContentInMainSidebar(url, typePage, typeObjet, callback) {
 
 		antifloodHashChange = false;
 	});
-}
-
-/**
- * Charge l'URL dans la sidebar secondaire.
- *
- * @param {string} url - URL de la page à charger avec AJAX
- * @param {string} typePage - Type du contenu SPIP : <tt>article</tt>, <tt>rubrique</tt>…
- * @param {string} typeObjet - Type de l'objet principal de la page : <tt>consignes</tt>, <tt>travail_en_cours</tt>, <tt>blogs</tt>, <tt>evenements</tt>, <tt>ressources</tt>, <tt>classes</tt>…
- *
- * @see loadContentInMainSidebar
- *
- * @todo Loading et son callback
- */
-
-function loadContentInLateralSidebar(url, typePage, typeObjet, callback) {
-	$('body').addClass('loading');
-	showSidebar();
-	showSidebarLateral();
-	//emptyLateralSidebar();
-
-	$('#sidebar_lateral_inner').load(
-		url, function (response, status, xhr) {
-			$('body').removeClass('loading');
-			$('#sidebar_content').scrollTop(0);
-			if (callback) {
-				callback(response);
-			}
-			antifloodHashChange = false;
-		}
-	);
 }
 
 /**
@@ -1024,15 +976,6 @@ function emptyMainSidebar() {
 }
 
 /**
- * Vide la sidebar latérale.
- *
- * @see loadContentInLateralSidebar
- */
-function emptyLateralSidebar() {
-	$('#sidebar_lateral_inner').html('<div class="popup"><div class="sidebar_bubble sidebar_bubble_empty"></div></div>');
-}
-
-/**
  * Définit l'affichage plein écran de/des sidebars
  */
 
@@ -1060,24 +1003,6 @@ const _blankMainSidebarTemplates = {
 function blankMainSidebar(key) {
 	const html = _blankMainSidebarTemplates[key] || '';
 	$('#sidebar_main_inner').html('<div class="popup popup_blank">' + html + '</div>');
-}
-
-/**
- * Affiche la sidebar secondaire.
- *
- * @see loadContentInLateralSidebar
- */
-function showSidebarLateral() {
-	$('body').addClass('hasSidebarLateralVisible');
-}
-
-/**
- * Masque la sidebar secondaire.
- *
- * @see loadContentInLateralSidebar
- */
-function hideSidebarLateral() {
-	$('body').removeClass('hasSidebarLateralVisible');
 }
 
 /**

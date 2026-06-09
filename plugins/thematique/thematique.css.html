@@ -2226,8 +2226,12 @@ div.donnees_classe {
 
 
 #sidebar_main_around {
+	flex: 1;
+	min-width: 0;
 	z-index: 1;
 	margin-top: 0;
+	transition: width 500ms ease-in-out;
+	width: 100%;
 }
 
 .timeline_item.article_blog_container {
@@ -2939,41 +2943,6 @@ div.donnees_classe {
 	font-size: 11px;
 }
 
-
-#sidebar_lateral {
-	width: 100%;
-	position: relative;
-	font-size: 13px;
-	top: 0;
-	right: -100%;
-	padding: 0;
-	box-sizing: border-box;
-	overflow: auto;
-	transition: right 500ms ease-in-out, width 500ms ease-in-out;
-	z-index: 10000000;
-}
-
-.hasSidebarLateralVisible #sidebar_lateral {
-	right: 0px;
-}
-
-.hasSidebarLateralVisible #sidebar_main {
-	overflow: hidden;
-	height: auto;
-	min-height: 0px;
-	position: absolute;
-	right: 0;
-	bottom: 0;
-	opacity: .2;
-	/* width: calc(100% - 7px); */
-}
-
-#sidebar_lateral .ressources_header_titre {
-	font-size: 22px;
-	color: var(--color-default);
-	margin: 5px 0 25px 0;
-}
-
 #sidebar_main {
 	width: 100%;
 	font-size: 13px;
@@ -2981,11 +2950,6 @@ div.donnees_classe {
 	transition: opacity 500ms ease;
 	position: relative;
 	top: 0;
-}
-
-#sidebar_main_around {
-	transition: width 500ms ease-in-out;
-	width: 100%;
 }
 
 .hasSidebarExpanded .call_sidebar_main {
@@ -3009,38 +2973,6 @@ div.donnees_classe {
 
 .sidebar_lateral_around_hide {
 	width: 0 !important;
-}
-
-#sidebar_lateral_around {
-	transition: all 300ms ease;
-	width: 30%;
-}
-
-.modeCols.hasSidebarOpen.hasSidebarExpanded #sidebar_lateral_around {
-    max-height: calc(100vh - 90px - (54px*2));
-    height: fit-content;
-}
-
-.modeFullscreen.hasSidebarOpen.hasSidebarExpanded #sidebar_lateral_around {
-    max-height: calc(100vh - 90px - (54px*2));
-    height: fit-content;
-	display: none;
-}
-
-.modeCols.hasSidebarOpen #sidebar_lateral_around {
-    position: absolute;
-    right: 0;
-}
-
-.modeFullscreen.hasSidebarOpen #sidebar_lateral_around {
-    position: absolute;
-    right: 0;
-}
-
-.hasSidebarExpanded #sidebar_lateral {
-	right: 0;
-	width: 100%;
-	max-height: calc(100vh - 90px - (54px*2));
 }
 
 #loading_feedback {
@@ -3197,9 +3129,6 @@ a.liens_forum:hover { }
 }
 
 /* --- Menu --- */
-#sidebar_lateral .ui-state-active {
-	color: #999;
-}
 
 .popup_consigne .formulaire_formidable .submit {display: none;}
 .popup_consigne .formulaire_formidable textarea { color: white; }
