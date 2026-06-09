@@ -52,7 +52,6 @@
 							$('#menug li a.selected').removeClass('selected');
 							$('#ajax_rub_#ID_RUBRIQUE').addClass('selected');
 							$('#sidebar_main').load('[(#URL_ARTICLE|parametre_url{mode,ajax-detail}|html_entity_decode)]', {limit: 25}, function(){
-								hideSidebarLateral();
 								$('div#sidebar_main').removeClass('chargement');
 								$('#sidebar_main').show('slow');
 							});
@@ -139,7 +138,6 @@
 								$('#ajax_rub_#ID_RUBRIQUE').addClass('selected');
 								$('#sidebar_main').load('[(#URL_PAGE{article}|parametre_url{id_article,#ID_ARTICLE}|parametre_url{mode,ajax-detail}|html_entity_decode)]', {limit: 25},
 								function(){
-									hideSidebarLateral();
 									addCloseModal();
 									$('div#sidebar_main').removeClass('chargement');
 									$('#sidebar_main').show('slow');
@@ -153,7 +151,6 @@
 					<script>
 						(function () {
 							const $mainFiche = $('#sidebar_main_inner .fiche_titre').first();
-							const $sidebarFiche = $('#sidebar_lateral .fiche_titre').first();
 
 							if (!$mainFiche.length || !$sidebarFiche.length) return;
 
@@ -162,14 +159,10 @@
 								.find(c => c.startsWith('couleur_travail_en_cours'));
 
 							if (mainFicheClasse) {
-								$sidebarFiche.addClass(mainFicheClasse);
 								$('.rubrique_ul').first().addClass('ressources_rubrique').find('li a').css('color', 'black');
 							}
 
 							const src = $mainFiche.find('.photo img').attr('src');
-							if (src) {
-								$sidebarFiche.find('.photo img').attr('src', src);
-							}
 						})();
 					</script>
 					</ul>
@@ -345,7 +338,6 @@
 										$('#ajax_rub_#ID_SYNDIC').addClass('selected');
 										$('div#sidebar_main').addClass('chargement');
 										$('#sidebar_main').load('[(#URL_PAGE{syndic_article}|parametre_url{id_syndic_article,#ID_SYNDIC_ARTICLE}|parametre_url{mode,ajax-detail}|html_entity_decode)]', {limit: 25}, function(){
-											hideSidebarLateral();
 											$('div#sidebar_main').removeClass('chargement');
 											$('#sidebar_main').show('slow');
 										});
@@ -360,7 +352,6 @@
 										$('#ajax_rub_#ID_SYNDIC').addClass('selected');
 										$('div#sidebar_main').addClass('chargement');
 										$('#sidebar_main').load('[(#URL_PAGE{syndic_article}|parametre_url{id_syndic_article,#ID_SYNDIC_ARTICLE}|parametre_url{mode,ajax-detail}|html_entity_decode)]', {limit: 25}, function(){
-											hideSidebarLateral();
 											$('div#sidebar_main').removeClass('chargement');
 											$('#sidebar_main').show('slow');
 										});
