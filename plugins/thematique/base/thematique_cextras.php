@@ -4,7 +4,7 @@ if (!defined('_ECRIRE_INC_VERSION')) {
 	return;
 }
 
-function th_declarer_champs_extras($champs = []) {
+function thematique_declarer_champs_extras($champs = []) {
 	$champs['spip_auteurs']['ent'] = [
 		'saisie' => 'input', //Type du champ (voir plugin Saisies)
 		'options' => [
