@@ -4,7 +4,7 @@ if (!defined('_ECRIRE_INC_VERSION')) {
 	return;
 }
 
-function th_declarer_tables_principales($tables_principales) {
+function thematique_declarer_tables_principales($tables_principales) {
 
 	//-- Ajout des champs extras ----------------------------------
 	$tables_principales['spip_articles']['field']['id_consigne'] = 'bigint(21) NOT NULL';
@@ -33,7 +33,7 @@ function th_declarer_tables_principales($tables_principales) {
 	return $tables_principales;
 }
 
-function th_declarer_tables_interfaces($interface) {
+function thematique_declarer_tables_interfaces($interface) {
 
 	return $interface;
 }
