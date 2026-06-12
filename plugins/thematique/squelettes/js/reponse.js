@@ -47,6 +47,9 @@ function Reponse() {
 			? `plugins/thematique/squelettes/img/logo_classe_${(parseInt(coul)%10)+1}.png`
 			: this.data.vignette;
 
+
+		const classeIndex = this.data.classes.findIndex(c=> this.classe_id == c.id)
+
 		this.div_base = $(`
 			<div id="reponse_haute${this.id}"
 				class="timeline_item reponse_haute reponse_haute_consigne_parent${this.consigne.id} hide"
@@ -56,7 +59,13 @@ function Reponse() {
 				<div id="reponse${this.id}"
 					class="reponse couleur_texte_travail_en_cours bgc_classe_${coul}">
 					<div class="picto_nombre_commentaires">${this.nombre_commentaires}</div>
-					<div class="photo"><img src="${vignette}" /></div>
+					<div class='logo photo'
+						 style='display:flex;align-items:center;justify-content:center;container-type:size;'
+					>
+						<span aria-hidden="true" style="font-size:min(70cqw,70cqh)" class="bgc_classe_${classeIndex}">
+							${getClassIcon(classeIndex)}
+						</span>
+					</div>
 					<div class="texte">
 						<div class="titre">${escHtml(this.titre)}</div>
 						<div class="auteur_date">${escHtml(this.nom_classe)} - ${date_texte}</div>
