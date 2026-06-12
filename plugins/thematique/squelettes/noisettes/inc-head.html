@@ -9,9 +9,9 @@
 <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 #INSERT_HEAD
 [(#REM) Favicon forcée pour tous les navigateurs]
-<link rel="icon" type="image/svg+xml" href="[(#CHEMIN{img/pictos_sites/[(#NOM_SITE_SPIP|replace{' ',''}|strtolower)].svg})]" />
-<link rel="shortcut icon" type="image/svg+xml" href="[(#CHEMIN{img/pictos_sites/[(#NOM_SITE_SPIP|replace{' ',''}|strtolower)].svg})]" />
-<link rel="apple-touch-icon" href="[(#CHEMIN{img/pictos_sites/[(#NOM_SITE_SPIP|replace{' ',''}|strtolower)].svg})]" />
+<link rel="icon" type="image/svg+xml" href="[(#CHEMIN{img/pictos_sites/[(#NOM_SITE_SPIP|replace{' ',''}|strtolower)].svg}|timestamp)]" />
+<link rel="shortcut icon" type="image/svg+xml" href="[(#CHEMIN{img/pictos_sites/[(#NOM_SITE_SPIP|replace{' ',''}|strtolower)].svg}|timestamp)]" />
+<link rel="apple-touch-icon" href="[(#CHEMIN{img/pictos_sites/[(#NOM_SITE_SPIP|replace{' ',''}|strtolower)].svg}|timestamp)]" />
 <INCLURE{fond=noisettes/js/getClassIconByClassName.script}></INCLURE>
 [(#REM) Feuilles de style spécifiques à la page sommaire]
 [(#PAGE|=={sommaire}|oui)
