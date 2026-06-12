@@ -11,4 +11,5 @@
 	<licence>GNU/GPL</licence>
 	<pipeline nom="formulaire_verifier" inclure="ccn_pipelines.php" />
 	<pipeline nom="recuperer_fond" inclure="ccn_pipelines.php" />
+	<pipeline nom="formulaire_charger" inclure="ccn_pipelines.php" />
 </paquet>

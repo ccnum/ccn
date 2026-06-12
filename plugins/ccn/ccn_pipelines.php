@@ -112,8 +112,28 @@ function ccn_formulaire_verifier($flux) {
 		return $flux;
 	}
 
+	// Détecter si PHP a rejeté le fichier en amont (trop lourd)
+	$errors = (array) ($_FILES['fichier_upload']['error'] ?? []);
+	foreach ($errors as $err) {
+		if (in_array($err, [UPLOAD_ERR_INI_SIZE, UPLOAD_ERR_FORM_SIZE])) {
+				$erreurs['message_erreur'] = 'Le fichier dépasse la taille maximale autorisée (100 Mo).';
+				$flux['data'] = $erreurs;
+				return $flux;
+		}
+	}
+
 	if (empty($_FILES['fichier_upload']['name'])) {
-		return $flux;
+			return $flux;
+	}
+
+	// Vérifier la taille (100 Mo max)
+	$taille_max = 100 * 1024 * 1024;
+	foreach ((array) $_FILES['fichier_upload']['size'] as $taille) {
+		if ($taille > $taille_max) {
+				$erreurs['message_erreur'] = 'Le fichier dépasse la taille maximale autorisée (100 Mo).';
+				$flux['data'] = $erreurs;
+				return $flux;
+		}
 	}
 
 	$formats = trim($GLOBALS['meta']['formats_documents_forum'] ?? '');
@@ -132,4 +152,19 @@ function ccn_formulaire_verifier($flux) {
 
 	$flux['data'] = $erreurs;
 	return $flux;
+}
+
+function ccn_formulaire_charger($flux) {
+    if ($flux['args'][0] !== 'forum') {
+        return $flux;
+    }
+    
+    $max = 100 * 1024 * 1024;
+    $content_length = intval($_SERVER['CONTENT_LENGTH'] ?? 0);
+    
+    if ($content_length > $max) {
+        $flux['data']['message_erreur'] = 'Le fichier dépasse la taille maximale autorisée (100 Mo).';
+    }
+    
+    return $flux;
 }
