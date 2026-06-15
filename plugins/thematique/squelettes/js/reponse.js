@@ -24,13 +24,8 @@ function Reponse() {
 		this.x_absolu = this.data.nombre_jours + this.consigne.x; // Le bloc réponse est relatif à la position x de la consigne
 		this.y = this.data.y;
 		this.index = this.data.index;
-		this.nom_classe = '';
-
-		for (let k = 0; k < this.data.classes.length; ++k) {
-			if (this.classe_id == this.data.classes[k].id) {
-				this.nom_classe = this.data.classes[k].nom;
-			}
-		}
+		this.classeIndex = this.data.classes.findIndex(c => this.classe_id == c.id);
+		this.nom_classe = this.data.classes[this.classeIndex]?.nom ?? '';
 
 		this.initDOM();
 	}
@@ -42,13 +37,6 @@ function Reponse() {
 		const coul = String(this.classe_id).slice(-1);
 
 		const date_texte = this.date.substring(0, 2) + " " + CCN.nomMois[parseFloat(this.date.substring(3, 5)) - 1];
-
-		const vignette = this.data.vignette.includes('logo_rvb_bleu') 
-			? `plugins/thematique/squelettes/img/logo_classe_${(parseInt(coul)%10)+1}.png`
-			: this.data.vignette;
-
-
-		const classeIndex = this.data.classes.findIndex(c=> this.classe_id == c.id)
 
 		this.div_base = $(`
 			<div id="reponse_haute${this.id}"
@@ -62,8 +50,8 @@ function Reponse() {
 					<div class='logo photo'
 						 style='display:flex;align-items:center;justify-content:center;container-type:size;'
 					>
-						<span aria-hidden="true" style="font-size:min(70cqw,70cqh)" class="bgc_classe_${classeIndex}">
-							${getClassIcon(classeIndex)}
+						<span aria-hidden="true" style="font-size:min(70cqw,70cqh)" class="bgc_classe_${this.classeIndex}">
+							${getClassIcon(this.classeIndex)}
 						</span>
 					</div>
 					<div class="texte">

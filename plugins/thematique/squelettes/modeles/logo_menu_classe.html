@@ -29,21 +29,13 @@
 		[data-filter-value="(#FILTER)"] 
 		[data-option-value="(#OPTION)"]
 		onClick="callClasse(#ID_RUBRIQUE);"
-		class="[(#TEXTE|=={''}|oui)[logo_menu-(#VALEUR)]] #CLASS logo_menu_classe tooltip"
-        style="
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            width: 100%;
-            height: 100%;
-            box-sizing: border-box;
-        "
+		class="[(#TEXTE|=={''}|oui)[logo_menu-(#VALEUR)]] #CLASS logo_menu_classe tooltip bgc_classe_#ENV{NUMERO}"
 		data-tip="
 			<BOUCLE_titre_rubrique(RUBRIQUES){id_rubrique}{tous}>
 				#TITRE
 			</BOUCLE_titre_rubrique>
 		">
-		<span aria-hidden="true" style="font-size:min(70cqw,70cqh)" class="icon bgc_classe_#ENV{NUMERO}">
+		<span aria-hidden="true" style="font-size:min(70cqw,70cqh)">
 			#ENV{ICONE}
 		</span>
     </a>
