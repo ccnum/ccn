@@ -252,8 +252,6 @@ body {
 
 /* --------- Blocs --------- */
 #global {
-	display: grid;
-  	grid-template-rows: auto 1fr auto;
 	min-height: 100vh;
 	width: 100%;
 }
@@ -264,7 +262,6 @@ body {
 	position: relative;
 	margin: 0px;
 	float: left;
-	margin: 0.3% 1% 0 1%;
 }
 
 #zone_classe {
@@ -287,7 +284,7 @@ body {
 	width: 100%;
 	background-color: white;
 	z-index: 4100;
-	position: fixed;
+	position: relative;
 	height: var(--header-height);
 	display: flex;
 	font-size: 16px;
@@ -344,9 +341,6 @@ body {
 	overflow-y: auto;
 }
 
-.bloc_view {
-	background-color: white;
-}
 #menu_haut_titre .select:hover .first_label .icon {
 	background-color: var(--color-default);
 }
@@ -524,14 +518,9 @@ body {
 }
 
 #menu_bas {
-    position: fixed;
-    bottom: 0;
-    left: 0;
-	width: calc(100vw - 10px - 10px);
 	height: var(--footer-height);
     display: flex;
     gap: 1.5rem;
-	padding: 10px;
     background: white;
     align-items: center;
     z-index: 999;
@@ -544,13 +533,10 @@ body {
 	}
 }
 
-.bloc_view {
-	height: 58px;
-	line-height: 12px;
-	> h3 {
-		white-space: nowrap;
-	}
+.bloc_view > h3 {
+	white-space: nowrap;
 }
+
 
 .logo_menu_classe_image {
 	width: 100%;
@@ -896,7 +882,12 @@ a:hover {
 
 /* Zone-menu */
 
-.zone-menu li, .zone-menu form {
+.zone-menu li {
+	padding-top: 3px;
+	padding-bottom: 3px;
+}
+
+.zone-menu form {
 	float: left;
 	display: block;
 	height: 40px;
@@ -928,7 +919,6 @@ a:hover {
 
 /* Select */
 .select {
-	line-height: var(--header-height);
 	position: relative;
 	float: left;
 	z-index: 1000;
@@ -1202,8 +1192,6 @@ a:hover {
 	list-style: none;
 	padding: 0 12px;
 	cursor: pointer;
-	white-space: nowrap;
-	height: 32px;
 	display: flex;
 	align-items: center;
 	width: 100%;
