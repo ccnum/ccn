@@ -177,7 +177,7 @@ body {
 	height: 100%;
 	width: 100%;
 	text-align: center;
-	overflow: visible;
+	overflow-y: auto;
 }
 
 body.mobile {
@@ -385,7 +385,6 @@ body.mobile {
 	margin-right: -450px;
 	z-index: 100;
 	border-radius: 0 0 4px 4px;
-	behavior: url(../js/PIE.php);
 	font-family: Arial, Helvetica, sans-serif;
 }
 
@@ -582,8 +581,6 @@ li#m0 {
 	float: left;
 	position: relative;
 	border-radius: 2px 2px 2px 2px;
-	behavior: url(../js/PIE.php);
-	float: left;
 }
 
 .liste-link-medium {
@@ -595,8 +592,6 @@ li#m0 {
 	height: 25px;
 	float: left;
 	border-radius: 2px 2px 2px 2px;
-	behavior: url(../js/PIE.php);
-	float: left;
 	position: relative;
 }
 
@@ -662,7 +657,6 @@ a.webmestre.last-small {
 	height: auto;
 	background-image: url(../img/global/tooltip-background.png);
 	border-radius: 5px;
-	behavior: url(../js/PIE.php);
 	width: 230px;
 	float: left;
 }
@@ -751,7 +745,6 @@ a.webmestre.last-small {
 .legende-cadavre-texte {
 	float: left;
 	font-style: italic;
-	float: left;
 	margin: 5px 0px 0px 10px;
 	font-size: 13px;
 }
@@ -784,8 +777,6 @@ a.webmestre.last-small {
 	height: 18px;
 	float: left;
 	border-radius: 2px 2px 2px 2px;
-	behavior: url(../js/PIE.php);
-	float: left;
 }
 
 a.auteur.last-small {
@@ -1007,7 +998,6 @@ a:hover.spip_out {
 	float: right;
 	display: block;
 	border-radius: 20px 20px 20px 20px;
-	behavior: url(../js/PIE.php);
 	cursor: pointer;
 	background-image: url(../img/ecriture/bt-plus.png);
 	text-align: left;
@@ -1082,7 +1072,6 @@ a:hover.spip_out {
 	width: 110px;
 	color: #FFF;
 	border-radius: 4px 4px 4px 4px;
-	behavior: url(../js/PIE.php);
 	margin-bottom: 5px;
 	padding: 10px 60px 10px 50px;
 	font-family: Arial, Helvetica, sans-serif;
@@ -1145,7 +1134,6 @@ a:hover.spip_out {
 	z-index: 10;
 	margin: 0px 0px 3px 0px;
 	border-radius: 20px 20px 20px;
-	behavior: url(../js/PIE.php);
 	color: #FFF;
 	font-family: Arial, Helvetica, sans-serif;
 	font-size: 12px;
@@ -1527,7 +1515,6 @@ a:hover.spip_out {
 	font-size: 13px;
 	border: 0;
 	border-radius: 20px 20px 20px 20px;
-	behavior: url(../js/PIE.php);
 	float: left;
 	clear: both;
 }

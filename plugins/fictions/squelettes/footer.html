@@ -18,7 +18,7 @@
 			url = 'http://airchive.laclasse.com/?annee_scolaire=' + cookie_valeur;
 		}
 		else {
-			document.cookie = cookie_nom + "=" + escape(cookie_valeur);
+			document.cookie = cookie_nom + "=" + encodeURIComponent(cookie_valeur);
 			url = url+'/?annee_scolaire=' + cookie_valeur;
 		}
 		reload(url);
