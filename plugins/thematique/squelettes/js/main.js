@@ -159,6 +159,8 @@ function loadConsignes(fichier) {
 					dataForConsigne.titre = getXMLNodeValue('titre', xmlConsignes[i]);
 					dataForConsigne.image = getXMLNodeValue('image', xmlConsignes[i]);
 					dataForConsigne.y = getXMLNodeValue('y', xmlConsignes[i]);
+					dataForConsigne.isLivrable = (getXMLNodeValue('livrable', xmlConsignes[i]) == "oui");
+					dataForConsigne.isLastConsigne = (i==xmlConsignes.length-1)
 
 					if (indexY >= CCN.projet.liste_y_consignes.length) {
 						indexY = 0;
@@ -304,37 +306,9 @@ function loadConsignes(fichier) {
 					CCN.consignes.push(nouvelleConsigne);
 					indexConsigne++;
 				}
-				post_process_DOM_after_all_consignes_created()
 	});
 }
 
-function getDernièreConsigneHaute(){
-	// Récupère toutes les consignes
-	const consignes = document.querySelectorAll('.consigne[data-index]');
-	if(consignes.length === 0) return
-	
-	// Trouve celle avec le data-index le plus élevé
-	const consigneMax = [...consignes].reduce((a, b) =>
-		parseInt(a.dataset.index) > parseInt(b.dataset.index) ? a : b
-	);
-	//remontée dans le DOM
-	const consigneHaute = $(consigneMax).closest('.consigne_haute');
-	return consigneHaute;
-}
-
-function post_process_DOM_after_all_consignes_created() {
-	const derniereConsigneHaute = getDernièreConsigneHaute()
-	derniereConsigneHaute.addClass("derniere-etape")
-	derniereConsigneHaute.find(".card-bg").show();
-	const cestLaDerniereConsigneDeLAnnee = false;
-	if(cestLaDerniereConsigneDeLAnnee) {
-		derniereConsigneHaute.find(".texte-etiquette").first().text("PROJETS FINAUX !");
-		derniereConsigneHaute.find(".logo-etiquette").first().attr("src", `${CCN.urlRoot}img/sparks.svg`)
-		// <img class="card-bg" src="${CCN.urlRoot}img/cards_background.svg" />
-	} else {
-		derniereConsigneHaute.find(".logo-etiquette").first().attr("src", `${CCN.urlRoot}img/location-check.svg`) 
-	}
-}
 /**
  *  Charge le XML des articles du blog
  *
