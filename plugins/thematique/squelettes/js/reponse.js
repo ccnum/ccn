@@ -95,7 +95,7 @@ function Reponse() {
 						$(this).addClass('no_event');
 					},
 					drag: function (event, ui) {
-						updateConnecteurs();
+						updateConnecteur(event.target, ui);
 					},
 					stop: function (event, ui) {
 						const yy = (ui.offset.top - CCN.projet.timeline.offset().top) / CCN.projet.timeline.height();

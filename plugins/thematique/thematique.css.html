@@ -25,12 +25,13 @@
 /* ------- */
 
 :root {
-	--color-hover: #FFCD00;
+	--background-color-hover: #000AFF;
+	--color-hover: white;
 	--color-tonic: #000AFF;
 	--color-consigne: #7D7BFD;
 	--color-default: #1E2055;
-	--color-jaune: #FFCD00;
 	--color-bleu-fond: #DEE0FF;
+	--color-gris: #F5F5F5;
 	--header-height: 54px;
 	--footer-height: 80px;
 	--transition-fast: 200ms;
@@ -322,10 +323,6 @@ body {
 }
 #menu_haut #menu_haut_titre {
 	background-color: var(--color-tonic);
-	&:hover {
-		background-color: var(--color-hover);
-		color: var(--color-default);
-	}
 }
 
 .bloc_titre label + div {
@@ -342,12 +339,12 @@ body {
 }
 
 #menu_haut_titre .select:hover .first_label .icon {
-	background-color: var(--color-default);
+	background-color: var(--color-hover);
 }
 #menu_haut_titre {
 	> .select:hover {
 		.icon-down {
-			background-color: white;
+			background-color: var(--color-hover);
 		}
 	}
 }
@@ -372,12 +369,11 @@ body {
 	}
 	> .select:hover {
 		.first_label {
-			background-color: var(--color-hover);
-			color:  var(--color-default);
+			background-color: var(--background-color-hover);
+			color: var(--color-hover);
 		}
-		.icon-connecter,
-		.icon-down {
-			background-color: var(-color-default);
+		.icon-connecter, .icon-down {
+			background-color: var(--color-hover);
 		}
 		.user-option {
 			display: flex;
@@ -394,7 +390,7 @@ body {
 		.icon {
 			background-color: var(--color-default);
 		}
-		background-color: var(--color-hover);
+		background-color: var(--color-gris);
 		a {
 			color: var(--color-default);
 		}
@@ -406,12 +402,12 @@ body {
 		padding-left: 1rem;
 		padding-right: 1rem;
 		&:hover {
-			background-color: var(--color-hover);
+			background-color: var(--background-color-hover);
 			.icon-connecter {
-				background-color: white;
+				background-color: var(--color-hover);
 			}
 			a {
-				color: white;
+				color: var(--color-hover);
 			}
 		}
 	}
@@ -427,13 +423,13 @@ body {
 		width: 40px;
 	}
 	> .select:hover {
-		background-color: var(--color-hover);
+		background-color: var(--background-color-hover);
 		.first_label {
-			background-color: var(--color-hover);
-			color: var(--color-default);
+			background-color: var(--background-color-hover);
+			color: var(--color-hover);
 		}
-		.icon-down {
-			background-color: var(--color-default);
+		.icon {
+			background-color: var(--color-hover);
 		}
 	}
 }
@@ -459,9 +455,9 @@ body {
 		width: 30px;
 	}
 	&:hover {
-	background-color: var(--color-hover);
+	background-color: var(--background-color-hover);
 		.icon {
-			background-color: white !important;
+			background-color: var(--color-hover) !important;
 		}
 	}
 }
@@ -622,22 +618,19 @@ body {
 }
 
 #menu_haut_titre .select:hover input:not(.first) {
-	background-color: var(--color-default);
-	color: white;
-}
-#menu_haut_titre .select {
-	background: transparent;
+	background-color: white;
+	color: var(--color-default);
 }
 #menu_haut_titre .select .first_label {
-	color: white;
+	color: var(--color-hover);
 }
 #menu_haut_ecrire .icon:hover {
 	background: var(--color-default);
 	color: white;
 }
 #menu_haut_titre .select:hover .first_label {
-	background: var(--color-hover);
-	color: var(--color-default);
+	background: var(--background-color-hover);
+	color: var(--color-hover);
 }
 .icon {
 	/* Dimensions */
@@ -688,8 +681,7 @@ body {
 	--svg: url("#CHEMIN{img/logout.svg}");
 }
 
-/* Exemple d'interaction */
-.select input:hover + label .icon-down, .select input.actif + label .icon-down, .select:hover input.first + label .icon-down, #menu_haut_user .connecter_ok:hover .icon-down {
+.select:hover .icon-down {
 	transform: rotate(180deg);
 }
 
@@ -883,8 +875,7 @@ a:hover {
 /* Zone-menu */
 
 .zone-menu li {
-	padding-top: 3px;
-	padding-bottom: 3px;
+	padding: 12px 48px 12px 24px;
 }
 
 .zone-menu form {
@@ -966,8 +957,8 @@ a:hover {
 	padding: 0 15px 0 25px;
 }
 .select label:hover {
-	background-color: var(--color-hover) !important;
-	color: var(--color-default);
+	background-color: var(--background-color-hover) !important;
+	color: var(--color-hover);
 }
 /*Déplie le carroussel*/
 .select:hover label:not(.first_label) {
@@ -1196,10 +1187,11 @@ a:hover {
 	align-items: center;
 	width: 100%;
 	box-sizing: border-box;
+	padding: 12px 48px 12px 24px;
 }
 
 .select-option:hover {
-	background-color: #f0f0f0;
+	background-color: var(--color-gris);
 }
 
 .select-option.actif {
@@ -1277,7 +1269,13 @@ a:hover {
 .zone-menu li.logo a.selected {
 	cursor: default;
 	border: 0px solid white;
-	color: white !important;
+	color: var(--color-hover) !important;
+	background-color: var(--background-color-hover);
+}
+
+.zone-menu li.logo a:hover {
+	color: var(--color-hover) !important;
+	background-color: var(--background-color-hover);
 }
 
 .tooltip::after,
@@ -3264,7 +3262,7 @@ input[type="file"] {
 	font-weight: 500;
 	cursor: pointer;
 	&:hover {
-		background-color: var(--color-hover);
+		background-color: var(--background-color-hover);
 	}
 }
 
@@ -3430,7 +3428,7 @@ p.boutons:has(input[type="submit"]) {
             font-weight: bold;
 			flex: 1;
 			&:hover {
-				background-color: var(--color-hover);
+				background-color: var(--background-color-hover);
 			}
 		}
 	}
@@ -3450,9 +3448,9 @@ p.boutons:has(input[type="submit"]) {
 				background-color: var(--color-tonic);
 			}
 			&:hover {
-				color: var(--color-default);
+				color: var(--color-hover);
 				.icon-motdepasse {
-					background-color: var(--color-hover);
+					background-color: var(--background-color-hover);
 				}
 			}
 		}
@@ -3697,8 +3695,8 @@ li a, li a:hover {
 			height: auto;
 			padding-bottom: 15px;
 			&:hover {
-				background-color: var(--color-hover);
-				color: var(--color-default);
+				background-color: var(--background-color-hover);
+				color: var(--color-hover);
 			}
 			> img {
 				height: auto !important;
@@ -3706,8 +3704,8 @@ li a, li a:hover {
 				padding: 15px 0;
 				margin: 0 auto;
 				&:hover {
-					background-color: var(--color-hover);
-					color: var(--color-default);
+					background-color: var(--background-color-hover);
+					color: var(--color-hover);
 				}
 			}
 		}
@@ -3795,8 +3793,8 @@ li a, li a:hover {
 }
 
 .swiper-pagination-bullet:not(.swiper-pagination-bullet-active):hover {
-  background: var(--color-hover) !important;
-  color: var(--color-default);
+  background: var(--background-color-hover) !important;
+  color: var(--color-hover);
   opacity: 1 !important;
 }
 
@@ -3896,8 +3894,8 @@ donc je passe de 300px à 30rem. */
     border-radius: 5px;
     background-color: var(--color-default);
 	&:hover {
-		background-color: var(--color-hover)
-		color: var(--color-default);
+		background-color: var(--background-color-hover)
+		color: var(--color-hover);
 	}
 	span {
 		max-width: 300px;
@@ -3990,37 +3988,26 @@ ul#forum, .lien_forum {
 
 
 
-#timeline_layer_consignes,
-#timeline_layer_blogs,
-#timeline_layer_evenements,
-#timeline_layer_livrables {
-	top: 32px;
-}
+
 
 #timeline_wrapin {
 	position: absolute;
-	top: 55px;
-	bottom: 100px;
-	left: 0;
 	width: 100%;
+	height: 100%;
 	z-index: 900;
 	transition: all 500ms ease;
 }
 
 #timeline_fixed {
 	position: absolute;
-	top: -40px;
-	bottom: -80px;
-	left: 0;
 	width: 100%;
+	height: 100%;
 }
 
 #timeline_background {
 	position: absolute;
-	top: -40px;
-	bottom: -80px;
-	left: 0;
 	width: 100%;
+	height: 100%;
 }
 
 .timeline_trigger {
@@ -4164,8 +4151,8 @@ ul#forum, .lien_forum {
 		filter: brightness(0) saturate(100%) invert(13%) sepia(51%) saturate(1781%) hue-rotate(215deg) brightness(90%) contrast(98%);
 	}
 	&:hover {
-		background: var(--color-hover);
-		color: var(--color-default);
+		background: var(--background-color-hover);
+		color: var(--color-hover);
 		&::before {
 			filter: brightness(0) saturate(100%) invert(100%) sepia(100%) saturate(1%) hue-rotate(214deg) brightness(107%) contrast(102%);
 		}
