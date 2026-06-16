@@ -807,10 +807,10 @@ function updateConnecteurs() {
 
 			const connecteur = $(this);
 
-			const x1 = connecteur_consigne.offset().left + connecteur_consigne.outerWidth() - 5;
-			const y1 = connecteur_consigne.offset().top + CCN.projet.timeline.offset().top + 5;
-			const x2 = connecteur_reponse.offset().left + 5;
-			const y2 = connecteur_reponse.offset().top + CCN.projet.timeline.offset().top + 5;
+			const x1 = connecteur_consigne.offset().left + connecteur_consigne.outerWidth();
+			const y1 = connecteur_consigne.offset().top;
+			const x2 = connecteur_reponse.offset().left;
+			const y2 = connecteur_reponse.offset().top;
 
 			const length = Math.sqrt((x1 - x2) * (x1 - x2) + (y1 - y2) * (y1 - y2));
 			const angle = Math.atan2(y2 - y1, x2 - x1) * 180 / Math.PI;
@@ -827,6 +827,50 @@ function updateConnecteurs() {
 				.width(parseFloat(length) + 'px');
 		}
 	);
+}
+
+function handleCollision(y, responseHeight, timelineTop, timelineHeight) {
+    const yMin = 0;
+    const yMax = yMin + timelineHeight - responseHeight;
+    if (y < yMin) return yMin;
+    if (y > yMax) return yMax;
+    return y;
+}
+
+function updateConnecteur(reponseObject, ui) {
+	const reponseDOM = $(reponseObject)
+	const idConsigne = reponseDOM.data('consigne-id')
+	const idReponse = reponseDOM.data('reponse-id')
+	const connecteurDOM = $(`#connecteur_consigne_${idConsigne}_reponse_${idReponse}`);
+	const consigneDOM = $(`#consigne_haute${idConsigne}`);
+	const timelineTop = CCN.timelineLayerConsignes.offset().top;
+	const timelineHeight = CCN.timelineLayerConsignes.height();
+
+	const x1 = consigneDOM.offset().left + consigneDOM.outerWidth();
+	const y1 = consigneDOM.offset().top  + consigneDOM.outerHeight() / 2 - timelineTop;
+	const x2 = reponseDOM.offset().left;
+    const adjustedUiPositionTop = handleCollision(
+		ui.position.top, 
+		reponseDOM.outerHeight(),
+		timelineTop, 
+		timelineHeight
+	);
+    ui.position.top = adjustedUiPositionTop;
+    const y2 = adjustedUiPositionTop + reponseDOM.outerHeight() / 2;
+
+	const length = Math.sqrt((x1 - x2) * (x1 - x2) + (y1 - y2) * (y1 - y2));
+	const angle = Math.atan2(y2 - y1, x2 - x1) * 180 / Math.PI;
+	const transform = 'rotate(' + angle + 'deg)';
+
+	connecteurDOM.css(
+		{
+			'position': 'absolute',
+			'transform': transform,
+			'left': parseFloat(x1) + 'px',
+			'top': parseFloat(y1) + 'px'
+		}
+	)
+		.width(parseFloat(length) + 'px');
 }
 
 /**
