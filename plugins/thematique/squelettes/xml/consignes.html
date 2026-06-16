@@ -12,6 +12,7 @@
 			<annee_scolaire>#CONST{_ANNEE_SCOLAIRE}</annee_scolaire>
 			<image>[(#MODELE{logo_carre}{id_rubrique}|extraire_attribut{src})]</image>
 			<y>[(#Y|sinon{0})]</y>
+			<BOUCLE_mots(MOTS){id_article}{titre=livrable}><livrable>oui</livrable></BOUCLE_mots>
 			<BOUCLE_reponse(ARTICLES){id_consigne=#ID_ARTICLE}>
 				<reponse>
 					<id>#ID_ARTICLE</id>
