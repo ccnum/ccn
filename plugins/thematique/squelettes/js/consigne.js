@@ -41,6 +41,8 @@ function Consigne() {
 		if (this.nombre_jours_max <= 0) {
 			this.nombre_jours_max = data.nombre_jours;
 		}
+		this.isLivrable = this.data.isLivrable;
+		this.isLastConsigne = this.data.isLastConsigne;
 
 		this.initDOM();
 	}
@@ -116,8 +118,20 @@ function Consigne() {
 		this.div_reponse_plus = this.div_base.find('.bouton_reponse_consigne').eq(0);
 		this.div_reponse_see = this.div_base.find('.bouton_reponse_consigne').eq(1);
 		
-		this.div_base.find(`.titre`).text(this.titre)
-
+		this.div_base.find(`.titre`).text(this.titre);
+		
+		if(this.isLastConsigne) {
+			this.div_base.addClass("derniere-etape")
+			this.div_base.find(".card-bg").show();
+			if(this.isLivrable) {
+				this.div_base.find(".texte-etiquette").first().text("PROJETS FINAUX !");
+				this.div_base.find(".logo-etiquette").first().attr("src", `${CCN.urlRoot}img/sparks.svg`)
+			} else {
+				this.div_base.find(".logo-etiquette").first().attr("src", `${CCN.urlRoot}img/location-check.svg`) 
+			}
+		} else {
+			this.div_base.find(".logo-etiquette").hide()
+		}
 		CCN.timelineLayerConsignes.prepend(this.div_base);
 
 		this.largeur = this.div_base.outerWidth();
