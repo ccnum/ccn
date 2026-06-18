@@ -247,4 +247,31 @@ fi
 #    fi
 #fi
 
+
+# Initialiser les clés de chiffrement manquantes
+mkdir -p config
+php -r "
+\$file = 'config/cles.php';
+\$json = [];
+if (file_exists(\$file)) {
+    \$content = file_get_contents(\$file);
+    \$json = json_decode(substr(\$content, strpos(\$content, \"\n\") + 1), true) ?: [];
+}
+\$changed = false;
+foreach (['secret_du_site', 'secret_des_auth'] as \$key) {
+    if (empty(\$json[\$key])) {
+        \$json[\$key] = base64_encode(random_bytes(32));
+        echo \"✓ Clé \$key générée\n\";
+        \$changed = true;
+    } else {
+        echo \"✓ Clé \$key déjà présente\n\";
+    }
+}
+if (\$changed) {
+    file_put_contents(\$file, \"<?php die ('Acces interdit'); ?>\n\" . json_encode(\$json));
+    chmod(\$file, 0640);
+}
+"
+chown www-data:www-data config/cles.php
+
 exec "$@"
