@@ -104,12 +104,38 @@ function formulaires_public_editer_article_traiter_dist(
 		$row,
 		$hidden
 	);
-	// Ajout du champ id_consigne — vérifié en base pour éviter un id fantôme
+	// Ajout du champ id_consigne — vérifié que la consigne existe ET que l'utilisateur appartient au même secteur
 	$id_consigne = intval(_request('id_consigne'));
 	if ($id_consigne > 0) {
-		$existe = sql_getfetsel('id_article', 'spip_articles', 'id_article=' . $id_consigne);
-		if (!$existe) {
+		$id_auteur = intval($GLOBALS['visiteur_session']['id_auteur'] ?? 0);
+		$id_rubrique_consigne = sql_getfetsel('id_rubrique', 'spip_articles', 'id_article=' . $id_consigne);
+
+		if (!$id_rubrique_consigne || !$id_auteur) {
 			$id_consigne = 0;
+		} else {
+			// Vérifie que la rubrique de la consigne est bien taggée "consignes"
+			$id_mot_consignes = sql_getfetsel('id_mot', 'spip_mots', "titre='consignes'");
+			$rubrique_est_consigne = $id_mot_consignes ? sql_getfetsel(
+				'id_objet',
+				'spip_mots_liens',
+				'id_mot=' . intval($id_mot_consignes) . " AND objet='rubrique' AND id_objet=" . intval($id_rubrique_consigne)
+			) : null;
+
+			if (!$rubrique_est_consigne) {
+				$id_consigne = 0;
+			} else {
+				// Vérifie que l'utilisateur est lié à une rubrique du même secteur que la consigne
+				$id_secteur = sql_getfetsel('id_secteur', 'spip_rubriques', 'id_rubrique=' . intval($id_rubrique_consigne));
+				$user_dans_secteur = $id_secteur ? sql_getfetsel(
+					'lien.id_objet',
+					'spip_auteurs_liens AS lien JOIN spip_rubriques AS rub ON lien.id_objet = rub.id_rubrique',
+					'lien.id_auteur=' . $id_auteur . " AND lien.objet='rubrique' AND rub.id_secteur=" . intval($id_secteur)
+				) : null;
+
+				if (!$user_dans_secteur) {
+					$id_consigne = 0;
+				}
+			}
 		}
 	}
 
