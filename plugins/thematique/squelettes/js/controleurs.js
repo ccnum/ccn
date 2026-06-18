@@ -946,7 +946,7 @@ function reloadAndSetCookie(url, cookie_nom, cookie_valeur) {
 function reload(url) {
 	if (url === 'self') {
 		location.reload(true);
-	} else if (url.startsWith('/') || url.startsWith(window.location.origin)) {
+	} else if ((url.startsWith('/') && !url.startsWith('//')) || url.startsWith(window.location.origin)) {
 		window.location.href = url;
 	}
 }
