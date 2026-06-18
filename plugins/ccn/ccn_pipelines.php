@@ -155,7 +155,7 @@ function ccn_formulaire_verifier($flux) {
 }
 
 function ccn_formulaire_charger($flux) {
-    if ($flux['args'][0] !== 'forum') {
+    if (($flux['args']['form'] ?? '') !== 'forum') {
         return $flux;
     }
     
