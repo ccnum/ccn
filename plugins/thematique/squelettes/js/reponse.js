@@ -36,8 +36,7 @@ function Reponse() {
 
 		const coul = String(this.classe_id).slice(-1);
 
-		const _d = parseDate(this.date);
-		const date_texte = _d.getDate() + " " + CCN.nomMois[_d.getMonth()];
+		const date_texte = formatDateCourte(this.date);
 
 		this.div_base = $(`
 			<div id="reponse_haute${this.id}"
@@ -79,11 +78,7 @@ function Reponse() {
 
 		const _thisId = this.id;
 
-		this.div_texte.on(
-			'click', function () {
-				callReponse(_thisId);
-			}
-		);
+		this.div_texte.on('click', () => callReponse(_thisId));
 
 		this.largeur = this.div_base.outerWidth();
 		this.hauteur = this.div_base.outerHeight() + 7;
