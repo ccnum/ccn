@@ -23,7 +23,6 @@ function Reponse() {
 		this.x = this.data.nombre_jours;
 		this.x_absolu = this.data.nombre_jours + this.consigne.x; // Le bloc réponse est relatif à la position x de la consigne
 		this.y = this.data.y;
-		this.index = this.data.index;
 		this.classeIndex = this.data.classes.findIndex(c => this.classe_id == c.id);
 		this.nom_classe = this.data.classes[this.classeIndex]?.nom ?? '';
 
