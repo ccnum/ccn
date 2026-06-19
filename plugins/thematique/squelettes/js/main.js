@@ -94,8 +94,8 @@ function loadProjet(fichier) {
 
 				$.when(
 					loadClasses(CCN.urlXml + "classes"),
-					loadBlog(CCN.urlXml + "articles_blog"),
-					loadEvenements(CCN.urlXml + "articles_evenement")
+					loadBlog(CCN.urlXml + "articles&type=blogs"),
+					loadEvenements(CCN.urlXml + "articles&type=evenements")
 				).done(initTimeline);
 			}
 		}
@@ -263,8 +263,6 @@ function loadConsignes(fichier) {
 
 						dataForReponse.nombre_jours = parseFloat(Math.round((dataForReponse.date_date) / (24 * 60 * 60 * 1000))) - dataForConsigne.jour_consigne;
 						dataForReponse.nombre_commentaires = parseFloat(getXMLNodeValue('commentaires', xmlReponses[j]));
-
-						dataForReponse.vignette = (hasXMLNodeValue('vignette', xmlReponses[j])) ? getXMLNodeValue('vignette', xmlReponses[j]) : '';
 
 						dataForReponse.y = parseFloat(getXMLNodeValue('y', xmlReponses[j]));
 

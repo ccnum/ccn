@@ -1,9 +1,11 @@
 #CACHE{0}
+[(#REM) type=blogs ou type=evenements passé en paramètre via &mode=articles&type=... ]
+#SET{afficher,oui}[(#ENV{type}|=={evenements}|oui)[(#SESSION{statut}|=={0minirezo}|non)#SET{afficher,non}]]
 <datas>
-	<BOUCLE_rubrique(RUBRIQUES){titre_mot=evenements}{tout}>
+	<BOUCLE_rubrique(RUBRIQUES){titre_mot=#ENV{type}}{tout}>
 		<BOUCLE_article(ARTICLES){branche}{par date}{date>=#CONST{_DATE_DEBUT}}{date<=#CONST{_DATE_FIN}}{tout}>
-			#SET{total,0}<BOUCLE_forum(FORUMS){id_article}> </BOUCLE_forum>#SET{total,#TOTAL_BOUCLE}</B_forum>
-			[(#SESSION{statut}|=={0minirezo}|oui)
+			[(#GET{afficher}|=={oui}|oui)
+			#SET{total,0}<BOUCLE_forum_article(FORUMS){id_article}> </BOUCLE_forum_article>#SET{total,#TOTAL_BOUCLE}</B_forum_article>
 			<article>
 				<id>article_#ID_ARTICLE</id>
 				<id_objet>#ID_ARTICLE</id_objet>
@@ -17,18 +19,18 @@
 		</BOUCLE_article>
 		<BOUCLE_syndic(SYNDIC_ARTICLES){branche}{par date}{date>=#CONST{_DATE_DEBUT}}{date<=#CONST{_DATE_FIN}}{tout}>
 			[(#REM)Pour exclure les doublons ou articles qui bouclent depuis le WP]
-			<BOUCLE_exclusion(ARTICLES){titre=#TITRE}>
+			<BOUCLE_exclusion(ARTICLES){titre=#_syndic:TITRE}>
 			</BOUCLE_exclusion>
 			</B_exclusion>
-				[(#SESSION{statut}|=={0minirezo}|oui)
+				[(#GET{afficher}|=={oui}|oui)
 				<article>
 					<id>syndic_article_#ID_SYNDIC_ARTICLE</id>
 					<id_objet>#ID_SYNDIC_ARTICLE</id_objet>
 					<type_objet>syndic_article</type_objet>
 					<titre>[(#TITRE|entites_html)]</titre>
 					<date>[(#DATE|affdate{'Y-m-d'})]</date>
+					<y>[(#Y|sinon{0})]</y>
 					<commentaires>0</commentaires>
-				<y>[(#Y|sinon{0})]</y>
 				</article>
 				]
 			<//B_exclusion>

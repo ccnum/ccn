@@ -13,7 +13,6 @@
 			</BOUCLE_auteur_consigne>
 			<titre>[(#TITRE|entites_html)]</titre>
 			<date>[(#DATE|affdate{'Y-m-d'})]</date>
-			<annee_scolaire>#CONST{_ANNEE_SCOLAIRE}</annee_scolaire>
 			<image>[(#MODELE{logo_carre}{id_rubrique}|extraire_attribut{src})]</image>
 			<y>[(#Y|sinon{0})]</y>
 			<BOUCLE_mots(MOTS){id_article}{titre=livrable}><livrable>oui</livrable></BOUCLE_mots>
@@ -24,7 +23,6 @@
 					<date>[(#DATE|affdate{'Y-m-d'})]</date>
 					<texte>[(#TITRE|couper{60}|entites_html)]</texte>
 					<commentaires><BOUCLE_forum(FORUMS){id_article}> </BOUCLE_forum>#TOTAL_BOUCLE</B_forum>0<//B_forum></commentaires>
-					<vignette>[(#MODELE{logo_carre,id_rubrique,taille=35}|extraire_attribut{src})]</vignette>
 					<y>[(#Y|sinon{0})]</y>
 				</reponse>
 			</BOUCLE_reponse>
