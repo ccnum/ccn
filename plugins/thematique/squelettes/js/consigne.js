@@ -76,9 +76,9 @@ function Consigne() {
 				 class="timeline_item consigne_haute"
 				 style="top:${this.y * 100}%; left:${this.x / CCN.projet.nombre_jours * 100}%;"
 			>
-				<img class="card-bg" 
-					 src="${CCN.urlRoot}img/cards_background.svg" 
-					 alt="" 
+				<img class="card-bg"
+					 src="${CCN.urlRoot}img/cards_background.svg"
+					 alt=""
 					 style="display: none"/>
 				<div id="consigne${this.id}"
 					class="consigne couleur_texte_consignes couleur_consignes${coul}"
@@ -117,9 +117,9 @@ function Consigne() {
 		this.div_consigne = this.div_base.find(`#consigne${this.id}`);
 		this.div_reponse_plus = this.div_base.find('.bouton_reponse_consigne').eq(0);
 		this.div_reponse_see = this.div_base.find('.bouton_reponse_consigne').eq(1);
-		
+
 		this.div_base.find(`.titre`).text(this.titre);
-		
+
 		if(this.isLastConsigne) {
 			this.div_base.addClass("derniere-etape")
 			this.div_base.find(".card-bg").show();
@@ -127,7 +127,7 @@ function Consigne() {
 				this.div_base.find(".texte-etiquette").first().text("PROJETS FINAUX !");
 				this.div_base.find(".logo-etiquette").first().attr("src", `${CCN.urlRoot}img/sparks.svg`)
 			} else {
-				this.div_base.find(".logo-etiquette").first().attr("src", `${CCN.urlRoot}img/location-check.svg`) 
+				this.div_base.find(".logo-etiquette").first().attr("src", `${CCN.urlRoot}img/location-check.svg`)
 			}
 		} else {
 			this.div_base.find(".logo-etiquette").hide()
