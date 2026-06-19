@@ -1839,7 +1839,7 @@ div.donnees_classe {
 .consigne .titre {
 	font-size: 0.875em;
 	font-family: 'Poppins', sans-serif;
-	font-weight: 700;
+	font-weight: 500;
 }
 
 .consigne .auteur_date {
@@ -1865,7 +1865,7 @@ div.donnees_classe {
 }
 
 .consigne .texte .second-row {
-	border-top: 1px solid rgba(0, 0, 0, 0.12);
+	border-top: 1px solid #000AFF;
 	padding-top: 0.5em;
 }
 
@@ -1881,7 +1881,7 @@ div.donnees_classe {
 }
 
 .consigne .reponse_puce {
-	width: 1.5em;
+	width: 1.2em;
 	aspect-ratio: 1 / 1;
 	border-radius: 50%;
 	overflow: hidden;
@@ -2062,12 +2062,12 @@ div.donnees_classe {
 
 .consigne .picto_nombre_commentaires {
 	position: absolute;
-	top: -0.63em;
-	right: -0.58em;
+	top: -0.5em;
+	right: -0.45em;
 	padding: 0;
-	font-size: 1.1875em;
-	width: 1.58em;
-	height: 1.58em;
+	font-size: 0.875em;
+	width: 1.3em;
+	height: 1.3em;
 	background: #FFD659;
 	color: var(--color-default);
 	display: flex;
@@ -2078,27 +2078,30 @@ div.donnees_classe {
 
 .consigne .etiquette-etape {
 	position: absolute;
-	top: -2.14em;
+	top: -1.8em;
 	left: 1.07em;
-	padding: 0.36em 0.5em;
+	padding: 0.3em 0.45em;
 	display: flex;
 	gap: 0.29em;
 	background-color: var(--color-bleu-fond);
 	color: var(--color-tonic);
 	border: 1px solid var(--color-tonic);
-	font-size: 0.875em;
+	font-size: 0.75em;
 	font-family: 'Poppins', sans-serif;
 	font-weight: 500;
 	transform: rotate(-3deg);
 	border-radius: 0.29em;
 	white-space: nowrap;
+	z-index: 2;
 }
 
 .consigne_haute.derniere-etape .etiquette-etape {
-	/* Changement de couleur sur dernière consigne */
 	background-color: var(--color-tonic);
 	color: white;
 	border: 1px solid white;
+	top: auto;
+	bottom: -1.8em;
+	transform: rotate(3deg);
 }
 
 
