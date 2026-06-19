@@ -44,8 +44,7 @@ function thematique_jqueryui_plugins($scripts) {
 
 function thematique_insert_head($flux) {
 	$scripts = [
-		'js/article_blog.js',
-		'js/article_evenement.js',
+		'js/article.js',
 		'js/bouton.js',
 		'js/bundled/html4+html5/jquery.history.js',
 		'js/classe.js',

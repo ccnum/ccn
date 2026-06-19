@@ -1,7 +1,3 @@
-let indexConsigne;
-let indexReponse;
-let indexArticleBlog;
-let indexArticleEvenement;
 /**
  * Première fonction initialisant le document
  * et les variables globales, puis appelant
@@ -11,11 +7,6 @@ let indexArticleEvenement;
  */
 
 function initCCN() {
-	indexConsigne = 0;
-	indexReponse = 0;
-	indexArticleBlog = 0;
-	indexArticleEvenement = 0;
-
 	CCN.classes = [];
 	CCN.intervenants = [];
 	CCN.consignes = [];
@@ -94,8 +85,8 @@ function loadProjet(fichier) {
 
 				$.when(
 					loadClasses(CCN.urlXml + "classes"),
-					loadBlog(CCN.urlXml + "articles&type=blogs"),
-					loadEvenements(CCN.urlXml + "articles&type=evenements")
+					loadArticles(CCN.urlXml + "articles&type=blogs", 'blogs', CCN.articlesBlog, CCN.projet.liste_y_blogs),
+					loadArticles(CCN.urlXml + "articles&type=evenements", 'evenements', CCN.articlesEvenement, CCN.projet.liste_y_evenements)
 				).done(initTimeline);
 			}
 		}
@@ -249,7 +240,6 @@ function loadConsignes(fichier) {
 						liste_y.push(liste_y[0]);
 					}
 
-					let indexReponseInConsigne = 0;
 					let has_current_classe_already_answer = false;
 
 					for (let j = 0; j < xmlReponses.length; j++) {
@@ -272,8 +262,6 @@ function loadConsignes(fichier) {
 
 						dataForReponse.consigne = nouvelleConsigne;
 						dataForReponse.classes = CCN.classes;
-						dataForReponse.numero = indexReponse;
-						dataForReponse.index = indexReponseInConsigne;
 
 						const nouvelleReponse = new Reponse();
 						nouvelleReponse.init(dataForReponse);
@@ -282,9 +270,6 @@ function loadConsignes(fichier) {
 						if (CCN.classeSelection > 0 && CCN.classeSelection == dataForReponse.classe_id) {
 							has_current_classe_already_answer = true;
 						}
-
-						indexReponseInConsigne++;
-						indexReponse++;
 					}
 
 					if (!has_current_classe_already_answer) {
@@ -292,110 +277,47 @@ function loadConsignes(fichier) {
 					}
 
 					CCN.consignes.push(nouvelleConsigne);
-					indexConsigne++;
 				}
 	});
 }
 
 /**
- *  Charge le XML des articles du blog
+ *  Charge le XML des articles (blogs ou événements) et les instancie.
  *
- * @param {string} fichier - URL du fichier
+ * @param {string} fichier  - URL du fichier XML
+ * @param {string} type     - "blogs" ou "evenements"
+ * @param {Array}  ccnArray - Tableau de destination (CCN.articlesBlog ou CCN.articlesEvenement)
+ * @param {Array}  listeY   - Séquence de positions Y (CCN.projet.liste_y_blogs ou liste_y_evenements)
  */
 
-function loadBlog(fichier) {
+function loadArticles(fichier, type, ccnArray, listeY) {
 	return $.ajax({url: fichier, dataType: 'text'}).then(function (xml) {
 		xml = $.parseXML(xml.trim());
 
-		const xmlArticlesBlog = xml.getElementsByTagName("article");
+		const xmlArticles = xml.getElementsByTagName("article");
 		let indexY = 0;
 
-		for (let i = 0; i < xmlArticlesBlog.length; i++) {
+		for (let i = 0; i < xmlArticles.length; i++) {
+			const data = {};
 
-			const dataForArticleBlog = {};
+			data.id = getXMLNodeValue('id', xmlArticles[i]);
+			data.type_objet = getXMLNodeValue('type_objet', xmlArticles[i]);
+			data.id_objet = getXMLNodeValue('id_objet', xmlArticles[i]);
+			data.titre = getXMLNodeValue('titre', xmlArticles[i]);
+			data.date = getXMLNodeValue('date', xmlArticles[i]);
+			data.y = getXMLNodeValue('y', xmlArticles[i]);
 
-			dataForArticleBlog.id = getXMLNodeValue('id', xmlArticlesBlog[i]);
-			dataForArticleBlog.type_objet = getXMLNodeValue('type_objet', xmlArticlesBlog[i]);
-			dataForArticleBlog.id_objet = getXMLNodeValue('id_objet', xmlArticlesBlog[i]);
-			dataForArticleBlog.titre = getXMLNodeValue('titre', xmlArticlesBlog[i]);
-			dataForArticleBlog.y = getXMLNodeValue('y', xmlArticlesBlog[i]);
-			dataForArticleBlog.date = getXMLNodeValue('date', xmlArticlesBlog[i]);
-
-			if (indexY >= CCN.projet.liste_y_blogs.length) {
-				indexY = 0;
-			}
-
-			if (dataForArticleBlog.y == 0) {
-				dataForArticleBlog.y = CCN.projet.liste_y_blogs[indexY];
-			}
-
+			if (indexY >= listeY.length) indexY = 0;
+			if (data.y == 0) data.y = listeY[indexY];
 			indexY++;
 
-			const date = parseDate(dataForArticleBlog.date);
-			const jour_article = parseFloat(Math.round((date) / (24 * 60 * 60 * 1000)));
-			dataForArticleBlog.nombre_jours = jour_article - CCN.projet.premier_jour;
-			dataForArticleBlog.nombre_commentaires = parseFloat(getXMLNodeValue('commentaires', xmlArticlesBlog[i]));
+			const date = parseDate(data.date);
+			data.nombre_jours = parseFloat(Math.round(date / (24 * 60 * 60 * 1000))) - CCN.projet.premier_jour;
+			data.nombre_commentaires = parseFloat(getXMLNodeValue('commentaires', xmlArticles[i]));
 
-			dataForArticleBlog.numero = indexArticleBlog;
-			dataForArticleBlog.index = indexArticleBlog;
-
-			const nouvelArticleBlog = new ArticleBlog();
-			nouvelArticleBlog.init(dataForArticleBlog);
-
-			CCN.articlesBlog.push(nouvelArticleBlog);
-
-			indexArticleBlog++;
-		}
-	});
-}
-/**
- *  Charge le XML des événements
- *  puis appelle initTimeline
- *
- * @param {string} fichier - URL du fichier
- */
-
-function loadEvenements(fichier) {
-	return $.ajax({url: fichier, dataType: 'text'}).then(function (xml) {
-		xml = $.parseXML(xml.trim());
-
-		const xmlArticlesEvenement = xml.getElementsByTagName("article");
-		let indexY = 0;
-
-		for (let i = 0; i < xmlArticlesEvenement.length; i++) {
-
-			const dataForEvenement = {};
-
-			dataForEvenement.id = getXMLNodeValue('id', xmlArticlesEvenement[i]);
-			dataForEvenement.type_objet = getXMLNodeValue('type_objet', xmlArticlesEvenement[i]);
-			dataForEvenement.id_objet = getXMLNodeValue('id_objet', xmlArticlesEvenement[i]);
-			dataForEvenement.titre = getXMLNodeValue('titre', xmlArticlesEvenement[i]);
-			dataForEvenement.y = getXMLNodeValue('y', xmlArticlesEvenement[i]);
-
-			if (indexY >= CCN.projet.liste_y_evenements.length) {
-				indexY = 0;
-			}
-			if (dataForEvenement.y == 0) {
-				dataForEvenement.y = CCN.projet.liste_y_evenements[indexY];
-			}
-
-			indexY++;
-
-			dataForEvenement.date = getXMLNodeValue('date', xmlArticlesEvenement[i]);
-			const date = parseDate(dataForEvenement.date);
-			const jour_article = parseFloat(Math.round((date) / (24 * 60 * 60 * 1000)));
-			dataForEvenement.nombre_jours = jour_article - CCN.projet.premier_jour;
-			dataForEvenement.nombre_commentaires = parseFloat(getXMLNodeValue('commentaires', xmlArticlesEvenement[i]));
-
-			dataForEvenement.numero = indexArticleEvenement;
-			dataForEvenement.index = indexArticleEvenement;
-
-			const nouvelArticleEvenement = new ArticleEvenement();
-			nouvelArticleEvenement.init(dataForEvenement);
-
-			CCN.articlesEvenement.push(nouvelArticleEvenement);
-
-			indexArticleEvenement++;
+			const article = new Article();
+			article.init(data, type);
+			ccnArray.push(article);
 		}
 	});
 }
@@ -453,10 +375,11 @@ function initTimeline() {
 		if (Math.round(date) >= Math.round(CCN.projet.date_debut) && Math.round(date) <= Math.round(CCN.projet.date_fin)) {
 			const mois = Math.round((date - CCN.projet.date_debut) / (24 * 60 * 60 * 30.5 * 1000));
 			CCN.projet.mois_select = mois;
+			const largeur_mois = CCN.projet.nombre_jours / CCN.projet.nombre_mois;
 			if (mois < CCN.projet.nombre_mois / 2) {
-				CCN.projet.showRangeOfTimeline(90, (mois * CCN.projet.largeur_mois), 0);
+				CCN.projet.showRangeOfTimeline(90, mois * largeur_mois, 0);
 			} else {
-				CCN.projet.showRangeOfTimeline(90, ((mois + 1) * CCN.projet.largeur_mois), 0);
+				CCN.projet.showRangeOfTimeline(90, (mois + 1) * largeur_mois, 0);
 			}
 		}
 	}
