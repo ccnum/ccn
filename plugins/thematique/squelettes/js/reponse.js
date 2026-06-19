@@ -36,7 +36,8 @@ function Reponse() {
 
 		const coul = String(this.classe_id).slice(-1);
 
-		const date_texte = this.date.substring(0, 2) + " " + CCN.nomMois[parseFloat(this.date.substring(3, 5)) - 1];
+		const _d = parseDate(this.date);
+		const date_texte = _d.getDate() + " " + CCN.nomMois[_d.getMonth()];
 
 		this.div_base = $(`
 			<div id="reponse_haute${this.id}"

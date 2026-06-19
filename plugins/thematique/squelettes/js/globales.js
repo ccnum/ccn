@@ -118,12 +118,12 @@ function getJsonFromUrl(query) {
 }
 
 /**
- * Parse une date au format JJ/MM/AAAA en objet Date.
+ * Parse une date au format ISO AAAA-MM-JJ en objet Date (heure locale).
  *
- * @param {string} str - Date au format "JJ/MM/AAAA"
+ * @param {string} str - Date au format "AAAA-MM-JJ"
  * @returns {Date}
  */
 function parseDate(str) {
-	const [day, month, year] = str.split('/').map(Number);
+	const [year, month, day] = str.split('-').map(Number);
 	return new Date(year, month - 1, day);
 }

@@ -81,30 +81,18 @@ function Projet() {
 	 * Définit les variables de temps
 	 */
 	this.initTimeVariables = function (date_debut, date_fin) {
-		const jd1 = parseFloat(date_debut.substring(0, 2));
-		const md1 = parseFloat(date_debut.substring(3, 5));
-		const yd1 = parseFloat(date_debut.substring(6, 10));
-		const jd2 = parseFloat(date_fin.substring(0, 2));
-		const md2 = parseFloat(date_fin.substring(3, 5));
-		const yd2 = parseFloat(date_fin.substring(6, 10));
-		this.date_debut = new Date();
-		this.date_debut.setDate(jd1);
-		this.date_debut.setMonth(md1 - 1);
-		this.date_debut.setFullYear(yd1);
-		this.date_fin = new Date();
-		this.date_fin.setDate(jd2);
-		this.date_fin.setMonth(md2 - 1);
-		this.date_fin.setFullYear(yd2);
+		this.date_debut = parseDate(date_debut);
+		this.date_fin = parseDate(date_fin);
 		this.nombre_mois = Math.round((this.date_fin - this.date_debut) / (24 * 60 * 60 * 30.5 * 1000));
 		this.nombre_jours = Math.round((this.date_fin - this.date_debut) / (24 * 60 * 60 * 1000));
 		this.nombre_jours_vus = this.nombre_jours;
 		this.nombre_jours_vus_dest = this.nombre_jours_vus;
-		this.premier_mois = md1 - 1;
+		this.premier_mois = this.date_debut.getMonth();
 		this.premier_jour = Math.round(this.date_debut / (24 * 60 * 60 * 1000));
 		this.mois_rollover = -1;
 		this.mois_select = -1;
 		this.aujourdhui = Math.round(new Date() - this.date_debut) / (24 * 60 * 60 * 1000);
-		this.premiere_annee = yd1;
+		this.premiere_annee = this.date_debut.getFullYear();
 	}
 
 	/**

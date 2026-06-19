@@ -39,7 +39,8 @@ function ArticleEvenement() {
 
 		this.div_base.append(this.img);
 
-		const date_texte = this.date.substring(0, 2) + " " + CCN.nomMois[parseFloat(this.date.substring(3, 5)) - 1];
+		const _d = parseDate(this.date);
+		const date_texte = _d.getDate() + " " + CCN.nomMois[_d.getMonth()];
 
 		// Trim text if too long
 		if (this.titre.length > 25) {
