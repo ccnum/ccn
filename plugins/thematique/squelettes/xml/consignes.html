@@ -6,6 +6,7 @@
 	<BOUCLE_consigne(ARTICLES){branche}{par date}{date>=#CONST{_DATE_DEBUT}}{date<=#CONST{_DATE_FIN}}>
 		<consigne>
 			<id>#ID_ARTICLE</id>
+			<rang>[(#COMPTEUR_BOUCLE)]</rang>
 			<intervenant_id>#ID_RUBRIQUE</intervenant_id>
 			<titre>[(#TITRE|entites_html)]</titre>
 			<date>[(#DATE|affdate{'d'})]/[(#DATE|affdate{'m'})]/[(#DATE|affdate{'Y'})]</date>

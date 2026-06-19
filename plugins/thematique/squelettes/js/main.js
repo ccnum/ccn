@@ -223,7 +223,7 @@ function loadConsignes(fichier) {
 
 					dataForConsigne.classes = CCN.classes;
 					dataForConsigne.intervenants = CCN.intervenants;
-					dataForConsigne.numero = indexConsigne;
+					dataForConsigne.numero = parseInt(getXMLNodeValue('rang', xmlConsignes[i])) - 1;
 
 					const nouvelleConsigne = new Consigne();
 					nouvelleConsigne.init(dataForConsigne);
