@@ -29,14 +29,8 @@ function Consigne() {
 		const d = parseDate(this.data.date_texte);
 		this.date_texte = d.getDate() + " " + CCN.nomMois[d.getMonth()] + " " + d.getFullYear();
 		this.reponses = [];
-		this.intervenant_nom = '';
+		this.intervenant_nom = this.data.intervenant_nom;
 		this.nombre_jours_max = this.data.nombre_jours_max;
-
-		for (let k = 0; k < this.data.intervenants.length; k++) {
-			if (this.data.intervenant_id == this.data.intervenants[k].id) {
-				this.intervenant_nom = this.data.intervenants[k].nom;
-			}
-		}
 
 		if (this.nombre_jours_max <= 0) {
 			this.nombre_jours_max = data.nombre_jours;

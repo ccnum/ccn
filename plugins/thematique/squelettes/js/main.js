@@ -173,10 +173,7 @@ function loadConsignes(fichier) {
 					indexY++;
 
 					dataForConsigne.date_texte = getXMLNodeValue('date', xmlConsignes[i]);
-					dataForConsigne.date = new Date();
-					dataForConsigne.date.setDate(parseFloat(dataForConsigne.date_texte.substring(0, 2)));
-					dataForConsigne.date.setMonth(parseFloat(dataForConsigne.date_texte.substring(3, 5)) - 1);
-					dataForConsigne.date.setFullYear(parseFloat(dataForConsigne.date_texte.substring(6, 10)));
+					dataForConsigne.date = parseDate(dataForConsigne.date_texte);
 					dataForConsigne.jour_consigne = parseFloat(Math.round((dataForConsigne.date) / (24 * 60 * 60 * 1000)));
 					dataForConsigne.nombre_jours = dataForConsigne.jour_consigne - CCN.projet.premier_jour;
 
@@ -194,11 +191,7 @@ function loadConsignes(fichier) {
 
 					for (let j = 0; j < xmlReponses.length; j++) {
 						const date_texte_reponse = getXMLNodeValue('date', xmlReponses[j]);
-						const date_jours_max = new Date();
-
-						date_jours_max.setDate(parseFloat(date_texte_reponse.substring(0, 2)));
-						date_jours_max.setMonth(parseFloat(date_texte_reponse.substring(3, 5)) - 1);
-						date_jours_max.setFullYear(parseFloat(date_texte_reponse.substring(6, 10)));
+						const date_jours_max = parseDate(date_texte_reponse);
 
 						const jours = parseFloat(Math.round((date_jours_max) / (24 * 60 * 60 * 1000))) - dataForConsigne.jour_consigne;
 						liste_jours_max.push(jours);
@@ -222,7 +215,7 @@ function loadConsignes(fichier) {
 					}
 
 					dataForConsigne.classes = CCN.classes;
-					dataForConsigne.intervenants = CCN.intervenants;
+					dataForConsigne.intervenant_nom = getXMLNodeValue('intervenant_nom', xmlConsignes[i]);
 					dataForConsigne.numero = parseInt(getXMLNodeValue('rang', xmlConsignes[i])) - 1;
 
 					const nouvelleConsigne = new Consigne();
@@ -266,10 +259,7 @@ function loadConsignes(fichier) {
 						dataForReponse.classe_id = parseFloat(getXMLNodeValue('classe_id', xmlReponses[j]));
 						dataForReponse.titre = getXMLNodeValue('texte', xmlReponses[j]);
 						dataForReponse.date = getXMLNodeValue('date', xmlReponses[j]);
-						dataForReponse.date_date = new Date();
-						dataForReponse.date_date.setDate(parseFloat(dataForReponse.date.substring(0, 2)));
-						dataForReponse.date_date.setMonth(parseFloat(dataForReponse.date.substring(3, 5)) - 1);
-						dataForReponse.date_date.setFullYear(parseFloat(dataForReponse.date.substring(6, 10)));
+						dataForReponse.date_date = parseDate(dataForReponse.date);
 
 						dataForReponse.nombre_jours = parseFloat(Math.round((dataForReponse.date_date) / (24 * 60 * 60 * 1000))) - dataForConsigne.jour_consigne;
 						dataForReponse.nombre_commentaires = parseFloat(getXMLNodeValue('commentaires', xmlReponses[j]));
@@ -343,12 +333,7 @@ function loadBlog(fichier) {
 
 			indexY++;
 
-			const date = new Date();
-
-			date.setDate(parseFloat(dataForArticleBlog.date.substring(0, 2)));
-			date.setMonth(parseFloat(dataForArticleBlog.date.substring(3, 5)) - 1);
-			date.setFullYear(parseFloat(dataForArticleBlog.date.substring(6, 10)));
-
+			const date = parseDate(dataForArticleBlog.date);
 			const jour_article = parseFloat(Math.round((date) / (24 * 60 * 60 * 1000)));
 			dataForArticleBlog.nombre_jours = jour_article - CCN.projet.premier_jour;
 			dataForArticleBlog.nombre_commentaires = parseFloat(getXMLNodeValue('commentaires', xmlArticlesBlog[i]));
@@ -399,12 +384,7 @@ function loadEvenements(fichier) {
 			indexY++;
 
 			dataForEvenement.date = getXMLNodeValue('date', xmlArticlesEvenement[i]);
-			const date = new Date();
-
-			date.setDate(parseFloat(dataForEvenement.date.substring(0, 2)));
-			date.setMonth(parseFloat(dataForEvenement.date.substring(3, 5)) - 1);
-			date.setFullYear(parseFloat(dataForEvenement.date.substring(6, 10)));
-
+			const date = parseDate(dataForEvenement.date);
 			const jour_article = parseFloat(Math.round((date) / (24 * 60 * 60 * 1000)));
 			dataForEvenement.nombre_jours = jour_article - CCN.projet.premier_jour;
 			dataForEvenement.nombre_commentaires = parseFloat(getXMLNodeValue('commentaires', xmlArticlesEvenement[i]));
