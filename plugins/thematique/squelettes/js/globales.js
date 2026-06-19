@@ -127,3 +127,13 @@ function parseDate(str) {
 	const [year, month, day] = str.split('-').map(Number);
 	return new Date(year, month - 1, day);
 }
+
+function formatDateCourte(dateStr) {
+	const d = parseDate(dateStr);
+	return d.getDate() + " " + CCN.nomMois[d.getMonth()];
+}
+
+function formatDateLongue(dateStr) {
+	const d = parseDate(dateStr);
+	return d.getDate() + " " + CCN.nomMois[d.getMonth()] + " " + d.getFullYear();
+}

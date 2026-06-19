@@ -21,7 +21,6 @@ function ArticleBlog() {
 		this.nombre_commentaires = this.data.nombre_commentaires;
 		this.x = this.data.nombre_jours;
 		this.y = this.data.y;
-		this.index = this.data.index
 
 		this.div_base = $('<div/>')
 			.attr('class', 'timeline_item article_blog_container')
@@ -36,8 +35,7 @@ function ArticleBlog() {
 
 		this.div_base.append(this.img);
 
-		const _d = parseDate(this.date);
-		const date_texte = _d.getDate() + " " + CCN.nomMois[_d.getMonth()];
+		const date_texte = formatDateCourte(this.date);
 
 		const articleBlogClass = 'article_blog' +
 			((this.titre.match("gazette") || this.titre.match("novamag") || this.titre.match("magazine")) ? ' article_blog2' : '');
@@ -57,11 +55,7 @@ function ArticleBlog() {
 
 		const _thisId = this.id_objet;
 
-		this.div_texte.on(
-			'click', function () {
-				callArticleBlog(_thisId);
-			}
-		);
+		this.div_texte.on('click', () => callArticleBlog(_thisId));
 
 		if (CCN.admin == 0) {
 			$(this.div_base).draggable(

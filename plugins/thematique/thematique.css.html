@@ -1808,8 +1808,8 @@ div.donnees_classe {
 
 .consigne {
 	margin: 0;
-	padding: 10px;
-	border-radius: 5px;
+	padding: 0.625em;
+	border-radius: 0.3125em;
 	position: relative;
 	z-index: 1;
 	box-sizing: border-box;
@@ -1825,9 +1825,9 @@ div.donnees_classe {
 }
 
 .consigne .photo {
-	width: 25px;
-	height: 25px;
-	border-radius: 12px;
+	width: 1.5625em;
+	height: 1.5625em;
+	border-radius: 50%;
 	overflow: hidden;
 }
 
@@ -1837,63 +1837,36 @@ div.donnees_classe {
 }
 
 .consigne .titre {
-	font-size: 14px;
+	font-size: 0.875em;
 	font-family: 'Poppins', sans-serif;
 	font-weight: 700;
 }
 
 .consigne .auteur_date {
-	font-size: 9.4px;
-	line-height: 12px;
-	padding: 10px 10px;
+	font-size: 0.5875em;
+	line-height: 1.28em;
+	padding: 1.06em;
 	text-transform: uppercase;
 	letter-spacing: 1px;
 	background: rgba(0,0,0,0.07);
-	margin: 12px -10px 8px;
-}
-
-.consigne .titre_taille1 {
-	font-size: 16px;
-}
-
-.consigne .titre_taille2 {
-	font-size: 20px;
-}
-
-.consigne .titre_taille3 {
-	font-size: 24px;
-}
-
-.consigne .titre_taille4 {
-	font-size: 32px;
+	margin: 1.28em -1.06em 0.85em;
 }
 
 .consigne .texte {
 	display: flex;
 	flex-direction: column;
-	gap: 10px;
+	gap: 0.625em;
 }
 
 .consigne .texte .first-row {
 	display: flex;
 	align-items: center;
-	gap: 10px;
+	gap: 0.625em;
 }
 
 .consigne .texte .second-row {
-	height: auto;
 	border-top: 1px solid rgba(0, 0, 0, 0.12);
-	padding-top: 8px;
-}
-
-.consigne .texte .liens {
-	font-size: 11px;
-}
-
-.consigne .texte .liens:hover {
-	font-size: 11px;
-	text-decoration: underline;
-	color: var(--color-default);
+	padding-top: 0.5em;
 }
 
 .consigne .picto_nombre_reponses {
@@ -1901,17 +1874,16 @@ div.donnees_classe {
 	grid-template-columns: repeat(5, max-content);
 	grid-template-rows: repeat(2, auto);
 	justify-content: center;
-	gap: 4px;
+	gap: 0.29em;
 	z-index: 10;
-	font-size: 14px;
+	font-size: 0.875em;
 	font-weight: bold;
 }
 
 .consigne .reponse_puce {
-	width: 21px;
-	aspect-ratio: 1 / 1; /* fait coincider la hauteur et la largeur */
-	/* background: rgb(255, 255, 255); */
-	border-radius: 50%;  /* div circulaire */
+	width: 1.5em;
+	aspect-ratio: 1 / 1;
+	border-radius: 50%;
 	overflow: hidden;
 }
 
@@ -1926,22 +1898,22 @@ div.donnees_classe {
 	border: solid 7px rgba(0, 0, 0, 0);
 	border-bottom-color: white;
 	left: 50%;
-	margin-left: -7px;
-	top: -14px;
+	margin-left: -0.58em;
+	top: -1.17em;
 }
 .bouton_reponse_consigne {
 	position: absolute;
-	bottom: -35px;
-	left: 10px;
-	right: 10px;
-	height: 33px;
+	bottom: -2.92em;
+	left: 0.83em;
+	right: 0.83em;
+	height: 2.75em;
 	background: white;
-	border-radius: 3px;
+	border-radius: 0.25em;
 	box-shadow: 0 2px 7px rgba(0,0,0,0.3);
 	z-index: 10;
-	line-height: 33px;
-	font-size: 12px;
-	padding: 0px 10px 10px 10px;
+	line-height: 2.75em;
+	font-size: 0.75em;
+	padding: 0 0.83em 0.83em 0.83em;
 	box-sizing: border-box;
 	color: #58AB27;
 	text-align: center;
@@ -1955,10 +1927,10 @@ div.donnees_classe {
 
 .bouton_reponse_consigne img {
 	display: inline-block;
-	vertical-align: -3px;
-	height: 17px;
+	vertical-align: -0.25em;
+	height: 1.42em;
 	width: auto;
-	margin-right: 4px
+	margin-right: 0.33em;
 }
 
 .reponse {
@@ -2090,34 +2062,35 @@ div.donnees_classe {
 
 .consigne .picto_nombre_commentaires {
 	position: absolute;
-	top: -12px;
-	right: -11px;
+	top: -0.63em;
+	right: -0.58em;
 	padding: 0;
-	font-size: 19px;
-	width: 30px;
-	height: 30px;
+	font-size: 1.1875em;
+	width: 1.58em;
+	height: 1.58em;
 	background: #FFD659;
 	color: var(--color-default);
-	line-height: 30px;
-	text-align: center;
+	display: flex;
+	align-items: center;
+	justify-content: center;
 	border-radius: 50%;
 }
 
 .consigne .etiquette-etape {
 	position: absolute;
-	top: -30px;
-	left: 15px;
-	padding: 5px 7px;
+	top: -2.14em;
+	left: 1.07em;
+	padding: 0.36em 0.5em;
 	display: flex;
-	gap: 4px;
+	gap: 0.29em;
 	background-color: var(--color-bleu-fond);
 	color: var(--color-tonic);
 	border: 1px solid var(--color-tonic);
-	font-size: 14px;
+	font-size: 0.875em;
 	font-family: 'Poppins', sans-serif;
 	font-weight: 500;
 	transform: rotate(-3deg);
-	border-radius: 3.66px;
+	border-radius: 0.29em;
 	white-space: nowrap;
 }
 
@@ -4247,15 +4220,15 @@ ul#forum, .lien_forum {
 	z-index: 200;
 	overflow: visible;
 	height: auto;
-	zoom: 1.333;
+	font-size: 1.333rem;
 }
 
 .card-bg {
   position: absolute;
-  top: -7px;
-  left: -7px;
-  width: calc(100% + 14px);
-  height: calc(100% + 14px);
+  top: -0.4375em;
+  left: -0.4375em;
+  width: calc(100% + 0.875em);
+  height: calc(100% + 0.875em);
   z-index: -1;
 }
 

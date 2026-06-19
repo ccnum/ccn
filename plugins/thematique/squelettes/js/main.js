@@ -496,11 +496,7 @@ function initTimeline() {
 
 	$('.profil').mediabox({ width: '80%', height: '80%' });
 
-	window.addEventListener(
-		"resize", function (event) {
-			updateConnecteurs();
-		}, false
-	);
+	window.addEventListener("resize", () => updateConnecteurs());
 }
 
 $(function () {

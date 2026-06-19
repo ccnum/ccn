@@ -26,8 +26,7 @@ function Consigne() {
 		this.y = this.data.y; // Entre 0 et 1
 		this.image = this.data.image;
 		this.select = false;
-		const d = parseDate(this.data.date_texte);
-		this.date_texte = d.getDate() + " " + CCN.nomMois[d.getMonth()] + " " + d.getFullYear();
+		this.date_texte = formatDateLongue(this.data.date_texte);
 		this.reponses = [];
 		this.intervenant_nom = this.data.intervenant_nom;
 		this.nombre_jours_max = this.data.nombre_jours_max;
@@ -135,15 +134,8 @@ function Consigne() {
 		const _thisIdRestreint = parseInt(CCN.idRestreint, 10);
 		const _thisNumero = parseInt(this.numero, 10);
 
-		this.div_reponse_plus.on('click', function () {
-			createReponse(false, _thisId, _thisIdRestreint, _thisNumero);
-		});
-
-		this.div_consigne.on(
-			'click', function () {
-				callConsigne(_thisId);
-			}
-		);
+		this.div_reponse_plus.on('click', () => createReponse(false, _thisId, _thisIdRestreint, _thisNumero));
+		this.div_consigne.on('click', () => callConsigne(_thisId));
 
 		if (CCN.admin == 0) {
 			const leftPercent = CCN.projet.nombre_jours > 0 ? this.x / CCN.projet.nombre_jours * 100 : 0;
@@ -200,11 +192,7 @@ function Consigne() {
 			&& (CCN.typeRestreint != '')
 			&& (CCN.typeRestreint == 'travail_en_cours')
 		) {
-			this.div_reponse_see.on(
-				'click', function () {
-					callReponse(answerId);
-				}
-			).addClass('show');
+			this.div_reponse_see.on('click', () => callReponse(answerId)).addClass('show');
 		}
 	}
 

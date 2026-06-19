@@ -21,7 +21,6 @@ function ArticleEvenement() {
 		this.nombre_commentaires = this.data.nombre_commentaires;
 		this.x = this.data.nombre_jours;
 		this.y = this.data.y;
-		this.index = this.data.index;
 		this.left = -1;
 		this.top = -1;
 		this.show = false;
@@ -39,8 +38,7 @@ function ArticleEvenement() {
 
 		this.div_base.append(this.img);
 
-		const _d = parseDate(this.date);
-		const date_texte = _d.getDate() + " " + CCN.nomMois[_d.getMonth()];
+		const date_texte = formatDateCourte(this.date);
 
 		// Trim text if too long
 		if (this.titre.length > 25) {
@@ -65,11 +63,7 @@ function ArticleEvenement() {
 		const _thisId = this.id_objet;
 		const _thisTypeObjet = this.type_objet;
 
-		this.div_texte.on(
-			'click', function () {
-				callArticleEvenement(_thisId, _thisTypeObjet);
-			}
-		);
+		this.div_texte.on('click', () => callArticleEvenement(_thisId, _thisTypeObjet));
 
 		if (CCN.admin == 0) {
 			$(this.div_base).draggable(
