@@ -19,59 +19,39 @@ include_spip('base/abstract_sql');
  * @param string $version_cible
  */
 function reactions_upgrade($nom_meta_base_version, $version_cible) {
-	include_spip('base/upgrade');
+    include_spip('base/upgrade');
+    include_spip('inc/config');
 
-	$maj = [];
+    $maj = [];
+    $maj['create'] = [
+        ['maj_tables', ['spip_reactions']],
+    ];
 
-	$maj['create'] = [
-		['maj_tables', ['spip_reactions']],
-		['reactions_initialiser_config'],
-	];
-
-	maj_plugin($nom_meta_base_version, $version_cible, $maj);
+    maj_plugin($nom_meta_base_version, $version_cible, $maj);
+    if (lire_config($nom_meta_base_version) && !lire_config('reactions/types_actifs')) {
+        include_spip('formulaires/configurer_reactions');
+        if (function_exists('reactions_catalogue_smileys')) {
+            $defaut_actifs = array_keys(reactions_catalogue_smileys());
+        } else {
+            $defaut_actifs = ['coeur', 'pouce', 'feu'];
+        }
+        ecrire_config('reactions/anonymes_autorises', 'oui');
+        ecrire_config('reactions/multi_reactions', 'oui');
+        ecrire_config('reactions/types_actifs', $defaut_actifs);
+        include_spip('inc/meta');
+        lire_metas();
+    }
 }
 
 /**
- * Initialise la configuration par défaut du plugin (smileys actifs,
- * options anonymes/multi-réactions), uniquement si elle n'existe pas
- * déjà (pour ne jamais écraser une config existante lors d'une
- * réinstallation ou d'une mise à jour).
- *
- * Appelée depuis le tableau $maj de reactions_upgrade(), suivant le
- * pattern recommandé par SPIP pour les actions propres au plugin
- * (cf. revisions_update_meta dans la documentation officielle).
- */
-function reactions_initialiser_config() {
-	include_spip('inc/config');
-
-	if (!isset($GLOBALS['meta']['reactions/types_actifs'])) {
-		ecrire_config('reactions/types_actifs', serialize([
-			'coeur' => '❤️',
-			'pouce' => '👍',
-			'feu'   => '🔥',
-			'rire'  => '😂',
-			'triste' => '😢',
-		]));
-	}
-
-	if (!isset($GLOBALS['meta']['reactions/anonymes_autorises'])) {
-		ecrire_config('reactions/anonymes_autorises', 'oui');
-	}
-
-	if (!isset($GLOBALS['meta']['reactions/multi_reactions'])) {
-		ecrire_config('reactions/multi_reactions', 'oui');
-	}
-}
-
-/**
- * Désinstallation : supprime la table et les métas associées
- *
- * @param string $nom_meta_base_version
+ * Fonction de désinstallation (Obligatoire si on veut être propre)
  */
 function reactions_vider_tables($nom_meta_base_version) {
-	sql_drop_table('spip_reactions');
-	effacer_meta('reactions/types_actifs');
-	effacer_meta('reactions/anonymes_autorises');
-	effacer_meta('reactions/multi_reactions');
-	effacer_meta($nom_meta_base_version);
+    include_spip('base/abstract_sql');
+    include_spip('inc/config');
+    sql_drop_table('spip_reactions');
+    effacer_config('reactions');
+    effacer_meta($nom_meta_base_version);
 }
+
+
