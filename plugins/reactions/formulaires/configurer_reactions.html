@@ -1,0 +1,56 @@
+[(#REM) Squelette du formulaire de configuration du plugin Reactions )]
+
+<form class="formulaire_configurer_reactions" method="post" action="#ENV{action}">
+
+	<fieldset>
+		<legend><:reactions:config_types_actifs:></legend>
+
+		[(#SET{actifs_courants, #ENV*{types_actifs_courants}})]
+		<BOUCLE_catalogue(DATA){source tableau, #ENV*{catalogue_smileys}}>
+			<label class="reaction_choix">
+				<input
+					type="checkbox"
+					name="types_actifs[]"
+					value="#CLE"
+					[(#CLE|reaction_est_actif{#GET{actifs_courants}})]
+				/>
+				<span class="reaction_smiley">#VALEUR</span> #CLE
+			</label>
+		</BOUCLE_catalogue>
+
+		[(#ENV*{erreurs}|table_valeur{types_actifs}|oui) <p class="erreur">#ENV*{erreurs}{types_actifs}</p>]
+	</fieldset>
+
+	<fieldset>
+		<legend><:reactions:config_titre:></legend>
+
+		<label>
+			<input
+				type="checkbox"
+				name="anonymes_autorises"
+				value="oui"
+				[(#ENV{anonymes_autorises}|=={oui}|oui[checked="checked"])]
+			/>
+			<:reactions:config_anonymes_autorises:>
+		</label>
+
+		<label>
+			<input
+				type="checkbox"
+				name="multi_reactions"
+				value="oui"
+				[(#ENV{multi_reactions}|=={oui}|oui[checked="checked"])]
+			/>
+			<:reactions:config_multi_reactions:>
+		</label>
+	</fieldset>
+
+	#ACTION_FORMULAIRE{#ENV{action}}
+
+	<p>
+		<input type="submit" value="<:reactions:config_enregistrer:>" class="submit" />
+	</p>
+
+	[(#ENV{message_ok}|oui) <p class="ok">#ENV{message_ok}</p>]
+
+</form>
