@@ -144,7 +144,7 @@ RUN set -eux; \
     apt-get update; \
     apt-get install -y --no-install-recommends $fetchDeps; \
     \
-    git clone https://git.spip.net/spip-contrib-outils/spip-cli.git /opt/spip-cli; \
+    git clone --depth=1 https://git.spip.net/spip-contrib-outils/spip-cli.git /opt/spip-cli; \
     rm -rf /opt/spip-cli/.git; \
     rm -rf /opt/spip-cli/.gitattributes; \
     rm -rf /opt/spip-cli/.gitignore; \
