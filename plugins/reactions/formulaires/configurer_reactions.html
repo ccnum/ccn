@@ -1,56 +1,87 @@
-[(#REM) Squelette du formulaire de configuration du plugin Reactions )]
+<div class="formulaire_spip formulaire_configurer formulaire_configurer_reactions">
+    [<p class="reponse_formulaire reponse_formulaire_ok">(#ENV*{message_ok})</p>]
+    [<p class="reponse_formulaire reponse_formulaire_erreur">(#ENV*{message_erreur})</p>]
 
-<form class="formulaire_configurer_reactions" method="post" action="#ENV{action}">
+    <style>
+        .grille-smileys {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
+            gap: 12px;
+            margin-top: 15px;
+        }
+        .carte-smiley {
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            padding: 10px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            background: #fff;
+            display: block;
+        }
+        .carte-smiley:hover {
+            border-color: #999;
+            background: #f9f9f9;
+        }
+        /* Style quand la checkbox masquée est cochée */
+        .choix-smiley input[type="checkbox"]:checked + .carte-smiley {
+            border-color: #26b262; /* Vert SPIP */
+            background: #f0fff4;
+            box-shadow: 0 0 5px rgba(38, 178, 98, 0.3);
+        }
+        .visuel-emoj {
+            font-size: 2rem;
+            display: block;
+            margin-bottom: 5px;
+        }
+        .label-emoj {
+            font-size: 0.85rem;
+            color: #555;
+            text-transform: capitalize;
+        }
+    </style>
 
-	<fieldset>
-		<legend><:reactions:config_types_actifs:></legend>
+    <form method="post" action="#ENV{action}">
+        <div>
+            #ACTION_FORMULAIRE
+            
+            <fieldset>
+                <legend>Sélectionnez les smileys à activer sur le site</legend>
+                
+                <div class="grille-smileys">
+                    <BOUCLE_smileys(DATA){source table, #ENV{catalogue_smileys}}>
+						<div class="choix">
+							<input type="checkbox" 
+								name="types_actifs_courants[]" 
+								value="#CLE" 
+								id="smiley_#CLE"
+								[(#CLE|in_array{#ENV{types_actifs_courants}}|oui) checked="checked"] />
+							<label for="smiley_#CLE">
+								[(#VALEUR{no_encoding})] <span>#CLE</span>
+							</label>
+						</div>
+					</BOUCLE_smileys>
+                </div>
+                [<p class='erreur_message' style="color:red; margin-top:10px;">(#ENV**{erreurs/types_actifs})</p>]
+            </fieldset>
 
-		[(#SET{actifs_courants, #ENV*{types_actifs_courants}})]
-		<BOUCLE_catalogue(DATA){source tableau, #ENV*{catalogue_smileys}}>
-			<label class="reaction_choix">
-				<input
-					type="checkbox"
-					name="types_actifs[]"
-					value="#CLE"
-					[(#CLE|reaction_est_actif{#GET{actifs_courants}})]
-				/>
-				<span class="reaction_smiley">#VALEUR</span> #CLE
-			</label>
-		</BOUCLE_catalogue>
+            <fieldset style="margin-top: 25px;">
+                <legend>Options de comportement</legend>
+                <div class="editer-groupe">
+                    <div class="choix">
+                        <input type="checkbox" name="anonymes_autorises" value="oui" id="opt_anonymes" [(#ENV{anonymes_autorises}|=={oui}|oui) checked="checked"] />
+                        <label for="opt_anonymes">Autoriser les visiteurs non connectés à réagir</label>
+                    </div>
+                    <div class="choix" style="margin-top: 10px;">
+                        <input type="checkbox" name="multi_reactions" value="oui" id="opt_multi" [(#ENV{multi_reactions}|=={oui}|oui) checked="checked"] />
+                        <label for="opt_multi">Autoriser plusieurs réactions différentes par contenu</label>
+                    </div>
+                </div>
+            </fieldset>
 
-		[(#ENV*{erreurs}|table_valeur{types_actifs}|oui) <p class="erreur">#ENV*{erreurs}{types_actifs}</p>]
-	</fieldset>
-
-	<fieldset>
-		<legend><:reactions:config_titre:></legend>
-
-		<label>
-			<input
-				type="checkbox"
-				name="anonymes_autorises"
-				value="oui"
-				[(#ENV{anonymes_autorises}|=={oui}|oui[checked="checked"])]
-			/>
-			<:reactions:config_anonymes_autorises:>
-		</label>
-
-		<label>
-			<input
-				type="checkbox"
-				name="multi_reactions"
-				value="oui"
-				[(#ENV{multi_reactions}|=={oui}|oui[checked="checked"])]
-			/>
-			<:reactions:config_multi_reactions:>
-		</label>
-	</fieldset>
-
-	#ACTION_FORMULAIRE{#ENV{action}}
-
-	<p>
-		<input type="submit" value="<:reactions:config_enregistrer:>" class="submit" />
-	</p>
-
-	[(#ENV{message_ok}|oui) <p class="ok">#ENV{message_ok}</p>]
-
-</form>
+            <p class="boutons" style="margin-top: 20px;">
+                <input type="submit" class="submit" value="Enregistrer la configuration" />
+            </p>
+        </div>
+    </form>
+</div>

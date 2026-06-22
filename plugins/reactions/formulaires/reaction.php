@@ -24,16 +24,14 @@ include_spip('reactions_fonctions');
  * @return array
  */
 function formulaires_reaction_charger_dist($objet = 'article', $id_objet = 0) {
-	$valeurs = [
-		'objet'    => $objet,
-		'id_objet' => intval($id_objet),
-	];
-
-	$valeurs['_types_actifs']  = reactions_types_actifs();
-	$valeurs['_compteurs']     = reactions_compter($objet, $id_objet);
-	$valeurs['_mes_reactions'] = reactions_mes_reactions($objet, $id_objet);
-
-	return $valeurs;
+    include_spip('inc/config');
+    return [
+        'objet'          => $objet,
+        'id_objet'       => intval($id_objet),
+        '_types_actifs' => function_exists('reactions_types_actifs') ? reactions_types_actifs() : [],
+        '_compteurs'     => function_exists('reactions_compter') ? reactions_compter($objet, $id_objet) : [],
+        '_mes_reactions' => function_exists('reactions_mes_reactions') ? reactions_mes_reactions($objet, $id_objet) : [],
+    ];
 }
 
 /**
@@ -98,21 +96,3 @@ function formulaires_reaction_traiter_dist($objet = 'article', $id_objet = 0) {
 
 
 
-
-// XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
-
-
-
-// function reaction_classe_active($cle, $mes_reactions) {
-//     if (is_array($mes_reactions) && in_array($cle, $mes_reactions)) {
-//         return ' active'; // Notez l'espace avant "active" pour la classe CSS
-//     }
-//     return '';
-// }
-
-// function reaction_compteur($cle, $compteurs) {
-//     if (is_array($compteurs) && isset($compteurs[$cle])) {
-//         return intval($compteurs[$cle]);
-//     }
-//     return 0;
-// }

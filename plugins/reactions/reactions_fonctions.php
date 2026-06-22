@@ -15,25 +15,18 @@ include_spip('base/abstract_sql');
 
 
 
-/**
- * Retourne la liste des types de réactions actifs sur ce site
- *
- * Format : ['coeur' => '❤️', 'pouce' => '👍', ...]
- * Configurable via la page de config du plugin (stockée en spip_meta).
- *
- * @return array
- */
+
 function reactions_types_actifs() {
-	$types = unserialize($GLOBALS['meta']['reactions/types_actifs'] ?? '');
-	if (!is_array($types) || empty($types)) {
-		// Fallback si la meta est vide ou corrompue
-		$types = [
-			'coeur' => '❤️',
-			'pouce' => '👍',
-			'feu'   => '🔥',
-		];
-	}
-	return $types;
+    include_spip('inc/config');
+    $types = lire_config('reactions/types_actifs');
+    if (!is_array($types) || empty($types)) {
+        include_spip('formulaires/configurer_reactions');
+        if (function_exists('reactions_catalogue_smileys')) {
+            return ['amour', 'pouce', 'feu'];
+        }
+        return ['coeur', 'pouce', 'feu'];
+    }
+    return $types;
 }
 
 /**
@@ -151,7 +144,7 @@ function reactions_a_deja_reagi($objet, $id_objet, $type_reaction) {
  */
 function reactions_poser($objet, $id_objet, $type_reaction) {
 	$types_actifs = reactions_types_actifs();
-	if (!isset($types_actifs[$type_reaction])) {
+	if (!in_array($type_reaction, $types_actifs, true)) {
 		return ['ok' => false, 'raison' => 'type_inconnu'];
 	}
 
@@ -236,40 +229,31 @@ function reactions_retirer_toutes($objet, $id_objet, $identite) {
 	return (bool) sql_delete('spip_reactions', $where);
 }
 
-/**
- * Retourne le décompte des réactions par type pour un objet donné
- *
- * @param string $objet
- * @param int $id_objet
- * @return array Format ['like' => 12, 'love' => 3, ...]
- */
 function reactions_compter($objet, $id_objet) {
-    $compteurs = [];
+    include_spip('inc/config');
+    include_spip('reactions_fonctions');
 
-    // 1. On initialise TOUS les types configurés à 0
-    // Cela garantit que même s'il y a 0 réaction, la clé existera avec la valeur 0
-    if (function_exists('reactions_types_actifs')) {
-        $types_actifs = reactions_types_actifs();
-        foreach ($types_actifs as $cle => $smiley) {
-            $compteurs[$cle] = 0;
+    $types_actifs = reactions_types_actifs();
+    $compteurs = [];
+    foreach ($types_actifs as $type) {
+        if (!empty($type)) {
+            $compteurs[(string)$type] = 0; 
         }
     }
-
-    // 2. On va chercher les vrais totaux en base de données
-    $res = sql_allfetsel(
-        'type_reaction, COUNT(*) AS total',
+	$scores = sql_allfetsel(
+        'type_reaction, COUNT(*) as total',
         'spip_reactions',
-        [
-            'objet = ' . sql_quote($objet),
-            'id_objet = ' . intval($id_objet),
-        ],
-        'type_reaction'
+        'objet = ' . sql_quote($objet) . ' AND id_objet = ' . intval($id_objet),
+        'type_reaction' // 🚀 Le GROUP BY est ici !
     );
 
-    // 3. On écrase les 0 par les vrais totaux trouvés
-    if (is_array($res)) {
-        foreach ($res as $ligne) {
-            $compteurs[$ligne['type_reaction']] = (int) $ligne['total'];
+    if (is_array($scores) && !empty($scores)) {
+        foreach ($scores as $row) {
+            $type = $row['type_reaction'];
+            // On vérifie si ce type fait partie de nos compteurs initialisés
+            if (array_key_exists($type, $compteurs)) {
+                $compteurs[$type] = intval($row['total']);
+            }
         }
     }
 
@@ -286,29 +270,25 @@ function reactions_compter($objet, $id_objet) {
  * @return array Liste de types, ex: ['coeur', 'feu']
  */
 function reactions_mes_reactions($objet, $id_objet) {
-	// Équivalent SPIP pour récupérer l'ID de l'auteur connecté ou sa session anonyme
-    include_spip('inc/session');
-    $id_auteur = intval(session_get('id_auteur'));
-    
-    // Si ton plugin gère les IP pour les non-connectés, adapte la requete
-    $res = sql_allfetsel(
-        'type_reaction',
-        'spip_reactions',
-        [
-            'objet = ' . sql_quote($objet),
-            'id_objet = ' . intval($id_objet),
-            'id_auteur = ' . $id_auteur // À adapter selon ta structure de table
-        ]
-    );
+	$identite = reactions_identite_visiteur();
 
-    $mes_reactions = [];
-    if (is_array($res)) {
-        foreach ($res as $ligne) {
-            $mes_reactions[] = $ligne['type_reaction'];
-        }
-    }
+	$where = [
+		'objet = ' . sql_quote($objet),
+		'id_objet = ' . intval($id_objet),
+	];
 
-    return $mes_reactions;
+	if ($identite['id_auteur']) {
+		$where[] = 'id_auteur = ' . $identite['id_auteur'];
+	} else {
+		if (!$identite['session_id']) {
+			return [];
+		}
+		$where[] = 'id_auteur = 0';
+		$where[] = 'session_id = ' . sql_quote($identite['session_id']);
+	}
+
+	$res = sql_allfetsel('type_reaction', 'spip_reactions', $where);
+	return $res ? array_column($res, 'type_reaction') : [];
 }
 
 /**
@@ -339,4 +319,20 @@ function reaction_classe_active($type, $mes_reactions) {
 function reaction_compteur($type, $compteurs) {
 	$compteurs = is_array($compteurs) ? $compteurs : [];
 	return (int) ($compteurs[$type] ?? 0);
+}
+
+/**
+ * Filtre SPIP pour récupérer un encodage précis d'un smiley depuis son nom (sa clé)
+ * Utilisation dans le squelette : [(#VALEUR|reactions_recuperer_smiley{html_encoding})]
+ */
+function reactions_recuperer_smiley($cle, $type_encodage = 'html_encoding') {
+    include_spip('formulaires/configurer_reactions');
+    
+    if (function_exists('reactions_catalogue_smileys')) {
+        $catalogue = reactions_catalogue_smileys();
+        if (isset($catalogue[$cle][$type_encodage])) {
+            return $catalogue[$cle][$type_encodage];
+        }
+    }
+    return '';
 }

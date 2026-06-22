@@ -17,13 +17,11 @@ function action_poser_reaction_dist() {
     include_spip('inc/autoriser');
     if ($objet && $id_objet && $type_reaction && autoriser('reactionposer', $objet, $id_objet)) {
         
-        // Charger le fichier CVT pour accéder à vos fonctions de BDD (ex: reactions_compter)
         include_spip('formulaires/reaction'); 
+        include_spip('reactions_fonctions'); // 🚀 Crucial pour avoir reactions_types_actifs()
         
-        // Sécurité : On vérifie dans la config d' /ecrire si cette réaction est bien activée
         $types_actifs = function_exists('reactions_types_actifs') ? reactions_types_actifs() : [];
-        
-        if (isset($types_actifs[$type_reaction])) {
+        if (in_array($type_reaction, $types_actifs)) {
             
             // Logique de bascule (Toggle)
             $deja_pose = reactions_a_deja_reagi($objet, $id_objet, $type_reaction);
@@ -43,6 +41,7 @@ function action_poser_reaction_dist() {
             $retour['compteurs'] = reactions_compter($objet, $id_objet);
         } else {
             $retour['erreur'] = 'Reaction non activee dans la configuration';
+            spip_log("Tentative de réaction non active : " . $type_reaction, "reactions." . _LOG_ERREUR);
         }
     } else {
         $retour['erreur'] = 'Action non autorisee';
@@ -50,6 +49,6 @@ function action_poser_reaction_dist() {
 
     // Envoi de la réponse brute en JSON
     header('Content-Type: application/json; charset=utf-8');
-    echo json_encode($retour);
+    echo json_encode($retour, JSON_UNESCAPED_UNICODE);
     exit;
 }

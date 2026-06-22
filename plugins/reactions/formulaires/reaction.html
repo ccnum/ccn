@@ -3,15 +3,19 @@
     [(#SET{compteurs, #ENV{objet}|reactions_compter{#ENV{id_objet}}})]
     [(#SET{types_actifs, #URL_SITE_SPIP|reactions_types_actifs})]
     
-    <BOUCLE_types(DATA){source tableau, #GET{types_actifs}}>
+    <BOUCLE_types(DATA){source tableau, #ENV*{_types_actifs}}>
         <button type="button" 
-                class="reaction_bouton[(#CLE|reaction_classe_active{#GET{mes_reactions}})]" 
-                title="#CLE"
-                data-action="#URL_ACTION_AUTEUR{poser_reaction, #ENV{objet}-#ENV{id_objet}-#CLE}"
-                data-type="#CLE"
+                class="reaction_bouton[(#VALEUR|reaction_classe_active{#GET{mes_reactions}})]" 
+                title="#VALEUR"
+                data-action="#URL_ACTION_AUTEUR{poser_reaction, #ENV{objet}-#ENV{id_objet}-#VALEUR}"
+                data-type="#VALEUR"
         >
-            <span class="reaction_smiley">#VALEUR</span>
-            <span class="reaction_compteur js-compteur-#CLE">[(#CLE|reaction_compteur{#GET{compteurs}})]</span>
+            <span class="reaction_smiley">
+                [(#VALEUR|reactions_recuperer_smiley{html_encoding})]
+            </span>
+            <span class="reaction_compteur js-compteur-#VALEUR">
+                [(#VALEUR|reaction_compteur{#GET{compteurs}})]
+            </span>
         </button>
     </BOUCLE_types>
 </div>
@@ -31,13 +35,9 @@ $(function() {
             dataType: 'json',
             success: function(data) {
                 if (data.ok) {
-                    // 1. Mise à jour de tous les compteurs numériques
                     $.each(data.compteurs, function(cle, total) {
                         $('.js-compteur-' + cle).text(total);
                     });
-
-                    // 2. Mise à jour visuelle de la classe "active"
-                    // On regarde ce que le fichier PHP (l'action) a renvoyé
                     if (data.action === 'pose') {
                         $btn.addClass('reaction_active');
                     } else if (data.action === 'retire') {
