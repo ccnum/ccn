@@ -1244,13 +1244,14 @@ a:hover {
 	padding: 12px 48px 12px 24px;
 }
 
-.select-option:hover {
+.select-option:not(.actif):hover {
 	background-color: var(--color-gris);
 }
 
 .select-option.actif {
-	background-color: #e8f4f8;
 	font-weight: bold;
+	color: #bfbfbf;
+	cursor: auto;
 }
 
 /* ================================================================ */
