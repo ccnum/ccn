@@ -80,6 +80,9 @@ function formulaires_public_editer_article_verifier_dist(
 	$hidden = ''
 ) {
 	$erreurs = formulaires_editer_objet_verifier('article', $id_article, ['titre']);
+	if (empty($erreurs['titre']) && strlen(_request('titre')) > 50) {
+		$erreurs['titre'] = 'Le titre ne peut pas dépasser 50 caractères.';
+	}
 	return $erreurs;
 }
 
