@@ -134,27 +134,35 @@ RUN set -eux; \
     find /etc/apache2 -type f -name '*.conf' -exec sed -ri 's/([[:space:]]*LogFormat[[:space:]]+"[^"]*)%h([^"]*")/\1%a\2/g' '{}' +
 
 # Install SPIP-Cli
+# spip-cli est désormais EMBARQUÉ dans le dépôt (dossier ./spip-cli) et copié ici,
+# au lieu d'être cloné depuis git.spip.net à chaque build.
+COPY spip-cli/ /opt/spip-cli/
+
+# --- DEBUG TEMPORAIRE (à retirer ensuite) ---
+RUN echo "=== PHP ==="; php --version; \
+    echo "=== spip-cli racine ==="; ls -la /opt/spip-cli; \
+    echo "=== spip-cli/bin ==="; ls -la /opt/spip-cli/bin || echo "PAS DE DOSSIER bin"; \
+    echo "=== composer.json ==="; cat /opt/spip-cli/composer.json || echo "PAS DE composer.json"
+# --- FIN DEBUG ---
+
 RUN set -eux; \
     cd /opt; \
     curl --silent --show-error https://getcomposer.org/installer | php; \
-    fetchDeps=" \
-    git \
-    unzip \
-    "; \
+    fetchDeps="git unzip"; \
     apt-get update; \
     apt-get install -y --no-install-recommends $fetchDeps; \
     \
-    git clone https://git.spip.net/spip-contrib-outils/spip-cli.git /opt/spip-cli; \
-    rm -rf /opt/spip-cli/.git; \
-    rm -rf /opt/spip-cli/.gitattributes; \
-    rm -rf /opt/spip-cli/.gitignore; \
-    ln -s /opt/spip-cli/bin/spip /usr/local/bin/spip; \
+    # liens + droits d'exécution sur les binaires spip-cli (au cas où le bit +x serait perdu)
+    chmod +x /opt/spip-cli/bin/spip /opt/spip-cli/bin/spipmu; \
+    ln -s /opt/spip-cli/bin/spip   /usr/local/bin/spip; \
     ln -s /opt/spip-cli/bin/spipmu /usr/local/bin/spipmu; \
-    cd /opt/spip-cli && /opt/composer.phar install; \
+    cd /opt/spip-cli && /opt/composer.phar install --no-interaction --no-progress; \
     \
-    curl -o spip.zip -fSL "files.spip.net/spip/archives/spip-v${SPIP_PACKAGE}.zip"; \
-    unzip spip.zip -d /usr/src/spip; \
-    rm spip.zip; \
+    # Archive SPIP (URL en https + retry, téléchargée dans un fichier dédié)
+    curl -fSL --retry 3 -o /tmp/spip.zip \
+        "https://files.spip.net/spip/archives/spip-v${SPIP_PACKAGE}.zip"; \
+    unzip -q /tmp/spip.zip -d /usr/src/spip; \
+    rm /tmp/spip.zip; \
     chown -R www-data:www-data /usr/src/spip; \
     \
     apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false $fetchDeps; \

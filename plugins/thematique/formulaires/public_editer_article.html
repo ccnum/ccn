@@ -28,7 +28,7 @@
 			<div class="editer editer_titre [(#ENV{id_article}|=={oui}|non)cache] obligatoire[ (#ENV**{erreurs/titre}|oui)erreur]">
 				<label for="titre" class="titre2">Titre<em class="aide">#AIDER{titre}</em></label>[
 				<span class='erreur_message'>(#ENV**{erreurs/titre})</span>
-				]<input type='text' class='text titre2' name='titre' id='titre3' cols='40' [ lang='(#LANGUE)'] value="[(#ENV**{titre})]"
+				]<input type='text' class='text titre2' name='titre' id='titre3' cols='40' maxlength='50' [ lang='(#LANGUE)'] value="[(#ENV**{titre})]"
 				[(#ENV{titre,''}|?{'',' '})onfocus="if(!antifocus){this.value='';antifocus=true;}"]/>
 			</div>
 			<!--

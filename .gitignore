@@ -13,6 +13,8 @@ squelettes-dist
 tmp
 /vendor
 CHANGELOG.md
+!spip-cli/composer.json
+!spip-cli/composer.lock
 composer.*
 index.php
 LICENSE
