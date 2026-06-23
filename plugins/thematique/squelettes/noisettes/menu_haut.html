@@ -72,6 +72,9 @@
 					$options.on('click', '.select-option', function(e){
 						e.stopPropagation();
 						var $li = $(this);
+						if($li.hasClass("actif")){ 
+							return;
+						}
 						var val = $li.data('value');
 						var text = $li.html();
 						// update visible label — first non-icon span
