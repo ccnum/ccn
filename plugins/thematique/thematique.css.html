@@ -90,7 +90,7 @@
 	--color-default: #1E2055;
 	--color-bleu-fond: #DEE0FF;
 	--color-gris: #F5F5F5;
-	--header-height: 54px;
+	--header-height: 44px;
 	--footer-height: 80px;
 	--transition-fast: 200ms;
 	--transition-normal: 300ms;
@@ -547,8 +547,6 @@ body {
 }
 
 #menu_bas_logos {
-	padding-top: 20px;
-	padding-right: 10px;
 	> li {
 		height: fit-content !important;
 		width: unset !important;
@@ -741,6 +739,10 @@ body {
 
 .select:hover .icon-down {
 	transform: rotate(180deg);
+}
+
+#menu_haut .icon-down {
+	margin-right: -12px;
 }
 
 #zone_bas {
@@ -1481,7 +1483,7 @@ a:hover {
 	height: 40px;
 	width: 23px;
 	background-color: var(--color-default);
-	margin-right: 1rem;
+	margin-right: 0.5rem;
 }
 #bouton_aide {
 	background-color: white;
@@ -1838,9 +1840,11 @@ div.donnees_classe {
 }
 
 .consigne .titre {
-	font-size: 0.875em;
+	font-size: 0.675em;
 	font-family: 'Poppins', sans-serif;
-	font-weight: 500;
+	font-weight: 600;
+	width: 119px;
+	line-height: 17px;
 }
 
 .consigne .auteur_date {
@@ -2079,15 +2083,15 @@ div.donnees_classe {
 
 .consigne .etiquette-etape {
 	position: absolute;
-	top: -1.8em;
+	top: -1.6em;
 	left: 1.07em;
-	padding: 0.3em 0.45em;
+	padding: 0.17em 0.45em;
 	display: flex;
 	gap: 0.29em;
 	background-color: var(--color-bleu-fond);
 	color: var(--color-tonic);
 	border: 1px solid var(--color-tonic);
-	font-size: 0.75em;
+	font-size: 0.65em;
 	font-family: 'Poppins', sans-serif;
 	font-weight: 500;
 	transform: rotate(-3deg);
@@ -2100,9 +2104,7 @@ div.donnees_classe {
 	background-color: var(--color-tonic);
 	color: white;
 	border: 1px solid white;
-	top: auto;
-	bottom: -1.8em;
-	transform: rotate(3deg);
+	left: 10px;
 }
 
 
