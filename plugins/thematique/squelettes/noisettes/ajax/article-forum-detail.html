@@ -176,20 +176,4 @@
 		});
 	})()
 </script>
-<script>
-$(document).off('change.ccn_filesize').on('change.ccn_filesize', 'input[type="file"]', function() {
-    if (!this.files[0]) return;
-    if (this.files[0].size > 100 * 1024 * 1024) {
-        this.value = '';
-        var errDiv = $(this).closest('form').prev('.reponse_formulaire_erreur');
-        if (!errDiv.length) {
-            errDiv = $(this).closest('.formulaire_spip').find('.reponse_formulaire_erreur');
-        }
-        if (errDiv.length) {
-            errDiv.html('Le fichier dépasse la taille maximale autorisée (100 Mo).').show();
-        } else {
-            alert('Le fichier dépasse la taille maximale autorisée (100 Mo).');
-        }
-    }
-});
-</script>
+

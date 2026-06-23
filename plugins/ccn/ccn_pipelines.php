@@ -107,33 +107,12 @@ function ccn_compresser_video($fichier) {
 function ccn_formulaire_verifier($flux) {
 	$erreurs = $flux['data'];
 	$args = $flux['args'];
-
-	if ($args[0] !== 'joindre_document' || count($erreurs) || _request('joindre_mediatheque')) {
+	if (count($erreurs) || _request('joindre_mediatheque')) {
 		return $flux;
 	}
 
-	// Détecter si PHP a rejeté le fichier en amont (trop lourd)
-	$errors = (array) ($_FILES['fichier_upload']['error'] ?? []);
-	foreach ($errors as $err) {
-		if (in_array($err, [UPLOAD_ERR_INI_SIZE, UPLOAD_ERR_FORM_SIZE])) {
-				$erreurs['message_erreur'] = 'Le fichier dépasse la taille maximale autorisée (100 Mo).';
-				$flux['data'] = $erreurs;
-				return $flux;
-		}
-	}
-
 	if (empty($_FILES['fichier_upload']['name'])) {
-			return $flux;
-	}
-
-	// Vérifier la taille (100 Mo max)
-	$taille_max = 100 * 1024 * 1024;
-	foreach ((array) $_FILES['fichier_upload']['size'] as $taille) {
-		if ($taille > $taille_max) {
-				$erreurs['message_erreur'] = 'Le fichier dépasse la taille maximale autorisée (100 Mo).';
-				$flux['data'] = $erreurs;
-				return $flux;
-		}
+		return $flux;
 	}
 
 	$formats = trim($GLOBALS['meta']['formats_documents_forum'] ?? '');
@@ -155,16 +134,5 @@ function ccn_formulaire_verifier($flux) {
 }
 
 function ccn_formulaire_charger($flux) {
-    if (($flux['args']['form'] ?? '') !== 'forum') {
-        return $flux;
-    }
-    
-    $max = 100 * 1024 * 1024;
-    $content_length = intval($_SERVER['CONTENT_LENGTH'] ?? 0);
-    
-    if ($content_length > $max) {
-        $flux['data']['message_erreur'] = 'Le fichier dépasse la taille maximale autorisée (100 Mo).';
-    }
-    
     return $flux;
 }
