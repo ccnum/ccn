@@ -138,21 +138,18 @@ RUN set -eux; \
     cd /opt; \
     curl --silent --show-error https://getcomposer.org/installer | php; \
     fetchDeps=" \
-    git \
     unzip \
     "; \
     apt-get update; \
     apt-get install -y --no-install-recommends $fetchDeps; \
     \
-    git clone --depth=1 https://git.spip.net/spip-contrib-outils/spip-cli.git /opt/spip-cli; \
-    rm -rf /opt/spip-cli/.git; \
-    rm -rf /opt/spip-cli/.gitattributes; \
-    rm -rf /opt/spip-cli/.gitignore; \
+    mkdir -p /opt/spip-cli; \
+    curl -fSL https://git.spip.net/spip-contrib-outils/spip-cli/archive/master.tar.gz | tar -xz --strip-components=1 -C /opt/spip-cli; \
     ln -s /opt/spip-cli/bin/spip /usr/local/bin/spip; \
     ln -s /opt/spip-cli/bin/spipmu /usr/local/bin/spipmu; \
     cd /opt/spip-cli && /opt/composer.phar install; \
     \
-    curl -o spip.zip -fSL "files.spip.net/spip/archives/spip-v${SPIP_PACKAGE}.zip"; \
+    curl -o spip.zip -fSL "https://files.spip.net/spip/archives/spip-v${SPIP_PACKAGE}.zip"; \
     unzip spip.zip -d /usr/src/spip; \
     rm spip.zip; \
     chown -R www-data:www-data /usr/src/spip; \
