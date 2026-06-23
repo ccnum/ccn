@@ -1,4 +1,5 @@
 <BOUCLE_principale(ARTICLES){id_article}{tout}>
+	<div>Oui</div>
 	<BOUCLE_rub1(HIERARCHIE){id_rubrique}{tout}{0,1}>[(#SET{coul,[(#ID_RUBRIQUE|moins{2})]})]</BOUCLE_rub1>
 	[(#MODE|!={ajax-detail}|oui)<div id="popup" [class="popup_(#GET{type_objet})"]>
 		<div id="titre">
@@ -10,24 +11,28 @@
 			<div id="bloc_texte">]
 				[<div class="ajax">(#FORMULAIRE_FORUM{'spip.php?page=article&amp;mode=complet&amp;id_article='#VAL{id_article}|_request})</div>]
 				<script>
-				document.addEventListener('DOMContentLoaded', function() {
-					var form = document.querySelector('#formulaire_forum form');
-					if (!form) return;
-					var input = form.querySelector('input[type="file"]');
-					if (!input) return;
-					
-					input.addEventListener('change', function() {
-						if (!this.files[0]) return;
-						if (this.files[0].size > 100 * 1024 * 1024) {
-							this.value = '';
-							var errDiv = form.closest('#formulaire_forum').querySelector('.reponse_formulaire_erreur');
-							if (errDiv) {
-								errDiv.innerHTML = 'Le fichier dépasse la taille maximale autorisée (100 Mo).';
-								errDiv.style.display = 'block';
-							}
+
+					$(document).off('change', '#ajouter_document').on('change', '#ajouter_document', function () {
+						var poidsMaxi = 100 * 1024 * 1024; // 100 Mo
+						var fichier = this.files[0];
+
+						var $conteneur = $(this).closest('.saisie_document_forum');
+						var $spanErreur = $conteneur.find('.erreur_message');
+
+						if ($spanErreur.length === 0) {
+							$spanErreur = $('<span class="erreur_message"></span>');
+							$conteneur.prepend($spanErreur);
+						}
+
+						if (fichier && fichier.size > poidsMaxi) {
+							$spanErreur.text('Taille maximale autorisée : 100 Mo.');
+							$conteneur.addClass('erreur');
+							$(this).val('');
+						} else {
+							$spanErreur.text('');
+							$conteneur.removeClass('erreur');
 						}
 					});
-				});
 				</script>
 			[</div>
 		</div>
