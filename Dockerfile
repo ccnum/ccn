@@ -138,6 +138,13 @@ RUN set -eux; \
 # au lieu d'être cloné depuis git.spip.net à chaque build.
 COPY spip-cli/ /opt/spip-cli/
 
+# --- DEBUG TEMPORAIRE (à retirer ensuite) ---
+RUN echo "=== PHP ==="; php --version; \
+    echo "=== spip-cli racine ==="; ls -la /opt/spip-cli; \
+    echo "=== spip-cli/bin ==="; ls -la /opt/spip-cli/bin || echo "PAS DE DOSSIER bin"; \
+    echo "=== composer.json ==="; cat /opt/spip-cli/composer.json || echo "PAS DE composer.json"
+# --- FIN DEBUG ---
+
 RUN set -eux; \
     cd /opt; \
     curl --silent --show-error https://getcomposer.org/installer | php; \
