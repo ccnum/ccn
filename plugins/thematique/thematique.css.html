@@ -961,7 +961,6 @@ a:hover {
 }
 
 #menu_haut.zone-menu li a {
-	color: var(--color-default);
 	height: 40px;
 	display: inline-block;
 }
@@ -1493,21 +1492,37 @@ a:hover {
 #menu_haut.zone-menu li a.logo_menu-deconnecter:hover {
 	background-color: #7dd6de;
 }
+
+li.aide {
+	height: 100%;
+	color: var(--color-default);
+	background-color: white;
+	display: flex;
+	align-items: center;
+	&:hover {
+		background-color: var(--background-color-hover);
+		color: var(--color-hover) !important;
+
+		& .icon {
+			background-color: var(--color-hover);
+		}
+		a {
+			color: white;
+		}
+	}
+	& .icon {
+		background-color: var(--color-default);
+	}
+}
 #bouton_aide .icon-aide {
 	height: 40px;
 	width: 23px;
-	background-color: var(--color-default);
 	margin-right: 0.5rem;
 }
 #bouton_aide {
-	background-color: white;
-	background-size: contain;
 	display: flex;
 	align-items: center;
 	padding: 0px 11px;
-}
-#bouton_aide:hover {
-	background-color: #7dd6de;
 }
 
 /*Surcharges mode 1024*/
