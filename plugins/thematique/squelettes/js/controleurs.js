@@ -388,7 +388,11 @@ function callConsigne(id_consigne) {
 	if (!Number.isInteger(Number(id_consigne))) return;
 	changeTimelineMode('consignes');
 
-	const url = CCN.projet.url_popup_consigne + "&id_article=" + id_consigne;
+	// récupérer le rang déjà connu côté JS
+	const consigneData = CCN.consignes.find(c => c.id == id_consigne);
+	const numero = consigneData ? consigneData.numero : '';
+
+	const url = CCN.projet.url_popup_consigne + "&id_article=" + id_consigne + "&rang=" + numero;
 	showConsigneInTimeline(id_consigne);
 	setFullscreenModeToCols(false);
 	updateMenuIcon(['consignes-' + id_consigne], 'mainView');
@@ -400,7 +404,7 @@ function callConsigne(id_consigne) {
 					'type_objet': 'consignes',
 					'id_objet': id_consigne,
 					'id_rubrique': id_consigne,
-					'page': 'article'
+					'page': 'article',
 				}, 'Consigne', "./spip.php?page=article&id_article=" + id_consigne + "&mode=complet"
 			);
 		}

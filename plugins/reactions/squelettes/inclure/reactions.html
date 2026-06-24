@@ -1,0 +1,19 @@
+[(#REM)
+	Widget réactions, à inclure depuis n'importe quel squelette objet.
+
+	Usage typique, dans squelettes/article.html :
+	[(#INCLURE{fond=inclure/reactions, objet=article, id_objet=#ID_ARTICLE})]
+
+	Paramètres attendus :
+	- objet : type d'objet éditorial (ex: article, rubrique...)
+	- id_objet : identifiant numérique de l'objet
+)]
+
+
+[(#AUTORISER{reactionvoir, #ENV{objet}, #ENV{id_objet}}|oui)
+    <div class="reactions_widget" data-objet="#ENV{objet}" data-id-objet="#ENV{id_objet}">
+        <div class="ajax">
+            [(#FORMULAIRE_REACTION{#ENV{objet}, #ENV{id_objet}, ajax=reaction})]
+        </div>
+    </div>
+]

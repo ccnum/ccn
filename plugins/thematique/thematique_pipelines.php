@@ -57,6 +57,7 @@ function thematique_insert_head($flux) {
 		'js/main.js',
 		'js/projet.js',
 		'js/reponse.js',
+		'js/custom-tabs.js'
 	];
 
 	foreach ($scripts as $script) {

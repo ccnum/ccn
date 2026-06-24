@@ -1,0 +1,59 @@
+.reactions_widget {
+	margin: 1em 0;
+}
+
+.reactions_liste {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 0.5em;
+}
+
+.reaction_bouton {
+	display: inline-flex;
+	align-items: center;
+	gap: 0.35em;
+	padding: 0.3em 0.7em;
+	border: 1px solid #ddd;
+	border-radius: 999px;
+	background: #fafafa;
+	cursor: pointer;
+	font-size: 0.95em;
+	line-height: 1.2;
+	transition: transform 0.1s ease, background 0.15s ease, border-color 0.15s ease;
+}
+
+.reaction_bouton:hover {
+	background: #f0f0f0;
+	transform: scale(1.05);
+}
+
+.reaction_bouton:active {
+	transform: scale(0.95);
+}
+
+.reaction_bouton.reaction_active {
+	background: #e8f0ff;
+	border-color: #6f9ce8;
+}
+
+.reaction_smiley {
+	font-size: 1.15em;
+}
+
+.reaction_compteur {
+	font-variant-numeric: tabular-nums;
+	color: #666;
+	min-width: 1em;
+	text-align: left;
+}
+
+.reaction_bouton.reaction_active .reaction_compteur {
+	color: #2a5cc7;
+	font-weight: 600;
+}
+
+.formulaire_reaction .erreur {
+	color: #c0392b;
+	font-size: 0.85em;
+	margin-top: 0.4em;
+}

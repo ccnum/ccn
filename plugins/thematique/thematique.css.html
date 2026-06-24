@@ -110,6 +110,14 @@
 	--color-classe-6: #4D49FC;
 	--color-classe-7: #1F7C3E;
 	--color-classe-8: #72C2E4;
+
+	--header-height: 54px;
+	--footer-height: 80px;
+	--sidebar-width-large: 650px;
+	--sidebar-header-height: 117px;
+	--sidebar-width-normal: 480px;
+	--sidebar-y-margin: 15px;
+
 }
 
 .crayon-active.text {
@@ -735,6 +743,12 @@ body {
 }
 .icon-logout {
 	--svg: url("#CHEMIN{img/logout.svg}");
+}
+#sidebar-close {
+	--svg: url("#CHEMIN{img/xmark.svg}");
+	width: 30px;
+	height: 30px;
+	background-color: var(--color-tonic);
 }
 
 .select:hover .icon-down {
@@ -2081,11 +2095,8 @@ div.donnees_classe {
 	border-radius: 50%;
 }
 
-.consigne .etiquette-etape {
-	position: absolute;
-	top: -1.6em;
-	left: 1.07em;
-	padding: 0.17em 0.45em;
+.etiquette-etape {
+	padding: 5px 7px;
 	display: flex;
 	gap: 0.29em;
 	background-color: var(--color-bleu-fond);
@@ -2097,7 +2108,24 @@ div.donnees_classe {
 	transform: rotate(-3deg);
 	border-radius: 0.29em;
 	white-space: nowrap;
-	z-index: 2;
+}
+
+.consigne .etiquette-etape {
+	position: absolute;
+	top: -30px;
+	left: 15px;
+}
+
+.consigne .etiquette-etape {
+	position: absolute;
+	top: -30px;
+	left: 15px;
+}
+#sidebar .etiquette-etape .texte-etiquette {
+	display: flex;
+	align-items: center;
+	font-size: 1rem;
+	font-weight: 399;
 }
 
 .consigne_haute.derniere-etape .etiquette-etape {
@@ -3520,7 +3548,11 @@ li.editer p.explication, .editer_pgp, .editer_bio, .editer_liens_sites, .saisie_
 }
 
 .bloc_article {
+	display: flex;
+	flex-direction: column;
 	overflow-x: hidden;
+	overflow-y: hidden;
+	height: calc(100vh - var(--header-height) - var(--footer-height) - 15px);
 }
 
 .bloc_article.serif p {
@@ -4016,7 +4048,7 @@ ul#forum, .lien_forum {
 }
 
 .hasSidebarOpen #timeline_responsive {
-    width: calc(100% - 550px); /* largeur de la sidebar */
+    width: calc(100% - var(--sidebar-width-large)); /* largeur de la sidebar */
     flex: none;
 }
 
@@ -4097,9 +4129,9 @@ ul#forum, .lien_forum {
 	position: fixed;
 	top: var(--header-height);
 	right: 0;
-	width: 550px;
+	width: var(--sidebar-width-large);
 	z-index: 4000;
-	height: 100%;
+	height: calc(100vh - var());
 	transform: translateX(100%); 
 	transition: transform 500ms ease-in-out, width 500ms ease; 	
 }
@@ -4168,39 +4200,10 @@ ul#forum, .lien_forum {
 		background: url("#CHEMIN{img/expand-on.svg}");
 	}
 }
-#sidebarExpand {
-	display: none;
-	position: absolute;
-	left: -40px;
-	top: 1px;
-	height: 40px;
-	width: 40px;
-	background: white;
-	font-size: 0;
-	line-height: 33px;
-	cursor: pointer;
-	z-index: 100000;
-	&::before {
-		content: '';
-		position: absolute;
-		height: 40px;
-		width: 40px;
-		background-repeat: no-repeat;
-		background-position: center;
-		filter: brightness(0) saturate(100%) invert(13%) sepia(51%) saturate(1781%) hue-rotate(215deg) brightness(90%) contrast(98%);
-	}
-	&:hover {
-		background: var(--background-color-hover);
-		color: var(--color-hover);
-		&::before {
-			filter: brightness(0) saturate(100%) invert(100%) sepia(100%) saturate(1%) hue-rotate(214deg) brightness(107%) contrast(102%);
-		}
-	}
-}
-#sidebarExpand .icon, #sidebarCache .icon {
+/*.icon, #sidebarCache .icon {
 	display: contents;
-}
-#sidebarExpand .icon svg, #sidebarCache .icon svg {
+}*/
+.icon svg, #sidebarCache .icon svg {
 	height: 33px;
 }
 #sidebarCloseButton {
@@ -4546,7 +4549,7 @@ ul#forum, .lien_forum {
 	}
 
 	#sidebar {
-		width: 450px;
+		width: var(--sidebar-width-normal);
 	}
 
 	#zone {
@@ -4581,4 +4584,91 @@ ul#forum, .lien_forum {
 	#livrables {
 		overflow-y: scroll;
 	}
+}
+
+#row_header {
+	display: flex;
+	justify-content: space-between;
+	padding: 11px;
+}
+#header-col_left {
+	flex: 1;
+}
+#header-col-right {
+	flex: 4;
+	padding: 12px;
+}
+#header-row-1 {
+    display: flex;
+	align-items: center;
+	justify-content: space-between;
+	margin-bottom: 16px;
+}
+#header-row-2 {
+	flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+	font-weight: 800;
+}
+#header-reactions {
+	display: flex;
+	align-items: center;
+	gap: 6px;
+	white-space: nowrap;
+}
+#sidebar-top-right-corner {
+	display: flex;
+	gap: 8px;
+}
+#header-sidebarexpand-container {
+	display: flex;
+    align-items: center;
+    justify-content: center;
+	border-radius: 50%;
+	height: 25px;
+	width: 25px;
+	background-color: var(--color-tonic);
+	margin: 2px;
+}
+#sidebarExpand {
+	--svg: url("#CHEMIN{img/expend.svg}"); 
+	background-color: white;
+	aspect-ratio: 1 / 1;
+	width: 70%;
+}
+.hasSidebarExpanded #sidebarExpand {
+	--svg: url("#CHEMIN{img/shrink.svg}"); 
+}
+
+.container-tabs {
+	flex: 1; /* prend tout l'espace restant */
+	min-height: 0; /* IMPORTANT : sans ça, le scroll ne marche pas dans certains navigateurs */
+	display: flex;
+	flex-direction: column;
+}
+
+#sidebar-header-container {
+	flex-shrink: 0; /* ne se compresse jamais, garde sa hauteur naturelle */
+}
+
+
+#CHEMIN{img/pictos_sites/[(#NOM_SITE_SPIP|replace{' ',''}|strtolower)].svg}
+
+#mission-tabs {
+	height: 100%;
+}
+
+.container-tabs,
+#mission-tabs {
+	flex: 1;
+	min-height: 0;
+	display: flex;
+	flex-direction: column;
+}
+
+.ctabs-content {
+	flex: 1;
+	min-height0;
+	overflow-y: auto;
 }
