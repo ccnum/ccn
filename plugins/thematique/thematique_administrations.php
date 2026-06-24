@@ -16,8 +16,6 @@ function thematique_upgrade($nom_meta_base_version, $version_cible) {
 		['maj_tables', ['spip_syndic_articles']],
 		['maj_tables', ['spip_rubriques']],
 		['thematique_ajouter_mots_clef'],
-		['sql_alter', "TABLE spip_syndic CHANGE oubli oubli VARCHAR(3) DEFAULT 'oui'"],
-		['sql_alter', "TABLE spip_syndic CHANGE resume resume VARCHAR(3) DEFAULT 'non'"],
 		['ecrire_meta', 'articles_mots', 'oui'],
 		['ecrire_meta', 'activer_sites', 'oui'],
 		['ecrire_meta', 'activer_syndic', 'oui'],
@@ -36,12 +34,10 @@ function thematique_upgrade($nom_meta_base_version, $version_cible) {
 
 	$maj['2.3.3'] = [['thematique_configurer_site']];
 
+	$maj['2.3.4'] = [];
 	cextras_api_upgrade(thematique_declarer_champs_extras(), $maj['2.3.4']);
 
-	$maj['2.3.5'] = [
-		['sql_update', 'spip_auteurs', ['ent_statut' => 'bio']],
-		['sql_update', 'spip_auteurs', ['ent' => 'pgp']],
-	];
+	$maj['2.3.5'] = [];
 
 	$maj['2.3.6'] = [['thematique_ajouter_mots_clef']];
 
@@ -50,6 +46,8 @@ function thematique_upgrade($nom_meta_base_version, $version_cible) {
 	$maj['2.4.0'] = [['thematique_configurer_rubriques']];
 
 	$maj['3.0.3'] = [['thematique_ajouter_mots_clef'], ['maj_tables', ['spip_rubriques']]];
+
+	$maj['3.0.7'] = [['maj_tables', ['spip_articles', 'spip_rubriques']]];
 	cextras_api_upgrade(thematique_declarer_champs_extras(), $maj['3.0.7']);
 
 	include_spip('base/upgrade');
@@ -57,6 +55,18 @@ function thematique_upgrade($nom_meta_base_version, $version_cible) {
 }
 
 function thematique_vider_tables($nom_meta_base_version) {
+	foreach (['Contenus', 'Presentation', 'site'] as $titre) {
+		$groupes = sql_allfetsel('id_groupe', 'spip_groupes_mots', 'titre=' . sql_quote($titre));
+		foreach ($groupes as $g) {
+			$id_groupe = intval($g['id_groupe']);
+			$mots = sql_allfetsel('id_mot', 'spip_mots', 'id_groupe=' . $id_groupe);
+			foreach ($mots as $m) {
+				sql_delete('spip_mots_liens', 'id_mot=' . intval($m['id_mot']));
+			}
+			sql_delete('spip_mots', 'id_groupe=' . $id_groupe);
+			sql_delete('spip_groupes_mots', 'id_groupe=' . $id_groupe);
+		}
+	}
 	effacer_meta($nom_meta_base_version);
 }
 
