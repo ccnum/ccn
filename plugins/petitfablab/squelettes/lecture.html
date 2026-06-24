@@ -110,10 +110,6 @@
 		window.onresize = resize_global_content;
 		resize_global_content();
 
-		// NICESCROLL
-		$(".global-content").niceScroll({cursorcolor:"#ff6b6b", cursoropacitymin:'0.2',cursoropacitymax:'1', scrollspeed:'100', cursorborder:'0px'});
-		$('#ascrail2000').css({'cursor':'pointer'});
-
 		// AFFICHAGES DES PAGES
 		var compteur = '[(#ENV{compteur}|sinon{1})]';
 		compteur = parseFloat(compteur);
