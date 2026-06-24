@@ -9,7 +9,8 @@
 	<nom>CCN</nom>
 	<auteur>Erasme</auteur>
 	<licence>GNU/GPL</licence>
+	<pipeline nom="boite_infos" inclure="ccn_pipelines.php" />
+	<pipeline nom="post_edition" inclure="ccn_pipelines.php" />
 	<pipeline nom="formulaire_verifier" inclure="ccn_pipelines.php" />
-	<pipeline nom="recuperer_fond" inclure="ccn_pipelines.php" />
 	<pipeline nom="formulaire_charger" inclure="ccn_pipelines.php" />
 </paquet>

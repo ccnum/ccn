@@ -28,9 +28,9 @@
 
 	<pipeline nom="declarer_champs_extras" inclure="base/thematique_cextras.php" />
 	<pipeline nom="declarer_tables_principales" inclure="base/thematique_install.php" />
+	<pipeline nom="pre_boucle" inclure="thematique_pipelines.php" />
 	<pipeline nom="insert_head" inclure="thematique_pipelines.php" />
 	<pipeline nom="jqueryui_plugins" inclure="thematique_pipelines.php" />
 	<pipeline nom="notifications_destinataires" inclure="thematique_pipelines.php" />
 	<pipeline nom="cioidc_userinfo" inclure="thematique_pipelines.php" />
-	<pipeline nom="optimiser" inclure="thematique_pipelines.php" />
 </paquet>
