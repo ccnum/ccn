@@ -1,0 +1,21 @@
+<paquet
+	prefix="reactions"
+	categorie="communication"
+	version="1.0.0"
+	etat="dev"
+	compatibilite="[4.0.0;5.*]"
+	logo="prive/themes/spip/images/reactions-32.png"
+	schema="1.0.0"
+>
+
+	<nom>Reactions</nom>
+	<auteur>Votre CCN</auteur>
+	<licence>GNU/GPL</licence>
+
+	<pipeline nom="insert_head_css" inclure="reactions_pipelines.php" />
+	<pipeline nom="declarer_tables_principales" inclure="base/reactions.php" />
+	<pipeline nom="header_prive" inclure="reactions_pipelines.php" />
+
+	<necessite nom="SPIP" compatibilite="[4.0.0;5.*]" />
+
+</paquet>

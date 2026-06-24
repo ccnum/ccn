@@ -1,0 +1,56 @@
+<div class="reactions_liste">
+	[(#SET{mes_reactions, #ENV*{_mes_reactions}})]
+    [(#SET{compteurs, #ENV{objet}|reactions_compter{#ENV{id_objet}}})]
+    [(#SET{types_actifs, #URL_SITE_SPIP|reactions_types_actifs})]
+    
+    <BOUCLE_types(DATA){source tableau, #ENV*{_types_actifs}}>
+        <button type="button" 
+                class="reaction_bouton[(#VALEUR|reaction_classe_active{#GET{mes_reactions}})]" 
+                title="#VALEUR"
+                data-action="#URL_ACTION_AUTEUR{poser_reaction, #ENV{objet}-#ENV{id_objet}-#VALEUR}"
+                data-type="#VALEUR"
+        >
+            <span class="reaction_smiley">
+                [(#VALEUR|reactions_recuperer_smiley{html_encoding})]
+            </span>
+            <span class="reaction_compteur js-compteur-#VALEUR">
+                [(#VALEUR|reaction_compteur{#GET{compteurs}})]
+            </span>
+        </button>
+    </BOUCLE_types>
+</div>
+
+<script type="text/javascript">
+$(function() {
+    // On cible le clic sur les boutons de réaction
+    $('.reaction_bouton').off('click').on('click', function(e) {
+        e.preventDefault();
+        
+        var $btn = $(this);
+        var urlAction = $btn.data('action');
+
+        $.ajax({
+            url: urlAction,
+            type: 'GET',
+            dataType: 'json',
+            success: function(data) {
+                if (data.ok) {
+                    $.each(data.compteurs, function(cle, total) {
+                        $('.js-compteur-' + cle).text(total);
+                    });
+                    if (data.action === 'pose') {
+                        $btn.addClass('reaction_active');
+                    } else if (data.action === 'retire') {
+                        $btn.removeClass('reaction_active');
+                    }
+                } else {
+                    console.error("Erreur SPIP détectée :", data.erreur);
+                }
+            },
+            error: function(xhr, status, error) {
+                console.error("Erreur réseau Ajax :", error);
+            }
+        });
+    });
+});
+</script>
