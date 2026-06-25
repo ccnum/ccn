@@ -24,18 +24,17 @@
 	[(#GET{logo_match_bool}|=={non}|oui)
 		#SET{logo_bg_size, calc(100% - 8px) auto}
 	]
-	<a 	[href="(#HREF)"] 
-		[rel="(#REL)"] 
-		[data-filter-value="(#FILTER)"] 
+	<BOUCLE_titre_rubrique(RUBRIQUES){id_rubrique}{tous}>
+		#SET{titre_classe, #TITRE}
+	</BOUCLE_titre_rubrique>
+	<a 	[href="(#HREF)"]
+		[rel="(#REL)"]
+		[data-filter-value="(#FILTER)"]
 		[data-option-value="(#OPTION)"]
 		onClick="callClasse(#ID_RUBRIQUE);"
 		class="[(#TEXTE|=={''}|oui)[logo_menu-(#VALEUR)]] #CLASS logo_menu_classe tooltip bgc_classe_#ENV{NUMERO}"
-		data-tip="
-			<BOUCLE_titre_rubrique(RUBRIQUES){id_rubrique}{tous}>
-				#TITRE
-			</BOUCLE_titre_rubrique>
-		">
-		<span aria-hidden="true" style="font-size:min(70cqw,70cqh)">
+		data-tip="#GET{titre_classe}">
+		<span role="img" aria-label="#GET{titre_classe}" style="font-size:min(70cqw,70cqh)">
 			#ENV{ICONE}
 		</span>
     </a>
