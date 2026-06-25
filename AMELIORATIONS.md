@@ -6,14 +6,6 @@
 
 ## JavaScript
 
-### 1.1 Migrer `$.ajax()` vers `fetch()` + `async/await`
-
-**Fichiers** : `squelettes/js/main.js`, `squelettes/js/controleurs.js`
-
-`$.ajax()` est couplé à `$.parseXML()` et `$.when()`. Les appels `$('#sidebar_main_inner').load()` déclenchent les mécanismes AJAX de SPIP (crayon, ajaxbloc). Migration à faire avec tests d'intégration complets.
-
----
-
 ### 1.7 Extraire le JavaScript inline de `swiper.script.html`
 
 **Fichier** : `squelettes/noisettes/js/swiper.script.html` — 335 lignes de JS dans un squelette SPIP
