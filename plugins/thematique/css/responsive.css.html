@@ -1,0 +1,133 @@
+/* ---------------------------------------------------------------- */
+/* ------------------------ RESPONSIVE ---------------------------- */
+/* ---------------------------------------------------------------- */
+@media screen and (max-width: 1280px) {
+	.logo_service_public {
+		> img {
+			height: 20px;
+		}
+	}
+
+	#sidebar {
+		width: var(--sidebar-width-normal);
+	}
+
+	#zone {
+		margin-top: 0.5%;
+	}
+
+	.zone-menu h3 { font-size: var(--font-size1-bas); padding: 2px;}
+
+	.choix_rubrique_wrapper {
+		height: max-content !important;
+	}
+
+	.zone-menu form {
+		width: 91px;
+	}
+
+	.zone-menu .titre3, .zone-menu .titre3 a {
+		font-size: var(--font-size2);
+		line-height: var(--font-size2);
+	}
+
+	#SET{lar_col,30}	/* 30*n - 3 */
+	#menu-vues {width: [(#GET{lar_col}|mult{2}|moins{3})]px;}
+	#menu-ressources {width: [(#GET{lar_col}|mult{6}|moins{3})]px;}
+	#menu-consignes {width: [(#GET{lar_col}|mult{7}|moins{3})]px;}
+	#menu-classes {width: [(#GET{lar_col}|mult{8}|moins{3})]px;}
+	#menu-medias {width: [(#GET{lar_col}|mult{6}|moins{3})]px;}
+	#menu-tris {width: [(#GET{lar_col}|mult{2}|moins{3})]px;}
+}
+
+@media screen and (max-width: 1050px) and (max-height: 770px ) {
+	#livrables {
+		overflow-y: scroll;
+	}
+}
+
+#row_header {
+	display: flex;
+	justify-content: space-between;
+	padding: 11px;
+}
+#header-col_left {
+	flex: 1;
+}
+#header-col-right {
+	flex: 4;
+	padding: 12px;
+}
+#header-row-1 {
+    display: flex;
+	align-items: center;
+	justify-content: space-between;
+	margin-bottom: 16px;
+}
+#header-row-2 {
+	flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+	font-weight: 800;
+}
+#header-reactions {
+	display: flex;
+	align-items: center;
+	gap: 6px;
+	white-space: nowrap;
+}
+#sidebar-top-right-corner {
+	display: flex;
+	gap: 8px;
+}
+#header-sidebarexpand-container {
+	display: flex;
+    align-items: center;
+    justify-content: center;
+	border-radius: 50%;
+	height: 25px;
+	width: 25px;
+	background-color: var(--color-tonic);
+	margin: 2px;
+}
+#sidebarExpand {
+	--svg: url("#CHEMIN{img/expend.svg}"); 
+	background-color: white;
+	aspect-ratio: 1 / 1;
+	width: 70%;
+}
+.hasSidebarExpanded #sidebarExpand {
+	--svg: url("#CHEMIN{img/shrink.svg}"); 
+}
+
+.container-tabs {
+	flex: 1; /* prend tout l'espace restant */
+	min-height: 0; /* IMPORTANT : sans ça, le scroll ne marche pas dans certains navigateurs */
+	display: flex;
+	flex-direction: column;
+}
+
+#sidebar-header-container {
+	flex-shrink: 0; /* ne se compresse jamais, garde sa hauteur naturelle */
+}
+
+
+#CHEMIN{img/pictos_sites/[(#NOM_SITE_SPIP|replace{' ',''}|strtolower)].svg}
+
+#mission-tabs {
+	height: 100%;
+}
+
+.container-tabs,
+#mission-tabs {
+	flex: 1;
+	min-height: 0;
+	display: flex;
+	flex-direction: column;
+}
+
+.ctabs-content {
+	flex: 1;
+	min-height0;
+	overflow-y: auto;

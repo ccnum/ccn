@@ -1,0 +1,160 @@
+.crayon-active.text {
+	width: 100% !important;
+}
+
+.crayon-html {
+	position: fixed !important;
+	top: 0 !important;
+	left: 0 !important;
+	margin: -50px 0 !important;
+	z-index: 50000000 !important;
+	right: 0 !important;
+	bottom: 0;
+}
+
+.crayon-html::before {
+	content: "";
+	display: block;
+	position: fixed;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	background: rgba(0,0,0,.8);
+	z-index: 1;
+}
+
+.crayon-html {
+	display: flex;
+	justify-content: center;
+	align-items: flex-start;
+	padding-top: 60px;
+}
+
+.crayon-html .formulaire_spip {
+	z-index: 10000;
+	background: white;
+	width: 80%;
+	max-width: 40%;
+}
+
+.crayon-active.markItUpEditor {
+	color: var(--color-default) !important;
+}
+.resizehandle_boutons {
+	margin: 0 !important;
+}
+
+.formulaire_spip input.text {
+	color: #222 !important;
+	background-color: white !important;
+	padding: 10px 9px !important;
+	border: none !important;
+	margin-top: 0 !important;
+	margin-left: 0 !important;
+	outline: none !important;
+	box-sizing: border-box;
+}
+.formulaire_crayon .crayon-active { color: #222 !important; }
+.crayon-html .crayon-boutons {
+	position: absolute !important;
+	right: 0px !important;
+	left: 0px !important;
+	background: white !important;
+	padding: 3px 0px 0px 0px !important;
+	box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+}
+
+.crayon-boutons .crayon-cancel {
+	background: #D27E60 url(images/annuler-16.png) center center no-repeat !important;
+	color: rgba(255, 255, 255, 0.65) !important;
+	text-indent: 0 !important;
+	padding-right: 20px !important;
+	margin-bottom: 0 !important;
+	margin-left: 0 !important;
+	padding: 10px 5px !important;
+	width: 25% !important;
+	margin: 0 !important;
+	float: left !important;
+}
+
+.crayon-boutons button {
+	border: none !important;
+	cursor: pointer !important;
+	display: inline-block !important;
+	font-size: 12px !important;
+	border-radius: 0px !important;
+	text-transform: uppercase !important;
+	letter-spacing: 1px !important;
+}
+
+.crayon-boutons .crayon-submit {
+	background: #ADD260 url(images/ok-16.png) 2px center no-repeat !important;
+	color: #5f6554 !important;
+	border-color: #c6d880 !important;
+	float: right !important;
+	margin-bottom: 0 !important;
+	margin-left: 0 !important;
+	padding: 10px 5px !important;
+	width: 75% !important;
+	margin: 0 !important;
+	text-indent: 0 !important;
+}
+
+.crayon .crayon-icones em.crayon-crayon {
+	background-color: white !important;
+	width: 30px !important;
+	height: 30px !important;
+	background-position: center center !important;
+	border-radius: 50% !important;
+	background-size: 50% !important;
+	margin-top: -8px !important ;
+	left: -30px
+}
+
+.markItUp {
+	margin: 0;
+	clear: both;
+	position: relative;
+}
+
+.markItUp .markItUpHeader {
+	display: flex;
+	justify-content: space-between;
+	align-items: stretch;
+	margin: 0;
+	padding: 0 10px;
+	background: #CCC;
+	border: none;
+	border-radius: 0;
+}
+.markItUp .markItUpTabs {
+	padding: 0;
+	margin: 0;
+	overflow: hidden;
+	z-index: 5;
+}
+.markItUp .markItUpTabs a {
+	display: block;
+	float: right;
+	border: none;
+	border-bottom: 0;
+	margin: 0;
+	padding: 11px 14px;
+	background: #ddd;
+	border-radius: 0;
+}
+.markItUp .markItUpHeader ul a {
+	clear: none;
+	display: block;
+	margin: 0;
+	padding: 10px 9px 9px;
+}
+.markItUpEditor {
+	width: 100% !important;
+	box-sizing: border-box;
+	border: none !important;
+	padding: 20px !important;
+	outline: solid 1px #ddd !important;
+	outline-offset: -1px;
+}

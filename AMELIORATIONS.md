@@ -18,19 +18,6 @@ Breakpoints à ajouter : `max-width: 768px` et `max-width: 1024px`.
 
 ---
 
-### 2.4 Découper le fichier CSS en modules
-
-**Fichier** : `thematique.css.html` — 4497 lignes
-
-Découpage suggéré via `<INCLURE>` SPIP :
-```
-css/variables.css.html · css/reset.css.html · css/layout.css.html
-css/timeline.css.html · css/sidebar.css.html · css/forms.css.html
-css/components.css.html · css/responsive.css.html
-```
-
----
-
 ## Architecture SPIP
 
 ### 4.1 Déplacer la logique métier vers des pipelines PHP
