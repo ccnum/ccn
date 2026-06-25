@@ -30,11 +30,7 @@ function reactions_upgrade($nom_meta_base_version, $version_cible) {
     maj_plugin($nom_meta_base_version, $version_cible, $maj);
     if (lire_config($nom_meta_base_version) && !lire_config('reactions/types_actifs')) {
         include_spip('formulaires/configurer_reactions');
-        if (function_exists('reactions_catalogue_smileys')) {
-            $defaut_actifs = array_keys(reactions_catalogue_smileys());
-        } else {
-            $defaut_actifs = ['coeur', 'pouce', 'feu'];
-        }
+        $defaut_actifs = ['amour', 'feu', 'pouce'];
         ecrire_config('reactions/anonymes_autorises', 'oui');
         ecrire_config('reactions/multi_reactions', 'oui');
         ecrire_config('reactions/types_actifs', $defaut_actifs);
