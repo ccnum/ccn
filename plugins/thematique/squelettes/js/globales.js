@@ -19,7 +19,7 @@ CCN.timelineLayerConsignes;
 CCN.timelineLayerBlogs;
 CCN.timelineLayerEvenements;
 
-const CLASS_ICONS = ['🦋', '🦓', '🦊', '🐟', '🐱', '🦌', '🐝', '🦉', '🐜', '🦔'];
+const CLASS_ICONS = ['🐝', '🦩', '🦉', '🦔', '🐟', '🐙', '🐜', '🦁', '🦋', '🦊'];
 
 function getClassIcon(index) {
     return CLASS_ICONS[index % CLASS_ICONS.length];
