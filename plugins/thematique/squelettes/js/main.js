@@ -35,62 +35,56 @@ function initCCN() {
  * @param {string} fichier - URL du fichier
  */
 
-function loadProjet(fichier) {
-	$.ajax(
-		{
-			url: fichier,
-			dataType: 'text',
-			success: function (xml) {
-				xml = $.parseXML(xml.trim());
+async function loadProjet(fichier) {
+	const text = await fetch(fichier).then(r => r.text());
+	const xml = new DOMParser().parseFromString(text.trim(), 'text/xml');
 
-				const dataForProjet = {};
+	const dataForProjet = {};
 
-				dataForProjet.date_debut = getXMLNodeValue('date_debut', xml);
-				dataForProjet.date_fin = getXMLNodeValue('date_fin', xml);
-				dataForProjet.couleur_fond = getXMLNodeValue('couleur_fond', xml);
-				dataForProjet.couleur_base_texte = getXMLNodeValue('couleur_base_texte', xml);
-				dataForProjet.couleur_1erplan1 = getXMLNodeValue('couleur_1erplan1', xml);
-				dataForProjet.couleur_1erplan2 = getXMLNodeValue('couleur_1erplan2', xml);
-				dataForProjet.couleur_1erplan3 = getXMLNodeValue('couleur_1erplan3', xml);
+	dataForProjet.date_debut = getXMLNodeValue('date_debut', xml);
+	dataForProjet.date_fin = getXMLNodeValue('date_fin', xml);
+	dataForProjet.couleur_fond = getXMLNodeValue('couleur_fond', xml);
+	dataForProjet.couleur_base_texte = getXMLNodeValue('couleur_base_texte', xml);
+	dataForProjet.couleur_1erplan1 = getXMLNodeValue('couleur_1erplan1', xml);
+	dataForProjet.couleur_1erplan2 = getXMLNodeValue('couleur_1erplan2', xml);
+	dataForProjet.couleur_1erplan3 = getXMLNodeValue('couleur_1erplan3', xml);
 
-				dataForProjet.largeur = getLargeurZone();
-				dataForProjet.hauteur = getHauteurZone();
+	dataForProjet.largeur = getLargeurZone();
+	dataForProjet.hauteur = getHauteurZone();
 
-				dataForProjet.fps = parseFloat(getXMLNodeValue('fps', xml));
-				dataForProjet.zoom_consignes = getXMLNodeValue('zoom_consignes', xml);
-				dataForProjet.liste_y_consignes = getXMLNodeValue('seq_posy_consignes', xml);
-				dataForProjet.liste_y_blogs = getXMLNodeValue('seq_posy_blogs', xml);
-				dataForProjet.liste_y_evenements = getXMLNodeValue('seq_posy_evenements', xml);
+	dataForProjet.fps = parseFloat(getXMLNodeValue('fps', xml));
+	dataForProjet.zoom_consignes = getXMLNodeValue('zoom_consignes', xml);
+	dataForProjet.liste_y_consignes = getXMLNodeValue('seq_posy_consignes', xml);
+	dataForProjet.liste_y_blogs = getXMLNodeValue('seq_posy_blogs', xml);
+	dataForProjet.liste_y_evenements = getXMLNodeValue('seq_posy_evenements', xml);
 
-				dataForProjet.url_popup_consigne = getXMLNodeValue('url_popup_consigne', xml);
-				dataForProjet.url_popup_reponse = getXMLNodeValue('url_popup_reponse', xml);
-				dataForProjet.url_popup_reponseajout = getXMLNodeValue('url_popup_reponseajout', xml);
-				dataForProjet.url_popup_blog = getXMLNodeValue('url_popup_blog', xml);
-				dataForProjet.url_popup_livrables = getXMLNodeValue('url_popup_livrables', xml);
-				dataForProjet.url_popup_evenement = getXMLNodeValue('url_popup_evenement', xml);
-				dataForProjet.url_popup_ressources = getXMLNodeValue('url_popup_ressources', xml);
-				dataForProjet.url_popup_agora = getXMLNodeValue('url_popup_agora', xml);
-				dataForProjet.url_popup_classes = getXMLNodeValue('url_popup_classes', xml);
-				dataForProjet.url_popup_chat = getXMLNodeValue('url_popup_chat', xml);
-				dataForProjet.url_popup_chat2 = getXMLNodeValue('url_popup_chat2', xml);
+	dataForProjet.url_popup_consigne = getXMLNodeValue('url_popup_consigne', xml);
+	dataForProjet.url_popup_reponse = getXMLNodeValue('url_popup_reponse', xml);
+	dataForProjet.url_popup_reponseajout = getXMLNodeValue('url_popup_reponseajout', xml);
+	dataForProjet.url_popup_blog = getXMLNodeValue('url_popup_blog', xml);
+	dataForProjet.url_popup_livrables = getXMLNodeValue('url_popup_livrables', xml);
+	dataForProjet.url_popup_evenement = getXMLNodeValue('url_popup_evenement', xml);
+	dataForProjet.url_popup_ressources = getXMLNodeValue('url_popup_ressources', xml);
+	dataForProjet.url_popup_agora = getXMLNodeValue('url_popup_agora', xml);
+	dataForProjet.url_popup_classes = getXMLNodeValue('url_popup_classes', xml);
+	dataForProjet.url_popup_chat = getXMLNodeValue('url_popup_chat', xml);
+	dataForProjet.url_popup_chat2 = getXMLNodeValue('url_popup_chat2', xml);
 
-				dataForProjet.image_fond = (hasXMLNodeValue('image_fond', xml)) ? getXMLNodeValue('image_fond', xml) : '';
+	dataForProjet.image_fond = hasXMLNodeValue('image_fond', xml) ? getXMLNodeValue('image_fond', xml) : '';
 
-				CCN.projet = new Projet();
-				CCN.projet.init(dataForProjet);
+	CCN.projet = new Projet();
+	CCN.projet.init(dataForProjet);
 
-				CCN.couleurBlog = getXMLNodeValue('couleur_blog', xml);
-				CCN.idRubriqueRessources = getXMLNodeValue('id_rubrique_ressources', xml);
-				CCN.idRubriqueAgora = getXMLNodeValue('id_rubrique_agora', xml);
+	CCN.couleurBlog = getXMLNodeValue('couleur_blog', xml);
+	CCN.idRubriqueRessources = getXMLNodeValue('id_rubrique_ressources', xml);
+	CCN.idRubriqueAgora = getXMLNodeValue('id_rubrique_agora', xml);
 
-				$.when(
-					loadClasses(CCN.urlXml + "classes"),
-					loadArticles(CCN.urlXml + "articles&type=blogs", 'blogs', CCN.articlesBlog, CCN.projet.liste_y_blogs),
-					loadArticles(CCN.urlXml + "articles&type=evenements", 'evenements', CCN.articlesEvenement, CCN.projet.liste_y_evenements)
-				).done(initTimeline);
-			}
-		}
-	);
+	await Promise.all([
+		loadClasses(CCN.urlXml + "classes"),
+		loadArticles(CCN.urlXml + "articles&type=blogs", 'blogs', CCN.articlesBlog, CCN.projet.liste_y_blogs),
+		loadArticles(CCN.urlXml + "articles&type=evenements", 'evenements', CCN.articlesEvenement, CCN.projet.liste_y_evenements)
+	]);
+	initTimeline();
 }
 /**
  *  Charge le XML des classes (liste)
@@ -99,33 +93,32 @@ function loadProjet(fichier) {
  * @param {string} fichier - URL du fichier
  */
 
-function loadClasses(fichier) {
-	return $.ajax({url: fichier, dataType: 'text'}).then(function (xml) {
-		xml = $.parseXML(xml.trim());
+async function loadClasses(fichier) {
+	const text = await fetch(fichier).then(r => r.text());
+	const xml = new DOMParser().parseFromString(text.trim(), 'text/xml');
 
-		const xmlClasses = xml.getElementsByTagName("classe");
-		for (let i = 0; i < xmlClasses.length; ++i) {
-			const dataForClasse = {};
-			dataForClasse.id = parseFloat(getXMLNodeValue('id', xmlClasses[i]));
-			dataForClasse.nom = getXMLNodeValue('nom', xmlClasses[i]);
-			const nouvelleClasse = new Classe();
-			nouvelleClasse.init(dataForClasse);
-			CCN.classes.push(nouvelleClasse);
-		}
+	const xmlClasses = xml.getElementsByTagName("classe");
+	for (let i = 0; i < xmlClasses.length; ++i) {
+		const dataForClasse = {};
+		dataForClasse.id = parseFloat(getXMLNodeValue('id', xmlClasses[i]));
+		dataForClasse.nom = getXMLNodeValue('nom', xmlClasses[i]);
+		const nouvelleClasse = new Classe();
+		nouvelleClasse.init(dataForClasse);
+		CCN.classes.push(nouvelleClasse);
+	}
 
-		const xmlIntervenants = xml.getElementsByTagName("intervenant");
-		for (let i = 0; i < xmlIntervenants.length; ++i) {
-			const dataForIntervenant = {};
-			dataForIntervenant.id = parseFloat(getXMLNodeValue('id', xmlIntervenants[i]));
-			dataForIntervenant.nom = getXMLNodeValue('nom', xmlIntervenants[i]);
-			const nouvelIntervenant = new Intervenant();
-			nouvelIntervenant.init(dataForIntervenant);
-			CCN.intervenants.push(nouvelIntervenant);
-		}
+	const xmlIntervenants = xml.getElementsByTagName("intervenant");
+	for (let i = 0; i < xmlIntervenants.length; ++i) {
+		const dataForIntervenant = {};
+		dataForIntervenant.id = parseFloat(getXMLNodeValue('id', xmlIntervenants[i]));
+		dataForIntervenant.nom = getXMLNodeValue('nom', xmlIntervenants[i]);
+		const nouvelIntervenant = new Intervenant();
+		nouvelIntervenant.init(dataForIntervenant);
+		CCN.intervenants.push(nouvelIntervenant);
+	}
 
-		CCN.travailEnCoursId = parseFloat(getXMLNodeValue('travail_en_cours_id', xml));
-		return loadConsignes(CCN.urlXml + "consignes");
-	});
+	CCN.travailEnCoursId = parseFloat(getXMLNodeValue('travail_en_cours_id', xml));
+	await loadConsignes(CCN.urlXml + "consignes");
 }
 /**
  *  Charge le XML des consignes et des réponses
@@ -134,11 +127,11 @@ function loadClasses(fichier) {
  * @param {string} fichier - URL du fichier
  */
 
-function loadConsignes(fichier) {
-	return $.ajax({url: fichier, dataType: 'text'}).then(function (xml) {
-		xml = $.parseXML(xml.trim());
+async function loadConsignes(fichier) {
+	const text = await fetch(fichier).then(r => r.text());
+	const xml = new DOMParser().parseFromString(text.trim(), 'text/xml');
 
-		const xmlConsignes = xml.getElementsByTagName("consigne");
+	const xmlConsignes = xml.getElementsByTagName("consigne");
 				let indexY = 0;
 
 				for (let i = 0; i < xmlConsignes.length; ++i) {
@@ -278,7 +271,6 @@ function loadConsignes(fichier) {
 
 					CCN.consignes.push(nouvelleConsigne);
 				}
-	});
 }
 
 /**
@@ -290,36 +282,35 @@ function loadConsignes(fichier) {
  * @param {Array}  listeY   - Séquence de positions Y (CCN.projet.liste_y_blogs ou liste_y_evenements)
  */
 
-function loadArticles(fichier, type, ccnArray, listeY) {
-	return $.ajax({url: fichier, dataType: 'text'}).then(function (xml) {
-		xml = $.parseXML(xml.trim());
+async function loadArticles(fichier, type, ccnArray, listeY) {
+	const text = await fetch(fichier).then(r => r.text());
+	const xml = new DOMParser().parseFromString(text.trim(), 'text/xml');
 
-		const xmlArticles = xml.getElementsByTagName("article");
-		let indexY = 0;
+	const xmlArticles = xml.getElementsByTagName("article");
+	let indexY = 0;
 
-		for (let i = 0; i < xmlArticles.length; i++) {
-			const data = {};
+	for (let i = 0; i < xmlArticles.length; i++) {
+		const data = {};
 
-			data.id = getXMLNodeValue('id', xmlArticles[i]);
-			data.type_objet = getXMLNodeValue('type_objet', xmlArticles[i]);
-			data.id_objet = getXMLNodeValue('id_objet', xmlArticles[i]);
-			data.titre = getXMLNodeValue('titre', xmlArticles[i]);
-			data.date = getXMLNodeValue('date', xmlArticles[i]);
-			data.y = getXMLNodeValue('y', xmlArticles[i]);
+		data.id = getXMLNodeValue('id', xmlArticles[i]);
+		data.type_objet = getXMLNodeValue('type_objet', xmlArticles[i]);
+		data.id_objet = getXMLNodeValue('id_objet', xmlArticles[i]);
+		data.titre = getXMLNodeValue('titre', xmlArticles[i]);
+		data.date = getXMLNodeValue('date', xmlArticles[i]);
+		data.y = getXMLNodeValue('y', xmlArticles[i]);
 
-			if (indexY >= listeY.length) indexY = 0;
-			if (data.y == 0) data.y = listeY[indexY];
-			indexY++;
+		if (indexY >= listeY.length) indexY = 0;
+		if (data.y == 0) data.y = listeY[indexY];
+		indexY++;
 
-			const date = parseDate(data.date);
-			data.nombre_jours = parseFloat(Math.round(date / (24 * 60 * 60 * 1000))) - CCN.projet.premier_jour;
-			data.nombre_commentaires = parseFloat(getXMLNodeValue('commentaires', xmlArticles[i]));
+		const date = parseDate(data.date);
+		data.nombre_jours = parseFloat(Math.round(date / (24 * 60 * 60 * 1000))) - CCN.projet.premier_jour;
+		data.nombre_commentaires = parseFloat(getXMLNodeValue('commentaires', xmlArticles[i]));
 
-			const article = new Article();
-			article.init(data, type);
-			ccnArray.push(article);
-		}
-	});
+		const article = new Article();
+		article.init(data, type);
+		ccnArray.push(article);
+	}
 }
 /**
  *  Initialise la vue, la timeline,
