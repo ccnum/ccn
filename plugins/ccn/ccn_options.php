@@ -30,4 +30,4 @@ $annee_scolaire = intval($annee_scolaire);
 define('_ANNEE_SCOLAIRE', $annee_scolaire);
 define('_COOKIE_ANNEE_SCOLAIRE', 'laclasse_annee_scolaire');
 define('_DATE_DEBUT', $annee_scolaire . '-09-01');
-define('_DATE_FIN', ($annee_scolaire + 1) . '-09-01');
+define('_DATE_FIN', ($annee_scolaire + 1) . '-06-30');
