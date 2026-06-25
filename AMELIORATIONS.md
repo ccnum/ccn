@@ -6,14 +6,6 @@
 
 ## JavaScript
 
-### 1.7 Extraire le JavaScript inline de `swiper.script.html`
-
-**Fichier** : `squelettes/noisettes/js/swiper.script.html` — 335 lignes de JS dans un squelette SPIP
-
-L'essentiel devrait être dans `squelettes/js/swiper.js`, le squelette ne gardant que les quelques valeurs dynamiques (`#ENV{...}`).
-
----
-
 ## CSS
 
 ### 2.3 Ajouter des media queries mobile/tablette
