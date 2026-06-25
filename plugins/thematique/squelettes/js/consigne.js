@@ -78,7 +78,7 @@ function Consigne() {
 					data-id="${this.id}"
 					data-index="${this.numero}"
 				>
-					<div class="picto_nombre_commentaires">${this.data.nombre_commentaires}</div>
+					<div aria-label="${this.data.nombre_commentaires} interaction${this.data.nombre_commentaires > 1 ? 's' : ''}" class="picto_nombre_commentaires">${this.data.nombre_commentaires}</div>
 					<div class="etiquette-etape">
 						<img class="logo-etiquette" src="" alt="" />
 						<span class="texte-etiquette">Étape N°${this.numero+1}</span>
