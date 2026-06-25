@@ -52,7 +52,7 @@ function Consigne() {
 			let iconSpan = '';
 			if (this.reponses_id.includes(classe.id)) {
 				disabled = '';
-				iconSpan = `<span aria-hidden="true" style="font-size:min(70cqw,70cqh)" class="bgc_classe_${index}">
+				iconSpan = `<span role="img" aria-label="${escHtml(classe.nom)}" style="font-size:min(70cqw,70cqh)" class="bgc_classe_${index}">
 					${getClassIcon(index)}
 				</span>`;
 			}
