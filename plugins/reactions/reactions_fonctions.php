@@ -325,6 +325,41 @@ function reaction_compteur($type, $compteurs) {
  * Filtre SPIP pour récupérer un encodage précis d'un smiley depuis son nom (sa clé)
  * Utilisation dans le squelette : [(#VALEUR|reactions_recuperer_smiley{html_encoding})]
  */
+/**
+ * Filtre SPIP : retourne le label français d'une réaction pour aria-label.
+ *
+ * @param string $cle
+ * @return string
+ */
+function reaction_label_fr($cle) {
+    $labels = [
+        'coeur'     => 'Cœur',
+        'amour'     => 'Amour',
+        'pouce'     => 'Pouce en l\'air',
+        'pouce_bas' => 'Pouce en bas',
+        'feu'       => 'Feu',
+        'rire'      => 'Rire',
+        'triste'    => 'Triste',
+        'etonne'    => 'Étonné',
+        'colere'    => 'Colère',
+        'clap'      => 'Applaudissements',
+        'fete'      => 'Fête',
+    ];
+    return $labels[$cle] ?? $cle;
+}
+
+/**
+ * Filtre SPIP : retourne 'true' ou 'false' pour aria-pressed.
+ *
+ * @param string $type
+ * @param array $mes_reactions
+ * @return string
+ */
+function reaction_aria_pressed($type, $mes_reactions) {
+    $mes_reactions = is_array($mes_reactions) ? $mes_reactions : [];
+    return in_array($type, $mes_reactions, true) ? 'true' : 'false';
+}
+
 function reactions_recuperer_smiley($cle, $type_encodage = 'html_encoding') {
     include_spip('formulaires/configurer_reactions');
     
