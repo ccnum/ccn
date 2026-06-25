@@ -201,7 +201,7 @@ function Projet() {
 				'<div/>', {
 				'class': 'mois'
 			}
-			).append('<div class="mois_label">' + texte + '</div>').css({ 'width': 100 / this.nombre_mois + '%' });
+			).append('<div class="mois_label" aria-hidden="true">' + texte + '</div>').css({ 'width': 100 / this.nombre_mois + '%' });
 
 			mois_DOM.appendTo(this.timeline_background);
 
