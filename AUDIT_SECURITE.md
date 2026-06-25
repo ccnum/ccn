@@ -1,6 +1,19 @@
 # Audit de sécurité — Plugin SPIP `thematique` (CCN)
 
-**Date** : 2026-05-29 · **Statut** : ✅ Toutes les vulnérabilités corrigées
+**Date** : 2026-06-25 · **Statut** : ✅ Toutes les vulnérabilités corrigées
+
+## Résolutions récentes
+
+### ✅ #286 — Durcissement des migrations PHP (2026-06-24)
+
+**Fichier** : `thematique_administrations.php`
+
+- `$maj['2.3.4']` et `$maj['3.0.7']` définis avant utilisation (supprime les avertissements sur clés indéfinies)
+- `sql_update` sans effet supprimés dans `$maj['2.3.5']`
+- `sql_alter` sur `spip_syndic` retiré (table optionnelle, plugin tiers)
+- `thematique_vider_tables()` complété : nettoie les groupes de mots et mots à la désinstallation
+
+---
 
 ## Points en suspens
 

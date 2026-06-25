@@ -1,6 +1,6 @@
 # Améliorations à faire — Plugin SPIP `thematique` (CCN)
 
-**Date** : 2026-05-29
+**Date** : 2026-06-25
 
 ---
 
@@ -70,6 +70,8 @@ Piste : pipeline PHP précalculant les données, ou critère `{jointure}`.
 ### 5.3 Remplacer les `<div>` cliquables par des `<button>`
 
 Plusieurs `<div onclick>` dans `consigne.js` et les squelettes. Le remplacement impacte les règles CSS ciblant `.bouton_reponse_consigne`. À faire conjointement avec une refonte des styles de composants.
+
+> **Progrès** : les boutons de réaction sont désormais accessibles au clavier et aux lecteurs d'écran (#315, 2026-06-25), mais les `<div onclick>` restants dans `consigne.js` et les squelettes demeurent à traiter.
 
 ---
 
