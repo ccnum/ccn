@@ -4,17 +4,21 @@
     [(#SET{types_actifs, #URL_SITE_SPIP|reactions_types_actifs})]
     
     <BOUCLE_types(DATA){source tableau, #ENV*{_types_actifs}}>
-        <button type="button" 
-                class="reaction_bouton[(#VALEUR|reaction_classe_active{#GET{mes_reactions}})]" 
-                title="#VALEUR"
+        [(#SET{label_fr, #VALEUR|reaction_label_fr})]
+        [(#SET{nb_reactions, #VALEUR|reaction_compteur{#GET{compteurs}}})]
+        <button type="button"
+                class="reaction_bouton[(#VALEUR|reaction_classe_active{#GET{mes_reactions}})]"
+                aria-label="Réagir avec [(#GET{label_fr})], [(#GET{nb_reactions})] réaction[(#GET{nb_reactions}|>{1}|oui)s(/oui)]"
+                aria-pressed="[(#VALEUR|reaction_aria_pressed{#GET{mes_reactions}})]"
                 data-action="#URL_ACTION_AUTEUR{poser_reaction, #ENV{objet}-#ENV{id_objet}-#VALEUR}"
                 data-type="#VALEUR"
+                data-label="[(#GET{label_fr})]"
         >
-            <span class="reaction_smiley">
+            <span class="reaction_smiley" aria-hidden="true">
                 [(#VALEUR|reactions_recuperer_smiley{html_encoding})]
             </span>
-            <span class="reaction_compteur js-compteur-#VALEUR">
-                [(#VALEUR|reaction_compteur{#GET{compteurs}})]
+            <span class="reaction_compteur js-compteur-#VALEUR" aria-hidden="true">
+                [(#GET{nb_reactions})]
             </span>
         </button>
     </BOUCLE_types>
@@ -36,12 +40,17 @@ $(function() {
             success: function(data) {
                 if (data.ok) {
                     $.each(data.compteurs, function(cle, total) {
-                        $('.js-compteur-' + cle).text(total);
+                        var $compteur = $('.js-compteur-' + cle);
+                        $compteur.text(total);
+                        var $bouton = $compteur.closest('.reaction_bouton');
+                        var label = $bouton.data('label') || cle;
+                        var pluriel = total > 1 ? 's' : '';
+                        $bouton.attr('aria-label', 'Réagir avec ' + label + ', ' + total + ' réaction' + pluriel);
                     });
                     if (data.action === 'pose') {
-                        $btn.addClass('reaction_active');
+                        $btn.addClass('reaction_active').attr('aria-pressed', 'true');
                     } else if (data.action === 'retire') {
-                        $btn.removeClass('reaction_active');
+                        $btn.removeClass('reaction_active').attr('aria-pressed', 'false');
                     }
                 } else {
                     console.error("Erreur SPIP détectée :", data.erreur);
