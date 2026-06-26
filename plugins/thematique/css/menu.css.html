@@ -591,6 +591,43 @@ li.aide {
 	line-height: var(--font-size2);
 }
 
+.char-counter-wrap {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	margin-top: 4px;
+}
+
+.char-counter-bar {
+	flex: 1;
+	height: 4px;
+	background: rgba(0, 0, 0, 0.1);
+	border-radius: 2px;
+	overflow: hidden;
+}
+
+.char-counter-fill {
+	height: 100%;
+	width: 0%;
+	background: var(--color-tonic);
+	border-radius: 2px;
+	transition: width 0.1s ease, background 0.2s ease;
+}
+
+.char-counter-fill.warn {
+	background: #f0a500;
+}
+
+.char-counter-fill.full {
+	background: #d9534f;
+}
+
+.char-counter {
+	flex-shrink: 0;
+	font-size: 11px;
+	color: var(--color-text-light, #888);
+}
+
 .consigne_reponses {
 	width: 26px;
 	height: 32px;
