@@ -1,10 +1,8 @@
 # Améliorations à faire — Plugin SPIP `thematique` (CCN)
 
-**Date** : 2026-06-25
+**Date** : 2026-06-26
 
 ---
-
-## JavaScript
 
 ## CSS
 
@@ -20,19 +18,21 @@ Breakpoints à ajouter : `max-width: 768px` et `max-width: 1024px`.
 
 ## Architecture SPIP
 
-### 4.1 Déplacer la logique métier vers des pipelines PHP
+### 3.2 Réduire les boucles SPIP imbriquées
 
-**Fichier** : `squelettes/noisettes/rubrique.html` — 389 lignes mêlant présentation et logique de droits
+**Fichiers candidats** :
+- `squelettes/noisettes/inc/actus_timeline.html` — 24 boucles
+- `squelettes/noisettes/sommaire.html` — 17 boucles
 
-La logique conditionnelle (rôles, permissions, calculs) devrait être dans `thematique_pipelines.php` via `pre_boucle`/`post_boucle` ou des balises custom dans `balises.php`.
+Piste : pipeline PHP précalculant les données, ou critère `{jointure}`.
 
 ---
 
-### 3.2 Réduire les boucles SPIP imbriquées
+### 4.1 Déplacer la logique métier vers des pipelines PHP
 
-**Fichier** : `squelettes/noisettes/isotope-article.html` — 5 boucles imbriquées générant de nombreuses requêtes SQL
+**Fichier** : `squelettes/noisettes/rubrique.html` — mêle présentation et logique de droits
 
-Piste : pipeline PHP précalculant les données, ou critère `{jointure}`.
+La logique conditionnelle (rôles, permissions, calculs) devrait être dans `thematique_pipelines.php` via `pre_boucle`/`post_boucle` ou des balises custom dans `balises.php`.
 
 ---
 
@@ -47,10 +47,6 @@ Plusieurs `<div onclick>` dans `consigne.js` et les squelettes. Le remplacement 
 ---
 
 ## Maintenabilité
-
-### 6.3 Compléter la documentation JSDoc
-
-Les fonctions JS publiques manquent de `@param {Type}` et `@returns {Type}`. À compléter progressivement lors des prochains développements.
 
 ### 6.2 TODO restant dans `controleurs.js`
 
