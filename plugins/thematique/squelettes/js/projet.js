@@ -109,12 +109,7 @@ function Projet() {
 	 */
 	this.showRangeOfTimeline = function (nombre_jours_vus_dest, x_dest, y_dest) {
 
-		// Nombre de jours ajoutés au nombre de jours à afficher
-		// pour que les blocs les plus à droite soient visibles
-
-		const offset_bloc_width = 20;
-
-		this.nombre_jours_vus_dest = nombre_jours_vus_dest + offset_bloc_width;
+		this.nombre_jours_vus_dest = nombre_jours_vus_dest;
 		this.x_dest = x_dest;
 		this.y_dest = y_dest;
 
