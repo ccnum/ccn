@@ -1,5 +1,13 @@
 (function ($) {
 
+    /**
+     * Transforme chaque élément sélectionné en un système d'onglets.
+     * Chaque enfant direct doit avoir un attribut `data-title` pour le libellé de l'onglet.
+     *
+     * @param {Object} [options]
+     * @param {number} [options.active=0] - Index de l'onglet actif à l'initialisation
+     * @returns {jQuery} La collection jQuery pour le chaînage
+     */
     $.fn.customTabs = function (options) {
 
         const settings = $.extend({
@@ -41,6 +49,11 @@
 
             $container.append($wrapper);
 
+            /**
+             * Active l'onglet à l'index donné.
+             *
+             * @param {number} index - Index (base 0) de l'onglet à afficher
+             */
             function activate(index) {
 
                 $nav.children().removeClass('active');

@@ -78,7 +78,10 @@ function Projet() {
 	}
 
 	/**
-	 * Définit les variables de temps
+	 * Définit les variables de temps du projet à partir des dates de début et de fin.
+	 *
+	 * @param {string} date_debut - Date de début du projet (format `parseDate`)
+	 * @param {string} date_fin - Date de fin du projet (format `parseDate`)
 	 */
 	this.initTimeVariables = function (date_debut, date_fin) {
 		this.date_debut = parseDate(date_debut);
@@ -99,6 +102,9 @@ function Projet() {
 	 * Met à jour les variables d'affichage de la timeline
 	 * et appelle l'application des nouveaux paramètres.
 	 *
+	 * @param {number} nombre_jours_vus_dest - Nombre de jours à afficher dans la fenêtre
+	 * @param {number} x_dest - Position horizontale de départ (en jours depuis le début)
+	 * @param {number} y_dest - Position verticale de départ
 	 * @see Projet#setTimelineZoom
 	 */
 	this.showRangeOfTimeline = function (nombre_jours_vus_dest, x_dest, y_dest) {

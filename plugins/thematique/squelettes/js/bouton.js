@@ -1,8 +1,17 @@
-////////////////////////////////////////////////////////////////
-// objet bouton
-////////////////////////////////////////////////////////////////
+/**
+ * Génère un bouton de publication d'article sur la timeline.
+ *
+ * @constructor
+ */
 function bouton() {
 
+	/**
+	 * Initialise le bouton et l'insère dans le canvas.
+	 *
+	 * @param {Object} projet - Instance du projet courant (non utilisée directement, réservée)
+	 * @param {HTMLElement} canvas - Élément DOM parent dans lequel insérer le bouton
+	 * @param {number} type - Position du bouton : 0 = bas-droite, 1 = haut-gauche
+	 */
 	this.init = function (projet, canvas, type) {
 		this.div_base = document.createElement("div");
 
