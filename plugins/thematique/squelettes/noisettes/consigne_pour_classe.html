@@ -1,0 +1,112 @@
+#CACHE{0}
+
+<BOUCLE_rub(RUBRIQUES){id_rubrique}{tout}>
+    #SET{classe_iframe, #DESCRIPTIF*}
+    #SET{titre_parent, #TITRE}
+    #SET{id_parent, #ID_RUBRIQUE}
+    <BOUCLE_rub00(RUBRIQUES){id_rubrique=#ID_PARENT}{tout}>
+        #SET{id_travail_en_cours,#ID_RUBRIQUE}
+    </BOUCLE_rub00>
+</BOUCLE_rub>
+
+<BOUCLE_consigne_de_la_reponse(ARTICLES){id_article=#ID_CONSIGNE}>
+    #SET{titre_consigne,#TITRE}
+    #SET{id_consigne,#ID_ARTICLE}
+</BOUCLE_consigne_de_la_reponse>
+
+<BOUCLE_police(MOTS){id_rubrique}{type=police}>#SET{police,#TITRE}</BOUCLE_police>
+
+<BOUCLE_nb_doc(DOCUMENTS) {id_article}>
+</BOUCLE_nb_doc>
+    #SET{nb_doc,#TOTAL_BOUCLE}
+</B_nb_doc>
+    #SET{nb_doc,0}
+<//B_nb_doc>
+
+#SET{a_repondu,non}
+[(#TEXTE|oui)#SET{a_repondu,oui}]
+
+#SET{titre_onglet_reponse,Répondre à la mission}
+[(#GET{a_repondu}|=={oui}|oui)#SET{titre_onglet_reponse,Voir ma réponse}]
+
+<div class="[popup_(#ENV{type_objet})]">
+    <div id="bloc_article-#ID_ARTICLE" class="bloc_article[ (#GET{police})]">
+        #SET{titre_consigne_final, #GET{titre_consigne}|sinon{#TITRE}}
+        <div id="sidebar-header-container">
+            <INCLURE{
+                fond=noisettes/header_sidebar,
+                id_article=#ID_ARTICLE, ajax,
+                titre_parent=#GET{titre_parent},
+                titre_consigne=#GET{titre_consigne_final},
+                id_consigne=#GET{id_consigne},
+                type_objet=#ENV{type_objet},
+                env
+            } />
+        </div>
+
+        <div id="tabs-article-#ID_ARTICLE" class="container-tabs">
+            <div id="mission-tabs">
+
+                <div data-title="Description de la mission">
+                    <div class="sidebar_bubble">
+                        <div>#TITRE</div>
+                        [(#TEXTE|oui)
+                            <div>avant consigne</div>
+                            <div class="bloc_texte">
+                                <span class="spip #EDIT{texte}">(#TEXTE|liens_ouvrants|image_reduire{500})</span>
+                            </div>
+                            <div>après consigne</div>
+                        ]
+                        [(#TEXTE|non)
+                            <div>Pas de consigne</div>
+                        ]
+                    </div>
+                    
+
+                </div>
+                
+                <div data-title="#GET{titre_onglet_reponse}">
+                    [(#GET{a_repondu}|!={oui}|oui)
+                        <div class="sidebar_bubble bloc_pas_repondu">
+                            <div class="reponse_entete">
+                                <div class="encadre-sidebar">
+                                    <div>Vous pourrez toujours modifier votre réponse à postériori. </div>
+                                    [(#AUTORISER{modifier,article,#ID_ARTICLE}|oui)
+                                        <a id="bloc_option_publier_reponse-#ID_ARTICLE" class="lien_ajouter" title="Publier">
+                                            &#9998; Publier
+                                        </a>
+                                        
+                                    ]
+                                </div>
+                                
+                            </div>
+
+                            <div class="texte_aide">
+                                <p>
+                                    Oups&nbsp;! Vous n'avez pas encore répondu à la mission proposée par l'intervenant-e.<br />
+                                    Vous avez jusqu'à &#91;insérer date&#93; pour valider votre mission et compléter l'étape n°1.
+                                </p>
+                                <p>
+                                    <strong>Besoin d'inspiration&nbsp;?</strong> Regardez les réponses des autres classes.<br />
+                                    <strong>Besoin d'aide&nbsp;?</strong> N'hésitez pas à poster un message dans l'onglet « Discussion autour de la mission ».
+                                </p>
+                            </div>
+                        </div>
+                    ]
+                    
+                    
+                </div>
+                
+                <div data-title="Discussion autour de la mission">
+                    
+                </div>
+
+            </div>
+        </div>
+        <div class="sidebar_bubble masquer">#ENV{type_objet}</div>
+
+    </div>
+</div>
+<script>
+$('#mission-tabs').customTabs();
+</script>
