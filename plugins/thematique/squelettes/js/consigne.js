@@ -97,8 +97,8 @@ function Consigne() {
 					<div class="nettoyeur"></div>
 				</div>
 				<div class="bouton_reponse_consigne">
-					<img src="${CCN.urlRoot}img/reponse_plus.png" alt="" title="Répondre à la consigne">
-					Répondre à la consigne
+					<img src="${CCN.urlRoot}img/reponse_plus.png" alt="" title="R&eacute;pondre &agrave; la consigne">
+					R&eacute;pondre &agrave; la consigne
 				</div>
 				<div class="bouton_reponse_consigne">
 					<img src="${CCN.urlRoot}img/reponse_plus.png" alt="" title="Accéder à ma réponse">
