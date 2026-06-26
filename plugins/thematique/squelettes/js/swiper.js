@@ -6,7 +6,14 @@ const PDFJS_WORKER_SRC = pdfScript
 	: 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
 
 /**
- * Swiper core
+ * Initialise un Swiper avec navigation, pagination et effet fondu.
+ *
+ * @param {HTMLElement} swiperEl - Élément DOM racine du Swiper
+ * @param {Object} [opts={}] - Options de sélecteurs CSS
+ * @param {string} [opts.nextSelector='.swiper-button-next-custom'] - Sélecteur du bouton suivant
+ * @param {string} [opts.prevSelector='.swiper-button-prev-custom'] - Sélecteur du bouton précédent
+ * @param {string} [opts.paginationSelector='.swiper-pagination'] - Sélecteur de la pagination
+ * @returns {Swiper} Instance Swiper créée
  */
 function initFlipSwiper(swiperEl, opts = {}) {
 	const $swiper = $(swiperEl);
@@ -41,7 +48,10 @@ function initFlipSwiper(swiperEl, opts = {}) {
 }
 
 /**
- * Swiper Image
+ * Crée un Swiper image à partir des `.spip_documents` contenant des images dans le portfolio.
+ *
+ * @param {jQuery} $documents_portfolio - Conteneur parent des éléments `.spip_documents`
+ * @returns {void}
  */
 function initImagesSwiper($documents_portfolio) {
 	// Get all spip_documents image
@@ -103,7 +113,11 @@ function initImagesSwiper($documents_portfolio) {
 }
 
 /**
- * Swiper PDF
+ * Crée un Swiper PDF par page pour chaque `.spip_documents` contenant un PDF dans le portfolio.
+ * Nécessite que PDF.js (`window.pdfjsLib`) soit chargé.
+ *
+ * @param {jQuery} $documents_portfolio - Conteneur parent des éléments `.spip_documents`
+ * @returns {Promise<void>}
  */
 async function initPdfSwipers($documents_portfolio) {
 	// Check if PDF.js is correctly loaded
@@ -227,6 +241,13 @@ async function initPdfSwipers($documents_portfolio) {
 	}
 }
 
+/**
+ * Crée un Swiper PDF par page à partir d'un lien PDF dans un commentaire.
+ * Nécessite que PDF.js (`window.pdfjsLib`) soit chargé.
+ *
+ * @param {jQuery} $portfolio_grand - Élément `<a>` pointant vers le PDF
+ * @returns {Promise<void>}
+ */
 async function initPdfSwipersInComment($portfolio_grand) {
 	// Check if PDF.js is correctly loaded
 	if (!window.pdfjsLib) return;

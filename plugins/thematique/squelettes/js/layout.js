@@ -8,6 +8,12 @@
 	}
 })();
 
+/**
+ * Affiche une boîte de confirmation native du navigateur.
+ *
+ * @param {string} txt - Message à afficher
+ * @returns {boolean} `true` si l'utilisateur a confirmé, `false` sinon
+ */
 function confirmation(txt) {
 	return window.confirm(txt);
 }

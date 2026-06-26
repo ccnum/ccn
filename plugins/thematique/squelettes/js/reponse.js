@@ -106,9 +106,7 @@ function Reponse() {
 	}
 
 	/**
-	 * Affiche la réponse dans la timeline.
-	 *
-	 * @param {Object} data - Données à affecter à l'instance
+	 * Affiche la réponse dans la timeline et la met en surbrillance.
 	 */
 	this.showInTimeline = function () {
 		const reponse_DOM = $('.reponse_haute[data-reponse-id="' + this.id + '"]');
