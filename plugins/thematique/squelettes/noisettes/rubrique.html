@@ -19,64 +19,7 @@
 		[(#REM)Corps Menu Arborescent]
 		<div id="listmenu">
 
-			[(#REM)
-			|
-			|  On cherche :
-			|   …à savoir si la rubrique #_principale a les mots-clés blog ou chrono
-			|
-			|  Note :
-			|   Il n'y a aucun article/rubrique avec ces mots-clés,
-			|   donc la boucle n'est jamais exécutée
-			]
-
-			<BOUCLE_rubriques_ordre(RUBRIQUES) {id_rubrique} {titre_mot IN chrono,blog} {doublons r}>
-			</BOUCLE_rubriques_ordre>
-
-				[(#REM)
-				|
-				|  Si :
-				|   …la rubrique #_principale a les mots-clés blog ou chrono,
-				|
-				|  Alors on cherche :
-				|   Articles || enfants || de la rubrique #_principale ayant les mots-clés blog ou chrono
-				|
-				|  Note :
-				|   Il n'y a aucun article/rubrique avec ces mots-clés,
-				|   donc la boucle n'est jamais exécutée
-				]
-
-				<BOUCLE_sous_articles0(ARTICLES) {id_rubrique} {tout} {!par date} {doublons}>
-					<script type="text/javascript">
-						$('#ajax#ID_ARTICLE').on('click', function() {
-							$('div#sidebar_main').addClass('chargement');
-							$('#menug li a.selected').removeClass('selected');
-							$('#ajax_rub_#ID_RUBRIQUE').addClass('selected');
-							$('#sidebar_main').load('[(#URL_ARTICLE|parametre_url{mode,ajax-detail}|html_entity_decode)]', {limit: 25}, function(){
-								$('div#sidebar_main').removeClass('chargement');
-								$('#sidebar_main').show('slow');
-							});
-						});
-					</script>
-					<li><a id="ajax#ID_ARTICLE" href="#" class="ajax [(#EXPOSE) [(#GET{art1}|=={#ID_ARTICLE}|oui)gauche_menu_on]]">[- (#TITRE|couper{50})]</a></li>
-				</BOUCLE_sous_articles0>
-				<br />
-				</B_sous_articles0>
-
-			</B_rubriques_ordre>
-
-				[(#REM)
-				|
-				|  Si :
-				|	… l'id de la rubrique correspond à l'id de laclasse_rubrique_admin
-				|   …la rubrique #_principale n'a pas les mots-clés blog ou chrono,
-				|
-				|  Alors on cherche :
-				|   Articles || enfants || de la rubrique #_principale n'ayant pas les mots-clés blog ou chrono
-				|
-				| 	Affiche la rubrique concernant l'utilisateur connecté en premiere place dans Travail en cours
-				|	seulement si l'utilisateur connecté est professeur
-				]
-
+				<!-- Affiche la rubrique de l'utilisateur connecté en premier (profs uniquement) -->
 				<!-- Vérifie le mot clé de la rubrique  -->
 				<BOUCLE_getMotCle(MOTS) {id_rubrique == #SESSION{idRubriqueUser}}>
 					#SET{motcle, #TITRE}
@@ -167,17 +110,9 @@
 					</script>
 					</ul>
 				</div>
-				</B_sous_articles1>
-			<//B_rubriques_ordre>
+				<//B_sous_articles1>
 
-			[(#REM)
-			|
-			|  Dans les doublons {doublons r} :
-			|  - La rubrique #_principale si elle a les mots-clés chrono ou blog (donc si la rubrique #_principale a un des mots-clés, cette boucle n'est pas exécutée)
-			|
-			|  On cherche :
-			|   Sous-rubriques || enfants || de la rubrique #_principale n'ayant pas les mots-clés blog ou chrono
-			]
+			[(#REM) Sous-rubriques enfants de la rubrique #_principale]
 
 			<BOUCLE_rubriques(RUBRIQUES) {id_parent} {par num titre, titre}{tout} {doublons r}>
 				<script type="text/javascript">
@@ -235,45 +170,7 @@
 
 						[(#REM)Articles]
 
-						<BOUCLE_rubriques_ordre2(RUBRIQUES) {id_rubrique} {titre_mot IN chrono,blog} {doublons r}>
-						</BOUCLE_rubriques_ordre2>
-							[(#REM)
-							|
-							|  Si :
-							|   …la sous-rubrique #_rubriques a les mots-clés blog ou chrono enfant de la rubrique #_principale
-							|
-							|  Alors on cherche :
-							|   Articles || enfants || de la sous-rubrique #_rubriques ayant les mots-clés blog ou chrono || enfant || de la rubrique #_principale n'ayant pas les mots-clés blog ou chrono
-							|
-							|  Note :
-							|   Il n'y a aucun article/rubrique avec ces mots-clés,
-							|   donc la boucle n'est jamais exécutée
-							]
-							<BOUCLE_sous_articles2(ARTICLES) {id_rubrique} {tout} {!par date} {doublons}>
-							<script type="text/javascript">
-								$('#ajax#ID_ARTICLE').on('click', function() {
-									call({
-										'type':'article',
-										'type_objet':'travail_en_cours',
-										'id_rubrique':'#ID_ARTICLE',
-										'mode':'ajax-detail'
-									});
-								});
-							</script>
-
-							<li class="ressources_classe_consignes">
-								<a id="ajax#ID_ARTICLE" href="#"  class="ajax [(#EXPOSE) [(#GET{art1}|=={#ID_ARTICLE}|oui)gauche_menu_on]]">
-									[(#TITRE|couper{50})]
-								</a>
-							</li>
-							</BOUCLE_sous_articles2>
-						</B_rubriques_ordre2>
-							[(#REM)
-							|
-							|  On cherche :
-							|   Articles || enfants || de la sous-rubrique #_rubriques n'ayant pas les mots-clés blog ou chrono || enfant || de la rubrique #_principale n'ayant pas les mots-clés blog ou chrono
-							]
-							<BOUCLE_sous_articles3(ARTICLES) {id_rubrique}{par num titre} {doublons}>
+						<BOUCLE_sous_articles3(ARTICLES) {id_rubrique}{par num titre} {doublons}>
 								<script type="text/javascript">
 									$('#ajax#ID_ARTICLE').on('click', function() {
 										call({
@@ -292,7 +189,6 @@
 									</a>
 								</li>
 							</BOUCLE_sous_articles3>
-						<//B_rubriques_ordre2>
 
 						[(#REM)
 						|
