@@ -1613,9 +1613,9 @@ ul#forum, .lien_forum {
 	right: 0;
 	width: var(--sidebar-width-large);
 	z-index: 4000;
-	height: calc(100vh - var());
-	transform: translateX(100%); 
-	transition: transform 500ms ease-in-out, width 500ms ease; 	
+	height: calc(100vh - var(--header-height) - var(--footer-height));
+	transform: translateX(100%);
+	transition: transform 500ms ease-in-out, width 500ms ease;
 }
 
 #sidebar_content {
@@ -1624,7 +1624,7 @@ ul#forum, .lien_forum {
     z-index: 10000;
 	overflow: hidden;
 	display: flex;
-	height: calc(100vh - var(--header-height));
+	height: calc(100vh - var(--header-height) - var(--footer-height));
 }
 
 #sidebar_content_inner {
