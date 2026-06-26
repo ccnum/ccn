@@ -29,7 +29,21 @@
 				<label for="titre" class="titre2">Titre<em class="aide">#AIDER{titre}</em></label>[
 				<span class='erreur_message'>(#ENV**{erreurs/titre})</span>
 				]<input type='text' class='text titre2' name='titre' id='titre3' cols='40' maxlength='50' [ lang='(#LANGUE)'] value="[(#ENV**{titre})]"
-				[(#ENV{titre,''}|?{'',' '})onfocus="if(!antifocus){this.value='';antifocus=true;}"]/>
+				[(#ENV{titre,''}|?{'',' '})onfocus="if(!antifocus){this.value='';antifocus=true;}"]
+				oninput="updateCharCounter('titre3', 50)"/>
+				<div class="char-counter-wrap">
+					<div class="char-counter-bar"><div id="titre3-bar" class="char-counter-fill"></div></div>
+					<span id="titre3-counter" class="char-counter">0/50</span>
+				</div>
+				<script>
+				function updateCharCounter(id, max) {
+					var val = document.getElementById(id).value.length;
+					document.getElementById(id + '-counter').textContent = val + '/' + max;
+					document.getElementById(id + '-bar').style.width = (val / max * 100) + '%';
+					document.getElementById(id + '-bar').className = 'char-counter-fill' + (val >= max ? ' full' : val >= max * 0.8 ? ' warn' : '');
+				}
+				updateCharCounter('titre3', 50);
+				</script>
 			</div>
 			<!--
 			[(#ENV**{config/articles_soustitre}|=={non}|?{#ENV**{soustitre,''},' '}|oui)
