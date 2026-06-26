@@ -74,17 +74,17 @@ $(function () {
 
 	onResize();
 
-	$('#sidebarExpand').on(
-		'click', function () {
-			toggleSidebarExpand();
-		}
-	);
+	$(document).on('click', '#sidebarExpand', function () {
+		toggleSidebarExpand();
+	});
 
-	$('#sidebarCache').on(
-		'click', function () {
-			$('body').removeClass('hasSidebarExpanded');
-		}
-	);
+	$(document).on('click', '#sidebar-close', function () {
+		closeSidebar();
+	});
+
+	$(document).on('click', '#sidebarCache', function () {
+		$('body').removeClass('hasSidebarExpanded');
+	});
 
 	$("#menu_bas ul a").not('#menu-classes-select ul a').tooltip(
 		{
