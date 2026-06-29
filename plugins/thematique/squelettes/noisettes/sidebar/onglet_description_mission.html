@@ -1,0 +1,10 @@
+<div class="sidebar_bubble">
+    [(#ENV{a_repondu}|oui)
+        <div class="bloc_texte">
+            <span class="spip #EDIT{texte}">#ENV{texte_de_larticle}</span>
+        </div>
+    ]
+    [(#GET{a_repondu}|non)
+        <div>Pas de consigne</div>
+    ]
+</div>

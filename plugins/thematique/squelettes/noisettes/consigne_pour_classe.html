@@ -9,9 +9,10 @@
     </BOUCLE_rub00>
 </BOUCLE_rub>
 
-<BOUCLE_consigne_de_la_reponse(ARTICLES){id_article=#ID_CONSIGNE}>
+<BOUCLE_consigne_de_la_reponse(ARTICLES){id_article=#ENV{id_article}}>
     #SET{titre_consigne,#TITRE}
     #SET{id_consigne,#ID_ARTICLE}
+    #SET{texte_de_larticle, #TEXTE|liens_ouvrants|image_reduire{500}}
 </BOUCLE_consigne_de_la_reponse>
 
 <BOUCLE_police(MOTS){id_rubrique}{type=police}>#SET{police,#TITRE}</BOUCLE_police>
@@ -25,6 +26,7 @@
 
 #SET{a_repondu,non}
 [(#TEXTE|oui)#SET{a_repondu,oui}]
+
 
 #SET{titre_onglet_reponse,Répondre à la mission}
 [(#GET{a_repondu}|=={oui}|oui)#SET{titre_onglet_reponse,Voir ma réponse}]
@@ -48,19 +50,15 @@
             <div id="mission-tabs">
 
                 <div data-title="Description de la mission">
-                    <div class="sidebar_bubble">
-                        <div>#TITRE</div>
-                        [(#TEXTE|oui)
-                            <div>avant consigne</div>
-                            <div class="bloc_texte">
-                                <span class="spip #EDIT{texte}">(#TEXTE|liens_ouvrants|image_reduire{500})</span>
-                            </div>
-                            <div>après consigne</div>
-                        ]
-                        [(#TEXTE|non)
-                            <div>Pas de consigne</div>
-                        ]
-                    </div>
+                    <INCLURE{
+                        fond=noisettes/header_sidebar,
+                        id_article=#ID_ARTICLE, ajax,
+                        titre_parent=#GET{titre_parent},
+                        titre_consigne=#GET{titre_consigne_final},
+                        id_consigne=#GET{id_consigne},
+                        type_objet=#ENV{type_objet},
+                        env
+                    } />
                     
 
                 </div>
@@ -69,16 +67,13 @@
                     [(#GET{a_repondu}|!={oui}|oui)
                         <div class="sidebar_bubble bloc_pas_repondu">
                             <div class="reponse_entete">
-                                <div class="encadre-sidebar">
-                                    <div>Vous pourrez toujours modifier votre réponse à postériori. </div>
-                                    [(#AUTORISER{modifier,article,#ID_ARTICLE}|oui)
-                                        <a id="bloc_option_publier_reponse-#ID_ARTICLE" class="lien_ajouter" title="Publier">
-                                            &#9998; Publier
-                                        </a>
-                                        
-                                    ]
-                                </div>
-                                
+                                <div class="sidebar-texte-encadre">Vous pourrez toujours modifier votre réponse à postériori. </div>
+                                [(#AUTORISER{modifier,article,#ID_ARTICLE}|oui)
+                                    <a id="bloc_option_publier_reponse-#ID_ARTICLE" class="sidebar_publier" title="Publier">
+                                        &#9998; Publier
+                                    </a>
+                                    
+                                ]
                             </div>
 
                             <div class="texte_aide">
@@ -98,7 +93,19 @@
                 </div>
                 
                 <div data-title="Discussion autour de la mission">
-                    
+                    <div class="sidebar_bubble bloc_pas_repondu">
+                        <div class="reponse_entete">
+                            <div class="sidebar-texte-encadre">
+                                Vous avez des questions sur cette mission ? Envie de réagir auprès de l’intervenant-e et des autres classes ? C’est ici !
+                            </div>
+                            <a id="bloc_option_publier_reponse-#ID_ARTICLE" class="sidebar_publier" title="Publier">
+                                &#9998; Écrire
+                            </a>
+                        </div>
+                        <INCLURE{fond=noisettes/inc/forum, mode=ajax-detail, env, ajax} />
+                           
+                        
+                    </div>
                 </div>
 
             </div>
