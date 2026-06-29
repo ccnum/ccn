@@ -420,7 +420,8 @@ function call(opts) {
  *
  * @todo Définir le contenu de la sidebar secondaire
  */
-
+// CCN.currentUserType
+// current_user_type
 function callConsigne(id_consigne) {
 
 	if (!Number.isInteger(Number(id_consigne))) return;
@@ -436,7 +437,7 @@ function callConsigne(id_consigne) {
 	updateMenuIcon(['consignes-' + id_consigne], 'mainView');
 
 	loadContentInMainSidebar(
-		url, 'article', 'consignes', function () {
+		url, function () {
 			updateUrl(
 				{
 					'type_objet': 'consignes',
@@ -478,7 +479,7 @@ function callReponse(id_reponse) {
 
 	showConsigneInTimeline(id_consigne);
 	loadContentInMainSidebar(
-		url, 'article', 'travail_en_cours', function () {
+		url, function () {
 			updateUrl(
 				{
 					'type_objet': 'travail_en_cours',
@@ -520,7 +521,7 @@ function callClasse(id_classe) {
 		url = CCN.projet.url_popup_classes + '&id_objet=' + id_classe + '&type_objet=travail_en_cours';
 	}
 	loadContentInMainSidebar(
-		url, 'rubrique', 'classes', function () {
+		url, function () {
 			updateUrl(
 				{
 					'type_objet': 'classes',
@@ -592,7 +593,7 @@ function callArticleBlog(id_article) {
 
 	const url = CCN.projet.url_popup_blog + "&page=article&id_article=" + id_article;
 	loadContentInMainSidebar(
-		url, 'article', 'blogs', function () {
+		url, function () {
 			updateUrl(
 				{
 					'type_objet': 'blogs',
@@ -648,7 +649,7 @@ function callRessourceArticle(id_article, type_objet) {
 
 	const url = "./spip.php?page=article&id_article=" + id_article + "&mode=ajax-detail";
 	loadContentInMainSidebar(
-		url, 'article', type_objet, function () {
+		url, function () {
 			updateUrl(
 				{
 					'type_objet': type_objet,
@@ -679,7 +680,7 @@ function callRessourceSyndicArticle(id_syndic_article, type_objet) {
 
 	const url = "./spip.php?page=syndic_article&id_syndic_article=" + id_syndic_article + "&mode=ajax-detail";
 	loadContentInMainSidebar(
-		url, 'syndic_article', type_objet, function () {
+		url, function () {
 			updateUrl(
 				{
 					'type_objet': type_objet,
@@ -710,7 +711,7 @@ function callRessourceRubrique(id_rubrique, type_objet) {
 
 	const url = "./spip.php?page=rubrique&id_rubrique=" + id_rubrique + "&mode=ajax-detail";
 	loadContentInMainSidebar(
-		url, 'rubrique', type_objet, function () {
+		url, function () {
 			updateUrl(
 				{
 					'type_objet': type_objet,
@@ -745,7 +746,7 @@ function callArticleEvenement(id_objet, type_objet) {
 
 	const url = CCN.projet.url_popup_evenement + "&page=" + type_objet + "&id_" + type_objet + "=" + id_objet;
 	loadContentInMainSidebar(
-		url, 'article', 'evenements', function () {
+		url, function () {
 			updateUrl(
 				{
 					'type_objet': 'evenements',
@@ -794,7 +795,7 @@ function createReponse(id_consigne, id_rubrique_classe, numero) {
 	changeTimelineMode('consignes');
 
 	const url = CCN.projet.url_popup_reponseajout + "&id_consigne=" + id_consigne + "&id_rubrique=" + id_rubrique_classe;
-	loadContentInMainSidebar(url, 'article', 'blogs');
+	loadContentInMainSidebar(url);
 
 }
 /**
@@ -1005,7 +1006,7 @@ function reload(url) {
  * @todo Loading et son callback
  */
 
-function loadContentInMainSidebar(url, typePage, typeObjet, callback) {
+function loadContentInMainSidebar(url, callback) {
 	$('body').addClass('loading');
 	showSidebar();
 	emptyMainSidebar();

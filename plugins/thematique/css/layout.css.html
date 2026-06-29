@@ -8,6 +8,15 @@
 	margin: 0px;
 }
 
+p {  /* Ecrasons le css appliqué sur "*" pour gérer l'exception des paragraphes. */
+    display: block;
+    margin-block-start: 1em;
+    margin-block-end: 1em;
+    margin-inline-start: 0px;
+    margin-inline-end: 0px;
+    unicode-bidi: isolate;
+}
+
 embed, iframe, object {
 	max-width: 100%;
 }
@@ -552,3 +561,22 @@ a:hover {
 .petit {font-size: 0.94em;}
 #lien_public:hover, #lien_prive:hover { cursor: pointer; }
 
+.reponse_entete {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	background-color: #DBDCFF;
+    padding: 12px 24px;
+    flex: 1;
+}
+
+.sidebar_publier {
+	display: flex;
+    white-space: nowrap;
+	background-color: white;
+	padding: 10px;
+	height: 1.8rem;
+}
+.sidebar-texte-encadre {
+	width: fit-content;
+}
