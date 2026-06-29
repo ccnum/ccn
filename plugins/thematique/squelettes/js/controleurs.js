@@ -86,8 +86,9 @@ $(function () {
 		$('body').removeClass('hasSidebarExpanded');
 	});
 
-	$("#menu_bas ul a").not('#menu-classes-select ul a').tooltip(
+	$(".logo").not('#menu-classes-select ul a').tooltip(
 		{
+			appendTo: "body", // On garde ça pour éviter le bug des images déplacées !
 			position: {
 				my: "center bottom-4",
 				at: "center top",
@@ -111,8 +112,7 @@ $(function () {
 			}
 		}
 	);
-}
-);
+});
 
 let antifloodHashChange = false;
 
