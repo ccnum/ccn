@@ -1,0 +1,22 @@
+<div class="sidebar_bubble bloc_pas_repondu">
+    <div class="reponse_entete">
+        <div class="sidebar-texte-encadre">Vous pourrez toujours modifier votre réponse à postériori. </div>
+        [(#AUTORISER{modifier,article,#ID_ARTICLE}|oui)
+            <a id="bloc_option_publier_reponse-#ID_ARTICLE" class="sidebar_publier" title="Publier">
+                &#9998; Publier
+            </a>
+            
+        ]
+    </div>
+
+    <div class="texte_aide">
+        <p>
+            Oups&nbsp;! Vous n'avez pas encore répondu à la mission proposée par l'intervenant-e.<br />
+            Vous avez jusqu'à &#91;insérer date&#93; pour valider votre mission et compléter l'étape n°1.
+        </p>
+        <p>
+            <strong>Besoin d'inspiration&nbsp;?</strong> Regardez les réponses des autres classes.<br />
+            <strong>Besoin d'aide&nbsp;?</strong> N'hésitez pas à poster un message dans l'onglet « Discussion autour de la mission ».
+        </p>
+    </div>
+</div>

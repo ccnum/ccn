@@ -1,0 +1,79 @@
+#CACHE{0}
+
+<BOUCLE_rub(RUBRIQUES){id_rubrique}{tout}>
+    #SET{classe_iframe, #DESCRIPTIF*}
+    #SET{titre_parent, #TITRE}
+    #SET{id_parent, #ID_RUBRIQUE}
+    <BOUCLE_rub00(RUBRIQUES){id_rubrique=#ID_PARENT}{tout}>
+        #SET{id_travail_en_cours,#ID_RUBRIQUE}
+    </BOUCLE_rub00>
+</BOUCLE_rub>
+
+<BOUCLE_consigne_de_la_reponse(ARTICLES){id_article=#ENV{id_article}}>
+    #SET{titre_consigne,#TITRE}
+    #SET{id_consigne,#ID_ARTICLE}
+</BOUCLE_consigne_de_la_reponse>
+
+<BOUCLE_police(MOTS){id_rubrique}{type=police}>#SET{police,#TITRE}</BOUCLE_police>
+
+<BOUCLE_nb_doc(DOCUMENTS) {id_article}>
+</BOUCLE_nb_doc>
+    #SET{nb_doc,#TOTAL_BOUCLE}
+</B_nb_doc>
+    #SET{nb_doc,0}
+<//B_nb_doc>
+
+#SET{a_repondu,non}
+[(#TEXTE|oui)#SET{a_repondu,oui}]
+
+
+#SET{titre_onglet_reponse,Répondre à la mission}
+[(#GET{a_repondu}|=={oui}|oui)#SET{titre_onglet_reponse,Voir ma réponse}]
+
+<div class="[popup_(#ENV{type_objet})]">
+    <div id="bloc_article-#ID_ARTICLE" class="bloc_article[ (#GET{police})]">
+        #SET{titre_consigne_final, #GET{titre_consigne}|sinon{#TITRE}}
+        <div id="sidebar-header-container">
+            <INCLURE{
+                fond=noisettes/sidebar/header_sidebar,
+                id_article=#ID_ARTICLE, ajax,
+                titre_parent=#GET{titre_parent},
+                titre_consigne=#GET{titre_consigne_final},
+                id_consigne=#GET{id_consigne},
+                type_objet=#ENV{type_objet},
+                env
+            } />
+        </div>
+
+        <div id="tabs-article-#ID_ARTICLE" class="container-tabs">
+            <div id="mission-tabs">
+                <div data-title="Description de la mission">
+                    <INCLURE{
+                        fond=noisettes/sidebar/onglet_description_mission,
+                        id_article=#GET{id_consigne},
+                        env
+                    } />
+                </div>
+                <div data-title="#GET{titre_onglet_reponse}">
+                    [(#GET{a_repondu}|!={oui}|oui)
+                        <INCLURE{
+                            fond=noisettes/sidebar/onglet_repondre_mission,
+                            env
+                        } />
+                    
+                    ]
+                </div>
+                <div data-title="Discussion autour de la mission">
+                    <INCLURE{
+                        fond=noisettes/sidebar/onglet_discussion_mission,
+                        env
+                    } />
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+$('#mission-tabs').customTabs();
+</script>
