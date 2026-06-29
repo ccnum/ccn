@@ -45,7 +45,7 @@ function Reponse() {
 				style="top:${this.y * 100}%; left:${this.x_absolu / CCN.projet.nombre_jours * 100}%;">
 				<div id="reponse${this.id}"
 					class="reponse couleur_texte_travail_en_cours bgc_classe_${coul}">
-					<div aria-label="${this.nombre_commentaires} interaction${this.nombre_commentaires > 1 ? 's' : ''}" class="picto_nombre_commentaires">${this.nombre_commentaires}</div>
+					${this.nombre_commentaires > 0 ? `<div aria-label="${this.nombre_commentaires} interaction${this.nombre_commentaires > 1 ? 's' : ''}" class="picto_nombre_commentaires">${this.nombre_commentaires}</div>` : ''}
 					<div class='logo photo'
 						 style='display:flex;align-items:center;justify-content:center;container-type:size;'
 					>
