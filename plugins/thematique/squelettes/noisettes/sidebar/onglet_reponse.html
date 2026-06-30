@@ -34,7 +34,7 @@
 			</div>]
 			<!-- Formulaire de modification, masqué par défaut, ouvert par l'accordéon ci-dessus -->
 			[(#AUTORISER{modifier,article,#ID_ARTICLE}|oui)
-				<div class='nettoyeur cache bloc_option_doc' style="display:block">
+				<div class='nettoyeur masquer bloc_option_doc'>
 					<INCLURE{fond=noisettes/publier_article, mode=ajax-detail, id_article=#ID_ARTICLE, env, ajax} />
 				</div>
 			]
@@ -74,7 +74,7 @@
 			</div>
 			<!-- Formulaire de publication, masqué par défaut, ouvert par l'accordéon ci-dessus -->
 			[(#AUTORISER{modifier,article,#ID_ARTICLE}|oui)
-				<div class='nettoyeur cache bloc_option_doc' style="display:block">
+				<div class='nettoyeur masquer bloc_option_doc'>
 					<INCLURE{fond=noisettes/publier_article, mode=ajax-detail, id_article=#ID_ARTICLE, env, ajax} />
 				</div>
 			]

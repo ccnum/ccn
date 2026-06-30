@@ -35,12 +35,12 @@
 <div id="menu_haut_rubrique" class="bloc_titre">
 	<B_rub_aut2>
 		<div class="select">
-			
+
 				<div id="choix_rubrique_admin" name="rubrique_admin" class="select selectbox" data-select-name="rubrique_admin">
 					<button type="button" class="select-toggle first_label">
 						<span class="icon icon-publier"></span>
 						Publier
-						[(#GET{titre}|?{<span class="highlight">#GET{titre}</span>,})]
+						<span class="highlight">[&nbsp;(#GET{titre})]</span>
 						<span class="icon icon-down"></span>
 					</button>
 					<ul class="select-options choix_rubrique_wrapper">
@@ -63,7 +63,7 @@
 						</BOUCLE_rub_aut2>
 					</ul>
 				</div>
-			
+
 		</div>
 	</B_rub_aut2>
 		[(#REM) Admin complet]
@@ -73,7 +73,7 @@
 					<button type="button" class="select-toggle first_label">
 						<span class="icon icon-publier"></span>
 						Publier
-						<span class="highlight">[(#GET{titre})]</span>
+						<span class="highlight">[&nbsp;(#GET{titre})]</span>
 						<span class="icon icon-down"></span>
 					</button>
 					<ul class="select-options choix_rubrique_wrapper">
@@ -100,7 +100,7 @@
 						</BOUCLE_rub2>
 					</ul>
 				</div>
-			
+
 		</B_rub2>
 	<//B_rub_aut2>
 </div>
