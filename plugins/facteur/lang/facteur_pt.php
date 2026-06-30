@@ -47,7 +47,7 @@ return [
 	'facteur_smtp_secure_non' => 'náo',
 	'facteur_smtp_secure_ssl' => 'SSL (obsoleto)',
 	'facteur_smtp_secure_tls' => 'TLS (recomendado)',
-	'facteur_smtp_sender' => 'Endereço pelo retorno dos erros (opcional)',
+	'facteur_smtp_sender' => 'Endereço para o retorno dos erros (opcional)',
 	'facteur_smtp_sender_descriptif' => 'Informa, no cabeçalho da mensagem, o endereço de e-mail de retorno dos erros (ou Return-Path)',
 	'facteur_smtp_username' => 'Nome do usuário:',
 
