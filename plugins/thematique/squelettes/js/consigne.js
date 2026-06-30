@@ -98,11 +98,11 @@ function Consigne() {
 				</div>
 				<div class="bouton_reponse_consigne">
 					<img src="${CCN.urlRoot}img/reponse_plus.png" alt="" title="R&eacute;pondre &agrave; la consigne">
-					R&eacute;pondre &agrave; la consigne
+					<div style="white-space: nowrap;">Répondre&nbsp;&agrave;&nbsp;la mission</div>
 				</div>
 				<div class="bouton_reponse_consigne">
 					<img src="${CCN.urlRoot}img/reponse_plus.png" alt="" title="Accéder à ma réponse">
-					Accéder à ma réponse
+					<div style="white-space: nowrap;">Ma réponse</div>
 				</div>
 			</div>
 		`);
@@ -177,7 +177,7 @@ function Consigne() {
 			&& (CCN.typeRestreint == 'travail_en_cours')
 		) {
 			this.div_reponse_plus.addClass('show');
-		}
+		
 	}
 
 	/**
@@ -193,7 +193,7 @@ function Consigne() {
 			&& (CCN.typeRestreint == 'travail_en_cours')
 		) {
 			this.div_reponse_see.on('click', () => callReponse(answerId)).addClass('show');
-		}
+		
 	}
 
 	/**
