@@ -9,7 +9,6 @@
 )]
 #CACHE{0}
 
-<BOUCLE_auth(AUTEURS){id_auteur=#SESSION{id_auteur}}{tous}>
 [(#SET{mon_favori, #ENV{objet}|favoris_ccn_mon_favori{#ENV{id_objet}}})]
 [(#SET{compteurs, #ENV{objet}|favoris_ccn_compter{#ENV{id_objet}}})]
 
@@ -19,26 +18,15 @@
 	data-compteurs='[(#GET{compteurs}|favoris_ccn_json)]'
 	data-mon-favori="#GET{mon_favori}">
 
-	<button type="button" class="favori-ccn-btn" data-categorie="feu"
-		data-action="#URL_ACTION_AUTEUR{toggle_favori_ccn, #ENV{objet}-#ENV{id_objet}-feu}"
-		aria-label="Feu">
-		<span class="favori-ccn-emoji" aria-hidden="true">&#128293;</span>
+	[(#SET{categories, #VAL{''}|favoris_ccn_categories})]
+	<BOUCLE_cat(DATA){source tableau, #GET{categories}}>
+	<button type="button" class="favori-ccn-btn" data-categorie="#CLE"
+		data-action="#URL_ACTION_AUTEUR{toggle_favori_ccn, #ENV{objet}-#ENV{id_objet}-#CLE}"
+		aria-label="#VALEUR{label}">
+		<span class="favori-ccn-emoji" aria-hidden="true">#VALEUR{html}</span>
 		<span class="favori-ccn-count">0</span>
 	</button>
-
-	<button type="button" class="favori-ccn-btn" data-categorie="coeur"
-		data-action="#URL_ACTION_AUTEUR{toggle_favori_ccn, #ENV{objet}-#ENV{id_objet}-coeur}"
-		aria-label="Cœur">
-		<span class="favori-ccn-emoji" aria-hidden="true">&#10084;&#65039;</span>
-		<span class="favori-ccn-count">0</span>
-	</button>
-
-	<button type="button" class="favori-ccn-btn" data-categorie="pouce"
-		data-action="#URL_ACTION_AUTEUR{toggle_favori_ccn, #ENV{objet}-#ENV{id_objet}-pouce}"
-		aria-label="Pouce">
-		<span class="favori-ccn-emoji" aria-hidden="true">&#128077;</span>
-		<span class="favori-ccn-count">0</span>
-	</button>
+	</BOUCLE_cat>
 
 </div>
 
@@ -73,5 +61,3 @@ $(function () {
 	});
 });
 </script>
-
-</BOUCLE_auth>

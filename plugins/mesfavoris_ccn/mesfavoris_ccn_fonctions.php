@@ -4,7 +4,7 @@ if (!defined('_ECRIRE_INC_VERSION')) {
 	return;
 }
 
-function favoris_ccn_categories() {
+function favoris_ccn_categories($dummy = '') {
 	return [
 		'feu'   => ['html' => '&#128293;', 'label' => 'Feu'],
 		'coeur' => ['html' => '&#10084;&#65039;', 'label' => 'Cœur'],
