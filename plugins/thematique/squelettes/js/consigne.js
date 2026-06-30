@@ -177,7 +177,7 @@ function Consigne() {
 			&& (CCN.typeRestreint == 'travail_en_cours')
 		) {
 			this.div_reponse_plus.addClass('show');
-		
+		}
 	}
 
 	/**
@@ -193,7 +193,7 @@ function Consigne() {
 			&& (CCN.typeRestreint == 'travail_en_cours')
 		) {
 			this.div_reponse_see.on('click', () => callReponse(answerId)).addClass('show');
-		
+		}
 	}
 
 	/**
