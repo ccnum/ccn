@@ -1109,6 +1109,7 @@ function showSidebar() {
 function closeSidebar() {
 	$('body').removeClass('hasSidebarOpen hasSidebarExpanded');
 	$('#sidebar').removeClass('show');
+	$('#menu_bas .logo a').removeClass('selected');
 	if (_sidebarTrigger && typeof _sidebarTrigger.focus === 'function') {
 		_sidebarTrigger.focus();
 	}
