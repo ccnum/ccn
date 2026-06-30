@@ -9,6 +9,10 @@ function fictions_post_edition($flux) {
 		return $flux;
 	}
 
+	if (($flux['args']['objet'] ?? '') !== 'article') {
+		return $flux;
+	}
+
 	$id_objet   = intval($flux['args']['id_objet'] ?? 0);
 	$statut     = $flux['args']['champs_anciens']['statut'] ?? '';
 	$descriptif = $flux['args']['champs_anciens']['descriptif'] ?? '';
