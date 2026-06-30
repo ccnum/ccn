@@ -134,7 +134,7 @@ function Consigne() {
 		const _thisIdRestreint = parseInt(CCN.idRestreint, 10);
 		const _thisNumero = parseInt(this.numero, 10);
 
-		this.div_reponse_plus.on('click', () => createReponse(false, _thisId, _thisIdRestreint, _thisNumero));
+		this.div_reponse_plus.on('click', () => createReponse(_thisId, _thisIdRestreint, _thisNumero));
 		this.div_consigne.on('click', () => callConsigne(_thisId));
 
 		if (CCN.admin == 0) {
