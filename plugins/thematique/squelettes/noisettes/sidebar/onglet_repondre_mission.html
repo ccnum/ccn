@@ -2,10 +2,10 @@
     <div class="reponse_entete">
         <div class="sidebar-texte-encadre">Vous pourrez toujours modifier votre réponse à postériori. </div>
         [(#AUTORISER{modifier,article,#ID_ARTICLE}|oui)
-            <a id="bloc_option_publier_reponse-#ID_ARTICLE" class="sidebar_publier" title="Publier">
+            <INCLURE{fond=noisettes/js/accordeon, nom=bloc_option_publier_reponse-#ID_ARTICLE, ajax}>
+            <a id="bloc_option_publier_reponse-#ID_ARTICLE" class="hac sidebar_publier" title="Publier">
                 &#9998; Publier
             </a>
-            
         ]
     </div>
 
@@ -19,4 +19,10 @@
             <strong>Besoin d'aide&nbsp;?</strong> N'hésitez pas à poster un message dans l'onglet « Discussion autour de la mission ».
         </p>
     </div>
+
+    [(#AUTORISER{modifier,article,#ID_ARTICLE}|oui)
+        <div class='nettoyeur cache bloc_option_doc' style="display:block">
+            <INCLURE{fond=noisettes/publier_article, mode=ajax-detail, id_article=#ID_ARTICLE, env, ajax} />
+        </div>
+    ]
 </div>

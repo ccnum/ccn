@@ -55,12 +55,11 @@
                     } />
                 </div>
                 <div data-title="#GET{titre_onglet_reponse}">
+                    [(#GET{a_repondu}|=={oui}|oui)
+                        <INCLURE{fond=noisettes/sidebar/onglet_voir_reponse, env} />
+                    ]
                     [(#GET{a_repondu}|!={oui}|oui)
-                        <INCLURE{
-                            fond=noisettes/sidebar/onglet_repondre_mission,
-                            env
-                        } />
-                    
+                        <INCLURE{fond=noisettes/sidebar/onglet_repondre_mission, env} />
                     ]
                 </div>
                 <div data-title="Discussion autour de la mission">

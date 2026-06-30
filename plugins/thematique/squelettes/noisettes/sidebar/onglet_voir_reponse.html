@@ -1,0 +1,44 @@
+<div class="sidebar_bubble">
+    <div class="bloc_option_doc nettoyeur bloc_texte">
+        <div style="clear:both" class='bloc_classe_iframe'>
+            [(#AUTORISER{modifier,rubrique,#ID_RUBRIQUE}|oui)
+                [<a class="spip_doc_titre" href="[(#GET{classe_iframe}|replace{embed,})]" target="_blank" rel="noopener noreferrer">
+                    (#GET{classe_iframe}|replace{embed,})
+                </a>]
+            ]
+            <div class="nettoyeur"></div>
+            <iframe src="[(#GET{classe_iframe}|textebrut)]" width="100%" height="100%" sandbox="allow-scripts allow-same-origin allow-forms allow-popups"></iframe>
+        </div>
+    </div>
+</div>
+
+<div class="sidebar_bubble">
+    <div class="reponse_entete nettoyeur">
+        <div class="reponse_titre_bubble">
+            [(#TITRE|sinon{Ma réponse})]
+        </div>
+        [(#AUTORISER{modifier,article,#ID_ARTICLE}|oui)
+            <INCLURE{fond=noisettes/js/accordeon, nom=bloc_option_modifier_reponse-#ID_ARTICLE, ajax}>
+            <a id="bloc_option_modifier_reponse-#ID_ARTICLE" class="hac lien_modifier bouton_modifier" title="Modifier">
+                &#9998; Modifier
+            </a>
+        ]
+    </div>
+    <div class="nettoyeur0"></div>
+    <div class="bloc_texte">
+        <span class="spip #EDIT{texte}">(#TEXTE|liens_ouvrants|image_reduire{500})</span>
+    </div>
+    [(#AUTORISER{modifier,article,#ID_ARTICLE}|oui)
+        <div class='nettoyeur cache bloc_option_doc' style="display:block">
+            <INCLURE{fond=noisettes/publier_article, mode=ajax-detail, id_article=#ID_ARTICLE, env, ajax} />
+        </div>
+    ]
+</div>
+
+[(#ENV{type_objet}|=={consignes}|oui)
+    <div class="sidebar_bubble">
+        <div class="reponse_titre_bubble">Commentaires</div>
+        <INCLURE{fond=noisettes/js/accordeon, nom=bloc_option_reponses_consignes_classe-#ID_ARTICLE, ajax}>
+        <INCLURE{fond=noisettes/reponses_classes, mode=ajax-detail, id_article=#ID_ARTICLE, env, ajax} />
+    </div>
+]
