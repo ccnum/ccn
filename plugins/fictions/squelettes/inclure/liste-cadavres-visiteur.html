@@ -15,7 +15,7 @@ SOMMAIRE.HTML > LISTE-CADAVRE-AUTEUR.HTML
 			<div class="liste-link">
 				<!-- TOOL TIP CONTENT -->
 				<div class="liste-tooltip-content">
-					<div id="liste-tooltip-content">
+					<div class="liste-tooltip-inner">
 						<div class="liste-tooltip-num-cadavre">Histoire #GET{i}</div>
 						<!--<div class="liste-tooltip-num-chapitre">#SURTITRE</div>-->
 						<div class="liste-tooltip-titre-chapitre">#TITRE</div>
@@ -27,7 +27,7 @@ SOMMAIRE.HTML > LISTE-CADAVRE-AUTEUR.HTML
 							</div>
 						</BOUCLE_auteur_tous>
 					</div>
-					<div id="liste-tooltip-bulle">
+					<div class="liste-tooltip-bulle">
 					</div>
 				</div>
 				<a href="[(#URL_PAGE{lecture, id_rubrique=#ID_RUBRIQUE}|parametre_url{compteur,1})]" class="verrouille [(#COMPTEUR_BOUCLE|=={#TOTAL_BOUCLE}|?{'last',''})]"></a>

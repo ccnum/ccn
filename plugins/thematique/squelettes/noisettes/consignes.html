@@ -85,12 +85,10 @@
 					<div class="sidebar_bubble">
 						<div class="nettoyeur0"></div>
 						[(#TEXTE|oui)
-							<div>avant consigne</div>
 							<div class="bloc_texte">
 								[[(#GET{police}|=={monospace}|et{#NOM_SITE_SPIP|=={novaterra.laclasse.com}}|oui) <p>ordinateur@novaterra:~$</p>]
 								<span class="spip #EDIT{texte}">(#TEXTE|liens_ouvrants|image_reduire{500})</span>]
 							</div>
-							<div>après consigne</div>
 						]
 					</div>
 
@@ -156,15 +154,12 @@
 
 							<!-- ============== ETAT : A DEJA REPONDU ============== -->
 							<div class="sidebar_bubble">
-								<div>production de la classe</div>
 								<div class="bloc_option_doc nettoyeur bloc_texte">
 									<div style="clear:both" class='bloc_classe_iframe'>
 										[(#AUTORISER{modifier,rubrique,#ID_RUBRIQUE}|oui)
-											<div>avant modifier</div>
 											[<a class="spip_doc_titre" href="[(#GET{classe_iframe}|replace{embed,})]" target="_blank" rel="noopener noreferrer">
 												(#GET{classe_iframe}|replace{embed,})
 											</a>]
-											<div>après modifier</div>
 										]
 										<div class="nettoyeur"></div>
 										<iframe src="[(#GET{classe_iframe}|textebrut)]" width="100%" height="100%" sandbox="allow-scripts allow-same-origin allow-forms allow-popups"></iframe>
