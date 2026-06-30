@@ -419,6 +419,10 @@ function cextras_crayons_verifier($flux) {
 			if ($erreur) {
 				$flux['data']['erreurs'][$nom] = $erreur[$nom];
 			} elseif (!is_null($normaliser = saisies_request($nom))) {
+				// Si c'est une saisie qui permet les choix alternatifs, on doit ruser
+				if (($saisie['options']['choix_alternatif'] ?? '') && $normaliser === '@choix_alternatif') {
+					$normaliser = _request("{$key}_choix_alternatif");
+				}
 				$flux['data']['normaliser'][$nom] = champs_extras_serialiser($normaliser, $saisie);
 			}
 		}
