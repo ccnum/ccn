@@ -6,8 +6,7 @@
 	<title>[(#NOM_SITE_SPIP|textebrut)]</title>
 	[<meta name="description" content="(#DESCRIPTIF_SITE_SPIP|couper{150}|textebrut)" />]
 	<INCLURE{fond=inclure/head} />
-	<script type="text/javascript" src="#CHEMIN{js/jquery.scrollTo-1.4.2-min.js}"></script>
-	<meta name="viewport" content="width=980, user-scalable=no" />
+	<meta name="viewport" content="width=device-width, initial-scale=1" />
 </head>
 <body>
 <a href="#contenu-principal" class="skip-link">Aller au contenu principal</a>
@@ -64,7 +63,7 @@
 			var offset = $(el).offset();
 			var content_tooltip = $(el).find('.liste-tooltip-content').html();
 			$('#liste-tooltip').show().html(content_tooltip);
-			var hauteur_tooltip = $('#liste-tooltip-content').height();
+			var hauteur_tooltip = $('#liste-tooltip .liste-tooltip-inner').height();
 			$('#liste-tooltip').height(hauteur_tooltip);
 			$('#liste-tooltip').css('top', Math.round(offset.top) - hauteur_tooltip - 5);
 			$('#liste-tooltip').css('left', Math.round(offset.left) - 108 + 2);
@@ -74,21 +73,25 @@
 
 		// Navigation par ancre
 		var $scrollTarget = $('.global-content');
+		function scrollToEl($container, selector, duration, offsetTop) {
+			var top = selector === 0 ? 0 : $container.find(selector).position().top + $container.scrollTop() + (offsetTop || 0);
+			$container.stop(true).animate({scrollTop: top}, duration);
+		}
 		$('#nav-script').click(function(event) {
 			event.preventDefault();
-			$scrollTarget.stop().scrollTo('.script-ecrivain', 300, {offset: {top:-50, left:0}});
+			scrollToEl($scrollTarget, '.script-ecrivain', 300, -50);
 		});
 		$('#nav-forum').click(function(event) {
 			event.preventDefault();
-			$scrollTarget.stop().scrollTo('.forum-titre', 300, {offset: {top:-75, left:0}});
+			scrollToEl($scrollTarget, '.forum-titre', 300, -75);
 		});
 		$('#nav-ecrire').click(function(event) {
 			event.preventDefault();
-			$scrollTarget.stop().scrollTo('.ecriture-chapitre:last', 300, {offset: {top:-40, left:0}});
+			scrollToEl($scrollTarget, '.ecriture-chapitre:last', 300, -40);
 		});
 		$('#nav-top').click(function(event) {
 			event.preventDefault();
-			$scrollTarget.stop().scrollTo(0, 300);
+			scrollToEl($scrollTarget, 0, 300, 0);
 		});
 
 		// Script écrivain : open/close

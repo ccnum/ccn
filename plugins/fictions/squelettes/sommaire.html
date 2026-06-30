@@ -107,7 +107,7 @@ $(document).ready(function() {
 		var offset = $(el).offset();
 		var content_tooltip = $(el).find('.liste-tooltip-content').html();
 		$('#liste-tooltip').show().html(content_tooltip);
-		var hauteur_tooltip = $('#liste-tooltip-content').height();
+		var hauteur_tooltip = $('#liste-tooltip .liste-tooltip-inner').height();
 		$('#liste-tooltip').height(hauteur_tooltip);
 		var toptooltip = Math.round(offset.top) - hauteur_tooltip;
 		var lefttooltip = Math.round(offset.left) - 95;
