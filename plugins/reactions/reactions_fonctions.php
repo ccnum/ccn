@@ -68,6 +68,13 @@ function reactions_identite_visiteur() {
 	return ['id_auteur' => 0, 'session_id' => reactions_session_anonyme()];
 }
 
+/* Je ne comprends pas tout ici, c'est du Claude */
+function reactions_est_https() {
+	return (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off')
+		|| (($_SERVER['SERVER_PORT'] ?? null) == 443)
+		|| (($_SERVER['HTTP_X_FORWARDED_PROTO'] ?? null) === 'https');
+}
+
 /**
  * Génère (ou récupère) un identifiant anonyme stable, posé en cookie
  * de longue durée, pour distinguer les visiteurs non connectés.
@@ -90,7 +97,7 @@ function reactions_session_anonyme() {
 			[
 				'expires'  => time() + (3600 * 24 * 365),
 				'path'     => '/',
-				'secure'   => is_ssl(),
+				'secure' => reactions_est_https(),
 				'httponly' => true,
 				'samesite' => 'Lax',
 			]
