@@ -1,0 +1,46 @@
+.favoris-ccn-widget {
+	display: flex;
+	gap: 6px;
+	align-items: center;
+}
+
+.favori-ccn-btn {
+	display: inline-flex;
+	align-items: center;
+	gap: 4px;
+	padding: 4px 8px;
+	border: 1px solid transparent;
+	border-radius: 20px;
+	background: transparent;
+	cursor: pointer;
+	font-size: 14px;
+	line-height: 1;
+	transition: background 0.15s, border-color 0.15s;
+}
+
+.favori-ccn-btn:hover {
+	background: rgba(0, 0, 0, 0.06);
+	border-color: rgba(0, 0, 0, 0.12);
+}
+
+.favori-ccn-btn.actif {
+	background: rgba(0, 0, 0, 0.08);
+	border-color: rgba(0, 0, 0, 0.2);
+	font-weight: bold;
+}
+
+.favori-ccn-emoji {
+	font-size: 18px;
+	line-height: 1;
+}
+
+.favori-ccn-count {
+	font-size: 12px;
+	color: #555;
+	min-width: 10px;
+	text-align: center;
+}
+
+.favori-ccn-btn.actif .favori-ccn-count {
+	color: #222;
+}

@@ -1,0 +1,17 @@
+<paquet
+	prefix="mesfavoris_ccn"
+	categorie="communication"
+	version="1.0.0"
+	etat="dev"
+	compatibilite="[4.1.0;4.*]"
+	logo="images/mesfavoris_ccn.svg"
+>
+	<nom>Mes Favoris CCN</nom>
+	<auteur>Votre CCN</auteur>
+	<licence>GNU/GPL</licence>
+
+	<necessite nom="mesfavoris" compatibilite="[4.0.0;]" />
+
+	<pipeline nom="insert_head_css" inclure="mesfavoris_ccn_pipelines.php" />
+
+</paquet>
