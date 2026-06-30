@@ -120,9 +120,6 @@
 				</div>
 			]
 		</div>
-
-		[(#REM) ajouter les saisies supplementaires : extra et autre, a cet endroit ]
-		<!--extra-->
 		[(#VAL{type_objet}|_request|=={consignes}|et{#SESSION{role}|=={intervenant}}|oui)
 		<div class="editer editer_attendre_livrable">
 			<label>
