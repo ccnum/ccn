@@ -1,6 +1,6 @@
 <BOUCLE_principale(ARTICLES){id_article}{tous}>
 [(#ENV{type_objet}|=={consignes}|oui)
-    <INCLURE{fond=noisettes/consignes, env, ajax} />
+    <INCLURE{fond=noisettes/sidebar/consigne_pour_classe, env, ajax} />
 ]
 [(#ENV{type_objet}|=={consignes}|non)
 	<INCLURE{fond=noisettes/article_legacy, env, ajax} />
