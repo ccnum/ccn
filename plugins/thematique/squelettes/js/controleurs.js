@@ -79,7 +79,11 @@ $(function () {
 	});
 
 	$(document).on('click', '#sidebar-close', function () {
-		closeSidebar();
+		if (CCN.projet) {
+			CCN.projet.showWholeTimeline();
+		} else {
+			closeSidebar();
+		}
 	});
 
 	$(document).on('click', '#sidebarCache', function () {
