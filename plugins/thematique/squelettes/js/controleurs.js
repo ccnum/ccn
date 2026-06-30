@@ -1107,12 +1107,14 @@ function showSidebar() {
 }
 
 function closeSidebar() {
-	$('body').removeClass('hasSidebarOpen');
+	$('body').removeClass('hasSidebarOpen hasSidebarExpanded');
 	$('#sidebar').removeClass('show');
 	if (_sidebarTrigger && typeof _sidebarTrigger.focus === 'function') {
 		_sidebarTrigger.focus();
 	}
 	_sidebarTrigger = null;
+	const interval = setInterval(updateConnecteurs, 16);
+	setTimeout(() => clearInterval(interval), 500);
 }
 
 function _sidebarFocusFirst() {
