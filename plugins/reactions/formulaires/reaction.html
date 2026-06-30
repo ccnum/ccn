@@ -1,18 +1,22 @@
 <div class="reactions_liste">
-	[(#SET{mes_reactions, #ENV*{_mes_reactions}})]
+    [(#SET{mes_reactions, #ENV*{_mes_reactions}})]
     [(#SET{compteurs, #ENV{objet}|reactions_compter{#ENV{id_objet}}})]
     [(#SET{types_actifs, #URL_SITE_SPIP|reactions_types_actifs})]
-    
+    [(#SET{connecte, #SESSION{id_auteur}|oui})]
+
     <BOUCLE_types(DATA){source tableau, #ENV*{_types_actifs}}>
         [(#SET{label_fr, #VALEUR|reaction_label_fr})]
         [(#SET{nb_reactions, #VALEUR|reaction_compteur{#GET{compteurs}}})]
         <button type="button"
-                class="reaction_bouton[(#VALEUR|reaction_classe_active{#GET{mes_reactions}})]"
+                class="reaction_bouton[(#VALEUR|reaction_classe_active{#GET{mes_reactions}})][ (#GET{connecte}|=={non}|oui)reaction_lecture_seule(/oui)]"
                 aria-label="Réagir avec [(#GET{label_fr})], [(#GET{nb_reactions})] réaction[(#GET{nb_reactions}|>{1}|oui)s(/oui)]"
                 aria-pressed="[(#VALEUR|reaction_aria_pressed{#GET{mes_reactions}})]"
-                data-action="#URL_ACTION_AUTEUR{poser_reaction, #ENV{objet}-#ENV{id_objet}-#VALEUR}"
+                [(#GET{connecte}|oui)
+                    data-action="#URL_ACTION_AUTEUR{poser_reaction, #ENV{objet}-#ENV{id_objet}-#VALEUR}"
+                ]
                 data-type="#VALEUR"
                 data-label="[(#GET{label_fr})]"
+                [(#GET{connecte}|=={non}|oui)disabled="disabled" title="Connectez-vous pour réagir"(/oui)]
         >
             <span class="reaction_smiley" aria-hidden="true">
                 [(#VALEUR|reactions_recuperer_smiley{html_encoding})]
@@ -27,7 +31,7 @@
 <script type="text/javascript">
 $(function() {
     // On cible le clic sur les boutons de réaction
-    $('.reaction_bouton').off('click').on('click', function(e) {
+    $('.reaction_bouton:not([disabled])').off('click').on('click', function(e) {
         e.preventDefault();
         
         var $btn = $(this);
