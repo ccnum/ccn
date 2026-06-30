@@ -17,8 +17,10 @@
 	#SET{parent, #INFO_TITRE{rubrique,#ID_PARENT}}
 </BOUCLE_rub>
 
-[(#ENV{admin}|=={1}|oui|et{#ENV{restreint}}|oui)
-	[(#GET{titre})]
+[(#ENV{admin}|=={1}|oui)
+	[(#ENV{restreint}|oui)
+		[(#GET{titre})]
+	]
 ]
 #SET{affiche,non}
 [(#ENV{admin}|=={0}|oui)
@@ -66,8 +68,8 @@
 	</B_rub_aut2>
 		[(#REM) Admin complet]
 		<B_rub2>
-			
-				<div id="choix_rubrique_admin" name="rubrique_admin" class="select selectbox" data-select-name="rubrique_admin">
+
+				<div id="choix_rubrique_admin2" name="rubrique_admin" class="select selectbox" data-select-name="rubrique_admin">
 					<button type="button" class="select-toggle first_label">
 						<span class="icon icon-publier"></span>
 						Publier
@@ -103,8 +105,11 @@
 	<//B_rub_aut2>
 </div>
 ]
-[(#ENV{restreint}|!={0}|oui|et{#ENV{restreint}|!={''}}|et{#ENV{type_restreint}|!={''}}|et{#ENV{type_restreint}|!={travail_en_cours}|oui}|oui)
+[(#ENV{restreint}|!={0}|oui)
+[(#ENV{restreint}|oui)
+[(#ENV{type_restreint}|oui)
+[(#ENV{type_restreint}|!={travail_en_cours}|oui)
 <div id="menu_haut_ecrire" class="bloc_titre tooltip_bottom" data-tip="Publier un nouvel article" aria-label="Publier un nouvel article">
 	<a onClick='createReponse(true, 0, #ENV{restreint});'><span class="icon icon-ecrire"></span></a>
 </div>
-]
+]]]]
