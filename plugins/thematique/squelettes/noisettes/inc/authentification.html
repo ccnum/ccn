@@ -9,8 +9,8 @@
 		</button>
 		<ul class="select-options">
 			<li class="select-option me-deconnecter">
-				<a href="[(#URL_LOGOUT)]" title="Me déconnecter" style="display: flex; align-items: center;">
-					<div id="texte-me-deconnecter">Me déconnecter</div>
+				<a href="[(#URL_LOGOUT)]" title="Me déconnecter" style="display: flex; align-items: center;" class="nowrap">
+					Me déconnecter
 				</a>
 			</li>
 		</ul>
@@ -27,14 +27,14 @@
 		<ul class="select-options">
 			[(#PLUGIN{cicas}|oui)
 				<li class="select-option">
-					<a href="[(#URL_PAGE{login}|parametre_url{url,#SELF}|parametre_url{cicas,oui})]" title="Se connecter à l'ENT">
+					<a href="[(#URL_PAGE{login}|parametre_url{url,#SELF}|parametre_url{cicas,oui})]" title="Se connecter à l'ENT" class="nowrap">
 						Se connecter à l'ENT
 					</a>
 				</li>
 			]
 			[(#PLUGIN{cioidc}|oui)
 				<li class="select-option">
-					<a href="[(#URL_PAGE{login}|parametre_url{url,#SELF}|parametre_url{action,login_cioidc})]" title="Se connecter à l'ENT">
+					<a href="[(#URL_PAGE{login}|parametre_url{url,#SELF}|parametre_url{action,login_cioidc})]" title="Se connecter à l'ENT" class="nowrap">
 						Se connecter à l'ENT (OpenID)
 					</a>
 				</li>
