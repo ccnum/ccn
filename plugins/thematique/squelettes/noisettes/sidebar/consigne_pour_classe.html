@@ -25,13 +25,6 @@
 #SET{a_repondu,non}
 [(#TEXTE|oui)#SET{a_repondu,oui}]
 
-#SET{date_prochaine_etape,''}
-<BOUCLE_rub_consignes(RUBRIQUES){titre_mot=consignes}{0,1}{tout}>
-    <BOUCLE_prochaine_consigne(ARTICLES){branche}{par date}{(#ENV{rang}|plus{1}),1}{tout}>
-        #SET{date_prochaine_etape,#DATE}
-    </BOUCLE_prochaine_consigne>
-</BOUCLE_rub_consignes>
-
 #SET{titre_onglet_reponse,#VAL{thematique:repondre_a_la_mission}|_T}
 [(#GET{a_repondu}|=={oui}|oui)#SET{titre_onglet_reponse,#VAL{thematique:voir_ma_reponse}|_T}]
 
@@ -64,7 +57,7 @@
                         <INCLURE{fond=noisettes/sidebar/onglet_voir_reponse, env} />
                     ]
                     [(#GET{a_repondu}|!={oui}|oui)
-                        <INCLURE{fond=noisettes/sidebar/onglet_repondre_mission, date_prochaine_etape=#GET{date_prochaine_etape}, env} />
+                        <INCLURE{fond=noisettes/sidebar/onglet_repondre_mission, date_prochaine_etape=#ENV{date_limite}, env} />
                     ]
                 </div>
                 <div data-title="<:thematique:discussion_mission:>">
