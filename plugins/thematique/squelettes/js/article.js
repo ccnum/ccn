@@ -38,7 +38,7 @@ function Article() {
 			.attr('class', 'timeline_item ' + prefix + '_container')
 			.css({
 				'top': (this.y * 100) + '%',
-				'left': (this.x / CCN.projet.nombre_jours * 100) + '%'
+				'left': (this.x / CCN.projet.nombre_jours_total * 100) + '%'
 			});
 
 		this.div_base.append($('<img src="' + urlImg + '">'));
