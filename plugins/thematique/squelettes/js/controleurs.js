@@ -550,6 +550,7 @@ function callClasse(id_classe) {
 
 function callClasses() {
 	changeTimelineMode('consignes');
+	showSidebar();
 	toggleSidebarExpand();
 	setFullscreenModeToCols(true);
 	updateMenuIcon(['classes'], 'sidebarView');
@@ -568,6 +569,7 @@ function callClasses() {
 
 function callLivrables() {
 	changeTimelineMode('consignes');
+	showSidebar();
 	toggleSidebarExpand();
 	updateMenuIcon(['livrables'], 'sidebarView');
 
@@ -627,6 +629,7 @@ function callArticleBlog(id_article) {
 
 function callRessource() {
 	changeTimelineMode('consignes');
+	showSidebar();
 	toggleSidebarExpand();
 	updateMenuIcon(['ressources'], 'sidebarView');
 
@@ -779,6 +782,7 @@ function callArticleEvenement(id_objet, type_objet) {
 
 function callAgora() {
 	changeTimelineMode('consignes');
+	showSidebar();
 	toggleSidebarExpand();
 	updateMenuIcon(['agora'], 'sidebarView');
 
