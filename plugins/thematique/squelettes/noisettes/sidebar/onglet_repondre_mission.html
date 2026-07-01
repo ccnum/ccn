@@ -1,27 +1,27 @@
 <div class="sidebar_bubble bloc_pas_repondu">
     <div class="reponse_entete">
-        <div class="sidebar-texte-encadre">Vous pourrez toujours modifier votre réponse à postériori. </div>
+        <div class="sidebar-texte-encadre"><:thematique:repondre_modifier_posteriori:></div>
         [(#AUTORISER{modifier,article,#ID_ARTICLE}|oui)
             <INCLURE{fond=noisettes/js/accordeon, nom=bloc_option_publier_reponse-#ID_ARTICLE, ajax}>
-            <a id="bloc_option_publier_reponse-#ID_ARTICLE" class="hac sidebar_publier" title="Publier">
-                &#9998; Publier
+            <a id="bloc_option_publier_reponse-#ID_ARTICLE" class="hac sidebar_publier" title="<:thematique:repondre_publier:>">
+                &#9998; <:thematique:repondre_publier:>
             </a>
         ]
     </div>
 
     <div class="texte_aide">
         <p>
-            Oups&nbsp;! Vous n'avez pas encore répondu à la mission proposée par l'intervenant-e.<br />
-            Vous avez jusqu'à &#91;insérer date&#93; pour valider votre mission et compléter l'étape n°1.
+            <:thematique:repondre_pas_encore_repondu:><br />
+            [(#ENV{date_prochaine_etape}|oui)Vous avez jusqu'au [(#ENV{date_prochaine_etape}|affdate{'d/m'})] pour valider votre mission et compléter l'étape n°[(#ENV{rang}|plus{1})].]
         </p>
         <p>
-            <strong>Besoin d'inspiration&nbsp;?</strong> Regardez les réponses des autres classes.<br />
-            <strong>Besoin d'aide&nbsp;?</strong> N'hésitez pas à poster un message dans l'onglet « Discussion autour de la mission ».
+            <strong><:thematique:repondre_besoin_inspiration:></strong> <:thematique:repondre_voir_reponses_classes:><br />
+            <strong><:thematique:repondre_besoin_aide:></strong> <:thematique:repondre_poster_message:>
         </p>
     </div>
 
     [(#AUTORISER{modifier,article,#ID_ARTICLE}|oui)
-        <div class='nettoyeur cache bloc_option_doc' style="display:block">
+        <div class='nettoyeur masquer bloc_option_doc'>
             <INCLURE{fond=noisettes/publier_article, mode=ajax-detail, id_article=#ID_ARTICLE, env, ajax} />
         </div>
     ]

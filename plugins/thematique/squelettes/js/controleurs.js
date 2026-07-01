@@ -433,9 +433,11 @@ function callConsigne(id_consigne) {
 
 	// récupérer le rang déjà connu côté JS
 	const consigneData = CCN.consignes.find(c => c.id == id_consigne);
-	const numero = consigneData ? consigneData.numero : '';
+	const numero       = consigneData ? consigneData.numero : '';
+	const nextConsigne = consigneData ? CCN.consignes.find(c => c.numero === consigneData.numero + 1) : null;
+	const dateLimite   = nextConsigne ? nextConsigne.data.date_texte : '';
 
-	const url = CCN.projet.url_popup_consigne + "&id_article=" + id_consigne + "&rang=" + numero;
+	const url = CCN.projet.url_popup_consigne + "&id_article=" + id_consigne + "&rang=" + numero + "&date_limite=" + dateLimite;
 	showConsigneInTimeline(id_consigne);
 	setFullscreenModeToCols(false);
 	updateMenuIcon(['consignes-' + id_consigne], 'mainView');
@@ -798,7 +800,12 @@ function createReponse(id_consigne, id_rubrique_classe, numero) {
 
 	changeTimelineMode('consignes');
 
-	const url = CCN.projet.url_popup_reponseajout + "&id_consigne=" + id_consigne + "&id_rubrique=" + id_rubrique_classe;
+	const consigneData = CCN.consignes && CCN.consignes.find(c => c.id == id_consigne);
+	const nextConsigne = consigneData ? CCN.consignes.find(c => c.numero === consigneData.numero + 1) : null;
+	const dateLimite   = nextConsigne ? nextConsigne.data.date_texte : '';
+	const rang         = consigneData ? consigneData.numero : (numero || '');
+
+	const url = CCN.projet.url_popup_reponseajout + "&id_consigne=" + id_consigne + "&id_rubrique=" + id_rubrique_classe + "&rang=" + rang + "&date_limite=" + dateLimite;
 	loadContentInMainSidebar(url);
 
 }

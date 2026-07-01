@@ -25,9 +25,15 @@
 #SET{a_repondu,non}
 [(#TEXTE|oui)#SET{a_repondu,oui}]
 
+#SET{date_prochaine_etape,''}
+<BOUCLE_rub_consignes(RUBRIQUES){titre_mot=consignes}{0,1}{tout}>
+    <BOUCLE_prochaine_consigne(ARTICLES){branche}{par date}{(#ENV{rang}|plus{1}),1}{tout}>
+        #SET{date_prochaine_etape,#DATE}
+    </BOUCLE_prochaine_consigne>
+</BOUCLE_rub_consignes>
 
-#SET{titre_onglet_reponse,Répondre à la mission}
-[(#GET{a_repondu}|=={oui}|oui)#SET{titre_onglet_reponse,Voir ma réponse}]
+#SET{titre_onglet_reponse,#VAL{thematique:repondre_a_la_mission}|_T}
+[(#GET{a_repondu}|=={oui}|oui)#SET{titre_onglet_reponse,#VAL{thematique:voir_ma_reponse}|_T}]
 
 <div class="[popup_(#ENV{type_objet})]">
     <div id="bloc_article-#ID_ARTICLE" class="bloc_article[ (#GET{police})]">
@@ -46,7 +52,7 @@
 
         <div id="tabs-article-#ID_ARTICLE" class="container-tabs">
             <div id="mission-tabs">
-                <div data-title="Description de la mission">
+                <div data-title="<:thematique:description_mission:>">
                     <INCLURE{
                         fond=noisettes/sidebar/onglet_description_mission,
                         id_article=#GET{id_consigne},
@@ -58,10 +64,10 @@
                         <INCLURE{fond=noisettes/sidebar/onglet_voir_reponse, env} />
                     ]
                     [(#GET{a_repondu}|!={oui}|oui)
-                        <INCLURE{fond=noisettes/sidebar/onglet_repondre_mission, env} />
+                        <INCLURE{fond=noisettes/sidebar/onglet_repondre_mission, date_prochaine_etape=#GET{date_prochaine_etape}, env} />
                     ]
                 </div>
-                <div data-title="Discussion autour de la mission">
+                <div data-title="<:thematique:discussion_mission:>">
                     <INCLURE{
                         fond=noisettes/sidebar/onglet_discussion_mission,
                         env

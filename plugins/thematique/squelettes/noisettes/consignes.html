@@ -24,8 +24,8 @@
 <//B_nb_doc>
 #SET{a_repondu,non}
 [(#TEXTE|oui)#SET{a_repondu,oui}]
-#SET{titre_onglet_reponse,Répondre à la mission}
-[(#GET{a_repondu}|=={oui}|oui)#SET{titre_onglet_reponse,Voir ma réponse}]
+#SET{titre_onglet_reponse,#VAL{thematique:repondre_a_la_mission}|_T}
+[(#GET{a_repondu}|=={oui}|oui)#SET{titre_onglet_reponse,#VAL{thematique:voir_ma_reponse}|_T}]
 #SET{titre_consigne_final, #GET{titre_consigne}|sinon{#TITRE}}
 <div class="[popup_(#ENV{type_objet})]">
 	<div id="bloc_article-#ID_ARTICLE" class="bloc_article[ (#GET{police})]">
@@ -42,7 +42,7 @@
 		</div>
 		<div id="tabs-article-#ID_ARTICLE" class="container-tabs">
 			<div id="mission-tabs">
-				<div data-title="Description de la mission">
+				<div data-title="<:thematique:description_mission:>">
 					<INCLURE{fond=noisettes/sidebar/onglet_description, id_article=#ID_ARTICLE, env, ajax} />
 				</div>
 				[(#ENV{type_objet}|=={agora}
@@ -56,7 +56,7 @@
 					<INCLURE{fond=noisettes/sidebar/onglet_reponse, id_article=#ID_ARTICLE, env, ajax} />
 				</div>
 				]
-				<div data-title="Discussion autour de la mission">
+				<div data-title="<:thematique:discussion_mission:>">
 					<INCLURE{fond=noisettes/sidebar/onglet_discussion, id_article=#ID_ARTICLE, env, ajax} />
 				</div>
 			</div>
