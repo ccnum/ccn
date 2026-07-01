@@ -20,8 +20,8 @@ function Reponse() {
 		this.date = this.data.date;
 		this.date_date = this.data.date_date;
 		this.nombre_commentaires = this.data.nombre_commentaires;
-		this.x = this.data.nombre_jours;
-		this.x_absolu = this.data.nombre_jours + this.consigne.x; // Le bloc réponse est relatif à la position x de la consigne
+		this.x = this.data.x_affichage;
+		this.x_absolu = this.x;
 		this.y = this.data.y;
 		this.classeIndex = this.data.classes.findIndex(c => this.classe_id == c.id);
 		this.nom_classe = this.data.classes[this.classeIndex]?.nom ?? '';
@@ -34,7 +34,6 @@ function Reponse() {
 	this.initDOM = function () {
 
 		const coul = String(this.classe_id).slice(-1);
-
 		const date_texte = formatDateCourte(this.date);
 
 		this.div_base = $(`

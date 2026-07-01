@@ -38,6 +38,10 @@
 	#menu-classes {width: [(#GET{lar_col}|mult{8}|moins{3})]px;}
 	#menu-medias {width: [(#GET{lar_col}|mult{6}|moins{3})]px;}
 	#menu-tris {width: [(#GET{lar_col}|mult{2}|moins{3})]px;}
+
+	.hasSidebarOpen #timeline_responsive {
+    	width: calc(100% - var(--sidebar-width-normal)); /* largeur de la sidebar */
+	}
 }
 
 @media screen and (max-width: 1050px) and (max-height: 770px ) {
