@@ -67,7 +67,7 @@ function Consigne() {
 		this.div_base = $(`
 			<div id="consigne_haute${this.id}"
 				 class="timeline_item consigne_haute"
-				 style="top:${this.y * 100}%; left:${this.x / CCN.projet.nombre_jours * 100}%;"
+				 style="top:${this.y * 100}%; left:${this.x / CCN.projet.nombre_jours_total * 100}%;"
 			>
 				<img class="card-bg"
 					 src="${CCN.urlRoot}img/cards_background.svg"
@@ -134,11 +134,11 @@ function Consigne() {
 		const _thisIdRestreint = parseInt(CCN.idRestreint, 10);
 		const _thisNumero = parseInt(this.numero, 10);
 
-		this.div_reponse_plus.on('click', () => createReponse(false, _thisId, _thisIdRestreint, _thisNumero));
+		this.div_reponse_plus.on('click', () => createReponse(_thisId, _thisIdRestreint, _thisNumero));
 		this.div_consigne.on('click', () => callConsigne(_thisId));
 
 		if (CCN.admin == 0) {
-			const leftPercent = CCN.projet.nombre_jours > 0 ? this.x / CCN.projet.nombre_jours * 100 : 0;
+			const leftPercent = CCN.projet.nombre_jours_total > 0 ? this.x / CCN.projet.nombre_jours_total * 100 : 0;
 
 			this.div_base.draggable({
 				axis: "y",

@@ -1,0 +1,19 @@
+#CACHE{0}
+	[(#GET{blocs_forum}|=={non}|non)
+		[(#ENV{type_objet}|!={ressource0}|oui)
+			<INCLURE{fond=noisettes/inc/forum, mode=ajax-detail, env, ajax} />
+		]
+	]
+	[(#REM)On exclut le forum sur les consignes pour les enseignants]
+	[(#TYPE_AUTEUR|=={travail_en_cours}
+	|ou{#TYPE_AUTEUR|=={''}}
+	|et{#ENV{type_objet}|=={consignes}}|oui)
+		#SET{blocs_forum,non}
+	]
+	[(#ADMIN|=={0}|oui)
+		#SET{blocs_forum,oui}
+		#SET{blocs_cplt,oui}
+	]
+	[(#ADMIN|=={-2}|oui)
+		#SET{blocs_forum,non}
+	]

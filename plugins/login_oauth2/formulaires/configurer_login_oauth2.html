@@ -1,0 +1,171 @@
+<div class="formulaire_spip formulaire_configurer formulaire_#FORM">
+
+	<h3 class="titrem">[(#CHEMIN_IMAGE{login_oauth2-xx.svg}|balise_img{icone listunsubscribe-xx,cadre-icone})]</h3>
+
+	[<div class="reponse_formulaire reponse_formulaire_ok">(#ENV*{message_ok})</div>]
+	[<div class="reponse_formulaire reponse_formulaire_erreur">(#ENV*{message_erreur})</div>]
+
+	<form method="post" action="#ENV{action}">
+	#ACTION_FORMULAIRE
+	<legend class="titrem"><:login_oauth2:cfg_options_connexion:></legend>
+	<p class="explication"><:login_oauth2:explication_providers:></p>
+	<fieldset>	
+		<legend><:login_oauth2:cfg_securisation:></legend>
+		<div class="editer">
+			<label>
+				<input type="checkbox" name="forcer_oauth2" value="1" [(#ENV{forcer_oauth2,0}|=={1}|oui)checked="checked"]>
+					<:login_oauth2:cfg_forcer_oauth2:>
+			</label>
+		</div>
+		<div class="editer">
+			<label>
+				<input type="checkbox" name="exiger_email_verifie" value="1" [(#ENV{exiger_email_verifie,0}|=={1}|oui)checked="checked"]>
+					<:login_oauth2:cfg_securisation_email:>
+			</label>
+		</div>
+	</fieldset>
+	<B_providers>
+	<fieldset>
+	<legend><:login_oauth2:cfg_providers:></legend>
+	<BOUCLE_providers(DATA){source tableau,#PROVIDERS}>
+		<legend class="titrem">#VALEUR{label}</legend>
+			<div class="si">
+				<input type="checkbox"  id="provider_[(#CLE)]_actif" name="provider_[(#CLE)]_actif" value="1" [(#VALEUR{actif,0}|oui)checked="checked"]>
+				<label><:login_oauth2:cfg_activer:>&nbsp;[(#VALEUR{label})]</label>
+			<div class="alors choix" [(#VALEUR{actif,0}|non) style='display:none;']>
+
+			<div class="editer">
+				<label>Label</label>
+				<input type="text"
+				   name="provider_[(#CLE)]_label"
+				   value="[(#VALEUR{label})]">
+			</div>
+
+			<div class="editer">
+				<label>Client ID</label>
+				<input type="text"
+				   name="provider_[(#CLE)]_client_id"
+				   value="[(#VALEUR{client_id})]">
+			</div>
+
+			<div class="editer">
+				<label>Client Secret</label>
+				<input type="text"
+				   name="provider_[(#CLE)]_client_secret"
+				   value="[(#VALEUR{client_secret})]">
+			</div>
+
+			<div class="editer">
+				<label>Discovery URL</label>
+				<input type="text"
+					name="provider_[(#CLE)]_discovery"
+					value="[(#VALEUR{discovery})]" >
+			</div>
+	
+		[(#VALEUR{discovery}|non)
+			<div class="editer">
+				<label>Authorize Endpoint</label>
+				<input type="text"
+				   name="provider_[(#CLE)]_authorize_endpoint"
+				   value="[(#VALEUR{authorize_endpoint})]">
+			</div>
+	
+			<div class="editer">
+				<label>Token Endpoint</label>
+				<input type="text"
+				   name="provider_[(#CLE)]_token_endpoint"
+				   value="[(#VALEUR{token_endpoint})]">
+			</div>
+			
+			<div class="editer">
+				<label>Issuer</label>
+				<input type="text"
+					name="provider_[(#CLE)]_issuer"
+					value="[(#VALEUR{issuer})]">
+			</div>
+			
+			<div class="editer">
+				<label>Userinfo Endpoint</label>
+				<input type="text"
+					name="provider_[(#CLE)]_userinfo_endpoint"
+					value="[(#VALEUR{userinfo_endpoint})]">
+			</div>
+		]
+		[(#VALEUR{discovery}|oui)		
+			<div class="editer readonly">
+				<label>Authorize Endpoint</label>
+				<input type="text"
+				   name="provider_[(#CLE)]_authorize_endpoint"
+				   value="[(#VALEUR{_discovery_values/authorize_endpoint})]"  readonly>
+			</div>
+	
+			<div class="editer readonly">
+				<label>Token Endpoint</label>
+				<input type="text"
+				   name="provider_[(#CLE)]_token_endpoint"
+				   value="[(#VALEUR{_discovery_values/token_endpoint})]"  readonly>
+			</div>
+			
+			<div class="editer readonly">
+				<label>Issuer</label>
+				<input type="text"
+					name="provider_[(#CLE)]_issuer"
+					value="[(#VALEUR{_discovery_values/issuer})]"  readonly>
+			</div>
+			
+			<div class="editer readonly">
+				<label>Userinfo Endpoint</label>
+				<input type="text"
+					name="provider_[(#CLE)]_userinfo_endpoint"
+					value="[(#VALEUR{_discovery_values/userinfo_endpoint})]"  readonly>
+			</div>
+		]
+
+			<div class="editer">
+				<label>Scope</label>
+				<input type="text"
+					name="provider_[(#CLE)]_scope"
+					value="[(#VALEUR{scope})]">
+			</div>
+
+
+		</div>
+	  </div>
+
+	</BOUCLE_providers>
+	</fieldset>
+	</B_providers>
+
+<p class="boutons">
+	<input type="submit" class="submit" value="<:bouton_enregistrer:>">
+</p>
+
+	</form>
+</div>
+<style>
+.choix .suite .editer { 
+	background: #f8f8f8;}
+
+.readonly input {
+	background: #f8f8f8;
+	color: #666;
+	border: none;
+}
+</style>
+<script type="text/javascript">
+jQuery(function(){
+	jQuery('.si>.alors').each(function(){
+		var $suite = jQuery(this);
+		var $input = $suite.siblings('input[type=radio], input[type=checkbox]').eq(0);
+		var name = $input.attr('name');
+		jQuery('input[name='+name+']').change(function() {
+			if ($input.prop('checked')) {
+				$suite.show('fast');
+			}
+			else {
+				$suite.hide('fast');
+			}
+		});
+	});
+})
+</script>

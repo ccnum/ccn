@@ -79,7 +79,11 @@ $(function () {
 	});
 
 	$(document).on('click', '#sidebar-close', function () {
-		closeSidebar();
+		if (CCN.projet) {
+			CCN.projet.showWholeTimeline();
+		} else {
+			closeSidebar();
+		}
 	});
 
 	$(document).on('click', '#sidebarCache', function () {
@@ -429,9 +433,11 @@ function callConsigne(id_consigne) {
 
 	// récupérer le rang déjà connu côté JS
 	const consigneData = CCN.consignes.find(c => c.id == id_consigne);
-	const numero = consigneData ? consigneData.numero : '';
+	const numero       = consigneData ? consigneData.numero : '';
+	const nextConsigne = consigneData ? CCN.consignes.find(c => c.numero === consigneData.numero + 1) : null;
+	const dateLimite   = nextConsigne ? nextConsigne.data.date_texte : '';
 
-	const url = CCN.projet.url_popup_consigne + "&id_article=" + id_consigne + "&rang=" + numero;
+	const url = CCN.projet.url_popup_consigne + "&id_article=" + id_consigne + "&rang=" + numero + "&date_limite=" + dateLimite;
 	showConsigneInTimeline(id_consigne);
 	setFullscreenModeToCols(false);
 	updateMenuIcon(['consignes-' + id_consigne], 'mainView');
@@ -544,6 +550,7 @@ function callClasse(id_classe) {
 
 function callClasses() {
 	changeTimelineMode('consignes');
+	showSidebar();
 	toggleSidebarExpand();
 	setFullscreenModeToCols(true);
 	updateMenuIcon(['classes'], 'sidebarView');
@@ -562,6 +569,7 @@ function callClasses() {
 
 function callLivrables() {
 	changeTimelineMode('consignes');
+	showSidebar();
 	toggleSidebarExpand();
 	updateMenuIcon(['livrables'], 'sidebarView');
 
@@ -621,6 +629,7 @@ function callArticleBlog(id_article) {
 
 function callRessource() {
 	changeTimelineMode('consignes');
+	showSidebar();
 	toggleSidebarExpand();
 	updateMenuIcon(['ressources'], 'sidebarView');
 
@@ -773,6 +782,7 @@ function callArticleEvenement(id_objet, type_objet) {
 
 function callAgora() {
 	changeTimelineMode('consignes');
+	showSidebar();
 	toggleSidebarExpand();
 	updateMenuIcon(['agora'], 'sidebarView');
 
@@ -794,7 +804,12 @@ function createReponse(id_consigne, id_rubrique_classe, numero) {
 
 	changeTimelineMode('consignes');
 
-	const url = CCN.projet.url_popup_reponseajout + "&id_consigne=" + id_consigne + "&id_rubrique=" + id_rubrique_classe;
+	const consigneData = CCN.consignes && CCN.consignes.find(c => c.id == id_consigne);
+	const nextConsigne = consigneData ? CCN.consignes.find(c => c.numero === consigneData.numero + 1) : null;
+	const dateLimite   = nextConsigne ? nextConsigne.data.date_texte : '';
+	const rang         = consigneData ? consigneData.numero : (numero || '');
+
+	const url = CCN.projet.url_popup_reponseajout + "&id_consigne=" + id_consigne + "&id_rubrique=" + id_rubrique_classe + "&rang=" + rang + "&date_limite=" + dateLimite;
 	loadContentInMainSidebar(url);
 
 }
@@ -1107,12 +1122,15 @@ function showSidebar() {
 }
 
 function closeSidebar() {
-	$('body').removeClass('hasSidebarOpen');
+	$('body').removeClass('hasSidebarOpen hasSidebarExpanded');
 	$('#sidebar').removeClass('show');
+	$('#menu_bas .logo a').removeClass('selected');
 	if (_sidebarTrigger && typeof _sidebarTrigger.focus === 'function') {
 		_sidebarTrigger.focus();
 	}
 	_sidebarTrigger = null;
+	const interval = setInterval(updateConnecteurs, 16);
+	setTimeout(() => clearInterval(interval), 500);
 }
 
 function _sidebarFocusFirst() {

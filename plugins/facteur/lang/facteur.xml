@@ -37,8 +37,9 @@
 		<traducteur nom="Cerf" lien="https://trad.spip.net/auteur/cerf" />
 		<traducteur nom="RealET" lien="https://trad.spip.net/auteur/realet" />
 	</langue>
-	<langue code="it" url="https://trad.spip.net/tradlang_module/facteur?lang_cible=it" total="67" traduits="65" relire="0" modifs="0" nouveaux="2" pourcent="97.01">
+	<langue code="it" url="https://trad.spip.net/tradlang_module/facteur?lang_cible=it" total="67" traduits="67" relire="0" modifs="0" nouveaux="0" pourcent="100.00">
 		<traducteur nom="Alberto" lien="https://trad.spip.net/auteur/alberto" />
+		<traducteur nom="asro" lien="https://trad.spip.net/auteur/asro" />
 		<traducteur nom="kent1" lien="https://trad.spip.net/auteur/kent1" />
 	</langue>
 	<langue code="ja" url="https://trad.spip.net/tradlang_module/facteur?lang_cible=ja" total="67" traduits="64" relire="0" modifs="0" nouveaux="3" pourcent="95.52">
@@ -56,6 +57,7 @@
 	</langue>
 	<langue code="pt" url="https://trad.spip.net/tradlang_module/facteur?lang_cible=pt" total="67" traduits="52" relire="0" modifs="0" nouveaux="15" pourcent="77.61">
 		<traducteur nom="BoOz" lien="https://trad.spip.net/auteur/booz" />
+		<traducteur nom="Ricardo Porto" lien="https://trad.spip.net/auteur/ricardo-porto" />
 	</langue>
 	<langue code="pt_br" url="https://trad.spip.net/tradlang_module/facteur?lang_cible=pt_br" total="67" traduits="67" relire="0" modifs="0" nouveaux="0" pourcent="100.00">
 		<traducteur nom="placido" lien="https://trad.spip.net/auteur/placido" />

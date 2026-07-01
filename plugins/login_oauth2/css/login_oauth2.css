@@ -1,0 +1,128 @@
+/* =========================================================
+   Login OAuth2 - SPIP Plugin
+   Design inspiré GitHub / GitLab / Notion
+   ========================================================= */
+
+.login-oauth2-erreur {
+
+	background: #ffe8e8;
+	border: 1px solid #e33;
+	border-radius: 4px;
+
+	padding: 10px;
+	margin-bottom: 15px;
+
+}
+
+.login-oauth2-erreur .erreur_message {
+	color: #b30000;
+	font-weight: 600;
+}
+
+.login-oauth2 {
+	margin-top: 20px;
+}
+
+/* =========================================================
+   Séparateur "OU"
+   ========================================================= */
+
+.login-oauth2-separator {
+	display: flex;
+	align-items: center;
+	text-align: center;
+	margin: 20px 0;
+	color: #fff;
+	font-size: 13px;
+	text-transform: uppercase;
+}
+
+.login-oauth2-separator::before,
+.login-oauth2-separator::after {
+	content: "";
+	flex: 1;
+	border-bottom: 1px solid #ddd;
+}
+
+.login-oauth2-separator span {
+	padding: 0 12px;
+}
+
+/* =========================================================
+   Boutons OAuth
+   ========================================================= */
+
+.oauth-btn {
+	display: flex;
+	align-items: center;
+	gap: 12px;
+
+	width: 100%;
+
+	padding: 10px 14px;
+	margin: 8px 0;
+
+	background: #ffffff;
+
+	border: 1px solid #ddd;
+	border-radius: 8px;
+
+	font-size: 14px;
+	font-weight: 500;
+
+	text-decoration: none;
+	color: #333;
+
+	transition: all 0.15s ease;
+
+	box-sizing: border-box;
+}
+
+/* Hover */
+
+.oauth-btn:hover {
+	background: #f7f7f7;
+	border-color: #ccc;
+	text-decoration: none;
+}
+
+/* Focus clavier */
+
+.oauth-btn:focus {
+	outline: none;
+	border-color: #666;
+}
+
+/* Icônes */
+
+.oauth-btn img {
+	width: 20px;
+	height: 20px;
+	flex-shrink: 0;
+}
+
+/* Texte */
+
+.oauth-btn span {
+	flex-grow: 1;
+}
+
+
+/* =========================================================
+   Fallback si aucune icône
+   ========================================================= */
+
+.oauth-fallback {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+
+	width: 20px;
+	height: 20px;
+
+	background: #ccc;
+	border-radius: 3px;
+
+	font-size: 11px;
+	color: #fff;
+}

@@ -36,6 +36,13 @@ class FacteurMail extends PHPMailer {
 	 */
 	public $ForceFromName = '';
 
+
+	/**
+	 * From force si From différent de celui par défaut, même si même domaine
+	 * @var bool
+	 */
+	public bool $ForceFromEverytime = false;
+
 	/**
 	 * Faut il embarquer dans le mail les images referencees ?
 	 * @var bool
@@ -138,6 +145,12 @@ class FacteurMail extends PHPMailer {
 		// si From n'est pas dans le meme domaine
 		// (utiliser le facteur avec un service externe qui necessite la validation des domaines d'envoi)
 		if (isset($options['forcer_from']) and ($options['forcer_from'] === 'oui' or $options['forcer_from'] === true)) {
+			$this->ForceFrom = $this->From;
+			$this->ForceFromName = $this->FromName;
+		}
+
+		if (in_array($options['forcer_from_everytime'] ?? '', ['oui', true], true)) {
+			$this->ForceFromEverytime = true;
 			$this->ForceFrom = $this->From;
 			$this->ForceFromName = $this->FromName;
 		}
@@ -501,6 +514,7 @@ class FacteurMail extends PHPMailer {
 
 	/**
 	 * Forcer le from avant envoi si il n'est pas sur le bon domaine
+	 * ou si on demande de forcer dans tous les cas
 	 * @throws Exception
 	 */
 	protected function forceFromIfNeeded() {
@@ -509,12 +523,15 @@ class FacteurMail extends PHPMailer {
 			$this->ForceFrom
 			and $this->From !== $this->ForceFrom
 		) {
-			$forcedomain = explode('@', $this->ForceFrom);
-			$forcedomain = end($forcedomain);
-			$domain = explode('@', $this->From);
-			$domain = end($domain);
 
-			if ($domain !== $forcedomain) {
+			if (!$this->ForceFromEverytime) {
+				$forcedomain = explode('@', $this->ForceFrom);
+				$forcedomain = end($forcedomain);
+				$domain = explode('@', $this->From);
+				$domain = end($domain);
+			}
+
+			if ($this->ForceFromEverytime || ($domain !== $forcedomain)) {
 				// le From passe en ReplyTo
 				$this->AddReplyTo($this->From, $this->FromName);
 				// on force le From

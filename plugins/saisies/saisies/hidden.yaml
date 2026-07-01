@@ -26,6 +26,15 @@ options:
           nom: 'defaut'
           label: '<:saisies:option_defaut_label:>'
           size: 50
+      -
+        saisie: 'input'
+        options:
+          nom: 'defaut_session'
+          label: '<:saisies:option_defaut_session_label:>'
+          explication: '<:saisies:option_defaut_session_explication:>'
+          size: 50
+          data: ['email', 'nom']
+          placeholder: 'email'
   -
     saisie: 'fieldset'
     options:

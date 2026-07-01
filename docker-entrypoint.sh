@@ -130,7 +130,8 @@ spip plugins:activer verifier -y
 spip plugins:activer yaml -y
 spip plugins:activer autorite -y
 spip plugins:activer simplog -y
-spip plugins:activer reactions -y
+spip plugins:activer mesfavoris -y
+spip plugins:activer mesfavoris_ccn -y
 spip plugins:activer ccn -y
 
 

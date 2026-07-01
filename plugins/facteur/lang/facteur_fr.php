@@ -66,6 +66,7 @@ Vérifiez votre fichier <tt>mes_options.php</tt>',
 	'label_email_test_from' => 'Expéditeur',
 	'label_email_test_from_placeholder' => 'from@example.org (optionnel)',
 	'label_email_test_important' => 'Cet email est important',
+	'label_facteur_forcer_from_everytime' => 'Forcer cette adresse d’envoi quand le <tt>From</tt> est différent',
 	'label_facteur_forcer_from' => 'Forcer cette adresse d’envoi quand le <tt>From</tt> n’est pas sur le même domaine',
 	'label_message_envoye' => 'Message envoyé :',
 

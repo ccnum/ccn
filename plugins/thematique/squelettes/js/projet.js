@@ -88,7 +88,8 @@ function Projet() {
 		this.date_fin = parseDate(date_fin);
 		this.nombre_mois = Math.round((this.date_fin - this.date_debut) / (24 * 60 * 60 * 30.5 * 1000));
 		this.nombre_jours = Math.round((this.date_fin - this.date_debut) / (24 * 60 * 60 * 1000));
-		this.nombre_jours_vus = this.nombre_jours;
+		this.nombre_jours_total = this.nombre_jours + 40;
+		this.nombre_jours_vus = this.nombre_jours_total;
 		this.nombre_jours_vus_dest = this.nombre_jours_vus;
 		this.premier_mois = this.date_debut.getMonth();
 		this.premier_jour = Math.round(this.date_debut / (24 * 60 * 60 * 1000));
@@ -139,7 +140,7 @@ function Projet() {
 		$('#menu-consignes .filter a, #menu-classes .filter a').removeClass('selected');
 		$('#menu-consignes .logo_menu-tout, #menu-classes .logo_menu-tout').addClass('selected');
 
-		this.showRangeOfTimeline(CCN.projet.nombre_jours, 0, 0);
+		this.showRangeOfTimeline(CCN.projet.nombre_jours_total, 0, 0);
 
 		closeSidebar();
 		$('body').removeClass('highlightReponse');
@@ -175,11 +176,11 @@ function Projet() {
 	 */
 
 	this.setTimelineZoom = function () {
-		this.timeline_width = (100 / (this.nombre_jours_vus_dest * 100 / this.nombre_jours) * 100);
+		this.timeline_width = (100 / (this.nombre_jours_vus_dest * 100 / this.nombre_jours_total) * 100);
 		this.timeline.css(
 			{
 				'width': this.timeline_width + '%',
-				'left': (-(this.x_dest * 100 / this.nombre_jours) * this.timeline_width / 100) + '%'
+				'left': (-(this.x_dest * 100 / this.nombre_jours_total) * this.timeline_width / 100) + '%'
 			}
 		);
 
@@ -191,26 +192,27 @@ function Projet() {
 
 	this.initTimelineMonths = function () {
 
-		// width, height, etc
-
 		let mois = this.premier_mois;
+		let annee = this.premiere_annee;
 
 		for (let i = 0; i < this.nombre_mois; i++) {
 
 			const texte = CCN.nomCompletMois[mois] + " ";
+			const jours_mois = new Date(annee, mois + 1, 0).getDate();
+			const largeur = jours_mois / this.nombre_jours_total * 100;
 
 			const mois_DOM = $(
 				'<div/>', {
 				'class': 'mois'
 			}
-			).append('<div class="mois_label" aria-hidden="true">' + texte + '</div>').css({ 'width': 100 / this.nombre_mois + '%' });
+			).append('<div class="mois_label" aria-hidden="true">' + texte + '</div>').css({ 'width': largeur + '%' });
 
 			mois_DOM.appendTo(this.timeline_background);
 
 			mois++;
-
 			if (mois >= 12) {
 				mois = 0;
+				annee++;
 			}
 		}
 	}

@@ -42,7 +42,7 @@ function Reponse() {
 				class="timeline_item reponse_haute reponse_haute_consigne_parent${this.consigne.id} hide"
 				data-consigne-id="${this.consigne.id}"
 				data-reponse-id="${this.id}"
-				style="top:${this.y * 100}%; left:${this.x_absolu / CCN.projet.nombre_jours * 100}%;">
+				style="top:${this.y * 100}%; left:${this.x_absolu / CCN.projet.nombre_jours_total * 100}%;">
 				<div id="reponse${this.id}"
 					class="reponse couleur_texte_travail_en_cours bgc_classe_${coul}">
 					${this.nombre_commentaires > 0 ? `<div aria-label="${this.nombre_commentaires} interaction${this.nombre_commentaires > 1 ? 's' : ''}" class="picto_nombre_commentaires">${this.nombre_commentaires}</div>` : ''}

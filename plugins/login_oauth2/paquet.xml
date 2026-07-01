@@ -1,0 +1,27 @@
+<paquet
+	prefix="login_oauth2"
+	categorie="authentification"
+	version="0.4.3"
+	schema="0.2.0"
+	etat="test"
+	compatibilite="[4.0;4.*]"
+	documentation="https://contrib.spip.net/login_oauth2"
+	logo="prive/themes/spip/images/login_oauth2-xx.svg"
+>
+
+	<nom>Login OAuth2</nom>
+	<auteur lien="http://aranoa.net">JMarc_64</auteur>
+	<licence>GPL</licence>
+	<credit lien="https://oauth.net/2/">OAuth2 specification</credit>
+	
+	<necessite nom="oauth2_client" compatibilite="[0.3.0;]" />
+	<pipeline nom="declarer_tables_objets_sql" inclure="base/login_oauth2.php" />
+	<pipeline nom="declarer_tables_auxiliaires" inclure="base/login_oauth2.php" />
+	<pipeline nom="declarer_tables_interfaces" inclure="base/login_oauth2.php" />
+	<pipeline nom="login_oauth2_providers" inclure="login_oauth2_pipelines.php" />
+	<pipeline nom="formulaire_fond" inclure="login_oauth2_pipelines.php" />
+	<pipeline nom="afficher_config_objet" inclure="login_oauth2_pipelines.php" />
+	<pipeline nom="insert_head_css" inclure="login_oauth2_pipelines.php" />
+	<pipeline nom="autoriser" inclure="login_oauth2_autorisations.php" />
+
+</paquet>

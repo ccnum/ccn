@@ -33,3 +33,4 @@ db_data/
 TMP_SPIP_3
 .env
 helm/custom.yaml
+plugins/oauth2_client/oauthclient.log

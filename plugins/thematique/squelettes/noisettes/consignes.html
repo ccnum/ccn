@@ -1,0 +1,68 @@
+#CACHE{0}
+<BOUCLE_principale(ARTICLES){id_article}{tous}>
+<BOUCLE_rub(RUBRIQUES){id_rubrique}{tout}>
+	#SET{classe_iframe, #DESCRIPTIF*}
+	#SET{titre_parent, #TITRE}
+	#SET{id_parent, #ID_RUBRIQUE}
+	<BOUCLE_rub00(RUBRIQUES){id_rubrique=#ID_PARENT}{tout}>
+		#SET{id_travail_en_cours,#ID_RUBRIQUE}
+	</BOUCLE_rub00>
+</BOUCLE_rub>
+<BOUCLE_consigne_de_la_reponse(ARTICLES){id_article=#ID_CONSIGNE}>
+	#SET{titre_consigne,#TITRE}
+	#SET{id_consigne,#ID_ARTICLE}
+</BOUCLE_consigne_de_la_reponse>
+<BOUCLE_police(MOTS){id_rubrique}{type=police}>#SET{police,#TITRE}</BOUCLE_police>
+<BOUCLE_rub_classe(RUBRIQUES){id_rubrique}{tout}>
+	[(#SET{donnees_classe,[(#TEXTE*|liens_ouvrants)]})]
+</BOUCLE_rub_classe>
+<BOUCLE_nb_doc(DOCUMENTS) {id_article}>
+</BOUCLE_nb_doc>
+	#SET{nb_doc,#TOTAL_BOUCLE}
+</B_nb_doc>
+	#SET{nb_doc,0}
+<//B_nb_doc>
+#SET{a_repondu,non}
+[(#TEXTE|oui)#SET{a_repondu,oui}]
+#SET{titre_onglet_reponse,#VAL{thematique:repondre_a_la_mission}|_T}
+[(#GET{a_repondu}|=={oui}|oui)#SET{titre_onglet_reponse,#VAL{thematique:voir_ma_reponse}|_T}]
+#SET{titre_consigne_final, #GET{titre_consigne}|sinon{#TITRE}}
+<div class="[popup_(#ENV{type_objet})]">
+	<div id="bloc_article-#ID_ARTICLE" class="bloc_article[ (#GET{police})]">
+		<div id="sidebar-header-container">
+			<INCLURE{
+				fond=noisettes/sidebar/header_sidebar,
+				id_article=#ID_ARTICLE, ajax,
+				titre_parent=#GET{titre_parent},
+				titre_consigne=#GET{titre_consigne_final},
+				id_consigne=#GET{id_consigne},
+				type_objet=#ENV{type_objet},
+				env
+			} />
+		</div>
+		<div id="tabs-article-#ID_ARTICLE" class="container-tabs">
+			<div id="mission-tabs">
+				<div data-title="<:thematique:description_mission:>">
+					<INCLURE{fond=noisettes/sidebar/onglet_description, id_article=#ID_ARTICLE, env, ajax} />
+				</div>
+				[(#ENV{type_objet}|=={agora}
+				|ou{#ENV{type_objet}|=={evenements}}
+				|ou{#ENV{type_objet}|=={livrable}}
+				|ou{#ENV{type_objet}|=={consignes}}
+				|ou{#ENV{type_objet}|=={ressources}}
+				|ou{#ENV{type_objet}|=={travail_en_cours}}
+				|oui)
+				<div data-title="#GET{titre_onglet_reponse}">
+					<INCLURE{fond=noisettes/sidebar/onglet_reponse, id_article=#ID_ARTICLE, env, ajax} />
+				</div>
+				]
+				<div data-title="<:thematique:discussion_mission:>">
+					<INCLURE{fond=noisettes/sidebar/onglet_discussion, id_article=#ID_ARTICLE, env, ajax} />
+				</div>
+			</div>
+		</div>
+		<div class="sidebar_bubble masquer">#ENV{type_objet}</div>
+	</div>
+</div>
+</BOUCLE_principale>
+<script>$('#mission-tabs').customTabs();</script>

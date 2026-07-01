@@ -1,0 +1,63 @@
+[(#REM)
+	Widget favoris CCN — emoji radio (un seul par user par article)
+
+	Usage :
+	[(#INCLURE{fond=inclure/favoris_ccn, objet=article, id_objet=#ID_ARTICLE, ajax})]
+
+	Pour ajouter une catégorie : éditer favoris_ccn_categories() dans mesfavoris_ccn_fonctions.php
+	ET ajouter un bloc <button> ci-dessous.
+)]
+#CACHE{0}
+
+[(#SET{mon_favori, #ENV{objet}|favoris_ccn_mon_favori{#ENV{id_objet}}})]
+[(#SET{compteurs, #ENV{objet}|favoris_ccn_compter{#ENV{id_objet}}})]
+
+<div class="favoris-ccn-widget"
+	data-objet="#ENV{objet}"
+	data-id-objet="#ENV{id_objet}"
+	data-compteurs='[(#GET{compteurs}|favoris_ccn_json)]'
+	data-mon-favori="#GET{mon_favori}">
+
+	[(#SET{categories, #VAL{''}|favoris_ccn_categories})]
+	<BOUCLE_cat(DATA){source tableau, #GET{categories}}>
+	<button type="button" class="favori-ccn-btn" data-categorie="#CLE"
+		data-action="#URL_ACTION_AUTEUR{toggle_favori_ccn, #ENV{objet}-#ENV{id_objet}-#CLE}"
+		aria-label="#VALEUR{label}">
+		<span class="favori-ccn-emoji" aria-hidden="true">#VALEUR{html}</span>
+		<span class="favori-ccn-count">0</span>
+	</button>
+	</BOUCLE_cat>
+
+</div>
+
+<script>
+$(function () {
+	$('.favoris-ccn-widget').each(function () {
+		var $widget   = $(this);
+		var compteurs = $widget.data('compteurs') || {};
+		var monFavori = $widget.data('mon-favori') || '';
+
+		$widget.find('.favori-ccn-btn').each(function () {
+			var $b  = $(this);
+			var cat = $b.data('categorie');
+			$b.find('.favori-ccn-count').text(compteurs[cat] || 0);
+			var actif = (monFavori === cat);
+			$b.toggleClass('actif', actif).attr('aria-pressed', actif ? 'true' : 'false');
+		});
+
+		$widget.find('.favori-ccn-btn').on('click', function () {
+			var url = $(this).data('action');
+			$.getJSON(url, function (data) {
+				if (!data.ok) return;
+				$widget.find('.favori-ccn-btn').each(function () {
+					var $b  = $(this);
+					var cat = $b.data('categorie');
+					$b.find('.favori-ccn-count').text(data.compteurs[cat] || 0);
+					var actif = (data.categorie === cat);
+					$b.toggleClass('actif', actif).attr('aria-pressed', actif ? 'true' : 'false');
+				});
+			});
+		});
+	});
+});
+</script>
