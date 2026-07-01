@@ -245,9 +245,7 @@ async function loadConsignes(fichier) {
 						dataForReponse.date_date = parseDate(dataForReponse.date);
 
 						const jour_reponse = Math.round(dataForReponse.date_date / (24 * 60 * 60 * 1000));
-						const delta = jour_reponse - dataForConsigne.jour_consigne;
-						dataForReponse.x_affichage = dataForConsigne.nombre_jours + delta * 0.6;
-
+						dataForReponse.x_affichage = get_abscisse_affiche_reponse(dataForConsigne.nombre_jours, dataForConsigne.jour_consigne, jour_reponse)
 
 						dataForReponse.nombre_commentaires = parseFloat(getXMLNodeValue('commentaires', xmlReponses[j]));
 

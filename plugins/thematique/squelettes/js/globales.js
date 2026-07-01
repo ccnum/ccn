@@ -86,3 +86,8 @@ function formatDateLongue(dateStr) {
 	const d = parseDate(dateStr);
 	return d.getDate() + " " + CCN.nomMois[d.getMonth()] + " " + d.getFullYear();
 }
+
+function get_abscisse_affiche_reponse(base_consigne, date_consigne, date_reponse) {
+	const delta = date_reponse - date_consigne;
+	return base_consigne + delta * 0.7
+}
