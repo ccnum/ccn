@@ -36,5 +36,5 @@
 	[(#SET{restreint,#SESSION{cookie_rubrique}})]
 ]
 
-[(#MODE|=={restreint}|oui)#SESSION_SET{restreint, #GET{restreint}}]
-[(#MODE|=={restreint}|non)#SESSION_SET{admin, #GET{admin}}]
+#SESSION_SET{restreint, #GET{restreint}}
+#SESSION_SET{admin, #GET{admin}}
