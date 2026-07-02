@@ -8,7 +8,6 @@
 >
 	<nom>API Vimeo</nom>
 	<auteur>pierretux</auteur>
-	<description>Upload automatique des vidéos MP4 vers Vimeo via l'API TUS</description>
 	<licence>GNU/GPL</licence>
 
 	<pipeline nom="declarer_champs_extras" inclure="api_vimeo_pipelines.php" />
