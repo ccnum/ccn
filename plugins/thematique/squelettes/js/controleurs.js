@@ -1130,7 +1130,14 @@ function closeSidebar() {
 	}
 	_sidebarTrigger = null;
 	const interval = setInterval(updateConnecteurs, 16);
-	setTimeout(() => clearInterval(interval), 500);
+	setTimeout(() => {
+		clearInterval(interval);
+		// Une fois le panneau glissé hors écran, on vide son contenu
+		// pour ne pas le garder chargé inutilement (poids DOM sur mobile).
+		if (!$('body').hasClass('hasSidebarOpen')) {
+			$('#sidebar_main_inner').empty();
+		}
+	}, 500);
 }
 
 function _sidebarFocusFirst() {
