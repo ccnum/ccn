@@ -12,7 +12,7 @@
 </BOUCLE_rubAnnee>
 
 #SET{laclasse_rubrique_admin, #ENV{restreint}}
-<BOUCLE_rub(RUBRIQUES){id_rubrique=#ENV{restreint}}{tout}>
+<BOUCLE_rub(RUBRIQUES){id_rubrique=#ENV{restreint}}{si #ENV{restreint}}{tout}>
 	#SET{titre,#TITRE}
 	#SET{parent, #INFO_TITRE{rubrique,#ID_PARENT}}
 </BOUCLE_rub>
