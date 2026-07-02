@@ -145,14 +145,12 @@ function formulaires_public_editer_article_traiter_dist(
 	// Publication de l'article
 	include_spip('action/editer_objet');
 	if (!empty($res['id_article'])) {
+		$statut = sql_getfetsel('statut', 'spip_articles', 'id_article=' . intval($res['id_article']));
 		if ($id_consigne > 0) {
 			sql_updateq('spip_articles', ['id_consigne' => $id_consigne], 'id_article=' . intval($res['id_article']));
+		}
+		if ($statut !== 'publie') {
 			objet_instituer('article', $res['id_article'], ['statut' => 'publie']);
-		} else {
-			$statut = sql_getfetsel('statut', 'spip_articles', 'id_article=' . intval($res['id_article']));
-			if ($statut !== 'publie') {
-				objet_instituer('article', $res['id_article'], ['statut' => 'publie']);
-			}
 		}
 
 		// Case cochée par l'intervenant sur la consigne → associe/dissocie le mot-clé livrable
