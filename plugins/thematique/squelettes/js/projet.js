@@ -88,7 +88,7 @@ function Projet() {
 		this.date_fin = parseDate(date_fin);
 		this.nombre_mois = Math.round((this.date_fin - this.date_debut) / (24 * 60 * 60 * 30.5 * 1000));
 		this.nombre_jours = Math.round((this.date_fin - this.date_debut) / (24 * 60 * 60 * 1000));
-		this.nombre_jours_total = this.nombre_jours + 40;
+		this.nombre_jours_total = this.nombre_jours;
 		this.nombre_jours_vus = this.nombre_jours_total;
 		this.nombre_jours_vus_dest = this.nombre_jours_vus;
 		this.premier_mois = this.date_debut.getMonth();
