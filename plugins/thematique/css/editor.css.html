@@ -10,6 +10,10 @@
 	z-index: 50000000 !important;
 	right: 0 !important;
 	bottom: 0;
+	display: flex;
+	justify-content: center;
+	align-items: flex-start;
+	padding-top: 60px;
 }
 
 .crayon-html::before {
@@ -22,13 +26,6 @@
 	bottom: 0;
 	background: rgba(0,0,0,.8);
 	z-index: 1;
-}
-
-.crayon-html {
-	display: flex;
-	justify-content: center;
-	align-items: flex-start;
-	padding-top: 60px;
 }
 
 .crayon-html .formulaire_spip {
@@ -109,7 +106,12 @@
 	border-radius: 50% !important;
 	background-size: 50% !important;
 	margin-top: -8px !important ;
-	left: -30px
+	left: -30px;
+	background-attachment: scroll;
+	background-clip: border-box;
+	background-image: url("#ENV{chemin}/img/logo_crayon_20.png");
+	background-origin: padding-box;
+	background-repeat: no-repeat;
 }
 
 .markItUp {

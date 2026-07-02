@@ -38,11 +38,6 @@ $(document).on('keydown.sidebarFocusTrap', function (e) {
 	}
 });
 
-// Vérifie les paramètres dans l'url
-function urlParam(name) {
-	return new URLSearchParams(window.location.search).get(name) || 0;
-}
-
 $(function () {
 
 	$(document).on('click', '.js-call-consigne', function () {
@@ -424,8 +419,6 @@ function call(opts) {
  *
  * @todo Définir le contenu de la sidebar secondaire
  */
-// CCN.currentUserType
-// current_user_type
 function callConsigne(id_consigne) {
 
 	if (!Number.isInteger(Number(id_consigne))) return;
@@ -496,8 +489,6 @@ function callReponse(id_reponse) {
 			);
 		}
 	);
-	const url_travail_en_cours = 'spip.php?page=rubrique&mode=detail&id_rubrique=' + CCN.travailEnCoursId;
-
 	showReponseInTimeline(id_reponse);
 
 }
@@ -538,8 +529,6 @@ function callClasse(id_classe) {
 			);
 		}
 	);
-
-	const url_travail_en_cours = 'spip.php?page=rubrique&mode=detail&id_rubrique=' + CCN.travailEnCoursId;
 }
 /**
  * Appelle le chargement des classes
@@ -556,8 +545,6 @@ function callClasses() {
 	updateMenuIcon(['classes'], 'sidebarView');
 
 	blankMainSidebar('travail_en_cours');
-
-	const url_travail_en_cours = 'spip.php?page=rubrique&mode=detail&id_rubrique=' + CCN.travailEnCoursId;
 }
 
 /**
@@ -575,8 +562,6 @@ function callLivrables() {
 
 	blankMainSidebar('livrables');
 	setFullscreenModeToCols(true);
-
-	const url_lateral = CCN.projet.url_popup_livrables;
 }
 /**
  * Appelle le chargement de l'article de blog
@@ -635,8 +620,6 @@ function callRessource() {
 
 	blankMainSidebar('ressources');
 	setFullscreenModeToCols(true);
-
-	const url_lateral = CCN.projet.url_popup_ressources;
 }
 
 /**
@@ -788,9 +771,6 @@ function callAgora() {
 
 	blankMainSidebar('agora');
 	setFullscreenModeToCols(true);
-
-	const url_lateral = CCN.projet.url_popup_agora;
-
 }
 
 /**
@@ -929,17 +909,6 @@ function updateConnecteur(reponseObject, ui) {
 		}
 	)
 		.width(parseFloat(length) + 'px');
-}
-
-/**
- * Change la couleur du bouton une fois cliqué.
- *
- * @param {string} val - Sélecteur de l'élément DOM en jQuery
- * @todo  Améliorer la récupération de la couleur ?
- */
-function changeCouleurLogoMenu(val) {
-	const color = $(val).css('background-color');
-	$(val).closest('li').children('h3').css('background-color', color);
 }
 
 /**

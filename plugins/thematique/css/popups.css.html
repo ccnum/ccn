@@ -172,10 +172,6 @@
 }
 
 .popup.popup_blank .sidebar_bubble_blank {
-	/*
-	height: 300px;
-	padding: 50px;
-	*/
 	padding: 30px;
 	font-size: 18px;
 	line-height: 24px;
@@ -259,11 +255,6 @@
 .intervention_callto_answer a.retour {
 	padding: 5px;
 	display: initial;
-}
-
-.intervention_thumbnail {
-	max-width: 100% !important;
-	height: auto !important;
 }
 
 .intervention_new_answer.bloc_texte {
@@ -423,21 +414,9 @@
 	padding: 0 0 8px 0;
 	margin-top: -15px;
 }
-/*
 .sidebar_bubble.reponse_binome_entete_bubble {
 	background: rgb(62, 62, 62);
 }
-
-.reponse_binome_entete_texte {
-	height: 35px;
-	line-height: 40px;
-	font-weight: bold;
-	font-size: 15.6px;
-	text-align: center;
-	color: rgb(216, 216, 216);
-	padding-top: 5px;
-}
-*/
 
 .popup_reponse_binome_entete {
 	padding-bottom: 30px
@@ -616,20 +595,12 @@ li > .ressources_classe_nom {
 }
 
 
-.chargement_grand {
-	background: url(#ENV{chemin}/img/chargement.gif) no-repeat center center;
-	min-width: 200px;
-	min-height: 200px;
-	}
-
 .chargement {
 	background: url(#ENV{chemin}/img/chargement-petit.gif) no-repeat center center;
 	}
 
 a.lien_ajouter { cursor: pointer; color: #58ab27; padding-right: 25px; font-weight: normal;}
 a.liens_voir { cursor: pointer; color: #333; font-weight: normal;}
-
-a.liens_voir2 { cursor: pointer; color: #333; font-weight: normal;}
 
 a.liens_supprimer { cursor: pointer; color: red; font-weight: normal;}
 a.liens_supprimer:hover { }
@@ -680,19 +651,6 @@ a.liens_forum:hover { }
 
 /* -------- Surcharges SPIP ----------*/
 
-.crayon .crayon-icones em.crayon-crayon {
-	background-attachment: scroll;
-	background-clip: border-box;
-	background-color: transparent;
-	background-image: url("#ENV{chemin}/img/logo_crayon_20.png");
-	background-origin: padding-box;
-	background-position: 0 0;
-	background-repeat: no-repeat;
-	background-size: auto auto;
-	height: 20px;
-	width: 20px;
-}
-
 input.crayon-active {
 	background-color: #ccc;
 	color: var(--color-default);
@@ -720,7 +678,7 @@ p.spip_cadre {
 	margin-left: 0px;
 }
 
-code, .coloration_code{
+code {
 	display: block;
 	background: #EEEEEE none repeat scroll 0% 50%;
 	border-color: #EEEEEE rgb(238, 238, 238) rgb(238, 238, 238) #00a5db;
@@ -866,7 +824,6 @@ p.boutons:has(input[type="submit"]) {
 	margin-bottom: 0;
 }
 
-/*#formulaire_forum { margin-top: 5px; margin-bottom: 15px; }*/
 #formulaire_forum .markItUpHeader ul, #formulaire_forum .retour, #formulaire_forum fieldset p { }
 #formulaire_forum legend { display: none; }
 #formulaire_forum fieldset { border: 0px; padding: 0px; margin: 0px;}
@@ -1039,9 +996,7 @@ li.editer p.explication, .editer_pgp, .editer_bio, .editer_liens_sites, .saisie_
 
 .bloc_article.monospace {color: white; }
 .bloc_article.monospace p { font-family: Courier, "Courier New", FreeMono, "Liberation Mono", monospace; font-size: 1.1em; }
-.bloc_article.monospace .bloc_article_h, .bloc_article.monospace .bloc_article_b { visibility: hidden; }
-.bloc_article.monospace .bloc_article_m { width: 497px; background-image: url(); background-color: var(--color-default); padding: 20px 15px 20px 20px; margin-left: 6px; -moz-border-radius: 10px;}
-.bloc_article.monospace #bloc_texte p: first-letter, .bloc_article.monospace .bloc_consigne p: first-letter {
+.bloc_article.monospace #bloc_texte p: first-letter {
 	font-size: 100%;
 	font-weight: normal;
 	color: white;
@@ -1120,24 +1075,6 @@ li a, li a:hover {
 	background-position: 25px 55% !important;
 }
 
-.bloc_option_doc_link {
-	background-image: url([(#CHEMIN{img/permalink.svg}|image_reduire{25}|extraire_attribut{src})]);
-	background-size: 24px auto;
-	background-position: 25px 50% !important;
-}
-
-.bloc_option_doc_social {
-	background-image: url([(#CHEMIN{img/share.svg}|image_reduire{25}|extraire_attribut{src})]);
-	background-size: 24px auto;
-	background-position: 25px 50% !important;
-}
-
-.bloc_option_doc_about {
-	background-image: url([(#CHEMIN{img/group.svg}|image_reduire{25}|extraire_attribut{src})]);
-	background-size: 24px auto;
-	background-position: 25px 50% !important;
-}
-
 .bloc_option_doc_edit {
 	background-image: url([(#CHEMIN{img/edit.svg}|image_reduire{25}|extraire_attribut{src})]);
 	background-size: 27px auto;
@@ -1164,10 +1101,6 @@ li a, li a:hover {
 	background: none;
 	border-radius: 3px;
 	padding: 0;
-}
-
-.bloc_option_top {
-	margin-top: 10px;
 }
 
 #popup label, .popup label {
@@ -1659,22 +1592,11 @@ ul#forum, .lien_forum {
 	cursor: pointer;
 }
 
-.sidebarCacheOn {
-	display: block !important;
-}
 .sidebarExpandOff {
 	&::before {
 		background: url("#CHEMIN{img/expand-off.svg}");
 	}
 }
-.sidebarExpandOn {
-	&::before {
-		background: url("#CHEMIN{img/expand-on.svg}");
-	}
-}
-/*.icon, #sidebarCache .icon {
-	display: contents;
-}*/
 .icon svg, #sidebarCache .icon svg {
 	height: 33px;
 }
@@ -1774,17 +1696,6 @@ ul#forum, .lien_forum {
 	border-radius: 3px;
 }
 
-.sidebar_bubble_split_parent {
-	padding: 0;
-	background: rgba(0, 0, 0, 0);
-	font-size: 0;
-	margin-bottom: 0;
-}
-/*
-.sidebar_bubble_portfolio {
-	padding: 20px 30px
-}
-*/
 .bloc_documents {
 	padding: 0 10px 0 10px;
 	clear: both;
@@ -1955,16 +1866,6 @@ ul#forum, .lien_forum {
 	cursor: pointer;
 }
 
-.livrable .featured-image {
-	filter: blur(2px) grayscale(100%);
-	transition: all 0.5s ease;
-}
-
-.livrable:hover > .featured-image {
-	-webkit-filter: grayscale(0%);
-	 -moz-filter: grayscale(0%);
-	filter: blur(2px) grayscale(0%);
-}
 
 .livrable .profil {
 	display: flex;

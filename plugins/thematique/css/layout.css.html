@@ -130,11 +130,11 @@ body {
 	overflow-y: auto;
 }
 
-#menu_haut_titre .select:hover .first_label .icon {
+#menu_haut_titre .selectbox:hover .first_label .icon {
 	background-color: var(--color-hover);
 }
 #menu_haut_titre {
-	> .select:hover {
+	> .selectbox:hover {
 		.icon-down {
 			background-color: var(--color-hover);
 		}
@@ -155,11 +155,7 @@ body {
 	.icon-connecter {
 		margin-right: 1rem;
 	}
-	.icon-logout {
-		margin-right: 0.5rem;
-		width: 30px;
-	}
-	> .select:hover {
+	> .selectbox:hover {
 		.first_label {
 			background-color: var(--background-color-hover);
 			color: var(--color-hover);
@@ -214,7 +210,7 @@ body {
 	.icon-down {
 		width: 40px;
 	}
-	> .select:hover {
+	> .selectbox:hover {
 		background-color: var(--background-color-hover);
 		.first_label {
 			background-color: var(--background-color-hover);
@@ -417,18 +413,18 @@ body {
 	line-height: 50px;
 }
 
-#menu_haut_titre .select:hover input:not(.first) {
+#menu_haut_titre .selectbox:hover input:not(.first) {
 	background-color: white;
 	color: var(--color-default);
 }
-#menu_haut_titre .select .first_label {
+#menu_haut_titre .selectbox .first_label {
 	color: var(--color-hover);
 }
 #menu_haut_ecrire .icon:hover {
 	background: var(--color-default);
 	color: white;
 }
-#menu_haut_titre .select:hover .first_label {
+#menu_haut_titre .selectbox:hover .first_label {
 	background: var(--background-color-hover);
 	color: var(--color-hover);
 }
@@ -471,15 +467,6 @@ body {
 .icon-close {
 	--svg: url("#CHEMIN{img/close.svg}");
 }
-.icon-expand-off {
-	--svg: url("#CHEMIN{img/expand-off.svg}");
-}
-.icon-expand-on {
-	--svg: url("#CHEMIN{img/expand-on.svg}");
-}
-.icon-logout {
-	--svg: url("#CHEMIN{img/logout.svg}");
-}
 #sidebar-close {
 	--svg: url("#CHEMIN{img/xmark.svg}");
 	width: 30px;
@@ -487,7 +474,7 @@ body {
 	background-color: var(--color-tonic);
 }
 
-.select:hover .icon-down {
+.selectbox:hover .icon-down {
 	transform: rotate(180deg);
 }
 
@@ -544,17 +531,13 @@ a:hover {
 
 .nettoyeur { clear: both; }
 .zone-menu li a.cache { display: none; }
-.cache2, .zone-menu li a.cache2 { visibility: hidden; }
-.aligne_centre { text-align: center; margin: 0 auto;}
-.aligne_gauche { text-align: left; }
-.aligne_droite { text-align: right; }
 .top { margin-top: 2%; }
 .gauche { position: relative; float: left; }
 .droite { position: relative; float: right; }
 .p45 {width: 43%; }
 
 .fin { font-weight: normal; }
-.gras, .titre { font-weight: bold; }
+.titre { font-weight: bold; }
 .petit {font-size: 0.94em;}
 #lien_public:hover, #lien_prive:hover { cursor: pointer; }
 

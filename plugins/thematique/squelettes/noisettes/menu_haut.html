@@ -5,7 +5,7 @@
 	</div>
 	<div id="menu_haut_titre" class="bloc_titre">
 		[(#REM)Titre]
-		<div class="select selectbox" name="annee_scolaire" data-select-name="annee_scolaire">
+		<div class="selectbox" name="annee_scolaire" data-select-name="annee_scolaire">
 			<button type="button" class="select-toggle first_label">
 				<span>[(#NOM_SITE_SPIP) ][(#ENV{annee_scolaire})]-[(#ENV{annee_scolaire}|plus{1})]</span>
 				<span class="icon icon-down"></span>
@@ -32,7 +32,7 @@
 			}
 
 			function closeAllSelects(){
-				$('.select.open').each(function(){
+				$('.selectbox.open').each(function(){
 					clearTimeout($(this).data('closeTimeout'));
 					$(this).removeClass('open');
 				});
@@ -90,7 +90,7 @@
 				});
 			}
 
-			initSelectbox($('.select.selectbox'));
+			initSelectbox($('.selectbox'));
 
 			// close on outside click
 			$(document).on('click', function(){ closeAllSelects(); });

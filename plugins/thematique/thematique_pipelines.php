@@ -45,7 +45,6 @@ function thematique_jqueryui_plugins($scripts) {
 function thematique_insert_head($flux) {
 	$scripts = [
 		'js/article.js',
-		'js/bouton.js',
 		'js/bundled/html4+html5/jquery.history.js',
 		'js/classe.js',
 		'js/consigne.js',
@@ -57,7 +56,7 @@ function thematique_insert_head($flux) {
 		'js/main.js',
 		'js/projet.js',
 		'js/reponse.js',
-		'js/custom-tabs.js'
+		'js/custom-tabs.js',
 	];
 
 	foreach ($scripts as $script) {
