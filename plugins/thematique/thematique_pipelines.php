@@ -43,6 +43,12 @@ function thematique_jqueryui_plugins($scripts) {
 }
 
 function thematique_insert_head($flux) {
+	
+	if (_request('mode') === 'ajax'
+		|| _request('mode') === 'ajax-detail') {
+		return $flux;
+	}
+
 	$scripts = [
 		'js/article.js',
 		'js/bundled/html4+html5/jquery.history.js',
