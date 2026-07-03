@@ -55,19 +55,14 @@
             <div id="mission-tabs">
                 <div data-title="<:thematique:description_mission:>">
                     <INCLURE{
-                        fond=noisettes/sidebar/onglet_description_mission,
+                        fond=noisettes/sidebar/onglet_description,
                         id_article=#GET{id_consigne},
                         env
                     } />
                 </div>
                 <div data-title="#GET{titre_onglet_reponse}">
-                    [(#GET{a_repondu}|=={oui}|oui)
-                        <INCLURE{fond=noisettes/sidebar/onglet_voir_reponse, env} />
-                    ]
-                    [(#GET{a_repondu}|!={oui}|oui)
-                        <INCLURE{fond=noisettes/sidebar/onglet_repondre_mission, date_prochaine_etape=#GET{date_prochaine_etape}, env} />
-                    ]
-                </div>
+					<INCLURE{fond=noisettes/sidebar/onglet_reponse, id_article=#ID_ARTICLE, env, ajax} />
+				</div>
                 <div data-title="<:thematique:discussion_mission:>">
                     <INCLURE{
                         fond=noisettes/sidebar/onglet_discussion_mission,
