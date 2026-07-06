@@ -3,7 +3,6 @@
 	categorie="multimedia"
 	version="1.0.0"
 	etat="dev"
-	schema="1.0.0"
 	compatibilite="[4.3.2;4.*]"
 >
 	<nom>API Vimeo</nom>
