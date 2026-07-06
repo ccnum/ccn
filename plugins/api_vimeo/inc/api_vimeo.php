@@ -35,6 +35,13 @@ function api_vimeo_upload(int $id_document, array $doc): bool {
 		return false;
 	}
 
+	$site  = strtolower(str_replace(' ', '', lire_config('nom_site')));
+	$annee = (string) intval(constant('_ANNEE_SCOLAIRE'));
+	$id_dossier = api_vimeo_dossier_id($site, $annee);
+	if ($id_dossier) {
+		api_vimeo_ranger_dans_dossier($upload['link'], $id_dossier);
+	}
+
 	sql_updateq('spip_documents', [
 		'fichier'  => $upload['link'],
 		'distant'  => 'oui',
@@ -90,6 +97,134 @@ function api_vimeo_creer_upload(string $titre, int $file_size): array|false {
 		'upload_link' => $data['upload']['upload_link'],
 		'link'        => $data['link'] ?? ('https://vimeo.com' . ltrim($data['uri'] ?? '', '/')),
 	];
+}
+
+/**
+ * Résout l'ID du dossier Vimeo "site/année" (le crée si besoin) et met en cache
+ * le résultat dans spip_meta pour ne faire les appels de résolution qu'une fois.
+ */
+function api_vimeo_dossier_id(string $site, string $annee): string|false {
+	$cle_meta = 'api_vimeo/dossier_' . $site . '_' . $annee;
+
+	$id_cache = lire_config($cle_meta);
+	if ($id_cache) {
+		return $id_cache;
+	}
+
+	$id_site = api_vimeo_trouver_ou_creer_dossier($site);
+	if (!$id_site) {
+		return false;
+	}
+
+	$id_annee = api_vimeo_trouver_ou_creer_dossier($annee, $id_site);
+	if (!$id_annee) {
+		return false;
+	}
+
+	ecrire_config($cle_meta, $id_annee);
+
+	return $id_annee;
+}
+
+/**
+ * Cherche un dossier Vimeo par nom (sous un dossier parent le cas échéant)
+ * et le crée s'il n'existe pas encore.
+ */
+function api_vimeo_trouver_ou_creer_dossier(string $nom, ?string $id_parent = null): string|false {
+	if (!defined('_VIMEO_ACCESS_TOKEN') || !_VIMEO_ACCESS_TOKEN) {
+		spip_log('_VIMEO_ACCESS_TOKEN non défini', 'api_vimeo' . _LOG_ERREUR);
+		return false;
+	}
+
+	$url_liste = $id_parent
+		? "https://api.vimeo.com/me/folders/$id_parent/items?type=folder&per_page=100"
+		: 'https://api.vimeo.com/me/folders?per_page=100';
+
+	$ch = curl_init($url_liste);
+	curl_setopt_array($ch, [
+		CURLOPT_RETURNTRANSFER => true,
+		CURLOPT_HTTPHEADER     => [
+			'Authorization: bearer ' . _VIMEO_ACCESS_TOKEN,
+			'Accept: application/vnd.vimeo.*+json;version=3.4',
+		],
+	]);
+	$response  = curl_exec($ch);
+	$http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+	curl_close($ch);
+
+	if ($http_code === 200) {
+		$data = json_decode($response, true);
+		foreach ($data['data'] ?? [] as $item) {
+			$folder = $item['folder'] ?? $item;
+			if (isset($folder['name'], $folder['uri']) && strcasecmp($folder['name'], $nom) === 0) {
+				return basename($folder['uri']);
+			}
+		}
+	}
+
+	$payload = ['name' => $nom];
+	if ($id_parent) {
+		$payload['parent_folder_uri'] = "/folders/$id_parent";
+	}
+
+	$ch = curl_init('https://api.vimeo.com/me/folders');
+	curl_setopt_array($ch, [
+		CURLOPT_RETURNTRANSFER => true,
+		CURLOPT_POST           => true,
+		CURLOPT_POSTFIELDS     => json_encode($payload),
+		CURLOPT_HTTPHEADER     => [
+			'Authorization: bearer ' . _VIMEO_ACCESS_TOKEN,
+			'Content-Type: application/json',
+			'Accept: application/vnd.vimeo.*+json;version=3.4',
+		],
+	]);
+	$response  = curl_exec($ch);
+	$http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+	curl_close($ch);
+
+	if ($http_code !== 201) {
+		spip_log("Erreur création dossier Vimeo '$nom' (HTTP $http_code) : $response", 'api_vimeo' . _LOG_ERREUR);
+		return false;
+	}
+
+	$data = json_decode($response, true);
+	if (empty($data['uri'])) {
+		spip_log("Réponse Vimeo invalide (création dossier) : $response", 'api_vimeo' . _LOG_ERREUR);
+		return false;
+	}
+
+	return basename($data['uri']);
+}
+
+/**
+ * Ajoute une vidéo Vimeo (par son URL complète) à un dossier donné.
+ */
+function api_vimeo_ranger_dans_dossier(string $vimeo_url, string $id_dossier): bool {
+	if (!preg_match('#vimeo\.com/(\d+)#', $vimeo_url, $m)) {
+		spip_log("URL Vimeo invalide : $vimeo_url", 'api_vimeo' . _LOG_ERREUR);
+		return false;
+	}
+	$video_id = $m[1];
+
+	$ch = curl_init("https://api.vimeo.com/me/folders/$id_dossier/videos/$video_id");
+	curl_setopt_array($ch, [
+		CURLOPT_RETURNTRANSFER => true,
+		CURLOPT_CUSTOMREQUEST  => 'PUT',
+		CURLOPT_HTTPHEADER     => [
+			'Authorization: bearer ' . _VIMEO_ACCESS_TOKEN,
+		],
+	]);
+	curl_exec($ch);
+	$http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+	curl_close($ch);
+
+	if ($http_code !== 204) {
+		spip_log("Erreur ajout vidéo $video_id au dossier $id_dossier (HTTP $http_code)", 'api_vimeo' . _LOG_ERREUR);
+		return false;
+	}
+
+	spip_log("Vidéo $video_id rangée dans le dossier $id_dossier", 'api_vimeo' . _LOG_INFO);
+	return true;
 }
 
 /**
