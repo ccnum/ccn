@@ -5,7 +5,7 @@ paramètre : titre_mot
 ]
 #SET{id_rub,0}
 [(#REM) commenter le 23/09/2024
-<BOUCLE_id0(RUBRIQUES){titre LIKE %(#CONST{_ANNEE_SCOLAIRE})%}{si #CONST{_ANNEE_SCOLAIRE}|=={#CONST{_annee_cours}}|non}{par id_rubrique}{tout}>
+<BOUCLE_id0(RUBRIQUES){titre LIKE %(#CONST{_ANNEE_SCOLAIRE})%}{si #CONST{_ANNEE_SCOLAIRE}|=={#CONST{_ANNEE_COURS}}|non}{par id_rubrique}{tout}>
 	<BOUCLE_id1(RUBRIQUES){titre_mot=#ENV{titre_mot}}{id_parent=#ID_RUBRIQUE}{par id_rubrique}{0,1}{tout}>
 		#SET{id_rub,#ID_RUBRIQUE}
 	</BOUCLE_id1>
