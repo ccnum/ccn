@@ -7,14 +7,12 @@
 	[<meta name="description" content="(#DESCRIPTIF_SITE_SPIP|couper{150}|textebrut)" />]
 	<INCLURE{fond=inclure/head} />
 
-	<meta name="viewport" content="width=980" />
+	<meta name="viewport" content="width=device-width, initial-scale=1" />
 
 </head>
 
-<body>
+<body data-compteur="#ENV{compteur}">
 <a href="#contenu-principal" class="skip-link">Aller au contenu principal</a>
-<div id="liste-tooltip">
-</div>
 
 <!-- ELEMENTS GRAPHIQUES-->
 <div id="book-top-left"><img src="#CHEMIN{img/global/border-book-top-left.png}" width="14" height="16" alt="" /></div>
@@ -176,41 +174,5 @@
 <INCLURE{fond=footer} />
 </body>
 
-<script type="text/javascript">
-	$(document).ready(function() {
-		window.onresize = resize_global_content;
-		resize_global_content();
-
-
-		var compteur = parseFloat('#ENV{compteur}');
-		var num_page_limite = $('.content-left > div').length;
-
-		$('.lecture-page').hide();
-		pagination(compteur);
-		next_prev(compteur, num_page_limite);
-
-		$('#bt-prev').click(function(event) {
-			event.preventDefault();
-			compteur -= 2;
-			pagination(compteur);
-			next_prev(compteur, num_page_limite);
-		});
-		$('#bt-next').click(function(event) {
-			event.preventDefault();
-			compteur += 2;
-			pagination(compteur);
-			next_prev(compteur, num_page_limite);
-		});
-
-		function showLectureTooltip(el) {
-			var offset = $(el).offset();
-			$('#liste-tooltip').show().html($(el).prev().html());
-			var hauteur_tooltip = $('#liste-tooltip-content').height();
-			$('#liste-tooltip').height(hauteur_tooltip);
-			$('#liste-tooltip').css('top', 75).css('left', Math.round(offset.left) - 100 + 2);
-		}
-		$('.lecture-tooltip').on('mouseover focus', function() { showLectureTooltip(this); });
-		$('.lecture-tooltip').on('mouseout blur', function() { $('#liste-tooltip').hide(); });
-	});
-</script>
+<script type="text/javascript" src="#CHEMIN{js/lecture.js}"></script>
 </html>

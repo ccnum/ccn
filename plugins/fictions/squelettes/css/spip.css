@@ -244,9 +244,20 @@ body.mobile {
 .global-content {
 	position: relative;
 	overflow: auto;
+	-webkit-overflow-scrolling: touch;
 	width: 968px;
 	scrollbar-width: thin;
 	scrollbar-color: #ff6b6b transparent;
+}
+
+/* Le "livre" a une largeur fixe (art directed, images de fond en px) :
+   pas de reflow fluide possible sans refaire les visuels. Sous 980px,
+   le document déborde et devient scrollable horizontalement (cf. html,body
+   overflow ci-dessus) plutôt que d'être coupé. */
+@media (max-width: 980px) {
+	html, body {
+		overflow-x: auto;
+	}
 }
 .global-content::-webkit-scrollbar { width: 6px; }
 .global-content::-webkit-scrollbar-track { background: transparent; }
@@ -681,34 +692,17 @@ a.webmestre.last-small {
 	text-align: left;
 }
 
-#liste-tooltip-content {
-	height: auto;
-	background-image: url(../img/global/tooltip-background.png);
-	border-radius: 5px;
-	width: 230px;
-	float: left;
+.liste-tooltip-content {
+	display: none;
 }
 
-#liste-tooltip-bulle {
+.liste-tooltip-bulle {
 	width: 230px;
 	height: 8px;
 	float: left;
 	background-image: url(../img/global/tooltip-bulle.png);
 	background-repeat: no-repeat;
 	background-position: center;
-}
-
-#liste-tooltip-bulle-top {
-	width: 230px;
-	height: 8px;
-	float: left;
-	background-image: url(../img/global/tooltip-bulle-top.png);
-	background-repeat: no-repeat;
-	background-position: center;
-}
-
-.liste-tooltip-content {
-	display: none;
 }
 
 .liste-tooltip-num-cadavre {

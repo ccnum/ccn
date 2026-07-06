@@ -5,7 +5,7 @@
 	<title>[(#NOM_SITE_SPIP|textebrut)]</title>
 	[<meta name="description" content="(#DESCRIPTIF_SITE_SPIP|couper{150}|textebrut)" />]
 	<INCLURE{fond=inclure/head} />
-	<meta name="viewport" content="width=980" />
+	<meta name="viewport" content="width=device-width, initial-scale=1" />
 </head>
 <body>
 <a href="#contenu-principal" class="skip-link">Aller au contenu principal</a>
@@ -96,35 +96,5 @@
 	<INCLURE{fond=footer} />
 </body>
 
-<script type="text/javascript">
-$(document).ready(function() {
-	// RESIZE
- 	window.onresize = resize_global_content;
-	resize_global_content();
-	// NICESCROLL
-	//
-	function showTooltipListeLink(el) {
-		var offset = $(el).offset();
-		var content_tooltip = $(el).find('.liste-tooltip-content').html();
-		$('#liste-tooltip').show().html(content_tooltip);
-		var hauteur_tooltip = $('#liste-tooltip .liste-tooltip-inner').height();
-		$('#liste-tooltip').height(hauteur_tooltip);
-		var toptooltip = Math.round(offset.top) - hauteur_tooltip;
-		var lefttooltip = Math.round(offset.left) - 95;
-		$('#liste-tooltip').css('top', toptooltip - 5).css('left', lefttooltip + 2);
-	}
-	$('.liste-link').on('mouseover focus', function() { showTooltipListeLink(this); });
-	$('.liste-link').on('mouseout blur', function() { $('#liste-tooltip').hide(); });
-
-});
-
-// RESIZE
-function resize_global_content() {
-	h = $(window).height();
-	h -=61;
-	$('.global-content').height(h);
-	stitches_margin = ((h-60) - 258)/4;
-	$(".stitches-inner").css({'margin-top':stitches_margin});
-}
-</script>
+<script type="text/javascript" src="#CHEMIN{js/sommaire.js}"></script>
 </html>
