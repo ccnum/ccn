@@ -43,9 +43,14 @@ function thematique_jqueryui_plugins($scripts) {
 }
 
 function thematique_insert_head($flux) {
-	
-	if (_request('mode') === 'ajax'
-		|| _request('mode') === 'ajax-detail') {
+
+	// Ne pas ré-insérer les balises script lors d'un rechargement ajax
+	// (ex: $.load()) qui recharge un fragment dans une page déjà initialisée.
+	// On se base sur l'en-tête X-Requested-With plutôt que sur le paramètre
+	// 'mode' seul : une vraie navigation complète vers une url mode=ajax-detail
+	// (lien direct, rafraîchissement) doit quand même charger les scripts.
+	if (($_SERVER['HTTP_X_REQUESTED_WITH'] ?? '') === 'XMLHttpRequest'
+		&& (_request('mode') === 'ajax' || _request('mode') === 'ajax-detail')) {
 		return $flux;
 	}
 
