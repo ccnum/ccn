@@ -1,0 +1,33 @@
+<div style="display: flex; 
+     gap: 5px;
+     align-items: center;
+     font-size:15px;
+     font-size: 0.8rem;
+     margin-left: 2px;
+">
+    <div>Choisir un auteur</div>
+    <select id="admin-intervenant-select" style="width: 157px; height: 30px;">
+        <BOUCLE_intervenants(RUBRIQUES auteurs){tout}{unique}{par id_rubrique}>
+            <option value="#ID_RUBRIQUE">#ID_RUBRIQUE - #TITRE</option>
+        </BOUCLE_intervenants>
+    </select>
+</div>
+
+<script>
+
+   const selectIntervenant = document.querySelector('#admin-intervenant-select');
+
+    window.CCN = window.CCN || {};
+    const savedIntervenant = localStorage.getItem('admin_intervenant_id');
+    if (savedIntervenant) {
+        selectIntervenant.value = savedIntervenant;
+        CCN.intervenant_id = savedIntervenant;
+    }
+    selectIntervenant.addEventListener('change', (e) => {
+        CCN.intervenant_id = e.target.value;
+        localStorage.setItem(
+            'admin_intervenant_id',
+            e.target.value
+        );
+    });
+</script>

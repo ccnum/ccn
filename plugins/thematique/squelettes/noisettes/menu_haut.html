@@ -24,7 +24,9 @@
 	</div>
 	<INCLURE{fond=noisettes/inc/authentification, id_auteur, admin, restreint, type_restreint} />
 	<INCLURE{fond=noisettes/inc/choix_rubrique_admin2, id_auteur, admin, restreint, type_restreint} />
-
+	[(#SESSION{statut}|=={0minirezo}|oui)
+		<INCLURE{fond=noisettes/inc/auteur_select_for_admin} />
+	]
 	<script>
 		$(function(){
 			if ($('#menu_haut_titre').width() <= 185) {
@@ -84,8 +86,8 @@
 						$sel.removeClass('open');
 						// react to known select names
 						var name = $sel.attr('data-select-name') || $sel.attr('name');
-						if (name=='annee_scolaire') reloadAndSetCookie('', 'laclasse_annee_scolaire', val);
-						else if (name=='rubrique_admin') reloadAndSetCookie('', 'laclasse_rubrique_admin', val);
+						if (name=='annee_scolaire') setCookie('', 'laclasse_annee_scolaire', val);
+						else if (name=='rubrique_admin') setCookie('', 'laclasse_rubrique_admin', val);
 					});
 				});
 			}

@@ -781,7 +781,6 @@ function callAgora() {
  * @todo Documenter
  */
 function createReponse(id_consigne, id_rubrique_classe, numero) {
-
 	changeTimelineMode('consignes');
 
 	const consigneData = CCN.consignes && CCN.consignes.find(c => c.id == id_consigne);
@@ -958,16 +957,15 @@ function updateUrl(object, title, url) {
  * @param {string} cookie_valeur - Valeur du cookie
  */
 
-function reloadAndSetCookie(url, cookie_nom, cookie_valeur) {
+function setCookie(url, cookie_nom, cookie_valeur) {
 	document.cookie = cookie_nom + "=" + encodeURIComponent(cookie_valeur) + "; SameSite=Strict; Secure";
-	reload(url + '/?rub=' + encodeURIComponent(cookie_valeur));
 }
 /**
  * Gère le rechargement de la page.
  *
  * @param {string} url - URL de la page à charger avec AJAX ou <tt>self</tt> pour recharger la même page
  *
- * @see reloadAndSetCookie
+ * @see setCookie
  */
 
 function reload(url) {

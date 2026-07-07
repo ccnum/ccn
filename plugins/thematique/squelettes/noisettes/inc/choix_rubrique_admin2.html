@@ -7,7 +7,12 @@
 <!-- Si aucune rubrique n'est selectionnee par le user alors en choisir une par defaut -->
 <BOUCLE_rubAnnee(RUBRIQUES) {racine}{titre LIKE %(#CONST{_ANNEE_SCOLAIRE})%} {si #GET{motcle}|!={evenements} } >
 	<BOUCLE_filtreTravailEnCours(RUBRIQUES){id_parent} {titre_mot=travail_en_cours}{par date}{0,1}>
-		[(#ENV{restreint}|?{#SESSION_SET{idRubriqueUser,#ENV{restreint}}, #SESSION_SET{idRubriqueUser,#ID_RUBRIQUE}})]
+		[(#ENV{restreint}|oui)
+			#SESSION_SET{idRubriqueUser,#ENV{restreint}}
+		]
+		[(#ENV{restreint}|non)
+			#SESSION_SET{idRubriqueUser,#ID_RUBRIQUE}
+		]
 	</BOUCLE_filtreTravailEnCours>
 </BOUCLE_rubAnnee>
 
@@ -30,85 +35,47 @@
 	#SET{affiche,oui}
 ]
 
+[(#SET{voir_mission, non})]
+
+[(#ENV{restreint,0}|!={0}|oui)
+	[(#ENV{restreint,0}|oui)
+		[(#ENV{type_restreint}|oui)
+			[(#ENV{type_restreint}|!={travail_en_cours}|oui)
+				[(#SET{voir_mission, oui})]
+			]
+		]
+	]
+]
+
+[(#SESSION{statut}|=={0minirezo}|oui)
+	[(#SET{voir_mission, oui})]
+]
+
 [(#REM) Admin restreint]
 [(#GET{affiche}|=={oui}|oui)
 <div id="menu_haut_rubrique" class="bloc_titre">
-	<B_rub_aut2>
-		<div class="select">
-				<div id="choix_rubrique_admin" name="rubrique_admin" class="selectbox" data-select-name="rubrique_admin">
-					<button type="button" class="select-toggle first_label">
-						<span class="icon icon-publier"></span>
-						Publier
-						[(#GET{titre}|?{<span class="highlight">#GET{titre}</span>,})]
-						<span class="icon icon-down"></span>
-					</button>
-					<ul class="select-options choix_rubrique_wrapper">
-						<BOUCLE_rub_aut2(RUBRIQUES auteurs){id_auteur}{tout}>
-							[(#GET{affiche}|=={oui}|oui)
-								[(#ID_RUBRIQUE|!={#ENV{restreint}}|oui)
-									<li class="select-option" data-value="#ID_RUBRIQUE">[(#TITRE)]</li>
-								]
-							]
-							<BOUCLE_rub4(RUBRIQUES){id_parent=#ID_RUBRIQUE}{tout}>
-								[(#GET{affiche}|=={oui}|oui)
-									[(#ID_RUBRIQUE|=={#ENV{restreint}}|oui)
-										<li class="select-option actif" data-value="#ID_RUBRIQUE">[(#TITRE)]</li>
-									]
-									[(#ID_RUBRIQUE|!={#ENV{restreint}}|oui)
-										<li class="select-option" data-value="#ID_RUBRIQUE">[(#TITRE)]</li>
-									]
-								]
-							</BOUCLE_rub4>
-						</BOUCLE_rub_aut2>
-					</ul>
-				</div>
-			
+	[(#REM) Admin complet]
+	<B_rub2>
+		<div id="choix_rubrique_admin2" name="rubrique_admin" class="selectbox" data-select-name="rubrique_admin">
+			<button type="button" class="select-toggle first_label">
+				<span class="icon icon-publier"></span>
+				Publier
+			</button>
+			<ul class="select-options choix_rubrique_wrapper">
+				[(#GET{voir_mission}|=={oui}|oui)
+					<li onClick='createReponse(0, CCN.intervenant_id || #SESSION{idRubriqueUser}, 0);' 
+						class="select-option" 
+						data-value="#ID_RUBRIQUE"
+					>
+						Une mission
+					</li>
+				]
+				<li onClick='alert("Cette partie des CCN est en chantier, veuillez réessayer plus tard.")' class="select-option" data-value="#ID_RUBRIQUE">Une ressource</li>
+				<li onClick='alert("Cette partie des CCN est en chantier, veuillez réessayer plus tard.")' class="select-option" data-value="#ID_RUBRIQUE">Un événement</li>
+				<li onClick='alert("Cette partie des CCN est en chantier, veuillez réessayer plus tard.")' class="select-option" data-value="#ID_RUBRIQUE">Un message</li>
+			</ul>
 		</div>
-	</B_rub_aut2>
-		[(#REM) Admin complet]
-		<B_rub2>
-
-				<div id="choix_rubrique_admin2" name="rubrique_admin" class="selectbox" data-select-name="rubrique_admin">
-					<button type="button" class="select-toggle first_label">
-						<span class="icon icon-publier"></span>
-						Publier
-						<span class="highlight">[(#GET{titre})]</span>
-						<span class="icon icon-down"></span>
-					</button>
-					<ul class="select-options choix_rubrique_wrapper">
-						<BOUCLE_rub2(RUBRIQUES){racine}{!par maj}{tout}>
-							[(#GET{affiche}|=={oui}|oui)
-								[(#ID_RUBRIQUE|!={#ENV{restreint}}|oui)
-									<li class="select-option" data-value="#ID_RUBRIQUE">[(#TITRE)]</li>
-								]
-							]
-							<BOUCLE_rub3(RUBRIQUES){id_parent=#ID_RUBRIQUE}{tout}>
-								[(#GET{affiche}|=={oui}|oui)
-									[(#ID_RUBRIQUE|!={#ENV{restreint}}|oui)
-										<li class="select-option" data-value="#ID_RUBRIQUE">[|-(#TITRE)]</li>
-									]
-								]
-								<BOUCLE_rub5(RUBRIQUES){id_parent=#ID_RUBRIQUE}{tout}>
-									[(#GET{affiche}|=={oui}|oui)
-										[(#ID_RUBRIQUE|!={#ENV{restreint}}|oui)
-											<li class="select-option" data-value="#ID_RUBRIQUE">[&nbsp;&nbsp;&nbsp;&nbsp;|-(#TITRE)]</li>
-										]
-									]
-								</BOUCLE_rub5>
-							</BOUCLE_rub3>
-						</BOUCLE_rub2>
-					</ul>
-				</div>
-			
-		</B_rub2>
-	<//B_rub_aut2>
+	</B_rub2>
 </div>
 ]
-[(#ENV{restreint}|!={0}|oui)
-[(#ENV{restreint}|oui)
-[(#ENV{type_restreint}|oui)
-[(#ENV{type_restreint}|!={travail_en_cours}|oui)
-<div id="menu_haut_ecrire" class="bloc_titre tooltip_bottom" data-tip="Publier un nouvel article" aria-label="Publier un nouvel article">
-	<a onClick='createReponse(0, #ENV{restreint});'><span class="icon icon-ecrire"></span></a>
-</div>
-]]]]
+
