@@ -22,10 +22,10 @@
 	<INCLURE{fond=chargement}{type_objet=travail_en_cours}>
 ]
 [(#AUTORISER{modifier, rubrique, #ID_RUBRIQUE}|oui)
-	[(#ENV{mode}|=={ajax}|non)
+	[(#ENV{mode}|match{ajax}|non)
 		<INCLURE{fond=layout}{page=#GET{page}}{env} />
 	]
-	[(#ENV{mode}|=={ajax}|oui)
+	[(#ENV{mode}|match{ajax}|oui)
 		<INCLURE{fond=noisettes/#GET{page}}{env} />
 	]
 ]
