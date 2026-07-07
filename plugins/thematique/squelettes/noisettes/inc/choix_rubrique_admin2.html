@@ -54,28 +54,25 @@
 [(#REM) Admin restreint]
 [(#GET{affiche}|=={oui}|oui)
 <div id="menu_haut_rubrique" class="bloc_titre">
-	[(#REM) Admin complet]
-	<B_rub2>
-		<div id="choix_rubrique_admin2" name="rubrique_admin" class="selectbox" data-select-name="rubrique_admin">
-			<button type="button" class="select-toggle first_label">
-				<span class="icon icon-publier"></span>
-				Publier
-			</button>
-			<ul class="select-options choix_rubrique_wrapper">
-				[(#GET{voir_mission}|=={oui}|oui)
-					<li onClick='createReponse(0, CCN.intervenant_id || #SESSION{idRubriqueUser}, 0);' 
-						class="select-option" 
-						data-value="#ID_RUBRIQUE"
-					>
-						Une mission
-					</li>
-				]
-				<li onClick='alert("Cette partie des CCN est en chantier, veuillez réessayer plus tard.")' class="select-option" data-value="#ID_RUBRIQUE">Une ressource</li>
-				<li onClick='alert("Cette partie des CCN est en chantier, veuillez réessayer plus tard.")' class="select-option" data-value="#ID_RUBRIQUE">Un événement</li>
-				<li onClick='alert("Cette partie des CCN est en chantier, veuillez réessayer plus tard.")' class="select-option" data-value="#ID_RUBRIQUE">Un message</li>
-			</ul>
-		</div>
-	</B_rub2>
+	<div id="choix_rubrique_admin2" name="rubrique_admin" class="selectbox" data-select-name="rubrique_admin">
+		<button type="button" class="select-toggle first_label">
+			<span class="icon icon-publier"></span>
+			Publier
+		</button>
+		<ul class="select-options choix_rubrique_wrapper">
+			[(#GET{voir_mission}|=={oui}|oui)
+				<li onClick='createReponse(0, CCN.intervenant_id || #SESSION{idRubriqueUser}, 0);' 
+					class="select-option" 
+					data-value="#ID_RUBRIQUE"
+				>
+					Une mission
+				</li>
+			]
+			<li onClick='alert("Cette partie des CCN est en chantier, veuillez réessayer plus tard.")' class="select-option" data-value="#ID_RUBRIQUE">Une ressource</li>
+			<li onClick='alert("Cette partie des CCN est en chantier, veuillez réessayer plus tard.")' class="select-option" data-value="#ID_RUBRIQUE">Un événement</li>
+			<li onClick='alert("Cette partie des CCN est en chantier, veuillez réessayer plus tard.")' class="select-option" data-value="#ID_RUBRIQUE">Un message</li>
+		</ul>
+	</div>
 </div>
 ]
 
