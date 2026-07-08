@@ -3,10 +3,31 @@
         <div class="sidebar-texte-encadre">
             Vous avez des questions sur cette mission ? Envie de réagir auprès de l’intervenant-e et des autres classes ? C’est ici !
         </div>
-        <a id="bloc_option_publier_reponse-#ID_ARTICLE" class="sidebar_publier" title="Publier">
+        <a id="bloc_option_ecrire_forum-#ID_ARTICLE" class="hac lien_ajouter bouton_publier" title="Écrire">
             &#9998; Écrire
         </a>
     </div>
+    <script type="text/javascript">
+        // Le formulaire "Commenter" et sa liste parente "Forum" sont gérés par
+        // leurs propres accordéons dans noisettes/inc/forum.html. Ce bouton
+        // ne fait que déplier/replier ce même formulaire (pas de markup dupliqué).
+        $('#bloc_option_ecrire_forum-#ID_ARTICLE').on('click', function () {
+            const $listToggle = $('#bloc_option_forum_all-#ID_ARTICLE');
+            const $formToggle = $('#bloc_option_forum-#ID_ARTICLE');
+            const $form = $formToggle.next();
+
+            if ($form.hasClass('masquer')) {
+                if ($listToggle.next().hasClass('masquer')) {
+                    $listToggle.trigger('click');
+                }
+                $formToggle.trigger('click');
+                $formToggle.get(0).scrollIntoView({ behavior: 'smooth', block: 'center' });
+            } else {
+                $formToggle.trigger('click');
+            }
+            return false;
+        });
+    </script>
     [(#GET{blocs_forum}|=={non}|non)
         [(#ENV{type_objet}|!={ressource0}|oui)
             <INCLURE{fond=noisettes/inc/forum, mode=ajax-detail, env, ajax} />
