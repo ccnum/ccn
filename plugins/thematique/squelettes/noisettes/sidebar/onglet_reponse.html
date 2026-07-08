@@ -2,21 +2,27 @@
 <BOUCLE_rep(ARTICLES){id_article=#ENV{id_article}}{tous}>
 	#SET{a_repondu,non}
 	[(#TEXTE|oui)#SET{a_repondu,oui}]
+	#SET{classe_iframe,''}
+	<BOUCLE_rub_iframe(RUBRIQUES){id_rubrique}{tout}>
+		#SET{classe_iframe,#DESCRIPTIF*}
+	</BOUCLE_rub_iframe>
 	[(#GET{a_repondu}|=={oui}|oui)
 		<!-- ============== ETAT : A DEJA REPONDU ============== -->
-		<div class="sidebar_bubble">
-			<div class="bloc_option_doc nettoyeur bloc_texte">
-				<div style="clear:both" class='bloc_classe_iframe'>
-					[(#AUTORISER{modifier,rubrique,#ID_RUBRIQUE}|oui)
-						[<a class="spip_doc_titre" href="[(#GET{classe_iframe}|replace{embed,''})]" target="_blank" rel="noopener noreferrer">
-							(#GET{classe_iframe}|replace{embed,''})
-						</a>]
-					]
-					<div class="nettoyeur"></div>
-					<iframe src="[(#GET{classe_iframe}|textebrut)]" width="100%" height="100%" sandbox="allow-scripts allow-same-origin allow-forms allow-popups"></iframe>
+		[(#GET{classe_iframe}|oui)
+			<div class="sidebar_bubble">
+				<div class="bloc_option_doc nettoyeur bloc_texte">
+					<div style="clear:both" class='bloc_classe_iframe'>
+						[(#AUTORISER{modifier,rubrique,#ID_RUBRIQUE}|oui)
+							[<a class="spip_doc_titre" href="[(#GET{classe_iframe}|replace{embed,''})]" target="_blank" rel="noopener noreferrer">
+								(#GET{classe_iframe}|replace{embed,''})
+							</a>]
+						]
+						<div class="nettoyeur"></div>
+						<iframe src="[(#GET{classe_iframe}|textebrut)]" width="100%" height="100%" sandbox="allow-scripts allow-same-origin allow-forms allow-popups"></iframe>
+					</div>
 				</div>
 			</div>
-		</div>
+		]
 		<!-- Ma réponse, avec bouton Modifier -->
 		<div class="sidebar_bubble">
 			<div class="reponse_entete nettoyeur">

@@ -543,11 +543,17 @@ a:hover {
 
 .reponse_entete {
 	display: flex;
+	flex-wrap: wrap;
 	align-items: center;
 	justify-content: space-between;
 	background-color: #DBDCFF;
     padding: 12px 24px;
     flex: 1;
+}
+
+.reponse_entete > .bloc_option_doc {
+	flex: 1 0 100%;
+	order: 3;
 }
 
 .sidebar_publier {
