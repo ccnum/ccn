@@ -988,6 +988,19 @@ function reload(url) {
  * @todo Loading et son callback
  */
 
+/**
+ * Initialise le système d'onglets #mission-tabs s'il est présent.
+ * Appelable sans risque plusieurs fois (customTabs est idempotent) :
+ * couvre à la fois le chargement de page complet (voir main.js) et
+ * la navigation ajax (voir loadContentInMainSidebar).
+ */
+function initMissionTabs() {
+	const missionTabs = $('#mission-tabs');
+	if (missionTabs.length > 0) {
+		missionTabs.customTabs();
+	}
+}
+
 function loadContentInMainSidebar(url, callback) {
 	$('body').addClass('loading');
 	showSidebar();
@@ -1007,6 +1020,7 @@ function loadContentInMainSidebar(url, callback) {
 		$('body').removeClass('loading');
 		$('#sidebar_content').scrollTop(0);
 		_sidebarFocusFirst();
+		initMissionTabs();
 
 		if (callback) {
 			callback(response);

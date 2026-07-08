@@ -415,4 +415,5 @@ function initTimeline() {
 
 $(function () {
 	initCCN();
+	initMissionTabs();
 });

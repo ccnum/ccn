@@ -18,6 +18,11 @@
 
             const $container = $(this);
 
+            // Idempotent : un conteneur déjà transformé ne l'est pas une 2e fois.
+            if ($container.children('.ctabs').length > 0) {
+                return;
+            }
+
             const $panels = $container.children();
 
             const $wrapper = $('<div class="ctabs"></div>');
