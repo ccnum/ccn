@@ -49,7 +49,7 @@ function thematique_insert_head($flux) {
 	// On se base sur l'en-tête X-Requested-With plutôt que sur le paramètre
 	// 'mode' seul : une vraie navigation complète vers une url mode=ajax-detail
 	// (lien direct, rafraîchissement) doit quand même charger les scripts.
-	if (($_SERVER['HTTP_X_REQUESTED_WITH'] ?? '') === 'XMLHttpRequest'
+	if (thematique_est_requete_ajax()
 		&& (_request('mode') === 'ajax' || _request('mode') === 'ajax-detail')) {
 		return $flux;
 	}
