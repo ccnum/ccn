@@ -1013,6 +1013,11 @@ function loadContentInMainSidebar(url, callback) {
 		}
 
 		antifloodHashChange = false;
+
+		const missionTabs = $('#mission-tabs')
+		if(missionTabs.length > 0) {
+			missionTabs.customTabs();
+		}
 	});
 }
 

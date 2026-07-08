@@ -41,21 +41,30 @@ function Reponse() {
 				class="timeline_item reponse_haute reponse_haute_consigne_parent${this.consigne.id} hide"
 				data-consigne-id="${this.consigne.id}"
 				data-reponse-id="${this.id}"
-				style="top:${this.y * 100}%; left:${this.x_absolu / CCN.projet.nombre_jours_total * 100}%;">
+				style="top:${this.y * 100}%; left:${this.x_absolu / CCN.projet.nombre_jours_total * 100}%;"
+			>
 				<div id="reponse${this.id}"
-					class="reponse couleur_texte_travail_en_cours bgc_classe_${coul}">
-					${this.nombre_commentaires > 0 ? `<div aria-label="${this.nombre_commentaires} interaction${this.nombre_commentaires > 1 ? 's' : ''}" class="picto_nombre_commentaires">${this.nombre_commentaires}</div>` : ''}
-					<div class='logo photo'
-						 style='display:flex;align-items:center;justify-content:center;container-type:size;'
-					>
-						<span role="img" aria-label="${escHtml(this.nom_classe)}" style="font-size:min(70cqw,70cqh)" class="bgc_classe_${this.classeIndex}">
-							${getClassIcon(this.classeIndex)}
-						</span>
+					 class="reponse couleur_texte_travail_en_cours reponse_border_${coul}"
+				>
+					<div class="first-row">
+						<div class='logo photo bgc_classe_${coul}'
+							style='display:flex;align-items:center;justify-content:center;container-type:size;'
+						>
+							<span role="img"
+								  aria-label="${escHtml(this.nom_classe)}" 
+								  style="font-size:min(70cqw,70cqh)"
+							>
+								${getClassIcon(this.classeIndex)}
+							</span>
+						</div>
+						<div class="titre">
+							${escHtml(this.titre)}
+						</div>
 					</div>
-					<div class="texte">
-						<div class="titre">${escHtml(this.titre)}</div>
+					<div class="second-row reponse_border_${coul}">
 						<div class="auteur_date">${escHtml(this.nom_classe)} - ${date_texte}</div>
 					</div>
+					${this.nombre_commentaires > 0 ? `<div aria-label="${this.nombre_commentaires} interaction${this.nombre_commentaires > 1 ? 's' : ''}" class="picto_nombre_commentaires">${this.nombre_commentaires}</div>` : ''}
 					<div class="nettoyeur"></div>
 				</div>
 			</div>
