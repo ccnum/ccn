@@ -183,8 +183,11 @@ ENV PROJET=laclasse
 # PHP
 ENV PHP_MAX_EXECUTION_TIME=120
 ENV PHP_MEMORY_LIMIT=512M
-ENV PHP_POST_MAX_SIZE=40M
-ENV PHP_UPLOAD_MAX_FILESIZE=100M
+# Limite PHP volontairement large : les vidéos MP4 (poussées vers Vimeo)
+# ne doivent pas être bridées ici. La limite de 100 Mo pour les autres
+# documents est appliquée au niveau applicatif (ccn_formulaire_verifier).
+ENV PHP_POST_MAX_SIZE=5G
+ENV PHP_UPLOAD_MAX_FILESIZE=5G
 ENV PHP_TIMEZONE=Europe/Paris
 
 # Apache
