@@ -115,9 +115,9 @@ $(function () {
 
 let antifloodHashChange = false;
 
-function onHashChange() {
+function onHashChange(event) {
 	if (antifloodHashChange === false) {
-		setContentFromState(History.getState());
+		setContentFromState({ data: event.state });
 	}
 }
 
@@ -922,7 +922,7 @@ function updateUrl(object, title, url) {
 
 		} else {
 
-			History.pushState(object, title, url + '#' + CCN.hash);
+			window.history.pushState(object, title, url + '#' + CCN.hash);
 
 		}
 
@@ -932,7 +932,7 @@ function updateUrl(object, title, url) {
 				if (/^[\w-]+$/.test(CCN.hash)) {
 					const anchor = $("#" + CCN.hash);
 					if (anchor.length > 0) {
-						// TODO : cela est appelé deux fois minimum à cause de History.js (donc un trigger('click') sur .triggertoggleshow ne fonctionne pas car il ouvre puis ferme)
+						// TODO : cela est appelé deux fois minimum (donc un trigger('click') sur .triggertoggleshow ne fonctionne pas car il ouvre puis ferme)
 
 						// Forum : ouvre les items
 						anchor.find('.toggleshow').show();
@@ -946,7 +946,7 @@ function updateUrl(object, title, url) {
 			}, 500
 		);
 	} else {
-		History.pushState(object, title, url);
+		window.history.pushState(object, title, url);
 	}
 }
 /**

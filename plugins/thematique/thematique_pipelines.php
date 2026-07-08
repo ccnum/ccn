@@ -56,7 +56,6 @@ function thematique_insert_head($flux) {
 
 	$scripts = [
 		'js/article.js',
-		'js/bundled/html4+html5/jquery.history.js',
 		'js/classe.js',
 		'js/consigne.js',
 		'js/controleurs.js',

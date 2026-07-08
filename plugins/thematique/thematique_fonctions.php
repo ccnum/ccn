@@ -29,7 +29,7 @@ function thematique_est_requete_ajax() {
  *
  * Retourne 'non' pour une vraie navigation (lien direct, rafraîchissement)
  * même en mode=ajax-detail, afin que le layout complet (et donc les scripts,
- * ex. jquery.history.js) soit chargé.
+ * ex. controleurs.js) soit chargé.
  */
 function balise_EST_MODE_NOISETTE_dist($p) {
 	$p->code = "(_request('mode') === 'ajax' || (_request('mode') === 'ajax-detail' && thematique_est_requete_ajax()) ? 'oui' : 'non')";
