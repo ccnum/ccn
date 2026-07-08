@@ -1,5 +1,7 @@
 #CACHE{0}
 <BOUCLE_rep(ARTICLES){id_article=#ENV{id_article}}{tous}>
+	#SET{a_repondu,non}
+	[(#TEXTE|oui)#SET{a_repondu,oui}]
 	[(#GET{a_repondu}|=={oui}|oui)
 		<!-- ============== ETAT : A DEJA REPONDU ============== -->
 		<div class="sidebar_bubble">
