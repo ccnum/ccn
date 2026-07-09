@@ -1,5 +1,6 @@
 <BOUCLE_principale(ARTICLES){id_article}{tous}>
     [(#INCLURE{fond=noisettes/fonction/type_role})]
+    [(#INCLURE{fond=noisettes/fonction/admin})]
     [(#ENV{type_objet}|=={consignes}|oui)
         <INCLURE{fond=noisettes/sidebar/consigne, env, ajax} />
     ]
