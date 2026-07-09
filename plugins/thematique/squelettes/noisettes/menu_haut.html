@@ -24,7 +24,7 @@
 	</div>
 	<INCLURE{fond=noisettes/inc/authentification, id_auteur, admin, restreint, type_restreint} />
 	<INCLURE{fond=noisettes/inc/choix_rubrique_admin2, id_auteur, admin, restreint, type_restreint} />
-	[(#SESSION{statut}|=={0minirezo}|oui)
+	[(#SESSION{role}|=={admin}|oui)
 		<INCLURE{fond=noisettes/inc/auteur_select_for_admin} />
 	]
 	<script>
