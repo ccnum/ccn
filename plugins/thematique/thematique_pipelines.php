@@ -64,6 +64,7 @@ function thematique_insert_head($flux) {
 		'js/jquery.isotope.min.js',
 		'js/layout.js',
 		'js/main.js',
+		'js/menu_haut.js',
 		'js/projet.js',
 		'js/reponse.js',
 		'js/custom-tabs.js',
