@@ -22,40 +22,21 @@
 	#SET{parent, #INFO_TITRE{rubrique,#ID_PARENT}}
 </BOUCLE_rub>
 
-[(#ENV{admin}|=={1}|oui)
-	[(#ENV{restreint}|oui)
-		[(#GET{titre})]
-	]
-]
-#SET{affiche,non}
-[(#ENV{admin}|=={0}|oui)
-	#SET{affiche,oui}
-]
-[(#ENV{admin}|>{1}|oui)
-	#SET{affiche,oui}
-]
-#SET{affiche,oui}
 
-[(#SET{voir_mission, non})]
+[(#SET{voir_mission,non})]
 
-[(#ENV{restreint,0}|!={0}|oui)
-	[(#ENV{restreint,0}|oui)
-		[(#ENV{type_restreint}|oui)
-			[(#ENV{type_restreint}|!={travail_en_cours}|oui)
-				[(#SET{voir_mission, oui})]
-			]
-		]
-	]
+[(#SESSION{role}|=={admin}|oui)
+    [(#SET{voir_mission,oui})]
 ]
 
-[(#SESSION{statut}|=={0minirezo}|oui)
-	[(#SET{voir_mission, oui})]
+[(#SESSION{role}|=={intervenant}|oui)
+    [(#SESSION{admin}|>{0}|oui)
+        [(#SET{voir_mission,oui})]
+    ]
 ]
-#SET{voir_mission, oui}
-
 
 [(#REM) Admin restreint]
-[(#GET{affiche}|=={oui}|oui)
+[(#SESSION{role}|=={eleve}|non)
 <div id="menu_haut_rubrique" class="bloc_titre">
 	<div id="choix_rubrique_admin2" name="rubrique_admin" class="selectbox" data-select-name="rubrique_admin">
 		<button type="button" class="select-toggle first_label">
