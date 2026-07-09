@@ -64,7 +64,7 @@
 		</button>
 		<ul class="select-options choix_rubrique_wrapper">
 			[(#GET{voir_mission}|=={oui}|oui)
-				<li onClick='createReponse(0, CCN.intervenant_id || #SESSION{idRubriqueUser}, 0);' 
+				<li onClick='createReponse(0, CCN.intervenant_id || #SESSION{restreint}, 0);' 
 					class="select-option" 
 					data-value="#ID_RUBRIQUE"
 				>

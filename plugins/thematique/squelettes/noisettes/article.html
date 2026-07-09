@@ -1,8 +1,9 @@
 <BOUCLE_principale(ARTICLES){id_article}{tous}>
-[(#ENV{type_objet}|=={consignes}|oui)
-    <INCLURE{fond=noisettes/sidebar/consigne, env, ajax} />
-]
-[(#ENV{type_objet}|=={consignes}|non)
-	<INCLURE{fond=noisettes/article_legacy, env, ajax} />
-]
+    [(#INCLURE{fond=noisettes/fonction/type_role})]
+    [(#ENV{type_objet}|=={consignes}|oui)
+        <INCLURE{fond=noisettes/sidebar/consigne, env, ajax} />
+    ]
+    [(#ENV{type_objet}|=={consignes}|non)
+        <INCLURE{fond=noisettes/article_legacy, env, ajax} />
+    ]
 </BOUCLE_principale>
