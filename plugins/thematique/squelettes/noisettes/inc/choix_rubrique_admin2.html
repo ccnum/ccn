@@ -22,6 +22,10 @@
 	#SET{parent, #INFO_TITRE{rubrique,#ID_PARENT}}
 </BOUCLE_rub>
 
+[(#SESSION{id_auteur}|oui)
+  #SET{peut_publier, #SESSION{role}|=={eleve}|non}
+]
+
 
 [(#SET{voir_mission,non})]
 
@@ -29,14 +33,14 @@
     [(#SET{voir_mission,oui})]
 ]
 
+
 [(#SESSION{role}|=={intervenant}|oui)
     [(#SESSION{admin}|>{0}|oui)
         [(#SET{voir_mission,oui})]
     ]
 ]
 
-[(#REM) Admin restreint]
-[(#SESSION{role}|=={eleve}|non)
+[(#GET{peut_publier})
 <div id="menu_haut_rubrique" class="bloc_titre">
 	<div id="choix_rubrique_admin2" name="rubrique_admin" class="selectbox" data-select-name="rubrique_admin">
 		<button type="button" class="select-toggle first_label">
