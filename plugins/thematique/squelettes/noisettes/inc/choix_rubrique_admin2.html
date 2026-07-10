@@ -26,7 +26,6 @@
   #SET{peut_publier, #SESSION{role}|=={eleve}|non}
 ]
 
-
 [(#SET{voir_mission,non})]
 
 [(#SESSION{role}|=={admin}|oui)
@@ -49,15 +48,15 @@
 		</button>
 		<ul class="select-options choix_rubrique_wrapper">
 			[(#GET{voir_mission}|=={oui}|oui)
-				<li onClick='createReponse(0, CCN.intervenant_id || #SESSION{restreint}, 0);' 
-					class="select-option" 
+				<li onClick='createReponse(0, CCN.intervenant_id || [(#SESSION{restreint}|intval)], 0);'
+					class="select-option"
 					data-value="#ID_RUBRIQUE"
 				>
 					Une mission
 				</li>
 			]
-			<li onClick='alert("Cette partie des CCN est en chantier, veuillez réessayer plus tard.")' class="select-option" data-value="#ID_RUBRIQUE">Une ressource</li>
-			<li onClick='alert("Cette partie des CCN est en chantier, veuillez réessayer plus tard.")' class="select-option" data-value="#ID_RUBRIQUE">Un événement</li>
+			<li onClick='callRessource();' class="select-option" data-value="#ID_RUBRIQUE">Une ressource</li>
+			<li onClick='changeTimelineMode("blogs");' class="select-option" data-value="#ID_RUBRIQUE">Un événement</li>
 			<li onClick='alert("Cette partie des CCN est en chantier, veuillez réessayer plus tard.")' class="select-option" data-value="#ID_RUBRIQUE">Un message</li>
 		</ul>
 	</div>
