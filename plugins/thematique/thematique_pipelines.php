@@ -151,12 +151,36 @@ function thematique_notifications_destinataires($flux) {
 }
 
 function thematique_cioidc_userinfo($flux) {
-	$auteur = sql_fetsel('id_auteur,nom', 'spip_auteurs', 'email=' . sql_quote($flux['args']['email']));
+	spip_log('userinfo args=' . json_encode($flux['args']) . ' data=' . json_encode($flux['data']), 'cioidc');
+
+	$email = $flux['data']['MailAdressePrincipal'] ?? '';
+	$auteur = sql_fetsel('id_auteur,nom,statut,email', 'spip_auteurs', 'email=' . sql_quote($email));
 	if (!$auteur) {
+		// Compte auto-créé par cioidc (login=uid, sans email) : chercher par login en secours
+		$uid = $flux['args']['uid'] ?? '';
+		$auteur = sql_fetsel('id_auteur,nom,statut,email', 'spip_auteurs', 'login=' . sql_quote($uid));
+	}
+	if (!$auteur) {
+		spip_log('userinfo aucun auteur trouvé pour email=' . $email, 'cioidc');
 		return $flux;
 	}
+	spip_log('userinfo auteur trouvé id=' . $auteur['id_auteur'] . ' nom=' . $auteur['nom'], 'cioidc');
 
-	$is_enseignant = false;
+	if ($email && $email !== $auteur['email']) {
+		spip_log('userinfo mise à jour de l\'email : ' . $auteur['email'] . ' => ' . $email, 'cioidc');
+		sql_updateq('spip_auteurs', ['email' => $email], 'id_auteur=' . intval($auteur['id_auteur']));
+		$auteur['email'] = $email;
+	}
+
+	$prenom = $flux['data']['LaclassePrenom'] ?? '';
+	$nom_famille = $flux['data']['LaclasseNom'] ?? '';
+	$nom = trim($prenom . ' ' . $nom_famille);
+	if ($nom && $nom !== $auteur['nom']) {
+		spip_log('userinfo mise à jour du nom : ' . $auteur['nom'] . ' => ' . $nom, 'cioidc');
+		sql_updateq('spip_auteurs', ['nom' => $nom], 'id_auteur=' . intval($auteur['id_auteur']));
+		$auteur['nom'] = $nom;
+	}
+
 	$classes_a_lier = [];
 
 	// Trouver le secteur de l'année scolaire en cours (ex: "2025")
@@ -166,6 +190,7 @@ function thematique_cioidc_userinfo($flux) {
 		'spip_rubriques',
 		'titre LIKE ' . sql_quote('%' . $annee_scolaire . '%') . ' AND id_parent=0'
 	);
+	spip_log('userinfo annee_scolaire=' . $annee_scolaire . ' id_secteur=' . $id_secteur, 'cioidc');
 
 	// Trouver la rubrique "Travail des classes" sous ce secteur
 	$id_travail_classes = null;
@@ -176,18 +201,39 @@ function thematique_cioidc_userinfo($flux) {
 			'titre LIKE ' . sql_quote('%Travail des classes%') . ' AND id_secteur=' . intval($id_secteur)
 		);
 	}
+	spip_log('userinfo id_travail_classes=' . $id_travail_classes, 'cioidc');
 
-	foreach ($flux['data']['ENTClassesGroupes'] ?? [] as $c_g) {
-		//$c_g->member_type; $c_g->group_id; $c_g->group_structure_id; $c_g->group_name; $c_g->group_type;
-		if ($c_g->member_type == 'ENS') {
-			$is_enseignant = true;
+	$profils = $flux['data']['ENTPersonProfils [ENS|TUT|ELV]'] ?? '';
+	$is_enseignant = (strpos($profils, 'ENS') !== false);
+	spip_log('userinfo ENTPersonProfils=' . $profils . ' => enseignant:' . ($is_enseignant ? 'oui' : 'non'), 'cioidc');
+
+	$statut = null;
+	if (strpos($profils, 'ELV') !== false) {
+		$statut = '6forum';
+	} elseif (strpos($profils, 'ENS') !== false) {
+		$statut = '0minirezo';
+	}
+	if ($statut && $statut !== $auteur['statut']) {
+		spip_log('userinfo mise à jour du statut : ' . $auteur['statut'] . ' => ' . $statut, 'cioidc');
+		sql_updateq('spip_auteurs', ['statut' => $statut], 'id_auteur=' . intval($auteur['id_auteur']));
+		$auteur['statut'] = $statut;
+	}
+
+	$groupes_libres = $flux['data']['ENTGroupesLibres'] ?? [];
+	spip_log('userinfo nb ENTGroupesLibres=' . count($groupes_libres), 'cioidc');
+
+	if ($is_enseignant) {
+		foreach ($groupes_libres as $groupe) {
+			//$groupe->structure_id; $groupe->id; $groupe->name;
+			spip_log('userinfo groupe=' . json_encode($groupe), 'cioidc');
 			// Chercher la rubrique de classe (ex: "3EME2") sous "Travail des classes" de l'année en cours
-			if ($id_travail_classes && !empty($c_g->group_name)) {
+			if ($id_travail_classes && !empty($groupe->name)) {
 				$id_classe = sql_getfetsel(
 					'id_rubrique',
 					'spip_rubriques',
-					'titre LIKE ' . sql_quote('%' . $c_g->group_name . '%') . ' AND id_parent=' . intval($id_travail_classes)
+					'titre LIKE ' . sql_quote('%' . $groupe->name . '%') . ' AND id_parent=' . intval($id_travail_classes)
 				);
+				spip_log('userinfo recherche classe name=' . $groupe->name . ' => id_classe=' . $id_classe, 'cioidc');
 				if ($id_classe) {
 					$classes_a_lier[] = $id_classe;
 				}
