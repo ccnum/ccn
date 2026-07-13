@@ -1,0 +1,6 @@
+<div class="sidebar-reaction-container">
+    [(#INCLURE{fond=inclure/favoris_ccn, objet=article, id_objet=#ID_ARTICLE, ajax})]
+</div>
+<BOUCLE_desc(ARTICLES){id_article=#ENV{id_article}}{tous}>
+    #TEXTE
+</BOUCLE_desc>

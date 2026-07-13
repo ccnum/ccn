@@ -1,0 +1,68 @@
+
+<div class="classes-flex">
+
+    <div class="classes-repondu">
+        <h2>Classes ayant répondu</h2>
+
+        <BOUCLE_annee_comp(RUBRIQUES){tout}{racine}{titre LIKE %(#CONST{_ANNEE_SCOLAIRE})%}>
+            <BOUCLE_type_comp(RUBRIQUES){tout}{id_parent}{titre_mot=travail_en_cours}>
+                <BOUCLE_classes_comp(RUBRIQUES){tout}{id_parent}{par id_rubrique}>
+
+                    <B_reponse721>
+                        <BOUCLE_reponse721(ARTICLES){id_rubrique}{id_consigne=721}{0,1}>
+                            <div class="classe">
+                                #SET{cle_icone,r#ID_RUBRIQUE}
+                                #SET{icone,#SESSION{icones_classes}|table_valeur{#GET{cle_icone}}}
+                                <INCLURE{
+                                    fond=noisettes/sidebar/card_reponse,
+                                    id_rubrique=#ID_RUBRIQUE,
+                                    titre=#TITRE,
+                                    icone=#GET{icone},
+                                    env, 
+                                    ajax
+                                } />
+                            </div>
+                        </BOUCLE_reponse721>
+                    </B_reponse721>
+
+                </BOUCLE_classes_comp>
+            </BOUCLE_type_comp>
+        </BOUCLE_annee_comp>
+
+    </div>
+
+
+    <div class="classes-non-repondu">
+        <h2>Classes n'ayant pas répondu</h2>
+
+        <BOUCLE_annee_comp2(RUBRIQUES){tout}{racine}{titre LIKE %(#CONST{_ANNEE_SCOLAIRE})%}>
+            <BOUCLE_type_comp2(RUBRIQUES){tout}{id_parent}{titre_mot=travail_en_cours}>
+                <BOUCLE_classes_comp2(RUBRIQUES){tout}{id_parent}{par id_rubrique}>
+
+                    <B_reponse721bis>
+                        <BOUCLE_reponse721bis(ARTICLES){id_rubrique}{id_consigne=721}{0,1}>
+                        </BOUCLE_reponse721bis>
+                    </B_reponse721bis>
+
+                        <div class="classe">
+                            #SET{cle_icone,r#ID_RUBRIQUE}
+                            #SET{icone,#SESSION{icones_classes}|table_valeur{#GET{cle_icone}}}
+                            <INCLURE{
+                                fond=noisettes/sidebar/card_reponse,
+                                id_rubrique=#ID_RUBRIQUE,
+                                titre=#TITRE,
+                                icone=#GET{icone},
+                                env, 
+                                ajax
+                            } />
+                        </div>
+
+                    <//B_reponse721bis>
+
+                </BOUCLE_classes_comp2>
+            </BOUCLE_type_comp2>
+        </BOUCLE_annee_comp2>
+
+    </div>
+
+</div>

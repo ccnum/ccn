@@ -25,7 +25,7 @@
 		]
 		<!-- Ma réponse, avec bouton Modifier -->
 		<div class="sidebar_bubble">
-			<div class="reponse_entete nettoyeur">
+			<div class="encadre-message nettoyeur">
 				<div class="reponse_titre_bubble">
 					[(#TITRE|sinon{<:thematique:ma_reponse:>})]
 				</div>
@@ -57,7 +57,7 @@
 	[(#GET{a_repondu}|=={oui}|non)
 		<!-- ============== ETAT : N'A PAS ENCORE REPONDU ============== -->
 		<div class="sidebar_bubble bloc_pas_repondu">
-			<div class="reponse_entete nettoyeur">
+			<div class="encadre-message nettoyeur">
 				<div class="reponse_titre_bubble">
 					<:thematique:repondre_modifier_posteriori:>
 				</div>

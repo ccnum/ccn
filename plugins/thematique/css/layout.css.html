@@ -500,3 +500,47 @@ a:hover {
 .titre { font-weight: bold; }
 .petit {font-size: 0.94em;}
 #lien_public:hover, #lien_prive:hover { cursor: pointer; }
+
+.encadre-message {
+	display: flex;	
+	align-items: center;
+	justify-content: space-between;
+	background-color: #DBDCFF;
+    padding: 12px 24px;
+    flex: 1;
+}
+
+.encadre-message > .bloc_option_doc {
+	flex: 1 0 100%;
+	order: 3;
+}
+
+.encadre-message > .bouton_publier,
+.encadre-message > .bouton_modifier {
+	margin-left: auto;
+	flex-shrink: 0;
+}
+
+.sidebar_publier {
+	display: flex;
+	align-items: center;
+    white-space: nowrap;
+	background-color: white;
+	padding: 10px;
+	height: 1.4rem;
+}
+.sidebar-texte-encadre {
+	width: fit-content;
+}
+
+.sidebar-reaction-container {
+	display: flex;
+	justify-content: flex-end;
+	width: 100%;
+}
+
+.colonne-suivi-des-reponses {
+	display: flex;
+	flex-direction: column;
+	gap: 3px;
+}

@@ -33,6 +33,5 @@
 	<pipeline nom="jqueryui_plugins" inclure="thematique_pipelines.php" />
 	<pipeline nom="notifications_destinataires" inclure="thematique_pipelines.php" />
 	<pipeline nom="cioidc_userinfo" inclure="thematique_pipelines.php" />
-
-	<genie nom="rentree_poubelle" periode="86400" />
+	<pipeline nom="autoriser" inclure="thematique_autoriser.php" />
 </paquet>
