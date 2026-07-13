@@ -55,10 +55,17 @@ function thematique_insert_head($flux) {
 	}
 
 	$scripts = [
+		'js/addCloseModal.js',
+		'js/admin_intervenant_select.js',
+		'js/ajouter_document_forum.js',
 		'js/article.js',
+		'js/article_email_consigne.js',
 		'js/classe.js',
 		'js/consigne.js',
 		'js/controleurs.js',
+		'js/documents_portfolio_swiper_init.js',
+		'js/getClassColorByClassName.js',
+		'js/getClassIconByClassName.js',
 		'js/globales.js',
 		'js/intervenant.js',
 		'js/jquery.isotope.min.js',
@@ -67,6 +74,9 @@ function thematique_insert_head($flux) {
 		'js/menu_haut.js',
 		'js/projet.js',
 		'js/reponse.js',
+		'js/reponse_binome_scroll.js',
+		'js/save_mot.js',
+		'js/sidebarCacheTooltip.js',
 		'js/custom-tabs.js',
 	];
 

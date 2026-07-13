@@ -21,13 +21,6 @@
 								</BOUCLE_classe_de_la_reponse_2>
 							</div>
 						</div>
-
-						<script type="text/javascript">
-							$('#goto_reponse_binome_1').on('click', function(){
-								var anchor = $('#reponse_binome_1');
-								$('#sidebar_content, #sidebar_main_inner, #sidebar_lateral_inner').animate({scrollTop: anchor.offset().top-4},'slow');
-							})
-						</script>
 					</div>
 				</BOUCLE_classe_2>
 
@@ -42,15 +35,12 @@
 								</BOUCLE_classe_de_la_reponse>
 							</div>
 						</div>
-
-						<script type="text/javascript">
-							$('#goto_reponse_binome_2').on('click', function(){
-								var anchor = $('#reponse_binome_2');
-								$('#sidebar_content, #sidebar_main_inner, #sidebar_lateral_inner').animate({scrollTop: anchor.offset().top-4},'slow');
-							})
-						</script>
 					</div>
 				</BOUCLE_classe_1>
+				<script>
+					bindGotoReponseBinomeScroll(1);
+					bindGotoReponseBinomeScroll(2);
+				</script>
 			</div>
 		</div>
 	</div>
