@@ -191,7 +191,8 @@ MAINEOF
 fi
 
 # Default _config_cas.php
-if [ ! -e config/_config_cas.php ] && [ ${SPIP_PLUGINS_CICAS} = true ]; then
+rm -f config/_config_cas.php
+if [ ${SPIP_PLUGINS_CICAS} = true ]; then
 	/bin/cat << MAINEOF > config/_config_cas.php
 <?php
 if (!defined("_ECRIRE_INC_VERSION")) return;
@@ -202,6 +203,30 @@ if (!defined("_ECRIRE_INC_VERSION")) return;
 \$GLOBALS['ciconfig']['cicasport'] = '443';
 \$GLOBALS['ciconfig']['cicas_creer_auteur'] = '6forum';
 \$GLOBALS['ciconfig']['cicashostordre'] = ['HTTP_HOST', 'SERVER_NAME', 'HTTP_X_FORWARDED_SERVER'];
+?>
+MAINEOF
+fi
+
+# Default _config_cioidc.php
+rm -f config/_config_cioidc.php
+if [ ${SPIP_PLUGINS_CIOIDC} = true ]; then
+	/bin/cat << MAINEOF > config/_config_cioidc.php
+<?php
+if (!defined("_ECRIRE_INC_VERSION")) return;
+define('_CIOIDC_MODE_AUTH', 'hybride');
+define('_CIOIDC_NOM_SERVEUR', 'LaClasse');
+define('_CIOIDC_URL_SERVEUR', 'https://www.laclasse.com');
+define('_CIOIDC_CLIENT_NOM', '${SPIP_CIOIDC_CLIENT_NOM}');
+define('_CIOIDC_CLIENT_SECRET', '${SPIP_CIOIDC_CLIENT_SECRET}');
+define('_CIOIDC_UID_CHAMP_SPIP', 'login');
+define('_CIOIDC_UID_CLAIM', 'uid');
+define('_CIOIDC_CREER_AUTEUR', '6forum');
+define('_CIOIDC_AUTHORIZATION_ENDPOINT', 'https://www.laclasse.com/sso/authorize');
+define('_CIOIDC_TOKEN_ENDPOINT', 'https://www.laclasse.com/sso/token');
+define('_CIOIDC_USERINFO_ENDPOINT', 'https://www.laclasse.com/sso/userinfo');
+define('_CIOIDC_END_SESSION_ENDPOINT', 'https://www.laclasse.com/sso/logout');
+define('_CIOIDC_JWKS_URI', 'https://www.laclasse.com/sso/jwks');
+define('_CIOIDC_TOKEN_ENDPOINT_AUTH_METHODS_SUPPORTED', '["client_secret_post"]');
 ?>
 MAINEOF
 fi
