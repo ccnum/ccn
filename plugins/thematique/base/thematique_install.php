@@ -10,11 +10,15 @@ function thematique_declarer_tables_principales($tables_principales) {
 	$tables_principales['spip_articles']['field']['id_consigne'] = 'bigint(21) NOT NULL';
 	$tables_principales['spip_articles']['field']['X'] = 'float NOT NULL';
 	$tables_principales['spip_articles']['field']['Y'] = 'float NOT NULL';
-	$tables_principales['spip_articles']['key']['id_consigne'] = 'id_consigne';
+	// Préfixe de longueur sur la clé : thematique_cextras.php déclare aussi ce
+	// champ, mais en 'int(5)' — un ADD INDEX sans longueur échouerait si la
+	// colonne réelle s'avère être un type texte plutôt que le bigint déclaré ici.
+	$tables_principales['spip_articles']['key']['id_consigne'] = 'id_consigne(20)';
 	$tables_principales['spip_syndic_articles']['field']['X'] = 'float NOT NULL';
 	$tables_principales['spip_syndic_articles']['field']['Y'] = 'float NOT NULL';
 	$tables_principales['spip_rubriques']['field']['id_rubrique_lien'] = 'bigint(21) NOT NULL';
-	$tables_principales['spip_rubriques']['key']['id_rubrique_lien'] = 'id_rubrique_lien';
+	// Idem : thematique_cextras.php déclare ce champ en 'text'.
+	$tables_principales['spip_rubriques']['key']['id_rubrique_lien'] = 'id_rubrique_lien(20)';
 
 	$nom = $GLOBALS['meta']['nom_site'];
 	if ((strpos($nom, 'design') !== false) || (strpos($nom, 'zerogaspi') !== false)) {
