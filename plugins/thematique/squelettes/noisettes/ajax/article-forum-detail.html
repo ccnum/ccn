@@ -21,9 +21,10 @@
 		<div id="forum#ID_FORUM" class="intervention_item_around">
 			<div class="intervention_item bgc_classe_[(#MODELE{nb2col}{id_auteur})]">
 				<div class="triggertoggleshow intervention couleur_texte[_(#GET{type_objet})] [couleur_(#GET{type_objet})[(#MODELE{nb2col}{id_auteur})]]">
-				<BOUCLE_forums_fils_compteur(FORUMS){id_parent}{par date}> </BOUCLE_forums_fils_compteur>
-				<div class="intervention_nb_reponses">#TOTAL_BOUCLE</div>
-				</B_forums_fils_compteur>
+				[(#REM)Le nombre de réponses est repris de #TOTAL_BOUCLE de BOUCLE_forums_fils
+				plus bas (via le script en fin de bloc), pour éviter de relancer la même
+				requête FORUMS une deuxième fois juste pour la compter.]
+				<div class="intervention_nb_reponses" id="nb_reponses#ID_FORUM">0</div>
 				<div class="intervention_header">
 					<div class="photo">
 						[(#MODELE{logo_carre}{id_auteur}{titre=#TITRE})]
@@ -154,6 +155,7 @@
 				</BOUCLE_forums_fils>
 
 			</ul>
+			<script>document.getElementById('nb_reponses#ID_FORUM').textContent = '#TOTAL_BOUCLE';</script>
 		</B_forums_fils>
 
 		<div class="toggleshow intervention_callto_answer">

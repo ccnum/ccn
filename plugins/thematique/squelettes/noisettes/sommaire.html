@@ -92,39 +92,16 @@ et/ou
 
 		[(#REM) Classes]
 		<div id="menu-classes" class="bloc_view col">
-			#SET{nb_classes,0}
 			#SET{hasYearRub,false}
-			[(#REM) =================== ]
-			[(#REM) COMPTEUR - BOUCLE 1 ]
-			[(#REM) =================== ]
-			<BOUCLE_FiltreAnnee_compteur(RUBRIQUES){racine}{titre LIKE %(#CONST{_ANNEE_SCOLAIRE})%}>
-				#SET{hasYearRub,true}
-				<BOUCLE_rubMot_compteur(RUBRIQUES){id_parent}{titre_mot=travail_en_cours}>
-					<BOUCLE_rubLoop_compteur(RUBRIQUES){id_parent}{tous}>
-						#SET{nb_classes,#GET{nb_classes}|plus{1}}
-					</BOUCLE_rubLoop_compteur>
-				</BOUCLE_rubMot_compteur>
-			</BOUCLE_FiltreAnnee_compteur>
-			[(#REM) =================== ]
-			[(#REM) COMPTEUR - BOUCLE 2 ]
-			[(#REM) =================== ]
-			<BOUCLE_r3_compteur(RUBRIQUES){titre_mot==travail_en_cours}{tous}{si #GET{hasYearRub}|=={false}}{!par date}>
-				<BOUCLE_c3_compteur(RUBRIQUES){id_parent}{tous}>
-					<BOUCLE_a3_compteur(ARTICLES){id_rubrique}{date>=#CONST{_DATE_DEBUT}}{date<=#CONST{_DATE_FIN}}>
-					</BOUCLE_a3_compteur>
-						#SET{nb_classes,#GET{nb_classes}|plus{1}}
-					</B_a3_compteur>
-						[(#_c3_compteur:DATE|substr{0,10}|replace{-,.}|>={#CONST{_DATE_DEBUT}}|oui|et{#_c3_compteur:DATE|substr{0,10}|replace{-,.}|<={#CONST{_DATE_FIN}}|oui}|oui)
-							#SET{nb_classes,#GET{nb_classes}|plus{1}}
-						]
-					<//B_a3_compteur>
-				</BOUCLE_c3_compteur>
-			</BOUCLE_r3_compteur>
 			[(#REM) =============== ]
 			[(#REM) AFFICHAGE TOTAL ]
 			[(#REM) =============== ]
+			[(#REM)Le nombre de classes est déduit du compteur numero_classe,
+			incrémenté plus bas dans les mêmes boucles que l'affichage : cela évite
+			de relancer deux fois l'intégralité des requêtes (une pour compter,
+			une pour afficher).]
 			<h3 class="menu-title">
-				<span>Les [(#GET{nb_classes}|sinon{0})] classes participantes</span>
+				<span>Les <span class="nb_classes_valeur">0</span> classes participantes</span>
 			</h3>
 			[(#REM) ======================= ]
 			[(#REM) AFFICHAGE LISTE CLASSES ]
@@ -196,6 +173,7 @@ et/ou
 					</BOUCLE_c3>
 				</BOUCLE_r3>
 			</ul>
+			<script>document.querySelector('#menu-classes .nb_classes_valeur').textContent = '#GET{numero_classe}';</script>
 		</div>
 
 		[(#REM) Ressources]
