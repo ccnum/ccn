@@ -1,6 +1,6 @@
 <div class="popup popup_livrable">
 	<INCLURE{fond=noisettes/call_sidebar,type_objet, ajax} />
-	[(#INCLURE{fond=noisettes/fonction/type_role})]
+	[(#SESSION{role}|non)[(#INCLURE{fond=noisettes/fonction/type_role})]]
 	[(#REM) ---------------- titre & logo ---------------- ]
 	<div class="sidebar_bubble">
 		<div class="fiche_titre">

@@ -1,5 +1,5 @@
 #SET{contenu,#ARRAY}
-[(#INCLURE{fond=noisettes/fonction/type_role})]
+[(#SESSION{role}|non)[(#INCLURE{fond=noisettes/fonction/type_role})]]
 <BOUCLE_blogPrive(RUBRIQUES){racine} {si #SESSION{role}|=={prof}|ou{#SESSION{role}|=={intervenant}}|ou{#SESSION{role}|=={admin}}}{titre_mot=evenements}>
 	<BOUCLE_articleBlogPrive(ARTICLES){id_rubrique} {date>=#EVAL{_DATE_DEBUT}}{date<=#EVAL{_DATE_FIN}}>
 		<BOUCLE_commentaires1(FORUMS){id_article}{!par date}{0,5} {doublons}>

@@ -57,7 +57,7 @@ et/ou
 
 				[(#MODELE{logo_menu}{valeur=blog}{class=tooltip menu_logo_blogs}{filter=.ressource_blogs}{onclick=changeTimelineMode('blogs');}{title=Agenda})]
 
-				[(#INCLURE{fond=noisettes/fonction/type_role})]
+				[(#SESSION{role}|non)[(#INCLURE{fond=noisettes/fonction/type_role})]]
 				[(#SESSION{role}|in_array{#LISTE{prof,intervenant,admin}}|oui)
 					[(#MODELE{logo_menu}{valeur=evenement}{class=tooltip menu_logo_evenements}{filter=.ressource_evenements}{onclick=changeTimelineMode('evenements');}{title=Le blog pédagogique})]
 				]

@@ -5,6 +5,12 @@
 		- INTERVENANT
 		- PROF
 		- ELEVE
+
+	Calculé une seule fois par session : les points d'inclusion de ce
+	fond le sautent si #SESSION{role} est déjà renseigné, pour ne pas
+	relancer les boucles RUBRIQUES/HIERARCHIE/MOTS à chaque page. Un
+	changement de droits (nouvelle classe, promotion admin) ne sera
+	donc pris en compte qu'à la reconnexion.
 ]
 #SET{role,null}
 #SET{prof,0}
