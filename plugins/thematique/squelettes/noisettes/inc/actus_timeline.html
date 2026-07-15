@@ -10,7 +10,7 @@
 
 <BOUCLE_rubAnnee(RUBRIQUES) {racine} {titre LIKE %(#EVAL{_ANNEE_SCOLAIRE})%}>
 	<BOUCLE_filtreRessources(RUBRIQUES){racine}{titre_mot=ressources}>
-		<BOUCLE_ressources(RUBRIQUES){id_parent}{!par date}{0,50}>
+		<BOUCLE_ressources(RUBRIQUES){id_parent}{!par date}{0,10}>
 			<BOUCLE_ressourcesArticles(ARTICLES){id_rubrique}{!par date}{0,1}>
 				#SET_PUSH{contenu,#ARRAY{#DATE_MODIF, #ARRAY{ressources, #ID_ARTICLE}}}
 			</BOUCLE_ressourcesArticles>
@@ -18,7 +18,7 @@
 	</BOUCLE_filtreRessources>
 
 	<BOUCLE_filtreTravailEnCours(RUBRIQUES){id_parent}{titre_mot=travail_en_cours}{!par date}>
-		<BOUCLE_filtreIdRubriques(RUBRIQUES){id_parent}{!par date}{0,50}>
+		<BOUCLE_filtreIdRubriques(RUBRIQUES){id_parent}{!par date}{0,10}>
 			<BOUCLE_filtreLivrables(ARTICLES){id_rubrique}{titre_mot=livrable} {0,1} {!par date}>
 				#SET_PUSH{contenu,#ARRAY{#DATE_MODIF, #ARRAY{livrable, #ID_ARTICLE}}}
 			</BOUCLE_filtreLivrables>
@@ -31,7 +31,7 @@
 		</BOUCLE_filtreIdRubriques>
 	</BOUCLE_filtreTravailEnCours>
 	<BOUCLE_filtreConsigne(RUBRIQUES){id_parent}>
-		<BOUCLE_Rubconsignes(RUBRIQUES){id_parent}{!par date}{titre_mot=consignes}{0,50}>
+		<BOUCLE_Rubconsignes(RUBRIQUES){id_parent}{!par date}{titre_mot=consignes}{0,10}>
 			<BOUCLE_Artconsignes(ARTICLES){id_rubrique}{!par date} {0,2} >
 				<BOUCLE_commentaires3(FORUMS){id_article}{!par date}{0,5} {doublons}>
 				#SET_PUSH{contenu,#ARRAY{#DATE_MODIF, #ARRAY{forum, #ID_FORUM}}}
