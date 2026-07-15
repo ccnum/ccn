@@ -3,7 +3,6 @@
 if (!defined('_ECRIRE_INC_VERSION')) {
 	return;
 }
-error_log('thematique_fonctions.php chargé');
 /**
  * FONCTIONS
  **/

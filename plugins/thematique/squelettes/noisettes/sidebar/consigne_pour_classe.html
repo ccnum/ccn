@@ -1,5 +1,4 @@
 #CACHE{0}
-<div>consigne pour classe</div>
 <BOUCLE_rub(RUBRIQUES){id_rubrique}{tout}>
     #SET{titre_parent, #TITRE}
 </BOUCLE_rub>
@@ -31,7 +30,7 @@
             <div id="mission-tabs">
                 <div data-title="<:thematique:description_mission:>">
                     <INCLURE{
-                        fond=noisettes/sidebar/onglet_description,
+                        fond=noisettes/sidebar/onglet_description_classe,
                         id_article=#GET{id_consigne},
                         env
                     } />
