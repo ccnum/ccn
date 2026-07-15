@@ -674,116 +674,13 @@
 	display: none;
 }
 
-/* * * * * * * *
-
-	CONSIGNES / RÉPONSES / SUPPRESSION (forum, portfolio)
-
-*/
-
-.consigne_reponses {
-	width: 26px;
-	height: 32px;
-	font-size: var(--font-size2);
-	font-weight: bold;
-	text-align: center;
-	display: table-cell;
-	vertical-align: middle;
-	background-image: url(#ENV{chemin}/img/reponse.png);
-}
-
-.consigne_reponses_classe {
-	width: 26px;
-	height: 32px;
-	font-size: var(--font-size2);
-	font-weight: bold;
-	text-align: center;
-	display: table-cell;
-	vertical-align: middle;
-	background-image: url(#ENV{chemin}/img/reponse_classe.png);
-}
-
-.reponse_plus {
-	float: left;
-	white-space: nowrap;
-	color: #00A0F0;
-	font-size: var(--font-size1);
-	font-weight: bold;
-	margin-left: 41px;
-	margin-top: 2px;
-}
-
-.intervention .action_supprimer {
+.nb-reponses-container {
 	position: absolute;
-	z-index: 1000;
-	right: 1px;
-	top: 5px;
-	background-color: white;
+	top: -0.5rem;
+	left: 60%;
+	background-color: yellow;
 	border-radius: 50%;
-	width: 30px;
-	height: 30px;
-}
-
-.action_supprimer, .formulaire_editer_rubrique .action_supprimer {
-	background: url(#ENV{chemin}/img/logo_supprimer_off_15.png) no-repeat center center / 12px auto;
-	position: relative;
-	z-index: 2;
-}
-.action_supprimer:hover, .formulaire_editer_rubrique .action_supprimer:hover {
-	background: url(#ENV{chemin}/img/logo_supprimer_off_15_white.png) no-repeat scroll center center / 12px auto tomato;
-	border-radius: 0 3px 3px 0;
-	position: relative;
-	z-index: 2;
-}
-
-.forum .action_supprimer {
-	position: absolute;
-	top: 0;
-	right: 0;
-	float: none;
-	margin: 0;
-	bottom: 0;
-	width: 30px;
-	height: 100%;
-	z-index: 5;
-	background-color: rgba(0, 0, 0, 0);
-}
-
-.forum .action_supprimer:hover {
-	background-color: tomato;
-}
-
-.portfolio_grand .action_supprimer {
-	position: absolute;
-	top: 0;
-	right: 0;
-	float: none;
-	margin: 0;
-	bottom: 0;
-	width: 30px;
-	height: 100%;
-	z-index: 5;
-	background-color: rgba(0, 0, 0, 0);
-}
-
-.portfolio_grand {
-	display: flex;
-	flex-direction: column;
-	align-items: center;
-}
-
-.portfolio_grand .audio {
-	width: 100%;
-	display: flex;
-	justify-content: center;
-}
-
-.portfolio_grand .icone img {
-	padding-left: 15px;
-	height: auto;
-	width: 25px;
-}
-
-.portfolio_grand .action_supprimer:hover {
-	background-color: tomato;
+	width: 3rem;
+	height: 1rem;
 }
 
