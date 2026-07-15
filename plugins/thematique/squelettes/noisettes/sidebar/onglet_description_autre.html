@@ -1,6 +1,5 @@
 #CACHE{0}
 <BOUCLE_desc(ARTICLES){id_article=#ENV{id_article}}{tous}>
-	<div>test 45</div>
 	[(#AUTORISER{modifier, article, #ID_ARTICLE}|oui|et{#TEXTE|non|et{#GET{nb_doc}|=={0}|oui}}|et{#ADMIN|=={-1}|non}|oui)
 		<div>ICICICICI</div>
 		<div class="sidebar_bubble">

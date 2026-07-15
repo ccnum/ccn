@@ -1,5 +1,4 @@
 #CACHE{0}
-<div>reponse pour intervenant</div>
 <BOUCLE_rub(RUBRIQUES){id_rubrique}{tout}>
     #SET{titre_parent, #TITRE}
 </BOUCLE_rub>
@@ -30,15 +29,8 @@
 
         <div id="tabs-article-#ID_ARTICLE" class="container-tabs">
             <div id="mission-tabs">
-                <div data-title="<:thematique:description_mission:>">
-                    <INCLURE{
-                        fond=noisettes/sidebar/onglet_description,
-                        id_article=#GET{id_consigne},
-                        env
-                    } />
-                </div>
-                <div data-title="en chantard">
-                    
+                <div data-title="<:thematique:titre_onglet_reponse_pour_intervenant:>">
+                    <INCLURE{fond=noisettes/sidebar/onglet_reponse_non_modifiable, env} />
                 </div>
                 <div data-title="<:thematique:titre_onglet_comentaire:>">
                     <INCLURE{fond=noisettes/sidebar/onglet_commentaires, env} />

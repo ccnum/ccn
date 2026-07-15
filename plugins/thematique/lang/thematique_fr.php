@@ -31,9 +31,10 @@ return [
 	'repondre_voir_reponses_classes' => 'Regardez les réponses des autres classes.',
 	'reponses_autres_classes'        => 'Réponses des autres classes',
 	'titre_onglet_comentaire'        => 'Commentaires',
-	'titre_onglet_reponse'           => 'Suivi des réponses',
+	'titre_onglet_liste_des_reponses'=> 'Suivi des réponses',
 	'titre_onglet_reponse_autre_classe'=> 'Réponse à la mission',
 	'titre_onglet_reponse_ma_classe' => 'Ma réponse à la mission',
+	'titre_onglet_reponse_pour_intervenant' => 'Réponse de la classe',
 	'titre_page_importer_user'       => 'Import des utilisateurs',
 	'voir_ma_reponse'                => 'Voir ma réponse',
 ];
