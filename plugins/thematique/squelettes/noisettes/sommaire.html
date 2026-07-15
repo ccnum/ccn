@@ -101,7 +101,7 @@ et/ou
 			de relancer deux fois l'intégralité des requêtes (une pour compter,
 			une pour afficher).]
 			<h3 class="menu-title">
-				<span>Les <span class="nb_classes_valeur">0</span> classes participantes</span>
+				<span>Les <span id="nb_classes_valeur">0</span> classes participantes</span>
 			</h3>
 			[(#REM) ======================= ]
 			[(#REM) AFFICHAGE LISTE CLASSES ]
@@ -173,7 +173,7 @@ et/ou
 					</BOUCLE_c3>
 				</BOUCLE_r3>
 			</ul>
-			<script>document.querySelector('#menu-classes .nb_classes_valeur').textContent = '#GET{numero_classe}';</script>
+			<script>thematiqueApplyDeferredCount('nb_classes_valeur', '#GET{numero_classe}');</script>
 		</div>
 
 		[(#REM) Ressources]

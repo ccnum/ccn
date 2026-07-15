@@ -75,6 +75,7 @@ function thematique_insert_head($flux) {
 		'js/classe.js',
 		'js/consigne.js',
 		'js/controleurs.js',
+		'js/deferred_count.js',
 		'js/documents_portfolio_swiper_init.js',
 		'js/getClassColorByClassName.js',
 		'js/getClassIconByClassName.js',

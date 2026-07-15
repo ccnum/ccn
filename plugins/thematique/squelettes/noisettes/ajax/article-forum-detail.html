@@ -155,7 +155,7 @@
 				</BOUCLE_forums_fils>
 
 			</ul>
-			<script>document.getElementById('nb_reponses#ID_FORUM').textContent = '#TOTAL_BOUCLE';</script>
+			<script>thematiqueApplyDeferredCount('nb_reponses#ID_FORUM', '#TOTAL_BOUCLE');</script>
 		</B_forums_fils>
 
 		<div class="toggleshow intervention_callto_answer">
@@ -171,11 +171,11 @@
 <//B_Forums>
 <!-- Je mets le script ici pour être sûr qu'il soit executé (pas de spip conditionnel) -->
 <script>
-	(()=>{
+	$(function() {
 		const $portfolio_grand_list = $('.portfolio_grand');
 		$portfolio_grand_list.each(function(_index, portfolio_grand) {
 			initPdfSwipersInComment($(portfolio_grand));
 		});
-	})()
+	});
 </script>
 
