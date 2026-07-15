@@ -58,7 +58,7 @@
 				<div style="clear:both" class='bloc_option_reponses_consignes_classe'>
 					<div class="nettoyeur"></div>
 
-					<BOUCLE_rubrique(RUBRIQUES){id_parent=#ID_RUBRIQUE}{!par id_rubrique}{tout}{0,10}>
+					<BOUCLE_rubrique(RUBRIQUES){id_parent=#ID_RUBRIQUE}{!par id_rubrique}{tout}{0,50}>
 						<div class="ressources_rubrique">
 							<div class="ressource_rubrique_titre" id="rubrique_#ID_RUBRIQUE"><h3>#TITRE</h3></div>
 							<script type="text/javascript">
@@ -72,7 +72,7 @@
 						</div>
 					</BOUCLE_rubrique>
 
-					<BOUCLE_sites(SITES){id_rubrique=#ID_RUBRIQUE}{tout}{0,10}>
+					<BOUCLE_sites(SITES){id_rubrique=#ID_RUBRIQUE}{tout}{0,50}>
 
 					<div class="ressources_rubrique">
 						<div class="ressource_rubrique_titre" id="ajax_go_to_ressources_rubrique_#ID_RUBRIQUE" onclick="callRessourceRubrique('#ID_RUBRIQUE')">

@@ -113,7 +113,7 @@
 
 			[(#REM) Sous-rubriques enfants de la rubrique #_principale]
 
-			<BOUCLE_rubriques(RUBRIQUES) {id_parent} {par num titre, titre}{tout} {doublons r} {0,10}>
+			<BOUCLE_rubriques(RUBRIQUES) {id_parent} {par num titre, titre}{tout} {doublons r} {0,50}>
 				<script type="text/javascript">
 					$('#ajax_rub_#ID_RUBRIQUE').on('click', function() {
 						call({
@@ -132,7 +132,7 @@
 						</a>
 					<ul>
 						[(#REM)Rubriques]
-						<BOUCLE_sous_rubriques(RUBRIQUES) {id_parent} {par num titre, titre} {doublons r} {0,10}>
+						<BOUCLE_sous_rubriques(RUBRIQUES) {id_parent} {par num titre, titre} {doublons r} {0,50}>
 							<script type="text/javascript">
 								$('#ajax_rub_#ID_RUBRIQUE').on('click', function() {
 									call({
@@ -149,7 +149,7 @@
 								</a>
 								<B_sous_rubriques00>
 									<ul>
-									<BOUCLE_sous_rubriques00(RUBRIQUES) {id_parent} {tout} {par titre} {doublons r} {0,10}>
+									<BOUCLE_sous_rubriques00(RUBRIQUES) {id_parent} {tout} {par titre} {doublons r} {0,50}>
 										<script type="text/javascript">
 											$('#ajax_rub_#ID_RUBRIQUE').on('click', function() {
 												call({
