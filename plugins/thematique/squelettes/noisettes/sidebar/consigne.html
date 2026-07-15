@@ -28,7 +28,7 @@
 
 #SET{date_prochaine_etape,''}
 <BOUCLE_rub_consignes(RUBRIQUES){titre_mot=consignes}{0,1}{tout}>
-    <BOUCLE_prochaine_consigne(ARTICLES){branche}{par date}{(#ENV{rang}|plus{1}),1}{tout}>
+    <BOUCLE_prochaine_consigne(ARTICLES){branche}{par date}{(#ENV{rang}|intval|plus{1}),1}{tout}>
         #SET{date_prochaine_etape,#DATE}
     </BOUCLE_prochaine_consigne>
 </BOUCLE_rub_consignes>
