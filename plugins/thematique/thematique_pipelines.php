@@ -123,13 +123,13 @@ function thematique_notifications_destinataires($flux) {
 				'thematique'
 			);
 			// Prendre les admin restreint des sous rubriques (des écoles)
-			$rubriques = sql_allfetsel('id_rubrique', 'spip_rubriques', 'id_secteur=' . intval($article['id_secteur']));
-			foreach ($rubriques as $r) {
-				spip_log('dans les sous rubriques ' . $r['id_rubrique'], 'thematique');
+			$id_rubriques = sql_allfetsel('id_rubrique', 'spip_rubriques', 'id_secteur=' . intval($article['id_secteur']));
+			$id_rubriques = array_map('intval', array_column($id_rubriques, 'id_rubrique'));
+			if ($id_rubriques) {
 				$auteurs_restreint = sql_select(
 					'auteurs.id_auteur, auteurs.email',
 					'spip_auteurs AS auteurs JOIN spip_auteurs_liens AS lien ON auteurs.id_auteur=lien.id_auteur',
-					["lien.objet='rubrique'", 'lien.id_objet=' . intval($r['id_rubrique']), "auteurs.statut='0minirezo'"]
+					["lien.objet='rubrique'", sql_in('lien.id_objet', $id_rubriques), "auteurs.statut='0minirezo'"]
 				);
 				foreach ($auteurs_restreint as $ar) {
 					spip_log('auteur id=' . intval($ar['id_auteur']), 'thematique');
@@ -142,13 +142,13 @@ function thematique_notifications_destinataires($flux) {
 			spip_log('lier à l année ' . $annee_scolaire, 'thematique');
 			$id_secteur = sql_getfetsel('id_secteur', 'spip_rubriques', 'titre LIKE ' . sql_quote('%' . $annee_scolaire . '%'));
 			spip_log('lier au secteur ' . $id_secteur, 'thematique');
-			$rubriques = sql_allfetsel('id_rubrique', 'spip_rubriques', 'id_secteur=' . intval($id_secteur));
-			foreach ($rubriques as $r) {
-				spip_log('lier à la rubrique ' . $r['id_rubrique'], 'thematique');
+			$id_rubriques = sql_allfetsel('id_rubrique', 'spip_rubriques', 'id_secteur=' . intval($id_secteur));
+			$id_rubriques = array_map('intval', array_column($id_rubriques, 'id_rubrique'));
+			if ($id_rubriques) {
 				$auteurs_restreint = sql_select(
 					'auteurs.id_auteur, auteurs.email',
 					'spip_auteurs AS auteurs JOIN spip_auteurs_liens AS lien ON auteurs.id_auteur=lien.id_auteur',
-					["lien.objet='rubrique'", 'lien.id_objet=' . intval($r['id_rubrique']), "auteurs.statut='0minirezo'"]
+					["lien.objet='rubrique'", sql_in('lien.id_objet', $id_rubriques), "auteurs.statut='0minirezo'"]
 				);
 				foreach ($auteurs_restreint as $ar) {
 					spip_log('auteur id=' . intval($ar['id_auteur']), 'thematique');
