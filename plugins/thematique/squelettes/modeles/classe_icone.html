@@ -1,0 +1,26 @@
+[(#REM) Affiche l'icône/logo d'une classe et avance le compteur global ]
+[(#REM) Paramètres attendus : id_rubrique, titre ]
+
+#SET{icone, #SESSION{icones}|table_valeur{#SESSION{numero_classe}}}
+
+#SESSION_SET{classes_data,
+	#SESSION{classes_data}|array_merge{
+		#ARRAY{
+			r#ENV{id_rubrique}, #ARRAY{numero,#SESSION{numero_classe}, icone,#GET{icone}}
+		}
+	}
+}
+
+[(#MODELE{logo_menu_classe,
+	valeur=#ENV{id_rubrique},
+	filter=.#ENV{id_rubrique},
+	title=#ENV{titre},
+	class=menu_logo_classes-#ENV{id_rubrique}
+	hover_couleur_travail_en_cours[(#ENV{id_rubrique}|nb2col)],
+	classcouleur=couleur_travail_en_cours[(#ENV{id_rubrique}|nb2col)],
+	texte=[(#ENV{titre}|couper{2})],
+	NUMERO=#SESSION{numero_classe},
+	ICONE=#GET{icone}
+})]
+
+#SESSION_SET{numero_classe, #SESSION{numero_classe}|plus{1}}

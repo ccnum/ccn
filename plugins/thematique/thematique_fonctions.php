@@ -3,7 +3,7 @@
 if (!defined('_ECRIRE_INC_VERSION')) {
 	return;
 }
-
+error_log('thematique_fonctions.php chargé');
 /**
  * FONCTIONS
  **/
@@ -227,4 +227,21 @@ function thematique_hierarchie_a_mot($id_rubrique, $titre_mot) {
 	);
 
 	return !empty($id_objet);
+}
+
+function thematique_classe_infos($id_rubrique) {
+	$classes = session_get('classes_data');
+	return (is_array($classes) && isset($classes['r' . $id_rubrique]))
+		? $classes['r' . $id_rubrique]
+		: array('numero' => '', 'icone' => '');
+}
+
+function classe_icone($id_rubrique) {
+	$infos = thematique_classe_infos($id_rubrique);
+	return $infos['icone'];
+}
+
+function classe_numero($id_rubrique) {
+	$infos = thematique_classe_infos($id_rubrique);
+	return $infos['numero'];
 }

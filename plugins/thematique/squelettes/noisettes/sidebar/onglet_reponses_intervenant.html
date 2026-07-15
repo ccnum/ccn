@@ -1,23 +1,30 @@
 
-<div class="classes-flex">
+<div style="display: flex; 
+            gap: 1rem;
+            align-items: stretch;">
 
-    <div class="classes-repondu">
-        <h2>Classes ayant répondu</h2>
+    <div style="width: 50%; 
+                flex: 1;
+                display: flex;
+                flex-direction: column;
+                gap: 1rem;">
+        <div>Ont répondu</div>
 
         <BOUCLE_annee_comp(RUBRIQUES){tout}{racine}{titre LIKE %(#CONST{_ANNEE_SCOLAIRE})%}>
             <BOUCLE_type_comp(RUBRIQUES){tout}{id_parent}{titre_mot=travail_en_cours}>
                 <BOUCLE_classes_comp(RUBRIQUES){tout}{id_parent}{par id_rubrique}>
-
+                    #SET{nom_classe, #TITRE}
                     <B_reponse721>
                         <BOUCLE_reponse721(ARTICLES){id_rubrique}{id_consigne=721}{0,1}>
                             <div class="classe">
-                                #SET{cle_icone,r#ID_RUBRIQUE}
-                                #SET{icone,#SESSION{icones_classes}|table_valeur{#GET{cle_icone}}}
+                                #SET{icone_classe, #ID_RUBRIQUE|classe_icone}
                                 <INCLURE{
                                     fond=noisettes/sidebar/card_reponse,
                                     id_rubrique=#ID_RUBRIQUE,
-                                    titre=#TITRE,
-                                    icone=#GET{icone},
+                                    titre=#GET{nom_classe},
+                                    icone=#GET{icone_classe},
+                                    date="#DATE",
+                                    couleur-bg="--color-positive",
                                     env, 
                                     ajax
                                 } />
@@ -31,9 +38,14 @@
 
     </div>
 
+    <div style="width: 1px; background-color: black;"></div>
 
-    <div class="classes-non-repondu">
-        <h2>Classes n'ayant pas répondu</h2>
+    <div style="width: 50%; 
+                flex: 1;
+                display: flex;
+                flex-direction: column;
+                gap: 1rem;">
+        <div>Il manque encore</div>
 
         <BOUCLE_annee_comp2(RUBRIQUES){tout}{racine}{titre LIKE %(#CONST{_ANNEE_SCOLAIRE})%}>
             <BOUCLE_type_comp2(RUBRIQUES){tout}{id_parent}{titre_mot=travail_en_cours}>
@@ -45,13 +57,13 @@
                     </B_reponse721bis>
 
                         <div class="classe">
-                            #SET{cle_icone,r#ID_RUBRIQUE}
-                            #SET{icone,#SESSION{icones_classes}|table_valeur{#GET{cle_icone}}}
+                            #SET{icone_classe, #ID_RUBRIQUE|classe_icone}
                             <INCLURE{
                                 fond=noisettes/sidebar/card_reponse,
                                 id_rubrique=#ID_RUBRIQUE,
                                 titre=#TITRE,
-                                icone=#GET{icone},
+                                icone=#GET{icone_classe},
+                                couleur-bg="--color-negative",
                                 env, 
                                 ajax
                             } />
@@ -65,4 +77,15 @@
 
     </div>
 
+</div>
+
+<div style="margin-top: 1rem;"
+     class="encadre-message">
+    <p>
+    La date limite approche ? Pensez à encourager les dernières classes à déposer leur réponse. Vous pouvez le faire directement dans l’espace de discussion.
+    </p>
+    <button class="bouton_encadre"
+            onclick="alert('Ce bouton ne fait rien pour l\'instant.')">
+            Relancer
+    </button>
 </div>

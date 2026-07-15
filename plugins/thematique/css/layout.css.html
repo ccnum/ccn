@@ -505,9 +505,10 @@ a:hover {
 	display: flex;	
 	align-items: center;
 	justify-content: space-between;
-	background-color: #DBDCFF;
+	background-color: var(--color-background-sidebar-encadre);
     padding: 12px 24px;
     flex: 1;
+	border-radius: 4.9998px;
 }
 
 .encadre-message > .bloc_option_doc {
@@ -515,10 +516,12 @@ a:hover {
 	order: 3;
 }
 
-.encadre-message > .bouton_publier,
-.encadre-message > .bouton_modifier {
+.encadre-message > .bouton_encadre {
 	margin-left: auto;
 	flex-shrink: 0;
+	padding: 0.4rem 1rem;
+	background-color: white;
+	border-radius: 3px;
 }
 
 .sidebar_publier {
