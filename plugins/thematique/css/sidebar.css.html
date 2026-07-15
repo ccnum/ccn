@@ -5,6 +5,10 @@
 /* --------- Styles sidebar / popup de contenu --------- */
 
 .popup {
+	max-height: calc(100vh - var(--header-height));
+}
+
+.popup {
 	font-size: 11px;
 	line-height: 13px;
 	overflow-y: auto;
@@ -462,6 +466,55 @@
 	background-color: white;
 }
 
+#sidebar_main_around {
+	flex: 1;
+	min-width: 0;
+	z-index: 1;
+	margin-top: 0;
+	transition: width 500ms ease-in-out;
+	width: 100%;
+}
+
+#sidebar-close {
+	--svg: url("#CHEMIN{img/xmark.svg}");
+	width: 30px;
+	height: 30px;
+	background-color: var(--color-tonic);
+}
+
+.reponse_entete {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	justify-content: space-between;
+	background-color: #DBDCFF;
+    padding: 12px 24px;
+    flex: 1;
+}
+
+.reponse_entete > .bloc_option_doc {
+	flex: 1 0 100%;
+	order: 3;
+}
+
+.reponse_entete > .bouton_publier,
+.reponse_entete > .bouton_modifier {
+	margin-left: auto;
+	flex-shrink: 0;
+}
+
+.sidebar_publier {
+	display: flex;
+	align-items: center;
+    white-space: nowrap;
+	background-color: white;
+	padding: 10px;
+	height: 1.4rem;
+}
+.sidebar-texte-encadre {
+	width: fit-content;
+}
+
 .hasSidebarExpanded .call_sidebar_main {
 	display: none;
 }
@@ -610,11 +663,6 @@ a.liens_forum { color: #00a5db; font-weight: normal;}
 a.liens_forum:hover { }
 
 
-/*--- Google doc --- */
-#docs-chrome, #docs-header, #docs-bar {
-	visibility: hidden;
-}
-
 /* --- Silder d'aide --- */
 #slide1 p {
 	position: absolute;
@@ -649,330 +697,6 @@ a.liens_forum:hover { }
 	margin-left: 5px;
 	margin-right: 5px;
 }
-
-/* -------- Surcharges SPIP ----------*/
-
-input.crayon-active {
-	background-color: #ccc;
-	color: var(--color-default);
-}
-
-.crayon-html li.editer_logo {
-	margin-top: 0px;
-}
-
-p.spip_cadre {
-	display: block;
-	background: #EEEEEE none repeat scroll 0%;
-	border-color: #999;
-	border-style: inset inset inset solid;
-	border-width: 1px 1px 1px 4px;
-	padding: 0.5em 4px 4px;
-	width: 95%;
-	/*color: #3465A4;*/
-	margin: 0.5em 0px 0.5em 0px;
-	font-size: 110%;
-}
-
-.sous-colonne form {
-	margin-bottom: 0px;
-	margin-left: 0px;
-}
-
-code {
-	display: block;
-	background: #EEEEEE none repeat scroll 0% 50%;
-	border-color: #EEEEEE rgb(238, 238, 238) rgb(238, 238, 238) #00a5db;
-	border-style: inset inset inset solid;
-	border-width: 1px 1px 1px 4px;
-	color: #00a5db;
-	padding: 4px;
-	/*width: 95%;*/
-	overflow: hidden;
-	margin: 8px 0px 20px 8px;
-}
-
-/*Suppression de certains champs de la barre d'outils porte plumes*/
-label em.aide, .formulaire_editer_article .editer_parent, .outil_code, .outil_caracteres, .outil_guillemets, .outil_liste_ol, .outil_quote {display: none;}
-
-.formulaire_spip .editer_texte #text_area {height: 25vh;}
-.formulaire_spip .editer input,
-.formulaire_spip .editer textarea { width: 100%;}
-
-.erreur_message {color: red;}
-
-/*Formulaire edition*/
-.markItUpTabs {display: none;}
-
-/*Formulaires edition article public*/
-.ajouter_couleur {
-	color: gray;
-}
-
-.popup div.formulaire_spip {
-	margin: 0;
-	padding: 10px;
-}
-
-input[type="file"] {
-	border: solid 2px #EEE;
-	padding: 10px;
-	width: 100%;
-	box-sizing: border-box;
-	border-radius: 3px;
-}
-
-#fichier_upload__new_wrap_list > div {
-	padding: 10px;
-	background: #eee;
-	border-radius: 3px;
-	margin-top: 5px;
-	font-size: 12px;
-}
-#fichier_upload__new_wrap_list > div > a {
-	float: right;
-	display: block;
-	width: 30px;
-	text-align: center;
-	margin: -6px;
-	height: 26px;
-	width: 26px;
-	border-radius: 50%;
-	line-height: 22px;
-	font-size: 0;
-	background: url([(#CHEMIN{img/close.svg}|image_reduire{25}|extraire_attribut{src})]) no-repeat center center / 20px auto;
-}
-
-#fichier_upload__new_wrap_list > div > a:hover {
-	background: url([(#CHEMIN{img/close_white.svg}|image_reduire{25}|extraire_attribut{src})]) no-repeat center center / 20px auto #ff6347;
-}
-
-.bloc_option_doc .submit,
-.popup_new_article .submit,
-.formulaire_spip .submit {
-	margin-top: 6px;
-	background: var(--color-tonic);
-	color: white;
-	text-align: center;
-	border: none;
-	border-radius: 5px;
-	padding: 10px 15px;
-	font-size: 12px;
-	text-transform: uppercase;
-	letter-spacing: 1px;
-	font-weight: 500;
-	cursor: pointer;
-	&:hover {
-		background-color: var(--background-color-hover);
-	}
-}
-
-p.boutons:has(input[type="submit"]) {
-	text-align: center;
-}
-
-/*Formulaires edition auteur*/
-
-.formulaire_editer_auteur {
-	padding-left: 20px;
-	margin-left: 5px;
-	margin-top: 10px;
-	padding-top: 10px;
-	border: none;
-	background: #d6d6d6;
-	padding: 30px;
-}
-.formulaire_editer_auteur label, .formulaire_editer_auteur legend, .formulaire_editer_auteur .champs_extras, .formulaire_editer_auteur .editer_identification {
-	display: none;
-}
-.formulaire_editer_auteur fieldset {
-	border: 0px;
-}
-.formulaire_editer_auteur li {
-	margin-bottom: 10px;
-}
-
-.crayon-html fieldset {
-	padding: 10px;
-}
-
-.crayon-html fieldset .legend {
-	font-size: 14px;
-	color: var(--color-default);
-}
-
-.editer-groupe {
-	font-size: 14px !important;
-	color: var(--color-default) !important;
-	line-height: 18px !important;
-}
-
-.editer-groupe .choix {
-	padding: 10px;
-	background: #eee;
-	border-radius: 3px;
-	margin-top: 4px;
-	clear: both;
-}
-
-/*Forum*/
-.popup div.formulaire_forum {
-	margin-top: 0;
-	padding-top: 0px;
-	border-left: none;
-	margin-left: 0;
-	padding-left: 0;
-	margin-bottom: 0;
-}
-
-#formulaire_forum .markItUpHeader ul, #formulaire_forum .retour, #formulaire_forum fieldset p { }
-#formulaire_forum legend { display: none; }
-#formulaire_forum fieldset { border: 0px; padding: 0px; margin: 0px;}
-#formulaire_forum fieldset p.boutons { display: block;}
-#formulaire_forum fieldset.qui { display: none; }
-
-#formulaire_forum ul.forum {
-
-	margin-left: 0px;
-	margin-top: 10px;
-}
-
-/*Affichage Doc*/
-.forum .doc a img {
-	width: 10%;
-	float: left;
-}
-
-.forum .doc {
-	height: 55px;
-	padding: 15px;
-}
-
-.forum .doc a span {
-	padding-left: 10px;
-	height: 85%;
-	display: flex;
-	align-items: center;
-}
-
-.bloc_previsu {
-	background: white;
-	padding-top: 20px;
-	border-radius: 4px;
-}
-
-#formulaire_forum .bloc_previsu ul.forum {
-	margin-top: 0;
-}
-
-.bloc_previsu .comment-titre {
-	font-size: 18px;
-	line-height: 22px;
-	display: block;
-}
-
-.bloc_previsu .comment-auteur { display: none; }
-
-.bloc_previsu .comment-content {
-	font-size: 13px;
-	line-height: 17px;
-	margin-top: 5px;
-}
-
-.intervention_new_answer:has(.login-forum-bloc) {
-	background-color: #f5f5f5;
-    margin: 0px;
-    padding: 0px 16px;
-	.login-forum-bloc {
-		margin-right: -10px;
-        margin-bottom: -10px;
-		padding-left: 0;
-		padding-right: 0;
-	}
-}
-
-.login-forum-bloc {
-	padding: 1rem;
-    border-radius: 5px;
-	background-color: #f5f5f5;
-	.icon-connecter {
-		width: 20px;
-		height: 20px;
-		margin-right: 0.5rem;
-	}
-	.icon-s-enregistrer {
-		width: 24px;
-		height: 20px;
-		margin-right: 0.5rem;
-		mask-size: 24px 20px;
-		-webkit-mask-size: 24px 20px;
-	}
-	.login-message {
-		font-size: 13px;
-		text-align: center;
-	}
-	.login-forum-buttons {
-		display: flex;
-		gap: 0.5rem;
-		padding-top: 0.5rem;
-		a {
-			text-align: center;
-			font-size: 13px;
-			height: 18px;
-			line-height: 18px;
-			padding: 10px 0;
-			border-radius: 5px;
-			text-transform: uppercase;
-			background-color: var(--color-tonic);
-			color: white;
-            font-weight: bold;
-			flex: 1;
-			&:hover {
-				background-color: var(--background-color-hover);
-			}
-		}
-	}
-	.login-forum-password {
-		padding-top: 0.5rem;
-		display: flex;
-		justify-content: flex-end;
-		a {
-			padding: 0 !important;
-			text-align: right;
-			font-size: 13px;
-			color: var(--color-tonic);
-			.icon-motdepasse {
-				width: 20px;
-				height: 20px;
-				margin-right: 0.2rem;
-				background-color: var(--color-tonic);
-			}
-			&:hover {
-				color: var(--color-hover);
-				.icon-motdepasse {
-					background-color: var(--background-color-hover);
-				}
-			}
-		}
-	}
-}
-
-/* Dans le cas ou l'utilisateur est un invité ne pas afficher */
-.forum_commenter #formulaire_forum .explication, .forum_commenter #formulaire_forum .retour{
-	display: none;
-}
-
-
-/*Formulaire_joindre_document*/
-.formulaire_joindre_document .titrem,
-.formulaire_joindre_document .sourceup,
-.formulaire_joindre_document #joindre_mediatheque__new,
-.formulaire_joindre_document #joindre_distant__new,
-.formulaire_joindre_document #defaultsubmit__new,
-.formulaire_joindre_document .boutons {display: none;}
-.formulaire_joindre_document #joindre_upload__new {display: inline!important;}
-#spip-admin {display: none;}
-li.editer p.explication, .editer_pgp, .editer_bio, .editer_liens_sites, .saisie_session_nom, .saisie_session_email {display: none;}
 
 /* -------- Surcharges du classique ----------*/
 
@@ -1386,10 +1110,6 @@ donc je passe de 300px à 30rem. */
 	}
 }
 
-.titre_bloc {
-	font-size: 100%;
-}
-
 ul#forum, .lien_forum {
 	margin-top: 0px;
 }
@@ -1744,46 +1464,6 @@ ul#forum, .lien_forum {
 	width: 100% !important;
 }
 
-#cboxTopLeft,
-#cboxTopCenter,
-#cboxTopRight,
-#cboxMiddleLeft,
-#cboxMiddleRight,
-#cboxBottomLeft,
-#cboxBottomCenter,
-#cboxBottomRight {
-	display: none;
-}
-
-#cboxClose, #cboxClose:hover {
-	top: 0;
-	right: 0;
-	background: url(#ENV{chemin}/img/close.svg) no-repeat center center / 80% auto white;
-	width: 40px;
-	height: 40px;
-	z-index: 2000;
-	position: fixed;
-}
-
-#cboxLoadedContent {
-	padding: 0;
-	margin: 0;
-}
-
-#cboxContent {
-	overflow: visible;
-	background: transparent;
-}
-
-#cboxTitle {
-	color: white;
-	bottom: -30px;
-}
-
-#cboxOverlay {
-	background: var(--color-default) !important
-}
-
 .timeline_layer {
 	opacity: .2;
 	transition: opacity 300ms ease;
@@ -1808,6 +1488,8 @@ ul#forum, .lien_forum {
 	opacity: 0;
 	pointer-events: none;
 	transition: all 0.1s ease-in;
+	position: absolute;
+	z-index: 105;
 }
 
 .show_livrables #livrables {
@@ -1838,14 +1520,10 @@ ul#forum, .lien_forum {
 .choix_rubrique_wrapper {
 	display: none;
 	overflow-y: auto;
-	calc(100vh - 117px);
+	max-height: calc(100vh - 117px);
 }
 
 /* LIVRABLES */
-#livrables {
-	position: absolute;
-	z-index: 105;
-}
 #livrables .wrapper {
 	display: flex;
 	flex-direction: row;
@@ -1904,11 +1582,90 @@ ul#forum, .lien_forum {
 	border-bottom-right-radius: 5px;
 }
 
-#debug-nav {
-	left: 10px;
-}
-
 /* Rajouter par Pierre K */
 .lity { z-index: 999992; }
 .masquer { display: none; }
+
+/* -------- Header sidebar (retour, actions) ----------*/
+
+#row_header {
+	display: flex;
+	justify-content: space-between;
+	padding: 11px;
+	padding-bottom: 0;
+}
+#header-col_left {
+	flex: 1;
+}
+#header-col-right {
+	flex: 4;
+	padding: 12px;
+}
+#header-row-1 {
+    display: flex;
+	align-items: center;
+	justify-content: space-between;
+	margin-bottom: 16px;
+}
+#header-row-2 {
+	flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+	font-weight: 800;
+}
+#header-reactions {
+	display: flex;
+	align-items: center;
+	gap: 6px;
+	white-space: nowrap;
+}
+#sidebar-top-right-corner {
+	display: flex;
+	gap: 8px;
+}
+#header-sidebarexpand-container {
+	display: flex;
+    align-items: center;
+    justify-content: center;
+	border-radius: 50%;
+	height: 25px;
+	width: 25px;
+	background-color: var(--color-tonic);
+	margin: 2px;
+}
+#sidebarExpand {
+	--svg: url("#CHEMIN{img/expend.svg}");
+	background-color: white;
+	aspect-ratio: 1 / 1;
+	width: 70%;
+}
+.hasSidebarExpanded #sidebarExpand {
+	--svg: url("#CHEMIN{img/shrink.svg}");
+}
+
+.container-tabs {
+	flex: 1; /* prend tout l'espace restant */
+	min-height: 0; /* IMPORTANT : sans ça, le scroll ne marche pas dans certains navigateurs */
+	display: flex;
+	flex-direction: column;
+}
+
+#sidebar-header-container {
+	flex-shrink: 0; /* ne se compresse jamais, garde sa hauteur naturelle */
+}
+
+#mission-tabs {
+	height: 100%;
+	flex: 1;
+	min-height: 0;
+	display: flex;
+	flex-direction: column;
+}
+
+.ctabs-content {
+	flex: 1;
+	min-height: 0;
+	overflow-y: auto;
+}
 
