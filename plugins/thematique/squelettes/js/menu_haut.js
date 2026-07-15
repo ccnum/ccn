@@ -59,8 +59,8 @@
 					$sel.removeClass('open');
 					// react to known select names
 					var name = $sel.attr('data-select-name') || $sel.attr('name');
-					if (name == 'annee_scolaire') setCookie('', 'laclasse_annee_scolaire', val);
-					else if (name == 'rubrique_admin') setCookie('', 'laclasse_rubrique_admin', val);
+					if (name == 'annee_scolaire') { setCookie('', 'laclasse_annee_scolaire', val); reload('self'); }
+					else if (name == 'rubrique_admin') { setCookie('', 'laclasse_rubrique_admin', val); reload('self'); }
 				});
 			});
 		}
