@@ -1,9 +1,9 @@
 <div class="sidebar-reaction-container">
-    [(#INCLURE{fond=inclure/favoris_ccn, objet=article, id_objet=#ID_ARTICLE, ajax})]
+	[(#INCLURE{fond=inclure/favoris_ccn, objet=article, id_objet=#ID_ARTICLE, ajax})]
 </div>
 <BOUCLE_desc(ARTICLES){id_article=#ENV{id_article}}{tous}>
-    #TEXTE
+	#TEXTE
 </BOUCLE_desc>
 <div style="display: flex; justify-content: flex-end;">
-    <button class="bouton_encadre">Modifier</button>
+	<button class="bouton_encadre">Modifier</button>
 </div>

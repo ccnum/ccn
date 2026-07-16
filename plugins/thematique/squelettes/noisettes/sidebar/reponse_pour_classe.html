@@ -2,12 +2,12 @@
 [(#REM) Paramètre attendu en plus des habituels : c_est_ma_reponse (oui/non),
 calculé par l'appelant (noisettes/article.html) ]
 <BOUCLE_rub(RUBRIQUES){id_rubrique}{tout}>
-    #SET{titre_parent, #TITRE}
+	#SET{titre_parent, #TITRE}
 </BOUCLE_rub>
 
 <BOUCLE_consigne_de_la_reponse(ARTICLES){id_article=#ENV{id_article}}>
-    #SET{titre_consigne,#TITRE}
-    #SET{id_consigne,#ID_ARTICLE}
+	#SET{titre_consigne,#TITRE}
+	#SET{id_consigne,#ID_ARTICLE}
 </BOUCLE_consigne_de_la_reponse>
 
 <BOUCLE_police(MOTS){id_rubrique}{type=police}>#SET{police,#TITRE}</BOUCLE_police>
@@ -19,42 +19,42 @@ calculé par l'appelant (noisettes/article.html) ]
 ]
 
 <div class="[popup_(#ENV{type_objet})]">
-    <div id="bloc_article-#ID_ARTICLE" class="bloc_article[ (#GET{police})]">
-        #SET{titre_consigne_final, #GET{titre_consigne}|sinon{#TITRE}}
-        <div id="sidebar-header-container">
-            <INCLURE{
-                fond=noisettes/sidebar/header_reponse_sidebar,
-                id_article=#ID_ARTICLE, ajax,
-                titre_parent=#GET{titre_parent},
-                titre_consigne=#GET{titre_consigne_final},
-                id_consigne=#GET{id_consigne},
-                type_objet=#ENV{type_objet},
-                env
-            } />
-        </div>
+	<div id="bloc_article-#ID_ARTICLE" class="bloc_article[ (#GET{police})]">
+		#SET{titre_consigne_final, #GET{titre_consigne}|sinon{#TITRE}}
+		<div id="sidebar-header-container">
+			<INCLURE{
+				fond=noisettes/sidebar/header_reponse_sidebar,
+				id_article=#ID_ARTICLE, ajax,
+				titre_parent=#GET{titre_parent},
+				titre_consigne=#GET{titre_consigne_final},
+				id_consigne=#GET{id_consigne},
+				type_objet=#ENV{type_objet},
+				env
+			} />
+		</div>
 
-        <div id="tabs-article-#ID_ARTICLE" class="container-tabs">
-            <div id="mission-tabs">
-                <div data-title="#GET{titre_onglet_reponse}">
-                    [(#ENV{c_est_ma_reponse}|=={oui}|oui)
-                        <INCLURE{
-                            fond=noisettes/sidebar/onglet_reponse_modifiable,
-                            id_article=#GET{id_consigne},
-                            env
-                        } />
-                    ]
-                    [(#ENV{c_est_ma_reponse}|=={oui}|non)
-                        <INCLURE{
-                            fond=noisettes/sidebar/onglet_reponse_non_modifiable,
-                            id_article=#GET{id_consigne},
-                            env
-                        } />
-                    ]
-                </div>
-                <div data-title="<:thematique:titre_onglet_comentaire:>">
-                    <INCLURE{fond=noisettes/sidebar/onglet_commentaires, env} />
-                </div>
-            </div>
-        </div>
-    </div>
+		<div id="tabs-article-#ID_ARTICLE" class="container-tabs">
+			<div id="mission-tabs">
+				<div data-title="#GET{titre_onglet_reponse}">
+					[(#ENV{c_est_ma_reponse}|=={oui}|oui)
+						<INCLURE{
+							fond=noisettes/sidebar/onglet_reponse_modifiable,
+							id_article=#GET{id_consigne},
+							env
+						} />
+					]
+					[(#ENV{c_est_ma_reponse}|=={oui}|non)
+						<INCLURE{
+							fond=noisettes/sidebar/onglet_reponse_non_modifiable,
+							id_article=#GET{id_consigne},
+							env
+						} />
+					]
+				</div>
+				<div data-title="<:thematique:titre_onglet_comentaire:>">
+					<INCLURE{fond=noisettes/sidebar/onglet_commentaires, env} />
+				</div>
+			</div>
+		</div>
+	</div>
 </div>

@@ -29,14 +29,14 @@
 [(#SET{voir_mission,non})]
 
 [(#SESSION{role}|=={admin}|oui)
-    [(#SET{voir_mission,oui})]
+	[(#SET{voir_mission,oui})]
 ]
 
 
 [(#SESSION{role}|=={intervenant}|oui)
-    [(#SESSION{admin}|>{0}|oui)
-        [(#SET{voir_mission,oui})]
-    ]
+	[(#SESSION{admin}|>{0}|oui)
+		[(#SET{voir_mission,oui})]
+	]
 ]
 
 [(#GET{peut_publier})

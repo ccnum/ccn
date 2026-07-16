@@ -1,31 +1,31 @@
 <BOUCLE_principale(ARTICLES){id_article}{tous}>
-    [(#SESSION{role}|non)[(#INCLURE{fond=noisettes/fonction/type_role})]]
-    [(#INCLURE{fond=noisettes/fonction/admin})]
+	[(#SESSION{role}|non)[(#INCLURE{fond=noisettes/fonction/type_role})]]
+	[(#INCLURE{fond=noisettes/fonction/admin})]
 
-    [(#ENV{type_objet}|=={consignes}|oui)
-        [(#REM) Par défaut (visiteur non connecté, admin, eleve) : vue "autre",
-        pas de différence apparente entre "autre" et "eleve"]
-        #SET{fond_consigne, consigne_pour_autre}
-        [(#SESSION{role}|=={prof}|oui) #SET{fond_consigne, consigne_pour_classe}]
-        [(#SESSION{role}|=={intervenant}|oui) #SET{fond_consigne, consigne_pour_intervenant}]
-        <INCLURE{fond=noisettes/sidebar/#GET{fond_consigne}, env, ajax} />
-    ]
-    [(#ENV{type_objet}|=={travail_en_cours}|oui)
-        [(#REM) "c'est ma réponse" : rubrique restreinte de l'admin/prof courant,
-        ou classe de l'élève courant. Calculé ici pour éviter de dupliquer
-        cette détection dans chaque fond reponse_pour_*.html]
-        #SET{c_est_ma_reponse, non}
-        [(#SESSION{role}|=={eleve}|oui)
-            <BOUCLE_ma_classe(RUBRIQUES auteurs_liens){id_auteur=#SESSION{id_auteur}}{id_rubrique=#ID_RUBRIQUE}{0,1}>
-                #SET{c_est_ma_reponse, oui}
-            </BOUCLE_ma_classe>
-        ] [(#SESSION{role}|!={eleve}|oui)
-            [(#ID_RUBRIQUE|=={#SESSION{restreint}}|oui) #SET{c_est_ma_reponse, oui}]
-        ]
+	[(#ENV{type_objet}|=={consignes}|oui)
+		[(#REM) Par défaut (visiteur non connecté, admin, eleve) : vue "autre",
+		pas de différence apparente entre "autre" et "eleve"]
+		#SET{fond_consigne, consigne_pour_autre}
+		[(#SESSION{role}|=={prof}|oui) #SET{fond_consigne, consigne_pour_classe}]
+		[(#SESSION{role}|=={intervenant}|oui) #SET{fond_consigne, consigne_pour_intervenant}]
+		<INCLURE{fond=noisettes/sidebar/#GET{fond_consigne}, env, ajax} />
+	]
+	[(#ENV{type_objet}|=={travail_en_cours}|oui)
+		[(#REM) "c'est ma réponse" : rubrique restreinte de l'admin/prof courant,
+		ou classe de l'élève courant. Calculé ici pour éviter de dupliquer
+		cette détection dans chaque fond reponse_pour_*.html]
+		#SET{c_est_ma_reponse, non}
+		[(#SESSION{role}|=={eleve}|oui)
+			<BOUCLE_ma_classe(RUBRIQUES auteurs_liens){id_auteur=#SESSION{id_auteur}}{id_rubrique=#ID_RUBRIQUE}{0,1}>
+				#SET{c_est_ma_reponse, oui}
+			</BOUCLE_ma_classe>
+		] [(#SESSION{role}|!={eleve}|oui)
+			[(#ID_RUBRIQUE|=={#SESSION{restreint}}|oui) #SET{c_est_ma_reponse, oui}]
+		]
 
-        [(#REM) Par défaut (visiteur non connecté, admin, prof, eleve) : vue classe]
-        #SET{fond_reponse, reponse_pour_classe}
-        [(#SESSION{role}|=={intervenant}|oui) #SET{fond_reponse, reponse_pour_intervenant}]
-        <INCLURE{fond=noisettes/sidebar/#GET{fond_reponse}, env, ajax, c_est_ma_reponse=#GET{c_est_ma_reponse}} />
-    ]
+		[(#REM) Par défaut (visiteur non connecté, admin, prof, eleve) : vue classe]
+		#SET{fond_reponse, reponse_pour_classe}
+		[(#SESSION{role}|=={intervenant}|oui) #SET{fond_reponse, reponse_pour_intervenant}]
+		<INCLURE{fond=noisettes/sidebar/#GET{fond_reponse}, env, ajax, c_est_ma_reponse=#GET{c_est_ma_reponse}} />
+	]
 </BOUCLE_principale>
