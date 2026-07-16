@@ -75,7 +75,6 @@ function thematique_insert_head($flux) {
 		'js/projet.js',
 		'js/reponse.js',
 		'js/reponse_binome_scroll.js',
-		'js/save_mot.js',
 		'js/sidebarCacheTooltip.js',
 		'js/custom-tabs.js',
 	];
