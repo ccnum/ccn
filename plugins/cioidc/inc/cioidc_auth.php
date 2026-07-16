@@ -114,7 +114,12 @@ if ($config_oidc) {
 
 		echo '<pre>';
 		echo $e->getMessage() . "\n\n";
-		print_r($e);
+		echo 'session_id: ' . session_id() . "\n";
+		echo 'session_status: ' . session_status() . "\n";
+		echo "cookies recus:\n";
+		print_r($_COOKIE);
+		echo "session:\n";
+		print_r($_SESSION ?? []);
 		echo '</pre>';
 		exit;
 
