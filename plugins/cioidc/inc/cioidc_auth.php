@@ -91,6 +91,10 @@ if ($config_oidc) {
 	try {
 		$oidc->authenticate();
 
+		// le flux est termine, on autorise une nouvelle authentification
+		include_spip('inc/cookie');
+		spip_setcookie('cioidc_en_cours', '', ['expires' => 1, 'httponly' => true]);
+
 		$cioidc_id_token = $oidc->getIdToken();
 
 		if (isset($config_oidc['serveur_sans_userinfo']) && $config_oidc['serveur_sans_userinfo'] == 'oui') {
@@ -112,16 +116,9 @@ if ($config_oidc) {
 	} catch (Exception $e) {
 		spip_log($e, _LOG_ERREUR);
 
-		echo '<pre>';
-		echo $e->getMessage() . "\n\n";
-		echo 'session_id: ' . session_id() . "\n";
-		echo 'session_status: ' . session_status() . "\n";
-		echo "cookies recus:\n";
-		print_r($_COOKIE);
-		echo "session:\n";
-		print_r($_SESSION ?? []);
-		echo '</pre>';
-		exit;
+		// le flux est termine (en echec), on autorise une nouvelle authentification
+		include_spip('inc/cookie');
+		spip_setcookie('cioidc_en_cours', '', ['expires' => 1, 'httponly' => true]);
 
 		$ciredirect = generer_url_public('cioidc_erreur4');
 		include_spip('inc/headers');

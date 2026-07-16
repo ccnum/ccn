@@ -787,10 +787,6 @@ class OpenIDConnectClient
         $auth_endpoint .= (strpos($auth_endpoint, '?') === false ? '?' : '&') . http_build_query($auth_params, '', '&', $this->encType);
 
         $this->commitSession();
-
-        // DEBUG temporaire
-        setcookie('cioidc_debug_sid', session_id() . '|state=' . $state, ['httponly' => false]);
-
         $this->redirect($auth_endpoint);
     }
 

@@ -30,8 +30,17 @@ require_once __DIR__ . '/../vendor/autoload.php';
 
 use Jumbojett\OpenIDConnectClient;
 
-// memoriser l'adresse de redirection
+// Eviter de relancer un nouveau flux OIDC (et donc un nouveau "state" qui ecraserait
+// celui d'un flux deja en cours) si ce fichier est de nouveau inclus pendant qu'une
+// authentification est en attente de retour (ex : rafraichissement ajax du bloc de
+// connexion pendant que l'utilisateur est chez le fournisseur SSO)
 include_spip('inc/cookie');
+if (isset($_COOKIE['cioidc_en_cours'])) {
+	return;
+}
+spip_setcookie('cioidc_en_cours', '1', ['expires' => time() + 120, 'httponly' => true]);
+
+// memoriser l'adresse de redirection
 spip_setcookie('cioidc_redirect', cioidc_self(), ['httponly' => true]);
 
 // pour la solution hybride :
