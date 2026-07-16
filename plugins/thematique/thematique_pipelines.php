@@ -5,14 +5,6 @@ if (!defined('_ECRIRE_INC_VERSION')) {
 }
 include_spip('action/editer_liens');
 
-function thematique_annee_scolaire() {
-	static $annee_scolaire = null;
-	if ($annee_scolaire === null) {
-		$annee_scolaire = intval(constant('_ANNEE_SCOLAIRE'));
-	}
-	return $annee_scolaire;
-}
-
 // Pre_boucles
 // Retourne les articles et articles syndiqués en lien avec l'année scolaire
 function thematique_pre_boucle($boucle) {
@@ -24,19 +16,14 @@ function thematique_pre_boucle($boucle) {
 		return $boucle;
 	}
 
-	$annee = thematique_annee_scolaire();
-	$mois = '08';
-	$jour = '01';
-
-	$annee2 = thematique_annee_scolaire() + 1;
-	$mois2 = '08';
-	$jour2 = '01';
-
+	// thematique_annee_scolaire() doit être appelée à l'exécution du squelette compilé
+	// (et non interpolée ici), sinon l'année scolaire de la toute première compilation
+	// resterait figée dans le cache pour toutes les requêtes suivantes.
 	$date = $boucle->id_table . '.date';
 	$boucle->where[] = [
 		"'AND'",
-		["'>='", "'$date'", ("'\"$annee-$mois-$jour\"'")],
-		["'<='", "'$date'", ("'\"$annee2-$mois2-$jour2\"'")],
+		["'>='", "'$date'", "'\"'.thematique_annee_scolaire().'-08-01\"'"],
+		["'<='", "'$date'", "'\"'.(thematique_annee_scolaire() + 1).'-08-01\"'"],
 	];
 	return $boucle;
 }

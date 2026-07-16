@@ -12,6 +12,23 @@ function filtre_nb2col($nb) {
 }
 
 /**
+ * Année scolaire courante (cookie/GET, cf plugins/ccn/ccn_options.php).
+ *
+ * Doit rester dans ce fichier _fonctions.php (auto-inclus à chaque appel),
+ * pas dans _pipelines.php : le pipeline pre_boucle interpole l'appel à cette
+ * fonction en dur dans le squelette compilé (pour qu'elle soit réévaluée à
+ * chaque requête), et ce squelette compilé s'exécute sans que _pipelines.php
+ * soit forcément rechargé.
+ */
+function thematique_annee_scolaire() {
+	static $annee_scolaire = null;
+	if ($annee_scolaire === null) {
+		$annee_scolaire = intval(constant('_ANNEE_SCOLAIRE'));
+	}
+	return $annee_scolaire;
+}
+
+/**
  * Indique si la requête HTTP courante est un appel Ajax (XMLHttpRequest),
  * par opposition à une vraie navigation du navigateur.
  */
