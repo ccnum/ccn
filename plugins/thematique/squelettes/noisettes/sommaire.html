@@ -108,15 +108,16 @@ et/ou
 			[(#REM) ======================= ]
 			<ul class="filter clearfix option-set" data-filter-group="classe">
 				#SESSION_SET{icones, #ARRAY{0,🐝,1,🦩,2,🦉,3,🦔,4,🐟,5,🐙,6,🐜,7,🦁,8,🦋,9,🦊}}
-				#SESSION_SET{numero_classe, 0}
 				#SESSION_SET{classes_data,#ARRAY}
+				#SET{numero_classe, 0}
 
 				[(#REM) ======== BOUCLE 1 : rubrique de l'année en cours ======== ]
 				<BOUCLE_FiltreAnnee(RUBRIQUES){racine}{titre LIKE %(#CONST{_ANNEE_SCOLAIRE})%}>
 					#SET{hasYearRub,true}
 					<BOUCLE_rubMot(RUBRIQUES){id_parent}{titre_mot=travail_en_cours}>
 						<BOUCLE_rubLoop(RUBRIQUES){id_parent}{tous}{par id_rubrique}>
-							<INCLURE{fond=modeles/classe_icone, id_rubrique=#ID_RUBRIQUE, titre=#TITRE} />
+							<INCLURE{fond=modeles/classe_icone, id_rubrique=#ID_RUBRIQUE, titre=#TITRE, numero_classe=#GET{numero_classe}} />
+							#SET{numero_classe, #GET{numero_classe}|plus{1}}
 						</BOUCLE_rubLoop>
 					</BOUCLE_rubMot>
 				</BOUCLE_FiltreAnnee>
@@ -124,7 +125,8 @@ et/ou
 				[(#REM) ======== BOUCLE 2 : fallback si pas de rubrique année ======== ]
 				<BOUCLE_r3(RUBRIQUES){titre_mot==travail_en_cours}{tous}{si #GET{hasYearRub}|=={false}}{!par date}>
 					<BOUCLE_c3(RUBRIQUES){id_parent}{tous}{par id_rubrique}>
-						<INCLURE{fond=modeles/classe_icone, id_rubrique=#ID_RUBRIQUE, titre=#_c3:TITRE} />
+						<INCLURE{fond=modeles/classe_icone, id_rubrique=#ID_RUBRIQUE, titre=#_c3:TITRE, numero_classe=#GET{numero_classe}} />
+						#SET{numero_classe, #GET{numero_classe}|plus{1}}
 					</BOUCLE_c3>
 				</BOUCLE_r3>
 			</ul>

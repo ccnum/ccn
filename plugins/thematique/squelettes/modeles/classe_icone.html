@@ -1,12 +1,15 @@
-[(#REM) Affiche l'icône/logo d'une classe et avance le compteur global ]
-[(#REM) Paramètres attendus : id_rubrique, titre ]
+[(#REM) Affiche l'icône/logo d'une classe ]
+[(#REM) Paramètres attendus : id_rubrique, titre, numero_classe ]
+[(#REM) numero_classe est géré par l'appelant en variable locale, pas en session :
+une valeur posée en session depuis un INCLURE n'est pas relue de manière
+fiable par l'appelant une fois l'INCLURE terminé. ]
 
-#SET{icone, #SESSION{icones}|table_valeur{#SESSION{numero_classe}}}
+#SET{icone, #SESSION{icones}|table_valeur{#ENV{numero_classe}}}
 
 #SESSION_SET{classes_data,
 	#SESSION{classes_data}|array_merge{
 		#ARRAY{
-			r#ENV{id_rubrique}, #ARRAY{numero,#SESSION{numero_classe}, icone,#GET{icone}}
+			r#ENV{id_rubrique}, #ARRAY{numero,#ENV{numero_classe}, icone,#GET{icone}}
 		}
 	}
 }
@@ -19,8 +22,6 @@
 	hover_couleur_travail_en_cours[(#ENV{id_rubrique}|nb2col)],
 	classcouleur=couleur_travail_en_cours[(#ENV{id_rubrique}|nb2col)],
 	texte=[(#ENV{titre}|couper{2})],
-	NUMERO=#SESSION{numero_classe},
+	NUMERO=#ENV{numero_classe},
 	ICONE=#GET{icone}
 })]
-
-#SESSION_SET{numero_classe, #SESSION{numero_classe}|plus{1}}

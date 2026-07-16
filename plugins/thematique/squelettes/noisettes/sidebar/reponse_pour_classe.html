@@ -1,4 +1,6 @@
 #CACHE{0}
+[(#REM) Paramètre attendu en plus des habituels : c_est_ma_reponse (oui/non),
+calculé par l'appelant (noisettes/article.html) ]
 <BOUCLE_rub(RUBRIQUES){id_rubrique}{tout}>
     #SET{titre_parent, #TITRE}
 </BOUCLE_rub>
@@ -10,14 +12,9 @@
 
 <BOUCLE_police(MOTS){id_rubrique}{type=police}>#SET{police,#TITRE}</BOUCLE_police>
 
-#SET{c_est_ma_reponse,non}
-[(#ID_RUBRIQUE|=={#SESSION{restreint}}|oui)
-	#SET{c_est_ma_reponse,oui}
-]
-
 #SET{titre_onglet_reponse,#VAL{thematique:titre_onglet_reponse_autre_classe}|_T}
 
-[(#GET{c_est_ma_reponse}|=={oui}|oui)
+[(#ENV{c_est_ma_reponse}|=={oui}|oui)
 	#SET{titre_onglet_reponse,#VAL{thematique:titre_onglet_reponse_ma_classe}|_T}
 ]
 
@@ -39,14 +36,14 @@
         <div id="tabs-article-#ID_ARTICLE" class="container-tabs">
             <div id="mission-tabs">
                 <div data-title="#GET{titre_onglet_reponse}">
-                    [(#GET{c_est_ma_reponse}|=={oui}|oui)
+                    [(#ENV{c_est_ma_reponse}|=={oui}|oui)
                         <INCLURE{
                             fond=noisettes/sidebar/onglet_reponse_modifiable,
                             id_article=#GET{id_consigne},
                             env
                         } />
                     ]
-                    [(#GET{c_est_ma_reponse}|=={oui}|non)
+                    [(#ENV{c_est_ma_reponse}|=={oui}|non)
                         <INCLURE{
                             fond=noisettes/sidebar/onglet_reponse_non_modifiable,
                             id_article=#GET{id_consigne},
