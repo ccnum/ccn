@@ -49,3 +49,75 @@
 		overflow-y: scroll;
 	}
 }
+
+#row_header {
+	display: flex;
+	justify-content: space-between;
+	padding: 11px;
+	padding-bottom: 0;
+}
+#header-col_left {
+	flex: 1;
+}
+#header-col-right {
+	flex: 4;
+	padding: 12px;
+}
+#header-row-1 {
+    display: flex;
+	align-items: center;
+	justify-content: space-between;
+	margin-bottom: 16px;
+}
+#header-row-2 {
+	flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+	font-weight: 800;
+}
+#header-reactions {
+	display: flex;
+	align-items: center;
+	gap: 6px;
+	white-space: nowrap;
+}
+#header-sidebarexpand-container {
+	display: flex;
+    align-items: center;
+    justify-content: center;
+	border-radius: 50%;
+	height: 25px;
+	width: 25px;
+	background-color: var(--color-tonic);
+	margin: 2px;
+}
+#sidebarExpand {
+	--svg: url("#CHEMIN{img/expend.svg}"); 
+	background-color: white;
+	aspect-ratio: 1 / 1;
+	width: 70%;
+}
+.hasSidebarExpanded #sidebarExpand {
+	--svg: url("#CHEMIN{img/shrink.svg}"); 
+}
+
+#sidebar-header-container {
+	flex-shrink: 0; /* ne se compresse jamais, garde sa hauteur naturelle */
+}
+
+
+#CHEMIN{img/pictos_sites/[(#NOM_SITE_SPIP|replace{' ',''}|strtolower)].svg}
+
+
+
+.container-tabs, #mission-tabs {
+	flex: 1;
+	min-height: 0;
+	display: flex;
+	flex-direction: column;
+}
+
+#mission-tabs {
+	height: 100%;
+}
