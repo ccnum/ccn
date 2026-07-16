@@ -229,6 +229,10 @@ function thematique_cioidc_userinfo($flux) {
 	}
 
 	$groupes_libres = $flux['data']['ENTGroupesLibres'] ?? [];
+	// Un attribut CAS multivalué arrive en objet unique (pas en tableau) quand il n'y a qu'une seule valeur
+	if (is_object($groupes_libres)) {
+		$groupes_libres = [$groupes_libres];
+	}
 	spip_log('userinfo nb ENTGroupesLibres=' . count($groupes_libres), 'cioidc');
 
 	if ($is_enseignant) {
