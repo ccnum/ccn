@@ -8,6 +8,7 @@ function thematique_autoriser() {
 }
 
 // declarations d'autorisations
+// Uniquement des fonctions courtes ici théoriquement
 function autoriser_thematique_creer_onglet_dist($faire, $type, $id, $qui, $opt) {
 	return autoriser('configurer', 'thematique', $id, $qui, $opt);
 }
