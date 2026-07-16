@@ -112,6 +112,12 @@ if ($config_oidc) {
 	} catch (Exception $e) {
 		spip_log($e, _LOG_ERREUR);
 
+		echo '<pre>';
+		echo $e->getMessage() . "\n\n";
+		print_r($e);
+		echo '</pre>';
+		exit;
+
 		$ciredirect = generer_url_public('cioidc_erreur4');
 		include_spip('inc/headers');
 		redirige_par_entete($ciredirect);
