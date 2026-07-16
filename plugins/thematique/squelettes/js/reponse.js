@@ -24,7 +24,7 @@ function Reponse() {
 		this.x_absolu = this.x;
 		this.y = this.data.y;
 		this.classeIndex = this.data.classes.findIndex(c => this.classe_id == c.id);
-		this.nom_classe = this.data.classes[this.classeIndex]?.nom ?? '';
+		this.nom_classe = decodeHtmlEntities(this.data.classes[this.classeIndex]?.nom ?? '');
 
 		this.initDOM();
 	}

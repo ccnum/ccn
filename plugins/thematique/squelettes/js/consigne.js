@@ -28,7 +28,7 @@ function Consigne() {
 		this.select = false;
 		this.date_texte = formatDateLongue(this.data.date_texte);
 		this.reponses = [];
-		this.intervenant_nom = this.data.intervenant_nom;
+		this.intervenant_nom = decodeHtmlEntities(this.data.intervenant_nom);
 		this.nombre_jours_max = this.data.nombre_jours_max;
 
 		if (this.nombre_jours_max <= 0) {
@@ -50,16 +50,17 @@ function Consigne() {
 		classes_triees.forEach((classe, index) => {
 			let disabled = 'disabled';
 			let iconSpan = '';
+			const nomClasse = decodeHtmlEntities(classe.nom);
 			if (this.reponses_id.includes(classe.id)) {
 				disabled = '';
-				iconSpan = `<span role="img" aria-label="${escHtml(classe.nom)}" style="font-size:min(70cqw,70cqh)" class="bgc_classe_${index}">
+				iconSpan = `<span role="img" aria-label="${escHtml(nomClasse)}" style="font-size:min(70cqw,70cqh)" class="bgc_classe_${index}">
 					${getClassIcon(index)}
 				</span>`;
 			}
 
 			reponses_puces += `
 				<div class='reponse_puce ${disabled} tooltip logo'
-					data-tip='${classe.nom}'
+					data-tip='${escHtml(nomClasse)}'
 					style='display:flex;align-items:center;justify-content:center;container-type:size;'>
 					${iconSpan}
 				</div>`;
