@@ -1624,6 +1624,9 @@ ul#forum, .lien_forum {
 	display: flex;
 	gap: 8px;
 }
+#sidebar-top-right-corner > * {
+	cursor: pointer;
+}
 #header-sidebarexpand-container {
 	display: flex;
     align-items: center;
@@ -1649,6 +1652,7 @@ ul#forum, .lien_forum {
 	min-height: 0; /* IMPORTANT : sans ça, le scroll ne marche pas dans certains navigateurs */
 	display: flex;
 	flex-direction: column;
+	padding: 20px;
 }
 
 #sidebar-header-container {
@@ -1667,5 +1671,6 @@ ul#forum, .lien_forum {
 	flex: 1;
 	min-height: 0;
 	overflow-y: auto;
+	background-color: var(--color-background-tabs);
 }
 

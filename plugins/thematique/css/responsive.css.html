@@ -82,10 +82,6 @@
 	gap: 6px;
 	white-space: nowrap;
 }
-#sidebar-top-right-corner {
-	display: flex;
-	gap: 8px;
-}
 #header-sidebarexpand-container {
 	display: flex;
     align-items: center;
@@ -106,13 +102,6 @@
 	--svg: url("#CHEMIN{img/shrink.svg}"); 
 }
 
-.container-tabs {
-	flex: 1; /* prend tout l'espace restant */
-	min-height: 0; /* IMPORTANT : sans ça, le scroll ne marche pas dans certains navigateurs */
-	display: flex;
-	flex-direction: column;
-}
-
 #sidebar-header-container {
 	flex-shrink: 0; /* ne se compresse jamais, garde sa hauteur naturelle */
 }
@@ -131,11 +120,4 @@
 
 #mission-tabs {
 	height: 100%;
-}
-
-.ctabs-content {
-	flex: 1;
-	min-height: 0;
-	overflow-y: auto;
-	background-color: var(--color-background-tabs);
 }
