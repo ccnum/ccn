@@ -59,8 +59,15 @@
 					$sel.removeClass('open');
 					// react to known select names
 					var name = $sel.attr('data-select-name') || $sel.attr('name');
-					if (name == 'annee_scolaire') { setCookie('', 'laclasse_annee_scolaire', val); reload('self'); }
-					else if (name == 'rubrique_admin') { setCookie('', 'laclasse_rubrique_admin', val); reload('self'); }
+					if (name == 'annee_scolaire') {
+						// ccn_options.php lit ?annee_scolaire= et pose le cookie côté serveur
+						var url = new URL(window.location.href);
+						url.searchParams.set('annee_scolaire', val);
+						window.location.href = url.toString();
+					}
+					// rubrique_admin (menu "Publier") : chaque option a déjà son propre
+					// onClick (createReponse, callRessource, changeTimelineMode...) qui fait
+					// l'action en JS ; un reload ici l'interromprait.
 				});
 			});
 		}
