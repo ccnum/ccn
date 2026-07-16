@@ -25,7 +25,7 @@
 		]
 		<!-- Ma réponse, avec bouton Modifier -->
 		<div class="sidebar_bubble">
-			<div class="reponse_entete nettoyeur">
+			<div class="encadre-message nettoyeur">
 				<div class="reponse_titre_bubble">
 					[(#TITRE|sinon{<:thematique:ma_reponse:>})]
 				</div>
@@ -57,13 +57,13 @@
 	[(#GET{a_repondu}|=={oui}|non)
 		<!-- ============== ETAT : N'A PAS ENCORE REPONDU ============== -->
 		<div class="sidebar_bubble bloc_pas_repondu">
-			<div class="reponse_entete nettoyeur">
+			<div class="encadre-message nettoyeur">
 				<div class="reponse_titre_bubble">
 					<:thematique:repondre_modifier_posteriori:>
 				</div>
 				[(#AUTORISER{modifier,article,#ID_ARTICLE}|oui)
 					<INCLURE{fond=noisettes/js/accordeon, nom=bloc_option_publier_reponse-#ID_ARTICLE, ajax}>
-					<a id="bloc_option_publier_reponse-#ID_ARTICLE" class="hac lien_ajouter bouton_publier" title="<:thematique:repondre_publier:>">
+					<a id="bloc_option_publier_reponse-#ID_ARTICLE" class="hac lien_ajouter bouton_encadre" title="<:thematique:repondre_publier:>">
 						&#9998; <:thematique:repondre_publier:>
 					</a>
 					<!-- Formulaire de publication, masqué par défaut, ouvert par l'accordéon ci-dessus (doit être le frère direct du lien pour le .next() du JS) -->

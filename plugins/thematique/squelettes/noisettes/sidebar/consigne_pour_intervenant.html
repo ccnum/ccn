@@ -1,12 +1,6 @@
 #CACHE{0}
-
 <BOUCLE_rub(RUBRIQUES){id_rubrique}{tout}>
-    #SET{classe_iframe, #DESCRIPTIF*}
     #SET{titre_parent, #TITRE}
-    #SET{id_parent, #ID_RUBRIQUE}
-    <BOUCLE_rub00(RUBRIQUES){id_rubrique=#ID_PARENT}{tout}>
-        #SET{id_travail_en_cours,#ID_RUBRIQUE}
-    </BOUCLE_rub00>
 </BOUCLE_rub>
 
 <BOUCLE_consigne_de_la_reponse(ARTICLES){id_article=#ENV{id_article}}>
@@ -15,26 +9,6 @@
 </BOUCLE_consigne_de_la_reponse>
 
 <BOUCLE_police(MOTS){id_rubrique}{type=police}>#SET{police,#TITRE}</BOUCLE_police>
-
-<BOUCLE_nb_doc(DOCUMENTS) {id_article}>
-</BOUCLE_nb_doc>
-    #SET{nb_doc,#TOTAL_BOUCLE}
-</B_nb_doc>
-    #SET{nb_doc,0}
-<//B_nb_doc>
-
-#SET{a_repondu,non}
-[(#TEXTE|oui)#SET{a_repondu,oui}]
-
-#SET{date_prochaine_etape,''}
-<BOUCLE_rub_consignes(RUBRIQUES){titre_mot=consignes}{0,1}{tout}>
-    <BOUCLE_prochaine_consigne(ARTICLES){branche}{par date}{(#ENV{rang}|intval|plus{1}),1}{tout}>
-        #SET{date_prochaine_etape,#DATE}
-    </BOUCLE_prochaine_consigne>
-</BOUCLE_rub_consignes>
-
-#SET{titre_onglet_reponse,#VAL{thematique:repondre_a_la_mission}|_T}
-[(#GET{a_repondu}|=={oui}|oui)#SET{titre_onglet_reponse,#VAL{thematique:voir_ma_reponse}|_T}]
 
 <div class="[popup_(#ENV{type_objet})]">
     <div id="bloc_article-#ID_ARTICLE" class="bloc_article[ (#GET{police})]">
@@ -55,21 +29,17 @@
             <div id="mission-tabs">
                 <div data-title="<:thematique:description_mission:>">
                     <INCLURE{
-                        fond=noisettes/sidebar/onglet_description,
+                        fond=noisettes/sidebar/onglet_description_intervenant,
                         id_article=#GET{id_consigne},
                         env
                     } />
                 </div>
-                <div data-title="#GET{titre_onglet_reponse}">
-					<INCLURE{fond=noisettes/sidebar/onglet_reponse, id_article=#ID_ARTICLE, env, ajax} />
+                <div data-title="<:thematique:titre_onglet_liste_des_reponses:>">
+					<INCLURE{fond=noisettes/sidebar/onglet_reponses_intervenant, id_article=#ID_ARTICLE, env, ajax} />
 				</div>
-                <div data-title="<:thematique:discussion_mission:>">
-                    <INCLURE{
-                        fond=noisettes/sidebar/onglet_discussion,
-                        env
-                    } />
+                <div data-title="<:thematique:titre_onglet_comentaire:>">
+                    <INCLURE{fond=noisettes/sidebar/onglet_commentaires, env} />
                 </div>
-
             </div>
         </div>
     </div>
