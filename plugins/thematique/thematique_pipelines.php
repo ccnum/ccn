@@ -4,6 +4,10 @@ if (!defined('_ECRIRE_INC_VERSION')) {
 	return;
 }
 include_spip('action/editer_liens');
+// thematique_annee_scolaire() est normalement auto-incluse via thematique_fonctions.php,
+// mais ce n'est pas garanti dans tous les contextes d'appel (ex: pipeline cioidc_userinfo
+// déclenché depuis une action hors squelette), d'où cet include explicite.
+include_spip('thematique_fonctions');
 
 // Pre_boucles
 // Retourne les articles et articles syndiqués en lien avec l'année scolaire
