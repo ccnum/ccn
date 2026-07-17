@@ -1,17 +1,23 @@
 <div style="display: flex;
-            justify-content: space-between;"
+            justify-content: space-between;
+            margin-bottom: 18px;"
 >
-    <div id="creation-mission-etape-suivante-container">
-        <button onclick="creationMissionEtapePrecedente()"
+    <div>
+        <button class="bouton-etape-suivante"
+                onclick="creationMissionEtapePrecedente()"
                 style="display: flex;
-                    gap: 2px;
-                    background-color: var(--color-tonic);
-                    width: 70rem;
-                    height: 2rem;
-                    border-radius: 50%;"
+                       justify-content: center;
+                       align-items: center;
+                       gap: 2px;
+                       background-color: var(--color-tonic);
+                       width: 6rem;
+                       height: 2rem;
+                       border-radius: 1rem;
+                       padding: 10px;
+                       overflow: hidden;"
         >
-            <div style="--svg: url(plugins/thematique/squelettes/img/arrow-left.svg);"></div>
-            <div>RETOUR</div>
+            <div class="icon-left-arrow icon"></div>
+            <div class="texte-etpae-suivante">RETOUR</div>
         </button>
     </div>
     

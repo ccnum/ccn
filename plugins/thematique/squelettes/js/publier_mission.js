@@ -20,7 +20,7 @@ function initCompteurCaracteres() {
 function creationMissionEtapeSuivante() {
     const etape1 = document.getElementById("etape-1-container") 
     const etape2 = document.getElementById("etape-2-container") 
-    const boutonContainer = document.getElementById("creation-mission-etape-suivante-container")
+    const boutonElement = document.querySelector(".bouton-etape-suivante")
     etape1.style.display = "none"
     etape2.style.display = "block"
     boutonContainer.style.display = "block"
@@ -29,8 +29,8 @@ function creationMissionEtapeSuivante() {
 function creationMissionEtapePrecedente() {
     const etape1 = document.getElementById("etape-1-container") 
     const etape2 = document.getElementById("etape-2-container") 
-    const boutonContainer = document.getElementById("creation-mission-etape-suivante-container")
+    const boutonElement = document.querySelector(".bouton-etape-suivante")
     etape1.style.display = "block"
     etape2.style.display = "none"
-    boutonContainer.style.display = "none"
+    boutonElement.style.display = "none"
 }
