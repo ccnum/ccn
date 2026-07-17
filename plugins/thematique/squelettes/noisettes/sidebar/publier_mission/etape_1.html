@@ -1,0 +1,39 @@
+<h3>Étape 1 -Rédaction de votre mission</h3>
+
+<p>Choisissez un titre et rédigez la mission que vous lancez aux classes !<br>
+Vous pourrez ajouter des fichiers à l'étape suivante.
+</p>
+<br>
+
+<h4>&#128161; Conseils pour une mission réussie</h4>
+<div>Écrire des phrases courtes et simples (le public est jeune!).</div>
+<div>Évitez d'écrire en MAJUSCULES, c'est plus difficile à lire.</div>
+<div>Ajouter une vidéo ou une image pour donner envie.</div>
+<div>Poser une seule question claire à chaque fois.</div>
+<br>
+
+<label for="titre_mission_publiee">
+    Titre de la mission
+</label>
+<input type="text" id="titre_mission_publiee" size="50"/>
+
+<div class="compteur-caracteres">
+    <div class="nb-caracteres" for="titre_mission_publiee"></div>
+    <div>/50 caractères</div>
+</div>
+
+<label for="texte_mission_publiee">
+    Contenu de la mission
+</label>
+<textarea name='texte' 
+          id='text_area' 
+          class="inserer_barre_edition inserer_previsualisation"[ lang='(#LANGUE)'] 
+          rows='[(#ENV{config/lignes}|plus{2})]' 
+          cols='40'
+>
+    [(#ENV{texte})]
+</textarea>
+
+<div style="display: flex; justify-content: flex-end;">
+    <button onclick="creationMissionEtapeSuivante()">Suivant</button>
+</div>

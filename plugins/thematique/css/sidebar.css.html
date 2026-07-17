@@ -458,6 +458,7 @@
 
 #sidebar_main {
 	width: 100%;
+	height: 100%;
 	font-size: 13px;
 	max-height: 100%;
 	transition: opacity 500ms ease;
@@ -1155,6 +1156,10 @@ ul#forum, .lien_forum {
 	color: var(--color-default);
 }
 
+#sidebar_main_inner {
+	height: 100%;
+}
+
 #sidebar_main_inner > .syndic_article_lire_suite {
 	display: none;
 }
@@ -1725,5 +1730,25 @@ ul#forum, .lien_forum {
 
 .image-classe-dans-reponse > .logo > .logo_menu_classe {
 	background-color: inherit !important;
+}
+
+#etape-1-container {
+
+}
+
+#etape-2-container {
+	display: none;
+}
+
+.compteur-caracteres {
+	display: flex;
+	justify-content: flex-end;
+}
+.compteur-caracteres.warn {
+	color: red;
+}
+
+#creation-mission-etape-suivante-container {
+	display: none;
 }
 
