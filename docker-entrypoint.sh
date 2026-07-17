@@ -118,7 +118,6 @@ spip plugins:activer cextras -y
 spip plugins:activer crayons -y
 spip plugins:activer corbeille -y
 spip plugins:activer facteur -y
-spip plugins:activer imports_utilisateurs -y
 spip plugins:activer jqueryui -y
 spip plugins:activer notation -y
 spip plugins:activer notifications -y
@@ -134,6 +133,7 @@ spip plugins:activer mesfavoris -y
 spip plugins:activer mesfavoris_ccn -y
 spip plugins:activer ccn -y
 
+spip plugins:desactiver imports_utilisateurs -y
 
 if [ ${SPIP_PLUGINS_CICAS} == true ]; then
 	spip plugins:activer cicas -y
