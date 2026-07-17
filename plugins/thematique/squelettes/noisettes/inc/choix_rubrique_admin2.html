@@ -24,6 +24,9 @@
 
 [(#SET{voir_mission,non})]
 
+<div>role #SESSION{role}</div>
+<div>admin #SESSION{admin}</div>
+
 [(#SESSION{role}|=={admin}|oui)
 	[(#SET{voir_mission,oui})]
 ]
