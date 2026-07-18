@@ -179,6 +179,13 @@ function thematique_cioidc_userinfo($flux) {
 	}
 	spip_log('userinfo auteur trouvé id=' . $auteur['id_auteur'] . ' nom=' . $auteur['nom'], 'cioidc');
 
+	// Le rôle (#SESSION{role}) calculé par type_role.html est mis en cache pour la session
+	// et SPIP restaure les données de session d'un id_auteur d'une connexion à l'autre :
+	// sans ce reset, un rôle obsolète (ex: élève) resterait figé malgré un statut/des
+	// classes à jour tant que le compte ne change pas de navigateur/session.
+	include_spip('inc/session');
+	session_set('role', null);
+
 	if ($email && $email !== $auteur['email']) {
 		spip_log('userinfo mise à jour de l\'email : ' . $auteur['email'] . ' => ' . $email, 'cioidc');
 		sql_updateq('spip_auteurs', ['email' => $email], 'id_auteur=' . intval($auteur['id_auteur']));
