@@ -7,5 +7,5 @@
 	#SET{fichier, #ENV{fichier, demo/test_#VALEUR.yaml}}
 	#SET{options, #GET{options}|array_merge{#ARRAY{library, #VALEUR}}}
 	<h3 class="h3">LIBRAIRIE : [(#VALEUR) - ][FICHIER : (#GET{fichier})]</h3>
-	[<p>(#GET{fichier}|decoder_fichier_yaml{#GET{options}}|bel_env)</p>]
+	[<p>(#GET{fichier}|decoder_fichier_yaml{#GET{options}}|print_r{1}|highlight_string{1})</p>]
 </BOUCLE_tests>

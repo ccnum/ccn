@@ -1,6 +1,7 @@
 <?php
 // This is a SPIP language file  --  Ceci est un fichier langue de SPIP
-// Fichier source, a modifier dans https://git.spip.net/spip-contrib-extensions/yaml.git
+// extrait automatiquement de https://trad.spip.net/tradlang_module/paquet-yaml?lang_cible=mg
+// ** ne pas modifier le fichier **
 
 return [
 

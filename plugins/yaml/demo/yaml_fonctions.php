@@ -4,15 +4,6 @@ if (!defined('_ECRIRE_INC_VERSION')) {
 	return;
 }
 
-function ajouter_libyaml($librairies) {
-
-	if (function_exists('yaml_parse')) {
-		$librairies['libyaml'] = 'libYAML';
-	}
-
-	return $librairies;
-}
-
 function decoder_fichier_yaml($filename, $options = []) {
 
 	include_spip('inc/yaml');
@@ -46,7 +37,7 @@ function comparer_decodage($fichier, $libraries, $options = []) {
 			$compared[$_library] = 'référence';
 		} else {
 			$difference = array_diff_assoc_recursive($first, $parsed, $fichier);
-			$compared[$_library] = $difference ? bel_env($difference, true) : 'idem';
+			$compared[$_library] = $difference ? highlight_string(print_r($difference, true), true) : 'idem';
 		}
 	}
 

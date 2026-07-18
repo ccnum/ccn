@@ -8,8 +8,6 @@ if (!defined('_LIB_YAML')) {
 	/**
 	 * Les valeurs possibles sont :
 	 * - 'symfony' pour le composant YAML le plus récent de Symfony
-	 * - 'spyc' pour la librairie YAML spyc la plus récente
-	 * - 'libyaml' pour le composant PECL basé sur la librairie libYAML écrite en C.
 	 */
 	define('_LIB_YAML', 'symfony');
 }
