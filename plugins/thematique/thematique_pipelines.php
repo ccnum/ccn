@@ -166,12 +166,15 @@ function thematique_notifications_destinataires($flux) {
 function thematique_cioidc_userinfo($flux) {
 	spip_log('userinfo args=' . json_encode($flux['args']) . ' data=' . json_encode($flux['data']), 'cioidc');
 
+	// cioidc_session() résout le compte qui recevra réellement la session par login=uid
+	// (uid_champ_spip='login', cf. cioidc_verifier_identifiant()) : on doit chercher avec
+	// le même critère en priorité, sinon on met à jour un autre compte (ex: un doublon
+	// historique retrouvé par email) que celui qui sera effectivement connecté.
 	$email = $flux['data']['MailAdressePrincipal'] ?? '';
-	$auteur = sql_fetsel('id_auteur,nom,statut,email', 'spip_auteurs', 'email=' . sql_quote($email));
+	$uid = $flux['args']['uid'] ?? '';
+	$auteur = $uid ? sql_fetsel('id_auteur,nom,statut,email', 'spip_auteurs', 'login=' . sql_quote($uid)) : null;
 	if (!$auteur) {
-		// Compte auto-créé par cioidc (login=uid, sans email) : chercher par login en secours
-		$uid = $flux['args']['uid'] ?? '';
-		$auteur = sql_fetsel('id_auteur,nom,statut,email', 'spip_auteurs', 'login=' . sql_quote($uid));
+		$auteur = sql_fetsel('id_auteur,nom,statut,email', 'spip_auteurs', 'email=' . sql_quote($email));
 	}
 	if (!$auteur) {
 		spip_log('userinfo aucun auteur trouvé pour email=' . $email, 'cioidc');
