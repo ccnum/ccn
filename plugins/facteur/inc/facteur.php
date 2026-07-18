@@ -9,6 +9,7 @@
  */
 
 defined('_FACTEUR_NOMBRE_ESSAIS_ENVOI_MAIL') || define('_FACTEUR_NOMBRE_ESSAIS_ENVOI_MAIL', 5);
+defined('_FACTEUR_NOMBRE_ESSAIS_SEUIL_NOTIFIE') || define('_FACTEUR_NOMBRE_ESSAIS_SEUIL_NOTIFIE', 1);
 defined('_FACTEUR_DELAI_MAX_ESSAIS_ENVOI_MAIL') || define('_FACTEUR_DELAI_MAX_ESSAIS_ENVOI_MAIL', 18);
 
 /**
@@ -232,7 +233,8 @@ function facteur_envoyer_mail($destinataires, string $sujet, array $message, int
 	// si c'est un mail important, preparer le forward a envoyer en cas d'echec
 	// mais on delegue la gestion de cet envoi au facteur qui est le seul a savoir quoi faire
 	// en fonction de la reponse et du modus operandi pour connaitre le status du message
-	if ($important and $dest_alertes = $facteur->Sender) {
+	$dest_alertes = $facteur->Sender;
+	if (($try >= _FACTEUR_NOMBRE_ESSAIS_SEUIL_NOTIFIE) and $important and $dest_alertes) {
 		$dest = (is_array($destinataires) ? implode(', ', $destinataires) : $destinataires);
 		$sujet_alerte = _T('facteur:sujet_alerte_mail_fail', ['dest' => $dest, 'sujet' => $sujet]);
 		$args = func_get_args();
