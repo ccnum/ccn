@@ -7,7 +7,7 @@ fiable par l'appelant une fois l'INCLURE terminé. ]
 #SET{icone, #SESSION{icones}|table_valeur{#ENV{numero_classe}}}
 
 #SESSION_SET{classes_data,
-	#SESSION{classes_data}|array_merge{
+	#SESSION{classes_data}|sinon{#ARRAY}|array_merge{
 		#ARRAY{
 			r#ENV{id_rubrique}, #ARRAY{numero,#ENV{numero_classe}, icone,#GET{icone}}
 		}
