@@ -59,7 +59,6 @@ function thematique_insert_head($flux) {
 
 	$scripts = [
 		'js/addCloseModal.js',
-		'js/admin_intervenant_select.js',
 		'js/ajouter_document_forum.js',
 		'js/article.js',
 		'js/article_email_consigne.js',
