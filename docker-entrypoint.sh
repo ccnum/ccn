@@ -131,6 +131,7 @@ spip plugins:activer yaml -y
 spip plugins:activer autorite -y
 spip plugins:activer simplog -y
 spip plugins:activer ccn -y
+spip plugins:activer entravaux -y
 
 if [ ${SPIP_PLUGINS_CICAS} == true ]; then
 	spip plugins:activer cicas -y
@@ -163,6 +164,17 @@ spip config:ecrire -p notation acces:ide
 spip config:ecrire -p notation change_note:oui
 spip config:ecrire -p notifications forum_article:0
 spip config:ecrire -p notifications thread_forum:0
+
+# Message affiché sur la page "en travaux" du plugin entravaux
+# (pas de -p ici : la meta lue par le squelette est la clé plate "entravaux_message",
+# pas le casier "entravaux/message" qu'écrirait -p entravaux)
+ENTRAVAUX_MESSAGE=$(cat <<'EOF'
+Ce site est en refonte pour l'été.
+_ On vous donne rendez-vous le 24 août pour la nouvelle version.
+EOF
+)
+run_as "spip config:ecrire entravaux_message:\"${ENTRAVAUX_MESSAGE}\""
+run_as "spip php:eval \"include_spip('entravaux_administrations'); entravaux_poser_verrou('accesferme');\""
 
 # Default mes_options
 rm -rf config/mes_options.php
