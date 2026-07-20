@@ -1,10 +1,18 @@
 
-<div style="padding: 18px;">
+<div style="padding: 18px;
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+            box-sizing: border-box;">
     <INCLURE{fond=noisettes/sidebar/publier_mission/header, env} />
-    <div id="etape-1-container">
-        <INCLURE{fond=noisettes/sidebar/publier_mission/etape_1, env} />
-    </div>
-    <div id="etape-2-container">
-        <INCLURE{fond=noisettes/sidebar/publier_mission/etape_2, env} />
+    <div style="overflow-y: auto;
+                flex: 1;"
+    >
+        <div id="etape-1-container">
+            <INCLURE{fond=noisettes/sidebar/publier_mission/etape_1, env} />
+        </div>
+        <div id="etape-2-container">
+            <INCLURE{fond=noisettes/sidebar/publier_mission/etape_2, env} />
+        </div>
     </div>
 </div>

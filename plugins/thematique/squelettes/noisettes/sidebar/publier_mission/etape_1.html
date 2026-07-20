@@ -13,37 +13,9 @@ Vous pourrez ajouter des fichiers à l'étape suivante.
 <br>
 
 
-<div class="editer editer_titre">
-    <label for="titre_mission_publiee">
-        Titre de la mission
-    </label>
-    <input type="text" id="titre_mission_publiee" size="50"/>
-    
-    <div class="compteur-caracteres">
-        <div class="nb-caracteres" for="titre_mission_publiee"></div>
-        <div>/50 caractères</div>
-    </div>
-
-</div>
-<label for="texte_mission_publiee">
-    Contenu de la mission
-</label>
 
 
-<div class="formulaire_spip ajax formulaire_editer formulaire_editer_article formulaire_editer_article-#ENV{id_article,nouveau}">
-
-    <div class="editer editer_texte">
-        <textarea name='texte' 
-                  id='texte_mission_publiee' 
-                  class="inserer_barre_edition inserer_previsualisation"[ lang='(#LANGUE)'] 
-                  rows='[(#ENV{config/lignes}|plus{2})]' 
-                  cols='40'
-        >
-            [(#ENV{texte})]
-        </textarea>
-    </div>
-
-</div>
+#FORMULAIRE_PUBLIC_EDITER_ARTICLE{#ENV{id_article},#ENV{id_rubrique},#URL_ARTICLE|parametre_url{mode,complet}}
 
 
 <div style="display: flex; justify-content: flex-end;">

@@ -97,16 +97,27 @@ function formulaires_public_editer_article_traiter_dist(
 	$hidden = ''
 ) {
 	// Traitement principal
-	$res = formulaires_editer_objet_traiter(
-		'article',
+	spip_log("voici ce qu'on mets dans formulaires_editer_objet_traiter", 'debug_article');
+	spip_log(print_r(['article',
 		$id_article,
 		$id_rubrique,
 		$lier_trad,
 		$retour,
 		$config_fonc,
 		$row,
+		$hidden], true), 'debug_article');
+	$res = formulaires_editer_objet_traiter(
+		'article',
+		0,
+		137,
+		$lier_trad,
+		$retour,
+		$config_fonc,
+		$row,
 		$hidden
 	);
+	spip_log("voici le resultat du traitement du formulaire", 'debug_article');
+	spip_log(var_export($res, true), 'debug_article');
 	// Ajout du champ id_consigne — vérifié que la consigne existe ET que l'utilisateur appartient au même secteur
 	$id_consigne = intval(_request('id_consigne'));
 	if ($id_consigne > 0) {
