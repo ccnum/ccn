@@ -33,11 +33,5 @@
 			[(#CONFIG{entravaux_message,<:entravaux:info_travaux_texte:>}|propre)]
 		</div>
 	</div>
-	[(#SESSION{id_auteur}|non)
-		<p class="retour"><a href="#URL_PAGE{login_sos}"><:lien_connecter:></a></p>
-	]
-	[(#SESSION{id_auteur}|oui)
-		<p class="retour"><a href="#URL_ECRIRE{accueil}"><:espace_prive:></a> <a href="#URL_LOGOUT"><:icone_deconnecter:></a></p>
-	]
 </body>
 </html>
