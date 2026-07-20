@@ -171,9 +171,9 @@ function thematique_cioidc_userinfo($flux) {
 	// historique retrouvé par email) que celui qui sera effectivement connecté.
 	$email = $flux['data']['MailAdressePrincipal'] ?? '';
 	$uid = $flux['args']['uid'] ?? '';
-	$auteur = $uid ? sql_fetsel('id_auteur,nom,statut,email', 'spip_auteurs', 'login=' . sql_quote($uid)) : null;
+	$auteur = $uid ? sql_fetsel('id_auteur,nom,statut,email,webmestre', 'spip_auteurs', 'login=' . sql_quote($uid)) : null;
 	if (!$auteur) {
-		$auteur = sql_fetsel('id_auteur,nom,statut,email', 'spip_auteurs', 'email=' . sql_quote($email));
+		$auteur = sql_fetsel('id_auteur,nom,statut,email,webmestre', 'spip_auteurs', 'email=' . sql_quote($email));
 	}
 	if (!$auteur) {
 		spip_log('userinfo aucun auteur trouvé pour email=' . $email, 'cioidc');
@@ -229,16 +229,31 @@ function thematique_cioidc_userinfo($flux) {
 	$is_enseignant = (strpos($profils, 'ENS') !== false);
 	spip_log('userinfo ENTPersonProfils=' . $profils . ' => enseignant:' . ($is_enseignant ? 'oui' : 'non'), 'cioidc');
 
+	// Les comptes ENS rattachés à un établissement listé dans _THEMATIQUE_RNE_WEBMESTRES
+	// (ex: établissement pilote de l'équipe projet) restent administrateurs complets
+	// plutôt que rédacteurs, sans restriction de rubrique.
+	$rne = $flux['data']['ENTPersonStructRattachRNE'] ?? '';
+	$rne_webmestres = array_filter(array_map('trim', explode(',', _THEMATIQUE_RNE_WEBMESTRES)));
+	$is_webmestre = $is_enseignant && $rne && in_array($rne, $rne_webmestres, true);
+	spip_log('userinfo ENTPersonStructRattachRNE=' . $rne . ' => webmestre:' . ($is_webmestre ? 'oui' : 'non'), 'cioidc');
+
 	$statut = null;
-	if (strpos($profils, 'ELV') !== false) {
+	if ($is_webmestre) {
+		$statut = '0minirezo';
+	} elseif (strpos($profils, 'ELV') !== false) {
 		$statut = '6forum';
 	} elseif (strpos($profils, 'ENS') !== false) {
-		$statut = '0minirezo';
+		$statut = '1comite';
 	}
 	if ($statut && $statut !== $auteur['statut']) {
 		spip_log('userinfo mise à jour du statut : ' . $auteur['statut'] . ' => ' . $statut, 'cioidc');
 		sql_updateq('spip_auteurs', ['statut' => $statut], 'id_auteur=' . intval($auteur['id_auteur']));
 		$auteur['statut'] = $statut;
+	}
+	if ($is_webmestre && ($auteur['webmestre'] ?? 'non') !== 'oui') {
+		spip_log('userinfo passage webmestre', 'cioidc');
+		sql_updateq('spip_auteurs', ['webmestre' => 'oui'], 'id_auteur=' . intval($auteur['id_auteur']));
+		$auteur['webmestre'] = 'oui';
 	}
 
 	$groupes_libres = $flux['data']['ENTGroupesLibres'] ?? [];
@@ -248,7 +263,7 @@ function thematique_cioidc_userinfo($flux) {
 	}
 	spip_log('userinfo nb ENTGroupesLibres=' . count($groupes_libres), 'cioidc');
 
-	if ($is_enseignant) {
+	if ($is_enseignant && !$is_webmestre) {
 		foreach ($groupes_libres as $groupe) {
 			//$groupe->structure_id; $groupe->id; $groupe->name;
 			spip_log('userinfo groupe=' . json_encode($groupe), 'cioidc');
@@ -275,7 +290,7 @@ function thematique_cioidc_userinfo($flux) {
 		'cioidc'
 	);
 
-	if ($is_enseignant) {
+	if ($is_enseignant && !$is_webmestre) {
 		$blog = sql_getfetsel('id_rubrique', 'spip_rubriques', 'titre = ' . sql_quote('Blog pédagogique'));
 		if ($blog) {
 			objet_associer(['id_auteur' => $auteur['id_auteur']], ['rubrique' => $blog]);

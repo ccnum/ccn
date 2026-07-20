@@ -5,7 +5,7 @@ id_objet
 X,Y
 ]
 
-[(#SESSION{statut}|=={0minirezo}|oui)
+[(#SESSION{statut}|in_array{#LISTE{0minirezo,1comite}}|oui)
   Minizero : OK
 	[(#TYPE_OBJET|match{article|syndic_article}|oui)
 	  Is an article

@@ -1,6 +1,6 @@
 #CACHE{0}
 [(#REM) type=blogs ou type=evenements passé en paramètre via &mode=articles&type=... ]
-#SET{afficher,oui}[(#ENV{type}|=={evenements}|oui)[(#SESSION{statut}|=={0minirezo}|non)#SET{afficher,non}]]
+#SET{afficher,oui}[(#ENV{type}|=={evenements}|oui)[(#SESSION{statut}|in_array{#LISTE{0minirezo,1comite}}|non)#SET{afficher,non}]]
 <datas>
 	<BOUCLE_rubrique(RUBRIQUES){titre_mot=#ENV{type}}{tout}>
 		<BOUCLE_article(ARTICLES){branche}{par date}{date>=#CONST{_DATE_DEBUT}}{date<=#CONST{_DATE_FIN}}{tout}>

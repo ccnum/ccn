@@ -17,7 +17,7 @@
 	</BOUCLE_rub4>
 </BOUCLE_rub_aut>
 
-[(#SESSION{statut}|=={0minirezo}|non)
+[(#SESSION{statut}|in_array{#LISTE{0minirezo,1comite}}|non)
 	#SET{admin,-1}
 ]
 
