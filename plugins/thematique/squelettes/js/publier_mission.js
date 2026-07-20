@@ -23,7 +23,7 @@ function creationMissionEtapeSuivante() {
     const boutonElement = document.querySelector("#bouton-etape-precedente-mission")
     etape1.style.display = "none"
     etape2.style.display = "block"
-    boutonContainer.style.display = "block"
+    boutonElement.style.display = "flex"
 }
 
 function creationMissionEtapePrecedente() {
