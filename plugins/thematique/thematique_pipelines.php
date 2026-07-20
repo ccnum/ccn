@@ -255,6 +255,11 @@ function thematique_cioidc_userinfo($flux) {
 		sql_updateq('spip_auteurs', ['webmestre' => 'oui'], 'id_auteur=' . intval($auteur['id_auteur']));
 		$auteur['webmestre'] = 'oui';
 	}
+	if ($is_webmestre) {
+		// Un webmestre n'est restreint à aucune rubrique : on retire d'éventuels
+		// liens d'admin restreint hérités d'un statut précédent.
+		objet_dissocier(['id_auteur' => $auteur['id_auteur']], ['rubrique' => '*']);
+	}
 
 	$groupes_libres = $flux['data']['ENTGroupesLibres'] ?? [];
 	// Un attribut CAS multivalué arrive en objet unique (pas en tableau) quand il n'y a qu'une seule valeur
