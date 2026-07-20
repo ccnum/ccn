@@ -24,8 +24,8 @@
 
 [(#SET{voir_mission,non})]
 
-<div>role #SESSION{role}</div>
-<div>admin #SESSION{admin}</div>
+<script>console.log("role #SESSION{role}")</script>
+<script>console.log("admin #SESSION{admin}")</script>
 
 [(#SESSION{role}|=={admin}|oui)
 	[(#SET{voir_mission,oui})]
