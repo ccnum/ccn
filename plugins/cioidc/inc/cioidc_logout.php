@@ -190,6 +190,21 @@ function action_logout_dist() {
 
 				// logout de OpenID Connect
 				if (isset($GLOBALS['visiteur_session']['cioidc_id_token'])) {
+					// Diagnostic temporaire (cf issue laclasse.com sur le retour post-logout) :
+					// loggue ce qui est envoyé au end_session_endpoint. Le retour de
+					// laclasse.com lui-même (redirection ou non vers ci_url_retour) ne
+					// passe pas par notre serveur, donc pas loggable ici : à observer
+					// côté navigateur (onglet réseau) en comparant avec ces valeurs.
+					$ci_end_session_endpoint = $well_known_config['end_session_endpoint']
+						?? (defined('_CIOIDC_END_SESSION_ENDPOINT') ? _CIOIDC_END_SESSION_ENDPOINT : null);
+					$ci_id_token = $GLOBALS['visiteur_session']['cioidc_id_token'];
+					spip_log(
+						'logout oidc signOut end_session_endpoint=' . $ci_end_session_endpoint
+							. ' post_logout_redirect_uri=' . $ci_url_retour
+							. ' id_token_hint_longueur=' . strlen($ci_id_token)
+							. ' id_token_hint_debut=' . substr($ci_id_token, 0, 12) . '...',
+						'cioidc'
+					);
 					try {
 						$oidc->signOut($GLOBALS['visiteur_session']['cioidc_id_token'], $ci_url_retour);
 					} catch (Exception $e) {
