@@ -1,27 +1,17 @@
 [(#REM) Affiche l'icône/logo d'une classe ]
-[(#REM) Paramètres attendus : id_rubrique, titre, numero_classe ]
-[(#REM) numero_classe est géré par l'appelant en variable locale, pas en session :
-une valeur posée en session depuis un INCLURE n'est pas relue de manière
-fiable par l'appelant une fois l'INCLURE terminé. ]
-
-#SET{icone, #SESSION{icones}|table_valeur{#ENV{numero_classe}}}
-
-#SESSION_SET{classes_data,
-	#SESSION{classes_data}|sinon{#ARRAY}|array_merge{
-		#ARRAY{
-			r#ENV{id_rubrique}, #ARRAY{numero,#ENV{numero_classe}, icone,#GET{icone}}
-		}
-	}
-}
+[(#REM) Paramètres attendus : id_rubrique, titre ]
+[(#REM) L'icône et le numéro de couleur sont calculés par classe_icone()/
+classe_numero() (thematique_fonctions.php) à partir de id_rubrique : stables
+et calculables depuis n'importe quelle page, sans dépendre d'une session
+partagée ni de l'ordre dans lequel les pages sont visitées. ]
 
 [(#MODELE{logo_menu_classe,
 	valeur=#ENV{id_rubrique},
 	filter=.#ENV{id_rubrique},
 	title=#ENV{titre},
-	class=menu_logo_classes-#ENV{id_rubrique}
-	hover_couleur_travail_en_cours[(#ENV{id_rubrique}|nb2col)],
+	class=menu_logo_classes-[(#ENV{id_rubrique}) ]hover_couleur_travail_en_cours[(#ENV{id_rubrique}|nb2col)],
 	classcouleur=couleur_travail_en_cours[(#ENV{id_rubrique}|nb2col)],
 	texte=[(#ENV{titre}|couper{2})],
-	NUMERO=#ENV{numero_classe},
-	ICONE=#GET{icone}
+	NUMERO=[(#ENV{id_rubrique}|classe_numero)],
+	ICONE=[(#ENV{id_rubrique}|classe_icone)]
 })]

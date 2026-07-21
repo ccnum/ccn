@@ -252,19 +252,82 @@ function thematique_hierarchie_a_mot($id_rubrique, $titre_mot) {
 	return !empty($id_objet);
 }
 
-function thematique_classe_infos($id_rubrique) {
-	$classes = session_get('classes_data');
-	return (is_array($classes) && isset($classes['r' . $id_rubrique]))
-		? $classes['r' . $id_rubrique]
-		: ['numero' => '', 'icone' => ''];
+/**
+ * Rang (0, 1, 2, ...) de chaque classe dans l'ordre d'affichage du sommaire,
+ * calculé directement en base (même logique que les boucles RUBRIQUES de
+ * sommaire.html : rubriques de l'année en cours taguées "travail_en_cours",
+ * sinon repli sur toutes les rubriques taguées "travail_en_cours").
+ *
+ * Volontairement stateless (pas de session) : mis en cache pour la durée de
+ * la requête seulement, recalculé identiquement depuis n'importe quelle
+ * page, dans n'importe quel ordre de navigation.
+ *
+ * @return array<int,int> id_rubrique => rang
+ */
+function thematique_classes_rangs() {
+	static $rangs = null;
+	if ($rangs !== null) {
+		return $rangs;
+	}
+	$rangs = [];
+
+	$id_mot = sql_getfetsel('id_mot', 'spip_mots', 'titre=' . sql_quote('travail_en_cours'));
+	if (!$id_mot) {
+		return $rangs;
+	}
+
+	$annee_scolaire = thematique_annee_scolaire();
+	$id_annee = sql_getfetsel(
+		'id_rubrique',
+		'spip_rubriques',
+		'titre LIKE ' . sql_quote('%' . $annee_scolaire . '%') . ' AND id_parent=0'
+	);
+
+	$from = 'spip_rubriques INNER JOIN spip_mots_liens'
+		. ' ON spip_mots_liens.id_objet=spip_rubriques.id_rubrique AND spip_mots_liens.objet=' . sql_quote('rubrique');
+	$where = 'spip_mots_liens.id_mot=' . intval($id_mot);
+	if ($id_annee) {
+		$where .= ' AND spip_rubriques.id_parent=' . intval($id_annee);
+	}
+	$conteneurs = sql_allfetsel('spip_rubriques.id_rubrique', $from, $where);
+	$ids_conteneurs = array_column($conteneurs, 'id_rubrique');
+	if (!$ids_conteneurs) {
+		return $rangs;
+	}
+
+	$classes = sql_allfetsel('id_rubrique', 'spip_rubriques', sql_in('id_parent', $ids_conteneurs), '', 'id_rubrique');
+	foreach ($classes as $rang => $ligne) {
+		$rangs[$ligne['id_rubrique']] = $rang;
+	}
+
+	return $rangs;
 }
 
-function classe_icone($id_rubrique) {
-	$infos = thematique_classe_infos($id_rubrique);
-	return $infos['icone'];
-}
-
+/**
+ * Numéro de couleur (0-9) d'une classe : son rang d'affichage (cf
+ * thematique_classes_rangs()) modulo le nombre de couleurs/icônes
+ * disponibles (cf classe_icone()).
+ *
+ * @param int $id_rubrique
+ * @return string
+ */
 function classe_numero($id_rubrique) {
-	$infos = thematique_classe_infos($id_rubrique);
-	return $infos['numero'];
+	$rang = thematique_classes_rangs()[$id_rubrique] ?? null;
+	if ($rang === null) {
+		// rubrique inconnue du sommaire (pas une "classe") : repli sur l'id
+		return filtre_nb2col($id_rubrique);
+	}
+
+	return (string) ($rang % 10);
+}
+
+/**
+ * Icône (emoji) d'une classe, dérivée de son id_rubrique via classe_numero().
+ *
+ * @param int $id_rubrique
+ * @return string
+ */
+function classe_icone($id_rubrique) {
+	$icones = ['🐝', '🦩', '🦉', '🦔', '🐟', '🐙', '🐜', '🦁', '🦋', '🦊'];
+	return $icones[classe_numero($id_rubrique)] ?? '';
 }
