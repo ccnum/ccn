@@ -1,7 +1,7 @@
 <paquet
 	prefix="thematique"
 	categorie="squelette"
-	version="3.3.1"
+	version="3.3.2"
 	etat="stable"
 	logo="th.png"
 	schema="3.0.7"
@@ -34,4 +34,6 @@
 	<pipeline nom="notifications_destinataires" inclure="thematique_pipelines.php" />
 	<pipeline nom="cioidc_userinfo" inclure="thematique_pipelines.php" />
 	<pipeline nom="autoriser" inclure="thematique_autoriser.php" />
+
+	<genie nom="thematique_rentree_poubelle" periode="86400" />
 </paquet>
