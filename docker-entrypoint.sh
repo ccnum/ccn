@@ -135,11 +135,6 @@ spip plugins:activer ccn -y
 
 spip plugins:desactiver imports_utilisateurs -y
 
-if [ ${SPIP_PLUGINS_CICAS} == true ]; then
-	spip plugins:activer cicas -y
-	else
-	spip plugins:desactiver cicas -y
-fi
 if [ ${SPIP_PLUGINS_CIOIDC} == true ]; then
 	spip plugins:activer cioidc -y
 	else
@@ -204,22 +199,10 @@ define('_PROJET', '${PROJET}');
 MAINEOF
 fi
 
-# Default _config_cas.php
+# TODO(#ISSUE): plugin cicas supprimé, ce fichier ne devrait plus jamais être
+# généré nulle part mais peut subsister sur les déploiements existants -
+# à retirer une fois qu'on est sûr qu'aucun environnement n'en a plus besoin
 rm -f config/_config_cas.php
-if [ ${SPIP_PLUGINS_CICAS} = true ]; then
-	/bin/cat << MAINEOF > config/_config_cas.php
-<?php
-if (!defined("_ECRIRE_INC_VERSION")) return;
-\$GLOBALS['ciconfig']['cicas'] = 'hybride';
-\$GLOBALS['ciconfig']['cicasuid'] = 'login';
-\$GLOBALS['ciconfig']['cicasurldefaut'] = 'www.laclasse.com';
-\$GLOBALS['ciconfig']['cicasrepertoire'] = '/sso';
-\$GLOBALS['ciconfig']['cicasport'] = '443';
-\$GLOBALS['ciconfig']['cicas_creer_auteur'] = '6forum';
-\$GLOBALS['ciconfig']['cicashostordre'] = ['HTTP_HOST', 'SERVER_NAME', 'HTTP_X_FORWARDED_SERVER'];
-?>
-MAINEOF
-fi
 
 # Default _config_cioidc.php
 rm -f config/_config_cioidc.php
