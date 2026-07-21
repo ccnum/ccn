@@ -18,7 +18,7 @@
 					class="btn-rollover" data-src-hover="#CHEMIN{img/lecture/bt_forum_hover.png}"
 					width="20" height="20" title="forum" style="height: 20px; line-height: 20px; vertical-align: middle; padding-left: 5px; display: none;"/></a>]]
 			]
-			[(#SESSION{id_auteur}|non)<a href="[(#PLUGIN{CICAS}|oui|?{'?url=spip.php%3Fpage%3Dsommaire&cicas=oui','?page=login&url=.%2F'})]" class="">Se connecter</a>&nbsp;&nbsp;|<a href="http://www.laclasse.com/pls/public/!page.laclasse?contexte=QUESTION&rubrique=0">Mot de passe oublié ?</a>]
+			[(#SESSION{id_auteur}|non)<a href="[(#PLUGIN{cioidc}|oui|?{'?url=spip.php%3Fpage%3Dsommaire&cioidc=oui','?page=login&url=.%2F'})]" class="">Se connecter</a>&nbsp;&nbsp;|<a href="http://www.laclasse.com/pls/public/!page.laclasse?contexte=QUESTION&rubrique=0">Mot de passe oublié ?</a>]
 
 			<BOUCLE_espace_doc(RUBRIQUES){titre==#EVAL{_ANNEE_SCOLAIRE}}>
 				<!-- #ID_RUBRIQUE -->
