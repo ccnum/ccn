@@ -214,16 +214,23 @@ function thematique_cioidc_userinfo($flux) {
 	);
 	spip_log('userinfo annee_scolaire=' . $annee_scolaire . ' id_secteur=' . $id_secteur, 'cioidc');
 
-	// Trouver la rubrique "Travail des classes" sous ce secteur
+	// Trouver la rubrique "Travail des classes" sous ce secteur (rôle prof)
 	$id_travail_classes = null;
+	// Trouver la rubrique "Consignes" sous ce secteur (rôle intervenant)
+	$id_consignes = null;
 	if ($id_secteur) {
 		$id_travail_classes = sql_getfetsel(
 			'id_rubrique',
 			'spip_rubriques',
 			'titre LIKE ' . sql_quote('%Travail des classes%') . ' AND id_secteur=' . intval($id_secteur)
 		);
+		$id_consignes = sql_getfetsel(
+			'id_rubrique',
+			'spip_rubriques',
+			'titre LIKE ' . sql_quote('%Consignes%') . ' AND id_secteur=' . intval($id_secteur)
+		);
 	}
-	spip_log('userinfo id_travail_classes=' . $id_travail_classes, 'cioidc');
+	spip_log('userinfo id_travail_classes=' . $id_travail_classes . ' id_consignes=' . $id_consignes, 'cioidc');
 
 	$profils = $flux['data']['ENTPersonProfils [ENS|TUT|ELV]'] ?? '';
 	$is_enseignant = (strpos($profils, 'ENS') !== false);
@@ -261,37 +268,89 @@ function thematique_cioidc_userinfo($flux) {
 		objet_dissocier(['id_auteur' => $auteur['id_auteur']], ['rubrique' => '*']);
 	}
 
+	// ENTClassesGroupes (member_type=ENS, group_type=CLS) : la/les classe(s) réellement
+	// enseignée(s) par ce prof → lien "Travail des classes". Absent chez un intervenant
+	// qui n'a pas de classe en charge, seulement un groupe projet (ENTGroupesLibres).
+	$classes_groupes = $flux['data']['ENTClassesGroupes'] ?? [];
+	if (is_object($classes_groupes)) {
+		$classes_groupes = [$classes_groupes];
+	}
+
+	// ENTGroupesLibres : le groupe projet (ex: nom de l'intervenant/du binôme) → lien "Consignes"
 	$groupes_libres = $flux['data']['ENTGroupesLibres'] ?? [];
 	// Un attribut CAS multivalué arrive en objet unique (pas en tableau) quand il n'y a qu'une seule valeur
 	if (is_object($groupes_libres)) {
 		$groupes_libres = [$groupes_libres];
 	}
-	spip_log('userinfo nb ENTGroupesLibres=' . count($groupes_libres), 'cioidc');
+	spip_log(
+		'userinfo nb ENTClassesGroupes=' . count($classes_groupes) . ' nb ENTGroupesLibres=' . count($groupes_libres),
+		'cioidc'
+	);
+
+	$projets_a_lier = [];
 
 	if ($is_enseignant && !$is_webmestre) {
-		foreach ($groupes_libres as $groupe) {
-			//$groupe->structure_id; $groupe->id; $groupe->name;
-			spip_log('userinfo groupe=' . json_encode($groupe), 'cioidc');
-			// Chercher la rubrique de classe (ex: "3EME2") sous "Travail des classes" de l'année en cours
-			if ($id_travail_classes && !empty($groupe->name)) {
+		// Chercher/créer la rubrique de classe (ex: "3EME2") sous "Travail des classes" de l'année en cours
+		foreach ($classes_groupes as $groupe) {
+			if (($groupe->group_type ?? '') !== 'CLS' || empty($groupe->group_name)) {
+				continue;
+			}
+			spip_log('userinfo classe_groupe=' . json_encode($groupe), 'cioidc');
+			if ($id_travail_classes) {
 				$id_classe = sql_getfetsel(
 					'id_rubrique',
 					'spip_rubriques',
-					'titre LIKE ' . sql_quote('%' . $groupe->name . '%') . ' AND id_parent=' . intval($id_travail_classes)
+					'titre LIKE ' . sql_quote('%' . $groupe->group_name . '%') . ' AND id_parent=' . intval($id_travail_classes)
 				);
-				spip_log('userinfo recherche classe name=' . $groupe->name . ' => id_classe=' . $id_classe, 'cioidc');
+				spip_log('userinfo recherche classe name=' . $groupe->group_name . ' => id_classe=' . $id_classe, 'cioidc');
+				if (!$id_classe) {
+					// Rubrique de classe absente (ex: nouvelle année scolaire, nouveau groupe ENT) :
+					// on la crée à la volée plutôt que de bloquer le prof, elle héritera
+					// du rôle "prof" via la hiérarchie de "Travail des classes".
+					include_spip('inc/rubriques');
+					$id_classe = creer_rubrique_nommee($groupe->group_name, $id_travail_classes);
+					if ($id_classe) {
+						sql_updateq('spip_rubriques', ['statut' => 'publie'], 'id_rubrique=' . intval($id_classe));
+						spip_log('userinfo classe créée name=' . $groupe->group_name . ' => id_classe=' . $id_classe, 'cioidc');
+					}
+				}
 				if ($id_classe) {
 					$classes_a_lier[] = $id_classe;
+				}
+			}
+		}
+
+		// Chercher/créer la rubrique du groupe projet (ex: "Tuba & Silva") sous "Consignes"
+		foreach ($groupes_libres as $groupe) {
+			spip_log('userinfo groupe=' . json_encode($groupe), 'cioidc');
+			if ($id_consignes && !empty($groupe->name)) {
+				$id_projet = sql_getfetsel(
+					'id_rubrique',
+					'spip_rubriques',
+					'titre LIKE ' . sql_quote('%' . $groupe->name . '%') . ' AND id_parent=' . intval($id_consignes)
+				);
+				spip_log('userinfo recherche projet name=' . $groupe->name . ' => id_projet=' . $id_projet, 'cioidc');
+				if (!$id_projet) {
+					// Rubrique de projet absente : on la crée à la volée plutôt que de bloquer
+					// l'intervenant, elle héritera du rôle "intervenant" via la hiérarchie de "Consignes".
+					include_spip('inc/rubriques');
+					$id_projet = creer_rubrique_nommee($groupe->name, $id_consignes);
+					if ($id_projet) {
+						sql_updateq('spip_rubriques', ['statut' => 'publie'], 'id_rubrique=' . intval($id_projet));
+						spip_log('userinfo projet créé name=' . $groupe->name . ' => id_projet=' . $id_projet, 'cioidc');
+					}
+				}
+				if ($id_projet) {
+					$projets_a_lier[] = $id_projet;
 				}
 			}
 		}
 	}
 
 	spip_log(
-		$auteur['id_auteur'] . ' / ' . $auteur['nom'] . ' => enseignant:' . ($is_enseignant ? 'oui' : 'non') . ' classes:' . implode(
-			',',
-			$classes_a_lier
-		),
+		$auteur['id_auteur'] . ' / ' . $auteur['nom'] . ' => enseignant:' . ($is_enseignant ? 'oui' : 'non')
+			. ' classes:' . implode(',', $classes_a_lier)
+			. ' projets:' . implode(',', $projets_a_lier),
 		'cioidc'
 	);
 
@@ -302,6 +361,9 @@ function thematique_cioidc_userinfo($flux) {
 		}
 		foreach ($classes_a_lier as $id_classe) {
 			objet_associer(['id_auteur' => $auteur['id_auteur']], ['rubrique' => $id_classe]);
+		}
+		foreach ($projets_a_lier as $id_projet) {
+			objet_associer(['id_auteur' => $auteur['id_auteur']], ['rubrique' => $id_projet]);
 		}
 	}
 
