@@ -160,7 +160,16 @@ spip config:ecrire -p autorite auteur_modere_forum:0
 spip config:ecrire -p autorite editer_forums:1
 spip config:ecrire -p autorite publierdans:15
 spip config:ecrire -p bigup charger_public:1
-spip config:ecrire -p bigup max_file_size:${PHP_UPLOAD_MAX_FILESIZE%M}
+spip config:ecrire -p bigup max_file_size:100
+# ne jamais redimensionner automatiquement les images trop grandes à l'upload :
+# ce chemin décode l'image entière en GD/Imagick, ce que _IMG_MAX_WIDTH/_IMG_MAX_HEIGHT
+# (mes_options.php) sont censés empêcher en rejetant l'upload à la place
+spip config:ecrire creer_preview:non
+# Utiliser Imagick plutôt que GD pour générer les vignettes : GD charge l'image
+# entière en mémoire PHP (memory_limit) selon sa résolution, tandis qu'Imagick
+# gère sa propre mémoire (policy.xml) et peut basculer sur disque, ce qui évite
+# de faire planter le process PHP sur de grosses images.
+spip config:ecrire image_process:imagick
 spip config:ecrire -p mediabox active:oui
 spip config:ecrire -p notation acces:ide
 spip config:ecrire -p notation change_note:oui
@@ -182,6 +191,11 @@ define('_DEBUG_SLOW_QUERIES', true);
 define('_BOUCLE_PROFILER', 5000);
 define('_AUTORISER_TELECHARGER_PLUGINS', false);
 define('_TITRER_DOCUMENTS', true);
+// limiter la résolution des images acceptées : le serveur n'a que 300 Mo de
+// RAM, un décodage GD/Imagick d'image trop grande fait planter le process
+// (~15 Mpx = marge de sécurité avec le reste des process du serveur)
+define('_IMG_MAX_WIDTH', 4500);
+define('_IMG_MAX_HEIGHT', 3500);
 // désactiver les notifications de mise à jour
 define('_MAJ_NOTIF_EMAILS', '');
 // des personalisations par projet
