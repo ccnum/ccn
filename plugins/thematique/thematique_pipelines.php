@@ -244,14 +244,63 @@ function thematique_cioidc_userinfo($flux) {
 	$is_webmestre = $is_enseignant && $rne && in_array($rne, $rne_webmestres, true);
 	spip_log('userinfo ENTPersonStructRattachRNE=' . $rne . ' => webmestre:' . ($is_webmestre ? 'oui' : 'non'), 'cioidc');
 
+	// ENTClassesGroupes (member_type=ENS, group_type=CLS) : la/les classe(s) réellement
+	// enseignée(s) par ce prof → lien "Travail des classes". Absent chez un intervenant
+	// qui n'a pas de classe en charge, seulement un groupe projet (ENTGroupesLibres).
+	$classes_groupes = $flux['data']['ENTClassesGroupes'] ?? [];
+	if (is_object($classes_groupes)) {
+		$classes_groupes = [$classes_groupes];
+	}
+	$classes_reelles = array_filter(
+		$classes_groupes,
+		fn ($groupe) => ($groupe->group_type ?? '') === 'CLS' && !empty($groupe->group_name)
+	);
+
+	// ENTGroupesLibres : le groupe projet (ex: nom de l'intervenant/du binôme) → lien "Consignes".
+	// Un même compte ENT peut porter des groupes de plusieurs thématiques/années
+	// ("Textile 2023", "On tourne 2025", ...) : seuls ceux de la thématique de CE site
+	// (meta nom_site) et de l'année scolaire en cours sont pertinents ici.
+	$groupes_libres = $flux['data']['ENTGroupesLibres'] ?? [];
+	// Un attribut CAS multivalué arrive en objet unique (pas en tableau) quand il n'y a qu'une seule valeur
+	if (is_object($groupes_libres)) {
+		$groupes_libres = [$groupes_libres];
+	}
+	$nom_site = $GLOBALS['meta']['nom_site'] ?? '';
+	$groupes_libres_pertinents = [];
+	if ($nom_site) {
+		foreach ($groupes_libres as $groupe) {
+			$nom_groupe = $groupe->name ?? '';
+			if (
+				$nom_groupe
+				&& stripos($nom_groupe, (string) $nom_site) !== false
+				&& strpos($nom_groupe, (string) $annee_scolaire) !== false
+			) {
+				$groupes_libres_pertinents[] = $groupe;
+			}
+		}
+	}
+	spip_log(
+		'userinfo nom_site=' . $nom_site
+			. ' nb ENTClassesGroupes=' . count($classes_groupes)
+			. ' nb ENTGroupesLibres=' . count($groupes_libres)
+			. ' nb pertinents=' . count($groupes_libres_pertinents),
+		'cioidc'
+	);
+
+	// Un enseignant sans classe réelle ni groupe projet pertinent pour ce site/cette
+	// année reste simple visiteur : pas de droit de rédaction tant qu'il n'est pas
+	// effectivement affecté à quelque chose ici.
+	$a_un_groupe_pertinent = count($classes_reelles) > 0 || count($groupes_libres_pertinents) > 0;
+
 	$statut = null;
 	if ($is_webmestre) {
 		$statut = '0minirezo';
 	} elseif (strpos($profils, 'ELV') !== false) {
 		$statut = '6forum';
 	} elseif (strpos($profils, 'ENS') !== false) {
-		$statut = '1comite';
+		$statut = $a_un_groupe_pertinent ? '1comite' : '6forum';
 	}
+	spip_log('userinfo groupe_pertinent=' . ($a_un_groupe_pertinent ? 'oui' : 'non') . ' => statut:' . $statut, 'cioidc');
 	if ($statut && $statut !== $auteur['statut']) {
 		spip_log('userinfo mise à jour du statut : ' . $auteur['statut'] . ' => ' . $statut, 'cioidc');
 		sql_updateq('spip_auteurs', ['statut' => $statut], 'id_auteur=' . intval($auteur['id_auteur']));
@@ -268,40 +317,19 @@ function thematique_cioidc_userinfo($flux) {
 		objet_dissocier(['id_auteur' => $auteur['id_auteur']], ['rubrique' => '*']);
 	}
 
-	// ENTClassesGroupes (member_type=ENS, group_type=CLS) : la/les classe(s) réellement
-	// enseignée(s) par ce prof → lien "Travail des classes". Absent chez un intervenant
-	// qui n'a pas de classe en charge, seulement un groupe projet (ENTGroupesLibres).
-	$classes_groupes = $flux['data']['ENTClassesGroupes'] ?? [];
-	if (is_object($classes_groupes)) {
-		$classes_groupes = [$classes_groupes];
-	}
-
-	// ENTGroupesLibres : le groupe projet (ex: nom de l'intervenant/du binôme) → lien "Consignes"
-	$groupes_libres = $flux['data']['ENTGroupesLibres'] ?? [];
-	// Un attribut CAS multivalué arrive en objet unique (pas en tableau) quand il n'y a qu'une seule valeur
-	if (is_object($groupes_libres)) {
-		$groupes_libres = [$groupes_libres];
-	}
-	spip_log(
-		'userinfo nb ENTClassesGroupes=' . count($classes_groupes) . ' nb ENTGroupesLibres=' . count($groupes_libres),
-		'cioidc'
-	);
-
 	$projets_a_lier = [];
 
 	if ($is_enseignant && !$is_webmestre) {
 		// Rubrique de classe (ex: "3EME2") sous "Travail des classes" de l'année en cours → rôle prof
-		foreach ($classes_groupes as $groupe) {
-			if (($groupe->group_type ?? '') !== 'CLS' || empty($groupe->group_name)) {
-				continue;
-			}
+		foreach ($classes_reelles as $groupe) {
 			if ($id_classe = thematique_trouver_ou_creer_rubrique($groupe->group_name, $id_travail_classes)) {
 				$classes_a_lier[] = $id_classe;
 			}
 		}
 
-		// Rubrique du groupe projet (ex: "Tuba & Silva") sous "Consignes" → rôle intervenant
-		foreach ($groupes_libres as $groupe) {
+		// Rubrique du groupe projet (ex: "Tuba & Silva") sous "Consignes" → rôle intervenant,
+		// uniquement pour les groupes pertinents pour ce site (cf plus haut)
+		foreach ($groupes_libres_pertinents as $groupe) {
 			if ($id_projet = thematique_trouver_ou_creer_rubrique($groupe->name ?? '', $id_consignes)) {
 				$projets_a_lier[] = $id_projet;
 			}
