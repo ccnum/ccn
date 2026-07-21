@@ -1,7 +1,7 @@
 <paquet
 	prefix="thematique"
 	categorie="squelette"
-	version="3.3.2"
+	version="3.3.3"
 	etat="stable"
 	logo="th.png"
 	schema="3.0.7"
@@ -23,7 +23,7 @@
 	<necessite nom="spip_bonux" />
 
 	<utilise nom="autorite" compatibilite="[0.10.18;[" />
-	<utilise nom="cicas" />
+	<utilise nom="cioidc" />
 	<utilise nom="medias" />
 
 	<pipeline nom="declarer_champs_extras" inclure="base/thematique_cextras.php" />

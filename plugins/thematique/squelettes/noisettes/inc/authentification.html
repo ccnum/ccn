@@ -25,13 +25,6 @@
 			<span class="icon icon-down"></span>
 		</button>
 		<ul class="select-options">
-			[(#PLUGIN{cicas}|oui)
-				<li class="select-option">
-					<a href="[(#URL_PAGE{login}|parametre_url{url,#SELF}|parametre_url{cicas,oui})]" title="Se connecter à l'ENT" class="nowrap">
-						Se connecter à l'ENT
-					</a>
-				</li>
-			]
 			[(#PLUGIN{cioidc}|oui)
 				<li class="select-option">
 					<a href="[(#URL_PAGE{login}|parametre_url{url,#SELF}|parametre_url{cioidc,oui})]" title="Se connecter à l'ENT" class="nowrap">

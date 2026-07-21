@@ -9,9 +9,6 @@
 		<!-- <p class="explication"><:forum_vous_enregistrer:> <:forum_vous_inscrire:></p> -->
 		<p class="retour">
 			<div class="login-forum-buttons">
-				[(#PLUGIN{cicas}|oui)
-					<a href="[(#URL_PAGE{login}|parametre_url{url,#SELF}|parametre_url{cicas,oui})]"><span class="icon icon-connecter"></span>Me connecter</a>
-				]
 				[(#PLUGIN{cioidc}|oui)
 					<a href="[(#URL_PAGE{login}|parametre_url{url,#SELF}|parametre_url{action,login_cioidc})]"><span class="icon icon-connecter"></span>Me connecter</a>
 				]
