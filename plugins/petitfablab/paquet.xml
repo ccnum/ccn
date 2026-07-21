@@ -1,7 +1,7 @@
 <paquet
 	prefix="petitfablab"
 	categorie="squelette"
-	version="1.0.0"
+	version="1.0.1"
 	etat="stable"
 	logo=""
 	schema=""
@@ -23,5 +23,5 @@
 	<necessite nom="verifier" />
 	<necessite nom="vider_rubrique" />
 
-	<utilise nom="cicas" />
+	<utilise nom="cioidc" />
 </paquet>
