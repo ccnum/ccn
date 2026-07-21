@@ -28,6 +28,40 @@ function thematique_annee_scolaire() {
 }
 
 /**
+ * Cherche une rubrique par titre sous un parent, la crée (publiée) si absente.
+ *
+ * @param string $nom
+ * @param int $id_parent
+ * @return int|null
+ */
+function thematique_trouver_ou_creer_rubrique($nom, $id_parent) {
+	if (!$id_parent || empty($nom)) {
+		return null;
+	}
+	$id_rubrique = sql_getfetsel(
+		'id_rubrique',
+		'spip_rubriques',
+		'titre LIKE ' . sql_quote('%' . $nom . '%') . ' AND id_parent=' . intval($id_parent)
+	);
+	spip_log(
+		'userinfo recherche rubrique name=' . $nom . ' id_parent=' . $id_parent . ' => id_rubrique=' . $id_rubrique,
+		'cioidc'
+	);
+	if (!$id_rubrique) {
+		include_spip('inc/rubriques');
+		$id_rubrique = creer_rubrique_nommee($nom, $id_parent);
+		if ($id_rubrique) {
+			sql_updateq('spip_rubriques', ['statut' => 'publie'], 'id_rubrique=' . intval($id_rubrique));
+			spip_log(
+				'userinfo rubrique créée name=' . $nom . ' id_parent=' . $id_parent . ' => id_rubrique=' . $id_rubrique,
+				'cioidc'
+			);
+		}
+	}
+	return $id_rubrique ?: null;
+}
+
+/**
  * Indique si la requête HTTP courante est un appel Ajax (XMLHttpRequest),
  * par opposition à une vraie navigation du navigateur.
  */
@@ -52,8 +86,6 @@ function balise_EST_MODE_NOISETTE_dist($p) {
 	return $p;
 }
 
-
-
 /**
  * Retourne le profil de navigation de la sidebar
  *
@@ -61,66 +93,58 @@ function balise_EST_MODE_NOISETTE_dist($p) {
  */
 function sidebar_profil() {
 
-    // Pas connecté
-    if (!session_get('id_auteur')) {
-        return [
-            'role' => 'intervenant',
-            'restreint' => null
-        ];
-    }
+	// Pas connecté
+	if (!session_get('id_auteur')) {
+		return [
+			'role' => 'intervenant',
+			'restreint' => null,
+		];
+	}
 
-    $id_auteur = intval(session_get('id_auteur'));
-    $statut = session_get('statut');
+	$id_auteur = intval(session_get('id_auteur'));
+	$statut = session_get('statut');
 
+	// Administrateur complet
+	if ($statut === '0minirezo') {
+		return [
+			'role' => 'admin',
+			'restreint' => null,
+		];
+	}
 
-    // Administrateur complet
-    if ($statut === '0minirezo') {
-        return [
-            'role' => 'admin',
-            'restreint' => null
-        ];
-    }
+	// Recherche des rubriques administrées
+	$rubriques = sql_allfetsel(
+		'id_rubrique',
+		'spip_auteurs_liens',
+		['id_auteur=' . $id_auteur, 'objet=' . sql_quote('rubrique')]
+	);
 
+	// Aucune rubrique administrée
+	if (!$rubriques) {
+		return [
+			'role' => 'intervenant',
+			'restreint' => null,
+		];
+	}
 
-    // Recherche des rubriques administrées
-    $rubriques = sql_allfetsel(
-        'id_rubrique',
-        'spip_auteurs_liens',
-        [
-            'id_auteur=' . $id_auteur,
-            'objet=' . sql_quote('rubrique')
-        ]
-    );
+	// Une seule rubrique → admin restreint
+	if (count($rubriques) === 1) {
 
+		return [
+			'role' => 'admin_restreint',
+			'restreint' => intval($rubriques[0]['id_rubrique']),
+		];
+	}
 
-    // Aucune rubrique administrée
-    if (!$rubriques) {
-        return [
-            'role' => 'intervenant',
-            'restreint' => null
-        ];
-    }
-
-
-    // Une seule rubrique → admin restreint
-    if (count($rubriques) === 1) {
-
-        return [
-            'role' => 'admin_restreint',
-            'restreint' => intval($rubriques[0]['id_rubrique'])
-        ];
-    }
-
-
-    // Plusieurs rubriques → à adapter selon ta règle métier
-    return [
-        'role' => 'admin_restreint',
-        'restreint' => intval($rubriques[0]['id_rubrique'])
-    ];
+	// Plusieurs rubriques → à adapter selon ta règle métier
+	return [
+		'role' => 'admin_restreint',
+		'restreint' => intval($rubriques[0]['id_rubrique']),
+	];
 }
 
 function filtre_sidebar_profil_dist() {
-    return sidebar_profil();
+	return sidebar_profil();
 }
 
 function thematique_donner_role($id_auteur) {
@@ -168,7 +192,7 @@ function thematique_auteur_a_mot_dans_hierarchie($id_auteur, $titre_mot) {
 	$rubriques = sql_allfetsel(
 		'id_rubrique',
 		'spip_auteurs_liens',
-		"id_auteur=" . intval($id_auteur) . " AND objet='rubrique'"
+		'id_auteur=' . intval($id_auteur) . " AND objet='rubrique'"
 	);
 	foreach ($rubriques as $r) {
 		// équivalent de ta BOUCLE_hie_rub{tout} + BOUCLE_mot_rub
@@ -232,7 +256,7 @@ function thematique_classe_infos($id_rubrique) {
 	$classes = session_get('classes_data');
 	return (is_array($classes) && isset($classes['r' . $id_rubrique]))
 		? $classes['r' . $id_rubrique]
-		: array('numero' => '', 'icone' => '');
+		: ['numero' => '', 'icone' => ''];
 }
 
 function classe_icone($id_rubrique) {

@@ -290,59 +290,20 @@ function thematique_cioidc_userinfo($flux) {
 	$projets_a_lier = [];
 
 	if ($is_enseignant && !$is_webmestre) {
-		// Chercher/créer la rubrique de classe (ex: "3EME2") sous "Travail des classes" de l'année en cours
+		// Rubrique de classe (ex: "3EME2") sous "Travail des classes" de l'année en cours → rôle prof
 		foreach ($classes_groupes as $groupe) {
 			if (($groupe->group_type ?? '') !== 'CLS' || empty($groupe->group_name)) {
 				continue;
 			}
-			spip_log('userinfo classe_groupe=' . json_encode($groupe), 'cioidc');
-			if ($id_travail_classes) {
-				$id_classe = sql_getfetsel(
-					'id_rubrique',
-					'spip_rubriques',
-					'titre LIKE ' . sql_quote('%' . $groupe->group_name . '%') . ' AND id_parent=' . intval($id_travail_classes)
-				);
-				spip_log('userinfo recherche classe name=' . $groupe->group_name . ' => id_classe=' . $id_classe, 'cioidc');
-				if (!$id_classe) {
-					// Rubrique de classe absente (ex: nouvelle année scolaire, nouveau groupe ENT) :
-					// on la crée à la volée plutôt que de bloquer le prof, elle héritera
-					// du rôle "prof" via la hiérarchie de "Travail des classes".
-					include_spip('inc/rubriques');
-					$id_classe = creer_rubrique_nommee($groupe->group_name, $id_travail_classes);
-					if ($id_classe) {
-						sql_updateq('spip_rubriques', ['statut' => 'publie'], 'id_rubrique=' . intval($id_classe));
-						spip_log('userinfo classe créée name=' . $groupe->group_name . ' => id_classe=' . $id_classe, 'cioidc');
-					}
-				}
-				if ($id_classe) {
-					$classes_a_lier[] = $id_classe;
-				}
+			if ($id_classe = thematique_trouver_ou_creer_rubrique($groupe->group_name, $id_travail_classes)) {
+				$classes_a_lier[] = $id_classe;
 			}
 		}
 
-		// Chercher/créer la rubrique du groupe projet (ex: "Tuba & Silva") sous "Consignes"
+		// Rubrique du groupe projet (ex: "Tuba & Silva") sous "Consignes" → rôle intervenant
 		foreach ($groupes_libres as $groupe) {
-			spip_log('userinfo groupe=' . json_encode($groupe), 'cioidc');
-			if ($id_consignes && !empty($groupe->name)) {
-				$id_projet = sql_getfetsel(
-					'id_rubrique',
-					'spip_rubriques',
-					'titre LIKE ' . sql_quote('%' . $groupe->name . '%') . ' AND id_parent=' . intval($id_consignes)
-				);
-				spip_log('userinfo recherche projet name=' . $groupe->name . ' => id_projet=' . $id_projet, 'cioidc');
-				if (!$id_projet) {
-					// Rubrique de projet absente : on la crée à la volée plutôt que de bloquer
-					// l'intervenant, elle héritera du rôle "intervenant" via la hiérarchie de "Consignes".
-					include_spip('inc/rubriques');
-					$id_projet = creer_rubrique_nommee($groupe->name, $id_consignes);
-					if ($id_projet) {
-						sql_updateq('spip_rubriques', ['statut' => 'publie'], 'id_rubrique=' . intval($id_projet));
-						spip_log('userinfo projet créé name=' . $groupe->name . ' => id_projet=' . $id_projet, 'cioidc');
-					}
-				}
-				if ($id_projet) {
-					$projets_a_lier[] = $id_projet;
-				}
+			if ($id_projet = thematique_trouver_ou_creer_rubrique($groupe->name ?? '', $id_consignes)) {
+				$projets_a_lier[] = $id_projet;
 			}
 		}
 	}
