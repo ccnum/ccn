@@ -9,8 +9,7 @@ partagée ni de l'ordre dans lequel les pages sont visitées. ]
 	valeur=#ENV{id_rubrique},
 	filter=.#ENV{id_rubrique},
 	title=#ENV{titre},
-	class=menu_logo_classes-[(#ENV{id_rubrique}) ]hover_couleur_travail_en_cours[(#ENV{id_rubrique}|nb2col)],
-	classcouleur=couleur_travail_en_cours[(#ENV{id_rubrique}|nb2col)],
+	class=menu_logo_classes-[(#ENV{id_rubrique}) ],
 	texte=[(#ENV{titre}|couper{2})],
 	NUMERO=[(#ENV{id_rubrique}|classe_numero)],
 	ICONE=[(#ENV{id_rubrique}|classe_icone)]
