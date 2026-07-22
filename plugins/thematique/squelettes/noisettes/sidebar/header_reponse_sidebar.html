@@ -10,36 +10,21 @@ Arguments :
 <BOUCLE_article_sidebar(ARTICLES){id_article}{tout}>
 <div class="sidebar_bubble">
 	<div id="row_header">
-		<div id="header-col-left">
-			[(#ENV{type_objet}|in_array{#LISTE{consignes,travail_en_cours,ressources,classes,agora}}|oui)
-				[(#ENV{type_objet}|in_array{#LISTE{travail_en_cours,classes}}|oui)]
-				<div>
-					<div class="texte">
-						<div class="photo">[(#MODELE{logo_carre}{id_article})]</div>
-						<div class="#EDIT{titre} titre">[(#TITRE)]</div>
-						<div class="auteur_date">
-							[<div id="ajax_go_to_classe_#GET{id_parent}" onclick="callClasse('#GET{id_parent}')" class="reponse_goto_classe[(#ENV{type_objet}|in_array{#LISTE{travail_en_cours,classes}}|oui) pointer]">
-								(#GET{titre_parent})
-							</div>]
-							[<div class="#EDIT{date}">Publié le (#DATE|affdate)</div>]
-							<BOUCLE_auteur_consigne(AUTEURS){id_article}{tout}>
-								#NOM
-							</BOUCLE_auteur_consigne>
-							[(#ENV{type_objet}|=={travail_en_cours}|oui)
-								[<div id="ajax_go_to_consigne_#GET{id_consigne}" onclick="callConsigne('#GET{id_consigne}')" class="reponse_goto_consigne">
-									<div class="reponse_goto_consigne_label">En réponse à la consigne :</div>
-									(#GET{titre_consigne})
-								</div>]
-							]
-						</div>
-					</div>
-				</div>
-			]
+		<div id="header-col-left">	
+			<div class="photo">[(#MODELE{logo_carre}{id_article})]</div>
+			<div class="#EDIT{titre} titre">
+				<BOUCLE_auteur_consigne(AUTEURS){id_article}{tout}>
+					#NOM
+				</BOUCLE_auteur_consigne>
+			</div>
+			<div class="#EDIT{date} date">
+				Publié le [(#DATE|affdate)]
+			</div>
 		</div>
 		<div id="header-col-right">
 			<div id="header-row-1">
 				<div class="etiquette-etape">
-					<span class="texte-etiquette">Étape N°[(#ENV{rang}|plus{1})]</span>
+					<span class="texte-etiquette">RÉPONSE - MISSION N°[(#ENV{rang}|plus{1})]</span>
 				</div>
 				<div id="sidebar-top-right-corner">
 					<div id="header-sidebarexpand-container">

@@ -41,16 +41,6 @@
 	line-height: 17px;
 }
 
-.consigne .auteur_date {
-	font-size: 0.5875em;
-	line-height: 1.28em;
-	padding: 1.06em;
-	text-transform: uppercase;
-	letter-spacing: 1px;
-	background: rgba(0,0,0,0.07);
-	margin: 1.28em -1.06em 0.85em;
-}
-
 .consigne .texte {
 	display: flex;
 	flex-direction: column;
@@ -190,6 +180,9 @@
 }
 
 .auteur_date {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
 	margin-top: 0px;
 	padding-top: 7px;
 }
@@ -282,10 +275,10 @@
 }
 
 .etiquette-etape {
-	padding: 5px 7px;
+	padding: 3px 7px;
 	display: flex;
 	gap: 0.29em;
-	background-color: var(--color-bleu-fond);
+	background-color: white;
 	color: var(--color-tonic);
 	border: 1px solid var(--color-tonic);
 	font-size: 0.65em;
@@ -304,8 +297,7 @@
 #sidebar .etiquette-etape .texte-etiquette {
 	display: flex;
 	align-items: center;
-	font-size: 1rem;
-	font-weight: 399;
+	font-size: 0.8rem;
 }
 
 .consigne_haute.derniere-etape .etiquette-etape {
