@@ -12,11 +12,9 @@ Vous pourrez ajouter des fichiers à l'étape suivante.
 <div>Poser une seule question claire à chaque fois.</div>
 <br>
 
-
-
-
-#FORMULAIRE_PUBLIC_EDITER_ARTICLE{#ENV{id_article},#ENV{id_rubrique},#URL_ARTICLE|parametre_url{mode,complet}}
-
+<div class="ajax">
+#FORMULAIRE_PUBLIC_PUBLIER_ARTICLE{#ID_RUBRIQUE}
+</div>
 
 <div style="display: flex; justify-content: flex-end;">
     <button onclick="creationMissionEtapeSuivante()">
