@@ -84,7 +84,7 @@ function Consigne() {
 						<img class="logo-etiquette" src="" alt="" />
 						<span class="texte-etiquette">Étape N°${this.numero+1}</span>
 					</div>
-					<div class="texte">
+					<div class="texte ceci_est_un_test">
 						<div class="first-row">
 							<div class="photo"><img src="${this.data.image}" alt="${escHtml(this.intervenant_nom)}" /></div>
 							<div class="titre"></div>

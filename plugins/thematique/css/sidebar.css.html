@@ -1591,15 +1591,23 @@ ul#forum, .lien_forum {
 #row_header {
 	display: flex;
 	justify-content: space-between;
-	padding: 11px;
-	padding-bottom: 0;
 }
-#header-col_left {
-	flex: 1;
+
+#row_header > * {
+	padding: 11px;
+}
+#header-col-left {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+}
+.sidebar_bubble:not(.header-reponse) #header-col-left {
+	border-bottom: 3px solid var(--color-bleu-fond);
 }
 #header-col-right {
-	flex: 4;
+	flex: 1;
 	padding: 12px;
+	background-color: var(--color-bleu-fond);
 }
 #header-row-1 {
     display: flex;
@@ -1611,7 +1619,6 @@ ul#forum, .lien_forum {
 	flex: 1;
     display: flex;
     align-items: center;
-    justify-content: center;
 	font-weight: 800;
 }
 #header-reactions {
@@ -1620,6 +1627,30 @@ ul#forum, .lien_forum {
 	gap: 6px;
 	white-space: nowrap;
 }
+
+#header-col-left .photo {
+	width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    overflow: hidden;
+}
+
+#header-col-left .photo > img {
+	width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+}
+
+#header-col-left .auteur {
+	font-weight: 700;
+	font-size: 12.8049px;
+}
+#header-col-left .date {
+	font-weight: 400;
+	font-size: 12.8049px;
+}
+
 #sidebar-top-right-corner {
 	display: flex;
 	gap: 8px;
@@ -1638,13 +1669,15 @@ ul#forum, .lien_forum {
 	margin: 2px;
 }
 #sidebarExpand {
-	--svg: url("#CHEMIN{img/expend.svg}");
+	--svg: url("#CHEMIN{img/arrows-up-down.svg}");
 	background-color: white;
 	aspect-ratio: 1 / 1;
 	width: 70%;
+	transform: rotate(45deg);
 }
 .hasSidebarExpanded #sidebarExpand {
 	--svg: url("#CHEMIN{img/shrink.svg}");
+	transform: rotate(0deg);
 }
 
 .container-tabs {
@@ -1672,5 +1705,25 @@ ul#forum, .lien_forum {
 	min-height: 0;
 	overflow-y: auto;
 	background-color: var(--color-background-tabs);
+}
+
+.image-classe-dans-reponse {
+	width: 33%;
+    aspect-ratio: 1 / 1;
+	border-radius: 50%;
+    overflow: hidden;
+	background-color: white;
+}
+
+.image-classe-dans-reponse > .logo {
+	display: flex;
+    align-items: center;
+	height: 100%;
+	width: 100%;
+	background-color: inherit !important;
+}
+
+.image-classe-dans-reponse > .logo > .logo_menu_classe {
+	background-color: inherit !important;
 }
 
