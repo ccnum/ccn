@@ -7,15 +7,18 @@ Arguments :
 - type_objet
 - rang
 ]
+
 <BOUCLE_article_sidebar(ARTICLES){id_article}{tout}>
-<div class="sidebar_bubble">
+<div class="sidebar_bubble header-reponse">
 	<div id="row_header">
-		<div id="header-col-left">	
-			<div class="photo">[(#MODELE{logo_carre}{id_article})]</div>
+		<div id="header-col-left" style="background-color: var(--color-classe-light-[(#ENV{id_rubrique}|classe_numero)]);">	
+			<div class="image-classe-dans-reponse">
+				<INCLURE{fond=modeles/classe_icone, id_rubrique=#ID_RUBRIQUE, titre=#ENV{titre_parent}} />
+			</div>
 			<div class="#EDIT{titre} titre">
-				<BOUCLE_auteur_consigne(AUTEURS){id_article}{tout}>
-					#NOM
-				</BOUCLE_auteur_consigne>
+				<BOUCLE_nom_ecole(RUBRIQUES){id_rubrique}{tout}>
+					#TITRE
+				</BOUCLE_nom_ecole>
 			</div>
 			<div class="#EDIT{date} date">
 				Publié le [(#DATE|affdate)]

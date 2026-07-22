@@ -32,8 +32,7 @@ function Reponse() {
 	 * Crée l'élément DOM et l'intègre dans la timeline.
 	 */
 	this.initDOM = function () {
-
-		const coul = String(this.classe_id).slice(-1);
+		const coul = this.classeIndex;
 		const date_texte = formatDateCourte(this.date);
 
 		this.div_base = $(`

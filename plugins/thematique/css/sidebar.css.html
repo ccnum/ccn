@@ -1595,12 +1595,14 @@ ul#forum, .lien_forum {
 
 #row_header > * {
 	padding: 11px;
-	padding-bottom: 0;
 }
 #header-col-left {
 	display: flex;
 	flex-direction: column;
 	align-items: center;
+}
+.sidebar_bubble:not(.header-reponse) #header-col-left {
+	border-bottom: 3px solid var(--color-bleu-fond);
 }
 #header-col-right {
 	flex: 1;
@@ -1703,5 +1705,25 @@ ul#forum, .lien_forum {
 	min-height: 0;
 	overflow-y: auto;
 	background-color: var(--color-background-tabs);
+}
+
+.image-classe-dans-reponse {
+	width: 33%;
+    aspect-ratio: 1 / 1;
+	border-radius: 50%;
+    overflow: hidden;
+	background-color: white;
+}
+
+.image-classe-dans-reponse > .logo {
+	display: flex;
+    align-items: center;
+	height: 100%;
+	width: 100%;
+	background-color: inherit !important;
+}
+
+.image-classe-dans-reponse > .logo > .logo_menu_classe {
+	background-color: inherit !important;
 }
 
