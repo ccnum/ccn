@@ -458,6 +458,7 @@
 
 #sidebar_main {
 	width: 100%;
+	height: 100%;
 	font-size: 13px;
 	max-height: 100%;
 	transition: opacity 500ms ease;
@@ -1155,6 +1156,10 @@ ul#forum, .lien_forum {
 	color: var(--color-default);
 }
 
+#sidebar_main_inner {
+	height: 100%;
+}
+
 #sidebar_main_inner > .syndic_article_lire_suite {
 	display: none;
 }
@@ -1726,4 +1731,54 @@ ul#forum, .lien_forum {
 .image-classe-dans-reponse > .logo > .logo_menu_classe {
 	background-color: inherit !important;
 }
+
+#etape-1-container {
+	
+}
+
+#etape-2-container {
+	display: none;
+}
+
+.compteur-caracteres {
+	display: flex;
+	justify-content: flex-end;
+}
+.compteur-caracteres.warn {
+	color: red;
+}
+
+#bouton-etape-precedente-mission {
+	display: none;
+	justify-content: center;
+	align-items: center;
+	gap: 2px;
+	color: white;
+	font-family: Poppins;
+	background-color: var(--color-tonic);
+	width: 6rem;
+	height: 2rem;
+	border-radius: 1rem;
+	padding: 10px;
+	overflow: hidden;
+}
+
+.texte-etpae-suivante {
+	flex: 4;
+}
+
+.icon-left-arrow {
+	--svg: url("#CHEMIN{img/arrow-left.svg}");
+	flex: 1;
+	border: 0px solid black;
+}
+#titre_mission_publiee {
+	width: 100%;
+}
+
+#texte_mission_publiee {
+	width: 100%;
+}
+
+
 

@@ -58,6 +58,7 @@ function thematique_insert_head($flux) {
 	}
 
 	$scripts = [
+		'js/publier_mission.js',
 		'js/addCloseModal.js',
 		'js/ajouter_document_forum.js',
 		'js/article.js',

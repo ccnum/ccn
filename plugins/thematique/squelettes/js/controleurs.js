@@ -436,7 +436,8 @@ function callConsigne(id_consigne) {
 	updateMenuIcon(['consignes-' + id_consigne], 'mainView');
 
 	loadContentInMainSidebar(
-		url, function () {
+		url, 
+		() => {
 			updateUrl(
 				{
 					'type_objet': 'consignes',
@@ -445,7 +446,8 @@ function callConsigne(id_consigne) {
 					'page': 'article',
 				}, 'Consigne', "./spip.php?page=article&id_article=" + id_consigne + "&mode=complet"
 			);
-		}
+		},
+		"consigne"
 	);
 
 }
@@ -478,7 +480,8 @@ function callReponse(id_reponse) {
 
 	showConsigneInTimeline(id_consigne);
 	loadContentInMainSidebar(
-		url, function () {
+		url, 
+		() => {
 			updateUrl(
 				{
 					'type_objet': 'travail_en_cours',
@@ -487,7 +490,8 @@ function callReponse(id_reponse) {
 					'page': 'article'
 				}, "Réponse", "./spip.php?page=article&id_article=" + id_reponse + "&mode=complet"
 			);
-		}
+		},
+		"reponse"
 	);
 	showReponseInTimeline(id_reponse);
 
@@ -518,7 +522,8 @@ function callClasse(id_classe) {
 		url = CCN.projet.url_popup_classes + '&id_objet=' + id_classe + '&type_objet=travail_en_cours';
 	}
 	loadContentInMainSidebar(
-		url, function () {
+		url, 
+		() => {
 			updateUrl(
 				{
 					'type_objet': 'classes',
@@ -527,7 +532,8 @@ function callClasse(id_classe) {
 					'page': 'rubrique'
 				}, "Classe", "./spip.php?page=rubrique&id_objet=" + id_classe + "&mode=complet&type_objet=classes"
 			);
-		}
+		},
+		"ressource"
 	);
 }
 /**
@@ -586,7 +592,8 @@ function callArticleBlog(id_article) {
 
 	const url = CCN.projet.url_popup_blog + "&page=article&id_article=" + id_article;
 	loadContentInMainSidebar(
-		url, function () {
+		url, 
+		() => {
 			updateUrl(
 				{
 					'type_objet': 'blogs',
@@ -595,7 +602,8 @@ function callArticleBlog(id_article) {
 					'page': 'article'
 				}, "Blog", "./spip.php?page=article&id_article=" + id_article + "&mode=complet"
 			);
-		}
+		},
+		"blog"
 	);
 }
 /**
@@ -641,7 +649,8 @@ function callRessourceArticle(id_article, type_objet) {
 
 	const url = "./spip.php?page=article&id_article=" + id_article + "&mode=ajax-detail";
 	loadContentInMainSidebar(
-		url, function () {
+		url, 
+		() => {
 			updateUrl(
 				{
 					'type_objet': type_objet,
@@ -649,7 +658,8 @@ function callRessourceArticle(id_article, type_objet) {
 					'page': 'article'
 				}, "Ressources", "./spip.php?page=article&id_article=" + id_article + "&type_objet=" + type_objet + "&mode=complet"
 			);
-		}
+		},
+		"ressource"
 	);
 }
 
@@ -672,7 +682,8 @@ function callRessourceSyndicArticle(id_syndic_article, type_objet) {
 
 	const url = "./spip.php?page=syndic_article&id_syndic_article=" + id_syndic_article + "&mode=ajax-detail";
 	loadContentInMainSidebar(
-		url, function () {
+		url, 
+		() => {
 			updateUrl(
 				{
 					'type_objet': type_objet,
@@ -680,7 +691,8 @@ function callRessourceSyndicArticle(id_syndic_article, type_objet) {
 					'page': 'article'
 				}, "Ressources", "./spip.php?page=syndic_article&id_syndic_article=" + id_syndic_article + "&type_objet=" + type_objet + "&mode=complet"
 			);
-		}
+		},
+		"ressource"
 	);
 }
 
@@ -703,7 +715,8 @@ function callRessourceRubrique(id_rubrique, type_objet) {
 
 	const url = "./spip.php?page=rubrique&id_rubrique=" + id_rubrique + "&mode=ajax-detail";
 	loadContentInMainSidebar(
-		url, function () {
+		url, 
+		() => {
 			updateUrl(
 				{
 					'type_objet': type_objet,
@@ -711,7 +724,8 @@ function callRessourceRubrique(id_rubrique, type_objet) {
 					'page': 'rubrique'
 				}, "Ressources", "./spip.php?page=rubrique&id_rubrique=" + id_rubrique + "&type_objet=" + type_objet + "&mode=complet"
 			);
-		}
+		},
+		"ressource"
 	);
 }
 /**
@@ -738,7 +752,8 @@ function callArticleEvenement(id_objet, type_objet) {
 
 	const url = CCN.projet.url_popup_evenement + "&page=" + type_objet + "&id_" + type_objet + "=" + id_objet;
 	loadContentInMainSidebar(
-		url, function () {
+		url, 
+		() => {
 			updateUrl(
 				{
 					'type_objet': 'evenements',
@@ -746,7 +761,8 @@ function callArticleEvenement(id_objet, type_objet) {
 					'page': type_objet
 				}, "Événement", "./spip.php?page=" + type_objet + "&id_article=" + id_objet + "&mode=complet"
 			);
-		}
+		},
+		"article"
 	);
 
 }
@@ -789,7 +805,7 @@ function createReponse(id_consigne, id_rubrique_classe, numero) {
 	const rang         = consigneData ? consigneData.numero : (numero || '');
 
 	const url = CCN.projet.url_popup_reponseajout + "&id_consigne=" + id_consigne + "&id_rubrique=" + id_rubrique_classe + "&rang=" + rang + "&date_limite=" + dateLimite;
-	loadContentInMainSidebar(url);
+	loadContentInMainSidebar(url, null, "publication_mission");
 
 }
 /**
@@ -1001,7 +1017,7 @@ function initMissionTabs() {
 	}
 }
 
-function loadContentInMainSidebar(url, callback) {
+function loadContentInMainSidebar(url, callback, typeContenu) {
 	$('body').addClass('loading');
 	showSidebar();
 	emptyMainSidebar();
@@ -1020,7 +1036,12 @@ function loadContentInMainSidebar(url, callback) {
 		$('body').removeClass('loading');
 		$('#sidebar_content').scrollTop(0);
 		_sidebarFocusFirst();
-		initMissionTabs();
+		if(["consigne", "reponse"].includes(typeContenu)) {
+			initMissionTabs();
+		}
+		if(typeContenu === "publication_mission") {
+			// initCompteurCaracteres()
+		}
 
 		if (callback) {
 			callback(response);
