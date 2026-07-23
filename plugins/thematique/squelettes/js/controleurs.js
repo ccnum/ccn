@@ -1040,7 +1040,7 @@ function loadContentInMainSidebar(url, callback, typeContenu) {
 			initMissionTabs();
 		}
 		if(typeContenu === "publication_mission") {
-			initCompteurCaracteres()
+			// initCompteurCaracteres()
 		}
 
 		if (callback) {

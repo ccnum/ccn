@@ -2,17 +2,20 @@
 	[<p class="reponse_formulaire reponse_formulaire_ok">(#ENV*{message_ok})</p>]
 	[<p class="reponse_formulaire reponse_formulaire_erreur">(#ENV*{message_erreur})</p>]
 
-	<form method="post" action="#ENV{action}">
+	<form method="post" 
+		  action="#ENV{action}"
+		  enctype="multipart/form-data"
+	>
 		<div>
 			#ACTION_FORMULAIRE{#ENV{action}}
             <input type="hidden"
-                   name="id_parent"
-                   value="#ENV{id_rubrique}" 
-            />
+				   name="id_parent"
+				   value="#ENV{id_parent}" 
+			/>
 
 
 			<div class="editer-groupe">
-
+				<h3>Étape 1 : Informations</h3>
 				<div class="editer editer_titre obligatoire[ (#ENV**{erreurs}|table_valeur{titre}|oui)erreur]">
 					<label for="titre"><:info_titre:></label>
 					[<span class="erreur_message">(#ENV**{erreurs}|table_valeur{titre})</span>]
@@ -21,7 +24,8 @@
 						class="text"
 						name="titre"
 						id="titre"
-						value="#ENV{titre}" />
+						value="#ENV{titre}"
+						style="border: 1px solid black !important;" />
 				</div>
 
 				<div class="editer editer_texte obligatoire[ (#ENV**{erreurs}|table_valeur{texte}|oui)erreur]">
@@ -30,7 +34,7 @@
 
 					<textarea name="texte"
                               id="texte"
-                              rows="20"
+                              rows="10"
                               class="inserer_barre_edition inserer_previsualisation"
                               data-barre="edition"
                               data-id="article-#ENV{id_article,new}"
@@ -39,15 +43,35 @@
                     </textarea>
 				</div>
 
+				<div class="editer editer_attendre_livrable">
+					<div class="choix">
+						<input
+							type="checkbox"
+							name="attendre_livrable"
+							id="attendre_livrable"
+							value="oui"
+							[(#ENV{attendre_livrable}|=={oui}|oui)checked="checked"] />
+						<label for="attendre_livrable">
+							Cette consigne attend un livrable.
+						</label>
+					</div>
+				</div>
+
+				<h3>Étape 2 : Pièces jointes</h3>
+
+				<input type="file"
+					   name="fichier_upload[]"
+					   multiple="multiple" 
+				/>
+				<p class="boutons">
+
+					<input type="submit"
+						   name="joindre_upload"
+						   class="submit"
+						   value="<:bouton_enregistrer:>" 
+					/>
+				</p>
 			</div>
-
-			<p class="boutons">
-				<input
-					type="submit"
-					class="submit"
-					value="<:bouton_enregistrer:>" />
-			</p>
-
 		</div>
 	</form>
 </div>
