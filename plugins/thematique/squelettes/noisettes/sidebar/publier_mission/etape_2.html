@@ -1,0 +1,23 @@
+<h3>Étape 2 - Ajouter un document</h3>
+
+<div>Ajouter une pièce jointe si vous le souhaitez. Après sa publication , elle restera modifiable à tout moment.</div>
+
+<strong>Formats autorisés: jpeg, jpg, pdf, png, mp4 et gif.</strong>
+
+<div class="bloc_option_doc nettoyeur">
+    <a id="bloc_option_doc-#ID_ARTICLE" class="hac lien_ajouter bloc_option_doc_adddocument" title="Ajouter un document">Ajouter un document</a>
+    <div class='nettoyeur cache formulaire_spip formulaire_editer_document bloc_option_doc'>
+        Vos documents apparaîtront par ordre de chargement (du premier au dernier document chargé)
+        <div class="ajax">#FORMULAIRE_JOINDRE_DOCUMENT{new,#ID_ARTICLE,article,auto,false,false,false}</div>
+    </div>
+</div>
+
+
+<div class="encadre-message">
+    <div>ampoule</div>
+    <p>Le format de votre fichier n'est pas autorisé ? VOus pouvez le convertir avec cet outil gratuit en ligne : [renvoyer vers outil]</p>
+</div>
+
+<div style="display: flex; justify-content: flex-end;">
+    <button onclick="alert('On ne peut pas publier de mission pour l\'instant.')">Publier la mission</button>
+</div>
