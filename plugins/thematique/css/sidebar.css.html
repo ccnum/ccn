@@ -1214,6 +1214,7 @@ ul#forum, .lien_forum {
 
 .hasSidebarOpen #timeline_responsive {
 	width: calc(100% - var(--sidebar-width-large) - var(--sidebar-margin-right));
+	width: calc(100% - var(--sidebar-width-large) - var(--sidebar-margin-right));
     flex: none;
 }
 
@@ -1830,4 +1831,58 @@ ul#forum, .lien_forum {
 .image-classe-dans-reponse > .logo > .logo_menu_classe {
 	background-color: inherit !important;
 }
+
+#etape-1-container {
+	
+}
+
+#etape-2-container {
+	display: none;
+}
+
+.compteur-caracteres {
+	display: flex;
+	justify-content: flex-end;
+}
+.compteur-caracteres.warn {
+	color: red;
+}
+
+.bouton-publication-mission {
+	justify-content: center;
+	align-items: center;
+	gap: 2px;
+	color: white;
+	font-family: Poppins;
+	background-color: var(--color-tonic);
+	width: 6rem;
+	height: 2rem;
+	border-radius: 1rem;
+	padding: 6px 4px;
+	overflow: hidden;
+}
+
+.texte-etpae-suivante {
+	flex: 4;
+}
+
+.icon-left-arrow {
+	--svg: url("#CHEMIN{img/arrow-left.svg}");
+	flex: 1;
+	border: 0px solid black;
+}
+#titre_mission_publiee {
+	width: 100%;
+}
+
+#texte_mission_publiee {
+	width: 100%;
+}
+
+#bouton-container {
+	display: flex;
+	justify-content: space-between;
+}
+
+
 
