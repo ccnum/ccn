@@ -17,6 +17,8 @@
 	</div>
 	<div>
 		<div style="font-weight: 500;">#ENV{titre}</div>
-		<div>#ENV{date}</div>
+		[(#ENV{date}|strlen|oui)
+			<div>[(#ENV{date}|affdate)]</div>
+		]
 	</div>
 </div>

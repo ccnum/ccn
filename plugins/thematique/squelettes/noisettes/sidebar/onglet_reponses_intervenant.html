@@ -2,7 +2,6 @@
 <div style="display: flex; 
 			gap: 1rem;
 			align-items: stretch;">
-
 	<div style="width: 50%; 
 				flex: 1;
 				display: flex;
@@ -14,8 +13,9 @@
 			<BOUCLE_type_comp(RUBRIQUES){tout}{id_parent}{titre_mot=travail_en_cours}>
 				<BOUCLE_classes_comp(RUBRIQUES){tout}{id_parent}{par id_rubrique}>
 					#SET{nom_classe, #TITRE}
-					<B_reponse721>
-						<BOUCLE_reponse721(ARTICLES){id_rubrique}{id_consigne=721}{0,1}>
+
+					<B_reponse>
+						<BOUCLE_reponse(ARTICLES){id_rubrique}{id_consigne=#ENV{id_article}}{0,1}>
 							<div class="classe">
 								#SET{icone_classe, #ID_RUBRIQUE|classe_icone}
 								<INCLURE{
@@ -23,18 +23,19 @@
 									id_rubrique=#ID_RUBRIQUE,
 									titre=#GET{nom_classe},
 									icone=#GET{icone_classe},
-									date="#DATE",
+									date=#DATE,
 									couleur-bg="--color-positive",
-									env, 
+									env,
 									ajax
 								} />
 							</div>
-						</BOUCLE_reponse721>
-					</B_reponse721>
+						</BOUCLE_reponse>
+					</B_reponse>
 
 				</BOUCLE_classes_comp>
 			</BOUCLE_type_comp>
 		</BOUCLE_annee_comp>
+
 
 	</div>
 
@@ -51,11 +52,10 @@
 			<BOUCLE_type_comp2(RUBRIQUES){tout}{id_parent}{titre_mot=travail_en_cours}>
 				<BOUCLE_classes_comp2(RUBRIQUES){tout}{id_parent}{par id_rubrique}>
 
-					<B_reponse721bis>
-						<BOUCLE_reponse721bis(ARTICLES){id_rubrique}{id_consigne=721}{0,1}>
-						</BOUCLE_reponse721bis>
-					</B_reponse721bis>
-
+					<B_reponse2>
+						<BOUCLE_reponse2(ARTICLES){id_rubrique}{id_consigne=#ENV{id_article}}{0,1}>
+						</BOUCLE_reponse2>
+					<//B_reponse2>
 						<div class="classe">
 							#SET{icone_classe, #ID_RUBRIQUE|classe_icone}
 							<INCLURE{
@@ -63,17 +63,18 @@
 								id_rubrique=#ID_RUBRIQUE,
 								titre=#TITRE,
 								icone=#GET{icone_classe},
+								date='',
 								couleur-bg="--color-negative",
-								env, 
+								env,
 								ajax
 							} />
 						</div>
-
-					<//B_reponse721bis>
+					</B_reponse2>
 
 				</BOUCLE_classes_comp2>
 			</BOUCLE_type_comp2>
 		</BOUCLE_annee_comp2>
+
 
 	</div>
 
