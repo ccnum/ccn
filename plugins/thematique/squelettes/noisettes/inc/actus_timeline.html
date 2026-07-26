@@ -44,29 +44,29 @@
 
 <B_dataContenu>
 	<BOUCLE_dataContenu(DATA){source table, #GET{contenu}}{!par date}>
-		<BOUCLE_triDate(POUR){tableau #VALEUR}>
-			<BOUCLE_test(POUR){tableau #VALEUR}>
+		<BOUCLE_triDate(DATA){source table, #VALEUR}>
+			<BOUCLE_test(DATA){source table, #VALEUR}>
 			</BOUCLE_test>
 
-			<BOUCLE_affiche_livrable(POUR){tableau #VALEUR}{cle=livrable}>
+			<BOUCLE_affiche_livrable(DATA){source table, #VALEUR}{cle=livrable}>
 				[(#REM) Nouveaux documents sur livrable]
 				[(#MODELE{actu_livrables}{id_article=#VALEUR})]
 			</BOUCLE_affiche_livrable>
 
-			<BOUCLE_affiche_doc(POUR){tableau #VALEUR}{cle=doc}>
+			<BOUCLE_affiche_doc(DATA){source table, #VALEUR}{cle=doc}>
 				[(#REM) Nouveaux documents ]
 				[(#MODELE{actu_documents}{id_article=#VALEUR})]
 			</BOUCLE_affiche_doc>
-			<BOUCLE_affiche_forum(POUR){tableau #VALEUR}{cle=forum}>
+			<BOUCLE_affiche_forum(DATA){source table, #VALEUR}{cle=forum}>
 				[(#REM) Nouveaux commentaires ]
 				[(#MODELE{actu_commentaires}{id_forum=#VALEUR})]
 			</BOUCLE_affiche_forum>
-			<BOUCLE_affiche_consignes(POUR){tableau #VALEUR}{cle=consigne}>
+			<BOUCLE_affiche_consignes(DATA){source table, #VALEUR}{cle=consigne}>
 				[(#REM) Nouvelles consignes ]
 				[(#REM)[(#MODELE{actu_consignes}{id_objet=#VALEUR})]]
 				[(#MODELE{actu_travail_en_cours}{id_objet=#VALEUR})]
 			</BOUCLE_affiche_consignes>
-			<BOUCLE_affiche_ressources(POUR){tableau #VALEUR}{cle=ressources}>
+			<BOUCLE_affiche_ressources(DATA){source table, #VALEUR}{cle=ressources}>
 			</BOUCLE_affiche_ressources>
 		</BOUCLE_triDate>
 	</BOUCLE_dataContenu>
