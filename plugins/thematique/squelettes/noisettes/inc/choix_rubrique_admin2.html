@@ -4,8 +4,10 @@
 -restreint : pour savoir si un choix existe déjà
 ]
 
-<!-- Si aucune rubrique n'est selectionnee par le user alors en choisir une par defaut -->
-<BOUCLE_rubAnnee(RUBRIQUES) {racine}{titre LIKE %(#CONST{_ANNEE_SCOLAIRE})%} {si #GET{motcle}|!={evenements} } >
+<!-- Rubrique par défaut de l'année active :
+     - idRubriqueUser : classe en cours de travail, si aucune rubrique n'est sélectionnée par le user
+     - id_rubrique_mission : rubrique Consignes/intervenant, secours pour "Une nouvelle mission" quand l'utilisateur (ex: webmaster) n'a pas de rubrique restreinte -->
+<BOUCLE_rubAnnee(RUBRIQUES) {racine}{titre LIKE %(#CONST{_ANNEE_SCOLAIRE})%}>
 	<BOUCLE_filtreTravailEnCours(RUBRIQUES){id_parent} {titre_mot=travail_en_cours}{par date}{0,1}>
 		[(#ENV{restreint}|oui)
 			#SESSION_SET{idRubriqueUser,#ENV{restreint}}
@@ -14,27 +16,15 @@
 			#SESSION_SET{idRubriqueUser,#ID_RUBRIQUE}
 		]
 	</BOUCLE_filtreTravailEnCours>
-</BOUCLE_rubAnnee>
 
-<!-- Rubrique de l'intervenant sous Consignes, pour l'année active : sert de secours quand l'utilisateur (ex: webmaster) n'a pas de rubrique restreinte -->
-<BOUCLE_rubAnneeMission(RUBRIQUES) {racine}{titre LIKE %(#CONST{_ANNEE_SCOLAIRE})%}>
 	<BOUCLE_filtreConsignesMission(RUBRIQUES){id_parent}{titre_mot=consignes}{0,1}>
 		<BOUCLE_filtreIntervenantMission(RUBRIQUES){id_parent}{0,1}>
 			#SET{id_rubrique_mission,#ID_RUBRIQUE}
 		</BOUCLE_filtreIntervenantMission>
 	</BOUCLE_filtreConsignesMission>
-</BOUCLE_rubAnneeMission>
-
-#SET{laclasse_rubrique_admin, #ENV{restreint}}
-<BOUCLE_rub(RUBRIQUES){id_rubrique=#ENV{restreint}}{si #ENV{restreint}}{tout}>
-	#SET{titre,#TITRE}
-	#SET{parent, #INFO_TITRE{rubrique,#ID_PARENT}}
-</BOUCLE_rub>
+</BOUCLE_rubAnnee>
 
 [(#SET{voir_mission,non})]
-
-<script>console.log("role #SESSION{role}")</script>
-<script>console.log("admin #SESSION{admin}")</script>
 
 [(#SESSION{role}|=={admin}|oui)
 	[(#SET{voir_mission,oui})]
