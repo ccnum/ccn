@@ -18,6 +18,7 @@
 				var $sel = $(this);
 				if ($sel.hasClass('initialized')) return;
 				$sel.addClass('initialized');
+				var rememberChoice = $sel.hasClass('save-choice')
 				var $toggle = $sel.find('.select-toggle').first();
 				var $options = $sel.find('.select-options').first();
 				if (!$toggle.length) return;
@@ -47,7 +48,7 @@
 				$options.on('click', '.select-option', function (e) {
 					e.stopPropagation();
 					var $li = $(this);
-					if ($li.hasClass("actif")) {
+					if (rememberChoice && $li.hasClass("actif")) {
 						return;
 					}
 					var val = $li.data('value');
@@ -55,7 +56,9 @@
 					// update visible label — first non-icon span
 					$toggle.find('span').not('.icon').first().html(text);
 					$options.find('.select-option').removeClass('actif');
-					$li.addClass('actif');
+					if(rememberChoice) {
+						$li.addClass('actif');
+					}
 					$sel.removeClass('open');
 					// react to known select names
 					var name = $sel.attr('data-select-name') || $sel.attr('name');

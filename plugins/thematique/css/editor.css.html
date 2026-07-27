@@ -52,6 +52,15 @@
 	outline: none !important;
 	box-sizing: border-box;
 }
+
+.editer_titre input.text {
+	border: solid 1px #ccc !important;
+}
+
+.editer_titre input.text:focus-visible {
+	outline: solid 2px var(--color-tonic) !important;
+	outline-offset: 1px;
+}
 .formulaire_crayon .crayon-active { color: #222 !important; }
 .crayon-html .crayon-boutons {
 	position: absolute !important;
@@ -317,7 +326,17 @@ p.boutons:has(input[type="submit"]) {
 	line-height: 18px !important;
 }
 
+.editer-groupe .editer {
+	margin-bottom: 20px;
+}
+
+.editer-groupe .editer:last-child {
+	margin-bottom: 0;
+}
+
 .editer-groupe .choix {
+	display: flex;
+	gap: 1rem;
 	padding: 10px;
 	background: #eee;
 	border-radius: 3px;

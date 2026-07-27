@@ -105,42 +105,22 @@ function ccn_compresser_video($fichier) {
 }
 
 function ccn_formulaire_verifier($flux) {
-	$erreurs = $flux['data'];
-	$args = $flux['args'];
-	if (count($erreurs) || _request('joindre_mediatheque')) {
-		return $flux;
-	}
+    $erreurs = $flux['data'];
 
-	if (empty($_FILES['fichier_upload']['name'])) {
-		return $flux;
-	}
+    if (count($erreurs) || _request('joindre_mediatheque')) {
+        return $flux;
+    }
 
-	$formats = trim($GLOBALS['meta']['formats_documents_forum'] ?? '');
-	$extensions_autorisees = $formats
-		? array_filter(preg_split(',[^a-zA-Z0-9/+_],', $formats))
-		: [];
+	include_spip('inc/uploads');
 
-	// Pas de limite de taille pour les MP4 : ils sont poussés vers Vimeo après upload.
-	$taille_max = 100 * 1024 * 1024;
+    $erreurs = array_merge(
+        $erreurs,
+        ccn_verifier_uploads()
+    );
 
-	foreach ((array) $_FILES['fichier_upload']['name'] as $cle => $nom) {
-		$ext = strtolower(pathinfo($nom, PATHINFO_EXTENSION));
-		if ($extensions_autorisees && !in_array($ext, $extensions_autorisees)) {
-			$erreurs['message_erreur'] = _T('ccn:ccn_extension_non_autorisee', [
-				'ext' => $ext,
-				'formats' => implode(', ', $extensions_autorisees),
-			]);
-			break;
-		}
-		$taille = $_FILES['fichier_upload']['size'][$cle] ?? 0;
-		if ($ext !== 'mp4' && $taille > $taille_max) {
-			$erreurs['message_erreur'] = _T('ccn:ccn_fichier_trop_volumineux', ['nom' => $nom]);
-			break;
-		}
-	}
+    $flux['data'] = $erreurs;
 
-	$flux['data'] = $erreurs;
-	return $flux;
+    return $flux;
 }
 
 function ccn_formulaire_charger($flux) {

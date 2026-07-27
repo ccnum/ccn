@@ -17,15 +17,5 @@
 	[(#GET{type_objet}|in_array{#LISTE{ressources|classes}}|oui)#SET{page,rubrique}]
 	[(#GET{mode}|=={ajax-detail}|oui)#SET{page,publier_article}]
 
-[(#REM) Ouverture]
-[(#AUTORISER{modifier, rubrique, #ID_RUBRIQUE}|non)
-	<INCLURE{fond=chargement}{type_objet=travail_en_cours}>
-]
-[(#AUTORISER{modifier, rubrique, #ID_RUBRIQUE}|oui)
-	[(#EST_MODE_NOISETTE|=={oui}|non)
-		<INCLURE{fond=layout}{page=#GET{page}}{env} />
-	]
-	[(#EST_MODE_NOISETTE|=={oui}|oui)
-		<INCLURE{fond=noisettes/#GET{page}}{env} />
-	]
-]
+
+<INCLURE{fond=noisettes/sidebar/publier_mission/publier_mission, env} />

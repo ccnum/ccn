@@ -26,14 +26,7 @@ Arguments :
 				<div class="etiquette-etape">
 					<span class="texte-etiquette">MISSION N°[(#ENV{rang}|plus{1})]</span>
 				</div>
-				<div id="sidebar-top-right-corner">
-					<div id="header-sidebarexpand-container">
-						<div id="sidebarExpand" class="sidebarExpandOff tooltip icon" data-tip="Agrandir/Réduire la modale" aria-label="Agrandir/Réduire la modale">
-						</div>
-					</div>
-					<div id="sidebar-close" class="icon"></div>
-				</div>
-				
+				<INCLURE{fond=noisettes/sidebar/normal_header_icons, env} />
 			</div>
 			<div id="header-row-2">
 				#ENV{titre_consigne}

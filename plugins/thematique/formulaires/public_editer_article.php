@@ -86,7 +86,6 @@ function formulaires_public_editer_article_verifier_dist(
 	return $erreurs;
 }
 
-// http://doc.spip.org/@inc_editer_article_dist
 function formulaires_public_editer_article_traiter_dist(
 	$id_article = 'new',
 	$id_rubrique = 0,
@@ -96,7 +95,6 @@ function formulaires_public_editer_article_traiter_dist(
 	$row = [],
 	$hidden = ''
 ) {
-	// Traitement principal
 	$res = formulaires_editer_objet_traiter(
 		'article',
 		$id_article,
