@@ -12,9 +12,6 @@
 		[(#SET{restreint1,#ID_RUBRIQUE})]
 	]
 	[(#SET{admin,[(#GET{admin}|plus{1})]})]
-	<BOUCLE_rub4(RUBRIQUES){id_parent=#ID_RUBRIQUE}{tout}{0,50}>
-		[(#SET{admin,[(#GET{admin}|plus{1})]})]
-	</BOUCLE_rub4>
 </BOUCLE_rub_aut>
 
 [(#SESSION{statut}|in_array{#LISTE{0minirezo,1comite}}|non)
