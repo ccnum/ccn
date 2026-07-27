@@ -16,6 +16,15 @@
 	</BOUCLE_filtreTravailEnCours>
 </BOUCLE_rubAnnee>
 
+<!-- Rubrique de l'intervenant sous Consignes, pour l'année active : sert de secours quand l'utilisateur (ex: webmaster) n'a pas de rubrique restreinte -->
+<BOUCLE_rubAnneeMission(RUBRIQUES) {racine}{titre LIKE %(#CONST{_ANNEE_SCOLAIRE})%}>
+	<BOUCLE_filtreConsignesMission(RUBRIQUES){id_parent}{titre_mot=consignes}{0,1}>
+		<BOUCLE_filtreIntervenantMission(RUBRIQUES){id_parent}{0,1}>
+			#SET{id_rubrique_mission,#ID_RUBRIQUE}
+		</BOUCLE_filtreIntervenantMission>
+	</BOUCLE_filtreConsignesMission>
+</BOUCLE_rubAnneeMission>
+
 #SET{laclasse_rubrique_admin, #ENV{restreint}}
 <BOUCLE_rub(RUBRIQUES){id_rubrique=#ENV{restreint}}{si #ENV{restreint}}{tout}>
 	#SET{titre,#TITRE}
@@ -47,7 +56,7 @@
 		</button>
 		<ul class="select-options choix_rubrique_wrapper">
 			[(#GET{voir_mission}|=={oui}|oui)
-				<li onClick='createReponse(0, CCN.idRestreint, 0);'
+				<li onClick='createReponse(0, CCN.idRestreint || [(#GET{id_rubrique_mission}|intval)], 0);'
 					class="select-option"
 					data-value="#ID_RUBRIQUE"
 				>
