@@ -7,10 +7,10 @@
 <!-- Rubrique par défaut de l'année active (calcul en PHP, cf thematique_fonctions.php) :
      - idRubriqueUser : classe en cours de travail, si aucune rubrique n'est sélectionnée par le user
      - id_rubrique_mission : rubrique Consignes/intervenant, secours pour "Une nouvelle mission" quand l'utilisateur (ex: webmaster) n'a pas de rubrique restreinte -->
-#SET{ignore, [(#ENV{restreint}|thematique_set_id_rubrique_user)]}
-#SET{id_rubrique_mission, [(#VAL{1}|thematique_id_rubrique_mission)]}
+#SET{ignore, #ENV{restreint}|thematique_set_id_rubrique_user}
+#SET{id_rubrique_mission, #VAL{1}|thematique_id_rubrique_mission}
 
-#SET{voir_mission, [(#VAL{1}|thematique_voir_mission)]}
+#SET{voir_mission, #VAL{1}|thematique_voir_mission}
 
 [(#SESSION{id_auteur}|oui)
 <div id="menu_haut_rubrique" class="bloc_titre">
