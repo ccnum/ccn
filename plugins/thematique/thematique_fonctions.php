@@ -331,3 +331,114 @@ function classe_icone($id_rubrique) {
 	$icones = ['🐝', '🦩', '🦉', '🦔', '🐟', '🐙', '🐜', '🦁', '🦋', '🦊'];
 	return $icones[classe_numero($id_rubrique)] ?? '';
 }
+
+/**
+ * Id de la rubrique racine de l'année scolaire active (cf choix_rubrique_admin2.html).
+ *
+ * @return int 0 si non trouvée
+ */
+function thematique_id_rubrique_annee_active() {
+	return (int) sql_getfetsel(
+		'id_rubrique',
+		'spip_rubriques',
+		'titre LIKE ' . sql_quote('%' . thematique_annee_scolaire() . '%') . ' AND id_parent=0'
+	);
+}
+
+/**
+ * Première rubrique enfant de $id_parent taguée du mot-clé $titre_mot.
+ *
+ * @param int $id_parent
+ * @param string $titre_mot
+ * @param string $orderby
+ * @return int 0 si non trouvée
+ */
+function thematique_id_rubrique_enfant_a_mot($id_parent, $titre_mot, $orderby = '') {
+	if (!$id_parent) {
+		return 0;
+	}
+	$id_mot = sql_getfetsel('id_mot', 'spip_mots', 'titre=' . sql_quote($titre_mot));
+	if (!$id_mot) {
+		return 0;
+	}
+
+	return (int) sql_getfetsel(
+		'spip_rubriques.id_rubrique',
+		'spip_rubriques INNER JOIN spip_mots_liens'
+			. ' ON spip_mots_liens.id_objet=spip_rubriques.id_rubrique AND spip_mots_liens.objet=' . sql_quote('rubrique'),
+		'spip_mots_liens.id_mot=' . intval($id_mot) . ' AND spip_rubriques.id_parent=' . intval($id_parent),
+		'',
+		$orderby,
+		'0,1'
+	);
+}
+
+/**
+ * Rubrique "classe en cours de travail" par défaut pour l'année active :
+ * repli pour idRubriqueUser quand l'utilisateur n'a pas de rubrique
+ * sélectionnée (cf choix_rubrique_admin2.html, ex BOUCLE_filtreTravailEnCours).
+ *
+ * @return int 0 si non trouvée
+ */
+function thematique_id_rubrique_travail_en_cours() {
+	return thematique_id_rubrique_enfant_a_mot(
+		thematique_id_rubrique_annee_active(),
+		'travail_en_cours',
+		'spip_rubriques.date'
+	);
+}
+
+/**
+ * Mémorise en session la rubrique "courante" de l'utilisateur (utilisée pour
+ * surligner la classe active dans le menu, cf rubrique.html) : la rubrique
+ * explicitement sélectionnée ($restreint), sinon la classe en cours de
+ * travail par défaut de l'année active.
+ *
+ * @param int|string $restreint
+ * @return int la valeur mémorisée
+ */
+function thematique_set_id_rubrique_user($restreint) {
+	include_spip('inc/session');
+	$id_rubrique_user = $restreint ? intval($restreint) : thematique_id_rubrique_travail_en_cours();
+	session_set('idRubriqueUser', $id_rubrique_user);
+	return $id_rubrique_user;
+}
+
+/**
+ * Rubrique de l'intervenant sous "Consignes", pour l'année active. Sert de
+ * repli pour créer une mission quand l'utilisateur (ex: webmaster) n'a pas
+ * de rubrique restreinte (cf choix_rubrique_admin2.html).
+ *
+ * @return int 0 si non trouvée
+ */
+function thematique_id_rubrique_mission() {
+	static $id_rubrique_mission = null;
+	if ($id_rubrique_mission !== null) {
+		return $id_rubrique_mission;
+	}
+
+	$id_consignes = thematique_id_rubrique_enfant_a_mot(thematique_id_rubrique_annee_active(), 'consignes');
+	$id_rubrique_mission = $id_consignes
+		? (int) sql_getfetsel('id_rubrique', 'spip_rubriques', 'id_parent=' . intval($id_consignes))
+		: 0;
+
+	return $id_rubrique_mission;
+}
+
+/**
+ * Est-ce que le menu "Publier > Une nouvelle mission" doit être proposé à
+ * l'utilisateur connecté : admin, ou intervenant avec au moins une rubrique
+ * restreinte (cf choix_rubrique_admin2.html).
+ *
+ * @return string 'oui'|'non'
+ */
+function thematique_voir_mission() {
+	include_spip('inc/session');
+	$role = session_get('role');
+	$admin = session_get('admin');
+
+	if ($role === 'admin' || ($role === 'intervenant' && $admin > 0)) {
+		return 'oui';
+	}
+	return 'non';
+}
