@@ -240,10 +240,19 @@ function thematique_cioidc_userinfo($flux) {
 	// Les comptes ENS rattachés à un établissement listé dans _THEMATIQUE_RNE_WEBMESTRES
 	// (ex: établissement pilote de l'équipe projet) restent administrateurs complets
 	// plutôt que rédacteurs, sans restriction de rubrique.
-	$rne = $flux['data']['ENTPersonStructRattachRNE'] ?? '';
+	// ENTAllUai liste tous les UAI de rattachement (pas seulement le principal) : un
+	// attribut CAS multivalué arrive en objet unique quand il n'y a qu'une seule valeur.
+	$uai_liste = $flux['data']['ENTAllUai'] ?? [];
+	if (is_object($uai_liste)) {
+		$uai_liste = [$uai_liste];
+	}
+	$uai_liste = array_map('strval', (array) $uai_liste);
 	$rne_webmestres = array_filter(array_map('trim', explode(',', _THEMATIQUE_RNE_WEBMESTRES)));
-	$is_webmestre = $is_enseignant && $rne && in_array($rne, $rne_webmestres, true);
-	spip_log('userinfo ENTPersonStructRattachRNE=' . $rne . ' => webmestre:' . ($is_webmestre ? 'oui' : 'non'), 'cioidc');
+	$is_webmestre = $is_enseignant && (bool) array_intersect($uai_liste, $rne_webmestres);
+	spip_log(
+		'userinfo ENTAllUai=' . implode(',', $uai_liste) . ' => webmestre:' . ($is_webmestre ? 'oui' : 'non'),
+		'cioidc'
+	);
 
 	// ENTClassesGroupes (member_type=ENS, group_type=CLS) : la/les classe(s) réellement
 	// enseignée(s) par ce prof → lien "Travail des classes". Absent chez un intervenant
