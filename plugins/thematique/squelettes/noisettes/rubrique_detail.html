@@ -1,5 +1,5 @@
 [(#REM) Réponses de la classe]
-<BOUCLE_principale(RUBRIQUES){id_rubrique}{doublons}{tout}>
+<BOUCLE_principale(RUBRIQUES){id_rubrique=#ENV{id_objet}}{doublons}{tout}>
 <head> </head>
 <div class="popup [popup_(#ENV{type_objet})]">
 	<INCLURE{fond=noisettes/call_sidebar,type_objet=classes, ajax} />
@@ -15,7 +15,9 @@
 	<div class="sidebar_bubble">
 		<div class="fiche_titre couleur_texte_[(#TYPE_OBJET)] couleur_[(#TYPE_OBJET)][(#MODELE{nb2col}{id_article})]">
 			<div class="texte">
-				<div class="photo #EDIT{logo}">[(#MODELE{logo_carre}{id_rubrique})]</div>
+				<div class="photo bgc_classe_[(#ID_RUBRIQUE|classe_numero)]">
+					<span role="img" aria-label="[(#TITRE)]" style="font-size:min(70cqw,70cqh)">[(#ID_RUBRIQUE|classe_icone)]</span>
+				</div>
 				<div class="titre #EDIT{titre}">[(#TITRE)]</div>
 			</div>
 		</div>
