@@ -42,10 +42,14 @@
 				</div>
 				<div>
 					<div class="tabs-title">
-						<:thematique:titre_onglet_comentaire:>
+						<:thematique:titre_onglet_comentaire_pour_classe:>
+						<div class="picto_nombre_commentaires"></div>
 					</div>
 					<div class="tabs-content">
-						<INCLURE{fond=noisettes/sidebar/onglet_commentaires, env} />
+						[(#REM) <INCLURE{fond=noisettes/sidebar/onglet_commentaires, env} />]
+						<div class="ajax">
+							#FORMULAIRE_COMMENTAIRE_ARTICLE{#ID_ARTICLE}
+						</div>
 					</div>
 				</div>
 			</div>

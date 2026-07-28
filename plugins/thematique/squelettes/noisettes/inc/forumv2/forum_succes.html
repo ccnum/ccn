@@ -1,0 +1,57 @@
+<div class="forum-succes">
+
+    <div class="forum-succes__message">
+
+        <span class="forum-succes__icone">
+            ✓
+        </span>
+
+        <strong>
+            Votre commentaire a été posté avec succès !
+        </strong>
+
+    </div>
+
+    <BOUCLE_commentaire(FORUMS){id_forum}>
+
+        <div class="forum-card">
+
+            <div class="forum-card__header">
+
+                <div class="forum-card__left">
+
+                    <div class="forum-card__icon">
+                        icone
+                    </div>
+
+                    <h3>#TITRE</h3>
+
+                </div>
+
+                <div class="forum-card__date">
+                    [(#DATE|affdate)]
+                </div>
+
+            </div>
+
+            <div class="forum-card__body">
+
+                [(#TEXTE|couper{200})]
+
+            </div>
+
+            <div class="forum-card__footer">
+
+                #URL_ECRIRE{forum,id_forum=#ID_FORUM}
+
+                <a href="#URL_ACTION_AUTEmer_forum,#ID_FORUM}
+                    Supprimer mon commentaire
+                </a>
+
+            </div>
+
+        </div>
+
+    </BOUCLE_commentaire>
+
+</div>

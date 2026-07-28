@@ -1,0 +1,62 @@
+<form
+    method="post"
+    action="#ENV{action}"
+    class="forum-commentaire"
+>
+
+#ACTION_FORMULAIRE
+
+<input type="hidden" name="titre" value="#ENV{titre}">
+<input type="hidden" name="texte" value="#ENV{texte}">
+<input type="hidden" name="id_parent" value="#ENV{id_parent}">
+
+
+
+[(#ENV{etat_affichage}|=={succes}|oui)
+    <div>succes</div>
+    <INCLURE
+        {fond=noisettes/inc/forumv2/forum_succes}
+        {id_forum=#ENV{id_forum}}
+        {id_article=#ENV{id_article}}
+    />
+]
+
+[(#ENV{etat_affichage}|=={succes}|non)
+
+    <INCLURE
+        {fond=noisettes/inc/forumv2/forum_accueil}
+        {id_article=#ENV{id_article}}
+    />
+
+    [(#ENV{etape}|=={redaction}|oui)
+            <div>redac</div>
+        <INCLURE
+            {fond=noisettes/inc/forumv2/forum_redaction}
+            {id_article=#ENV{id_article}}
+            {id_parent=#ENV{id_parent}}
+            {titre=#ENV{titre}}
+            {texte=#ENV{texte}}
+            {etape=#ENV{etape}}
+        />
+    ]
+
+    [(#ENV{etape}|=={previsualisation}|oui)
+        <div>previsu</div>
+        <INCLURE
+            {fond=noisettes/inc/forumv2/forum_previsualisation}
+            {id_article=#ENV{id_article}}
+            {id_parent=#ENV{id_parent}}
+            {titre=#ENV{titre}}
+            {texte=#ENV{texte}}
+            {etape=#ENV{etape}}
+        />
+    ]
+
+    <INCLURE
+        {fond=noisettes/inc/forumv2/forum_messages}
+        {id_article=#ENV{id_article}}
+    />
+
+]
+
+</form>

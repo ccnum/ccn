@@ -45,3 +45,7 @@
 .ctabs-panel {
     display: none;
 }
+
+.tabs-title {
+    display: flex;
+}
