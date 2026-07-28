@@ -155,7 +155,11 @@ spip config:ecrire -p autorite auteur_modere_forum:0
 spip config:ecrire -p autorite editer_forums:1
 spip config:ecrire -p autorite publierdans:15
 spip config:ecrire -p bigup charger_public:1
-spip config:ecrire -p bigup max_file_size:100
+# Ce réglage ne pilote que le contrôle JS côté navigateur (bigup_config()) : la
+# vraie limite serveur est appliquée par ccn_verifier_uploads() (100 Mo, sauf
+# MP4 poussés vers Vimeo). On le fixe large pour ne pas bloquer les vidéos
+# avant même l'envoi.
+spip config:ecrire -p bigup max_file_size:1000
 # ne jamais redimensionner automatiquement les images trop grandes à l'upload :
 # ce chemin décode l'image entière en GD/Imagick, ce que _IMG_MAX_WIDTH/_IMG_MAX_HEIGHT
 # (mes_options.php) sont censés empêcher en rejetant l'upload à la place
