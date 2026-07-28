@@ -28,4 +28,7 @@
 		[(#SESSION{role}|=={intervenant}|oui) #SET{fond_reponse, reponse_pour_intervenant}]
 		<INCLURE{fond=noisettes/sidebar/#GET{fond_reponse}, env, ajax, c_est_ma_reponse=#GET{c_est_ma_reponse}} />
 	]
+	[(#ENV{type_objet}|in_array{#LISTE{blogs,evenements,ressources,agora}}|oui)
+		<INCLURE{fond=noisettes/sidebar/blog, env, ajax} />
+	]
 </BOUCLE_principale>

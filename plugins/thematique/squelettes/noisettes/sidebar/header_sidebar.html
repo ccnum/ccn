@@ -36,7 +36,7 @@ Arguments :
 			
 		</div>
 	</div>
-	[(#ENV{type_objet}|in_array{#LISTE{blogs,evenements}}|oui)
+	[(#ENV{type_objet}|in_array{#LISTE{blogs,evenements,ressources,agora}}|oui)
 		<div class="popup_titre [popup_titre_(#ENV{type_objet})]">
 			<div class="#EDIT{titre} titre">[(#TITRE)]</div>
 			<div class="auteur_date">
