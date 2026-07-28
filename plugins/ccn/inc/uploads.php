@@ -32,7 +32,10 @@ function ccn_verifier_uploads() {
         $taille = $_FILES['fichier_upload']['size'][$cle] ?? 0;
 
         // Pas de limite de taille pour les MP4 : ils sont poussés vers Vimeo après upload.
-        if ($ext !== 'mp4' && $taille > $taille_max) {
+        // Si le plugin api_vimeo est désactivé, la vidéo resterait en local :
+        // on lui applique alors la même limite qu'aux autres documents.
+        $mp4_sans_limite = $ext === 'mp4' && defined('_DIR_PLUGIN_API_VIMEO');
+        if (!$mp4_sans_limite && $taille > $taille_max) {
             $erreurs['message_erreur'] = _T(
                 'ccn:ccn_fichier_trop_volumineux',
                 ['nom' => $nom]
