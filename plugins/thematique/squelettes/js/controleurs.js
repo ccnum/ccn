@@ -8,6 +8,15 @@ function _sidebarFocusableElements() {
 	return $('#sidebar').find(SIDEBAR_FOCUSABLE).filter(':visible');
 }
 
+// Active au clavier (Entrée/Espace) les divs cliquables marquées role="button",
+// utilisées pour la navigation (rubriques, articles) au lieu de vrais <a>/<button>.
+$(document).on('keydown.clickableRole', '[role="button"]', function (e) {
+	if (e.key === 'Enter' || e.key === ' ' || e.key === 'Spacebar') {
+		e.preventDefault();
+		this.click();
+	}
+});
+
 $(document).on('keydown.sidebarFocusTrap', function (e) {
 	if (!$('body').hasClass('hasSidebarOpen')) {
 		return;
@@ -513,7 +522,7 @@ function callClasse(id_classe) {
 
 	if (id_classe !== '' && !Number.isInteger(Number(id_classe))) return;
 	changeTimelineMode('consignes');
-	toggleSidebarExpand();
+	expandSidebar();
 	setFullscreenModeToCols(true);
 	updateMenuIcon(['classes', 'classes-' + id_classe], 'sidebarView');
 
@@ -521,6 +530,7 @@ function callClasse(id_classe) {
 	if (id_classe != '') {
 		url = CCN.projet.url_popup_classes + '&id_objet=' + id_classe + '&type_objet=travail_en_cours';
 	}
+	loadContentInLateralSidebar(CCN.projet.url_popup_classes);
 	loadContentInMainSidebar(
 		url, 
 		() => {
@@ -551,6 +561,7 @@ function callClasses() {
 	updateMenuIcon(['classes'], 'sidebarView');
 
 	blankMainSidebar('travail_en_cours');
+	loadContentInLateralSidebar(CCN.projet.url_popup_classes);
 }
 
 /**
@@ -568,6 +579,8 @@ function callLivrables() {
 
 	blankMainSidebar('livrables');
 	setFullscreenModeToCols(true);
+
+	loadContentInLateralSidebar(CCN.projet.url_popup_livrables);
 }
 /**
  * Appelle le chargement de l'article de blog
@@ -628,6 +641,8 @@ function callRessource() {
 
 	blankMainSidebar('ressources');
 	setFullscreenModeToCols(true);
+
+	loadContentInLateralSidebar(CCN.projet.url_popup_ressources);
 }
 
 /**
@@ -787,6 +802,8 @@ function callAgora() {
 
 	blankMainSidebar('agora');
 	setFullscreenModeToCols(true);
+
+	loadContentInLateralSidebar(CCN.projet.url_popup_agora);
 }
 
 /**
@@ -1079,6 +1096,21 @@ function updateMenuIcon(ids, mode) {
  */
 function emptyMainSidebar() {
 	$('#sidebar_main_inner').html('<div class="popup"><div class="sidebar_bubble sidebar_bubble_empty"></div></div>');
+}
+
+/**
+ * Charge l'URL dans la sidebar latérale (colonne de navigation "Bibliothèque"
+ * pour Ressources/Agora/Projets finis, cf CCN.projet.url_popup_*).
+ *
+ * Contrairement à l'ancienne version (avant #157ba4c0), l'affichage de cette
+ * colonne n'est plus piloté par une classe JS dédiée : elle est visible dès
+ * que .hasSidebarExpanded.modeCols s'applique (cf sidebar.css.html), au même
+ * titre que #sidebar_main_around.
+ *
+ * @param {string} url - URL de la page à charger avec AJAX
+ */
+function loadContentInLateralSidebar(url) {
+	$('#sidebar_lateral_inner').load(url);
 }
 
 /**

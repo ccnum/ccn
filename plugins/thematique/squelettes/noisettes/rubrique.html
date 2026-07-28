@@ -93,6 +93,7 @@
 					<script>
 						(function () {
 							const $mainFiche = $('#sidebar_main_inner .fiche_titre').first();
+							const $sidebarFiche = $('#sidebar_lateral .fiche_titre').first();
 
 							if (!$mainFiche.length || !$sidebarFiche.length) return;
 
@@ -101,10 +102,14 @@
 								.find(c => c.startsWith('couleur_travail_en_cours'));
 
 							if (mainFicheClasse) {
+								$sidebarFiche.addClass(mainFicheClasse);
 								$('.rubrique_ul').first().addClass('ressources_rubrique').find('li a').css('color', 'black');
 							}
 
 							const src = $mainFiche.find('.photo img').attr('src');
+							if (src) {
+								$sidebarFiche.find('.photo img').attr('src', src);
+							}
 						})();
 					</script>
 					</ul>
