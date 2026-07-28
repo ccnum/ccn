@@ -5,6 +5,20 @@ if (!defined('_ECRIRE_INC_VERSION')) {
 }
 
 /**
+ * Tâche de fond (cf plugin ccn, queue_add_job) : recharge le document
+ * depuis la base (son fichier a pu être remplacé entre-temps par la
+ * compression ffmpeg) puis l'envoie vers Vimeo.
+ */
+function api_vimeo_upload_job(int $id_document): bool {
+	$doc = sql_fetsel('titre, fichier, extension', 'spip_documents', 'id_document=' . $id_document);
+	if (!$doc || strtolower($doc['extension']) !== 'mp4') {
+		return false;
+	}
+
+	return api_vimeo_upload($id_document, $doc);
+}
+
+/**
  * Orchestre l'upload d'un document SPIP vers Vimeo.
  *
  * @param int   $id_document

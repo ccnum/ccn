@@ -39,15 +39,27 @@ function api_vimeo_post_edition(array $flux): array {
 		return $flux;
 	}
 
-	include_spip('inc/api_vimeo');
-
 	if ($action === 'insert') {
-		$doc = sql_fetsel('titre, fichier, extension', 'spip_documents', 'id_document=' . $id_document);
+		$doc = sql_fetsel('extension', 'spip_documents', 'id_document=' . $id_document);
 		if ($doc && strtolower($doc['extension']) === 'mp4') {
-			api_vimeo_upload($id_document, $doc);
+			// Différé en tâche de fond : la compression ffmpeg éventuelle
+			// (plugin ccn, priorité 5) et l'upload TUS vers Vimeo peuvent être
+			// longs et ne doivent pas bloquer la requête d'ajout du document.
+			include_spip('inc/queue');
+			queue_add_job(
+				'api_vimeo_upload_job',
+				'Envoi Vimeo document #' . $id_document,
+				[$id_document],
+				'inc/api_vimeo',
+				false,
+				0,
+				0
+			);
 		}
 		return $flux;
 	}
+
+	include_spip('inc/api_vimeo');
 
 	if ($action === 'update' && array_key_exists('vimeo_password', $flux['data'] ?? [])) {
 		$doc = sql_fetsel('fichier', 'spip_documents', 'id_document=' . $id_document);

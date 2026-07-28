@@ -34,74 +34,31 @@ function ccn_post_edition($flux) {
 	$ext = strtolower($flux['data']['extension'] ?? pathinfo($fichier, PATHINFO_EXTENSION));
 	$id_document = intval($flux['args']['id_objet']);
 
+	include_spip('inc/uploads');
+
 	if (in_array($ext, ['jpg', 'jpeg', 'png', 'webp'])) {
 		ccn_compresser_image($fichier, $ext);
+		if (file_exists($fichier)) {
+			sql_updateq('spip_documents', ['taille' => filesize($fichier)], 'id_document=' . $id_document);
+		}
 	} elseif (in_array($ext, ['mp4', 'mov', 'avi', 'mkv', 'webm'])) {
-		ccn_compresser_video($fichier);
-	} else {
-		return $flux;
-	}
-
-	if (file_exists($fichier)) {
-		sql_updateq('spip_documents', ['taille' => filesize($fichier)], 'id_document=' . $id_document);
+		// Vidéo potentiellement volumineuse : la compression ffmpeg (et l'envoi
+		// vers Vimeo qui s'enchaîne derrière, cf plugin api_vimeo) est différée
+		// en tâche de fond pour ne pas bloquer la requête d'upload sur
+		// max_execution_time.
+		include_spip('inc/queue');
+		queue_add_job(
+			'ccn_compresser_video_job',
+			'Compression vidéo document #' . $id_document,
+			[$id_document, $fichier],
+			'inc/uploads',
+			false,
+			0,
+			5
+		);
 	}
 
 	return $flux;
-}
-
-function ccn_compresser_image($fichier, $ext) {
-	if (!function_exists('imagecreatefromjpeg')) {
-		return;
-	}
-	switch ($ext) {
-		case 'jpg':
-		case 'jpeg':
-			if ($img = @imagecreatefromjpeg($fichier)) {
-				imagejpeg($img, $fichier, 85);
-				imagedestroy($img);
-			}
-			break;
-		case 'png':
-			if ($img = @imagecreatefrompng($fichier)) {
-				imagesavealpha($img, true);
-				imagepng($img, $fichier, 7);
-				imagedestroy($img);
-			}
-			break;
-		case 'webp':
-			if ($img = @imagecreatefromwebp($fichier)) {
-				imagewebp($img, $fichier, 85);
-				imagedestroy($img);
-			}
-			break;
-	}
-}
-
-function ccn_compresser_video($fichier) {
-	if (!function_exists('exec')) {
-		return;
-	}
-	$ffmpeg = trim((string) shell_exec('which ffmpeg 2>/dev/null'));
-	if (!$ffmpeg) {
-		return;
-	}
-	$tmp = $fichier . '.ccn_tmp.mp4';
-	exec(
-		$ffmpeg . ' -y -i ' . escapeshellarg($fichier)
-		. ' -vcodec libx264 -crf 28 -acodec aac '
-		. escapeshellarg($tmp) . ' 2>/dev/null',
-		$out,
-		$code
-	);
-	if ($code === 0 and file_exists($tmp)) {
-		if (filesize($tmp) < filesize($fichier)) {
-			rename($tmp, $fichier);
-		} else {
-			unlink($tmp);
-		}
-	} elseif (file_exists($tmp)) {
-		unlink($tmp);
-	}
 }
 
 function ccn_formulaire_verifier($flux) {
