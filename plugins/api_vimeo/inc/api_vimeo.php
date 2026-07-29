@@ -37,7 +37,7 @@ function api_vimeo_upload(int $id_document, array $doc): bool {
 		return false;
 	}
 
-	$fichier = _DIR_RACINE . $doc['fichier'];
+	$fichier = _DIR_IMG . $doc['fichier'];
 	if (!file_exists($fichier)) {
 		spip_log("Fichier introuvable : {$doc['fichier']}", 'api_vimeo' . _LOG_ERREUR);
 		return false;

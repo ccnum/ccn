@@ -65,6 +65,7 @@ function formulaires_joindre_video_charger_dist($id_objet = 0, $objet = '') {
 function formulaires_joindre_video_verifier_dist($id_objet = 0, $objet = '') {
 	$erreurs = [];
 
+	include_spip('inc/autoriser');
 	if (!autoriser('joindredocument', $objet, $id_objet)) {
 		$erreurs['message_erreur'] = _T('info_acces_interdit');
 		return $erreurs;
@@ -83,7 +84,7 @@ function formulaires_joindre_video_verifier_dist($id_objet = 0, $objet = '') {
 	}
 
 	foreach ($files as $file) {
-		$ext = strtolower(pathinfo($file['name'], PATHINFO_EXTENSION));
+		$ext = strtolower(pathinfo($file['name'] ?? '', PATHINFO_EXTENSION));
 		if (!in_array($ext, _VIMEO_EXTENSIONS_AUTORISEES)) {
 			$erreurs['message_erreur'] = 'Format vidéo non accepté : ' . $ext
 				. ' (formats acceptés : ' . implode(', ', _VIMEO_EXTENSIONS_AUTORISEES) . ')';
@@ -105,10 +106,6 @@ function formulaires_joindre_video_traiter_dist($id_objet = 0, $objet = '') {
 
 	$ajouter_documents = charger_fonction('ajouter_documents', 'action');
 	$nouveaux_doc = $ajouter_documents('new', $files, $objet, $id_objet, 'document');
-
-	if (defined('_TMP_DIR')) {
-		effacer_repertoire_temporaire(_TMP_DIR);
-	}
 
 	$messages_erreur = [];
 	$sel = [];
