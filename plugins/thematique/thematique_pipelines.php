@@ -321,6 +321,25 @@ function thematique_cioidc_userinfo($flux) {
 		sql_updateq('spip_auteurs', ['webmestre' => 'oui'], 'id_auteur=' . intval($auteur['id_auteur']));
 		$auteur['webmestre'] = 'oui';
 	}
+
+	// Sur un CCN archivé (_CCN_PROJET_ACTIVE=false), seuls les comptes
+	// webmestre peuvent se connecter via l'ENT/OIDC. Vérifié seulement ici,
+	// après la promotion webmestre ci-dessus : un webmestre qui se connecte
+	// pour la première fois sur ce site précis n'a pas encore 'oui' en base
+	// avant ce point (chaque CCN a sa propre table spip_auteurs), il serait
+	// bloqué à tort si on testait plus tôt. cioidc_session()
+	// (plugins/cioidc/inc/cioidc_session.php) ouvre la session juste après
+	// ce pipeline : rediriger ici empêche la session de s'ouvrir, sans avoir
+	// à toucher au plugin tiers cioidc.
+	if (
+		defined('_CCN_PROJET_ACTIVE') && !_CCN_PROJET_ACTIVE
+		&& ($auteur['webmestre'] ?? 'non') !== 'oui'
+	) {
+		spip_log('userinfo connexion refusée (CCN archivé, non-webmestre) id=' . $auteur['id_auteur'], 'cioidc');
+		include_spip('inc/headers');
+		redirige_par_entete(generer_url_public('cioidc_erreur_archive'));
+	}
+
 	if ($is_webmestre) {
 		// Un webmestre n'est restreint à aucune rubrique : on retire d'éventuels
 		// liens d'admin restreint hérités d'un statut précédent.
