@@ -10,8 +10,15 @@ if (!defined('_ECRIRE_INC_VERSION')) {
  * compression ffmpeg) puis l'envoie vers Vimeo.
  */
 function api_vimeo_upload_job(int $id_document): bool {
+	spip_log("Job Vimeo démarré pour le document #$id_document", 'api_vimeo' . _LOG_INFO_IMPORTANTE);
+
 	$doc = sql_fetsel('titre, fichier, extension', 'spip_documents', 'id_document=' . $id_document);
-	if (!$doc || strtolower($doc['extension']) !== 'mp4') {
+	if (!$doc) {
+		spip_log("Job Vimeo #$id_document : document introuvable en base, abandon", 'api_vimeo' . _LOG_ERREUR);
+		return false;
+	}
+	if (strtolower($doc['extension']) !== 'mp4') {
+		spip_log("Job Vimeo #$id_document : extension '{$doc['extension']}' non mp4, abandon", 'api_vimeo' . _LOG_ERREUR);
 		return false;
 	}
 
@@ -38,16 +45,21 @@ function api_vimeo_upload(int $id_document, array $doc): bool {
 
 	$file_size = filesize($fichier);
 	$titre = $doc['titre'] ?: basename($doc['fichier']);
+	spip_log("Document #$id_document : fichier '$fichier' trouvé (" . round($file_size / 1024 / 1024, 1) . " Mo), démarrage de la création de session Vimeo", 'api_vimeo' . _LOG_INFO_IMPORTANTE);
 
 	$upload = api_vimeo_creer_upload($titre, $file_size);
 	if (!$upload) {
+		spip_log("Document #$id_document : échec de la création de la session d'upload Vimeo", 'api_vimeo' . _LOG_ERREUR);
 		return false;
 	}
+	spip_log("Document #$id_document : session Vimeo créée ({$upload['link']}), démarrage de l'envoi TUS", 'api_vimeo' . _LOG_INFO_IMPORTANTE);
 
 	$success = api_vimeo_tus_upload($fichier, $file_size, $upload['upload_link']);
 	if (!$success) {
+		spip_log("Document #$id_document : échec de l'envoi TUS vers Vimeo", 'api_vimeo' . _LOG_ERREUR);
 		return false;
 	}
+	spip_log("Document #$id_document : envoi TUS terminé ({$upload['link']})", 'api_vimeo' . _LOG_INFO_IMPORTANTE);
 
 	$site  = strtolower(str_replace(' ', '', lire_config('nom_site')));
 	$annee = (string) intval(constant('_ANNEE_SCOLAIRE'));
@@ -60,7 +72,7 @@ function api_vimeo_upload(int $id_document, array $doc): bool {
 		'fichier'  => $upload['link'],
 		'distant'  => 'oui',
 	], 'id_document=' . $id_document);
-	spip_log("Vidéo uploadée : {$upload['link']} (document #$id_document)", 'api_vimeo' . _LOG_INFO);
+	spip_log("Vidéo uploadée : {$upload['link']} (document #$id_document)", 'api_vimeo' . _LOG_INFO_IMPORTANTE);
 
 	return true;
 }
@@ -237,7 +249,7 @@ function api_vimeo_ranger_dans_dossier(string $vimeo_url, string $id_dossier): b
 		return false;
 	}
 
-	spip_log("Vidéo $video_id rangée dans le dossier $id_dossier", 'api_vimeo' . _LOG_INFO);
+	spip_log("Vidéo $video_id rangée dans le dossier $id_dossier", 'api_vimeo' . _LOG_INFO_IMPORTANTE);
 	return true;
 }
 
@@ -288,7 +300,7 @@ function api_vimeo_set_password(string $vimeo_url, string $password): bool {
 	}
 
 	$action = $password ? "protégée par mot de passe" : "rendue publique";
-	spip_log("Vidéo $video_id $action", 'api_vimeo' . _LOG_INFO);
+	spip_log("Vidéo $video_id $action", 'api_vimeo' . _LOG_INFO_IMPORTANTE);
 	return true;
 }
 
@@ -308,6 +320,7 @@ function api_vimeo_tus_upload(string $fichier, int $file_size, string $upload_li
 	ignore_user_abort(true);
 
 	$offset = 0;
+	spip_log("Envoi TUS : démarrage (" . round($file_size / 1024 / 1024, 1) . " Mo, chunks de " . round($chunk_size / 1024 / 1024) . " Mo)", 'api_vimeo' . _LOG_INFO_IMPORTANTE);
 
 	while ($offset < $file_size) {
 		$chunk        = fread($fp, min($chunk_size, $file_size - $offset));
@@ -348,8 +361,11 @@ function api_vimeo_tus_upload(string $fichier, int $file_size, string $upload_li
 		$offset = isset($response_headers['upload-offset'])
 			? (int) $response_headers['upload-offset']
 			: $offset + $chunk_length;
+
+		spip_log("Envoi TUS : $offset / $file_size octets envoyés (" . round($offset / $file_size * 100) . "%)", 'api_vimeo' . _LOG_INFO_IMPORTANTE);
 	}
 
 	fclose($fp);
+	spip_log("Envoi TUS : terminé ($file_size octets)", 'api_vimeo' . _LOG_INFO_IMPORTANTE);
 	return true;
 }

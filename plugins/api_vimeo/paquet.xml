@@ -1,9 +1,10 @@
 <paquet
 	prefix="api_vimeo"
 	categorie="multimedia"
-	version="1.0.0"
+	version="1.0.1"
 	etat="dev"
 	compatibilite="[4.3.2;4.*]"
+	schema="1.0.0"
 >
 	<nom>API Vimeo</nom>
 	<auteur>pierretux</auteur>

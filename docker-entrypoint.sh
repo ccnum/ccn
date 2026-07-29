@@ -199,6 +199,8 @@ define('_IMG_MAX_HEIGHT', 3500);
 define('_MAJ_NOTIF_EMAILS', '');
 // des personalisations par projet
 define('_PROJET', '${PROJET}');
+// plugin api_vimeo : envoi des documents mp4 vers Vimeo
+define('_VIMEO_ACCESS_TOKEN', '${VIMEO_ACCESS_TOKEN}');
 ?>
 MAINEOF
 fi
