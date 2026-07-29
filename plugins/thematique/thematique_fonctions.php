@@ -397,6 +397,41 @@ function thematique_assurer_structure_annee() {
 }
 
 /**
+ * Premier intervenant (au sens thematique_donner_role) trouvé sur la
+ * branche "consignes" du projet dont fait partie $id_rubrique.
+ *
+ * @param int $id_rubrique
+ * @return int 0 si aucun intervenant trouvé
+ */
+function thematique_premier_intervenant($id_rubrique) {
+	$id_mot_consignes = sql_getfetsel('id_mot', 'spip_mots', "titre='consignes'");
+	if (!$id_mot_consignes) {
+		return 0;
+	}
+
+	$id_secteur = sql_getfetsel('id_secteur', 'spip_rubriques', 'id_rubrique=' . intval($id_rubrique));
+	if (!$id_secteur) {
+		return 0;
+	}
+
+	return intval(sql_getfetsel(
+		'lien.id_auteur',
+		['spip_auteurs_liens AS lien', 'spip_rubriques AS rub', 'spip_mots_liens AS ml'],
+		[
+			'lien.id_objet=rub.id_rubrique',
+			"lien.objet='rubrique'",
+			'rub.id_secteur=' . intval($id_secteur),
+			'ml.id_objet=rub.id_rubrique',
+			"ml.objet='rubrique'",
+			'ml.id_mot=' . intval($id_mot_consignes),
+		],
+		'',
+		'',
+		'1'
+	));
+}
+
+/**
  * Première rubrique enfant de $id_parent taguée du mot-clé $titre_mot.
  *
  * @param int $id_parent

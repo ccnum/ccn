@@ -15,6 +15,12 @@ if (!defined('_ECRIRE_INC_VERSION')) {
  *    statut prop, assignés au premier intervenant trouvé sur le projet.
  *    C'est ensuite à lui de les compléter et de les publier.
  *
+ * Enregistrée via le pipeline taches_generales_cron (thematique_pipelines.php)
+ * plutôt que la balise <genie> de paquet.xml : la balise <genie> fait la
+ * même chose en interne (cf ecrire/inc/genie.php) mais nécessite que SPIP
+ * revérifie le paquet du plugin pour enregistrer la tâche, alors que le
+ * pipeline est réévalué à chaque calcul des tâches de fond.
+ *
  * Désactivable projet par projet via _CCN_PROJET_ACTIVE (mes_options.php,
  * défini depuis la variable d'environnement Docker CCN_PROJET_ACTIVE) pour
  * les CCN qui ne repartent pas d'une année sur l'autre.
@@ -73,7 +79,7 @@ function genie_thematique_rentree_annee_dist($last) {
 			continue;
 		}
 
-		// déjà créé (idempotent, au cas où le genie repasserait dans le mois)
+		// déjà créé (idempotent, au cas où le job repasserait dans le mois)
 		$id_article_existant = sql_getfetsel(
 			'spip_articles.id_article',
 			['spip_articles', 'spip_mots_liens'],
@@ -114,39 +120,4 @@ function genie_thematique_rentree_annee_dist($last) {
 	ecrire_meta('thematique_rentree_annee_traitee', $annee);
 
 	return 1;
-}
-
-/**
- * Premier intervenant (au sens thematique_donner_role) trouvé sur la
- * branche "consignes" du projet dont fait partie $id_rubrique.
- *
- * @param int $id_rubrique
- * @return int 0 si aucun intervenant trouvé
- */
-function thematique_premier_intervenant($id_rubrique) {
-	$id_mot_consignes = sql_getfetsel('id_mot', 'spip_mots', "titre='consignes'");
-	if (!$id_mot_consignes) {
-		return 0;
-	}
-
-	$id_secteur = sql_getfetsel('id_secteur', 'spip_rubriques', 'id_rubrique=' . intval($id_rubrique));
-	if (!$id_secteur) {
-		return 0;
-	}
-
-	return intval(sql_getfetsel(
-		'lien.id_auteur',
-		['spip_auteurs_liens AS lien', 'spip_rubriques AS rub', 'spip_mots_liens AS ml'],
-		[
-			'lien.id_objet=rub.id_rubrique',
-			"lien.objet='rubrique'",
-			'rub.id_secteur=' . intval($id_secteur),
-			'ml.id_objet=rub.id_rubrique',
-			"ml.objet='rubrique'",
-			'ml.id_mot=' . intval($id_mot_consignes),
-		],
-		'',
-		'',
-		'1'
-	));
 }

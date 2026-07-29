@@ -9,6 +9,11 @@ if (!defined('_ECRIRE_INC_VERSION')) {
  * en statut 5poubelle (élèves et enseignants), pour forcer un réapprovisionnement
  * des comptes via la connexion ENT (cioidc) de la nouvelle année.
  *
+ * Enregistrée via le pipeline taches_generales_cron (thematique_pipelines.php)
+ * plutôt que la balise <genie> de paquet.xml : équivalent en interne, mais
+ * évalué dynamiquement au lieu de nécessiter que SPIP revérifie le paquet
+ * du plugin pour l'enregistrer.
+ *
  * @param int $last
  * @return int
  */

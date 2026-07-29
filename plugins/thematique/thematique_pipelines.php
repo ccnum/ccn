@@ -387,3 +387,20 @@ function thematique_cioidc_userinfo($flux) {
 
 	return $flux;
 }
+
+/**
+ * Enregistre les tâches de fond thematique_rentree_annee et
+ * thematique_rentree_poubelle (genie/) via le pipeline plutôt que la
+ * balise <genie> de paquet.xml : équivalent en interne (cf
+ * ecrire/inc/genie.php), mais évalué dynamiquement à chaque calcul des
+ * tâches de fond au lieu de nécessiter que SPIP revérifie le paquet du
+ * plugin pour les enregistrer.
+ *
+ * @param array $taches_generales
+ * @return array
+ */
+function thematique_taches_generales_cron($taches_generales) {
+	$taches_generales['thematique_rentree_annee'] = 86400;
+	$taches_generales['thematique_rentree_poubelle'] = 86400;
+	return $taches_generales;
+}
