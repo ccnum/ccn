@@ -18,14 +18,18 @@ function autoriser_thematique_configurer_dist($faire, $type, $id, $qui, $opt) {
 }
 
 /**
- * Modération des forums (modifier/supprimer un message) : réservée aux
- * profs/intervenants/admins, jamais aux élèves — y compris sur leurs
- * propres messages. Les élèves ne doivent pouvoir que publier. (issue #356)
+ * Modération des forums attachés à un article (modifier/supprimer un
+ * message) : réservée aux profs/intervenants/admins, jamais aux élèves —
+ * y compris sur leurs propres messages. Les élèves ne doivent pouvoir que
+ * publier. (issue #356)
  *
- * Surcharge autoriser_modererforum_dist() du plugin forum (qui délègue par
- * défaut à autoriser('modifier', $type_objet, ...), non pertinent ici).
+ * Nom spécifique au type "article" (testé par SPIP avant la version
+ * générique autoriser_modererforum) plutôt qu'une surcharge de
+ * autoriser_modererforum() : ce nom générique est déjà défini par le
+ * plugin autorite (plugins/autorite/inc/autoriser.php), le redéclarer
+ * provoque un fatal "Cannot redeclare".
  */
-function autoriser_modererforum($faire, $type, $id, $qui, $opt) {
+function autoriser_article_modererforum_dist($faire, $type, $id, $qui, $opt) {
 	include_spip('thematique_fonctions');
 	$role = thematique_donner_role($qui['id_auteur'] ?? 0);
 
