@@ -201,6 +201,11 @@ define('_MAJ_NOTIF_EMAILS', '');
 define('_PROJET', '${PROJET}');
 // plugin api_vimeo : envoi des documents mp4 vers Vimeo
 define('_VIMEO_ACCESS_TOKEN', '${VIMEO_ACCESS_TOKEN}');
+// false pour un projet CCN qui ne repart pas d'une année sur l'autre :
+// désactive la création automatique de la structure de rentrée (rubrique
+// de l'année + articles jalons, cf
+// plugins/thematique/genie/thematique_rentree_annee.php)
+define('_CCN_PROJET_ACTIVE', '${CCN_PROJET_ACTIVE}' !== 'false');
 ?>
 MAINEOF
 fi

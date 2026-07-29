@@ -34,6 +34,17 @@ et/ou
 					<div class="timeline_trigger"></div>
 				</div>
 				<div id="timeline_background"></div>
+				[(#SESSION{role}|in_array{#LISTE{intervenant,admin}}|oui)#SET{peut_voir_non_publie,oui}]
+				<div id="badge_cap_sur_annee" class="badge_timeline badge_timeline_debut" style="display:none;" data-peut-voir-non-publie="[(#GET{peut_voir_non_publie}|oui)oui]" onclick="callArticleJalon(CCN.idArticleCapSurAnnee)" role="button" tabindex="0">
+					<span class="badge_timeline_icone"><img src="[(#CHEMIN{img/pictos_sites/[(#NOM_SITE_SPIP|replace{' ',''}|strtolower)].svg}|sinon{#CHEMIN{img/pictos_sites/selfdata.svg}}|attribut_url)]" alt="" /></span>
+					<span class="badge_timeline_label">Cap sur l'année</span>
+					<span class="badge_timeline_warning">⚠ Article non publié</span>
+				</div>
+				<div id="badge_la_rencontre" class="badge_timeline badge_timeline_fin" style="display:none;" data-peut-voir-non-publie="[(#GET{peut_voir_non_publie}|oui)oui]" onclick="callArticleJalon(CCN.idArticleLaRencontre)" role="button" tabindex="0">
+					<span class="badge_timeline_icone"><img src="[(#CHEMIN{img/logo_la_rencontre.svg}|attribut_url)]" alt="" /></span>
+					<span class="badge_timeline_label">La Rencontre</span>
+					<span class="badge_timeline_warning">⚠ Article non publié</span>
+				</div>
 			</div>
 		</div>
 		<div id="sidebar">

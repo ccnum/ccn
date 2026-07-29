@@ -668,6 +668,34 @@ function callRessource() {
  * @todo Documenter
  */
 
+/**
+ * Appelle le chargement d'un article jalon ("Cap sur l'année" / "La Rencontre")
+ * dans la sidebar principale.
+ *
+ * @param {number} id_article
+ *
+ * @see loadContentInMainSidebar
+ */
+
+function callArticleJalon(id_article) {
+	if (!Number.isInteger(Number(id_article)) || id_article <= 0) return;
+	changeTimelineMode('consignes');
+	setFullscreenModeToCols(true);
+
+	const url = "./spip.php?page=article&id_article=" + id_article + "&mode=ajax-detail";
+	loadContentInMainSidebar(
+		url,
+		() => {
+			updateUrl(
+				{
+					'id_article': id_article,
+					'page': 'article'
+				}, "", "./spip.php?page=article&id_article=" + id_article + "&mode=complet"
+			);
+		}
+	);
+}
+
 function callRessourceArticle(id_article, type_objet) {
 	if (!Number.isInteger(Number(id_article))) return;
 	changeTimelineMode('consignes');

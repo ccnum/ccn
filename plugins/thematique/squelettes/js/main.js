@@ -81,6 +81,14 @@ async function loadProjet(fichier) {
 	CCN.idRubriqueRessources = getXMLNodeValue('id_rubrique_ressources', xml);
 	CCN.idRubriqueAgora = getXMLNodeValue('id_rubrique_agora', xml);
 
+	const [idArticleCapSurAnnee, statutCapSurAnnee] = (getXMLNodeValue('article_cap_sur_annee', xml) || '0|').split('|');
+	CCN.idArticleCapSurAnnee = parseInt(idArticleCapSurAnnee) || 0;
+	CCN.statutCapSurAnnee = statutCapSurAnnee || '';
+
+	const [idArticleLaRencontre, statutLaRencontre] = (getXMLNodeValue('article_la_rencontre', xml) || '0|').split('|');
+	CCN.idArticleLaRencontre = parseInt(idArticleLaRencontre) || 0;
+	CCN.statutLaRencontre = statutLaRencontre || '';
+
 	// Seules les missions (classes + consignes) sont chargées au démarrage.
 	// Agenda (blogs) et blog pédagogique (evenements) sont chargés à la demande,
 	// au clic sur le menu-timeline (voir ensureArticlesLoaded).
@@ -383,6 +391,33 @@ async function loadArticles(fichier, type, ccnArray, listeY) {
 	}
 }
 /**
+ *  Affiche/masque un badge jalon ("Cap sur l'année" / "La Rencontre") selon
+ *  qu'un article existe et son statut de publication. Les élèves ne voient
+ *  jamais le badge tant qu'il n'est pas publié (data-peut-voir-non-publie
+ *  posé côté squelette selon #SESSION{role}).
+ *
+ * @param {string} prefixe - "cap_sur_annee" ou "la_rencontre"
+ * @param {number} idArticle
+ * @param {string} statut
+ */
+
+function updateBadgeJalon(prefixe, idArticle, statut) {
+	const $badge = $('#badge_' + prefixe);
+	if (!idArticle) {
+		$badge.hide();
+		return;
+	}
+
+	const peutVoirNonPublie = $badge.attr('data-peut-voir-non-publie') === 'oui';
+	if (statut !== 'publie' && !peutVoirNonPublie) {
+		$badge.hide();
+		return;
+	}
+
+	$badge.toggleClass('badge_timeline--non-publie', statut !== 'publie').show();
+}
+
+/**
  *  Initialise la vue, la timeline,
  *  définit les événements attribués aux éléments de la timeline.
  */
@@ -394,6 +429,9 @@ function initTimeline() {
 	CCN.projet.initTimelineMonths();
 	CCN.projet.showWholeTimeline();
 	changeTimelineMode('consignes');
+
+	updateBadgeJalon('cap_sur_annee', CCN.idArticleCapSurAnnee, CCN.statutCapSurAnnee);
+	updateBadgeJalon('la_rencontre', CCN.idArticleLaRencontre, CCN.statutLaRencontre);
 
 	updateConnecteurs();
 

@@ -1,0 +1,12 @@
+#HTTP_HEADER{Content-Type: text/plain; charset=#CHARSET}
+#CACHE{0}
+[(#REM)Id article + statut correspondant au mot clef donné, sous la forme "id|statut" (ou "0|" si absent)
+paramètre : titre_mot
+]
+#SET{id_art,0}
+#SET{statut_art,''}
+<BOUCLE_art(ARTICLES){titre_mot=#ENV{titre_mot}}{par id_article}{0,1}{tout}>
+	#SET{id_art,#ID_ARTICLE}
+	#SET{statut_art,#STATUT}
+</BOUCLE_art>
+#GET{id_art}|#GET{statut_art}

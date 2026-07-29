@@ -349,6 +349,54 @@ function thematique_id_rubrique_annee_active() {
 }
 
 /**
+ * Crée (si absente) la structure minimale de l'année scolaire active :
+ * rubrique racine + deux sous-rubriques "Travail des classes" (mot-clé
+ * travail_en_cours) et "Consignes" (mot-clé consignes) — titres exacts
+ * requis par la synchro ENT (cf thematique_pipelines.php, recherche par
+ * LIKE sur ces titres).
+ *
+ * Ne crée jamais "Ressources"/"Agora" : rubriques globales, réutilisées
+ * d'année en année (cf xml/projet.html, résolues sans filtre d'année).
+ *
+ * @return int id de la rubrique "Travail des classes" (0 si échec)
+ */
+function thematique_assurer_structure_annee() {
+	$annee = thematique_annee_scolaire();
+	$id_racine = thematique_id_rubrique_annee_active();
+
+	if (!$id_racine) {
+		include_spip('inc/rubriques');
+		$titre_racine = $annee . '-' . ($annee + 1);
+		$id_racine = creer_rubrique_nommee($titre_racine, 0);
+		if (!$id_racine) {
+			spip_log(
+				"thematique_assurer_structure_annee : échec de création de la rubrique racine '$titre_racine'",
+				'thematique' . _LOG_ERREUR
+			);
+			return 0;
+		}
+		sql_updateq('spip_rubriques', ['statut' => 'publie'], 'id_rubrique=' . intval($id_racine));
+		spip_log("thematique_assurer_structure_annee : rubrique racine '$titre_racine' créée (#$id_racine)", 'thematique');
+	}
+
+	$id_travail_classes = thematique_trouver_ou_creer_rubrique('Travail des classes', $id_racine);
+	$id_consignes = thematique_trouver_ou_creer_rubrique('Consignes', $id_racine);
+
+	include_spip('action/editer_liens');
+	foreach (['travail_en_cours' => $id_travail_classes, 'consignes' => $id_consignes] as $titre_mot => $id_rub) {
+		if (!$id_rub) {
+			continue;
+		}
+		$id_mot = sql_getfetsel('id_mot', 'spip_mots', 'titre=' . sql_quote($titre_mot));
+		if ($id_mot) {
+			objet_associer(['mots' => intval($id_mot)], ['rubriques' => intval($id_rub)]);
+		}
+	}
+
+	return $id_travail_classes ?: 0;
+}
+
+/**
  * Première rubrique enfant de $id_parent taguée du mot-clé $titre_mot.
  *
  * @param int $id_parent

@@ -36,4 +36,5 @@
 	<pipeline nom="autoriser" inclure="thematique_autoriser.php" />
 
 	<genie nom="thematique_rentree_poubelle" periode="86400" />
+	<genie nom="thematique_rentree_annee" periode="86400" />
 </paquet>
