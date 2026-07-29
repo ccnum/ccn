@@ -576,3 +576,56 @@ function thematique_voir_mission() {
 	}
 	return 'non';
 }
+
+
+function filtre_afficher_forum_arbre($id_article) {
+
+    $forums = sql_allfetsel(
+        '*',
+        'spip_forum',
+        "objet='article' AND id_objet=" . intval($id_article),
+        '',
+        'date_heure'
+    );
+
+    if (!$forums) {
+        return '';
+    }
+
+    // Index des commentaires par parent
+    $parents = [];
+
+    foreach ($forums as $forum) {
+        $forum['reponses'] = [];
+        $parents[$forum['id_parent']][] = $forum;
+    }
+
+    // Injection des réponses dans chaque commentaire
+    foreach ($parents as $id_parent => &$enfants) {
+        foreach ($enfants as &$forum) {
+            if (isset($parents[$forum['id_forum']])) {
+                $forum['reponses'] = $parents[$forum['id_forum']];
+            }
+        }
+    }
+
+    // Les messages racines sont ceux qui ont id_parent = 0
+    return forum_rendre_branche($parents[0] ?? []);
+}
+
+function forum_rendre_branche($forums) {
+
+    $html = '';
+
+    foreach ($forums as $forum) {
+
+        $html .= recuperer_fond(
+            'noisettes/inc/forumv2/forum_commentaire_et_ses_reponses',
+            [
+                'forum' => $forum
+            ]
+        );
+    }
+
+    return $html;
+}

@@ -1,16 +1,30 @@
-.message-list {
-    display: flex;
-    flex-direction: column;
-    gap: 5px;
-}
-
 .forum-card {
     display: flex;
     gap: 1rem;
     background-color: white;
     border: 1px solid var(--color-tonic);
-    border-color: 5px;
+    border-radius: 5px;
     padding: 1rem;
+    position: relative;
+}
+
+.forum-children .forum-card {
+    margin-left: 2rem;
+    width: calc(100% - 2rem);
+}
+
+.forum-children {
+    display: none;
+}
+
+.forum-children.is-open {
+    display: block;
+}
+
+.forum-card .badge {
+    position: absolute;
+    right: 0;
+    top: -12px;
 }
 
 .forum-card .col-forum {
@@ -27,3 +41,28 @@
     display: flex;
     justify-content: space-between;
 }
+
+.forum-card [name="repondre_a"] {
+    background: none;
+    border: none;
+    padding: 0;
+    color: var(--color-default);
+    text-decoration: underline;
+    cursor: pointer;
+    font: inherit;
+}
+
+.forum-commentaire .reponse-list {
+    display: none;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.forum-commentaire.is-opened .reponse-list {
+    display: flex;
+}
+
+.forum-commentaire [role="alert"] {
+    color: red;
+}
+

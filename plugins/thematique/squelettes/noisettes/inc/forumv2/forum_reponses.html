@@ -1,20 +1,8 @@
-<div>debut messages #ENV{id_article}</div>
-
-<div id="reponses-#ID_FORUM" 
-     class="forum-children"
-     style="display: block;">
-    <BOUCLE_discussions(FORUMS)
-        {objet=article}
-        {id_objet=#ENV{id_article}}
-        {id_parent=0}
-        {par date}
-        {inverse}
-    >
-        
-        
-    </BOUCLE_discussions(FORUMS)>
+<BOUCLE_reponse(FORUMS){id_parent}>
 
     <div id="forum-#ID_FORUM" class="forum-card">
+            
+        
         <B_nb_reponses>
             <div class="forum-card__badge">
                 #TOTAL_BOUCLE réponses
@@ -75,5 +63,4 @@
     </div> 
 
 </BOUCLE_reponse>
-
-</div>
+``
