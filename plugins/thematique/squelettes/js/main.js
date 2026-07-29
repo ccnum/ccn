@@ -13,6 +13,8 @@ function initCCN() {
 	CCN.reponses = [];
 	CCN.articlesBlog = [];
 	CCN.articlesEvenement = [];
+	CCN.articlesBlogLoaded = false;
+	CCN.articlesEvenementLoaded = false;
 
 	CCN.idRubriqueRessources = null;
 	CCN.idRubriqueAgora = null;
@@ -79,12 +81,78 @@ async function loadProjet(fichier) {
 	CCN.idRubriqueRessources = getXMLNodeValue('id_rubrique_ressources', xml);
 	CCN.idRubriqueAgora = getXMLNodeValue('id_rubrique_agora', xml);
 
-	await Promise.all([
-		loadClasses(CCN.urlXml + "classes"),
-		loadArticles(CCN.urlXml + "articles&type=blogs", 'blogs', CCN.articlesBlog, CCN.projet.liste_y_blogs),
-		loadArticles(CCN.urlXml + "articles&type=evenements", 'evenements', CCN.articlesEvenement, CCN.projet.liste_y_evenements)
-	]);
+	// Seules les missions (classes + consignes) sont chargées au démarrage.
+	// Agenda (blogs) et blog pédagogique (evenements) sont chargés à la demande,
+	// au clic sur le menu-timeline (voir ensureArticlesLoaded).
+	await loadClasses(CCN.urlXml + "classes");
 	initTimeline();
+}
+/**
+ *  Charge à la demande le flux d'articles (blogs ou événements)
+ *  correspondant au mode de timeline demandé, une seule fois.
+ *
+ * @param {string} type - "blogs" ou "evenements"
+ * @returns {Promise<void>}
+ */
+
+async function ensureArticlesLoaded(type) {
+	if (type === 'blogs' && !CCN.articlesBlogLoaded) {
+		CCN.articlesBlogLoaded = true;
+		$('body').addClass('loading');
+		await loadArticles(CCN.urlXml + "articles&type=blogs", 'blogs', CCN.articlesBlog, CCN.projet.liste_y_blogs);
+		$('body').removeClass('loading');
+	}
+
+	if (type === 'evenements' && !CCN.articlesEvenementLoaded) {
+		CCN.articlesEvenementLoaded = true;
+		$('body').addClass('loading');
+		await loadArticles(CCN.urlXml + "articles&type=evenements", 'evenements', CCN.articlesEvenement, CCN.projet.liste_y_evenements);
+		$('body').removeClass('loading');
+	}
+}
+/**
+ *  Retire du DOM le contenu d'un layer de la timeline (consignes+réponses,
+ *  blogs ou évènements), sans perdre les données déjà chargées : un simple
+ *  detach, pas de suppression.
+ *
+ * @param {string} type - "consignes", "blogs" ou "evenements"
+ */
+
+function detachTimelineLayer(type) {
+	if (type === 'consignes') {
+		CCN.consignes.forEach(consigne => {
+			consigne.div_base.detach();
+			consigne.reponses.forEach(reponse => {
+				reponse.div_base.detach();
+				reponse.connecteur.detach();
+			});
+		});
+		return;
+	}
+	const ccnArray = type === 'blogs' ? CCN.articlesBlog : CCN.articlesEvenement;
+	ccnArray.forEach(article => article.div_base.detach());
+}
+/**
+ *  Réinsère dans le DOM le contenu déjà chargé et instancié
+ *  d'un layer de la timeline (consignes+réponses, blogs ou évènements).
+ *
+ * @param {string} type - "consignes", "blogs" ou "evenements"
+ */
+
+function attachTimelineLayer(type) {
+	if (type === 'consignes') {
+		CCN.consignes.forEach(consigne => {
+			CCN.timelineLayerConsignes.append(consigne.div_base);
+			consigne.reponses.forEach(reponse => {
+				CCN.timelineLayerConsignes.append(reponse.div_base);
+				CCN.projet.timeline_fixed.append(reponse.connecteur);
+			});
+		});
+		return;
+	}
+	const ccnArray = type === 'blogs' ? CCN.articlesBlog : CCN.articlesEvenement;
+	const layer = type === 'blogs' ? CCN.timelineLayerBlogs : CCN.timelineLayerEvenements;
+	ccnArray.forEach(article => layer.append(article.div_base));
 }
 /**
  *  Charge le XML des classes (liste)
@@ -325,6 +393,7 @@ function initTimeline() {
 
 	CCN.projet.initTimelineMonths();
 	CCN.projet.showWholeTimeline();
+	changeTimelineMode('consignes');
 
 	updateConnecteurs();
 

@@ -14,6 +14,8 @@ CCN.consignes;
 CCN.reponses;
 CCN.articlesBlog;         // blogs        : Blog du projet    (accessible par tous, bulles roses)
 CCN.articlesEvenement;    // evenements   : Blog pédagogique  (caché aux élèves, losanges bleu ciel)
+CCN.articlesBlogLoaded;       // true une fois le flux "blogs" chargé (lazy load au clic sur menu-timeline)
+CCN.articlesEvenementLoaded;  // true une fois le flux "evenements" chargé (lazy load au clic sur menu-timeline)
 
 CCN.timelineLayerConsignes;
 CCN.timelineLayerBlogs;

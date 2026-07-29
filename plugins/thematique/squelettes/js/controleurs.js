@@ -321,13 +321,25 @@ function getHauteurZone() {
  *
  * @param {string} type - Peut être <tt>consignes</tt>, <tt>blogs</tt> ou <tt>evenements</tt>
  */
-function changeTimelineMode(type) {
+async function changeTimelineMode(type) {
 	const classCss = {};
 	classCss.consignes = 'show_consignes';
 	classCss.blogs = 'show_blogs';
 	classCss.evenements = 'show_evenements';
 
 	if (!$('body').hasClass(classCss[type])) {
+		if (type === 'blogs' || type === 'evenements') {
+			await ensureArticlesLoaded(type);
+		}
+
+		attachTimelineLayer(type);
+
+		for (const other of ['consignes', 'blogs', 'evenements']) {
+			if (other !== type) {
+				detachTimelineLayer(other);
+			}
+		}
+
 		CCN.projet.showWholeTimeline();
 
 		for (const index in classCss) {
@@ -1159,7 +1171,7 @@ function showSidebar() {
 function closeSidebar() {
 	$('body').removeClass('hasSidebarOpen hasSidebarExpanded');
 	$('#sidebar').removeClass('show');
-	$('#menu_bas .logo a').removeClass('selected');
+	$('#menu_bas .logo a').not('#menu-timeline .logo a').removeClass('selected');
 	if (_sidebarTrigger && typeof _sidebarTrigger.focus === 'function') {
 		_sidebarTrigger.focus();
 	}
