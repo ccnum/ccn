@@ -283,11 +283,14 @@ function thematique_classes_rangs() {
 		'titre LIKE ' . sql_quote('%' . $annee_scolaire . '%') . ' AND id_parent=0'
 	);
 
-	$from = 'spip_rubriques INNER JOIN spip_mots_liens'
-		. ' ON spip_mots_liens.id_objet=spip_rubriques.id_rubrique AND spip_mots_liens.objet=' . sql_quote('rubrique');
-	$where = 'spip_mots_liens.id_mot=' . intval($id_mot);
+	$from = ['spip_rubriques', 'spip_mots_liens'];
+	$where = [
+		'spip_mots_liens.id_objet=spip_rubriques.id_rubrique',
+		'spip_mots_liens.objet=' . sql_quote('rubrique'),
+		'spip_mots_liens.id_mot=' . intval($id_mot),
+	];
 	if ($id_annee) {
-		$where .= ' AND spip_rubriques.id_parent=' . intval($id_annee);
+		$where[] = 'spip_rubriques.id_parent=' . intval($id_annee);
 	}
 	$conteneurs = sql_allfetsel('spip_rubriques.id_rubrique', $from, $where);
 	$ids_conteneurs = array_column($conteneurs, 'id_rubrique');
@@ -364,9 +367,13 @@ function thematique_id_rubrique_enfant_a_mot($id_parent, $titre_mot, $orderby = 
 
 	return (int) sql_getfetsel(
 		'spip_rubriques.id_rubrique',
-		'spip_rubriques INNER JOIN spip_mots_liens'
-			. ' ON spip_mots_liens.id_objet=spip_rubriques.id_rubrique AND spip_mots_liens.objet=' . sql_quote('rubrique'),
-		'spip_mots_liens.id_mot=' . intval($id_mot) . ' AND spip_rubriques.id_parent=' . intval($id_parent),
+		['spip_rubriques', 'spip_mots_liens'],
+		[
+			'spip_mots_liens.id_objet=spip_rubriques.id_rubrique',
+			'spip_mots_liens.objet=' . sql_quote('rubrique'),
+			'spip_mots_liens.id_mot=' . intval($id_mot),
+			'spip_rubriques.id_parent=' . intval($id_parent),
+		],
 		'',
 		$orderby,
 		'0,1'
