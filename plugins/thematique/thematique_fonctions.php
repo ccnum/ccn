@@ -188,6 +188,32 @@ function thematique_donner_role($id_auteur) {
 	return null;
 }
 
+/**
+ * Fond sidebar à inclure pour une consigne (mission), selon le rôle de session.
+ * Par défaut (visiteur non connecté, admin, eleve) : vue "autre",
+ * pas de différence apparente entre "autre" et "eleve".
+ */
+function fond_consigne_pour_role($role) {
+	if ($role === 'prof') {
+		return 'consigne_pour_classe';
+	}
+	if ($role === 'intervenant') {
+		return 'consigne_pour_intervenant';
+	}
+	return 'consigne_pour_autre';
+}
+
+/**
+ * Fond sidebar à inclure pour une réponse à une consigne, selon le rôle de session.
+ * Par défaut (visiteur non connecté, admin, prof, eleve) : vue classe.
+ */
+function fond_reponse_pour_role($role) {
+	if ($role === 'intervenant') {
+		return 'reponse_pour_intervenant';
+	}
+	return 'reponse_pour_classe';
+}
+
 function thematique_auteur_a_mot_dans_hierarchie($id_auteur, $titre_mot) {
 	$rubriques = sql_allfetsel(
 		'id_rubrique',
