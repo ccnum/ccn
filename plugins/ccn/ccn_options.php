@@ -31,3 +31,8 @@ define('_ANNEE_SCOLAIRE', $annee_scolaire);
 define('_COOKIE_ANNEE_SCOLAIRE', 'laclasse_annee_scolaire');
 define('_DATE_DEBUT', $annee_scolaire . '-09-01');
 define('_DATE_FIN', ($annee_scolaire + 1) . '-09-01');
+
+// Limite de taille des documents (hors mp4, poussés vers Vimeo), en Mo.
+// Utilisée par ccn_verifier_uploads() (inc/uploads.php) et affichable en
+// squelette via #CONST{_CCN_UPLOAD_TAILLE_MAX_MO}.
+define('_CCN_UPLOAD_TAILLE_MAX_MO', 100);

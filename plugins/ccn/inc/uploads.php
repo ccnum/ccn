@@ -12,7 +12,7 @@ function ccn_verifier_uploads() {
         ? array_filter(preg_split(',[^a-zA-Z0-9/+_],', $formats))
         : [];
 
-    $taille_max = 100 * 1024 * 1024;
+    $taille_max = _CCN_UPLOAD_TAILLE_MAX_MO * 1024 * 1024;
 
     foreach ((array) $_FILES['fichier_upload']['name'] as $cle => $nom) {
 
@@ -38,7 +38,7 @@ function ccn_verifier_uploads() {
         if (!$mp4_sans_limite && $taille > $taille_max) {
             $erreurs['message_erreur'] = _T(
                 'ccn:ccn_fichier_trop_volumineux',
-                ['nom' => $nom]
+                ['nom' => $nom, 'taille_max' => _CCN_UPLOAD_TAILLE_MAX_MO]
             );
             break;
         }
