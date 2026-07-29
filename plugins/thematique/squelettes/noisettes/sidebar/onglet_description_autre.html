@@ -45,14 +45,24 @@
 		<div class="bloc_documents">
 			[(#AUTORISER{modifier,article,#ID_ARTICLE}|oui)
 				<div class="sidebar_bubble">
-					<INCLURE{fond=noisettes/js/accordeon, nom=bloc_option_doc-#ID_ARTICLE, ajax} />
 					<div class="bloc_option_doc nettoyeur">
-						<a id="bloc_option_doc-#ID_ARTICLE" class="hac lien_ajouter bloc_option_doc_adddocument" title="Ajouter un document">Ajouter un document</a>
-						<div class='nettoyeur cache formulaire_spip formulaire_editer_document bloc_option_doc'>
-							Vos documents apparaîtront par ordre de chargement (du premier au dernier document chargé)
-							<div class="ajax">#FORMULAIRE_JOINDRE_DOCUMENT{new,#ID_ARTICLE,article,auto,false,false,false}</div>
+						<div id="onglets_ajout_media-#ID_ARTICLE">
+							<div data-title="Ajouter un document">
+								<div class='nettoyeur formulaire_spip formulaire_editer_document bloc_option_doc'>
+									Vos documents apparaîtront par ordre de chargement (du premier au dernier document chargé)
+									<div class="ajax">#FORMULAIRE_JOINDRE_DOCUMENT{new,#ID_ARTICLE,article,auto,false,false,false}</div>
+								</div>
+							</div>
+							<div data-title="Ajouter une vidéo">
+								<div class='nettoyeur formulaire_spip formulaire_joindre_video bloc_option_doc'>
+									<div class="ajax">#FORMULAIRE_JOINDRE_VIDEO{#ID_ARTICLE,article}</div>
+								</div>
+							</div>
 						</div>
 					</div>
+					<script type="text/javascript">
+						$(function() { $('#onglets_ajout_media-#ID_ARTICLE').customTabs(); });
+					</script>
 				</div>
 			]
 			<INCLURE{fond=noisettes/inc/ajouter_document, id_article, env, ajax=documents} />

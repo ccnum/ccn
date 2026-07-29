@@ -12,7 +12,7 @@ if (!defined('_ECRIRE_INC_VERSION')) {
 function api_vimeo_upload_job(int $id_document): bool {
 	spip_log("Job Vimeo démarré pour le document #$id_document", 'api_vimeo' . _LOG_INFO_IMPORTANTE);
 
-	$doc = sql_fetsel('titre, fichier, extension', 'spip_documents', 'id_document=' . $id_document);
+	$doc = sql_fetsel('titre, fichier, extension, vimeo_password', 'spip_documents', 'id_document=' . $id_document);
 	if (!$doc) {
 		spip_log("Job Vimeo #$id_document : document introuvable en base, abandon", 'api_vimeo' . _LOG_ERREUR);
 		return false;
@@ -60,6 +60,10 @@ function api_vimeo_upload(int $id_document, array $doc): bool {
 		return false;
 	}
 	spip_log("Document #$id_document : envoi TUS terminé ({$upload['link']})", 'api_vimeo' . _LOG_INFO_IMPORTANTE);
+
+	if (!empty($doc['vimeo_password'])) {
+		api_vimeo_set_password($upload['link'], $doc['vimeo_password']);
+	}
 
 	$site  = strtolower(str_replace(' ', '', lire_config('nom_site')));
 	$annee = (string) intval(constant('_ANNEE_SCOLAIRE'));
