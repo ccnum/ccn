@@ -35,24 +35,34 @@ calculé par l'appelant (noisettes/article.html) ]
 
 		<div id="tabs-article-#ID_ARTICLE" class="container-tabs">
 			<div id="mission-tabs">
-				<div data-title="#GET{titre_onglet_reponse}">
-					[(#ENV{c_est_ma_reponse}|=={oui}|oui)
-						<INCLURE{
-							fond=noisettes/sidebar/onglet_reponse_modifiable,
-							id_article=#GET{id_consigne},
-							env
-						} />
-					]
-					[(#ENV{c_est_ma_reponse}|=={oui}|non)
-						<INCLURE{
-							fond=noisettes/sidebar/onglet_reponse_non_modifiable,
-							id_article=#GET{id_consigne},
-							env
-						} />
-					]
+				<div>
+					<div class="tabs-title">
+						#GET{titre_onglet_reponse}
+					</div>
+					<div class="tabs-content">
+						[(#ENV{c_est_ma_reponse}|=={oui}|oui)
+							<INCLURE{
+								fond=noisettes/sidebar/onglet_reponse_modifiable,
+								id_article=#GET{id_consigne},
+								env
+							} />
+						]
+						[(#ENV{c_est_ma_reponse}|=={oui}|non)
+							<INCLURE{
+								fond=noisettes/sidebar/onglet_reponse_non_modifiable,
+								id_article=#GET{id_consigne},
+								env
+							} />
+						]
+					</div>
 				</div>
-				<div data-title="<:thematique:titre_onglet_comentaire:>">
-					<INCLURE{fond=noisettes/sidebar/onglet_commentaires, env} />
+				<div>
+					<div class="tabs-title">
+						<:thematique:titre_onglet_comentaire:>
+					</div>
+					<div class="tabs-content">
+						<INCLURE{fond=noisettes/sidebar/onglet_commentaires, env} />
+					</div>
 				</div>
 			</div>
 		</div>

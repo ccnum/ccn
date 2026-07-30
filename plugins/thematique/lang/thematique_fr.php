@@ -36,6 +36,7 @@ return [
 	'reponses_intervenant_relance_message' => 'La date limite approche ? Pensez à encourager les dernières classes à déposer leur réponse. Vous pouvez le faire directement dans l’espace de discussion.',
 	'reponses_intervenant_relancer'  => 'Relancer',
 	'titre_onglet_comentaire'        => 'Commentaires',
+	'titre_onglet_comentaire_pour_classe' => 'Discussions',
 	'titre_onglet_liste_des_reponses'=> 'Suivi des réponses',
 	'titre_onglet_reponse_autre_classe'=> 'Réponse à la mission',
 	'titre_onglet_reponse_ma_classe' => 'Ma réponse à la mission',

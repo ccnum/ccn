@@ -2,7 +2,8 @@
 
     /**
      * Transforme chaque élément sélectionné en un système d'onglets.
-     * Chaque enfant direct doit avoir un attribut `data-title` pour le libellé de l'onglet.
+     * Chaque enfant direct doit contenir une div `.tabs-title` (libellé de l'onglet)
+     * et une div `.tabs-content` (contenu associé).
      *
      * @param {Object} [options]
      * @param {number} [options.active=0] - Index de l'onglet actif à l'initialisation
@@ -33,15 +34,23 @@
 
                 const $panel = $(this);
 
-                const title = $panel.data('title') || ('Onglet ' + (index + 1));
+                const $titleEl = $panel.children('.tabs-title');
+                const $panelContent = $panel.children('.tabs-content');
+
+                const title = $titleEl.length
+                    ? $titleEl.html().trim()
+                    : ('Onglet ' + (index + 1));
 
                 const $tab = $('<li></li>')
-                    .text(title)
+                    .html(title)
                     .attr('data-index', index);
 
-                $nav.append($tab);
+                if ($panel.data('tab-id')) {
+                    $tab.attr('data-tab-id', $panel.data('tab-id'));
+                }
 
-                $panel
+                $nav.append($tab);
+                $panelContent
                     .addClass('ctabs-panel')
                     .appendTo($content);
             });
@@ -64,11 +73,19 @@
                 $nav.children().removeClass('active');
                 $nav.children().eq(index).addClass('active');
 
-                $content
+                const $activePanel =$content
                     .children('.ctabs-panel')
                     .hide()
                     .eq(index)
                     .show();
+
+                const $activeTab = $nav.children().eq(index);
+
+                $container.trigger('customtabs:activated', {
+                    index: index,
+                    panel: $activePanel[0],
+                    tabId: $activeTab.data('tab-id')
+                });
             }
 
             $nav.on('click', 'li', function () {
