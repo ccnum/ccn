@@ -12,7 +12,9 @@
     $.fn.customTabs = function (options) {
 
         const settings = $.extend({
-            active: 0
+            active: 0,
+            urlParam: null,
+            pushHistory: true
         }, options);
 
         return this.each(function () {
@@ -80,6 +82,19 @@
                     .show();
 
                 const $activeTab = $nav.children().eq(index);
+
+                if (settings.urlParam) {
+                    const tabId = $activeTab.data('tab-id');
+                    if (tabId) {
+                        const url = new URL(window.location.href);
+                        url.searchParams.set(settings.urlParam, tabId);
+                        if (settings.pushHistory) {
+                            window.history.pushState(null, '', url);
+                        } else {
+                            window.history.replaceState(null, '', url);
+                        }
+                    }
+                }
 
                 $container.trigger('customtabs:activated', {
                     index: index,
