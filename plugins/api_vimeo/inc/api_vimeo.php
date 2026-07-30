@@ -323,7 +323,11 @@ function api_vimeo_set_password(string $vimeo_url, string $password): bool {
  * Upload le fichier vers Vimeo via le protocole TUS (chunks de 128 Mo).
  */
 function api_vimeo_tus_upload(string $fichier, int $file_size, string $upload_link): bool {
-	$chunk_size = 128 * 1024 * 1024; // 128 Mo
+	// Chargé entièrement en mémoire (fread + copie interne de curl dans
+	// CURLOPT_POSTFIELDS) : rester très en dessous des ~300 Mo de RAM du
+	// serveur (cf commentaire sur _IMG_MAX_WIDTH/_IMG_MAX_HEIGHT dans
+	// mes_options.php) pour ne pas déclencher un OOM sur les grosses vidéos.
+	$chunk_size = 8 * 1024 * 1024; // 8 Mo
 
 	$fp = fopen($fichier, 'rb');
 	if (!$fp) {
