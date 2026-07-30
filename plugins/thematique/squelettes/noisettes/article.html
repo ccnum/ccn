@@ -3,7 +3,8 @@
 	[(#INCLURE{fond=noisettes/fonction/admin})]
 
 	[(#ENV{type_objet}|=={consignes}|oui)
-		<INCLURE{fond=noisettes/sidebar/#SESSION{role}|fond_consigne_pour_role, env, ajax} />
+		#SET{fond_consigne, #SESSION{role}|fond_consigne_pour_role}
+		<INCLURE{fond=noisettes/sidebar/#GET{fond_consigne}, env, ajax} />
 	]
 	[(#ENV{type_objet}|=={travail_en_cours}|oui)
 		[(#REM) "c'est ma réponse" : rubrique restreinte de l'admin/prof courant,
@@ -18,7 +19,8 @@
 			[(#ID_RUBRIQUE|=={#SESSION{restreint}}|oui) #SET{c_est_ma_reponse, oui}]
 		]
 
-		<INCLURE{fond=noisettes/sidebar/#SESSION{role}|fond_reponse_pour_role, env, ajax, c_est_ma_reponse=#GET{c_est_ma_reponse}} />
+		#SET{fond_reponse, #SESSION{role}|fond_reponse_pour_role}
+		<INCLURE{fond=noisettes/sidebar/#GET{fond_reponse}, env, ajax, c_est_ma_reponse=#GET{c_est_ma_reponse}} />
 	]
 	[(#ENV{type_objet}|in_array{#LISTE{blogs,evenements,ressources,agora}}|oui)
 		<INCLURE{fond=noisettes/sidebar/blog, env, ajax} />
