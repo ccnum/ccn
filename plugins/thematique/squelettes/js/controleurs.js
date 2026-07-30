@@ -70,14 +70,6 @@ $(function () {
 		}
 	);
 
-	$(window).on(
-		'resize', function () {
-			onResize();
-		}
-	);
-
-	onResize();
-
 	$(document).on('click', '#sidebarExpand', function () {
 		toggleSidebarExpand();
 	});
