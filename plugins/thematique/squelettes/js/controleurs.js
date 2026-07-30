@@ -273,22 +273,16 @@ function setContentFromState(state) {
 
 }
 
-/**
- * Gère la mise à jour des styles lorsque l'écran est resizé
- */
-function onResize() {
-	$('#crayons-surcharge-styles').text('.crayon-active.markItUpEditor { height: ' + (parseInt($(window).height()) - 228) + 'px !important; } .resizehandle { display:none !important; }');
-}
 
 function expandSidebar() {
     if ($('body').hasClass('hasSidebarExpanded')) return; // déjà ouvert
-    
+
     $('body').addClass('hasSidebarExpanded');
 }
 
 function collapseSidebar() {
     if (!$('body').hasClass('hasSidebarExpanded')) return; // déjà fermé
-    
+
     $('body').removeClass('hasSidebarExpanded');
 }
 
@@ -453,7 +447,7 @@ function callConsigne(id_consigne) {
 	updateMenuIcon(['consignes-' + id_consigne], 'mainView');
 
 	loadContentInMainSidebar(
-		url, 
+		url,
 		() => {
 			updateUrl(
 				{
@@ -497,7 +491,7 @@ function callReponse(id_reponse) {
 
 	showConsigneInTimeline(id_consigne);
 	loadContentInMainSidebar(
-		url,  
+		url,
 		() => {
 			updateUrl(
 				{
@@ -538,7 +532,7 @@ function callClasse(id_classe) {
 	}
 	loadContentInLateralSidebar(CCN.projet.url_popup_classes);
 	loadContentInMainSidebar(
-		url, 
+		url,
 		() => {
 			updateUrl(
 				{
@@ -606,7 +600,7 @@ function callArticleBlog(id_article) {
 
 	const url = CCN.projet.url_popup_blog + "&page=article&id_article=" + id_article;
 	loadContentInMainSidebar(
-		url, 
+		url,
 		() => {
 			updateUrl(
 				{
@@ -684,7 +678,7 @@ function callRessourceArticle(id_article, type_objet) {
 
 	const url = "./spip.php?page=article&id_article=" + id_article + "&mode=ajax-detail";
 	loadContentInMainSidebar(
-		url, 
+		url,
 		() => {
 			updateUrl(
 				{
@@ -716,7 +710,7 @@ function callRessourceSyndicArticle(id_syndic_article, type_objet) {
 
 	const url = "./spip.php?page=syndic_article&id_syndic_article=" + id_syndic_article + "&mode=ajax-detail";
 	loadContentInMainSidebar(
-		url, 
+		url,
 		() => {
 			updateUrl(
 				{
@@ -748,7 +742,7 @@ function callRessourceRubrique(id_rubrique, type_objet) {
 
 	const url = "./spip.php?page=rubrique&id_rubrique=" + id_rubrique + "&mode=ajax-detail";
 	loadContentInMainSidebar(
-		url, 
+		url,
 		() => {
 			updateUrl(
 				{
@@ -781,7 +775,7 @@ function callArticleEvenement(id_objet, type_objet) {
 
 	const url = CCN.projet.url_popup_evenement + "&page=" + type_objet + "&id_" + type_objet + "=" + id_objet;
 	loadContentInMainSidebar(
-		url, 
+		url,
 		() => {
 			updateUrl(
 				{
@@ -930,9 +924,9 @@ function updateConnecteur(reponseObject, ui) {
 	const y1 = consigneDOM.offset().top  + consigneDOM.outerHeight() / 2 - timelineTop;
 	const x2 = reponseDOM.offset().left;
     const adjustedUiPositionTop = handleCollision(
-		ui.position.top, 
+		ui.position.top,
 		reponseDOM.outerHeight(),
-		timelineTop, 
+		timelineTop,
 		timelineHeight
 	);
     ui.position.top = adjustedUiPositionTop;
