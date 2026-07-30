@@ -1,6 +1,4 @@
 function initCommentaires() {
-    console.log("initCommentaires");
-    
     $('#mission-tabs').on(
         'customtabs:activated',
         function handler(e, data) {
@@ -17,15 +15,12 @@ function initCommentaires() {
 }
 
 function initForum() {
-     console.log("initForum");
     document.querySelector(".forum-liste").querySelectorAll('.forum-card').forEach(card => {
         const contenu = card.querySelector('.contenu-texte');
         contenu.classList.remove('redimmensionne');
         const hauteurComplete = contenu.scrollHeight;
         contenu.classList.add('redimmensionne');
         const hauteurVisible = contenu.clientHeight;
-        console.log(hauteurComplete, hauteurVisible);
-        
         const bouton = card.querySelector('.lire-la-suite');
         // Vérifie si le texte dépasse la limite
         if (hauteurComplete > hauteurVisible) {
@@ -55,7 +50,6 @@ function callbackCliqueSurVoirLesReponses(e) {
  * Déplace le formulaire caché en dessous du message auquel on veut répondre.
  */
 function callbackCliqueSurRepondreAuCommentaire(e) {
-    console.log({e});
     const bouton = e.target
     if (!bouton) {
         return;
@@ -72,7 +66,6 @@ function callbackCliqueSurRepondreAuCommentaire(e) {
     formulaireDePublication
         .querySelector('.forum-formulaire-reponse-zone')
         .appendChild(formulaireCache);
-    console.log({formulaireDePublication});
     formulaireCache.hidden = false;
 }
 
@@ -85,10 +78,8 @@ function callbackCliqueSurCommenter(e) {
 }
 
 function callbackCliqueSurAnnuler(e) {
-    console.log("annuler");
     const racineFormulaire = e.currentTarget.closest(".forum-commentaire")
     const champParent = racineFormulaire.querySelector(".js-forum-id-parent")
-    console.log(champParent.value);
     let formulaire
     if(champParent.value == 0) {
         const racinePage = e.currentTarget.closest(".forum-article")
