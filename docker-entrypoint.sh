@@ -178,8 +178,7 @@ spip config:ecrire formats_documents_forum:".pdf,.jpg,.jpeg,.png,.gif,.mp4"
 
 # Default mes_options
 rm -rf config/mes_options.php
-if [ ! -e config/mes_options.php ]; then
-	/bin/cat << MAINEOF > config/mes_options.php
+/bin/cat << MAINEOF > config/mes_options.php
 <?php
 if (!defined("_ECRIRE_INC_VERSION")) return;
 \$GLOBALS['taille_des_logs'] = 500;
@@ -208,7 +207,6 @@ define('_VIMEO_ACCESS_TOKEN', '${VIMEO_ACCESS_TOKEN}');
 define('_CCN_PROJET_ACTIVE', '${CCN_PROJET_ACTIVE}' !== 'false');
 ?>
 MAINEOF
-fi
 
 # TODO(#ISSUE): plugin cicas supprimé, ce fichier ne devrait plus jamais être
 # généré nulle part mais peut subsister sur les déploiements existants -
