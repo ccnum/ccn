@@ -343,12 +343,12 @@ function api_vimeo_set_password(string $vimeo_url, string $password): bool {
 		],
 	]);
 
-	curl_exec($ch);
+	$response  = curl_exec($ch);
 	$http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
 	curl_close($ch);
 
 	if ($http_code !== 200) {
-		spip_log("Erreur set_password Vimeo (HTTP $http_code) vidéo $video_id", 'api_vimeo' . _LOG_ERREUR);
+		spip_log("Erreur set_password Vimeo (HTTP $http_code) vidéo $video_id : $response", 'api_vimeo' . _LOG_ERREUR);
 		return false;
 	}
 
