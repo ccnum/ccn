@@ -34,32 +34,38 @@ function api_vimeo_upload_job(int $id_document): bool {
 function api_vimeo_upload(int $id_document, array $doc): bool {
 	if (!defined('_VIMEO_ACCESS_TOKEN') || !_VIMEO_ACCESS_TOKEN) {
 		spip_log('_VIMEO_ACCESS_TOKEN non défini dans mes_options.php', 'api_vimeo' . _LOG_ERREUR);
+		api_vimeo_maj_statut($id_document, 'erreur');
 		return false;
 	}
 
 	$fichier = _DIR_IMG . $doc['fichier'];
 	if (!file_exists($fichier)) {
 		spip_log("Fichier introuvable : {$doc['fichier']}", 'api_vimeo' . _LOG_ERREUR);
+		api_vimeo_maj_statut($id_document, 'erreur');
 		return false;
 	}
 
 	$file_size = filesize($fichier);
 	$titre = $doc['titre'] ?: basename($doc['fichier']);
 	spip_log("Document #$id_document : fichier '$fichier' trouvé (" . round($file_size / 1024 / 1024, 1) . " Mo), démarrage de la création de session Vimeo", 'api_vimeo' . _LOG_INFO_IMPORTANTE);
+	api_vimeo_maj_statut($id_document, 'envoi', 0);
 
 	$upload = api_vimeo_creer_upload($titre, $file_size);
 	if (!$upload) {
 		spip_log("Document #$id_document : échec de la création de la session d'upload Vimeo", 'api_vimeo' . _LOG_ERREUR);
+		api_vimeo_maj_statut($id_document, 'erreur');
 		return false;
 	}
 	spip_log("Document #$id_document : session Vimeo créée ({$upload['link']}), démarrage de l'envoi TUS", 'api_vimeo' . _LOG_INFO_IMPORTANTE);
 
-	$success = api_vimeo_tus_upload($fichier, $file_size, $upload['upload_link']);
+	$success = api_vimeo_tus_upload($fichier, $file_size, $upload['upload_link'], $id_document);
 	if (!$success) {
 		spip_log("Document #$id_document : échec de l'envoi TUS vers Vimeo", 'api_vimeo' . _LOG_ERREUR);
+		api_vimeo_maj_statut($id_document, 'erreur');
 		return false;
 	}
 	spip_log("Document #$id_document : envoi TUS terminé ({$upload['link']})", 'api_vimeo' . _LOG_INFO_IMPORTANTE);
+	api_vimeo_maj_statut($id_document, 'transcodage', 100);
 
 	if (!empty($doc['vimeo_password'])) {
 		api_vimeo_set_password($upload['link'], $doc['vimeo_password']);
@@ -76,9 +82,22 @@ function api_vimeo_upload(int $id_document, array $doc): bool {
 		'fichier'  => $upload['link'],
 		'distant'  => 'oui',
 	], 'id_document=' . $id_document);
+	api_vimeo_maj_statut($id_document, 'disponible', 100);
 	spip_log("Vidéo uploadée : {$upload['link']} (document #$id_document)", 'api_vimeo' . _LOG_INFO_IMPORTANTE);
 
 	return true;
+}
+
+/**
+ * Met à jour le statut/la progression de l'envoi Vimeo d'un document,
+ * affichés côté front (cf noisettes/inc/ajouter_document.html).
+ */
+function api_vimeo_maj_statut(int $id_document, string $statut, ?int $progression = null): void {
+	$champs = ['vimeo_statut' => $statut];
+	if ($progression !== null) {
+		$champs['vimeo_progression'] = $progression;
+	}
+	sql_updateq('spip_documents', $champs, 'id_document=' . $id_document);
 }
 
 /**
@@ -360,7 +379,7 @@ function api_vimeo_set_password(string $vimeo_url, string $password): bool {
 /**
  * Upload le fichier vers Vimeo via le protocole TUS (chunks de 8 Mo).
  */
-function api_vimeo_tus_upload(string $fichier, int $file_size, string $upload_link): bool {
+function api_vimeo_tus_upload(string $fichier, int $file_size, string $upload_link, int $id_document): bool {
 	// Chargé entièrement en mémoire (fread + copie interne de curl dans
 	// CURLOPT_POSTFIELDS) : rester très en dessous des ~300 Mo de RAM du
 	// serveur (cf commentaire sur _IMG_MAX_WIDTH/_IMG_MAX_HEIGHT dans
@@ -419,7 +438,9 @@ function api_vimeo_tus_upload(string $fichier, int $file_size, string $upload_li
 			? (int) $response_headers['upload-offset']
 			: $offset + $chunk_length;
 
-		spip_log("Envoi TUS : $offset / $file_size octets envoyés (" . round($offset / $file_size * 100) . "%)", 'api_vimeo' . _LOG_INFO_IMPORTANTE);
+		$progression = (int) round($offset / $file_size * 100);
+		spip_log("Envoi TUS : $offset / $file_size octets envoyés ($progression%)", 'api_vimeo' . _LOG_INFO_IMPORTANTE);
+		api_vimeo_maj_statut($id_document, 'envoi', $progression);
 	}
 
 	fclose($fp);

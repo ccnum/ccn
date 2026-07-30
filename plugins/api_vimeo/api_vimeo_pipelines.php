@@ -21,6 +21,27 @@ function api_vimeo_declarer_champs_extras(array $champs = []): array {
 			],
 		],
 	];
+	// en_attente / envoi / transcodage / disponible / erreur : cf api_vimeo_upload().
+	// Sert à afficher la progression côté front et à ne rendre la vidéo
+	// visible (oembed) qu'une fois 'disponible'.
+	$champs['spip_documents']['vimeo_statut'] = [
+		'saisie'  => 'input',
+		'options' => [
+			'nom'    => 'vimeo_statut',
+			'label'  => 'Statut Vimeo',
+			'sql'    => "varchar(20) NOT NULL DEFAULT ''",
+			'defaut' => '',
+		],
+	];
+	$champs['spip_documents']['vimeo_progression'] = [
+		'saisie'  => 'input',
+		'options' => [
+			'nom'    => 'vimeo_progression',
+			'label'  => 'Progression envoi Vimeo',
+			'sql'    => "tinyint(3) unsigned NOT NULL DEFAULT '0'",
+			'defaut' => 0,
+		],
+	];
 	return $champs;
 }
 
@@ -59,6 +80,7 @@ function api_vimeo_post_edition(array $flux): array {
 			// (plugin ccn, priorité 5) et l'upload TUS vers Vimeo peuvent être
 			// longs et ne doivent pas bloquer la requête d'ajout du document.
 			spip_log("Document #$id_document (mp4) : mise en file d'attente de l'envoi Vimeo", 'api_vimeo' . _LOG_INFO_IMPORTANTE);
+			sql_updateq('spip_documents', ['vimeo_statut' => 'en_attente', 'vimeo_progression' => 0], 'id_document=' . $id_document);
 			include_spip('inc/queue');
 			queue_add_job(
 				'api_vimeo_upload_job',
