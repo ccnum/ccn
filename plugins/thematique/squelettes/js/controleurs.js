@@ -593,18 +593,15 @@ function callLivrables() {
 	loadContentInLateralSidebar(CCN.projet.url_popup_livrables);
 }
 /**
- * Appelle le chargement de l'article de blog
- * dans la sidebar principale et appelle
- * (…)
+ * Appelle le chargement d'un article de blog dans la sidebar principale
+ * et met à jour l'URL du navigateur en conséquence.
  *
- * @param {number} id_objet
- * @param {string} type_objet
+ * @param {number} id_article
  *
  * @see loadContentInMainSidebar
  * @see loadContentInLateralSidebar
  *
  * @todo Modifier le contenu de la sidebar secondaire
- * @todo Documenter
  */
 
 function callArticleBlog(id_article) {
@@ -630,16 +627,10 @@ function callArticleBlog(id_article) {
 	);
 }
 /**
- * Appelle le chargement de la ressource
- * dans la sidebar principale et appelle
- * (…)
- *
- * @param {number} id_objet
- * @param {string} type_objet
+ * Vide la sidebar principale et charge la liste des ressources
+ * dans la sidebar secondaire.
  *
  * @see loadContentInLateralSidebar
- *
- * @todo Documenter
  */
 
 function callRessource() {
@@ -653,17 +644,6 @@ function callRessource() {
 
 	loadContentInLateralSidebar(CCN.projet.url_popup_ressources);
 }
-
-/**
- * Appelle le chargement d'un article ressource
- * dans la sidebar secondaire
- *
- * @param {number} id_article
- *
- * @see loadContentInMainSidebar
- *
- * @todo Documenter
- */
 
 /**
  * Appelle le chargement d'un article jalon ("Cap sur l'année" / "La Rencontre")
@@ -693,6 +673,15 @@ function callArticleJalon(id_article) {
 	);
 }
 
+/**
+ * Appelle le chargement d'un article ressource dans la sidebar principale.
+ *
+ * @param {number} id_article
+ * @param {string} type_objet
+ *
+ * @see loadContentInMainSidebar
+ */
+
 function callRessourceArticle(id_article, type_objet) {
 	if (!Number.isInteger(Number(id_article))) return;
 	changeTimelineMode('consignes');
@@ -716,14 +705,13 @@ function callRessourceArticle(id_article, type_objet) {
 }
 
 /**
- * Appelle le chargement d'un article syndic
- * dans la sidebar secondaire
+ * Appelle le chargement d'un article syndiqué (ressource externe)
+ * dans la sidebar principale.
  *
  * @param {number} id_syndic_article
+ * @param {string} type_objet
  *
  * @see loadContentInMainSidebar
- *
- * @todo Documenter
  */
 
 function callRessourceSyndicArticle(id_syndic_article, type_objet) {
@@ -750,13 +738,12 @@ function callRessourceSyndicArticle(id_syndic_article, type_objet) {
 
 /**
  * Appelle le chargement d'une rubrique ressource
- * dans la sidebar secondaire
+ * dans la sidebar principale.
  *
  * @param {number} id_rubrique
+ * @param {string} type_objet
  *
  * @see loadContentInMainSidebar
- *
- * @todo Documenter
  */
 
 function callRessourceRubrique(id_rubrique, type_objet) {
@@ -781,18 +768,16 @@ function callRessourceRubrique(id_rubrique, type_objet) {
 	);
 }
 /**
- * Appelle le chargement de l'événement
- * dans la sidebar principale et appelle
- * (…)
+ * Appelle le chargement d'un article ou syndic_article d'événement
+ * dans la sidebar principale et met à jour l'URL du navigateur.
  *
  * @param {number} id_objet
- * @param {string} type_objet
+ * @param {string} type_objet - "article" ou "syndic_article"
  *
  * @see loadContentInMainSidebar
  * @see loadContentInLateralSidebar
  *
  * @todo Modifier le contenu de la sidebar secondaire
- * @todo Documenter
  */
 
 function callArticleEvenement(id_objet, type_objet) {
@@ -819,15 +804,13 @@ function callArticleEvenement(id_objet, type_objet) {
 
 }
 /**
- * Appelle le chargement de l'agora
- * dans la sidebar principale et appelle
- * (…)
+ * Vide la sidebar principale et charge le contenu de l'agora
+ * dans la sidebar secondaire.
  *
  * @see loadContentInMainSidebar
  * @see loadContentInLateralSidebar
  *
  * @todo Modifier le contenu de la sidebar principale
- * @todo Documenter
  */
 
 function callAgora() {
@@ -843,11 +826,14 @@ function callAgora() {
 }
 
 /**
+ * Charge le formulaire de publication d'une réponse à une consigne
+ * dans la sidebar principale.
+ *
  * @param {number} id_consigne
  * @param {number} id_rubrique_classe
- * @param {number} numero
+ * @param {number} numero - Rang de la consigne, utilisé si absente de CCN.consignes
  *
- * @todo Documenter
+ * @see loadContentInMainSidebar
  */
 function createReponse(id_consigne, id_rubrique_classe, numero) {
 	changeTimelineMode('consignes');
