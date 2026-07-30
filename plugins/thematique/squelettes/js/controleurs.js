@@ -987,7 +987,9 @@ function updateUrl(object, title, url) {
 				if (/^[\w-]+$/.test(CCN.hash)) {
 					const anchor = $("#" + CCN.hash);
 					if (anchor.length > 0) {
-						// TODO : cela est appelé deux fois minimum (donc un trigger('click') sur .triggertoggleshow ne fonctionne pas car il ouvre puis ferme)
+						// Ce bloc est appelé au moins deux fois : on utilise .show() plutôt
+						// qu'un trigger('click') sur .triggertoggleshow, qui ferait un
+						// slideToggle et refermerait l'item au second appel.
 
 						// Forum : ouvre les items
 						anchor.find('.toggleshow').show();
