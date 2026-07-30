@@ -41,6 +41,17 @@ function api_vimeo_post_edition(array $flux): array {
 		return $flux;
 	}
 
+	if ($action === 'supprimer_document') {
+		// Le document est déjà supprimé en base à ce stade : la ligne complète
+		// (avant suppression) est fournie dans $flux['args']['document'].
+		$doc = $flux['args']['document'] ?? null;
+		if ($doc && !empty($doc['fichier']) && strpos($doc['fichier'], 'vimeo.com') !== false) {
+			include_spip('inc/api_vimeo');
+			api_vimeo_supprimer($doc['fichier']);
+		}
+		return $flux;
+	}
+
 	if ($action === 'ajouter_document') {
 		$doc = sql_fetsel('extension', 'spip_documents', 'id_document=' . $id_document);
 		if ($doc && strtolower($doc['extension']) === 'mp4') {

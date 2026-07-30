@@ -269,6 +269,44 @@ function api_vimeo_ranger_dans_dossier(string $vimeo_url, string $id_dossier): b
 }
 
 /**
+ * Supprime une vidéo sur Vimeo.
+ *
+ * @param string $vimeo_url  URL complète de la vidéo (https://vimeo.com/123456789)
+ */
+function api_vimeo_supprimer(string $vimeo_url): bool {
+	if (!defined('_VIMEO_ACCESS_TOKEN') || !_VIMEO_ACCESS_TOKEN) {
+		spip_log('_VIMEO_ACCESS_TOKEN non défini', 'api_vimeo' . _LOG_ERREUR);
+		return false;
+	}
+	if (!preg_match('#vimeo\.com/(\d+)#', $vimeo_url, $m)) {
+		spip_log("URL Vimeo invalide : $vimeo_url", 'api_vimeo' . _LOG_ERREUR);
+		return false;
+	}
+	$video_id = $m[1];
+
+	$ch = curl_init("https://api.vimeo.com/videos/$video_id");
+	curl_setopt_array($ch, [
+		CURLOPT_RETURNTRANSFER => true,
+		CURLOPT_CUSTOMREQUEST  => 'DELETE',
+		CURLOPT_HTTPHEADER     => [
+			'Authorization: bearer ' . _VIMEO_ACCESS_TOKEN,
+		],
+	]);
+	$response  = curl_exec($ch);
+	$http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+	curl_close($ch);
+
+	// 404 = déjà supprimée côté Vimeo : pas la peine d'échouer pour autant.
+	if ($http_code !== 204 && $http_code !== 404) {
+		spip_log("Erreur suppression vidéo $video_id (HTTP $http_code) : $response", 'api_vimeo' . _LOG_ERREUR);
+		return false;
+	}
+
+	spip_log("Vidéo $video_id supprimée sur Vimeo", 'api_vimeo' . _LOG_INFO_IMPORTANTE);
+	return true;
+}
+
+/**
  * Met à jour la privacy d'une vidéo Vimeo.
  * Si $password est vide, la vidéo devient publique.
  *
