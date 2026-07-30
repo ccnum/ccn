@@ -1,3 +1,9 @@
+/**
+ * Vérifie côté client, au choix d'un fichier dans "#ajouter_document",
+ * que sa taille ne dépasse pas 100 Mo (doit rester cohérent avec
+ * _CCN_UPLOAD_TAILLE_MAX_MO, cf plugins/ccn/ccn_options.php) et affiche
+ * un message d'erreur dans le ".saisie_document_forum" englobant sinon.
+ */
 $(document).off('change', '#ajouter_document').on('change', '#ajouter_document', function () {
 	console.log("check file size");
 

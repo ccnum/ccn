@@ -1,3 +1,8 @@
+/**
+ * Affiche un tooltip "Fermer la modale" qui suit le curseur au survol de
+ * "#sidebarCache" (le voile derrière la sidebar en plein écran), en évitant
+ * de déborder de la fenêtre. Ne fait rien si les éléments sont absents du DOM.
+ */
 function activateSidebarCacheTooltip() {
 	const tooltip = document.getElementById("tooltip-sidebarCache");
 	const sidebarCache = document.getElementById("sidebarCache");

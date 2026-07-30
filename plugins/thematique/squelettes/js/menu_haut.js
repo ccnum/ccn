@@ -1,3 +1,8 @@
+/**
+ * Menu haut : masque le sélecteur d'année scolaire si le titre n'a pas la
+ * place de s'afficher, et gère l'ouverture/fermeture des ".selectbox"
+ * (sélecteur d'année scolaire, menu "Publier"...).
+ */
 (function ($) {
 
 	$(function () {
@@ -6,6 +11,9 @@
 			$('#annee_scolaire_more').hide();
 		}
 
+		/**
+		 * Referme toutes les ".selectbox" actuellement ouvertes.
+		 */
 		function closeAllSelects() {
 			$('.selectbox.open').each(function () {
 				clearTimeout($(this).data('closeTimeout'));
@@ -13,6 +21,14 @@
 			});
 		}
 
+		/**
+		 * Initialise le comportement d'un ensemble de ".selectbox" :
+		 * ouverture au clic/survol, fermeture au clic extérieur, sélection
+		 * d'une option (avec mémorisation visuelle si ".save-choice").
+		 * Idempotent (marque chaque élément ".initialized").
+		 *
+		 * @param {jQuery} $roots - Éléments ".selectbox" à initialiser
+		 */
 		function initSelectbox($roots) {
 			$roots.each(function () {
 				var $sel = $(this);
