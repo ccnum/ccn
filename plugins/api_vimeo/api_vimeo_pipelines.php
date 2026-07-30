@@ -15,6 +15,11 @@ function api_vimeo_declarer_champs_extras(array $champs = []): array {
 			'label'  => _T('api_vimeo:champ_vimeo_password'),
 			'sql'    => "varchar(255) NOT NULL DEFAULT ''",
 			'defaut' => '',
+			// Masque la valeur (placeholder) et préserve l'existant si le
+			// champ est laissé vide à l'enregistrement (comportement natif
+			// SPIP des clés secrètes) : cf api_vimeo_post_edition (action
+			// 'instituer'), qui répercute tout changement sur Vimeo.
+			'cle_secrete' => 'oui',
 			'restrictions' => [
 				'voir'     => ['statut' => ['0minirezo', '1comite']],
 				'modifier' => ['statut' => ['0minirezo', '1comite']],
