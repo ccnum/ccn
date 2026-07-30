@@ -243,7 +243,11 @@ function api_vimeo_ranger_dans_dossier(string $vimeo_url, string $id_dossier): b
 	}
 	$video_id = $m[1];
 
-	$ch = curl_init("https://api.vimeo.com/me/folders/$id_dossier/videos/$video_id");
+	// Les dossiers renvoyés par api_vimeo_trouver_ou_creer_dossier() sont des
+	// URI /users/{id}/projects/{id} (cf son commentaire) : sur ce compte,
+	// l'API n'expose ces dossiers que sous /me/projects, pas /me/folders
+	// (qui répondait 403, l'id n'y correspondant à aucune ressource).
+	$ch = curl_init("https://api.vimeo.com/me/projects/$id_dossier/videos/$video_id");
 	curl_setopt_array($ch, [
 		CURLOPT_RETURNTRANSFER => true,
 		CURLOPT_CUSTOMREQUEST  => 'PUT',
