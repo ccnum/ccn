@@ -32,6 +32,13 @@
             const $nav = $('<ul class="ctabs-nav"></ul>');
             const $content = $('<div class="ctabs-content"></div>');
 
+            // Onglet demandé dans l'URL (ex: &onglet=commentaires), pour
+            // restaurer l'onglet actif après un F5 ou un lien direct.
+            const tabIdDansUrl = settings.urlParam
+                ? new URL(window.location.href).searchParams.get(settings.urlParam)
+                : null;
+            let initialActive = settings.active;
+
             $panels.each(function (index) {
 
                 const $panel = $(this);
@@ -49,6 +56,9 @@
 
                 if ($panel.data('tab-id')) {
                     $tab.attr('data-tab-id', $panel.data('tab-id'));
+                    if (tabIdDansUrl && $panel.data('tab-id') === tabIdDansUrl) {
+                        initialActive = index;
+                    }
                 }
 
                 $nav.append($tab);
@@ -107,7 +117,7 @@
                 activate($(this).data('index'));
             });
 
-            activate(settings.active);
+            activate(initialActive);
         });
     };
 
