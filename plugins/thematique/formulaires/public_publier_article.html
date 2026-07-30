@@ -2,9 +2,10 @@
 	[<p class="reponse_formulaire reponse_formulaire_ok">(#ENV*{message_ok})</p>]
 	[<p class="reponse_formulaire reponse_formulaire_erreur">(#ENV*{message_erreur})</p>]
 
-	<form method="post" 
+	<form method="post"
 		  action="#ENV{action}"
 		  enctype="multipart/form-data"
+		  id="formulaire_publier_mission"
 	>
 		<div>
 			#ACTION_FORMULAIRE{#ENV{action}}
@@ -53,7 +54,7 @@
 								id="attendre_livrable"
 								value="oui"
 								[(#ENV{attendre_livrable}|=={oui}|oui)checked="checked"] />
-							
+
 						</div>
 					</div>
 				</div>
@@ -62,17 +63,10 @@
 
 					<input type="file"
 						name="fichier_upload[]"
-						multiple="multiple" 
+						multiple="multiple"
 					/>
-					<p>
-						<input type="submit"
-							   value="<:bouton_enregistrer:>" 
-							   class="bouton-publication-mission"
-						/>
-					</p>
 				</div>
-				
+
 			</div>
 		</div>
 	</form>
-</div>

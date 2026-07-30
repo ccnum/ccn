@@ -455,8 +455,6 @@ function callConsigne(id_consigne) {
 	loadContentInMainSidebar(
 		url, 
 		() => {
-		url, 
-		() => {
 			updateUrl(
 				{
 					'type_objet': 'consignes',
@@ -465,8 +463,6 @@ function callConsigne(id_consigne) {
 					'page': 'article',
 				}, 'Consigne', "./spip.php?page=article&id_article=" + id_consigne + "&mode=complet"
 			);
-		},
-		"consigne"
 		},
 		"consigne"
 	);
@@ -501,9 +497,7 @@ function callReponse(id_reponse) {
 
 	showConsigneInTimeline(id_consigne);
 	loadContentInMainSidebar(
-		url, 
-		() => {
-		url, 
+		url,  
 		() => {
 			updateUrl(
 				{
@@ -513,8 +507,6 @@ function callReponse(id_reponse) {
 					'page': 'article'
 				}, "Réponse", "./spip.php?page=article&id_article=" + id_reponse + "&mode=complet"
 			);
-		},
-		"reponse"
 		},
 		"reponse"
 	);
