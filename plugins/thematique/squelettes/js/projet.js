@@ -123,8 +123,6 @@ function Projet() {
 	 *
 	 * @see Projet#showRangeOfTimeline
 	 * @see Projet#setTimelineZoom
-	 *
-	 * @todo Gérer l'affichage/le masquage des événements et des blogs
 	 */
 	this.showWholeTimeline = function () {
 		canShowConsigneSidebar = false;

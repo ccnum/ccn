@@ -410,8 +410,6 @@ function showReponseInTimeline(numero) {
  * @see callConsigne
  * @see callReponse
  * @see callClasse
- *
- * @todo Compléter au maximum la fonction
  */
 
 function call(opts) {
@@ -437,8 +435,6 @@ function call(opts) {
  *
  * @see loadContentInMainSidebar
  * @see showConsigneInTimeline
- *
- * @todo Définir le contenu de la sidebar secondaire
  */
 function callConsigne(id_consigne) {
 
@@ -600,8 +596,6 @@ function callLivrables() {
  *
  * @see loadContentInMainSidebar
  * @see loadContentInLateralSidebar
- *
- * @todo Modifier le contenu de la sidebar secondaire
  */
 
 function callArticleBlog(id_article) {
@@ -776,8 +770,6 @@ function callRessourceRubrique(id_rubrique, type_objet) {
  *
  * @see loadContentInMainSidebar
  * @see loadContentInLateralSidebar
- *
- * @todo Modifier le contenu de la sidebar secondaire
  */
 
 function callArticleEvenement(id_objet, type_objet) {
@@ -809,8 +801,6 @@ function callArticleEvenement(id_objet, type_objet) {
  *
  * @see loadContentInMainSidebar
  * @see loadContentInLateralSidebar
- *
- * @todo Modifier le contenu de la sidebar principale
  */
 
 function callAgora() {
@@ -887,8 +877,6 @@ function getIdClasseFromIdReponse(id_reponse) {
  * <br>
  * La fonction est appelée de manière récursive (<tt>setInterval(…, 1)</tt>)
  * afin de mettre à jour en même temps que la transition CSS de la timeline.
- *
- * @todo Éléments autres que DOM ?
  */
 function updateConnecteurs() {
 	$('.connecteur_timeline').each(
