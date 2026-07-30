@@ -255,12 +255,12 @@ function api_vimeo_ranger_dans_dossier(string $vimeo_url, string $id_dossier): b
 			'Authorization: bearer ' . _VIMEO_ACCESS_TOKEN,
 		],
 	]);
-	curl_exec($ch);
+	$response  = curl_exec($ch);
 	$http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
 	curl_close($ch);
 
 	if ($http_code !== 204) {
-		spip_log("Erreur ajout vidéo $video_id au dossier $id_dossier (HTTP $http_code)", 'api_vimeo' . _LOG_ERREUR);
+		spip_log("Erreur ajout vidéo $video_id au dossier $id_dossier (HTTP $http_code) : $response", 'api_vimeo' . _LOG_ERREUR);
 		return false;
 	}
 
@@ -358,7 +358,7 @@ function api_vimeo_set_password(string $vimeo_url, string $password): bool {
 }
 
 /**
- * Upload le fichier vers Vimeo via le protocole TUS (chunks de 128 Mo).
+ * Upload le fichier vers Vimeo via le protocole TUS (chunks de 8 Mo).
  */
 function api_vimeo_tus_upload(string $fichier, int $file_size, string $upload_link): bool {
 	// Chargé entièrement en mémoire (fread + copie interne de curl dans
