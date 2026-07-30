@@ -141,31 +141,38 @@ function api_vimeo_dossier_id(string $site, string $annee): string|false {
 		return $id_cache;
 	}
 
-	$id_site = api_vimeo_trouver_ou_creer_dossier($site);
-	if (!$id_site) {
+	$dossier_site = api_vimeo_trouver_ou_creer_dossier($site);
+	if (!$dossier_site) {
 		return false;
 	}
 
-	$id_annee = api_vimeo_trouver_ou_creer_dossier($annee, $id_site);
-	if (!$id_annee) {
+	$dossier_annee = api_vimeo_trouver_ou_creer_dossier($annee, $dossier_site['uri']);
+	if (!$dossier_annee) {
 		return false;
 	}
 
-	ecrire_config($cle_meta, $id_annee);
+	ecrire_config($cle_meta, $dossier_annee['id']);
 
-	return $id_annee;
+	return $dossier_annee['id'];
 }
 
 /**
  * Cherche un dossier Vimeo par nom (sous un dossier parent le cas échéant)
  * et le crée s'il n'existe pas encore.
+ *
+ * $uri_parent doit être l'URI Vimeo complète du dossier parent (ex :
+ * "/users/12345/projects/6789"), telle que renvoyée par l'API : Vimeo
+ * refuse un parent_folder_uri reconstruit à la main (ex : "/folders/6789").
+ *
+ * @return array{id: string, uri: string}|false
  */
-function api_vimeo_trouver_ou_creer_dossier(string $nom, ?string $id_parent = null): string|false {
+function api_vimeo_trouver_ou_creer_dossier(string $nom, ?string $uri_parent = null): array|false {
 	if (!defined('_VIMEO_ACCESS_TOKEN') || !_VIMEO_ACCESS_TOKEN) {
 		spip_log('_VIMEO_ACCESS_TOKEN non défini', 'api_vimeo' . _LOG_ERREUR);
 		return false;
 	}
 
+	$id_parent = $uri_parent ? basename($uri_parent) : null;
 	$url_liste = $id_parent
 		? "https://api.vimeo.com/me/folders/$id_parent/items?type=folder&per_page=100"
 		: 'https://api.vimeo.com/me/folders?per_page=100';
@@ -187,14 +194,14 @@ function api_vimeo_trouver_ou_creer_dossier(string $nom, ?string $id_parent = nu
 		foreach ($data['data'] ?? [] as $item) {
 			$folder = $item['folder'] ?? $item;
 			if (isset($folder['name'], $folder['uri']) && strcasecmp($folder['name'], $nom) === 0) {
-				return basename($folder['uri']);
+				return ['id' => basename($folder['uri']), 'uri' => $folder['uri']];
 			}
 		}
 	}
 
 	$payload = ['name' => $nom];
-	if ($id_parent) {
-		$payload['parent_folder_uri'] = "/folders/$id_parent";
+	if ($uri_parent) {
+		$payload['parent_folder_uri'] = $uri_parent;
 	}
 
 	$ch = curl_init('https://api.vimeo.com/me/folders');
@@ -223,7 +230,7 @@ function api_vimeo_trouver_ou_creer_dossier(string $nom, ?string $id_parent = nu
 		return false;
 	}
 
-	return basename($data['uri']);
+	return ['id' => basename($data['uri']), 'uri' => $data['uri']];
 }
 
 /**
