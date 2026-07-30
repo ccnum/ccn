@@ -344,11 +344,16 @@ function api_vimeo_set_password(string $vimeo_url, string $password): bool {
 	}
 	$video_id = $m[1];
 
-	$privacy = $password
-		? ['view' => 'password', 'password' => $password]
-		: ['view' => 'anybody'];
-
-	$payload = json_encode(['privacy' => $privacy]);
+	// Le mot de passe est un champ racine de la requête, pas imbriqué dans
+	// "privacy" : Vimeo répond 400 "Please enter a password for this video"
+	// si on l'y met quand même, même avec un mot de passe non vide.
+	$payload = [
+		'privacy' => ['view' => $password ? 'password' : 'anybody'],
+	];
+	if ($password) {
+		$payload['password'] = $password;
+	}
+	$payload = json_encode($payload);
 
 	$ch = curl_init("https://api.vimeo.com/videos/$video_id");
 	curl_setopt_array($ch, [
