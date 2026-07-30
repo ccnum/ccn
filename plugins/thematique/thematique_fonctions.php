@@ -132,7 +132,7 @@ function sidebar_profil() {
 
 	// Recherche des rubriques administrées
 	$rubriques = sql_allfetsel(
-		'id_rubrique',
+		'id_objet',
 		'spip_auteurs_liens',
 		['id_auteur=' . $id_auteur, 'objet=' . sql_quote('rubrique')]
 	);
@@ -150,14 +150,14 @@ function sidebar_profil() {
 
 		return [
 			'role' => 'admin_restreint',
-			'restreint' => intval($rubriques[0]['id_rubrique']),
+			'restreint' => intval($rubriques[0]['id_objet']),
 		];
 	}
 
 	// Plusieurs rubriques → à adapter selon ta règle métier
 	return [
 		'role' => 'admin_restreint',
-		'restreint' => intval($rubriques[0]['id_rubrique']),
+		'restreint' => intval($rubriques[0]['id_objet']),
 	];
 }
 
@@ -234,13 +234,13 @@ function fond_reponse_pour_role($role) {
 
 function thematique_auteur_a_mot_dans_hierarchie($id_auteur, $titre_mot) {
 	$rubriques = sql_allfetsel(
-		'id_rubrique',
+		'id_objet',
 		'spip_auteurs_liens',
 		'id_auteur=' . intval($id_auteur) . " AND objet='rubrique'"
 	);
 	foreach ($rubriques as $r) {
 		// équivalent de ta BOUCLE_hie_rub{tout} + BOUCLE_mot_rub
-		if (thematique_hierarchie_a_mot($r['id_rubrique'], $titre_mot)) {
+		if (thematique_hierarchie_a_mot($r['id_objet'], $titre_mot)) {
 			return true;
 		}
 	}
