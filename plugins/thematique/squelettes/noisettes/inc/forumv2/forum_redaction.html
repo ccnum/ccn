@@ -2,47 +2,35 @@
     <h2>Rédaction de votre commentaire</h2>
     [(#ENV**{erreurs/message_erreur})]
     <p>
-        Choisissez un titre et rédigez votre commentaire sur cette réponse.
+        Rédigez votre commentaire sur cette réponse.
     </p>
     [(#ENV{id_parent}|>{0}|oui)
         <p class="forum-redaction__reponse-a">
             Vous répondez à un commentaire existant.
         </p>
     ]
-    [(#ENV**{erreurs/titre})]
-    <div class="editer">
-        <label for="titre">
-            Titre
-        </label>
-        <input
-            id="titre"
-            name="titre"
-            type="text"
-            value="#ENV{titre}"
-        />
-    </div>
     [(#ENV**{erreurs/texte})]
     <div class="editer">
-        <label for="texte">
-            Commentaire
-        </label>
         <textarea
             id="texte"
             name="texte"
-            rows="8"
+            rows="2"
+            style="width: 100%;"
         >#ENV{texte}</textarea>
     </div>
-    <button onclick="callbackCliqueSurAnnuler(event)"
-            type="button">
-        Annuler
-    </button>
-    <div class="forum-actions">
-       
-        <button
-            type="submit"
-            name="publication_forum_action" 
-            value="previsualiser">
-            Prévisualiser
-        </button>
+    <div style="display: flex; justify-content: end;">
+        <div class="forum-actions">
+            <button onclick="callbackCliqueSurAnnuler(event)"
+                    type="button">
+                Annuler
+            </button>
+            <button
+                type="submit"
+                name="publication_forum_action" 
+                value="previsualiser">
+                Prévisualiser
+            </button>
+        </div>
     </div>
+    
 </div>

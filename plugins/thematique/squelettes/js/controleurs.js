@@ -1076,6 +1076,7 @@ function loadContentInMainSidebar(url, callback, typeContenu) {
 		_sidebarFocusFirst();
 		if(["consigne", "reponse"].includes(typeContenu)) {
 			initMissionTabs();
+			initCommentaires();
 		}
 		if(typeContenu === "publication_mission") {
 			// initCompteurCaracteres()

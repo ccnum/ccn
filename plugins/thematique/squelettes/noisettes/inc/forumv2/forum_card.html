@@ -3,28 +3,32 @@
 <div id="forum-[(#ENV{forum}|table_valeur{id_forum})]" class="forum-card">
     [(#ENV{forum}|table_valeur{reponses}|count|oui)
         <div class="badge">
-            [(#ENV{forum}|table_valeur{reponses}|count)] reponses
+            [(#ENV{forum}|table_valeur{reponses}|count)] réponses
         </div>
     ]
     <div class="col-forum">
         icone
     </div>
-    <div class="col-forum" style="flex: 1">
+    <div class="col-forum" 
+         style="flex: 1;
+                min-width: 0;"
+    >
         <div class="header">
-            <h3>titre : [(#ENV{forum}|table_valeur{titre})]</h3>
             <div>
                 date : [(#ENV{forum}|table_valeur{date_heure}|affdate)]
             </div>
         </div>
         <div class="content">
-            <div>
+            <div class="contenu-texte">
                 texte :
-                [(#ENV{forum}|table_valeur{texte}|couper{180})]
-
-                <a class="lire-la-suite">
-                    Lire la suite du commentaire
-                </a>
+                [(#ENV{forum}|table_valeur{texte})]
             </div>
+            <a class="lire-la-suite"
+                onclick="callback_clique_sur_lire_la_suite_du_commentaire(event)"
+                style="display: none;"
+            >
+                Lire la suite du commentaire
+            </a>
         </div>
         <div class="footer forum-actions">
             <div>

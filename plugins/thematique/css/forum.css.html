@@ -56,8 +56,9 @@
 .forum-commentaire .reponse-list {
     display: none;
     flex-direction: column;
-    gap: 5px;
-    margin-left: 1rem;
+    gap: 1.3rem;
+    margin-left: 2rem;
+    margin-top: 1.3rem;
     width: calc(100% - 2rem);
 }
 
@@ -72,6 +73,31 @@
 .forum-liste {
     display: flex;
     flex-direction: column;
-    gap: 0.3rem;
+    gap: 1.3rem;
+}
+
+.forum-card .lire-la-suite {
+    margin-top: 10px;
+    border: none;
+    background: none;
+    color: #0066cc;
+    cursor: pointer;
+    font-weight: 600;
+}
+
+.forum-card .contenu-texte.redimmensionne {
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 5;
+    transition: all 0.3s ease;
+}
+
+.forum-card .content.ouvert .contenu-texte{
+    display: block;
+}
+
+.forum-commentaire-racine {
+    margin-bottom: 2rem;
 }
 

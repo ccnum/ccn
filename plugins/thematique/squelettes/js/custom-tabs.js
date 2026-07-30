@@ -45,8 +45,11 @@
                     .html(title)
                     .attr('data-index', index);
 
-                $nav.append($tab);
+                if ($panel.data('tab-id')) {
+                    $tab.attr('data-tab-id', $panel.data('tab-id'));
+                }
 
+                $nav.append($tab);
                 $panelContent
                     .addClass('ctabs-panel')
                     .appendTo($content);
@@ -70,11 +73,19 @@
                 $nav.children().removeClass('active');
                 $nav.children().eq(index).addClass('active');
 
-                $content
+                const $activePanel =$content
                     .children('.ctabs-panel')
                     .hide()
                     .eq(index)
                     .show();
+
+                const $activeTab = $nav.children().eq(index);
+
+                $container.trigger('customtabs:activated', {
+                    index: index,
+                    panel: $activePanel[0],
+                    tabId: $activeTab.data('tab-id')
+                });
             }
 
             $nav.on('click', 'li', function () {
