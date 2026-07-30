@@ -22,7 +22,6 @@ function formulaires_forumv2_charger_dist($id_article) {
 
 
 function formulaires_forumv2_verifier_dist($id_article) {
-    print_r("verifier");
     $erreurs = [];
 
     if (_request('publication_forum_action') === 'previsualiser') {
@@ -35,26 +34,14 @@ function formulaires_forumv2_verifier_dist($id_article) {
             $erreurs['texte'] = 'Le commentaire est obligatoire.';
         }
     }
-    print_r($erreurs);
     return $erreurs;
 }
 
 function formulaires_forumv2_traiter_dist($id_article) {
-    print_r("traiter<br>");
-    print_r(_request('publication_forum_action') . "<br>");
-
     include_spip('action/editer_forum');
 
-    // Annulation
-    if (_request('publication_forum_action') === 'annuler') {
-
-        return [
-            'redirect' => self()
-        ];
-    }
 
     if (_request('publication_forum_action') === 'previsualiser') {
-        print_r('previsualiser<br>');
         return [
             'affichage' => 'previsualisation',
             'titre' => _request('titre'),
@@ -63,7 +50,7 @@ function formulaires_forumv2_traiter_dist($id_article) {
     }
 
     if (_request('publication_forum_action') === 'publier') {
-    
+
         $id_parent = intval(_request('id_parent'));
 
         $id_forum = forum_inserer(

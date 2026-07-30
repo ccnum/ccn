@@ -579,7 +579,6 @@ function thematique_voir_mission() {
 
 
 function filtre_afficher_forum_arbre($id_article) {
-
     $forums = sql_allfetsel(
         '*',
         'spip_forum',
@@ -587,38 +586,34 @@ function filtre_afficher_forum_arbre($id_article) {
         '',
         'date_heure'
     );
-
     if (!$forums) {
         return '';
     }
-
     // Index des commentaires par parent
     $parents = [];
-
     foreach ($forums as $forum) {
-        $forum['reponses'] = [];
         $parents[$forum['id_parent']][] = $forum;
     }
+    // Construction récursive de l'arbre à partir de la racine
+    $arbre = forum_construire_arbre(0, $parents);
+    return forum_rendre_branche($arbre);
+}
 
-    // Injection des réponses dans chaque commentaire
-    foreach ($parents as $id_parent => &$enfants) {
-        foreach ($enfants as &$forum) {
-            if (isset($parents[$forum['id_forum']])) {
-                $forum['reponses'] = $parents[$forum['id_forum']];
-            }
-        }
+function forum_construire_arbre($id_parent, &$parents) {
+    if (!isset($parents[$id_parent])) {
+        return [];
     }
-
-    // Les messages racines sont ceux qui ont id_parent = 0
-    return forum_rendre_branche($parents[0] ?? []);
+    $res = [];
+    foreach ($parents[$id_parent] as $forum) {
+        $forum['reponses'] = forum_construire_arbre($forum['id_forum'], $parents);
+        $res[] = $forum;
+    }
+    return $res;
 }
 
 function forum_rendre_branche($forums) {
-
     $html = '';
-
     foreach ($forums as $forum) {
-
         $html .= recuperer_fond(
             'noisettes/inc/forumv2/forum_commentaire_et_ses_reponses',
             [
@@ -626,6 +621,5 @@ function forum_rendre_branche($forums) {
             ]
         );
     }
-
     return $html;
 }

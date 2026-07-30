@@ -8,10 +8,19 @@ function callbackCliqueSurVoirLesReponses(e) {
         return;
     }
     const commentaire = bouton.closest('.forum-commentaire');
-    const reponses = commentaire.querySelector('.forum-reponses');
-    reponses.hidden = !reponses.hidden;
+    const reponses = commentaire.querySelector('.reponse-list');
+    if(reponses.style.display == "flex") {
+        reponses.style.display = "none";
+        bouton.innerText = "Voir les réponses"
+    } else {
+        reponses.style.display = "flex";
+        bouton.innerText = "Masquer les réponses"
+    }
 }
 
+/**
+ * Déplace le formulaire caché en dessous du message auquel on veut répondre.
+ */
 function callbackCliqueSurRepondreAuCommentaire(e) {
     console.log({e});
     
@@ -24,11 +33,11 @@ function callbackCliqueSurRepondreAuCommentaire(e) {
     const idForum = bouton.dataset.idForum;
     console.log({idForum});
     
-    const formulaire = document.querySelector(
+    const formulaireCache = document.querySelector(
         '#forum-formulaire-reponse'
     );
 
-    const champParent = formulaire.querySelector(
+    const champParent = formulaireCache.querySelector(
         '.js-forum-id-parent'
     );
 
@@ -39,11 +48,26 @@ function callbackCliqueSurRepondreAuCommentaire(e) {
 
     formulaireDePublication
         .querySelector('.forum-formulaire-reponse-zone')
-        .after(formulaire);
+        .appendChild(formulaireCache);
 
 
     console.log({formulaireDePublication});
     
-    formulaireDePublication.hidden = false;
+    formulaireCache.hidden = false;
 }
 
+function callbackCliqueSurCommenter(e) {
+    const racineFormulaire = e.currentTarget.closest(".forum-article")
+    const formulaireDePublication = racineFormulaire.querySelector(".forum-commentaire-racine")
+    const encadre = racineFormulaire.querySelector(".encadre-message")
+    encadre.style.display = "none" 
+    formulaireDePublication.style.display = "block"
+}
+
+function callbackCliqueSurAnnuler(e) {
+    const racineFormulaire = e.currentTarget.closest(".forum-article")
+    const formulaireDePublication = racineFormulaire.querySelector(".forum-commentaire-racine")
+    const encadre = racineFormulaire.querySelector(".encadre-message")
+    encadre.style.display = "flex" 
+    formulaireDePublication.style.display = "none"
+}

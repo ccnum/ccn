@@ -16,10 +16,7 @@
     class="js-forum-id-parent"
 />
 
-<div>etat_affichage = #ENV{etat_affichage}</div>
-<div>affichage = #ENV{affichage}</div>
 [(#ENV{etat_affichage}|=={succes}|oui)
-
     <INCLURE
         {fond=noisettes/inc/forumv2/forum_succes}
         {env}
@@ -28,25 +25,17 @@
 ]
 
 [(#ENV{etat_affichage}|=={succes}|non)
-
     [(#ENV{affichage}|=={previsualisation}|oui)
-
         <INCLURE
             {fond=noisettes/inc/forumv2/forum_previsualisation}
             {env}
         />
-
     ]
-
     [(#ENV{affichage}|=={redaction}|oui)
-
         <INCLURE
             {fond=noisettes/inc/forumv2/forum_redaction}
             {env}
         />
-
     ]
-
 ]
-
 </form>

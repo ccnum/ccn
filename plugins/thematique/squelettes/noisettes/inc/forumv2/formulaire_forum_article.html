@@ -1,7 +1,23 @@
 <div class="forum-article">
 
-    <!-- Formulaire nouveau commentaire -->
-    <div class="forum-commentaire-racine ajax">
+    <div class="encadre-message">
+        <p>
+            Envie de réagir, d’apporter ou de demander une précision ? Vous êtes au bon endroit !
+        </p>
+        <button class="bouton-encadre" onclick="callbackCliqueSurCommenter(event)">
+            Commenter
+        </button>
+    </div>
+    
+
+    <!-- Formulaire nouveau commentaire 
+     On met display none ici pour pouvoir n'afficher le formualire que si on clique sur commenter
+    
+    -->
+
+    <div class="forum-commentaire-racine ajax"
+         style="display: none;" 
+    >
 
         #FORMULAIRE_FORUMV2{
             #ENV{id_article},

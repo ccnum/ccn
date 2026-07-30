@@ -1038,7 +1038,10 @@ function reload(url) {
 function initMissionTabs() {
 	const missionTabs = $('#mission-tabs');
 	if (missionTabs.length > 0) {
-		missionTabs.customTabs();
+		missionTabs.customTabs({
+			urlParam: 'onglet',
+			pushHistory: false  // "false" pour que "précédent" ne navigue pas entre les onglets
+		});
 	}
 }
 
