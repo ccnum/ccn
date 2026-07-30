@@ -1,11 +1,5 @@
 <div class="forum-commentaire">
 	<INCLURE{fond=noisettes/inc/forumv2/forum_card}{forum=#ENV{forum}} />
-	<div class="repondre-form">
-		<div class="ajax">
-			#FORMULAIRE_FORUMV2{#ENV{forum}|table_valeur{id_objet}, #ENV{forum}|table_valeur{id_forum}}
-		</div>
-	</div>
-	<div class="forum-formulaire-reponse-zone"></div>
 	<B_reponses>
 		<div class="reponse-list" hidden>
 			<BOUCLE_reponses(DATA){source tableau, #ENV{forum}|table_valeur{reponses}}>
@@ -13,4 +7,5 @@
 			</BOUCLE_reponses>
 		</div>
 	</B_reponses>
+	<div class="forum-formulaire-reponse-zone"></div>
 </div>

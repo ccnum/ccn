@@ -64,7 +64,7 @@ function callbackCliqueSurRepondreAuCommentaire(e) {
     champParent.value = idForum;
     const formulaireDePublication = bouton.closest('.forum-commentaire');
     formulaireDePublication
-        .querySelector('.forum-formulaire-reponse-zone')
+        .querySelector(':scope > .forum-formulaire-reponse-zone')
         .appendChild(formulaireCache);
     formulaireCache.hidden = false;
 }
@@ -78,7 +78,7 @@ function callbackCliqueSurCommenter(e) {
 }
 
 function callbackCliqueSurAnnuler(e) {
-    const racineFormulaire = e.currentTarget.closest(".forum-commentaire")
+    const racineFormulaire = e.currentTarget.closest(".forum-commentaire-racine, .forum-commentaire")
     const champParent = racineFormulaire.querySelector(".js-forum-id-parent")
     let formulaire
     if(champParent.value == 0) {

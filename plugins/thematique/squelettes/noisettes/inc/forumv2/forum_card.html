@@ -5,12 +5,11 @@
 	<div class="col-forum">icone</div>
 	<div class="col-forum col-forum-message">
 		<div class="header">
-			<div>date : [(#ENV{forum}|table_valeur{date_heure}|affdate)]</div>
+			<div>[(#ENV{forum}|table_valeur{date_heure}|affdate)]</div>
 		</div>
 		<div class="content">
 			<div class="contenu-texte">
-				texte :
-				[(#ENV{forum}|table_valeur{texte})]
+				[(#ENV{forum}|table_valeur{texte}|propre)]
 			</div>
 			<a class="lire-la-suite" onclick="callback_clique_sur_lire_la_suite_du_commentaire(event)" style="display: none;">Lire la suite du commentaire</a>
 		</div>
