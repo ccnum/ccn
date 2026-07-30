@@ -28,6 +28,24 @@ function thematique_annee_scolaire() {
 }
 
 /**
+ * Année scolaire réelle (calendaire), indépendante du cookie/GET de
+ * sélection d'année (cf plugins/ccn/ccn_options.php). Sert à distinguer
+ * l'année scolaire réellement en cours d'une année archivée consultée
+ * via le sélecteur du menu haut.
+ */
+function thematique_annee_scolaire_reelle() {
+	if (intval(date('m')) >= 9) {
+		return intval(date('Y'));
+	}
+	return intval(date('Y')) - 1;
+}
+
+function balise_ANNEE_SCOLAIRE_REELLE_dist($p) {
+	$p->code = 'thematique_annee_scolaire_reelle()';
+	return $p;
+}
+
+/**
  * Cherche une rubrique par titre sous un parent, la crée (publiée) si absente.
  *
  * @param string $nom
