@@ -1032,18 +1032,6 @@ function reload(url) {
 }
 
 /**
- * Charge l'URL dans la sidebar principale.
- *
- * @param {string} url - URL de la page à charger avec AJAX
- * @param {string} typePage - Type du contenu SPIP : <tt>article</tt>, <tt>rubrique</tt>…
- * @param {string} typeObjet - Type de l'objet principal de la page : <tt>consignes</tt>, <tt>travail_en_cours</tt>, <tt>blogs</tt>, <tt>evenements</tt>, <tt>ressources</tt>, <tt>classes</tt>…
- *
- * @see loadContentInLateralSidebar
- *
- * @todo Loading et son callback
- */
-
-/**
  * Initialise le système d'onglets #mission-tabs s'il est présent.
  * Appelable sans risque plusieurs fois (customTabs est idempotent) :
  * couvre à la fois le chargement de page complet (voir main.js) et
@@ -1056,6 +1044,16 @@ function initMissionTabs() {
 	}
 }
 
+/**
+ * Charge une URL dans la sidebar principale, avec état de chargement
+ * (classe <tt>loading</tt> sur <tt>body</tt>) et callback de fin.
+ *
+ * @param {string} url - URL de la page à charger avec AJAX
+ * @param {?function(string)} callback - Appelé avec la réponse une fois le contenu chargé
+ * @param {string} typeContenu - Type de contenu chargé : <tt>consigne</tt>, <tt>reponse</tt>, <tt>publication_mission</tt>…
+ *
+ * @see loadContentInLateralSidebar
+ */
 function loadContentInMainSidebar(url, callback, typeContenu) {
 	$('body').addClass('loading');
 	showSidebar();
