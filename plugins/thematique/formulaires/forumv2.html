@@ -1,0 +1,40 @@
+<form
+    method="post"
+    action="#ENV{action}"
+    class="forum-commentaire"
+>
+
+#ACTION_FORMULAIRE
+
+<input type="hidden" name="texte" value="#ENV{texte}">
+<input type="hidden" name="id_article" value="#ENV{id_article}">
+<input
+    type="hidden"
+    name="id_parent"
+    value="#ENV{id_parent,0}"
+    class="js-forum-id-parent"
+/>
+
+[(#ENV{etat_affichage}|=={succes}|oui)
+    <INCLURE
+        {fond=noisettes/inc/forumv2/forum_succes}
+        {env}
+    />
+
+]
+
+[(#ENV{etat_affichage}|=={succes}|non)
+    [(#ENV{affichage}|=={previsualisation}|oui)
+        <INCLURE
+            {fond=noisettes/inc/forumv2/forum_previsualisation}
+            {env}
+        />
+    ]
+    [(#ENV{affichage}|=={redaction}|oui)
+        <INCLURE
+            {fond=noisettes/inc/forumv2/forum_redaction}
+            {env}
+        />
+    ]
+]
+</form>

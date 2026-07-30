@@ -1,0 +1,55 @@
+
+
+<div id="forum-[(#ENV{forum}|table_valeur{id_forum})]" class="forum-card">
+    [(#ENV{forum}|table_valeur{reponses}|count|oui)
+        <div class="badge">
+            [(#ENV{forum}|table_valeur{reponses}|count)] réponses
+        </div>
+    ]
+    <div class="col-forum">
+        icone
+    </div>
+    <div class="col-forum" 
+         style="flex: 1;
+                min-width: 0;"
+    >
+        <div class="header">
+            <div>
+                date : [(#ENV{forum}|table_valeur{date_heure}|affdate)]
+            </div>
+        </div>
+        <div class="content">
+            <div class="contenu-texte">
+                texte :
+                [(#ENV{forum}|table_valeur{texte})]
+            </div>
+            <a class="lire-la-suite"
+                onclick="callback_clique_sur_lire_la_suite_du_commentaire(event)"
+                style="display: none;"
+            >
+                Lire la suite du commentaire
+            </a>
+        </div>
+        <div class="footer forum-actions">
+            <div>
+                [(#ENV{forum}|table_valeur{reponses}|oui)
+                    <button
+                        onclick="callbackCliqueSurVoirLesReponses(event)">
+                        Voir les réponses
+                    </button>
+                ]
+            </div>
+            <div>
+                <button
+                    type="submit"
+                    name="id_parent"
+                    value="[(#ENV{forum}|table_valeur{id_forum})]"
+                    data-id-forum="[(#ENV{forum}|table_valeur{id_forum})]"
+                    onclick="callbackCliqueSurRepondreAuCommentaire(event)"
+                >
+                    Répondre
+                </button>
+            </div>
+        </div>
+    </div>
+</div> 

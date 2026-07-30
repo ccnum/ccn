@@ -1,0 +1,36 @@
+<div class="forum-redaction">
+    <h2>Rédaction de votre commentaire</h2>
+    [(#ENV**{erreurs/message_erreur})]
+    <p>
+        Rédigez votre commentaire sur cette réponse.
+    </p>
+    [(#ENV{id_parent}|>{0}|oui)
+        <p class="forum-redaction__reponse-a">
+            Vous répondez à un commentaire existant.
+        </p>
+    ]
+    [(#ENV**{erreurs/texte})]
+    <div class="editer">
+        <textarea
+            id="texte"
+            name="texte"
+            rows="2"
+            style="width: 100%;"
+        >#ENV{texte}</textarea>
+    </div>
+    <div style="display: flex; justify-content: end;">
+        <div class="forum-actions">
+            <button onclick="callbackCliqueSurAnnuler(event)"
+                    type="button">
+                Annuler
+            </button>
+            <button
+                type="submit"
+                name="publication_forum_action" 
+                value="previsualiser">
+                Prévisualiser
+            </button>
+        </div>
+    </div>
+    
+</div>

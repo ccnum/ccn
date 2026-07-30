@@ -497,7 +497,7 @@ function callReponse(id_reponse) {
 
 	showConsigneInTimeline(id_consigne);
 	loadContentInMainSidebar(
-		url, 
+		url,  
 		() => {
 			updateUrl(
 				{
@@ -1030,7 +1030,10 @@ function reload(url) {
 function initMissionTabs() {
 	const missionTabs = $('#mission-tabs');
 	if (missionTabs.length > 0) {
-		missionTabs.customTabs();
+		missionTabs.customTabs({
+			urlParam: 'onglet',
+			pushHistory: false  // "false" pour que "précédent" ne navigue pas entre les onglets
+		});
 	}
 }
 
@@ -1065,6 +1068,7 @@ function loadContentInMainSidebar(url, callback, typeContenu) {
 		_sidebarFocusFirst();
 		if(["consigne", "reponse"].includes(typeContenu)) {
 			initMissionTabs();
+			initCommentaires();
 		}
 		if(typeContenu === "publication_mission") {
 			// initCompteurCaracteres()
