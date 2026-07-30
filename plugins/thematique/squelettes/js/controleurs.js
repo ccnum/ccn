@@ -526,8 +526,6 @@ function callReponse(id_reponse) {
  *
  * @see loadContentInMainSidebar
  * @see loadContentInLateralSidebar
- *
- * @todo *1 : Modifier le contenu de la sidebar secondaire
  */
 
 function callClasse(id_classe) {
@@ -641,7 +639,6 @@ function callArticleBlog(id_article) {
  *
  * @see loadContentInLateralSidebar
  *
- * @todo Modifier le contenu de la sidebar secondaire
  * @todo Documenter
  */
 
@@ -830,7 +827,6 @@ function callArticleEvenement(id_objet, type_objet) {
  * @see loadContentInLateralSidebar
  *
  * @todo Modifier le contenu de la sidebar principale
- * @todo Modifier le contenu de la sidebar secondaire
  * @todo Documenter
  */
 
