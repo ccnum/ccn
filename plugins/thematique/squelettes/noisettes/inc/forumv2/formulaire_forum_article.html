@@ -1,36 +1,17 @@
 <div class="forum-article">
-    <div class="encadre-message">
-        <p>
-            Envie de réagir, d’apporter ou de demander une précision ? Vous êtes au bon endroit !
-        </p>
-        <button class="bouton-encadre" onclick="callbackCliqueSurCommenter(event)">
-            Commenter
-        </button>
-    </div>
-    <div class="forum-commentaire-racine ajax"
-         hidden
-    >
-        #FORMULAIRE_FORUMV2{
-            #ENV{id_article},
-            0
-        }
-    </div>
-    <!-- Arbre des commentaires -->
-    <div class="forum-liste">
-
-        [(#ENV{id_article}|afficher_forum_arbre)]
-
-    </div>
-    <!-- Formulaire de réponse unique -->
-    <div
-        id="forum-formulaire-reponse"
-        class="forum-formulaire-reponse ajax"
-        hidden
-    >
-        #FORMULAIRE_FORUMV2{
-            #ENV{id_article},
-            0
-        }
-
-    </div>
+	<div class="encadre-message">
+		<p>Envie de réagir, d’apporter ou de demander une précision ? Vous êtes au bon endroit !</p>
+		<button class="bouton-encadre" onclick="callbackCliqueSurCommenter(event)">Commenter</button>
+	</div>
+	<div class="forum-commentaire-racine ajax" hidden>
+		#FORMULAIRE_FORUMV2{#ENV{id_article}, 0}
+	</div>
+	<!-- Arbre des commentaires -->
+	<div class="forum-liste">
+		[(#ENV{id_article}|afficher_forum_arbre)]
+	</div>
+	<!-- Formulaire de réponse unique -->
+	<div id="forum-formulaire-reponse" class="forum-formulaire-reponse ajax" hidden>
+		#FORMULAIRE_FORUMV2{#ENV{id_article}, 0}
+	</div>
 </div>

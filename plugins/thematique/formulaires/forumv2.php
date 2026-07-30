@@ -11,6 +11,8 @@ function forumv2_texte_est_valide() {
 function formulaires_forumv2_charger_dist($id_article) {
 	$publication_forum_action = _request('publication_forum_action');
 
+	// 'rediger' (bouton "Retour" de la prévisualisation) et toute valeur
+	// absente ou inconnue retombent sur la rédaction.
 	$affichage = 'redaction';
 	if ($publication_forum_action === 'previsualiser' && forumv2_texte_est_valide()) {
 		$affichage = 'previsualisation';
@@ -61,9 +63,9 @@ function formulaires_forumv2_traiter_dist($id_article) {
 
 		return [
 			'redirect' => generer_url_public('article', [
-					'id_article' => $id_article,
-					'mode' => 'complet',
-				]),
+				'id_article' => $id_article,
+				'mode' => 'complet',
+			]),
 		];
 	}
 
