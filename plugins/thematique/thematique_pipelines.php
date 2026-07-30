@@ -207,6 +207,24 @@ function thematique_cioidc_userinfo($flux) {
 	$is_enseignant = (strpos($profils, 'ENS') !== false);
 	spip_log('userinfo ENTPersonProfils=' . $profils . ' => enseignant:' . ($is_enseignant ? 'oui' : 'non'), 'cioidc');
 
+	// Les comptes ENS rattachés à un établissement listé dans _THEMATIQUE_RNE_WEBMESTRES
+	// (ex: établissement pilote de l'équipe projet) restent administrateurs complets
+	// plutôt que rédacteurs, sans restriction de rubrique. Calculé ici (avant le nom
+	// affiché) car un webmestre affiche "Admin" plutôt que son rôle ENT d'origine.
+	// ENTAllUai liste tous les UAI de rattachement (pas seulement le principal) : un
+	// attribut CAS multivalué arrive en objet unique quand il n'y a qu'une seule valeur.
+	$uai_liste = $flux['data']['ENTAllUai'] ?? [];
+	if (is_object($uai_liste)) {
+		$uai_liste = [$uai_liste];
+	}
+	$uai_liste = array_map('strval', (array) $uai_liste);
+	$rne_webmestres = array_filter(array_map('trim', explode(',', _THEMATIQUE_RNE_WEBMESTRES)));
+	$is_webmestre = $is_enseignant && (bool) array_intersect($uai_liste, $rne_webmestres);
+	spip_log(
+		'userinfo ENTAllUai=' . implode(',', $uai_liste) . ' => webmestre:' . ($is_webmestre ? 'oui' : 'non'),
+		'cioidc'
+	);
+
 	$roles_ent = ['ENS' => 'Enseignant', 'TUT' => 'Tuteur', 'ELV' => 'Élève'];
 	$role_ent = null;
 	foreach ($roles_ent as $code => $libelle) {
@@ -214,6 +232,9 @@ function thematique_cioidc_userinfo($flux) {
 			$role_ent = $libelle;
 			break;
 		}
+	}
+	if ($is_webmestre) {
+		$role_ent = 'Admin';
 	}
 
 	$prenom = $flux['data']['LaclassePrenom'] ?? '';
@@ -266,23 +287,6 @@ function thematique_cioidc_userinfo($flux) {
 		);
 	}
 	spip_log('userinfo id_travail_classes=' . $id_travail_classes . ' id_consignes=' . $id_consignes, 'cioidc');
-
-	// Les comptes ENS rattachés à un établissement listé dans _THEMATIQUE_RNE_WEBMESTRES
-	// (ex: établissement pilote de l'équipe projet) restent administrateurs complets
-	// plutôt que rédacteurs, sans restriction de rubrique.
-	// ENTAllUai liste tous les UAI de rattachement (pas seulement le principal) : un
-	// attribut CAS multivalué arrive en objet unique quand il n'y a qu'une seule valeur.
-	$uai_liste = $flux['data']['ENTAllUai'] ?? [];
-	if (is_object($uai_liste)) {
-		$uai_liste = [$uai_liste];
-	}
-	$uai_liste = array_map('strval', (array) $uai_liste);
-	$rne_webmestres = array_filter(array_map('trim', explode(',', _THEMATIQUE_RNE_WEBMESTRES)));
-	$is_webmestre = $is_enseignant && (bool) array_intersect($uai_liste, $rne_webmestres);
-	spip_log(
-		'userinfo ENTAllUai=' . implode(',', $uai_liste) . ' => webmestre:' . ($is_webmestre ? 'oui' : 'non'),
-		'cioidc'
-	);
 
 	// ENTGroupesLibres : le groupe projet (ex: nom de l'intervenant/du binôme) → lien "Consignes".
 	// Un même compte ENT peut porter des groupes de plusieurs thématiques/années
