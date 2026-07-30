@@ -188,9 +188,50 @@ function thematique_cioidc_userinfo($flux) {
 		$auteur['email'] = $email;
 	}
 
+	// ENTClassesGroupes (member_type=ENS, group_type=CLS) : la/les classe(s) réellement
+	// enseignée(s) par ce prof, utilisée ci-dessous pour affiner son nom affiché et,
+	// plus bas, pour le lien "Travail des classes". Absent chez un intervenant qui n'a
+	// pas de classe en charge, seulement un groupe projet (ENTGroupesLibres).
+	$classes_groupes = $flux['data']['ENTClassesGroupes'] ?? [];
+	if (is_object($classes_groupes)) {
+		$classes_groupes = [$classes_groupes];
+	}
+	$classes_reelles = array_values(array_filter(
+		$classes_groupes,
+		fn ($groupe) => ($groupe->group_type ?? '') === 'CLS' && !empty($groupe->group_name)
+	));
+
+	// ENTPersonProfils indique le rôle ENT du compte (ENS/TUT/ELV), utilisé ci-dessous
+	// pour affiner le nom affiché et plus bas pour déterminer le statut SPIP.
+	$profils = $flux['data']['ENTPersonProfils [ENS|TUT|ELV]'] ?? '';
+	$is_enseignant = (strpos($profils, 'ENS') !== false);
+	spip_log('userinfo ENTPersonProfils=' . $profils . ' => enseignant:' . ($is_enseignant ? 'oui' : 'non'), 'cioidc');
+
+	$roles_ent = ['ENS' => 'Enseignant', 'TUT' => 'Tuteur', 'ELV' => 'Élève'];
+	$role_ent = null;
+	foreach ($roles_ent as $code => $libelle) {
+		if (strpos($profils, $code) !== false) {
+			$role_ent = $libelle;
+			break;
+		}
+	}
+
 	$prenom = $flux['data']['LaclassePrenom'] ?? '';
 	$nom_famille = $flux['data']['LaclasseNom'] ?? '';
 	$nom = trim($prenom . ' ' . $nom_famille);
+	// On affiche le rôle ENT et la classe (première classe réelle du prof) à la suite
+	// du nom, pour distinguer dans la liste des auteurs un même prof intervenant sur
+	// plusieurs CCN (cf issue #44).
+	if ($nom && $role_ent) {
+		$nom .= ' - ' . $role_ent;
+	}
+	// Le group_name reçu de l'ENT est préfixé par "CCN - " : préfixe redondant qu'on retire.
+	if ($nom && ($groupe_classe = $classes_reelles[0]->group_name ?? null)) {
+		if (stripos($groupe_classe, 'CCN - ') === 0) {
+			$groupe_classe = substr($groupe_classe, strlen('CCN - '));
+		}
+		$nom .= ' - ' . $groupe_classe;
+	}
 	if ($nom && $nom !== $auteur['nom']) {
 		spip_log('userinfo mise à jour du nom : ' . $auteur['nom'] . ' => ' . $nom, 'cioidc');
 		sql_updateq('spip_auteurs', ['nom' => $nom], 'id_auteur=' . intval($auteur['id_auteur']));
@@ -226,10 +267,6 @@ function thematique_cioidc_userinfo($flux) {
 	}
 	spip_log('userinfo id_travail_classes=' . $id_travail_classes . ' id_consignes=' . $id_consignes, 'cioidc');
 
-	$profils = $flux['data']['ENTPersonProfils [ENS|TUT|ELV]'] ?? '';
-	$is_enseignant = (strpos($profils, 'ENS') !== false);
-	spip_log('userinfo ENTPersonProfils=' . $profils . ' => enseignant:' . ($is_enseignant ? 'oui' : 'non'), 'cioidc');
-
 	// Les comptes ENS rattachés à un établissement listé dans _THEMATIQUE_RNE_WEBMESTRES
 	// (ex: établissement pilote de l'équipe projet) restent administrateurs complets
 	// plutôt que rédacteurs, sans restriction de rubrique.
@@ -245,18 +282,6 @@ function thematique_cioidc_userinfo($flux) {
 	spip_log(
 		'userinfo ENTAllUai=' . implode(',', $uai_liste) . ' => webmestre:' . ($is_webmestre ? 'oui' : 'non'),
 		'cioidc'
-	);
-
-	// ENTClassesGroupes (member_type=ENS, group_type=CLS) : la/les classe(s) réellement
-	// enseignée(s) par ce prof → lien "Travail des classes". Absent chez un intervenant
-	// qui n'a pas de classe en charge, seulement un groupe projet (ENTGroupesLibres).
-	$classes_groupes = $flux['data']['ENTClassesGroupes'] ?? [];
-	if (is_object($classes_groupes)) {
-		$classes_groupes = [$classes_groupes];
-	}
-	$classes_reelles = array_filter(
-		$classes_groupes,
-		fn ($groupe) => ($groupe->group_type ?? '') === 'CLS' && !empty($groupe->group_name)
 	);
 
 	// ENTGroupesLibres : le groupe projet (ex: nom de l'intervenant/du binôme) → lien "Consignes".
