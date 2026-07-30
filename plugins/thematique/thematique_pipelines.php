@@ -427,3 +427,61 @@ function thematique_taches_generales_cron($taches_generales) {
 	$taches_generales['thematique_rentree_poubelle'] = 86400;
 	return $taches_generales;
 }
+
+/**
+ * Amorce les crayons sur les fragments sans <head> (ex: noisettes/sidebar/*
+ * chargées par loadContentInMainSidebar() via #INCLURE{...,ajax}).
+ *
+ * Le plugin crayons (Crayons_affichage_final) sait très bien détecter et
+ * autoriser ces crayons, mais son injection du script (inc_crayons_preparer_page_dist)
+ * cherche un `</head>` dans la page pour savoir où insérer le <script> :
+ * absent sur un simple fragment HTML, elle abandonne silencieusement et
+ * crayons.js n'est jamais chargé. On ne modifie pas ce plugin communautaire :
+ * on complète ici, pour nos propres fragments, en rejouant le même calcul
+ * de droits et en demandant l'injection en mode 'head' (simple ajout en fin
+ * de fragment, sans dépendre d'un </head>).
+ *
+ * @param string $page
+ * @return string
+ */
+function thematique_affichage_final($page) {
+	if (!test_plugin_actif('crayons')) {
+		return $page;
+	}
+	// Déjà pris en charge par crayons lui-même (page complète avec <head>),
+	// ou déjà amorcé par cette fonction sur un hit précédent : rien à faire.
+	if (strpos($page, 'crayon') === false || strpos($page, '</head>') !== false || strpos(
+		$page,
+		'startCrayons'
+	) !== false) {
+		return $page;
+	}
+
+	include_spip('inc/crayons');
+	if (
+		(function_exists('analyse_droits_rapide') ? analyse_droits_rapide() : analyse_droits_rapide_dist())
+		and preg_match_all(_PREG_CRAYON, $page, $regs, PREG_SET_ORDER)
+	) {
+		include_spip('inc/autoriser');
+		$droits = [];
+		$droits_accordes = 0;
+		foreach ($regs as $reg) {
+			[, $crayon, $type, $champ, $id] = $reg;
+			if (autoriser('modifier', $type, $id, null, ['champ' => $champ])) {
+				$droits['.' . $crayon] = true;
+				$droits_accordes++;
+			}
+		}
+		if ($droits) {
+			$Crayons_preparer_page = charger_fonction('Crayons_preparer_page', 'inc');
+			$page = $Crayons_preparer_page(
+				$page,
+				$droits_accordes === count($regs) ? '*' : implode(',', array_keys($droits)),
+				wdgcfg(),
+				'head'
+			);
+		}
+	}
+
+	return $page;
+}
