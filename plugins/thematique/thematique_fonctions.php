@@ -410,6 +410,34 @@ function classe_icone_auteur($id_auteur) {
 }
 
 /**
+ * Icône (emoji) de classe pour une carte de commentaire forum.
+ *
+ * Priorité à la classe actuelle de l'auteur (cf classe_icone_auteur) ;
+ * repli sur la rubrique de l'article commenté pour les commentaires
+ * d'élèves dont le compte n'a jamais été rattaché à une classe (créé
+ * avant l'ajout de ce rattachement dans thematique_cioidc_userinfo, et
+ * pas reconnecté depuis).
+ *
+ * @param array $forum Ligne spip_forum (cf filtre_afficher_forum_arbre())
+ * @return string
+ */
+function classe_icone_forum($forum) {
+	$icone = classe_icone_auteur($forum['id_auteur'] ?? 0);
+	if ($icone) {
+		return $icone;
+	}
+
+	if (($forum['objet'] ?? '') === 'article' && !empty($forum['id_objet'])) {
+		$id_rubrique = sql_getfetsel('id_rubrique', 'spip_articles', 'id_article=' . intval($forum['id_objet']));
+		if ($id_rubrique) {
+			return classe_icone($id_rubrique);
+		}
+	}
+
+	return '';
+}
+
+/**
  * Id de la rubrique racine de l'année scolaire active (cf choix_rubrique_admin2.html).
  *
  * @return int 0 si non trouvée

@@ -2,7 +2,7 @@
 	[(#ENV{forum}|table_valeur{reponses}|count|oui)
 		<div class="badge">[(#ENV{forum}|table_valeur{reponses}|count)] réponses</div>
 	]
-	<div class="col-forum">[(#ENV{forum}|table_valeur{id_auteur}|classe_icone_auteur)]</div>
+	<div class="col-forum">[(#ENV{forum}|classe_icone_forum)]</div>
 	<div class="col-forum col-forum-message">
 		<div class="header">
 			<div>[(#ENV{forum}|table_valeur{date_heure}|affdate)]</div>
