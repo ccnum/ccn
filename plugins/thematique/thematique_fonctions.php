@@ -380,6 +380,36 @@ function classe_icone($id_rubrique) {
 }
 
 /**
+ * Icône (emoji) de la classe d'un auteur (élève ou prof), déduite de la
+ * rubrique de classe à laquelle il est lié (cf thematique_cioidc_userinfo,
+ * qui rattache l'auteur à sa rubrique de classe via objet_associer).
+ *
+ * Restreint explicitement aux rubriques reconnues comme "classe" (cf
+ * thematique_classes_rangs()) pour ignorer d'éventuels autres liens
+ * d'un prof (blog pédagogique, rubrique de projet).
+ *
+ * @param int $id_auteur
+ * @return string
+ */
+function classe_icone_auteur($id_auteur) {
+	$rangs = thematique_classes_rangs();
+	if (!$rangs) {
+		return '';
+	}
+
+	$id_rubrique = sql_getfetsel(
+		'id_objet',
+		'spip_auteurs_liens',
+		'id_auteur=' . intval($id_auteur) . ' AND objet=' . sql_quote('rubrique') . ' AND ' . sql_in(
+			'id_objet',
+			array_keys($rangs)
+		)
+	);
+
+	return $id_rubrique ? classe_icone($id_rubrique) : '';
+}
+
+/**
  * Id de la rubrique racine de l'année scolaire active (cf choix_rubrique_admin2.html).
  *
  * @return int 0 si non trouvée
