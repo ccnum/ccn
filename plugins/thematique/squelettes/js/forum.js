@@ -91,7 +91,9 @@ function callbackCliqueSurAnnuler(e) {
     }
     formulaire.hidden = true
     const textarea = racineFormulaire.querySelector("textarea#texte")
-    textarea.value = ""
+    if (textarea) {
+        textarea.value = ""
+    }
 }
 
 function callback_clique_sur_lire_la_suite_du_commentaire(e) {
