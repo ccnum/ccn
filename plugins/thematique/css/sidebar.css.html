@@ -898,7 +898,11 @@ li a, li a:hover {
 .portfolio {
 	> .spip_documents {
 		display: flex;
+		flex-wrap: wrap;
 		align-items: stretch;
+		> .bloc_modifier_mdp_video {
+			flex: 0 0 100%;
+		}
 		> a,
 		> .spip_document_ {
 			flex: 0 0 100%;
