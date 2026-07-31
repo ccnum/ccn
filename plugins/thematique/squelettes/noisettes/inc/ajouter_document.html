@@ -20,15 +20,26 @@
 			]
 			[(#DISTANT|=={oui}|oui)
 				[(#VIMEO_STATUT|=={disponible}|oui)
-					[(#FICHIER|oembed)]
-					[(#AUTORISER{modifier,article,#ID_ARTICLE}|oui)
-						<div class="bloc_modifier_mdp_video">
-							<INCLURE{fond=noisettes/js/accordeon, nom=bloc_modifier_mdp_video-#ID_DOCUMENT, ajax} />
-							<a id="bloc_modifier_mdp_video-#ID_DOCUMENT" class="hac lien_modifier" title="<:thematique:modifier_mot_de_passe_video:>"><:thematique:modifier_mot_de_passe_video:></a>
-							<div class="masquer formulaire_spip">
-								<div class="ajax">#FORMULAIRE_MODIFIER_VIDEO_PASSWORD{#ID_DOCUMENT}</div>
+					#SET{embed_video, #FICHIER|oembed}
+					[(#GET{embed_video}|match{iframe}|non)
+						[(#REM) Le statut Vimeo est "disponible" mais l'API oEmbed de Vimeo
+						n'a pas encore le lecteur prêt (léger décalage juste après la fin
+						du transcodage) : on continue le polling comme pour les autres
+						statuts en cours, le temps que ça se mette à jour. ]
+						#SET{vimeo_en_cours, oui}
+						<div class="vimeo_statut vimeo_statut_encours"><:thematique:vimeo_statut_lecteur_en_attente:></div>
+					]
+					[(#GET{embed_video}|match{iframe}|oui)
+						#GET{embed_video}
+						[(#AUTORISER{modifier,article,#ID_ARTICLE}|oui)
+							<div class="bloc_modifier_mdp_video">
+								<INCLURE{fond=noisettes/js/accordeon, nom=bloc_modifier_mdp_video-#ID_DOCUMENT, ajax} />
+								<a id="bloc_modifier_mdp_video-#ID_DOCUMENT" class="hac lien_modifier" title="<:thematique:modifier_mot_de_passe_video:>"><:thematique:modifier_mot_de_passe_video:></a>
+								<div class="masquer formulaire_spip">
+									<div class="ajax">#FORMULAIRE_MODIFIER_VIDEO_PASSWORD{#ID_DOCUMENT}</div>
+								</div>
 							</div>
-						</div>
+						]
 					]
 				]
 			]

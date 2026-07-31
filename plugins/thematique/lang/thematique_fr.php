@@ -47,5 +47,6 @@ return [
 	'titre_onglet_reponse_ma_classe' => 'Ma réponse à la mission',
 	'titre_onglet_reponse_pour_intervenant' => 'Réponse de la classe',
 	'titre_page_importer_user'       => 'Import des utilisateurs',
+	'vimeo_statut_lecteur_en_attente' => 'Vidéo envoyée, préparation du lecteur en cours...',
 	'voir_ma_reponse'                => 'Voir ma réponse',
 ];
