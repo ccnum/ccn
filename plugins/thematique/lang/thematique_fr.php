@@ -18,6 +18,7 @@ return [
 	'etape2_ajouter_contenu'         => 'Etape 2 : vous pouvez ajouter un texte et des documents à votre article',
 	'info_1_auteur_importer'         => 'Vous allez importer 1 auteur',
 	'info_aucun_auteurs_importer'    => 'Vous n\'avez aucun auteur à importer',
+	'info_laisser_vide_mot_de_passe' => 'Laisser vide pour conserver le mot de passe actuel.',
 	'info_nb_auteurs_importer'       => 'Vous allez importer @nb@ auteurs',
 	'label_file_import'              => 'Fichier à importer',
 	'ma_reponse'                     => 'Ma réponse',

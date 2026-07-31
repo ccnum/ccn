@@ -19,7 +19,9 @@ function formulaires_modifier_video_password_charger_dist($id_document = 0) {
 
 	return [
 		'id_document' => $id_document,
-		'vimeo_password' => $mot_de_passe ?: '',
+		// Le mot de passe existant n'est jamais renvoyé au template : même
+		// masqué en CSS, il resterait visible dans le code source de la page.
+		'a_un_mot_de_passe' => $mot_de_passe ? 'oui' : '',
 	];
 }
 
@@ -43,15 +45,20 @@ function formulaires_modifier_video_password_traiter_dist($id_document = 0) {
 		return $res;
 	}
 
-	$mot_de_passe = _request('vimeo_password') ?? '';
+	$mot_de_passe = _request('vimeo_password');
 
-	include_spip('inc/api_vimeo');
-	if (!api_vimeo_set_password($doc['fichier'], $mot_de_passe)) {
-		$res['message_erreur'] = _T('thematique:erreur_maj_mot_de_passe_video');
-		return $res;
+	// Champ laissé vide : comme pour les autres clés secrètes du site
+	// (cf champ_extra vimeo_password, 'cle_secrete' => 'oui'), on ne touche
+	// pas au mot de passe existant plutôt que de le rendre public.
+	if ($mot_de_passe) {
+		include_spip('inc/api_vimeo');
+		if (!api_vimeo_set_password($doc['fichier'], $mot_de_passe)) {
+			$res['message_erreur'] = _T('thematique:erreur_maj_mot_de_passe_video');
+			return $res;
+		}
+
+		sql_updateq('spip_documents', ['vimeo_password' => $mot_de_passe], 'id_document=' . intval($id_document));
 	}
-
-	sql_updateq('spip_documents', ['vimeo_password' => $mot_de_passe], 'id_document=' . intval($id_document));
 
 	$res['message_ok'] = _T('thematique:mot_de_passe_video_modifie');
 	// Recharge le bloc documents : referme le formulaire (ré-affiché masqué
