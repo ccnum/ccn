@@ -29,6 +29,11 @@ function formulaires_forumv2_charger_dist($id_article) {
 function formulaires_forumv2_verifier_dist($id_article) {
 	$erreurs = [];
 
+	if (!($GLOBALS['visiteur_session']['id_auteur'] ?? 0)) {
+		$erreurs['message_erreur'] = _T('info_acces_interdit');
+		return $erreurs;
+	}
+
 	if (!forumv2_texte_est_valide()) {
 		$erreurs['texte'] = 'Le texte est obligatoire.';
 	}

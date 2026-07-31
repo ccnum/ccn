@@ -21,13 +21,20 @@
 				]
 			</div>
 			<div>
-				<button
-					type="submit"
-					name="id_parent"
-					value="[(#ENV{forum}|table_valeur{id_forum})]"
-					data-id-forum="[(#ENV{forum}|table_valeur{id_forum})]"
-					onclick="callbackCliqueSurRepondreAuCommentaire(event)"
-				>Répondre</button>
+				[(#SESSION{id_auteur}|oui)
+					<button
+						type="submit"
+						name="id_parent"
+						value="[(#ENV{forum}|table_valeur{id_forum})]"
+						data-id-forum="[(#ENV{forum}|table_valeur{id_forum})]"
+						onclick="callbackCliqueSurRepondreAuCommentaire(event)"
+					>Répondre</button>
+				]
+				[(#SESSION{id_auteur}|non)
+					[(#PLUGIN{cioidc}|oui)
+						<a href="[(#URL_PAGE{login}|parametre_url{url,#SELF}|parametre_url{cioidc,oui})]">Se connecter pour répondre</a>
+					]
+				]
 			</div>
 		</div>
 	</div>
