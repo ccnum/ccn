@@ -61,7 +61,7 @@
 					<BOUCLE_rubrique(RUBRIQUES){id_parent=#ID_RUBRIQUE}{par num titre, titre}{tout}{0,50}>
 						<div class="ressources_rubrique">
 							<div class="ressource_rubrique_titre" id="ajax_go_to_ressources_rubrique_#ID_RUBRIQUE" onclick="callRessourceRubrique('#ID_RUBRIQUE','#GET{sous_type}')" role="button" tabindex="0"><h3>#TITRE</h3></div>
-							<BOUCLE_article(ARTICLES){id_rubrique}{par date}>
+							<BOUCLE_article(ARTICLES){id_rubrique}{par date}{tous}>
 								<div class="ressource_article" id="ajax_go_to_ressources_article_#ID_ARTICLE" onclick="callRessourceArticle('#ID_ARTICLE','#GET{sous_type}')" role="button" tabindex="0">#TITRE</div>
 							</BOUCLE_article>
 						</div>
@@ -81,7 +81,7 @@
 
 					<B_article2>
 						<div class="ressources_rubrique">
-							<BOUCLE_article2(ARTICLES){id_rubrique}{par date}>
+							<BOUCLE_article2(ARTICLES){id_rubrique}{par date}{tous}>
 								<div class="ressource_article" id="ajax_go_to_ressources_article_#ID_ARTICLE" onclick="callRessourceArticle('#ID_ARTICLE','#GET{sous_type}')" role="button" tabindex="0">#TITRE</div>
 							</BOUCLE_article2>
 						</div>
