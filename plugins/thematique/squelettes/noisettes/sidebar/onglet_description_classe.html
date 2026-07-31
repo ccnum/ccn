@@ -1,60 +1,7 @@
 #CACHE{0}
-<BOUCLE_desc(ARTICLES){id_article=#ENV{id_article}}{tous}>
-	[(#AUTORISER{modifier, article, #ID_ARTICLE}|oui|et{#TEXTE|non|et{#GET{nb_doc}|=={0}|oui}}|et{#ADMIN|=={-1}|non}|et{#CONST{_ANNEE_SCOLAIRE}|=={#ANNEE_SCOLAIRE_REELLE}}|oui)
-		<div class="sidebar_bubble">
-			<div class="date" id="entete_publication" style="display: block;">
-				<:thematique:etape2_ajouter_contenu:><br />
-			</div>
-		</div>
-	]
-	<div class="sidebar_bubble">
-		<div class="nettoyeur0"></div>
-		[(#TEXTE|oui)
-			<div class="bloc_texte">
-				[<span class="spip #EDIT{texte}">(#TEXTE|liens_ouvrants|image_reduire{500})</span>]
-			</div>
-		]
-	</div>
-	[(#CONFIG{articles_urlref}|=={oui}|oui)
-		[(#URL_SITE|textebrut|=={''}|non)
-			<div class="sidebar_bubble">
-				<INCLURE{fond=noisettes/js/accordeon, nom=bloc_option_classe_reponse_iframe, ajax} />
-				<div class="bloc_option_doc nettoyeur">
-					<a id="bloc_option_classe_reponse_iframe" class="hac liens_voir bloc_option_doc_ressources" title="<:thematique:contenu_lie:>">
-						<:thematique:contenu_lie:>
-					</a>
-					<span class="texte nettoyeur bloc_classe_iframe">
-						<p style="padding: 15px;" class="#EDIT{url_site}">[<a class="spip_doc_titre" href="[(#URL_SITE|textebrut)]">(#URL_SITE|textebrut)</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;]</p>
-						<div class="nettoyeur"></div>
-						<iframe src="[(#URL_SITE|textebrut)]" width="100%" height="100%" sandbox="allow-scripts allow-same-origin allow-forms allow-popups"></iframe>
-					</span>
-				</div>
-			</div>
-		]
-		[(#AUTORISER{modifier,article,#ID_ARTICLE}|oui|et{#URL_SITE|textebrut|=={''}|oui}|et{#CONST{_ANNEE_SCOLAIRE}|=={#ANNEE_SCOLAIRE_REELLE}}|oui)
-			<div class="sidebar_bubble">
-				<INCLURE{fond=noisettes/js/accordeon, nom=bloc_option_classe_reponse_iframe, ajax} />
-				<div class="bloc_option_doc nettoyeur">
-					[<div class="#EDIT{url_site} titre_bubble bloc_option_doc_adddocument">(#URL_SITE|textebrut|sinon{<div class=""><:thematique:ajouter_contenu_integre:></div>})</div>]
-				</div>
-			</div>
-		]
-	]
-	<div class="sidebar_bubble">
-		<div class="bloc_documents">
-			<INCLURE{fond=noisettes/inc/ajouter_document, id_article, env, ajax=documents} />
-			[(#AUTORISER{modifier,article,#ID_ARTICLE}|oui|et{#CONST{_ANNEE_SCOLAIRE}|=={#ANNEE_SCOLAIRE_REELLE}}|oui)
-				<div class="sidebar_bubble">
-					<INCLURE{fond=noisettes/js/accordeon, nom=bloc_option_doc-#ID_ARTICLE, ajax} />
-					<div class="bloc_option_doc nettoyeur">
-						<a id="bloc_option_doc-#ID_ARTICLE" class="hac lien_ajouter bloc_option_doc_adddocument" title="<:thematique:ajouter_document:>"><:thematique:ajouter_document:></a>
-						<div class='nettoyeur cache formulaire_spip formulaire_editer_document bloc_option_doc'>
-							<:thematique:ordre_chargement_documents:>
-							<div class="ajax">#FORMULAIRE_JOINDRE_DOCUMENT{new,#ID_ARTICLE,article,auto,false,false,false}</div>
-						</div>
-					</div>
-				</div>
-			]
-		</div>
-	</div>
-</BOUCLE_desc>
+<INCLURE{
+	fond=noisettes/sidebar/onglet_description_commun,
+	id_article,
+	env,
+	fond_bloc_ajout_document=noisettes/sidebar/bloc_ajout_document_simple
+} />

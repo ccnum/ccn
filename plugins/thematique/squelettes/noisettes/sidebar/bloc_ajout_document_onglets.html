@@ -1,0 +1,30 @@
+#CACHE{0}
+[(#AUTORISER{modifier,article,#ID_ARTICLE}|oui|et{#CONST{_ANNEE_SCOLAIRE}|=={#ANNEE_SCOLAIRE_REELLE}}|oui)
+	<div class="sidebar_bubble">
+		<div class="bloc_option_doc nettoyeur">
+			<div id="onglets_ajout_media-#ID_ARTICLE">
+				<div>
+					<div class="tabs-title"><:thematique:ajouter_document:></div>
+					<div class="tabs-content">
+						<div class='nettoyeur formulaire_spip formulaire_editer_document bloc_option_doc'>
+							<:thematique:ordre_chargement_documents:>
+							<p style="color:#888;font-size:0.85em;"><:thematique:taille_maximale_fichier{taille=#CONST{_CCN_UPLOAD_TAILLE_MAX_MO}}:></p>
+							<div class="ajax">#FORMULAIRE_JOINDRE_DOCUMENT{new,#ID_ARTICLE,article,auto,false,false,false}</div>
+						</div>
+					</div>
+				</div>
+				<div>
+					<div class="tabs-title"><:thematique:ajouter_video:></div>
+					<div class="tabs-content">
+						<div class='nettoyeur formulaire_spip formulaire_joindre_video bloc_option_doc'>
+							<div class="ajax">#FORMULAIRE_JOINDRE_VIDEO{#ID_ARTICLE,article}</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<script type="text/javascript">
+			$(function() { $('#onglets_ajout_media-#ID_ARTICLE').customTabs(); });
+		</script>
+	</div>
+]
