@@ -36,6 +36,9 @@ function api_vimeo_declarer_champs_extras(array $champs = []): array {
 			'label'  => 'Statut Vimeo',
 			'sql'    => "varchar(20) NOT NULL DEFAULT ''",
 			'defaut' => '',
+			// Piloté uniquement par api_vimeo_upload()/api_vimeo_maj_statut() :
+			// pas de saisie manuelle possible dans le formulaire d'édition.
+			'restrictions' => ['voir' => false, 'modifier' => false],
 		],
 	];
 	$champs['spip_documents']['vimeo_progression'] = [
@@ -45,6 +48,9 @@ function api_vimeo_declarer_champs_extras(array $champs = []): array {
 			'label'  => 'Progression envoi Vimeo',
 			'sql'    => "tinyint(3) unsigned NOT NULL DEFAULT '0'",
 			'defaut' => 0,
+			// Piloté uniquement par api_vimeo_upload()/api_vimeo_maj_statut() :
+			// pas de saisie manuelle possible dans le formulaire d'édition.
+			'restrictions' => ['voir' => false, 'modifier' => false],
 		],
 	];
 	return $champs;
