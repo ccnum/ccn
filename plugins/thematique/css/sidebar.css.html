@@ -899,7 +899,8 @@ li a, li a:hover {
 	> .spip_documents {
 		display: flex;
 		align-items: stretch;
-		> a {
+		> a,
+		> .spip_document_ {
 			flex: 0 0 100%;
 			text-align: center;
 			height: auto;
@@ -920,7 +921,8 @@ li a, li a:hover {
 			}
 		}
 		&:has(> .action_supprimer) {
-			> a {
+			> a,
+			> .spip_document_ {
 				flex: 0 0 90%;
 			}
 		}
