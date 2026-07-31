@@ -3,7 +3,7 @@
 	[(#AUTORISER{modifier, article, #ID_ARTICLE}|oui|et{#TEXTE|non|et{#GET{nb_doc}|=={0}|oui}}|et{#ADMIN|=={-1}|non}|et{#CONST{_ANNEE_SCOLAIRE}|=={#ANNEE_SCOLAIRE_REELLE}}|oui)
 		<div class="sidebar_bubble">
 			<div class="date" id="entete_publication" style="display: block;">
-				Etape 2 : vous pouvez ajouter un texte et des documents à votre article<br />
+				<:thematique:etape2_ajouter_contenu:><br />
 			</div>
 		</div>
 	]
@@ -20,8 +20,8 @@
 			<div class="sidebar_bubble">
 				<INCLURE{fond=noisettes/js/accordeon, nom=bloc_option_classe_reponse_iframe, ajax} />
 				<div class="bloc_option_doc nettoyeur">
-					<a id="bloc_option_classe_reponse_iframe" class="hac liens_voir bloc_option_doc_ressources" title="Contenu lié">
-						Contenu lié
+					<a id="bloc_option_classe_reponse_iframe" class="hac liens_voir bloc_option_doc_ressources" title="<:thematique:contenu_lie:>">
+						<:thematique:contenu_lie:>
 					</a>
 					<span class="texte nettoyeur bloc_classe_iframe">
 						<p style="padding: 15px;" class="#EDIT{url_site}">[<a class="spip_doc_titre" href="[(#URL_SITE|textebrut)]">(#URL_SITE|textebrut)</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;]</p>
@@ -35,7 +35,7 @@
 			<div class="sidebar_bubble">
 				<INCLURE{fond=noisettes/js/accordeon, nom=bloc_option_classe_reponse_iframe, ajax} />
 				<div class="bloc_option_doc nettoyeur">
-					[<div class="#EDIT{url_site} titre_bubble bloc_option_doc_adddocument">(#URL_SITE|textebrut|sinon{<div class="">Ajouter un contenu intégré (url)</div>})</div>]
+					[<div class="#EDIT{url_site} titre_bubble bloc_option_doc_adddocument">(#URL_SITE|textebrut|sinon{<div class=""><:thematique:ajouter_contenu_integre:></div>})</div>]
 				</div>
 			</div>
 		]
@@ -47,17 +47,17 @@
 					<div class="bloc_option_doc nettoyeur">
 						<div id="onglets_ajout_media-#ID_ARTICLE">
 							<div>
-								<div class="tabs-title">Ajouter un document</div>
+								<div class="tabs-title"><:thematique:ajouter_document:></div>
 								<div class="tabs-content">
 									<div class='nettoyeur formulaire_spip formulaire_editer_document bloc_option_doc'>
-										Vos documents apparaîtront par ordre de chargement (du premier au dernier document chargé)
-										<p style="color:#888;font-size:0.85em;">Taille maximale par fichier : #CONST{_CCN_UPLOAD_TAILLE_MAX_MO} Mo</p>
+										<:thematique:ordre_chargement_documents:>
+										<p style="color:#888;font-size:0.85em;"><:thematique:taille_maximale_fichier{taille=#CONST{_CCN_UPLOAD_TAILLE_MAX_MO}}:></p>
 										<div class="ajax">#FORMULAIRE_JOINDRE_DOCUMENT{new,#ID_ARTICLE,article,auto,false,false,false}</div>
 									</div>
 								</div>
 							</div>
 							<div>
-								<div class="tabs-title">Ajouter une vidéo</div>
+								<div class="tabs-title"><:thematique:ajouter_video:></div>
 								<div class="tabs-content">
 									<div class='nettoyeur formulaire_spip formulaire_joindre_video bloc_option_doc'>
 										<div class="ajax">#FORMULAIRE_JOINDRE_VIDEO{#ID_ARTICLE,article}</div>

@@ -7,6 +7,7 @@ if (!defined('_ECRIRE_INC_VERSION')) {
 return [
 	'ajouter_contenu_integre'        => 'Ajouter un contenu intégré (url)',
 	'ajouter_document'               => 'Ajouter un document',
+	'ajouter_video'                  => 'Ajouter une vidéo',
 	'bouton_importer'                => 'Faire l\'import',
 	'bouton_previsu_importer'        => 'Prévisualiser l\'import',
 	'cartable_ligne'                 => 'Mon cartable en ligne',
@@ -35,6 +36,7 @@ return [
 	'reponses_intervenant_ont_repondu' => 'Ont répondu',
 	'reponses_intervenant_relance_message' => 'La date limite approche ? Pensez à encourager les dernières classes à déposer leur réponse. Vous pouvez le faire directement dans l’espace de discussion.',
 	'reponses_intervenant_relancer'  => 'Relancer',
+	'taille_maximale_fichier'        => 'Taille maximale par fichier : @taille@ Mo',
 	'titre_onglet_comentaire'        => 'Commentaires',
 	'titre_onglet_comentaire_pour_classe' => 'Discussions',
 	'titre_onglet_liste_des_reponses'=> 'Suivi des réponses',
