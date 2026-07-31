@@ -18,6 +18,17 @@ function favoris_ccn_json($val) {
 }
 
 /**
+ * Filtre SPIP : nom accessible d'un bouton de réaction, avec décompte
+ * ("Réagir avec Feu, 3 réactions"). Fait en PHP plutôt qu'en assemblant
+ * la chaîne dans le squelette : le compilateur SPIP grignote les espaces
+ * autour des balises quand elles sont mélangées à du texte littéral.
+ */
+function favoris_ccn_aria_label($label, $nb) {
+	$nb = (int) $nb;
+	return 'Réagir avec ' . $label . ', ' . $nb . ' réaction' . ($nb === 1 ? '' : 's');
+}
+
+/**
  * Retourne un tableau ['feu' => 3, 'coeur' => 1, 'pouce' => 0]
  * pour un objet donné.
  */

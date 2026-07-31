@@ -13,5 +13,6 @@
 	<necessite nom="mesfavoris" compatibilite="[4.0.0;]" />
 
 	<pipeline nom="insert_head_css" inclure="mesfavoris_ccn_pipelines.php" />
+	<pipeline nom="insert_head" inclure="mesfavoris_ccn_pipelines.php" />
 
 </paquet>
