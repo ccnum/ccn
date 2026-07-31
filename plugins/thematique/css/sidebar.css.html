@@ -927,12 +927,16 @@ li a, li a:hover {
 		&:has(> .action_supprimer) {
 			> a,
 			> .spip_document_ {
-				flex: 0 0 90%;
+				/* flex-grow (et non un % fixe) : évite qu'un arrondi sous-pixel
+				fasse dépasser 100% de la ligne et rejette .action_supprimer,
+				seul, sur la ligne suivante (où il perd sa hauteur, cf
+				align-items:stretch, et son icône devient invisible). */
+				flex: 1 1 auto;
 			}
 		}
 		> .action_supprimer {
 			cursor: pointer;
-			flex: 0 0 10%;
+			flex: 0 0 40px;
 			display: flex;
 			> a {
 				width: 100%;
