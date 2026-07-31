@@ -1,6 +1,6 @@
 #CACHE{0}
 <BOUCLE_desc(ARTICLES){id_article=#ENV{id_article}}{tous}>
-	[(#AUTORISER{modifier, article, #ID_ARTICLE}|oui|et{#TEXTE|non|et{#GET{nb_doc}|=={0}|oui}}|et{#ADMIN|=={-1}|non}|oui)
+	[(#AUTORISER{modifier, article, #ID_ARTICLE}|oui|et{#TEXTE|non|et{#GET{nb_doc}|=={0}|oui}}|et{#ADMIN|=={-1}|non}|et{#CONST{_ANNEE_SCOLAIRE}|=={#ANNEE_SCOLAIRE_REELLE}}|oui)
 		<div class="sidebar_bubble">
 			<div class="date" id="entete_publication" style="display: block;">
 				Etape 2 : vous pouvez ajouter un texte et des documents à votre article<br />
@@ -31,7 +31,7 @@
 				</div>
 			</div>
 		]
-		[(#AUTORISER{modifier,article,#ID_ARTICLE}|oui|et{#URL_SITE|textebrut|=={''}|oui}|oui)
+		[(#AUTORISER{modifier,article,#ID_ARTICLE}|oui|et{#URL_SITE|textebrut|=={''}|oui}|et{#CONST{_ANNEE_SCOLAIRE}|=={#ANNEE_SCOLAIRE_REELLE}}|oui)
 			<div class="sidebar_bubble">
 				<INCLURE{fond=noisettes/js/accordeon, nom=bloc_option_classe_reponse_iframe, ajax} />
 				<div class="bloc_option_doc nettoyeur">
@@ -42,7 +42,7 @@
 	]
 	<div class="sidebar_bubble">
 		<div class="bloc_documents">
-			[(#AUTORISER{modifier,article,#ID_ARTICLE}|oui)
+			[(#AUTORISER{modifier,article,#ID_ARTICLE}|oui|et{#CONST{_ANNEE_SCOLAIRE}|=={#ANNEE_SCOLAIRE_REELLE}}|oui)
 				<div class="sidebar_bubble">
 					<div class="bloc_option_doc nettoyeur">
 						<div id="onglets_ajout_media-#ID_ARTICLE">

@@ -614,8 +614,8 @@ function forum_rendre_branche($forums) {
 	$html = '';
 	foreach ($forums as $forum) {
 		$html .= recuperer_fond('noisettes/inc/forumv2/forum_commentaire_et_ses_reponses', [
-				'forum' => $forum,
-			]);
+			'forum' => $forum,
+		]);
 	}
 	return $html;
 }
