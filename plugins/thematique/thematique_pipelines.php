@@ -234,6 +234,7 @@ function thematique_cioidc_userinfo($flux) {
 			break;
 		}
 	}
+	$is_eleve = (strpos($profils, 'ELV') !== false);
 	if ($is_webmestre) {
 		$role_ent = 'Admin';
 	}
@@ -386,10 +387,20 @@ function thematique_cioidc_userinfo($flux) {
 				$projets_a_lier[] = $id_projet;
 			}
 		}
+	} elseif ($is_eleve) {
+		// Même rubrique de classe que son prof (même recherche/création),
+		// pour rattacher l'élève à sa classe à son tour (ex: affichage de
+		// l'emoji de classe hors du contexte d'une rubrique).
+		foreach ($classes_reelles as $groupe) {
+			if ($id_classe = thematique_trouver_ou_creer_rubrique($groupe->group_name, $id_travail_classes)) {
+				$classes_a_lier[] = $id_classe;
+			}
+		}
 	}
 
 	spip_log(
 		$auteur['id_auteur'] . ' / ' . $auteur['nom'] . ' => enseignant:' . ($is_enseignant ? 'oui' : 'non')
+			. ' eleve:' . ($is_eleve ? 'oui' : 'non')
 			. ' classes:' . implode(',', $classes_a_lier)
 			. ' projets:' . implode(',', $projets_a_lier),
 		'cioidc'
@@ -400,11 +411,13 @@ function thematique_cioidc_userinfo($flux) {
 		if ($blog) {
 			objet_associer(['id_auteur' => $auteur['id_auteur']], ['rubrique' => $blog]);
 		}
-		foreach ($classes_a_lier as $id_classe) {
-			objet_associer(['id_auteur' => $auteur['id_auteur']], ['rubrique' => $id_classe]);
-		}
 		foreach ($projets_a_lier as $id_projet) {
 			objet_associer(['id_auteur' => $auteur['id_auteur']], ['rubrique' => $id_projet]);
+		}
+	}
+	if (($is_enseignant && !$is_webmestre) || $is_eleve) {
+		foreach ($classes_a_lier as $id_classe) {
+			objet_associer(['id_auteur' => $auteur['id_auteur']], ['rubrique' => $id_classe]);
 		}
 	}
 
