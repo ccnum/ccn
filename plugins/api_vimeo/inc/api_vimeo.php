@@ -98,6 +98,11 @@ function api_vimeo_maj_statut(int $id_document, string $statut, ?int $progressio
 		$champs['vimeo_progression'] = $progression;
 	}
 	sql_updateq('spip_documents', $champs, 'id_document=' . $id_document);
+	// sql_updateq() ne passe pas par document_modifier() : sans ceci, les
+	// squelettes en cache affichant ce document (ex: portfolio de l'article)
+	// ne sont jamais invalidés et continuent de montrer l'ancienne valeur.
+	include_spip('inc/invalideur');
+	suivre_invalideur("id='document/$id_document'");
 }
 
 /**
