@@ -472,7 +472,9 @@ function thematique_assurer_structure_annee() {
 
 	if (!$id_racine) {
 		include_spip('inc/rubriques');
-		$titre_racine = $annee . '-' . ($annee + 1);
+		// Format simple ("2026"), pas "2026-2027" : cohérent avec toutes les
+		// rubriques années existantes sur les sites CCN (2018, 2019, ..., 2025).
+		$titre_racine = (string) $annee;
 		$id_racine = creer_rubrique_nommee($titre_racine, 0);
 		if (!$id_racine) {
 			spip_log(
