@@ -54,5 +54,11 @@ function formulaires_modifier_video_password_traiter_dist($id_document = 0) {
 	sql_updateq('spip_documents', ['vimeo_password' => $mot_de_passe], 'id_document=' . intval($id_document));
 
 	$res['message_ok'] = _T('thematique:mot_de_passe_video_modifie');
+	// Recharge le bloc documents : referme le formulaire (ré-affiché masqué
+	// par défaut) et évite d'avoir à recharger la page à la main.
+	$res['message_ok'] .= "<script type='text/javascript'>"
+		. "if (window.jQuery) jQuery(function(){ajaxReload('documents');});"
+		. '</script>';
+
 	return $res;
 }
