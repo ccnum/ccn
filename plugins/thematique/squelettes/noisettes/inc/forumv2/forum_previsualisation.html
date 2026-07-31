@@ -1,18 +1,20 @@
 <div class="forum-preview">
 	<h2>Vérification de votre commentaire</h2>
 	<p>Relisez votre commentaire avant de le publier.</p>
-	<div class="forum-card forum-card--preview">
-		<div class="forum-card__header">
-			<div class="forum-card__left">
-				<div class="forum-card__icon">icone</div>
-				<h3>#SESSION{nom_classe}</h3>
-			</div>
-			<div class="forum-card__date">[(#DATE|affdate)]</div>
-		</div>
-		<div class="forum-card__body">
-			[(#ENV{texte}|propre)]
-		</div>
-	</div>
+
+	[(#SET{date_heure,[(#ENV{date}|affdate{'d/m/Y H:i'})]})]
+	[(#SET{texte,[(#ENV{texte}|propre)]})]
+
+	
+	<INCLURE{fond=noisettes/inc/forumv2/forum_card,
+		nombre_reponses=0,
+		date_heure=#GET{date_heure},
+		texte=#GET{texte},
+		id_rubrique_classe=insérer_id_ici,
+		est_une_previsualisation=oui
+	}>
+	
+	
 	<div class="forum-actions">
 		<button type="submit" name="publication_forum_action" value="rediger" class="btn-link">Retour</button>
 		<button type="submit" name="publication_forum_action" value="publier">Poster mon commentaire</button>

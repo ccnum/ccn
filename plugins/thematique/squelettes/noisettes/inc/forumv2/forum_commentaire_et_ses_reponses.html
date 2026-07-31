@@ -1,5 +1,11 @@
 <div class="forum-commentaire">
-	<INCLURE{fond=noisettes/inc/forumv2/forum_card}{forum=#ENV{forum}} />
+	<INCLURE{fond=noisettes/inc/forumv2/forum_card,
+		id_forum=#ENV{forum}|table_valeur{id_forum},
+		nombre_reponses=(#ENV{forum}|table_valeur{reponses}|count),
+		date_heure=(#ENV{forum}|table_valeur{date_heure}|affdate{'d/m/Y H:i'}),
+		texte=(#ENV{forum}|table_valeur{texte}|propre),
+		id_rubrique_classe="insérer_id_ici"
+	}>
 	<B_reponses>
 		<div class="reponse-list" hidden>
 			<BOUCLE_reponses(DATA){source tableau, #ENV{forum}|table_valeur{reponses}}>

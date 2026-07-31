@@ -81,15 +81,17 @@ function callbackCliqueSurAnnuler(e) {
     const racineFormulaire = e.currentTarget.closest(".forum-commentaire-racine, .forum-commentaire")
     const champParent = racineFormulaire.querySelector(".js-forum-id-parent")
     let formulaire
-    if(champParent.value == 0) {
+    if(champParent.value == 0) {  // Cas formulaire de publication racine
         const racinePage = e.currentTarget.closest(".forum-article")
         formulaire = racinePage.querySelector(".forum-commentaire-racine")
         const encadre = racinePage.querySelector(".encadre-message")
         encadre.style.display = "flex"  
-    } else {
+    } else {  // Cas formulaire de réponse à une réponse
         formulaire = document.querySelector('#forum-formulaire-reponse');
     }
     formulaire.hidden = true
+    const textarea = racineFormulaire.querySelector("textarea#texte")
+    textarea.value = ""
 }
 
 function callback_clique_sur_lire_la_suite_du_commentaire(e) {

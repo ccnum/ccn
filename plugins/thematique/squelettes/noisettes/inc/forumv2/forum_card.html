@@ -1,41 +1,59 @@
-<div id="forum-[(#ENV{forum}|table_valeur{id_forum})]" class="forum-card">
-	[(#ENV{forum}|table_valeur{reponses}|count|oui)
-		<div class="badge">[(#ENV{forum}|table_valeur{reponses}|count)] réponses</div>
+<div class="forum-card">
+	[(#ENV{nombre_reponses}|>{0}|oui)
+		<div class="badge">
+			[(#ENV{nombre_reponses}|=={1}|oui)
+				1&nbsp;réponse
+			]
+			[(#ENV{nombre_reponses}|>{1}|oui)
+				#ENV{nombre_reponses}&nbsp;réponses
+			]
+		</div>
 	]
 	#SET{id_rubrique_classe, #ENV{forum}|classe_id_rubrique_forum}
 	<div class="col-forum col-forum-icone[ (#GET{id_rubrique_classe}|oui)bgc_classe_[(#GET{id_rubrique_classe}|classe_numero)]]">[(#GET{id_rubrique_classe}|oui)[(#GET{id_rubrique_classe}|classe_icone)]]</div>
 	<div class="col-forum col-forum-message">
 		<div class="header">
-			<div>[(#ENV{forum}|table_valeur{date_heure}|affdate)]</div>
+			<div>#ENV{date_heure}</div>
 		</div>
 		<div class="content">
 			<div class="contenu-texte">
-				[(#ENV{forum}|table_valeur{texte}|propre)]
+				#ENV*{texte}
 			</div>
-			<a class="lire-la-suite" onclick="callback_clique_sur_lire_la_suite_du_commentaire(event)" style="display: none;">Lire la suite du commentaire</a>
+			<a class="lire-la-suite" 
+			   onclick="callback_clique_sur_lire_la_suite_du_commentaire(event)" 
+			   style="display: none;"
+			>
+				Lire la suite du commentaire
+			</a>
 		</div>
-		<div class="footer forum-actions">
-			<div>
-				[(#ENV{forum}|table_valeur{reponses}|oui)
-					<button onclick="callbackCliqueSurVoirLesReponses(event)">Voir les réponses</button>
-				]
-			</div>
-			<div>
-				[(#SESSION{id_auteur}|oui)
-					<button
-						type="submit"
-						name="id_parent"
-						value="[(#ENV{forum}|table_valeur{id_forum})]"
-						data-id-forum="[(#ENV{forum}|table_valeur{id_forum})]"
-						onclick="callbackCliqueSurRepondreAuCommentaire(event)"
-					>Répondre</button>
-				]
-				[(#SESSION{id_auteur}|non)
-					[(#PLUGIN{cioidc}|oui)
-						<a href="[(#URL_PAGE{login}|parametre_url{url,#SELF}|parametre_url{cioidc,oui})]">Se connecter pour répondre</a>
+		[(#ENV{est_une_previsualisation}|non)
+			<div class="footer forum-actions">
+				<div>
+					[(#ENV{nombre_reponses}|>{0}|oui)
+						<button onclick="callbackCliqueSurVoirLesReponses(event)">
+							Voir les réponses
+						</button>
 					]
-				]
+				</div>
+				<div>
+					[(#SESSION{id_auteur}|oui)
+						<button
+							type="submit"
+							name="id_parent"
+							value="#ENV{id_forum}"
+							data-id-forum="#ENV{id_forum}"
+							onclick="callbackCliqueSurRepondreAuCommentaire(event)"
+						>
+							Répondre
+						</button>
+					]
+					[(#SESSION{id_auteur}|non)
+						[(#PLUGIN{cioidc}|oui)
+							<a href="[(#URL_PAGE{login}|parametre_url{url,#SELF}|parametre_url{cioidc,oui})]">Se connecter pour répondre</a>
+						]
+					]
+				</div>
 			</div>
-		</div>
+		]
 	</div>
 </div>
