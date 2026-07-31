@@ -327,16 +327,18 @@ function thematique_classes_rangs() {
 		'titre LIKE ' . sql_quote('%' . $annee_scolaire . '%') . ' AND id_parent=0'
 	);
 
-	$from = ['spip_rubriques', 'spip_mots_liens'];
-	$where = [
-		'spip_mots_liens.id_objet=spip_rubriques.id_rubrique',
-		'spip_mots_liens.objet=' . sql_quote('rubrique'),
-		'spip_mots_liens.id_mot=' . intval($id_mot),
-	];
+	// Alias (r/ml) obligatoires : le préfixage des tables SPIP (spip_ → préfixe
+	// réel du site) ne s'applique qu'à la clause SELECT...FROM, jamais à la
+	// clause WHERE (cf ecrire/req/mysql.php:_mysql_traite_query) — un
+	// spip_mots_liens.xxx dans le WHERE resterait donc littéralement
+	// "spip_mots_liens", introuvable une fois le FROM préfixé (erreur SQL
+	// "Unknown column").
+	$from = ['spip_rubriques AS r', 'spip_mots_liens AS ml'];
+	$where = ['ml.id_objet=r.id_rubrique', 'ml.objet=' . sql_quote('rubrique'), 'ml.id_mot=' . intval($id_mot)];
 	if ($id_annee) {
-		$where[] = 'spip_rubriques.id_parent=' . intval($id_annee);
+		$where[] = 'r.id_parent=' . intval($id_annee);
 	}
-	$conteneurs = sql_allfetsel('spip_rubriques.id_rubrique', $from, $where);
+	$conteneurs = sql_allfetsel('r.id_rubrique', $from, $where);
 	$ids_conteneurs = array_column($conteneurs, 'id_rubrique');
 	if (!$ids_conteneurs) {
 		return $rangs;
@@ -552,14 +554,15 @@ function thematique_id_rubrique_enfant_a_mot($id_parent, $titre_mot, $orderby = 
 		return 0;
 	}
 
+	// Alias (r/ml) obligatoires, cf thematique_classes_rangs().
 	return (int) sql_getfetsel(
-		'spip_rubriques.id_rubrique',
-		['spip_rubriques', 'spip_mots_liens'],
+		'r.id_rubrique',
+		['spip_rubriques AS r', 'spip_mots_liens AS ml'],
 		[
-			'spip_mots_liens.id_objet=spip_rubriques.id_rubrique',
-			'spip_mots_liens.objet=' . sql_quote('rubrique'),
-			'spip_mots_liens.id_mot=' . intval($id_mot),
-			'spip_rubriques.id_parent=' . intval($id_parent),
+			'ml.id_objet=r.id_rubrique',
+			'ml.objet=' . sql_quote('rubrique'),
+			'ml.id_mot=' . intval($id_mot),
+			'r.id_parent=' . intval($id_parent),
 		],
 		'',
 		$orderby,
@@ -575,11 +578,7 @@ function thematique_id_rubrique_enfant_a_mot($id_parent, $titre_mot, $orderby = 
  * @return int 0 si non trouvée
  */
 function thematique_id_rubrique_travail_en_cours() {
-	return thematique_id_rubrique_enfant_a_mot(
-		thematique_id_rubrique_annee_active(),
-		'travail_en_cours',
-		'spip_rubriques.date'
-	);
+	return thematique_id_rubrique_enfant_a_mot(thematique_id_rubrique_annee_active(), 'travail_en_cours', 'r.date');
 }
 
 /**
