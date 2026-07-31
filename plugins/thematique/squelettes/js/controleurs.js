@@ -471,7 +471,7 @@ function callReponse(id_reponse) {
 
 	if (!Number.isInteger(Number(id_reponse))) return;
 	changeTimelineMode('consignes');
-	setFullscreenModeToCols(true);
+	setFullscreenModeToCols(false);
 
 	const id_consigne = getIdConsigneFromIdReponse(id_reponse);
 
@@ -501,13 +501,12 @@ function callReponse(id_reponse) {
 }
 /**
  * Appelle le chargement de la classe
- * dans la sidebar principale et appelle
- * le chargement de la classe dans la sidebar secondaire.
+ * dans la sidebar principale, en plein écran (pas de colonne latérale
+ * de navigation entre classes, cf callClasses).
  *
  * @param {number} id_classe - ID de la classe
  *
  * @see loadContentInMainSidebar
- * @see loadContentInLateralSidebar
  */
 
 function callClasse(id_classe) {
@@ -515,14 +514,13 @@ function callClasse(id_classe) {
 	if (id_classe !== '' && !Number.isInteger(Number(id_classe))) return;
 	changeTimelineMode('consignes');
 	expandSidebar();
-	setFullscreenModeToCols(true);
+	setFullscreenModeToCols(false);
 	updateMenuIcon(['classes', 'classes-' + id_classe], 'sidebarView');
 
 	let url = CCN.projet.url_popup_classes;
 	if (id_classe != '') {
 		url = CCN.projet.url_popup_classes + '&id_objet=' + id_classe + '&type_objet=travail_en_cours';
 	}
-	loadContentInLateralSidebar(CCN.projet.url_popup_classes);
 	loadContentInMainSidebar(
 		url,
 		() => {
@@ -541,19 +539,16 @@ function callClasse(id_classe) {
 /**
  * Appelle le chargement des classes
  * dans la sidebar principale
- *
- * @see loadContentInLateralSidebar
  */
 
 function callClasses() {
 	changeTimelineMode('consignes');
 	showSidebar();
 	toggleSidebarExpand();
-	setFullscreenModeToCols(true);
+	setFullscreenModeToCols(false);
 	updateMenuIcon(['classes'], 'sidebarView');
 
 	blankMainSidebar('travail_en_cours');
-	loadContentInLateralSidebar(CCN.projet.url_popup_classes);
 }
 
 /**
