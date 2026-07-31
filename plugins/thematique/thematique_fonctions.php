@@ -380,21 +380,22 @@ function classe_icone($id_rubrique) {
 }
 
 /**
- * Icône (emoji) de la classe d'un auteur (élève ou prof), déduite de la
+ * Id de la rubrique de classe d'un auteur (élève ou prof), déduite de la
  * rubrique de classe à laquelle il est lié (cf thematique_cioidc_userinfo,
  * qui rattache l'auteur à sa rubrique de classe via objet_associer).
+ * À utiliser avec les filtres classe_icone()/classe_numero() habituels.
  *
  * Restreint explicitement aux rubriques reconnues comme "classe" (cf
  * thematique_classes_rangs()) pour ignorer d'éventuels autres liens
  * d'un prof (blog pédagogique, rubrique de projet).
  *
  * @param int $id_auteur
- * @return string
+ * @return int|null
  */
-function classe_icone_auteur($id_auteur) {
+function classe_id_rubrique_auteur($id_auteur) {
 	$rangs = thematique_classes_rangs();
 	if (!$rangs) {
-		return '';
+		return null;
 	}
 
 	$id_rubrique = sql_getfetsel(
@@ -406,35 +407,36 @@ function classe_icone_auteur($id_auteur) {
 		)
 	);
 
-	return $id_rubrique ? classe_icone($id_rubrique) : '';
+	return $id_rubrique ? (int) $id_rubrique : null;
 }
 
 /**
- * Icône (emoji) de classe pour une carte de commentaire forum.
+ * Id de la rubrique de classe à utiliser pour une carte de commentaire forum
+ * (avec classe_icone()/classe_numero()).
  *
- * Priorité à la classe actuelle de l'auteur (cf classe_icone_auteur) ;
+ * Priorité à la classe actuelle de l'auteur (cf classe_id_rubrique_auteur) ;
  * repli sur la rubrique de l'article commenté pour les commentaires
  * d'élèves dont le compte n'a jamais été rattaché à une classe (créé
  * avant l'ajout de ce rattachement dans thematique_cioidc_userinfo, et
  * pas reconnecté depuis).
  *
  * @param array $forum Ligne spip_forum (cf filtre_afficher_forum_arbre())
- * @return string
+ * @return int|null
  */
-function classe_icone_forum($forum) {
-	$icone = classe_icone_auteur($forum['id_auteur'] ?? 0);
-	if ($icone) {
-		return $icone;
+function classe_id_rubrique_forum($forum) {
+	$id_rubrique = classe_id_rubrique_auteur($forum['id_auteur'] ?? 0);
+	if ($id_rubrique) {
+		return $id_rubrique;
 	}
 
 	if (($forum['objet'] ?? '') === 'article' && !empty($forum['id_objet'])) {
 		$id_rubrique = sql_getfetsel('id_rubrique', 'spip_articles', 'id_article=' . intval($forum['id_objet']));
 		if ($id_rubrique) {
-			return classe_icone($id_rubrique);
+			return (int) $id_rubrique;
 		}
 	}
 
-	return '';
+	return null;
 }
 
 /**

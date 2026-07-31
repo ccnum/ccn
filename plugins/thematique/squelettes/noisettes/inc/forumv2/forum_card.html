@@ -2,7 +2,8 @@
 	[(#ENV{forum}|table_valeur{reponses}|count|oui)
 		<div class="badge">[(#ENV{forum}|table_valeur{reponses}|count)] réponses</div>
 	]
-	<div class="col-forum">[(#ENV{forum}|classe_icone_forum)]</div>
+	#SET{id_rubrique_classe, #ENV{forum}|classe_id_rubrique_forum}
+	<div class="col-forum col-forum-icone[ (#GET{id_rubrique_classe}|oui)bgc_classe_[(#GET{id_rubrique_classe}|classe_numero)]]">[(#GET{id_rubrique_classe}|oui)[(#GET{id_rubrique_classe}|classe_icone)]]</div>
 	<div class="col-forum col-forum-message">
 		<div class="header">
 			<div>[(#ENV{forum}|table_valeur{date_heure}|affdate)]</div>
