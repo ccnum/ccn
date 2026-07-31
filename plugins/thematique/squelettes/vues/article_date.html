@@ -1,0 +1,12 @@
+[(#REM)
+Vue pour le crayon 'article_date' : ré-affichage de la date après
+enregistrement (sans cette vue, crayons retombe sur un rendu générique
+qui ne sait pas formater un champ 'date' et laisse l'affichage vide ou
+brut tant que la page n'est pas rechargée).
+
+@see controleurs/article_date.html
+]
+#CACHE{0}
+<BOUCLE_a(ARTICLES){id_article}{tous}>
+Publié le [(#DATE|affdate)]
+</BOUCLE_a>
