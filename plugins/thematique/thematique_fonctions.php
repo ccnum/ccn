@@ -215,7 +215,7 @@ function fond_consigne_pour_role($role) {
 	if ($role === 'prof') {
 		return 'consigne_pour_classe';
 	}
-	if ($role === 'intervenant') {
+	if ($role === 'intervenant' || $role === 'admin') {
 		return 'consigne_pour_intervenant';
 	}
 	return 'consigne_pour_autre';

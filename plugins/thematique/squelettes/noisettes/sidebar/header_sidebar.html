@@ -1,5 +1,5 @@
-[(#REM) 
-Arguments : 
+[(#REM)
+Arguments :
 - id_article
 - titre_parent
 - titre_consigne
@@ -10,7 +10,7 @@ Arguments :
 <BOUCLE_article_sidebar(ARTICLES){id_article}{tout}>
 <div class="sidebar_bubble">
 	<div id="row_header">
-		<div id="header-col-left">	
+		<div id="header-col-left">
 			<div class="photo">[(#MODELE{logo_carre}{id_article})]</div>
 			<div class="auteur">
 				<BOUCLE_auteur_consigne(AUTEURS){id_article}{tout}>
@@ -23,17 +23,19 @@ Arguments :
 		</div>
 		<div id="header-col-right">
 			<div id="header-row-1">
+				#SET{est_jalon, non}
+				<BOUCLE_test_jalon_header(MOTS){id_article}{titre IN cap-sur-l-annee,la-rencontre}>
+					#SET{est_jalon, oui}
+				</BOUCLE_test_jalon_header>
 				<div class="etiquette-etape">
-					<span class="texte-etiquette">MISSION N°[(#ENV{rang}|plus{1})]</span>
+					[(#GET{est_jalon}|=={oui}|oui)<span class="texte-etiquette">[(#TITRE)]</span>]
+					[(#GET{est_jalon}|=={non}|oui)<span class="texte-etiquette">MISSION N°[(#ENV{rang}|plus{1})]</span>]
 				</div>
 				<INCLURE{fond=noisettes/sidebar/normal_header_icons, env} />
 			</div>
 			<div id="header-row-2">
 				#ENV{titre_consigne}
 			</div>
-			
-			
-			
 		</div>
 	</div>
 	[(#ENV{type_objet}|in_array{#LISTE{blogs,evenements,ressources,agora}}|oui)

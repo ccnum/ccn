@@ -1,0 +1,9 @@
+<form class='formulaire_spip formulaire_publier_article' method='post' action='#ENV{action}'>
+	<div>
+		#ACTION_FORMULAIRE
+		<input type='hidden' name='id_article' value='#ENV{id_article}' />
+		[<div class="reponse_formulaire reponse_formulaire_ok" role="status">(#ENV**{message_ok})</div>]
+		[<div class="reponse_formulaire reponse_formulaire_erreur" role="alert">(#ENV*{message_erreur})</div>]
+		<input type='submit' class='btn submit btn_mini' value='<:thematique:bouton_publier_article:>' />
+	</div>
+</form>

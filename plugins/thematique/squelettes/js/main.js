@@ -392,9 +392,8 @@ async function loadArticles(fichier, type, ccnArray, listeY) {
 }
 /**
  *  Affiche/masque un badge jalon ("Cap sur l'année" / "La Rencontre") selon
- *  qu'un article existe et son statut de publication. Les élèves ne voient
- *  jamais le badge tant qu'il n'est pas publié (data-peut-voir-non-publie
- *  posé côté squelette selon #SESSION{role}).
+ *  qu'un article existe. Visible pour tout le monde, avec juste un signalement
+ *  visuel (badge_timeline--non-publie) tant qu'il n'est pas encore publié.
  *
  * @param {string} prefixe - "cap_sur_annee" ou "la_rencontre"
  * @param {number} idArticle
@@ -408,12 +407,9 @@ function updateBadgeJalon(prefixe, idArticle, statut) {
 		return;
 	}
 
-	const peutVoirNonPublie = $badge.attr('data-peut-voir-non-publie') === 'oui';
-	if (statut !== 'publie' && !peutVoirNonPublie) {
-		$badge.hide();
-		return;
-	}
-
+	// Visible pour tout le monde ; simplement signalé (classe
+	// badge_timeline--non-publie, cf sidebar.css.html) tant qu'il n'est pas
+	// encore publié par l'intervenant.
 	$badge.toggleClass('badge_timeline--non-publie', statut !== 'publie').show();
 }
 

@@ -25,40 +25,69 @@
 			} />
 		</div>
 
-		<div id="tabs-article-#ID_ARTICLE" class="container-tabs">
-			<div id="mission-tabs">
-				<div>
-					<div class="tabs-title">
-						<:thematique:description_mission:>
-					</div>
-					<div class="tabs-content">
-						<INCLURE{
-							fond=noisettes/sidebar/onglet_description_intervenant,
-							id_article=#GET{id_consigne},
-							env
-						} />
-					</div>
+		#SET{est_jalon, non}
+		<BOUCLE_test_jalon(MOTS){id_article=#ID_ARTICLE}{titre IN cap-sur-l-annee,la-rencontre}>
+			#SET{est_jalon, oui}
+		</BOUCLE_test_jalon>
+
+		[(#GET{est_jalon}|=={oui}|oui)
+			[(#REM) Article jalon du projet ("Cap sur l'année"/"La Rencontre") :
+			pas une vraie mission (pas de réponses de classe attendues), donc pas
+			d'onglets "Description de la mission"/"Suivi des réponses" — juste un
+			texte libre, éditable au crayon par l'intervenant. ]
+			<BOUCLE_jalon_texte(ARTICLES){id_article=#ID_ARTICLE}{tous}>
+				<div class="sidebar_bubble">
+					<span class="spip texte_jalon #EDIT{texte}">[(#TEXTE|propre|sinon{<:thematique:jalon_texte_a_completer:>})]</span>
 				</div>
-				<div>
-					<div class="tabs-title">
-						<:thematique:titre_onglet_liste_des_reponses:>
-					</div>
-					<div class="tabs-content">
-						<INCLURE{fond=noisettes/sidebar/onglet_reponses_intervenant, id_article=#ID_ARTICLE, env, ajax} />
-					</div>
-				</div>
-				[(#REM) Pour l'instant, on exclut cet onglet, par qu'il ralentit considérablement l'ouverture de la sidebar
-						et en plus il n'est pas à jour.
-					<div data-tab-id="commentaires">
-						<div class="tabs-title">
-							<:thematique:titre_onglet_comentaire:>
-						</div>
-						<div class="tabs-content">
-							<INCLURE{fond=noisettes/sidebar/onglet_commentaires, env} />
-						</div>
+				[(#STATUT|!={publie}|oui)
+					<div class="sidebar_bubble">
+						<div class="ajax">#FORMULAIRE_PUBLIER_ARTICLE{#ID_ARTICLE}</div>
 					</div>
 				]
+				<div class="sidebar_bubble">
+					<div class="bloc_documents">
+						<INCLURE{fond=noisettes/inc/ajouter_document, id_article, env, ajax=documents} />
+						<INCLURE{fond=noisettes/sidebar/bloc_ajout_document_onglets, id_article, env} />
+					</div>
+				</div>
+			</BOUCLE_jalon_texte>
+		]
+		[(#GET{est_jalon}|=={non}|oui)
+			<div id="tabs-article-#ID_ARTICLE" class="container-tabs">
+				<div id="mission-tabs">
+					<div>
+						<div class="tabs-title">
+							<:thematique:description_mission:>
+						</div>
+						<div class="tabs-content">
+							<INCLURE{
+								fond=noisettes/sidebar/onglet_description_intervenant,
+								id_article=#GET{id_consigne},
+								env
+							} />
+						</div>
+					</div>
+					<div>
+						<div class="tabs-title">
+							<:thematique:titre_onglet_liste_des_reponses:>
+						</div>
+						<div class="tabs-content">
+							<INCLURE{fond=noisettes/sidebar/onglet_reponses_intervenant, id_article=#ID_ARTICLE, env, ajax} />
+						</div>
+					</div>
+					[(#REM) Pour l'instant, on exclut cet onglet, par qu'il ralentit considérablement l'ouverture de la sidebar
+							et en plus il n'est pas à jour.
+						<div data-tab-id="commentaires">
+							<div class="tabs-title">
+								<:thematique:titre_onglet_comentaire:>
+							</div>
+							<div class="tabs-content">
+								<INCLURE{fond=noisettes/sidebar/onglet_commentaires, env} />
+							</div>
+						</div>
+					]
+				</div>
 			</div>
-		</div>
+		]
 	</div>
 </div>
