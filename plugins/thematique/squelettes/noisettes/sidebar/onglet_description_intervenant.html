@@ -42,6 +42,7 @@
 	]
 	<div class="sidebar_bubble">
 		<div class="bloc_documents">
+			<INCLURE{fond=noisettes/inc/ajouter_document, id_article, env, ajax=documents} />
 			[(#AUTORISER{modifier,article,#ID_ARTICLE}|oui|et{#CONST{_ANNEE_SCOLAIRE}|=={#ANNEE_SCOLAIRE_REELLE}}|oui)
 				<div class="sidebar_bubble">
 					<INCLURE{fond=noisettes/js/accordeon, nom=bloc_option_doc-#ID_ARTICLE, ajax} />
@@ -54,7 +55,6 @@
 					</div>
 				</div>
 			]
-			<INCLURE{fond=noisettes/inc/ajouter_document, id_article, env, ajax=documents} />
 		</div>
 	</div>
 </BOUCLE_desc>
