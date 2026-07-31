@@ -9,8 +9,7 @@
 			]
 		</div>
 	]
-	#SET{id_rubrique_classe, #ENV{forum}|classe_id_rubrique_forum}
-	<div class="col-forum col-forum-icone[ (#GET{id_rubrique_classe}|oui)bgc_classe_[(#GET{id_rubrique_classe}|classe_numero)]]">[(#GET{id_rubrique_classe}|oui)[(#GET{id_rubrique_classe}|classe_icone)]]</div>
+	<div class="col-forum col-forum-icone[ (#ENV{id_rubrique_classe}|oui)bgc_classe_[(#ENV{id_rubrique_classe}|classe_numero)]]">[(#ENV{id_rubrique_classe}|oui)[(#ENV{id_rubrique_classe}|classe_icone)]]</div>
 	<div class="col-forum col-forum-message">
 		<div class="header">
 			<div>#ENV{date_heure}</div>
