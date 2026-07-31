@@ -116,6 +116,14 @@
 	border-color: var(--border-color-classe-9) !important;
 }
 
+/* .bgc_classe_N pose son fond en !important : sans cette règle plus
+spécifique et elle aussi !important, .selected ne peut jamais reprendre
+la main pour indiquer la classe sélectionnée dans le menu du bas. */
+.zone-menu li.logo a[class*="bgc_classe_"].selected {
+	background-color: var(--background-color-hover) !important;
+	color: var(--color-hover) !important;
+}
+
 .reponse_border_0 {
 	border-color: var(--color-classe-0) !important;
 }
