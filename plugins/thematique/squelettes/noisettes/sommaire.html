@@ -89,21 +89,22 @@ et/ou
 			<h3 class="menu-title"><span>Missions</span></h3>
 			<ul class="filter clearfix option-set" data-filter-group="consigne">
 				#SET{num,0}
-				<BOUCLE_consignes0(RUBRIQUES mots mots_liens){mots.titre=consignes}{rubriques.id_rubrique=mots_liens.id_objet}>
-					[(#MODELE{logo_menu}{valeur=[(#GET{num})]}{filter=.consigne_#ID_ARTICLE}{class=tooltip hover_couleur_consignes[(#ID_RUBRIQUE|nb2col)] menu_logo_consignes-[(#GET{num}|plus{1})] menu_logo_consignes-#ID_ARTICLE}{onclick=callConsigne('#ID_ARTICLE');}{title=#TITRE}{texte=[(#GET{num}|plus{1})]})]
-					[(#SET{num,[(#GET{num}|plus{1})]})]
-				</BOUCLE_consignes0>
-				<BOUCLE_consignes(ARTICLES mots_liens rubriques){rubriques.id_rubrique=mots_liens.id_objet}{mots_liens.id_mot=2}{tous}>
+				[(#REM) Missions = articles de LA rubrique de l'intervenant sous
+				"Consignes", pour l'année active (cookie année, cf
+				thematique_annee_scolaire()). thematique_id_rubrique_mission()
+				(déjà utilisée ailleurs, cf choix_rubrique_admin2.html) fait
+				exactement cette résolution : année active -> rubrique "Consignes"
+				-> son premier enfant (la rubrique de l'intervenant).
+				Remplace les 3 anciennes boucles (BOUCLE_consignes0, BOUCLE_consignes
+				avec id_mot=2, BOUCLE_r4/BOUCLE_a4), qui listaient sans filtre
+				d'année ni de groupe TOUTES les rubriques taguées "consignes" de
+				tout le site, mélangeant les missions de plusieurs
+				années/intervenants dans le même menu. ]
+				#SET{id_rubrique_missions, #VAL{0}|thematique_id_rubrique_mission}
+				<BOUCLE_consignes(ARTICLES){id_rubrique=#GET{id_rubrique_missions}}{branche}{tous}{par date}>
 					[(#MODELE{logo_menu}{valeur=[(#GET{num})]}{filter=.consigne_#ID_ARTICLE}{class=tooltip hover_couleur_consignes[(#ID_RUBRIQUE|nb2col)] menu_logo_consignes-[(#GET{num}|plus{1})] menu_logo_consignes-#ID_ARTICLE}{onclick=callConsigne('#ID_ARTICLE');}{title=#TITRE}{texte=[(#GET{num}|plus{1})]})]
 					[(#SET{num,[(#GET{num}|plus{1})]})]
 				</BOUCLE_consignes>
-
-				<BOUCLE_r4(RUBRIQUES){titre_mot=consignes}{!par id_rubrique}{tous}>
-				<BOUCLE_a4(ARTICLES){branche}{par date}{date>=#CONST{_DATE_DEBUT}}{date<=#CONST{_DATE_FIN}}>
-					[(#MODELE{logo_menu}{valeur=[(#GET{num})]}{filter=.consigne_#ID_ARTICLE}{class=tooltip hover_couleur_consignes[(#ID_RUBRIQUE|nb2col)] menu_logo_consignes-[(#GET{num}|plus{1})] menu_logo_consignes-#ID_ARTICLE}{onclick=callConsigne('#ID_ARTICLE');}{title=#TITRE}{texte=[(#GET{num}|plus{1})]})]
-					[(#SET{num,[(#GET{num}|plus{1})]})]
-				</BOUCLE_a4>
-				</BOUCLE_r4>
 			</ul>
 		</div>
 
