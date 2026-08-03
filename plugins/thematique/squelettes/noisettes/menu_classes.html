@@ -1,0 +1,46 @@
+#CACHE{0}
+[(#REM) Classes
+
+#CACHE{0} : liste live des classes participantes (rubriques), donc ne doit
+jamais être mise en cache — même si la page englobante (sommaire.html)
+l'est 48h, sans quoi une classe ajoutée reste invisible jusqu'à expiration
+du cache de la page. ]
+<div id="menu-classes" class="bloc_view col">
+	#SET{hasYearRub,false}
+	[(#REM) =============== ]
+	[(#REM) AFFICHAGE TOTAL ]
+	[(#REM) =============== ]
+	[(#REM)Le nombre de classes est déduit du compteur nb_classes,
+	incrémenté plus bas dans les mêmes boucles que l'affichage : cela évite
+	de relancer deux fois l'intégralité des requêtes (une pour compter,
+	une pour afficher).]
+	<h3 class="menu-title">
+		<span>Les <span id="nb_classes_valeur">0</span> classes participantes</span>
+	</h3>
+	[(#REM) ======================= ]
+	[(#REM) AFFICHAGE LISTE CLASSES ]
+	[(#REM) ======================= ]
+	<ul class="filter clearfix option-set" data-filter-group="classe">
+		#SET{nb_classes, 0}
+
+		[(#REM) ======== BOUCLE 1 : rubrique de l'année en cours ======== ]
+		<BOUCLE_FiltreAnnee(RUBRIQUES){racine}{titre LIKE %(#CONST{_ANNEE_SCOLAIRE})%}>
+			#SET{hasYearRub,true}
+			<BOUCLE_rubMot(RUBRIQUES){id_parent}{titre_mot=travail_en_cours}>
+				<BOUCLE_rubLoop(RUBRIQUES){id_parent}{tous}{par id_rubrique}>
+					<INCLURE{fond=modeles/classe_icone, id_rubrique=#ID_RUBRIQUE, titre=#TITRE} />
+					#SET{nb_classes, #GET{nb_classes}|plus{1}}
+				</BOUCLE_rubLoop>
+			</BOUCLE_rubMot>
+		</BOUCLE_FiltreAnnee>
+
+		[(#REM) ======== BOUCLE 2 : fallback si pas de rubrique année ======== ]
+		<BOUCLE_r3(RUBRIQUES){titre_mot==travail_en_cours}{tous}{si #GET{hasYearRub}|=={false}}{!par date}>
+			<BOUCLE_c3(RUBRIQUES){id_parent}{tous}{par id_rubrique}>
+				<INCLURE{fond=modeles/classe_icone, id_rubrique=#ID_RUBRIQUE, titre=#_c3:TITRE} />
+				#SET{nb_classes, #GET{nb_classes}|plus{1}}
+			</BOUCLE_c3>
+		</BOUCLE_r3>
+	</ul>
+	<script>thematiqueApplyDeferredCount('nb_classes_valeur', '#GET{nb_classes}');</script>
+</div>

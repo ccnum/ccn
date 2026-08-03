@@ -86,89 +86,11 @@ et/ou
 			</ul>
 		</div>
 
-		[(#REM) Consignes]
-		<div id="menu-consignes" class="bloc_view col">
-			<h3 class="menu-title"><span>Missions</span></h3>
-			<ul class="filter clearfix option-set" data-filter-group="consigne">
-				#SET{num,0}
-				[(#REM) Missions = articles de LA rubrique de l'intervenant sous
-				"Consignes", pour l'année active (cookie année, cf
-				thematique_annee_scolaire()). thematique_id_rubrique_mission()
-				(déjà utilisée ailleurs, cf choix_rubrique_admin2.html) fait
-				exactement cette résolution : année active -> rubrique "Consignes"
-				-> son premier enfant (la rubrique de l'intervenant).
-				Remplace les 3 anciennes boucles (BOUCLE_consignes0, BOUCLE_consignes
-				avec id_mot=2, BOUCLE_r4/BOUCLE_a4), qui listaient sans filtre
-				d'année ni de groupe TOUTES les rubriques taguées "consignes" de
-				tout le site, mélangeant les missions de plusieurs
-				années/intervenants dans le même menu. ]
-				#SET{id_rubrique_missions, #VAL{0}|thematique_id_rubrique_mission}
-				<BOUCLE_consignes(ARTICLES){id_rubrique=#GET{id_rubrique_missions}}{branche}{tous}{par date}>
-					[(#MODELE{logo_menu}{valeur=[(#GET{num})]}{filter=.consigne_#ID_ARTICLE}{class=tooltip hover_couleur_consignes[(#ID_RUBRIQUE|nb2col)] menu_logo_consignes-[(#GET{num}|plus{1})] menu_logo_consignes-#ID_ARTICLE}{onclick=callConsigne('#ID_ARTICLE');}{title=#TITRE}{texte=[(#GET{num}|plus{1})]})]
-					[(#SET{num,[(#GET{num}|plus{1})]})]
-				</BOUCLE_consignes>
-			</ul>
-		</div>
+		<INCLURE{fond=noisettes/menu_consignes, env, ajax} />
 
-		[(#REM) Classes]
-		<div id="menu-classes" class="bloc_view col">
-			#SET{hasYearRub,false}
-			[(#REM) =============== ]
-			[(#REM) AFFICHAGE TOTAL ]
-			[(#REM) =============== ]
-			[(#REM)Le nombre de classes est déduit du compteur nb_classes,
-			incrémenté plus bas dans les mêmes boucles que l'affichage : cela évite
-			de relancer deux fois l'intégralité des requêtes (une pour compter,
-			une pour afficher).]
-			<h3 class="menu-title">
-				<span>Les <span id="nb_classes_valeur">0</span> classes participantes</span>
-			</h3>
-			[(#REM) ======================= ]
-			[(#REM) AFFICHAGE LISTE CLASSES ]
-			[(#REM) ======================= ]
-			<ul class="filter clearfix option-set" data-filter-group="classe">
-				#SET{nb_classes, 0}
+		<INCLURE{fond=noisettes/menu_classes, env, ajax} />
 
-				[(#REM) ======== BOUCLE 1 : rubrique de l'année en cours ======== ]
-				<BOUCLE_FiltreAnnee(RUBRIQUES){racine}{titre LIKE %(#CONST{_ANNEE_SCOLAIRE})%}>
-					#SET{hasYearRub,true}
-					<BOUCLE_rubMot(RUBRIQUES){id_parent}{titre_mot=travail_en_cours}>
-						<BOUCLE_rubLoop(RUBRIQUES){id_parent}{tous}{par id_rubrique}>
-							<INCLURE{fond=modeles/classe_icone, id_rubrique=#ID_RUBRIQUE, titre=#TITRE} />
-							#SET{nb_classes, #GET{nb_classes}|plus{1}}
-						</BOUCLE_rubLoop>
-					</BOUCLE_rubMot>
-				</BOUCLE_FiltreAnnee>
-
-				[(#REM) ======== BOUCLE 2 : fallback si pas de rubrique année ======== ]
-				<BOUCLE_r3(RUBRIQUES){titre_mot==travail_en_cours}{tous}{si #GET{hasYearRub}|=={false}}{!par date}>
-					<BOUCLE_c3(RUBRIQUES){id_parent}{tous}{par id_rubrique}>
-						<INCLURE{fond=modeles/classe_icone, id_rubrique=#ID_RUBRIQUE, titre=#_c3:TITRE} />
-						#SET{nb_classes, #GET{nb_classes}|plus{1}}
-					</BOUCLE_c3>
-				</BOUCLE_r3>
-			</ul>
-			<script>thematiqueApplyDeferredCount('nb_classes_valeur', '#GET{nb_classes}');</script>
-		</div>
-
-		[(#REM) Ressources]
-		<div id="menu-ressources" class="bloc_view col">
-			<h3 class="menu-title"><span>Ressources</span></h3>
-			<ul class="filter clearfix option-set ressource" data-filter-group="ressource">
-				[(#MODELE{logo_menu, valeur=ressource, class=tooltip menu_logo_ressources menu_logo_type_sidebarView, filter=.ressource_ressources, onclick=callRessource();, title=Ressources})]
-				[(#MODELE{logo_menu, valeur=agora, class=tooltip menu_logo_agora menu_logo_type_sidebarView, filter=.ressource_agora, title=Espace de discussion, onclick=callAgora();})]
-
-				[(#REM)Espace Doc]
-				[(#ENV{restreint}|?{#SET{docId,#ENV{restreint}}, #SET{docId,false}})]
-
-				<BOUCLE_espace_doc(RUBRIQUES){tous}{racine}{titre==^[20]}{!par titre}{0,1}>
-				[<li class="logo">
-					<a class="logo_menu-doc menu_logo_type_sidebarView tooltip" href="(#DESCRIPTIF|textebrut)" aria-label="<:thematique:cartable_ligne:>" data-tip="<:thematique:cartable_ligne:>" target="_blank" rel="noopener noreferrer"></a>
-				</li>
-				]
-				</BOUCLE_espace_doc>
-			</ul>
-		</div>
+		<INCLURE{fond=noisettes/menu_ressources, env, ajax} />
 
 		[(#REM) Actualités]
 		[(#CONST{_PROJET}|!={laclasse}|oui)
