@@ -28,4 +28,8 @@ La condition de rôle (`thematique_afficher_rubrique_utilisateur_prof()`) et le 
 
 ### Remplacer les `<div>` cliquables par des `<button>`
 
-Toutes les div cliquables ont `role="button"` + `tabindex="0"` (accessibles au clavier, focus visible). Le remplacement par de vrais `<button>` reste à faire, mais impose de refaire les styles de composants (`.bouton_reponse_consigne` etc.) — à prévoir avec une refonte CSS dédiée.
+Fait : toutes les div cliquables (consigne.js, reponse.js, article.js, modèles `actu_*`, `rubrique_detail.html`, `ressources_detail.html`, `classes_detail.html`, `reponse_binome_head.html`, icônes de sidebar, badges timeline) sont converties en `<button type="button" class="... btn-reset">`. `.btn-reset` (dans `tokens.css.html`, chargé avant les CSS de composants) fait un `all: unset` + `display: block` neutre, que les règles de composants (chargées après) re-spécialisent normalement (fond, bordure, `display: flex`, etc.) sans rien casser.
+
+Exception : `actu_commentaires.html` et `actu_documents.html` gardent une `<div role="button">` — ils contiennent un `<a>` cliquable imbriqué (lien image lightbox), invalide dans un `<button>` (contenu interactif imbriqué interdit en HTML5, risque de casser le clic sur l'image).
+
+Vérifié via `recuperer_fond()` en CLI sur plusieurs fonds (`sommaire`, `rubrique`, `ressources_detail`, `classes_detail`, `actus_timeline`, modèles `actu_*`) — rendu correct, balises bien fermées, aucune erreur. Non vérifié dans un vrai navigateur.

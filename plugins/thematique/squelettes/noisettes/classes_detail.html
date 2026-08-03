@@ -20,7 +20,7 @@
 
 					<BOUCLE_classes(RUBRIQUES){id_parent=#ID_RUBRIQUE}{par titre}{tout}{0,50}>
 						<div class="ressources_rubrique">
-							<div class="ressource_rubrique_titre" id="ajax_go_to_classe_#ID_RUBRIQUE" onclick="callClasse('#ID_RUBRIQUE')" role="button" tabindex="0"><h3>#TITRE</h3></div>
+							<button type="button" class="ressource_rubrique_titre btn-reset" id="ajax_go_to_classe_#ID_RUBRIQUE" onclick="callClasse('#ID_RUBRIQUE')"><h3>#TITRE</h3></button>
 						</div>
 					</BOUCLE_classes>
 

@@ -58,7 +58,7 @@ function Article() {
 			if (this.nombre_commentaires > 0) {
 				divArticle.append($('<div class="picto_nombre_commentaires">').text(this.nombre_commentaires));
 			}
-			this.div_texte = $('<div/>').attr('class', '').attr('role', 'button').attr('tabindex', '0').append(divArticle);
+			this.div_texte = $('<button type="button"/>').attr('class', 'btn-reset').append(divArticle);
 		} else {
 			const divTexteInner = $('<div class="article_evenement_texte">')
 				.append(bTitre)
@@ -69,7 +69,7 @@ function Article() {
 			if (this.nombre_commentaires > 0) {
 				divArticle.append($('<div class="picto_nombre_commentaires">').text(this.nombre_commentaires));
 			}
-			this.div_texte = $('<div/>').attr('class', '').attr('role', 'button').attr('tabindex', '0').append(divArticle);
+			this.div_texte = $('<button type="button"/>').attr('class', 'btn-reset').append(divArticle);
 		}
 
 		this.div_base.append(this.div_texte);
@@ -87,7 +87,7 @@ function Article() {
 			$(this.div_base).draggable({
 				axis: "y",
 				start: function (event, ui) {
-					$(this).children('div').children('div').removeAttr("onClick");
+					$(this).children().children().removeAttr("onClick");
 				},
 				stop: function (event, ui) {
 					const y_parent = $(this).parent().height();

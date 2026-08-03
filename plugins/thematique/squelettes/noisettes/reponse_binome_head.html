@@ -12,7 +12,7 @@
 
 				<BOUCLE_classe_2(ARTICLES){id_article=#ID_ARTICLE_LIEN_BIS}>
 					<div class="classe_consigne couleur_[(#TYPE_OBJET)][(#ID_RUBRIQUE|substr{[(#GET{id_to_check}|strlen|moins{1})],1})]">
-						<div id="goto_reponse_binome_1" class="classe_consigne_reponse" role="button" tabindex="0">
+						<button type="button" id="goto_reponse_binome_1" class="classe_consigne_reponse btn-reset">
 							<div class="classe_consigne_reponse_photo">[(#MODELE{logo_carre}{id_rubrique})]</div>
 							<div class="classe_consigne_reponse_titre">[(#TITRE)]</div>
 							<div class="classe_consigne_reponse_classe">
@@ -20,13 +20,13 @@
 									#TITRE
 								</BOUCLE_classe_de_la_reponse_2>
 							</div>
-						</div>
+						</button>
 					</div>
 				</BOUCLE_classe_2>
 
 				<BOUCLE_classe_1(ARTICLES){id_article=#ID_ARTICLE_LIEN}>
 					<div class="classe_consigne couleur_[(#TYPE_OBJET)][(#ID_RUBRIQUE|substr{[(#GET{id_to_check}|strlen|moins{1})],1})]">
-						<div id="goto_reponse_binome_2" class="classe_consigne_reponse" role="button" tabindex="0">
+						<button type="button" id="goto_reponse_binome_2" class="classe_consigne_reponse btn-reset">
 							<div class="classe_consigne_reponse_photo">[(#MODELE{logo_carre}{id_rubrique})]</div>
 							<div class="classe_consigne_reponse_titre">[(#TITRE)]</div>
 							<div class="classe_consigne_reponse_classe">
@@ -34,7 +34,7 @@
 									#TITRE
 								</BOUCLE_classe_de_la_reponse>
 							</div>
-						</div>
+						</button>
 					</div>
 				</BOUCLE_classe_1>
 				<script>

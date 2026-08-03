@@ -8,10 +8,10 @@
 	<BOUCLE_docs(DOCUMENTS){id_article}{0,1}{!par date}>
 		<div class="actu-documents">
 			<div class="actualites-actu bgc_classe_[(#GET{IdCouleur}|nb2col)]">
-				<div class="js-call-livrable" data-id-article="#ID_ARTICLE" role="button" tabindex="0">
+				<button type="button" class="js-call-livrable btn-reset" data-id-article="#ID_ARTICLE">
 					<span class="profil">[(#MODELE{logo_carre}{id_rubrique=#ID_RUBRIQUE}{titre=#TITRE})]</span>
 					Nouveau document de #GET{titre}<br> sur #GET{titreLivrable}
-				</div>
+				</button>
 				<p class="date">[(#DATE|affdate)]</p>
 				[(#MEDIA|=={'image'}|oui)
 					<a href="#URL_DOCUMENT" class="mediabox" type="#MIME_TYPE" data-box-min-height="90pc">

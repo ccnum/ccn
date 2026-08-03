@@ -74,12 +74,10 @@ function Consigne() {
 					 src="${CCN.urlRoot}img/cards_background.svg"
 					 alt=""
 					 style="display: none"/>
-				<div id="consigne${this.id}"
-					class="consigne couleur_texte_consignes couleur_consignes${coul}"
+				<button type="button" id="consigne${this.id}"
+					class="consigne couleur_texte_consignes couleur_consignes${coul} btn-reset"
 					data-id="${this.id}"
 					data-index="${this.numero}"
-					role="button"
-					tabindex="0"
 				>
 					${this.data.nombre_commentaires > 0 ? `<div aria-label="${this.data.nombre_commentaires} interaction${this.data.nombre_commentaires > 1 ? 's' : ''}" class="picto_nombre_commentaires">${this.data.nombre_commentaires}</div>` : ''}
 					<div class="etiquette-etape">
@@ -98,15 +96,15 @@ function Consigne() {
 						</div>
 					</div>
 					<div class="nettoyeur"></div>
-				</div>
-				<div class="bouton_reponse_consigne" role="button" tabindex="0">
+				</button>
+				<button type="button" class="bouton_reponse_consigne btn-reset">
 					<img src="${CCN.urlRoot}img/reponse_plus.png" alt="" title="R&eacute;pondre &agrave; la consigne">
 					<div style="white-space: nowrap;">Répondre&nbsp;&agrave;&nbsp;la mission</div>
-				</div>
-				<div class="bouton_reponse_consigne" role="button" tabindex="0">
+				</button>
+				<button type="button" class="bouton_reponse_consigne btn-reset">
 					<img src="${CCN.urlRoot}img/reponse_plus.png" alt="" title="Accéder à ma réponse">
 					<div style="white-space: nowrap;">Ma réponse</div>
-				</div>
+				</button>
 			</div>
 		`);
 

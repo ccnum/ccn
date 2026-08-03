@@ -134,3 +134,15 @@
 	--font-size3: 24px;
 
 }
+
+/* Remet à zéro les styles par défaut du navigateur sur un <button> utilisé
+comme conteneur cliquable générique (remplace les div[role=button] qu'il
+remplaçait) : chargé avant components.css/sidebar.css, donc leurs propres
+règles (fond, bordure, padding, position...) reprennent la main sur ce que
+`all: unset` a remis à l'état initial. */
+.btn-reset {
+	all: unset;
+	display: block;
+	box-sizing: border-box;
+	cursor: pointer;
+}

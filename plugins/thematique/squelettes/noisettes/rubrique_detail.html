@@ -51,17 +51,17 @@
 						#SET{id_to_check,#_principale:ID_RUBRIQUE}
 							<BOUCLE_reponse(ARTICLES){id_consigne=#ID_ARTICLE}{id_rubrique=#_principale:ID_RUBRIQUE}>
 								<div class="classe_consigne couleur_[(#TYPE_OBJET)][(#GET{id_to_check}|substr{[(#GET{id_to_check}|strlen|moins{1})],1})]">
-									<div id="ajax_go_to_reponse_#ID_ARTICLE" class="classe_consigne_reponse" onclick="callReponse('#ID_ARTICLE')" role="button" tabindex="0">
+									<button type="button" id="ajax_go_to_reponse_#ID_ARTICLE" class="classe_consigne_reponse btn-reset" onclick="callReponse('#ID_ARTICLE')">
 										<div class="classe_consigne_reponse_photo">[(#MODELE{logo_carre}{id_rubrique})]</div>
 										<div class="classe_consigne_reponse_titre">[(#TITRE)]</div>
-									</div>
+									</button>
 									<div id="ajax_go_to_consigne_#_consigne:ID_ARTICLE"class="classe_consigne_reponse_consigne">
 										<div class="classe_consigne_reponse_date">Mis en ligne le [(#DATE|affdate{'d'})]/[(#DATE|affdate{'m'})]/[(#DATE|affdate{'Y'})] en réponse à la consigne :</div>
 										<div class="classe_consigne_reponse_consigne_titre">[(#_consigne:TITRE)]</div>
 									</div>
 								</div>
 							</BOUCLE_reponse>
-								<div id="ajax_go_to_consigne_#ID_ARTICLE" class="classe_consigne consigne_no_reponse" onclick="callConsigne('#ID_ARTICLE')" role="button" tabindex="0">
+								<button type="button" id="ajax_go_to_consigne_#ID_ARTICLE" class="classe_consigne consigne_no_reponse btn-reset" onclick="callConsigne('#ID_ARTICLE')">
 									<div class="classe_consigne_reponse">
 										<div class="classe_consigne_reponse_photo"></div>
 										<div class="classe_consigne_reponse_titre">La classe n'a pas encore répondu à cette consigne.</div>
@@ -70,7 +70,7 @@
 										<div class="classe_consigne_reponse_date">Consigne :</div>
 										<div class="classe_consigne_reponse_consigne_titre">[(#_consigne:TITRE)]</div>
 									</div>
-								</div>
+								</button>
 							<//B_reponse>
 					</BOUCLE_consigne>
 				</BOUCLE_rubrique>

@@ -42,17 +42,15 @@ function Reponse() {
 				data-reponse-id="${this.id}"
 				style="top:${this.y * 100}%; left:${this.x_absolu / CCN.projet.nombre_jours_total * 100}%;"
 			>
-				<div id="reponse${this.id}"
-					 class="reponse couleur_texte_travail_en_cours reponse_border_${coul}"
-					 role="button"
-					 tabindex="0"
+				<button type="button" id="reponse${this.id}"
+					 class="reponse couleur_texte_travail_en_cours reponse_border_${coul} btn-reset"
 				>
 					<div class="first-row">
 						<div class='logo photo bgc_classe_${coul}'
 							style='display:flex;align-items:center;justify-content:center;container-type:size;'
 						>
 							<span role="img"
-								  aria-label="${escHtml(this.nom_classe)}" 
+								  aria-label="${escHtml(this.nom_classe)}"
 								  style="font-size:min(70cqw,70cqh)"
 							>
 								${getClassIcon(this.classeIndex)}
@@ -67,7 +65,7 @@ function Reponse() {
 					</div>
 					${this.nombre_commentaires > 0 ? `<div aria-label="${this.nombre_commentaires} interaction${this.nombre_commentaires > 1 ? 's' : ''}" class="picto_nombre_commentaires">${this.nombre_commentaires}</div>` : ''}
 					<div class="nettoyeur"></div>
-				</div>
+				</button>
 			</div>
 		`);
 

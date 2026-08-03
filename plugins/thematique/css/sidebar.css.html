@@ -1120,7 +1120,7 @@ ul#forum, .lien_forum {
 role="button" (cf le pattern déjà établi ici, repris ailleurs plutôt que
 remplacer ces div par de vrais <button>, qui impliquerait de refaire tous
 les styles de composants). */
-[role="button"]:focus-visible {
+:is([role="button"], .btn-reset):focus-visible {
 	outline: 2px solid currentColor;
 	outline-offset: -2px;
 }
@@ -1496,6 +1496,7 @@ décalerait le reste de la mise en page, ex: bouton Publier). */
 	top: 24px;
 	z-index: 102;
 	cursor: pointer;
+	display: block;
 }
 
 .badge_timeline_debut { left: 20px; }
