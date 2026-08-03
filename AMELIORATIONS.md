@@ -10,7 +10,7 @@
 
 **Fichier** : `css/responsive.css.html`
 
-Seuls `max-width: 1280px` et `max-width: 1050px` existent. Ajouter `768px`/`1024px` nécessite une vraie refonte responsive (quels blocs s'adaptent, comment) — à faire avec un accès navigateur pour vérifier visuellement.
+Ajouté `max-width: 1024px` (sidebar/colonnes du menu bas en tailles fluides) et `max-width: 768px` (sidebar plein écran, menu bas empilé). Ajustements défensifs anti-débordement, pas une vraie refonte visuelle — **à vérifier dans un vrai navigateur**, non testé visuellement.
 
 ---
 
@@ -20,7 +20,7 @@ Seuls `max-width: 1280px` et `max-width: 1050px` existent. Ajouter `768px`/`1024
 
 **Fichier** : `squelettes/noisettes/rubrique.html`
 
-La condition de rôle a été extraite en PHP (`thematique_afficher_rubrique_utilisateur_prof()`). Le reste du fichier (arbre de navigation, handlers JS inline, classes CSS calculées par `#TYPE_OBJET`) mélange encore présentation et logique — refactor plus large à faire avec accès navigateur (risque de régression visuelle sur la sidebar).
+La condition de rôle (`thematique_afficher_rubrique_utilisateur_prof()`) et le calcul des classes CSS par type de rubrique (`thematique_classe_bloc_rubrique_menu_externe/interne()`) sont extraits en PHP, vérifiés via `recuperer_fond()` en CLI. Le reste du fichier (arbre de navigation, handlers JS inline) mélange encore présentation et logique — refactor plus large à faire avec accès navigateur (risque de régression visuelle sur la sidebar).
 
 ---
 

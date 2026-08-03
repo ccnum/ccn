@@ -50,6 +50,66 @@
 	}
 }
 
+/* Tablette : la sidebar (480-650px de base) et les colonnes à largeur fixe
+du menu bas (calculées en px pour l'écran large) débordent sur un viewport
+plus étroit — on les repasse en tailles fluides/empilables plutôt que de
+refaire toute la mise en page. */
+@media screen and (max-width: 1024px) {
+	#sidebar {
+		width: min(var(--sidebar-width-normal), 92vw);
+	}
+
+	.hasSidebarExpanded #sidebar {
+		width: min(var(--sidebar-width-large), 96vw);
+	}
+
+	#timeline_responsive, .hasSidebarOpen #timeline_responsive {
+		width: 100%;
+	}
+
+	#menu_bas {
+		flex-wrap: wrap;
+		height: auto;
+		row-gap: .75rem;
+		padding: .5rem 0;
+	}
+
+	#menu-vues, #menu-ressources, #menu-consignes, #menu-classes, #menu-medias, #menu-tris {
+		width: auto !important;
+	}
+}
+
+/* Mobile : la sidebar passe en plein écran, le menu bas s'empile en colonne. */
+@media screen and (max-width: 768px) {
+	:root {
+		--font-size1: 11px;
+		--font-size2: 14px;
+	}
+
+	#sidebar {
+		width: 100vw;
+		right: 0;
+	}
+
+	.hasSidebarExpanded #sidebar {
+		width: 100vw;
+	}
+
+	#menu_bas {
+		flex-direction: column;
+		align-items: stretch;
+		height: auto;
+	}
+
+	#menu_bas > :last-child {
+		margin-left: 0;
+	}
+
+	#menu_bas_logos {
+		display: none;
+	}
+}
+
 #header-col_left {
 	flex: 1;
 }
