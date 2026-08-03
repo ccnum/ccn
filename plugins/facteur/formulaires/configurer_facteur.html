@@ -45,6 +45,18 @@
 						</div>
 					</div>
 				</div>
+				#SET{name,forcer_from_everytime}#SET{obli,''}#SET{defaut,''}#SET{erreurs,#ENV**{erreurs}|table_valeur{#GET{name}}}
+				<div class="editer pleine_largeur editer_[(#GET{name})][ (#GET{obli})][ (#GET{erreurs}|oui)erreur]">[
+					<span class='erreur_message'>(#GET{erreurs})</span>
+					]
+					<div class="choix">
+						#SET{val,non}
+						<input type="hidden" name="#GET{name}" value="#GET{val}" />
+						#SET{val,oui}
+						<input type="checkbox" name="#GET{name}" class="checkbox" id="#GET{name}_#GET{val}" value="#GET{val}"[(#ENV{#GET{name},#GET{defaut}}|=={#GET{val}}|oui)checked="checked"] />
+						<label for="#GET{name}_#GET{val}"><:facteur:label_facteur_forcer_from_everytime:></label>
+					</div>
+				</div>
 				#SET{name,forcer_from}#SET{obli,''}#SET{defaut,''}#SET{erreurs,#ENV**{erreurs}|table_valeur{#GET{name}}}
 				<div class="editer pleine_largeur editer_[(#GET{name})][ (#GET{obli})][ (#GET{erreurs}|oui)erreur]">[
 					<span class='erreur_message'>(#GET{erreurs})</span>
@@ -137,5 +149,14 @@ jQuery(function(){
 			}
 		});
 	});
+	$('input[name=forcer_from_everytime]').change(function() {
+		let $forcer_from = $('.editer_forcer_from');
+		if ($(this).prop('checked')) {
+			$forcer_from.hide('fast');
+		} else {
+			$forcer_from.show('fast');
+		}
+	});
+	$('input[name=forcer_from_everytime]').trigger('change');
 })
 </script>

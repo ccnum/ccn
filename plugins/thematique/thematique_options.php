@@ -18,3 +18,7 @@ $pagination_item_apres = '';
 $pagination_separateur = '&nbsp;|&nbsp;';
 
 define('_FORUM_LONGUEUR_MAXI', 10000);
+
+// RNE des établissements dont les comptes ENS reçoivent le statut webmestre
+// (0minirezo + webmestre, sans rubrique restreinte), séparés par des virgules
+define('_THEMATIQUE_RNE_WEBMESTRES', '0000001A');

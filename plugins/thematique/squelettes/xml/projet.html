@@ -2,18 +2,14 @@
 <datas>
 	<projet>
 		<nom>[(#NOM_SITE_SPIP)]</nom>
-		<date_debut>01/09/#ENV{annee_scolaire}</date_debut>
-		<date_fin>01/09/[(#ENV{annee_scolaire}|plus{1})]</date_fin>
+		<date_debut>#ENV{annee_scolaire}-09-01</date_debut>
+		<date_fin>[(#ENV{annee_scolaire}|plus{1})]-09-01</date_fin>
 		<couleur_base_texte>#000000</couleur_base_texte>
 		<couleur_1erplan1>#444444</couleur_1erplan1>
 		<couleur_1erplan2>#C0C0C0</couleur_1erplan2>
 		<couleur_1erplan3>#00A0F0</couleur_1erplan3>
 		<couleur_fond>#EEEEEE</couleur_fond>
-		<couleur_blog>
-			[(#NOM_SITE_SPIP|=={finisterrae.laclasse.com}|oui) #00ffff ]
-			[(#NOM_SITE_SPIP|=={novaterra.laclasse.com}|oui) #ff9e0d ]
-			[(#NOM_SITE_SPIP|=={air.laclasse.com}|oui) #ff9e0d ]
-		</couleur_blog>
+		<couleur_blog></couleur_blog>
 
 		<image_fond>
 			#SET{anneeEnCours, false}
@@ -39,65 +35,25 @@
 			]
 			#GET{url}
 		</image_fond>
-		<largeur>#CONST{_largeur}</largeur>
-		<hauteur>#CONST{_hauteur}</hauteur>
 		<fps>20</fps>
 		<zoom_consignes>2</zoom_consignes>
 		<seq_posy_consignes>0.30, 0.10, 0.50, 0.70, 0.50, 0.20, 0.70, 0.00, 0.30, 0.60, 0.10, 1.00, 0.40, 0.80</seq_posy_consignes>
 		<seq_posy_blogs>0.45, 0.75, 0.25, 0.35, 0.65, 0.15</seq_posy_blogs>
-		[(#NOM_SITE_SPIP|=={air.laclasse.com}|oui) <seq_posy_evenements>0.05, 0.65, 0.75, 0.45</seq_posy_evenements> ]
-		[(#NOM_SITE_SPIP|=={air.laclasse.com}|non) <seq_posy_evenements>0.45, 0.05, 0.65, 0.25</seq_posy_evenements> ]
-		<url_popup_consigne>spip.php?page=article&amp;mode=ajax-detail&amp;type_objet=consignes</url_popup_consigne>
-		<url_popup_reponse>spip.php?page=article&amp;mode=ajax-detail&amp;type_objet=travail_en_cours</url_popup_reponse>
-		<url_popup_reponseajout>spip.php?page=publier&amp;mode=ajax-detail&amp;type_objet=travail_en_cours</url_popup_reponseajout>
-		<url_popup_blog>spip.php?page=article&amp;mode=ajax-detail&amp;type_objet=blogs</url_popup_blog>
-		<url_popup_livrables>spip.php?page=livrables&amp;mode=detail&amp;type_objet=ressources</url_popup_livrables>
-		<url_popup_evenement>spip.php?page=article&amp;mode=ajax-detail&amp;type_objet=evenements</url_popup_evenement>
-		<url_popup_ressources>spip.php?page=rubrique&amp;id_rubrique=[(#MODELE{rub_mot_clef}{titre_mot=ressources})]&amp;mode=ajax-detail&amp;type_objet=ressources</url_popup_ressources>
-		<url_popup_agora>spip.php?page=rubrique&amp;id_rubrique=[(#MODELE{rub_mot_clef}{titre_mot=agora})]&amp;mode=ajax-detail&amp;type_objet=ressources</url_popup_agora>
-		<url_popup_classes>spip.php?page=rubrique&amp;id_rubrique=[(#MODELE{rub_mot_clef}{titre_mot=travail_en_cours})]&amp;mode=ajax-detail&amp;type_objet=ressources</url_popup_classes>
-		<url_popup_chat>
-			[(#NOM_SITE_SPIP|=={novaterra.laclasse.com}|oui)
-				spip.php?page=groupe_mot&amp;id_groupe=5&amp;mode=ajax-detail&amp;type_objet=ressources
-			]
-			[(#NOM_SITE_SPIP|=={miam.laclasse.com}|oui)
-				#SET{gid,8}
-
-				[(#SESSION{nom}|oui)
-				[(#INCLURE{fond=noisettes/fonction/admin,mode=restreint,rub})]
-					[(#SET{restreint,#SESSION{restreint}})]
-					[(#GET{restreint}|=={26}|oui)#SET{gid,9}]
-					[(#GET{restreint}|=={23}|oui)#SET{gid,11}]
-					[(#GET{restreint}|=={24}|oui)#SET{gid,10}]
-					[(#GET{restreint}|=={28}|oui)#SET{gid,12}]
-					[(#GET{restreint}|=={27}|oui)#SET{gid,13}]
-					[(#GET{restreint}|=={29}|oui)#SET{gid,15}]
-					[(#GET{restreint}|=={30}|oui)#SET{gid,14}]
-					[(#GET{restreint}|=={22}|oui)#SET{gid,16}]
-					[(#GET{restreint}|=={32}|oui)#SET{gid,17}]
-					[(#GET{restreint}|=={25}|oui)#SET{gid,18}]
-					[(#GET{restreint}|=={31}|oui)#SET{gid,19}]
-					https://docs.google.com/spreadsheet/ccc?key=0An8SJZ8E7nY9dGFlQ25YTnA1ZW1paVVZZ3lXcFlNTXc&amp;hl=fr_FR&amp;target=blank#gid=#GET{gid}
-				]
-
-				[(#SESSION{nom}|non)
-					https://docs.google.com/spreadsheet/pub?hl=fr_FR&amp;key=0An8SJZ8E7nY9dGFlQ25YTnA1ZW1paVVZZ3lXcFlNTXc&amp;hl=fr_FR#gid=8
-				]
-			]
-		</url_popup_chat>
-		<url_popup_chat2>
-			[(#NOM_SITE_SPIP|=={miam.laclasse.com}|oui)
-				[(#INCLURE{fond=noisettes/fonction/admin,mode=admin,rub})]
-				[(#SET{admin,#SESSION{admin}})]
-				[(#GET{admin}|>={0}|oui)
-					https://docs.google.com/drawings/d/1XNN89gz1qaVkV1BBwztvQNJuFetv3y-fXtrwbFGyEPM/edit?target=blank
-				]
-				[(#GET{admin}|>={0}|non)
-					[(#VAL{<img src="https://docs.google.com/drawings/pub?id=1XNN89gz1qaVkV1BBwztvQNJuFetv3y-fXtrwbFGyEPM&w=880&h=630">}|htmlspecialchars)]
-				]
-			]
-		</url_popup_chat2>
+		<seq_posy_evenements>0.05, 0.65, 0.75, 0.45</seq_posy_evenements>
+		<url_popup_consigne>[(#URL_PAGE{article, mode=ajax-detail&type_objet=consignes})]</url_popup_consigne>
+		<url_popup_reponse>[(#URL_PAGE{article, mode=ajax-detail&type_objet=travail_en_cours})]</url_popup_reponse>
+		<url_popup_reponseajout>[(#URL_PAGE{publier, mode=ajax-detail&type_objet=travail_en_cours})]</url_popup_reponseajout>
+		<url_popup_blog>[(#URL_PAGE{article, mode=ajax-detail&type_objet=blogs})]</url_popup_blog>
+		<url_popup_livrables>[(#URL_PAGE{livrables, mode=detail&type_objet=ressources})]</url_popup_livrables>
+		<url_popup_evenement>[(#URL_PAGE{article, mode=ajax-detail&type_objet=evenements})]</url_popup_evenement>
+		<url_popup_ressources>[(#URL_PAGE{rubrique, id_rubrique=#MODELE{rub_mot_clef}{titre_mot=ressources}&mode=ajax-detail&type_objet=ressources})]</url_popup_ressources>
+		<url_popup_agora>[(#URL_PAGE{rubrique, id_rubrique=#MODELE{rub_mot_clef}{titre_mot=agora}&mode=ajax-detail&type_objet=ressources})]</url_popup_agora>
+		<url_popup_classes>[(#URL_PAGE{rubrique, id_rubrique=#MODELE{rub_mot_clef}{titre_mot=travail_en_cours}&mode=ajax-detail&type_objet=travail_en_cours})]</url_popup_classes>
+		<url_popup_chat></url_popup_chat>
+		<url_popup_chat2></url_popup_chat2>
 		<id_rubrique_ressources>[(#MODELE{rub_mot_clef}{titre_mot=ressources})]</id_rubrique_ressources>
 		<id_rubrique_agora>[(#MODELE{rub_mot_clef}{titre_mot=agora})]</id_rubrique_agora>
+		<article_cap_sur_annee>[(#MODELE{art_mot_clef}{titre_mot=cap-sur-l-annee})]</article_cap_sur_annee>
+		<article_la_rencontre>[(#MODELE{art_mot_clef}{titre_mot=la-rencontre})]</article_la_rencontre>
 	</projet>
 </datas>

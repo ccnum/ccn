@@ -1,0 +1,45 @@
+<?php
+
+if (!defined('_ECRIRE_INC_VERSION')) {
+	return;
+}
+
+function thematique_declarer_tables_principales($tables_principales) {
+
+	//-- Ajout des champs extras ----------------------------------
+	$tables_principales['spip_articles']['field']['id_consigne'] = 'bigint(21) NOT NULL';
+	$tables_principales['spip_articles']['field']['X'] = 'float NOT NULL';
+	$tables_principales['spip_articles']['field']['Y'] = 'float NOT NULL';
+	// Préfixe de longueur sur la clé : thematique_cextras.php déclare aussi ce
+	// champ, mais en 'int(5)' — un ADD INDEX sans longueur échouerait si la
+	// colonne réelle s'avère être un type texte plutôt que le bigint déclaré ici.
+	$tables_principales['spip_articles']['key']['id_consigne'] = 'id_consigne(20)';
+	$tables_principales['spip_syndic_articles']['field']['X'] = 'float NOT NULL';
+	$tables_principales['spip_syndic_articles']['field']['Y'] = 'float NOT NULL';
+	$tables_principales['spip_rubriques']['field']['id_rubrique_lien'] = 'bigint(21) NOT NULL';
+	// Idem : thematique_cextras.php déclare ce champ en 'text'.
+	$tables_principales['spip_rubriques']['key']['id_rubrique_lien'] = 'id_rubrique_lien(20)';
+
+	$nom = $GLOBALS['meta']['nom_site'];
+	if ((strpos($nom, 'design') !== false) || (strpos($nom, 'zerogaspi') !== false)) {
+		$tables_principales['spip_articles']['field']['champ1'] = 'longtext NOT NULL';
+		$tables_principales['spip_articles']['field']['champ2'] = 'longtext NOT NULL';
+		$tables_principales['spip_articles']['field']['champ3'] = 'longtext NOT NULL';
+		$tables_principales['spip_articles']['field']['champ4'] = 'longtext NOT NULL';
+		$tables_principales['spip_articles']['field']['champ5'] = 'longtext NOT NULL';
+		$tables_principales['spip_articles']['field']['champ6'] = 'longtext NOT NULL';
+		$tables_principales['spip_articles']['field']['champ7'] = 'longtext NOT NULL';
+		$tables_principales['spip_articles']['field']['champ8'] = 'longtext NOT NULL';
+		$tables_principales['spip_articles']['field']['champ9'] = 'longtext NOT NULL';
+		$tables_principales['spip_articles']['field']['champ10'] = 'longtext NOT NULL';
+		$tables_principales['spip_articles']['field']['champ11'] = 'longtext NOT NULL';
+		$tables_principales['spip_articles']['field']['champ12'] = 'longtext NOT NULL';
+	}
+
+	return $tables_principales;
+}
+
+function thematique_declarer_tables_interfaces($interface) {
+
+	return $interface;
+}

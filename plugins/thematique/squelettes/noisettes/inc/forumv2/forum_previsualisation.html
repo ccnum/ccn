@@ -1,0 +1,20 @@
+<div class="forum-preview">
+	<h2>Vérification de votre commentaire</h2>
+	<p>Relisez votre commentaire avant de le publier.</p>
+
+	[(#SET{date_heure,[(#ENV{date}|affdate{'d/m/Y H:i'})]})]
+	[(#SET{texte,[(#ENV{texte}|propre)]})]
+
+	<INCLURE{fond=noisettes/inc/forumv2/forum_card,
+		nombre_reponses=0,
+		date_heure=#GET{date_heure},
+		texte=#GET{texte},
+		id_rubrique_classe=(#SESSION{id_auteur}|classe_id_rubrique_auteur),
+		est_une_previsualisation=oui
+	}>
+
+	<div class="forum-actions">
+		<button type="submit" name="publication_forum_action" value="rediger" class="btn-link">Retour</button>
+		<button type="submit" name="publication_forum_action" value="publier">Poster mon commentaire</button>
+	</div>
+</div>

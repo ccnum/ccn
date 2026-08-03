@@ -39,7 +39,7 @@ function cioidc_url_host() {
 
 				// securite sur le contenu de l'entete
 				$ci_host = strtr($ci_host, "<>?\"\{\}\$'` \r\n", '____________');
-				
+
 				break;
 			}
 		}
@@ -106,7 +106,7 @@ function cioidc_is_https() {
 		|| (!empty($_SERVER['HTTP_X_PROTO']) && strtolower($_SERVER['HTTP_X_PROTO']) === 'ssl')
 		|| (!empty($_SERVER['REQUEST_SCHEME']) && strtolower($_SERVER['REQUEST_SCHEME']) === 'https')
 		|| (!empty($_SERVER['HTTPS']) && (strcasecmp($_SERVER['HTTPS'], 'off') !== 0))
-		|| (!empty($_SERVER['SERVER_PORT']) && intval($_SERVER['SERVER_PORT']) == 443)		
+		|| (!empty($_SERVER['SERVER_PORT']) && intval($_SERVER['SERVER_PORT']) == 443)
 	) {
 		$return = true;
 	}
@@ -148,22 +148,22 @@ function cioidc_url_serveur_oidc($id_serveur = 0, $forcer = false, $en_session =
 		}
 
 		if (
-				$cioidc_urls
-				&& is_array($cioidc_urls)
-				&& isset($cioidc_urls[$id_serveur])
-				&& is_array($cioidc_urls[$id_serveur])
+			$cioidc_urls
+			&& is_array($cioidc_urls)
+			&& isset($cioidc_urls[$id_serveur])
+			&& is_array($cioidc_urls[$id_serveur])
 		) {
-				foreach ($cioidc_urls[$id_serveur] as $terminaison => $valeur_url) {
-					if (substr($ci_host, -strlen($terminaison)) == $terminaison) {
-						$ci_url_oidc = $valeur_url;
-						// Pas de slash à la fin de l'url du serveur
-						if (substr($ci_url_oidc, -1) == '/') {
-							$ci_url_oidc = substr($ci_url_oidc, 0, -1);
-						}
-
-						break;
+			foreach ($cioidc_urls[$id_serveur] as $terminaison => $valeur_url) {
+				if (substr($ci_host, -strlen($terminaison)) == $terminaison) {
+					$ci_url_oidc = $valeur_url;
+					// Pas de slash à la fin de l'url du serveur
+					if (substr($ci_url_oidc, -1) == '/') {
+						$ci_url_oidc = substr($ci_url_oidc, 0, -1);
 					}
+
+					break;
 				}
+			}
 		}
 	}
 
@@ -196,7 +196,7 @@ function cioidc_url_cible($prive = null) {
 
 	// Si on se connecte dans l'espace prive,
 	// ajouter "bonjour" (repere a peu pres les cookies desactives)
-	if (is_null($prive) ? cioidc_is_url_prive($cible) : $prive) {
+	if ($prive === null ? cioidc_is_url_prive($cible) : $prive) {
 		$cible = parametre_url($cible, 'bonjour', 'oui', '&');
 	}
 
@@ -311,19 +311,13 @@ function cioidc_verifier_identifiant($ci_oidc_userid) {
 		}
 	}
 
-
 	if (isset($return['id_auteur'])) {
 		// Pour la solution hybride
 		if (_request('cioidc')) {
 			if (_request('cioidc') == 'oui' || intval(_request('cioidc')) >= 1) {
 				if (!isset($_COOKIE['cioidc_sso'])) {
 					$ci_id_random = mt_rand(1, 999999);
-					// SPIP 3.2 n'accepte pas l'option 'httponly'
-					if ($GLOBALS['spip_version_branche'] >= 4.2) {
-						spip_setcookie('cioidc_sso', $ci_id_random, ['httponly' => true]);
-					} else {
-						spip_setcookie('cioidc_sso', $ci_id_random);
-					}
+                                        spip_setcookie('cioidc_sso', $ci_id_random, ['httponly' => true]);
 				}
 			}
 		}
@@ -378,7 +372,6 @@ function cioidc_lire_meta($id_serveur = 0, $force = false, $en_session = false) 
 			$config = array_merge($config, $tableau);
 		}
 
-
 		// parametrage par fichier (ou par constante dans un fichier d'options)
 		cioidc_charger_fichier_parametrage();
 
@@ -398,7 +391,6 @@ function cioidc_lire_meta($id_serveur = 0, $force = false, $en_session = false) 
 			}
 		}
 
-
 		foreach ($vars_serveur as $var) {
 			$constante = '_CIOIDC_' . strtoupper($var);
 			if (defined($constante)) {
@@ -407,7 +399,6 @@ function cioidc_lire_meta($id_serveur = 0, $force = false, $en_session = false) 
 				}
 			}
 		}
-
 
 		if (defined('_CIOIDC_SERVEURS_ADDITIONNELS')) {
 			$serveurs_additionnels = _CIOIDC_SERVEURS_ADDITIONNELS;
@@ -429,8 +420,6 @@ function cioidc_lire_meta($id_serveur = 0, $force = false, $en_session = false) 
 			}
 		}
 
-
-
 		// valeurs par defaut
 		$valeurs_par_defaut = cioidc_tableau_des_valeurs_par_defaut();
 		foreach ($valeurs_par_defaut as $cle_defaut => $valeur_defaut) {
@@ -438,7 +427,6 @@ function cioidc_lire_meta($id_serveur = 0, $force = false, $en_session = false) 
 				$config[$cle_defaut] = $valeur_defaut;
 			}
 		}
-
 
 		// Cas d'un serveur additionnel
 		// on bascule les valeurs du serveur additionnel dans les valeurs de base
@@ -508,7 +496,7 @@ function cioidc_tableau_des_champs() {
 		'serveur_sans_userinfo',
 		'http_proxy',
 		'creer_auteur',
-		'redirect_url_avec_pi'
+		'redirect_url_avec_pi',
 	];
 
 	return $champs;
@@ -541,14 +529,7 @@ function cioidc_tableau_des_valeurs_par_defaut() {
  * @return array
  */
 function cioidc_tableau_des_champs_obligatoires() {
-	$champs = [
-		'nom_serveur',
-		'url_serveur',
-		'client_nom',
-		'client_secret',
-		'uid_champ_spip',
-		'uid_claim'
-	];
+	$champs = ['nom_serveur', 'url_serveur', 'client_nom', 'client_secret', 'uid_champ_spip', 'uid_claim'];
 
 	return $champs;
 }
@@ -568,9 +549,9 @@ function cioidc_verifier($champ, $texte) {
 
 	if (ctype_alnum(str_replace('_', '', $champ)) && function_exists($f = 'cioidc_filtrer_' . $champ)) {
 		return $f($texte, true);
-	} else {
-		return false;
 	}
+	return false;
+
 }
 
 /**
@@ -587,9 +568,9 @@ function cioidc_filtrer($champ, $texte) {
 
 	if (ctype_alnum(str_replace('_', '', $champ)) && function_exists($f = 'cioidc_filtrer_' . $champ)) {
 		return $f($texte, false);
-	} else {
-		return false;
 	}
+	return false;
+
 }
 
 /**
@@ -729,13 +710,13 @@ function cioidc_filtrer_jwks_uri($url = '', $verif_only = false) {
  */
 function cioidc_filtrer_token_endpoint_auth_methods_supported($texte = '', $verif_only = false) {
 	$texte = trim($texte);
-	if (substr($texte,0,1)!='[') {
+	if (substr($texte, 0, 1) != '[') {
 		return false;
 	}
-	if (substr($texte,-1)!=']') {
+	if (substr($texte, -1) != ']') {
 		return false;
 	}
-	
+
 	// interdire les caracteres dangereux
 	// limiter à a-zA-Z0-9 et aux underscores, quote, double quote, virgule, crochets
 	$tableau = [',', '_', "'", '"', '[', ']', ' '];
@@ -871,7 +852,7 @@ function cioidc_filtrer_redirect_url_avec_pi($texte, $verif_only = false) {
  * @return bool|string
  */
 function cioidc_filtrer_creer_auteur($texte, $verif_only = false) {
-	return in_array($texte, ['0minirezo','1comite', '6forum']);
+	return in_array($texte, ['0minirezo', '1comite', '6forum']);
 }
 
 /**
@@ -994,7 +975,7 @@ function cioidc_titre_se_connecter() {
 
 	if (isset($tableau_config['titre_se_connecter']) && $tableau_config['titre_se_connecter']) {
 		$return = $tableau_config['titre_se_connecter'];
-		if (strpos($return,'[') !== false) {
+		if (strpos($return, '[') !== false) {
 			include_spip('inc/texte');
 			$nom_site_spip = textebrut(typo($GLOBALS['meta']['nom_site']));
 			if (!$nom_site_spip) {
@@ -1101,15 +1082,11 @@ function cioidc_test_agentconnect($cioidc_url_serveur = '') {
 
 	if ($cioidc_url_serveur) {
 		$host = parse_url($cioidc_url_serveur, PHP_URL_HOST);
-		
-		if ($host){
+
+		if ($host) {
 			$host = trim($host);
-		
-			$liste_blanche_fin_de_host = [
-				'.agentconnect.rie.gouv.fr',
-				'.agentconnect.gouv.fr',
-				'.dev-agentconnect.fr'
-				];
+
+			$liste_blanche_fin_de_host = ['.agentconnect.rie.gouv.fr', '.agentconnect.gouv.fr', '.dev-agentconnect.fr'];
 
 			$longueur_host = strlen($host);
 			$longueur_fin_de_host = 0;
@@ -1119,7 +1096,7 @@ function cioidc_test_agentconnect($cioidc_url_serveur = '') {
 					$longueur_fin_de_host = strlen($fin_de_host);
 
 					if ($longueur_host > $longueur_fin_de_host) {
-						if (substr($host, -$longueur_fin_de_host) == $fin_de_host){
+						if (substr($host, -$longueur_fin_de_host) == $fin_de_host) {
 							$return = true;
 							break;
 						}
@@ -1142,15 +1119,11 @@ function cioidc_test_proconnect($cioidc_url_serveur = '') {
 
 	if ($cioidc_url_serveur) {
 		$host = parse_url($cioidc_url_serveur, PHP_URL_HOST);
-		
-		if ($host){
+
+		if ($host) {
 			$host = trim($host);
-		
-			$liste_blanche_fin_de_host = [
-				'.proconnect.rie.gouv.fr',
-				'.proconnect.gouv.fr',
-				'.dev-proconnect.fr'
-				];
+
+			$liste_blanche_fin_de_host = ['.proconnect.rie.gouv.fr', '.proconnect.gouv.fr', '.dev-proconnect.fr'];
 
 			$longueur_host = strlen($host);
 			$longueur_fin_de_host = 0;
@@ -1160,7 +1133,7 @@ function cioidc_test_proconnect($cioidc_url_serveur = '') {
 					$longueur_fin_de_host = strlen($fin_de_host);
 
 					if ($longueur_host > $longueur_fin_de_host) {
-						if (substr($host, -$longueur_fin_de_host) == $fin_de_host){
+						if (substr($host, -$longueur_fin_de_host) == $fin_de_host) {
 							$return = true;
 							break;
 						}
@@ -1183,14 +1156,11 @@ function cioidc_test_franceconnect($cioidc_url_serveur = '') {
 
 	if ($cioidc_url_serveur) {
 		$host = parse_url($cioidc_url_serveur, PHP_URL_HOST);
-		
-		if ($host){
+
+		if ($host) {
 			$host = trim($host);
-		
-			$liste_blanche_fin_de_host = [
-			'.franceconnect.gouv.fr',
-			'.dev-franceconnect.fr'
-				];
+
+			$liste_blanche_fin_de_host = ['.franceconnect.gouv.fr', '.dev-franceconnect.fr'];
 
 			$longueur_host = strlen($host);
 			$longueur_fin_de_host = 0;
@@ -1200,7 +1170,7 @@ function cioidc_test_franceconnect($cioidc_url_serveur = '') {
 					$longueur_fin_de_host = strlen($fin_de_host);
 
 					if ($longueur_host > $longueur_fin_de_host) {
-						if (substr($host, -$longueur_fin_de_host) == $fin_de_host){
+						if (substr($host, -$longueur_fin_de_host) == $fin_de_host) {
 							$return = true;
 							break;
 						}
@@ -1224,11 +1194,7 @@ function cioidc_self() {
 	$uri1 = str_replace('&amp;', '&', self());
 	do {
 		$uri = $uri1;
-		$uri1 = preg_replace(
-			',([?&])(cioidc)=[^&]*(&|$),i',
-			'\1',
-			$uri
-		);
+		$uri1 = preg_replace(',([?&])(cioidc)=[^&]*(&|$),i', '\1', $uri);
 	} while ($uri <> $uri1);
 
 	$return = preg_replace(',[?&]$,', '', $uri1);
@@ -1261,13 +1227,13 @@ function cioidc_enlever_protocole($texte) {
  * @return string (URL de redirection)
  * */
 function cioidc_redirect_url($redirect_url_avec_pi = '') {
-    
+
 	if ($redirect_url_avec_pi == 'non') {
 		$url = cioidc_url_de_base() . 'cioidc.php';
 	} else {
 		$url = cioidc_url_de_base() . 'spip.php?action=login_cioidc';
 	}
-	
+
 	$url = pipeline('cioidc_redirect_uri', ['args' => [], 'data' => $url]);
 
 	return $url;
@@ -1293,14 +1259,13 @@ function cioidc_url_de_base($profondeur = null) {
 		return $url;
 	}
 
-	if (is_null($profondeur)) {
+	if ($profondeur === null) {
 		$profondeur = $GLOBALS['profondeur_url'] ?? (_DIR_RESTREINT ? 0 : 1);
 	}
 
 	if (isset($url[$profondeur])) {
 		return $url[$profondeur];
 	}
-
 
 	// Protocole
 	$http = 'http';
@@ -1350,10 +1315,10 @@ function cioidc_url_de_base($profondeur = null) {
 		if (isset($_SERVER['REQUEST_URI'])) {
 			$GLOBALS['REQUEST_URI'] = $_SERVER['REQUEST_URI'];
 		} else {
-			$GLOBALS['REQUEST_URI'] = (php_sapi_name() !== 'cli') ? $_SERVER['PHP_SELF'] : '';
+			$GLOBALS['REQUEST_URI'] = (PHP_SAPI !== 'cli') ? $_SERVER['PHP_SELF'] : '';
 			if (
-					!empty($_SERVER['QUERY_STRING'])
-					&& !strpos($_SERVER['REQUEST_URI'], '?')
+				!empty($_SERVER['QUERY_STRING'])
+				&& !strpos($_SERVER['REQUEST_URI'], '?')
 			) {
 				$GLOBALS['REQUEST_URI'] .= '?' . $_SERVER['QUERY_STRING'];
 			}
@@ -1514,14 +1479,8 @@ function cioidc_tableau_uid_champ_spip() {
  */
 function cioidc_well_known_config($id_serveur = 0) {
 	$well_known_config = [];
-	
-	$champs = [
-		'authorization_endpoint',
-		'token_endpoint',
-		'userinfo_endpoint',
-		'end_session_endpoint',
-		'jwks_uri'
-	];
+
+	$champs = ['authorization_endpoint', 'token_endpoint', 'userinfo_endpoint', 'end_session_endpoint', 'jwks_uri'];
 
 	$config = cioidc_lire_meta($id_serveur);
 
@@ -1530,8 +1489,8 @@ function cioidc_well_known_config($id_serveur = 0) {
 			$well_known_config[$champ] = $config[$champ];
 		}
 	}
-	
-	if ($well_known_config){
+
+	if ($well_known_config) {
 		$well_known_config = ['issuer' => $config['url_serveur']];
 	}
 
@@ -1554,11 +1513,11 @@ function cioidc_html_lien_serveur($lien = '', $url_serveur = '', $intitule = '',
 	$cioidc_test_proconnect = cioidc_test_proconnect($url_serveur);
 	$cioidc_test_franceconnect = cioidc_test_franceconnect($url_serveur);
 
-	if (version_compare($GLOBALS['spip_version_branche'], '4.2.13') >=0) {
+	if (version_compare($GLOBALS['spip_version_branche'], '4.2.13') >= 0) {
 		include_spip('inc/filtres');
 		$lien = attribut_url($lien);
 	}
-	
+
 	if ($cioidc_test_agentconnect) {
 		$return = cioidc_bouton_agent_connect($lien);
 	} elseif ($cioidc_test_proconnect) {
@@ -1648,8 +1607,8 @@ function cioidc_uid_claim_additionnel() {
 
 	// UID claim additionnel figurant dans le parametrage par fichier
 	// ou par constante dans un fichier d'options
-	if (defined('_CIOIDC_UID_CLAIM_ADDITIONNEL') 
-		&& _CIOIDC_UID_CLAIM_ADDITIONNEL 
+	if (defined('_CIOIDC_UID_CLAIM_ADDITIONNEL')
+		&& _CIOIDC_UID_CLAIM_ADDITIONNEL
 		&& cioidc_filtrer_uid_claim(_CIOIDC_UID_CLAIM_ADDITIONNEL, true)
 	) {
 		$return = _CIOIDC_UID_CLAIM_ADDITIONNEL;

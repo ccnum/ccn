@@ -1,7 +1,7 @@
 <paquet
 	prefix="fictions"
 	categorie="squelette"
-	version="1.0.1"
+	version="1.0.2"
 	etat="stable"
 	logo=""
 	schema=""
@@ -22,7 +22,7 @@
 	<necessite nom="spip_bonux" />
 	<necessite nom="vider_rubrique" />
 
-	<utilise nom="cicas" />
+	<utilise nom="cioidc" />
 
 	<pipeline nom="post_edition" inclure="fictions_pipelines.php" />
 </paquet>

@@ -1,3 +1,4 @@
+#CACHE{0}
 [(#REM) "Espace ressources" et rubriques des ressources]
 #SET{is_ressource,'non'}
 #SET{is_agora,'non'}
@@ -37,89 +38,52 @@
 			<div class="fiche_titre couleur_texte_[(#TYPE_OBJET)] couleur_[(#TYPE_OBJET)][(#MODELE{nb2col}{id_article})]">
 				<div class="texte">
 					<div class="titre">[(#TITRE)]</div>
-					<!--<div class="auteur_date">[(#NOM) - ][(#DATE|affdate)]</div>-->
-				</div>
+					</div>
 			</div>
 		</div>
 
 		<div class="sidebar_bubble">
 
-			<INCLURE{fond=noisettes/js/accordeon, nom=bloc_option_reponses_consignes_classe-#ID_RUBRIQUE, ajax}>
 			<div class="bloc_option_doc nettoyeur">
 				[(#GET{sous_type}|=={ressources}|oui)
-				<a id="bloc_option_reponses_consignes_classe-#ID_RUBRIQUE" class="hac liens_voir bloc_option_doc_ressources" title="Ressources">
+				<a id="bloc_option_reponses_consignes_classe-#ID_RUBRIQUE" class="liens_voir bloc_option_doc_ressources" title="Ressources">
 					Ressources
 				</a>
 				]
 				[(#GET{sous_type}|=={agora}|oui)
-				<a id="bloc_option_reponses_consignes_classe-#ID_RUBRIQUE" class="hac liens_voir bloc_option_doc_comment" title="Agora">
+				<a id="bloc_option_reponses_consignes_classe-#ID_RUBRIQUE" class="liens_voir bloc_option_doc_comment" title="Agora">
 					Agora
 				</a>
 				]
 				<div style="clear:both" class='bloc_option_reponses_consignes_classe'>
 					<div class="nettoyeur"></div>
 
-					<BOUCLE_rubrique(RUBRIQUES){id_parent=#ID_RUBRIQUE}{!par id_rubrique}{tout}>
+					<BOUCLE_rubrique(RUBRIQUES){id_parent=#ID_RUBRIQUE}{par num titre, titre}{tout}{0,50}>
 						<div class="ressources_rubrique">
-							<div class="ressource_rubrique_titre" id="rubrique_#ID_RUBRIQUE"><h3>#TITRE</h3></div>
-							<script type="text/javascript">
-								$(function() {
-									$('#ajax_go_to_ressources_rubrique_#ID_RUBRIQUE').on('click',function() {
-										callRessourceRubrique('#ID_RUBRIQUE','#GET{sous_type}');
-									});
-								});
-							</script>
-							<BOUCLE_article(ARTICLES){id_rubrique}{par date}>
-								<div class="ressource_article" id="ajax_go_to_ressources_article_#ID_ARTICLE">#TITRE</div>
-
-								<script type="text/javascript">
-									$(function() {
-										$('#ajax_go_to_ressources_article_#ID_ARTICLE').on('click',function() {
-											callRessourceArticle('#ID_ARTICLE','#GET{sous_type}');
-										});
-									});
-								</script>
+							<div class="ressource_rubrique_titre" id="ajax_go_to_ressources_rubrique_#ID_RUBRIQUE" onclick="callRessourceRubrique('#ID_RUBRIQUE','#GET{sous_type}')" role="button" tabindex="0"><h3>#TITRE</h3></div>
+							<BOUCLE_article(ARTICLES){id_rubrique}{par date}{tous}>
+								<div class="ressource_article" id="ajax_go_to_ressources_article_#ID_ARTICLE" onclick="callRessourceArticle('#ID_ARTICLE','#GET{sous_type}')" role="button" tabindex="0">#TITRE</div>
 							</BOUCLE_article>
 						</div>
 					</BOUCLE_rubrique>
 
-					<BOUCLE_sites(SITES){id_rubrique=#ID_RUBRIQUE}{tout}>
+					<BOUCLE_sites(SITES){id_rubrique=#ID_RUBRIQUE}{tout}{0,50}>
 
 					<div class="ressources_rubrique">
-						<div class="ressource_rubrique_titre" id="ajax_go_to_ressources_rubrique_#ID_RUBRIQUE"><h3>#NOM_SITE</h3></div>
-						<script type="text/javascript">
-							$(function() {
-								$('#ajax_go_to_ressources_rubrique_#ID_RUBRIQUE').on('click',function() {
-								//	callRessourceRubrique('#ID_RUBRIQUE');
-								});
-							});
-						</script>
+						<div class="ressource_rubrique_titre" id="ajax_go_to_ressources_rubrique_#ID_RUBRIQUE" onclick="callRessourceRubrique('#ID_RUBRIQUE')" role="button" tabindex="0">
+							<h3>#NOM_SITE</h3>
+						</div>
 						<BOUCLE_article_sites(SYNDIC_ARTICLES){id_rubrique}{par date}>
-							<div class="ressource_article" id="ajax_go_to_ressources_syndic_article_#ID_SYNDIC_ARTICLE">#TITRE</div>
-
-							<script type="text/javascript">
-								$(function() {
-									$('#ajax_go_to_ressources_syndic_article_#ID_SYNDIC_ARTICLE').on('click',function() {
-										callRessourceSyndicArticle('#ID_SYNDIC_ARTICLE','#GET{sous_type}');
-									});
-								});
-							</script>
+							<div class="ressource_article" id="ajax_go_to_ressources_syndic_article_#ID_SYNDIC_ARTICLE" onclick="callRessourceSyndicArticle('#ID_SYNDIC_ARTICLE','#GET{sous_type}')" role="button" tabindex="0">#TITRE</div>
 						</BOUCLE_article_sites>
 					</div>
 					</BOUCLE_sites>
 
 					<B_article2>
 						<div class="ressources_rubrique">
-					<BOUCLE_article2(ARTICLES){id_rubrique}{par date}>
-						<div class="ressource_article" id="ajax_go_to_ressources_article_#ID_ARTICLE">#TITRE</div>
-						<script type="text/javascript">
-						$(function() {
-							$('#ajax_go_to_ressources_article_#ID_ARTICLE').on('click',function() {
-								callRessourceArticle('#ID_ARTICLE','#GET{sous_type}');
-							});
-						});
-						</script>
-					</BOUCLE_article2>
+							<BOUCLE_article2(ARTICLES){id_rubrique}{par date}{tous}>
+								<div class="ressource_article" id="ajax_go_to_ressources_article_#ID_ARTICLE" onclick="callRessourceArticle('#ID_ARTICLE','#GET{sous_type}')" role="button" tabindex="0">#TITRE</div>
+							</BOUCLE_article2>
 						</div>
 					</B_article2>
 
@@ -162,7 +126,7 @@
 			[(#AUTORISER{modifier,rubrique,#ID_RUBRIQUE}|non)
 				<div class="sidebar_bubble">
 					<div class="bloc_texte">
-						[(#TEXTE)]
+						[(#TEXTE|propre)]
 					</div>
 				</div>
 			]

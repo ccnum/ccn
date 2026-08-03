@@ -39,6 +39,7 @@ function tarteaucitron_upgrade($nom_meta_base_version, $version_cible) {
 
 	$maj['1.1.0'][] = ['maj_tarteaucitron_cfg'];
 	$maj['1.1.1'][] = ['maj_tarteaucitron_cfg', 'maj_tarteaucitron_services'];
+	$maj['1.2.0'][] = ['maj_tarteaucitron_services_lowercase'];
 
 	include_spip('base/upgrade');
 	maj_plugin($nom_meta_base_version, $version_cible, $maj);
@@ -122,5 +123,44 @@ function maj_tarteaucitron_services() {
 			$cfg['services'][$service][$param] = $v;
 		}
 	}
+	ecrire_config('tarteaucitron', $cfg);
+}
+
+function maj_tarteaucitron_services_lowercase() {
+	$cfg = lire_config('tarteaucitron');
+
+	if (!isset($cfg['services']) || !is_array($cfg['services'])) {
+		return;
+	}
+
+	foreach ($cfg['services'] as &$params) {
+		if (!is_array($params) || empty($params)) {
+			continue;
+		}
+		$new_params = [];
+
+		// Passe 1 : clés déjà en majuscules/mixtes → on les insère en minuscules
+		foreach ($params as $key => $value) {
+			$new_key = strtolower((string) $key);
+			if ((string) $key !== $new_key) {
+				$new_params[$new_key] = $value;
+			}
+		}
+
+		// Passe 2 : clés déjà minuscules → priorité sur la valeur (sauf si vide,
+		// auquel cas on garde la valeur de l'ancienne clé si elle existe)
+		foreach ($params as $key => $value) {
+			$new_key = strtolower((string) $key);
+			if ((string) $key === $new_key) {
+				if ($value !== '' || !array_key_exists($new_key, $new_params)) {
+					$new_params[$new_key] = $value;
+				}
+			}
+		}
+
+		$params = $new_params;
+	}
+	unset($params);
+
 	ecrire_config('tarteaucitron', $cfg);
 }

@@ -19,11 +19,13 @@ return [
 	'email_envoye_par' => 'Inviato da @site@',
 	'email_test_envoye' => 'La mail di prova è stata correttamente inviata. Se non la ricevete correttamente, verficate la configurazione del server o contattate un amministratore del server.',
 	'erreur' => 'Errore',
+	'erreur_confirm_ip_sans_hostname' => 'Vuoi davvero utilizzare questo indirizzo IP come host SMTP?',
 	'erreur_dans_log' => ': consultate il file log per maggiori dettagli',
 	'erreur_envoi_bloque_constante' => 'Invio bloccato dalla costante <tt>_TEST_EMAIL_DEST</tt>. Verifica il file <tt>mes_options.php</tt>',
 	'erreur_generale' => 'Ci sono uno o più errori di configurazione. Verificate il contenuto del formulario.',
 	'erreur_invalid_host' => 'Questo nome di host non è corretto',
 	'erreur_invalid_port' => 'QuestO numero di porta non è corretto',
+	'erreur_ip_sans_hostname' => 'Questo indirizzo IP non corrisponde a nessun nome di dominio.',
 
 	// F
 	'facteur_adresse_envoi_email' => 'Email:',

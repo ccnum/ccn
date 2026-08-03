@@ -1,0 +1,71 @@
+<div class="reponses_intervenant">
+	<div class="reponses_intervenant_colonne">
+		<div><:thematique:reponses_intervenant_ont_repondu:></div>
+		<BOUCLE_annee_comp(RUBRIQUES){tout}{racine}{titre LIKE %(#CONST{_ANNEE_SCOLAIRE})%}>
+			#SET{id_secteur_annee_courante, #ID_RUBRIQUE}
+			<BOUCLE_type_comp(RUBRIQUES){tout}{id_parent}{titre_mot=travail_en_cours}>
+				<BOUCLE_classes_comp(RUBRIQUES){tout}{id_parent}{par id_rubrique}>
+					#SET{nom_classe, #TITRE}
+					<B_reponse>
+						<BOUCLE_reponse(ARTICLES){id_rubrique}{id_consigne=#ENV{id_article}}{0,1}>
+							<div class="classe">
+								#SET{icone_classe, #ID_RUBRIQUE|classe_icone}
+								<INCLURE{
+									fond=noisettes/sidebar/card_reponse,
+									id_rubrique=#ID_RUBRIQUE,
+									titre=#GET{nom_classe},
+									icone=#GET{icone_classe},
+									date=#DATE,
+									couleur-bg="--color-positive",
+									env,
+									ajax
+								} />
+							</div>
+						</BOUCLE_reponse>
+					</B_reponse>
+				</BOUCLE_classes_comp>
+			</BOUCLE_type_comp>
+		</BOUCLE_annee_comp>
+	</div>
+
+	<div class="reponses_intervenant_separateur"></div>
+
+	<div class="reponses_intervenant_colonne">
+		<div><:thematique:reponses_intervenant_il_manque:></div>
+		<BOUCLE_annee_comp2(RUBRIQUES){tout}{racine}{titre LIKE %(#CONST{_ANNEE_SCOLAIRE})%}>
+			<BOUCLE_type_comp2(RUBRIQUES){tout}{id_parent}{titre_mot=travail_en_cours}>
+				<BOUCLE_classes_comp2(RUBRIQUES){tout}{id_parent}{par id_rubrique}>
+					<BOUCLE_reponse2(ARTICLES){id_rubrique}{id_consigne=#ENV{id_article}}{0,1}>
+					</BOUCLE_reponse2>
+						<div class="classe">
+							#SET{icone_classe, #ID_RUBRIQUE|classe_icone}
+							<INCLURE{
+								fond=noisettes/sidebar/card_reponse,
+								id_rubrique=#ID_RUBRIQUE,
+								titre=#TITRE,
+								icone=#GET{icone_classe},
+								date='',
+								couleur-bg="--color-negative",
+								env,
+								ajax
+							} />
+						</div>
+					<//B_reponse2>
+				</BOUCLE_classes_comp2>
+			</BOUCLE_type_comp2>
+		</BOUCLE_annee_comp2>
+	</div>
+</div>
+
+[(#CONST{_ANNEE_SCOLAIRE}|=={#ANNEE_SCOLAIRE_REELLE}|oui)
+	<BOUCLE_verif_annee_courante(ARTICLES){id_article=#ENV{id_article}}{id_secteur=#GET{id_secteur_annee_courante}}{0,1}>
+		<BOUCLE_verif_auteur_mission(AUTEURS){id_article=#ENV{id_article}}{id_auteur=#SESSION{id_auteur}}{0,1}>
+			<div class="encadre-message reponses_intervenant_relance">
+				<p><:thematique:reponses_intervenant_relance_message:></p>
+				<button class="bouton_encadre" onclick="alert('[(#VAL{thematique:reponses_intervenant_bouton_relance_inactif}|_T|texte_script)]')">
+					<:thematique:reponses_intervenant_relancer:>
+				</button>
+			</div>
+		</BOUCLE_verif_auteur_mission>
+	</BOUCLE_verif_annee_courante>
+]

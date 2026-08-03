@@ -1,0 +1,157 @@
+/* ---------------------------------------------------------------- */
+/* ------------------------ COULEURS ------------------------------ */
+/* ---------------------------------------------------------------- */
+
+/* --------- Defaut --------- */
+
+.fiche_titre {
+	color: white;
+	background-color: #657d88;
+}
+
+.vert	{ color: #58AB27; }
+.noir	{ color: var(--color-default); }
+
+.couleur_ressources { background-color: #00c800; }
+
+/* --------- Intervenants --------- */
+
+.couleur_texte_consignes {
+	color:var(--color-default);
+}
+/*Jaune*/
+[class^="couleur_consignes"],
+.zone-menu li.logo a[class^="hover_couleur_consignes"]:hover,
+.zone-menu li.logo a[class^="hover_couleur_consignes"].selected {
+	background-color: var(--color-consigne);
+}
+
+/* --------- Classes --------- */
+
+.couleur_texte_travail_en_cours {
+	color: white;
+}
+
+/* Interventions */
+
+
+/*Jaune*/
+.couleur_intervention_item1 {
+	border-color: #F44336;
+}
+/*Vert*/
+.couleur_intervention_item2 {
+	border-color: #E91E63;
+}
+/*Bleu*/
+.couleur_intervention_item3 {
+	border-color: #9C27B0;
+}
+.couleur_intervention_item4 {
+	border-color: #673AB7;
+}
+/*Jaune*/
+.couleur_intervention_item5 {
+	border-color: #3F51B5;
+}
+/*Violet*/
+.couleur_intervention_item6 {
+	border-color: #2196F3;
+}
+.couleur_intervention_item7 {
+	border-color: #009688;
+}
+.couleur_intervention_item8 {
+	border-color: #4CAF50;
+}
+/*Bleu clair*/
+.couleur_intervention_item9 {
+	border-color: #3F51B5;
+}
+/*Rose*/
+.couleur_intervention_item0 {
+	border-color: #607D8B;
+}
+
+/* --------- Classes (fond / bordure) --------- */
+
+.bgc_classe_0 {
+	background-color: var(--color-classe-0) !important;
+	border-color: var(--border-color-classe-0) !important;
+}
+.bgc_classe_1 {
+	background-color: var(--color-classe-1) !important;
+	border-color: var(--border-color-classe-1) !important;
+}
+.bgc_classe_2 {
+	background-color: var(--color-classe-2) !important;
+	border-color: var(--border-color-classe-2) !important;
+}
+.bgc_classe_3 {
+	background-color: var(--color-classe-3) !important;
+	border-color: var(--border-color-classe-3) !important;
+}
+.bgc_classe_4 {
+	background-color: var(--color-classe-4) !important;
+	border-color: var(--border-color-classe-4) !important;
+}
+.bgc_classe_5 {
+	background-color: var(--color-classe-5) !important;
+	border-color: var(--border-color-classe-5) !important;
+}
+.bgc_classe_6 {
+	background-color: var(--color-classe-6) !important;
+	border-color: var(--border-color-classe-6) !important;
+}
+.bgc_classe_7 {
+	background-color: var(--color-classe-7) !important;
+	border-color: var(--border-color-classe-7) !important;
+}
+.bgc_classe_8 {
+	background-color: var(--color-classe-8) !important;
+	border-color: var(--border-color-classe-8) !important;
+}
+.bgc_classe_9 {
+	background-color: var(--color-classe-9) !important;
+	border-color: var(--border-color-classe-9) !important;
+}
+
+/* .bgc_classe_N pose son fond en !important : sans cette règle plus
+spécifique et elle aussi !important, .selected ne peut jamais reprendre
+la main pour indiquer la classe sélectionnée dans le menu du bas. */
+.zone-menu li.logo a[class*="bgc_classe_"].selected {
+	background-color: var(--background-color-hover) !important;
+	color: var(--color-hover) !important;
+}
+
+.reponse_border_0 {
+	border-color: var(--color-classe-0) !important;
+}
+.reponse_border_1 {
+	border-color: var(--color-classe-1) !important;
+}
+.reponse_border_2 {
+	border-color: var(--color-classe-2) !important;
+}
+.reponse_border_3 {
+	border-color: var(--color-classe-3) !important;
+}
+.reponse_border_4 {
+	border-color: var(--color-classe-4) !important;
+}
+.reponse_border_5 {
+	border-color: var(--color-classe-5) !important;
+}
+.reponse_border_6 {
+	border-color: var(--color-classe-6) !important;
+}
+.reponse_border_7 {
+	border-color: var(--color-classe-7) !important;
+}
+.reponse_border_8 {
+	border-color: var(--color-classe-8) !important;
+}
+.reponse_border_9 {
+	border-color: var(--color-classe-9) !important;
+}
+

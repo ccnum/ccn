@@ -8,16 +8,14 @@
 
 [(#REM) ******************* VARIABLES ***************************** ]
 [(#REM) Annee scolaire]
-#SET{annee_scolaire,#CONST{_annee_scolaire}}
+#SET{annee_scolaire,#CONST{_ANNEE_SCOLAIRE}}
 
 [(#SET{projet,[(#URL_PAGE{xml, mode=projet}|url_absolue|copie_locale)]})]
 
-[(#REM) Type d'admin : 0 : total / autrement : nb de rubriques restreintes / -1 : pas admin / -2 pas connecté]
+[(#REM) Type d'admin : 0 : total / autrement : nb de rubriques restreintes / -1 : pas admin / -2 pas connecté
+Id de la rubrique restreinte sélectionnée : calculés en un seul appel]
 [(#INCLURE{fond=noisettes/fonction/admin,mode=admin,rub})]
 [(#SET{admin,#SESSION{admin}})]
-
-[(#REM) Id de la rubrique restreinte sélectionnée]
-[(#INCLURE{fond=noisettes/fonction/admin,mode=restreint,rub})]
 [(#SET{restreint,#SESSION{restreint}})]
 
 [(#REM) Type de rubrique restreinte: consignes, travail_en_cours, blogs, evenements, ressources, classes]
@@ -36,10 +34,25 @@
 		<meta http-equiv="Pragma" content="no-cache" />
 		<meta http-equiv="Cache-Control" content="no-cache, must-revalidate" />
 		<meta http-equiv="Expires" content="0" />
-		<link rel="stylesheet" type="text/css" href="[(#URL_PAGE{thematique.css}|parametre_url{chemin,#DOSSIER_SQUELETTE}|parametre_url{type_objet,#TYPE_OBJET})]">
+<link rel="stylesheet" type="text/css" href="[(#URL_PAGE{thematique.css}|parametre_url{chemin,#DOSSIER_SQUELETTE}|parametre_url{type_objet,#TYPE_OBJET})]">
+		<!-- Swiper CSS -->
+		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.css"
+			integrity="sha384-WDy11dc+3v52BOTt9WHuWenX6bjqGVBwYrU4XtgPIrneMtg1bXhpmWEZECSNrasO"
+			crossorigin="anonymous" />
+		<!-- Swiper JS -->
+		<script src="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.js"
+			integrity="sha384-UpSTlZpLDzenAXs6CRRa5gU7uk1xaEJy+7uIz+c0niFDR3yuAlqzV7w0SgZhmEX3"
+			crossorigin="anonymous" defer></script>
+		<!-- PDF.js -->
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"
+			integrity="sha384-/1qUCSGwTur9vjf/z9lmu/eCUYbpOTgSjmpbMQZ1/CtX2v/WcAIKqRv+U1DUCG6e"
+			crossorigin="anonymous" defer></script>
 	</head>
 	<body>
+	<div id="tooltip-sidebarCache" class="tooltip-sidebarCache"></div>
+	<div id="sidebarCache"></div>
 		[(#TYPE_OBJET|=={evenements}|oui|et{#GET{admin}|<{0}|oui}|non)
+			[(#ENV{page}|in_array{#LISTE{sommaire,article,rubrique,rubrique_detail,forum,groupe_mot,groupe_mot_detail,ressources_detail,timeline,isotope,livrables,auteur_editer,publier_article,syndic_article,menu_haut,call_sidebar}}|non)#SET{page,sommaire}]
 			<INCLURE{fond=noisettes/#ENV{page}}
 				{admin=#GET{admin}}
 				{restreint=#GET{restreint}}
@@ -58,7 +71,7 @@
 		[(#TYPE_OBJET|=={evenements}|oui|et{#GET{admin}|<{0}|oui}|oui)
 			<script>
 				const urlCourante = encodeURIComponent("#URL_ARTICLE");
-				const urlFormulaireConnexion = "[(#URL_PAGE{sommaire})]&url=" + urlCourante + "&cicas=oui&ent=1";
+				const urlFormulaireConnexion = "[(#URL_PAGE{sommaire})]&url=" + urlCourante + "&cioidc=oui&ent=1";
 				window.location = urlFormulaireConnexion;
 			</script>
 		]

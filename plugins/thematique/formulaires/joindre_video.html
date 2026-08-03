@@ -1,0 +1,24 @@
+<div class='formulaire_spip formulaire_joindre formulaire_joindre_video'>
+	<span class="image_loading"></span>
+	<div class="reponse_formulaire reponse_formulaire_ok" role="status">#ENV**{message_ok}</div>
+	<div class="reponse_formulaire reponse_formulaire_erreur" role="alert">#ENV**{message_erreur}</div>
+
+	<form action="#ENV{action}" method="post" enctype='multipart/form-data'><div>
+		#ACTION_FORMULAIRE
+
+		<div class="editer-groupe">
+			[(#SAISIE_FICHIER{bigup, video,
+				label=Fichier vidéo (formats acceptés : mp4 mov avi mkv webm),
+				accept=.mp4,.mov,.avi,.mkv,.webm})]
+		</div>
+
+		<div class="editer-groupe">
+			<div class="editer editer_vimeo_password">
+				<label for="vimeo_password_video">Mot de passe (optionnel)</label>
+				<input class="text" type="text" name="vimeo_password" id="vimeo_password_video" autocomplete="off" />
+			</div>
+		</div>
+
+		<p class='boutons'><input class='btn submit' type="submit" name="envoyer_video" value="Envoyer la vidéo" /></p>
+	</div></form>
+</div>

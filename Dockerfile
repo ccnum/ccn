@@ -1,7 +1,7 @@
 # https://github.com/ipeos-and-co/docker-spip/tree/master
 FROM php:8.4-apache-trixie AS base
 ENV SPIP_VERSION 4.4
-ENV SPIP_PACKAGE 4.4.15
+ENV SPIP_PACKAGE 4.4.16
 
 RUN set -eux; \
     apt-get update; \
@@ -138,13 +138,6 @@ RUN set -eux; \
 # au lieu d'être cloné depuis git.spip.net à chaque build.
 COPY spip-cli/ /opt/spip-cli/
 
-# --- DEBUG TEMPORAIRE (à retirer ensuite) ---
-RUN echo "=== PHP ==="; php --version; \
-    echo "=== spip-cli racine ==="; ls -la /opt/spip-cli; \
-    echo "=== spip-cli/bin ==="; ls -la /opt/spip-cli/bin || echo "PAS DE DOSSIER bin"; \
-    echo "=== composer.json ==="; cat /opt/spip-cli/composer.json || echo "PAS DE composer.json"
-# --- FIN DEBUG ---
-
 RUN set -eux; \
     cd /opt; \
     curl --silent --show-error https://getcomposer.org/installer | php; \
@@ -190,8 +183,11 @@ ENV PROJET=laclasse
 # PHP
 ENV PHP_MAX_EXECUTION_TIME=120
 ENV PHP_MEMORY_LIMIT=512M
-ENV PHP_POST_MAX_SIZE=100M
-ENV PHP_UPLOAD_MAX_FILESIZE=100M
+# Limite PHP volontairement large : les vidéos MP4 (poussées vers Vimeo)
+# ne doivent pas être bridées ici. La limite de 100 Mo pour les autres
+# documents est appliquée au niveau applicatif (ccn_formulaire_verifier).
+ENV PHP_POST_MAX_SIZE=5G
+ENV PHP_UPLOAD_MAX_FILESIZE=5G
 ENV PHP_TIMEZONE=Europe/Paris
 
 # Apache

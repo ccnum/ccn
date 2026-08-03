@@ -8,10 +8,9 @@
  * @package SPIP\Facteur\Inc\Facteur_mail_html2text
  */
 
-
 /**
  * Transformer un mail HTML en mail Texte proprement :
- * - les tableaux de mise en page sont utilis�s pour structurer le mail texte
+ * - les tableaux de mise en page sont utilisés pour structurer le mail texte
  * - le reste du HTML est markdownifie car c'est un format texte lisible et conventionnel
  *
  * @param string $html
@@ -82,6 +81,9 @@ function inc_facteur_mail_html2text_dist($html) {
 	$html = str_replace('&nbsp;', ' ', $html);
 	$html = preg_replace(',<p>\s+,ims', '<p>', $html);
 
+	// découpage des lignes de blockquotes cf #51 
+	$html = blockquote_wrap($html);
+	
 	#return $html;
 	include_spip('lib/markdownify/markdownify');
 	$parser = new Markdownify('inline', false, false);
@@ -110,4 +112,29 @@ function inc_facteur_mail_html2text_dist($html) {
 
 	// Faire des lignes de 75 caracteres maximum
 	return trim(wordwrap($texte));
+}
+
+
+/**
+ * Découpe le contenu de chaque <blockquote> en plusieurs <blockquote>
+ * de moins de 72 caractères chacun, sans couper les mots, 
+ * pour que le futur rendu markdown paraisse OK dans les lecteurs de mails
+ */
+function blockquote_wrap(string $html): string {
+	return preg_replace_callback(
+		'/<blockquote[^>]*>(.*?)<\/blockquote>/si',
+		function (array $match): string {
+			$quote = trim($match[1]);
+			if (!$quote) {
+				return '';
+			}
+			$wrap = wordwrap($quote, 72);
+			$res = '';
+			foreach (explode("\n", $wrap) as $ligne) {
+				$res .= "<blockquote>" . htmlspecialchars($ligne, ENT_QUOTES) . "</blockquote>\n";
+			}
+			return rtrim($res);
+		},
+		$html
+	);
 }

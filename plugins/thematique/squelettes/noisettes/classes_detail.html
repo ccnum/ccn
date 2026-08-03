@@ -1,0 +1,34 @@
+#CACHE{0}
+[(#REM) Navigation latérale : liste des classes participantes, pour naviguer entre les classes depuis la colonne "Bibliothèque"]
+
+<BOUCLE_principale(RUBRIQUES){id_rubrique}{tout}>
+
+	<div class="popup [popup_(#ENV{type_objet})]">
+
+		<div class="sidebar_bubble">
+			<div class="fiche_titre couleur_texte_travail_en_cours couleur_travail_en_cours0">
+				<div class="texte">
+					<div class="titre">Les classes participantes</div>
+				</div>
+			</div>
+		</div>
+
+		<div class="sidebar_bubble">
+			<div class="bloc_option_doc nettoyeur">
+				<div style="clear:both" class="bloc_option_reponses_consignes_classe">
+					<div class="nettoyeur"></div>
+
+					<BOUCLE_classes(RUBRIQUES){id_parent=#ID_RUBRIQUE}{par titre}{tout}{0,50}>
+						<div class="ressources_rubrique">
+							<div class="ressource_rubrique_titre" id="ajax_go_to_classe_#ID_RUBRIQUE" onclick="callClasse('#ID_RUBRIQUE')" role="button" tabindex="0"><h3>#TITRE</h3></div>
+						</div>
+					</BOUCLE_classes>
+
+					<div class="introduction nettoyeur"></div>
+				</div>
+			</div>
+		</div>
+
+	</div>
+
+</BOUCLE_principale>

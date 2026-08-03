@@ -7,7 +7,9 @@
  * @license GNU/GPLv3
  */
 
-if (!defined('_ECRIRE_INC_VERSION')) {
+if (!defined(
+	'_ECRIRE_INC_VERSION'
+)) {
 	return;
 }
 
@@ -44,7 +46,7 @@ function formulaires_cioidc_mode_auth_charger_dist() {
 			$ciedit_nom_serveur_spip = false;
 		}
 	}
-	
+
 	if (defined('_CIOIDC_MODE_AUTH')) {
 		if (in_array(_CIOIDC_MODE_AUTH, ['oidc', 'hybride', 'spip'])) {
 			$ciedit = false;

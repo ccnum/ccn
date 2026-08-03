@@ -5,7 +5,7 @@
 	</BOUCLE_getAuteur>
 
 	<BOUCLE_docs(DOCUMENTS){id_article}{0,1}{!par date}>
-		<div class="actualites-actu couleur_travail_en_cours[(#GET{IdCouleur}|nb2col)] js-call-reponse" data-id-article="#ID_ARTICLE">
+		<div class="actualites-actu bgc_classe_[(#GET{IdCouleur}|nb2col)] js-call-reponse" data-id-article="#ID_ARTICLE">
 			<span class="profil">[(#MODELE{logo_carre}{id_rubrique=#ID_RUBRIQUE}{titre=#TITRE})]</span>
 			Nouveau document de #GET{titre}<br>
 			<p class="date">[(#DATE|affdate)]</p>

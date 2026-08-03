@@ -6,25 +6,24 @@
 	<title>[(#NOM_SITE_SPIP|textebrut)]</title>
 	[<meta name="description" content="(#DESCRIPTIF_SITE_SPIP|couper{150}|textebrut)" />]
 	<INCLURE{fond=inclure/head} />
-	<script type="text/javascript" src="#CHEMIN{js/jquery.nicescroll.min.js}"></script>
-	<script type="text/javascript" src="#CHEMIN{js/jquery.scrollTo-1.4.2-min.js}"></script>
-	<meta name="viewport" content="width=980, user-scalable=no" />
+	<meta name="viewport" content="width=device-width, initial-scale=1" />
 </head>
 <body>
+<a href="#contenu-principal" class="skip-link">Aller au contenu principal</a>
 	<!-- BOUTON CONNEXION -->
 	<INCLURE{fond=inclure/authentification} />
 	<!-- ELEMENTS GRAPHIQUES-->
-	<div id="book-top-left"><img src="#CHEMIN{img/global/border-book-top-left.png}" width="14" height="16" /></div>
-	<div id="book-top-right"><img src="#CHEMIN{img/global/border-book-top-right.png}" width="14" height="16" /></div>
-	<div id="book-bottom-left"><img src="#CHEMIN{img/global/border-book-bottom-left.png}" width="14" height="16" /></div>
-	<div id="book-bottom-right"><img src="#CHEMIN{img/global/border-book-bottom-right.png}" width="14" height="16" /></div>
-	<div id="book-middle-top-ecriture"><img src="#CHEMIN{img/global/book-middle-top.png}" width="300" height="6" /></div>
-	<div id="book-middle-bottom-ecriture"><img src="#CHEMIN{img/global/book-middle-bottom.png}" width="300" height="5" /></div>
+	<div id="book-top-left"><img src="#CHEMIN{img/global/border-book-top-left.png}" width="14" height="16" alt="" /></div>
+	<div id="book-top-right"><img src="#CHEMIN{img/global/border-book-top-right.png}" width="14" height="16" alt="" /></div>
+	<div id="book-bottom-left"><img src="#CHEMIN{img/global/border-book-bottom-left.png}" width="14" height="16" alt="" /></div>
+	<div id="book-bottom-right"><img src="#CHEMIN{img/global/border-book-bottom-right.png}" width="14" height="16" alt="" /></div>
+	<div id="book-middle-top-ecriture"><img src="#CHEMIN{img/global/book-middle-top.png}" width="300" height="6" alt="" /></div>
+	<div id="book-middle-bottom-ecriture"><img src="#CHEMIN{img/global/book-middle-bottom.png}" width="300" height="5" alt="" /></div>
 
 	<div class="stitches-ecriture">
-		<div class="stitches-inner"><img src="#CHEMIN{img/global/stitches.png}" width="5" height="86" /></div>
-		<div class="stitches-inner"><img src="#CHEMIN{img/global/stitches.png}" width="5" height="86" /></div>
-		<div class="stitches-inner"><img src="#CHEMIN{img/global/stitches.png}" width="5" height="86" /></div>
+		<div class="stitches-inner"><img src="#CHEMIN{img/global/stitches.png}" width="5" height="86" alt="" /></div>
+		<div class="stitches-inner"><img src="#CHEMIN{img/global/stitches.png}" width="5" height="86" alt="" /></div>
+		<div class="stitches-inner"><img src="#CHEMIN{img/global/stitches.png}" width="5" height="86" alt="" /></div>
 	</div>
 
 	<!-- RETOUR INDEX -->
@@ -51,99 +50,7 @@
 	.crayon-html .crayon-boutons button { width: auto; height: 32px; text-indent: 0; cursor: pointer; background: #ff6b6b; color: #FFF; border-radius: 5px; font-family:Arial, Helvetica, sans-serif; font-size:13px; margin:0px 0px 0px 10px; float:left;}
 </style>
 
-<script type="text/javascript">
-	$(document).ready(function() {
-		// Redimensionnement
-		window.onresize = resize_global_content;
-		resize_global_content();
-
-		// NiceScroll
-		$(".global-content").niceScroll({cursorcolor:"#ff6b6b", cursoropacitymin:'0.2',cursoropacitymax:'1', scrollspeed:'100', cursorborder:'0px'});
-		$('#ascrail2000').css({'cursor':'pointer'});
-
-		// Tooltip liste
-		$('.liste-link-small').mouseover(function() {
-			var offset = $(this).offset();
-			var content_tooltip = $(this).find('.liste-tooltip-content').html();
-			$('#liste-tooltip').show().html(content_tooltip);
-			var hauteur_tooltip = $('#liste-tooltip-content').height();
-			$('#liste-tooltip').height(hauteur_tooltip);
-			$('#liste-tooltip').css('top', Math.round(offset.top) - hauteur_tooltip - 5);
-			$('#liste-tooltip').css('left', Math.round(offset.left) - 108 + 2);
-		});
-		$('.liste-link-small').mouseout(function() {
-			$('#liste-tooltip').hide();
-		});
-
-		// Navigation par ancre
-		var $scrollTarget = $('.global-content');
-		$('#nav-script').click(function(event) {
-			event.preventDefault();
-			$scrollTarget.stop().scrollTo('.script-ecrivain', 300, {offset: {top:-50, left:0}});
-		});
-		$('#nav-forum').click(function(event) {
-			event.preventDefault();
-			$scrollTarget.stop().scrollTo('.forum-titre', 300, {offset: {top:-75, left:0}});
-		});
-		$('#nav-ecrire').click(function(event) {
-			event.preventDefault();
-			$scrollTarget.stop().scrollTo('.ecriture-chapitre:last', 300, {offset: {top:-40, left:0}});
-		});
-		$('#nav-top').click(function(event) {
-			event.preventDefault();
-			$scrollTarget.stop().scrollTo(0, 300);
-		});
-
-		// Script écrivain : open/close
-		$('#slideup-script-ecrivain, #close-script-ecrivain').hide();
-		$('#open-script-ecrivain').click(function() {
-			$('#slideup-script-ecrivain').toggle("slow");
-			$('#open-script-ecrivain, #close-script-ecrivain').toggle();
-		});
-		$('#close-script-ecrivain').click(function() {
-			$('#slideup-script-ecrivain').toggle("slow");
-			$('#open-script-ecrivain, #close-script-ecrivain').toggle();
-		});
-
-		// Script collège : open/close
-		$('#open-script-college').click(function() {
-			$('#slideup-script-college').toggle('fast');
-			$(this).toggleClass('is-open');
-		});
-
-		// Prologue : open/close
-		$('#texte_prologue, #close_prologue').hide();
-		$('#open_prologue').click(function() {
-			$('#texte_prologue').show('normal');
-			$('#close_prologue').show();
-			$(this).hide();
-			resize_global_content();
-		});
-		$('#close_prologue').click(function() {
-			$('#texte_prologue').hide('normal');
-			$('#open_prologue').show();
-			$(this).hide();
-		});
-
-		// Corrections plugin Crayon
-		setInterval(function() {
-			$('.crayon-html').css({top:'0px', left:'0px', width:'100%', height:'100%', 'z-index':'9400'});
-			$('.crayon-active').css({'background-color':'#FFF', color:'#000', height:'300px', 'font-size':'13px', 'line-height':'18px', width:'516px'});
-			$('.formulaire_crayon').css({position:'absolute', width:'520px', height:'500px', top:'50%', left:'50%', 'margin-left':'-250px', 'margin-top':'-150px'});
-		}, 200);
-
-		// Rollover flèche script écrivain : dérivé du nom de fichier _hover
-		$('.script-ecrivain-edit').on('mouseenter', function() {
-			var img = $(this).prev('.script-forum-fleche').find('img');
-			img.data('src-normal', img.attr('src'));
-			img.attr('src', img.attr('src').replace(/\.png$/, '_hover.png'));
-		}).on('mouseleave', function() {
-			var img = $(this).prev('.script-forum-fleche').find('img');
-			var normal = img.data('src-normal');
-			if (normal) img.attr('src', normal);
-		});
-	});
-</script>
+<script type="text/javascript" src="#CHEMIN{js/rubrique.js}"></script>
 
 </html>
 </BOUCLE_principale>

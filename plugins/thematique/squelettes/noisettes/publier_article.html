@@ -1,30 +1,14 @@
 #CACHE{0}
 <div class="popup [popup_(#ENV{type_objet})]">
 	[(#ID_ARTICLE|non)
-		<script type="text/javascript">
-  		/*
-			$(function() {
-				$('#entete_contenu').fadeTo('fast', 0.2);
-				$('#entete_publication').delay(1000).slideDown('slow');
-				function cache() {
-					$('#entete_contenu').fadeTo('fast', 1);
-					$('#entete_publication').fadeTo(4000, 0.8, function(){
-						//$(this).slideUp(1000);
-					});
-				}
-				$('#entete_publication').click(cache);
-				window.setTimeout(cache, 2000);
-			});
-			*/
-		</script>
 		[(#REM) [(#INCLURE{fond=noisettes/fonction/type_objet,id_rubrique})] ]
 		[(#SET{type_objet,#SESSION{type}})]
 
 		<div class="sidebar_bubble bloc_publier_repondre">
   		[(#GET{type_objet}|=={travail_en_cours}|oui)
 			<div class="fiche_titre couleur_texte_[(#GET{type_objet})] couleur_[(#GET{type_objet})][(#ENV{id_rubrique}|nb2col)]">
-				<div class="photo">[(#MODELE{logo_carre}{id_rubrique})]</div>
 				<div class="texte">
+					<div class="photo">[(#MODELE{logo_carre}{id_rubrique})]</div>
 					<div class="#EDIT{titre} titre">[(#TITRE)]</div>
 					<div class="auteur_date">[(#GET{titre_parent}) - ][<span class="#EDIT{date}">(#DATE|affdate)</span>]</div>
 				</div>
@@ -37,8 +21,7 @@
 				[(#GET{type_objet}|=={travail_en_cours}|non) Publier un nouvel article]
 			</div>
 			<div class="date" id="entete_publication">
-				<!-- <img class='img_titre' src="#CHEMIN{images}/puce_titrecouleur6.gif"> -->
-				[(#GET{type_objet}|=={travail_en_cours}|oui) Etape 1 : Pour répondre à la consigne, choisir un titre et le valider ci-dessous]
+[(#GET{type_objet}|=={travail_en_cours}|oui) Etape 1 : Pour répondre à la consigne, choisir un titre et le valider ci-dessous]
 				[(#GET{type_objet}|=={travail_en_cours}|non) Etape 1 : Pour créer votre article, choisir un titre et le valider ci-dessous]
 			</div>
 		</div>

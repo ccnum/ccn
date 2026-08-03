@@ -1,0 +1,72 @@
+<div class="formulaire_spip formulaire_public_publier_article">
+	[<p class="reponse_formulaire reponse_formulaire_ok">(#ENV*{message_ok})</p>]
+	[<p class="reponse_formulaire reponse_formulaire_erreur">(#ENV*{message_erreur})</p>]
+
+	<form method="post"
+		  action="#ENV{action}"
+		  enctype="multipart/form-data"
+		  id="formulaire_publier_mission"
+	>
+		<div>
+			#ACTION_FORMULAIRE{#ENV{action}}
+            <input type="hidden"
+				   name="id_parent"
+				   value="#ENV{id_parent}" 
+			/>
+
+
+			<div class="editer-groupe">
+				<div id="sidebar-etape-1-container">
+					<h3>Étape 1 : Rédaction de votre mission</h3>
+					<div class="editer editer_titre obligatoire[ (#ENV**{erreurs}|table_valeur{titre}|oui)erreur]">
+						<label for="titre"><:info_titre:></label>
+						[<span class="erreur_message">(#ENV**{erreurs}|table_valeur{titre})</span>]
+						<input
+							type="text"
+							class="text"
+							name="titre"
+							id="titre"
+							value="#ENV{titre}" />
+					</div>
+
+					<div class="editer editer_texte obligatoire[ (#ENV**{erreurs}|table_valeur{texte}|oui)erreur]">
+						<label for="texte"><:info_texte:></label>
+						[<span class="erreur_message">(#ENV**{erreurs}|table_valeur{texte})</span>]
+
+						<textarea name="texte"
+								id="texte"
+								rows="10"
+								class="inserer_barre_edition inserer_previsualisation"
+								data-barre="edition"
+								data-id="article-#ENV{id_article,new}"
+						></textarea>
+					</div>
+
+					<div class="editer editer_attendre_livrable">
+						<div class="choix">
+							<label for="attendre_livrable">
+								Cette consigne attend un livrable.
+							</label>
+							<input
+								style="width: 1rem; height: 1rem;"
+								type="checkbox"
+								name="attendre_livrable"
+								id="attendre_livrable"
+								value="oui"
+								[(#ENV{attendre_livrable}|=={oui}|oui)checked="checked"] />
+
+						</div>
+					</div>
+				</div>
+				<div id="sidebar-etape-2-container">
+					<h3>Étape 2 : Ajouter un document</h3>
+
+					<input type="file"
+						name="fichier_upload[]"
+						multiple="multiple"
+					/>
+				</div>
+
+			</div>
+		</div>
+	</form>

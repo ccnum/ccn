@@ -388,7 +388,12 @@ body.mobile {
 	position: relative;
 	overflow: auto;
 	width: 968px;
+	scrollbar-width: thin;
+	scrollbar-color: #ff6b6b transparent;
 }
+.global-content::-webkit-scrollbar { width: 6px; }
+.global-content::-webkit-scrollbar-track { background: transparent; }
+.global-content::-webkit-scrollbar-thumb { background-color: #ff6b6b; border-radius: 3px; }
 
 .content {
 	width: 960px;
@@ -1342,7 +1347,12 @@ a:hover.spip_out {
 	height: 100%;
 	color: #FFF;
 	background-color: #AAB0B7;
+	scrollbar-width: thin;
+	scrollbar-color: #FFF transparent;
 }
+#forum::-webkit-scrollbar { width: 6px; }
+#forum::-webkit-scrollbar-track { background: transparent; }
+#forum::-webkit-scrollbar-thumb { background-color: #FFF; border-radius: 3px; }
 
 #forum-lecture {
 	position: relative;

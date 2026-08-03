@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html lang="fr" xml:lang="fr" xmlns="http://www.w3.org/1999/xhtml">
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 
@@ -7,28 +7,26 @@
 	[<meta name="description" content="(#DESCRIPTIF_SITE_SPIP|couper{150}|textebrut)" />]
 	<INCLURE{fond=inclure/head} />
 
-	<script type="text/javascript" src="#CHEMIN{js/jquery.nicescroll.min.js}"></script>
-	<meta name="viewport" content="width=980, user-scalable=no" />
+	<meta name="viewport" content="width=device-width, initial-scale=1" />
 
 </head>
 
-<body>
-<div id="liste-tooltip">
-</div>
+<body data-compteur="#ENV{compteur}">
+<a href="#contenu-principal" class="skip-link">Aller au contenu principal</a>
 
 <!-- ELEMENTS GRAPHIQUES-->
-<div id="book-top-left"><img src="#CHEMIN{img/global/border-book-top-left.png}" width="14" height="16" /></div>
-<div id="book-top-right"><img src="#CHEMIN{img/global/border-book-top-right.png}" width="14" height="16" /></div>
-<div id="book-bottom-left"><img src="#CHEMIN{img/global/border-book-bottom-left.png}" width="14" height="16" /></div>
-<div id="book-bottom-right"><img src="#CHEMIN{img/global/border-book-bottom-right.png}" width="14" height="16" /></div>
+<div id="book-top-left"><img src="#CHEMIN{img/global/border-book-top-left.png}" width="14" height="16" alt="" /></div>
+<div id="book-top-right"><img src="#CHEMIN{img/global/border-book-top-right.png}" width="14" height="16" alt="" /></div>
+<div id="book-bottom-left"><img src="#CHEMIN{img/global/border-book-bottom-left.png}" width="14" height="16" alt="" /></div>
+<div id="book-bottom-right"><img src="#CHEMIN{img/global/border-book-bottom-right.png}" width="14" height="16" alt="" /></div>
 
-<div id="book-middle-top"><img src="#CHEMIN{img/global/book-middle-top.png}" width="300" height="6" /></div>
-<div id="book-middle-bottom"><img src="#CHEMIN{img/global/book-middle-bottom.png}" width="300" height="5" /></div>
+<div id="book-middle-top"><img src="#CHEMIN{img/global/book-middle-top.png}" width="300" height="6" alt="" /></div>
+<div id="book-middle-bottom"><img src="#CHEMIN{img/global/book-middle-bottom.png}" width="300" height="5" alt="" /></div>
 
 <div class="stitches">
-	<div class="stitches-inner"><img src="#CHEMIN{img/global/stitches.png}" width="5" height="86" /></div>
-	<div class="stitches-inner"><img src="#CHEMIN{img/global/stitches.png}" width="5" height="86" /></div>
-	<div class="stitches-inner"><img src="#CHEMIN{img/global/stitches.png}" width="5" height="86" /></div>
+	<div class="stitches-inner"><img src="#CHEMIN{img/global/stitches.png}" width="5" height="86" alt="" /></div>
+	<div class="stitches-inner"><img src="#CHEMIN{img/global/stitches.png}" width="5" height="86" alt="" /></div>
+	<div class="stitches-inner"><img src="#CHEMIN{img/global/stitches.png}" width="5" height="86" alt="" /></div>
 </div>
 
 <!-- PAGE SUIVANT PRECEDENTE-->
@@ -46,13 +44,14 @@
 
 <!-- RETOUR HOME -->
 <div id="retour-home">
-	<a href="[(#URL_SITE_SPIP|parametre_url{annee_scolaire,#EVAL{_annee_scolaire}})]"><img src="#CHEMIN{img/lecture/bt-home.png}" alt="Accueil"
+	<a href="#URL_SITE_SPIP"><img src="#CHEMIN{img/lecture/bt-home.png}" alt="Accueil"
 		class="btn-rollover" data-src-hover="#CHEMIN{img/lecture/bt-home-hover.png}"
 		width="60" height="60" /></a>
 </div>
 
 <!-- BOOK -->
 <div id="global">
+<a id="contenu-principal" tabindex="-1"></a>
 
 	<div id="global-spacer">
 	</div>
@@ -71,10 +70,9 @@
 					<span class="lecture-titre-cadavre">#TITRE</span>
 					</BOUCLE_lecture_titre_rubrique_prologue>
 
-					<BOUCLE_annee(RUBRIQUES){titre==#EVAL{_annee_scolaire}}{tout}{0,1}>
+					<BOUCLE_annee(RUBRIQUES){titre==#EVAL{_ANNEE_SCOLAIRE}}{tout}{0,1}>
 					<BOUCLE_article(ARTICLES){id_rubrique}{titre LIKE prologue}{tout}{0,1}>
 					<h1 class="prologue">#TITRE</h1>
-					<h2></h2>
 					<div class="texte-courant-lecture texte-prologue">
 						#TEXTE
 					</div>
@@ -100,7 +98,7 @@
 							</BOUCLE_auteur_article2>
 
 							[(#ENV{fin}|=={oui}|non)
-							<INCLURE{fond=logos-script-forum,id_article,class=ecriture-chapitre-liens}>
+							<INCLURE{fond=inclure/logos-script-forum,id_article,class=ecriture-chapitre-liens}>
 							]
 
 						</div>
@@ -110,10 +108,10 @@
 					<h1 class="nettoyeur">#SURTITRE</h1>
 					<h2>#TITRE</h2>
 					#SET{var_lecture, false}
-					[(#ANNEE_ACTUELLE|=={#EVAL{_annee_scolaire}}|non)
+					[(#ANNEE_ACTUELLE|=={#EVAL{_ANNEE_SCOLAIRE}}|non)
 						<INCLURE{fond=lecture-texte-visible, id_article} />
 					]
-					[(#ANNEE_ACTUELLE|=={#EVAL{_annee_scolaire}}|oui)
+					[(#ANNEE_ACTUELLE|=={#EVAL{_ANNEE_SCOLAIRE}}|oui)
 						[(#LECTURE|!={#GET{var_lecture}}|oui)<INCLURE{fond=lecture-texte-visible, id_article} />]
 						[(#LECTURE|=={#GET{var_lecture}}|oui)<INCLURE{fond=lecture-texte, id_article} />]
 					]
@@ -139,12 +137,12 @@
 						<div class="lecture-chapitre-auteur">
 
 							<BOUCLE_auteur_article(AUTEURS){id_article}{0,1}>
-							<div class="ecriture-chapitre-avatar">[(#LOGO_AUTEUR|image_reduire{42,42})]</div>
+							<div class="ecriture-chapitre-avatar">[(#LOGO_AUTEUR|image_reduire{42,42}|inserer_attribut{alt,#NOM})]</div>
 							<div class="ecriture-chapitre-nom">#NOM</div>
 							</BOUCLE_auteur_article>
 
 							[(#ENV{fin}|=={oui}|non)
-								<INCLURE{fond=logos-script-forum,id_article,class=ecriture-chapitre-liens} />
+								<INCLURE{fond=inclure/logos-script-forum,id_article,class=ecriture-chapitre-liens} />
 							]
 
 						</div>
@@ -153,10 +151,10 @@
 					<!-- CONTENT GAUCHE -->
 					<h1 class="nettoyeur">#SURTITRE</h1>
 					<h2>#TITRE</h2>
-					[(#ANNEE_ACTUELLE|=={#EVAL{_annee_scolaire}}|non)
+					[(#ANNEE_ACTUELLE|=={#EVAL{_ANNEE_SCOLAIRE}}|non)
 						<INCLURE{fond=lecture-texte-visible, id_article} />
 					]
-					[(#ANNEE_ACTUELLE|=={#EVAL{_annee_scolaire}}|oui)
+					[(#ANNEE_ACTUELLE|=={#EVAL{_ANNEE_SCOLAIRE}}|oui)
 						[(#LECTURE|!={#GET{var_lecture}}|oui)<INCLURE{fond=lecture-texte-visible, id_article} />]
 						[(#LECTURE|=={#GET{var_lecture}}|oui)<INCLURE{fond=lecture-texte, id_article} />]
 					]
@@ -176,45 +174,5 @@
 <INCLURE{fond=footer} />
 </body>
 
-<script type="text/javascript">
-	$(document).ready(function() {
-		window.onresize = resize_global_content;
-		resize_global_content();
-
-		$(".global-content").niceScroll({cursorcolor:"#ff6b6b", cursoropacitymin:'0.2',cursoropacitymax:'1', scrollspeed:'100', cursorborder:'0px'});
-		$('#ascrail2000').css({'cursor':'pointer'});
-
-		var compteur = parseFloat('#ENV{compteur}');
-		var num_page_limite = $('.content-left > div').length;
-
-		$('.lecture-page').hide();
-		pagination(compteur);
-		next_prev(compteur, num_page_limite);
-
-		$('#bt-prev').click(function(event) {
-			event.preventDefault();
-			compteur -= 2;
-			pagination(compteur);
-			next_prev(compteur, num_page_limite);
-		});
-		$('#bt-next').click(function(event) {
-			event.preventDefault();
-			compteur += 2;
-			pagination(compteur);
-			next_prev(compteur, num_page_limite);
-		});
-
-		$('.lecture-tooltip').mouseover(function() {
-			var offset = $(this).offset();
-			$('#liste-tooltip').show().html($(this).prev().html());
-			var hauteur_tooltip = $('#liste-tooltip-content').height();
-			$('#liste-tooltip').height(hauteur_tooltip);
-			$('#liste-tooltip').css('top', 75);
-			$('#liste-tooltip').css('left', Math.round(offset.left) - 100 + 2);
-		});
-		$('.lecture-tooltip').mouseout(function() {
-			$('#liste-tooltip').hide();
-		});
-	});
-</script>
+<script type="text/javascript" src="#CHEMIN{js/lecture.js}"></script>
 </html>

@@ -31,7 +31,12 @@ include_spip('inc/cioidc_commun');
  * @param array $cioidc_tableau_pipeline
  * @return string
  */
-function cioidc_session($ci_oidc_userid = '', $cioidc_id_token = '', $ci_id_serveur_auth = 0 , $cioidc_tableau_pipeline = []) {
+function cioidc_session(
+	$ci_oidc_userid = '',
+	$cioidc_id_token = '',
+	$ci_id_serveur_auth = 0,
+	$cioidc_tableau_pipeline = []
+) {
 
 	// redirection par defaut
 	$ciredirect = generer_url_public('');
@@ -131,7 +136,6 @@ function cioidc_session($ci_oidc_userid = '', $cioidc_id_token = '', $ci_id_serv
 			$auteur = cioidc_verifier_identifiant($ci_oidc_userid);
 		}
 
-
 		if (!isset($auteur['id_auteur'])) {
 			// Envoyer au pipeline
 			$auteur = pipeline('cioidc_auteur', $cioidc_tableau_pipeline);
@@ -179,18 +183,12 @@ function cioidc_session($ci_oidc_userid = '', $cioidc_id_token = '', $ci_id_serv
 		$ciredirect = generer_url_public('cioidc_erreur1');
 	}
 
-
 	if ($ciredirect) {
 		if (isset($_COOKIE['cioidc_redirect'])) {
-			// SPIP 3.2 n'accepte pas l'option 'httponly'
-			if ($GLOBALS['spip_version_branche'] >= 4.2) {
-				spip_setcookie('cioidc_redirect', '', [
-					'expires' => time() - 3600,
-					'httponly' => true,
-				]);
-			} else {
-				spip_setcookie('cioidc_redirect', '', time() - 3600);
-			}
+                        spip_setcookie('cioidc_redirect', '', [
+                                'expires' => time() - 3600,
+                                'httponly' => true,
+                        ]);
 		}
 
 		include_spip('inc/headers');

@@ -53,7 +53,6 @@
 /* End: Recommended Isotope styles */
 
 
-
 /* disable CSS transitions for containers with infinite scrolling*/
 .isotope.infinite-scrolling {
   -webkit-transition: none;
@@ -787,7 +786,6 @@ code .m  { color: #DE8E50; } /* CSS value */
 code .nd { color: #9FAD7E; } /* CSS pseudo selector */
 
 
-
 /**** Super list ****/
 
 
@@ -992,7 +990,6 @@ code .nd { color: #9FAD7E; } /* CSS pseudo selector */
      -moz-border-radius: 10px;
           border-radius: 10px;
 }
-
 
 
 /* The Magnificent Clearfix: nicolasgallagher.com/micro-clearfix-hack/ */

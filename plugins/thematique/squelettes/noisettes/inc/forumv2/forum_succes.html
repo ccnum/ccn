@@ -1,0 +1,25 @@
+<div class="forum-succes">
+	<div class="forum-succes__message">
+		<span class="forum-succes__icone">✓</span>
+		<strong>Votre commentaire a été posté avec succès !</strong>
+	</div>
+	<BOUCLE_commentaire(FORUMS){id_forum}>
+		<div class="forum-card">
+			<div class="forum-card__header">
+				<div class="forum-card__left">
+					<div class="forum-card__icon">icone</div>
+					<h3>#TITRE</h3>
+				</div>
+				<div class="forum-card__date">[(#DATE|affdate)]</div>
+			</div>
+			<div class="forum-card__body">
+				[(#TEXTE|couper{200})]
+			</div>
+			<div class="forum-card__footer">
+				[(#AUTORISER{instituer,forum,#ID_FORUM}|oui)
+					<a href="(#URL_ACTION_AUTEUR{instituer_forum,#ID_FORUM-forum-suppr-safe,#URL_SITE_SPIP/spip.php?page=article&id_article=#ENV{id_article}&var_mode=recalcul})" onclick="return confirmation('Êtes-vous sûr de vouloir supprimer ce commentaire ?')">Supprimer mon commentaire</a>
+				]
+			</div>
+		</div>
+	</BOUCLE_commentaire>
+</div>

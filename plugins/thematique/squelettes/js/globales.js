@@ -1,7 +1,8 @@
-var CCN = {};
+let CCN = {};
 
-CCN.nomMois = new Array("Janv.", "Fév.", "Mars", "Avril", "Mai", "Juin", "Juil.", "Août", "Sept.", "Oct.", "Nov.", "Déc.");
-CCN.nomCompletMois = new Array("janvier", "février", "mars", "avril", "mai", "juin", "juillet", "août", "septembre", "octobre", "novembre", "décembre");
+CCN.debug = false;
+CCN.nomMois = ["Janv.", "Fév.", "Mars", "Avril", "Mai", "Juin", "Juil.", "Août", "Sept.", "Oct.", "Nov.", "Déc."];
+CCN.nomCompletMois = ["janvier", "février", "mars", "avril", "mai", "juin", "juillet", "août", "septembre", "octobre", "novembre", "décembre"];
 CCN.travailEnCoursId;
 CCN.couleurBlog;
 CCN.dureeTransition;
@@ -13,24 +14,33 @@ CCN.consignes;
 CCN.reponses;
 CCN.articlesBlog;         // blogs        : Blog du projet    (accessible par tous, bulles roses)
 CCN.articlesEvenement;    // evenements   : Blog pédagogique  (caché aux élèves, losanges bleu ciel)
+CCN.articlesBlogLoaded;       // true une fois le flux "blogs" chargé (lazy load au clic sur menu-timeline)
+CCN.articlesEvenementLoaded;  // true une fois le flux "evenements" chargé (lazy load au clic sur menu-timeline)
 
 CCN.timelineLayerConsignes;
 CCN.timelineLayerBlogs;
 CCN.timelineLayerEvenements;
 
-function hexToR(h) {
-	return parseInt((cutHex(h)).substring(0, 2), 16)
-}
-function hexToG(h) {
-	return parseInt((cutHex(h)).substring(2, 4), 16)
-}
-function hexToB(h) {
-	return parseInt((cutHex(h)).substring(4, 6), 16)
-}
-function cutHex(h) {
-	return (h.charAt(0) == "#") ? h.substring(1, 7) : h
+const CLASS_ICONS = ['🐝', '🦩', '🦉', '🦔', '🐟', '🐙', '🐜', '🦁', '🦋', '🦊'];
+
+function getClassIcon(index) {
+    return CLASS_ICONS[index % CLASS_ICONS.length];
 }
 
+function escHtml(s) {
+	return String(s)
+		.replace(/&/g, '&amp;')
+		.replace(/</g, '&lt;')
+		.replace(/>/g, '&gt;')
+		.replace(/"/g, '&quot;')
+		.replace(/'/g, '&#x27;');
+}
+
+function decodeHtmlEntities(str) {
+	const el = document.createElement('textarea');
+	el.innerHTML = str;
+	return el.value;
+}
 
 /**
  *  Retourne la valeur du noeud XML demandé.
@@ -41,7 +51,7 @@ function cutHex(h) {
  */
 
 function getXMLNodeValue(tagName, xml) {
-	var node = xml.getElementsByTagName(tagName)[0];
+	const node = xml.getElementsByTagName(tagName)[0];
 	return node && node.childNodes[0] ? node.childNodes[0].nodeValue : null;
 }
 
@@ -54,44 +64,32 @@ function getXMLNodeValue(tagName, xml) {
  */
 
 function hasXMLNodeValue(tagName, xml) {
-	var node = xml.getElementsByTagName(tagName)[0];
+	const node = xml.getElementsByTagName(tagName)[0];
 	return node ? node.childNodes[0] : null;
 }
 
 /**
- * Retourne un tableau des paramètres d'une URL passée en paramètre string
- * Voir : http://stackoverflow.com/questions/8486099/how-do-i-parse-a-url-query-parameters-in-javascript
+ * Parse une date au format ISO AAAA-MM-JJ en objet Date (heure locale).
+ *
+ * @param {string} str - Date au format "AAAA-MM-JJ"
+ * @returns {Date}
  */
-function getJsonFromUrl(query) {
-	var result = {};
+function parseDate(str) {
+	const [year, month, day] = str.split('-').map(Number);
+	return new Date(year, month - 1, day);
+}
 
-	query = query.substring(query.indexOf("?") + 1);
-	query.split("&").forEach(
-		function (part) {
-			if (!part) {
-				return;
-			}
-			part = part.split("+").join(" "); // replace every + with space, regexp-free version
-			var eq = part.indexOf("=");
-			var key = eq > -1 ? part.substr(0, eq) : part;
-			var val = eq > -1 ? decodeURIComponent(part.substr(eq + 1)) : "";
-			var from = key.indexOf("[");
-			if (from == -1) {
-				result[decodeURIComponent(key)] = val;
-			} else {
-				var to = key.indexOf("]");
-				var index = decodeURIComponent(key.substring(from + 1, to));
-				key = decodeURIComponent(key.substring(0, from));
-				if (!result[key]) {
-					result[key] = [];
-				}
-				if (!index) {
-					result[key].push(val);
-				} else {
-					result[key][index] = val;
-				}
-			}
-		}
-	);
-	return result;
+function formatDateCourte(dateStr) {
+	const d = parseDate(dateStr);
+	return d.getDate() + " " + CCN.nomMois[d.getMonth()];
+}
+
+function formatDateLongue(dateStr) {
+	const d = parseDate(dateStr);
+	return d.getDate() + " " + CCN.nomMois[d.getMonth()] + " " + d.getFullYear();
+}
+
+function get_abscisse_affiche_reponse(base_consigne, date_consigne, date_reponse) {
+	const delta = date_reponse - date_consigne;
+	return base_consigne + delta * 0.7
 }

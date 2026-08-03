@@ -1,10 +1,9 @@
 .ddev
 .vscode
 .env
-.htaccess
 config/
 ecrire
-IMG
+/IMG
 local
 plugins/auto
 plugins-dist
@@ -17,7 +16,6 @@ CHANGELOG.md
 !spip-cli/composer.json
 !spip-cli/composer.lock
 composer.*
-htaccess.txt
 index.php
 LICENSE
 phpcs.xml.dist
@@ -35,3 +33,4 @@ db_data/
 TMP_SPIP_3
 .env
 helm/custom.yaml
+plugins/oauth2_client/oauthclient.log

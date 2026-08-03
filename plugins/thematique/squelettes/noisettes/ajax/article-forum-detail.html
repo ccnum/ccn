@@ -1,13 +1,12 @@
+<INCLURE{fond=noisettes/js/swiper.script}>
 #CACHE{24*3600}
 [<div class="lien_forum"><a class="lienss" href="(#PARAMETRES_FORUM|url_reponse_forum)">> <:repondre_article:></a></div>]
 <B_Forums>
 <!-- Début Forum-->
 
 	<script type="text/javascript">
-		$(function(){
-			$('.triggertoggleshow').off('click').on('click', function(){
-				$(this).closest('.intervention_item_around').find('.toggleshow').slideToggle(300);
-			});
+		$('.triggertoggleshow').off('click').on('click', function(){
+			$(this).closest('.intervention_item_around').find('.toggleshow').slideToggle(300);
 		});
 	</script>
 
@@ -20,11 +19,12 @@
 		[(#GET{type_objet}|=={ressources}|oui) #SET{type_objet,consignes} ]
 
 		<div id="forum#ID_FORUM" class="intervention_item_around">
-			<div class="intervention_item couleur_travail_en_cours[(#MODELE{nb2col}{id_auteur})]">
+			<div class="intervention_item bgc_classe_[(#MODELE{nb2col}{id_auteur})]">
 				<div class="triggertoggleshow intervention couleur_texte[_(#GET{type_objet})] [couleur_(#GET{type_objet})[(#MODELE{nb2col}{id_auteur})]]">
-				<BOUCLE_forums_fils_compteur(FORUMS){id_parent}{par date}> </BOUCLE_forums_fils_compteur>
-				<div class="intervention_nb_reponses">#TOTAL_BOUCLE</div>
-				</B_forums_fils_compteur>
+				[(#REM)Le nombre de réponses est repris de #TOTAL_BOUCLE de BOUCLE_forums_fils
+				plus bas (via le script en fin de bloc), pour éviter de relancer la même
+				requête FORUMS une deuxième fois juste pour la compter.]
+				<div class="intervention_nb_reponses" id="nb_reponses#ID_FORUM">0</div>
 				<div class="intervention_header">
 					<div class="photo">
 						[(#MODELE{logo_carre}{id_auteur}{titre=#TITRE})]
@@ -33,7 +33,7 @@
 						[<div class="intervention_auteur">(#NOM)</div>]
 					</BOUCLE_forum_billet_auteur>
 					[<div class="intervention_date">(#DATE|affdate)</div>]
-					[(#AUTORISER{modifier,forum,#ID_FORUM}|oui)
+					[(#AUTORISER{instituer,forum,#ID_FORUM}|oui)
 						<div class="forum">
 							[<a href="(#URL_ACTION_AUTEUR{instituer_forum,#ID_FORUM-forum-suppr-safe,#URL_SITE_SPIP/spip.php?article#_principale:ID_ARTICLE&var_mode=recalcul})"
 							class='supprimer_couleur'
@@ -57,11 +57,20 @@
 							</a>
 						]
 						[(#MIME_TYPE|match{image}|non)
-						<div class="doc">
-							<a href="#URL_DOCUMENT" title="[(#TITRE)]" class="[(#EDIT{titre}) ]mediabox" type="#MIME_TYPE">
-								[(#LOGO_DOCUMENT|image_reduire{100}|inserer_attribut{style,'border:0px solid #000000;'})]<span>[(#FICHIER|basename)]</span>
-							</a>
-						</div>
+							[(#MIME_TYPE|match{'application/pdf'}|oui)
+								<a href="#URL_DOCUMENT" class="mediabox portfolio_grand" type="#MIME_TYPE" data-box-min-height="90pc">
+									[(#LOGO_DOCUMENT|image_reduire{100}|inserer_attribut{style,'border:0px solid #000000;'}|inserer_attribut{alt,#TITRE})]
+									<span>[(#FICHIER|basename)]</span>
+								</a>
+							]
+							[(#MIME_TYPE|match{'application/pdf'}|non)
+								<div class="doc">
+									<a href="#URL_DOCUMENT" title="[(#TITRE)]" class="[(#EDIT{titre}) ] mediabox " type="#MIME_TYPE" data-box-min-height="90pc">
+										[(#LOGO_DOCUMENT|image_reduire{16}|inserer_attribut{style,'border:0px solid #000000;'})]
+										<span>[(#FICHIER|basename)]</span>
+									</a>
+								</div>
+							]
 						]
 					</div>
 				</BOUCLE_documents_joints>
@@ -72,19 +81,19 @@
 				<div class="toggleshow bloc_option_doc nettoyeur">
 					<ul><li>
 						<script type="text/javascript">
-							$(function() {
-							$('#ajaxf1#ID_FORUM').click(function() {
+							$('#ajaxf1#ID_FORUM').on('click', function() {
 								var visibility = $('div#ajax_callback_forum_#ID_FORUM').css("display");
 								if (visibility == 'none'){
-								$(this).addClass('chargement');
-								$('#ajax_callback_forum_#ID_FORUM').load('[(#PARAMETRES_FORUM|url_reponse_forum|parametre_url{mode,ajax-detail}|html_entity_decode)]'
-								, {limit: 25}, function(){
-									$('#ajax_callback_forum_#ID_FORUM').show('slow');
-									$('#ajaxf1#ID_FORUM').removeClass('chargement');	});
+									$(this).addClass('chargement');
+									$('#ajax_callback_forum_#ID_FORUM').load('[(#PARAMETRES_FORUM|url_reponse_forum|parametre_url{mode,ajax-detail}|html_entity_decode)]'
+									, {limit: 25}, function(){
+										$('#ajax_callback_forum_#ID_FORUM').show('slow');
+										$('#ajaxf1#ID_FORUM').removeClass('chargement');
+									});
+								} else {
+									$('#ajax_callback_forum_#ID_FORUM').hide('slow');
 								}
-								else $('#ajax_callback_forum_#ID_FORUM').hide('slow');
-								return false; // Or ev.preventDefault();
-							});
+								return false;
 							});
 						</script>
 					</li></ul>
@@ -96,7 +105,7 @@
 				<BOUCLE_forums_fils(FORUMS){id_parent}{par date}>
 					#SET{type_objet,#MODELE{type_objet}{id_auteur}}
 					[(#GET{type_objet}|=={''}|oui) #SET{type_objet,consignes} ]
-					<div id="forum#ID_FORUM" class="intervention_item couleur_travail_en_cours[(#MODELE{nb2col}{id_auteur})]">
+					<div id="forum#ID_FORUM" class="intervention_item bgc_classe_[(#MODELE{nb2col}{id_auteur})]">
 						<div class="intervention couleur_texte[_(#GET{type_objet})] [couleur_(#GET{type_objet})[(#MODELE{nb2col}{id_auteur})]]">
 							<div class="intervention_header">
 								<div class="photo">
@@ -104,7 +113,7 @@
 								</div>
 								[<div class="intervention_auteur">(#NOM)</div>]
 								[<div class="intervention_date">(#DATE|affdate)</div>]
-								[(#AUTORISER{modifier,forum,#ID_FORUM}|oui)
+								[(#AUTORISER{instituer,forum,#ID_FORUM}|oui)
 									[<a href="(#URL_ACTION_AUTEUR{instituer_forum,#ID_FORUM-forum-suppr-safe,#URL_SITE_SPIP/spip.php?article#_principale:ID_ARTICLE&var_mode=recalcul})"
 										class='supprimer_couleur'
 										onClick='return confirmation("Êtes-vous sûr de vouloir supprimer ce message ?")'
@@ -119,18 +128,34 @@
 							[<div class="#EDIT{titre} titre">(#TITRE)</div>]
 							[<div class="#EDIT{texte} bloc_texte">(#TEXTE|liens_ouvrants)</div>]
 							<BOUCLE_documents_joints3(DOCUMENTS) {id_forum} {tout} {doublons}>
-								<div class="portfolio_grand">
-									<a href="#URL_DOCUMENT" class="mediabox" type="#MIME_TYPE" data-box-min-height="90pc">
-										[(#FICHIER|image_reduire{300}|inserer_attribut{alt,#TITRE})]
-									</a>
+								<div>
+									[(#MIME_TYPE|match{image}|oui)
+										<a href="#URL_DOCUMENT" class="mediabox" type="#MIME_TYPE" data-box-min-height="90pc">
+											[(#FICHIER|image_reduire{300}|inserer_attribut{alt,#TITRE})]
+										</a>
+									]
+									[(#MIME_TYPE|match{image}|non)
+										[(#MIME_TYPE|match{'application/pdf'}|oui)
+											<a href="#URL_DOCUMENT" class="mediabox" type="#MIME_TYPE" data-box-min-height="90pc">
+												[(#LOGO_DOCUMENT|image_reduire{100}|inserer_attribut{style,'border:0px solid #000000;'}|inserer_attribut{alt,#TITRE})]
+												<span>[(#FICHIER|basename)]</span>
+											</a>
+										]
+										[(#MIME_TYPE|match{'application/pdf'}|non)
+											<a href="#URL_DOCUMENT" class="mediabox portfolio_grand portfolio_grand_comment_file" type="#MIME_TYPE" data-box-min-height="90pc">
+												[(#LOGO_DOCUMENT|image_reduire{16}|inserer_attribut{style,'border:0px solid #000000;'}|inserer_attribut{alt,#TITRE})]
+												<span>[(#FICHIER|basename)]</span>
+											</a>
+										]
+									]
 								</div>
 							</BOUCLE_documents_joints3>
 						</div>
 					</div>
-					<!--[<div id="spip"><a href="(#PARAMETRES_FORUM|url_reponse_forum)"  class="lienss">R&eacute;pondre &agrave; ce message</a></div>]-->
 				</BOUCLE_forums_fils>
 
 			</ul>
+			<script>thematiqueApplyDeferredCount('nb_reponses#ID_FORUM', '#TOTAL_BOUCLE');</script>
 		</B_forums_fils>
 
 		<div class="toggleshow intervention_callto_answer">
@@ -144,3 +169,13 @@
 	</ul>
 </B_Forums>
 <//B_Forums>
+<!-- Je mets le script ici pour être sûr qu'il soit executé (pas de spip conditionnel) -->
+<script>
+	$(function() {
+		const $portfolio_grand_list = $('.portfolio_grand');
+		$portfolio_grand_list.each(function(_index, portfolio_grand) {
+			initPdfSwipersInComment($(portfolio_grand));
+		});
+	});
+</script>
+

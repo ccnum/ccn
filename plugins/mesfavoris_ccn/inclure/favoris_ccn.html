@@ -1,0 +1,38 @@
+[(#REM)
+	Widget favoris CCN — emoji radio (un seul par user par article)
+
+	Usage :
+	[(#INCLURE{fond=inclure/favoris_ccn, objet=article, id_objet=#ID_ARTICLE, ajax})]
+
+	Pour ajouter une catégorie : éditer favoris_ccn_categories() dans mesfavoris_ccn_fonctions.php
+	ET ajouter un bloc <button> ci-dessous.
+
+	L'état initial (compteurs, aria-pressed, aria-label) est rendu ici côté
+	SPIP : le JS (js/favoris_ccn.js, chargé une seule fois via le pipeline
+	insert_head) ne gère que le clic, en délégation sur .favoris-ccn-widget,
+	pour fonctionner même quand ce fragment est réinséré par AJAX.
+)]
+#CACHE{0}
+
+[(#SET{mon_favori, #ENV{objet}|favoris_ccn_mon_favori{#ENV{id_objet}}})]
+[(#SET{compteurs, #ENV{objet}|favoris_ccn_compter{#ENV{id_objet}}})]
+
+<div class="favoris-ccn-widget"
+	data-objet="#ENV{objet}"
+	data-id-objet="#ENV{id_objet}">
+
+	[(#SET{categories, #VAL{''}|favoris_ccn_categories})]
+	<BOUCLE_cat(DATA){source tableau, #GET{categories}}>
+	#SET{nb, #GET{compteurs}|table_valeur{#CLE,0}}
+	#SET{actif, #GET{mon_favori}|=={#CLE}}
+	<button type="button" class="favori-ccn-btn[ (#GET{actif}|oui)actif]" data-categorie="#CLE"
+		data-action="#URL_ACTION_AUTEUR{toggle_favori_ccn, #ENV{objet}-#ENV{id_objet}-#CLE}"
+		data-label="#VALEUR{label}"
+		aria-pressed="[(#GET{actif}|oui)true][(#GET{actif}|non)false]"
+		aria-label="[(#VALEUR{label}|favoris_ccn_aria_label{#GET{nb}})]">
+		<span class="favori-ccn-emoji" aria-hidden="true">#VALEUR{html}</span>
+		<span class="favori-ccn-count">#GET{nb}</span>
+	</button>
+	</BOUCLE_cat>
+
+</div>

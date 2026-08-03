@@ -1,0 +1,22 @@
+[(#REM)
+Contrôleur crayon pour #EDIT{date} sur un article : affiche un vrai
+<input type="datetime-local"> plutôt que le texte brut "AAAA-MM-JJ HH:MM:SS"
+que le plugin crayons génère par défaut pour un champ SQL datetime.
+
+Le champ réellement soumis (name="#ENV{name_date}") reste cependant au
+format SQL "AAAA-MM-JJ HH:MM:SS" : le champ visible (datetime-local) le
+resynchronise à chaque changement, car le navigateur ne permet pas de
+choisir un autre format de soumission pour ce type de champ natif.
+
+@see vues/article_date.html pour le ré-affichage après enregistrement.
+]
+#CACHE{0}
+<BOUCLE_a(ARTICLES){id_article}{tous}>
+<input type="hidden" class="crayon-active" name="#ENV{name_date}" value="[(#DATE)]" />
+<input type="datetime-local" step="1" style="#ENV{style}"
+	value="[(#DATE|replace{' ','T'})]"
+	onchange="
+		this.previousElementSibling.value = this.value.replace('T', ' ');
+		this.previousElementSibling.dispatchEvent(new Event('change', {bubbles: true}));
+	" />
+</BOUCLE_a>

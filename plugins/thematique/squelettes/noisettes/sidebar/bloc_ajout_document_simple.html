@@ -1,0 +1,13 @@
+#CACHE{0}
+[(#AUTORISER{modifier,article,#ID_ARTICLE}|oui|et{#CONST{_ANNEE_SCOLAIRE}|=={#ANNEE_SCOLAIRE_REELLE}}|oui)
+	<div class="sidebar_bubble">
+		<INCLURE{fond=noisettes/js/accordeon, nom=bloc_option_doc-#ID_ARTICLE, ajax} />
+		<div class="bloc_option_doc nettoyeur">
+			<a id="bloc_option_doc-#ID_ARTICLE" class="hac lien_ajouter bloc_option_doc_adddocument" title="<:thematique:ajouter_document:>"><:thematique:ajouter_document:></a>
+			<div class='nettoyeur cache formulaire_spip formulaire_editer_document bloc_option_doc'>
+				<:thematique:ordre_chargement_documents:>
+				<div class="ajax">#FORMULAIRE_JOINDRE_DOCUMENT_MISSION{#ID_ARTICLE,article}</div>
+			</div>
+		</div>
+	</div>
+]

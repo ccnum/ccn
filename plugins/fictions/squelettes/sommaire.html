@@ -1,14 +1,14 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html lang="fr" xml:lang="fr" xmlns="http://www.w3.org/1999/xhtml">
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 	<title>[(#NOM_SITE_SPIP|textebrut)]</title>
 	[<meta name="description" content="(#DESCRIPTIF_SITE_SPIP|couper{150}|textebrut)" />]
 	<INCLURE{fond=inclure/head} />
-	<script type="text/javascript" src="#CHEMIN{js/jquery.nicescroll.min.js}"></script>
-	<meta name="viewport" content="width=980, user-scalable=no" />
+	<meta name="viewport" content="width=device-width, initial-scale=1" />
 </head>
 <body>
+<a href="#contenu-principal" class="skip-link">Aller au contenu principal</a>
 
 	<!-- TOOLTIP -->
 	<div id="liste-tooltip">
@@ -31,10 +31,11 @@
 		<div class="stitches-inner"><img src="#CHEMIN{img/global/stitches.png}" width="5" height="86"  alt=""/></div>
 		<div class="stitches-inner"><img src="#CHEMIN{img/global/stitches.png}" width="5" height="86"  alt=""/></div>
 	</div>
-	<BOUCLE_annee(RUBRIQUES){titre==#EVAL{_annee_scolaire}}{tout}{0,1}>#SET{id_rubrique,#ID_RUBRIQUE}
+	<BOUCLE_annee(RUBRIQUES){titre==#EVAL{_ANNEE_SCOLAIRE}}{tout}{0,1}>#SET{id_rubrique,#ID_RUBRIQUE}
 		<BOUCLE_article(ARTICLES){id_rubrique}{titre LIKE presentation}{tout}{0,1}>
 		<!-- BOOK -->
 		<div id="global-ecriture">
+		<a id="contenu-principal" tabindex="-1"></a>
 			<div id="global-spacer"></div>
 			<div class="global-content">
 				<div class="content">
@@ -67,7 +68,7 @@
 						[(#REM) Par défaut, les années sont en mode visualisation.]
 						#SET{mode_affichage,visualisation}
 						<BOUCLE_rubrique_contenant_annees_2(RUBRIQUES){titre_mot=rubrique-contenant-annees}>
-							<BOUCLE_rubrique_annee_2(RUBRIQUES){id_parent}{titre=#EVAL{_annee_scolaire}}>
+							<BOUCLE_rubrique_annee_2(RUBRIQUES){id_parent}{titre=#EVAL{_ANNEE_SCOLAIRE}}>
 								<BOUCLE_mots_clef_annee(MOTS){id_rubrique}>
 								[(#REM) Si le mot-clef est associé à l'année qu'on souhaite afficher, on passe la variable]
 								[(#REM) de mode en « fabrication ».]
@@ -95,42 +96,5 @@
 	<INCLURE{fond=footer} />
 </body>
 
-<script type="text/javascript">
-$(document).ready(function() {
-	// RESIZE
- 	window.onresize = resize_global_content;
-	resize_global_content();
-	// NICESCROLL
-	$(".global-content").niceScroll({cursorcolor:"#ff6b6b", cursoropacitymin:'0.2',cursoropacitymax:'1', scrollspeed:'100', cursorborder:'0px'});
-	$('#ascrail2000').css({'cursor':'pointer'});
-	//
-	$('.liste-link').mouseover(function() {
-		var offset = $(this).offset();
-		var content_tooltip = $(this).find('.liste-tooltip-content').html();
-		$('#liste-tooltip').show();
-		$('#liste-tooltip').html(content_tooltip);
-		var hauteur_tooltip = $('#liste-tooltip-content').height();
-		$('#liste-tooltip').height(hauteur_tooltip);
-		var toptooltip = Math.round(offset.top);
-		toptooltip = toptooltip - hauteur_tooltip;
-		var lefttooltip = Math.round(offset.left);
-		lefttooltip -= 95;
-		$('#liste-tooltip').css('top', toptooltip -5);
-		$('#liste-tooltip').css('left', lefttooltip + 2);
-	});
-	$('.liste-link').mouseout(function() {
-		$('#liste-tooltip').hide();
-	});
-
-});
-
-// RESIZE
-function resize_global_content() {
-	h = $(window).height();
-	h -=61;
-	$('.global-content').height(h);
-	stitches_margin = ((h-60) - 258)/4;
-	$(".stitches-inner").css({'margin-top':stitches_margin});
-}
-</script>
+<script type="text/javascript" src="#CHEMIN{js/sommaire.js}"></script>
 </html>

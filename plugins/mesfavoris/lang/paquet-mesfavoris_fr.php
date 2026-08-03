@@ -1,0 +1,10 @@
+<?php
+// This is a SPIP language file  --  Ceci est un fichier langue de SPIP
+// Fichier source, a modifier dans https://git.spip.net/spip-contrib-extensions/mesfavoris.git
+
+return [
+
+	// M
+	'mesfavoris_description' => '(Dé)Sélectionne un objet pour gérer des objets (articles, rubriques ...) favoris pour un visiteur authentifié',
+	'mesfavoris_slogan' => 'Sélection de favoris',
+];

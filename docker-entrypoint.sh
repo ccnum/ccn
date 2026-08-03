@@ -118,7 +118,6 @@ spip plugins:activer cextras -y
 spip plugins:activer crayons -y
 spip plugins:activer corbeille -y
 spip plugins:activer facteur -y
-spip plugins:activer imports_utilisateurs -y
 spip plugins:activer jqueryui -y
 spip plugins:activer notation -y
 spip plugins:activer notifications -y
@@ -130,13 +129,12 @@ spip plugins:activer verifier -y
 spip plugins:activer yaml -y
 spip plugins:activer autorite -y
 spip plugins:activer simplog -y
+spip plugins:activer mesfavoris -y
+spip plugins:activer mesfavoris_ccn -y
 spip plugins:activer ccn -y
 
-if [ ${SPIP_PLUGINS_CICAS} == true ]; then
-	spip plugins:activer cicas -y
-	else
-	spip plugins:desactiver cicas -y
-fi
+spip plugins:desactiver imports_utilisateurs -y
+
 if [ ${SPIP_PLUGINS_CIOIDC} == true ]; then
 	spip plugins:activer cioidc -y
 	else
@@ -155,19 +153,32 @@ spip config:ecrire -p autorite auteur_mod_email:0
 spip config:ecrire -p autorite auteur_mod_article:1
 spip config:ecrire -p autorite auteur_modere_forum:0
 spip config:ecrire -p autorite editer_forums:1
-spip config:ecrire -p autorite publierdans:7
+spip config:ecrire -p autorite publierdans:15
 spip config:ecrire -p bigup charger_public:1
-spip config:ecrire -p bigup max_file_size:${PHP_UPLOAD_MAX_FILESIZE%M}
+# Ce réglage ne pilote que le contrôle JS côté navigateur (bigup_config()) : la
+# vraie limite serveur est appliquée par ccn_verifier_uploads() (100 Mo, sauf
+# MP4 poussés vers Vimeo). On le fixe large pour ne pas bloquer les vidéos
+# avant même l'envoi.
+spip config:ecrire -p bigup max_file_size:1000
+# ne jamais redimensionner automatiquement les images trop grandes à l'upload :
+# ce chemin décode l'image entière en GD/Imagick, ce que _IMG_MAX_WIDTH/_IMG_MAX_HEIGHT
+# (mes_options.php) sont censés empêcher en rejetant l'upload à la place
+spip config:ecrire creer_preview:non
+# Utiliser Imagick plutôt que GD pour générer les vignettes : GD charge l'image
+# entière en mémoire PHP (memory_limit) selon sa résolution, tandis qu'Imagick
+# gère sa propre mémoire (policy.xml) et peut basculer sur disque, ce qui évite
+# de faire planter le process PHP sur de grosses images.
+spip config:ecrire image_process:imagick
 spip config:ecrire -p mediabox active:oui
 spip config:ecrire -p notation acces:ide
 spip config:ecrire -p notation change_note:oui
 spip config:ecrire -p notifications forum_article:0
 spip config:ecrire -p notifications thread_forum:0
+spip config:ecrire formats_documents_forum:".pdf,.jpg,.jpeg,.png,.gif,.mp4"
 
 # Default mes_options
 rm -rf config/mes_options.php
-if [ ! -e config/mes_options.php ]; then
-	/bin/cat << MAINEOF > config/mes_options.php
+/bin/cat << MAINEOF > config/mes_options.php
 <?php
 if (!defined("_ECRIRE_INC_VERSION")) return;
 \$GLOBALS['taille_des_logs'] = 500;
@@ -178,26 +189,50 @@ define('_DEBUG_SLOW_QUERIES', true);
 define('_BOUCLE_PROFILER', 5000);
 define('_AUTORISER_TELECHARGER_PLUGINS', false);
 define('_TITRER_DOCUMENTS', true);
+// limiter la résolution des images acceptées : le serveur n'a que 300 Mo de
+// RAM, un décodage GD/Imagick d'image trop grande fait planter le process
+// (~15 Mpx = marge de sécurité avec le reste des process du serveur)
+define('_IMG_MAX_WIDTH', 4500);
+define('_IMG_MAX_HEIGHT', 3500);
 // désactiver les notifications de mise à jour
 define('_MAJ_NOTIF_EMAILS', '');
 // des personalisations par projet
 define('_PROJET', '${PROJET}');
+// plugin api_vimeo : envoi des documents mp4 vers Vimeo
+define('_VIMEO_ACCESS_TOKEN', '${VIMEO_ACCESS_TOKEN}');
+// false pour un projet CCN qui ne repart pas d'une année sur l'autre :
+// désactive la création automatique de la structure de rentrée (rubrique
+// de l'année + articles jalons, cf
+// plugins/thematique/genie/thematique_rentree_annee.php)
+define('_CCN_PROJET_ACTIVE', '${CCN_PROJET_ACTIVE}' !== 'false');
 ?>
 MAINEOF
-fi
 
-# Default _config_cas.php
-if [ ! -e config/_config_cas.php ] && [ ${SPIP_PLUGINS_CICAS} = true ]; then
-	/bin/cat << MAINEOF > config/_config_cas.php
+# TODO(#ISSUE): plugin cicas supprimé, ce fichier ne devrait plus jamais être
+# généré nulle part mais peut subsister sur les déploiements existants -
+# à retirer une fois qu'on est sûr qu'aucun environnement n'en a plus besoin
+rm -f config/_config_cas.php
+
+# Default _config_cioidc.php
+rm -f config/_config_cioidc.php
+if [ ${SPIP_PLUGINS_CIOIDC} = true ]; then
+	/bin/cat << MAINEOF > config/_config_cioidc.php
 <?php
 if (!defined("_ECRIRE_INC_VERSION")) return;
-\$GLOBALS['ciconfig']['cicas'] = 'hybride';
-\$GLOBALS['ciconfig']['cicasuid'] = 'login';
-\$GLOBALS['ciconfig']['cicasurldefaut'] = 'www.laclasse.com';
-\$GLOBALS['ciconfig']['cicasrepertoire'] = '/sso';
-\$GLOBALS['ciconfig']['cicasport'] = '443';
-\$GLOBALS['ciconfig']['cicas_creer_auteur'] = '6forum';
-\$GLOBALS['ciconfig']['cicashostordre'] = ['HTTP_HOST', 'SERVER_NAME', 'HTTP_X_FORWARDED_SERVER'];
+define('_CIOIDC_MODE_AUTH', 'hybride');
+define('_CIOIDC_NOM_SERVEUR', 'LaClasse');
+define('_CIOIDC_URL_SERVEUR', 'https://www.laclasse.com');
+define('_CIOIDC_CLIENT_NOM', '${SPIP_CIOIDC_CLIENT_NOM}');
+define('_CIOIDC_CLIENT_SECRET', '${SPIP_CIOIDC_CLIENT_SECRET}');
+define('_CIOIDC_UID_CHAMP_SPIP', 'login');
+define('_CIOIDC_UID_CLAIM', 'uid');
+define('_CIOIDC_CREER_AUTEUR', '6forum');
+define('_CIOIDC_AUTHORIZATION_ENDPOINT', 'https://www.laclasse.com/sso/authorize');
+define('_CIOIDC_TOKEN_ENDPOINT', 'https://www.laclasse.com/sso/token');
+define('_CIOIDC_USERINFO_ENDPOINT', 'https://www.laclasse.com/sso/userinfo');
+define('_CIOIDC_END_SESSION_ENDPOINT', 'https://www.laclasse.com/sso/logout');
+define('_CIOIDC_JWKS_URI', 'https://www.laclasse.com/sso/jwks');
+define('_CIOIDC_TOKEN_ENDPOINT_AUTH_METHODS_SUPPORTED', '["client_secret_post"]');
 ?>
 MAINEOF
 fi
@@ -246,32 +281,5 @@ fi
 #        rm IMG.tar.gz
 #    fi
 #fi
-
-
-# Initialiser les clés de chiffrement manquantes
-mkdir -p config
-php -r "
-\$file = 'config/cles.php';
-\$json = [];
-if (file_exists(\$file)) {
-    \$content = file_get_contents(\$file);
-    \$json = json_decode(substr(\$content, strpos(\$content, \"\n\") + 1), true) ?: [];
-}
-\$changed = false;
-foreach (['secret_du_site', 'secret_des_auth'] as \$key) {
-    if (empty(\$json[\$key])) {
-        \$json[\$key] = base64_encode(random_bytes(32));
-        echo \"✓ Clé \$key générée\n\";
-        \$changed = true;
-    } else {
-        echo \"✓ Clé \$key déjà présente\n\";
-    }
-}
-if (\$changed) {
-    file_put_contents(\$file, \"<?php die ('Acces interdit'); ?>\n\" . json_encode(\$json));
-    chmod(\$file, 0640);
-}
-"
-chown www-data:www-data config/cles.php
 
 exec "$@"

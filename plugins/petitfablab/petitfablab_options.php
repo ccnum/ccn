@@ -10,4 +10,4 @@ if (!defined('_ECRIRE_INC_VERSION')) {
 //define('_DEBUG_AUTORISER', true);
 //define('_AUTOBR', true)
 
-// _annee_scolaire, _date_debut, _date_fin sont définis par le plugin ccn (ccn_options.php)
+// _ANNEE_SCOLAIRE, _DATE_DEBUT, _DATE_FIN sont définis par le plugin ccn (ccn_options.php)

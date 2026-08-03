@@ -9,6 +9,10 @@ function fictions_post_edition($flux) {
 		return $flux;
 	}
 
+	if (($flux['args']['objet'] ?? '') !== 'article') {
+		return $flux;
+	}
+
 	$id_objet   = intval($flux['args']['id_objet'] ?? 0);
 	$statut     = $flux['args']['champs_anciens']['statut'] ?? '';
 	$descriptif = $flux['args']['champs_anciens']['descriptif'] ?? '';
@@ -18,20 +22,22 @@ function fictions_post_edition($flux) {
 		return $flux;
 	}
 
+	include_spip('action/editer_objet');
+
 	$blog = sql_getfetsel('id_rubrique', 'spip_rubriques', 'titre LIKE ' . sql_quote('%Blog Pédagogique%'));
 
 	if ($statut === 'prop') {
 		// Publier l'article que l'on vient de modifier
-		sql_updateq('spip_articles', ['statut' => 'publie'], 'id_article=' . $id_objet);
+		objet_modifier('article', $id_objet, ['statut' => 'publie']);
 		// Passer de prépa à prop le suivant
 		$id_article = sql_getfetsel('id_article', 'spip_articles', ['id_rubrique=' . $id_rubrique, 'statut=' . sql_quote('prepa')], '', 'id_article', '0,1');
 		if ($id_article) {
-			sql_updateq('spip_articles', ['statut' => 'prop'], 'id_article=' . intval($id_article));
+			objet_modifier('article', intval($id_article), ['statut' => 'prop']);
 		}
 	}
 
 	if ($blog && (int)$blog === $id_rubrique && $statut === 'prepa') {
-		sql_updateq('spip_articles', ['statut' => 'publie'], 'id_article=' . $id_objet);
+		objet_modifier('article', $id_objet, ['statut' => 'publie']);
 	}
 
 	return $flux;

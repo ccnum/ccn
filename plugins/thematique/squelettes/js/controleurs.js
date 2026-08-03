@@ -1,17 +1,57 @@
-var vue = 'timeline';
-var canShowConsigneSidebar = false;
-var antiPushState = false;
-var detailsLivrableOpen = false;
+let canShowConsigneSidebar = false;
 
-// Verifie les parametres dans l'url
-$.urlParam = function (name) {
+let _sidebarTrigger = null;
 
-	var results = new RegExp('[\?&]' + name + '=([^&#]*)').exec(window.location.href);
+const SIDEBAR_FOCUSABLE = 'a[href], button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])';
 
-	if (results) {
-		return results[1] || 0;
-	}
+function _sidebarFocusableElements() {
+	return $('#sidebar').find(SIDEBAR_FOCUSABLE).filter(':visible');
 }
+
+// Active au clavier (Entrée/Espace) les divs cliquables marquées role="button",
+// utilisées pour la navigation (rubriques, articles) au lieu de vrais <a>/<button>.
+$(document).on('keydown.clickableRole', '[role="button"]', function (e) {
+	if (e.key === 'Enter' || e.key === ' ' || e.key === 'Spacebar') {
+		e.preventDefault();
+		this.click();
+	}
+});
+
+$(document).on('keydown.sidebarFocusTrap', function (e) {
+	if (!$('body').hasClass('hasSidebarOpen')) {
+		return;
+	}
+	if (e.key === 'Escape') {
+		// Le plugin crayons gère déjà Échap pour fermer son propre formulaire
+		// d'édition, sans stopper la propagation : sans ce garde-fou, on fermait
+		// toute la sidebar en même temps, laissant l'affichage à moitié grisé.
+		if ($(e.target).closest('.crayon-html').length) {
+			return;
+		}
+		closeSidebar();
+		return;
+	}
+	if (e.key !== 'Tab') {
+		return;
+	}
+	const $focusable = _sidebarFocusableElements();
+	if ($focusable.length === 0) {
+		return;
+	}
+	const first = $focusable.first()[0];
+	const last = $focusable.last()[0];
+	if (e.shiftKey) {
+		if (document.activeElement === first) {
+			e.preventDefault();
+			last.focus();
+		}
+	} else {
+		if (document.activeElement === last) {
+			e.preventDefault();
+			first.focus();
+		}
+	}
+});
 
 $(function () {
 
@@ -36,28 +76,25 @@ $(function () {
 		}
 	);
 
-	$(window).on(
-		'resize', function () {
-			onResize();
+	$(document).on('click', '#sidebarExpand', function () {
+		toggleSidebarExpand();
+	});
+
+	$(document).on('click', '#sidebar-close', function () {
+		if (CCN.projet) {
+			CCN.projet.showWholeTimeline();
+		} else {
+			closeSidebar();
 		}
-	);
+	});
 
-	onResize();
+	$(document).on('click', '#sidebarCache', function () {
+		$('body').removeClass('hasSidebarExpanded');
+	});
 
-	$('#sidebarExpand').on(
-		'click', function () {
-			toggleSidebarExpand();
-		}
-	);
-
-	$('#sidebarCache').on(
-		'click', function () {
-			$('body').removeClass('hasSidebarExpanded');
-		}
-	);
-
-	$("#menu_bas ul a").not('#menu-classes-select ul a').tooltip(
+	$(".logo").not('#menu-classes-select ul a').tooltip(
 		{
+			appendTo: "body", // On garde ça pour éviter le bug des images déplacées !
 			position: {
 				my: "center bottom-4",
 				at: "center top",
@@ -81,14 +118,13 @@ $(function () {
 			}
 		}
 	);
-}
-);
+});
 
-var antifloodHashChange = false;
+let antifloodHashChange = false;
 
-function onHashChange() {
-	if (antifloodHashChange == false) {
-		setContentFromState(History.getState());
+function onHashChange(event) {
+	if (antifloodHashChange === false) {
+		setContentFromState({ data: event.state });
 	}
 }
 
@@ -96,13 +132,13 @@ function onHashChange() {
  * Initialise la vue depuis l'URL donnée
  * ou depuis l'état de l'historique donné
  */
-var currentState = {};
-function setContentFromState(state) {
+let currentState = {};
+function setContentFromState(state, title, url) {
 
 	if (typeof state.data !== 'object' || state.data == null) {
 		return;
 	}
-	var state = state.data;
+	state = state.data;
 
 	if (state.type_objet == undefined) { state.type_objet = ''; }
 	if (state.page == undefined) { state.page = ''; }
@@ -118,22 +154,24 @@ function setContentFromState(state) {
 	if (currentState.id_syndic_article == undefined) { currentState.id_syndic_article = ''; }
 	if (currentState.id_objet == undefined) { currentState.id_objet = ''; }
 
-	isSamePage = true;
+	let isSamePage = true;
 
-	for (var index in state) {
+	for (const index of Object.keys(state)) {
 		if (state[index] != currentState[index]) {
 			isSamePage = false;
 			break;
 		}
 	}
 	currentState = state;
-
-
 	if (isSamePage) { return; }
 
+	// Repousse l'url du navigateur (ex: retour à l'url courte du site
+	// quand showWholeTimeline() referme la sidebar), si demandé par l'appelant.
+	if (url !== undefined) {
+		updateUrl(state, title, url);
+	}
+
 	antifloodHashChange = true;
-
-
 	// Ressource
 	if ((state.type_objet == '0'
 		&& state.id_objet == '0')
@@ -144,7 +182,6 @@ function setContentFromState(state) {
 	}
 
 	if (state.type_objet == "ressources") {
-		changeTimelineMode('consignes');
 		callRessource();
 
 		if (state.page == 'rubrique') {
@@ -164,7 +201,6 @@ function setContentFromState(state) {
 
 	// Agora
 	if (state.type_objet == "agora") {
-		changeTimelineMode('consignes');
 		callAgora();
 
 		if (state.page == 'rubrique') {
@@ -185,8 +221,7 @@ function setContentFromState(state) {
 	if (state.id_objet != "0") {
 		// Consigne
 		if (state.type_objet == "consignes") {
-			changeTimelineMode('consignes');
-			for (k = 0; k < CCN.consignes.length; k++) {
+			for (let k = 0; k < CCN.consignes.length; k++) {
 				if (CCN.consignes[k].id == state.id_objet) {
 					callConsigne(state.id_objet);
 					break;
@@ -196,9 +231,8 @@ function setContentFromState(state) {
 
 		// Réponse
 		if (state.type_objet == "travail_en_cours") {
-			changeTimelineMode('consignes');
-			outer: for (k = 0; k < CCN.consignes.length; k++) {
-				for (l = 0; l < CCN.consignes[k].reponses.length; l++) {
+			outer: for (let k = 0; k < CCN.consignes.length; k++) {
+				for (let l = 0; l < CCN.consignes[k].reponses.length; l++) {
 					if (CCN.consignes[k].reponses[l].id == state.id_objet) {
 						callReponse(state.id_objet);
 						break outer;
@@ -209,11 +243,7 @@ function setContentFromState(state) {
 
 		// Classe
 		if (state.type_objet == "classes") {
-
-			changeTimelineMode('consignes');
-
-
-			for (k = 0; k < CCN.classes.length; k++) {
+			for (let k = 0; k < CCN.classes.length; k++) {
 				if (CCN.classes[k].id == state.id_objet) {
 					callClasse(state.id_objet);
 					break;
@@ -223,13 +253,11 @@ function setContentFromState(state) {
 
 		// Article de blog
 		if (state.type_objet == "blogs") {
-			changeTimelineMode('blogs');
 			callArticleBlog(state.id_objet, "article");
 		}
 
 		// Article d'événement
 		if (state.type_objet == "evenements") {
-			changeTimelineMode('evenements');
 			callArticleEvenement(state.id_objet, "article");
 		}
 	}
@@ -249,39 +277,25 @@ function setContentFromState(state) {
 
 }
 
-/**
- * Initialise les binds jQuery des sidebars
- */
-function initLocalEvents(parent) {
+
+function expandSidebar() {
+    if ($('body').hasClass('hasSidebarExpanded')) return; // déjà ouvert
+
+    $('body').addClass('hasSidebarExpanded');
 }
 
-/**
- * Gère la mise à jour des styles lorsque l'écran est resizé
- */
-function onResize() {
-	$('#crayons-surcharge-styles').text('.crayon-active.markItUpEditor { height: ' + (parseInt($(window).height()) - 228) + 'px !important; } .resizehandle { display:none !important; }');
+function collapseSidebar() {
+    if (!$('body').hasClass('hasSidebarExpanded')) return; // déjà fermé
+
+    $('body').removeClass('hasSidebarExpanded');
 }
 
-
-/**
- * Affiche ou réduit l'affichage plein écran des sidebars.
- */
 function toggleSidebarExpand() {
-	if ($('body').hasClass('hasSidebarExpanded')) {
-		$('body').removeClass('hasSidebarExpanded');
-
-		if ($('body').hasClass('hadSidebarLateralVisible')) {
-			$('body').removeClass('hadSidebarLateralVisible');
-			showSidebarLateral();
-		}
-	} else {
-		$('body').addClass('hasSidebarExpanded');
-
-		if ($('body').hasClass('hasSidebarLateralVisible')) {
-			$('body').addClass('hadSidebarLateralVisible');
-		}
-		hideSidebarLateral();
-	}
+    if ($('body').hasClass('hasSidebarExpanded')) {
+        collapseSidebar();
+    } else {
+        expandSidebar();
+    }
 }
 
 /**
@@ -301,30 +315,32 @@ function getHauteurZone() {
 }
 
 /**
- * Appelle le recalcul des connecteurs.
- *
- * @see updateConnecteurs
- */
-
-function updateTimeline() {
-	updateConnecteurs();
-}
-
-/**
  * Change le mode d'affichage de la timeline.
  *
  * @param {string} type - Peut être <tt>consignes</tt>, <tt>blogs</tt> ou <tt>evenements</tt>
  */
-function changeTimelineMode(type) {
-	var classCss = {};
+async function changeTimelineMode(type) {
+	const classCss = {};
 	classCss.consignes = 'show_consignes';
 	classCss.blogs = 'show_blogs';
 	classCss.evenements = 'show_evenements';
 
 	if (!$('body').hasClass(classCss[type])) {
+		if (type === 'blogs' || type === 'evenements') {
+			await ensureArticlesLoaded(type);
+		}
+
+		attachTimelineLayer(type);
+
+		for (const other of ['consignes', 'blogs', 'evenements']) {
+			if (other !== type) {
+				detachTimelineLayer(other);
+			}
+		}
+
 		CCN.projet.showWholeTimeline();
 
-		for (var index in classCss) {
+		for (const index in classCss) {
 			$('body').removeClass(classCss[index]);
 		}
 
@@ -336,8 +352,6 @@ function changeTimelineMode(type) {
 	$('#menu_bas .logo a.menu_logo_type_sidebarView').removeClass('selected');
 
 }
-
-
 /**
  * Gère les événements lors du click sur une consigne et appelle {@link consigne#showInTimeline}.
  *
@@ -352,17 +366,12 @@ function changeTimelineMode(type) {
  */
 
 function showConsigneInTimeline(numero) {
-	for (var index_consigne in CCN.consignes) {
-		if (CCN.consignes[index_consigne].id == numero) {
-			//  CCN.projet.showWholeTimeline();
-			CCN.consignes[index_consigne].showInTimeline();
+	for (const consigne of CCN.consignes) {
+		if (consigne.id == numero) {
+			consigne.showInTimeline();
 		}
 	}
-
-	// TODO : icones
 }
-
-
 /**
  * Gère les événements lors du click sur une réponse et appelle {@link reponse#showInTimeline}.
  *
@@ -377,16 +386,14 @@ function showConsigneInTimeline(numero) {
  */
 
 function showReponseInTimeline(numero) {
-	for (var index_consigne in CCN.consignes) {
-		for (var index_reponse in CCN.consignes[index_consigne].reponses) {
-			if (CCN.consignes[index_consigne].reponses[index_reponse].id == numero) {
-				CCN.consignes[index_consigne].reponses[index_reponse].showInTimeline();
+	for (const consigne of CCN.consignes) {
+		for (const reponse of consigne.reponses) {
+			if (reponse.id == numero) {
+				reponse.showInTimeline();
 			}
 		}
 	}
 }
-
-
 /**
  * Redirige vers la fonction la plus appropriée
  * pour charger l'élément
@@ -401,8 +408,6 @@ function showReponseInTimeline(numero) {
  * @see callConsigne
  * @see callReponse
  * @see callClasse
- *
- * @todo Compléter au maximum la fonction
  */
 
 function call(opts) {
@@ -428,35 +433,39 @@ function call(opts) {
  *
  * @see loadContentInMainSidebar
  * @see showConsigneInTimeline
- *
- * @todo Définir le contenu de la sidebar secondaire
  */
-
 function callConsigne(id_consigne) {
 
+	if (!Number.isInteger(Number(id_consigne))) return;
 	changeTimelineMode('consignes');
 
-	var url = CCN.projet.url_popup_consigne + "&id_article=" + id_consigne;
+	// récupérer le rang déjà connu côté JS
+	const consigneData = CCN.consignes.find(c => c.id == id_consigne);
+	const numero       = consigneData ? consigneData.numero : '';
+	const nextConsigne = consigneData ? CCN.consignes.find(c => c.numero === consigneData.numero + 1) : null;
+	const dateLimite   = nextConsigne ? nextConsigne.data.date_texte : '';
+
+	const url = CCN.projet.url_popup_consigne + "&id_article=" + id_consigne + "&rang=" + numero + "&date_limite=" + dateLimite;
 	showConsigneInTimeline(id_consigne);
 	setFullscreenModeToCols(false);
 	updateMenuIcon(['consignes-' + id_consigne], 'mainView');
 
 	loadContentInMainSidebar(
-		url, 'article', 'consignes', function () {
+		url,
+		() => {
 			updateUrl(
 				{
 					'type_objet': 'consignes',
 					'id_objet': id_consigne,
 					'id_rubrique': id_consigne,
-					'page': 'article'
+					'page': 'article',
 				}, 'Consigne', "./spip.php?page=article&id_article=" + id_consigne + "&mode=complet"
 			);
-		}
+		},
+		"consigne"
 	);
 
 }
-
-
 /**
  * Appelle le chargement de la réponse
  * dans la sidebar principale et appelle
@@ -472,21 +481,22 @@ function callConsigne(id_consigne) {
 
 function callReponse(id_reponse) {
 
+	if (!Number.isInteger(Number(id_reponse))) return;
 	changeTimelineMode('consignes');
-	setFullscreenModeToCols(true);
+	setFullscreenModeToCols(false);
 
-	var id_consigne = getIdConsigneFromIdReponse(id_reponse);
+	const id_consigne = getIdConsigneFromIdReponse(id_reponse);
 
-	var id_classe = getIdClasseFromIdReponse(id_reponse);
+	const id_classe = getIdClasseFromIdReponse(id_reponse);
 
 	updateMenuIcon(['consignes-' + id_consigne, 'classes-' + id_classe], 'mainView');
 
-	var url = CCN.projet.url_popup_reponse + "&id_article=" + id_reponse;
+	const url = CCN.projet.url_popup_reponse + "&id_article=" + id_reponse;
 
 	showConsigneInTimeline(id_consigne);
-
 	loadContentInMainSidebar(
-		url, 'article', 'travail_en_cours', function () {
+		url,
+		() => {
 			updateUrl(
 				{
 					'type_objet': 'travail_en_cours',
@@ -495,46 +505,37 @@ function callReponse(id_reponse) {
 					'page': 'article'
 				}, "Réponse", "./spip.php?page=article&id_article=" + id_reponse + "&mode=complet"
 			);
-		}
+		},
+		"reponse"
 	);
-
-
-	var url_travail_en_cours = 'spip.php?page=rubrique&mode=detail&id_rubrique=' + CCN.travailEnCoursId;
-
-	loadContentInLateralSidebar(url_travail_en_cours, 'rubrique', 'travail_en_cours');
-
 	showReponseInTimeline(id_reponse);
 
 }
-
-
 /**
  * Appelle le chargement de la classe
- * dans la sidebar principale et appelle
- * le chargement de la classe dans la sidebar secondaire.
+ * dans la sidebar principale, en plein écran (pas de colonne latérale
+ * de navigation entre classes, cf callClasses).
  *
  * @param {number} id_classe - ID de la classe
  *
  * @see loadContentInMainSidebar
- * @see loadContentInLateralSidebar
- *
- * @todo *1 : Modifier le contenu de la sidebar secondaire
  */
 
 function callClasse(id_classe) {
 
+	if (id_classe !== '' && !Number.isInteger(Number(id_classe))) return;
 	changeTimelineMode('consignes');
-	toggleSidebarExpand();
-	setFullscreenModeToCols(true);
+	expandSidebar();
+	setFullscreenModeToCols(false);
 	updateMenuIcon(['classes', 'classes-' + id_classe], 'sidebarView');
 
-	var url = CCN.projet.url_popup_classes;
+	let url = CCN.projet.url_popup_classes;
 	if (id_classe != '') {
-		// url = CCN.projet.url_popup_classes + '&id_rubrique=' + id_classe + '&type_objet=travail_en_cours';
 		url = CCN.projet.url_popup_classes + '&id_objet=' + id_classe + '&type_objet=travail_en_cours';
 	}
 	loadContentInMainSidebar(
-		url, 'rubrique', 'classes', function () {
+		url,
+		() => {
 			updateUrl(
 				{
 					'type_objet': 'classes',
@@ -543,31 +544,23 @@ function callClasse(id_classe) {
 					'page': 'rubrique'
 				}, "Classe", "./spip.php?page=rubrique&id_objet=" + id_classe + "&mode=complet&type_objet=classes"
 			);
-		}
+		},
+		"ressource"
 	);
-
-	var url_travail_en_cours = 'spip.php?page=rubrique&mode=detail&id_rubrique=' + CCN.travailEnCoursId;
-	loadContentInLateralSidebar(url_travail_en_cours, 'rubrique', 'travail_en_cours');
 }
-
-
 /**
  * Appelle le chargement des classes
  * dans la sidebar principale
- *
- * @see loadContentInLateralSidebar
  */
 
 function callClasses() {
 	changeTimelineMode('consignes');
+	showSidebar();
 	toggleSidebarExpand();
-	setFullscreenModeToCols(true);
+	setFullscreenModeToCols(false);
 	updateMenuIcon(['classes'], 'sidebarView');
 
-	blankMainSidebar('<div class="sidebar_bubble"><div class="fiche_titre couleur_texte_ressources couleur_ressources0"><div class="texte"><div class="titre">Travail en cours</div></div></div></div><div class="sidebar_bubble sidebar_bubble_blank">Naviguez dans l\'espace travail en cours grâce à la barre latérale sur votre droite.</div>');
-
-	var url_travail_en_cours = 'spip.php?page=rubrique&mode=detail&id_rubrique=' + CCN.travailEnCoursId;
-	loadContentInLateralSidebar(url_travail_en_cours, 'rubrique', 'travail_en_cours');
+	blankMainSidebar('travail_en_cours');
 }
 
 /**
@@ -579,43 +572,35 @@ function callClasses() {
 
 function callLivrables() {
 	changeTimelineMode('consignes');
+	showSidebar();
 	toggleSidebarExpand();
 	updateMenuIcon(['livrables'], 'sidebarView');
 
-	blankMainSidebar('<div class="sidebar_bubble"><div class="fiche_titre couleur_texte_livrables couleur_livrables0"><div class="texte"><div class="titre">Espace livrables</div></div></div></div><div class="sidebar_bubble sidebar_bubble_blank">Naviguez dans l\'espace livrables grâce à la barre latérale sur votre droite.</div>');
+	blankMainSidebar('livrables');
 	setFullscreenModeToCols(true);
 
-	var url_lateral = CCN.projet.url_popup_livrables;
-	loadContentInLateralSidebar(
-		url_lateral, 'rubrique', 'livrables', function () {
-		}
-	);
+	loadContentInLateralSidebar(CCN.projet.url_popup_livrables);
 }
-
-
 /**
- * Appelle le chargement de l'article de blog
- * dans la sidebar principale et appelle
- * (…)
+ * Appelle le chargement d'un article de blog dans la sidebar principale
+ * et met à jour l'URL du navigateur en conséquence.
  *
- * @param {number} id_objet
- * @param {string} type_objet
+ * @param {number} id_article
  *
  * @see loadContentInMainSidebar
  * @see loadContentInLateralSidebar
- *
- * @todo Modifier le contenu de la sidebar secondaire
- * @todo Documenter
  */
 
 function callArticleBlog(id_article) {
+	if (!Number.isInteger(Number(id_article))) return;
 	changeTimelineMode('blogs');
 	setFullscreenModeToCols(false);
 	updateMenuIcon(['blogs'], 'mainView');
 
-	var url = CCN.projet.url_popup_blog + "&page=article&id_article=" + id_article;
+	const url = CCN.projet.url_popup_blog + "&page=article&id_article=" + id_article;
 	loadContentInMainSidebar(
-		url, 'article', 'blogs', function () {
+		url,
+		() => {
 			updateUrl(
 				{
 					'type_objet': 'blogs',
@@ -624,59 +609,76 @@ function callArticleBlog(id_article) {
 					'page': 'article'
 				}, "Blog", "./spip.php?page=article&id_article=" + id_article + "&mode=complet"
 			);
-		}
+		},
+		"blog"
 	);
 }
-
-
 /**
- * Appelle le chargement de la ressource
- * dans la sidebar principale et appelle
- * (…)
- *
- * @param {number} id_objet
- * @param {string} type_objet
+ * Vide la sidebar principale et charge la liste des ressources
+ * dans la sidebar secondaire.
  *
  * @see loadContentInLateralSidebar
- *
- * @todo Modifier le contenu de la sidebar secondaire
- * @todo Documenter
  */
 
 function callRessource() {
 	changeTimelineMode('consignes');
+	showSidebar();
 	toggleSidebarExpand();
 	updateMenuIcon(['ressources'], 'sidebarView');
 
-	blankMainSidebar('<div class="sidebar_bubble"><div class="fiche_titre couleur_texte_ressources couleur_ressources0"><div class="texte"><div class="titre">Espace ressources</div></div></div></div><div class="sidebar_bubble sidebar_bubble_blank">Naviguez dans l\'espace ressources grâce à la barre latérale sur votre droite.</div>');
+	blankMainSidebar('ressources');
 	setFullscreenModeToCols(true);
 
-	var url_lateral = CCN.projet.url_popup_ressources;
-	loadContentInLateralSidebar(
-		url_lateral, 'rubrique', 'ressources', function () {
+	loadContentInLateralSidebar(CCN.projet.url_popup_ressources);
+}
+
+/**
+ * Appelle le chargement d'un article jalon ("Cap sur l'année" / "La Rencontre")
+ * dans la sidebar principale.
+ *
+ * @param {number} id_article
+ *
+ * @see loadContentInMainSidebar
+ */
+
+function callArticleJalon(id_article) {
+	if (!Number.isInteger(Number(id_article)) || id_article <= 0) return;
+	changeTimelineMode('consignes');
+	setFullscreenModeToCols(true);
+
+	const url = "./spip.php?page=article&id_article=" + id_article + "&mode=ajax-detail";
+	loadContentInMainSidebar(
+		url,
+		() => {
+			updateUrl(
+				{
+					'id_article': id_article,
+					'page': 'article'
+				}, "", "./spip.php?page=article&id_article=" + id_article + "&mode=complet"
+			);
 		}
 	);
 }
 
 /**
- * Appelle le chargement d'un article ressource
- * dans la sidebar secondaire
+ * Appelle le chargement d'un article ressource dans la sidebar principale.
  *
  * @param {number} id_article
+ * @param {string} type_objet
  *
  * @see loadContentInMainSidebar
- *
- * @todo Documenter
  */
 
 function callRessourceArticle(id_article, type_objet) {
+	if (!Number.isInteger(Number(id_article))) return;
 	changeTimelineMode('consignes');
 	setFullscreenModeToCols(true);
 	updateMenuIcon([type_objet], 'sidebarView');
 
-	var url = "./spip.php?page=article&id_article=" + id_article + "&mode=ajax-detail";
+	const url = "./spip.php?page=article&id_article=" + id_article + "&type_objet=" + type_objet + "&mode=ajax-detail";
 	loadContentInMainSidebar(
-		url, 'article', type_objet, function () {
+		url,
+		() => {
 			updateUrl(
 				{
 					'type_objet': type_objet,
@@ -684,31 +686,31 @@ function callRessourceArticle(id_article, type_objet) {
 					'page': 'article'
 				}, "Ressources", "./spip.php?page=article&id_article=" + id_article + "&type_objet=" + type_objet + "&mode=complet"
 			);
-		}
+		},
+		"ressource"
 	);
-
-	var url_lateral = (type_objet == 'ressources') ? CCN.projet.url_popup_ressources : CCN.projet.url_popup_agora;
 }
 
 /**
- * Appelle le chargement d'un article syndic
- * dans la sidebar secondaire
+ * Appelle le chargement d'un article syndiqué (ressource externe)
+ * dans la sidebar principale.
  *
  * @param {number} id_syndic_article
+ * @param {string} type_objet
  *
  * @see loadContentInMainSidebar
- *
- * @todo Documenter
  */
 
 function callRessourceSyndicArticle(id_syndic_article, type_objet) {
+	if (!Number.isInteger(Number(id_syndic_article))) return;
 	changeTimelineMode('consignes');
 	setFullscreenModeToCols(true);
 	updateMenuIcon([type_objet], 'sidebarView');
 
-	var url = "./spip.php?page=syndic_article&id_syndic_article=" + id_syndic_article + "&mode=ajax-detail";
+	const url = "./spip.php?page=syndic_article&id_syndic_article=" + id_syndic_article + "&type_objet=" + type_objet + "&mode=ajax-detail";
 	loadContentInMainSidebar(
-		url, 'syndic_article', type_objet, function () {
+		url,
+		() => {
 			updateUrl(
 				{
 					'type_objet': type_objet,
@@ -716,36 +718,31 @@ function callRessourceSyndicArticle(id_syndic_article, type_objet) {
 					'page': 'article'
 				}, "Ressources", "./spip.php?page=syndic_article&id_syndic_article=" + id_syndic_article + "&type_objet=" + type_objet + "&mode=complet"
 			);
-		}
+		},
+		"ressource"
 	);
-
-	var url_lateral = (type_objet == 'ressources') ? CCN.projet.url_popup_ressources : CCN.projet.url_popup_agora;
-	loadContentInLateralSidebar(
-		url_lateral, 'rubrique', type_objet, function () {
-		}
-	);
-
 }
 
 /**
  * Appelle le chargement d'une rubrique ressource
- * dans la sidebar secondaire
+ * dans la sidebar principale.
  *
  * @param {number} id_rubrique
+ * @param {string} type_objet
  *
  * @see loadContentInMainSidebar
- *
- * @todo Documenter
  */
 
 function callRessourceRubrique(id_rubrique, type_objet) {
+	if (!Number.isInteger(Number(id_rubrique))) return;
 	changeTimelineMode('consignes');
 	setFullscreenModeToCols(true);
 	updateMenuIcon([type_objet], 'sidebarView');
 
-	var url = "./spip.php?page=rubrique&id_rubrique=" + id_rubrique + "&mode=ajax-detail";
+	const url = "./spip.php?page=rubrique&id_rubrique=" + id_rubrique + "&type_objet=" + type_objet + "&mode=ajax-detail";
 	loadContentInMainSidebar(
-		url, 'rubrique', type_objet, function () {
+		url,
+		() => {
 			updateUrl(
 				{
 					'type_objet': type_objet,
@@ -753,36 +750,32 @@ function callRessourceRubrique(id_rubrique, type_objet) {
 					'page': 'rubrique'
 				}, "Ressources", "./spip.php?page=rubrique&id_rubrique=" + id_rubrique + "&type_objet=" + type_objet + "&mode=complet"
 			);
-		}
+		},
+		"ressource"
 	);
-
-	var url_lateral = (type_objet == 'ressources') ? CCN.projet.url_popup_ressources : CCN.projet.url_popup_agora;
 }
-
-
 /**
- * Appelle le chargement de l'événement
- * dans la sidebar principale et appelle
- * (…)
+ * Appelle le chargement d'un article ou syndic_article d'événement
+ * dans la sidebar principale et met à jour l'URL du navigateur.
  *
  * @param {number} id_objet
- * @param {string} type_objet
+ * @param {string} type_objet - "article" ou "syndic_article"
  *
  * @see loadContentInMainSidebar
  * @see loadContentInLateralSidebar
- *
- * @todo Modifier le contenu de la sidebar secondaire
- * @todo Documenter
  */
 
 function callArticleEvenement(id_objet, type_objet) {
+	if (!Number.isInteger(Number(id_objet))) return;
+	if (!['article', 'syndic_article'].includes(type_objet)) return;
 	changeTimelineMode('evenements');
 	setFullscreenModeToCols(false);
 	updateMenuIcon(['evenements'], 'mainView');
 
-	var url = CCN.projet.url_popup_evenement + "&page=" + type_objet + "&id_" + type_objet + "=" + id_objet;
+	const url = CCN.projet.url_popup_evenement + "&page=" + type_objet + "&id_" + type_objet + "=" + id_objet;
 	loadContentInMainSidebar(
-		url, 'article', 'evenements', function () {
+		url,
+		() => {
 			updateUrl(
 				{
 					'type_objet': 'evenements',
@@ -790,99 +783,86 @@ function callArticleEvenement(id_objet, type_objet) {
 					'page': type_objet
 				}, "Événement", "./spip.php?page=" + type_objet + "&id_article=" + id_objet + "&mode=complet"
 			);
-		}
+		},
+		"article"
 	);
 
 }
-
-
 /**
- * Appelle le chargement de l'agora
- * dans la sidebar principale et appelle
- * (…)
+ * Vide la sidebar principale et charge le contenu de l'agora
+ * dans la sidebar secondaire.
  *
  * @see loadContentInMainSidebar
  * @see loadContentInLateralSidebar
- *
- * @todo Modifier le contenu de la sidebar principale
- * @todo Modifier le contenu de la sidebar secondaire
- * @todo Documenter
  */
 
 function callAgora() {
 	changeTimelineMode('consignes');
+	showSidebar();
 	toggleSidebarExpand();
 	updateMenuIcon(['agora'], 'sidebarView');
 
-	blankMainSidebar('<div class="sidebar_bubble"><div class="fiche_titre couleur_texte_ressources couleur_ressources0"><div class="texte"><div class="titre">Agora</div></div></div></div><div class="sidebar_bubble sidebar_bubble_blank">Naviguez dans Agora grâce à la barre latérale sur votre droite.</div>');
+	blankMainSidebar('agora');
 	setFullscreenModeToCols(true);
 
-	var url_lateral = CCN.projet.url_popup_agora;
-	loadContentInLateralSidebar(
-		url_lateral, 'rubrique', 'agora', function () {
-		}
-	);
-
+	loadContentInLateralSidebar(CCN.projet.url_popup_agora);
 }
 
 /**
+ * Charge le formulaire de publication d'une réponse à une consigne
+ * dans la sidebar principale.
+ *
  * @param {number} id_consigne
  * @param {number} id_rubrique_classe
- * @param {number} numero
+ * @param {number} numero - Rang de la consigne, utilisé si absente de CCN.consignes
  *
- * @todo Documenter
+ * @see loadContentInMainSidebar
  */
 function createReponse(id_consigne, id_rubrique_classe, numero) {
-
 	changeTimelineMode('consignes');
 
-	var url = CCN.projet.url_popup_reponseajout + "&id_consigne=" + id_consigne + "&id_rubrique=" + id_rubrique_classe; // TODO Check infinite loading icon
-	loadContentInMainSidebar(url, 'article', 'blogs');
+	const consigneData = CCN.consignes && CCN.consignes.find(c => c.id == id_consigne);
+	const nextConsigne = consigneData ? CCN.consignes.find(c => c.numero === consigneData.numero + 1) : null;
+	const dateLimite   = nextConsigne ? nextConsigne.data.date_texte : '';
+	const rang         = consigneData ? consigneData.numero : (numero || '');
+
+	const url = CCN.projet.url_popup_reponseajout + "&id_consigne=" + id_consigne + "&id_rubrique=" + id_rubrique_classe + "&rang=" + rang + "&date_limite=" + dateLimite;
+	loadContentInMainSidebar(url, null, "publication_mission");
 
 }
-
+/**
+ * Cherche la réponse correspondant à un id_reponse dans CCN.consignes.
+ *
+ * @param   {number} id_reponse
+ * @returns {{consigne: object, reponse: object}|null}
+ */
+function findReponseById(id_reponse) {
+	for (const consigne of CCN.consignes) {
+		for (const reponse of consigne.reponses) {
+			if (reponse.id === id_reponse) {
+				return { consigne, reponse };
+			}
+		}
+	}
+	return null;
+}
 
 /**
- * Cherche l'ID de la consigne parente à une réponse de classe
- * grâce à l'ID de la réponse
- *
- * @param   {number} id_reponse - ID de la réponse
- * @returns {number} Id de la consigne
- *
- * @see callReponse
+ * @param {number} id_reponse
+ * @returns {number|null} Id de la consigne parente
  */
 function getIdConsigneFromIdReponse(id_reponse) {
-	for (var index_consigne in CCN.consignes) {
-		for (var index_reponse in CCN.consignes[index_consigne].reponses) {
-			if (CCN.consignes[index_consigne].reponses[index_reponse].id == id_reponse) {
-				return CCN.consignes[index_consigne].id;
-			}
-		}
-	}
-	return null;
+	const found = findReponseById(id_reponse);
+	return found ? found.consigne.id : null;
 }
 
-
-
 /**
- * Cherche l'ID de la classe parente à une réponse de classe
- * grâce à l'ID de la réponse
- *
- * @param   {number} id_reponse - ID de la réponse
- * @returns {number} Id de la classe
- *
- * @see callReponse
+ * @param {number} id_reponse
+ * @returns {number|null} Id de la classe parente
  */
-
 function getIdClasseFromIdReponse(id_reponse) {
-	for (var index_consigne in CCN.consignes) {
-		for (var index_reponse in CCN.consignes[index_consigne].reponses) {
-			if (CCN.consignes[index_consigne].reponses[index_reponse].id == id_reponse) {
-				return CCN.consignes[index_consigne].reponses[index_reponse].classe_id;
-			}
-		}
-	}
-	return null;
+	const found = findReponseById(id_reponse);
+	return found ? found.reponse.classe_id : null;
 }
 
 /**
@@ -890,26 +870,24 @@ function getIdClasseFromIdReponse(id_reponse) {
  * <br>
  * La fonction est appelée de manière récursive (<tt>setInterval(…, 1)</tt>)
  * afin de mettre à jour en même temps que la transition CSS de la timeline.
- *
- * @todo Éléments autres que DOM ?
  */
 function updateConnecteurs() {
 	$('.connecteur_timeline').each(
 		function () {
 
-			var connecteur_consigne = $('#consigne_haute' + $(this).data('consigne-id'));
-			var connecteur_reponse = $('#reponse_haute' + $(this).data('reponse-id'));
+			const connecteur_consigne = $('#consigne_haute' + $(this).data('consigne-id'));
+			const connecteur_reponse = $('#reponse_haute' + $(this).data('reponse-id'));
 
-			var connecteur = $(this);
+			const connecteur = $(this);
 
-			var x1 = connecteur_consigne.offset().left + connecteur_consigne.outerWidth() - 5;
-			var y1 = connecteur_consigne.offset().top + CCN.projet.timeline.offset().top + 5;
-			var x2 = connecteur_reponse.offset().left + 5;
-			var y2 = connecteur_reponse.offset().top + CCN.projet.timeline.offset().top + 5;
+			const x1 = connecteur_consigne.offset().left + connecteur_consigne.outerWidth();
+			const y1 = connecteur_consigne.offset().top;
+			const x2 = connecteur_reponse.offset().left;
+			const y2 = connecteur_reponse.offset().top;
 
-			var length = Math.sqrt((x1 - x2) * (x1 - x2) + (y1 - y2) * (y1 - y2));
-			var angle = Math.atan2(y2 - y1, x2 - x1) * 180 / Math.PI;
-			var transform = 'rotate(' + angle + 'deg)';
+			const length = Math.sqrt((x1 - x2) * (x1 - x2) + (y1 - y2) * (y1 - y2));
+			const angle = Math.atan2(y2 - y1, x2 - x1) * 180 / Math.PI;
+			const transform = 'rotate(' + angle + 'deg)';
 
 			connecteur.css(
 				{
@@ -924,15 +902,48 @@ function updateConnecteurs() {
 	);
 }
 
-/**
- * Change la couleur du bouton une fois cliqué.
- *
- * @param {string} val - Sélecteur de l'élément DOM en jQuery
- * @todo  Améliorer la récupération de la couleur ?
- */
-function changeCouleurLogoMenu(val) {
-	var color = $(val).css('background-color');
-	$(val).parent().parent().parent().children("h3").css('background-color', color);
+function handleCollision(y, responseHeight, timelineTop, timelineHeight) {
+    const yMin = 0;
+    const yMax = yMin + timelineHeight - responseHeight;
+    if (y < yMin) return yMin;
+    if (y > yMax) return yMax;
+    return y;
+}
+
+function updateConnecteur(reponseObject, ui) {
+	const reponseDOM = $(reponseObject)
+	const idConsigne = reponseDOM.data('consigne-id')
+	const idReponse = reponseDOM.data('reponse-id')
+	const connecteurDOM = $(`#connecteur_consigne_${idConsigne}_reponse_${idReponse}`);
+	const consigneDOM = $(`#consigne_haute${idConsigne}`);
+	const timelineTop = CCN.timelineLayerConsignes.offset().top;
+	const timelineHeight = CCN.timelineLayerConsignes.height();
+
+	const x1 = consigneDOM.offset().left + consigneDOM.outerWidth();
+	const y1 = consigneDOM.offset().top  + consigneDOM.outerHeight() / 2 - timelineTop;
+	const x2 = reponseDOM.offset().left;
+    const adjustedUiPositionTop = handleCollision(
+		ui.position.top,
+		reponseDOM.outerHeight(),
+		timelineTop,
+		timelineHeight
+	);
+    ui.position.top = adjustedUiPositionTop;
+    const y2 = adjustedUiPositionTop + reponseDOM.outerHeight() / 2;
+
+	const length = Math.sqrt((x1 - x2) * (x1 - x2) + (y1 - y2) * (y1 - y2));
+	const angle = Math.atan2(y2 - y1, x2 - x1) * 180 / Math.PI;
+	const transform = 'rotate(' + angle + 'deg)';
+
+	connecteurDOM.css(
+		{
+			'position': 'absolute',
+			'transform': transform,
+			'left': parseFloat(x1) + 'px',
+			'top': parseFloat(y1) + 'px'
+		}
+	)
+		.width(parseFloat(length) + 'px');
 }
 
 /**
@@ -942,47 +953,40 @@ function changeCouleurLogoMenu(val) {
 function updateUrl(object, title, url) {
 
 	currentState = object;
-
-
 	if (CCN.hash != '') {
 		if (CCN.hash.substring(0, 5) == 'forum') {
 
 		} else {
 
-			History.pushState(object, title, url + '#' + CCN.hash);
+			window.history.pushState(object, title, url + '#' + CCN.hash);
 
 		}
 
 		setTimeout(
 			function () {
 
-				var anchor = $("#" + CCN.hash);
+				if (/^[\w-]+$/.test(CCN.hash)) {
+					const anchor = $("#" + CCN.hash);
+					if (anchor.length > 0) {
+						// Ce bloc est appelé au moins deux fois : on utilise .show() plutôt
+						// qu'un trigger('click') sur .triggertoggleshow, qui ferait un
+						// slideToggle et refermerait l'item au second appel.
 
+						// Forum : ouvre les items
+						anchor.find('.toggleshow').show();
+						anchor.closest('.intervention_item_around').find('.toggleshow').show();
 
-				if (anchor.length > 0) {
-
-
-					// TODO : cela est appelé deux fois minimum à cause de History.js (donc un trigger('click') sur .triggertoggleshow ne fonctionne pas car il ouvre puis ferme)
-
-					// Forum : ouvre les items
-					anchor.find('.toggleshow').show();
-					anchor.closest('.intervention_item_around').find('.toggleshow').show();
-
-					$('#sidebar_content, #sidebar_main_inner, #sidebar_lateral_inner').animate({ scrollTop: anchor.offset().top - 60 }, 'slow');
+						$('#sidebar_content, #sidebar_main_inner, #sidebar_lateral_inner').animate({ scrollTop: anchor.offset().top - 60 }, 'slow');
+					}
 				}
 
 				CCN.hash = '';
 			}, 500
 		);
 	} else {
-		History.pushState(object, title, url);
+		window.history.pushState(object, title, url);
 	}
-	antiPushState = false;
-
-
 }
-
-
 /**
  * Met à jour le cookie et recharge la page.
  *
@@ -991,61 +995,78 @@ function updateUrl(object, title, url) {
  * @param {string} cookie_valeur - Valeur du cookie
  */
 
-function reloadAndSetCookie(url, cookie_nom, cookie_valeur) {
-	document.cookie = cookie_nom + "=" + cookie_valeur;
-	url = url + '/?rub=' + cookie_valeur;
-	reload(url);
+function setCookie(url, cookie_nom, cookie_valeur) {
+	document.cookie = cookie_nom + "=" + encodeURIComponent(cookie_valeur) + "; SameSite=Strict; Secure";
 }
-
-
 /**
  * Gère le rechargement de la page.
  *
  * @param {string} url - URL de la page à charger avec AJAX ou <tt>self</tt> pour recharger la même page
  *
- * @see reloadAndSetCookie
+ * @see setCookie
  */
 
 function reload(url) {
-	if (url == 'self') {
+	if (url === 'self') {
 		location.reload(true);
-	} else {
+	} else if ((url.startsWith('/') && !url.startsWith('//')) || url.startsWith(window.location.origin)) {
 		window.location.href = url;
 	}
 }
 
 /**
- * Charge l'URL dans la sidebar principale.
+ * Initialise le système d'onglets #mission-tabs s'il est présent.
+ * Appelable sans risque plusieurs fois (customTabs est idempotent) :
+ * couvre à la fois le chargement de page complet (voir main.js) et
+ * la navigation ajax (voir loadContentInMainSidebar).
+ */
+function initMissionTabs() {
+	const missionTabs = $('#mission-tabs');
+	if (missionTabs.length > 0) {
+		missionTabs.customTabs({
+			urlParam: 'onglet',
+			pushHistory: false  // "false" pour que "précédent" ne navigue pas entre les onglets
+		});
+	}
+}
+
+/**
+ * Charge une URL dans la sidebar principale, avec état de chargement
+ * (classe <tt>loading</tt> sur <tt>body</tt>) et callback de fin.
  *
  * @param {string} url - URL de la page à charger avec AJAX
- * @param {string} typePage - Type du contenu SPIP : <tt>article</tt>, <tt>rubrique</tt>…
- * @param {string} typeObjet - Type de l'objet principal de la page : <tt>consignes</tt>, <tt>travail_en_cours</tt>, <tt>blogs</tt>, <tt>evenements</tt>, <tt>ressources</tt>, <tt>classes</tt>…
+ * @param {?function(string)} callback - Appelé avec la réponse une fois le contenu chargé
+ * @param {string} typeContenu - Type de contenu chargé : <tt>consigne</tt>, <tt>reponse</tt>, <tt>publication_mission</tt>…
  *
  * @see loadContentInLateralSidebar
- *
- * @todo Loading et son callback
  */
-
-function loadContentInMainSidebar(url, typePage, typeObjet, callback) {
+function loadContentInMainSidebar(url, callback, typeContenu) {
 	$('body').addClass('loading');
 	showSidebar();
-	hideSidebarLateral();
 	emptyMainSidebar();
 
 	$('#sidebar_main_inner').load(url, function (response, status, xhr) {
 
 		if (status === "error") {
-			console.error("Erreur de chargement :", xhr.status, xhr.statusText);
+			if (CCN.debug) { console.error("Erreur de chargement :", xhr.status, xhr.statusText); }
 			return;
 		}
 
 		if (!response || response.trim() === "") {
-			console.warn("Réponse vide !");
+			if (CCN.debug) { console.warn("Réponse vide !"); }
 		}
 
 		$('body').removeClass('loading');
 		$('#sidebar_content').scrollTop(0);
-		initLocalEvents($('#sidebar_main_inner'));
+		_sidebarFocusFirst();
+		if(["consigne", "reponse"].includes(typeContenu)) {
+			initMissionTabs();
+			initCommentaires();
+		}
+		if(typeContenu === "publication_mission") {
+			// initCompteurCaracteres()
+			initPublierFormulaire();
+		}
 
 		if (callback) {
 			callback(response);
@@ -1056,63 +1077,21 @@ function loadContentInMainSidebar(url, typePage, typeObjet, callback) {
 }
 
 /**
- * Charge l'URL dans la sidebar secondaire.
- *
- * @param {string} url - URL de la page à charger avec AJAX
- * @param {string} typePage - Type du contenu SPIP : <tt>article</tt>, <tt>rubrique</tt>…
- * @param {string} typeObjet - Type de l'objet principal de la page : <tt>consignes</tt>, <tt>travail_en_cours</tt>, <tt>blogs</tt>, <tt>evenements</tt>, <tt>ressources</tt>, <tt>classes</tt>…
- *
- * @see loadContentInMainSidebar
- *
- * @todo Loading et son callback
- */
-
-function loadContentInLateralSidebar(url, typePage, typeObjet, callback) {
-	$('body').addClass('loading');
-	showSidebar();
-	//emptyLateralSidebar();
-
-	$('#sidebar_lateral_inner').load(
-		url, function (response, status, xhr) {
-			$('body').removeClass('loading');
-			$('#sidebar_content').scrollTop(0);
-			initLocalEvents($('#sidebar_lateral_inner'));
-			if (callback) {
-				callback(response);
-			}
-			antifloodHashChange = false;
-		}
-	);
-}
-
-/**
  * Update le menu
  */
 function updateMenuIcon(ids, mode) {
-	if (mode == 'timelineMode') {
+	if (mode === 'timelineMode' || mode === 'mainView') {
 		$('#menu_bas .logo a').removeClass('selected');
-		for (var i in ids) {
-			$('.menu_logo_' + ids[i]).addClass('selected');
+		for (const id of ids) {
+			$('.menu_logo_' + id).addClass('selected');
 		}
 	}
 
-	// mainView :
-	// on clean tous les items
-	// et on active les ids
-	if (mode == 'mainView') {
-		$('#menu_bas .logo a').removeClass('selected');
-		for (var i in ids) {
-			$('.menu_logo_' + ids[i]).addClass('selected');
-		}
-	}
-
-	// sidebarView :
-	// on clean uniquement les items sidebarView
-	// et on active les ids
-	if (mode == 'sidebarView') {
+	if (mode === 'sidebarView') {
 		$('#menu_bas .logo a.menu_logo_type_sidebarView').removeClass('selected');
-		for (var i in ids) {
-			$('.menu_logo_' + ids[i]).addClass('selected');
+		$('#menu_bas .logo a.logo_menu_classe').removeClass('selected');
+		for (const id of ids) {
+			$('.menu_logo_' + id).addClass('selected');
 		}
 	}
 }
@@ -1127,12 +1106,18 @@ function emptyMainSidebar() {
 }
 
 /**
- * Vide la sidebar latérale.
+ * Charge l'URL dans la sidebar latérale (colonne de navigation "Bibliothèque"
+ * pour Ressources/Agora/Projets finis, cf CCN.projet.url_popup_*).
  *
- * @see loadContentInLateralSidebar
+ * Contrairement à l'ancienne version (avant #157ba4c0), l'affichage de cette
+ * colonne n'est plus piloté par une classe JS dédiée : elle est visible dès
+ * que .hasSidebarExpanded.modeCols s'applique (cf sidebar.css.html), au même
+ * titre que #sidebar_main_around.
+ *
+ * @param {string} url - URL de la page à charger avec AJAX
  */
-function emptyLateralSidebar() {
-	$('#sidebar_lateral_inner').html('<div class="popup"><div class="sidebar_bubble sidebar_bubble_empty"></div></div>');
+function loadContentInLateralSidebar(url) {
+	$('#sidebar_lateral_inner').load(url);
 }
 
 /**
@@ -1153,27 +1138,16 @@ function setFullscreenModeToCols(setCols) {
  * @see loadContentInMainSidebar
  */
 
-function blankMainSidebar(msg) {
-	var message = (msg) ? msg : '';
-	$('#sidebar_main_inner').html('<div class="popup popup_blank">' + msg + '</div>');
-}
+const _blankMainSidebarTemplates = {
+	'travail_en_cours': '<div class="sidebar_bubble"><div class="fiche_titre couleur_texte_ressources couleur_ressources0"><div class="texte"><div class="titre">Travail en cours</div></div></div></div><div class="sidebar_bubble sidebar_bubble_blank">Naviguez dans l\'espace travail en cours grâce à la barre latérale sur votre droite.</div>',
+	'livrables':        '<div class="sidebar_bubble"><div class="fiche_titre couleur_texte_livrables couleur_livrables0"><div class="texte"><div class="titre">Espace livrables</div></div></div></div><div class="sidebar_bubble sidebar_bubble_blank">Naviguez dans l\'espace livrables grâce à la barre latérale sur votre droite.</div>',
+	'ressources':       '<div class="sidebar_bubble"><div class="fiche_titre couleur_texte_ressources couleur_ressources0"><div class="texte"><div class="titre">Espace ressources</div></div></div></div><div class="sidebar_bubble sidebar_bubble_blank">Naviguez dans l\'espace ressources grâce à la barre latérale sur votre droite.</div>',
+	'agora':            '<div class="sidebar_bubble"><div class="fiche_titre couleur_texte_ressources couleur_ressources0"><div class="texte"><div class="titre">Agora</div></div></div></div><div class="sidebar_bubble sidebar_bubble_blank">Naviguez dans Agora grâce à la barre latérale sur votre droite.</div>',
+};
 
-/**
- * Affiche la sidebar secondaire.
- *
- * @see loadContentInLateralSidebar
- */
-function showSidebarLateral() {
-	$('body').addClass('hasSidebarLateralVisible');
-}
-
-/**
- * Masque la sidebar secondaire.
- *
- * @see loadContentInLateralSidebar
- */
-function hideSidebarLateral() {
-	$('body').removeClass('hasSidebarLateralVisible');
+function blankMainSidebar(key) {
+	const html = _blankMainSidebarTemplates[key] || '';
+	$('#sidebar_main_inner').html('<div class="popup popup_blank">' + html + '</div>');
 }
 
 /**
@@ -1183,7 +1157,36 @@ function hideSidebarLateral() {
  */
 
 function showSidebar() {
+	_sidebarTrigger = document.activeElement;
 	$('body').addClass('hasSidebarOpen');
 	$('#sidebar').addClass('show');
-	updateTimeline();
+	updateConnecteurs();
+}
+
+function closeSidebar() {
+	$('body').removeClass('hasSidebarOpen hasSidebarExpanded');
+	$('#sidebar').removeClass('show');
+	$('#menu_bas .logo a').not('#menu-timeline .logo a').removeClass('selected');
+	if (_sidebarTrigger && typeof _sidebarTrigger.focus === 'function') {
+		_sidebarTrigger.focus();
+	}
+	_sidebarTrigger = null;
+	const interval = setInterval(updateConnecteurs, 16);
+	setTimeout(() => {
+		clearInterval(interval);
+		// Une fois le panneau glissé hors écran, on vide son contenu
+		// pour ne pas le garder chargé inutilement (poids DOM sur mobile).
+		if (!$('body').hasClass('hasSidebarOpen')) {
+			$('#sidebar_main_inner').empty();
+		}
+	}, 500);
+}
+
+function _sidebarFocusFirst() {
+	const $focusable = _sidebarFocusableElements();
+	if ($focusable.length) {
+		$focusable.first().focus();
+	} else {
+		$('#sidebar').attr('tabindex', '-1').focus();
+	}
 }

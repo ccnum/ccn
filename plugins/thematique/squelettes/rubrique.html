@@ -1,3 +1,4 @@
+#CACHE{0}
 <BOUCLE_principale_rubrique(RUBRIQUES){id_rubrique}{tout}>
 [(#REM)Type objet: consignes, travail_en_cours, blogs, evenements,ressources]
 [(#ENV{type_objet}|oui)
@@ -36,10 +37,18 @@
 		]
 	]
 	[(#GET{mode}|=={ajax-detail}|oui)
+		#SET{vue_classes_liste,non}
+		[(#GET{type_objet}|=={travail_en_cours}|et{#ENV{id_objet}|non}|oui)
+			#SET{vue_classes_liste,oui}
+		]
+
 		[(#GET{type_objet}|=={ressources}|oui)
 			<INCLURE{fond=noisettes/ressources_detail, type_objet=#GET{type_objet}, admin=#GET{admin}, env, ajax} />
 		]
-		[(#GET{type_objet}|=={ressources}|non)
+		[(#GET{vue_classes_liste}|=={oui}|oui)
+			<INCLURE{fond=noisettes/classes_detail, type_objet=#GET{type_objet}, admin=#GET{admin}, env, ajax} />
+		]
+		[(#GET{type_objet}|=={ressources}|non|et{#GET{vue_classes_liste}|=={non}}|oui)
 			<INCLURE{fond=noisettes/rubrique_detail, type_objet=#GET{type_objet}, admin=#GET{admin}, env, ajax} />
 		]
 	]

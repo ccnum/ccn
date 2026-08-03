@@ -6,7 +6,6 @@
 
 function Intervenant() {
 
-	var id, nom;
 	/**
 	 * Initialise l'intervenant.
 	 *

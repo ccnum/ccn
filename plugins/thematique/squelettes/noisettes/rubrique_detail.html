@@ -1,5 +1,6 @@
+#CACHE{0}
 [(#REM) Réponses de la classe]
-<BOUCLE_principale(RUBRIQUES){id_rubrique}{doublons}{tout}>
+<BOUCLE_principale(RUBRIQUES){id_rubrique=#ENV{id_objet}}{doublons}{tout}>
 <head> </head>
 <div class="popup [popup_(#ENV{type_objet})]">
 	<INCLURE{fond=noisettes/call_sidebar,type_objet=classes, ajax} />
@@ -14,17 +15,18 @@
 	[(#REM) ---------------- Titre ---------------- ]
 	<div class="sidebar_bubble">
 		<div class="fiche_titre couleur_texte_[(#TYPE_OBJET)] couleur_[(#TYPE_OBJET)][(#MODELE{nb2col}{id_article})]">
-			<div class="photo #EDIT{logo}">[(#MODELE{logo_carre}{id_rubrique})]</div>
 			<div class="texte">
+				<div class="photo bgc_classe_[(#ID_RUBRIQUE|classe_numero)]">
+					<span role="img" aria-label="[(#TITRE)]" style="font-size:min(70cqw,70cqh)">[(#ID_RUBRIQUE|classe_icone)]</span>
+				</div>
 				<div class="titre #EDIT{titre}">[(#TITRE)]</div>
-				<!--<div class="auteur_date">[(#NOM) - ][(#DATE|affdate)]</div>-->
 			</div>
 		</div>
 	</div>
 	[(#REM) ---------------- Texte (descriptif) ---------------- ]
 	[<div class="sidebar_bubble">
 		<div class="bloc_texte #EDIT{texte}">
-			(#TEXTE)
+			(#TEXTE|propre)
 		</div>
 	</div>]
 	[(#AUTORISER{modifier,rubrique,#ID_RUBRIQUE}|et{#TEXTE|=={''}|oui}|oui)
@@ -45,25 +47,11 @@
 			<div style="clear:both" class='bloc_option_reponses_consignes_classe'>
 				<div class="nettoyeur"></div>
 				<BOUCLE_rubrique(RUBRIQUES){titre_mot=consignes}{!par id_rubrique}{tout}>
-					<BOUCLE_consigne(ARTICLES){branche}{par date}{date>=#CONST{_date_debut}}{date<=#CONST{_date_fin}}>
+					<BOUCLE_consigne(ARTICLES){branche}{par date}{date>=#CONST{_DATE_DEBUT}}{date<=#CONST{_DATE_FIN}}>
 						#SET{id_to_check,#_principale:ID_RUBRIQUE}
-							<script type="text/javascript">
-								$(function() {
-									$('#ajax_go_to_consigne_#ID_ARTICLE').on('click',function() {
-										callConsigne('#ID_ARTICLE');
-									});
-								});
-							</script>
 							<BOUCLE_reponse(ARTICLES){id_consigne=#ID_ARTICLE}{id_rubrique=#_principale:ID_RUBRIQUE}>
-								<script type="text/javascript">
-									$(function() {
-										$('#ajax_go_to_reponse_#ID_ARTICLE').on('click',function() {
-											callReponse('#ID_ARTICLE');
-										});
-									});
-								</script>
 								<div class="classe_consigne couleur_[(#TYPE_OBJET)][(#GET{id_to_check}|substr{[(#GET{id_to_check}|strlen|moins{1})],1})]">
-									<div id="ajax_go_to_reponse_#ID_ARTICLE" class="classe_consigne_reponse">
+									<div id="ajax_go_to_reponse_#ID_ARTICLE" class="classe_consigne_reponse" onclick="callReponse('#ID_ARTICLE')">
 										<div class="classe_consigne_reponse_photo">[(#MODELE{logo_carre}{id_rubrique})]</div>
 										<div class="classe_consigne_reponse_titre">[(#TITRE)]</div>
 									</div>
@@ -73,7 +61,7 @@
 									</div>
 								</div>
 							</BOUCLE_reponse>
-								<div id="ajax_go_to_consigne_#ID_ARTICLE" class="classe_consigne consigne_no_reponse">
+								<div id="ajax_go_to_consigne_#ID_ARTICLE" class="classe_consigne consigne_no_reponse" onclick="callConsigne('#ID_ARTICLE')">
 									<div class="classe_consigne_reponse">
 										<div class="classe_consigne_reponse_photo"></div>
 										<div class="classe_consigne_reponse_titre">La classe n'a pas encore répondu à cette consigne.</div>
@@ -103,7 +91,7 @@
 			<div style="clear:both" class='bloc_classe_iframe'>
 				<BOUCLE_tab(DATA){source tableau, #GET{tab}}>
 					<div class="nettoyeur">
-						<iframe src="[(#VALEUR)]" width="100%" style="min-height: 600px;"></iframe>
+						[(#VALEUR|match{^https?://}|oui)<iframe src="[(#VALEUR|textebrut)]" width="100%" style="min-height: 600px;" sandbox="allow-scripts allow-same-origin allow-forms allow-popups"></iframe>]
 					</div>
 				</BOUCLE_tab>
 			</div>

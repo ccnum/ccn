@@ -5,6 +5,11 @@
 		- INTERVENANT
 		- PROF
 		- ELEVE
+
+	Recalculé à chaque inclusion (pas de cache #SESSION{role} entre
+	deux pages), pour qu'un changement de droits (nouvelle classe,
+	promotion admin/intervenant) soit pris en compte immédiatement
+	sans attendre une reconnexion.
 ]
 #SET{role,null}
 #SET{prof,0}
@@ -43,3 +48,7 @@
 		#SESSION_SET{role,eleve}
 	]
 </BOUCLE_auteur>
+<script>
+	var role = "#SESSION{role}";
+	console.log(`Role=${role}`)
+</script>

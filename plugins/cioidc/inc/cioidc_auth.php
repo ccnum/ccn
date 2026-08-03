@@ -9,7 +9,7 @@
 
 // Compatibilité avec SPIP 4.4
 if (file_exists(__DIR__ . '/../../../vendor/spip-league/kernel/boot.php')) {
-        require_once __DIR__ . '/../../../vendor/autoload.php';
+	require_once __DIR__ . '/../../../vendor/autoload.php';
 }
 
 // ou est l'espace prive ?
@@ -32,7 +32,9 @@ $ci_id_serveur_auth = 0;
 $ci_nbre_serveurs_additionnels = cioidc_nombre_serveurs_additionnels();
 if ($ci_nbre_serveurs_additionnels >= 1) {
 	// authentification demandee par un clic sur le lien
-	if (isset($_COOKIE['cioidc_choix']) && intval(isset($_COOKIE['cioidc_choix'])) >= 1) {
+	if (isset($_COOKIE['cioidc_choix']) && intval(
+		isset($_COOKIE['cioidc_choix'])
+	) >= 1) {
 		$ci_id_serveur_auth = intval($_COOKIE['cioidc_choix']);
 	}
 }
@@ -47,7 +49,9 @@ if ($config_oidc) {
 	);
 
 	// Well Known Config (pour éviter d'interroger à chaque fois le serveur d'authentification)
-	$well_known_config = cioidc_well_known_config($ci_id_serveur_auth);
+	$well_known_config = cioidc_well_known_config(
+		$ci_id_serveur_auth
+	);
 	if ($well_known_config) {
 		foreach ($well_known_config as $key => $value) {
 			$oidc->providerConfigParam([$key => $value]);
@@ -84,9 +88,12 @@ if ($config_oidc) {
 		}
 	}
 
-
 	try {
 		$oidc->authenticate();
+
+		// le flux est termine, on autorise une nouvelle authentification
+		include_spip('inc/cookie');
+		spip_setcookie('cioidc_en_cours', '', ['expires' => 1, 'httponly' => true]);
 
 		$cioidc_id_token = $oidc->getIdToken();
 
@@ -98,7 +105,7 @@ if ($config_oidc) {
 		}
 
 		$attribute = $config_oidc['uid_claim'];
-		$ci_oidc_userid = $user_info->$attribute;
+		$ci_oidc_userid = $user_info->{$attribute};
 
 		$cioidc_tableau_pipeline = ['args' => [$attribute => $ci_oidc_userid], 'data' => (array) $user_info];
 
@@ -106,8 +113,12 @@ if ($config_oidc) {
 
 		include_spip('inc/cioidc_session');
 		$ciredirect = cioidc_session($ci_oidc_userid, $cioidc_id_token, $ci_id_serveur_auth, $cioidc_tableau_pipeline);
-	} catch(Exception $e){
+	} catch (Exception $e) {
 		spip_log($e, _LOG_ERREUR);
+
+		// le flux est termine (en echec), on autorise une nouvelle authentification
+		include_spip('inc/cookie');
+		spip_setcookie('cioidc_en_cours', '', ['expires' => 1, 'httponly' => true]);
 
 		$ciredirect = generer_url_public('cioidc_erreur4');
 		include_spip('inc/headers');

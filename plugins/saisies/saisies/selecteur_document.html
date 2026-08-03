@@ -14,7 +14,7 @@
 
   Note : dans les options, il faut definir 'env' a 'oui' pour que le selecteur puisse recuperer id_article, id_rubrique ou id_breve.
 ]
-
+[(#ENV{nom}|saisie_nom2classe|set{nom})] 
 <input type="text" name="#ENV{nom}" class="text[ (#ENV{class})]" id="#ENV{id}"[ value="(#ENV{valeur_forcee,#ENV{valeur,#ENV{defaut}}})"][ size="(#ENV{size})"][ maxlength="(#ENV{maxlength})"][ disabled="(#ENV{disable})"][ readonly="(#ENV{readonly})"][(#ENV{obligatoire,non}|!={non}|oui) required="required"][ (#ENV*{attributs})] />
 
 [(#REM) Si la mediatheque est presente ]
@@ -25,7 +25,7 @@
 	#SET{id_table_objet,#ENV{objet}|id_table_objet}
 	<p class='boutons'><input class='submit' type="button" name="parcourir" value="<:saisies:bouton_parcourir_docs_objet:>"
 							  onclick="jQuery.modalboxload(
-			'[(#URL_ECRIRE{popin-choisir_document,var_zajax=contenu&selectfunc=mediaselect_#ENV{nom}&#GET{id_table_objet}=#ENV{id_objet}[&media=(#ENV{media})][&extension=(#ENV{extension})]})]',
+			'[(#URL_ECRIRE{popin-choisir_document,var_zajax=contenu&selectfunc=mediaselect_#GET{nom}&#GET{id_table_objet}=#ENV{id_objet}[&media=(#ENV{media})][&extension=(#ENV{extension})]})]',
 			{autoResize: true}
 		);"
 	/></p>
@@ -36,7 +36,7 @@
 	[(#ENV{id_article}|oui)
 	<p class='boutons'><input class='submit' type="button" name="parcourir" value="<:saisies:bouton_parcourir_docs_article:>"
 		onclick="jQuery.modalboxload(
-			'[(#URL_ECRIRE{popin-choisir_document,var_zajax=contenu&selectfunc=mediaselect_#ENV{nom}&id_article=#ENV{id_article}[&media=(#ENV{media})][&extension=(#ENV{extension})]})]',
+			'[(#URL_ECRIRE{popin-choisir_document,var_zajax=contenu&selectfunc=mediaselect_#GET{nom}&id_article=#ENV{id_article}[&media=(#ENV{media})][&extension=(#ENV{extension})]})]',
 			{autoResize: true}
 		);"
 	/></p>
@@ -46,7 +46,7 @@
 	[(#ENV{id_rubrique}|oui)
 	<p class='boutons'><input class='submit' type="button" name="parcourir" value="<:saisies:bouton_parcourir_docs_rubrique:>"
 		onclick="jQuery.modalboxload(
-			'[(#URL_ECRIRE{popin-choisir_document,var_zajax=contenu&selectfunc=mediaselect_#ENV{nom}&id_rubrique=#ENV{id_rubrique}[&media=(#ENV{media})][&extension=(#ENV{extension})]})]',
+			'[(#URL_ECRIRE{popin-choisir_document,var_zajax=contenu&selectfunc=mediaselect_#GET{nom}&id_rubrique=#ENV{id_rubrique}[&media=(#ENV{media})][&extension=(#ENV{extension})]})]',
 			{autoResize: true}
 		);"
 	/></p>
@@ -56,7 +56,7 @@
 	[(#ENV{id_breve}|oui)
 	<p class='boutons'><input class='submit' type="button" name="parcourir" value="<:saisies:bouton_parcourir_docs_breve:>"
 		onclick="jQuery.modalboxload(
-			'[(#URL_ECRIRE{popin-choisir_document,var_zajax=contenu&selectfunc=mediaselect_#ENV{nom}&id_breve=#ENV{id_breve}[&media=(#ENV{media})][&extension=(#ENV{extension})]})]',
+			'[(#URL_ECRIRE{popin-choisir_document,var_zajax=contenu&selectfunc=mediaselect_#GET{nom}&id_breve=#ENV{id_breve}[&media=(#ENV{media})][&extension=(#ENV{extension})]})]',
 			{autoResize: true}
 		);"
 	/></p>
@@ -65,13 +65,13 @@
 [(#REM) Parcourir toute la mediatheque ]
 <p class='boutons'><input class='submit' type="button" name="parcourir" value="<:saisies:bouton_parcourir_mediatheque:>"
 	onclick="jQuery.modalboxload(
-		'[(#URL_ECRIRE{popin-choisir_document,var_zajax=contenu&selectfunc=mediaselect_#ENV{nom}[&media=(#ENV{media})][&extension=(#ENV{extension})]})]',
+		'[(#URL_ECRIRE{popin-choisir_document,var_zajax=contenu&selectfunc=mediaselect_#GET{nom}[&media=(#ENV{media})][&extension=(#ENV{extension})]})]',
 		{autoResize: true}
 	);"
 /></p>
 
 <script>
-	function mediaselect_#ENV{nom}(id){
+	function mediaselect_#GET{nom}(id){
 		jQuery.modalboxclose();
 		const champ = document.getElementById("#ENV{id}");
 		const multiple = [(#ENV{multiple}|=={oui}|?{true,false})];

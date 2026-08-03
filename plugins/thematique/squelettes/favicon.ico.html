@@ -1,0 +1,9 @@
+#HTTP_HEADER{Content-Type: image/svg+xml; charset=UTF-8}
+#HTTP_HEADER{Cache-Control: max-age=3600, public}
+<?php
+$file = "[(#CHEMIN{img/pictos_sites/[(#NOM_SITE_SPIP|replace{' ',''}|strtolower)].svg}|sinon{#CHEMIN{img/pictos_sites/selfdata.svg}})]";
+if ($cl = filesize($file = preg_replace(',[?].*$,', '', $file))) {
+	header('Content-Length: ' . $cl);
+}
+readfile($file);
+?>

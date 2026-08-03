@@ -1,6 +1,6 @@
 <script type="text/javascript">
-	$('##NOM').click(function() {
-		$(this).next().removeClass('masquer');
+	$('##NOM').on('click', function() {
+		$(this).next().toggleClass('masquer');
 		return false;
 	});
 </script>

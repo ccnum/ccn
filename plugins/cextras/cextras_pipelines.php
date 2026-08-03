@@ -6,8 +6,6 @@
  * @package SPIP\Cextras\Pipelines
 **/
 
-// sécurité
-if (!defined("_ECRIRE_INC_VERSION")) return;
 
 /**
  * Retourne la liste des saisies de champs extras concernant un objet donné
@@ -244,17 +242,14 @@ function cextras_appliquer_traitements_saisies($saisies, $valeurs) {
 }
 
 /**
- * Vérification de la validité des champs extras
- *
- * Lorsqu'un formulaire 'editer_xx' se présente, la fonction effectue,
- * pour chaque champs extra les vérifications prévues dans la
- * définition de la saisie, et retourne les éventuelles erreurs rencontrées.
+ * Déclarer les champs extras comme au plugin saisies
+ * pour qu'il s'occupe tout seul des vérifications et des éventuelles prétraitement à la réception
  *
  * @pipeline formulaire_verifier
  * @param array $flux Données du pipeline
  * @return array      Données du pipeline
 **/
-function cextras_formulaire_verifier($flux){
+function cextras_formulaire_saisies($flux) {
 	$form = $flux['args']['form'];
 
 	if (strncmp($form, 'editer_', 7) !== 0) {
@@ -271,8 +266,7 @@ function cextras_formulaire_verifier($flux){
 		$saisies = champs_extras_autorisation('modifier', $objet, $saisies, array_merge($flux['args'], array(
 			'id' => $id_objet,
 			'contexte' => array()))); // nous ne connaissons pas le contexte dans ce pipeline
-
-		$flux['data'] = array_merge($flux['data'], saisies_verifier($saisies));
+		$flux['data'] = array_merge($flux['data'], $saisies);
 	}
 	return $flux;
 }
@@ -337,7 +331,6 @@ function cextras_formulaire_fond($flux) {
 	}
 	return $flux;
 }
-
 
 /**
  * Définir une fonction de contrôleur pour Crayons si on tente d'éditer un champs extras.
@@ -426,6 +419,10 @@ function cextras_crayons_verifier($flux) {
 			if ($erreur) {
 				$flux['data']['erreurs'][$nom] = $erreur[$nom];
 			} elseif (!is_null($normaliser = saisies_request($nom))) {
+				// Si c'est une saisie qui permet les choix alternatifs, on doit ruser
+				if (($saisie['options']['choix_alternatif'] ?? '') && $normaliser === '@choix_alternatif') {
+					$normaliser = _request("{$key}_choix_alternatif");
+				}
 				$flux['data']['normaliser'][$nom] = champs_extras_serialiser($normaliser, $saisie);
 			}
 		}

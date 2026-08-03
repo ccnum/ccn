@@ -1,7 +1,7 @@
 <paquet
 	prefix="thematique"
 	categorie="squelette"
-	version="3.2.0"
+	version="3.3.3"
 	etat="stable"
 	logo="th.png"
 	schema="3.0.7"
@@ -23,13 +23,17 @@
 	<necessite nom="spip_bonux" />
 
 	<utilise nom="autorite" compatibilite="[0.10.18;[" />
-	<utilise nom="cicas" />
+	<utilise nom="cioidc" />
 	<utilise nom="medias" />
 
-	<pipeline nom="declarer_champs_extras" inclure="base/th_cextras.php" />
-	<pipeline nom="declarer_tables_principales" inclure="base/th_install.php" />
+	<pipeline nom="declarer_champs_extras" inclure="base/thematique_cextras.php" />
+	<pipeline nom="declarer_tables_principales" inclure="base/thematique_install.php" />
+	<pipeline nom="pre_boucle" inclure="thematique_pipelines.php" />
 	<pipeline nom="insert_head" inclure="thematique_pipelines.php" />
 	<pipeline nom="jqueryui_plugins" inclure="thematique_pipelines.php" />
 	<pipeline nom="notifications_destinataires" inclure="thematique_pipelines.php" />
 	<pipeline nom="cioidc_userinfo" inclure="thematique_pipelines.php" />
+	<pipeline nom="affichage_final" inclure="thematique_pipelines.php" />
+	<pipeline nom="taches_generales_cron" inclure="thematique_pipelines.php" />
+	<pipeline nom="autoriser" inclure="thematique_autoriser.php" />
 </paquet>

@@ -13,6 +13,10 @@ if (!defined('_ECRIRE_INC_VERSION')) {
 
 include_spip('inc/cioidc_commun');
 
+if ($GLOBALS['spip_version_branche'] >= 5) {
+    include_spip('inc/presentation');
+}
+
 function cioidc_liste_serveurs() {
 	$return = '';
 
@@ -28,7 +32,12 @@ function cioidc_liste_serveurs() {
 
 	$res = '';
 	foreach ($serveurs as $id_serveur => $serveur) {
-		$res .= '<li>N° ' . intval($id_serveur) . ' : <a href="' . generer_url_ecrire('cioidc_serveur', 'id_serveur=' . intval($id_serveur)) . '">' . interdire_scripts($serveur['nom_serveur']) . '</a></li>';
+		$res .= '<li>N° ' . intval($id_serveur) . ' : <a href="' . generer_url_ecrire(
+			'cioidc_serveur',
+			'id_serveur=' . intval($id_serveur)
+		) . '">' . interdire_scripts(
+			$serveur['nom_serveur']
+		) . '</a></li>';
 	}
 
 	if ($res) {
@@ -43,7 +52,12 @@ function cioidc_liste_serveurs() {
 		$return .= "\n<table cellpadding='0' cellspacing='0' border='0' width='100%'>";
 		$return .= '<tr>';
 		$return .= "<td width='10%'>";
-		$return .= icone_verticale(_T('cioidc:titre_creer_serveur'), generer_url_ecrire('cioidc_serveur', 'new=oui'), 'article-24.png', 'creer.gif');
+		$return .= icone_verticale(
+			_T('cioidc:titre_creer_serveur'),
+			generer_url_ecrire('cioidc_serveur', 'new=oui'),
+			'article-24.png',
+			'creer.gif'
+		);
 		$return .= "</td><td width='90%'>";
 		$return .= '</td></tr></table>';
 	}

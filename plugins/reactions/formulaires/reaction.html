@@ -1,0 +1,69 @@
+<div class="reactions_liste">
+    [(#SET{mes_reactions, #ENV*{_mes_reactions}})]
+    [(#SET{compteurs, #ENV{objet}|reactions_compter{#ENV{id_objet}}})]
+    [(#SET{types_actifs, #URL_SITE_SPIP|reactions_types_actifs})]
+    [(#SET{connecte, #SESSION{id_auteur}|oui})]
+
+    <BOUCLE_types(DATA){source tableau, #ENV*{_types_actifs}}>
+        [(#SET{label_fr, #VALEUR|reaction_label_fr})]
+        [(#SET{nb_reactions, #VALEUR|reaction_compteur{#GET{compteurs}}})]
+        <button type="button"
+                class="reaction_bouton[(#VALEUR|reaction_classe_active{#GET{mes_reactions}})][ (#GET{connecte}|=={non}|oui)reaction_lecture_seule(/oui)]"
+                aria-label="Réagir avec [(#GET{label_fr})], [(#GET{nb_reactions})] réaction[(#GET{nb_reactions}|>{1}|oui)s(/oui)]"
+                aria-pressed="[(#VALEUR|reaction_aria_pressed{#GET{mes_reactions}})]"
+                [(#GET{connecte}|oui)
+                    data-action="#URL_ACTION_AUTEUR{poser_reaction, #ENV{objet}-#ENV{id_objet}-#VALEUR}"
+                ]
+                data-type="#VALEUR"
+                data-label="[(#GET{label_fr})]"
+                [(#GET{connecte}|=={non}|oui)disabled="disabled" title="Connectez-vous pour réagir"(/oui)]
+        >
+            <span class="reaction_smiley" aria-hidden="true">
+                [(#VALEUR|reactions_recuperer_smiley{html_encoding})]
+            </span>
+            <span class="reaction_compteur js-compteur-#VALEUR" aria-hidden="true">
+                [(#GET{nb_reactions})]
+            </span>
+        </button>
+    </BOUCLE_types>
+</div>
+
+<script type="text/javascript">
+$(function() {
+    // On cible le clic sur les boutons de réaction
+    $('.reaction_bouton:not([disabled])').off('click').on('click', function(e) {
+        e.preventDefault();
+        
+        var $btn = $(this);
+        var urlAction = $btn.data('action');
+
+        $.ajax({
+            url: urlAction,
+            type: 'GET',
+            dataType: 'json',
+            success: function(data) {
+                if (data.ok) {
+                    $.each(data.compteurs, function(cle, total) {
+                        var $compteur = $('.js-compteur-' + cle);
+                        $compteur.text(total);
+                        var $bouton = $compteur.closest('.reaction_bouton');
+                        var label = $bouton.data('label') || cle;
+                        var pluriel = total > 1 ? 's' : '';
+                        $bouton.attr('aria-label', 'Réagir avec ' + label + ', ' + total + ' réaction' + pluriel);
+                    });
+                    if (data.action === 'pose') {
+                        $btn.addClass('reaction_active').attr('aria-pressed', 'true');
+                    } else if (data.action === 'retire') {
+                        $btn.removeClass('reaction_active').attr('aria-pressed', 'false');
+                    }
+                } else {
+                    console.error("Erreur SPIP détectée :", data.erreur);
+                }
+            },
+            error: function(xhr, status, error) {
+                console.error("Erreur réseau Ajax :", error);
+            }
+        });
+    });
+});
+</script>

@@ -1,0 +1,86 @@
+<style>
+	.demo-icons {
+		font-size: 1.5em;
+	}
+	.demo-icons .one {
+		padding: 0.25em;
+		margin: 0.15em;
+		background: #fff;
+		display: inline-block;
+		line-height: 1;
+	}
+	.demo-icons .one:hover {
+		box-shadow: 0 0 5px #888;
+	}
+</style>
+
+	<h1>Fontawesome</h1>
+	<p>
+		<a href="https://fontawesome.com/">https://fontawesome.com/</a>
+	</p>
+
+	<h2>Utilisation</h2>
+	<p>
+		Via les sprites :
+		<code>\#FA_ICON{name,class,alt}</code>
+		<br />
+		#FA_ICON{beer,'',Beer} <code>\#FA_ICON{beer,'',Beer}</code>
+		<br />
+		#FA_ICON{brands#ubuntu,icon-sm,Ubuntu} <code>\#FA_ICON{brands#ubuntu,icon-sm,Ubuntu}</code>
+		<br />
+		#FA_ICON{regular#kiss,icon-lg,Kiss} <code>\#FA_ICON{regular#kiss,icon-lg,Kiss}</code>
+	</p>
+	<p>
+		En utilisant les SVG un par un selon le besoin :
+		<br />
+		#FA_ICON{img/fa/solid/beer.svg,'',Beer} <code>\#FA_ICON{img/fa/solid/beer.svg,'',Beer}</code>
+		<br />
+		#FA_ICON{img/fa/brands/ubuntu.svg,icon-sm,Ubuntu} <code>\#FA_ICON{img/fa/brands/ubuntu.svg,icon-sm,Ubuntu}</code>
+		<br />
+		#FA_ICON{img/fa/regular/kiss.svg,icon-lg,Kiss} <code>\#FA_ICON{img/fa/regular/kiss.svg,icon-lg,Kiss}</code>
+	</p>
+
+	<h2>Solid <small><tt>img/fa/solid.svg [(#CHEMIN{img/fa/solid.svg}|filesize|taille_en_octets)]</tt></small></h2>
+	#SET{icons,#CHEMIN{img/fa/solid.svg}|lister_icones_svg}
+	<p class="demo-icons">
+		<BOUCLE_i10(POUR){tableau #GET{icons}}>
+		#SET{name,#VALEUR}
+		<span class="one">#FA_ICON{#GET{name},'',#GET{name}}</span>
+		</BOUCLE_i10>
+	</p>
+
+	<h2>Regular <small><tt>img/fa/regular.svg [(#CHEMIN{img/fa/regular.svg}|filesize|taille_en_octets)]</tt></small></h2>
+	#SET{icons,#CHEMIN{img/fa/regular.svg}|lister_icones_svg}
+	<p class="demo-icons">
+		<BOUCLE_i11(POUR){tableau #GET{icons}}>
+		#SET{name,#VALEUR}
+		<span class="one">#FA_ICON{regular\##GET{name},'',regular\##GET{name}}</span>
+		</BOUCLE_i11>
+	</p>
+
+	<h2>Brands <small><tt>img/fa/brands.svg [(#CHEMIN{img/fa/brands.svg}|filesize|taille_en_octets)]</tt></small></h2>
+	#SET{icons,#CHEMIN{img/fa/brands.svg}|lister_icones_svg}
+	<p class="demo-icons">
+		<BOUCLE_i12(POUR){tableau #GET{icons}}>
+		#SET{name,#VALEUR}
+		<span class="one">#FA_ICON{brands\##GET{name},'',brands\##GET{name}}</span>
+		</BOUCLE_i12>
+	</p>
+
+	#SET{icons,#CHEMIN{img/fa/regular.svg}|lister_icones_svg}
+	<h2>Large <code>.icon-lg</code></h2>
+	<p class="demo-icons">
+		<BOUCLE_i2(POUR){tableau #GET{icons}}{0,10}>
+		#SET{name,#VALEUR}
+		<span class="one">#FA_ICON{regular\##GET{name},'icon-lg',regular\##GET{name}}</span>
+		</BOUCLE_i2>
+	</p>
+
+	<h2>Small <code>.icon-sm</code></h2>
+	<p class="demo-icons">
+		<BOUCLE_i3(POUR){tableau #GET{icons}}{0,10}>
+		#SET{name,#VALEUR}
+		<span class="one">#FA_ICON{regular\##GET{name},'icon-sm',regular\##GET{name}}</span>
+		</BOUCLE_i3>
+	</p>
+

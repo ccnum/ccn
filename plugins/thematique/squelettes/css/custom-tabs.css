@@ -1,0 +1,51 @@
+.ctabs {
+    display: flex;
+    flex-direction: column;
+    padding: 18px;
+    max-height: 100%;
+}
+
+.ctabs-nav {
+    display: flex;
+    justify-content: space-between;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    border-bottom: 1px solid #d9d9d9;
+    max-height: 100%;
+}
+
+.ctabs-nav li {
+    flex: 1 1 0;
+    text-align: center;
+    padding: 7px 3px;
+    cursor: pointer;
+    user-select: none;
+    color: #444;
+    transition: .2s;
+    border-radius: 3px 3px 0 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.ctabs-nav li:hover {
+    background: #ececec;
+}
+
+.ctabs-nav li.active {
+    background: var(--background-color-hover);
+    color: var(--color-hover);
+    font-weight: 600;
+}
+
+.ctabs-content {
+    padding: 20px;
+}
+
+.ctabs-panel {
+    display: none;
+}
+
+.tabs-title {
+    display: flex;
+}

@@ -7,7 +7,9 @@
  * @license GNU/GPLv3
  */
 
-if (!defined('_ECRIRE_INC_VERSION')) {
+if (!defined(
+	'_ECRIRE_INC_VERSION'
+)) {
 	return;
 }
 
@@ -21,11 +23,13 @@ include_spip('inc/cioidc_commun');
  * @param int|string $id_serveur
  * @return array
  */
-function formulaires_cioidc_serveur_charger_dist($id_serveur = 0) {
+function formulaires_cioidc_serveur_charger_dist(
+	$id_serveur = 0
+) {
 
 	$valeurs = [];
 
-	if ( !in_array(_request('exec'), array('configurer_cioidc', 'cioidc_serveur')) OR !test_espace_prive() ) {
+	if (!in_array(_request('exec'), ['configurer_cioidc', 'cioidc_serveur']) or !test_espace_prive()) {
 		return;
 	}
 
@@ -33,8 +37,7 @@ function formulaires_cioidc_serveur_charger_dist($id_serveur = 0) {
 	if (!$id_serveur) {
 		return;
 	}
-	
-	
+
 	if (!autoriser('configurer', '_cioidc')) {
 		return;
 	}
@@ -90,10 +93,10 @@ function formulaires_cioidc_serveur_charger_dist($id_serveur = 0) {
 	if (isset($valeurs['client_secret']) && $valeurs['client_secret']) {
 		$longueur = strlen($valeurs['client_secret']);
 		if ($longueur > 0) {
-			$valeurs['client_secret'] = str_repeat("X", $longueur);
+			$valeurs['client_secret'] = str_repeat('X', $longueur);
 		}
 	}
-	
+
 	return $valeurs;
 }
 
@@ -103,7 +106,9 @@ function formulaires_cioidc_serveur_charger_dist($id_serveur = 0) {
  * @param int|string $id_serveur
  * @return array
  */
-function formulaires_cioidc_serveur_verifier_dist($id_serveur = 0) {
+function formulaires_cioidc_serveur_verifier_dist(
+	$id_serveur = 0
+) {
 	$erreurs = [];
 
 	$champs = cioidc_tableau_des_champs();
@@ -114,7 +119,7 @@ function formulaires_cioidc_serveur_verifier_dist($id_serveur = 0) {
 		'userinfo_endpoint',
 		'end_session_endpoint',
 		'jwks_uri',
-		'token_endpoint_auth_methods_supported'
+		'token_endpoint_auth_methods_supported',
 	];
 	$champs_optimisation_renseignes = [];
 
@@ -130,19 +135,23 @@ function formulaires_cioidc_serveur_verifier_dist($id_serveur = 0) {
 		if ($valeur_saisie && !cioidc_verifier($champ, $valeur_saisie)) {
 			$erreurs[$champ] = _T('cioidc:erreur_incorrect');
 		}
-		if ($valeur_saisie && in_array($champ,$champs_optimisation)) {
+		if ($valeur_saisie && in_array($champ, $champs_optimisation)) {
 			$champs_optimisation_renseignes[] = $champ;
 		}
 	}
 
 	// partie optimisation partiellement renseignée
-	if ($champs_optimisation_renseignes && (count($champs_optimisation_renseignes) != count($champs_optimisation))) {
+	if ($champs_optimisation_renseignes && (count(
+		$champs_optimisation_renseignes
+	) != count(
+		$champs_optimisation
+	))) {
 		$diff = array_diff($champs_optimisation, $champs_optimisation_renseignes);
 		foreach ($diff as $champ) {
 			$erreurs[$champ] = _T('cioidc:erreur_incorrect');
 		}
 	}
-	
+
 	return $erreurs;
 }
 
@@ -152,7 +161,9 @@ function formulaires_cioidc_serveur_verifier_dist($id_serveur = 0) {
  * @param int|string $id_serveur
  * @return array
  */
-function formulaires_cioidc_serveur_traiter_dist($id_serveur = 0) {
+function formulaires_cioidc_serveur_traiter_dist(
+	$id_serveur = 0
+) {
 	$res = [];
 	$c = [];
 	$redirect = '';
@@ -210,7 +221,6 @@ function formulaires_cioidc_serveur_traiter_dist($id_serveur = 0) {
 			}
 		}
 	}
-	
 
 	// ne pas enregistrer si configuration par fichier
 	$ciedit = true;
@@ -241,14 +251,14 @@ function formulaires_cioidc_serveur_traiter_dist($id_serveur = 0) {
 	if ($redirect) {
 		$res['redirect'] = $redirect;
 	}
-	
+
 	return $res;
 }
 
 function cioidc_serveur_id_serveur_safe($id_serveur) {
 	$id_serveur_safe = '';
 
-	if (intval($id_serveur)>=1) {
+	if (intval($id_serveur) >= 1) {
 		$id_serveur_safe = intval($id_serveur);
 	} elseif ($id_serveur == 'initial') {
 		$id_serveur_safe = $id_serveur;

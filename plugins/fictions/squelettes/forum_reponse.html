@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html lang="fr" xml:lang="fr" xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 
@@ -7,8 +7,6 @@
 [<meta name="description" content="(#DESCRIPTIF_SITE_SPIP|couper{150}|textebrut)" />]
 
 <INCLURE{fond=inclure/head} />
-<script type="text/javascript" src="#CHEMIN{js/jquery.nicescroll.min.js}"></script>
-<title>[(#NOM_SITE_SPIP|textebrut)]</title>
 
 </head>
 
@@ -32,7 +30,7 @@ la premiere fois qu'un message est poste (cf. inc/invalideur). ]
 
 			<!-- IMAGE PROFIL -->
 			<div class="forum-img-profil">
-			[(#LOGO_AUTEUR||image_reduire{42,42})]
+			[(#LOGO_AUTEUR||image_reduire{42,42}|inserer_attribut{alt,#NOM})]
 			</div>
 
 			<!-- MESSAGE FORUM -->
@@ -45,7 +43,7 @@ la premiere fois qu'un message est poste (cf. inc/invalideur). ]
 			<BOUCLE_reponse(FORUMS){id_parent}{par date}>
 			<div class="forum-reponse">
 				<div class="forum-reponse-img">
-				[(#LOGO_AUTEUR|image_reduire{42,42})]
+				[(#LOGO_AUTEUR|image_reduire{42,42}|inserer_attribut{alt,#NOM})]
 				</div>
 				<div class="forum-reponse-texte">
 				<b>#NOM - [(#DATE|jour)] [(#DATE|nom_mois)]  [(#DATE|annee)]</b>
@@ -65,15 +63,6 @@ la premiere fois qu'un message est poste (cf. inc/invalideur). ]
 </div>
 </body>
 
-<script type="text/javascript">
-$(document).ready(function() {
-	// NICESCROLL
-	$("#forum").niceScroll({cursorcolor:"#FFF", cursoropacitymin:'0.2',cursoropacitymax:'1', scrollspeed:'100', cursorborder:'0px'});
-
-	//LARGEUR CHAMP FORUM
-	setInterval( "$('.forum').find('textarea').attr('cols','100');", 250 );
-
-});
-</script>
+<script type="text/javascript" src="#CHEMIN{js/forum.js}"></script>
 
 </html>

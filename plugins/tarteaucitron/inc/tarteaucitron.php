@@ -256,10 +256,7 @@ function tarteaucitron_generer_json($data) {
 
 		$dom = new DOMDocument();
 
-		$dom->loadHTML(
-			'<?xml encoding="UTF-8">' . $html,
-			LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD
-		);
+		$dom->loadHTML('<?xml encoding="UTF-8">' . $html, LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD);
 
 		$xpath = new DOMXPath($dom);
 
@@ -317,9 +314,6 @@ function tarteaucitron_generer_json($data) {
 		// ❌ balises <s>...</s> (code barré/commenté dans le JSON source)
 		$js = preg_replace('/<s>.*?<\/s>/is', '', $js);
 
-		// ❌ assignments avec objet vide ou commentaire seul : tarteaucitron.user.x = { /* ... */ };
-		$js = preg_replace('/tarteaucitron\.user\.[a-zA-Z0-9_]+\s*=\s*\{[^{}]*\/\*[^*]*\*\/[^{}]*\}\s*;?\n?/s', '', $js);
-
 		// wrap ptac
 		$js = preg_replace_callback(
 			"/(tarteaucitron\.user\.[a-zA-Z0-9_]+)\s*=\s*(ptac_[a-z0-9_-]+)\s*;/i",
@@ -327,8 +321,12 @@ function tarteaucitron_generer_json($data) {
 			$js
 		);
 
-		// ❌ fonctions inutiles
-		$js = preg_replace("/tarteaucitron\.user\.[a-zA-Z0-9_]+More\s*=\s*function\s*\([^)]*\)\s*\{.*?\};/s", '', $js);
+		// ❌ fonctions inutiles (avec ou sans accolades : function(){} ou function() ptac_xxx; ou function() /* */;)
+		$js = preg_replace(
+			"/tarteaucitron\.user\.[a-zA-Z0-9_]+More\s*=\s*function\s*\([^)]*\)\s*(?:\{[^}]*\}|[^;{]+);/s",
+			'',
+			$js
+		);
 
 		// ❌ anciens push
 		$js = preg_replace("/\(tarteaucitron\.job\s*=\s*tarteaucitron\.job\s*\|\|\s*\[\]\)\.push\([^)]+\);?/i", '', $js);
@@ -363,7 +361,26 @@ function tarteaucitron_generer_json($data) {
 		foreach ($items as $serviceName => $serviceData) {
 
 			$jsCode = normalizeCode($serviceData['code']['js'] ?? '');
-			$htmlCode = cleanHtml(normalizeCode($serviceData['code']['html'] ?? ''));
+			$rawHtml = normalizeCode($serviceData['code']['html'] ?? '');
+
+			// Extraire les <script> contenant des assignations tarteaucitron.user.*
+			// avant cleanHtml() qui supprime tous les <script>.
+			// Ces blocs sont de la config JS, pas du HTML de fallback visuel.
+			preg_match_all('/<script\b[^>]*>(.*?)<\/script>/is', $rawHtml, $scriptMatches);
+			foreach ($scriptMatches[1] as $scriptContent) {
+				if (preg_match('/tarteaucitron\.user\./i', $scriptContent)) {
+					$jsCode .= "\n" . trim($scriptContent);
+				}
+			}
+
+			// Convertir { /* commentaire */ } en ###commentaire### avant extraction des params
+			$jsCode = preg_replace_callback(
+				'/\{\s*\/\*\s*(.*?)\s*\*\/\s*\}/',
+				fn ($m) => '###' . trim($m[1]) . '###',
+				$jsCode
+			);
+
+			$htmlCode = cleanHtml($rawHtml);
 
 			// 🔍 params
 			preg_match_all($pattern, $jsCode . ' ' . $htmlCode, $matches);

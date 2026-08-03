@@ -4,75 +4,51 @@
 -restreint : pour savoir si un choix existe déjà
 ]
 
-<!-- Si aucune rubrique n'est selectionnee par le user alors en choisir une par defaut -->
-<BOUCLE_rubAnnee(RUBRIQUES) {racine}{titre LIKE %(#CONST{_annee_scolaire})%} {si #GET{motcle}|!={evenements} } >
-	<BOUCLE_filtreTravailEnCours(RUBRIQUES){id_parent} {titre_mot=travail_en_cours}{par date}{0,1}>
-		[(#RESTREINT|?{#SESSION_SET{idRubriqueUser,#RESTREINT}, #SESSION_SET{idRubriqueUser,#ID_RUBRIQUE}})]
-	</BOUCLE_filtreTravailEnCours>
-</BOUCLE_rubAnnee>
+<!-- Rubrique par défaut de l'année active (calcul en PHP, cf thematique_fonctions.php) :
+     - idRubriqueUser : classe en cours de travail, si aucune rubrique n'est sélectionnée par le user
+     - id_rubrique_mission : rubrique Consignes/intervenant, secours pour "Une nouvelle mission" quand l'utilisateur (ex: webmaster) n'a pas de rubrique restreinte -->
+#SET{ignore, #ENV{restreint}|thematique_set_id_rubrique_user}
+#SET{id_rubrique_mission, #VAL{1}|thematique_id_rubrique_mission}
 
-#SET{laclasse_rubrique_admin, #RESTREINT}
-<BOUCLE_rub(RUBRIQUES){id_rubrique=#RESTREINT}{tout}>
-	#SET{titre,#TITRE}
-</BOUCLE_rub>
+#SET{voir_mission, #VAL{1}|thematique_voir_mission}
 
-[(#ADMIN|=={1}|oui|et{#RESTREINT}|oui)
-	[(#GET{titre}|couper{25})]
-]
-#SET{affiche,non}
-[(#ADMIN|=={0}|oui)
-	#SET{affiche,oui}
-]
-[(#ADMIN|>{1}|oui)
-	#SET{affiche,oui}
-]
-
-[(#REM) Admin restreint]
-<B_rub_aut2>[(#GET{affiche}|=={oui}|oui)
-<div id="choix_rubrique_admin" name="rubrique_admin" class="select">
-<input type="radio" value="#ENV{restreint}" class="first"><label class="first_label">Je veux publier en tant que / dans <span class="highlight">[(#GET{titre}|couper{30})]</span></label>
-]
-	<div class="choix_rubrique_wrapper">
-		<BOUCLE_rub_aut2(RUBRIQUES auteurs){id_auteur=#SESSION{id_auteur}}{tout}>
-			[(#GET{affiche}|=={oui}|oui)
-			<input type="radio" value="#ID_RUBRIQUE" title="[(#TITRE|attribut_html)]"><label>[(#TITRE|couper{40})]</label>
+[(#SESSION{id_auteur}|oui)
+<div id="menu_haut_rubrique" class="bloc_titre">
+	<div id="choix_rubrique_admin2" name="rubrique_admin" class="selectbox" data-select-name="rubrique_admin">
+		<button type="button" class="select-toggle first_label">
+			<span class="icon icon-publier"></span>
+			Publier
+		</button>
+		<ul class="select-options choix_rubrique_wrapper">
+			[(#GET{voir_mission}|=={oui}|oui)
+				<li onClick='createReponse(0, CCN.idRestreint || [(#GET{id_rubrique_mission}|intval)], 0);'
+					class="select-option"
+					data-value="#ID_RUBRIQUE"
+				>
+					Une nouvelle mission
+				</li>
 			]
-			<BOUCLE_rub4(RUBRIQUES){id_parent=#ID_RUBRIQUE}{tout}>
-				[(#GET{affiche}|=={oui}|oui)
-				<input type="radio" value="#ID_RUBRIQUE" title="[(#TITRE|attribut_html)]" [(#ID_RUBRIQUE|=={#ENV{restreint}}|oui) selected ]><label>[(#TITRE|couper{40})]</label>
-				]
-			</BOUCLE_rub4>
-		</BOUCLE_rub_aut2>
+			<li onClick='alert("Cette partie des CCN est en chantier, veuillez réessayer plus tard.")' 
+				class="select-option" 
+				data-value="#ID_RUBRIQUE"
+			>
+				Une information dans la salle des profs
+			</li>
+			<li onClick='callRessource();' 
+				class="select-option" 
+				data-value="#ID_RUBRIQUE"
+			>
+				Une ressource
+			</li>
+			<li onClick='changeTimelineMode("blogs");' 
+				class="select-option" 
+				data-value="#ID_RUBRIQUE"
+			>
+				Un événement dans l'agenda
+			</li>
+			
+		</ul>
 	</div>
 </div>
-</B_rub_aut2>
+]
 
-
-	[(#REM) Admin complet]
-
-	<B_rub2>[(#GET{affiche}|=={oui}|oui)
-		<div id="choix_rubrique_admin" name="rubrique_admin" class="select">
-		<input type="radio" value="#ENV{restreint}" class="first"><label class="first_label">Je veux publier en tant que / dans <span class="highlight">[(#GET{titre}|couper{30})]</span></label>
-		]
-			<div class="choix_rubrique_wrapper">
-				<BOUCLE_rub2(RUBRIQUES){racine}{!par maj}{tout}>
-					[(#GET{affiche}|=={oui}|oui)
-					<input type="radio" value="#ID_RUBRIQUE" title="[(#TITRE|attribut_html)]"><label>[(#TITRE|couper{40})]</label>
-					]
-					<BOUCLE_rub3(RUBRIQUES){id_parent=#ID_RUBRIQUE}{tout}>
-						[(#GET{affiche}|=={oui}|oui)
-						<input type="radio" value="#ID_RUBRIQUE" title="[(#TITRE|attribut_html)]"><label>[|-(#TITRE|couper{40})]</label>
-						]
-						<BOUCLE_rub5(RUBRIQUES){id_parent=#ID_RUBRIQUE}{tout}>
-						[(#GET{affiche}|=={oui}|oui)
-						<input type="radio" value="#ID_RUBRIQUE" title="[(#TITRE|attribut_html)]"><label>[&nbsp;&nbsp;&nbsp;&nbsp;|-(#TITRE|couper{40})]</label>
-						]
-						</BOUCLE_rub5>
-					</BOUCLE_rub3>
-				</BOUCLE_rub2>
-			</div>
-		[(#GET{affiche}|=={oui}|oui)
-		</div>
-		]
-	</B_rub2>
-<//B_rub_aut2>

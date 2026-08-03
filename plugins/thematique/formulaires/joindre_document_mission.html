@@ -1,0 +1,18 @@
+<div class='formulaire_spip formulaire_joindre formulaire_joindre_document'>
+	<span class="image_loading"></span>
+	<div class="reponse_formulaire reponse_formulaire_ok" role="status">#ENV**{message_ok}</div>
+	<div class="reponse_formulaire reponse_formulaire_erreur" role="alert">#ENV**{message_erreur}</div>
+
+	<form action="#ENV{action}" method="post" enctype='multipart/form-data'><div>
+		#ACTION_FORMULAIRE
+
+		<div class="editer-groupe">
+			[(#SAISIE_FICHIER{bigup, document,
+				label=Fichier (formats acceptés : gif jpg png mp3 pdf),
+				accept=.gif,.jpg,.jpeg,.png,.mp3,.pdf,
+				multiple=oui})]
+		</div>
+
+		<p class='boutons'><input class='btn submit' type="submit" name="envoyer_document" value="Envoyer le document" /></p>
+	</div></form>
+</div>

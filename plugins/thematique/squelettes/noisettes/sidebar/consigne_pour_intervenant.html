@@ -1,0 +1,93 @@
+#CACHE{0}
+<BOUCLE_rub(RUBRIQUES){id_rubrique}{tout}>
+	#SET{titre_parent, #TITRE}
+</BOUCLE_rub>
+
+<BOUCLE_consigne_de_la_reponse(ARTICLES){id_article=#ENV{id_article}}>
+	#SET{titre_consigne,#TITRE}
+	#SET{id_consigne,#ID_ARTICLE}
+</BOUCLE_consigne_de_la_reponse>
+
+<BOUCLE_police(MOTS){id_rubrique}{type=police}>#SET{police,#TITRE}</BOUCLE_police>
+
+<div class="[popup_(#ENV{type_objet})]">
+	<div id="bloc_article-#ID_ARTICLE" class="bloc_article[ (#GET{police})]">
+		#SET{titre_consigne_final, #GET{titre_consigne}|sinon{#TITRE}}
+		<div id="sidebar-header-container">
+			<INCLURE{
+				fond=noisettes/sidebar/header_sidebar,
+				id_article=#ID_ARTICLE, ajax,
+				titre_parent=#GET{titre_parent},
+				titre_consigne=#GET{titre_consigne_final},
+				id_consigne=#GET{id_consigne},
+				type_objet=#ENV{type_objet},
+				env
+			} />
+		</div>
+
+		#SET{est_jalon, non}
+		<BOUCLE_test_jalon(MOTS){id_article=#ID_ARTICLE}{titre IN cap-sur-l-annee,la-rencontre}>
+			#SET{est_jalon, oui}
+		</BOUCLE_test_jalon>
+
+		[(#GET{est_jalon}|=={oui}|oui)
+			[(#REM) Article jalon du projet ("Cap sur l'année"/"La Rencontre") :
+			pas une vraie mission (pas de réponses de classe attendues), donc pas
+			d'onglets "Description de la mission"/"Suivi des réponses" — juste un
+			texte libre, éditable au crayon par l'intervenant. ]
+			<BOUCLE_jalon_texte(ARTICLES){id_article=#ID_ARTICLE}{tous}>
+				<div class="sidebar_bubble">
+					<span class="spip texte_jalon #EDIT{texte}">[(#TEXTE|propre|sinon{<:thematique:jalon_texte_a_completer:>})]</span>
+				</div>
+				[(#STATUT|!={publie}|oui)
+					<div class="sidebar_bubble">
+						<div class="ajax">#FORMULAIRE_PUBLIER_ARTICLE{#ID_ARTICLE}</div>
+					</div>
+				]
+				<div class="sidebar_bubble">
+					<div class="bloc_documents">
+						<INCLURE{fond=noisettes/inc/ajouter_document, id_article, env, ajax=documents} />
+						<INCLURE{fond=noisettes/sidebar/bloc_ajout_document_onglets, id_article, env} />
+					</div>
+				</div>
+			</BOUCLE_jalon_texte>
+		]
+		[(#GET{est_jalon}|=={non}|oui)
+			<div id="tabs-article-#ID_ARTICLE" class="container-tabs">
+				<div id="mission-tabs">
+					<div>
+						<div class="tabs-title">
+							<:thematique:description_mission:>
+						</div>
+						<div class="tabs-content">
+							<INCLURE{
+								fond=noisettes/sidebar/onglet_description_intervenant,
+								id_article=#GET{id_consigne},
+								env
+							} />
+						</div>
+					</div>
+					<div>
+						<div class="tabs-title">
+							<:thematique:titre_onglet_liste_des_reponses:>
+						</div>
+						<div class="tabs-content">
+							<INCLURE{fond=noisettes/sidebar/onglet_reponses_intervenant, id_article=#ID_ARTICLE, env, ajax} />
+						</div>
+					</div>
+					[(#REM) Pour l'instant, on exclut cet onglet, par qu'il ralentit considérablement l'ouverture de la sidebar
+							et en plus il n'est pas à jour.
+						<div data-tab-id="commentaires">
+							<div class="tabs-title">
+								<:thematique:titre_onglet_comentaire:>
+							</div>
+							<div class="tabs-content">
+								<INCLURE{fond=noisettes/sidebar/onglet_commentaires, env} />
+							</div>
+						</div>
+					]
+				</div>
+			</div>
+		]
+	</div>
+</div>

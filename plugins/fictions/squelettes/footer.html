@@ -1,38 +1,12 @@
 #CACHE{0}
 #SET{id_art,0}
-<BOUCLE_annee(RUBRIQUES){titre==#EVAL{_annee_scolaire}}{tout}{0,1}>
+<BOUCLE_annee(RUBRIQUES){titre==#EVAL{_ANNEE_SCOLAIRE}}{tout}{0,1}>
 	<BOUCLE_id_forum(ARTICLES){titre_mot==agora}{id_rubrique}{0,1}>
 		#SET{id_art,#ID_ARTICLE}
 	</BOUCLE_id_forum>
 </BOUCLE_annee>
 
-<script>
-	function reload_cookie(url,cookie_nom,cookie_valeur) {
-		/*
-		console.log('toto');
-		console.log('url : ' + url);
-		console.log('cookie_nom : ' + cookie_nom);
-		console.log('cookie_valeur : ' + cookie_valeur);
-		*/
-		if (cookie_valeur <= 2011) {
-			url = 'http://airchive.laclasse.com/?annee_scolaire=' + cookie_valeur;
-		}
-		else {
-			document.cookie = cookie_nom + "=" + encodeURIComponent(cookie_valeur);
-			url = url+'/?annee_scolaire=' + cookie_valeur;
-		}
-		reload(url);
-	}
-
-	function reload(url) {
-		if (url == 'self')  {
-			location.reload( true );
-			window.location.reload();
-		} else {
-			window.location.href = url;
-		}
-	}
-</script>
+<script type="text/javascript" src="#CHEMIN{js/footer.js}"></script>
 
 <div id="footer">
 	<div id="footer-inner">
@@ -40,13 +14,13 @@
 		<div id="footer-nav-left">
 			[(#SESSION{id_auteur}|oui)
 			Bonjour <b><a class="mediabox boxIframe boxWidth-730px boxHeight-550px" href="spip.php?page=auteur_editer&id_auteur=#SESSION{id_auteur}">#SESSION{nom}</a></b>
-			[(#GET{id_art}|=={0}|non|et{#SESSION{statut}|=={0minirezo}|oui}|oui)&nbsp;&nbsp;|&nbsp;&nbsp;<a href="#URL_SITE_SPIP/?page=forum&id_article=#GET{id_art}" class="mediabox boxIframe boxWidth-730px boxHeight-97pc">Accéder au forum<img src="[(#CHEMIN{img/lecture/bt_forum.png})]"
+			[(#GET{id_art}|=={0}|non)[(#SESSION{statut}|=={0minirezo}|oui)&nbsp;&nbsp;|&nbsp;&nbsp;<a href="#URL_SITE_SPIP/?page=forum&id_article=#GET{id_art}" class="mediabox boxIframe boxWidth-730px boxHeight-97pc">Accéder au forum<img src="[(#CHEMIN{img/lecture/bt_forum.png})]"
 					class="btn-rollover" data-src-hover="#CHEMIN{img/lecture/bt_forum_hover.png}"
-					width="20" height="20" title="forum" style="height: 20px; line-height: 20px; vertical-align: middle; padding-left: 5px; display: none;"/></a>]
+					width="20" height="20" title="forum" style="height: 20px; line-height: 20px; vertical-align: middle; padding-left: 5px; display: none;"/></a>]]
 			]
-			[(#SESSION{id_auteur}|non)<a href="[(#PLUGIN{CICAS}|oui|?{'?url=spip.php%3Fpage%3Dsommaire&cicas=oui','?page=login&url=.%2F'})]" class="">Se connecter</a>&nbsp;&nbsp;|<a href="http://www.laclasse.com/pls/public/!page.laclasse?contexte=QUESTION&rubrique=0">Mot de passe oublié ?</a>]
+			[(#SESSION{id_auteur}|non)<a href="[(#PLUGIN{cioidc}|oui|?{'?url=spip.php%3Fpage%3Dsommaire&cioidc=oui','?page=login&url=.%2F'})]" class="">Se connecter</a>&nbsp;&nbsp;|<a href="http://www.laclasse.com/pls/public/!page.laclasse?contexte=QUESTION&rubrique=0">Mot de passe oublié ?</a>]
 
-			<BOUCLE_espace_doc(RUBRIQUES){titre==#EVAL{_annee_scolaire}}>
+			<BOUCLE_espace_doc(RUBRIQUES){titre==#EVAL{_ANNEE_SCOLAIRE}}>
 				<!-- #ID_RUBRIQUE -->
 				<a href="[(#DESCRIPTIF|textebrut)]">Espace doc</a>
 				[<a href="(#TEXTE|extraire_attribut{href})">Blog de l'auteur</a>]
@@ -64,13 +38,13 @@
 			</BOUCLE_page_footer>
 			<a href="http://www.laclasse.com/">Laclasse.com</a>&nbsp;&nbsp;|&nbsp;&nbsp;
 			[(#REM)[(#SESSION{login}|oui)<a href="#URL_SITE_SPIP?scenario=jeu">Vers la version jeu</a>&nbsp;&nbsp;|]]
-			<span id="annee_scolaire" title="Choisir l'année scolaire">
-				Année scolaire :
+			<span id="annee_scolaire">
 				<form name="annee_scolaire" style="display:inline;">
-					<select onchange="reload_cookie('[(#URL_SITE_SPIP)]','[(#EVAL{_cookie_annee_scolaire})]',document.annee_scolaire.annee_scolaire.value)" name="annee_scolaire">
+					<label for="select_annee_scolaire">Année scolaire :</label>
+					<select id="select_annee_scolaire" name="annee_scolaire" onchange="reload_cookie('[(#URL_SITE_SPIP)]','[(#EVAL{_COOKIE_ANNEE_SCOLAIRE})]',this.value)">
 						<option value="#">---</option>
 						<BOUCLE_vieux(ARTICLES){par date}{date!=0000-00-00 00:00:00}{0,1}{tout}>
-						<option value="[(#DATE|annee)]">[(#DATE|annee|afficher_options_date{[(#DATE|mois)],#EVAL{_annee_scolaire}})]</option>
+						<option value="[(#DATE|annee)]">[(#DATE|annee|afficher_options_date{[(#DATE|mois)],#EVAL{_ANNEE_SCOLAIRE}})]</option>
 						</BOUCLE_vieux>
 						<option value="2011">2011/2012</option>
 						<option value="2010">2010/2011</option>

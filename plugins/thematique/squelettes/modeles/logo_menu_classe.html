@@ -7,21 +7,19 @@
 -style
 -onclick
 -texte
+-NUMERO
+-ICONE
 ]
-<li class="logo">
-	<a
-		[href="(#HREF)"] [rel="(#REL)"] [data-filter-value="(#FILTER)"] [data-option-value="(#OPTION)"]
-		onClick="callClasse(#ID_RUBRIQUE);"
-		class="[(#TEXTE|=={''}|oui)[logo_menu-(#VALEUR)]] #CLASS logo_menu_classe"
-		title="<BOUCLE_titre_rubrique(RUBRIQUES){id_rubrique}{tous}>#TITRE</BOUCLE_titre_rubrique>"
-		style="#STYLE"
-	>
-		<div
-			class="logo_menu_classe_image"
-			style="background-image:url([(#MODELE{logo_carre}{id_rubrique}{taille=35}|extraire_attribut{src})])"
-		>
-			[(#TEXTE*|sinon{&nbsp;})]
-		</div>
-		<div class="logo_menu_classe_couleur #CLASSCOULEUR"></div>
+<li class="logo" style="position: relative;">
+	<a 	[href="(#HREF)"]
+		[rel="(#REL)"]
+		[data-filter-value="(#FILTER)"]
+		[data-option-value="(#OPTION)"]
+		onClick="callClasse(#ENV{valeur});"
+		class="[(#TEXTE|=={''}|oui)[logo_menu-(#VALEUR)]] #CLASS logo_menu_classe tooltip bgc_classe_#ENV{NUMERO}"
+		data-tip="#TITLE">
+		<span role="img" aria-label="#TITLE" style="font-size:min(70cqw,70cqh)">
+			#ENV{ICONE}
+		</span>
 	</a>
 </li>

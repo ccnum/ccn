@@ -42,7 +42,7 @@
 }
 
 .chargement_grand {
-	background: url(../img/chargement.gif) no-repeat center center;
+	/*background: url(../img/chargement.gif) no-repeat center center;*/
 	min-width: 200px;
 	min-height: 200px;
 }

@@ -1,7 +1,7 @@
 #CACHE{0}
 #SET{dans_archives,non}
 <datas>
-	<BOUCLE_archives_annee(RUBRIQUES){titre==^#CONST{_annee_scolaire}}{tous}{0,1}>
+	<BOUCLE_archives_annee(RUBRIQUES){titre==^#CONST{_ANNEE_SCOLAIRE}}{tous}{0,1}>
 		#SET{dans_archives,oui}
 		<BOUCLE_archives_annee_intervenants(RUBRIQUES){id_parent=#ID_RUBRIQUE}{tous}>
 			<BOUCLE_archives_annee_intervenants_in(RUBRIQUES){id_parent=#ID_RUBRIQUE}{titre_mot==consignes}{tous}>
