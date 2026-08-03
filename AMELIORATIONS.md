@@ -42,7 +42,9 @@ La logique conditionnelle (rôles, permissions, calculs) devrait être dans `the
 
 Plusieurs `<div onclick>` dans `consigne.js` et les squelettes. Le remplacement impacte les règles CSS ciblant `.bouton_reponse_consigne`. À faire conjointement avec une refonte des styles de composants.
 
-> **Progrès** : les boutons de réaction sont désormais accessibles au clavier et aux lecteurs d'écran (#315, 2026-06-25), mais les `<div onclick>` restants dans `consigne.js` et les squelettes demeurent à traiter.
+> **Progrès** : les boutons de réaction sont désormais accessibles au clavier et aux lecteurs d'écran (#315, 2026-06-25).
+>
+> **Progrès (2026-08-03)** : toutes les div cliquables restantes (`consigne.js`, `reponse.js`, `article.js`, les modèles `actu_*`, `rubrique_detail.html`, `reponse_binome_head.html`, les icônes de sidebar) ont désormais `role="button"` + `tabindex="0"`, activables au clavier via le handler générique déjà en place (`controleurs.js`), avec un focus visible (`[role="button"]:focus-visible` dans `sidebar.css.html`). Le remplacement par de vrais `<button>` (qui impose de refaire les styles de composants) reste à faire dans le cadre d'une refonte dédiée.
 
 ---
 

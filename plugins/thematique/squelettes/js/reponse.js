@@ -44,6 +44,8 @@ function Reponse() {
 			>
 				<div id="reponse${this.id}"
 					 class="reponse couleur_texte_travail_en_cours reponse_border_${coul}"
+					 role="button"
+					 tabindex="0"
 				>
 					<div class="first-row">
 						<div class='logo photo bgc_classe_${coul}'

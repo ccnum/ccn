@@ -1116,8 +1116,11 @@ ul#forum, .lien_forum {
 	cursor: pointer;
 }
 
-.ressource_rubrique_titre:focus-visible,
-.ressource_article:focus-visible {
+/* Focus clavier générique pour toutes les div cliquables marquées
+role="button" (cf le pattern déjà établi ici, repris ailleurs plutôt que
+remplacer ces div par de vrais <button>, qui impliquerait de refaire tous
+les styles de composants). */
+[role="button"]:focus-visible {
 	outline: 2px solid currentColor;
 	outline-offset: -2px;
 }

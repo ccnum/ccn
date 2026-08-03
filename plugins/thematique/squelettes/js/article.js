@@ -58,7 +58,7 @@ function Article() {
 			if (this.nombre_commentaires > 0) {
 				divArticle.append($('<div class="picto_nombre_commentaires">').text(this.nombre_commentaires));
 			}
-			this.div_texte = $('<div/>').attr('class', '').append(divArticle);
+			this.div_texte = $('<div/>').attr('class', '').attr('role', 'button').attr('tabindex', '0').append(divArticle);
 		} else {
 			const divTexteInner = $('<div class="article_evenement_texte">')
 				.append(bTitre)
@@ -69,7 +69,7 @@ function Article() {
 			if (this.nombre_commentaires > 0) {
 				divArticle.append($('<div class="picto_nombre_commentaires">').text(this.nombre_commentaires));
 			}
-			this.div_texte = $('<div/>').attr('class', '').append(divArticle);
+			this.div_texte = $('<div/>').attr('class', '').attr('role', 'button').attr('tabindex', '0').append(divArticle);
 		}
 
 		this.div_base.append(this.div_texte);
