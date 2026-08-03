@@ -21,10 +21,14 @@ Breakpoints à ajouter : `max-width: 768px` et `max-width: 1024px`.
 ### 3.2 Réduire les boucles SPIP imbriquées
 
 **Fichiers candidats** :
-- `squelettes/noisettes/inc/actus_timeline.html` — 24 boucles
+- ~~`squelettes/noisettes/inc/actus_timeline.html` — 24 boucles~~
 - `squelettes/noisettes/sommaire.html` — 17 boucles
 
 Piste : pipeline PHP précalculant les données, ou critère `{jointure}`.
+
+> **Progrès (2026-08-03)** : `actus_timeline.html` refait — la résolution de hiérarchie (mot-clé → ids de rubriques : `evenements`/`ressources`/`travail_en_cours`/`consignes`) est déplacée dans 4 nouvelles fonctions PHP de `thematique_fonctions.php` (`thematique_ids_rubriques_racine_a_mot`, `thematique_id_rubrique_racine_a_mot`, `thematique_ids_rubriques_enfants`, `thematique_ids_rubriques_petits_enfants_a_mot`), qui remplacent les chaînes `BOUCLE(RUBRIQUES){id_parent}` imbriquées par un tableau résolu une seule fois. Boucles restantes : 24 → 19, profondeur d'imbrication max 5 → 3. Comportement vérifié équivalent (contenu réel généré sans erreur via `recuperer_fond()` en CLI, ce fond n'étant actuellement jamais rendu en usage web puisque conditionné à `_PROJET != 'laclasse'`, valeur qu'il vaut partout sur ce dépôt).
+>
+> `sommaire.html` (17 boucles) reste à traiter séparément — logique différente (menus, badges, timeline), pas la même resolution de hiérarchie.
 
 ---
 
