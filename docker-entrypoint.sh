@@ -134,6 +134,7 @@ spip plugins:activer mesfavoris_ccn -y
 spip plugins:activer ccn -y
 
 spip plugins:desactiver imports_utilisateurs -y
+spip plugins:desactiver cicas -y
 
 if [ ${SPIP_PLUGINS_CIOIDC} == true ]; then
 	spip plugins:activer cioidc -y
