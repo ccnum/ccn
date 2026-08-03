@@ -4,12 +4,14 @@ on:
   pull_request:
     paths:
       - 'plugins/thematique/**'
+      - '.ci/**'
   push:
     branches:
       - dev
       - main
     paths:
       - 'plugins/thematique/**'
+      - '.ci/**'
 
 jobs:
   check-lang-hardcoded:
@@ -24,4 +26,4 @@ jobs:
           python-version: '3.x'
 
       - name: Vérifier l'absence de nouveau texte en dur
-        run: python3 plugins/thematique/.ci/check_lang_hardcoded.py
+        run: python3 .ci/check_lang_hardcoded.py

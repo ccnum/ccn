@@ -14,8 +14,8 @@ Fonctionnement :
   Toute entrée de la baseline qui n'est plus détectée est simplement ignorée
   (la baseline peut donc être régénérée pour rétrécir au fil des corrections).
 
-Usage :
-  check_lang_hardcoded.py [--baseline PATH] [--write-baseline]
+Usage (depuis la racine du dépôt) :
+  .ci/check_lang_hardcoded.py [--baseline PATH] [--write-baseline]
 """
 
 import argparse
@@ -23,7 +23,8 @@ import re
 import sys
 from pathlib import Path
 
-PLUGIN_ROOT = Path(__file__).resolve().parent.parent
+REPO_ROOT = Path(__file__).resolve().parent.parent
+PLUGIN_ROOT = REPO_ROOT / "plugins" / "thematique"
 SCAN_DIRS = [PLUGIN_ROOT / "squelettes", PLUGIN_ROOT / "formulaires"]
 EXCLUDE_DIRS = {PLUGIN_ROOT / "lang"}
 
@@ -179,7 +180,7 @@ def main():
     parser = argparse.ArgumentParser()
     parser.add_argument(
         "--baseline",
-        default=str(PLUGIN_ROOT / ".ci" / "lang-check-baseline.txt"),
+        default=str(REPO_ROOT / ".ci" / "lang-check-baseline.txt"),
     )
     parser.add_argument("--write-baseline", action="store_true")
     args = parser.parse_args()

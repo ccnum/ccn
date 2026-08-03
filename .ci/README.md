@@ -1,13 +1,17 @@
 # check_lang_hardcoded.py
 
-Détecte le texte français codé en dur dans `squelettes/` et `formulaires/`
+Détecte le texte français codé en dur dans `plugins/thematique/{squelettes,formulaires}`
 (hors `lang/`), pour forcer le passage par des items de langue
 (`lang/thematique_fr.php` côté PHP/squelette, `CCN.lang` côté JS).
+
+Pour l'instant limité au plugin thematique (seul plugin i18n-isé à ce
+jour) — à généraliser (argument `--scan`) si d'autres plugins adoptent
+la même convention.
 
 Usage local :
 
 ```
-python3 plugins/thematique/.ci/check_lang_hardcoded.py
+python3 .ci/check_lang_hardcoded.py
 ```
 
 Le script échoue (exit 1) si du texte en dur absent de
@@ -29,7 +33,7 @@ Si un nouveau cas légitime doit être toléré (texte technique, contenu
 historique figé, etc.) :
 
 ```
-python3 plugins/thematique/.ci/check_lang_hardcoded.py --write-baseline
+python3 .ci/check_lang_hardcoded.py --write-baseline
 ```
 
 Vérifier ensuite que le diff de `lang-check-baseline.txt` ne contient QUE
