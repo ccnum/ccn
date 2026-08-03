@@ -223,10 +223,10 @@ function fond_consigne_pour_role($role) {
 
 /**
  * Fond sidebar à inclure pour une réponse à une consigne, selon le rôle de session.
- * Par défaut (visiteur non connecté, admin, prof, eleve) : vue classe.
+ * Par défaut (visiteur non connecté, prof, eleve) : vue classe.
  */
 function fond_reponse_pour_role($role) {
-	if ($role === 'intervenant') {
+	if ($role === 'intervenant' || $role === 'admin') {
 		return 'reponse_pour_intervenant';
 	}
 	return 'reponse_pour_classe';
