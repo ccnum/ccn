@@ -392,8 +392,10 @@ async function loadArticles(fichier, type, ccnArray, listeY) {
 }
 /**
  *  Affiche/masque un badge jalon ("Cap sur l'année" / "La Rencontre") selon
- *  qu'un article existe. Visible pour tout le monde, avec juste un signalement
- *  visuel (badge_timeline--non-publie) tant qu'il n'est pas encore publié.
+ *  qu'un article existe. Une fois publié, visible pour tout le monde. Tant
+ *  qu'il n'est pas publié, réservé aux admins/intervenants (cf CCN.role,
+ *  posé dans sommaire.html) avec un signalement visuel (svg d'étiquette
+ *  grise + pastille) ; masqué pour les autres rôles (prof/élève).
  *
  * @param {string} prefixe - "cap_sur_annee" ou "la_rencontre"
  * @param {number} idArticle
@@ -407,10 +409,19 @@ function updateBadgeJalon(prefixe, idArticle, statut) {
 		return;
 	}
 
-	// Visible pour tout le monde ; simplement signalé (classe
-	// badge_timeline--non-publie, cf sidebar.css.html) tant qu'il n'est pas
-	// encore publié par l'intervenant.
-	$badge.toggleClass('badge_timeline--non-publie', statut !== 'publie').show();
+	const nonPublie = statut !== 'publie';
+	const peutVoirNonPublie = CCN.role === 'admin' || CCN.role === 'intervenant';
+	if (nonPublie && !peutVoirNonPublie) {
+		$badge.hide();
+		return;
+	}
+
+	// L'image de fond du badge (étiquette + pastille "Article non publié"
+	// éventuelle) change selon le statut, cf les data-svg-publie /
+	// data-svg-non-publie posés dans sommaire.html.
+	const svg = nonPublie ? $badge.data('svg-non-publie') : $badge.data('svg-publie');
+	$badge.find('.badge_timeline_label_img').attr('src', svg);
+	$badge.show();
 }
 
 /**

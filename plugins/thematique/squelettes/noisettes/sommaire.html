@@ -6,6 +6,7 @@ et/ou
 -#ENV{vue_date} : 01/10/2011
 ]
 [(#INCLURE{fond=noisettes/fonction/type_role})]
+<script>CCN.role = "[(#SESSION{role})]";</script>
 <div id="zone" class="zone_timeline zone"[ (#VUE|=={classe}|oui) style="display:none;"]>
 	<INCLURE{fond=noisettes/timeline, env, ajax} />
 </div>
@@ -33,15 +34,17 @@ et/ou
 					<div class="timeline_trigger"></div>
 				</div>
 				<div id="timeline_background"></div>
-				<div id="badge_cap_sur_annee" class="badge_timeline badge_timeline_debut" style="display:none;" onclick="callArticleJalon(CCN.idArticleCapSurAnnee)" role="button" tabindex="0">
+				<div id="badge_cap_sur_annee" class="badge_timeline badge_timeline_debut" style="display:none;" onclick="callArticleJalon(CCN.idArticleCapSurAnnee)" role="button" tabindex="0"
+					data-svg-publie="[(#CHEMIN{img/badge_label_cap_sur_annee_publie.svg}|attribut_url)]"
+					data-svg-non-publie="[(#CHEMIN{img/badge_label_cap_sur_annee_non_publie.svg}|attribut_url)]">
+					<img class="badge_timeline_label_img" src="[(#CHEMIN{img/badge_label_cap_sur_annee_publie.svg}|attribut_url)]" alt="Cap sur l'année" />
 					<span class="badge_timeline_icone"><img src="[(#CHEMIN{img/pictos_sites/[(#NOM_SITE_SPIP|replace{' ',''}|strtolower)].svg}|sinon{#CHEMIN{img/pictos_sites/selfdata.svg}}|attribut_url)]" alt="" /></span>
-					<span class="badge_timeline_label">Cap sur l'année</span>
-					<span class="badge_timeline_warning">⚠ Article non publié</span>
 				</div>
-				<div id="badge_la_rencontre" class="badge_timeline badge_timeline_fin" style="display:none;" onclick="callArticleJalon(CCN.idArticleLaRencontre)" role="button" tabindex="0">
+				<div id="badge_la_rencontre" class="badge_timeline badge_timeline_fin" style="display:none;" onclick="callArticleJalon(CCN.idArticleLaRencontre)" role="button" tabindex="0"
+					data-svg-publie="[(#CHEMIN{img/badge_label_la_rencontre_publie.svg}|attribut_url)]"
+					data-svg-non-publie="[(#CHEMIN{img/badge_label_la_rencontre_non_publie.svg}|attribut_url)]">
+					<img class="badge_timeline_label_img" src="[(#CHEMIN{img/badge_label_la_rencontre_publie.svg}|attribut_url)]" alt="La Rencontre" />
 					<span class="badge_timeline_icone"><img src="[(#CHEMIN{img/logo_la_rencontre.svg}|attribut_url)]" alt="" /></span>
-					<span class="badge_timeline_label">La Rencontre</span>
-					<span class="badge_timeline_warning">⚠ Article non publié</span>
 				</div>
 			</div>
 		</div>

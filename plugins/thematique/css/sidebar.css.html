@@ -978,7 +978,7 @@ li a, li a:hover {
 	padding-bottom: 10px;
 }
 
-.swiper-button-prev-custom, 
+.swiper-button-prev-custom,
 .swiper-button-next-custom {
     width: 40px;
     height: 40px;
@@ -1490,22 +1490,27 @@ décalerait le reste de la mise en page, ex: bouton Publier). */
 
 .badge_timeline {
 	position: absolute;
+	top: 24px;
 	z-index: 102;
-	display: flex;
-	align-items: center;
 	cursor: pointer;
 }
 
 .badge_timeline_debut { left: 20px; }
 .badge_timeline_fin { right: 20px; }
 
-/* Gros rond chevauchant le bord gauche du bloc libellé : centrage vertical
-via align-items du flex parent (badge_timeline) plutôt qu'un top en dur,
-pour rester correct quelle que soit la hauteur réelle du libellé.
-Chevauchement horizontal via une marge négative. */
+/* Étiquette (+ pastille "Article non publié" éventuelle) : image SVG
+unique swappée en JS selon le statut (cf updateBadgeJalon dans main.js). */
+.badge_timeline_label_img {
+	display: block;
+}
+
+/* Rond de l'icône par-site, positionné en absolu par-dessus le rond vide
+réservé dans badge_timeline_label_img (coin haut-gauche du badge). */
 .badge_timeline_icone {
+	position: absolute;
+	left: 0;
+	top: -21px;
 	z-index: 1;
-	margin-right: -28px;
 	background: white;
 	border-radius: 50%;
 	width: 72px;
@@ -1513,61 +1518,14 @@ Chevauchement horizontal via une marge négative. */
 	display: flex;
 	align-items: center;
 	justify-content: center;
-	font-size: 20px;
 	box-shadow: 0 3px 10px rgba(0, 0, 0, .2);
 	overflow: hidden;
-	flex-shrink: 0;
 }
 
 .badge_timeline_icone img {
-	width: 48%;
-	height: 48%;
+	width: 68%;
+	height: 68%;
 	object-fit: contain;
-}
-
-.badge_timeline_label {
-	position: relative;
-	display: inline-block;
-	background: var(--color-tonic);
-	color: white;
-	font-weight: 700;
-	text-transform: uppercase;
-	font-size: .8em;
-	letter-spacing: .5px;
-	padding: 14px 20px 14px 44px;
-	border-radius: 8px;
-	border: 2px solid white;
-}
-
-/* Bandeau pleine largeur du badge (rond + libellé), accolé juste en
-dessous, plutôt qu'une pastille flottante décalée à droite. */
-.badge_timeline_warning {
-	display: none;
-	position: absolute;
-	top: 100%;
-	left: 0;
-	right: 0;
-	background: #fff3cd;
-	color: #664d03;
-	font-size: .75em;
-	font-weight: 600;
-	padding: 4px 10px;
-	border-radius: 0 0 8px 8px;
-	white-space: nowrap;
-	text-align: center;
-}
-
-.badge_timeline--non-publie .badge_timeline_icone {
-	filter: grayscale(1);
-}
-
-.badge_timeline--non-publie .badge_timeline_label {
-	filter: grayscale(1);
-	opacity: .6;
-}
-
-.badge_timeline--non-publie .badge_timeline_warning {
-	display: block;
 }
 
 #livrables {
