@@ -1,10 +1,15 @@
+#SET{id_forum, #ENV{forum}|table_valeur{id_forum}}
+#SET{nombre_reponses, #ENV{forum}|table_valeur{reponses}|count}
+#SET{date_heure, #ENV{forum}|table_valeur{date_heure}|affdate{'d/m/Y H:i'}}
+#SET{texte, #ENV{forum}|table_valeur{texte}|propre}
+#SET{id_rubrique_classe, #ENV{forum}|classe_id_rubrique_forum}
 <div class="forum-commentaire">
 	<INCLURE{fond=noisettes/inc/forumv2/forum_card,
-		id_forum=#ENV{forum}|table_valeur{id_forum},
-		nombre_reponses=(#ENV{forum}|table_valeur{reponses}|count),
-		date_heure=(#ENV{forum}|table_valeur{date_heure}|affdate{'d/m/Y H:i'}),
-		texte=(#ENV{forum}|table_valeur{texte}|propre),
-		id_rubrique_classe=(#ENV{forum}|classe_id_rubrique_forum)
+		id_forum=#GET{id_forum},
+		nombre_reponses=#GET{nombre_reponses},
+		date_heure=#GET{date_heure},
+		texte=#GET{texte},
+		id_rubrique_classe=#GET{id_rubrique_classe}
 	}>
 	<B_reponses>
 		<div class="reponse-list" hidden>
