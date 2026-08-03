@@ -22,13 +22,13 @@ Breakpoints à ajouter : `max-width: 768px` et `max-width: 1024px`.
 
 **Fichiers candidats** :
 - ~~`squelettes/noisettes/inc/actus_timeline.html` — 24 boucles~~
-- `squelettes/noisettes/sommaire.html` — 17 boucles
+- ~~`squelettes/noisettes/sommaire.html` — 17 boucles~~
 
 Piste : pipeline PHP précalculant les données, ou critère `{jointure}`.
 
 > **Progrès (2026-08-03)** : `actus_timeline.html` refait — la résolution de hiérarchie (mot-clé → ids de rubriques : `evenements`/`ressources`/`travail_en_cours`/`consignes`) est déplacée dans 4 nouvelles fonctions PHP de `thematique_fonctions.php` (`thematique_ids_rubriques_racine_a_mot`, `thematique_id_rubrique_racine_a_mot`, `thematique_ids_rubriques_enfants`, `thematique_ids_rubriques_petits_enfants_a_mot`), qui remplacent les chaînes `BOUCLE(RUBRIQUES){id_parent}` imbriquées par un tableau résolu une seule fois. Boucles restantes : 24 → 19, profondeur d'imbrication max 5 → 3. Comportement vérifié équivalent (contenu réel généré sans erreur via `recuperer_fond()` en CLI, ce fond n'étant actuellement jamais rendu en usage web puisque conditionné à `_PROJET != 'laclasse'`, valeur qu'il vaut partout sur ce dépôt).
 >
-> `sommaire.html` (17 boucles) reste à traiter séparément — logique différente (menus, badges, timeline), pas la même resolution de hiérarchie.
+> **`sommaire.html`** : déjà résolu comme effet de bord d'un précédent correctif de cache (extraction de `menu_consignes.html`, `menu_classes.html`, `menu_ressources.html` en noisettes dédiées avec `#CACHE{0}`, cf point sur le cache 48h du menu bas). `sommaire.html` a désormais 0 boucle directe ; les boucles vivent dans ces fichiers dédiés (7 au total, contre 17 avant, le reste ayant été supprimé ou déjà externalisé entre-temps dans `timeline.html`/`menu_haut.html`).
 
 ---
 
@@ -37,6 +37,8 @@ Piste : pipeline PHP précalculant les données, ou critère `{jointure}`.
 **Fichier** : `squelettes/noisettes/rubrique.html` — mêle présentation et logique de droits
 
 La logique conditionnelle (rôles, permissions, calculs) devrait être dans `thematique_pipelines.php` via `pre_boucle`/`post_boucle` ou des balises custom dans `balises.php`.
+
+> **Progrès (2026-08-03)** : la condition `{si #SESSION{role}|=={prof}} {si #GET{motcle}|!={evenements}}` (BOUCLE_rubAnnee, qui décide d'afficher la rubrique de l'utilisateur en premier) déplacée vers `thematique_afficher_rubrique_utilisateur_prof()` dans `thematique_fonctions.php`. Fichier vérifié fonctionnel via `recuperer_fond()` en CLI. Le reste du fichier (arbre de navigation, handlers JS inline, calculs de classes CSS par `#TYPE_OBJET`) reste tel quel — refactor plus large jugé trop risqué sans accès navigateur pour vérifier visuellement la sidebar.
 
 ---
 

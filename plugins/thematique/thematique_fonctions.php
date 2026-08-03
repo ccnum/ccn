@@ -11,6 +11,19 @@ function filtre_nb2col($nb) {
 }
 
 /**
+ * Faut-il mettre en avant la rubrique de l'utilisateur en premier dans le
+ * menu de navigation de la sidebar (cf noisettes/rubrique.html) : seulement
+ * pour un prof, et pas sur la rubrique "evenements" (blog pédagogique).
+ *
+ * @param string $motcle Mot-clé de la rubrique de l'utilisateur (#SESSION{idRubriqueUser})
+ * @param string $role
+ * @return bool
+ */
+function thematique_afficher_rubrique_utilisateur_prof($motcle, $role) {
+	return $role === 'prof' && $motcle !== 'evenements';
+}
+
+/**
  * Année scolaire courante (cookie/GET, cf plugins/ccn/ccn_options.php).
  *
  * Doit rester dans ce fichier _fonctions.php (auto-inclus à chaque appel),
