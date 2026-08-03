@@ -1,0 +1,58 @@
+:root {
+	--entravaux-border-radius: .25rem;
+	--entravaux-box-shadow: 0 .05em .15em hsla(0,0%,0%,0.1),0 .2em .5em hsla(0,0%,0%,0.1),0 .2em 1em hsla(0,0%,0%,0.075);
+}
+body.page_entravaux {
+	/* centrer */
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+}
+body.page_entravaux #icone_travaux {
+	/* annuler les styles inline */
+	left: 0 !important;
+	top: 1em !important;
+
+	/* centrer */
+	display: flex;
+	justify-content: center;
+	width: 100%;
+}
+body.page_entravaux .entravaux-bloc {
+	border-radius: var(--entravaux-border-radius);
+	box-shadow: var(--entravaux-box-shadow);
+	margin: 5rem auto;
+	width: 30em;
+	max-width: 100vw;
+	display: flex;
+	flex-direction: column;
+	align-items: stretch;
+	text-align: center;
+	min-height: 20em;
+
+	justify-content: center;
+	background-color: var(--spip-login-color-gray-dark);
+}
+body.page_entravaux .formulaire_login fieldset {
+	display: flex;
+	flex-direction: column;
+}
+body.page_entravaux .entravaux-bloc #icone_travaux,
+body.page_entravaux .formulaire_login fieldset #icone_travaux {
+	position: relative !important;
+	order: -1;
+	top: 0 !important;
+	margin-bottom: 1em;
+}
+body.page_entravaux .entravaux-bloc h1 {
+	display: block;
+}
+body.page_entravaux .entravaux-bloc header {
+	padding: 1.5em 2em;
+}
+body.page_entravaux .entravaux-bloc .corps {
+	padding: 1.5em 2em;
+}
+body.page_entravaux.page_login_sos #icone_travaux {
+
+}
