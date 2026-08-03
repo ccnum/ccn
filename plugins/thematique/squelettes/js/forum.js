@@ -39,10 +39,10 @@ function callbackCliqueSurVoirLesReponses(e) {
     const reponses = commentaire.querySelector('.reponse-list');
     if(reponses.style.display == "flex") {
         reponses.style.display = "none";
-        bouton.innerText = "Voir les réponses"
+        bouton.innerText = CCN.lang.forum_voir_reponses
     } else {
         reponses.style.display = "flex";
-        bouton.innerText = "Masquer les réponses"
+        bouton.innerText = CCN.lang.forum_masquer_reponses
     }
 }
 
@@ -101,6 +101,6 @@ function callback_clique_sur_lire_la_suite_du_commentaire(e) {
     const contenu = racineCard.querySelector(".content")
     const ouvert = contenu.classList.toggle('ouvert');
     e.currentTarget.textContent = ouvert
-    ? 'Réduire'
-    : 'Lire la suite du commentaire';
+    ? CCN.lang.forum_reduire
+    : CCN.lang.lire_la_suite_commentaire;
 }

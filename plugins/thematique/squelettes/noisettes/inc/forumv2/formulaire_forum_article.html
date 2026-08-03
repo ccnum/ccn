@@ -1,12 +1,12 @@
 <div class="forum-article">
 	<div class="encadre-message">
-		<p>Envie de réagir, d’apporter ou de demander une précision ? Vous êtes au bon endroit !</p>
+		<p><:thematique:envie_de_reagir:></p>
 		[(#SESSION{id_auteur}|oui)
-			<button class="bouton_encadre" onclick="callbackCliqueSurCommenter(event)">Commenter</button>
+			<button class="bouton_encadre" onclick="callbackCliqueSurCommenter(event)"><:thematique:commenter:></button>
 		]
 		[(#SESSION{id_auteur}|non)
 			[(#PLUGIN{cioidc}|oui)
-				<a class="bouton_encadre" href="[(#URL_PAGE{login}|parametre_url{url,#SELF}|parametre_url{cioidc,oui})]">Se connecter à l'ENT pour commenter</a>
+				<a class="bouton_encadre" href="[(#URL_PAGE{login}|parametre_url{url,#SELF}|parametre_url{cioidc,oui})]"><:thematique:se_connecter_ent_commenter:></a>
 			]
 		]
 	</div>

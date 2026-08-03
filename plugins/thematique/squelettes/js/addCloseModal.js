@@ -29,8 +29,8 @@ function addCloseModal() {
 			<div
 				id="sidebarCloseButton"
 				class="tooltip_bottom_left"
-				data-tip="Fermer la modale"
-				aria-label="Fermer la modale"
+				data-tip="${CCN.lang.fermer_la_modale}"
+				aria-label="${CCN.lang.fermer_la_modale}"
 				style="width: fit-content;margin-bottom:-60px;"
 			>
 				<span class="icon icon-close"></span>

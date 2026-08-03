@@ -17,12 +17,12 @@
 
 		<div class="popup_titre">
 			<div class="titre">
-				[(#GET{type_objet}|=={travail_en_cours}|oui) Répondre à la consigne]
-				[(#GET{type_objet}|=={travail_en_cours}|non) Publier un nouvel article]
+				[(#GET{type_objet}|=={travail_en_cours}|oui) <:thematique:repondre_a_la_consigne:>]
+				[(#GET{type_objet}|=={travail_en_cours}|non) <:thematique:publier_nouvel_article:>]
 			</div>
 			<div class="date" id="entete_publication">
-[(#GET{type_objet}|=={travail_en_cours}|oui) Etape 1 : Pour répondre à la consigne, choisir un titre et le valider ci-dessous]
-				[(#GET{type_objet}|=={travail_en_cours}|non) Etape 1 : Pour créer votre article, choisir un titre et le valider ci-dessous]
+[(#GET{type_objet}|=={travail_en_cours}|oui) <:thematique:etape1_repondre_consigne:>]
+				[(#GET{type_objet}|=={travail_en_cours}|non) <:thematique:etape1_creer_article:>]
 			</div>
 		</div>
 

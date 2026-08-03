@@ -1,6 +1,6 @@
 <div class="forum-preview">
-	<h2>Vérification de votre commentaire</h2>
-	<p>Relisez votre commentaire avant de le publier.</p>
+	<h2><:thematique:verification_commentaire:></h2>
+	<p><:thematique:relisez_commentaire:></p>
 
 	[(#SET{date_heure,[(#ENV{date}|affdate{'d/m/Y H:i'})]})]
 	[(#SET{texte,[(#ENV{texte}|propre)]})]
@@ -14,7 +14,7 @@
 	}>
 
 	<div class="forum-actions">
-		<button type="submit" name="publication_forum_action" value="rediger" class="btn-link">Retour</button>
-		<button type="submit" name="publication_forum_action" value="publier">Poster mon commentaire</button>
+		<button type="submit" name="publication_forum_action" value="rediger" class="btn-link"><:thematique:retour:></button>
+		<button type="submit" name="publication_forum_action" value="publier"><:thematique:poster_commentaire:></button>
 	</div>
 </div>

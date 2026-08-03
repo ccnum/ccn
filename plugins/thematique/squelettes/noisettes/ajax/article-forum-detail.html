@@ -37,8 +37,8 @@
 						<div class="forum">
 							[<a href="(#URL_ACTION_AUTEUR{instituer_forum,#ID_FORUM-forum-suppr-safe,#URL_SITE_SPIP/spip.php?article#_principale:ID_ARTICLE&var_mode=recalcul})"
 							class='supprimer_couleur'
-							onClick='return confirmation("Êtes-vous sûr de vouloir supprimer ce message ?")'
-							title='Supprimer ce message'>
+							onClick='return confirmation("<:thematique:confirmation_supprimer_message:>")'
+							title='<:thematique:supprimer_message:>'>
 							<div class='action_supprimer'></div>
 							</a>]
 						</div>
@@ -116,8 +116,8 @@
 								[(#AUTORISER{instituer,forum,#ID_FORUM}|oui)
 									[<a href="(#URL_ACTION_AUTEUR{instituer_forum,#ID_FORUM-forum-suppr-safe,#URL_SITE_SPIP/spip.php?article#_principale:ID_ARTICLE&var_mode=recalcul})"
 										class='supprimer_couleur'
-										onClick='return confirmation("Êtes-vous sûr de vouloir supprimer ce message ?")'
-										title='Supprimer ce message'>
+										onClick='return confirmation("<:thematique:confirmation_supprimer_message:>")'
+										title='<:thematique:supprimer_message:>'>
 										<div class='action_supprimer'></div>
 									</a>]
 								]
@@ -159,8 +159,8 @@
 		</B_forums_fils>
 
 		<div class="toggleshow intervention_callto_answer">
-			<a id="ajaxf1#ID_FORUM" class="hac liens_voir" title="Répondre à ce message">
-				<i class="material-icons md-24">&#xE8AF;</i>&nbsp;&nbsp;&nbsp;Répondre à ce message
+			<a id="ajaxf1#ID_FORUM" class="hac liens_voir" title="<:thematique:repondre_a_ce_message:>">
+				<i class="material-icons md-24">&#xE8AF;</i>&nbsp;&nbsp;&nbsp;<:thematique:repondre_a_ce_message:>
 			</a>
 			<div id="ajax_callback_forum_#ID_FORUM" class="intervention_new_answer bloc_texte" style='display: none;'></div>
 		</div>

@@ -149,8 +149,8 @@
 				[(#NOM_SITE_SPIP|match{novaterra.laclasse.com}|oui)
 					<INCLURE{fond=noisettes/js/accordeon, nom=bloc_motsclefs-#ID_ARTICLE}>
 					<div class="bloc_option_doc nettoyeur">
-						<a id="bloc_motsclefs-#ID_ARTICLE" class="hac lien_ajouter" title="Lien d'ouverture directe" href="#">
-							<img src="[(#CHEMIN{img/logo_editer_on_15.png}|image_reduire{17}|extraire_attribut{src})]">&nbsp;&nbsp;Ajouter à l'encyclopédie
+						<a id="bloc_motsclefs-#ID_ARTICLE" class="hac lien_ajouter" title="<:thematique:lien_ouverture_directe:>" href="#">
+							<img src="[(#CHEMIN{img/logo_editer_on_15.png}|image_reduire{17}|extraire_attribut{src})]">&nbsp;&nbsp;<:thematique:ajouter_encyclopedie:>
 						</a>
 						<div class="nettoyeur cache formulaire_spip formulaire_editer_document bloc_option_doc">
 							<INCLURE{fond=noisettes/inc/article-mot}{id_article}{id_groupe=5}{titre='Thématique'}>
@@ -163,9 +163,9 @@
 			[(#GET{blocs_forum}|=={non}|non)
 				<INCLURE{fond=noisettes/js/accordeon, nom=bloc_option_forum-#ID_ARTICLE}>
 				<div class="bloc_option_doc nettoyeur">
-					<a id="bloc_option_forum-#ID_ARTICLE" class="hac liens_voir" title="commenter">
+					<a id="bloc_option_forum-#ID_ARTICLE" class="hac liens_voir" title="<:thematique:commenter_title:>">
 						<img src="[(#CHEMIN{img/logo_aide_on_15.png}|image_reduire{15}|extraire_attribut{src})]">
-						&nbsp;Commenter
+						&nbsp;<:thematique:commenter:>
 					</a>
 					<div class='nettoyeur cache bloc_option_forum'>
 						<INCLURE{fond=forum,id_article=#ID_ARTICLE,mode=ajax-detail}>
@@ -179,8 +179,8 @@
 
 			[<INCLURE{fond=noisettes/js/accordeon, nom=bloc_permalien-#ID_ARTICLE}>
 			<div class="bloc_option_doc nettoyeur">
-				<a id="bloc_permalien-#ID_ARTICLE" class="hac liens_forum" title="Lien d'ouverture directe" href="#">
-					<img src="[(#CHEMIN{img/logo_voir_on_15.png}|image_reduire{17}|extraire_attribut{src})]">&nbsp;&nbsp;Permalien
+				<a id="bloc_permalien-#ID_ARTICLE" class="hac liens_forum" title="<:thematique:lien_ouverture_directe:>" href="#">
+					<img src="[(#CHEMIN{img/logo_voir_on_15.png}|image_reduire{17}|extraire_attribut{src})]">&nbsp;&nbsp;<:thematique:permalien:>
 				</a>
 				<div class="cache">
 					<code>#URL_SITE_SPIP/(#GET{url})</code>
@@ -192,8 +192,8 @@
 			[(#PLUGIN{SOCIALTAGS}|oui)
 			<INCLURE{fond=noisettes/js/accordeon, nom=bloc_reseaux-#ID_ARTICLE} />
 			<div class="bloc_option_doc nettoyeur">
-				<a id="bloc_reseaux-#ID_ARTICLE" class="hac liens_forum" title="Lien d'ouverture directe" href="#">
-					<img src="[(#CHEMIN{img/logo_voir_on_15.png}|image_reduire{17}|extraire_attribut{src})]">&nbsp;&nbsp;Réseaux sociaux
+				<a id="bloc_reseaux-#ID_ARTICLE" class="hac liens_forum" title="<:thematique:lien_ouverture_directe:>" href="#">
+					<img src="[(#CHEMIN{img/logo_voir_on_15.png}|image_reduire{17}|extraire_attribut{src})]">&nbsp;&nbsp;<:thematique:reseaux_sociaux:>
 				</a>
 				<div class="cache">
 					<div class="reseaux"></div>
@@ -205,8 +205,8 @@
 			[(#GET{type_objet}|=={travail_en_cours}|oui|et{#GET{donnees_classe}|=={''}|non}|oui)
 				<INCLURE{fond=noisettes/js/accordeon, nom=bloc_donnees-#ID_ARTICLE} />
 				<div class="bloc_option_doc nettoyeur">
-					<a id="bloc_donnees-#ID_ARTICLE" class="hac liens_forum" title="Lien d'ouverture directe" href="#">
-						<img src="[(#CHEMIN{img/logo_voir_on_15.png}|image_reduire{17}|extraire_attribut{src})]">&nbsp;&nbsp;Données de la classe
+					<a id="bloc_donnees-#ID_ARTICLE" class="hac liens_forum" title="<:thematique:lien_ouverture_directe:>" href="#">
+						<img src="[(#CHEMIN{img/logo_voir_on_15.png}|image_reduire{17}|extraire_attribut{src})]">&nbsp;&nbsp;<:thematique:donnees_classe:>
 					</a>
 					<div class="">
 						<div class="donnees_classe">#GET{donnees_classe}</div>

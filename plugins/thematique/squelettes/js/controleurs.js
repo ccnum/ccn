@@ -484,7 +484,7 @@ function callReponse(id_reponse) {
 					'id_objet': id_reponse,
 					'id_article': id_reponse,
 					'page': 'article'
-				}, "Réponse", "./spip.php?page=article&id_article=" + id_reponse + "&mode=complet"
+				}, CCN.lang.reponse, "./spip.php?page=article&id_article=" + id_reponse + "&mode=complet"
 			);
 		},
 		"reponse"
@@ -762,7 +762,7 @@ function callArticleEvenement(id_objet, type_objet) {
 					'type_objet': 'evenements',
 					'id_article': id_objet,
 					'page': type_objet
-				}, "Événement", "./spip.php?page=" + type_objet + "&id_article=" + id_objet + "&mode=complet"
+				}, CCN.lang.evenement, "./spip.php?page=" + type_objet + "&id_article=" + id_objet + "&mode=complet"
 			);
 		},
 		"article"
@@ -1109,14 +1109,19 @@ function setFullscreenModeToCols(setCols) {
  * @see loadContentInMainSidebar
  */
 
-const _blankMainSidebarTemplates = {
-	'travail_en_cours': '<div class="sidebar_bubble"><div class="fiche_titre couleur_texte_ressources couleur_ressources0"><div class="texte"><div class="titre">Travail en cours</div></div></div></div><div class="sidebar_bubble sidebar_bubble_blank">Naviguez dans l\'espace travail en cours grâce à la barre latérale sur votre droite.</div>',
-	'livrables':        '<div class="sidebar_bubble"><div class="fiche_titre couleur_texte_livrables couleur_livrables0"><div class="texte"><div class="titre">Espace livrables</div></div></div></div><div class="sidebar_bubble sidebar_bubble_blank">Naviguez dans l\'espace livrables grâce à la barre latérale sur votre droite.</div>',
-	'ressources':       '<div class="sidebar_bubble"><div class="fiche_titre couleur_texte_ressources couleur_ressources0"><div class="texte"><div class="titre">Espace ressources</div></div></div></div><div class="sidebar_bubble sidebar_bubble_blank">Naviguez dans l\'espace ressources grâce à la barre latérale sur votre droite.</div>',
-};
+// Construite à l'appel (pas au chargement du script) : CCN.lang n'est
+// disponible qu'une fois noisettes/timeline.html exécuté, plus tard.
+function _blankMainSidebarTemplates(key) {
+	const templates = {
+		'travail_en_cours': `<div class="sidebar_bubble"><div class="fiche_titre couleur_texte_ressources couleur_ressources0"><div class="texte"><div class="titre">${CCN.lang.sidebar_travail_en_cours_titre}</div></div></div></div><div class="sidebar_bubble sidebar_bubble_blank">${CCN.lang.sidebar_travail_en_cours_texte}</div>`,
+		'livrables':        `<div class="sidebar_bubble"><div class="fiche_titre couleur_texte_livrables couleur_livrables0"><div class="texte"><div class="titre">${CCN.lang.sidebar_livrables_titre}</div></div></div></div><div class="sidebar_bubble sidebar_bubble_blank">${CCN.lang.sidebar_livrables_texte}</div>`,
+		'ressources':       `<div class="sidebar_bubble"><div class="fiche_titre couleur_texte_ressources couleur_ressources0"><div class="texte"><div class="titre">${CCN.lang.sidebar_ressources_titre}</div></div></div></div><div class="sidebar_bubble sidebar_bubble_blank">${CCN.lang.sidebar_ressources_texte}</div>`,
+	};
+	return templates[key];
+}
 
 function blankMainSidebar(key) {
-	const html = _blankMainSidebarTemplates[key] || '';
+	const html = _blankMainSidebarTemplates(key) || '';
 	$('#sidebar_main_inner').html('<div class="popup popup_blank">' + html + '</div>');
 }
 

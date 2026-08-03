@@ -1,8 +1,11 @@
 let CCN = {};
 
 CCN.debug = false;
-CCN.nomMois = ["Janv.", "Fév.", "Mars", "Avril", "Mai", "Juin", "Juil.", "Août", "Sept.", "Oct.", "Nov.", "Déc."];
-CCN.nomCompletMois = ["janvier", "février", "mars", "avril", "mai", "juin", "juillet", "août", "septembre", "octobre", "novembre", "décembre"];
+// CCN.nomMois / CCN.nomCompletMois sont affectés depuis CCN.lang.mois_courts/
+// mois_complets (cf noisettes/timeline.html, lang/thematique_fr.php), une fois
+// ce dernier disponible.
+CCN.nomMois = [];
+CCN.nomCompletMois = [];
 CCN.travailEnCoursId;
 CCN.couleurBlog;
 CCN.dureeTransition;

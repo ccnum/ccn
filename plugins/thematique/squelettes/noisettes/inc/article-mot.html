@@ -37,7 +37,7 @@ titre : optionnel
 						<a href="[(#URL_PAGE{mot}|parametre_url{id_mot,#ID_MOT})]" style="text-decoration:none; border:0px;" class="ajax">[<strong>(#TITRE|couper{30})</strong>]</a>
 						<br />[<a href="[(#URL_PAGE{mot}|parametre_url{id_mot,#ID_MOT})]" type="#MIME_TYPE" title="#TITRE" class="ajax">(#LOGO_MOT|image_reduire{100})</a>]
 					</div>
-					<div class="bloc_droite #EDIT{descriptif}">[(#DESCRIPTIF|sinon{[(#SESSION|oui)Cliquer pour ajouter un descriptif]})]</div>
+					<div class="bloc_droite #EDIT{descriptif}">[(#DESCRIPTIF|sinon{[(#SESSION|oui)<:thematique:ajouter_descriptif:>]})]</div>
 					#SET{aff,oui}
 					#SET{mot,#ID_MOT}
 					</div>
@@ -63,7 +63,7 @@ titre : optionnel
 							<?php
 								$mode = "<form name='mot_clef'>";
 								$mode .= "<select onChange=\"save_mot(#ID_ARTICLE,'article',document.mot_clef.mot_encyclopedie.value)\" name='mot_encyclopedie' size='1' style='width: 180px; ' class='fondl'>";
-								$mode .= "<option value=''>Sélectionner une thématique</option>";
+								$mode .= "<option value=''>" . _T('thematique:selectionner_thematique') . "</option>";
 								$mode .= "<option value=''></option>";
 								<BOUCLE_mots(MOTS){id_groupe}>
 									$mode.="<option value='#ID_MOT' [(#GET{mot}|=={#ID_MOT}|oui)selected]>#TITRE</option>";

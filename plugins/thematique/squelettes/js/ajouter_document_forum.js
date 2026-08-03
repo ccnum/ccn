@@ -19,7 +19,7 @@ $(document).off('change', '#ajouter_document').on('change', '#ajouter_document',
 	}
 
 	if (fichier && fichier.size > poidsMaxi) {
-		$spanErreur.text('Taille maximale autorisée : 100 Mo.');
+		$spanErreur.text(CCN.lang.taille_maximale_document_forum);
 		$conteneur.addClass('erreur');
 		$(this).val('');
 	} else {

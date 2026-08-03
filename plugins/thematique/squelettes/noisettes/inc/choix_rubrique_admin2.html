@@ -17,7 +17,7 @@
 	<div id="choix_rubrique_admin2" name="rubrique_admin" class="selectbox" data-select-name="rubrique_admin">
 		<button type="button" class="select-toggle first_label">
 			<span class="icon icon-publier"></span>
-			Publier
+			<:thematique:menu_publier:>
 		</button>
 		<ul class="select-options choix_rubrique_wrapper">
 			[(#GET{voir_mission}|=={oui}|oui)
@@ -25,26 +25,26 @@
 					class="select-option"
 					data-value="#ID_RUBRIQUE"
 				>
-					Une nouvelle mission
+					<:thematique:nouvelle_mission:>
 				</li>
 			]
-			<li onClick='alert("Cette partie des CCN est en chantier, veuillez réessayer plus tard.")' 
-				class="select-option" 
+			<li onClick='alert("<:thematique:chantier_ccn:>")'
+				class="select-option"
 				data-value="#ID_RUBRIQUE"
 			>
-				Une information dans la salle des profs
+				<:thematique:information_salle_des_profs:>
 			</li>
-			<li onClick='callRessource();' 
-				class="select-option" 
+			<li onClick='callRessource();'
+				class="select-option"
 				data-value="#ID_RUBRIQUE"
 			>
-				Une ressource
+				<:thematique:nouvelle_ressource:>
 			</li>
-			<li onClick='changeTimelineMode("blogs");' 
-				class="select-option" 
+			<li onClick='changeTimelineMode("blogs");'
+				class="select-option"
 				data-value="#ID_RUBRIQUE"
 			>
-				Un événement dans l'agenda
+				<:thematique:nouvel_evenement_agenda:>
 			</li>
 			
 		</ul>

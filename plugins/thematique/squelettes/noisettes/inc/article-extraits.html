@@ -15,8 +15,8 @@
 
 <INCLURE{fond=noisettes/js/accordeon, nom=bloc_option_extraits, ajax} />
 <div id="bloc_option_extraits" style="clear: both;">
-<ul><li><a class="hac lien_ajouter" title="ajouter un document">
-<img src="[(#CHEMIN{img/logo_editer_on_15.png}|image_reduire{15}|extraire_attribut{src})]">&nbsp;&nbsp;Gérer les extraits</a>
+<ul><li><a class="hac lien_ajouter" title="<:thematique:ajouter_document:>">
+<img src="[(#CHEMIN{img/logo_editer_on_15.png}|image_reduire{15}|extraire_attribut{src})]">&nbsp;&nbsp;<:thematique:gerer_les_extraits:></a>
 <ul style="display: none;">
 
 		[(#REM)Affichage mots-clefs]
@@ -29,7 +29,7 @@
 						$action="editer_mots";
 						$redirect="spip.php?page=article&id_article=#_principale:ID_ARTICLE";
 						$arg="#_principale:ID_ARTICLE,#ID_MOT,articles,id_article,article";
-						echo '<a class="" title="Changer l\'extrait" href="'.securiser_action_auteur($action, $arg, $redirect, $mode=false, $att="").'"><div class="action_supprimer"></div></a>';
+						echo '<a class="" title="'._T('thematique:changer_lextrait').'" href="'.securiser_action_auteur($action, $arg, $redirect, $mode=false, $att="").'"><div class="action_supprimer"></div></a>';
 					}
 				?>
 
@@ -49,7 +49,7 @@
 					<BOUCLE_documents_joints_mp3(DOCUMENTS) {id_article=#_principale:ID_ARTICLE} {mode=document} {extension==mp3} {par num titre, date}>
 						<INCLURE{fond=noisettes/bloc/article/doc-flv, id_document, id_article=#ID_ARTICLE, affiche-titre=non, ajax} />
 					</BOUCLE_documents_joints_mp3>
-						<br /><p style="color: #cccccc;">Lancer les bandes sons librement en appuyant sur PLAY après avoir déclenché le film muet.</p>
+						<br /><p style="color: #cccccc;"><:thematique:bandes_sons_info:></p>
 					</B_documents_joints_mp3>
 
 				</div>
@@ -67,9 +67,9 @@
 							$action="editer_mots";
 							$redirect="spip.php?page=article&id_article=#ID_ARTICLE";
 							$att=" method='post' ";
-							$mode="<input name='image' type='file' size='15' /><input name='sousaction1' type='submit' value='T&eacute;l&eacute;charger' class='fondo spip_xx-small' /><input type='hidden' name='iframe_redirect' value='#URL_SITE_SPIP%2Fecrire%2F%3Fexec%3Diconifier%26type%3Did_article%26id_article%3D#ID_ARTICLE%26script%3Darticles' />";
+							$mode="<input name='image' type='file' size='15' /><input name='sousaction1' type='submit' value='".htmlspecialchars(_T('thematique:telecharger'), ENT_QUOTES)."' class='fondo spip_xx-small' /><input type='hidden' name='iframe_redirect' value='#URL_SITE_SPIP%2Fecrire%2F%3Fexec%3Diconifier%26type%3Did_article%26id_article%3D#ID_ARTICLE%26script%3Darticles' />";
 							$mode="<select name='nouv_mot' size='1'>";
-							$mode.="<option value=''>Sélectionner un extrait</option>";
+							$mode.="<option value=''>"._T('thematique:selectionner_extrait')."</option>";
 							<BOUCLE_materiau(ARTICLES){id_rubrique=17}>
 								$mode.="<option value='#ID_ARTICLE'>#TITRE</option>";
 							</BOUCLE_materiau>

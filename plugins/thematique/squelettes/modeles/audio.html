@@ -4,13 +4,13 @@
 		[(#MEDIA|=={audio}|oui)
 		<audio controls preload="none">
 		<source src="#URL_DOCUMENT" />
-		<p class="warning">Le format *.#MIME_TYPE n'est pas pris en charge par votre navigateur</p>
+		<p class="warning"><:thematique:format_non_supporte_navigateur{mime_type=#MIME_TYPE}:></p>
 		</audio>
 		]
 		[(#MEDIA|=={video}|oui)
 		<video controls width='#ENV{largeur, #LARGEUR|?{#LARGEUR,150}}' height='#ENV{hauteur, #HAUTEUR|?{#HAUTEUR,20}}'>
 		<source src="#URL_DOCUMENT" />
-		<p class="warning">Le format *.#MIME_TYPE n'est pas pris en charge par votre navigateur</p>
+		<p class="warning"><:thematique:format_non_supporte_navigateur{mime_type=#MIME_TYPE}:></p>
 		</video>
 		]
 		<!--

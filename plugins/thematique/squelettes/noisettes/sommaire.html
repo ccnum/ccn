@@ -37,13 +37,13 @@ et/ou
 				<button type="button" id="badge_cap_sur_annee" class="badge_timeline badge_timeline_debut btn-reset" style="display:none;" onclick="callArticleJalon(CCN.idArticleCapSurAnnee)"
 					data-svg-publie="[(#CHEMIN{img/badge_label_cap_sur_annee_publie.svg}|attribut_url)]"
 					data-svg-non-publie="[(#CHEMIN{img/badge_label_cap_sur_annee_non_publie.svg}|attribut_url)]">
-					<img class="badge_timeline_label_img" src="[(#CHEMIN{img/badge_label_cap_sur_annee_publie.svg}|attribut_url)]" alt="Cap sur l'année" />
+					<img class="badge_timeline_label_img" src="[(#CHEMIN{img/badge_label_cap_sur_annee_publie.svg}|attribut_url)]" alt="<:thematique:cap_sur_annee:>" />
 					<span class="badge_timeline_icone"><img src="[(#CHEMIN{img/pictos_sites/[(#NOM_SITE_SPIP|replace{' ',''}|strtolower)].svg}|sinon{#CHEMIN{img/pictos_sites/selfdata.svg}}|attribut_url)]" alt="" /></span>
 				</button>
 				<button type="button" id="badge_la_rencontre" class="badge_timeline badge_timeline_fin btn-reset" style="display:none;" onclick="callArticleJalon(CCN.idArticleLaRencontre)"
 					data-svg-publie="[(#CHEMIN{img/badge_label_la_rencontre_publie.svg}|attribut_url)]"
 					data-svg-non-publie="[(#CHEMIN{img/badge_label_la_rencontre_non_publie.svg}|attribut_url)]">
-					<img class="badge_timeline_label_img" src="[(#CHEMIN{img/badge_label_la_rencontre_publie.svg}|attribut_url)]" alt="La Rencontre" />
+					<img class="badge_timeline_label_img" src="[(#CHEMIN{img/badge_label_la_rencontre_publie.svg}|attribut_url)]" alt="<:thematique:la_rencontre:>" />
 					<span class="badge_timeline_icone"><img src="[(#CHEMIN{img/logo_la_rencontre.svg}|attribut_url)]" alt="" /></span>
 				</button>
 			</div>
@@ -71,17 +71,17 @@ et/ou
 	<div id="menu_bas" class="clearfix combo-filters zone-menu">
 		[(#REM)Timeline]
 		<div id="menu-timeline" class="bloc_view col">
-			<h3 class="menu-title"><span>Publier</span></h3>
+			<h3 class="menu-title"><span><:thematique:menu_publier:></span></h3>
 			<ul class="filter clearfix option-set ressource" data-filter-group="ressource">
-				[(#MODELE{logo_menu}{valeur=consignes}{class=tooltip menu_logo_consignes selected}{onclick=changeTimelineMode('consignes');CCN.projet.showWholeTimeline();}{title=Missions})]
+				[(#MODELE{logo_menu}{valeur=consignes}{class=tooltip menu_logo_consignes selected}{onclick=changeTimelineMode('consignes');CCN.projet.showWholeTimeline();}{title=<:thematique:missions:>})]
 
-				[(#MODELE{logo_menu}{valeur=blog}{class=tooltip menu_logo_blogs}{filter=.ressource_blogs}{onclick=changeTimelineMode('blogs');}{title=Agenda})]
+				[(#MODELE{logo_menu}{valeur=blog}{class=tooltip menu_logo_blogs}{filter=.ressource_blogs}{onclick=changeTimelineMode('blogs');}{title=<:thematique:agenda:>})]
 
 				[(#SESSION{role}|in_array{#LISTE{prof,intervenant,admin}}|oui)
-					[(#MODELE{logo_menu}{valeur=evenement}{class=tooltip menu_logo_evenements}{filter=.ressource_evenements}{onclick=changeTimelineMode('evenements');}{title=Salle des profs})]
+					[(#MODELE{logo_menu}{valeur=evenement}{class=tooltip menu_logo_evenements}{filter=.ressource_evenements}{onclick=changeTimelineMode('evenements');}{title=<:thematique:salle_des_profs:>})]
 				]
 
-				[(#MODELE{logo_menu}{valeur=livrable}{class=tooltip menu_logo_livrables logo_menu-cible}{filter=.ressource_livrables}{onclick=callLivrables();}{title=Projets finis})]
+				[(#MODELE{logo_menu}{valeur=livrable}{class=tooltip menu_logo_livrables logo_menu-cible}{filter=.ressource_livrables}{onclick=callLivrables();}{title=<:thematique:projets_finis:>})]
 
 			</ul>
 		</div>
@@ -95,9 +95,9 @@ et/ou
 		[(#REM) Actualités]
 		[(#CONST{_PROJET}|!={laclasse}|oui)
 			<div id="menu-actualites" class="bloc_view col">
-				<h3><span>Actualités</span></h3>
+				<h3><span><:thematique:menu_actualites:></span></h3>
 				<ul class="actualites-ul filter clearfix option-set" data-filter-group="classe">
-					[(#MODELE{logo_menu}{valeur=tout}{title=Toutes les actualités}{class=menu_logo_type_sidebarView menu_logo_actualites}{onclick=callActualites();})]
+					[(#MODELE{logo_menu}{valeur=tout}{title=<:thematique:toutes_les_actualites:>}{class=menu_logo_type_sidebarView menu_logo_actualites}{onclick=callActualites();})]
 				</ul>
 				<div class="actualites-inner filter clearfix option-set" data-filter-group="actualites">
 					<INCLURE{fond=noisettes/inc/actus_timeline, nb_actus=5, ajax} />
@@ -108,27 +108,27 @@ et/ou
 		<div id="menu-classe" [(#VUE|=={classe}|non) style="display:none;"]>
 			[(#REM) Médias]
 			<div id="menu-medias" class="bloc_view col">
-				<h3><span>Médias</span></h3>
+				<h3><span><:thematique:medias:></span></h3>
 				<ul class="filter clearfix option-set ressource" data-filter-group="media">
-					[(#MODELE{logo_menu}{valeur=tout}{class=selected}{title=Tous les médias})]
-					[(#MODELE{logo_menu}{valeur=texte}{filter=.texte}{title=Les textes})]
-					[(#MODELE{logo_menu}{valeur=image}{filter=.image}{title=Les images})]
-					[(#MODELE{logo_menu}{valeur=son}{filter=.son}{title=Les sons})]
-					[(#MODELE{logo_menu}{valeur=video}{filter=.video}{title=Les vidéos})]
-					[(#MODELE{logo_menu}{valeur=autre}{filter=.autre}{title=Les documents})]
+					[(#MODELE{logo_menu}{valeur=tout}{class=selected}{title=<:thematique:tous_les_medias:>})]
+					[(#MODELE{logo_menu}{valeur=texte}{filter=.texte}{title=<:thematique:les_textes:>})]
+					[(#MODELE{logo_menu}{valeur=image}{filter=.image}{title=<:thematique:les_images:>})]
+					[(#MODELE{logo_menu}{valeur=son}{filter=.son}{title=<:thematique:les_sons:>})]
+					[(#MODELE{logo_menu}{valeur=video}{filter=.video}{title=<:thematique:les_videos:>})]
+					[(#MODELE{logo_menu}{valeur=autre}{filter=.autre}{title=<:thematique:les_documents:>})]
 				</ul>
 			</div>
 
 			[(#REM) Tri]
 			<div id="menu-tris" class="bloc_view col">
-				<h3><span>Tri</span></h3>
+				<h3><span><:thematique:tri:></span></h3>
 				<ul id="sort-by" class="option-set clearfix" data-option-key="sortBy">
-					[(#MODELE{logo_menu}{valeur=date}{option=date}{title=Par date}{class=selected})]
-					[(#MODELE{logo_menu}{valeur=notation}{option=notation}{title=Par notation})]
+					[(#MODELE{logo_menu}{valeur=date}{option=date}{title=<:thematique:par_date:>}{class=selected})]
+					[(#MODELE{logo_menu}{valeur=notation}{option=notation}{title=<:thematique:par_notation:>})]
 				</ul>
 				<ul id="sort-direction" class="option-set clearfix" data-option-key="sortAscending">
-					[(#MODELE{logo_menu}{valeur=descendant}{option=false}{title=Descendant}{class=selected})]
-					[(#MODELE{logo_menu}{valeur=ascendant}{option=true}{title=Ascendant})]
+					[(#MODELE{logo_menu}{valeur=descendant}{option=false}{title=<:thematique:descendant:>}{class=selected})]
+					[(#MODELE{logo_menu}{valeur=ascendant}{option=true}{title=<:thematique:ascendant:>})]
 				</ul>
 			</div>
 		</div>

@@ -82,7 +82,7 @@ function Consigne() {
 					${this.data.nombre_commentaires > 0 ? `<div aria-label="${this.data.nombre_commentaires} interaction${this.data.nombre_commentaires > 1 ? 's' : ''}" class="picto_nombre_commentaires">${this.data.nombre_commentaires}</div>` : ''}
 					<div class="etiquette-etape">
 						<img class="logo-etiquette" src="" alt="" />
-						<span class="texte-etiquette">Étape N°${this.numero+1}</span>
+						<span class="texte-etiquette">${CCN.lang.consigne_etape.replace('@numero@', this.numero+1)}</span>
 					</div>
 					<div class="texte">
 						<div class="first-row">
@@ -98,12 +98,12 @@ function Consigne() {
 					<div class="nettoyeur"></div>
 				</button>
 				<button type="button" class="bouton_reponse_consigne btn-reset">
-					<img src="${CCN.urlRoot}img/reponse_plus.png" alt="" title="R&eacute;pondre &agrave; la consigne">
-					<div style="white-space: nowrap;">Répondre&nbsp;&agrave;&nbsp;la mission</div>
+					<img src="${CCN.urlRoot}img/reponse_plus.png" alt="" title="${CCN.lang.repondre_a_la_consigne}">
+					<div style="white-space: nowrap;">${CCN.lang.repondre_a_la_mission}</div>
 				</button>
 				<button type="button" class="bouton_reponse_consigne btn-reset">
-					<img src="${CCN.urlRoot}img/reponse_plus.png" alt="" title="Accéder à ma réponse">
-					<div style="white-space: nowrap;">Ma réponse</div>
+					<img src="${CCN.urlRoot}img/reponse_plus.png" alt="" title="${CCN.lang.acceder_a_ma_reponse}">
+					<div style="white-space: nowrap;">${CCN.lang.ma_reponse}</div>
 				</button>
 			</div>
 		`);

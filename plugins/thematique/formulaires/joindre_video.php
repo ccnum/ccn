@@ -86,8 +86,10 @@ function formulaires_joindre_video_verifier_dist($id_objet = 0, $objet = '') {
 	foreach ($files as $file) {
 		$ext = strtolower(pathinfo($file['name'] ?? '', PATHINFO_EXTENSION));
 		if (!in_array($ext, _VIMEO_EXTENSIONS_AUTORISEES)) {
-			$erreurs['message_erreur'] = 'Format vidéo non accepté : ' . $ext
-				. ' (formats acceptés : ' . implode(', ', _VIMEO_EXTENSIONS_AUTORISEES) . ')';
+			$erreurs['message_erreur'] = _T('thematique:format_video_non_accepte', [
+				'extension' => $ext,
+				'extensions' => implode(', ', _VIMEO_EXTENSIONS_AUTORISEES),
+			]);
 			return $erreurs;
 		}
 	}

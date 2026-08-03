@@ -24,10 +24,10 @@
 
 			[(#REM) ---------------- texte ---------------- ]
 				[(#AUTORISER{modifier,mot,#ID_MOT}|oui)
-					<ul class="popup_titre"><span class="titre">Modifier</span>
-						<li>le logo : <span class="photo #EDIT{logo}">[(#MODELE{logo_carre}{id_rubrique}{taille=20})]</span></li>
-						<li>le nom du mot-clef : <span class="#EDIT{titre}">[(#TITRE)]</span></li>
-						<li>le descriptif du mot-clef : <span class="spip #EDIT{texte}">[(#TEXTE|sinon{Double-cliquer pour compléter le descriptif de ma classe - #TITRE.})</span>]</li>
+					<ul class="popup_titre"><span class="titre"><:thematique:modifier:></span>
+						<li><:thematique:libelle_logo:> <span class="photo #EDIT{logo}">[(#MODELE{logo_carre}{id_rubrique}{taille=20})]</span></li>
+						<li><:thematique:libelle_nom_mot_clef:> <span class="#EDIT{titre}">[(#TITRE)]</span></li>
+						<li><:thematique:libelle_descriptif_mot_clef:> <span class="spip #EDIT{texte}">[(#TEXTE|oui)#TEXTE][(#TEXTE|non)<:thematique:descriptif_a_completer{titre=#TITRE}:>]</span></li>
 					</ul>
 				]
 				[(#AUTORISER{modifier,mot,#ID_MOT}|non)

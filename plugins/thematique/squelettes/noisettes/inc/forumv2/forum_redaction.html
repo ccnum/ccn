@@ -1,9 +1,9 @@
 <div class="forum-redaction">
-	<h2>Rédaction de votre commentaire</h2>
+	<h2><:thematique:redaction_commentaire:></h2>
 	[(#ENV**{erreurs/message_erreur})]
-	<p>Rédigez votre commentaire sur cette réponse.</p>
+	<p><:thematique:redigez_commentaire:></p>
 	[(#ENV{id_parent}|>{0}|oui)
-		<p class="forum-redaction__reponse-a">Vous répondez à un commentaire existant.</p>
+		<p class="forum-redaction__reponse-a"><:thematique:reponse_a_commentaire_existant:></p>
 	]
 	[(#ENV**{erreurs/texte})]
 	<div class="editer">
@@ -11,8 +11,8 @@
 	</div>
 	<div style="display: flex; justify-content: end;">
 		<div class="forum-actions">
-			<button onclick="callbackCliqueSurAnnuler(event)" type="button">Annuler</button>
-			<button type="submit" name="publication_forum_action" value="previsualiser">Prévisualiser</button>
+			<button onclick="callbackCliqueSurAnnuler(event)" type="button"><:thematique:annuler:></button>
+			<button type="submit" name="publication_forum_action" value="previsualiser"><:thematique:previsualiser:></button>
 		</div>
 	</div>
 </div>
