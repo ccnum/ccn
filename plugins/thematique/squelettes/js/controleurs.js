@@ -258,7 +258,6 @@ function setContentFromState(state, title, url) {
 
 }
 
-
 function expandSidebar() {
     if ($('body').hasClass('hasSidebarExpanded')) return; // déjà ouvert
 

@@ -256,7 +256,6 @@ async function initPdfSwipersInComment($portfolio_grand) {
 
 	if ($portfolio_grand.length !== 1) return;
 
-
 	const pdfUrl = $portfolio_grand.attr('href');
 	const pdfName = decodeURIComponent(pdfUrl.split('/').pop());
 	const $imgSrc = "";
