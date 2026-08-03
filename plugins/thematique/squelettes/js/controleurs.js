@@ -133,7 +133,7 @@ function onHashChange(event) {
  * ou depuis l'état de l'historique donné
  */
 let currentState = {};
-function setContentFromState(state) {
+function setContentFromState(state, title, url) {
 
 	if (typeof state.data !== 'object' || state.data == null) {
 		return;
@@ -164,6 +164,12 @@ function setContentFromState(state) {
 	}
 	currentState = state;
 	if (isSamePage) { return; }
+
+	// Repousse l'url du navigateur (ex: retour à l'url courte du site
+	// quand showWholeTimeline() referme la sidebar), si demandé par l'appelant.
+	if (url !== undefined) {
+		updateUrl(state, title, url);
+	}
 
 	antifloodHashChange = true;
 	// Ressource
