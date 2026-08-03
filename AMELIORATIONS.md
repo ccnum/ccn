@@ -59,3 +59,5 @@ Plusieurs `<div onclick>` dans `consigne.js` et les squelettes. Le remplacement 
 ### 6.2 TODO restant dans `controleurs.js`
 
 Ligne ~893 : `// TODO : cela est appelé deux fois minimum à cause de History.js` — comportement connu, non trivial à corriger.
+
+> **Résolu** : ce TODO n'existe plus dans `controleurs.js` (code déjà retravaillé entre-temps, cf gestion de l'historique navigateur).
