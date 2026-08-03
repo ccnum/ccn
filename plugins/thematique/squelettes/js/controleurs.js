@@ -669,7 +669,7 @@ function callRessourceArticle(id_article, type_objet) {
 	setFullscreenModeToCols(true);
 	updateMenuIcon([type_objet], 'sidebarView');
 
-	const url = "./spip.php?page=article&id_article=" + id_article + "&mode=ajax-detail";
+	const url = "./spip.php?page=article&id_article=" + id_article + "&type_objet=" + type_objet + "&mode=ajax-detail";
 	loadContentInMainSidebar(
 		url,
 		() => {
@@ -701,7 +701,7 @@ function callRessourceSyndicArticle(id_syndic_article, type_objet) {
 	setFullscreenModeToCols(true);
 	updateMenuIcon([type_objet], 'sidebarView');
 
-	const url = "./spip.php?page=syndic_article&id_syndic_article=" + id_syndic_article + "&mode=ajax-detail";
+	const url = "./spip.php?page=syndic_article&id_syndic_article=" + id_syndic_article + "&type_objet=" + type_objet + "&mode=ajax-detail";
 	loadContentInMainSidebar(
 		url,
 		() => {
@@ -733,7 +733,7 @@ function callRessourceRubrique(id_rubrique, type_objet) {
 	setFullscreenModeToCols(true);
 	updateMenuIcon([type_objet], 'sidebarView');
 
-	const url = "./spip.php?page=rubrique&id_rubrique=" + id_rubrique + "&mode=ajax-detail";
+	const url = "./spip.php?page=rubrique&id_rubrique=" + id_rubrique + "&type_objet=" + type_objet + "&mode=ajax-detail";
 	loadContentInMainSidebar(
 		url,
 		() => {
