@@ -1,63 +1,31 @@
 # Améliorations à faire — Plugin SPIP `thematique` (CCN)
 
-**Date** : 2026-06-26
+**Dernière mise à jour** : 2026-08-03
 
 ---
 
 ## CSS
 
-### 2.3 Ajouter des media queries mobile/tablette
+### Media queries mobile/tablette
 
-**Fichier** : `thematique.css.html`
+**Fichier** : `css/responsive.css.html`
 
-Il n'existe qu'une seule media query (`max-width: 1280px`). À traiter dans le cadre d'une refonte responsive dédiée.
-
-Breakpoints à ajouter : `max-width: 768px` et `max-width: 1024px`.
+Seuls `max-width: 1280px` et `max-width: 1050px` existent. Ajouter `768px`/`1024px` nécessite une vraie refonte responsive (quels blocs s'adaptent, comment) — à faire avec un accès navigateur pour vérifier visuellement.
 
 ---
 
 ## Architecture SPIP
 
-### 3.2 Réduire les boucles SPIP imbriquées
+### Logique de `rubrique.html`
 
-**Fichiers candidats** :
-- ~~`squelettes/noisettes/inc/actus_timeline.html` — 24 boucles~~
-- ~~`squelettes/noisettes/sommaire.html` — 17 boucles~~
+**Fichier** : `squelettes/noisettes/rubrique.html`
 
-Piste : pipeline PHP précalculant les données, ou critère `{jointure}`.
-
-> **Progrès (2026-08-03)** : `actus_timeline.html` refait — la résolution de hiérarchie (mot-clé → ids de rubriques : `evenements`/`ressources`/`travail_en_cours`/`consignes`) est déplacée dans 4 nouvelles fonctions PHP de `thematique_fonctions.php` (`thematique_ids_rubriques_racine_a_mot`, `thematique_id_rubrique_racine_a_mot`, `thematique_ids_rubriques_enfants`, `thematique_ids_rubriques_petits_enfants_a_mot`), qui remplacent les chaînes `BOUCLE(RUBRIQUES){id_parent}` imbriquées par un tableau résolu une seule fois. Boucles restantes : 24 → 19, profondeur d'imbrication max 5 → 3. Comportement vérifié équivalent (contenu réel généré sans erreur via `recuperer_fond()` en CLI, ce fond n'étant actuellement jamais rendu en usage web puisque conditionné à `_PROJET != 'laclasse'`, valeur qu'il vaut partout sur ce dépôt).
->
-> **`sommaire.html`** : déjà résolu comme effet de bord d'un précédent correctif de cache (extraction de `menu_consignes.html`, `menu_classes.html`, `menu_ressources.html` en noisettes dédiées avec `#CACHE{0}`, cf point sur le cache 48h du menu bas). `sommaire.html` a désormais 0 boucle directe ; les boucles vivent dans ces fichiers dédiés (7 au total, contre 17 avant, le reste ayant été supprimé ou déjà externalisé entre-temps dans `timeline.html`/`menu_haut.html`).
-
----
-
-### 4.1 Déplacer la logique métier vers des pipelines PHP
-
-**Fichier** : `squelettes/noisettes/rubrique.html` — mêle présentation et logique de droits
-
-La logique conditionnelle (rôles, permissions, calculs) devrait être dans `thematique_pipelines.php` via `pre_boucle`/`post_boucle` ou des balises custom dans `balises.php`.
-
-> **Progrès (2026-08-03)** : la condition `{si #SESSION{role}|=={prof}} {si #GET{motcle}|!={evenements}}` (BOUCLE_rubAnnee, qui décide d'afficher la rubrique de l'utilisateur en premier) déplacée vers `thematique_afficher_rubrique_utilisateur_prof()` dans `thematique_fonctions.php`. Fichier vérifié fonctionnel via `recuperer_fond()` en CLI. Le reste du fichier (arbre de navigation, handlers JS inline, calculs de classes CSS par `#TYPE_OBJET`) reste tel quel — refactor plus large jugé trop risqué sans accès navigateur pour vérifier visuellement la sidebar.
+La condition de rôle a été extraite en PHP (`thematique_afficher_rubrique_utilisateur_prof()`). Le reste du fichier (arbre de navigation, handlers JS inline, classes CSS calculées par `#TYPE_OBJET`) mélange encore présentation et logique — refactor plus large à faire avec accès navigateur (risque de régression visuelle sur la sidebar).
 
 ---
 
 ## Accessibilité
 
-### 5.3 Remplacer les `<div>` cliquables par des `<button>`
+### Remplacer les `<div>` cliquables par des `<button>`
 
-Plusieurs `<div onclick>` dans `consigne.js` et les squelettes. Le remplacement impacte les règles CSS ciblant `.bouton_reponse_consigne`. À faire conjointement avec une refonte des styles de composants.
-
-> **Progrès** : les boutons de réaction sont désormais accessibles au clavier et aux lecteurs d'écran (#315, 2026-06-25).
->
-> **Progrès (2026-08-03)** : toutes les div cliquables restantes (`consigne.js`, `reponse.js`, `article.js`, les modèles `actu_*`, `rubrique_detail.html`, `reponse_binome_head.html`, les icônes de sidebar) ont désormais `role="button"` + `tabindex="0"`, activables au clavier via le handler générique déjà en place (`controleurs.js`), avec un focus visible (`[role="button"]:focus-visible` dans `sidebar.css.html`). Le remplacement par de vrais `<button>` (qui impose de refaire les styles de composants) reste à faire dans le cadre d'une refonte dédiée.
-
----
-
-## Maintenabilité
-
-### 6.2 TODO restant dans `controleurs.js`
-
-Ligne ~893 : `// TODO : cela est appelé deux fois minimum à cause de History.js` — comportement connu, non trivial à corriger.
-
-> **Résolu** : ce TODO n'existe plus dans `controleurs.js` (code déjà retravaillé entre-temps, cf gestion de l'historique navigateur).
+Toutes les div cliquables ont `role="button"` + `tabindex="0"` (accessibles au clavier, focus visible). Le remplacement par de vrais `<button>` reste à faire, mais impose de refaire les styles de composants (`.bouton_reponse_consigne` etc.) — à prévoir avec une refonte CSS dédiée.
