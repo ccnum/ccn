@@ -1,0 +1,22 @@
+squelettes/js/controleurs.js:828: Réponse vide !
+squelettes/noisettes/inc/article-design.laclasse.com.html:10: Qu’aimeriez-vous manger comme aliments à la cantine ?
+squelettes/noisettes/inc/article-design.laclasse.com.html:13: Avez-vous des idées d’aliments, de recettes originales ?
+squelettes/noisettes/inc/article-design.laclasse.com.html:16: Qu’est ce que vous ne mangez pas à la cantine et que vous mangez chez vous ?
+squelettes/noisettes/inc/article-design.laclasse.com.html:19: Aujourd’hui avez vous mangez tout votre plateau repas ? Que n’avez-vous pas mang
+squelettes/noisettes/inc/article-design.laclasse.com.html:25: Quelle décoration aimeriez vous pour votre cantine du futur ?
+squelettes/noisettes/inc/article-design.laclasse.com.html:31: Aimez vous le design d’intérieur de votre cantine ? Comment imaginez vous l’arch
+squelettes/noisettes/inc/article-design.laclasse.com.html:34: Comment peut-on faire pour que les collégiens mangent tout ?
+squelettes/noisettes/inc/article-design.laclasse.com.html:37: Comment peut-on présenter les aliments pour qu’ils soient plus attractifs ?
+squelettes/noisettes/inc/article-design.laclasse.com.html:40: Comment peut-on faire réagir les collégiens pour qu’ils ne gaspillent pas ?
+squelettes/noisettes/inc/article-design.laclasse.com.html:43: Dessine soit le repas de tes rêves, soit le plateau repas de tes rêves, soit le 
+squelettes/noisettes/inc/article-design.laclasse.com.html:52: Qu’avez-vous comme objets dans votre sac à dos ?
+squelettes/noisettes/inc/article-design.laclasse.com.html:55: Que pouvez-vous partager pendant la récréation ?
+squelettes/noisettes/inc/article-design.laclasse.com.html:58: Que pouvez-vous offrir pendant la récréation ?
+squelettes/noisettes/inc/article-design.laclasse.com.html:61: Que pouvez-vous prêter pendant la récréation ?
+squelettes/noisettes/inc/article-design.laclasse.com.html:64: Que pouvez-vous échanger pendant la récréation ?
+squelettes/noisettes/inc/article-design.laclasse.com.html:67: Comment pouvez-vous aider des camarades pendant la récréation ?
+squelettes/noisettes/inc/article-design.laclasse.com.html:70: Qu’y a t il comme lieux accessibles en récréation ? Quelles sont leurs fonctions
+squelettes/noisettes/inc/article-design.laclasse.com.html:73: De quoi avez-vous besoin pendant la récréation ?
+squelettes/noisettes/inc/article-design.laclasse.com.html:76: Votre ville a t elle une spécialité ?
+squelettes/noisettes/inc/article-design.laclasse.com.html:79: Avez-vous des idées de services ? Lesquels ?
+squelettes/noisettes/inc/article-design.laclasse.com.html:82: A quoi ressemblerait votre récréation de rêve? Faire un dessin commenté (utilise

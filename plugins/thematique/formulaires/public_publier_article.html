@@ -17,7 +17,7 @@
 
 			<div class="editer-groupe">
 				<div id="sidebar-etape-1-container">
-					<h3>Étape 1 : Rédaction de votre mission</h3>
+					<h3><:thematique:etape1_redaction_mission:></h3>
 					<div class="editer editer_titre obligatoire[ (#ENV**{erreurs}|table_valeur{titre}|oui)erreur]">
 						<label for="titre"><:info_titre:></label>
 						[<span class="erreur_message">(#ENV**{erreurs}|table_valeur{titre})</span>]
@@ -45,7 +45,7 @@
 					<div class="editer editer_attendre_livrable">
 						<div class="choix">
 							<label for="attendre_livrable">
-								Cette consigne attend un livrable.
+								<:thematique:consigne_attend_livrable:>
 							</label>
 							<input
 								style="width: 1rem; height: 1rem;"
@@ -59,7 +59,7 @@
 					</div>
 				</div>
 				<div id="sidebar-etape-2-container">
-					<h3>Étape 2 : Ajouter un document</h3>
+					<h3><:thematique:etape2_ajouter_document:></h3>
 
 					<input type="file"
 						name="fichier_upload[]"
