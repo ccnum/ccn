@@ -170,15 +170,7 @@ function thematique_ajouter_mots_clef() {
 
 	// Groupe Contenus
 	$id_groupe = thematique_ajouter_groupe_mots('Contenus', 'rubriques');
-	foreach ([
-		'travail_en_cours',
-		'consignes',
-		'evenements',
-		'blogs',
-		'ressources',
-		'images_background',
-		'agora',
-	] as $mot) {
+	foreach (['travail_en_cours', 'consignes', 'evenements', 'blogs', 'ressources', 'images_background'] as $mot) {
 		thematique_ajouter_mot($mot, $id_groupe);
 	}
 
@@ -206,7 +198,6 @@ function thematique_configurer_rubriques() {
 		'blogs' => 'Agenda',
 		'evenements' => 'Blog pédagogique',
 		'images_background' => 'Contenu éditorial',
-		'agora' => 'Discuter avec',
 	];
 	foreach ($mots as $mot => $titre) {
 		$count = (int) sql_countsel(

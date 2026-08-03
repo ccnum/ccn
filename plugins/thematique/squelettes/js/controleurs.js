@@ -199,25 +199,6 @@ function setContentFromState(state, title, url) {
 		}
 	}
 
-	// Agora
-	if (state.type_objet == "agora") {
-		callAgora();
-
-		if (state.page == 'rubrique') {
-			if (state.id_rubrique != CCN.idRubriqueAgora) {
-				callRessourceRubrique(state.id_rubrique, 'agora');
-			}
-		}
-
-		if (state.page == 'article') {
-			callRessourceArticle(state.id_article, 'agora');
-		}
-
-		if (state.page == 'syndic_article') {
-			callRessourceSyndicArticle(state.id_syndic_article, 'agora');
-		}
-	}
-
 	if (state.id_objet != "0") {
 		// Consigne
 		if (state.type_objet == "consignes") {
@@ -789,26 +770,6 @@ function callArticleEvenement(id_objet, type_objet) {
 
 }
 /**
- * Vide la sidebar principale et charge le contenu de l'agora
- * dans la sidebar secondaire.
- *
- * @see loadContentInMainSidebar
- * @see loadContentInLateralSidebar
- */
-
-function callAgora() {
-	changeTimelineMode('consignes');
-	showSidebar();
-	toggleSidebarExpand();
-	updateMenuIcon(['agora'], 'sidebarView');
-
-	blankMainSidebar('agora');
-	setFullscreenModeToCols(true);
-
-	loadContentInLateralSidebar(CCN.projet.url_popup_agora);
-}
-
-/**
  * Charge le formulaire de publication d'une réponse à une consigne
  * dans la sidebar principale.
  *
@@ -1117,7 +1078,7 @@ function emptyMainSidebar() {
 
 /**
  * Charge l'URL dans la sidebar latérale (colonne de navigation "Bibliothèque"
- * pour Ressources/Agora/Projets finis, cf CCN.projet.url_popup_*).
+ * pour Ressources/Projets finis, cf CCN.projet.url_popup_*).
  *
  * Contrairement à l'ancienne version (avant #157ba4c0), l'affichage de cette
  * colonne n'est plus piloté par une classe JS dédiée : elle est visible dès
@@ -1152,7 +1113,6 @@ const _blankMainSidebarTemplates = {
 	'travail_en_cours': '<div class="sidebar_bubble"><div class="fiche_titre couleur_texte_ressources couleur_ressources0"><div class="texte"><div class="titre">Travail en cours</div></div></div></div><div class="sidebar_bubble sidebar_bubble_blank">Naviguez dans l\'espace travail en cours grâce à la barre latérale sur votre droite.</div>',
 	'livrables':        '<div class="sidebar_bubble"><div class="fiche_titre couleur_texte_livrables couleur_livrables0"><div class="texte"><div class="titre">Espace livrables</div></div></div></div><div class="sidebar_bubble sidebar_bubble_blank">Naviguez dans l\'espace livrables grâce à la barre latérale sur votre droite.</div>',
 	'ressources':       '<div class="sidebar_bubble"><div class="fiche_titre couleur_texte_ressources couleur_ressources0"><div class="texte"><div class="titre">Espace ressources</div></div></div></div><div class="sidebar_bubble sidebar_bubble_blank">Naviguez dans l\'espace ressources grâce à la barre latérale sur votre droite.</div>',
-	'agora':            '<div class="sidebar_bubble"><div class="fiche_titre couleur_texte_ressources couleur_ressources0"><div class="texte"><div class="titre">Agora</div></div></div></div><div class="sidebar_bubble sidebar_bubble_blank">Naviguez dans Agora grâce à la barre latérale sur votre droite.</div>',
 };
 
 function blankMainSidebar(key) {

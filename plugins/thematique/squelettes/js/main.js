@@ -17,7 +17,6 @@ function initCCN() {
 	CCN.articlesEvenementLoaded = false;
 
 	CCN.idRubriqueRessources = null;
-	CCN.idRubriqueAgora = null;
 
 	CCN.couleurBlog = '';
 	CCN.dureeTransition = 800;
@@ -67,7 +66,6 @@ async function loadProjet(fichier) {
 	dataForProjet.url_popup_livrables = getXMLNodeValue('url_popup_livrables', xml);
 	dataForProjet.url_popup_evenement = getXMLNodeValue('url_popup_evenement', xml);
 	dataForProjet.url_popup_ressources = getXMLNodeValue('url_popup_ressources', xml);
-	dataForProjet.url_popup_agora = getXMLNodeValue('url_popup_agora', xml);
 	dataForProjet.url_popup_classes = getXMLNodeValue('url_popup_classes', xml);
 	dataForProjet.url_popup_chat = getXMLNodeValue('url_popup_chat', xml);
 	dataForProjet.url_popup_chat2 = getXMLNodeValue('url_popup_chat2', xml);
@@ -79,7 +77,6 @@ async function loadProjet(fichier) {
 
 	CCN.couleurBlog = getXMLNodeValue('couleur_blog', xml);
 	CCN.idRubriqueRessources = getXMLNodeValue('id_rubrique_ressources', xml);
-	CCN.idRubriqueAgora = getXMLNodeValue('id_rubrique_agora', xml);
 
 	const [idArticleCapSurAnnee, statutCapSurAnnee] = (getXMLNodeValue('article_cap_sur_annee', xml) || '0|').split('|');
 	CCN.idArticleCapSurAnnee = parseInt(idArticleCapSurAnnee) || 0;
