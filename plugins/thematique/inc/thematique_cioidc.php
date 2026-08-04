@@ -74,7 +74,7 @@ function thematique_cioidc_role_affiche(string $profils, bool $is_webmestre) {
 	if ($is_webmestre) {
 		return 'Admin';
 	}
-	$roles_ent = ['ENS' => 'Enseignant', 'TUT' => 'Tuteur', 'ELV' => 'Élève'];
+	$roles_ent = ['ENS' => 'Enseignant', 'TUT' => 'Tuteur', 'ELV' => _T('thematique:cioidc_role_eleve')];
 	foreach ($roles_ent as $code => $libelle) {
 		if (strpos($profils, $code) !== false) {
 			return $libelle;
@@ -239,7 +239,11 @@ function thematique_cioidc_associer_rubriques(
 	array $projets_a_lier
 ) {
 	if ($is_enseignant && !$is_webmestre) {
-		$blog = sql_getfetsel('id_rubrique', 'spip_rubriques', 'titre = ' . sql_quote('Blog pédagogique'));
+		$blog = sql_getfetsel(
+			'id_rubrique',
+			'spip_rubriques',
+			'titre = ' . sql_quote(_T('thematique:cioidc_blog_pedagogique'))
+		);
 		if ($blog) {
 			objet_associer(['id_auteur' => $auteur['id_auteur']], ['rubrique' => $blog]);
 		}
