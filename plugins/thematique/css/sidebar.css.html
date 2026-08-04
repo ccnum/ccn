@@ -1168,13 +1168,16 @@ les styles de composants). */
 	width: 100%;
 	background: #eee;
 	height: calc(100vh - var(--header-height) - var(--footer-height));
+	padding-top: 20px;
+	padding-bottom: 20px;
+	box-sizing: border-box;
 }
 
 #timeline_responsive {
 	flex: 1;
 	position: relative;
 	transition: all 500ms ease;
-	overflow: hidden;
+	overflow: visible;
 }
 
 .hasSidebarOpen #timeline_responsive {

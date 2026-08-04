@@ -298,7 +298,7 @@ function getLargeurZone() {
  */
 
 function getHauteurZone() {
-	return $(window).height() * 0.873;
+	return $('#timeline').height();
 }
 
 /**
