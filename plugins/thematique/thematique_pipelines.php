@@ -108,7 +108,12 @@ function thematique_insert_head($flux) {
 	];
 
 	foreach ($scripts as $script) {
-		$flux .= "<script src='" . find_in_path($script) . "' defer></script>\n";
+		$chemin = find_in_path($script);
+		// Version = mtime du fichier : casse le cache navigateur à chaque
+		// déploiement, ce qui permet d'activer un cache long en aval (cf
+		// .htaccess) sans risquer de servir du JS périmé après une mise à jour.
+		$version = $chemin ? @filemtime($chemin) : null;
+		$flux .= "<script src='" . $chemin . ($version ? '?' . $version : '') . "' defer></script>\n";
 	}
 
 	return $flux;

@@ -126,6 +126,16 @@ RewriteRule ^sitemap[.]xml$      spip.php?page=sitemap.xml [QSA,L]
 	ExpiresByType text/html  "access plus 0 seconds"
 </IfModule>
 
+<IfModule mod_headers.c>
+	# JS du plugin thematique versionné (?mtime ajouté par
+	# thematique_insert_head) : cache long sûr, une mise à jour change l'URL
+	# plutôt que le contenu. Restreint à ce dossier précis (SetEnvIf sur le
+	# chemin) pour ne pas imposer un cache long à du JS non versionné
+	# d'autres plugins, qui servirait alors du contenu périmé après update.
+	SetEnvIf Request_URI "^/plugins/thematique/squelettes/js/" thematique_js
+	Header set Cache-Control "public, max-age=31536000, immutable" env=thematique_js
+</IfModule>
+
 #################################
 # gestion des erreurs 404
 # voir https://www.spip.net/fr_article3226.html
