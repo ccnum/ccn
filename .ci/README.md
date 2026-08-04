@@ -27,13 +27,9 @@ exécute ce même check sur toute PR touchant `plugins/thematique/**`.
 
 - `squelettes/js/controleurs.js:828` (`Réponse vide !`) : `console.warn` de
   debug, jamais affiché à l'utilisateur.
-- `squelettes/noisettes/inc/article-design.laclasse.com.html` : questions
-  d'une consigne historique spécifique (laclasse.com, "zerogaspi"/"design"),
-  liées à des `#ID_CONSIGNE` précis — pas du texte de chrome générique du
-  plugin. Décision documentée lors de l'externalisation i18n de 2026-08.
 - `genie/thematique_rentree_annee.php` (`Cap sur l'année`),
   `thematique_administrations.php` (`Blog pédagogique`, `Contenu éditorial`),
-  `thematique_pipelines.php` (`Élève`, `Blog pédagogique`) : chaînes de
+  `thematique_fonctions.php` (`Élève`, `Blog pédagogique`) : chaînes de
   contenu persistées en base (titre d'article/rubrique créé à l'installation
   ou à la rentrée, libellé de rôle concaténé dans le nom de l'auteur) — ce
   ne sont pas des textes de template rendus à chaque affichage, donc pas de
