@@ -14,7 +14,7 @@ déjà résolus. ]
 #SET{ids_ressources_rubriques, #GET{id_rubrique_ressources}|thematique_ids_rubriques_enfants{50}}
 #SET{ids_consignes_rubriques, #GET{id_rubrique_annee}|thematique_ids_rubriques_petits_enfants_a_mot{consignes,50}}
 
-[(#SESSION{role}|in_array{#LISTE{prof,intervenant,admin}}|oui)
+[(#SESSION{role}|thematique_role_voit_salle_profs|oui)
 	<BOUCLE_articleBlogPrive(ARTICLES){id_rubrique IN #GET{ids_evenements}}{date>=#EVAL{_DATE_DEBUT}}{date<=#EVAL{_DATE_FIN}}>
 		<BOUCLE_commentaires1(FORUMS){id_article}{!par date}{0,5} {doublons}>
 			#SET_PUSH{contenu,#ARRAY{#DATE_MODIF, #ARRAY{forum, #ID_FORUM}}}

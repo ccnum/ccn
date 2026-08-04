@@ -247,6 +247,14 @@ function thematique_donner_role($id_auteur) {
 }
 
 /**
+ * Est-ce que le rôle donné voit les contenus réservés aux adultes
+ * (blog pédagogique / "salle des profs") : prof, intervenant, admin.
+ */
+function thematique_role_voit_salle_profs($role) {
+	return in_array($role, ['prof', 'intervenant', 'admin']);
+}
+
+/**
  * Fond sidebar à inclure pour une consigne (mission), selon le rôle de session.
  * Par défaut (visiteur non connecté, admin, eleve) : vue "autre",
  * pas de différence apparente entre "autre" et "eleve".
