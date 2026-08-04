@@ -164,107 +164,102 @@ function thematique_notifications_destinataires($flux) {
 	return $flux;
 }
 
-function thematique_cioidc_userinfo($flux) {
-	spip_log('userinfo args=' . json_encode($flux['args']) . ' data=' . json_encode($flux['data']), 'cioidc');
-
-	// cioidc_session() résout le compte qui recevra réellement la session par login=uid
-	// (uid_champ_spip='login', cf. cioidc_verifier_identifiant()) : on doit chercher avec
-	// le même critère en priorité, sinon on met à jour un autre compte (ex: un doublon
-	// historique retrouvé par email) que celui qui sera effectivement connecté.
-	$email = $flux['data']['MailAdressePrincipal'] ?? '';
-	$uid = $flux['args']['uid'] ?? '';
+// cioidc_session() résout le compte qui recevra réellement la session par login=uid
+// (uid_champ_spip='login', cf. cioidc_verifier_identifiant()) : on doit chercher avec
+// le même critère en priorité, sinon on met à jour un autre compte (ex: un doublon
+// historique retrouvé par email) que celui qui sera effectivement connecté.
+function thematique_cioidc_resoudre_auteur($uid, $email) {
 	$auteur = $uid ? sql_fetsel('id_auteur,nom,statut,email,webmestre', 'spip_auteurs', 'login=' . sql_quote($uid)) : null;
 	if (!$auteur) {
 		$auteur = sql_fetsel('id_auteur,nom,statut,email,webmestre', 'spip_auteurs', 'email=' . sql_quote($email));
 	}
-	if (!$auteur) {
-		spip_log('userinfo aucun auteur trouvé pour email=' . $email, 'cioidc');
-		return $flux;
-	}
-	spip_log('userinfo auteur trouvé id=' . $auteur['id_auteur'] . ' nom=' . $auteur['nom'], 'cioidc');
+	return $auteur;
+}
 
-	if ($email && $email !== $auteur['email']) {
-		spip_log('userinfo mise à jour de l\'email : ' . $auteur['email'] . ' => ' . $email, 'cioidc');
-		sql_updateq('spip_auteurs', ['email' => $email], 'id_auteur=' . intval($auteur['id_auteur']));
-		$auteur['email'] = $email;
+// Si $valeur diffère du champ actuel de l'auteur, met à jour spip_auteurs et logue le
+// changement. Factorise le motif commun aux mises à jour d'email/nom/statut ci-dessous.
+function thematique_cioidc_maj_champ(array $auteur, string $champ, $valeur, string $libelle_log) {
+	if ($valeur && $valeur !== $auteur[$champ]) {
+		spip_log('userinfo mise à jour ' . $libelle_log . ' : ' . $auteur[$champ] . ' => ' . $valeur, 'cioidc');
+		sql_updateq('spip_auteurs', [$champ => $valeur], 'id_auteur=' . intval($auteur['id_auteur']));
+		$auteur[$champ] = $valeur;
 	}
+	return $auteur;
+}
 
-	// ENTClassesGroupes (member_type=ENS, group_type=CLS) : la/les classe(s) réellement
-	// enseignée(s) par ce prof, utilisée ci-dessous pour affiner son nom affiché et,
-	// plus bas, pour le lien "Travail des classes". Absent chez un intervenant qui n'a
-	// pas de classe en charge, seulement un groupe projet (ENTGroupesLibres).
-	$classes_groupes = $flux['data']['ENTClassesGroupes'] ?? [];
-	if (is_object($classes_groupes)) {
-		$classes_groupes = [$classes_groupes];
+// Normalise un attribut CAS multivalué : arrive en objet unique (pas en tableau)
+// quand il n'y a qu'une seule valeur.
+function thematique_cioidc_normaliser_liste($valeur) {
+	if (is_object($valeur)) {
+		return [$valeur];
 	}
-	$classes_reelles = array_values(array_filter(
+	return $valeur ?: [];
+}
+
+// ENTClassesGroupes (member_type=ENS, group_type=CLS) : la/les classe(s) réellement
+// enseignée(s) par ce prof, utilisée pour affiner son nom affiché et pour le lien
+// "Travail des classes". Absent chez un intervenant qui n'a pas de classe en charge,
+// seulement un groupe projet (ENTGroupesLibres).
+function thematique_cioidc_classes_reelles(array $classes_groupes) {
+	return array_values(array_filter(
 		$classes_groupes,
 		fn ($groupe) => ($groupe->group_type ?? '') === 'CLS' && !empty($groupe->group_name)
 	));
+}
 
-	// ENTPersonProfils indique le rôle ENT du compte (ENS/TUT/ELV), utilisé ci-dessous
-	// pour affiner le nom affiché et plus bas pour déterminer le statut SPIP.
-	$profils = $flux['data']['ENTPersonProfils [ENS|TUT|ELV]'] ?? '';
-	$is_enseignant = (strpos($profils, 'ENS') !== false);
-	spip_log('userinfo ENTPersonProfils=' . $profils . ' => enseignant:' . ($is_enseignant ? 'oui' : 'non'), 'cioidc');
-
-	// Les comptes ENS rattachés à un établissement listé dans _THEMATIQUE_RNE_WEBMESTRES
-	// (ex: établissement pilote de l'équipe projet) restent administrateurs complets
-	// plutôt que rédacteurs, sans restriction de rubrique. Calculé ici (avant le nom
-	// affiché) car un webmestre affiche "Admin" plutôt que son rôle ENT d'origine.
-	// ENTAllUai liste tous les UAI de rattachement (pas seulement le principal) : un
-	// attribut CAS multivalué arrive en objet unique quand il n'y a qu'une seule valeur.
-	$uai_liste = $flux['data']['ENTAllUai'] ?? [];
-	if (is_object($uai_liste)) {
-		$uai_liste = [$uai_liste];
-	}
-	$uai_liste = array_map('strval', (array) $uai_liste);
+// Les comptes ENS rattachés à un établissement listé dans _THEMATIQUE_RNE_WEBMESTRES
+// (ex: établissement pilote de l'équipe projet) restent administrateurs complets
+// plutôt que rédacteurs, sans restriction de rubrique. ENTAllUai liste tous les UAI
+// de rattachement (pas seulement le principal).
+function thematique_cioidc_est_webmestre($uai_liste, bool $is_enseignant) {
+	$uai_liste = array_map('strval', (array) thematique_cioidc_normaliser_liste($uai_liste));
 	$rne_webmestres = array_filter(array_map('trim', explode(',', _THEMATIQUE_RNE_WEBMESTRES)));
 	$is_webmestre = $is_enseignant && (bool) array_intersect($uai_liste, $rne_webmestres);
 	spip_log(
 		'userinfo ENTAllUai=' . implode(',', $uai_liste) . ' => webmestre:' . ($is_webmestre ? 'oui' : 'non'),
 		'cioidc'
 	);
+	return $is_webmestre;
+}
 
+// Rôle ENT affiché (Enseignant/Tuteur/Élève), remplacé par "Admin" pour un webmestre :
+// affiché ci-dessous à la suite du nom plutôt que le rôle ENT d'origine.
+function thematique_cioidc_role_affiche(string $profils, bool $is_webmestre) {
+	if ($is_webmestre) {
+		return 'Admin';
+	}
 	$roles_ent = ['ENS' => 'Enseignant', 'TUT' => 'Tuteur', 'ELV' => 'Élève'];
-	$role_ent = null;
 	foreach ($roles_ent as $code => $libelle) {
 		if (strpos($profils, $code) !== false) {
-			$role_ent = $libelle;
-			break;
+			return $libelle;
 		}
 	}
-	$is_eleve = (strpos($profils, 'ELV') !== false);
-	if ($is_webmestre) {
-		$role_ent = 'Admin';
-	}
+	return null;
+}
 
-	$prenom = $flux['data']['LaclassePrenom'] ?? '';
-	$nom_famille = $flux['data']['LaclasseNom'] ?? '';
+// Nom affiché : prénom/nom ENT, suivi du rôle ENT et de la classe (première classe
+// réelle du prof) pour distinguer dans la liste des auteurs un même prof intervenant
+// sur plusieurs CCN (cf issue #44). Le group_name reçu de l'ENT est préfixé par
+// "CCN - " : préfixe redondant qu'on retire.
+function thematique_cioidc_nom_affiche(array $flux_data, array $classes_reelles, ?string $role_ent) {
+	$prenom = $flux_data['LaclassePrenom'] ?? '';
+	$nom_famille = $flux_data['LaclasseNom'] ?? '';
 	$nom = trim($prenom . ' ' . $nom_famille);
-	// On affiche le rôle ENT et la classe (première classe réelle du prof) à la suite
-	// du nom, pour distinguer dans la liste des auteurs un même prof intervenant sur
-	// plusieurs CCN (cf issue #44).
 	if ($nom && $role_ent) {
 		$nom .= ' - ' . $role_ent;
 	}
-	// Le group_name reçu de l'ENT est préfixé par "CCN - " : préfixe redondant qu'on retire.
 	if ($nom && ($groupe_classe = $classes_reelles[0]->group_name ?? null)) {
 		if (stripos($groupe_classe, 'CCN - ') === 0) {
 			$groupe_classe = substr($groupe_classe, strlen('CCN - '));
 		}
 		$nom .= ' - ' . $groupe_classe;
 	}
-	if ($nom && $nom !== $auteur['nom']) {
-		spip_log('userinfo mise à jour du nom : ' . $auteur['nom'] . ' => ' . $nom, 'cioidc');
-		sql_updateq('spip_auteurs', ['nom' => $nom], 'id_auteur=' . intval($auteur['id_auteur']));
-		$auteur['nom'] = $nom;
-	}
+	return $nom;
+}
 
-	$classes_a_lier = [];
-
-	// Trouver le secteur de l'année scolaire en cours (ex: "2025")
-	$annee_scolaire = thematique_annee_scolaire();
+// Résout le secteur de l'année scolaire en cours (ex: "2025"), et sous ce secteur les
+// rubriques "Travail des classes" (rôle prof) et "Consignes" (rôle intervenant).
+function thematique_cioidc_rubriques_annee(string $annee_scolaire) {
 	$id_secteur = sql_getfetsel(
 		'id_rubrique',
 		'spip_rubriques',
@@ -272,9 +267,7 @@ function thematique_cioidc_userinfo($flux) {
 	);
 	spip_log('userinfo annee_scolaire=' . $annee_scolaire . ' id_secteur=' . $id_secteur, 'cioidc');
 
-	// Trouver la rubrique "Travail des classes" sous ce secteur (rôle prof)
 	$id_travail_classes = null;
-	// Trouver la rubrique "Consignes" sous ce secteur (rôle intervenant)
 	$id_consignes = null;
 	if ($id_secteur) {
 		$id_travail_classes = sql_getfetsel(
@@ -290,71 +283,57 @@ function thematique_cioidc_userinfo($flux) {
 	}
 	spip_log('userinfo id_travail_classes=' . $id_travail_classes . ' id_consignes=' . $id_consignes, 'cioidc');
 
-	// ENTGroupesLibres : le groupe projet (ex: nom de l'intervenant/du binôme) → lien "Consignes".
-	// Un même compte ENT peut porter des groupes de plusieurs thématiques/années
-	// ("Textile 2023", "On tourne 2025", ...) : seuls ceux de la thématique de CE site
-	// (meta nom_site) et de l'année scolaire en cours sont pertinents ici.
-	$groupes_libres = $flux['data']['ENTGroupesLibres'] ?? [];
-	// Un attribut CAS multivalué arrive en objet unique (pas en tableau) quand il n'y a qu'une seule valeur
-	if (is_object($groupes_libres)) {
-		$groupes_libres = [$groupes_libres];
+	return [$id_secteur, $id_travail_classes, $id_consignes];
+}
+
+// ENTGroupesLibres : le groupe projet (ex: nom de l'intervenant/du binôme) → lien
+// "Consignes". Un même compte ENT peut porter des groupes de plusieurs
+// thématiques/années ("Textile 2023", "On tourne 2025", ...) : seuls ceux de la
+// thématique de CE site (meta nom_site) et de l'année scolaire en cours sont
+// pertinents ici.
+function thematique_cioidc_groupes_libres_pertinents(array $groupes_libres, string $nom_site, string $annee_scolaire) {
+	if (!$nom_site) {
+		return [];
 	}
-	$nom_site = $GLOBALS['meta']['nom_site'] ?? '';
-	$groupes_libres_pertinents = [];
-	if ($nom_site) {
-		foreach ($groupes_libres as $groupe) {
-			$nom_groupe = $groupe->name ?? '';
-			if (
-				$nom_groupe
-				&& stripos($nom_groupe, (string) $nom_site) !== false
-				&& strpos($nom_groupe, (string) $annee_scolaire) !== false
-			) {
-				$groupes_libres_pertinents[] = $groupe;
-			}
+	$pertinents = [];
+	foreach ($groupes_libres as $groupe) {
+		$nom_groupe = $groupe->name ?? '';
+		if (
+			$nom_groupe
+			&& stripos($nom_groupe, $nom_site) !== false
+			&& strpos($nom_groupe, $annee_scolaire) !== false
+		) {
+			$pertinents[] = $groupe;
 		}
 	}
-	spip_log(
-		'userinfo nom_site=' . $nom_site
-			. ' nb ENTClassesGroupes=' . count($classes_groupes)
-			. ' nb ENTGroupesLibres=' . count($groupes_libres)
-			. ' nb pertinents=' . count($groupes_libres_pertinents),
-		'cioidc'
-	);
+	return $pertinents;
+}
 
-	// Un enseignant sans classe réelle ni groupe projet pertinent pour ce site/cette
-	// année reste simple visiteur : pas de droit de rédaction tant qu'il n'est pas
-	// effectivement affecté à quelque chose ici.
-	$a_un_groupe_pertinent = count($classes_reelles) > 0 || count($groupes_libres_pertinents) > 0;
-
-	$statut = null;
+// Statut SPIP selon le rôle ENT. Un enseignant sans classe réelle ni groupe projet
+// pertinent pour ce site/cette année reste simple visiteur ('6forum') : pas de droit
+// de rédaction tant qu'il n'est pas effectivement affecté à quelque chose ici.
+function thematique_cioidc_calculer_statut(bool $is_webmestre, string $profils, bool $a_un_groupe_pertinent) {
 	if ($is_webmestre) {
-		$statut = '0minirezo';
-	} elseif (strpos($profils, 'ELV') !== false) {
-		$statut = '6forum';
-	} elseif (strpos($profils, 'ENS') !== false) {
-		$statut = $a_un_groupe_pertinent ? '1comite' : '6forum';
+		return '0minirezo';
 	}
-	spip_log('userinfo groupe_pertinent=' . ($a_un_groupe_pertinent ? 'oui' : 'non') . ' => statut:' . $statut, 'cioidc');
-	if ($statut && $statut !== $auteur['statut']) {
-		spip_log('userinfo mise à jour du statut : ' . $auteur['statut'] . ' => ' . $statut, 'cioidc');
-		sql_updateq('spip_auteurs', ['statut' => $statut], 'id_auteur=' . intval($auteur['id_auteur']));
-		$auteur['statut'] = $statut;
+	if (strpos($profils, 'ELV') !== false) {
+		return '6forum';
 	}
-	if ($is_webmestre && ($auteur['webmestre'] ?? 'non') !== 'oui') {
-		spip_log('userinfo passage webmestre', 'cioidc');
-		sql_updateq('spip_auteurs', ['webmestre' => 'oui'], 'id_auteur=' . intval($auteur['id_auteur']));
-		$auteur['webmestre'] = 'oui';
+	if (strpos($profils, 'ENS') !== false) {
+		return $a_un_groupe_pertinent ? '1comite' : '6forum';
 	}
+	return null;
+}
 
-	// Sur un CCN archivé (_CCN_PROJET_ACTIVE=false), seuls les comptes
-	// webmestre peuvent se connecter via l'ENT/OIDC. Vérifié seulement ici,
-	// après la promotion webmestre ci-dessus : un webmestre qui se connecte
-	// pour la première fois sur ce site précis n'a pas encore 'oui' en base
-	// avant ce point (chaque CCN a sa propre table spip_auteurs), il serait
-	// bloqué à tort si on testait plus tôt. cioidc_session()
-	// (plugins/cioidc/inc/cioidc_session.php) ouvre la session juste après
-	// ce pipeline : rediriger ici empêche la session de s'ouvrir, sans avoir
-	// à toucher au plugin tiers cioidc.
+// Sur un CCN archivé (_CCN_PROJET_ACTIVE=false), seuls les comptes webmestre peuvent
+// se connecter via l'ENT/OIDC. Vérifié seulement après la promotion webmestre (dans
+// l'appelant) : un webmestre qui se connecte pour la première fois sur ce site précis
+// n'a pas encore 'oui' en base avant ce point (chaque CCN a sa propre table
+// spip_auteurs), il serait bloqué à tort si on testait plus tôt. cioidc_session()
+// (plugins/cioidc/inc/cioidc_session.php) ouvre la session juste après ce pipeline :
+// rediriger ici empêche la session de s'ouvrir, sans avoir à toucher au plugin tiers
+// cioidc.
+function thematique_cioidc_bloquer_si_archive(array $auteur) {
 	if (
 		defined('_CCN_PROJET_ACTIVE') && !_CCN_PROJET_ACTIVE
 		&& ($auteur['webmestre'] ?? 'non') !== 'oui'
@@ -363,34 +342,36 @@ function thematique_cioidc_userinfo($flux) {
 		include_spip('inc/headers');
 		redirige_par_entete(generer_url_public('cioidc_erreur_archive'));
 	}
+}
 
-	if ($is_webmestre) {
-		// Un webmestre n'est restreint à aucune rubrique : on retire d'éventuels
-		// liens d'admin restreint hérités d'un statut précédent.
-		objet_dissocier(['id_auteur' => $auteur['id_auteur']], ['rubrique' => '*']);
-	}
-
+// Rubriques de classe/projet à lier à l'auteur : rôle prof (classes réelles + groupes
+// projet pertinents) ou rôle élève (même classe que son prof, même recherche/création,
+// pour rattacher l'élève à sa classe à son tour, ex: affichage de l'emoji de classe
+// hors du contexte d'une rubrique).
+function thematique_cioidc_resoudre_liens_rubriques(
+	bool $is_enseignant,
+	bool $is_webmestre,
+	bool $is_eleve,
+	array $classes_reelles,
+	array $groupes_libres_pertinents,
+	$id_travail_classes,
+	$id_consignes
+) {
+	$classes_a_lier = [];
 	$projets_a_lier = [];
 
 	if ($is_enseignant && !$is_webmestre) {
-		// Rubrique de classe (ex: "3EME2") sous "Travail des classes" de l'année en cours → rôle prof
 		foreach ($classes_reelles as $groupe) {
 			if ($id_classe = thematique_trouver_ou_creer_rubrique($groupe->group_name, $id_travail_classes)) {
 				$classes_a_lier[] = $id_classe;
 			}
 		}
-
-		// Rubrique du groupe projet (ex: "Tuba & Silva") sous "Consignes" → rôle intervenant,
-		// uniquement pour les groupes pertinents pour ce site (cf plus haut)
 		foreach ($groupes_libres_pertinents as $groupe) {
 			if ($id_projet = thematique_trouver_ou_creer_rubrique($groupe->name ?? '', $id_consignes)) {
 				$projets_a_lier[] = $id_projet;
 			}
 		}
 	} elseif ($is_eleve) {
-		// Même rubrique de classe que son prof (même recherche/création),
-		// pour rattacher l'élève à sa classe à son tour (ex: affichage de
-		// l'emoji de classe hors du contexte d'une rubrique).
 		foreach ($classes_reelles as $groupe) {
 			if ($id_classe = thematique_trouver_ou_creer_rubrique($groupe->group_name, $id_travail_classes)) {
 				$classes_a_lier[] = $id_classe;
@@ -398,14 +379,19 @@ function thematique_cioidc_userinfo($flux) {
 		}
 	}
 
-	spip_log(
-		$auteur['id_auteur'] . ' / ' . $auteur['nom'] . ' => enseignant:' . ($is_enseignant ? 'oui' : 'non')
-			. ' eleve:' . ($is_eleve ? 'oui' : 'non')
-			. ' classes:' . implode(',', $classes_a_lier)
-			. ' projets:' . implode(',', $projets_a_lier),
-		'cioidc'
-	);
+	return [$classes_a_lier, $projets_a_lier];
+}
 
+// Associe effectivement l'auteur aux rubriques résolues ci-dessus (+ le blog
+// pédagogique commun à tous les profs).
+function thematique_cioidc_associer_rubriques(
+	array $auteur,
+	bool $is_enseignant,
+	bool $is_webmestre,
+	bool $is_eleve,
+	array $classes_a_lier,
+	array $projets_a_lier
+) {
 	if ($is_enseignant && !$is_webmestre) {
 		$blog = sql_getfetsel('id_rubrique', 'spip_rubriques', 'titre = ' . sql_quote('Blog pédagogique'));
 		if ($blog) {
@@ -420,6 +406,96 @@ function thematique_cioidc_userinfo($flux) {
 			objet_associer(['id_auteur' => $auteur['id_auteur']], ['rubrique' => $id_classe]);
 		}
 	}
+}
+
+function thematique_cioidc_userinfo($flux) {
+	spip_log('userinfo args=' . json_encode($flux['args']) . ' data=' . json_encode($flux['data']), 'cioidc');
+
+	$email = $flux['data']['MailAdressePrincipal'] ?? '';
+	$uid = $flux['args']['uid'] ?? '';
+	$auteur = thematique_cioidc_resoudre_auteur($uid, $email);
+	if (!$auteur) {
+		spip_log('userinfo aucun auteur trouvé pour email=' . $email, 'cioidc');
+		return $flux;
+	}
+	spip_log('userinfo auteur trouvé id=' . $auteur['id_auteur'] . ' nom=' . $auteur['nom'], 'cioidc');
+	$auteur = thematique_cioidc_maj_champ($auteur, 'email', $email, "de l'email");
+
+	$classes_groupes = thematique_cioidc_normaliser_liste($flux['data']['ENTClassesGroupes'] ?? []);
+	$classes_reelles = thematique_cioidc_classes_reelles($classes_groupes);
+
+	// ENTPersonProfils indique le rôle ENT du compte (ENS/TUT/ELV), utilisé ci-dessous
+	// pour affiner le nom affiché et plus bas pour déterminer le statut SPIP.
+	$profils = $flux['data']['ENTPersonProfils [ENS|TUT|ELV]'] ?? '';
+	$is_enseignant = (strpos($profils, 'ENS') !== false);
+	spip_log('userinfo ENTPersonProfils=' . $profils . ' => enseignant:' . ($is_enseignant ? 'oui' : 'non'), 'cioidc');
+
+	$is_webmestre = thematique_cioidc_est_webmestre($flux['data']['ENTAllUai'] ?? [], $is_enseignant);
+	$is_eleve = (strpos($profils, 'ELV') !== false);
+	$role_ent = thematique_cioidc_role_affiche($profils, $is_webmestre);
+
+	$nom = thematique_cioidc_nom_affiche($flux['data'], $classes_reelles, $role_ent);
+	$auteur = thematique_cioidc_maj_champ($auteur, 'nom', $nom, 'du nom');
+
+	$annee_scolaire = thematique_annee_scolaire();
+	[, $id_travail_classes, $id_consignes] = thematique_cioidc_rubriques_annee($annee_scolaire);
+
+	$groupes_libres = thematique_cioidc_normaliser_liste($flux['data']['ENTGroupesLibres'] ?? []);
+	$nom_site = $GLOBALS['meta']['nom_site'] ?? '';
+	$groupes_libres_pertinents = thematique_cioidc_groupes_libres_pertinents($groupes_libres, $nom_site, $annee_scolaire);
+	spip_log(
+		'userinfo nom_site=' . $nom_site
+			. ' nb ENTClassesGroupes=' . count($classes_groupes)
+			. ' nb ENTGroupesLibres=' . count($groupes_libres)
+			. ' nb pertinents=' . count($groupes_libres_pertinents),
+		'cioidc'
+	);
+
+	$a_un_groupe_pertinent = count($classes_reelles) > 0 || count($groupes_libres_pertinents) > 0;
+	$statut = thematique_cioidc_calculer_statut($is_webmestre, $profils, $a_un_groupe_pertinent);
+	spip_log('userinfo groupe_pertinent=' . ($a_un_groupe_pertinent ? 'oui' : 'non') . ' => statut:' . $statut, 'cioidc');
+	$auteur = thematique_cioidc_maj_champ($auteur, 'statut', $statut, 'du statut');
+
+	if ($is_webmestre && ($auteur['webmestre'] ?? 'non') !== 'oui') {
+		spip_log('userinfo passage webmestre', 'cioidc');
+		sql_updateq('spip_auteurs', ['webmestre' => 'oui'], 'id_auteur=' . intval($auteur['id_auteur']));
+		$auteur['webmestre'] = 'oui';
+	}
+
+	thematique_cioidc_bloquer_si_archive($auteur);
+
+	if ($is_webmestre) {
+		// Un webmestre n'est restreint à aucune rubrique : on retire d'éventuels
+		// liens d'admin restreint hérités d'un statut précédent.
+		objet_dissocier(['id_auteur' => $auteur['id_auteur']], ['rubrique' => '*']);
+	}
+
+	[$classes_a_lier, $projets_a_lier] = thematique_cioidc_resoudre_liens_rubriques(
+		$is_enseignant,
+		$is_webmestre,
+		$is_eleve,
+		$classes_reelles,
+		$groupes_libres_pertinents,
+		$id_travail_classes,
+		$id_consignes
+	);
+
+	spip_log(
+		$auteur['id_auteur'] . ' / ' . $auteur['nom'] . ' => enseignant:' . ($is_enseignant ? 'oui' : 'non')
+			. ' eleve:' . ($is_eleve ? 'oui' : 'non')
+			. ' classes:' . implode(',', $classes_a_lier)
+			. ' projets:' . implode(',', $projets_a_lier),
+		'cioidc'
+	);
+
+	thematique_cioidc_associer_rubriques(
+		$auteur,
+		$is_enseignant,
+		$is_webmestre,
+		$is_eleve,
+		$classes_a_lier,
+		$projets_a_lier
+	);
 
 	return $flux;
 }
