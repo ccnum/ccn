@@ -3,7 +3,7 @@
  * et les variables globales, puis appelant
  * le chargement du projet
  *
- * @see loadProjet
+ * @see loadDemarrage
  */
 
 function initCCN() {
@@ -26,19 +26,35 @@ function initCCN() {
 	CCN.timelineLayerEvenements = $('#timeline_layer_evenements');
 	CCN.timelineLayerLivrables = $('#livrables');
 
-	loadProjet(CCN.urlJson + "projet");
+	loadDemarrage(CCN.urlJson + "demarrage");
 }
 /**
- *  Charge le JSON du projet,
- *  initialise le projet
- *  puis appelle le chargement des classes.
+ *  Charge en un seul appel le JSON du projet, des classes et des consignes
+ *  (fond "demarrage", qui combine les 3 côté squelette), puis initialise
+ *  la timeline.
  *
  * @param {string} fichier - URL du fichier
  */
 
-async function loadProjet(fichier) {
-	const dataForProjet = await fetch(fichier).then(r => r.json());
+async function loadDemarrage(fichier) {
+	const data = await fetch(fichier).then(r => r.json());
 
+	initProjet(data.projet);
+	initClasses(data.classes);
+	initConsignes(data.consignes);
+
+	// Seules les missions (classes + consignes) sont chargées au démarrage.
+	// Agenda (blogs) et blog pédagogique (evenements) sont chargés à la demande,
+	// au clic sur le menu-timeline (voir ensureArticlesLoaded).
+	initTimeline();
+}
+/**
+ *  Initialise CCN.projet à partir des données JSON du projet.
+ *
+ * @param {Object} dataForProjet
+ */
+
+function initProjet(dataForProjet) {
 	dataForProjet.largeur = getLargeurZone();
 	dataForProjet.hauteur = getHauteurZone();
 
@@ -55,12 +71,6 @@ async function loadProjet(fichier) {
 	const [idArticleLaRencontre, statutLaRencontre] = (dataForProjet.article_la_rencontre || '0|').split('|');
 	CCN.idArticleLaRencontre = parseInt(idArticleLaRencontre) || 0;
 	CCN.statutLaRencontre = statutLaRencontre || '';
-
-	// Seules les missions (classes + consignes) sont chargées au démarrage.
-	// Agenda (blogs) et blog pédagogique (evenements) sont chargés à la demande,
-	// au clic sur le menu-timeline (voir ensureArticlesLoaded).
-	await loadClasses(CCN.urlJson + "classes");
-	initTimeline();
 }
 /**
  *  Charge à la demande le flux d'articles (blogs ou événements)
@@ -130,15 +140,13 @@ function attachTimelineLayer(type) {
 	ccnArray.forEach(article => layer.append(article.div_base));
 }
 /**
- *  Charge le JSON des classes (liste)
- *  puis appelle le chargement des consignes.
+ *  Initialise CCN.classes/CCN.intervenants/CCN.travailEnCoursId à partir
+ *  des données JSON des classes.
  *
- * @param {string} fichier - URL du fichier
+ * @param {Object} data
  */
 
-async function loadClasses(fichier) {
-	const data = await fetch(fichier).then(r => r.json());
-
+function initClasses(data) {
 	data.classes.forEach(dataForClasse => {
 		const nouvelleClasse = new Classe();
 		nouvelleClasse.init(dataForClasse);
@@ -152,17 +160,15 @@ async function loadClasses(fichier) {
 	});
 
 	CCN.travailEnCoursId = data.travail_en_cours_id;
-	await loadConsignes(CCN.urlJson + "consignes");
 }
 /**
- *  Charge le JSON des consignes et des réponses
- *  puis appelle le chargement des articles du blog
+ *  Initialise CCN.consignes (et leurs réponses) à partir des données JSON
+ *  des consignes.
  *
- * @param {string} fichier - URL du fichier
+ * @param {Object} data
  */
 
-async function loadConsignes(fichier) {
-	const data = await fetch(fichier).then(r => r.json());
+function initConsignes(data) {
 	const jsonConsignes = data.consignes;
 	let indexY = 0;
 

@@ -170,7 +170,7 @@ function Consigne() {
 	/**
 	 * Affiche le bouton <tt>Répondre à la question</tt>.
 	 *
-	 * @see loadConsignes
+	 * @see initConsignes
 	 */
 	this.showNewReponseButtonInTimeline = function () {
 		if ((CCN.idRestreint > 0)
@@ -187,7 +187,7 @@ function Consigne() {
 	 *
 	 * @param {Number} answerId - Id de la réponse de la classe courante
 	 *
-	 * @see loadConsignes
+	 * @see initConsignes
 	 */
 	this.showMyReponseButtonInTimeline = function (answerId) {
 		if ((CCN.idRestreint > 0)
