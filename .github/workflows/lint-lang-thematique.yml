@@ -27,3 +27,6 @@ jobs:
 
       - name: Vérifier l'absence de nouveau texte en dur
         run: python3 .ci/check_lang_hardcoded.py
+
+      - name: Vérifier la validité des clés de langue référencées
+        run: python3 .ci/check_lang_keys.py

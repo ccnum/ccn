@@ -1,11 +1,11 @@
 #!/usr/bin/env python3
 """
-Détecte le texte français codé en dur dans les squelettes/JS/formulaires du
-plugin thematique, pour forcer le passage par des items de langue
-(lang/thematique_fr.php + CCN.lang côté JS).
+Détecte le texte français codé en dur dans le plugin thematique, pour
+forcer le passage par des items de langue (lang/thematique_fr.php +
+CCN.lang côté JS).
 
 Fonctionnement :
-- Scanne plugins/thematique/{squelettes,formulaires} (hors lang/).
+- Scanne tout le plugin plugins/thematique (hors lang/ et vendor/).
 - Repère les chaînes contenant des caractères accentués français en dehors
   des tags de langue <:module:cle:>, des appels _T(...)/CCN.lang.xxx, et de
   quelques zones à ignorer (commentaires, attributs techniques).
@@ -25,8 +25,8 @@ from pathlib import Path
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
 PLUGIN_ROOT = REPO_ROOT / "plugins" / "thematique"
-SCAN_DIRS = [PLUGIN_ROOT / "squelettes", PLUGIN_ROOT / "formulaires"]
-EXCLUDE_DIRS = {PLUGIN_ROOT / "lang"}
+SCAN_DIRS = [PLUGIN_ROOT]
+EXCLUDE_DIRS = {PLUGIN_ROOT / "lang", PLUGIN_ROOT / "vendor"}
 
 ACCENTED = "àâäéèêëïîôöùûüçœÀÂÄÉÈÊËÏÎÔÖÙÛÜÇŒ"
 ACCENTED_RE = re.compile(f"[{ACCENTED}]")
@@ -35,9 +35,11 @@ ACCENTED_RE = re.compile(f"[{ACCENTED}]")
 # appels _T()/CCN.lang déjà conformes).
 STRIP_PATTERNS = [
     re.compile(r"<!--.*?-->", re.DOTALL),             # <!-- ... -->
+    re.compile(r"/\*.*?\*/", re.DOTALL),               # commentaires CSS/JS (ex: *.css.html)
     re.compile(r"<:[a-zA-Z0-9_]+:[a-zA-Z0-9_]+(\{[^:]*?\})?:>"),  # <:module:cle{...}:>
     re.compile(r"_T\(\s*['\"][^'\"]*['\"]\s*(,.*?\))?\s*\)", re.DOTALL),  # _T('module:cle', [...])
     re.compile(r"CCN\.lang\.[a-zA-Z0-9_]+"),          # CCN.lang.cle
+    re.compile(r"spip_log\(.*?\)\s*;", re.DOTALL),    # spip_log(...) : messages techniques, jamais affichés
 ]
 
 REM_START_RE = re.compile(r"\[\(#REM\)")

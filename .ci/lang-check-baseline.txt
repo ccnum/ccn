@@ -1,3 +1,4 @@
+genie/thematique_rentree_annee.php:36: Cap sur l'année
 squelettes/js/controleurs.js:828: Réponse vide !
 squelettes/noisettes/inc/article-design.laclasse.com.html:10: Qu’aimeriez-vous manger comme aliments à la cantine ?
 squelettes/noisettes/inc/article-design.laclasse.com.html:13: Avez-vous des idées d’aliments, de recettes originales ?
@@ -20,3 +21,7 @@ squelettes/noisettes/inc/article-design.laclasse.com.html:73: De quoi avez-vous 
 squelettes/noisettes/inc/article-design.laclasse.com.html:76: Votre ville a t elle une spécialité ?
 squelettes/noisettes/inc/article-design.laclasse.com.html:79: Avez-vous des idées de services ? Lesquels ?
 squelettes/noisettes/inc/article-design.laclasse.com.html:82: A quoi ressemblerait votre récréation de rêve? Faire un dessin commenté (utilise
+thematique_administrations.php:189: Blog pédagogique
+thematique_administrations.php:190: Contenu éditorial
+thematique_pipelines.php:217: Élève
+thematique_pipelines.php:386: Blog pédagogique
