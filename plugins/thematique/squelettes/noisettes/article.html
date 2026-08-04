@@ -1,5 +1,5 @@
 <BOUCLE_principale(ARTICLES){id_article}{tous}>
-	<INCLURE{fond=noisettes/fonction/type_role} />
+	#SESSION_SET{role, #SESSION{id_auteur}|thematique_donner_role}
 	[(#INCLURE{fond=noisettes/fonction/admin})]
 
 	[(#ENV{type_objet}|=={consignes}|oui)
