@@ -39,9 +39,8 @@
 
 	[(#REM) ---------------- Réponses ---------------- ]
 	<div class="sidebar_bubble">
-		<INCLURE{fond=noisettes/js/accordeon, nom=bloc_option_reponses_consignes_classe-#ID_ARTICLE, ajax}>
 		<div class="bloc_option_doc nettoyeur">
-			<a id="bloc_option_reponses_consignes_classe-#ID_ARTICLE" class="hac liens_voir bloc_option_doc_reply" title="<:thematique:reponses_de_la_classe:>">
+			<a id="bloc_option_reponses_consignes_classe-#ID_ARTICLE" class="hac js-accordeon-toggle liens_voir bloc_option_doc_reply" title="<:thematique:reponses_de_la_classe:>">
 				<:thematique:reponses_de_la_classe:>
 			</a>
 			<div style="clear:both" class='bloc_option_reponses_consignes_classe'>
@@ -86,9 +85,8 @@
 	[(#SET{tab,[(#DESCRIPTIF*)]})]
 	<B_tab>
 	<div class="sidebar_bubble cache">
-		<INCLURE{fond=noisettes/js/accordeon, nom=bloc_option_classe_iframe, ajax} />
 		<div class="bloc_option_doc nettoyeur">
-			<a id="bloc_option_classe_iframe" class="hac liens_voir bloc_option_doc_ressources" title="<:thematique:production_transversale:>">
+			<a id="bloc_option_classe_iframe" class="hac js-accordeon-toggle liens_voir bloc_option_doc_ressources" title="<:thematique:production_transversale:>">
 				<:thematique:production_transversale:>
 			</a>
 			<div style="clear:both" class='bloc_classe_iframe'>

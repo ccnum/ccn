@@ -1,8 +1,7 @@
 #CACHE{0}
 <div class="sidebar_bubble">
-	<INCLURE{fond=noisettes/js/accordeon, nom=bloc_option_forum_all-#ID_ARTICLE, ajax}>
 	<div class="bloc_option_doc nettoyeur">
-		<a id="bloc_option_forum_all-#ID_ARTICLE" class="hac liens_voir bloc_option_doc_comment" title="<:thematique:forum:>">
+		<a id="bloc_option_forum_all-#ID_ARTICLE" class="hac js-accordeon-toggle liens_voir bloc_option_doc_comment" title="<:thematique:forum:>">
 			<:thematique:forum:>
 		</a>
 		<div style="clear:both" class='bloc_option_forum'>
@@ -17,9 +16,8 @@
 				</div>
 			<//B_forum>
 
-			<INCLURE{fond=noisettes/js/accordeon, nom=bloc_option_forum-#ID_ARTICLE, ajax}>
 			<div class="forum_commenter">
-				<a id="bloc_option_forum-#ID_ARTICLE" class="forum_commenter_head hac liens_voir bloc_option_doc_comment" title="<:thematique:commenter:>"><:thematique:commenter:></a>
+				<a id="bloc_option_forum-#ID_ARTICLE" class="forum_commenter_head hac js-accordeon-toggle liens_voir bloc_option_doc_comment" title="<:thematique:commenter:>"><:thematique:commenter:></a>
 				<div class='nettoyeur masquer bloc_option_forum'>
 					<INCLURE{fond=forum, id_article, mode=ajax-detail, ajax} />
 				</div>

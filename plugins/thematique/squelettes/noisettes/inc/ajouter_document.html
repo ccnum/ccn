@@ -1,5 +1,5 @@
 #CACHE{0}
-<INCLURE{fond=noisettes/js/swiper.script}>
+<script src="#CHEMIN{js/swiper.js}"></script>
 <div id="documents_portfolio" class="portfolio">
 	<BOUCLE_documents_joints(DOCUMENTS){vu=non}{id_article}>
 		<div class="spip_documents">
@@ -70,8 +70,7 @@
 			[(#GET{embed_video}|match{iframe}|oui)
 				[(#AUTORISER{modifier,article,#ID_ARTICLE}|oui)
 					<div class="bloc_modifier_mdp_video">
-						<INCLURE{fond=noisettes/js/accordeon, nom=bloc_modifier_mdp_video-#ID_DOCUMENT, ajax} />
-						<a id="bloc_modifier_mdp_video-#ID_DOCUMENT" class="hac lien_modifier" title="<:thematique:modifier_mot_de_passe_video:>"><:thematique:modifier_mot_de_passe_video:></a>
+						<a id="bloc_modifier_mdp_video-#ID_DOCUMENT" class="hac js-accordeon-toggle lien_modifier" title="<:thematique:modifier_mot_de_passe_video:>"><:thematique:modifier_mot_de_passe_video:></a>
 						<div class="masquer formulaire_spip">
 							<div class="ajax">#FORMULAIRE_MODIFIER_VIDEO_PASSWORD{#ID_DOCUMENT}</div>
 						</div>

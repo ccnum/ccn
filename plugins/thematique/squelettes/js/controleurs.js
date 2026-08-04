@@ -68,6 +68,13 @@ $(function () {
 		callLivrable($(this).data('id-article'), 'openDetails');
 	});
 
+	// Accordéons génériques (bloc_option_doc, forum, réponses...) : affiche/masque
+	// le bloc juste après le déclencheur cliqué (cf noisettes/*.html, class="js-accordeon-toggle").
+	$(document).on('click', '.js-accordeon-toggle', function () {
+		$(this).next().toggleClass('masquer');
+		return false;
+	});
+
 	$('#timeline_fixed').on(
 		'click', function (event) {
 			event.stopPropagation();
