@@ -73,3 +73,26 @@ python3 .ci/check_lang_keys.py
 Pas de mécanisme de baseline ici : une clé manquante est toujours un bug
 (faute de frappe ou clé jamais ajoutée), donc le script échoue directement
 sans exception tolérée.
+
+# check_hardcoded_paths.py
+
+Détecte les liens en dur vers les ressources du plugin (`img/`, `css/`,
+`js/`, `pdf/`) dans les squelettes `.html`, qui n'utilisent pas
+`#CHEMIN{...}` (ou `#ENV{chemin}`/`#DOSSIER_SQUELETTE`). Un chemin relatif
+en dur (`src="img/foo.png"`, `url(../img/foo.png)`) casse si le plugin est
+déplacé/renommé ou si le squelette est appelé depuis un contexte différent,
+contrairement à `#CHEMIN{img/foo.png}` qui est résolu par SPIP.
+
+Seuls les fichiers `.html` (compilés par SPIP) sont scannés : un `.css` brut
+ou un `.js` ne passent pas par le compilateur SPIP, donc `#CHEMIN` n'y a pas
+de sens — les chemins relatifs classiques (`../img/...`) ou `CCN.urlRoot`
+y restent la bonne pratique.
+
+Usage local :
+
+```
+python3 .ci/check_hardcoded_paths.py
+```
+
+Même mécanisme de baseline que `check_lang_hardcoded.py` (`--write-baseline`
+pour régénérer après un faux positif volontaire).

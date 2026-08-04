@@ -30,3 +30,6 @@ jobs:
 
       - name: Vérifier la validité des clés de langue référencées
         run: python3 .ci/check_lang_keys.py
+
+      - name: Vérifier l'absence de nouveau lien en dur (hors #CHEMIN)
+        run: python3 .ci/check_hardcoded_paths.py
