@@ -1,14 +1,25 @@
 #CACHE{0}
 [(#REM) type=blogs ou type=evenements passé en paramètre via &mode=articles&type=... ]
 #SET{afficher,oui}[(#ENV{type}|=={evenements}|oui)[(#SESSION{statut}|in_array{#LISTE{0minirezo,1comite}}|non)#SET{afficher,non}]]
+
+[(#REM) Pré-passe silencieuse : collecte les ids d'articles pour compter leurs
+messages de forum en une seule requête groupée (thematique_comptes_forums),
+plutôt qu'une requête FORUMS par article dans la boucle d'affichage ci-dessous. ]
+#SET{ids_articles,#ARRAY}
+<BOUCLE_rubrique_ids(RUBRIQUES){titre_mot=#ENV{type}}{tout}>
+	<BOUCLE_article_ids(ARTICLES){branche}{date>=#CONST{_DATE_DEBUT}}{date<=#CONST{_DATE_FIN}}{tout}>
+		[(#GET{afficher}|=={oui}|oui)#SET_PUSH{ids_articles,#ID_ARTICLE}]
+	</BOUCLE_article_ids>
+</BOUCLE_rubrique_ids>
+#SET{comptes_forum,#GET{ids_articles}|thematique_comptes_forums}
+
 #SET{n,0}
 {
 "articles": [
 <BOUCLE_rubrique(RUBRIQUES){titre_mot=#ENV{type}}{tout}>
 	<BOUCLE_article(ARTICLES){branche}{par date}{date>=#CONST{_DATE_DEBUT}}{date<=#CONST{_DATE_FIN}}{tout}>
 		[(#GET{afficher}|=={oui}|oui)
-		#SET{total,0}<BOUCLE_forum_article(FORUMS){id_article}> </BOUCLE_forum_article>#SET{total,#TOTAL_BOUCLE}</B_forum_article>
-		[(#GET{n}|>{0}|oui),]{"id":"article_#ID_ARTICLE","id_objet":#ID_ARTICLE,"type_objet":"article","titre":[(#TITRE|json_encode)],"date":"[(#DATE|affdate{'Y-m-d'})]","y":[(#Y|sinon{0})],"commentaires":#GET{total}}
+		[(#GET{n}|>{0}|oui),]{"id":"article_#ID_ARTICLE","id_objet":#ID_ARTICLE,"type_objet":"article","titre":[(#TITRE|json_encode)],"date":"[(#DATE|affdate{'Y-m-d'})]","y":[(#Y|sinon{0})],"commentaires":[(#GET{comptes_forum}|table_valeur{#ID_ARTICLE,0})]}
 		[(#SET{n,#GET{n}|plus{1}})]
 		]
 	</BOUCLE_article>

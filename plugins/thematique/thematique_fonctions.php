@@ -928,6 +928,35 @@ function filtre_afficher_forum_arbre($id_article) {
 	return forum_rendre_branche($arbre);
 }
 
+/**
+ * Compte les messages de forum publiés pour un ensemble d'articles, en une
+ * seule requête groupée plutôt qu'une par article (évite le N+1 de
+ * <BOUCLE_forum(FORUMS){id_article}> répétée à chaque ligne d'une liste).
+ *
+ * Ne compte que les messages de premier niveau (id_parent=0), comme le fait
+ * implicitement le critère {id_article} sur une BOUCLE(FORUMS) : les
+ * réponses imbriquées à un message ne sont pas comptées séparément.
+ *
+ * @return array [id_article => nombre de messages publiés]
+ */
+function thematique_comptes_forums(array $ids_articles) {
+	$ids_articles = array_filter(array_map('intval', $ids_articles));
+	if (!$ids_articles) {
+		return [];
+	}
+	$rows = sql_allfetsel(
+		'id_objet, COUNT(*) AS n',
+		'spip_forum',
+		["objet='article'", sql_in('id_objet', $ids_articles), 'statut=' . sql_quote('publie'), 'id_parent=0'],
+		'id_objet'
+	);
+	$comptes = [];
+	foreach ($rows as $row) {
+		$comptes[(int) $row['id_objet']] = (int) $row['n'];
+	}
+	return $comptes;
+}
+
 function forum_construire_arbre($id_parent, &$parents) {
 	if (!isset($parents[$id_parent])) {
 		return [];
@@ -949,4 +978,3 @@ function forum_rendre_branche($forums) {
 	}
 	return $html;
 }
-
