@@ -1,4 +1,4 @@
-#CACHE{0}
+#CACHE{60}
 [(#REM) type=blogs ou type=evenements passé en paramètre via &mode=articles&type=... ]
 #SET{afficher,oui}[(#ENV{type}|=={evenements}|oui)[(#SESSION{statut}|in_array{#LISTE{0minirezo,1comite}}|non)#SET{afficher,non}]]
 
