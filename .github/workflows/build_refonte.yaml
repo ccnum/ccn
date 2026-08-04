@@ -7,7 +7,25 @@ on:
   workflow_dispatch:
 
 jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+
+      - name: Vérifier l'absence de nouveau texte en dur
+        run: python3 .ci/check_lang_hardcoded.py
+
+      - name: Vérifier la validité des clés de langue référencées
+        run: python3 .ci/check_lang_keys.py
+
   spip:
+    needs: lint
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
