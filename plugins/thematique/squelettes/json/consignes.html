@@ -44,7 +44,7 @@ la boucle d'affichage ci-dessous. ]
 			"y": [(#Y|sinon{0})],
 			"livrable": #GET{livrable},
 			"reponses": [
-			<BOUCLE_reponse(ARTICLES){id_consigne=#ID_ARTICLE}>
+			<BOUCLE_reponse(ARTICLES){id_consigne=#ID_ARTICLE}{par id_rubrique}>
 				[(#GET{n_reponse}|>{0}|oui),]{"id":#ID_ARTICLE,"classe_id":#ID_RUBRIQUE,"date":"[(#DATE|affdate{'Y-m-d'})]","texte":[(#TITRE|couper{60}|json_encode)],"commentaires":[(#GET{comptes_forum}|table_valeur{#ID_ARTICLE,0})],"y":[(#Y|sinon{0})]}
 				[(#SET{n_reponse,#GET{n_reponse}|plus{1}})]
 			</BOUCLE_reponse>
