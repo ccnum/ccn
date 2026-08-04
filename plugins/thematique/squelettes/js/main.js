@@ -242,34 +242,6 @@ function initConsignes(data) {
 		const nouvelleConsigne = new Consigne();
 		nouvelleConsigne.init(dataForConsigne);
 
-		// Calcul du positionnement y intelligent des réponses (TO DO)
-		const liste_y = [];
-
-		for (let j = 0; j < jsonReponses.length; j++) {
-			if (j == 0) {
-				const rd = Math.floor(Math.random() * jsonReponses.length);
-				liste_y.push(rd);
-			} else {
-				for (let k = 0; k < 15; k++) {
-					let meme = 0;
-					const rd = Math.floor(Math.random() * jsonReponses.length);
-					for (let l = 0; l < j; l++) {
-						if (rd == liste_y[l]) {
-							meme++;
-						}
-					}
-					if (meme == 0) {
-						liste_y.push(rd);
-						break;
-					}
-				}
-			}
-		}
-
-		if (liste_y.length < jsonReponses.length) {
-			liste_y.push(liste_y[0]);
-		}
-
 		let has_current_classe_already_answer = false;
 
 		for (let j = 0; j < jsonReponses.length; j++) {
@@ -288,9 +260,18 @@ function initConsignes(data) {
 			dataForReponse.nombre_commentaires = jsonReponse.commentaires;
 
 			dataForReponse.y = jsonReponse.y;
+			dataForReponse.y_genere = false;
 
 			if ((dataForReponse.y === 0) || (dataForReponse.y > 0.8) || (dataForReponse.y < -0.2)) {
-				dataForReponse.y = (liste_y[j]) / (jsonReponses.length);
+				// Position de repli figée sur l'ordre des réponses (trié par
+				// classe, cf {par id_rubrique} dans json/consignes.html) plutôt
+				// qu'aléatoire, pour ne pas mélanger l'ordre à chaque
+				// rechargement. Réparties uniformément sur [0,1] ici ; la
+				// conversion en marge pixel réelle (pour ne déborder ni sous le
+				// header ni sur le footer) se fait dans Reponse.initDOM, une
+				// fois la vraie hauteur de la carte connue.
+				dataForReponse.y = jsonReponses.length > 1 ? j / (jsonReponses.length - 1) : 0.5;
+				dataForReponse.y_genere = true;
 			}
 
 			dataForReponse.consigne = nouvelleConsigne;

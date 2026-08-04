@@ -31,6 +31,8 @@ function Projet() {
 		this.couleur_1erplan2 = data.couleur_1erplan2;
 		this.couleur_1erplan3 = data.couleur_1erplan3;
 		this.zoom_consignes = data.zoom_consignes;
+		this.largeur = data.largeur;
+		this.hauteur = data.hauteur;
 		this.timeline_parent = $('#timeline');
 		this.timeline_background = $('#timeline_background');
 		this.timeline_fixed = $('#timeline_fixed');

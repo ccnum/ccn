@@ -89,6 +89,23 @@ function Reponse() {
 		this.largeur = this.div_base.outerWidth();
 		this.hauteur = this.div_base.outerHeight() + 7;
 
+		// Pour une position de repli (main.js, this.data.y_genere), reconvertit
+		// le rang [0,1] en pixels dans la zone réellement disponible (marge
+		// haute/basse + hauteur de la carte, connue seulement maintenant
+		// qu'elle est dans le DOM), pour ne déborder ni sous le header ni sur
+		// le footer. Transformation proportionnelle (pas un simple clamp) :
+		// des rangs distincts restent distincts, aucune carte n'atterrit
+		// exactement sur une autre. Une position réelle (issue d'un
+		// glisser-déposer admin) n'est jamais retouchée.
+		if (this.data.y_genere && CCN.projet.hauteur) {
+			const margeHautPx = 20;
+			const margeBasPx = 20;
+			const plagePx = Math.max(0, CCN.projet.hauteur - this.hauteur - margeHautPx - margeBasPx);
+			const yPx = margeHautPx + this.y * plagePx;
+			this.y = yPx / CCN.projet.hauteur;
+			this.div_base.css('top', (this.y * 100) + '%');
+		}
+
 		if (CCN.admin == 0) {
 			$(this.div_base).draggable(
 				{
