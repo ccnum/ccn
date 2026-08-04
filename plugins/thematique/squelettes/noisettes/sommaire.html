@@ -5,7 +5,6 @@
 et/ou
 -#ENV{vue_date} : 01/10/2011
 ]
-#SESSION_SET{role, #SESSION{id_auteur}|thematique_donner_role}
 <script>CCN.role = "[(#SESSION{role})]";</script>
 <div id="zone" class="zone_timeline zone"[ (#VUE|=={classe}|oui) style="display:none;"]>
 	<INCLURE{fond=noisettes/timeline, env, ajax} />

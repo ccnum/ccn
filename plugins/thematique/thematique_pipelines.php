@@ -12,6 +12,26 @@ include_spip('thematique_fonctions');
 // ci-dessous : pas auto-incluses (fichier sous inc/), à charger explicitement.
 include_spip('inc/thematique_cioidc');
 
+/**
+ * Calcule le rôle (prof/intervenant/admin/eleve) une seule fois par requête,
+ * au moment où SPIP construit la session du visiteur identifié, plutôt que
+ * de le recalculer dans chaque squelette qui en a besoin via
+ * #SESSION_SET{role, #SESSION{id_auteur}|thematique_donner_role}.
+ *
+ * Ne s'exécute que pour un visiteur identifié (auth_init_droits) : un
+ * visiteur anonyme n'a pas de #SESSION{role} du tout, ce qui est
+ * équivalent pour tous les tests existants (aucun ne compare
+ * explicitement à 'visiteur', seulement à prof/intervenant/admin/eleve).
+ *
+ * @param array $flux
+ * @return array
+ */
+function thematique_preparer_visiteur_session($flux) {
+	$id_auteur = intval($flux['args']['row']['id_auteur'] ?? 0);
+	$flux['data']['role'] = thematique_donner_role($id_auteur);
+	return $flux;
+}
+
 // Pre_boucles
 // Retourne les articles et articles syndiqués en lien avec l'année scolaire
 function thematique_pre_boucle($boucle) {
