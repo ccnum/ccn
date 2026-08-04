@@ -1,6 +1,6 @@
 <BOUCLE_principale(ARTICLES){id_article}{tous}>
 	#SESSION_SET{role, #SESSION{id_auteur}|thematique_donner_role}
-	[(#INCLURE{fond=noisettes/fonction/admin})]
+	[(#SET{admin_scope, #ENV{rub}|thematique_admin_scope})]
 
 	[(#ENV{type_objet}|=={consignes}|oui)
 		#SET{fond_consigne, #SESSION{role}|fond_consigne_pour_role}

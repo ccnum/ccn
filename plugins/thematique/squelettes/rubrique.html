@@ -5,8 +5,7 @@
 	#SET{type_objet,#TYPE_OBJET}
 ]
 [(#ENV{type_objet}|non)
-	[(#INCLURE{fond=noisettes/fonction/type_objet,id_rubrique})]
-	[(#SET{type_objet,#SESSION{type}})]
+	[(#SET{type_objet, #ID_RUBRIQUE|thematique_type_objet_rubrique})]
 ]
 
 [(#REM)Mode]
@@ -26,7 +25,7 @@
 
 [(#GET{mode}|match{ajax}|oui)
 	[(#REM) Type d'admin : 0 : total / autrement : nb de rubriques restreintes / -1 : pas admin / -2 pas connecté]
-	[(#INCLURE{fond=noisettes/fonction/admin,mode=admin,rub})]
+	[(#SET{admin_scope, #ENV{rub}|thematique_admin_scope})]
 	[(#SET{admin,#SESSION{admin}})]
 	[(#GET{mode}|=={ajax}|oui)
 		[(#GET{type_objet}|=={ressources}|oui)

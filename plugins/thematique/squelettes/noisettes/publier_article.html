@@ -1,8 +1,7 @@
 #CACHE{0}
 <div class="popup [popup_(#ENV{type_objet})]">
 	[(#ID_ARTICLE|non)
-		[(#REM) [(#INCLURE{fond=noisettes/fonction/type_objet,id_rubrique})] ]
-		[(#SET{type_objet,#SESSION{type}})]
+		[(#SET{type_objet, #ENV{id_rubrique}|thematique_type_objet_rubrique})]
 
 		<div class="sidebar_bubble bloc_publier_repondre">
   		[(#GET{type_objet}|=={travail_en_cours}|oui)

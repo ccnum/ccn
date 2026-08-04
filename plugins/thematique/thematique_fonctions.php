@@ -337,6 +337,160 @@ function thematique_hierarchie_a_mot($id_rubrique, $titre_mot) {
 }
 
 /**
+ * Type de contenu (blogs, evenements, consignes, travail_en_cours,
+ * ressources, agora) porté par une rubrique ou l'une de ses ascendantes :
+ * le mot-clé le plus proche l'emporte (rubrique elle-même incluse, puis
+ * parent, grand-parent, ... jusqu'à la racine).
+ *
+ * Remplace l'ancien noisettes/fonction/type_objet.html (BOUCLE HIERARCHIE
+ * + BOUCLE MOTS imbriquées, non cachées, à chaque inclusion) : même
+ * logique de "plus proche l'emporte", mais en une requête par niveau de
+ * hiérarchie au lieu de charger toute la table MOTS pour chaque rubrique.
+ *
+ * @param int $id_rubrique
+ * @return string|null
+ */
+function thematique_type_objet_rubrique($id_rubrique) {
+	static $types = ['blogs', 'evenements', 'consignes', 'travail_en_cours', 'ressources', 'agora'];
+	static $cache = [];
+
+	$id_rubrique = intval($id_rubrique);
+	if (!$id_rubrique) {
+		return null;
+	}
+	if (array_key_exists($id_rubrique, $cache)) {
+		return $cache[$id_rubrique];
+	}
+
+	foreach (thematique_ascendants_rubrique($id_rubrique) as $id_asc) {
+		$titre = sql_getfetsel(
+			'mots.titre',
+			'spip_mots_liens AS liens INNER JOIN spip_mots AS mots ON liens.id_mot=mots.id_mot',
+			'liens.objet=' . sql_quote('rubrique')
+				. ' AND liens.id_objet=' . intval($id_asc)
+				. ' AND ' . sql_in('mots.titre', $types)
+		);
+		if ($titre) {
+			return $cache[$id_rubrique] = $titre;
+		}
+	}
+
+	return $cache[$id_rubrique] = null;
+}
+
+/**
+ * Type de contenu d'un article : "travail_en_cours" s'il répond à une
+ * consigne (id_consigne renseigné), sinon celui porté par sa rubrique
+ * (cf thematique_type_objet_rubrique).
+ *
+ * @param int $id_article
+ * @return string|null
+ */
+function thematique_type_objet_article($id_article) {
+	$id_article = intval($id_article);
+	if (!$id_article) {
+		return null;
+	}
+
+	$article = sql_fetsel('id_rubrique, id_consigne', 'spip_articles', 'id_article=' . $id_article);
+	if (!$article) {
+		return null;
+	}
+	if (!empty($article['id_consigne'])) {
+		return 'travail_en_cours';
+	}
+
+	return thematique_type_objet_rubrique($article['id_rubrique']);
+}
+
+/**
+ * Type de contenu porté par la rubrique d'un article syndiqué
+ * (cf thematique_type_objet_rubrique).
+ *
+ * @param int $id_syndic_article
+ * @return string|null
+ */
+function thematique_type_objet_syndic_article($id_syndic_article) {
+	$id_syndic_article = intval($id_syndic_article);
+	if (!$id_syndic_article) {
+		return null;
+	}
+
+	$id_rubrique = sql_getfetsel('id_rubrique', 'spip_syndic_articles', 'id_syndic_article=' . $id_syndic_article);
+	if (!$id_rubrique) {
+		return null;
+	}
+
+	return thematique_type_objet_rubrique($id_rubrique);
+}
+
+/**
+ * Périmètre admin de l'auteur en session : niveau d'administration et
+ * rubrique restreinte sélectionnée. Persiste le résultat en session
+ * (#SESSION{admin}, #SESSION{restreint}) pour les fonds qui les lisent.
+ *
+ * admin : 0 = admin total, N>0 = nb de rubriques restreintes administrées,
+ * -1 = pas admin, -2 = pas connecté.
+ *
+ * Remplace l'ancien noisettes/fonction/admin.html (BOUCLE RUBRIQUES
+ * auteurs + INCLURE type_objet imbriqué, non cachée, à chaque inclusion).
+ *
+ * @param int|string|null $id_rubrique_choisie rubrique explicitement
+ *   sélectionnée par l'utilisateur (#ENV{rub}), mémorisée en session
+ * @return array{admin:int, restreint:int|null}
+ */
+function thematique_admin_scope($id_rubrique_choisie = null) {
+	include_spip('inc/session');
+
+	if ($id_rubrique_choisie) {
+		session_set('cookie_rubrique', intval($id_rubrique_choisie));
+	}
+
+	$id_auteur = intval(session_get('id_auteur'));
+	$statut = session_get('statut');
+
+	$admin = 0;
+	$restreint1 = null;
+
+	$rubriques = sql_allfetsel(
+		'objets.id_rubrique',
+		'spip_auteurs_liens AS liens INNER JOIN spip_rubriques AS objets ON liens.id_objet=objets.id_rubrique',
+		'liens.id_auteur=' . $id_auteur
+			. ' AND liens.objet=' . sql_quote('rubrique')
+			. ' AND objets.id_parent>0',
+		'',
+		'',
+		'50'
+	);
+	foreach ($rubriques as $rubrique) {
+		$id_rub = intval($rubrique['id_rubrique']);
+		if (thematique_type_objet_rubrique($id_rub) !== 'evenements') {
+			$restreint1 = $id_rub;
+		}
+		$admin++;
+	}
+
+	if (!in_array($statut, ['0minirezo', '1comite'], true)) {
+		$admin = -1;
+	}
+	if (!$statut) {
+		$admin = -2;
+	}
+
+	$restreint = ($admin === 1 || $admin === 2) ? $restreint1 : null;
+
+	$cookie_rubrique = session_get('cookie_rubrique');
+	if (is_numeric($cookie_rubrique) && ($admin > 1 || $admin === 0)) {
+		$restreint = intval($cookie_rubrique);
+	}
+
+	session_set('restreint', $restreint);
+	session_set('admin', $admin);
+
+	return ['admin' => $admin, 'restreint' => $restreint];
+}
+
+/**
  * Rang (0, 1, 2, ...) de chaque classe dans l'ordre d'affichage du sommaire,
  * calculé directement en base (même logique que les boucles RUBRIQUES de
  * sommaire.html : rubriques de l'année en cours taguées "travail_en_cours",

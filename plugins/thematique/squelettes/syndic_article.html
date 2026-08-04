@@ -4,9 +4,7 @@
 		#SET{type_objet,#TYPE_OBJET}
 	]
 	[(#ENV{type_objet}|non)
-	[(#INCLURE{fond=noisettes/fonction/type_objet,id_syndic_article})]
-		[(#SET{type_objet,#SESSION{type}})]
-
+		[(#SET{type_objet, #ID_SYNDIC_ARTICLE|thematique_type_objet_syndic_article})]
 	]
 	[(#GET{type_objet}|in_array{#LISTE{blogs|evenements}}|oui)#SET{pre,article_}]
 
