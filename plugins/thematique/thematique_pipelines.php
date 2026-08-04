@@ -8,6 +8,9 @@ include_spip('action/editer_liens');
 // mais ce n'est pas garanti dans tous les contextes d'appel (ex: pipeline cioidc_userinfo
 // déclenché depuis une action hors squelette), d'où cet include explicite.
 include_spip('thematique_fonctions');
+// Fonctions thematique_cioidc_*, utilisées uniquement par thematique_cioidc_userinfo()
+// ci-dessous : pas auto-incluses (fichier sous inc/), à charger explicitement.
+include_spip('inc/thematique_cioidc');
 
 // Pre_boucles
 // Retourne les articles et articles syndiqués en lien avec l'année scolaire
