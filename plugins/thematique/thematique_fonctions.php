@@ -957,6 +957,25 @@ function thematique_comptes_forums(array $ids_articles) {
 	return $comptes;
 }
 
+/**
+ * Nombre de messages de forum publiés (premier niveau) pour un seul
+ * article. COUNT(*) direct plutôt qu'une BOUCLE(FORUMS) complète : utilisé
+ * dans les onglets "Commentaires" des sidebars (une seule mission/réponse
+ * par affichage, donc pas de N+1 à éviter ici, juste le coût d'une boucle
+ * SPIP pour ce qui est une simple requête de comptage).
+ *
+ * @param int $id_article
+ * @return int
+ */
+function thematique_nombre_commentaires($id_article) {
+	return (int) sql_countsel('spip_forum', [
+		"objet='article'",
+		'id_objet=' . intval($id_article),
+		'statut=' . sql_quote('publie'),
+		'id_parent=0',
+	]);
+}
+
 function forum_construire_arbre($id_parent, &$parents) {
 	if (!isset($parents[$id_parent])) {
 		return [];

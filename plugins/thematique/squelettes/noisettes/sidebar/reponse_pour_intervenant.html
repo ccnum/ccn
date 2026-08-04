@@ -40,6 +40,8 @@
 				<div data-tab-id="commentaires">
 					<div class="tabs-title">
 						<:thematique:titre_onglet_comentaire:>
+						#SET{nombre_commentaires,#ID_ARTICLE|thematique_nombre_commentaires}
+						[(#GET{nombre_commentaires}|>{0}|oui)<div class="picto_nombre_commentaires">#GET{nombre_commentaires}</div>]
 					</div>
 					<div class="tabs-content">
 						<INCLURE{fond=noisettes/sidebar/onglet_commentaires, env} />
