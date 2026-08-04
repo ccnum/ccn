@@ -23,5 +23,5 @@ squelettes/noisettes/inc/article-design.laclasse.com.html:79: Avez-vous des idé
 squelettes/noisettes/inc/article-design.laclasse.com.html:82: A quoi ressemblerait votre récréation de rêve? Faire un dessin commenté (utilise
 thematique_administrations.php:189: Blog pédagogique
 thematique_administrations.php:190: Contenu éditorial
-thematique_pipelines.php:219: Élève
-thematique_pipelines.php:384: Blog pédagogique
+thematique_fonctions.php:647: Élève
+thematique_fonctions.php:812: Blog pédagogique
