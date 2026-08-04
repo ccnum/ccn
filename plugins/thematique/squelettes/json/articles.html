@@ -1,0 +1,28 @@
+#CACHE{0}
+[(#REM) type=blogs ou type=evenements passé en paramètre via &mode=articles&type=... ]
+#SET{afficher,oui}[(#ENV{type}|=={evenements}|oui)[(#SESSION{statut}|in_array{#LISTE{0minirezo,1comite}}|non)#SET{afficher,non}]]
+#SET{n,0}
+{
+"articles": [
+<BOUCLE_rubrique(RUBRIQUES){titre_mot=#ENV{type}}{tout}>
+	<BOUCLE_article(ARTICLES){branche}{par date}{date>=#CONST{_DATE_DEBUT}}{date<=#CONST{_DATE_FIN}}{tout}>
+		[(#GET{afficher}|=={oui}|oui)
+		#SET{total,0}<BOUCLE_forum_article(FORUMS){id_article}> </BOUCLE_forum_article>#SET{total,#TOTAL_BOUCLE}</B_forum_article>
+		[(#GET{n}|>{0}|oui),]{"id":"article_#ID_ARTICLE","id_objet":#ID_ARTICLE,"type_objet":"article","titre":[(#TITRE|json_encode)],"date":"[(#DATE|affdate{'Y-m-d'})]","y":[(#Y|sinon{0})],"commentaires":#GET{total}}
+		[(#SET{n,#GET{n}|plus{1}})]
+		]
+	</BOUCLE_article>
+	<BOUCLE_syndic(SYNDIC_ARTICLES){branche}{par date}{date>=#CONST{_DATE_DEBUT}}{date<=#CONST{_DATE_FIN}}{tout}>
+		[(#REM)Pour exclure les doublons ou articles qui bouclent depuis le WP]
+		<BOUCLE_exclusion(ARTICLES){titre=#_syndic:TITRE}>
+		</BOUCLE_exclusion>
+		</B_exclusion>
+			[(#GET{afficher}|=={oui}|oui)
+			[(#GET{n}|>{0}|oui),]{"id":"syndic_article_#ID_SYNDIC_ARTICLE","id_objet":#ID_SYNDIC_ARTICLE,"type_objet":"syndic_article","titre":[(#TITRE|json_encode)],"date":"[(#DATE|affdate{'Y-m-d'})]","y":[(#Y|sinon{0})],"commentaires":0}
+			[(#SET{n,#GET{n}|plus{1}})]
+			]
+		<//B_exclusion>
+	</BOUCLE_syndic>
+</BOUCLE_rubrique>
+]
+}

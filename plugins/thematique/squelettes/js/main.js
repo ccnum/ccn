@@ -26,10 +26,10 @@ function initCCN() {
 	CCN.timelineLayerEvenements = $('#timeline_layer_evenements');
 	CCN.timelineLayerLivrables = $('#livrables');
 
-	loadProjet(CCN.urlXml + "projet");
+	loadProjet(CCN.urlJson + "projet");
 }
 /**
- *  Charge le XML du projet,
+ *  Charge le JSON du projet,
  *  initialise le projet
  *  puis appelle le chargement des classes.
  *
@@ -37,59 +37,29 @@ function initCCN() {
  */
 
 async function loadProjet(fichier) {
-	const text = await fetch(fichier).then(r => r.text());
-	const xml = new DOMParser().parseFromString(text.trim(), 'text/xml');
-
-	const dataForProjet = {};
-
-	dataForProjet.date_debut = getXMLNodeValue('date_debut', xml);
-	dataForProjet.date_fin = getXMLNodeValue('date_fin', xml);
-	dataForProjet.couleur_fond = getXMLNodeValue('couleur_fond', xml);
-	dataForProjet.couleur_base_texte = getXMLNodeValue('couleur_base_texte', xml);
-	dataForProjet.couleur_1erplan1 = getXMLNodeValue('couleur_1erplan1', xml);
-	dataForProjet.couleur_1erplan2 = getXMLNodeValue('couleur_1erplan2', xml);
-	dataForProjet.couleur_1erplan3 = getXMLNodeValue('couleur_1erplan3', xml);
+	const dataForProjet = await fetch(fichier).then(r => r.json());
 
 	dataForProjet.largeur = getLargeurZone();
 	dataForProjet.hauteur = getHauteurZone();
 
-	dataForProjet.fps = parseFloat(getXMLNodeValue('fps', xml));
-	dataForProjet.zoom_consignes = getXMLNodeValue('zoom_consignes', xml);
-	dataForProjet.liste_y_consignes = getXMLNodeValue('seq_posy_consignes', xml);
-	dataForProjet.liste_y_blogs = getXMLNodeValue('seq_posy_blogs', xml);
-	dataForProjet.liste_y_evenements = getXMLNodeValue('seq_posy_evenements', xml);
-
-	dataForProjet.url_popup_consigne = getXMLNodeValue('url_popup_consigne', xml);
-	dataForProjet.url_popup_reponse = getXMLNodeValue('url_popup_reponse', xml);
-	dataForProjet.url_popup_reponseajout = getXMLNodeValue('url_popup_reponseajout', xml);
-	dataForProjet.url_popup_blog = getXMLNodeValue('url_popup_blog', xml);
-	dataForProjet.url_popup_livrables = getXMLNodeValue('url_popup_livrables', xml);
-	dataForProjet.url_popup_evenement = getXMLNodeValue('url_popup_evenement', xml);
-	dataForProjet.url_popup_ressources = getXMLNodeValue('url_popup_ressources', xml);
-	dataForProjet.url_popup_classes = getXMLNodeValue('url_popup_classes', xml);
-	dataForProjet.url_popup_chat = getXMLNodeValue('url_popup_chat', xml);
-	dataForProjet.url_popup_chat2 = getXMLNodeValue('url_popup_chat2', xml);
-
-	dataForProjet.image_fond = hasXMLNodeValue('image_fond', xml) ? getXMLNodeValue('image_fond', xml) : '';
-
 	CCN.projet = new Projet();
 	CCN.projet.init(dataForProjet);
 
-	CCN.couleurBlog = getXMLNodeValue('couleur_blog', xml);
-	CCN.idRubriqueRessources = getXMLNodeValue('id_rubrique_ressources', xml);
+	CCN.couleurBlog = dataForProjet.couleur_blog;
+	CCN.idRubriqueRessources = dataForProjet.id_rubrique_ressources;
 
-	const [idArticleCapSurAnnee, statutCapSurAnnee] = (getXMLNodeValue('article_cap_sur_annee', xml) || '0|').split('|');
+	const [idArticleCapSurAnnee, statutCapSurAnnee] = (dataForProjet.article_cap_sur_annee || '0|').split('|');
 	CCN.idArticleCapSurAnnee = parseInt(idArticleCapSurAnnee) || 0;
 	CCN.statutCapSurAnnee = statutCapSurAnnee || '';
 
-	const [idArticleLaRencontre, statutLaRencontre] = (getXMLNodeValue('article_la_rencontre', xml) || '0|').split('|');
+	const [idArticleLaRencontre, statutLaRencontre] = (dataForProjet.article_la_rencontre || '0|').split('|');
 	CCN.idArticleLaRencontre = parseInt(idArticleLaRencontre) || 0;
 	CCN.statutLaRencontre = statutLaRencontre || '';
 
 	// Seules les missions (classes + consignes) sont chargées au démarrage.
 	// Agenda (blogs) et blog pédagogique (evenements) sont chargés à la demande,
 	// au clic sur le menu-timeline (voir ensureArticlesLoaded).
-	await loadClasses(CCN.urlXml + "classes");
+	await loadClasses(CCN.urlJson + "classes");
 	initTimeline();
 }
 /**
@@ -104,14 +74,14 @@ async function ensureArticlesLoaded(type) {
 	if (type === 'blogs' && !CCN.articlesBlogLoaded) {
 		CCN.articlesBlogLoaded = true;
 		$('body').addClass('loading');
-		await loadArticles(CCN.urlXml + "articles&type=blogs", 'blogs', CCN.articlesBlog, CCN.projet.liste_y_blogs);
+		await loadArticles(CCN.urlJson + "articles&type=blogs", 'blogs', CCN.articlesBlog, CCN.projet.liste_y_blogs);
 		$('body').removeClass('loading');
 	}
 
 	if (type === 'evenements' && !CCN.articlesEvenementLoaded) {
 		CCN.articlesEvenementLoaded = true;
 		$('body').addClass('loading');
-		await loadArticles(CCN.urlXml + "articles&type=evenements", 'evenements', CCN.articlesEvenement, CCN.projet.liste_y_evenements);
+		await loadArticles(CCN.urlJson + "articles&type=evenements", 'evenements', CCN.articlesEvenement, CCN.projet.liste_y_evenements);
 		$('body').removeClass('loading');
 	}
 }
@@ -160,219 +130,199 @@ function attachTimelineLayer(type) {
 	ccnArray.forEach(article => layer.append(article.div_base));
 }
 /**
- *  Charge le XML des classes (liste)
+ *  Charge le JSON des classes (liste)
  *  puis appelle le chargement des consignes.
  *
  * @param {string} fichier - URL du fichier
  */
 
 async function loadClasses(fichier) {
-	const text = await fetch(fichier).then(r => r.text());
-	const xml = new DOMParser().parseFromString(text.trim(), 'text/xml');
+	const data = await fetch(fichier).then(r => r.json());
 
-	const xmlClasses = xml.getElementsByTagName("classe");
-	for (let i = 0; i < xmlClasses.length; ++i) {
-		const dataForClasse = {};
-		dataForClasse.id = parseFloat(getXMLNodeValue('id', xmlClasses[i]));
-		dataForClasse.nom = getXMLNodeValue('nom', xmlClasses[i]);
+	data.classes.forEach(dataForClasse => {
 		const nouvelleClasse = new Classe();
 		nouvelleClasse.init(dataForClasse);
 		CCN.classes.push(nouvelleClasse);
-	}
+	});
 
-	const xmlIntervenants = xml.getElementsByTagName("intervenant");
-	for (let i = 0; i < xmlIntervenants.length; ++i) {
-		const dataForIntervenant = {};
-		dataForIntervenant.id = parseFloat(getXMLNodeValue('id', xmlIntervenants[i]));
-		dataForIntervenant.nom = getXMLNodeValue('nom', xmlIntervenants[i]);
+	data.intervenants.forEach(dataForIntervenant => {
 		const nouvelIntervenant = new Intervenant();
 		nouvelIntervenant.init(dataForIntervenant);
 		CCN.intervenants.push(nouvelIntervenant);
-	}
+	});
 
-	CCN.travailEnCoursId = parseFloat(getXMLNodeValue('travail_en_cours_id', xml));
-	await loadConsignes(CCN.urlXml + "consignes");
+	CCN.travailEnCoursId = data.travail_en_cours_id;
+	await loadConsignes(CCN.urlJson + "consignes");
 }
 /**
- *  Charge le XML des consignes et des réponses
+ *  Charge le JSON des consignes et des réponses
  *  puis appelle le chargement des articles du blog
  *
  * @param {string} fichier - URL du fichier
  */
 
 async function loadConsignes(fichier) {
-	const text = await fetch(fichier).then(r => r.text());
-	const xml = new DOMParser().parseFromString(text.trim(), 'text/xml');
+	const data = await fetch(fichier).then(r => r.json());
+	const jsonConsignes = data.consignes;
+	let indexY = 0;
 
-	const xmlConsignes = xml.getElementsByTagName("consigne");
-				let indexY = 0;
+	for (let i = 0; i < jsonConsignes.length; ++i) {
 
-				for (let i = 0; i < xmlConsignes.length; ++i) {
+		const jsonConsigne = jsonConsignes[i];
+		const dataForConsigne = {};
 
-					const dataForConsigne = {};
+		dataForConsigne.id = jsonConsigne.id;
+		dataForConsigne.intervenant_id = jsonConsigne.intervenant_id;
+		dataForConsigne.titre = jsonConsigne.titre;
+		dataForConsigne.image = jsonConsigne.image;
+		dataForConsigne.y = jsonConsigne.y;
+		dataForConsigne.isLivrable = jsonConsigne.livrable;
+		dataForConsigne.isLastConsigne = (i==jsonConsignes.length-1)
 
-					dataForConsigne.id = parseFloat(getXMLNodeValue('id', xmlConsignes[i]));
-					dataForConsigne.intervenant_id = parseFloat(getXMLNodeValue('intervenant_id', xmlConsignes[i]));
-					dataForConsigne.titre = getXMLNodeValue('titre', xmlConsignes[i]);
-					dataForConsigne.image = getXMLNodeValue('image', xmlConsignes[i]);
-					dataForConsigne.y = getXMLNodeValue('y', xmlConsignes[i]);
-					dataForConsigne.isLivrable = (getXMLNodeValue('livrable', xmlConsignes[i]) == "oui");
-					dataForConsigne.isLastConsigne = (i==xmlConsignes.length-1)
+		if (indexY >= CCN.projet.liste_y_consignes.length) {
+			indexY = 0;
+		}
 
-					if (indexY >= CCN.projet.liste_y_consignes.length) {
-						indexY = 0;
-					}
+		if ((dataForConsigne.y <= 0) || (dataForConsigne.y >= 1.05)) {
+			dataForConsigne.y = CCN.projet.liste_y_consignes[indexY];
+		}
 
-					if ((dataForConsigne.y <= 0) || (dataForConsigne.y >= 1.05)) {
-						dataForConsigne.y = CCN.projet.liste_y_consignes[indexY];
-					}
+		indexY++;
 
-					indexY++;
+		dataForConsigne.date_texte = jsonConsigne.date;
+		dataForConsigne.date = parseDate(dataForConsigne.date_texte);
+		dataForConsigne.jour_consigne = parseFloat(Math.round((dataForConsigne.date) / (24 * 60 * 60 * 1000)));
+		dataForConsigne.nombre_jours = dataForConsigne.jour_consigne - CCN.projet.premier_jour;
 
-					dataForConsigne.date_texte = getXMLNodeValue('date', xmlConsignes[i]);
-					dataForConsigne.date = parseDate(dataForConsigne.date_texte);
-					dataForConsigne.jour_consigne = parseFloat(Math.round((dataForConsigne.date) / (24 * 60 * 60 * 1000)));
-					dataForConsigne.nombre_jours = dataForConsigne.jour_consigne - CCN.projet.premier_jour;
+		while (dataForConsigne.nombre_jours < 0) {
+			dataForConsigne.nombre_jours += 365
+		}
 
-					while (dataForConsigne.nombre_jours < 0) {
-						dataForConsigne.nombre_jours += 365
-					}
+		const jsonReponses = jsonConsigne.reponses;
 
-					const xmlReponses = xmlConsignes[i].getElementsByTagName("reponse");
+		dataForConsigne.nombre_reponses = jsonReponses.length;
+		dataForConsigne.reponses = [];
 
-					dataForConsigne.nombre_reponses = (xmlReponses) ? xmlReponses.length : 0;
-					dataForConsigne.reponses = [];
+		const liste_jours_max = [];
+		dataForConsigne.nombre_commentaires = 0;
 
-					const liste_jours_max = [];
-					dataForConsigne.nombre_commentaires = 0;
+		for (let j = 0; j < jsonReponses.length; j++) {
+			const date_jours_max = parseDate(jsonReponses[j].date);
 
-					for (let j = 0; j < xmlReponses.length; j++) {
-						const date_texte_reponse = getXMLNodeValue('date', xmlReponses[j]);
-						const date_jours_max = parseDate(date_texte_reponse);
+			const jours = parseFloat(Math.round((date_jours_max) / (24 * 60 * 60 * 1000))) - dataForConsigne.jour_consigne;
+			liste_jours_max.push(jours);
 
-						const jours = parseFloat(Math.round((date_jours_max) / (24 * 60 * 60 * 1000))) - dataForConsigne.jour_consigne;
-						liste_jours_max.push(jours);
+			dataForConsigne.nombre_commentaires += jsonReponses[j].commentaires;
 
-						const nombre_commentaires_reponse = parseFloat(getXMLNodeValue('commentaires', xmlReponses[j]));
-						dataForConsigne.nombre_commentaires += nombre_commentaires_reponse;
+			dataForConsigne.reponses.push(jsonReponses[j].classe_id);
+		}
 
-						dataForConsigne.reponses.push(getXMLNodeValue('classe_id', xmlReponses[j]));
-					}
+		dataForConsigne.nombre_jours_max = 0;
 
-					dataForConsigne.nombre_jours_max = 0;
+		for (let j = 0; j < liste_jours_max.length; j++) {
+			if (dataForConsigne.nombre_jours_max < liste_jours_max[j]) {
+				dataForConsigne.nombre_jours_max = liste_jours_max[j];
+			}
+		}
+		dataForConsigne.nombre_jours_max += dataForConsigne.nombre_jours_max / 5;
+		if (dataForConsigne.nombre_jours_max <= 30) {
+			dataForConsigne.nombre_jours_max = 30;
+		}
 
-					for (let j = 0; j < liste_jours_max.length; j++) {
-						if (dataForConsigne.nombre_jours_max < liste_jours_max[j]) {
-							dataForConsigne.nombre_jours_max = liste_jours_max[j];
+		dataForConsigne.classes = CCN.classes;
+		dataForConsigne.intervenant_nom = jsonConsigne.intervenant_nom;
+		dataForConsigne.numero = jsonConsigne.rang - 1;
+
+		const nouvelleConsigne = new Consigne();
+		nouvelleConsigne.init(dataForConsigne);
+
+		// Calcul du positionnement y intelligent des réponses (TO DO)
+		const liste_y = [];
+
+		for (let j = 0; j < jsonReponses.length; j++) {
+			if (j == 0) {
+				const rd = Math.floor(Math.random() * jsonReponses.length);
+				liste_y.push(rd);
+			} else {
+				for (let k = 0; k < 15; k++) {
+					let meme = 0;
+					const rd = Math.floor(Math.random() * jsonReponses.length);
+					for (let l = 0; l < j; l++) {
+						if (rd == liste_y[l]) {
+							meme++;
 						}
 					}
-					dataForConsigne.nombre_jours_max += dataForConsigne.nombre_jours_max / 5;
-					if (dataForConsigne.nombre_jours_max <= 30) {
-						dataForConsigne.nombre_jours_max = 30;
+					if (meme == 0) {
+						liste_y.push(rd);
+						break;
 					}
-
-					dataForConsigne.classes = CCN.classes;
-					dataForConsigne.intervenant_nom = getXMLNodeValue('intervenant_nom', xmlConsignes[i]);
-					dataForConsigne.numero = parseInt(getXMLNodeValue('rang', xmlConsignes[i])) - 1;
-
-					const nouvelleConsigne = new Consigne();
-					nouvelleConsigne.init(dataForConsigne);
-
-					// Calcul du positionnement y intelligent des réponses (TO DO)
-					const liste_y = [];
-
-					for (let j = 0; j < xmlReponses.length; j++) {
-						if (j == 0) {
-							const rd = Math.floor(Math.random() * xmlReponses.length);
-							liste_y.push(rd);
-						} else {
-							for (let k = 0; k < 15; k++) {
-								let meme = 0;
-								const rd = Math.floor(Math.random() * xmlReponses.length);
-								for (let l = 0; l < j; l++) {
-									if (rd == liste_y[l]) {
-										meme++;
-									}
-								}
-								if (meme == 0) {
-									liste_y.push(rd);
-									break;
-								}
-							}
-						}
-					}
-
-					if (liste_y.length < xmlReponses.length) {
-						liste_y.push(liste_y[0]);
-					}
-
-					let has_current_classe_already_answer = false;
-
-					for (let j = 0; j < xmlReponses.length; j++) {
-						const dataForReponse = {};
-
-						dataForReponse.id = parseFloat(getXMLNodeValue('id', xmlReponses[j]));
-						dataForReponse.classe_id = parseFloat(getXMLNodeValue('classe_id', xmlReponses[j]));
-						dataForReponse.titre = getXMLNodeValue('texte', xmlReponses[j]);
-						dataForReponse.date = getXMLNodeValue('date', xmlReponses[j]);
-						dataForReponse.date_date = parseDate(dataForReponse.date);
-
-						const jour_reponse = Math.round(dataForReponse.date_date / (24 * 60 * 60 * 1000));
-						dataForReponse.x_affichage = get_abscisse_affiche_reponse(dataForConsigne.nombre_jours, dataForConsigne.jour_consigne, jour_reponse)
-
-						dataForReponse.nombre_commentaires = parseFloat(getXMLNodeValue('commentaires', xmlReponses[j]));
-
-						dataForReponse.y = parseFloat(getXMLNodeValue('y', xmlReponses[j]));
-
-						if ((dataForReponse.y === 0) || (dataForReponse.y > 0.8) || (dataForReponse.y < -0.2)) {
-							dataForReponse.y = (liste_y[j]) / (xmlReponses.length);
-						}
-
-						dataForReponse.consigne = nouvelleConsigne;
-						dataForReponse.classes = CCN.classes;
-
-						const nouvelleReponse = new Reponse();
-						nouvelleReponse.init(dataForReponse);
-						nouvelleConsigne.reponses.push(nouvelleReponse);
-
-						if (CCN.classeSelection > 0 && CCN.classeSelection == dataForReponse.classe_id) {
-							has_current_classe_already_answer = true;
-						}
-					}
-
-					if (!has_current_classe_already_answer) {
-						nouvelleConsigne.showNewReponseButtonInTimeline();
-					}
-
-					CCN.consignes.push(nouvelleConsigne);
 				}
+			}
+		}
+
+		if (liste_y.length < jsonReponses.length) {
+			liste_y.push(liste_y[0]);
+		}
+
+		let has_current_classe_already_answer = false;
+
+		for (let j = 0; j < jsonReponses.length; j++) {
+			const jsonReponse = jsonReponses[j];
+			const dataForReponse = {};
+
+			dataForReponse.id = jsonReponse.id;
+			dataForReponse.classe_id = jsonReponse.classe_id;
+			dataForReponse.titre = jsonReponse.texte;
+			dataForReponse.date = jsonReponse.date;
+			dataForReponse.date_date = parseDate(dataForReponse.date);
+
+			const jour_reponse = Math.round(dataForReponse.date_date / (24 * 60 * 60 * 1000));
+			dataForReponse.x_affichage = get_abscisse_affiche_reponse(dataForConsigne.nombre_jours, dataForConsigne.jour_consigne, jour_reponse)
+
+			dataForReponse.nombre_commentaires = jsonReponse.commentaires;
+
+			dataForReponse.y = jsonReponse.y;
+
+			if ((dataForReponse.y === 0) || (dataForReponse.y > 0.8) || (dataForReponse.y < -0.2)) {
+				dataForReponse.y = (liste_y[j]) / (jsonReponses.length);
+			}
+
+			dataForReponse.consigne = nouvelleConsigne;
+			dataForReponse.classes = CCN.classes;
+
+			const nouvelleReponse = new Reponse();
+			nouvelleReponse.init(dataForReponse);
+			nouvelleConsigne.reponses.push(nouvelleReponse);
+
+			if (CCN.classeSelection > 0 && CCN.classeSelection == dataForReponse.classe_id) {
+				has_current_classe_already_answer = true;
+			}
+		}
+
+		if (!has_current_classe_already_answer) {
+			nouvelleConsigne.showNewReponseButtonInTimeline();
+		}
+
+		CCN.consignes.push(nouvelleConsigne);
+	}
 }
 
 /**
- *  Charge le XML des articles (blogs ou événements) et les instancie.
+ *  Charge le JSON des articles (blogs ou événements) et les instancie.
  *
- * @param {string} fichier  - URL du fichier XML
+ * @param {string} fichier  - URL du fichier JSON
  * @param {string} type     - "blogs" ou "evenements"
  * @param {Array}  ccnArray - Tableau de destination (CCN.articlesBlog ou CCN.articlesEvenement)
  * @param {Array}  listeY   - Séquence de positions Y (CCN.projet.liste_y_blogs ou liste_y_evenements)
  */
 
 async function loadArticles(fichier, type, ccnArray, listeY) {
-	const text = await fetch(fichier).then(r => r.text());
-	const xml = new DOMParser().parseFromString(text.trim(), 'text/xml');
-
-	const xmlArticles = xml.getElementsByTagName("article");
+	const jsonData = await fetch(fichier).then(r => r.json());
+	const jsonArticles = jsonData.articles;
 	let indexY = 0;
 
-	for (let i = 0; i < xmlArticles.length; i++) {
-		const data = {};
-
-		data.id = getXMLNodeValue('id', xmlArticles[i]);
-		data.type_objet = getXMLNodeValue('type_objet', xmlArticles[i]);
-		data.id_objet = getXMLNodeValue('id_objet', xmlArticles[i]);
-		data.titre = getXMLNodeValue('titre', xmlArticles[i]);
-		data.date = getXMLNodeValue('date', xmlArticles[i]);
-		data.y = getXMLNodeValue('y', xmlArticles[i]);
+	for (let i = 0; i < jsonArticles.length; i++) {
+		const data = { ...jsonArticles[i] };
 
 		if (indexY >= listeY.length) indexY = 0;
 		if (data.y == 0) data.y = listeY[indexY];
@@ -380,7 +330,7 @@ async function loadArticles(fichier, type, ccnArray, listeY) {
 
 		const date = parseDate(data.date);
 		data.nombre_jours = parseFloat(Math.round(date / (24 * 60 * 60 * 1000))) - CCN.projet.premier_jour;
-		data.nombre_commentaires = parseFloat(getXMLNodeValue('commentaires', xmlArticles[i]));
+		data.nombre_commentaires = data.commentaires;
 
 		const article = new Article();
 		article.init(data, type);

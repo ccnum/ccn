@@ -1,0 +1,54 @@
+#CACHE{0}
+[(#REM) Type objet: consignes, travail_en_cours, blogs, evenements,ressources]
+
+[(#REM) Image de fond]
+#SET{anneeEnCours, false}
+<BOUCLE_rub(RUBRIQUES){titre_mot=images_background}{par hasard}{0,1}{tout}>
+	[(#REM) Si l'image dans le contenu editorial porte le TITRE de l'année en cours]
+	<BOUCLE_yearImage(DOCUMENTS){id_rubrique}>
+		<BOUCLE_selectYearImage(DOCUMENTS){id_document}{si #ENV{annee_scolaire}|=={#TITRE}}{si #GET{anneeEnCours}|=={false}}>
+			[(#SET{url,[(#URL_DOCUMENT|image_reduire{1600}|extraire_attribut{src})]})]
+			#SET{anneeEnCours, true}
+		</BOUCLE_selectYearImage>
+	</BOUCLE_yearImage>
+	[(#REM) Sinon choisir une image au hasard]
+	<BOUCLE_Image(DOCUMENTS){id_rubrique}{si #GET{anneeEnCours}|=={false}}{par hasard}{0,1}>
+		<BOUCLE_selectImage(DOCUMENTS){id_document}{par hasard}{0,1}>
+			[(#SET{url,[(#URL_DOCUMENT|image_reduire{1600}|extraire_attribut{src})]})]
+		</BOUCLE_selectImage>
+	</BOUCLE_Image>
+</BOUCLE_rub>
+<//B_rub>
+[(#GET{url}|non)[(#SET{url,[(#CHEMIN{img/fond_#NOM_SITE_SPIP.png}|sinon{#CHEMIN{img/fond.png}})]})]]
+[(#NOM_SITE_SPIP|=={test}|oui)
+	[(#SET{url,[(#GET{url}|image_gamma{30}|extraire_attribut{src})]})]
+]
+{
+	"date_debut": "[(#ENV{annee_scolaire})]-09-01",
+	"date_fin": "[(#ENV{annee_scolaire}|plus{1})]-09-01",
+	"couleur_base_texte": "#000000",
+	"couleur_1erplan1": "#444444",
+	"couleur_1erplan2": "#C0C0C0",
+	"couleur_1erplan3": "#00A0F0",
+	"couleur_fond": "#EEEEEE",
+	"couleur_blog": "",
+	"image_fond": [(#GET{url}|html_entity_decode|json_encode)],
+	"fps": 20,
+	"zoom_consignes": 2,
+	"seq_posy_consignes": [0.30, 0.10, 0.50, 0.70, 0.50, 0.20, 0.70, 0.00, 0.30, 0.60, 0.10, 1.00, 0.40, 0.80],
+	"seq_posy_blogs": [0.45, 0.75, 0.25, 0.35, 0.65, 0.15],
+	"seq_posy_evenements": [0.05, 0.65, 0.75, 0.45],
+	"url_popup_consigne": [(#URL_PAGE{article, mode=ajax-detail&type_objet=consignes}|html_entity_decode|json_encode)],
+	"url_popup_reponse": [(#URL_PAGE{article, mode=ajax-detail&type_objet=travail_en_cours}|html_entity_decode|json_encode)],
+	"url_popup_reponseajout": [(#URL_PAGE{publier, mode=ajax-detail&type_objet=travail_en_cours}|html_entity_decode|json_encode)],
+	"url_popup_blog": [(#URL_PAGE{article, mode=ajax-detail&type_objet=blogs}|html_entity_decode|json_encode)],
+	"url_popup_livrables": [(#URL_PAGE{livrables, mode=detail&type_objet=ressources}|html_entity_decode|json_encode)],
+	"url_popup_evenement": [(#URL_PAGE{article, mode=ajax-detail&type_objet=evenements}|html_entity_decode|json_encode)],
+	"url_popup_ressources": [(#URL_PAGE{rubrique, id_rubrique=#MODELE{rub_mot_clef}{titre_mot=ressources}&mode=ajax-detail&type_objet=ressources}|html_entity_decode|json_encode)],
+	"url_popup_classes": [(#URL_PAGE{rubrique, id_rubrique=#MODELE{rub_mot_clef}{titre_mot=travail_en_cours}&mode=ajax-detail&type_objet=travail_en_cours}|html_entity_decode|json_encode)],
+	"url_popup_chat": "",
+	"url_popup_chat2": "",
+	"id_rubrique_ressources": [(#MODELE{rub_mot_clef}{titre_mot=ressources}|intval)],
+	"article_cap_sur_annee": [(#MODELE{art_mot_clef}{titre_mot=cap-sur-l-annee}|json_encode)],
+	"article_la_rencontre": [(#MODELE{art_mot_clef}{titre_mot=la-rencontre}|json_encode)]
+}

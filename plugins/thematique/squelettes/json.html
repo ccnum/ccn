@@ -1,0 +1,5 @@
+#CACHE{0}
+#HTTP_HEADER{Content-Type: application/json; charset=#CHARSET}
+[(#ENV{mode}|in_array{#LISTE{consignes,classes,projet,articles,ajax}}|oui)
+<INCLURE{fond=json/#ENV{mode}}{env}>
+]

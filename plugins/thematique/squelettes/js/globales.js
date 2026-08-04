@@ -46,32 +46,6 @@ function decodeHtmlEntities(str) {
 }
 
 /**
- *  Retourne la valeur du noeud XML demandé.
- *
- * @param   {string} tagName - Nom du noeud demandé
- * @param   xml - Ressource XML
- * @returns {string} Valeur du noeud demandé
- */
-
-function getXMLNodeValue(tagName, xml) {
-	const node = xml.getElementsByTagName(tagName)[0];
-	return node && node.childNodes[0] ? node.childNodes[0].nodeValue : null;
-}
-
-/**
- * Retourne vrai si le noeud existe.
- *
- * @param   {string} tagName - Nom du noeud demandé
- * @param   xml - Ressource XML
- * @returns {boolean} <tt>true</tt> si le noeuf existe, <tt>false</tt> sinon
- */
-
-function hasXMLNodeValue(tagName, xml) {
-	const node = xml.getElementsByTagName(tagName)[0];
-	return node ? node.childNodes[0] : null;
-}
-
-/**
  * Parse une date au format ISO AAAA-MM-JJ en objet Date (heure locale).
  *
  * @param {string} str - Date au format "AAAA-MM-JJ"

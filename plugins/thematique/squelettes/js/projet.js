@@ -37,27 +37,10 @@ function Projet() {
 		this.timeline = $('#timeline_wrapin');
 		this.timeline_width = 100; // Pourcentage
 
-		// Liste y consignes
-
-		const liste_y_consignes = data.liste_y_consignes.split(",");
-		this.liste_y_consignes = [];
-		for (let i = 0; i < liste_y_consignes.length; i++) {
-			this.liste_y_consignes.push(parseFloat(liste_y_consignes[i]));
-		}
-
-		// Liste y articles de blog
-		const liste_y_blogs = data.liste_y_blogs.split(",");
-		this.liste_y_blogs = [];
-		for (let i = 0; i < liste_y_blogs.length; i++) {
-			this.liste_y_blogs.push(parseFloat(liste_y_blogs[i]));
-		}
-
-		// Liste y articles d'événement
-		const liste_y_evenements = data.liste_y_evenements.split(",");
-		this.liste_y_evenements = [];
-		for (let i = 0; i < liste_y_evenements.length; i++) {
-			this.liste_y_evenements.push(parseFloat(liste_y_evenements[i]));
-		}
+		// Listes y (consignes, articles de blog, articles d'événement)
+		this.liste_y_consignes = data.seq_posy_consignes;
+		this.liste_y_blogs = data.seq_posy_blogs;
+		this.liste_y_evenements = data.seq_posy_evenements;
 
 		if (data.image_fond && !data.image_fond.trim().includes('..') && !/^https?:\/\//i.test(data.image_fond.trim())) {
 			this.timeline_parent.css({ 'background-image': 'url("' + encodeURI(data.image_fond.trim()) + '")' });

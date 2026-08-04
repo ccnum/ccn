@@ -1,0 +1,43 @@
+#CACHE{0}
+#SET{n_consigne,0}
+{
+"consignes": [
+<BOUCLE_rubrique(RUBRIQUES){titre_mot=consignes}{!par id_rubrique}{tout}>
+
+	[(#REM) Les 2 articles jalons du projet ("Cap sur l'année"/"La Rencontre",
+	cf thematique_rentree_annee.php) ne sont pas de vraies missions (pas
+	d'image de classe ni de réponses associées) : exclus ici. ]
+	<BOUCLE_consigne(ARTICLES){branche}{par date}{date>=#CONST{_DATE_DEBUT}}{date<=#CONST{_DATE_FIN}}{!titre_mot IN cap-sur-l-annee,la-rencontre}>
+		#SET{intervenant_nom,''}
+		<BOUCLE_auteur_consigne(AUTEURS){id_article}{0,1}>
+			#SET{intervenant_nom,#NOM}
+		</BOUCLE_auteur_consigne>
+		#SET{livrable,false}
+		<BOUCLE_mots(MOTS){id_article}{titre=livrable}>
+			#SET{livrable,true}
+		</BOUCLE_mots>
+		#SET{n_reponse,0}
+		[(#GET{n_consigne}|>{0}|oui),]
+		{
+			"id": #ID_ARTICLE,
+			"rang": #COMPTEUR_BOUCLE,
+			"intervenant_id": #ID_RUBRIQUE,
+			"intervenant_nom": [(#GET{intervenant_nom}|json_encode)],
+			"titre": [(#TITRE|json_encode)],
+			"date": "[(#DATE|affdate{'Y-m-d'})]",
+			"image": [(#MODELE{logo_carre}{id_rubrique}|extraire_attribut{src}|json_encode)],
+			"y": [(#Y|sinon{0})],
+			"livrable": #GET{livrable},
+			"reponses": [
+			<BOUCLE_reponse(ARTICLES){id_consigne=#ID_ARTICLE}>
+				#SET{total_reponse,0}<BOUCLE_forum(FORUMS){id_article}> </BOUCLE_forum>#SET{total_reponse,#TOTAL_BOUCLE}</B_forum>
+				[(#GET{n_reponse}|>{0}|oui),]{"id":#ID_ARTICLE,"classe_id":#ID_RUBRIQUE,"date":"[(#DATE|affdate{'Y-m-d'})]","texte":[(#TITRE|couper{60}|json_encode)],"commentaires":#GET{total_reponse},"y":[(#Y|sinon{0})]}
+				[(#SET{n_reponse,#GET{n_reponse}|plus{1}})]
+			</BOUCLE_reponse>
+			]
+		}
+		[(#SET{n_consigne,#GET{n_consigne}|plus{1}})]
+	</BOUCLE_consigne>
+</BOUCLE_rubrique>
+]
+}

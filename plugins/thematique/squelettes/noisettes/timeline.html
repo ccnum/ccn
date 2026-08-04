@@ -3,7 +3,7 @@
 	var hash = window.location.hash;
 
 	CCN.urlRoot = "[(#ENV{chemin})]";
-	CCN.urlXml = "[(#URL_PAGE{xml}|parametre_url{annee_scolaire,#ENV{annee_scolaire}}|html_entity_decode)]" + "&mode=";
+	CCN.urlJson = "[(#URL_PAGE{json}|parametre_url{annee_scolaire,#ENV{annee_scolaire}}|html_entity_decode)]" + "&mode=";
 	CCN.urlImgBlog = "[(#CHEMIN{#ENV{chemin}/img/logo_blog_#NOM_SITE_SPIP.png}|sinon{#ENV{chemin}/img/logo_blog.png}|image_reduire{98}|extraire_attribut{src})]";
 	CCN.urlImgEvenement = "[(#CHEMIN{#ENV{chemin}/img/logo_evenement_#NOM_SITE_SPIP.png}|sinon{#ENV{chemin}/img/logo_evenement.png}|image_reduire{150,94}|extraire_attribut{src})]";
 
