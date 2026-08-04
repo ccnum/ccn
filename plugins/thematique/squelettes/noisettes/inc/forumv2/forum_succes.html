@@ -17,7 +17,7 @@
 			</div>
 			<div class="forum-card__footer">
 				[(#AUTORISER{instituer,forum,#ID_FORUM}|oui)
-					<a href="(#URL_ACTION_AUTEUR{instituer_forum,#ID_FORUM-forum-suppr-safe,#URL_SITE_SPIP/spip.php?page=article&id_article=#ENV{id_article}&var_mode=recalcul})" onclick="return confirmation('<:thematique:confirmation_supprimer_commentaire:>')"><:thematique:supprimer_mon_commentaire:></a>
+					<a href="(#URL_ACTION_AUTEUR{instituer_forum,#ID_FORUM-forum-suppr-safe,[(#URL_PAGE{article}|parametre_url{id_article,#ENV{id_article}}|parametre_url{var_mode,recalcul})]})" onclick="return confirmation('<:thematique:confirmation_supprimer_commentaire:>')"><:thematique:supprimer_mon_commentaire:></a>
 				]
 			</div>
 		</div>

@@ -1,19 +1,26 @@
 #!/usr/bin/env python3
 """
-Détecte les liens en dur vers les ressources du plugin thematique
-(img/, css/, js/, pdf/) qui n'utilisent pas #CHEMIN{...} (ou
-#ENV{chemin}/#DOSSIER_SQUELETTE), pour éviter les chemins qui cassent
-si le plugin est déplacé/renommé ou servi depuis un autre chemin.
+Détecte deux types de liens en dur dans le plugin thematique :
+
+1. Ressources du plugin (img/, css/, js/, pdf/) référencées sans passer
+   par #CHEMIN{...} (ou #ENV{chemin}/#DOSSIER_SQUELETTE), qui cassent si
+   le plugin est déplacé/renommé ou servi depuis un autre chemin.
+2. Liens internes vers spip.php?page=... écrits en dur au lieu de
+   #URL_PAGE{...}, qui ne respectent alors ni la config d'URL du site
+   ni un déplacement de l'installation SPIP.
 
 Fonctionnement :
 - Scanne les squelettes .html du plugin plugins/thematique (hors lang/
   et vendor/) : ce sont les seuls fichiers compilés par SPIP, donc les
-  seuls où #CHEMIN a un sens (un .css brut ou un .js ne sont pas
-  compilés et doivent utiliser des chemins relatifs classiques).
+  seuls où #CHEMIN/#URL_PAGE ont un sens (un .css brut ou un .js ne sont
+  pas compilés — chemins relatifs classiques et spip.php?page=... y
+  restent la seule option, ils sont donc hors scope de ce check).
 - Repère les attributs src=/href=/data-*= et les url(...) CSS qui
   référencent un segment img/, css/, js/ ou pdf/ sans passer par
   #CHEMIN{...}, #ENV{chemin} ou #DOSSIER_SQUELETTE, et qui ne sont pas
   des URLs externes (http(s)://, //, data:, mailto:, #ancre).
+- Repère toute occurrence littérale de "spip.php?page=" (attribut ou
+  chaîne JS dans un <script>), hors commentaires HTML/CSS/JS.
 - Compare le résultat à une baseline : toute occurrence absente de la
   baseline fait échouer le script (nouveau lien en dur introduit).
 
@@ -44,11 +51,17 @@ ATTR_RE = re.compile(
     re.IGNORECASE,
 )
 CSS_URL_RE = re.compile(r"url\(\s*(['\"]?)([^)'\"]+)\1\s*\)")
+SPIP_LINK_RE = re.compile(
+    r"[\"'](?!https?://|//)[^\"']*spip\.php\?page=[^\"']*[\"']", re.IGNORECASE
+)
 
 STRIP_PATTERNS = [
     re.compile(r"<!--.*?-->", re.DOTALL),
     re.compile(r"/\*.*?\*/", re.DOTALL),
 ]
+
+SCRIPT_BLOCK_RE = re.compile(r"<script\b[^>]*>(.*?)</script>", re.DOTALL | re.IGNORECASE)
+JS_LINE_COMMENT_RE = re.compile(r"//[^\n]*")
 
 
 def is_hardcoded(value: str) -> bool:
@@ -63,6 +76,9 @@ def is_hardcoded(value: str) -> bool:
 def strip_comments(text: str) -> str:
     for pat in STRIP_PATTERNS:
         text = pat.sub(" ", text)
+    # Les commentaires JS (//) ne sont pertinents qu'à l'intérieur des
+    # blocs <script> : les retirer globalement casserait les http://.
+    text = SCRIPT_BLOCK_RE.sub(lambda m: JS_LINE_COMMENT_RE.sub(" ", m.group(0)), text)
     return text
 
 
@@ -79,6 +95,8 @@ def scan_html(path: Path):
             value = m.group(2)
             if is_hardcoded(value):
                 findings.append((lineno, value[:120]))
+        for m in SPIP_LINK_RE.finditer(line):
+            findings.append((lineno, m.group(0)[:120]))
     return findings
 
 
@@ -131,8 +149,8 @@ def main():
         for line in new_findings:
             print(f"  {line}")
         print(
-            "\nPasse par #CHEMIN{img/...} (ou #ENV{chemin}/#DOSSIER_SQUELETTE selon "
-            "le contexte) plutôt qu'un chemin relatif en dur, ou si c'est un faux "
+            "\nPasse par #CHEMIN{img/...} (ressource) ou #URL_PAGE{...} (lien "
+            "spip.php?page=...) plutôt qu'un chemin en dur, ou si c'est un faux "
             "positif volontaire, régénère la baseline avec --write-baseline."
         )
         return 1

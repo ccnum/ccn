@@ -8,7 +8,7 @@
 
 		<div id="bloc_article">
 			<div id="bloc_texte">]
-				[<div class="ajax">(#FORMULAIRE_FORUM{'spip.php?page=article&amp;mode=complet&amp;id_article='#VAL{id_article}|_request})</div>]
+				[<div class="ajax">(#FORMULAIRE_FORUM{[(#URL_PAGE{article}|parametre_url{mode,complet}|parametre_url{id_article,#ID_ARTICLE}|_request)]})</div>]
 			[</div>
 		</div>
 	</div>

@@ -76,17 +76,26 @@ sans exception tolérée.
 
 # check_hardcoded_paths.py
 
-Détecte les liens en dur vers les ressources du plugin (`img/`, `css/`,
-`js/`, `pdf/`) dans les squelettes `.html`, qui n'utilisent pas
-`#CHEMIN{...}` (ou `#ENV{chemin}`/`#DOSSIER_SQUELETTE`). Un chemin relatif
-en dur (`src="img/foo.png"`, `url(../img/foo.png)`) casse si le plugin est
-déplacé/renommé ou si le squelette est appelé depuis un contexte différent,
-contrairement à `#CHEMIN{img/foo.png}` qui est résolu par SPIP.
+Détecte deux types de liens en dur dans les squelettes `.html` du plugin :
+
+1. Ressources du plugin (`img/`, `css/`, `js/`, `pdf/`) qui n'utilisent pas
+   `#CHEMIN{...}` (ou `#ENV{chemin}`/`#DOSSIER_SQUELETTE`). Un chemin
+   relatif en dur (`src="img/foo.png"`, `url(../img/foo.png)`) casse si le
+   plugin est déplacé/renommé ou si le squelette est appelé depuis un
+   contexte différent, contrairement à `#CHEMIN{img/foo.png}` résolu par
+   SPIP.
+2. Liens internes `spip.php?page=...` écrits en dur (dans un attribut ou
+   une chaîne JS de `<script>`) au lieu de `#URL_PAGE{...}`. Les URLs
+   absolues vers un autre domaine (agrégation RSS cross-site, etc.) ne sont
+   pas concernées — seuls les liens relatifs vers `spip.php` de l'install
+   courante le sont.
 
 Seuls les fichiers `.html` (compilés par SPIP) sont scannés : un `.css` brut
-ou un `.js` ne passent pas par le compilateur SPIP, donc `#CHEMIN` n'y a pas
-de sens — les chemins relatifs classiques (`../img/...`) ou `CCN.urlRoot`
-y restent la bonne pratique.
+ou un `.js` ne passent pas par le compilateur SPIP, donc `#CHEMIN`/`#URL_PAGE`
+n'y ont pas de sens — les chemins relatifs classiques (`../img/...`),
+`CCN.urlRoot` ou `spip.php?page=...` y restent la seule option (ex :
+`squelettes/js/controleurs.js`, qui construit ses URLs AJAX avec des ids
+connus seulement à l'exécution, donc hors de portée de `#URL_PAGE`).
 
 Usage local :
 
