@@ -13,14 +13,15 @@
 	<ul class="forum">
 	<BOUCLE_Forums(FORUMS){id_article?}{id_breve?}{!par date}>
 		#SET{type_objet,[(#ID_AUTEUR|thematique_type_objet_auteur)]}
+		#SET{id_rubrique_classe,[(#ARRAY{id_auteur,#ID_AUTEUR,objet,article,id_objet,#ENV{id_article}}|classe_id_rubrique_forum)]}
 
 		[(#REM)Pour l'instant on se rabat sur les consignes pour les couleurs (TO DO)]
 		[(#GET{type_objet}|=={''}|oui) #SET{type_objet,consignes} ]
 		[(#GET{type_objet}|=={ressources}|oui) #SET{type_objet,consignes} ]
 
 		<div id="forum#ID_FORUM" class="intervention_item_around">
-			<div class="intervention_item bgc_classe_[(#MODELE{nb2col}{id_auteur})]">
-				<div class="triggertoggleshow intervention couleur_texte[_(#GET{type_objet})] [couleur_(#GET{type_objet})[(#MODELE{nb2col}{id_auteur})]]">
+			<div class="intervention_item bgc_classe_[(#GET{id_rubrique_classe}|classe_numero)]">
+				<div class="triggertoggleshow intervention couleur_texte[_(#GET{type_objet})] [couleur_(#GET{type_objet})[(#GET{id_rubrique_classe}|classe_numero)]]">
 				[(#REM)Le nombre de réponses est repris de #TOTAL_BOUCLE de BOUCLE_forums_fils
 				plus bas (via le script en fin de bloc), pour éviter de relancer la même
 				requête FORUMS une deuxième fois juste pour la compter.]
@@ -46,7 +47,7 @@
 				</div>
 			</div>
 
-			<div class="toggleshow intervention_item_content couleur_intervention_item[(#MODELE{nb2col}{id_auteur})]">
+			<div class="toggleshow intervention_item_content couleur_intervention_item[(#GET{id_rubrique_classe}|classe_numero)]">
 				[<div class="#EDIT{titre} titre">(#TITRE)</div>]
 				[<div class="#EDIT{texte} bloc_texte">(#TEXTE|liens_ouvrants)</div>]
 				<BOUCLE_documents_joints(DOCUMENTS) {id_forum} {tout} {doublons}>
@@ -104,9 +105,10 @@
 			<ul class="toggleshow forum intervention_answers">
 				<BOUCLE_forums_fils(FORUMS){id_parent}{par date}>
 					#SET{type_objet,[(#ID_AUTEUR|thematique_type_objet_auteur)]}
+					#SET{id_rubrique_classe,[(#ARRAY{id_auteur,#ID_AUTEUR,objet,article,id_objet,#ENV{id_article}}|classe_id_rubrique_forum)]}
 					[(#GET{type_objet}|=={''}|oui) #SET{type_objet,consignes} ]
-					<div id="forum#ID_FORUM" class="intervention_item bgc_classe_[(#MODELE{nb2col}{id_auteur})]">
-						<div class="intervention couleur_texte[_(#GET{type_objet})] [couleur_(#GET{type_objet})[(#MODELE{nb2col}{id_auteur})]]">
+					<div id="forum#ID_FORUM" class="intervention_item bgc_classe_[(#GET{id_rubrique_classe}|classe_numero)]">
+						<div class="intervention couleur_texte[_(#GET{type_objet})] [couleur_(#GET{type_objet})[(#GET{id_rubrique_classe}|classe_numero)]]">
 							<div class="intervention_header">
 								<div class="photo">
 									[(#MODELE{logo_carre}{id_auteur}{titre=#TITRE})]
@@ -124,7 +126,7 @@
 							</div>
 						</div>
 
-						<div class="intervention_item_content couleur_intervention_item[(#MODELE{nb2col}{id_auteur})]">
+						<div class="intervention_item_content couleur_intervention_item[(#GET{id_rubrique_classe}|classe_numero)]">
 							[<div class="#EDIT{titre} titre">(#TITRE)</div>]
 							[<div class="#EDIT{texte} bloc_texte">(#TEXTE|liens_ouvrants)</div>]
 							<BOUCLE_documents_joints3(DOCUMENTS) {id_forum} {tout} {doublons}>
