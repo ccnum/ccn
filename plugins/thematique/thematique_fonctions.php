@@ -927,6 +927,78 @@ function thematique_id_rubrique_racine_a_mot($titre_mot) {
 }
 
 /**
+ * Première rubrique (au sens id_rubrique croissant, toutes profondeurs)
+ * portant un mot-clé donné, mise en cache mémoire par requête.
+ *
+ * Remplace squelettes/modeles/rub_mot_clef.html (BOUCLE RUBRIQUES non
+ * cachée, relancée à chaque #MODELE{rub_mot_clef}{titre_mot}) : même
+ * requête (pas de restriction id_parent=0, contrairement à
+ * thematique_id_rubrique_racine_a_mot, qui vise un usage différent).
+ *
+ * @param string $titre_mot
+ * @return int 0 si non trouvée
+ */
+function thematique_id_rubrique_a_mot($titre_mot) {
+	static $cache = [];
+
+	if (array_key_exists($titre_mot, $cache)) {
+		return $cache[$titre_mot];
+	}
+
+	include_spip('base/abstract_sql');
+	$id_mot = sql_getfetsel('id_mot', 'spip_mots', 'titre=' . sql_quote($titre_mot));
+	if (!$id_mot) {
+		return $cache[$titre_mot] = 0;
+	}
+
+	return $cache[$titre_mot] = (int) sql_getfetsel(
+		'r.id_rubrique',
+		['spip_rubriques AS r', 'spip_mots_liens AS ml'],
+		['ml.id_objet=r.id_rubrique', 'ml.objet=' . sql_quote('rubrique'), 'ml.id_mot=' . intval($id_mot)],
+		'',
+		'r.id_rubrique',
+		'0,1'
+	);
+}
+
+/**
+ * Premier article (au sens id_article croissant) portant un mot-clé donné,
+ * sous la forme "id|statut" (ou "0|" si absent) — mis en cache mémoire par
+ * requête.
+ *
+ * Remplace squelettes/modeles/art_mot_clef.html (BOUCLE ARTICLES non
+ * cachée, relancée à chaque #MODELE{art_mot_clef}{titre_mot}). Même format
+ * de sortie (cf squelettes/js/main.js, qui fait un split('|') dessus).
+ *
+ * @param string $titre_mot
+ * @return string
+ */
+function thematique_article_a_mot($titre_mot) {
+	static $cache = [];
+
+	if (array_key_exists($titre_mot, $cache)) {
+		return $cache[$titre_mot];
+	}
+
+	include_spip('base/abstract_sql');
+	$id_mot = sql_getfetsel('id_mot', 'spip_mots', 'titre=' . sql_quote($titre_mot));
+	if (!$id_mot) {
+		return $cache[$titre_mot] = '0|';
+	}
+
+	$article = sql_fetsel(
+		'a.id_article, a.statut',
+		['spip_articles AS a', 'spip_mots_liens AS ml'],
+		['ml.id_objet=a.id_article', 'ml.objet=' . sql_quote('article'), 'ml.id_mot=' . intval($id_mot)],
+		'',
+		'a.id_article',
+		'0,1'
+	);
+
+	return $cache[$titre_mot] = $article ? ($article['id_article'] . '|' . $article['statut']) : '0|';
+}
+
+/**
  * Ids des rubriques enfants directes d'une rubrique, triées par date
  * décroissante et limitées — remplace une BOUCLE(RUBRIQUES){id_parent}
  * {!par date}{0,N} imbriquée par un tableau résolu en PHP (cf

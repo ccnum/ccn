@@ -23,6 +23,10 @@
 [(#NOM_SITE_SPIP|=={test}|oui)
 	[(#SET{url,[(#GET{url}|image_gamma{30}|extraire_attribut{src})]})]
 ]
+
+[(#REM) Résolutions par mot-clé (une seule fois chacune, cf thematique_fonctions.php) ]
+#SET{id_rubrique_ressources, [(#VAL{ressources}|thematique_id_rubrique_a_mot)]}
+#SET{id_rubrique_travail_en_cours, [(#VAL{travail_en_cours}|thematique_id_rubrique_a_mot)]}
 {
 	"date_debut": "[(#ENV{annee_scolaire})]-09-01",
 	"date_fin": "[(#ENV{annee_scolaire}|plus{1})]-09-01",
@@ -44,11 +48,11 @@
 	"url_popup_blog": [(#URL_PAGE{article, mode=ajax-detail&type_objet=blogs}|html_entity_decode|json_encode)],
 	"url_popup_livrables": [(#URL_PAGE{livrables, mode=detail&type_objet=ressources}|html_entity_decode|json_encode)],
 	"url_popup_evenement": [(#URL_PAGE{article, mode=ajax-detail&type_objet=evenements}|html_entity_decode|json_encode)],
-	"url_popup_ressources": [(#URL_PAGE{rubrique, id_rubrique=#MODELE{rub_mot_clef}{titre_mot=ressources}&mode=ajax-detail&type_objet=ressources}|html_entity_decode|json_encode)],
-	"url_popup_classes": [(#URL_PAGE{rubrique, id_rubrique=#MODELE{rub_mot_clef}{titre_mot=travail_en_cours}&mode=ajax-detail&type_objet=travail_en_cours}|html_entity_decode|json_encode)],
+	"url_popup_ressources": [(#URL_PAGE{rubrique, id_rubrique=#GET{id_rubrique_ressources}&mode=ajax-detail&type_objet=ressources}|html_entity_decode|json_encode)],
+	"url_popup_classes": [(#URL_PAGE{rubrique, id_rubrique=#GET{id_rubrique_travail_en_cours}&mode=ajax-detail&type_objet=travail_en_cours}|html_entity_decode|json_encode)],
 	"url_popup_chat": "",
 	"url_popup_chat2": "",
-	"id_rubrique_ressources": [(#MODELE{rub_mot_clef}{titre_mot=ressources}|intval)],
-	"article_cap_sur_annee": [(#MODELE{art_mot_clef}{titre_mot=cap-sur-l-annee}|json_encode)],
-	"article_la_rencontre": [(#MODELE{art_mot_clef}{titre_mot=la-rencontre}|json_encode)]
+	"id_rubrique_ressources": [(#GET{id_rubrique_ressources}|intval)],
+	"article_cap_sur_annee": [(#VAL{cap-sur-l-annee}|thematique_article_a_mot|json_encode)],
+	"article_la_rencontre": [(#VAL{la-rencontre}|thematique_article_a_mot|json_encode)]
 }
