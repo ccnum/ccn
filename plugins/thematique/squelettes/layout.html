@@ -24,7 +24,7 @@ Id de la rubrique restreinte sélectionnée : calculés en un seul appel]
 ]
 
 [(#REM) Type auteur : travail_en_cours,ressources,consignes]
-	[(#SET{type_auteur,[(#MODELE{type_auteur}{id_auteur=#SESSION{id_auteur}})]})]
+	[(#SET{type_auteur, #SESSION{id_auteur}|thematique_type_auteur})]
 
 [(#REM) ******************* AFFICHAGE ***************************** ]
 

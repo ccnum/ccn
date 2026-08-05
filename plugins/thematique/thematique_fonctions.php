@@ -433,6 +433,90 @@ function thematique_type_objet_syndic_article($id_syndic_article) {
 }
 
 /**
+ * Type de contenu (blogs, evenements, consignes, travail_en_cours,
+ * ressources, agora) porté par l'une des rubriques auxquelles l'auteur est
+ * rattaché (spip_auteurs_liens), au sens de thematique_type_objet_rubrique
+ * (mot-clé le plus proche l'emporte).
+ *
+ * Remplace l'ancien squelettes/modeles/type_objet.html (branche id_auteur :
+ * BOUCLE auteurs_liens + BOUCLE HIERARCHIE + BOUCLE MOTS imbriquées,
+ * #CACHE{0} donc relancées à chaque #MODELE{type_objet}{id_auteur} —
+ * un appel par réponse dans un fil de forum).
+ *
+ * @param int $id_auteur
+ * @return string|null
+ */
+function thematique_type_objet_auteur($id_auteur) {
+	static $cache = [];
+
+	$id_auteur = intval($id_auteur);
+	if (!$id_auteur) {
+		return null;
+	}
+	if (array_key_exists($id_auteur, $cache)) {
+		return $cache[$id_auteur];
+	}
+
+	include_spip('base/abstract_sql');
+
+	$rubriques = sql_allfetsel('id_objet', 'spip_auteurs_liens', 'id_auteur=' . $id_auteur . " AND objet='rubrique'");
+	foreach ($rubriques as $r) {
+		$type = thematique_type_objet_rubrique($r['id_objet']);
+		if ($type) {
+			return $cache[$id_auteur] = $type;
+		}
+	}
+
+	return $cache[$id_auteur] = null;
+}
+
+/**
+ * Type d'"espace" d'un auteur (travail_en_cours, ressources ou consignes)
+ * porté par l'une des rubriques auxquelles il est rattaché, au sens le plus
+ * proche dans la hiérarchie (rubrique elle-même incluse, puis parent, ...).
+ *
+ * Remplace l'ancien squelettes/modeles/type_auteur.html (BOUCLE RUBRIQUES
+ * auteurs_liens + BOUCLE HIERARCHIE + BOUCLE MOTS imbriquées, #CACHE{0},
+ * relancées à chaque #MODELE{type_auteur} — donc à chaque page vue, depuis
+ * layout.html).
+ *
+ * @param int $id_auteur
+ * @return string|null
+ */
+function thematique_type_auteur($id_auteur) {
+	static $cache = [];
+	static $types = ['travail_en_cours', 'ressources', 'consignes'];
+
+	$id_auteur = intval($id_auteur);
+	if (!$id_auteur) {
+		return null;
+	}
+	if (array_key_exists($id_auteur, $cache)) {
+		return $cache[$id_auteur];
+	}
+
+	include_spip('base/abstract_sql');
+
+	$rubriques = sql_allfetsel('id_objet', 'spip_auteurs_liens', 'id_auteur=' . $id_auteur . " AND objet='rubrique'");
+	foreach ($rubriques as $r) {
+		foreach (thematique_ascendants_rubrique($r['id_objet']) as $id_asc) {
+			$titre = sql_getfetsel(
+				'mots.titre',
+				'spip_mots_liens AS liens INNER JOIN spip_mots AS mots ON liens.id_mot=mots.id_mot',
+				'liens.objet=' . sql_quote('rubrique')
+					. ' AND liens.id_objet=' . intval($id_asc)
+					. ' AND ' . sql_in('mots.titre', $types)
+			);
+			if ($titre) {
+				return $cache[$id_auteur] = $titre;
+			}
+		}
+	}
+
+	return $cache[$id_auteur] = null;
+}
+
+/**
  * Périmètre admin de l'auteur en session : niveau d'administration et
  * rubrique restreinte sélectionnée. Persiste le résultat en session
  * (#SESSION{admin}, #SESSION{restreint}) pour les fonds qui les lisent.
