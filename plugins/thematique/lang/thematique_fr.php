@@ -40,6 +40,8 @@ return [
 	'commenter_title'                => 'commenter',
 	'confirmation_supprimer_commentaire' => 'Êtes-vous sûr de vouloir supprimer ce commentaire ?',
 	'consigne_etape'                 => 'Étape N°@numero@',
+	'mission_numero'                 => 'MISSION N°@numero@',
+	'reponse_mission_numero'         => 'RÉPONSE - MISSION N°@numero@',
 	'contenu_lie'                    => 'Contenu lié',
 	'descriptif_a_completer'         => 'Double-cliquer pour compléter le descriptif de ma classe - @titre@.',
 	'desactiver'                     => 'Désactiver',
