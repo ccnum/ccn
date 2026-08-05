@@ -12,8 +12,8 @@
 
 	<ul class="forum">
 	<BOUCLE_Forums(FORUMS){id_article?}{id_breve?}{!par date}>
-		#SET{type_objet,[(#ID_AUTEUR|thematique_type_objet_auteur)]}
-		#SET{id_rubrique_classe,[(#ARRAY{id_auteur,#ID_AUTEUR,objet,article,id_objet,#ENV{id_article}}|classe_id_rubrique_forum)]}
+		#SET{type_objet,#ID_AUTEUR|thematique_type_objet_auteur}
+		#SET{id_rubrique_classe,#ARRAY{id_auteur,#ID_AUTEUR,objet,article,id_objet,#ENV{id_article}}|classe_id_rubrique_forum}
 
 		[(#REM)Pour l'instant on se rabat sur les consignes pour les couleurs (TO DO)]
 		[(#GET{type_objet}|=={''}|oui) #SET{type_objet,consignes} ]
@@ -104,8 +104,8 @@
 		<B_forums_fils>
 			<ul class="toggleshow forum intervention_answers">
 				<BOUCLE_forums_fils(FORUMS){id_parent}{par date}>
-					#SET{type_objet,[(#ID_AUTEUR|thematique_type_objet_auteur)]}
-					#SET{id_rubrique_classe,[(#ARRAY{id_auteur,#ID_AUTEUR,objet,article,id_objet,#ENV{id_article}}|classe_id_rubrique_forum)]}
+					#SET{type_objet,#ID_AUTEUR|thematique_type_objet_auteur}
+					#SET{id_rubrique_classe,#ARRAY{id_auteur,#ID_AUTEUR,objet,article,id_objet,#ENV{id_article}}|classe_id_rubrique_forum}
 					[(#GET{type_objet}|=={''}|oui) #SET{type_objet,consignes} ]
 					<div id="forum#ID_FORUM" class="intervention_item bgc_classe_[(#GET{id_rubrique_classe}|classe_numero)]">
 						<div class="intervention couleur_texte[_(#GET{type_objet})] [couleur_(#GET{type_objet})[(#GET{id_rubrique_classe}|classe_numero)]]">

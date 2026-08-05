@@ -25,8 +25,8 @@
 ]
 
 [(#REM) Résolutions par mot-clé (une seule fois chacune, cf thematique_fonctions.php) ]
-#SET{id_rubrique_ressources, [(#VAL{ressources}|thematique_id_rubrique_a_mot)]}
-#SET{id_rubrique_travail_en_cours, [(#VAL{travail_en_cours}|thematique_id_rubrique_a_mot)]}
+#SET{id_rubrique_ressources, #VAL{ressources}|thematique_id_rubrique_a_mot}
+#SET{id_rubrique_travail_en_cours, #VAL{travail_en_cours}|thematique_id_rubrique_a_mot}
 {
 	"date_debut": "[(#ENV{annee_scolaire})]-09-01",
 	"date_fin": "[(#ENV{annee_scolaire}|plus{1})]-09-01",
