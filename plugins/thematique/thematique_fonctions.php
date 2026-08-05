@@ -668,6 +668,32 @@ function classe_icone($id_rubrique) {
 }
 
 /**
+ * Id de rubrique d'un article, mis en cache mémoire par requête.
+ *
+ * Remplace la branche id_article de l'ancien squelettes/modeles/nb2col.html
+ * (BOUCLE ARTICLES non cachée, relancée à chaque #MODELE{nb2col}{id_article}),
+ * pour un usage avec classe_numero()/classe_icone() quand seul l'id_article
+ * est disponible dans le contexte (ex: noisettes/call_sidebar.html).
+ *
+ * @param int $id_article
+ * @return int 0 si non trouvée
+ */
+function thematique_id_rubrique_article($id_article) {
+	static $cache = [];
+
+	$id_article = intval($id_article);
+	if (!$id_article) {
+		return 0;
+	}
+	if (array_key_exists($id_article, $cache)) {
+		return $cache[$id_article];
+	}
+
+	include_spip('base/abstract_sql');
+	return $cache[$id_article] = (int) sql_getfetsel('id_rubrique', 'spip_articles', 'id_article=' . $id_article);
+}
+
+/**
  * Id de la rubrique de classe d'un auteur (élève ou prof), déduite de la
  * rubrique de classe à laquelle il est lié (cf thematique_cioidc_userinfo,
  * qui rattache l'auteur à sa rubrique de classe via objet_associer).

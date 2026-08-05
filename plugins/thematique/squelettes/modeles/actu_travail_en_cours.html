@@ -2,7 +2,7 @@
 	#SET{titre_consigne,#TITRE}
 	#SET{date_consigne,#DATE}
 	<BOUCLE_auteur(RUBRIQUES){id_rubrique}>#SET{auteur_consigne,#TITRE}</BOUCLE_auteur>
-	<button type="button" class="actualites-actu bgc_classe_[(#ID_RUBRIQUE|nb2col)] js-call-consigne btn-reset" data-id-objet="#ID_OBJET">
+	<button type="button" class="actualites-actu bgc_classe_[(#ID_RUBRIQUE|classe_numero)] js-call-consigne btn-reset" data-id-objet="#ID_OBJET">
 		<span class="profil">[(#MODELE{logo_carre}{id_rubrique=#ID_RUBRIQUE}{titre=#TITRE})]</span>
 		<span class="actualites-titre"><:thematique:reponse_de_sur{auteur=#GET{auteur_consigne},titre=#GET{titre_consigne}}:></span><br>
 		<p class="actualites-actu-date">[(#DATE_MODIF|affdate)]</p>

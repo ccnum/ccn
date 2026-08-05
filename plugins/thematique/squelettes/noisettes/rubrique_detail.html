@@ -14,7 +14,7 @@
 	<//B_nb_doc>
 	[(#REM) ---------------- Titre ---------------- ]
 	<div class="sidebar_bubble">
-		<div class="fiche_titre couleur_texte_[(#TYPE_OBJET)] couleur_[(#TYPE_OBJET)][(#MODELE{nb2col}{id_article})]">
+		<div class="fiche_titre couleur_texte_[(#TYPE_OBJET)] couleur_[(#TYPE_OBJET)][(#ID_RUBRIQUE|classe_numero)]">
 			<div class="texte">
 				<div class="photo bgc_classe_[(#ID_RUBRIQUE|classe_numero)]">
 					<span role="img" aria-label="[(#TITRE)]" style="font-size:min(70cqw,70cqh)">[(#ID_RUBRIQUE|classe_icone)]</span>
@@ -52,7 +52,7 @@
 								#SET{jour_reponse,#DATE|affdate{'d'}}
 								#SET{mois_reponse,#DATE|affdate{'m'}}
 								#SET{annee_reponse,#DATE|affdate{'Y'}}
-								<div class="classe_consigne couleur_[(#TYPE_OBJET)][(#GET{id_to_check}|substr{[(#GET{id_to_check}|strlen|moins{1})],1})]">
+								<div class="classe_consigne couleur_[(#TYPE_OBJET)][(#GET{id_to_check}|classe_numero)]">
 									<button type="button" id="ajax_go_to_reponse_#ID_ARTICLE" class="classe_consigne_reponse btn-reset" onclick="callReponse('#ID_ARTICLE')">
 										<div class="classe_consigne_reponse_photo">[(#MODELE{logo_carre}{id_rubrique})]</div>
 										<div class="classe_consigne_reponse_titre">[(#TITRE)]</div>
