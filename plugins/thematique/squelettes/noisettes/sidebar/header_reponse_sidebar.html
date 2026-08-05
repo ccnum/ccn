@@ -27,7 +27,7 @@ Arguments :
 		<div id="header-col-right">
 			<div id="header-row-1">
 				<div class="etiquette-etape">
-					<span class="texte-etiquette">RÉPONSE - MISSION N°[(#ENV{rang}|plus{1})]</span>
+					<span class="texte-etiquette">RÉPONSE - MISSION N°[(#ENV{rang}|sinon{0}|plus{1})]</span>
 				</div>
 				<INCLURE{fond=noisettes/sidebar/normal_header_icons, env} />
 			</div>

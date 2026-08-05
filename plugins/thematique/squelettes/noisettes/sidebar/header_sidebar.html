@@ -29,7 +29,7 @@ Arguments :
 				</BOUCLE_test_jalon_header>
 				<div class="etiquette-etape">
 					[(#GET{est_jalon}|=={oui}|oui)<span class="texte-etiquette">[(#TITRE)]</span>]
-					[(#GET{est_jalon}|=={non}|oui)<span class="texte-etiquette">MISSION N°[(#ENV{rang}|plus{1})]</span>]
+					[(#GET{est_jalon}|=={non}|oui)<span class="texte-etiquette">MISSION N°[(#ENV{rang}|sinon{0}|plus{1})]</span>]
 				</div>
 				<INCLURE{fond=noisettes/sidebar/normal_header_icons, env} />
 			</div>
