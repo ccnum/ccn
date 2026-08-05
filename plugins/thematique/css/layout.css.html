@@ -410,6 +410,34 @@ body {
 .icon-connecter {
 	--svg: url("#CHEMIN{img/logo_connecter.svg}");
 }
+/* Avatar de l'utilisateur connecté (menu haut) : masculin par défaut en
+   attendant de savoir d'où viendra l'info de civilité (ENT ou profil SPIP)
+   pour distinguer avatar_feminin/avatar_masculin — .icon-avatar-feminin
+   prévue ici (même rendu, seul le <img src> diffère côté squelette) pour
+   ce jour-là.
+   <img> plutôt que masque CSS : le SVG source (laclasse.com, cross-origin,
+   sans en-tête CORS) n'est pas peint par certains navigateurs en tant que
+   mask-image sans CORS ; un <img> n'a pas cette restriction. Les SVG sont
+   des pictogrammes blancs pleins (fill #FFFFFF) sans fond, donc posés sur
+   un rond de couleur pour rester visibles sur fond clair. */
+.icon-avatar-masculin,
+.icon-avatar-feminin {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	flex: none;
+	width: 40px;
+	height: 40px;
+	border-radius: 50%;
+	background-color: var(--color-default);
+	vertical-align: middle;
+	overflow: hidden;
+}
+.icon-avatar-masculin img,
+.icon-avatar-feminin img {
+	width: 26px;
+	height: 26px;
+}
 .icon-ecrire {
 	--svg: url("#CHEMIN{img/logo_ecrire.svg}");
 }
