@@ -88,6 +88,18 @@
 	background-color: #E9E9EF;
 }
 
+/* Icône de classe (emoji) : [role="img"] ne sert qu'à ça dans ce plugin
+   (consigne.js, reponse.js, rubrique_detail.html, logo_menu_classe.html).
+   line-height:1 neutralise la dérive verticale résiduelle propre aux
+   polices emoji système (Apple Color Emoji / Noto / Segoe UI Emoji n'ont
+   pas les mêmes métriques ascendant/descendant) — le décalage horizontal
+   observé (issue #374) venait lui d'espaces blancs parasites dans le HTML
+   généré (retour à la ligne autour de l'emoji dans le template), corrigé
+   côté squelette/JS, pas ici. */
+span[role="img"] {
+	line-height: 1;
+}
+
 .bouton_reponse_consigne:after {
 	position: absolute;
 	content: "";

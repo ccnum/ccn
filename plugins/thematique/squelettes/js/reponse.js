@@ -49,12 +49,7 @@ function Reponse() {
 						<div class='logo photo bgc_classe_${coul}'
 							style='display:flex;align-items:center;justify-content:center;container-type:size;'
 						>
-							<span role="img"
-								  aria-label="${escHtml(this.nom_classe)}"
-								  style="font-size:min(70cqw,70cqh)"
-							>
-								${getClassIcon(this.classeIndex)}
-							</span>
+							<span role="img" aria-label="${escHtml(this.nom_classe)}" style="font-size:min(70cqw,70cqh)">${getClassIcon(this.classeIndex)}</span>
 						</div>
 						<div class="titre">
 							${escHtml(this.titre)}

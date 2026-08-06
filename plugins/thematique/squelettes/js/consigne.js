@@ -53,9 +53,7 @@ function Consigne() {
 			const nomClasse = decodeHtmlEntities(classe.nom);
 			if (this.reponses_id.includes(classe.id)) {
 				disabled = '';
-				iconSpan = `<span role="img" aria-label="${escHtml(nomClasse)}" style="font-size:min(70cqw,70cqh)" class="bgc_classe_${index}">
-					${getClassIcon(index)}
-				</span>`;
+				iconSpan = `<span role="img" aria-label="${escHtml(nomClasse)}" style="font-size:min(70cqw,70cqh)" class="bgc_classe_${index}">${getClassIcon(index)}</span>`;
 			}
 
 			reponses_puces += `
