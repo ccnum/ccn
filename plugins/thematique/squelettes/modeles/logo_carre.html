@@ -33,8 +33,23 @@
 	<//B_auteur3>
 <//B_rub>
 [(#REM)Test : on fait passer les logos auteur en priorité]
+[(#REM)
+Priorité pour un auteur : son logo SPIP uploadé (#LOGO_AUTEUR), sinon sa
+photo ENT (colonne avatar, alimentée par le SSO laclasse.com), sinon le
+picto avatar_masculin.svg (même repli que le menu haut, voir
+noisettes/inc/authentification.html) — jamais le logo du site pour une
+personne. #GET{a_un_auteur} distingue "auteur sans photo" (-> SVG) de
+"pas d'auteur du tout" (-> logo du site/picto générique, comportement
+d'origine).
+]
+#SET{a_un_auteur, non}
+#SET{avatar_ent, ''}
 <BOUCLE_auteur4(AUTEURS){id_auteur}{tout}>
+	#SET{a_un_auteur, oui}
 	#SET{logo,#LOGO_AUTEUR}
+	[(#LOGO_AUTEUR|strlen|non)
+		#SET{avatar_ent, #AVATAR}
+	]
 </BOUCLE_auteur4>
 </B_auteur4>
 	<BOUCLE_mot4(MOTS){id_mot}{tout}>
@@ -42,6 +57,21 @@
 	</BOUCLE_mot4>
 <//B_auteur4>
 
-[(#GET{logo}|sinon{
-	[(#LOGO_SITE_SPIP|sinon{[<img src="(#CHEMIN{img/picto-classe.jpg})" alt="" />]})]
-}|image_reduire{#ENV{taille,50},0})]
+[(#GET{logo}|oui)
+	[(#GET{logo}|image_reduire{#ENV{taille,50},0})]
+]
+[(#GET{logo}|non)
+	[(#GET{avatar_ent}|oui)
+		<img src="[(#GET{avatar_ent})]" alt="" class="avatar-photo">
+	]
+	[(#GET{avatar_ent}|non)
+		[(#GET{a_un_auteur}|=={oui}|oui)
+			<span class="icon-avatar-masculin">
+				<img src="https://www.laclasse.com/avatar/avatar_masculin.svg" alt="">
+			</span>
+		]
+		[(#GET{a_un_auteur}|=={non}|oui)
+			[(#LOGO_SITE_SPIP|sinon{[<img src="(#CHEMIN{img/picto-classe.jpg})" alt="" />]}|image_reduire{#ENV{taille,50},0})]
+		]
+	]
+]

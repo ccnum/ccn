@@ -4,7 +4,12 @@
 	<div id="choix_rubrique_user" name="rubrique_user" class="selectbox" data-select-name="rubrique_user">
 		<button type="button" class="select-toggle first_label">
 			<span class="icon-avatar-masculin">
-				<img src="https://www.laclasse.com/avatar/avatar_masculin.svg" alt="">
+				[(#SESSION{avatar}|oui)
+					<img src="[(#SESSION{avatar})]" alt="" class="avatar-photo">
+				]
+				[(#SESSION{avatar}|non)
+					<img src="https://www.laclasse.com/avatar/avatar_masculin.svg" alt="">
+				]
 			</span>
 			[(#SESSION{nom})]
 			<span class="icon icon-down"></span>

@@ -1,6 +1,4 @@
 genie/thematique_rentree_annee.php:36: Cap sur l'année
 squelettes/js/controleurs.js:769: Réponse vide !
-thematique_administrations.php:189: Blog pédagogique
-thematique_administrations.php:190: Contenu éditorial
-thematique_fonctions.php:761: Élève
-thematique_fonctions.php:926: Blog pédagogique
+thematique_administrations.php:192: Blog pédagogique
+thematique_administrations.php:193: Contenu éditorial

@@ -23,12 +23,19 @@ include_spip('inc/thematique_cioidc');
  * équivalent pour tous les tests existants (aucun ne compare
  * explicitement à 'visiteur', seulement à prof/intervenant/admin/eleve).
  *
+ * Expose aussi #SESSION{avatar} (URL de la photo laclasse.com, vide si
+ * l'auteur n'est pas passé par le SSO ENT ou si l'ENT n'en fournit pas).
+ *
  * @param array $flux
  * @return array
  */
 function thematique_preparer_visiteur_session($flux) {
 	$id_auteur = intval($flux['args']['row']['id_auteur'] ?? 0);
 	$flux['data']['role'] = thematique_donner_role($id_auteur);
+	// Avatar réel fourni par l'ENT (photo laclasse.com), champ extra 'avatar' de
+	// spip_auteurs alimenté par thematique_cioidc_userinfo() ; exposé en session
+	// pour affichage dans le menu haut sans requête supplémentaire par squelette.
+	$flux['data']['avatar'] = $flux['args']['row']['avatar'] ?? '';
 	return $flux;
 }
 
@@ -204,6 +211,10 @@ function thematique_cioidc_userinfo($flux) {
 	}
 	spip_log('userinfo auteur trouvé id=' . $auteur['id_auteur'] . ' nom=' . $auteur['nom'], 'cioidc');
 	$auteur = thematique_cioidc_maj_champ($auteur, 'email', $email, "de l'email");
+	// URL de la photo de profil laclasse.com (avatar réel, distinct des pictos
+	// icon-avatar-masculin/feminin utilisés en repli quand l'ENT n'en fournit pas).
+	$avatar = $flux['data']['avatar'] ?? '';
+	$auteur = thematique_cioidc_maj_champ($auteur, 'avatar', $avatar, "de l'avatar");
 
 	$classes_groupes = thematique_cioidc_normaliser_liste($flux['data']['ENTClassesGroupes'] ?? []);
 	$classes_reelles = thematique_cioidc_classes_reelles($classes_groupes);

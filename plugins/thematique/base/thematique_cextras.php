@@ -19,6 +19,19 @@ function thematique_declarer_champs_extras($champs = []) {
 			], //Seuls les webmestres peuvent modifier
 		],
 	];
+	$champs['spip_auteurs']['avatar'] = [
+		'saisie' => 'input', //Type du champ (voir plugin Saisies)
+		'options' => [
+			'nom' => 'avatar',
+			'label' => _T('th:avatar'),
+			'sql' => "varchar(255) NOT NULL DEFAULT ''",
+			'defaut' => '', // Valeur par défaut
+			'restrictions' => [
+				'voir' => ['auteur' => ''], //Tout le monde peut voir
+				'modifier' => ['auteur' => 'webmestre'],
+			], //Seuls les webmestres peuvent modifier
+		],
+	];
 	$champs['spip_auteurs']['ent_statut'] = [
 		'saisie' => 'input', //Type du champ (voir plugin Saisies)
 		'options' => [

@@ -15,9 +15,10 @@ if (!defined('_ECRIRE_INC_VERSION')) {
 // le même critère en priorité, sinon on met à jour un autre compte (ex: un doublon
 // historique retrouvé par email) que celui qui sera effectivement connecté.
 function thematique_cioidc_resoudre_auteur($uid, $email) {
-	$auteur = $uid ? sql_fetsel('id_auteur,nom,statut,email,webmestre', 'spip_auteurs', 'login=' . sql_quote($uid)) : null;
+	$champs = 'id_auteur,nom,statut,email,webmestre,avatar';
+	$auteur = $uid ? sql_fetsel($champs, 'spip_auteurs', 'login=' . sql_quote($uid)) : null;
 	if (!$auteur) {
-		$auteur = sql_fetsel('id_auteur,nom,statut,email,webmestre', 'spip_auteurs', 'email=' . sql_quote($email));
+		$auteur = sql_fetsel($champs, 'spip_auteurs', 'email=' . sql_quote($email));
 	}
 	return $auteur;
 }
