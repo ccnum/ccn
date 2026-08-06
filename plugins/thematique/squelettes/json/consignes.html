@@ -24,9 +24,15 @@ la boucle d'affichage ci-dessous. ]
 	d'image de classe ni de réponses associées) : exclus ici. ]
 	<BOUCLE_consigne(ARTICLES){branche}{par date}{date>=#CONST{_DATE_DEBUT}}{date<=#CONST{_DATE_FIN}}{!titre_mot IN cap-sur-l-annee,la-rencontre}>
 		#SET{intervenant_nom,''}
+		#SET{id_auteur_consigne,0}
 		<BOUCLE_auteur_consigne(AUTEURS){id_article}{0,1}>
 			#SET{intervenant_nom,#NOM}
+			#SET{id_auteur_consigne,#ID_AUTEUR}
 		</BOUCLE_auteur_consigne>
+		[(#REM) Photo de la consigne : avatar de l'auteur de l'article, ou
+		logo de sa rubrique (classe/intervenant) en repli — voir
+		thematique_image_auteur_ou_classe() pour le détail de la priorité. ]
+		#SET{image,#GET{id_auteur_consigne}|thematique_image_auteur_ou_classe{#ID_RUBRIQUE}}
 		#SET{livrable,false}
 		<BOUCLE_mots(MOTS){id_article}{titre=livrable}>
 			#SET{livrable,true}
@@ -40,7 +46,7 @@ la boucle d'affichage ci-dessous. ]
 			"intervenant_nom": [(#GET{intervenant_nom}|json_encode)],
 			"titre": [(#TITRE|json_encode)],
 			"date": "[(#DATE|affdate{'Y-m-d'})]",
-			"image": [(#MODELE{logo_carre}{id_rubrique}|extraire_attribut{src}|json_encode)],
+			"image": [(#GET{image}|json_encode)],
 			"y": [(#Y|sinon{0})],
 			"livrable": #GET{livrable},
 			"reponses": [

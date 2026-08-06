@@ -54,7 +54,7 @@
 								#SET{annee_reponse,#DATE|affdate{'Y'}}
 								<div class="classe_consigne couleur_[(#TYPE_OBJET)][(#GET{id_to_check}|classe_numero)]">
 									<button type="button" id="ajax_go_to_reponse_#ID_ARTICLE" class="classe_consigne_reponse btn-reset" onclick="callReponse('#ID_ARTICLE')">
-										<div class="classe_consigne_reponse_photo">[(#MODELE{logo_carre}{id_rubrique})]</div>
+										<div class="classe_consigne_reponse_photo">[(#ID_RUBRIQUE|thematique_logo_carre)]</div>
 										<div class="classe_consigne_reponse_titre">[(#TITRE)]</div>
 									</button>
 									<div id="ajax_go_to_consigne_#_consigne:ID_ARTICLE"class="classe_consigne_reponse_consigne">

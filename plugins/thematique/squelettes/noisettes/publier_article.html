@@ -7,7 +7,7 @@
   		[(#GET{type_objet}|=={travail_en_cours}|oui)
 			<div class="fiche_titre couleur_texte_[(#GET{type_objet})] couleur_[(#GET{type_objet})][(#ENV{id_rubrique}|classe_numero)]">
 				<div class="texte">
-					<div class="photo">[(#MODELE{logo_carre}{id_rubrique})]</div>
+					<div class="photo">[(#ID_RUBRIQUE|thematique_logo_carre)]</div>
 					<div class="#EDIT{titre} titre">[(#TITRE)]</div>
 					<div class="auteur_date">[(#GET{titre_parent}) - ][<span class="#EDIT{date}">(#DATE|affdate)</span>]</div>
 				</div>

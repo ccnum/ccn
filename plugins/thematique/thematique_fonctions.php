@@ -1199,6 +1199,299 @@ function thematique_nombre_commentaires($id_article) {
 	]);
 }
 
+/**
+ * Chemin (relatif au site) + timestamp d'un logo, à partir du tableau
+ * renvoyé par quete_logo_objet() — petit utilitaire partagé par les
+ * fonctions ci-dessous pour éviter de répéter la concaténation.
+ *
+ * @param array|false $infos Retour de quete_logo_objet()
+ * @return string '' si $infos est vide/false
+ */
+function thematique_chemin_logo($infos) {
+	if (!$infos) {
+		return '';
+	}
+	return $infos['chemin'] . ($infos['timestamp'] ? '?' . $infos['timestamp'] : '');
+}
+
+/**
+ * Photo d'un auteur : son logo SPIP uploadé, ou son avatar ENT
+ * laclasse.com en repli (colonne extra spip_auteurs.avatar, alimentée par
+ * le SSO — cf thematique_cioidc_userinfo()), mis en cache mémoire par
+ * requête.
+ *
+ * Point d'entrée commun pour toute UI affichant "la photo d'un auteur" —
+ * cf thematique_image_auteur_ou_classe() (photo de consigne) et
+ * thematique_logo_carre() (avatar de forum, sidebar...).
+ *
+ * @param int $id_auteur 0 si pas d'auteur
+ * @return array{logo:string,avatar:string,a_un_auteur:bool}
+ *   'logo' : chemin du logo SPIP uploadé, '' si absent
+ *   'avatar' : URL de l'avatar ENT (seulement si pas de logo), '' sinon
+ *   'a_un_auteur' : true si $id_auteur correspond à un auteur existant
+ */
+function thematique_photo_auteur($id_auteur) {
+	static $cache = [];
+	$id_auteur = intval($id_auteur);
+	if (isset($cache[$id_auteur])) {
+		return $cache[$id_auteur];
+	}
+
+	$res = ['logo' => '', 'avatar' => '', 'a_un_auteur' => false];
+	if ($id_auteur) {
+		include_spip('base/abstract_sql');
+		// Existence de l'auteur vérifiée sur 'nom' (toujours présent), pas sur
+		// la colonne extra 'avatar' : sur un environnement où la migration
+		// 3.0.9 n'a pas tourné (cf thematique_upgrade()), cette colonne peut
+		// ne pas exister, et on ne veut pas perdre le vrai logo SPIP de
+		// l'auteur pour autant.
+		if (sql_fetsel('nom', 'spip_auteurs', 'id_auteur=' . $id_auteur)) {
+			$res['a_un_auteur'] = true;
+			include_spip('public/quete');
+			$infos = quete_logo_objet($id_auteur, 'auteur', 'on');
+			if ($infos) {
+				$res['logo'] = thematique_chemin_logo($infos);
+			} else {
+				$avatar = sql_getfetsel('avatar', 'spip_auteurs', 'id_auteur=' . $id_auteur);
+				$res['avatar'] = $avatar ?: '';
+			}
+		}
+	}
+
+	$cache[$id_auteur] = $res;
+	return $res;
+}
+
+/**
+ * Image d'une consigne : avatar de l'auteur de l'article, ou logo de sa
+ * rubrique (classe/intervenant) en repli, mis en cache mémoire par requête.
+ *
+ * Priorité : logo SPIP uploadé par l'auteur, puis son avatar ENT, puis le
+ * logo de la rubrique — jamais le logo de l'article lui-même. Remplace le
+ * #MODELE{logo_carre}{id_rubrique} de squelettes/json/consignes.html
+ * (boucles RUBRIQUES/AUTEURS/MOTS non cachées relancées à chaque consigne
+ * affichée).
+ *
+ * @param int $id_auteur 0 si l'article n'a pas d'auteur identifié
+ * @param int $id_rubrique Rubrique de repli (classe/intervenant)
+ * @return string URL (relative au site) de l'image, '' si rien trouvé
+ */
+function thematique_image_auteur_ou_classe($id_auteur, $id_rubrique) {
+	static $cache = [];
+	$id_auteur = intval($id_auteur);
+	$id_rubrique = intval($id_rubrique);
+	$cle = $id_auteur . ':' . $id_rubrique;
+	if (isset($cache[$cle])) {
+		return $cache[$cle];
+	}
+
+	$photo = thematique_photo_auteur($id_auteur);
+	$image = $photo['logo'] ?: $photo['avatar'];
+
+	if (!$image && $id_rubrique) {
+		include_spip('public/quete');
+		$image = thematique_chemin_logo(quete_logo_objet($id_rubrique, 'rubrique', 'on'));
+	}
+
+	$cache[$cle] = $image;
+	return $image;
+}
+
+/**
+ * Rubrique de classe liée à un auteur (prof/intervenant), mise en cache
+ * mémoire par requête.
+ *
+ * Traduction SQL de l'ancien repli de squelettes/modeles/logo_carre.html
+ * (BOUCLE(auteurs_liens) + BOUCLE(RUBRIQUES) + BOUCLE(RUBRIQUES){id_enfant})
+ * : parmi les rubriques liées à l'auteur, on écarte celles taguées
+ * evenements/blogs/ressources (ce sont des sous-espaces, pas des classes)
+ * ainsi que celles dont un enfant direct porte un de ces mots (rubriques
+ * "conteneur" d'un de ces sous-espaces) ; s'il reste plusieurs candidates,
+ * la dernière par id_rubrique croissant l'emporte (même ordre que l'ancien
+ * modèle, qui ne s'arrêtait pas à la première trouvée).
+ *
+ * @param int $id_auteur
+ * @return int 0 si aucune rubrique de classe trouvée
+ */
+function thematique_id_rubrique_classe_auteur($id_auteur) {
+	static $cache = [];
+	$id_auteur = intval($id_auteur);
+	if (isset($cache[$id_auteur])) {
+		return $cache[$id_auteur];
+	}
+
+	include_spip('base/abstract_sql');
+
+	$mots_exclus = sql_in('m.titre', ['evenements', 'blogs', 'ressources']);
+
+	$candidats = $id_auteur ? sql_allfetsel(
+		'al.id_objet AS id_rubrique',
+		'spip_auteurs_liens AS al',
+		[
+			'al.id_auteur=' . $id_auteur,
+			"al.objet='rubrique'",
+			'NOT EXISTS (SELECT 1 FROM spip_mots_liens AS ml
+				INNER JOIN spip_mots AS m ON m.id_mot=ml.id_mot
+				WHERE ml.id_objet=al.id_objet AND ml.objet=' . sql_quote('rubrique') . "
+				AND $mots_exclus)",
+		],
+		'',
+		'al.id_objet'
+	) : [];
+
+	$id_rubrique = 0;
+	foreach ($candidats as $candidat) {
+		$id_candidat = intval($candidat['id_rubrique']);
+		$a_un_enfant_exclu = sql_countsel(
+			'spip_rubriques AS r
+				INNER JOIN spip_mots_liens AS ml ON ml.id_objet=r.id_rubrique AND ml.objet=' . sql_quote('rubrique') . '
+				INNER JOIN spip_mots AS m ON m.id_mot=ml.id_mot',
+			['r.id_parent=' . $id_candidat, $mots_exclus]
+		);
+		if (!$a_un_enfant_exclu) {
+			$id_rubrique = $id_candidat;
+		}
+	}
+
+	$cache[$id_auteur] = $id_rubrique;
+	return $id_rubrique;
+}
+
+/**
+ * "Logo carré" prêt à afficher pour un article/auteur/rubrique/mot : avatar
+ * de l'auteur (logo SPIP puis avatar ENT), sinon logo de la rubrique/du
+ * mot, sinon picto du site — mis en cache mémoire par requête. Remplace
+ * squelettes/modeles/logo_carre.html (jusqu'à 7 boucles SPIP non cachées
+ * relancées à chaque affichage : timeline, sidebar, forum, listes
+ * d'actus...).
+ *
+ * Appelée comme filtre, avec le type d'objet en 2ᵉ paramètre (uniforme quel
+ * que soit l'objet, plutôt qu'une position dédiée par type) :
+ * `#ID_RUBRIQUE|thematique_logo_carre` (objet par défaut : rubrique),
+ * `#ID_ARTICLE|thematique_logo_carre{article}`,
+ * `#ID_AUTEUR|thematique_logo_carre{auteur}`,
+ * `#ID_RUBRIQUE|thematique_logo_carre{rubrique,40}` (taille explicite).
+ *
+ * Résolution de la rubrique de repli (même logique que l'ancien modèle) :
+ * - $objet='article' : sa propre rubrique.
+ * - $objet='auteur' : rubrique de classe liée à l'auteur (cf
+ *   thematique_id_rubrique_classe_auteur()).
+ * - $objet='rubrique' (par défaut) ou 'mot' : $id_objet tel quel.
+ *
+ * @param int $id_objet
+ * @param string $objet 'rubrique' (défaut), 'auteur', 'article' ou 'mot'
+ * @param int $taille Largeur maxi en pixels (image_reduire), 50 par défaut
+ * @return string Code HTML (balise <img> ou <span>)
+ */
+function thematique_logo_carre($id_objet = 0, $objet = 'rubrique', $taille = 50) {
+	static $cache = [];
+	$id_objet = intval($id_objet);
+	$objet = in_array($objet, ['rubrique', 'auteur', 'article', 'mot'], true) ? $objet : 'rubrique';
+	$taille = intval($taille) ?: 50;
+	$cle = "$objet:$id_objet:$taille";
+	if (isset($cache[$cle])) {
+		return $cache[$cle];
+	}
+
+	include_spip('base/abstract_sql');
+	include_spip('public/quete');
+	include_spip('inc/filtres_images_mini');
+	include_spip('inc/filtres');
+
+	$id_rubrique = $objet === 'rubrique' ? $id_objet : 0;
+	$id_auteur = $objet === 'auteur' ? $id_objet : 0;
+	$id_mot = $objet === 'mot' ? $id_objet : 0;
+
+	if ($objet === 'article') {
+		$id_rubrique = intval(sql_getfetsel('id_rubrique', 'spip_articles', 'id_article=' . $id_objet));
+	} elseif ($objet === 'auteur') {
+		$id_rubrique = thematique_id_rubrique_classe_auteur($id_auteur);
+	}
+
+	$logo_repli = $id_rubrique ? thematique_chemin_logo(quete_logo_objet($id_rubrique, 'rubrique', 'on')) : '';
+	if (!$logo_repli && $id_mot) {
+		$logo_repli = thematique_chemin_logo(quete_logo_objet($id_mot, 'mot', 'on'));
+	}
+
+	$html = '';
+	$a_un_auteur = false;
+	if ($id_auteur) {
+		$photo = thematique_photo_auteur($id_auteur);
+		$a_un_auteur = $photo['a_un_auteur'];
+		if ($photo['logo']) {
+			$html = image_reduire($photo['logo'], $taille, 0);
+		} elseif ($photo['avatar']) {
+			// balise_img_svg : URL externe mais pas un .svg, donc route en
+			// interne vers balise_img (construction de balise, pas de fetch
+			// réseau) — safe.
+			$html = filtrer('balise_img_svg', $photo['avatar'], '', 'avatar-photo');
+		}
+	}
+
+	if (!$html && $logo_repli) {
+		$html = image_reduire($logo_repli, $taille, 0);
+	}
+
+	if (!$html) {
+		if ($a_un_auteur) {
+			// avatar_masculin.svg est une URL externe (laclasse.com) : on la
+			// laisse en <img> brut plutôt que |balise_img_svg, qui pour un
+			// .svg distant déclencherait un copie_locale() (fetch + cache
+			// serveur) à chaque premier rendu.
+			$html = '<span class="icon-avatar-masculin"><img src="https://www.laclasse.com/avatar/avatar_masculin.svg" alt=""></span>';
+		} else {
+			// Ici en revanche thematique_picto_site() est un fichier SVG
+			// local : balise_img_svg l'inline en <svg> (pas de fetch, permet
+			// le theming CSS), sans jamais toucher au réseau.
+			$html = filtrer('balise_img_svg', thematique_picto_site(), '');
+		}
+	}
+
+	$cache[$cle] = $html;
+	return $html;
+}
+
+/**
+ * Chemin du picto SVG du site courant (squelettes/img/pictos_sites/), avec
+ * repli sur selfdata.svg si le site n'a pas le sien, mis en cache mémoire
+ * par requête.
+ *
+ * Centralise une résolution jusqu'ici copiée-collée à 4 endroits :
+ * favicon.ico.html, noisettes/inc-head.html (icônes de favicon),
+ * noisettes/sommaire.html (badge de la timeline) et le repli "aucun logo"
+ * de modeles/logo_carre.html.
+ *
+ * Appelée comme filtre : `#VAL{1}|thematique_picto_site` (le premier
+ * paramètre n'est qu'un porteur, SPIP exige toujours une valeur pipée).
+ *
+ * @param mixed $valeur_ignoree Non utilisé, cf. remarque d'appel ci-dessus
+ * @param string $avec_timestamp `non` pour omettre le `?timestamp`
+ *     (cache-busting, comme le filtre `|timestamp`) — utile pour un appel
+ *     qui recalcule déjà lui-même sur le fichier (ex: favicon.ico.html et
+ *     son filesize()). Toute autre valeur (par défaut) l'ajoute.
+ * @return string Chemin relatif au site (comme #CHEMIN{}), '' si introuvable
+ */
+function thematique_picto_site($valeur_ignoree = null, $avec_timestamp = 'oui') {
+	static $cache = [];
+	$avec_timestamp = ($avec_timestamp !== 'non');
+	$cle = $avec_timestamp ? 1 : 0;
+	if (isset($cache[$cle])) {
+		return $cache[$cle];
+	}
+
+	$nom_site = strtolower(str_replace(' ', '', $GLOBALS['meta']['nom_site'] ?? ''));
+	$chemin = (find_in_path('img/pictos_sites/' . $nom_site . '.svg') ?: find_in_path('img/pictos_sites/selfdata.svg'))
+		?: '';
+
+	if ($chemin && $avec_timestamp) {
+		include_spip('inc/filtres');
+		$chemin = timestamp($chemin);
+	}
+
+	$cache[$cle] = $chemin;
+	return $chemin;
+}
+
 function forum_construire_arbre($id_parent, &$parents) {
 	if (!isset($parents[$id_parent])) {
 		return [];

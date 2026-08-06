@@ -9,7 +9,7 @@
 		<div class="actu-documents">
 			<div class="actualites-actu bgc_classe_[(#GET{IdCouleur}|classe_numero)]">
 				<button type="button" class="js-call-livrable btn-reset" data-id-article="#ID_ARTICLE">
-					<span class="profil">[(#MODELE{logo_carre}{id_rubrique=#ID_RUBRIQUE}{titre=#TITRE})]</span>
+					<span class="profil">[(#ID_RUBRIQUE|thematique_logo_carre)]</span>
 					Nouveau document de #GET{titre}<br> sur #GET{titreLivrable}
 				</button>
 				<p class="date">[(#DATE|affdate)]</p>

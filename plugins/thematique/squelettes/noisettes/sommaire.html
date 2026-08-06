@@ -37,7 +37,7 @@ et/ou
 					data-svg-publie="[(#CHEMIN{img/badge_label_cap_sur_annee_publie.svg}|attribut_url)]"
 					data-svg-non-publie="[(#CHEMIN{img/badge_label_cap_sur_annee_non_publie.svg}|attribut_url)]">
 					<img class="badge_timeline_label_img" src="[(#CHEMIN{img/badge_label_cap_sur_annee_publie.svg}|attribut_url)]" alt="<:thematique:cap_sur_annee:>" />
-					<span class="badge_timeline_icone"><img src="[(#CHEMIN{img/pictos_sites/[(#NOM_SITE_SPIP|replace{' ',''}|strtolower)].svg}|sinon{#CHEMIN{img/pictos_sites/selfdata.svg}}|attribut_url)]" alt="" /></span>
+					<span class="badge_timeline_icone">[(#VAL{1}|thematique_picto_site|balise_img_svg)]</span>
 				</button>
 				<button type="button" id="badge_la_rencontre" class="badge_timeline badge_timeline_fin btn-reset" style="display:none;" onclick="callArticleJalon(CCN.idArticleLaRencontre)"
 					data-svg-publie="[(#CHEMIN{img/badge_label_la_rencontre_publie.svg}|attribut_url)]"

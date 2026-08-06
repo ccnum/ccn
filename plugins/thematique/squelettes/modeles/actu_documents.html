@@ -6,7 +6,7 @@
 
 	<BOUCLE_docs(DOCUMENTS){id_article}{0,1}{!par date}>
 		<div class="actualites-actu bgc_classe_[(#GET{IdCouleur}|classe_numero)] js-call-reponse" data-id-article="#ID_ARTICLE" role="button" tabindex="0">
-			<span class="profil">[(#MODELE{logo_carre}{id_rubrique=#ID_RUBRIQUE}{titre=#TITRE})]</span>
+			<span class="profil">[(#ID_RUBRIQUE|thematique_logo_carre)]</span>
 			Nouveau document de #GET{titre}<br>
 			<p class="date">[(#DATE|affdate)]</p>
 			[(#MEDIA|=={'image'}|oui)

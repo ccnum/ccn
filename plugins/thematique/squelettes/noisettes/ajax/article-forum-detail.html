@@ -28,7 +28,7 @@
 				<div class="intervention_nb_reponses" id="nb_reponses#ID_FORUM">0</div>
 				<div class="intervention_header">
 					<div class="photo">
-						[(#MODELE{logo_carre}{id_auteur}{titre=#TITRE})]
+						[(#ID_AUTEUR|thematique_logo_carre{auteur})]
 					</div>
 					<BOUCLE_forum_billet_auteur(AUTEURS){id_auteur}{tout}>
 						[<div class="intervention_auteur">(#NOM)</div>]
@@ -111,7 +111,7 @@
 						<div class="intervention couleur_texte[_(#GET{type_objet})] [couleur_(#GET{type_objet})[(#GET{id_rubrique_classe}|classe_numero)]]">
 							<div class="intervention_header">
 								<div class="photo">
-									[(#MODELE{logo_carre}{id_auteur}{titre=#TITRE})]
+									[(#ID_AUTEUR|thematique_logo_carre{auteur})]
 								</div>
 								[<div class="intervention_auteur">(#NOM)</div>]
 								[<div class="intervention_date">(#DATE|affdate)</div>]

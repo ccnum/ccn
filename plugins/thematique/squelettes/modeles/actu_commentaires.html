@@ -6,7 +6,7 @@
 </BOUCLE_getCouleur>
 <BOUCLE_commentaires(FORUMS){id_forum}>
 	<div class="actualites-actu bgc_classe_[(#GET{IdCouleur}|classe_numero)] js-call-consigne" data-id-objet="#ID_OBJET" role="button" tabindex="0">
-		<span class="profil">[(#MODELE{logo_carre, taille=17}{id_rubrique=#ID_RUBRIQUE}{titre=#TITRE})]</span>
+		<span class="profil">[(#ID_RUBRIQUE|thematique_logo_carre{rubrique,17})]</span>
 		<span class="actualites-titre"><:thematique:commentaire_de_sur{auteur=#AUTEUR,titre=#TITRE}:></span>
 		[<p class="actualites-actu-date"> (#DATE|affdate)</p>]
 		<div class="actualites-texte">
