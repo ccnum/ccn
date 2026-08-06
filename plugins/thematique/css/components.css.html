@@ -70,8 +70,16 @@
 }
 
 .consigne .reponse_puce {
+	/* width+height explicites plutôt que width+aspect-ratio seul : en item de
+	   grille, l'align-items:stretch par défaut du conteneur (picto_nombre_reponses)
+	   étire la puce à la hauteur de sa ligne (calculée sur le contenu le plus
+	   haut), ce qui écrase l'aspect-ratio et rend les puces ovales — surtout
+	   visible sur petit écran où la grille a moins de marge. align-self:center
+	   empêche cet étirement. */
 	width: 1.2em;
-	aspect-ratio: 1 / 1;
+	height: 1.2em;
+	align-self: center;
+	justify-self: center;
 	border-radius: 50%;
 	overflow: hidden;
 }
