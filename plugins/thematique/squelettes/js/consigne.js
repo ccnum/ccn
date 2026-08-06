@@ -69,10 +69,9 @@ function Consigne() {
 				 class="timeline_item consigne_haute"
 				 style="top:${this.y * 100}%; left:${this.x / CCN.projet.nombre_jours_total * 100}%;"
 			>
-				<img class="card-bg"
-					 src="${CCN.urlRoot}img/cards_background.svg"
-					 alt=""
-					 style="display: none"/>
+				${this.isLastConsigne
+					? `<img class="card-bg" src="${CCN.urlRoot}img/cards_background.svg" alt="" />`
+					: ''}
 				<button type="button" id="consigne${this.id}"
 					class="consigne couleur_texte_consignes couleur_consignes${coul} btn-reset"
 					data-id="${this.id}"
@@ -117,7 +116,6 @@ function Consigne() {
 
 		if(this.isLastConsigne) {
 			this.div_base.addClass("derniere-etape")
-			this.div_base.find(".card-bg").show();
 			if(this.isLivrable) {
 				this.div_base.find(".texte-etiquette").first().text("PROJETS FINAUX !");
 				this.div_base.find(".logo-etiquette").first().attr("src", `${CCN.urlRoot}img/sparks.svg`)
