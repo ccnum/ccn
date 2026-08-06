@@ -9,7 +9,7 @@ return [
 	'agora'                          => 'Agora',
 	'agrandir_reduire_modale'        => 'Agrandir/Réduire la modale',
 	'acces_reserve_webmestres'       => 'Accès réservé aux webmestres.',
-	'aide_info'                     => 'Aide & Info',
+	'aide_info'                     => 'Aide',
 	'agenda'                         => 'Agenda',
 	'ajouter_descriptif_classe'      => 'Ajouter le descriptif de la classe',
 	'annuler'                        => 'Annuler',
