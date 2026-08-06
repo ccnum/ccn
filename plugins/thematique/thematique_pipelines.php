@@ -23,19 +23,27 @@ include_spip('inc/thematique_cioidc');
  * équivalent pour tous les tests existants (aucun ne compare
  * explicitement à 'visiteur', seulement à prof/intervenant/admin/eleve).
  *
- * Expose aussi #SESSION{avatar} (URL de la photo laclasse.com, vide si
- * l'auteur n'est pas passé par le SSO ENT ou si l'ENT n'en fournit pas).
+ * Expose aussi #SESSION{avatar} pour le menu haut : soit une URL de photo
+ * laclasse.com (champ extra 'avatar' de spip_auteurs, alimenté par
+ * thematique_cioidc_userinfo() via le SSO ENT), soit l'emoji de la classe
+ * pour un prof (thematique_avatar_animal(), prioritaire sur la photo ENT —
+ * "l'icône classe est son avatar" même s'il a une photo dans l'ENT), soit
+ * vide (repli SVG géré côté squelette). Un seul SESSION{avatar} : c'est au
+ * squelette de distinguer URL/emoji (cf authentification.html).
  *
  * @param array $flux
  * @return array
  */
 function thematique_preparer_visiteur_session($flux) {
 	$id_auteur = intval($flux['args']['row']['id_auteur'] ?? 0);
-	$flux['data']['role'] = thematique_donner_role($id_auteur);
-	// Avatar réel fourni par l'ENT (photo laclasse.com), champ extra 'avatar' de
-	// spip_auteurs alimenté par thematique_cioidc_userinfo() ; exposé en session
-	// pour affichage dans le menu haut sans requête supplémentaire par squelette.
-	$flux['data']['avatar'] = $flux['args']['row']['avatar'] ?? '';
+	$role = thematique_donner_role($id_auteur);
+	$flux['data']['role'] = $role;
+
+	$avatar = $flux['args']['row']['avatar'] ?? '';
+	if ($role === 'prof' && $animal = thematique_avatar_animal($id_auteur)) {
+		$avatar = $animal;
+	}
+	$flux['data']['avatar'] = $avatar;
 	return $flux;
 }
 

@@ -668,6 +668,47 @@ function classe_icone($id_rubrique) {
 }
 
 /**
+ * Animal (emoji) de la classe d'un prof, pour son avatar dans le menu haut.
+ *
+ * Un prof est lié (spip_auteurs_liens) non seulement à sa/ses classe(s),
+ * mais aussi au blog pédagogique et à ses projets (voir
+ * thematique_cioidc_associer_rubriques) : on ne retient donc que le premier
+ * lien qui est effectivement une classe (présent dans
+ * thematique_classes_rangs()), pas n'importe quelle rubrique liée. S'il a
+ * plusieurs classes, la première trouvée fait foi (pas de notion de
+ * "classe principale").
+ *
+ * @param int $id_auteur
+ * @return string emoji de la classe, ou '' si aucune classe trouvée
+ */
+function thematique_avatar_animal($id_auteur) {
+	static $cache = [];
+	$id_auteur = intval($id_auteur);
+	if (isset($cache[$id_auteur])) {
+		return $cache[$id_auteur];
+	}
+
+	include_spip('base/abstract_sql');
+	$rangs = thematique_classes_rangs();
+	$rubriques = $id_auteur ? sql_allfetsel(
+		'id_objet',
+		'spip_auteurs_liens',
+		'id_auteur=' . $id_auteur . " AND objet='rubrique'"
+	) : [];
+
+	$animal = '';
+	foreach ($rubriques as $r) {
+		if (isset($rangs[$r['id_objet']])) {
+			$animal = classe_icone($r['id_objet']);
+			break;
+		}
+	}
+
+	$cache[$id_auteur] = $animal;
+	return $animal;
+}
+
+/**
  * Id de rubrique d'un article, mis en cache mémoire par requête.
  *
  * Remplace la branche id_article de l'ancien squelettes/modeles/nb2col.html

@@ -446,6 +446,14 @@ body {
 	height: 40px;
 	object-fit: cover;
 }
+/* Animal (emoji) de sa classe pour un prof, prioritaire sur avatar/SVG dans
+   le menu haut (cf classe_icone() côté PHP) : span plutôt que img, le rond
+   de couleur reste visible autour de l'emoji. */
+.icon-avatar-masculin .avatar-animal,
+.icon-avatar-feminin .avatar-animal {
+	font-size: 20px;
+	line-height: 1;
+}
 /* Repli avatar_masculin.svg utilisé par le modèle logo_carre (photo d'une
    consigne/article) : nichée dans un conteneur .photo dont la taille varie
    selon le contexte d'appel (fiche_titre, header sidebar, card réponse...),
