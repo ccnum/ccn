@@ -25,6 +25,7 @@ function Consigne() {
 		this.x = this.data.nombre_jours;
 		this.y = this.data.y; // Entre 0 et 1
 		this.image = this.data.image;
+		this.image_generique = !!this.data.image_generique;
 		this.select = false;
 		this.date_texte = formatDateLongue(this.data.date_texte);
 		this.reponses = [];
@@ -84,7 +85,9 @@ function Consigne() {
 					</div>
 					<div class="texte">
 						<div class="first-row">
-							<div class="photo"><img src="${this.data.image}" alt="${escHtml(this.intervenant_nom)}" /></div>
+							<div class="photo">${this.image_generique
+								? `<span class="icon-avatar-masculin"><img src="${this.data.image}" alt="${escHtml(this.intervenant_nom)}" /></span>`
+								: `<img src="${this.data.image}" alt="${escHtml(this.intervenant_nom)}" />`}</div>
 							<div class="titre"></div>
 						</div>
 						<div class="second-row">

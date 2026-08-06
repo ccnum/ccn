@@ -31,8 +31,12 @@ la boucle d'affichage ci-dessous. ]
 		</BOUCLE_auteur_consigne>
 		[(#REM) Photo de la consigne : avatar de l'auteur de l'article, ou
 		logo de sa rubrique (classe/intervenant) en repli — voir
-		thematique_image_auteur_ou_classe() pour le détail de la priorité. ]
+		thematique_image_auteur_ou_classe() pour le détail de la priorité.
+		image_generique signale le repli "picto générique sans fond" à
+		consigne.js, qui doit alors l'envelopper (icon-avatar-masculin) pour
+		qu'il reste visible — voir thematique_image_est_avatar_generique(). ]
 		#SET{image,#GET{id_auteur_consigne}|thematique_image_auteur_ou_classe{#ID_RUBRIQUE}}
+		#SET{image_generique,#GET{image}|thematique_image_est_avatar_generique}
 		#SET{livrable,false}
 		<BOUCLE_mots(MOTS){id_article}{titre=livrable}>
 			#SET{livrable,true}
@@ -47,6 +51,7 @@ la boucle d'affichage ci-dessous. ]
 			"titre": [(#TITRE|json_encode)],
 			"date": "[(#DATE|affdate{'Y-m-d'})]",
 			"image": [(#GET{image}|json_encode)],
+			"image_generique": [(#GET{image_generique}|json_encode)],
 			"y": [(#Y|sinon{0})],
 			"livrable": #GET{livrable},
 			"reponses": [

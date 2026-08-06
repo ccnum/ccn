@@ -1215,6 +1215,16 @@ function thematique_chemin_logo($infos) {
 }
 
 /**
+ * Avatar générique (pictogramme blanc plein, sans fond) utilisé quand un
+ * auteur existe mais n'a ni logo SPIP ni avatar ENT — cf
+ * thematique_logo_carre() et thematique_image_auteur_ou_classe(). Doit
+ * toujours être posé sur un fond de couleur (classe CSS
+ * .icon-avatar-masculin) pour rester visible, jamais affiché tel quel en
+ * `<img>` nu sur un fond clair.
+ */
+define('_THEMATIQUE_AVATAR_GENERIQUE_MASCULIN', 'https://www.laclasse.com/avatar/avatar_masculin.svg');
+
+/**
  * Photo d'un auteur : son logo SPIP uploadé, ou son avatar ENT
  * laclasse.com en repli (colonne extra spip_auteurs.avatar, alimentée par
  * le SSO — cf thematique_cioidc_userinfo()), mis en cache mémoire par
@@ -1267,14 +1277,19 @@ function thematique_photo_auteur($id_auteur) {
  * rubrique (classe/intervenant) en repli, mis en cache mémoire par requête.
  *
  * Priorité : logo SPIP uploadé par l'auteur, puis son avatar ENT, puis le
- * logo de la rubrique — jamais le logo de l'article lui-même. Remplace le
- * #MODELE{logo_carre}{id_rubrique} de squelettes/json/consignes.html
- * (boucles RUBRIQUES/AUTEURS/MOTS non cachées relancées à chaque consigne
- * affichée).
+ * logo de la rubrique — jamais le logo de l'article lui-même. Repli final
+ * identique à thematique_logo_carre() : _THEMATIQUE_AVATAR_GENERIQUE_MASCULIN
+ * si l'auteur existe, sinon picto du site. Le résultat est injecté tel quel
+ * en `src` d'un `<img>` côté JS (squelettes/js/consigne.js) : un '' y
+ * produirait un `<img src="">` sans avatar, et l'avatar générique (picto
+ * blanc plein sans fond) y serait invisible sans le fond de couleur que
+ * fournit la classe CSS .icon-avatar-masculin — voir
+ * thematique_image_est_avatar_generique(), à appeler côté squelette pour
+ * savoir s'il faut ce wrapper (cf squelettes/json/consignes.html).
  *
  * @param int $id_auteur 0 si l'article n'a pas d'auteur identifié
  * @param int $id_rubrique Rubrique de repli (classe/intervenant)
- * @return string URL (relative au site) de l'image, '' si rien trouvé
+ * @return string URL (relative au site ou externe) de l'image, jamais ''
  */
 function thematique_image_auteur_ou_classe($id_auteur, $id_rubrique) {
 	static $cache = [];
@@ -1293,8 +1308,38 @@ function thematique_image_auteur_ou_classe($id_auteur, $id_rubrique) {
 		$image = thematique_chemin_logo(quete_logo_objet($id_rubrique, 'rubrique', 'on'));
 	}
 
+	if (!$image) {
+		$image = $photo['a_un_auteur']
+			? _THEMATIQUE_AVATAR_GENERIQUE_MASCULIN
+			: thematique_picto_site();
+	}
+
 	$cache[$cle] = $image;
 	return $image;
+}
+
+/**
+ * Indique si une image renvoyée par thematique_image_auteur_ou_classe()
+ * est l'avatar générique (picto blanc plein sans fond) plutôt qu'une vraie
+ * photo/logo : dans ce cas, l'`<img>` doit être enveloppé dans
+ * `<span class="icon-avatar-masculin">` pour rester visible (même besoin
+ * que thematique_logo_carre(), qui construit ce wrapper lui-même — ici la
+ * construction du HTML final reste côté squelette/JS, cf
+ * squelettes/json/consignes.html et squelettes/js/consigne.js).
+ *
+ * Comparaison sur le nom de fichier (avatar_masculin.svg / avatar_feminin.svg
+ * — même repli que dans le menu haut, cf authentification.html), pas sur
+ * l'URL exacte de _THEMATIQUE_AVATAR_GENERIQUE_MASCULIN : l'ENT lui-même
+ * renvoie souvent ce même pictogramme générique comme "avatar" d'un compte
+ * sans photo (colonne spip_auteurs.avatar), donc $image peut arriver ici
+ * par ce chemin-là plutôt que par notre repli interne — dans les deux cas
+ * c'est le même picto blanc sans fond, à envelopper pareil.
+ *
+ * @param string $image Retour de thematique_image_auteur_ou_classe()
+ * @return bool
+ */
+function thematique_image_est_avatar_generique($image) {
+	return (bool) preg_match('#/avatar_(masculin|feminin)\.svg(?:\?|$)#', (string) $image);
 }
 
 /**
@@ -1438,7 +1483,7 @@ function thematique_logo_carre($id_objet = 0, $objet = 'rubrique', $taille = 50)
 			// laisse en <img> brut plutôt que |balise_img_svg, qui pour un
 			// .svg distant déclencherait un copie_locale() (fetch + cache
 			// serveur) à chaque premier rendu.
-			$html = '<span class="icon-avatar-masculin"><img src="https://www.laclasse.com/avatar/avatar_masculin.svg" alt=""></span>';
+			$html = '<span class="icon-avatar-masculin"><img src="' . _THEMATIQUE_AVATAR_GENERIQUE_MASCULIN . '" alt=""></span>';
 		} else {
 			// Ici en revanche thematique_picto_site() est un fichier SVG
 			// local : balise_img_svg l'inline en <svg> (pas de fetch, permet
