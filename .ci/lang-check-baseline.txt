@@ -2,3 +2,5 @@ genie/thematique_rentree_annee.php:36: Cap sur l'année
 squelettes/js/controleurs.js:781: Réponse vide !
 thematique_administrations.php:192: Blog pédagogique
 thematique_administrations.php:193: Contenu éditorial
+thematique_pipelines.php:191: de l'email
+thematique_pipelines.php:195: de l'avatar

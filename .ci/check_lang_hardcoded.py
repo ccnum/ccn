@@ -31,6 +31,20 @@ EXCLUDE_DIRS = {PLUGIN_ROOT / "lang", PLUGIN_ROOT / "vendor"}
 ACCENTED = "àâäéèêëïîôöùûüçœÀÂÄÉÈÊËÏÎÔÖÙÛÜÇŒ"
 ACCENTED_RE = re.compile(f"[{ACCENTED}]")
 
+# Une partie du texte français en dur n'a aucun caractère accentué ("J'aime",
+# "Je n'aime plus", "Oui", "Non"...) et passait donc entre les mailles d'un
+# filtre uniquement basé sur ACCENTED_RE. Les élisions (j'/n'/l'/d'/c'/m'/s'/
+# t'/qu') sont un signal quasi sans faux positif en français : on les
+# détecte en plus des accents. Le lookahead exige une lettre juste après
+# l'apostrophe (une élision est toujours suivie du début du mot suivant) :
+# sans lui, un filtre SPIP `'T'` ou un ternaire JS `'s' : ''` matchent aussi
+# (l'apostrophe fermante suit directement le "t"/"s" isolé).
+ELISION_RE = re.compile(r"\b(?:[jnldcmst]|qu)['’](?=[a-zàâäéèêëïîôöùûüçœ])", re.IGNORECASE)
+
+
+def looks_french(snippet: str) -> bool:
+    return bool(ACCENTED_RE.search(snippet) or ELISION_RE.search(snippet))
+
 # Zones à retirer avant analyse (commentaires, tags de langue déjà propres,
 # appels _T()/CCN.lang déjà conformes).
 STRIP_PATTERNS = [
@@ -76,10 +90,18 @@ HTML_EXTS = {".html"}
 JS_EXTS = {".js"}
 PHP_EXTS = {".php"}
 
-# Chaînes entre balises ou dans des attributs visibles.
-HTML_TEXT_NODE_RE = re.compile(r">([^<>{}]*[%s][^<>{}]*)<" % ACCENTED)
+# Chaînes entre balises ou dans des attributs visibles. Pas de pré-filtre sur
+# les accents ici : looks_french() fait le tri (texte comme "J'aime" n'a
+# aucun accent, le pré-filtrer aurait recréé le même trou que ACCENTED_RE
+# seul).
+HTML_TEXT_NODE_RE = re.compile(r">([^<>{}]+)<")
+# Rétro-référence sur le guillemet d'ouverture (\1) : sans elle, une valeur
+# entre guillemets doubles contenant une apostrophe française (data-tip="J'aime")
+# se faisait tronquer à l'apostrophe, elle-même prise pour le guillemet
+# fermant par un [^\'"]* qui exclut les deux types de guillemets sans
+# distinction.
 HTML_ATTR_RE = re.compile(
-    r'\b(?:title|alt|aria-label|placeholder|data-tip|value)=[\'"]([^\'"]*)[\'"]'
+    r"""\b(?:title|alt|aria-label|placeholder|data-tip|value)=(['"])((?:(?!\1).)*)\1"""
 )
 STRING_LITERAL_RE = re.compile(r"""(['"])((?:(?!\1)[^\\]|\\.)*)\1""", re.DOTALL)
 
@@ -115,11 +137,11 @@ def scan_html(path: Path):
     for lineno, line in enumerate(cleaned.splitlines(), start=1):
         for m in HTML_TEXT_NODE_RE.finditer(f">{line}<"):
             snippet = m.group(1).strip()
-            if snippet and ACCENTED_RE.search(snippet):
+            if snippet and looks_french(snippet):
                 findings.append((lineno, snippet[:80]))
         for m in HTML_ATTR_RE.finditer(line):
-            snippet = m.group(1).strip()
-            if snippet and ACCENTED_RE.search(snippet):
+            snippet = m.group(2).strip()
+            if snippet and looks_french(snippet):
                 findings.append((lineno, snippet[:80]))
     return findings
 
@@ -131,7 +153,7 @@ def scan_js(path: Path):
     for lineno, line in enumerate(cleaned.splitlines(), start=1):
         for m in STRING_LITERAL_RE.finditer(line):
             snippet = m.group(2).strip()
-            if snippet and ACCENTED_RE.search(snippet):
+            if snippet and looks_french(snippet):
                 findings.append((lineno, snippet[:80]))
     return findings
 
@@ -143,7 +165,7 @@ def scan_php(path: Path):
     for lineno, line in enumerate(cleaned.splitlines(), start=1):
         for m in STRING_LITERAL_RE.finditer(line):
             snippet = m.group(2).strip()
-            if snippet and ACCENTED_RE.search(snippet):
+            if snippet and looks_french(snippet):
                 findings.append((lineno, snippet[:80]))
     return findings
 

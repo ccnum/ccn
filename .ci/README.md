@@ -36,6 +36,23 @@ exécute ce même check sur toute PR touchant `plugins/thematique/**`.
   candidats à un item de langue (la BDD ne se traduit pas au chargement de
   la page). Ajoutées à la baseline lors de l'élargissement du scan à tout
   le plugin (2026-08).
+- `thematique_pipelines.php:191,195` (`de l'email`, `de l'avatar`) :
+  libellé passé à `thematique_cioidc_maj_champ()` uniquement pour composer
+  un message `spip_log(...)` de debug (mise à jour d'un champ auteur via le
+  SSO) — jamais affiché à l'utilisateur. Le `STRIP_PATTERN` sur les appels
+  `spip_log(...)` ne le voit pas car la chaîne est construite dans un
+  paramètre séparé, pas littéralement à l'intérieur de l'appel. Ajoutées
+  lors du renforcement du filtre (voir note ci-dessous).
+
+Le filtre a longtemps ignoré tout texte en dur **sans caractère accentué**
+(ex: `data-tip="J'aime"`) : il ne reposait que sur `ACCENTED_RE`. Depuis
+2026-08, `looks_french()` détecte aussi les élisions françaises (`j'/n'/l'/
+d'/c'/m'/s'/t'/qu'`), qui n'ont quasiment aucun faux positif en dehors du
+français — sauf schéma `'X'` à une lettre (filtre SPIP, ternaire JS), d'où
+le lookahead qui exige une lettre juste après l'apostrophe. La regex
+d'attribut (`HTML_ATTR_RE`) a aussi été corrigée : elle traitait `'` et `"`
+comme un seul et même délimiteur, donc `data-tip="J'aime"` se faisait
+tronquer à l'apostrophe elle-même avant même d'atteindre le filtre.
 
 ## Regénérer la baseline
 
