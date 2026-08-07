@@ -5,9 +5,10 @@
 	[(#ENV{id_parent}|>{0}|oui)
 		<p class="forum-redaction__reponse-a"><:thematique:reponse_a_commentaire_existant:></p>
 	]
-	[(#ENV**{erreurs/texte})]
+	<p id="texte-erreur" class="erreur" role="alert">[(#ENV**{erreurs/texte})]</p>
 	<div class="editer">
-		<textarea id="texte" name="texte" rows="2" class="forum-redaction__textarea">[(#ENV{texte}|entites_html)]</textarea>
+		<label for="texte" class="sr-only"><:thematique:redigez_commentaire:></label>
+		<textarea id="texte" name="texte" rows="2" class="forum-redaction__textarea" aria-describedby="texte-erreur">[(#ENV{texte}|entites_html)]</textarea>
 	</div>
 	<div style="display: flex; justify-content: end;">
 		<div class="forum-actions">
