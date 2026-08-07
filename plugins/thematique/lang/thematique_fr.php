@@ -14,6 +14,7 @@ return [
 	'agenda'                         => 'Agenda',
 	'ajouter_descriptif_classe'      => 'Ajouter le descriptif de la classe',
 	'annuler'                        => 'Annuler',
+	'attendre_livrable_final'        => 'J\'attends le livrable final de cette consigne',
 	'aucune_actualite'               => 'Il n\'a aucune actualité pour le moment',
 	'ajouter_contenu_integre'        => 'Ajouter un contenu intégré (url)',
 	'ajouter_document'               => 'Ajouter un document',
