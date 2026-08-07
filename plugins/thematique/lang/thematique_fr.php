@@ -7,6 +7,7 @@ if (!defined('_ECRIRE_INC_VERSION')) {
 return [
 	'acceder_a_ma_reponse'           => 'Accéder à ma réponse',
 	'agora'                          => 'Agora',
+	'aller_au_contenu'               => 'Aller au contenu',
 	'agrandir_reduire_modale'        => 'Agrandir/Réduire la modale',
 	'acces_reserve_webmestres'       => 'Accès réservé aux webmestres.',
 	'aide_info'                     => 'Aide',

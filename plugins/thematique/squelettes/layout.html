@@ -48,6 +48,8 @@ Id de la rubrique restreinte sélectionnée : calculés en un seul appel]
 			crossorigin="anonymous" defer></script>
 	</head>
 	<body>
+	<a href="#global" class="skip-link"><:thematique:aller_au_contenu:></a>
+	<div id="a11y_announcer" class="sr-only" role="status" aria-live="polite"></div>
 	<div id="tooltip-sidebarCache" class="tooltip-sidebarCache"></div>
 	<div id="sidebarCache"></div>
 		[(#TYPE_OBJET|=={evenements}|oui|et{#GET{admin}|<{0}|oui}|non)

@@ -31,6 +31,8 @@ function addCloseModal() {
 				class="tooltip_bottom_left"
 				data-tip="${CCN.lang.fermer_la_modale}"
 				aria-label="${CCN.lang.fermer_la_modale}"
+				role="button"
+				tabindex="0"
 				style="width: fit-content;margin-bottom:-60px;"
 			>
 				<span class="icon icon-close"></span>

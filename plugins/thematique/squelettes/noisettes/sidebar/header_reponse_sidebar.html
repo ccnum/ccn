@@ -42,7 +42,7 @@ Arguments :
 	</div>
 	[(#ENV{type_objet}|in_array{#LISTE{blogs,evenements}}|oui)
 		<div class="popup_titre [popup_titre_(#ENV{type_objet})]">
-			<div class="#EDIT{titre} titre">[(#TITRE)]</div>
+			<h2 class="#EDIT{titre} titre">[(#TITRE)]</h2>
 			<div class="auteur_date">
 				<span class="date #EDIT{date}">[(#DATE|nom_jour)] [(#DATE|affdate)]</span>
 				[<span class="auteur">(#LESAUTEURS)</span>]

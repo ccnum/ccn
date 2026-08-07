@@ -8,17 +8,17 @@
 			<div class="fiche_titre couleur_texte_[(#GET{type_objet})] couleur_[(#GET{type_objet})][(#ENV{id_rubrique}|classe_numero)]">
 				<div class="texte">
 					<div class="photo">[(#ID_RUBRIQUE|thematique_logo_carre)]</div>
-					<div class="#EDIT{titre} titre">[(#TITRE)]</div>
+					<h2 class="#EDIT{titre} titre">[(#TITRE)]</h2>
 					<div class="auteur_date">[(#GET{titre_parent}) - ][<span class="#EDIT{date}">(#DATE|affdate)</span>]</div>
 				</div>
 			</div>
   		]
 
 		<div class="popup_titre">
-			<div class="titre">
+			<h2 class="titre">
 				[(#GET{type_objet}|=={travail_en_cours}|oui) <:thematique:repondre_a_la_consigne:>]
 				[(#GET{type_objet}|=={travail_en_cours}|non) <:thematique:publier_nouvel_article:>]
-			</div>
+			</h2>
 			<div class="date" id="entete_publication">
 [(#GET{type_objet}|=={travail_en_cours}|oui) <:thematique:etape1_repondre_consigne:>]
 				[(#GET{type_objet}|=={travail_en_cours}|non) <:thematique:etape1_creer_article:>]

@@ -2,6 +2,27 @@ let canShowConsigneSidebar = false;
 
 let _sidebarTrigger = null;
 
+// Titre de page d'origine (avant toute navigation ajax dans la sidebar), pour
+// le restaurer à la fermeture. Cf. updatePageTitleFromSidebarContent().
+const _originalDocumentTitle = document.title;
+
+/**
+ * Dans cette architecture SPA-like, la navigation (article, rubrique,
+ * forum…) charge du contenu en ajax dans la sidebar sans jamais recharger la
+ * page : document.title ne bouge donc jamais tout seul, et un lecteur
+ * d'écran n'a aucun repère de changement de "page". On répercute ici le
+ * titre du contenu affiché sur document.title, et on l'annonce dans la
+ * région #a11y_announcer (cf layout.html) pour un lecteur d'écran.
+ *
+ * @see loadContentInMainSidebar
+ */
+function updatePageTitleFromSidebarContent() {
+	const $titre = $('#sidebar_main_inner .fiche_titre .titre, #sidebar_main_inner .popup_titre .titre').first();
+	const titre = $titre.length ? $titre.text().trim() : '';
+	document.title = titre ? `${titre} - ${_originalDocumentTitle}` : _originalDocumentTitle;
+	$('#a11y_announcer').text(titre);
+}
+
 const SIDEBAR_FOCUSABLE = 'a[href], button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])';
 
 function _sidebarFocusableElements() {
@@ -1025,6 +1046,7 @@ function loadContentInMainSidebar(url, callback, typeContenu) {
 
 		$('body').removeClass('loading');
 		$('#sidebar_content').scrollTop(0);
+		updatePageTitleFromSidebarContent();
 		_sidebarFocusFirst();
 		if(["consigne", "reponse"].includes(typeContenu)) {
 			initMissionTabs();
@@ -1140,14 +1162,15 @@ function blankMainSidebar(key) {
 function showSidebar() {
 	_sidebarTrigger = document.activeElement;
 	$('body').addClass('hasSidebarOpen');
-	$('#sidebar').addClass('show');
+	$('#sidebar').addClass('show').attr('aria-hidden', 'false');
 	updateConnecteurs();
 }
 
 function closeSidebar() {
 	$('body').removeClass('hasSidebarOpen hasSidebarExpanded');
-	$('#sidebar').removeClass('show');
+	$('#sidebar').removeClass('show').attr('aria-hidden', 'true');
 	$('#menu_bas .logo a').not('#menu-timeline .logo a').removeClass('selected');
+	document.title = _originalDocumentTitle;
 	if (_sidebarTrigger && typeof _sidebarTrigger.focus === 'function') {
 		_sidebarTrigger.focus();
 	}

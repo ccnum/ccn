@@ -8,6 +8,40 @@
 	margin: 0px;
 }
 
+/* --------- Accessibilité --------- */
+
+/* Masque visuellement sans masquer aux lecteurs d'écran (titres techniques,
+   régions live d'annonce de navigation). */
+.sr-only {
+	position: absolute;
+	width: 1px;
+	height: 1px;
+	padding: 0;
+	margin: -1px;
+	overflow: hidden;
+	clip: rect(0, 0, 0, 0);
+	white-space: nowrap;
+	border: 0;
+}
+
+/* Lien d'évitement : masqué comme .sr-only tant qu'il n'a pas le focus
+   clavier, redevient visible au-dessus de tout au Tab. */
+.skip-link {
+	position: absolute;
+	top: -3rem;
+	left: 0.5rem;
+	z-index: 10000;
+	padding: 0.6rem 1rem;
+	background: #fff;
+	color: #000;
+	font-weight: 600;
+	border-radius: 0 0 4px 4px;
+	transition: top 0.15s ease;
+}
+.skip-link:focus {
+	top: 0;
+}
+
 p {  /* Ecrasons le css appliqué sur "*" pour gérer l'exception des paragraphes. */
     display: block;
     margin-block-start: 1em;
