@@ -36,14 +36,7 @@ function callbackCliqueSurVoirLesReponses(e) {
         return;
     }
     const commentaire = bouton.closest('.forum-commentaire');
-    const reponses = commentaire.querySelector('.reponse-list');
-    if(reponses.style.display == "flex") {
-        reponses.style.display = "none";
-        bouton.innerText = CCN.lang.forum_voir_reponses
-    } else {
-        reponses.style.display = "flex";
-        bouton.innerText = CCN.lang.forum_masquer_reponses
-    }
+    commentaire.classList.toggle("is-opened")
 }
 
 /**
