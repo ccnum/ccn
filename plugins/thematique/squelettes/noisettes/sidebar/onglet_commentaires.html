@@ -1,4 +1,28 @@
-<INCLURE{fond=noisettes/inc/forumv2/formulaire_forum_article, 
-	id_article=#ID_ARTICLE, 
-	env
-} />
+<div class="forum-article">
+	<div class="encadre-message">
+		<p><:thematique:envie_de_reagir:></p>
+		[(#SESSION{id_auteur}|oui)
+			<button class="bouton_encadre" onclick="callbackCliqueSurCommenter(event)"><:thematique:commenter:></button>
+		]
+		[(#SESSION{id_auteur}|non)
+			[(#PLUGIN{cioidc}|oui)
+				<a class="bouton_encadre" href="[(#URL_PAGE{login}|parametre_url{url,#SELF}|parametre_url{cioidc,oui})]"><:thematique:se_connecter_ent_commenter:></a>
+			]
+		]
+	</div>
+	[(#SESSION{id_auteur}|oui)
+		<div class="forum-commentaire-racine ajax" hidden>
+			#FORMULAIRE_FORUMV2{#ENV{id_article}, 0}
+		</div>
+	]
+	<!-- Arbre des commentaires -->
+	<div class="forum-liste">
+		[(#ENV{id_article}|afficher_forum_arbre)]
+	</div>
+	[(#SESSION{id_auteur}|oui)
+		<!-- Formulaire de réponse unique -->
+		<div id="forum-formulaire-reponse" class="forum-formulaire-reponse ajax" hidden>
+			#FORMULAIRE_FORUMV2{#ENV{id_article}, 0}
+		</div>
+	]
+</div>
