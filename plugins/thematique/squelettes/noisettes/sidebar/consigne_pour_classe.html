@@ -16,7 +16,7 @@
 		<div id="sidebar-header-container">
 			<INCLURE{
 				fond=noisettes/sidebar/header_sidebar,
-				id_article=#ID_ARTICLE, 
+				id_article=#ID_ARTICLE,
 				titre_parent=#GET{titre_parent},
 				titre_consigne=#GET{titre_consigne_final},
 				id_consigne=#GET{id_consigne},
@@ -34,7 +34,7 @@
 					</div>
 					<div class="tabs-content">
 						<INCLURE{
-							fond=noisettes/sidebar/onglet_description_classe,
+							fond=noisettes/sidebar/onglet_description_role_simple,
 							id_article=#GET{id_consigne},
 							env
 						} />
@@ -48,8 +48,6 @@
 					</div>
 					<div class="tabs-content">
 						<INCLURE{fond=noisettes/sidebar/onglet_commentaires, env} />
-						
-						
 					</div>
 				</div>
 			</div>
