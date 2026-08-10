@@ -2,14 +2,18 @@
 	[(#ENV{nombre_reponses}|>{0}|oui)
 		<div class="badge">
 			[(#ENV{nombre_reponses}|=={1}|oui)
-				<:thematique:nombre_reponses_singulier:>
+				<:forum:nombre_reponses_singulier:>
 			]
 			[(#ENV{nombre_reponses}|>{1}|oui)
-				<:thematique:nombre_reponses_pluriel{nombre=#ENV{nombre_reponses}}:>
+				<:forum:nombre_reponses_pluriel{nombre=#ENV{nombre_reponses}}:>
 			]
 		</div>
 	]
-	<div class="col-forum col-forum-icone[ (#ENV{id_rubrique_classe}|oui)bgc_classe_[(#ENV{id_rubrique_classe}|classe_numero)]]">[(#ENV{id_rubrique_classe}|oui)[(#ENV{id_rubrique_classe}|classe_icone)]]</div>
+	<div class="col-forum col-forum-icone-container">
+		<div class="forum-card-icone [ (#ENV{id_rubrique_classe}|oui)bgc_classe_[(#ENV{id_rubrique_classe}|classe_numero)]]">
+			[(#ENV{id_rubrique_classe}|oui)[(#ENV{id_rubrique_classe}|classe_icone)]]
+		</div>
+	</div>
 	<div class="col-forum col-forum-message">
 		<div class="header">
 			<div>#ENV{date_heure}</div>
@@ -23,15 +27,17 @@
 			   onclick="callback_clique_sur_lire_la_suite_du_commentaire(event)"
 			   style="display: none;"
 			>
-				<:thematique:lire_la_suite_commentaire:>
+				<:forum:lire_la_suite_commentaire:>
 			</a>
 		</div>
-		[(#ENV{est_une_previsualisation}|non)
+		[(#ENV{est_une_previsualisation}|non|et{#ENV{is_root}|=={oui}|oui})
 			<div class="footer forum-actions">
 				<div>
 					[(#ENV{nombre_reponses}|>{0}|oui)
-						<button onclick="callbackCliqueSurVoirLesReponses(event)">
-							<:thematique:forum_voir_reponses:>
+						<button onclick="callbackCliqueSurVoirLesReponses(event)"
+								class="link-button voir-les-reponses">
+							<div class="texte-voir-les-reponses"></div>
+							<div class="icon icon-down"></div>
 						</button>
 					]
 				</div>
@@ -43,6 +49,7 @@
 							value="#ENV{id_forum}"
 							data-id-forum="#ENV{id_forum}"
 							onclick="callbackCliqueSurRepondreAuCommentaire(event)"
+							class="link-button"
 						>
 							<:thematique:repondre:>
 						</button>

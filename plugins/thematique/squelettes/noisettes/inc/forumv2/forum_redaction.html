@@ -10,10 +10,24 @@
 		<label for="texte" class="sr-only"><:thematique:redigez_commentaire:></label>
 		<textarea id="texte" name="texte" rows="2" class="forum-redaction__textarea" aria-describedby="texte-erreur">[(#ENV{texte}|entites_html)]</textarea>
 	</div>
-	<div style="display: flex; justify-content: end;">
+	<div style="display: flex; 
+				justify-content: end;
+				padding-top: 0.8rem;"
+	>
 		<div class="forum-actions">
-			<button onclick="callbackCliqueSurAnnuler(event)" type="button"><:thematique:annuler:></button>
-			<button type="submit" name="publication_forum_action" value="previsualiser"><:thematique:previsualiser:></button>
+			<button onclick="callbackCliqueSurAnnuler(event)" 
+					type="button"
+					class="link-button cancel-button"
+			>
+				<:thematique:annuler:>
+			</button>
+			<button type="submit" 
+					name="publication_forum_action" 
+					value="previsualiser"
+					class="previsualisation-button"
+			>
+				<:forum:previsualiser:>	
+			</button>
 		</div>
 	</div>
 </div>
