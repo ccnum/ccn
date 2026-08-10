@@ -2,20 +2,6 @@
 [(#TYPE_OBJET|in_array{#LISTE{ressources,agora,livrables}}|oui)
 <div class="call_sidebar_main couleur_[(#TYPE_OBJET)][(#ID_ARTICLE|thematique_id_rubrique_article|classe_numero)]">
 	<div class="call_sidebar_main_inner">
-		[(#REM)
-			[(#TYPE_OBJET|=={classes}|oui)
-				Afficher les autres classes
-			]
-
-			[(#TYPE_OBJET|=={travail_en_cours}|oui)
-				Afficher les réponses des autres classes
-			]
-
-			[(#TYPE_OBJET|=={consignes}|oui)
-				Afficher les réponses des classes
-			]
-		]
-
 		[(#TYPE_OBJET|=={livrables}|oui)
 			<:thematique:retour_aux_livrables:>
 		]
@@ -25,11 +11,6 @@
 
 		[(#TYPE_OBJET|=={agora}|oui)
 			<:thematique:retour_a_lagora:>
-		]
-		[(#REM)
-			[(#TYPE_OBJET|is_null|oui)
-				&#9664; Retour
-			]
 		]
 	</div>
 </div>
