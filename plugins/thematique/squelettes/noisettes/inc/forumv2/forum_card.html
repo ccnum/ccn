@@ -2,10 +2,10 @@
 	[(#ENV{nombre_reponses}|>{0}|oui)
 		<div class="badge">
 			[(#ENV{nombre_reponses}|=={1}|oui)
-				<:forum:nombre_reponses_singulier:>
+				<:thematique:nombre_reponses_singulier:>
 			]
 			[(#ENV{nombre_reponses}|>{1}|oui)
-				<:forum:nombre_reponses_pluriel{nombre=#ENV{nombre_reponses}}:>
+				<:thematique:nombre_reponses_pluriel{nombre=#ENV{nombre_reponses}}:>
 			]
 		</div>
 	]
@@ -27,7 +27,7 @@
 			   onclick="callback_clique_sur_lire_la_suite_du_commentaire(event)"
 			   style="display: none;"
 			>
-				<:forum:lire_la_suite_commentaire:>
+				<:thematique:lire_la_suite_commentaire:>
 			</a>
 		</div>
 		[(#ENV{est_une_previsualisation}|non|et{#ENV{is_root}|=={oui}|oui})
