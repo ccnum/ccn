@@ -14,7 +14,7 @@
                 align-items: end;"
     >
         <div style="font-size: 0.7rem;">MISSION N°#ENV{rang_mission}</div>
-        <button onclick="alert('Quand on clique ici, ça va rediriger vers la réponse en question.')"
+        <button onclick="callReponse(#ENV{id_reponse})"
                 class="button-style-important">
                 <:thematique:bouton_publication_card:>
         </button>
