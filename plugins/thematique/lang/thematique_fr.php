@@ -250,6 +250,12 @@ return [
 	'veuillez_connecter_enregistrer_commenter' => 'Veuillez vous <b>connecter</b> ou vous <b>enregistrer</b> pour <b>commenter</b>.',
 	'voir_ma_reponse'                => 'Voir ma réponse',
 
+	// Fiche participant
+	'label_header_fiche_participant' => 'Classe participante',
+	'titre_onglet_publications' => 'Publications',
+	'titre_onglet_commentaires' => 'Discussions',
+	'bouton_publication_card' => 'Voir la ressource',
+
 	// Menu du bas (sommaire.html et fichiers menu_*.html)
 	'ascendant'                      => 'Ascendant',
 	'cap_sur_annee'                  => 'Cap sur l\'année',
