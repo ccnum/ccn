@@ -1,0 +1,22 @@
+<div class="sidebar_bubble header-reponse">
+	<div id="row_header">
+		<div id="header-col-left" style="background-color: var(--color-classe-light-[(#ENV{id_rubrique}|classe_numero)]);">	
+			<div class="image-classe-dans-reponse">
+				<INCLURE{fond=modeles/classe_icone, id_rubrique=#ENV{id_rubrique}, titre=#ENV{nom_classe}} />
+			</div>
+            <div>#ENV{nom_classe}</div>
+		</div>
+		<div id="header-col-right">
+			<div id="header-row-1">
+				<div class="etiquette-etape">
+					<span class="texte-etiquette">Classe participante</span>
+				</div>
+				<INCLURE{fond=noisettes/sidebar/normal_header_icons, env} />
+			</div>
+			<div id="header-row-2">
+					#ENV*{description_classe}
+			</div>
+		</div>
+	</div>
+</div>
+

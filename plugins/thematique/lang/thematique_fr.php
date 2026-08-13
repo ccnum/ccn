@@ -275,8 +275,7 @@ return [
 	'tous_les_medias'                => 'Tous les médias',
 	'toutes_les_actualites'          => 'Toutes les actualités',
 	'tri'                            => 'Tri',
-	'classes_participantes_prefixe'  => 'Les',
-	'classes_participantes_suffixe'  => 'classes participantes',
+	'les_participants'  => 'Les participants',
 
 	// inc-head.html (liens rel=alternate)
 	'rss_dernieres_publications'     => 'Dernières publications',

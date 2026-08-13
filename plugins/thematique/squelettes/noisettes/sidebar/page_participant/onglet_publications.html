@@ -1,0 +1,7 @@
+<div style="display: flex; flex-direction: column; gap: 1rem;">
+    <BOUCLE_reponses(ARTICLES){id_rubrique}{id_consigne>0}{par date}{inverse}>
+        [(#SET{titre_c, #ID_CONSIGNE|filtre_titre_consigne})]
+        [(#SET{rang_c, #ID_CONSIGNE|filtre_rang_consigne})]
+        <INCLURE{fond=noisettes/sidebar/page_participant/card_publication, date=#DATE, titre_consigne=#GET{titre_c}, rang_mission=#GET{rang_c}, ajax, env} />
+    </BOUCLE_reponses>
+</div>

@@ -554,7 +554,6 @@ function callClasse(id_classe) {
 
 	if (id_classe !== '' && !Number.isInteger(Number(id_classe))) return;
 	changeTimelineMode('consignes');
-	expandSidebar();
 	setFullscreenModeToCols(false);
 	updateMenuIcon(['classes', 'classes-' + id_classe], 'sidebarView');
 
@@ -574,7 +573,7 @@ function callClasse(id_classe) {
 				}, "Classe", "./spip.php?page=rubrique&id_objet=" + id_classe + "&mode=complet&type_objet=classes"
 			);
 		},
-		"ressource"
+		"classe"
 	);
 }
 /**
@@ -841,7 +840,6 @@ function createReponse(id_consigne, id_rubrique_classe, numero) {
 
 	const url = CCN.projet.url_popup_reponseajout + "&id_consigne=" + id_consigne + "&id_rubrique=" + id_rubrique_classe + "&rang=" + rang + "&date_limite=" + dateLimite;
 	loadContentInMainSidebar(url, null, "publication_mission");
-
 }
 /**
  * Cherche la réponse correspondant à un id_reponse dans CCN.consignes.
@@ -1131,7 +1129,7 @@ function loadContentInMainSidebar(url, callback, typeContenu) {
 		$('#sidebar_content').scrollTop(0);
 		updatePageTitleFromSidebarContent();
 		_sidebarFocusFirst();
-		if(["consigne", "reponse", "blog"].includes(typeContenu)) {
+		if(["consigne", "reponse", "blog", "classe"].includes(typeContenu)) {
 			initMissionTabs();
 			if(["consigne", "reponse"].includes(typeContenu)) {
 				initCommentaires();

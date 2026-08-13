@@ -1,0 +1,41 @@
+<BOUCLE_classe(RUBRIQUES){id_rubrique=#ENV{id_objet}}{tout}>
+	#SET{description_classe, #TEXTE}
+	#SET{nom_classe, #TITRE}
+</BOUCLE_classe>
+<div class="bloc_article">
+	<INCLURE{
+		fond=noisettes/sidebar/page_participant/header_presentation_classe,
+		id_rubrique=#ENV{id_objet}, 
+		nom_classe=#GET{nom_classe},
+		description_classe=#GET{description_classe},
+		ajax,
+		env
+	} />
+	<div style="flex: 1;
+				min-height: 0;"
+	>
+		<div id="mission-tabs">
+			<div>
+				<div class="tabs-title">
+					<:thematique:titre_onglet_publications:>
+				</div>
+				<div class="tabs-content">
+					<INCLURE{fond=noisettes/sidebar/page_participant/onglet_publications,
+						id_rubrique=#ENV{id_objet}, 
+						env
+					} />
+				</div>
+			</div>
+			<div data-tab-id="commentaires">
+				<div class="tabs-title">
+					<:thematique:titre_onglet_commentaires:>
+				</div>
+				<div class="tabs-content">
+					<INCLURE{fond=noisettes/sidebar/onglet_commentaires, env} />
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+
