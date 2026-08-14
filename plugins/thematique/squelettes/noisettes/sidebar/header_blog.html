@@ -1,0 +1,28 @@
+<BOUCLE_article_sidebar(ARTICLES){id_article}{tout}>
+<div class="sidebar_bubble">
+	<div id="row_header">
+		<div id="header-col-left">
+			<div class="photo">[(#ID_ARTICLE|thematique_logo_carre{article})]</div>
+			<div class="auteur">
+				<BOUCLE_auteur_consigne(AUTEURS){id_article}{tout}>
+					#NOM
+				</BOUCLE_auteur_consigne>
+			</div>
+			<div class="#EDIT{date} date">
+				<:thematique:publie_le:> [(#DATE|affdate)]
+			</div>
+		</div>
+		<div id="header-col-right">
+			<div style="display: flex;
+                        justify-content: end;">
+                <INCLURE{fond=noisettes/sidebar/normal_header_icons, env} />
+            </div>
+            <div style="font-weight: 700;
+                        font-size: 14px;"
+            >
+                [(#TITRE)]
+            </div>
+		</div>
+	</div>
+</div>
+</BOUCLE_article_sidebar>

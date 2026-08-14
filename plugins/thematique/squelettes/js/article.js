@@ -7,6 +7,17 @@
 function Article() {
 
 	/**
+	 * Échappe les caractères HTML spéciaux (le titre passe par decodeHtmlEntities,
+	 * donc on doit ré-échapper avant de l'injecter dans un bloc HTML).
+	 *
+	 * @param {string} texte
+	 * @returns {string}
+	 */
+	function echapperHtml(texte) {
+		return $('<div/>').text(texte).html();
+	}
+
+	/**
 	 * Initialise l'article.
 	 *
 	 * @param {Object} data - Données à affecter à l'instance
@@ -34,45 +45,50 @@ function Article() {
 		const layer = isBlog ? CCN.timelineLayerBlogs : CCN.timelineLayerEvenements;
 		const date_texte = formatDateCourte(this.date);
 
-		this.div_base = $('<div/>')
-			.attr('class', 'timeline_item ' + prefix + '_container')
-			.css({
-				'top': (this.y * 100) + '%',
-				'left': (this.x / CCN.projet.nombre_jours_total * 100) + '%'
-			});
+		const titreSur = echapperHtml(this.titre);
+		const dateSure = echapperHtml(date_texte);
 
-		this.div_base.append($('<img src="' + urlImg + '">'));
+		const picto_commentaires = this.nombre_commentaires > 0
+			? `<div class="picto_nombre_commentaires">${this.nombre_commentaires}</div>`
+			: '';
 
-		const spanDate = $('<span class="' + prefix + '_date">').text(date_texte);
-		const bTitre = $('<b>').text(this.titre);
-
-		let contentDiv;
+		let html;
 		if (isBlog) {
-			const articleClass = 'article_blog' +
-				((this.titre.match("gazette") || this.titre.match("novamag") || this.titre.match("magazine")) ? ' article_blog2' : '');
-			contentDiv = $('<div class="article_blog_inner">')
-				.append(bTitre)
-				.append('<br/>')
-				.append(spanDate);
-			const divArticle = $('<div>').attr('id', 'article_blog' + this.id).attr('class', articleClass).append(contentDiv);
-			if (this.nombre_commentaires > 0) {
-				divArticle.append($('<div class="picto_nombre_commentaires">').text(this.nombre_commentaires));
-			}
-			this.div_texte = $('<button type="button"/>').attr('class', 'btn-reset').append(divArticle);
+			const est_magazine = /gazette|novamag|magazine/.test(this.titre);
+			const classe_article = 'article_blog' + (est_magazine ? ' article_blog2' : '');
+
+			html = `
+				<div class="timeline_item ${prefix}_container" style="top:${this.y * 100}%; left:${this.x / CCN.projet.nombre_jours_total * 100}%;">
+					<div id="article_blog${this.id}" class="${classe_article} bulle_bd">
+						<svg class="bubble_svg" aria-hidden="true"></svg>
+						<div class="bulle_contenu">
+							<div>${titreSur}</div><br/>
+							<span class="${prefix}_date">${dateSure}</span>
+						</div>
+						${picto_commentaires}
+					</div>
+				</div>
+			`;
 		} else {
-			const divTexteInner = $('<div class="article_evenement_texte">')
-				.append(bTitre)
-				.append('<br/>')
-				.append(spanDate);
-			contentDiv = $('<div class="article_evenement_inner">').append(divTexteInner);
-			const divArticle = $('<div>').attr('id', 'article_evenement' + this.id).attr('class', 'article_evenement').append(contentDiv);
-			if (this.nombre_commentaires > 0) {
-				divArticle.append($('<div class="picto_nombre_commentaires">').text(this.nombre_commentaires));
-			}
-			this.div_texte = $('<button type="button"/>').attr('class', 'btn-reset').append(divArticle);
+			html = `
+				<div class="timeline_item ${prefix}_container" style="top:${this.y * 100}%; left:${this.x / CCN.projet.nombre_jours_total * 100}%;">
+					<div id="article_evenement${this.id}" class="article_evenement">
+						<svg class="bubble_svg"></svg>
+						<div class="article_evenement_inner">
+							<div class="bulle_contenu">
+								<div class="bulle-texte">${titreSur}</div><br/>
+								<span class="${prefix}_date">${dateSure}</span>
+							</div>
+						</div>
+						${picto_commentaires}
+					</div>
+				</div>
+			`;
 		}
 
-		this.div_base.append(this.div_texte);
+		this.div_base = $(html.trim());
+		this.div_texte = this.div_base.find('.bulle_contenu');
+
 		layer.prepend(this.div_base);
 
 		const _thisId = this.id_objet;
@@ -84,7 +100,7 @@ function Article() {
 		);
 
 		if (CCN.admin == 0) {
-			$(this.div_base).draggable({
+			this.div_base.draggable({
 				axis: "y",
 				start: function (event, ui) {
 					$(this).children().children().removeAttr("onClick");

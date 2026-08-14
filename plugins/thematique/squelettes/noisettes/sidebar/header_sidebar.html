@@ -1,12 +1,3 @@
-[(#REM)
-Arguments :
-- id_article
-- titre_parent
-- titre_consigne
-- id_consigne
-- type_objet
-- rang
-]
 <BOUCLE_article_sidebar(ARTICLES){id_article}{tout}>
 <div class="sidebar_bubble">
 	<div id="row_header">
@@ -39,14 +30,5 @@ Arguments :
 			</div>
 		</div>
 	</div>
-	[(#ENV{type_objet}|in_array{#LISTE{blogs,evenements,ressources,agora}}|oui)
-		<div class="popup_titre [popup_titre_(#ENV{type_objet})]">
-			<h2 class="#EDIT{titre} titre">[(#TITRE)]</h2>
-			<div class="auteur_date">
-				<span class="date #EDIT{date}">[(#DATE|nom_jour)] [(#DATE|affdate)]</span>
-				[<span class="auteur">(#LESAUTEURS)</span>]
-			</div>
-		</div>
-	]
 </div>
 </BOUCLE_article_sidebar>

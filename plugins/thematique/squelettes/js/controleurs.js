@@ -355,11 +355,23 @@ async function changeTimelineMode(type) {
 		$('body').addClass(classCss[type]);
 
 		updateMenuIcon([type], 'timelineMode');
+		await do_stuff_after_timeline_mode_has_been_changed(type)
 	}
 
 	$('#menu_bas .logo a.menu_logo_type_sidebarView').removeClass('selected');
 
 }
+
+async function do_stuff_after_timeline_mode_has_been_changed(type) {
+	if (type === 'blogs' || type === 'evenements') {
+		await ensureArticlesLoaded(type);
+		document.querySelectorAll(".article_blog").forEach(blog=>{
+			initBulle(blog, CCN.urlImgBlog, 'black')
+		})
+	}
+}
+
+
 /**
  * Gère les événements lors du click sur une consigne et appelle {@link consigne#showInTimeline}.
  *
@@ -604,6 +616,7 @@ function callArticleBlog(id_article) {
 	changeTimelineMode('blogs');
 	setFullscreenModeToCols(false);
 	updateMenuIcon(['blogs'], 'mainView');
+	flouterLesBullesNonSelectionnees(id_article)
 
 	const url = CCN.projet.url_popup_blog + "&page=article&id_article=" + id_article;
 	loadContentInMainSidebar(
@@ -1048,9 +1061,11 @@ function loadContentInMainSidebar(url, callback, typeContenu) {
 		$('#sidebar_content').scrollTop(0);
 		updatePageTitleFromSidebarContent();
 		_sidebarFocusFirst();
-		if(["consigne", "reponse"].includes(typeContenu)) {
+		if(["consigne", "reponse", "blog"].includes(typeContenu)) {
 			initMissionTabs();
-			initCommentaires();
+			if(["consigne", "reponse"].includes(typeContenu)) {
+				initCommentaires();
+			}
 		}
 		if(typeContenu === "publication_mission") {
 			// initCompteurCaracteres()
@@ -1193,4 +1208,112 @@ function _sidebarFocusFirst() {
 	} else {
 		$('#sidebar').attr('tabindex', '-1').focus();
 	}
+}
+
+function selectBlog(blogId) {
+	const selected = document.querySelector(`.article_blogarticle_${blogId}`)
+	const timelineItem = selected.closest(".timeline_item")
+	document.querySelectorAll(".article_blog").forEach(blog=>{
+		blog.classList.add("blured")
+	})
+	timelineItem.classList.add("blured")
+}
+
+
+function initBulle(conteneur, urlSvg, couleur) {
+    const svgPlaceholder = conteneur.querySelector('.bubble_svg');
+
+    fetch(urlSvg)
+        .then(reponse => reponse.text())
+        .then(texteSvg => {
+            const temp = document.createElement('div');
+            temp.innerHTML = texteSvg.trim();
+            const svgEl = temp.querySelector('svg');
+
+            svgEl.classList.add('bubble_svg');
+            svgEl.setAttribute('preserveAspectRatio', 'none');
+            svgPlaceholder.replaceWith(svgEl);
+
+            if (couleur) conteneur.style.setProperty('--bulle-couleur', couleur);
+
+            // attend que les polices soient prêtes avant de mesurer le texte
+            document.fonts.ready.then(() => {
+                ajusterBulle(conteneur);
+				conteneur.closest(".timeline_item").classList.remove("flou")
+            });
+        });
+}
+
+/**
+ * Redimensionne la bulle autour de son texte, en cherchant un ratio proche du carré.
+ */
+function ajusterBulle(conteneur) {
+	const contenu = conteneur.querySelector('.bulle_contenu');
+    const LARGEUR_MIN = 70;   // px, taille plancher
+    const MARGE = 1.5;       // marge interne autour du texte (35%)
+	const MAX_ITERATIONS = 6;
+	const TOLERANCE = 4; // px, pour détecter la convergence
+
+    // 1. mesure du texte sur une seule ligne
+ 	// IMPORTANT : on repart de zéro à chaque appel, pour ne pas
+    // hériter d'une taille calculée lors d'un appel précédent
+    conteneur.style.width = '';
+    conteneur.style.height = '';
+    contenu.style.maxWidth = 'none';
+    contenu.style.whiteSpace = 'nowrap';
+
+    const largeurNaturelle = contenu.scrollWidth;
+    const hauteurLigne = contenu.scrollHeight;
+    contenu.style.whiteSpace = '';
+
+    // 2. largeur cible ≈ racine carrée de la surface -> tend vers un carré
+    let largeurCible = Math.max(LARGEUR_MIN, Math.sqrt(largeurNaturelle * hauteurLigne));
+	let largeurPrecedente = null;
+
+	for (let i = 0; i < MAX_ITERATIONS; i++) {
+		contenu.style.maxWidth = largeurCible + 'px';
+
+        const largeurReelle = contenu.offsetWidth;
+        const hauteurReelle = contenu.scrollHeight;
+
+        // convergence : la largeur cible ne bouge quasiment plus
+        if (largeurPrecedente !== null && Math.abs(largeurCible - largeurPrecedente) < TOLERANCE) {
+            break;
+        }
+
+        largeurPrecedente = largeurCible;
+        largeurCible = Math.max(LARGEUR_MIN, Math.sqrt(largeurReelle * hauteurReelle));
+	}
+
+
+	const largeurFinale = contenu.offsetWidth;
+    const hauteurFinale = contenu.scrollHeight;
+
+    // 5. la bulle épouse le texte + marge
+    conteneur.style.width = (largeurFinale * MARGE) + 'px';
+    conteneur.style.height = (hauteurFinale * MARGE) + 'px';
+}
+
+/**
+ * Change juste la couleur de fond de la bulle.
+ */
+function colorerBulle(conteneur, couleur) {
+    conteneur.style.setProperty('--bulle-couleur', couleur);
+}
+
+function flouterBulle(bulle) {
+    
+}
+
+function deflouterBulle(bulle) {
+	
+}
+
+function flouterLesBullesNonSelectionnees(idBulleSelectionnee) {
+	const article_blog = document.querySelector(`#article_blogarticle_${idBulleSelectionnee}`)
+	const bulleSelectionnee = article_blog.closest(".timeline_item")
+	document.querySelectorAll('.article_blog_container').forEach(bulle => {
+		bulle.classList.add('flou');
+	})
+	bulleSelectionnee.classList.remove('flou');	
 }

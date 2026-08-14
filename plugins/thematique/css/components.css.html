@@ -496,46 +496,47 @@ span[role="img"] {
 
 
 .timeline_item.article_blog_container {
-	width: 100px;
-	height: 100px;
+	min-width: 100px;
+	min-height: 100px;
 	padding: 0;
-	box-sizing: border-box;
+	display: inline-block;
 	transform: scale(0.4);
-	transition: transform 500ms ease;
+	
+	color: var(--color-default);
 }
 
 .show_blogs .article_blog_container{
 	transform: scale(1);
 }
 
-.article_blog_container::before {
-	content: "";
-	display: block;
-	position: absolute;
-	width: 50%;
-	height: 50%;
-	background: #E91E63;
-	z-index: -1;
-	left: 6%;
-	bottom: 6%;
-	transition: all 500ms ease;
-}
-
 .article_blog_container .article_blog{
-	font-size: 12px;
-	color: transparent;
-	width: 100px;
-	height: 100px;
-	position: absolute;
-	top: 0;
-	left: 0;
-	background: #E91E63;
-	border-radius: 50%;
-	transition: all 500ms ease;
+	position: relative;
+    width: 90px;
+    aspect-ratio: 1 / 1;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    box-sizing: border-box;
 }
 
-.show_blogs .article_blog_container .article_blog {
-	color: white;
+.bubble_svg {
+    position: absolute;
+    inset: 0;
+
+    width: 100%;
+    height: 100%;
+    fill: var(--color-bleu-fond);
+	pointer-events: none;
+}
+
+.article_blog_container.flou {
+    filter: blur(1px);
+}
+
+.article_blog_container.flou .bubble_svg {
+	fill: var(--color-blog-not-selected);
 }
 
 .timeline_item.article_evenement_container {
@@ -544,7 +545,6 @@ span[role="img"] {
 	padding: 0;
 	box-sizing: border-box;
 	transform: scale(0.4);
-	transition: transform 500ms ease;
 }
 
 .show_evenements .article_evenement_container{
@@ -576,7 +576,6 @@ span[role="img"] {
 	padding: 0 30px;
 	box-sizing: border-box;
 	background: rgba(0, 0, 0, 0);
-	transition: all 500ms ease;
 }
 
 .article_evenement_container .article_evenement::before {
@@ -602,23 +601,34 @@ span[role="img"] {
 }
 
 .article_blog_container .article_blog .article_blog_inner {
-	text-align: center;
-	vertical-align: middle;
-	display: table-cell;
-	height: 100px;
-	width: 100px;
-	margin: 0;
-	padding: 10px;
-	box-sizing: border-box;
+	width: 60%;
+    text-align: center;
 }
 
-.article_evenement_container .article_evenement_texte {
-	text-align: center;
-	vertical-align: middle;
-	display: table-cell;
-	width: 150px;
-	height: 99px;
-	margin: 20px 15px;
+.bulle_bd {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    /* évite tout saut visuel avant le premier calcul JS */
+    min-width: 6rem;
+    min-height: 6rem;
+}
+
+.bulle_bd .bubble_svg {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 0;
+    pointer-events: none;
+}
+
+.bulle_bd .bulle_contenu {
+    position: relative;
+    z-index: 1;
+    text-align: center;
+    line-height: 1.2;
 }
 
 .article_blog .picto_nombre_commentaires {
@@ -637,26 +647,21 @@ span[role="img"] {
 	text-align: center;
 	border-radius: 50%;
 	transform: scale(0);
-	transition: all 500ms ease;
+	z-index: 2;
 }
 
 .show_blogs .article_blog .picto_nombre_commentaires {
 	transform: scale(1);
 }
 
-.article_blog_date,
-.article_evenement_date {
-	text-transform: uppercase;
-	color: transparent;
-	font-size: 10px;
-	margin-top: 2px;
-	display: block;
-	transition: all 500ms ease;
+.bulle-texte {
+	font-weight: 600;
+    font-size: 14px;
+    line-height: 131%;
 }
 
-.show_blogs .article_blog_date,
-.show_evenements .article_evenement_date {
-	color: rgba(255,255,255,.6);
+.article_blog_container button {
+	position: relative;
 }
 
 .forum_vide {
@@ -703,15 +708,6 @@ span[role="img"] {
 	left: 37px;
 	width: 0px;
 	height: 0px;
-}
-
-.article_blog_container img {
-	position: relative;
-	left: 24px;
-	top: 32px;
-	width: 0px;
-	height: 0px;
-	display: none;
 }
 
 /* * * * * * * *
