@@ -82,6 +82,15 @@
 	justify-self: center;
 	border-radius: 50%;
 	overflow: hidden;
+	/* box-sizing:border-box + padding : le span emoji (font-size:min(70cqw,70cqh),
+	   cf consigne.js) se dimensionne sur le content-box de cette puce, pas sur
+	   son border-box. En rognant le content-box via ce padding, on réduit d'autant
+	   le glyphe rendu et on lui laisse une vraie marge dans le cercle — le rendu
+	   couleur des emoji système (Apple Color Emoji / Noto / Segoe UI Emoji)
+	   déborde souvent de son propre em carré, et se faisait rogner en bas par le
+	   overflow:hidden du cercle quand le glyphe frôlait le bord. */
+	box-sizing: border-box;
+	padding: 0.18em;
 }
 
 .consigne .reponse_puce.disabled {
@@ -90,14 +99,18 @@
 
 /* Icône de classe (emoji) : [role="img"] ne sert qu'à ça dans ce plugin
    (consigne.js, reponse.js, rubrique_detail.html, logo_menu_classe.html).
-   line-height:1 neutralise la dérive verticale résiduelle propre aux
-   polices emoji système (Apple Color Emoji / Noto / Segoe UI Emoji n'ont
-   pas les mêmes métriques ascendant/descendant) — le décalage horizontal
-   observé (issue #374) venait lui d'espaces blancs parasites dans le HTML
-   généré (retour à la ligne autour de l'emoji dans le template), corrigé
-   côté squelette/JS, pas ici. */
+   Le décalage horizontal observé (issue #374) venait d'espaces blancs
+   parasites dans le HTML généré (retour à la ligne autour de l'emoji dans
+   le template) — corrigé côté squelette/JS, pas ici.
+   line-height:1.3 (et non 1) : les puces emoji dans un cercle
+   (.reponse_puce notamment) sont en overflow:hidden. Avec line-height:1,
+   le rendu couleur des emoji système (Apple Color Emoji / Noto / Segoe UI
+   Emoji) déborde souvent de sa propre boîte de ligne — le glyphe se fait
+   rogner en bas par le cercle. Un line-height:1.3 restitue la marge
+   verticale nécessaire sans réintroduire la dérive horizontale (qui ne
+   dépendait pas du line-height, seulement des espaces blancs). */
 span[role="img"] {
-	line-height: 1;
+	line-height: 1.3;
 }
 
 .bouton_reponse_consigne:after {

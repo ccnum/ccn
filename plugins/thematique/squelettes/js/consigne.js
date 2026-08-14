@@ -51,14 +51,22 @@ function Consigne() {
 		classes_triees.forEach((classe, index) => {
 			let disabled = 'disabled';
 			let iconSpan = '';
+			let coulClasse = '';
 			const nomClasse = decodeHtmlEntities(classe.nom);
 			if (this.reponses_id.includes(classe.id)) {
 				disabled = '';
-				iconSpan = `<span role="img" aria-label="${escHtml(nomClasse)}" style="font-size:min(70cqw,70cqh)" class="bgc_classe_${index}">${getClassIcon(index)}</span>`;
+				// bgc_classe_${index} sur le conteneur circulaire (comme dans
+				// reponse.js), pas sur le span de l'emoji : posée sur le span, le
+				// fond ne colorait qu'une petite boîte texte (visible en carré une
+				// fois l'emoji réduit à sa taille réelle par le padding de
+				// .reponse_puce), au lieu de tout le cercle découpé par
+				// border-radius:50%+overflow:hidden du conteneur.
+				coulClasse = `bgc_classe_${index}`;
+				iconSpan = `<span role="img" aria-label="${escHtml(nomClasse)}" style="font-size:min(70cqw,70cqh)">${getClassIcon(index)}</span>`;
 			}
 
 			reponses_puces += `
-				<div class='reponse_puce ${disabled} tooltip logo'
+				<div class='reponse_puce ${disabled} ${coulClasse} tooltip logo'
 					data-tip='${escHtml(nomClasse)}'
 					style='display:flex;align-items:center;justify-content:center;container-type:size;'>
 					${iconSpan}
