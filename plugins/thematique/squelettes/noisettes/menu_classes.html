@@ -28,7 +28,7 @@ du cache de la page. ]
 			#SET{hasYearRub,true}
 			<BOUCLE_rubMot(RUBRIQUES){id_parent}{titre_mot=travail_en_cours}>
 				<BOUCLE_rubLoop(RUBRIQUES){id_parent}{tous}{par id_rubrique}>
-					<INCLURE{fond=modeles/classe_icone, id_rubrique=#ID_RUBRIQUE, titre=#TITRE} />
+					<INCLURE{fond=modeles/classe_icone,id_rubrique,titre} />
 					#SET{nb_classes, #GET{nb_classes}|plus{1}}
 				</BOUCLE_rubLoop>
 			</BOUCLE_rubMot>
@@ -37,7 +37,7 @@ du cache de la page. ]
 		[(#REM) ======== BOUCLE 2 : fallback si pas de rubrique année ======== ]
 		<BOUCLE_r3(RUBRIQUES){titre_mot==travail_en_cours}{tous}{si #GET{hasYearRub}|=={false}}{!par date}>
 			<BOUCLE_c3(RUBRIQUES){id_parent}{tous}{par id_rubrique}>
-				<INCLURE{fond=modeles/classe_icone, id_rubrique=#ID_RUBRIQUE, titre=#_c3:TITRE} />
+				<INCLURE{fond=modeles/classe_icone,id_rubrique,titre} />
 				#SET{nb_classes, #GET{nb_classes}|plus{1}}
 			</BOUCLE_c3>
 		</BOUCLE_r3>
