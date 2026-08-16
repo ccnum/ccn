@@ -1,12 +1,16 @@
 #!/usr/bin/env node
 
 /**
- * Détecte le HTML/squelette SPIP dupliqué (copier-coller) dans
- * plugins/, via jscpd (node_modules/.bin/jscpd, installé en
- * dépendance dev npm).
+ * Détecte le HTML/squelette SPIP dupliqué (copier-coller) dans les plugins
+ * maison (plugins/petitfablab, plugins/fictions, plugins/thematique), via
+ * jscpd (node_modules/.bin/jscpd, installé en dépendance dev npm).
+ *
+ * Limité à ces trois plugins (pas tout plugins/) : ce sont les seuls
+ * développés/maintenus ici, les autres sont des plugins tiers vendorisés
+ * (contrib SPIP) qu'on ne cherche pas à refactorer.
  *
  * Fonctionnement :
- * - Lance jscpd sur plugins/, restreint aux fichiers *.html
+ * - Lance jscpd sur ces plugins, restreint aux fichiers *.html
  *   (squelettes SPIP : BOUCLEs, balises, HTML), avec un rapport JSON.
  * - Chaque clone (une entrée du tableau "duplicates" du rapport,
  *   toujours entre exactement 2 fichiers pour jscpd) est réduit à une
@@ -31,7 +35,8 @@ const os = require('node:os');
 const path = require('node:path');
 
 const repoRoot = path.dirname(__dirname);
-const scanRoot = path.join(repoRoot, 'plugins');
+const scanRoots = ['plugins/petitfablab', 'plugins/fictions', 'plugins/thematique']
+	.map((p) => path.join(repoRoot, p));
 const jscpdBin = path.join(repoRoot, 'node_modules', '.bin', 'jscpd');
 
 const args = process.argv.slice(2);
@@ -63,7 +68,7 @@ try {
 		'--reporters', 'json',
 		'--output', outDir,
 		'--silent',
-		scanRoot,
+		...scanRoots,
 	], { stdio: ['ignore', 'inherit', 'inherit'], cwd: repoRoot });
 } catch {
 	// code de sortie != 0 attendu quand des clones sont trouves

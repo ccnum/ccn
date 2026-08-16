@@ -125,14 +125,15 @@ pour régénérer après un faux positif volontaire).
 
 # check_html_duplication.js
 
-Détecte le HTML/squelette SPIP dupliqué (copier-coller) dans `plugins/`, via
-[jscpd](https://github.com/kucherenko/jscpd) (`node_modules/.bin/jscpd`,
+Détecte le HTML/squelette SPIP dupliqué (copier-coller) dans les plugins
+maison (`plugins/petitfablab`, `plugins/fictions`, `plugins/thematique`),
+via [jscpd](https://github.com/kucherenko/jscpd) (`node_modules/.bin/jscpd`,
 dépendance dev npm — seul script `.ci/` en Node, les autres sont en
 PHP/Python).
 
-Contrairement aux autres checks (limités à `thematique`), celui-ci scanne
-tout `plugins/` (hors `vendor/`) : la duplication de squelette est un
-problème transverse à tous les plugins maison.
+Limité à ces trois plugins (pas tout `plugins/`) : ce sont les seuls
+développés/maintenus ici, les autres sont des plugins tiers vendorisés
+(contrib SPIP) qu'on ne cherche pas à refactorer.
 
 Usage local (nécessite `npm ci` au préalable) :
 
@@ -144,5 +145,5 @@ node .ci/check_html_duplication.js [--baseline=PATH] [--write-baseline]
 
 Comme pour les checks Python, seule une nouvelle duplication (absente de
 `html-duplication-baseline.txt`) fait échouer le script — le volume déjà
-présent (201 clones lors de la mise en place, 2026-08) est toléré tel quel ;
+présent (84 clones lors de la mise en place, 2026-08) est toléré tel quel ;
 `--write-baseline` régénère le fichier après vérification du diff.
