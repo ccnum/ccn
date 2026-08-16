@@ -12,6 +12,7 @@ sites
 squelettes-dist
 tmp
 /vendor
+node_modules
 CHANGELOG.md
 !spip-cli/composer.json
 !spip-cli/composer.lock

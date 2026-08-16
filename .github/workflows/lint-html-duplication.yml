@@ -1,0 +1,39 @@
+name: Lint - duplication HTML (plugins)
+
+on:
+  pull_request:
+    paths:
+      - 'plugins/**/*.html'
+      - '.ci/check_html_duplication.js'
+      - '.ci/html-duplication-baseline.txt'
+      - 'package.json'
+      - 'package-lock.json'
+  push:
+    branches:
+      - dev
+      - main
+    paths:
+      - 'plugins/**/*.html'
+      - '.ci/check_html_duplication.js'
+      - '.ci/html-duplication-baseline.txt'
+      - 'package.json'
+      - 'package-lock.json'
+
+jobs:
+  check-html-duplication:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Installer les dépendances npm
+        run: npm ci
+
+      - name: Vérifier l'absence de nouvelle duplication HTML
+        run: node .ci/check_html_duplication.js

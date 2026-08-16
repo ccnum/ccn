@@ -25,7 +25,7 @@ exécute ce même check sur toute PR touchant `plugins/thematique/**`.
 
 ## Exceptions dans la baseline
 
-- `squelettes/js/controleurs.js:828` (`Réponse vide !`) : `console.warn` de
+- `squelettes/js/controleurs.js:794` (`Réponse vide !`) : `console.warn` de
   debug, jamais affiché à l'utilisateur.
 - `genie/thematique_rentree_annee.php` (`Cap sur l'année`),
   `thematique_administrations.php` (`Blog pédagogique`, `Contenu éditorial`),
@@ -122,3 +122,27 @@ python3 .ci/check_hardcoded_paths.py
 
 Même mécanisme de baseline que `check_lang_hardcoded.py` (`--write-baseline`
 pour régénérer après un faux positif volontaire).
+
+# check_html_duplication.js
+
+Détecte le HTML/squelette SPIP dupliqué (copier-coller) dans `plugins/`, via
+[jscpd](https://github.com/kucherenko/jscpd) (`node_modules/.bin/jscpd`,
+dépendance dev npm — seul script `.ci/` en Node, les autres sont en
+PHP/Python).
+
+Contrairement aux autres checks (limités à `thematique`), celui-ci scanne
+tout `plugins/` (hors `vendor/`) : la duplication de squelette est un
+problème transverse à tous les plugins maison.
+
+Usage local (nécessite `npm ci` au préalable) :
+
+```
+npm ci
+node .ci/check_html_duplication.js [--baseline=PATH] [--write-baseline]
+                                    [--min-lines=N] [--min-tokens=N]
+```
+
+Comme pour les checks Python, seule une nouvelle duplication (absente de
+`html-duplication-baseline.txt`) fait échouer le script — le volume déjà
+présent (201 clones lors de la mise en place, 2026-08) est toléré tel quel ;
+`--write-baseline` régénère le fichier après vérification du diff.
