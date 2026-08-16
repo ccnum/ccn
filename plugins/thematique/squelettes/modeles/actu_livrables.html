@@ -13,21 +13,7 @@
 					Nouveau document de #GET{titre}<br> sur #GET{titreLivrable}
 				</button>
 				<p class="date">[(#DATE|affdate)]</p>
-				[(#MEDIA|=={'image'}|oui)
-					<a href="#URL_DOCUMENT" class="mediabox" type="#MIME_TYPE" data-box-min-height="90pc">
-						[(#FICHIER|image_reduire{300}|inserer_attribut{alt,#TITRE})]
-					</a>
-				]
-
-				[(#MEDIA|=={'image'}|non)
-					<div class="document">
-					[(#LOGO_DOCUMENT|image_reduire{100}|inserer_attribut{style,'border:0px solid #000000;'})]
-					[<span class="spip_doc_titre"><br />(#TITRE|couper{25}|sinon{<span class="ajouter_couleur"><:thematique:document_sans_titre:></span>})</span>]
-					[(#AUTORISER{modifier,article,#ID_ARTICLE}|non)
-						[<span class="spip_doc_titre"><br />(#TITRE|couper{25})</span>]
-					]
-					</div>
-				]
+				<INCLURE{fond=modeles/inc/vignette_document, id_document=#ID_DOCUMENT} />
 			</div>
 		</div>
 	</BOUCLE_docs>

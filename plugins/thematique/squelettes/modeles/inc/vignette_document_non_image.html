@@ -1,0 +1,17 @@
+[(#REM)
+Affichage d'un document non-image (logo générique + titre), commun aux
+modèles noisettes/modeles/actu_commentaires.html, actu_livrables.html et
+actu_documents.html (fil d'actualités). Appelé depuis une boucle DOCUMENTS
+quand #MEDIA != 'image'.
+
+Paramètre attendu : id_document.
+]
+<BOUCLE_vignette_document(DOCUMENTS){id_document}>
+	<div class="document">
+		[(#LOGO_DOCUMENT|image_reduire{100}|inserer_attribut{style,'border:0px solid #000000;'})]
+		[<span class="spip_doc_titre"><br />(#TITRE|couper{25}|sinon{<span class="ajouter_couleur"><:thematique:document_sans_titre:></span>})</span>]
+		[(#AUTORISER{modifier,article,#ID_ARTICLE}|non)
+		[<span class="spip_doc_titre"><br />(#TITRE|couper{25})</span>]
+		]
+	</div>
+</BOUCLE_vignette_document>

@@ -1,17 +1,7 @@
 <BOUCLE_article_sidebar(ARTICLES){id_article}{tout}>
 <div class="sidebar_bubble">
 	<div id="row_header">
-		<div id="header-col-left">
-			<div class="photo">[(#ID_ARTICLE|thematique_logo_carre{article})]</div>
-			<div class="auteur">
-				<BOUCLE_auteur_consigne(AUTEURS){id_article}{tout}>
-					#NOM
-				</BOUCLE_auteur_consigne>
-			</div>
-			<div class="#EDIT{date} date">
-				<:thematique:publie_le:> [(#DATE|affdate)]
-			</div>
-		</div>
+		<INCLURE{fond=noisettes/sidebar/inc/header_gauche_photo_auteur, id_article=#ID_ARTICLE} />
 		<div id="header-col-right">
 			<div style="display: flex;
                         justify-content: end;">

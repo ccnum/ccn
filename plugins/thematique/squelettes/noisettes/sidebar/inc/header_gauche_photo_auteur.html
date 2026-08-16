@@ -1,0 +1,19 @@
+[(#REM)
+Colonne gauche (photo/auteur/date) commune aux en-têtes de sidebar
+noisettes/sidebar/header_blog.html et header_sidebar.html.
+
+Paramètre attendu : id_article.
+]
+<BOUCLE_article_sidebar(ARTICLES){id_article}{tout}>
+<div id="header-col-left">
+	<div class="photo">[(#ID_ARTICLE|thematique_logo_carre{article})]</div>
+	<div class="auteur">
+		<BOUCLE_auteur_consigne(AUTEURS){id_article}{tout}>
+			#NOM
+		</BOUCLE_auteur_consigne>
+	</div>
+	<div class="#EDIT{date} date">
+		<:thematique:publie_le:> [(#DATE|affdate)]
+	</div>
+</div>
+</BOUCLE_article_sidebar>
