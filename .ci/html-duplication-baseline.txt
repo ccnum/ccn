@@ -5,7 +5,6 @@
 10L | plugins/fictions/squelettes/lecture-script.html:1 <-> plugins/fictions/squelettes/sommaire.html:1
 10L | plugins/fictions/squelettes/page.html:44 <-> plugins/fictions/squelettes/sommaire.html:35
 10L | plugins/thematique/formulaires/joindre_document_mission.html:1 <-> plugins/thematique/formulaires/joindre_video.html:1
-10L | plugins/thematique/squelettes/noisettes/sidebar/reponse_pour_classe.html:12 <-> plugins/thematique/squelettes/noisettes/sidebar/reponse_pour_intervenant.html:4
 11L | plugins/fictions/squelettes/inclure/chapitre-ecriture.html:8 <-> plugins/petitfablab/squelettes_ancien/chapitre-ecriture.html:9
 11L | plugins/fictions/squelettes/inclure/chapitre-verrouille.html:12 <-> plugins/petitfablab/squelettes_ancien/chapitre-ecriture.html:14
 11L | plugins/fictions/squelettes/inclure/rubrique-blogpeda.html:29 <-> plugins/fictions/squelettes/inclure/rubrique-blogpeda.html:40
@@ -13,6 +12,7 @@
 11L | plugins/petitfablab/squelettes/inclure/layout_end.html:14 <-> plugins/petitfablab/squelettes/inclure/rubrique.html:131
 12L | plugins/fictions/squelettes/page.html:5 <-> plugins/fictions/squelettes/sommaire.html:1
 12L | plugins/fictions/squelettes/rubrique.html:2 <-> plugins/fictions/squelettes/sommaire.html:1
+12L | plugins/thematique/squelettes/noisettes/sidebar/consigne_pour_autre.html:1 <-> plugins/thematique/squelettes/noisettes/sidebar/consigne_pour_classe.html:1
 13L | plugins/fictions/squelettes/forum_reponse.html:1 <-> plugins/fictions/squelettes/sommaire.html:1
 13L | plugins/fictions/squelettes/forum_reponse.html:34 <-> plugins/fictions/squelettes/lecture-forum.html:35
 13L | plugins/fictions/squelettes/lecture.html:1 <-> plugins/fictions/squelettes/sommaire.html:1
@@ -28,7 +28,6 @@
 16L | plugins/petitfablab/squelettes/inclure/layout_end.html:28 <-> plugins/petitfablab/squelettes/lecture.html:154
 17L | plugins/fictions/squelettes/lecture-forum.html:10 <-> plugins/petitfablab/squelettes_ancien/lecture-forum.html:11
 17L | plugins/fictions/squelettes/lecture-texte.html:96 <-> plugins/fictions/squelettes/lecture.html:91
-17L | plugins/thematique/squelettes/noisettes/sidebar/consigne_pour_autre.html:1 <-> plugins/thematique/squelettes/noisettes/sidebar/consigne_pour_classe.html:1
 18L | plugins/thematique/squelettes/noisettes/rubrique.html:179 <-> plugins/thematique/squelettes/noisettes/rubrique.html:205
 18L | plugins/thematique/squelettes/noisettes/rubrique.html:212 <-> plugins/thematique/squelettes/noisettes/rubrique.html:244
 20L | plugins/fictions/squelettes/inclure/liste-cadavres-auteur.html:18 <-> plugins/fictions/squelettes/inclure/liste-cadavres-visiteur.html:15
@@ -71,4 +70,4 @@
 9L | plugins/fictions/squelettes/lecture-forum.html:2 <-> plugins/fictions/squelettes/sommaire.html:2
 9L | plugins/petitfablab/squelettes/inclure/rubrique.html:133 <-> plugins/petitfablab/squelettes/lecture.html:142
 9L | plugins/petitfablab/squelettes/sommaire.html:159 <-> plugins/petitfablab/squelettes_ancien/page.html:121
-9L | plugins/thematique/squelettes/noisettes/sidebar/consigne_pour_classe.html:9 <-> plugins/thematique/squelettes/noisettes/sidebar/consigne_pour_intervenant.html:37
+9L | plugins/thematique/squelettes/noisettes/sidebar/consigne_pour_classe.html:4 <-> plugins/thematique/squelettes/noisettes/sidebar/consigne_pour_intervenant.html:32

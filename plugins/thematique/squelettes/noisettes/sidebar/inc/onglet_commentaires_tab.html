@@ -2,14 +2,18 @@
 Onglet "commentaires" (titre + badge de comptage + contenu), commun aux
 fonds noisettes/sidebar/consigne_pour_*.html et reponse_pour_*.html.
 
-Paramètre optionnel : libelle_cle (clé de langue thematique du titre
-d'onglet — par défaut titre_onglet_comentaire).
+Paramètre optionnel : libelle_onglet (déjà traduit — ex:
+<:thematique:titre_onglet_comentaire_pour_classe:> — par défaut
+<:thematique:titre_onglet_comentaire:>).
 ]
-#SET{libelle_cle, #ENV{libelle_cle}|sinon{thematique:titre_onglet_comentaire}}
+#SET{libelle_onglet, #ENV{libelle_onglet}}
+[(#GET{libelle_onglet}|non)
+	#SET{libelle_onglet, #VAL{thematique:titre_onglet_comentaire}|_T}
+]
 
 <div data-tab-id="commentaires">
 	<div class="tabs-title">
-		#GET{libelle_cle}|_T
+		#GET{libelle_onglet}
 		#SET{nombre_commentaires,#ID_ARTICLE|thematique_nombre_commentaires}
 		[(#GET{nombre_commentaires}|>{0}|oui)<div class="picto_nombre_commentaires">#GET{nombre_commentaires}</div>]
 	</div>

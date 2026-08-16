@@ -1,10 +1,5 @@
 #CACHE{0}
-<INCLURE{fond=noisettes/sidebar/inc/entete_commun, env} />
-
-<div class="[popup_(#ENV{type_objet})]">
-	<div id="bloc_article-#ID_ARTICLE" class="bloc_article[ (#GET{police})]">
-		#SET{titre_consigne_final, #GET{titre_consigne}|sinon{#TITRE}}
-		<INCLURE{fond=noisettes/sidebar/inc/entete_container, fond_header=noisettes/sidebar/header_sidebar, env} />
+<INCLURE{fond=noisettes/sidebar/inc/entete_et_ouverture, fond_header=noisettes/sidebar/header_sidebar, env} />
 
 		<div id="tabs-article-#ID_ARTICLE" class="container-tabs">
 			<div id="mission-tabs">
@@ -20,7 +15,8 @@
 						} />
 					</div>
 				</div>
-				<INCLURE{fond=noisettes/sidebar/inc/onglet_commentaires_tab, libelle_cle=thematique:titre_onglet_comentaire_pour_classe, env} />
+				#SET{libelle_onglet_commentaires, #VAL{thematique:titre_onglet_comentaire_pour_classe}|_T}
+				<INCLURE{fond=noisettes/sidebar/inc/onglet_commentaires_tab, libelle_onglet=#GET{libelle_onglet_commentaires}, env} />
 			</div>
 		</div>
 	</div>

@@ -1,18 +1,13 @@
 #CACHE{0}
 [(#REM) Paramètre attendu en plus des habituels : c_est_ma_reponse (oui/non),
 calculé par l'appelant (noisettes/article.html) ]
-<INCLURE{fond=noisettes/sidebar/inc/entete_commun, env} />
-
 #SET{titre_onglet_reponse,#VAL{thematique:titre_onglet_reponse_autre_classe}|_T}
 
 [(#ENV{c_est_ma_reponse}|=={oui}|oui)
 	#SET{titre_onglet_reponse,#VAL{thematique:titre_onglet_reponse_ma_classe}|_T}
 ]
 
-<div class="[popup_(#ENV{type_objet})]">
-	<div id="bloc_article-#ID_ARTICLE" class="bloc_article[ (#GET{police})]">
-		#SET{titre_consigne_final, #GET{titre_consigne}|sinon{#TITRE}}
-		<INCLURE{fond=noisettes/sidebar/inc/entete_container, fond_header=noisettes/sidebar/header_reponse_sidebar, env} />
+<INCLURE{fond=noisettes/sidebar/inc/entete_et_ouverture, fond_header=noisettes/sidebar/header_reponse_sidebar, env} />
 
 		<div id="tabs-article-#ID_ARTICLE" class="container-tabs">
 			<div id="mission-tabs">
