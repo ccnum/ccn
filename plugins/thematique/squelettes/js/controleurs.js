@@ -872,7 +872,7 @@ function getIdClasseFromIdReponse(id_reponse) {
  * La fonction est appelée de manière récursive (<tt>setInterval(…, 1)</tt>)
  * afin de mettre à jour en même temps que la transition CSS de la timeline.
  */
-function updateConnecteurs() {
+function updateAllConnecteurs() {
 	$('.connecteur_timeline').each(
 		function () {
 
@@ -903,15 +903,69 @@ function updateConnecteurs() {
 	);
 }
 
-function handleCollision(y, responseHeight, timelineTop, timelineHeight) {
-    const yMin = 0;
-    const yMax = yMin + timelineHeight - responseHeight;
+
+
+function handleObjectCollisionWithMenus(
+	y, 
+	etiquetteTop,
+	objectTop,
+	objectHeight,
+	timelineTop, 
+	timelineHeight
+) {
+	const yMin = objectTop-etiquetteTop;
+    const yMax = timelineHeight - objectHeight;
     if (y < yMin) return yMin;
     if (y > yMax) return yMax;
     return y;
 }
 
-function updateConnecteur(reponseObject, ui) {
+function updateConsigneConnecteurs(consigneObject, ui) {
+	const consigneDOM = $(consigneObject)
+	const buttonConsigne = consigneDOM.find('button.consigne').first()
+	const idConsigne = buttonConsigne.data('id')
+	const connecteursDOM = $(`[id^="connecteur_consigne_${idConsigne}_reponse_"]`);
+	const timelineTop = CCN.timelineLayerConsignes.offset().top;
+	const timelineHeight = CCN.timelineLayerConsignes.height();
+	const etiquette = consigneDOM.find(".etiquette-etape")
+
+	const adjustedUiPositionTop = handleObjectCollisionWithMenus(
+		ui.position.top,
+		etiquette.offset().top,
+		consigneDOM.offset().top,
+		consigneDOM.outerHeight(),
+		timelineTop,
+		timelineHeight
+	);
+	ui.position.top = adjustedUiPositionTop;
+
+	const x1 = consigneDOM.offset().left + consigneDOM.outerWidth();
+	const y1 = adjustedUiPositionTop + consigneDOM.outerHeight()/2;
+	connecteursDOM.each(function (){
+		const connecteur = $(this);
+		const reponseId = connecteur.data('reponse-id')
+		const reponseDOM = $(`#reponse_haute${reponseId}`)
+
+		const x2 = reponseDOM.offset().left
+		const y2 = reponseDOM.offset().top + reponseDOM.outerHeight()/2 - timelineTop;
+
+		const length = Math.sqrt((x1 - x2) * (x1 - x2) + (y1 - y2) * (y1 - y2));
+		const angle = Math.atan2(y2 - y1, x2 - x1) * 180 / Math.PI;
+		const transform = 'rotate(' + angle + 'deg)';
+
+		connecteur.css(
+			{
+				'position': 'absolute',
+				'transform': transform,
+				'left': parseFloat(x1) + 'px',
+				'top': parseFloat(y1) + 'px'
+			}
+		)
+		.width(parseFloat(length) + 'px');
+	})
+}
+
+function updateReponseConnecteurs(reponseObject, ui) {
 	const reponseDOM = $(reponseObject)
 	const idConsigne = reponseDOM.data('consigne-id')
 	const idReponse = reponseDOM.data('reponse-id')
@@ -919,12 +973,15 @@ function updateConnecteur(reponseObject, ui) {
 	const consigneDOM = $(`#consigne_haute${idConsigne}`);
 	const timelineTop = CCN.timelineLayerConsignes.offset().top;
 	const timelineHeight = CCN.timelineLayerConsignes.height();
+	const picto = reponseDOM.find(".picto_nombre_commentaires")
 
 	const x1 = consigneDOM.offset().left + consigneDOM.outerWidth();
 	const y1 = consigneDOM.offset().top  + consigneDOM.outerHeight() / 2 - timelineTop;
 	const x2 = reponseDOM.offset().left;
-    const adjustedUiPositionTop = handleCollision(
+    const adjustedUiPositionTop = handleObjectCollisionWithMenus(
 		ui.position.top,
+		picto.offset().top,
+		reponseDOM.offset().top,
 		reponseDOM.outerHeight(),
 		timelineTop,
 		timelineHeight
@@ -1178,7 +1235,7 @@ function showSidebar() {
 	_sidebarTrigger = document.activeElement;
 	$('body').addClass('hasSidebarOpen');
 	$('#sidebar').addClass('show').attr('aria-hidden', 'false');
-	updateConnecteurs();
+	updateAllConnecteurs();
 }
 
 function closeSidebar() {
@@ -1190,7 +1247,7 @@ function closeSidebar() {
 		_sidebarTrigger.focus();
 	}
 	_sidebarTrigger = null;
-	const interval = setInterval(updateConnecteurs, 16);
+	const interval = setInterval(updateAllConnecteurs, 16);
 	setTimeout(() => {
 		clearInterval(interval);
 		// Une fois le panneau glissé hors écran, on vide son contenu
