@@ -177,23 +177,7 @@
 							[(#REM)Articles]
 
 							<BOUCLE_sous_articles3(ARTICLES){id_rubrique}{par num titre}{doublons}>
-								<script type="text/javascript">
-									$('#ajax#ID_ARTICLE').on('click', function() {
-										call({
-											'type':'article',
-											'type_objet':'travail_en_cours',
-											'id_article':'#ID_ARTICLE',
-											'id_parent':'#ID_PARENT',
-											'mode':'ajax-detail'
-											[(#ID_CONSIGNE|oui|?{", 'type_entite': 'reponse'"})]
-										});
-									});
-								</script>
-								<li class="ressources_classe_consignes">
-									<a id="ajax#ID_ARTICLE" href="#" class="ajax [(#EXPOSE) [(#GET{art1}|=={#ID_ARTICLE}|oui)gauche_menu_on]]">
-										[(#TITRE|couper{50})]
-									</a>
-								</li>
+								<INCLURE{fond=noisettes/inc/lien_article_rubrique, id_article=#ID_ARTICLE, id_parent=#ID_PARENT, id_consigne=#ID_CONSIGNE, art1=#GET{art1}, titre=#TITRE} />
 							</BOUCLE_sous_articles3>
 
 							[(#REM)
@@ -203,22 +187,7 @@
 							]
 
 							<BOUCLE_sous_articles(ARTICLES){id_rubrique}{!par date}{doublons}>
-								<script type="text/javascript">
-									$('#ajax#ID_ARTICLE').on('click', function() {
-										call({
-											'type':'article',
-											'type_objet':'travail_en_cours',
-											'id_rubrique':'#ID_ARTICLE',
-											'mode':'ajax-detail'
-										});
-									});
-								</script>
-
-								<li class="ressources_classe_consignes">
-									<a id="ajax#ID_ARTICLE" href="#" class="ajax [(#EXPOSE) [(#GET{art1}|=={#ID_ARTICLE}|oui)gauche_menu_on]]">
-										[(#TITRE|couper{50})]
-									</a>
-								</li>
+								<INCLURE{fond=noisettes/inc/lien_article_rubrique, id_article=#ID_ARTICLE, id_parent=#ID_PARENT, id_consigne=#ID_CONSIGNE, art1=#GET{art1}, titre=#TITRE} />
 							</BOUCLE_sous_articles>
 						</ul>
 					</div>
