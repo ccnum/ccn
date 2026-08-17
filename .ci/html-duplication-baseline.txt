@@ -29,7 +29,6 @@
 17L | plugins/fictions/squelettes/lecture-forum.html:10 <-> plugins/petitfablab/squelettes_ancien/lecture-forum.html:11
 17L | plugins/fictions/squelettes/lecture-texte.html:96 <-> plugins/fictions/squelettes/lecture.html:91
 18L | plugins/thematique/squelettes/noisettes/rubrique.html:179 <-> plugins/thematique/squelettes/noisettes/rubrique.html:205
-18L | plugins/thematique/squelettes/noisettes/rubrique.html:212 <-> plugins/thematique/squelettes/noisettes/rubrique.html:244
 20L | plugins/fictions/squelettes/inclure/liste-cadavres-auteur.html:18 <-> plugins/fictions/squelettes/inclure/liste-cadavres-visiteur.html:15
 20L | plugins/fictions/squelettes/lecture-forum.html:1 <-> plugins/petitfablab/squelettes_ancien/forum_reponse.html:1
 21L | plugins/fictions/squelettes/forum.html:61 <-> plugins/petitfablab/squelettes_ancien/forum.html:54

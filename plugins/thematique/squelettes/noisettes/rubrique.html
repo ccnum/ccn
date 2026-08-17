@@ -232,33 +232,21 @@
 						[(#REM)Articles syndic]
 						<BOUCLE_syndic_articles(SYNDIC_ARTICLES){id_syndic}{tout}{par titre}{doublons}>
 
-							[(#TAGS|oui)
-								#SET{dest, #TAGS|extraire_attribut{href}}
-								<script type="text/javascript">
-									$('#ajax#ID_SYNDIC_ARTICLE').on('click', function() {
-										$('#menug li a.selected').removeClass('selected');
-										$('#ajax_rub_#ID_SYNDIC').addClass('selected');
-										$('div#sidebar_main').addClass('chargement');
-										$('#sidebar_main').load('[(#URL_PAGE{syndic_article}|parametre_url{id_syndic_article,#ID_SYNDIC_ARTICLE}|parametre_url{mode,ajax-detail}|html_entity_decode)]', {limit: 25}, function(){
-											$('div#sidebar_main').removeClass('chargement');
-											$('#sidebar_main').show('slow');
-										});
+							<script type="text/javascript">
+								$('#ajax#ID_SYNDIC_ARTICLE').on('click', function() {
+									$('#menug li a.selected').removeClass('selected');
+									$('#ajax_rub_#ID_SYNDIC').addClass('selected');
+									$('div#sidebar_main').addClass('chargement');
+									$('#sidebar_main').load('[(#URL_PAGE{syndic_article}|parametre_url{id_syndic_article,#ID_SYNDIC_ARTICLE}|parametre_url{mode,ajax-detail}|html_entity_decode)]', {limit: 25}, function(){
+										$('div#sidebar_main').removeClass('chargement');
+										$('#sidebar_main').show('slow');
 									});
-								</script>
+								});
+							</script>
+							[(#TAGS|oui)
 								<li><a id="ajax#ID_SYNDIC_ARTICLE" href="#" class="">[- (#TITRE|couper{80})]</a></li>
 							]
 							[(#TAGS|non)
-								<script type="text/javascript">
-									$('#ajax#ID_SYNDIC_ARTICLE').on('click', function() {
-										$('#menug li a.selected').removeClass('selected');
-										$('#ajax_rub_#ID_SYNDIC').addClass('selected');
-										$('div#sidebar_main').addClass('chargement');
-										$('#sidebar_main').load('[(#URL_PAGE{syndic_article}|parametre_url{id_syndic_article,#ID_SYNDIC_ARTICLE}|parametre_url{mode,ajax-detail}|html_entity_decode)]', {limit: 25}, function(){
-											$('div#sidebar_main').removeClass('chargement');
-											$('#sidebar_main').show('slow');
-										});
-									});
-								</script>
 								<li><a id="ajax#ID_SYNDIC_ARTICLE" href="#" class="ajax [(#EXPOSE) [(#GET{art1}|=={#ID_ARTICLE}|oui)gauche_menu_on]]">[(#TITRE|couper{80})]</a></li>
 							]
 						</BOUCLE_syndic_articles>
