@@ -1,137 +1,149 @@
 # https://github.com/ipeos-and-co/docker-spip/tree/master
 FROM php:8.4-apache-trixie AS base
+LABEL org.opencontainers.image.title="SPIP"
+LABEL org.opencontainers.image.description="SPIP 4.4 CMS on PHP 8.4 / Apache"
+LABEL org.opencontainers.image.source="https://github.com/ccnum/ccn"
+LABEL org.opencontainers.image.licenses="GPL-3.0-only"
+LABEL org.opencontainers.image.version="4.4.20"
 ENV SPIP_VERSION 4.4
 ENV SPIP_PACKAGE 4.4.20
+ENV SPIP_PACKAGE_SHA256 4fea8035a25ed5e254210a0e2819739fe5f539d0869511792d0509a2c0ef03e6
 
 RUN set -eux; \
-    apt-get update; \
-    apt-get install -y --no-install-recommends \
-    ghostscript \
-    netcat-traditional \
-    ; \
-    rm -rf /var/lib/apt/lists/*;
+	apt-get update; \
+	apt-get install -y --no-install-recommends \
+	ghostscript \
+	netcat-traditional \
+	; \
+	rm -rf /var/lib/apt/lists/*;
 
 RUN set -eux; \
-    \
-    savedAptMark="$(apt-mark showmanual)"; \
-    \
-    apt-get update; \
-    apt-get install -y --no-install-recommends \
-    libxml2-dev \
-    libssl-dev \
-    libavif-dev \
-    libfreetype6-dev \
-    libjpeg-dev \
-    libjpeg62-turbo-dev \
-    libpng-dev \
-    libzip-dev \
-    sqlite3 \
-    libsqlite3-dev \
-    zlib1g-dev \
-    libsodium-dev \
-    netpbm \
-    imagemagick \
-    libldap2-dev \
-    libicu-dev \
-    libmagickwand-dev \
-    libwebp-dev; \
-    \
-    docker-php-ext-configure gd --with-avif --with-freetype --with-jpeg --with-webp; \
-    \
-    docker-php-ext-install -j$(nproc) \
-    gd \
-    xml \
-    exif \
-    bcmath \
-    mysqli \
-    pdo \
-    pdo_sqlite \
-    sodium \
-    zip \
-    opcache; \
-    \
-    docker-php-ext-configure ldap --with-libdir=lib/x86_64-linux-gnu/ && \
-    docker-php-ext-install ldap; \
-    \
-    pecl install imagick && \
-    docker-php-ext-enable imagick; \
-    \
-    pecl install apcu && \
-    docker-php-ext-enable apcu; \
-    out="$(php -r 'exit(0);')"; \
-    [ -z "$out" ]; \
-    err="$(php -r 'exit(0);' 3>&1 1>&2 2>&3)"; \
-    [ -z "$err" ]; \
-    \
-    extDir="$(php -r 'echo ini_get("extension_dir");')"; \
-    [ -d "$extDir" ]; \
-    # reset apt-mark's "manual" list so that "purge --auto-remove" will remove all build dependencies
-    apt-mark auto '.*' > /dev/null; \
-    apt-mark manual netpbm imagemagick $savedAptMark; \
-    ldd "$extDir"/*.so \
-    | awk '/=>/ { so = $(NF-1); if (index(so, "/usr/local/") == 1) { next }; gsub("^/(usr/)?", "", so); printf "*%s\n", so }' \
-    | sort -u \
-    | xargs -r dpkg-query --search \
-    | cut -d: -f1 \
-    | sort -u \
-    | xargs -rt apt-mark manual; \
-    \
-    apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false; \
-    rm -rf /var/lib/apt/lists/*; \
-    \
-    ! { ldd "$extDir"/*.so | grep 'not found'; }; \
-    # check for output like "PHP Warning:  PHP Startup: Unable to load dynamic library 'foo' (tried: ...)
-    err="$(php --version 3>&1 1>&2 2>&3)"; \
-    [ -z "$err" ]
+	\
+	savedAptMark="$(apt-mark showmanual)"; \
+	\
+	apt-get update; \
+	apt-get install -y --no-install-recommends \
+	libxml2-dev \
+	libssl-dev \
+	libavif-dev \
+	libfreetype6-dev \
+	libjpeg-dev \
+	libjpeg62-turbo-dev \
+	libpng-dev \
+	libzip-dev \
+	sqlite3 \
+	libsqlite3-dev \
+	zlib1g-dev \
+	libsodium-dev \
+	netpbm \
+	imagemagick \
+	libldap2-dev \
+	libicu-dev \
+	libmagickwand-dev \
+	libwebp-dev; \
+	\
+	docker-php-ext-configure gd --with-avif --with-freetype --with-jpeg --with-webp; \
+	\
+	docker-php-ext-install -j$(nproc) \
+	gd \
+	xml \
+	exif \
+	bcmath \
+	mysqli \
+	pdo \
+	pdo_sqlite \
+	sodium \
+	zip \
+	opcache; \
+	\
+	docker-php-ext-configure ldap --with-libdir=lib/x86_64-linux-gnu/ && \
+	docker-php-ext-install ldap; \
+	\
+	curl -fL -o imagick.tgz 'https://pecl.php.net/get/imagick-3.8.1.tgz'; \
+	echo '3a3587c0a524c17d0dad9673a160b90cd776e836838474e173b549ed864352ee *imagick.tgz' | sha256sum -c -; \
+	pecl install ./imagick.tgz && \
+	rm imagick.tgz && \
+	docker-php-ext-enable imagick; \
+	\
+	curl -fL -o apcu.tgz 'https://pecl.php.net/get/apcu-5.1.28.tgz'; \
+	echo 'ca9c1820810a168786f8048a4c3f8c9e3fd941407ad1553259fb2e30b5f057bf *apcu.tgz' | sha256sum -c -; \
+	pecl install ./apcu.tgz && \
+	rm apcu.tgz && \
+	docker-php-ext-enable apcu; \
+	out="$(php -r 'exit(0);')"; \
+	[ -z "$out" ]; \
+	err="$(php -r 'exit(0);' 3>&1 1>&2 2>&3)"; \
+	[ -z "$err" ]; \
+	\
+	extDir="$(php -r 'echo ini_get("extension_dir");')"; \
+	[ -d "$extDir" ]; \
+	# reset apt-mark's "manual" list so that "purge --auto-remove" will remove all build dependencies
+	apt-mark auto '.*' > /dev/null; \
+	apt-mark manual netpbm imagemagick $savedAptMark; \
+	ldd "$extDir"/*.so \
+	| awk '/=>/ { so = $(NF-1); if (index(so, "/usr/local/") == 1) { next }; gsub("^/(usr/)?", "", so); printf "*%s\n", so }' \
+	| sort -u \
+	| xargs -r dpkg-query --search \
+	| cut -d: -f1 \
+	| sort -u \
+	| xargs -rt apt-mark manual; \
+	\
+	apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false; \
+	rm -rf /var/lib/apt/lists/*; \
+	\
+	! { ldd "$extDir"/*.so | grep 'not found'; }; \
+	# check for output like "PHP Warning:  PHP Startup: Unable to load dynamic library 'foo' (tried: ...)
+	err="$(php --version 3>&1 1>&2 2>&3)"; \
+	[ -z "$err" ]
 
 # set recommended PHP.ini settings
 # see https://secure.php.net/manual/en/opcache.installation.php
 RUN { \
-    echo 'opcache.enable_cli=1'; \
-    echo 'opcache.memory_consumption=128'; \
-    echo 'opcache.interned_strings_buffer=8'; \
-    echo 'opcache.max_accelerated_files=10000'; \
-    echo 'opcache.revalidate_freq=2'; \
-    echo 'opcache.validate_timestamps=1'; \
-    echo 'opcache.dups_fix=0'; \
-    echo 'opcache.fast_shutdown=1'; \
-    } > /usr/local/etc/php/conf.d/opcache-recommended.ini
+	echo 'opcache.enable_cli=1'; \
+	echo 'opcache.memory_consumption=128'; \
+	echo 'opcache.interned_strings_buffer=8'; \
+	echo 'opcache.max_accelerated_files=10000'; \
+	echo 'opcache.revalidate_freq=2'; \
+	echo 'opcache.validate_timestamps=1'; \
+	echo 'opcache.dups_fix=0'; \
+	echo 'opcache.fast_shutdown=1'; \
+	} > /usr/local/etc/php/conf.d/opcache-recommended.ini
 
 RUN { \
-    # https://www.php.net/manual/en/errorfunc.constants.php
-    echo 'error_reporting = E_ERROR | E_WARNING | E_PARSE | E_CORE_ERROR | E_CORE_WARNING | E_COMPILE_ERROR | E_COMPILE_WARNING | E_RECOVERABLE_ERROR'; \
-    echo 'display_errors = Off'; \
-    echo 'display_startup_errors = Off'; \
-    echo 'log_errors = On'; \
-    echo 'error_log = /dev/stderr'; \
-    echo 'log_errors_max_len = 1024'; \
-    echo 'ignore_repeated_errors = On'; \
-    echo 'ignore_repeated_source = Off'; \
-    echo 'html_errors = Off'; \
-    } > /usr/local/etc/php/conf.d/error-logging.ini
+	# https://www.php.net/manual/en/errorfunc.constants.php
+	echo 'error_reporting = E_ERROR | E_WARNING | E_PARSE | E_CORE_ERROR | E_CORE_WARNING | E_COMPILE_ERROR | E_COMPILE_WARNING | E_RECOVERABLE_ERROR'; \
+	echo 'display_errors = Off'; \
+	echo 'display_startup_errors = Off'; \
+	echo 'log_errors = On'; \
+	echo 'error_log = /dev/stderr'; \
+	echo 'log_errors_max_len = 1024'; \
+	echo 'ignore_repeated_errors = On'; \
+	echo 'ignore_repeated_source = Off'; \
+	echo 'html_errors = Off'; \
+	} > /usr/local/etc/php/conf.d/error-logging.ini
 
 RUN set -eux; \
-    a2enmod rewrite expires headers; \
-    { \
-    echo 'ServerSignature Off'; \
-    echo 'ServerTokens Prod'; \
-    echo 'Header unset Composed-By'; \
-    echo 'Header unset X-Powered-By'; \
-    } > /etc/apache2/conf-enabled/spip_headers.conf; \
-    # https://httpd.apache.org/docs/2.4/mod/mod_remoteip.html
-    a2enmod remoteip; \
-    { \
-    echo 'RemoteIPHeader X-Forwarded-For'; \
-    # these IP ranges are reserved for "private" use and should thus *usually* be safe inside Docker
-    echo 'RemoteIPInternalProxy 10.0.0.0/8'; \
-    echo 'RemoteIPInternalProxy 172.16.0.0/12'; \
-    echo 'RemoteIPInternalProxy 192.168.0.0/16'; \
-    echo 'RemoteIPInternalProxy 169.254.0.0/16'; \
-    echo 'RemoteIPInternalProxy 127.0.0.0/8'; \
-    } > /etc/apache2/conf-available/remoteip.conf; \
-    a2enconf remoteip; \
-    # (replace all instances of "%h" with "%a" in LogFormat)
-    find /etc/apache2 -type f -name '*.conf' -exec sed -ri 's/([[:space:]]*LogFormat[[:space:]]+"[^"]*)%h([^"]*")/\1%a\2/g' '{}' +
+	a2enmod rewrite expires headers; \
+	{ \
+	echo 'ServerSignature Off'; \
+	echo 'ServerTokens Prod'; \
+	echo 'Header unset Composed-By'; \
+	echo 'Header unset X-Powered-By'; \
+	} > /etc/apache2/conf-enabled/spip_headers.conf; \
+	# https://httpd.apache.org/docs/2.4/mod/mod_remoteip.html
+	a2enmod remoteip; \
+	{ \
+	echo 'RemoteIPHeader X-Forwarded-For'; \
+	# these IP ranges are reserved for "private" use and should thus *usually* be safe inside Docker
+	echo 'RemoteIPInternalProxy 10.0.0.0/8'; \
+	echo 'RemoteIPInternalProxy 172.16.0.0/12'; \
+	echo 'RemoteIPInternalProxy 192.168.0.0/16'; \
+	echo 'RemoteIPInternalProxy 169.254.0.0/16'; \
+	echo 'RemoteIPInternalProxy 127.0.0.0/8'; \
+	} > /etc/apache2/conf-available/remoteip.conf; \
+	a2enconf remoteip; \
+	# (replace all instances of "%h" with "%a" in LogFormat)
+	find /etc/apache2 -type f -name '*.conf' -exec sed -ri 's/([[:space:]]*LogFormat[[:space:]]+"[^"]*)%h([^"]*")/\1%a\2/g' '{}' +
 
 # Install SPIP-Cli
 # spip-cli est désormais EMBARQUÉ dans le dépôt (dossier ./spip-cli) et copié ici,
@@ -139,28 +151,33 @@ RUN set -eux; \
 COPY spip-cli/ /opt/spip-cli/
 
 RUN set -eux; \
-    cd /opt; \
-    curl --silent --show-error https://getcomposer.org/installer | php; \
-    fetchDeps="git unzip"; \
-    apt-get update; \
-    apt-get install -y --no-install-recommends $fetchDeps; \
-    \
-    # liens + droits d'exécution sur les binaires spip-cli (au cas où le bit +x serait perdu)
-    chmod +x /opt/spip-cli/bin/spip /opt/spip-cli/bin/spipmu; \
-    ln -s /opt/spip-cli/bin/spip   /usr/local/bin/spip; \
-    ln -s /opt/spip-cli/bin/spipmu /usr/local/bin/spipmu; \
-    cd /opt/spip-cli && /opt/composer.phar install --no-interaction --no-progress; \
-    \
-    # Archive SPIP (URL en https + retry, téléchargée dans un fichier dédié)
-    curl -fSL --retry 3 -o /tmp/spip.zip \
-        "https://files.spip.net/spip/archives/spip-v${SPIP_PACKAGE}.zip"; \
-    unzip -q /tmp/spip.zip -d /usr/src/spip; \
-    rm /tmp/spip.zip; \
-    chown -R www-data:www-data /usr/src/spip; \
-    \
-    apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false $fetchDeps; \
-    rm -rf /tmp/*; \
-    rm -rf /var/lib/apt/lists/*
+	cd /opt; \
+	EXPECTED_CHECKSUM="$(curl -fsSL https://composer.github.io/installer.sig)"; \
+	curl -fsSL -o composer-setup.php https://getcomposer.org/installer; \
+	echo "$EXPECTED_CHECKSUM *composer-setup.php" | sha384sum -c -; \
+	php composer-setup.php --install-dir=/opt; \
+	rm composer-setup.php; \
+	fetchDeps="git unzip"; \
+	apt-get update; \
+	apt-get install -y --no-install-recommends $fetchDeps; \
+	\
+	# liens + droits d'exécution sur les binaires spip-cli (au cas où le bit +x serait perdu)
+	chmod +x /opt/spip-cli/bin/spip /opt/spip-cli/bin/spipmu; \
+	ln -s /opt/spip-cli/bin/spip   /usr/local/bin/spip; \
+	ln -s /opt/spip-cli/bin/spipmu /usr/local/bin/spipmu; \
+	cd /opt/spip-cli && /opt/composer.phar install --no-interaction --no-progress; \
+	rm /opt/composer.phar; \
+	\
+	# Archive SPIP (URL en https + retry, vérifiée par sha256, téléchargée dans un fichier dédié)
+	curl -fSL --retry 3 -o /tmp/spip.zip "https://files.spip.net/spip/archives/spip-v${SPIP_PACKAGE}.zip"; \
+	echo "${SPIP_PACKAGE_SHA256} */tmp/spip.zip" | sha256sum -c -; \
+	unzip -q /tmp/spip.zip -d /usr/src/spip; \
+	rm /tmp/spip.zip; \
+	chown -R www-data:www-data /usr/src/spip; \
+	\
+	apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false $fetchDeps; \
+	rm -rf /tmp/*; \
+	rm -rf /var/lib/apt/lists/*
 
 VOLUME /var/www/html
 
@@ -168,6 +185,7 @@ VOLUME /var/www/html
 ENV SPIP_AUTO_INSTALL=0
 ENV SPIP_DB_SERVER=mysql
 ENV SPIP_DB_HOST=mysql
+ENV SPIP_DB_PORT=3306
 ENV SPIP_DB_LOGIN=spip
 ENV SPIP_DB_PASS=spip
 ENV SPIP_DB_NAME=spip
@@ -196,10 +214,12 @@ ENV APACHE_PORT=80
 EXPOSE ${APACHE_PORT}
 
 COPY ./plugins /usr/src/spip/plugins/
-COPY ./docker-entrypoint.sh /
-
-RUN chmod +x /docker-entrypoint.sh
+COPY --chmod=0755 ./docker-entrypoint.sh /
 
 ENTRYPOINT ["/docker-entrypoint.sh"]
 
 CMD ["apache2-foreground"]
+
+# Healthcheck
+HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=7 \
+	CMD curl -fsS http://localhost/ || exit 1

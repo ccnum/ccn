@@ -1,31 +1,40 @@
 services:
   db:
-    image: mariadb:10.11
+    image: mariadb:11.8
     restart: always
-    env_file:
-      - .env
     environment:
-      - MYSQL_ROOT_PASSWORD=MysqlRootPassword
-      - MYSQL_DATABASE=${SPIP_DB_NAME}
-      - MYSQL_USER=${SPIP_DB_LOGIN}
-      - MYSQL_PASSWORD=${SPIP_DB_PASS}
+      - MYSQL_ROOT_PASSWORD=ChangeMeRootPassword!
+      - MYSQL_DATABASE=spip
+      - MYSQL_USER=spip
+      - MYSQL_PASSWORD=ChangeMeSpipDbPassword!
     volumes:
-      - ./db_data:/var/lib/mysql
+      - db_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
+      interval: 5s
+      timeout: 5s
+      retries: 12
 
   app:
-    image: erasme/spip-ccn:custom-port
+    image: ipeos/spip:4.4
     restart: always
-    env_file:
-      - .env
-    build:
-      context: .
-      args:
-        - name=value
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      - SPIP_AUTO_INSTALL=1
+      - SPIP_DB_SERVER=mysql
+      - SPIP_DB_HOST=db
+      - SPIP_DB_LOGIN=spip
+      - SPIP_DB_PASS=ChangeMeSpipDbPassword!
+      - SPIP_DB_NAME=spip
+      - SPIP_ADMIN_PASS=ChangeMeAdminPassword!
+      - SPIP_SITE_ADDRESS=http://localhost:8880
     volumes:
-      - ./IMG/:/var/www/html/IMG
-      - ./plugins/:/var/www/html/plugins
-      - ./tmp/sessions/:/var/www/html/tmp/sessions
-    links:
-      - db:mysql
+      - spip_html:/var/www/html
     ports:
-      - 8005:80
+      - 8880:80
+
+volumes:
+  db_data:
+  spip_html:
