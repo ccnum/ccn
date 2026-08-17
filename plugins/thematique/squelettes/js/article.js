@@ -102,6 +102,7 @@ function Article() {
 		if (CCN.admin == 0) {
 			this.div_base.draggable({
 				axis: "y",
+				cancel: '',  // Force le drag and drop
 				start: function (event, ui) {
 					$(this).children().children().removeAttr("onClick");
 				},

@@ -147,16 +147,16 @@ function Consigne() {
 
 		if (CCN.admin == 0) {
 			const leftPercent = CCN.projet.nombre_jours_total > 0 ? this.x / CCN.projet.nombre_jours_total * 100 : 0;
-
 			this.div_base.draggable({
 				axis: "y",
+				cancel: '', // Force le drag and drop même s'il y a un button dans la consigne.
 				start: function (event, ui) {
 					$(this).addClass('no_event');
 				},
 				drag: function (event, ui) {
 					// jQuery UI va écrire un left en px — on le réécrit en % immédiatement
 					ui.position.left = CCN.projet.timeline.width() * leftPercent / 100;
-					updateConnecteurs();
+					updateConsigneConnecteurs(event.target, ui);
 				},
 				stop: function (event, ui) {
 					const yy = (ui.offset.top - CCN.projet.timeline.offset().top) / CCN.projet.timeline.height();
@@ -233,7 +233,7 @@ function Consigne() {
 		const rafEnd = Date.now() + 2300;
 
 		function rafConnecteurs() {
-			updateConnecteurs();
+			updateAllConnecteurs();
 			if (Date.now() < rafEnd) {
 				rafId = requestAnimationFrame(rafConnecteurs);
 			}

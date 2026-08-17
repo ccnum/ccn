@@ -105,11 +105,12 @@ function Reponse() {
 			$(this.div_base).draggable(
 				{
 					axis: "y",
+					cancel: '',  // Force le drag and drop même s'il y a un button dans la réponse.
 					start: function (event, ui) {
 						$(this).addClass('no_event');
 					},
 					drag: function (event, ui) {
-						updateConnecteur(event.target, ui);
+						updateReponseConnecteurs(event.target, ui);
 					},
 					stop: function (event, ui) {
 						const yy = (ui.offset.top - CCN.projet.timeline.offset().top) / CCN.projet.timeline.height();
