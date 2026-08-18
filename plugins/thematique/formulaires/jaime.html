@@ -34,8 +34,13 @@
 	</form>
 	]
 	[(#ENV**{editable}|non)
-		[(#GET{total}|oui)
-			<span class="btn_jaimeplus no-interactive">
+		[(#ENV{id_notation}|non)
+			<span class="btn_jaime no-interactive tooltip_bottom" data-tip="<:notation:jaime|attribut_html:>">
+				<div class="submit jaime"></div>
+			</span>
+		]
+		[(#ENV{id_notation}|oui)
+			<span class="btn_jaimeplus no-interactive tooltip_bottom" data-tip="<:notation:jaimeplus|attribut_html:>">
 				<div class="submit jaimeplus"></div>
 			</span>
 		]
