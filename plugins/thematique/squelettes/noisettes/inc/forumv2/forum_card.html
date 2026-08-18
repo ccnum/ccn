@@ -32,7 +32,13 @@
 		</div>
 		[(#ENV{est_une_previsualisation}|non|et{#ENV{is_root}|=={oui}|oui})
 			<div class="footer forum-actions">
-				<div>
+				
+				<div style="display: flex;
+							align-items: center;"
+				>
+					<BOUCLE_jaime_forum(FORUMS){id_forum=#ENV{id_forum}}>
+						#FORMULAIRE_JAIME
+					</BOUCLE_jaime_forum>
 					[(#ENV{nombre_reponses}|>{0}|oui)
 						<button onclick="callbackCliqueSurVoirLesReponses(event)"
 								class="link-button voir-les-reponses">
