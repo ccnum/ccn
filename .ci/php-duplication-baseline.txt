@@ -1,2 +1,0 @@
-11L | plugins/thematique/base/thematique_cextras.php:53 <-> plugins/thematique/base/thematique_cextras.php:67
-11L | plugins/thematique/base/thematique_cextras.php:81 <-> plugins/thematique/base/thematique_cextras.php:95

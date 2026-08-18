@@ -163,11 +163,10 @@ node .ci/check_php_duplication.js [--baseline=PATH] [--write-baseline]
                                    [--min-lines=N] [--min-tokens=N]
 ```
 
-Baseline dans `.ci/php-duplication-baseline.txt` (8 clones détectés à la
-mise en place, 2026-08 ; ramenés à 2 après factorisation, cf ci-dessous).
-Même mécanisme que les autres checks : `--write-baseline` après
-vérification du diff pour accepter une nouvelle duplication ou rétrécir la
-baseline une fois du code factorisé.
+Baseline dans `.ci/php-duplication-baseline.txt`, vide depuis la
+factorisation des 8 clones détectés à la mise en place (2026-08, cf
+ci-dessous). Même mécanisme que les autres checks : `--write-baseline`
+après vérification du diff pour accepter une nouvelle duplication.
 
 ## Duplications déjà traitées (2026-08)
 
@@ -179,11 +178,9 @@ baseline une fois du code factorisé.
   logique de recherche des fichiers bigup, vérification d'autorisation, et
   ajout des documents + construction de la réponse CVT, factorisées dans
   `inc/thematique_joindre.php`.
-
-## Exceptions restantes dans la baseline
-
 - `base/thematique_cextras.php` (2 clones de 11 lignes, champs
   `url_id_doc`/`id_rubrique_lien` et `x`/`y`) : boilerplate de déclaration
-  de champs extras (tableau `saisie`/`options`/`restrictions` par champ),
-  toléré tel quel — factoriser risquerait d'introduire une erreur dans une
-  déclaration de schéma pour un gain limité.
+  de champs extras factorisé dans `thematique_champ_extra_simple()` (nom,
+  clé de langue, type SQL et statuts autorisés à modifier en paramètres) —
+  sortie vérifiée strictement identique à l'ancien tableau en dur avant
+  factorisation.
