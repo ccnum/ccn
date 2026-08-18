@@ -67,8 +67,26 @@ jobs:
       - name: Vérifier l'absence de nouvelle duplication HTML
         run: node .ci/check_html_duplication.js
 
+  php_duplication:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Installer les dépendances npm
+        run: npm ci
+
+      - name: Vérifier l'absence de nouvelle duplication PHP
+        run: node .ci/check_php_duplication.js
+
   spip:
-    needs: [lang_hardcoded, lang_keys, hardcoded_paths, html_duplication]
+    needs: [lang_hardcoded, lang_keys, hardcoded_paths, html_duplication, php_duplication]
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
