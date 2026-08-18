@@ -147,3 +147,20 @@ Comme pour les checks Python, seule une nouvelle duplication (absente de
 `html-duplication-baseline.txt`) fait échouer le script — le volume déjà
 présent (84 clones lors de la mise en place, 2026-08) est toléré tel quel ;
 `--write-baseline` régénère le fichier après vérification du diff.
+
+# check_php_duplication.js
+
+Même principe que `check_html_duplication.js` (jscpd), appliqué au PHP du
+plugin `plugins/thematique` (pattern `**/*.php` au lieu de `**/*.html`).
+Limité à ce seul plugin pour l'instant (pas `fictions`/`petitfablab`) — à
+élargir si la convention fait ses preuves ici.
+
+Usage local (nécessite `npm ci` au préalable) :
+
+```
+npm ci
+node .ci/check_php_duplication.js [--baseline=PATH] [--write-baseline]
+                                   [--min-lines=N] [--min-tokens=N]
+```
+
+Baseline dans `.ci/php-duplication-baseline.txt` (8 clones lors de la mise
