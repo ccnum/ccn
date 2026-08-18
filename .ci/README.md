@@ -163,4 +163,27 @@ node .ci/check_php_duplication.js [--baseline=PATH] [--write-baseline]
                                    [--min-lines=N] [--min-tokens=N]
 ```
 
-Baseline dans `.ci/php-duplication-baseline.txt` (8 clones lors de la mise
+Baseline dans `.ci/php-duplication-baseline.txt` (8 clones détectés à la
+mise en place, 2026-08 ; ramenés à 2 après factorisation, cf ci-dessous).
+Même mécanisme que les autres checks : `--write-baseline` après
+vérification du diff pour accepter une nouvelle duplication ou rétrécir la
+baseline une fois du code factorisé.
+
+## Duplications déjà traitées (2026-08)
+
+- `base/th_cextras.php` et `base/th_install.php` : reliquats morts de
+  l'ancien préfixe `th_` (renommé en `thematique_` dans #289), plus jamais
+  chargés par SPIP (seul `base/<prefix>_*.php` avec le préfixe déclaré dans
+  `paquet.xml`, ici `thematique`, est auto-inclus) — supprimés.
+- `formulaires/joindre_document_mission.php` et `formulaires/joindre_video.php` :
+  logique de recherche des fichiers bigup, vérification d'autorisation, et
+  ajout des documents + construction de la réponse CVT, factorisées dans
+  `inc/thematique_joindre.php`.
+
+## Exceptions restantes dans la baseline
+
+- `base/thematique_cextras.php` (2 clones de 11 lignes, champs
+  `url_id_doc`/`id_rubrique_lien` et `x`/`y`) : boilerplate de déclaration
+  de champs extras (tableau `saisie`/`options`/`restrictions` par champ),
+  toléré tel quel — factoriser risquerait d'introduire une erreur dans une
+  déclaration de schéma pour un gain limité.

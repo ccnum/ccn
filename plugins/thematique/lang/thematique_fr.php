@@ -270,4 +270,14 @@ return [
 	'rss_dernieres_publications'     => 'Dernières publications',
 	'rss_dernieres_maj'              => 'Dernières mises à jour',
 	'rss_derniers_commentaires'      => 'Derniers commentaires dans le forum',
+
+	// base/thematique_cextras.php (labels des champs extras dans /ecrire)
+	'champ_extra_ent'                => 'Identifiant ENT',
+	'champ_extra_ent_statut'         => 'Statut ENT',
+	'champ_extra_avatar'             => 'Avatar',
+	'champ_extra_url_id_doc'         => 'URL ou identifiant du document',
+	'champ_extra_id_rubrique_lien'   => 'Rubrique liée',
+	'champ_extra_position_x'         => 'Position X',
+	'champ_extra_position_y'         => 'Position Y',
+	'champ_extra_id_consigne'        => 'Consigne liée',
 ];
