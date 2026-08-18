@@ -1111,7 +1111,7 @@ function loadContentInMainSidebar(url, callback, typeContenu) {
 		}
 
 		if (!response || response.trim() === "") {
-			if (CCN.debug) { console.warn("Réponse vide !"); }
+			if (CCN.debug) { console.warn(CCN.lang.reponse_vide); }
 		}
 
 		$('body').removeClass('loading');

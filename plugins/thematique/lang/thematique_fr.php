@@ -177,6 +177,7 @@ return [
 	'repondre_publier'               => 'Publier',
 	'repondre_voir_reponses_classes' => 'Regardez les réponses des autres classes.',
 	'reponse'                        => 'Réponse',
+	'reponse_vide'                   => 'Réponse vide !',
 	'reponse_binome'                 => 'Réponse binôme',
 	'reponses_du_binome'             => 'Réponses du binôme',
 	'ressources'                     => 'Ressources',
