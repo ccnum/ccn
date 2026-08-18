@@ -1065,6 +1065,45 @@ function thematique_ids_rubriques_enfants($id_parent, $limite = 0) {
 }
 
 /**
+ * Ids des rubriques petites-enfants (id_parent -> enfants -> enfants) de
+ * $id_grandparent portant un mot-clé donné, triées par date décroissante et
+ * limitées — même principe que thematique_ids_rubriques_enfants() mais un
+ * niveau plus profond (ex: chaque classe a une sous-rubrique "consignes",
+ * cf noisettes/inc/actus_timeline.html).
+ *
+ * @param int $id_grandparent
+ * @param string $titre_mot
+ * @param int $limite 0 = pas de limite
+ * @return int[]
+ */
+function thematique_ids_rubriques_petits_enfants_a_mot($id_grandparent, $titre_mot, $limite = 0) {
+	if (!$id_grandparent) {
+		return [];
+	}
+	$id_mot = sql_getfetsel('id_mot', 'spip_mots', 'titre=' . sql_quote($titre_mot));
+	if (!$id_mot) {
+		return [];
+	}
+
+	// Alias (r/parent/ml) obligatoires, cf thematique_id_rubrique_enfant_a_mot().
+	$rows = sql_allfetsel(
+		'r.id_rubrique',
+		['spip_rubriques AS r', 'spip_rubriques AS parent', 'spip_mots_liens AS ml'],
+		[
+			'parent.id_rubrique=r.id_parent',
+			'parent.id_parent=' . intval($id_grandparent),
+			'ml.id_objet=r.id_rubrique',
+			'ml.objet=' . sql_quote('rubrique'),
+			'ml.id_mot=' . intval($id_mot),
+		],
+		'',
+		'r.date DESC',
+		$limite ? '0,' . intval($limite) : ''
+	);
+	return array_map('intval', array_column($rows, 'id_rubrique'));
+}
+
+/**
  * Rubrique "classe en cours de travail" par défaut pour l'année active :
  * repli pour idRubriqueUser quand l'utilisateur n'a pas de rubrique
  * sélectionnée (cf choix_rubrique_admin2.html, ex BOUCLE_filtreTravailEnCours).
@@ -1122,9 +1161,15 @@ function thematique_id_rubrique_mission() {
 function thematique_voir_mission() {
 	include_spip('inc/session');
 	$role = session_get('role');
+	$statut = session_get('statut');
 	$admin = session_get('admin');
 
-	if ($role === 'admin' || ($role === 'intervenant' && $admin > 0)) {
+	// thematique_donner_role() priorise les mots-clés de hiérarchie
+	// (travail_en_cours/consignes) sur le statut SPIP : un vrai webmestre
+	// (statut 0minirezo) peut donc se retrouver avec $role='intervenant'
+	// s'il est aussi rattaché à une hiérarchie "consignes". On vérifie le
+	// statut directement pour ne pas le priver du bouton.
+	if ($statut === '0minirezo' || $role === 'admin' || ($role === 'intervenant' && $admin > 0)) {
 		return 'oui';
 	}
 	return 'non';
