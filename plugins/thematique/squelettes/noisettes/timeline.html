@@ -4,7 +4,7 @@
 
 	CCN.urlRoot = "[(#ENV{chemin})]";
 	CCN.urlJson = "[(#URL_PAGE{json}|parametre_url{annee_scolaire,#ENV{annee_scolaire}}|html_entity_decode)]" + "&mode=";
-	CCN.urlImgBlog = "#CHEMIN{img/logo_blog_timeline.svg}";
+	CCN.urlImgBlog = "#CHEMIN{img/bulle.svg}";
 	CCN.urlImgEvenement = "[(#CHEMIN{#ENV{chemin}/img/logo_evenement_#NOM_SITE_SPIP.png}|sinon{#ENV{chemin}/img/logo_evenement.png}|image_reduire{150,94}|extraire_attribut{src})]";
 
 	CCN.admin = [(#ENV{admin}|intval)];

@@ -62,8 +62,8 @@ function Article() {
 					<div id="article_blog${this.id}" class="${classe_article} bulle_bd">
 						<svg class="bubble_svg" aria-hidden="true"></svg>
 						<div class="bulle_contenu">
-							<div>${titreSur}</div><br/>
-							<span class="${prefix}_date">${dateSure}</span>
+							<div class="${prefix}_date">${dateSure}</div>
+							<div class="bulle-texte">${titreSur}</div>
 						</div>
 						${picto_commentaires}
 					</div>
@@ -76,8 +76,8 @@ function Article() {
 						<svg class="bubble_svg"></svg>
 						<div class="article_evenement_inner">
 							<div class="bulle_contenu">
-								<div class="bulle-texte">${titreSur}</div><br/>
-								<span class="${prefix}_date">${dateSure}</span>
+								<div class="${prefix}_date">${dateSure}</div>
+								<div class="bulle-texte">${titreSur}</div>
 							</div>
 						</div>
 						${picto_commentaires}

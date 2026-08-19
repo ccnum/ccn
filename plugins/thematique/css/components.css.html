@@ -564,7 +564,8 @@ span[role="img"] {
 	position: absolute;
 	width: 100px;
 	height: 100px;
-	background: rgb(71, 152, 154);
+	border-radius: 10px;
+	background-color: var(--color-bleu-fond);
 	z-index: -1;
 	left: 25px;
 	bottom: 0;
@@ -592,13 +593,13 @@ span[role="img"] {
 	left: 0;
 	width: 100%;
 	height: 100%;
-	background: var(--color-tonic);
+	background-color: var(--color-bleu-fond);
 	clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%);
 	z-index: -1;
 }
 
 .show_evenements .article_evenement_container .article_evenement {
-	color: white;
+	color: var(--color-default);
 }
 
 .article_blog_container .article_blog2{
@@ -636,6 +637,17 @@ span[role="img"] {
     z-index: 1;
     text-align: center;
     line-height: 1.2;
+}
+
+.bulle_bd .article_blog_date {
+	color: var(--color-tonic);
+	font-size: 14px;
+	font-style: italic;
+	font-weight: 300;
+}
+
+.bulle_bd .bulle-texte {
+	margin-top: 0.3rem;
 }
 
 .article_blog .picto_nombre_commentaires {

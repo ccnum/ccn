@@ -259,7 +259,7 @@ return [
 	'par_date'                       => 'Par date',
 	'par_notation'                   => 'Par notation',
 	'projets_finis'                  => 'Projets finis',
-	'salle_des_profs'                => 'Salle des profs',
+	'salle_des_pros'                => 'Salle des pros',
 	'tous_les_medias'                => 'Tous les médias',
 	'toutes_les_actualites'          => 'Toutes les actualités',
 	'tri'                            => 'Tri',

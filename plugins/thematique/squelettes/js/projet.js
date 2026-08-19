@@ -146,7 +146,7 @@ function Projet() {
 		for (let i = 0; i < CCN.articlesEvenement.length; i++) {
 			$(CCN.articlesEvenement[i].div_base).fadeIn(3000);
 		}
-
+		deflouterToutesLesBulles();
 		this.setTimelineZoom();
 
 		$('.connecteur_timeline').addClass('hide');

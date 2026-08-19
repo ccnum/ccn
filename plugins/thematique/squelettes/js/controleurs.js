@@ -100,7 +100,6 @@ $(function () {
 		'click', function (event) {
 			event.stopPropagation();
 			CCN.projet.showWholeTimeline();
-			changeTimelineMode('consignes');
 		}
 	);
 
@@ -156,6 +155,12 @@ function onHashChange(event) {
 	}
 }
 
+function getCurrentTimelineMode() {
+	if ($('body').hasClass('show_blogs')) return 'blogs';
+	if ($('body').hasClass('show_evenements')) return 'evenements';
+	return 'consignes';
+}
+
 /**
  * Initialise la vue depuis l'URL donnée
  * ou depuis l'état de l'historique donné
@@ -190,6 +195,8 @@ function setContentFromState(state, title, url) {
 			break;
 		}
 	}
+	console.log(currentState);
+	
 	currentState = state;
 	if (isSamePage) { return; }
 
@@ -271,7 +278,8 @@ function setContentFromState(state, title, url) {
 		}
 	}
 	else { // state.id_objet == 0)
-
+		console.log({typeobjet: state.type_objet, page: state.page} );
+		
 		// Ressource
 		if (state.type_objet == "ressources") {
 
@@ -280,7 +288,7 @@ function setContentFromState(state, title, url) {
 				callClasses();
 			}
 		} else {
-			changeTimelineMode('consignes');
+			changeTimelineMode(getCurrentTimelineMode());
 		}
 	}
 
@@ -328,6 +336,8 @@ function getHauteurZone() {
  * @param {string} type - Peut être <tt>consignes</tt>, <tt>blogs</tt> ou <tt>evenements</tt>
  */
 async function changeTimelineMode(type) {
+	console.log("changeTimelineMode");
+	
 	const classCss = {};
 	classCss.consignes = 'show_consignes';
 	classCss.blogs = 'show_blogs';
@@ -346,11 +356,11 @@ async function changeTimelineMode(type) {
 			}
 		}
 
-		CCN.projet.showWholeTimeline();
-
 		for (const index in classCss) {
 			$('body').removeClass(classCss[index]);
 		}
+		
+		CCN.projet.showWholeTimeline();
 
 		$('body').addClass(classCss[type]);
 
@@ -1358,12 +1368,10 @@ function colorerBulle(conteneur, couleur) {
     conteneur.style.setProperty('--bulle-couleur', couleur);
 }
 
-function flouterBulle(bulle) {
-    
-}
-
-function deflouterBulle(bulle) {
-	
+function deflouterToutesLesBulles() {
+	document.querySelectorAll('.article_blog_container').forEach(bulle => {
+		bulle.classList.remove('flou');
+	});
 }
 
 function flouterLesBullesNonSelectionnees(idBulleSelectionnee) {
