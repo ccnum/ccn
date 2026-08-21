@@ -13,15 +13,26 @@ include_spip('thematique_fonctions');
 include_spip('inc/thematique_cioidc');
 
 /**
- * Calcule le rôle (prof/intervenant/admin/eleve) une seule fois par requête,
- * au moment où SPIP construit la session du visiteur identifié, plutôt que
- * de le recalculer dans chaque squelette qui en a besoin via
+ * Calcule le rôle (prof/intervenant/admin/eleve) et l'avatar de session à
+ * chaque écriture du fichier de session (pipeline preparer_fichier_session),
+ * plutôt que de le recalculer dans chaque squelette qui en a besoin via
  * #SESSION_SET{role, #SESSION{id_auteur}|thematique_donner_role}.
  *
- * Ne s'exécute que pour un visiteur identifié (auth_init_droits) : un
- * visiteur anonyme n'a pas de #SESSION{role} du tout, ce qui est
- * équivalent pour tous les tests existants (aucun ne compare
- * explicitement à 'visiteur', seulement à prof/intervenant/admin/eleve).
+ * Accroché à preparer_fichier_session (déclenché par ajouter_session() à
+ * chaque écriture du fichier de session : connexion, ou tout session_set())
+ * plutôt qu'à preparer_visiteur_session (déclenché uniquement dans
+ * auth_init_droits(), donc seulement pour un accès à /ecrire ou le
+ * formulaire de connexion natif SPIP, jamais pour la connexion SSO
+ * utilisée par la quasi-totalité des comptes réels). preparer_visiteur_session
+ * a l'inconvénient supplémentaire de ne jamais réécrire son résultat dans
+ * le fichier de session (cf le commentaire "qui ne figure pas dans le
+ * fichier de session" dans ecrire/inc/auth.php) : il ne survivait donc que
+ * le temps de la requête en cours. Sans ce hook sur preparer_fichier_session,
+ * #SESSION{role} restait vide sur toutes les pages publiques pour un compte
+ * connecté via l'ENT (cioidc_session() contourne auth_loger() et écrit la
+ * session directement via ajouter_session()) : la sidebar "mission"
+ * retombait toujours sur le fond consigne_pour_autre, même pour un
+ * intervenant ou un admin correctement reconnus côté base.
  *
  * Expose aussi #SESSION{avatar} pour le menu haut : soit une URL de photo
  * laclasse.com (champ extra 'avatar' de spip_auteurs, alimenté par
@@ -34,16 +45,14 @@ include_spip('inc/thematique_cioidc');
  * @param array $flux
  * @return array
  */
-function thematique_preparer_visiteur_session($flux) {
-	$id_auteur = intval($flux['args']['row']['id_auteur'] ?? 0);
+function thematique_preparer_fichier_session($flux) {
+	$id_auteur = intval($flux['data']['id_auteur'] ?? 0);
 	$role = thematique_donner_role($id_auteur);
 	$flux['data']['role'] = $role;
 
-	$avatar = $flux['args']['row']['avatar'] ?? '';
 	if ($role === 'prof' && $animal = thematique_avatar_animal($id_auteur)) {
-		$avatar = $animal;
+		$flux['data']['avatar'] = $animal;
 	}
-	$flux['data']['avatar'] = $avatar;
 	return $flux;
 }
 

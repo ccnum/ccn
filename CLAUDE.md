@@ -92,11 +92,16 @@ boucle SPIP imbriquée non cachée, c'est probablement à migrer sur ce modèle 
 sur place.
 
 ### Rôle de session
-`thematique_donner_role($id_auteur)` (prof/intervenant/admin/eleve/null) est calculé **une fois
-par requête**, dans le pipeline `auth_init_droits` (`thematique_pipelines.php ->
-thematique_preparer_visiteur_session`), et exposé via `#SESSION{role}` — ne pas le
-recalculer ailleurs. `fond_consigne_pour_role()`/`fond_reponse_pour_role()` choisissent le fond
-sidebar à inclure selon ce rôle.
+`thematique_donner_role($id_auteur)` (prof/intervenant/admin/eleve/null) est calculé dans le
+pipeline `preparer_fichier_session` (`thematique_pipelines.php ->
+thematique_preparer_fichier_session`), déclenché à chaque écriture du fichier de session
+(connexion ou `session_set()`) plutôt que dans `preparer_visiteur_session`/`auth_init_droits` :
+ce dernier ne s'exécute que pour un accès à `/ecrire` ou le formulaire de connexion natif SPIP,
+jamais pour la connexion SSO (CIOIDC) utilisée par la quasi-totalité des comptes réels — un hook
+sur `preparer_visiteur_session` laisserait `#SESSION{role}` vide sur les pages publiques pour ces
+comptes. Exposé via `#SESSION{role}` — ne pas le recalculer ailleurs.
+`fond_consigne_pour_role()`/`fond_reponse_pour_role()` choisissent le fond sidebar à inclure selon
+ce rôle.
 
 ### Année scolaire
 `_ANNEE_SCOLAIRE` (constante PHP, définie dans `plugins/ccn/ccn_options.php`) pilote quasi toute
