@@ -822,7 +822,12 @@ function thematique_id_rubrique_annee_active() {
  * Ne crée jamais "Ressources"/"Agora" : rubriques globales, réutilisées
  * d'année en année (cf xml/projet.html, résolues sans filtre d'année).
  *
- * @return int id de la rubrique "Travail des classes" (0 si échec)
+ * @return int id de la rubrique "Consignes" (0 si échec) — c'est sous
+ *   cette rubrique (type_objet consignes) que doivent vivre les articles
+ *   jalons créés par genie/thematique_rentree_annee.php : c'est elle qui
+ *   route vers noisettes/sidebar/consigne_pour_*.html (où vit le
+ *   traitement spécifique est_jalon), pas "Travail des classes"
+ *   (type_objet travail_en_cours).
  */
 function thematique_assurer_structure_annee() {
 	$annee = thematique_annee_scolaire();
@@ -859,7 +864,7 @@ function thematique_assurer_structure_annee() {
 		}
 	}
 
-	return $id_travail_classes ?: 0;
+	return $id_consignes ?: 0;
 }
 
 /**

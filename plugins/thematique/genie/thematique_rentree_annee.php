@@ -95,7 +95,6 @@ function genie_thematique_rentree_annee_dist($last) {
 	];
 
 	include_spip('action/editer_article');
-	include_spip('action/editer_objet');
 	include_spip('action/editer_liens');
 
 	// Passe à false dès qu'un jalon n'a pas pu être créé (mot-clé manquant,
@@ -132,18 +131,22 @@ function genie_thematique_rentree_annee_dist($last) {
 			continue;
 		}
 
-		$id_article = article_inserer($id_rubrique);
+		// titre/date/statut passés directement à l'insertion (plutôt que via
+		// objet_instituer() après coup) : article_instituer() ne gère que
+		// statut/date/id_parent (cf son docstring SPIP), la clé 'titre' y est
+		// silencieusement ignorée — l'article restait sans titre. Ce chemin
+		// évite aussi la dépendance à autoriser('publierdans', ...), non
+		// significative dans le contexte cron (pas de vrai visiteur_session).
+		$id_article = article_inserer($id_rubrique, [
+			'titre' => $infos['titre'],
+			'date' => $infos['date'],
+			'statut' => 'prop',
+		]);
 		if (!$id_article) {
 			spip_log("thematique_rentree_annee : échec de création de l'article '$titre_mot'", 'thematique' . _LOG_ERREUR);
 			$tous_jalons_ok = false;
 			continue;
 		}
-
-		objet_instituer('article', $id_article, [
-			'titre' => $infos['titre'],
-			'date' => $infos['date'],
-			'statut' => 'prop',
-		]);
 
 		objet_associer(['mots' => intval($id_mot)], ['articles' => $id_article]);
 		if ($id_intervenant) {
