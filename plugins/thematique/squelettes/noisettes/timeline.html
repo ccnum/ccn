@@ -4,7 +4,7 @@
 
 	CCN.urlRoot = "[(#ENV{chemin})]";
 	CCN.urlJson = "[(#URL_PAGE{json}|parametre_url{annee_scolaire,#ENV{annee_scolaire}}|html_entity_decode)]" + "&mode=";
-	CCN.urlImgBlog = "[(#CHEMIN{#ENV{chemin}/img/logo_blog_#NOM_SITE_SPIP.png}|sinon{#ENV{chemin}/img/logo_blog.png}|image_reduire{98}|extraire_attribut{src})]";
+	CCN.urlImgBlog = "#CHEMIN{img/bulle.svg}";
 	CCN.urlImgEvenement = "[(#CHEMIN{#ENV{chemin}/img/logo_evenement_#NOM_SITE_SPIP.png}|sinon{#ENV{chemin}/img/logo_evenement.png}|image_reduire{150,94}|extraire_attribut{src})]";
 
 	CCN.admin = [(#ENV{admin}|intval)];
@@ -25,6 +25,7 @@
 	// donc on les expose ici depuis les items de langue PHP, cf lang/thematique_fr.php).
 	CCN.lang = {
 		reponse: [(#EVAL{"json_encode(_T('thematique:reponse'))"})],
+		reponse_vide: [(#EVAL{"json_encode(_T('thematique:reponse_vide'))"})],
 		evenement: [(#EVAL{"json_encode(_T('thematique:evenement'))"})],
 		consigne_etape: [(#EVAL{"json_encode(_T('thematique:consigne_etape'))"})],
 		repondre_a_la_consigne: [(#EVAL{"json_encode(_T('thematique:repondre_a_la_consigne'))"})],
@@ -37,8 +38,6 @@
 		sidebar_livrables_texte: [(#EVAL{"json_encode(_T('thematique:sidebar_livrables_texte'))"})],
 		sidebar_ressources_titre: [(#EVAL{"json_encode(_T('thematique:sidebar_ressources_titre'))"})],
 		sidebar_ressources_texte: [(#EVAL{"json_encode(_T('thematique:sidebar_ressources_texte'))"})],
-		forum_voir_reponses: [(#EVAL{"json_encode(_T('thematique:forum_voir_reponses'))"})],
-		forum_masquer_reponses: [(#EVAL{"json_encode(_T('thematique:forum_masquer_reponses'))"})],
 		forum_reduire: [(#EVAL{"json_encode(_T('thematique:forum_reduire'))"})],
 		taille_maximale_document_forum: [(#EVAL{"json_encode(_T('thematique:taille_maximale_document_forum'))"})],
 		lire_la_suite_commentaire: [(#EVAL{"json_encode(_T('thematique:lire_la_suite_commentaire'))"})],

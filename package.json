@@ -1,0 +1,8 @@
+{
+	"name": "ccn",
+	"private": true,
+	"description": "Outillage CI (hors code applicatif SPIP, en PHP/Python)",
+	"devDependencies": {
+		"jscpd": ">=4.0.5 <=4.2.4"
+	}
+}

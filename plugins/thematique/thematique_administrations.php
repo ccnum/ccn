@@ -55,6 +55,14 @@ function thematique_upgrade($nom_meta_base_version, $version_cible) {
 	$maj['3.0.9'] = [];
 	cextras_api_upgrade(thematique_declarer_champs_extras(), $maj['3.0.9']);
 
+	// mots-clés cap-sur-l-annee/la-rencontre : jamais créés jusqu'ici (absents
+	// de thematique_ajouter_mots_clef() avant ce correctif), donc
+	// genie/thematique_rentree_annee.php ne pouvait jamais créer les articles
+	// jalons sur aucun site existant ("mot-clé introuvable, ignoré" en log).
+	// Rejoue thematique_ajouter_mots_clef() (idempotent) pour les ajouter
+	// rétroactivement sur tous les sites déjà installés.
+	$maj['3.4.0'] = [['thematique_ajouter_mots_clef']];
+
 	include_spip('base/upgrade');
 	maj_plugin($nom_meta_base_version, $version_cible, $maj);
 }
@@ -185,7 +193,11 @@ function thematique_ajouter_mots_clef() {
 
 	// Groupe Presentation_articles
 	$id_groupe = thematique_ajouter_groupe_mots('Presentation', 'articles', "tables_liees LIKE '%articles%'");
-	foreach (['laclasse.com', 'sommaire_edito', 'livrable'] as $mot) {
+	// cap-sur-l-annee/la-rencontre : tags des 2 articles jalons du projet
+	// (cf genie/thematique_rentree_annee.php), pas des articles "présentation"
+	// au sens strict, mais rattachés à ce groupe existant plutôt qu'un
+	// groupe dédié pour 2 mots-clés seulement.
+	foreach (['laclasse.com', 'sommaire_edito', 'livrable', 'cap-sur-l-annee', 'la-rencontre'] as $mot) {
 		thematique_ajouter_mot($mot, $id_groupe);
 	}
 

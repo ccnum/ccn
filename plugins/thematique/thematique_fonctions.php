@@ -773,7 +773,12 @@ function classe_id_rubrique_auteur($id_auteur) {
  * repli sur la rubrique de l'article commenté pour les commentaires
  * d'élèves dont le compte n'a jamais été rattaché à une classe (créé
  * avant l'ajout de ce rattachement dans thematique_cioidc_userinfo, et
- * pas reconnecté depuis).
+ * pas reconnecté depuis) — ne s'applique que si l'article commenté est
+ * lui-même un article de réponse vivant dans la rubrique d'une classe
+ * (donc id_rubrique == la classe) : sur le forum d'une consigne
+ * (mission), id_rubrique est celle de l'intervenant, pas d'une classe,
+ * et ne doit pas servir de repli (sinon icône/couleur arbitraire, sans
+ * rapport avec l'auteur du commentaire ni avec la classe qui répond).
  *
  * @param array $forum Ligne spip_forum (cf filtre_afficher_forum_arbre())
  * @return int|null
@@ -785,9 +790,9 @@ function classe_id_rubrique_forum($forum) {
 	}
 
 	if (($forum['objet'] ?? '') === 'article' && !empty($forum['id_objet'])) {
-		$id_rubrique = sql_getfetsel('id_rubrique', 'spip_articles', 'id_article=' . intval($forum['id_objet']));
-		if ($id_rubrique) {
-			return (int) $id_rubrique;
+		$id_rubrique = (int) sql_getfetsel('id_rubrique', 'spip_articles', 'id_article=' . intval($forum['id_objet']));
+		if ($id_rubrique && isset(thematique_classes_rangs()[$id_rubrique])) {
+			return $id_rubrique;
 		}
 	}
 
@@ -817,7 +822,12 @@ function thematique_id_rubrique_annee_active() {
  * Ne crée jamais "Ressources"/"Agora" : rubriques globales, réutilisées
  * d'année en année (cf xml/projet.html, résolues sans filtre d'année).
  *
- * @return int id de la rubrique "Travail des classes" (0 si échec)
+ * @return int id de la rubrique "Consignes" (0 si échec) — c'est sous
+ *   cette rubrique (type_objet consignes) que doivent vivre les articles
+ *   jalons créés par genie/thematique_rentree_annee.php : c'est elle qui
+ *   route vers noisettes/sidebar/consigne_pour_*.html (où vit le
+ *   traitement spécifique est_jalon), pas "Travail des classes"
+ *   (type_objet travail_en_cours).
  */
 function thematique_assurer_structure_annee() {
 	$annee = thematique_annee_scolaire();
@@ -854,7 +864,7 @@ function thematique_assurer_structure_annee() {
 		}
 	}
 
-	return $id_travail_classes ?: 0;
+	return $id_consignes ?: 0;
 }
 
 /**
@@ -1065,6 +1075,45 @@ function thematique_ids_rubriques_enfants($id_parent, $limite = 0) {
 }
 
 /**
+ * Ids des rubriques petites-enfants (id_parent -> enfants -> enfants) de
+ * $id_grandparent portant un mot-clé donné, triées par date décroissante et
+ * limitées — même principe que thematique_ids_rubriques_enfants() mais un
+ * niveau plus profond (ex: chaque classe a une sous-rubrique "consignes",
+ * cf noisettes/inc/actus_timeline.html).
+ *
+ * @param int $id_grandparent
+ * @param string $titre_mot
+ * @param int $limite 0 = pas de limite
+ * @return int[]
+ */
+function thematique_ids_rubriques_petits_enfants_a_mot($id_grandparent, $titre_mot, $limite = 0) {
+	if (!$id_grandparent) {
+		return [];
+	}
+	$id_mot = sql_getfetsel('id_mot', 'spip_mots', 'titre=' . sql_quote($titre_mot));
+	if (!$id_mot) {
+		return [];
+	}
+
+	// Alias (r/parent/ml) obligatoires, cf thematique_id_rubrique_enfant_a_mot().
+	$rows = sql_allfetsel(
+		'r.id_rubrique',
+		['spip_rubriques AS r', 'spip_rubriques AS parent', 'spip_mots_liens AS ml'],
+		[
+			'parent.id_rubrique=r.id_parent',
+			'parent.id_parent=' . intval($id_grandparent),
+			'ml.id_objet=r.id_rubrique',
+			'ml.objet=' . sql_quote('rubrique'),
+			'ml.id_mot=' . intval($id_mot),
+		],
+		'',
+		'r.date DESC',
+		$limite ? '0,' . intval($limite) : ''
+	);
+	return array_map('intval', array_column($rows, 'id_rubrique'));
+}
+
+/**
  * Rubrique "classe en cours de travail" par défaut pour l'année active :
  * repli pour idRubriqueUser quand l'utilisateur n'a pas de rubrique
  * sélectionnée (cf choix_rubrique_admin2.html, ex BOUCLE_filtreTravailEnCours).
@@ -1122,9 +1171,15 @@ function thematique_id_rubrique_mission() {
 function thematique_voir_mission() {
 	include_spip('inc/session');
 	$role = session_get('role');
+	$statut = session_get('statut');
 	$admin = session_get('admin');
 
-	if ($role === 'admin' || ($role === 'intervenant' && $admin > 0)) {
+	// thematique_donner_role() priorise les mots-clés de hiérarchie
+	// (travail_en_cours/consignes) sur le statut SPIP : un vrai webmestre
+	// (statut 0minirezo) peut donc se retrouver avec $role='intervenant'
+	// s'il est aussi rattaché à une hiérarchie "consignes". On vérifie le
+	// statut directement pour ne pas le priver du bouton.
+	if ($statut === '0minirezo' || $role === 'admin' || ($role === 'intervenant' && $admin > 0)) {
 		return 'oui';
 	}
 	return 'non';

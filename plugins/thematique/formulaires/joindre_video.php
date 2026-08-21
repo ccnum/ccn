@@ -10,6 +10,8 @@ if (!defined('_ECRIRE_INC_VERSION')) {
  * upload par morceaux) : indispensable pour les grosses vidéos, un upload
  * classique en un seul POST peut saturer la mémoire du serveur (VM
  * redémarrée en OOM avec un simple <input type=file>, cf constat en prod).
+ * Logique commune à joindre_document_mission.php factorisée dans
+ * inc/thematique_joindre.php.
  *
  * Le mot de passe est stocké tel quel sur le document (champ extra
  * vimeo_password, cf plugin api_vimeo) : il est appliqué sur Vimeo une fois
@@ -21,10 +23,11 @@ if (!defined('_ECRIRE_INC_VERSION')) {
 define('_VIMEO_EXTENSIONS_AUTORISEES', ['mp4', 'mov', 'avi', 'mkv', 'webm']);
 
 /**
- * Trouve le fichier envoyé dans $_FILES. Avec _bigup_rechercher_fichiers
- * activé (cf charger_dist), bigup réinjecte le fichier uploadé par morceaux
- * dans $_FILES avant verifier()/traiter(), donc ce helper fonctionne à
- * l'identique d'un upload classique.
+ * Trouve le fichier envoyé dans $_FILES, restreint aux extensions vidéo
+ * autorisées. Avec _bigup_rechercher_fichiers activé (cf charger_dist),
+ * bigup réinjecte le fichier uploadé par morceaux dans $_FILES avant
+ * verifier()/traiter(), donc ce helper fonctionne à l'identique d'un
+ * upload classique.
  *
  * On n'utilise volontairement pas joindre_trouver_fichier_envoye() (qui
  * exige _request('joindre_upload')) : le plugin bigup cache tout bouton
@@ -34,15 +37,11 @@ define('_VIMEO_EXTENSIONS_AUTORISEES', ['mp4', 'mov', 'avi', 'mkv', 'webm']);
  * @return string|array
  */
 function joindre_video_trouver_fichier() {
-	include_spip('inc/joindre_document');
-	include_spip('action/ajouter_documents');
+	include_spip('inc/thematique_joindre');
 
-	$files = joindre_trouver_http_post_files();
+	$files = thematique_joindre_trouver_fichiers();
 	if (is_string($files)) {
 		return $files;
-	}
-	if (!count($files)) {
-		return _T('medias:erreur_indiquez_un_fichier');
 	}
 	foreach ($files as $file) {
 		if (!is_array(verifier_upload_autorise($file['name']))) {
@@ -65,9 +64,9 @@ function formulaires_joindre_video_charger_dist($id_objet = 0, $objet = '') {
 function formulaires_joindre_video_verifier_dist($id_objet = 0, $objet = '') {
 	$erreurs = [];
 
-	include_spip('inc/autoriser');
-	if (!autoriser('joindredocument', $objet, $id_objet)) {
-		$erreurs['message_erreur'] = _T('info_acces_interdit');
+	include_spip('inc/thematique_joindre');
+	if ($erreur = thematique_joindre_verifier_autorisation($objet, $id_objet)) {
+		$erreurs['message_erreur'] = $erreur;
 		return $erreurs;
 	}
 
@@ -98,55 +97,18 @@ function formulaires_joindre_video_verifier_dist($id_objet = 0, $objet = '') {
 }
 
 function formulaires_joindre_video_traiter_dist($id_objet = 0, $objet = '') {
-	$res = ['editable' => true];
-
 	$files = joindre_video_trouver_fichier();
 	if (is_string($files)) {
-		$res['message_erreur'] = $files;
-		return $res;
+		return ['editable' => true, 'message_erreur' => $files];
 	}
 
-	$ajouter_documents = charger_fonction('ajouter_documents', 'action');
-	$nouveaux_doc = $ajouter_documents('new', $files, $objet, $id_objet, 'document');
+	include_spip('inc/thematique_joindre');
+	$res = thematique_joindre_ajouter_documents($files, $objet, $id_objet);
 
-	$messages_erreur = [];
-	$sel = [];
-	$ancre = '';
-	foreach ($nouveaux_doc as $doc) {
-		if (!is_numeric($doc)) {
-			$messages_erreur[] = $doc;
-		} elseif (!$doc) {
-			$messages_erreur[] = _T('medias:erreur_insertion_document_base', ['fichier' => '<em>???</em>']);
-		} else {
-			if (!$ancre) {
-				$ancre = $doc;
-			}
-			$sel[] = $doc;
-		}
-	}
-
-	if ($mot_de_passe = _request('vimeo_password')) {
-		foreach ($sel as $id_document) {
+	if (!empty($res['ids']) && ($mot_de_passe = _request('vimeo_password'))) {
+		foreach ($res['ids'] as $id_document) {
 			sql_updateq('spip_documents', ['vimeo_password' => $mot_de_passe], 'id_document=' . intval($id_document));
 		}
-	}
-
-	if (count($messages_erreur)) {
-		$res['message_erreur'] = implode('<br />', $messages_erreur);
-	}
-	if ($sel) {
-		$res['message_ok'] = singulier_ou_pluriel(
-			count($sel),
-			'medias:document_installe_succes',
-			'medias:nb_documents_installe_succes'
-		);
-		$res['ids'] = $sel;
-		$sel_js = '#doc' . implode(',#doc', $sel);
-		$js = "if (window.jQuery) jQuery(function(){ajaxReload('documents',{callback:function(){ jQuery('$sel_js').animateAppend(); }});});";
-		$res['message_ok'] .= "<script type='text/javascript'>$js</script>";
-	}
-	if ($ancre) {
-		$res['redirect'] = "#doc$ancre";
 	}
 
 	return $res;

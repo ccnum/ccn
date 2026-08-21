@@ -1,6 +1,5 @@
-genie/thematique_rentree_annee.php:36: Cap sur l'année
-squelettes/js/controleurs.js:781: Réponse vide !
-thematique_administrations.php:192: Blog pédagogique
-thematique_administrations.php:193: Contenu éditorial
-thematique_pipelines.php:191: de l'email
-thematique_pipelines.php:195: de l'avatar
+genie/thematique_rentree_annee.php:53: Cap sur l'année
+thematique_administrations.php:204: Blog pédagogique
+thematique_administrations.php:205: Contenu éditorial
+thematique_pipelines.php:189: de l'email
+thematique_pipelines.php:193: de l'avatar

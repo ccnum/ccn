@@ -375,7 +375,7 @@ function initTimeline() {
 	updateBadgeJalon('cap_sur_annee', CCN.idArticleCapSurAnnee, CCN.statutCapSurAnnee);
 	updateBadgeJalon('la_rencontre', CCN.idArticleLaRencontre, CCN.statutLaRencontre);
 
-	updateConnecteurs();
+	updateAllConnecteurs();
 
 	$('.reponse_haute')
 		.on(
@@ -395,7 +395,7 @@ function initTimeline() {
 
 	$('.mois, .timeline_trigger').on(
 		'click', function () {
-			changeTimelineMode('consignes');
+			
 			CCN.projet.showWholeTimeline();
 		}
 	);
@@ -459,7 +459,7 @@ function initTimeline() {
 
 	$('.profil').mediabox({ width: '80%', height: '80%' });
 
-	window.addEventListener("resize", () => updateConnecteurs());
+	window.addEventListener("resize", () => updateAllConnecteurs());
 }
 
 $(function () {

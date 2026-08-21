@@ -1,0 +1,19 @@
+[(#REM)
+Affichage d'un document (image en mediabox, ou logo générique + titre pour
+les autres formats), commun aux modèles noisettes/modeles/actu_documents.html
+et actu_livrables.html (fil d'actualités). Appelé depuis une boucle
+DOCUMENTS.
+
+Paramètre attendu : id_document.
+]
+<BOUCLE_vignette_document(DOCUMENTS){id_document}>
+	[(#MEDIA|=={'image'}|oui)
+		<a href="#URL_DOCUMENT" class="mediabox" type="#MIME_TYPE" data-box-min-height="90pc">
+			[(#FICHIER|image_reduire{300}|inserer_attribut{alt,#TITRE})]
+		</a>
+	]
+
+	[(#MEDIA|=={'image'}|non)
+		<INCLURE{fond=modeles/inc/vignette_document_non_image, id_document=#ID_DOCUMENT} />
+	]
+</BOUCLE_vignette_document>

@@ -1,15 +1,19 @@
+
+
 #SET{id_forum, #ENV{forum}|table_valeur{id_forum}}
+#SET{is_root, #ENV{forum}|table_valeur{id_parent}|?{non,oui}}
 #SET{nombre_reponses, #ENV{forum}|table_valeur{reponses}|count}
-#SET{date_heure, #ENV{forum}|table_valeur{date_heure}|affdate{'d/m/Y H:i'}}
+#SET{date_heure, #ENV{forum}|table_valeur{date_heure}|affdate}
 #SET{texte, #ENV{forum}|table_valeur{texte}|propre}
 #SET{id_rubrique_classe, #ENV{forum}|classe_id_rubrique_forum}
-<div class="forum-commentaire">
+<div class="forum-commentaire[(#GET{is_root}|=={oui}|?{' is-root',''})]">
 	<INCLURE{fond=noisettes/inc/forumv2/forum_card,
 		id_forum=#GET{id_forum},
 		nombre_reponses=#GET{nombre_reponses},
 		date_heure=#GET{date_heure},
 		texte=#GET{texte},
-		id_rubrique_classe=#GET{id_rubrique_classe}
+		id_rubrique_classe=#GET{id_rubrique_classe},
+		is_root=#GET{is_root},
 	}>
 	<B_reponses>
 		<div class="reponse-list" hidden>

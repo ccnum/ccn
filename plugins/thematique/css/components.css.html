@@ -12,6 +12,13 @@
 	border: 2px solid var(--color-tonic);
 	background-color: white;
 }
+
+.consigne_haute img {
+	-webkit-user-drag: none;
+	user-drag: none;
+	user-select: none;
+}
+
 .consigne_haute:hover {
 	z-index: 3000;
 }
@@ -82,6 +89,15 @@
 	justify-self: center;
 	border-radius: 50%;
 	overflow: hidden;
+	/* box-sizing:border-box + padding : le span emoji (font-size:min(70cqw,70cqh),
+	   cf consigne.js) se dimensionne sur le content-box de cette puce, pas sur
+	   son border-box. En rognant le content-box via ce padding, on réduit d'autant
+	   le glyphe rendu et on lui laisse une vraie marge dans le cercle — le rendu
+	   couleur des emoji système (Apple Color Emoji / Noto / Segoe UI Emoji)
+	   déborde souvent de son propre em carré, et se faisait rogner en bas par le
+	   overflow:hidden du cercle quand le glyphe frôlait le bord. */
+	box-sizing: border-box;
+	padding: 0.18em;
 }
 
 .consigne .reponse_puce.disabled {
@@ -90,14 +106,18 @@
 
 /* Icône de classe (emoji) : [role="img"] ne sert qu'à ça dans ce plugin
    (consigne.js, reponse.js, rubrique_detail.html, logo_menu_classe.html).
-   line-height:1 neutralise la dérive verticale résiduelle propre aux
-   polices emoji système (Apple Color Emoji / Noto / Segoe UI Emoji n'ont
-   pas les mêmes métriques ascendant/descendant) — le décalage horizontal
-   observé (issue #374) venait lui d'espaces blancs parasites dans le HTML
-   généré (retour à la ligne autour de l'emoji dans le template), corrigé
-   côté squelette/JS, pas ici. */
+   Le décalage horizontal observé (issue #374) venait d'espaces blancs
+   parasites dans le HTML généré (retour à la ligne autour de l'emoji dans
+   le template) — corrigé côté squelette/JS, pas ici.
+   line-height:1.3 (et non 1) : les puces emoji dans un cercle
+   (.reponse_puce notamment) sont en overflow:hidden. Avec line-height:1,
+   le rendu couleur des emoji système (Apple Color Emoji / Noto / Segoe UI
+   Emoji) déborde souvent de sa propre boîte de ligne — le glyphe se fait
+   rogner en bas par le cercle. Un line-height:1.3 restitue la marge
+   verticale nécessaire sans réintroduire la dérive horizontale (qui ne
+   dépendait pas du line-height, seulement des espaces blancs). */
 span[role="img"] {
-	line-height: 1;
+	line-height: 1.3;
 }
 
 .bouton_reponse_consigne:after {
@@ -483,46 +503,47 @@ span[role="img"] {
 
 
 .timeline_item.article_blog_container {
-	width: 100px;
-	height: 100px;
+	min-width: 100px;
+	min-height: 100px;
 	padding: 0;
-	box-sizing: border-box;
+	display: inline-block;
 	transform: scale(0.4);
-	transition: transform 500ms ease;
+	
+	color: var(--color-default);
 }
 
 .show_blogs .article_blog_container{
 	transform: scale(1);
 }
 
-.article_blog_container::before {
-	content: "";
-	display: block;
-	position: absolute;
-	width: 50%;
-	height: 50%;
-	background: #E91E63;
-	z-index: -1;
-	left: 6%;
-	bottom: 6%;
-	transition: all 500ms ease;
-}
-
 .article_blog_container .article_blog{
-	font-size: 12px;
-	color: transparent;
-	width: 100px;
-	height: 100px;
-	position: absolute;
-	top: 0;
-	left: 0;
-	background: #E91E63;
-	border-radius: 50%;
-	transition: all 500ms ease;
+	position: relative;
+    width: 90px;
+    aspect-ratio: 1 / 1;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    box-sizing: border-box;
 }
 
-.show_blogs .article_blog_container .article_blog {
-	color: white;
+.bubble_svg {
+    position: absolute;
+    inset: 0;
+
+    width: 100%;
+    height: 100%;
+    fill: var(--color-bleu-fond);
+	pointer-events: none;
+}
+
+.article_blog_container.flou {
+    filter: blur(1px);
+}
+
+.article_blog_container.flou .bubble_svg {
+	fill: var(--color-blog-not-selected);
 }
 
 .timeline_item.article_evenement_container {
@@ -531,7 +552,6 @@ span[role="img"] {
 	padding: 0;
 	box-sizing: border-box;
 	transform: scale(0.4);
-	transition: transform 500ms ease;
 }
 
 .show_evenements .article_evenement_container{
@@ -544,7 +564,8 @@ span[role="img"] {
 	position: absolute;
 	width: 100px;
 	height: 100px;
-	background: rgb(71, 152, 154);
+	border-radius: 10px;
+	background-color: var(--color-bleu-fond);
 	z-index: -1;
 	left: 25px;
 	bottom: 0;
@@ -563,7 +584,6 @@ span[role="img"] {
 	padding: 0 30px;
 	box-sizing: border-box;
 	background: rgba(0, 0, 0, 0);
-	transition: all 500ms ease;
 }
 
 .article_evenement_container .article_evenement::before {
@@ -573,13 +593,13 @@ span[role="img"] {
 	left: 0;
 	width: 100%;
 	height: 100%;
-	background: var(--color-tonic);
+	background-color: var(--color-bleu-fond);
 	clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%);
 	z-index: -1;
 }
 
 .show_evenements .article_evenement_container .article_evenement {
-	color: white;
+	color: var(--color-default);
 }
 
 .article_blog_container .article_blog2{
@@ -589,23 +609,45 @@ span[role="img"] {
 }
 
 .article_blog_container .article_blog .article_blog_inner {
-	text-align: center;
-	vertical-align: middle;
-	display: table-cell;
-	height: 100px;
-	width: 100px;
-	margin: 0;
-	padding: 10px;
-	box-sizing: border-box;
+	width: 60%;
+    text-align: center;
 }
 
-.article_evenement_container .article_evenement_texte {
-	text-align: center;
-	vertical-align: middle;
-	display: table-cell;
-	width: 150px;
-	height: 99px;
-	margin: 20px 15px;
+.bulle_bd {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    /* évite tout saut visuel avant le premier calcul JS */
+    min-width: 6rem;
+    min-height: 6rem;
+}
+
+.bulle_bd .bubble_svg {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 0;
+    pointer-events: none;
+}
+
+.bulle_bd .bulle_contenu {
+    position: relative;
+    z-index: 1;
+    text-align: center;
+    line-height: 1.2;
+}
+
+.bulle_bd .article_blog_date {
+	color: var(--color-tonic);
+	font-size: 14px;
+	font-style: italic;
+	font-weight: 300;
+}
+
+.bulle_bd .bulle-texte {
+	margin-top: 0.3rem;
 }
 
 .article_blog .picto_nombre_commentaires {
@@ -624,26 +666,21 @@ span[role="img"] {
 	text-align: center;
 	border-radius: 50%;
 	transform: scale(0);
-	transition: all 500ms ease;
+	z-index: 2;
 }
 
 .show_blogs .article_blog .picto_nombre_commentaires {
 	transform: scale(1);
 }
 
-.article_blog_date,
-.article_evenement_date {
-	text-transform: uppercase;
-	color: transparent;
-	font-size: 10px;
-	margin-top: 2px;
-	display: block;
-	transition: all 500ms ease;
+.bulle-texte {
+	font-weight: 600;
+    font-size: 14px;
+    line-height: 131%;
 }
 
-.show_blogs .article_blog_date,
-.show_evenements .article_evenement_date {
-	color: rgba(255,255,255,.6);
+.article_blog_container button {
+	position: relative;
 }
 
 .forum_vide {
@@ -690,15 +727,6 @@ span[role="img"] {
 	left: 37px;
 	width: 0px;
 	height: 0px;
-}
-
-.article_blog_container img {
-	position: relative;
-	left: 24px;
-	top: 32px;
-	width: 0px;
-	height: 0px;
-	display: none;
 }
 
 /* * * * * * * *

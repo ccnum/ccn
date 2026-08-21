@@ -100,7 +100,6 @@ $(function () {
 		'click', function (event) {
 			event.stopPropagation();
 			CCN.projet.showWholeTimeline();
-			changeTimelineMode('consignes');
 		}
 	);
 
@@ -156,6 +155,12 @@ function onHashChange(event) {
 	}
 }
 
+function getCurrentTimelineMode() {
+	if ($('body').hasClass('show_blogs')) return 'blogs';
+	if ($('body').hasClass('show_evenements')) return 'evenements';
+	return 'consignes';
+}
+
 /**
  * Initialise la vue depuis l'URL donnée
  * ou depuis l'état de l'historique donné
@@ -190,6 +195,8 @@ function setContentFromState(state, title, url) {
 			break;
 		}
 	}
+	console.log(currentState);
+	
 	currentState = state;
 	if (isSamePage) { return; }
 
@@ -271,7 +278,8 @@ function setContentFromState(state, title, url) {
 		}
 	}
 	else { // state.id_objet == 0)
-
+		console.log({typeobjet: state.type_objet, page: state.page} );
+		
 		// Ressource
 		if (state.type_objet == "ressources") {
 
@@ -280,7 +288,7 @@ function setContentFromState(state, title, url) {
 				callClasses();
 			}
 		} else {
-			changeTimelineMode('consignes');
+			changeTimelineMode(getCurrentTimelineMode());
 		}
 	}
 
@@ -328,6 +336,8 @@ function getHauteurZone() {
  * @param {string} type - Peut être <tt>consignes</tt>, <tt>blogs</tt> ou <tt>evenements</tt>
  */
 async function changeTimelineMode(type) {
+	console.log("changeTimelineMode");
+	
 	const classCss = {};
 	classCss.consignes = 'show_consignes';
 	classCss.blogs = 'show_blogs';
@@ -346,20 +356,32 @@ async function changeTimelineMode(type) {
 			}
 		}
 
-		CCN.projet.showWholeTimeline();
-
 		for (const index in classCss) {
 			$('body').removeClass(classCss[index]);
 		}
+		
+		CCN.projet.showWholeTimeline();
 
 		$('body').addClass(classCss[type]);
 
 		updateMenuIcon([type], 'timelineMode');
+		await do_stuff_after_timeline_mode_has_been_changed(type)
 	}
 
 	$('#menu_bas .logo a.menu_logo_type_sidebarView').removeClass('selected');
 
 }
+
+async function do_stuff_after_timeline_mode_has_been_changed(type) {
+	if (type === 'blogs' || type === 'evenements') {
+		await ensureArticlesLoaded(type);
+		document.querySelectorAll(".article_blog").forEach(blog=>{
+			initBulle(blog, CCN.urlImgBlog, 'black')
+		})
+	}
+}
+
+
 /**
  * Gère les événements lors du click sur une consigne et appelle {@link consigne#showInTimeline}.
  *
@@ -604,6 +626,7 @@ function callArticleBlog(id_article) {
 	changeTimelineMode('blogs');
 	setFullscreenModeToCols(false);
 	updateMenuIcon(['blogs'], 'mainView');
+	flouterLesBullesNonSelectionnees(id_article)
 
 	const url = CCN.projet.url_popup_blog + "&page=article&id_article=" + id_article;
 	loadContentInMainSidebar(
@@ -859,7 +882,7 @@ function getIdClasseFromIdReponse(id_reponse) {
  * La fonction est appelée de manière récursive (<tt>setInterval(…, 1)</tt>)
  * afin de mettre à jour en même temps que la transition CSS de la timeline.
  */
-function updateConnecteurs() {
+function updateAllConnecteurs() {
 	$('.connecteur_timeline').each(
 		function () {
 
@@ -890,15 +913,69 @@ function updateConnecteurs() {
 	);
 }
 
-function handleCollision(y, responseHeight, timelineTop, timelineHeight) {
-    const yMin = 0;
-    const yMax = yMin + timelineHeight - responseHeight;
+
+
+function handleObjectCollisionWithMenus(
+	y, 
+	etiquetteTop,
+	objectTop,
+	objectHeight,
+	timelineTop, 
+	timelineHeight
+) {
+	const yMin = objectTop-etiquetteTop;
+    const yMax = timelineHeight - objectHeight;
     if (y < yMin) return yMin;
     if (y > yMax) return yMax;
     return y;
 }
 
-function updateConnecteur(reponseObject, ui) {
+function updateConsigneConnecteurs(consigneObject, ui) {
+	const consigneDOM = $(consigneObject)
+	const buttonConsigne = consigneDOM.find('button.consigne').first()
+	const idConsigne = buttonConsigne.data('id')
+	const connecteursDOM = $(`[id^="connecteur_consigne_${idConsigne}_reponse_"]`);
+	const timelineTop = CCN.timelineLayerConsignes.offset().top;
+	const timelineHeight = CCN.timelineLayerConsignes.height();
+	const etiquette = consigneDOM.find(".etiquette-etape")
+
+	const adjustedUiPositionTop = handleObjectCollisionWithMenus(
+		ui.position.top,
+		etiquette.offset().top,
+		consigneDOM.offset().top,
+		consigneDOM.outerHeight(),
+		timelineTop,
+		timelineHeight
+	);
+	ui.position.top = adjustedUiPositionTop;
+
+	const x1 = consigneDOM.offset().left + consigneDOM.outerWidth();
+	const y1 = adjustedUiPositionTop + consigneDOM.outerHeight()/2;
+	connecteursDOM.each(function (){
+		const connecteur = $(this);
+		const reponseId = connecteur.data('reponse-id')
+		const reponseDOM = $(`#reponse_haute${reponseId}`)
+
+		const x2 = reponseDOM.offset().left
+		const y2 = reponseDOM.offset().top + reponseDOM.outerHeight()/2 - timelineTop;
+
+		const length = Math.sqrt((x1 - x2) * (x1 - x2) + (y1 - y2) * (y1 - y2));
+		const angle = Math.atan2(y2 - y1, x2 - x1) * 180 / Math.PI;
+		const transform = 'rotate(' + angle + 'deg)';
+
+		connecteur.css(
+			{
+				'position': 'absolute',
+				'transform': transform,
+				'left': parseFloat(x1) + 'px',
+				'top': parseFloat(y1) + 'px'
+			}
+		)
+		.width(parseFloat(length) + 'px');
+	})
+}
+
+function updateReponseConnecteurs(reponseObject, ui) {
 	const reponseDOM = $(reponseObject)
 	const idConsigne = reponseDOM.data('consigne-id')
 	const idReponse = reponseDOM.data('reponse-id')
@@ -906,12 +983,15 @@ function updateConnecteur(reponseObject, ui) {
 	const consigneDOM = $(`#consigne_haute${idConsigne}`);
 	const timelineTop = CCN.timelineLayerConsignes.offset().top;
 	const timelineHeight = CCN.timelineLayerConsignes.height();
+	const picto = reponseDOM.find(".picto_nombre_commentaires")
 
 	const x1 = consigneDOM.offset().left + consigneDOM.outerWidth();
 	const y1 = consigneDOM.offset().top  + consigneDOM.outerHeight() / 2 - timelineTop;
 	const x2 = reponseDOM.offset().left;
-    const adjustedUiPositionTop = handleCollision(
+    const adjustedUiPositionTop = handleObjectCollisionWithMenus(
 		ui.position.top,
+		picto.offset().top,
+		reponseDOM.offset().top,
 		reponseDOM.outerHeight(),
 		timelineTop,
 		timelineHeight
@@ -1041,16 +1121,18 @@ function loadContentInMainSidebar(url, callback, typeContenu) {
 		}
 
 		if (!response || response.trim() === "") {
-			if (CCN.debug) { console.warn("Réponse vide !"); }
+			if (CCN.debug) { console.warn(CCN.lang.reponse_vide); }
 		}
 
 		$('body').removeClass('loading');
 		$('#sidebar_content').scrollTop(0);
 		updatePageTitleFromSidebarContent();
 		_sidebarFocusFirst();
-		if(["consigne", "reponse"].includes(typeContenu)) {
+		if(["consigne", "reponse", "blog"].includes(typeContenu)) {
 			initMissionTabs();
-			initCommentaires();
+			if(["consigne", "reponse"].includes(typeContenu)) {
+				initCommentaires();
+			}
 		}
 		if(typeContenu === "publication_mission") {
 			// initCompteurCaracteres()
@@ -1163,7 +1245,7 @@ function showSidebar() {
 	_sidebarTrigger = document.activeElement;
 	$('body').addClass('hasSidebarOpen');
 	$('#sidebar').addClass('show').attr('aria-hidden', 'false');
-	updateConnecteurs();
+	updateAllConnecteurs();
 }
 
 function closeSidebar() {
@@ -1175,7 +1257,7 @@ function closeSidebar() {
 		_sidebarTrigger.focus();
 	}
 	_sidebarTrigger = null;
-	const interval = setInterval(updateConnecteurs, 16);
+	const interval = setInterval(updateAllConnecteurs, 16);
 	setTimeout(() => {
 		clearInterval(interval);
 		// Une fois le panneau glissé hors écran, on vide son contenu
@@ -1193,4 +1275,110 @@ function _sidebarFocusFirst() {
 	} else {
 		$('#sidebar').attr('tabindex', '-1').focus();
 	}
+}
+
+function selectBlog(blogId) {
+	const selected = document.querySelector(`.article_blogarticle_${blogId}`)
+	const timelineItem = selected.closest(".timeline_item")
+	document.querySelectorAll(".article_blog").forEach(blog=>{
+		blog.classList.add("blured")
+	})
+	timelineItem.classList.add("blured")
+}
+
+
+function initBulle(conteneur, urlSvg, couleur) {
+    const svgPlaceholder = conteneur.querySelector('.bubble_svg');
+
+    fetch(urlSvg)
+        .then(reponse => reponse.text())
+        .then(texteSvg => {
+            const temp = document.createElement('div');
+            temp.innerHTML = texteSvg.trim();
+            const svgEl = temp.querySelector('svg');
+
+            svgEl.classList.add('bubble_svg');
+            svgEl.setAttribute('preserveAspectRatio', 'none');
+            svgPlaceholder.replaceWith(svgEl);
+
+            if (couleur) conteneur.style.setProperty('--bulle-couleur', couleur);
+
+            // attend que les polices soient prêtes avant de mesurer le texte
+            document.fonts.ready.then(() => {
+                ajusterBulle(conteneur);
+				conteneur.closest(".timeline_item").classList.remove("flou")
+            });
+        });
+}
+
+/**
+ * Redimensionne la bulle autour de son texte, en cherchant un ratio proche du carré.
+ */
+function ajusterBulle(conteneur) {
+	const contenu = conteneur.querySelector('.bulle_contenu');
+    const LARGEUR_MIN = 70;   // px, taille plancher
+    const MARGE = 1.5;       // marge interne autour du texte (35%)
+	const MAX_ITERATIONS = 6;
+	const TOLERANCE = 4; // px, pour détecter la convergence
+
+    // 1. mesure du texte sur une seule ligne
+ 	// IMPORTANT : on repart de zéro à chaque appel, pour ne pas
+    // hériter d'une taille calculée lors d'un appel précédent
+    conteneur.style.width = '';
+    conteneur.style.height = '';
+    contenu.style.maxWidth = 'none';
+    contenu.style.whiteSpace = 'nowrap';
+
+    const largeurNaturelle = contenu.scrollWidth;
+    const hauteurLigne = contenu.scrollHeight;
+    contenu.style.whiteSpace = '';
+
+    // 2. largeur cible ≈ racine carrée de la surface -> tend vers un carré
+    let largeurCible = Math.max(LARGEUR_MIN, Math.sqrt(largeurNaturelle * hauteurLigne));
+	let largeurPrecedente = null;
+
+	for (let i = 0; i < MAX_ITERATIONS; i++) {
+		contenu.style.maxWidth = largeurCible + 'px';
+
+        const largeurReelle = contenu.offsetWidth;
+        const hauteurReelle = contenu.scrollHeight;
+
+        // convergence : la largeur cible ne bouge quasiment plus
+        if (largeurPrecedente !== null && Math.abs(largeurCible - largeurPrecedente) < TOLERANCE) {
+            break;
+        }
+
+        largeurPrecedente = largeurCible;
+        largeurCible = Math.max(LARGEUR_MIN, Math.sqrt(largeurReelle * hauteurReelle));
+	}
+
+
+	const largeurFinale = contenu.offsetWidth;
+    const hauteurFinale = contenu.scrollHeight;
+
+    // 5. la bulle épouse le texte + marge
+    conteneur.style.width = (largeurFinale * MARGE) + 'px';
+    conteneur.style.height = (hauteurFinale * MARGE) + 'px';
+}
+
+/**
+ * Change juste la couleur de fond de la bulle.
+ */
+function colorerBulle(conteneur, couleur) {
+    conteneur.style.setProperty('--bulle-couleur', couleur);
+}
+
+function deflouterToutesLesBulles() {
+	document.querySelectorAll('.article_blog_container').forEach(bulle => {
+		bulle.classList.remove('flou');
+	});
+}
+
+function flouterLesBullesNonSelectionnees(idBulleSelectionnee) {
+	const article_blog = document.querySelector(`#article_blogarticle_${idBulleSelectionnee}`)
+	const bulleSelectionnee = article_blog.closest(".timeline_item")
+	document.querySelectorAll('.article_blog_container').forEach(bulle => {
+		bulle.classList.add('flou');
+	})
+	bulleSelectionnee.classList.remove('flou');	
 }

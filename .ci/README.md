@@ -25,7 +25,7 @@ exécute ce même check sur toute PR touchant `plugins/thematique/**`.
 
 ## Exceptions dans la baseline
 
-- `squelettes/js/controleurs.js:828` (`Réponse vide !`) : `console.warn` de
+- `squelettes/js/controleurs.js:794` (`Réponse vide !`) : `console.warn` de
   debug, jamais affiché à l'utilisateur.
 - `genie/thematique_rentree_annee.php` (`Cap sur l'année`),
   `thematique_administrations.php` (`Blog pédagogique`, `Contenu éditorial`),
@@ -36,7 +36,7 @@ exécute ce même check sur toute PR touchant `plugins/thematique/**`.
   candidats à un item de langue (la BDD ne se traduit pas au chargement de
   la page). Ajoutées à la baseline lors de l'élargissement du scan à tout
   le plugin (2026-08).
-- `thematique_pipelines.php:191,195` (`de l'email`, `de l'avatar`) :
+- `thematique_pipelines.php:189,193` (`de l'email`, `de l'avatar`) :
   libellé passé à `thematique_cioidc_maj_champ()` uniquement pour composer
   un message `spip_log(...)` de debug (mise à jour d'un champ auteur via le
   SSO) — jamais affiché à l'utilisateur. Le `STRIP_PATTERN` sur les appels
@@ -122,3 +122,65 @@ python3 .ci/check_hardcoded_paths.py
 
 Même mécanisme de baseline que `check_lang_hardcoded.py` (`--write-baseline`
 pour régénérer après un faux positif volontaire).
+
+# check_html_duplication.js
+
+Détecte le HTML/squelette SPIP dupliqué (copier-coller) dans les plugins
+maison (`plugins/petitfablab`, `plugins/fictions`, `plugins/thematique`),
+via [jscpd](https://github.com/kucherenko/jscpd) (`node_modules/.bin/jscpd`,
+dépendance dev npm — seul script `.ci/` en Node, les autres sont en
+PHP/Python).
+
+Limité à ces trois plugins (pas tout `plugins/`) : ce sont les seuls
+développés/maintenus ici, les autres sont des plugins tiers vendorisés
+(contrib SPIP) qu'on ne cherche pas à refactorer.
+
+Usage local (nécessite `npm ci` au préalable) :
+
+```
+npm ci
+node .ci/check_html_duplication.js [--baseline=PATH] [--write-baseline]
+                                    [--min-lines=N] [--min-tokens=N]
+```
+
+Comme pour les checks Python, seule une nouvelle duplication (absente de
+`html-duplication-baseline.txt`) fait échouer le script — le volume déjà
+présent (84 clones lors de la mise en place, 2026-08) est toléré tel quel ;
+`--write-baseline` régénère le fichier après vérification du diff.
+
+# check_php_duplication.js
+
+Même principe que `check_html_duplication.js` (jscpd), appliqué au PHP du
+plugin `plugins/thematique` (pattern `**/*.php` au lieu de `**/*.html`).
+Limité à ce seul plugin pour l'instant (pas `fictions`/`petitfablab`) — à
+élargir si la convention fait ses preuves ici.
+
+Usage local (nécessite `npm ci` au préalable) :
+
+```
+npm ci
+node .ci/check_php_duplication.js [--baseline=PATH] [--write-baseline]
+                                   [--min-lines=N] [--min-tokens=N]
+```
+
+Baseline dans `.ci/php-duplication-baseline.txt`, vide depuis la
+factorisation des 8 clones détectés à la mise en place (2026-08, cf
+ci-dessous). Même mécanisme que les autres checks : `--write-baseline`
+après vérification du diff pour accepter une nouvelle duplication.
+
+## Duplications déjà traitées (2026-08)
+
+- `base/th_cextras.php` et `base/th_install.php` : reliquats morts de
+  l'ancien préfixe `th_` (renommé en `thematique_` dans #289), plus jamais
+  chargés par SPIP (seul `base/<prefix>_*.php` avec le préfixe déclaré dans
+  `paquet.xml`, ici `thematique`, est auto-inclus) — supprimés.
+- `formulaires/joindre_document_mission.php` et `formulaires/joindre_video.php` :
+  logique de recherche des fichiers bigup, vérification d'autorisation, et
+  ajout des documents + construction de la réponse CVT, factorisées dans
+  `inc/thematique_joindre.php`.
+- `base/thematique_cextras.php` (2 clones de 11 lignes, champs
+  `url_id_doc`/`id_rubrique_lien` et `x`/`y`) : boilerplate de déclaration
+  de champs extras factorisé dans `thematique_champ_extra_simple()` (nom,
+  clé de langue, type SQL et statuts autorisés à modifier en paramètres) —
+  sortie vérifiée strictement identique à l'ancien tableau en dur avant
+  factorisation.

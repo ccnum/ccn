@@ -15,6 +15,10 @@ on:
 
 jobs:
   check-lang-hardcoded:
+    # Sur une PR dont la source est refonte_graphique, build_refonte.yaml
+    # fait déjà tourner ces mêmes checks (jobs lang_hardcoded/lang_keys/
+    # hardcoded_paths) à chaque push sur cette branche : éviter le doublon.
+    if: github.head_ref != 'refonte_graphique'
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
