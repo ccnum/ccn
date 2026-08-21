@@ -36,7 +36,7 @@ function genie_thematique_rentree_annee_dist($last) {
 		return 1;
 	}
 
-	if (date('n') != 9) {
+	if (date('n') != 8) {
 		return 1;
 	}
 
