@@ -32,19 +32,32 @@ if (!defined('_ECRIRE_INC_VERSION')) {
  * @return int
  */
 function genie_thematique_rentree_annee_dist($last) {
+	spip_log('thematique_rentree_annee : tâche déclenchée (last=' . $last . ')', 'thematique');
+
 	if (defined('_CCN_PROJET_ACTIVE') && !_CCN_PROJET_ACTIVE) {
+		spip_log('thematique_rentree_annee : _CCN_PROJET_ACTIVE=false, projet inactif, on ne fait rien', 'thematique');
 		return 1;
 	}
 
 	if (date('n') != 8) {
+		spip_log(
+			'thematique_rentree_annee : hors fenêtre (mois=' . date('n') . ', déclenché seulement en août), on ne fait rien',
+			'thematique'
+		);
 		return 1;
 	}
 
 	$annee = date('Y');
 	$derniere_execution = intval($GLOBALS['meta']['thematique_rentree_annee_traitee'] ?? 0);
 	if ($derniere_execution >= $annee) {
+		spip_log(
+			"thematique_rentree_annee $annee : déjà traitée (dernière exécution $derniere_execution), on ne fait rien",
+			'thematique'
+		);
 		return 1;
 	}
+
+	spip_log("thematique_rentree_annee $annee : traitement en cours", 'thematique');
 
 	include_spip('thematique_fonctions');
 	// crée la rubrique de l'année (+ "Travail des classes"/"Consignes") si
@@ -52,8 +65,14 @@ function genie_thematique_rentree_annee_dist($last) {
 	// main sur chacun des ~40 sites CCN à chaque rentrée.
 	$id_rubrique = thematique_assurer_structure_annee();
 	if (!$id_rubrique) {
+		spip_log(
+			"thematique_rentree_annee $annee : thematique_assurer_structure_annee() a échoué (voir logs précédents), abandon",
+			'thematique' . _LOG_ERREUR
+		);
 		return 1;
 	}
+
+	spip_log("thematique_rentree_annee $annee : rubrique de l'année #$id_rubrique OK", 'thematique');
 
 	$id_intervenant = thematique_premier_intervenant($id_rubrique);
 
@@ -91,6 +110,10 @@ function genie_thematique_rentree_annee_dist($last) {
 			]
 		);
 		if ($id_article_existant) {
+			spip_log(
+				"thematique_rentree_annee $annee : article '$titre_mot' déjà existant (#$id_article_existant), on ne recrée pas",
+				'thematique'
+			);
 			continue;
 		}
 
@@ -118,6 +141,10 @@ function genie_thematique_rentree_annee_dist($last) {
 	}
 
 	ecrire_meta('thematique_rentree_annee_traitee', $annee);
+	spip_log(
+		"thematique_rentree_annee $annee : traitement terminé, meta thematique_rentree_annee_traitee mise à jour",
+		'thematique'
+	);
 
 	return 1;
 }
