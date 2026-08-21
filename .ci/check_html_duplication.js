@@ -1,13 +1,13 @@
 #!/usr/bin/env node
 
 /**
- * Détecte le HTML/squelette SPIP dupliqué (copier-coller) dans les plugins
- * maison (plugins/petitfablab, plugins/fictions, plugins/thematique), via
- * jscpd (node_modules/.bin/jscpd, installé en dépendance dev npm).
+ * Détecte le HTML/squelette SPIP dupliqué (copier-coller) dans le plugin
+ * plugins/thematique, via jscpd (node_modules/.bin/jscpd, installé en
+ * dépendance dev npm).
  *
- * Limité à ces trois plugins (pas tout plugins/) : ce sont les seuls
- * développés/maintenus ici, les autres sont des plugins tiers vendorisés
- * (contrib SPIP) qu'on ne cherche pas à refactorer.
+ * Limité à ce seul plugin (pas plugins/fictions ni plugins/petitfablab),
+ * comme check_php_duplication.js : à élargir si besoin une fois la
+ * convention validée ici.
  *
  * Fonctionnement :
  * - Lance jscpd sur ces plugins, restreint aux fichiers *.html
@@ -35,8 +35,7 @@ const os = require('node:os');
 const path = require('node:path');
 
 const repoRoot = path.dirname(__dirname);
-const scanRoots = ['plugins/petitfablab', 'plugins/fictions', 'plugins/thematique']
-	.map((p) => path.join(repoRoot, p));
+const scanRoots = ['plugins/thematique'].map((p) => path.join(repoRoot, p));
 const jscpdBin = path.join(repoRoot, 'node_modules', '.bin', 'jscpd');
 
 const args = process.argv.slice(2);

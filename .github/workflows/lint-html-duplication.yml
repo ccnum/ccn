@@ -1,10 +1,8 @@
-name: Lint - duplication HTML (plugins)
+name: Lint - duplication HTML (thematique)
 
 on:
   pull_request:
     paths:
-      - 'plugins/petitfablab/**/*.html'
-      - 'plugins/fictions/**/*.html'
       - 'plugins/thematique/**/*.html'
       - '.ci/check_html_duplication.js'
       - '.ci/html-duplication-baseline.txt'
@@ -15,8 +13,6 @@ on:
       - dev
       - main
     paths:
-      - 'plugins/petitfablab/**/*.html'
-      - 'plugins/fictions/**/*.html'
       - 'plugins/thematique/**/*.html'
       - '.ci/check_html_duplication.js'
       - '.ci/html-duplication-baseline.txt'
