@@ -1,5 +1,5 @@
 genie/thematique_rentree_annee.php:46: Cap sur l'année
-thematique_administrations.php:192: Blog pédagogique
-thematique_administrations.php:193: Contenu éditorial
+thematique_administrations.php:204: Blog pédagogique
+thematique_administrations.php:205: Contenu éditorial
 thematique_pipelines.php:189: de l'email
 thematique_pipelines.php:193: de l'avatar
