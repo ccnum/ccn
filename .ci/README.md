@@ -36,7 +36,7 @@ exécute ce même check sur toute PR touchant `plugins/thematique/**`.
   candidats à un item de langue (la BDD ne se traduit pas au chargement de
   la page). Ajoutées à la baseline lors de l'élargissement du scan à tout
   le plugin (2026-08).
-- `thematique_pipelines.php:191,195` (`de l'email`, `de l'avatar`) :
+- `thematique_pipelines.php:189,193` (`de l'email`, `de l'avatar`) :
   libellé passé à `thematique_cioidc_maj_champ()` uniquement pour composer
   un message `spip_log(...)` de debug (mise à jour d'un champ auteur via le
   SSO) — jamais affiché à l'utilisateur. Le `STRIP_PATTERN` sur les appels
