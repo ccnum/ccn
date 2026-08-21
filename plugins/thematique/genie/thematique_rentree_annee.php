@@ -50,11 +50,18 @@ function genie_thematique_rentree_annee_dist($last) {
 	$annee = date('Y');
 	$derniere_execution = intval($GLOBALS['meta']['thematique_rentree_annee_traitee'] ?? 0);
 	if ($derniere_execution >= $annee) {
+		// Ne PAS s'arrêter là pour autant : cette meta n'est écrite plus bas
+		// que si tous les jalons ont vraiment été créés (cf $tous_jalons_ok),
+		// mais une exécution antérieure à ce garde-fou a pu la poser à tort
+		// après un échec silencieux (ex: mot-clé manquant en base). On
+		// continue donc, la vérification par jalon plus bas étant de toute
+		// façon idempotente (ne recrée pas ce qui existe déjà) : ça permet
+		// de se rattraper tout seul au prochain passage du cron sans accès
+		// serveur pour vider la meta à la main.
 		spip_log(
-			"thematique_rentree_annee $annee : déjà traitée (dernière exécution $derniere_execution), on ne fait rien",
+			"thematique_rentree_annee $annee : déjà marquée traitée (dernière exécution $derniere_execution), on revérifie quand même que les jalons existent",
 			'thematique'
 		);
-		return 1;
 	}
 
 	spip_log("thematique_rentree_annee $annee : traitement en cours", 'thematique');
@@ -91,10 +98,18 @@ function genie_thematique_rentree_annee_dist($last) {
 	include_spip('action/editer_objet');
 	include_spip('action/editer_liens');
 
+	// Passe à false dès qu'un jalon n'a pas pu être créé (mot-clé manquant,
+	// échec d'insertion) : dans ce cas on ne marque pas l'année comme
+	// "traitée" plus bas, pour que le job retente automatiquement au
+	// prochain passage du cron (dans les 24h, tant qu'on est en août) au
+	// lieu de rester bloqué jusqu'à la rentrée suivante.
+	$tous_jalons_ok = true;
+
 	foreach ($jalons as $titre_mot => $infos) {
 		$id_mot = sql_getfetsel('id_mot', 'spip_mots', 'titre=' . sql_quote($titre_mot));
 		if (!$id_mot) {
 			spip_log("thematique_rentree_annee : mot-clé '$titre_mot' introuvable, ignoré", 'thematique' . _LOG_ERREUR);
+			$tous_jalons_ok = false;
 			continue;
 		}
 
@@ -120,6 +135,7 @@ function genie_thematique_rentree_annee_dist($last) {
 		$id_article = article_inserer($id_rubrique);
 		if (!$id_article) {
 			spip_log("thematique_rentree_annee : échec de création de l'article '$titre_mot'", 'thematique' . _LOG_ERREUR);
+			$tous_jalons_ok = false;
 			continue;
 		}
 
@@ -138,6 +154,14 @@ function genie_thematique_rentree_annee_dist($last) {
 			"thematique_rentree_annee $annee : article #$id_article ('$titre_mot') créé en statut prop",
 			'thematique'
 		);
+	}
+
+	if (!$tous_jalons_ok) {
+		spip_log(
+			"thematique_rentree_annee $annee : au moins un jalon n'a pas pu être créé, meta non mise à jour (nouvelle tentative au prochain passage du cron)",
+			'thematique' . _LOG_ERREUR
+		);
+		return 1;
 	}
 
 	ecrire_meta('thematique_rentree_annee_traitee', $annee);
