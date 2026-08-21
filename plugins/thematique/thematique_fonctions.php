@@ -773,7 +773,12 @@ function classe_id_rubrique_auteur($id_auteur) {
  * repli sur la rubrique de l'article commenté pour les commentaires
  * d'élèves dont le compte n'a jamais été rattaché à une classe (créé
  * avant l'ajout de ce rattachement dans thematique_cioidc_userinfo, et
- * pas reconnecté depuis).
+ * pas reconnecté depuis) — ne s'applique que si l'article commenté est
+ * lui-même un article de réponse vivant dans la rubrique d'une classe
+ * (donc id_rubrique == la classe) : sur le forum d'une consigne
+ * (mission), id_rubrique est celle de l'intervenant, pas d'une classe,
+ * et ne doit pas servir de repli (sinon icône/couleur arbitraire, sans
+ * rapport avec l'auteur du commentaire ni avec la classe qui répond).
  *
  * @param array $forum Ligne spip_forum (cf filtre_afficher_forum_arbre())
  * @return int|null
@@ -785,9 +790,9 @@ function classe_id_rubrique_forum($forum) {
 	}
 
 	if (($forum['objet'] ?? '') === 'article' && !empty($forum['id_objet'])) {
-		$id_rubrique = sql_getfetsel('id_rubrique', 'spip_articles', 'id_article=' . intval($forum['id_objet']));
-		if ($id_rubrique) {
-			return (int) $id_rubrique;
+		$id_rubrique = (int) sql_getfetsel('id_rubrique', 'spip_articles', 'id_article=' . intval($forum['id_objet']));
+		if ($id_rubrique && isset(thematique_classes_rangs()[$id_rubrique])) {
+			return $id_rubrique;
 		}
 	}
 
