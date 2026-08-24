@@ -1614,7 +1614,6 @@ function thematique_picto_site($valeur_ignoree = null, $avec_timestamp = 'oui') 
 }
 
 function forum_construire_arbre($id_parent, &$parents, $id_forum_recent = null) {
-	spip_log("$id_forum_recent=" . $id_forum_recent, "debug");
 	if (!isset($parents[$id_parent])) {
 		return [];
 	}

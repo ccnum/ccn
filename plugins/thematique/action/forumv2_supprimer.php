@@ -11,7 +11,6 @@ function action_forumv2_supprimer_dist() {
 
 	$id_forum = intval($arg);
 	if (!autoriser('forumsupprimer', 'forum', $id_forum)) {
-		spip_log("supression autorisée", "debug");
 		include_spip('inc/minipres');
 		echo minipres();
 		exit;

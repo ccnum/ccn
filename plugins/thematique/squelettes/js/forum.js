@@ -65,8 +65,6 @@ function callbackCliqueSurRepondreAuCommentaire(e) {
 }
 
 function callbackCliqueSurModifierMonCommentaire(e) {
-    console.log("modifier");
-    
 	const bouton = e.target;
 	if (!bouton) return;
 
@@ -94,8 +92,6 @@ function callbackCliqueSurCommenter(e) {
 }
 
 function callbackCliqueSurAnnuler(e) {
-    console.log("callback click sur annuler");
-    
     const racineFormulaire = e.currentTarget.closest(".forum-commentaire-racine, .forum-commentaire")
     const cestLeFormulaireRepondre = !!racineFormulaire
     if(cestLeFormulaireRepondre) {
@@ -109,7 +105,6 @@ function callbackCliqueSurAnnuler(e) {
         } else {  // Cas formulaire de réponse à une réponse
             formulaire = document.querySelector('#forum-formulaire-reponse');
         }
-        console.log({formulaire});
         formulaire.hidden = true
         const textarea = racineFormulaire.querySelector("textarea#texte")
         if (textarea) {
