@@ -119,14 +119,13 @@ function formulaires_forumv2_verifier_dist($id_article) {
 			'id_forum=' . intval($id_forum) . " AND objet='article'"
 		);
 
-
 		if (!$forum) {
-			$erreurs['message_erreur'] = 'Ce commentaire n’existe pas.';
+			$erreurs['message_erreur'] = _T('thematique:erreur_commentaire_404');
 			return $erreurs;
 		}
 
 		if (intval($forum['id_objet']) !== intval($id_article)) {
-			$erreurs['message_erreur'] = 'Ce commentaire n’appartient pas à cet article.';
+			$erreurs['message_erreur'] = _T('thematique:erreur_commentaire_422');;
 			return $erreurs;
 		}
 

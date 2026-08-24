@@ -54,6 +54,8 @@ return [
 	'enregistrer'                    => 'Enregistrer',
 	'envoyer_document'               => 'Envoyer le document',
 	'envoyer_video'                  => 'Envoyer la vidéo',
+	'erreur_commentaire_404'		 => 'Ce commentaire n’existe pas.',
+	'erreur_commentaire_422'		 => 'Ce commentaire n’appartient pas à cet article.',
 	'erreur_extension_document_mission' => 'Format de fichier ".@extension@" non accepté (formats acceptés : @extensions@).',
 	'etape1_redaction_mission'       => 'Étape 1 : Rédaction de votre mission',
 	'etape2_ajouter_document'        => 'Étape 2 : Ajouter un document',

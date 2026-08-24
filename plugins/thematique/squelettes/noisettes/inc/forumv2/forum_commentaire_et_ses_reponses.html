@@ -12,7 +12,7 @@
 <div class="forum-commentaire-container[(#GET{est_recent}|oui) forum-message-recent]">
 	<div class="succes-commentaire">
 		<div class="icon-check-circle icon"></div>
-		<div>Votre commentaire a été posté avec succès !</div>
+		<div><:thematique:commentaire_poste_succes:></div>
 	</div>
 	<div class="forum-commentaire[(#GET{is_root}|=={oui}|?{' is-root',''})]">
 		<INCLURE{fond=noisettes/inc/forumv2/forum_card,
