@@ -17,9 +17,7 @@
 		[data-option-value="(#OPTION)"]
 		onClick="callClasse(#ENV{valeur});"
 		class="[(#TEXTE|=={''}|oui)[logo_menu-(#VALEUR)]] #CLASS logo_menu_classe tooltip bgc_classe_#ENV{NUMERO}"
-		data-tip="#TITLE">
-		<span role="img" aria-label="#TITLE" style="font-size:min(70cqw,70cqh)">
-			#ENV{ICONE}
-		</span>
+		data-tip="#TITLE"[(#HREF|non) role="button" tabindex="0"]>
+		<span role="img" aria-label="#TITLE" style="font-size:min(70cqw,70cqh)">#ENV{ICONE}</span>
 	</a>
 </li>

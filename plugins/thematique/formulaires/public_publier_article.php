@@ -35,7 +35,7 @@ function formulaires_public_publier_article_verifier_dist($id_rubrique, $id_cons
 	$erreurs = formulaires_editer_objet_verifier('article', 'new', ['titre', 'texte']);
 	$max_caracteres = 50;
 	if (empty($erreurs['titre']) && strlen(_request('titre')) > $max_caracteres) {
-		$erreurs['titre'] = 'Le titre ne peut pas dépasser ' . $max_caracteres . ' caractères.';
+		$erreurs['titre'] = _T('thematique:titre_trop_long', ['max' => $max_caracteres]);
 	}
 	return $erreurs;
 }
@@ -63,13 +63,13 @@ function formulaires_public_publier_article_traiter_dist($id_rubrique, $id_consi
 		if ($id_consigne) {
 			include_spip('action/editer_objet');
 			objet_modifier('article', $res['id_article'], [
-					'id_consigne' => $id_consigne,
-				]);
+				'id_consigne' => $id_consigne,
+			]);
 		}
 		article_instituer($res['id_article'], [
-				'statut' => 'publie',
-			]);
-		$res['message_ok'] = 'Article publié !';
+			'statut' => 'publie',
+		]);
+		$res['message_ok'] = _T('thematique:article_publie_succes');
 		$res['redirect'] = generer_url_public('article', 'id_article=' . $res['id_article'] . '&mode=complet');
 
 		if (_request('attendre_livrable') === 'oui') {

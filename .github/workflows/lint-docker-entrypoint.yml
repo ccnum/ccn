@@ -1,0 +1,34 @@
+name: Lint - config CCN dans docker-entrypoint.sh
+
+on:
+  pull_request:
+    paths:
+      - 'docker-entrypoint.sh'
+      - 'Dockerfile'
+      - '.ci/check_docker_entrypoint.py'
+  push:
+    branches:
+      - dev
+      - main
+    paths:
+      - 'docker-entrypoint.sh'
+      - 'Dockerfile'
+      - '.ci/check_docker_entrypoint.py'
+
+jobs:
+  check-docker-entrypoint:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Set up Python
+        uses: actions/setup-python@v7
+        with:
+          python-version: '3.x'
+
+      - name: Vérifier la syntaxe du script
+        run: bash -n docker-entrypoint.sh
+
+      - name: Vérifier la présence des blocs de config CCN
+        run: python3 .ci/check_docker_entrypoint.py

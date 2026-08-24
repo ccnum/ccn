@@ -1,47 +1,52 @@
 #CACHE{0}
 #SET{contenu,#ARRAY}
-<INCLURE{fond=noisettes/fonction/type_role} />
-<BOUCLE_blogPrive(RUBRIQUES){racine} {si #SESSION{role}|=={prof}|ou{#SESSION{role}|=={intervenant}}|ou{#SESSION{role}|=={admin}}}{titre_mot=evenements}>
-	<BOUCLE_articleBlogPrive(ARTICLES){id_rubrique} {date>=#EVAL{_DATE_DEBUT}}{date<=#EVAL{_DATE_FIN}}>
+
+[(#REM) Résolution de la hiérarchie (mots-clés -> ids de rubriques) faite en
+PHP (thematique_fonctions.php) plutôt que par des BOUCLE(RUBRIQUES)
+imbriquées : ne reste ensuite qu'une boucle par type de contenu, sur les ids
+déjà résolus. ]
+#SET{id_rubrique_annee, #VAL{0}|thematique_id_rubrique_annee_active}
+#SET{ids_evenements, #VAL{evenements}|thematique_ids_rubriques_racine_a_mot}
+#SET{id_rubrique_travail_en_cours, #GET{id_rubrique_annee}|thematique_id_rubrique_enfant_a_mot{travail_en_cours}}
+#SET{ids_classes, #GET{id_rubrique_travail_en_cours}|thematique_ids_rubriques_enfants{50}}
+#SET{id_rubrique_ressources, #VAL{ressources}|thematique_id_rubrique_racine_a_mot}
+#SET{ids_ressources_rubriques, #GET{id_rubrique_ressources}|thematique_ids_rubriques_enfants{50}}
+#SET{ids_consignes_rubriques, #GET{id_rubrique_annee}|thematique_ids_rubriques_petits_enfants_a_mot{consignes,50}}
+
+[(#SESSION{role}|thematique_role_voit_salle_profs|oui)
+	<BOUCLE_articleBlogPrive(ARTICLES){id_rubrique IN #GET{ids_evenements}}{date>=#EVAL{_DATE_DEBUT}}{date<=#EVAL{_DATE_FIN}}>
 		<BOUCLE_commentaires1(FORUMS){id_article}{!par date}{0,5} {doublons}>
 			#SET_PUSH{contenu,#ARRAY{#DATE_MODIF, #ARRAY{forum, #ID_FORUM}}}
 		</BOUCLE_commentaires1>
 	</BOUCLE_articleBlogPrive>
-</BOUCLE_blogPrive>
+]
 
-<BOUCLE_rubAnnee(RUBRIQUES) {racine} {titre LIKE %(#EVAL{_ANNEE_SCOLAIRE})%}>
-	<BOUCLE_filtreRessources(RUBRIQUES){racine}{titre_mot=ressources}>
-		<BOUCLE_ressources(RUBRIQUES){id_parent}{!par date}{0,50}>
-			<BOUCLE_ressourcesArticles(ARTICLES){id_rubrique}{!par date}{0,1}>
-				#SET_PUSH{contenu,#ARRAY{#DATE_MODIF, #ARRAY{ressources, #ID_ARTICLE}}}
-			</BOUCLE_ressourcesArticles>
-		</BOUCLE_ressources>
-	</BOUCLE_filtreRessources>
+<BOUCLE_dataRessources(DATA){source array, #GET{ids_ressources_rubriques}}>
+	<BOUCLE_ressourcesArticles(ARTICLES){id_rubrique=#VALEUR}{!par date}{0,1}>
+		#SET_PUSH{contenu,#ARRAY{#DATE_MODIF, #ARRAY{ressources, #ID_ARTICLE}}}
+	</BOUCLE_ressourcesArticles>
+</BOUCLE_dataRessources>
 
-	<BOUCLE_filtreTravailEnCours(RUBRIQUES){id_parent}{titre_mot=travail_en_cours}{!par date}>
-		<BOUCLE_filtreIdRubriques(RUBRIQUES){id_parent}{!par date}{0,50}>
-			<BOUCLE_filtreLivrables(ARTICLES){id_rubrique}{titre_mot=livrable} {0,1} {!par date}>
-				#SET_PUSH{contenu,#ARRAY{#DATE_MODIF, #ARRAY{livrable, #ID_ARTICLE}}}
-			</BOUCLE_filtreLivrables>
-			<BOUCLE_articles(ARTICLES){id_rubrique}{!titre_mot=livrable} {0,1} {!par date}>
-				#SET_PUSH{contenu,#ARRAY{#DATE_MODIF, #ARRAY{doc, #ID_ARTICLE}}}
-				<BOUCLE_commentaires2(FORUMS){id_article}{!par date}{0,5} {doublons}>
-					#SET_PUSH{contenu,#ARRAY{#DATE_MODIF, #ARRAY{forum, #ID_FORUM}}}
-				</BOUCLE_commentaires2>
-			</BOUCLE_articles>
-		</BOUCLE_filtreIdRubriques>
-	</BOUCLE_filtreTravailEnCours>
-	<BOUCLE_filtreConsigne(RUBRIQUES){id_parent}>
-		<BOUCLE_Rubconsignes(RUBRIQUES){id_parent}{!par date}{titre_mot=consignes}{0,50}>
-			<BOUCLE_Artconsignes(ARTICLES){id_rubrique}{!par date} {0,2} >
-				<BOUCLE_commentaires3(FORUMS){id_article}{!par date}{0,5} {doublons}>
-				#SET_PUSH{contenu,#ARRAY{#DATE_MODIF, #ARRAY{forum, #ID_FORUM}}}
-				</BOUCLE_commentaires3>
-				#SET_PUSH{contenu,#ARRAY{#DATE_MODIF, #ARRAY{consigne, #ID_ARTICLE}}}
-			</BOUCLE_Artconsignes>
-		</BOUCLE_Rubconsignes>
-	</BOUCLE_filtreConsigne>
-</BOUCLE_rubAnnee>
+<BOUCLE_dataClasses(DATA){source array, #GET{ids_classes}}>
+	<BOUCLE_filtreLivrables(ARTICLES){id_rubrique=#VALEUR}{titre_mot=livrable} {0,1} {!par date}>
+		#SET_PUSH{contenu,#ARRAY{#DATE_MODIF, #ARRAY{livrable, #ID_ARTICLE}}}
+	</BOUCLE_filtreLivrables>
+	<BOUCLE_articles(ARTICLES){id_rubrique=#VALEUR}{!titre_mot=livrable} {0,1} {!par date}>
+		#SET_PUSH{contenu,#ARRAY{#DATE_MODIF, #ARRAY{doc, #ID_ARTICLE}}}
+		<BOUCLE_commentaires2(FORUMS){id_article}{!par date}{0,5} {doublons}>
+			#SET_PUSH{contenu,#ARRAY{#DATE_MODIF, #ARRAY{forum, #ID_FORUM}}}
+		</BOUCLE_commentaires2>
+	</BOUCLE_articles>
+</BOUCLE_dataClasses>
+
+<BOUCLE_dataConsignes(DATA){source array, #GET{ids_consignes_rubriques}}>
+	<BOUCLE_Artconsignes(ARTICLES){id_rubrique=#VALEUR}{!par date} {0,2} >
+		<BOUCLE_commentaires3(FORUMS){id_article}{!par date}{0,5} {doublons}>
+		#SET_PUSH{contenu,#ARRAY{#DATE_MODIF, #ARRAY{forum, #ID_FORUM}}}
+		</BOUCLE_commentaires3>
+		#SET_PUSH{contenu,#ARRAY{#DATE_MODIF, #ARRAY{consigne, #ID_ARTICLE}}}
+	</BOUCLE_Artconsignes>
+</BOUCLE_dataConsignes>
 
 <B_dataContenu>
 	<BOUCLE_dataContenu(DATA){source table, #GET{contenu}}{!par date}>
@@ -73,6 +78,6 @@
 	</BOUCLE_dataContenu>
 </B_dataContenu>
 	<div class="actualites-actu bgc_classe_1">
-		<p>Il n'a aucune actualité pour le moment</p>
+		<p><:thematique:aucune_actualite:></p>
 	</div>
 <//B_dataContenu>

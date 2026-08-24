@@ -1,53 +1,35 @@
 # Améliorations à faire — Plugin SPIP `thematique` (CCN)
 
-**Date** : 2026-06-26
+**Dernière mise à jour** : 2026-08-03
 
 ---
 
 ## CSS
 
-### 2.3 Ajouter des media queries mobile/tablette
+### Media queries mobile/tablette
 
-**Fichier** : `thematique.css.html`
+**Fichier** : `css/responsive.css.html`
 
-Il n'existe qu'une seule media query (`max-width: 1280px`). À traiter dans le cadre d'une refonte responsive dédiée.
-
-Breakpoints à ajouter : `max-width: 768px` et `max-width: 1024px`.
+Ajouté `max-width: 1024px` (sidebar/colonnes du menu bas en tailles fluides) et `max-width: 768px` (sidebar plein écran, menu bas empilé). Ajustements défensifs anti-débordement, pas une vraie refonte visuelle — **à vérifier dans un vrai navigateur**, non testé visuellement.
 
 ---
 
 ## Architecture SPIP
 
-### 3.2 Réduire les boucles SPIP imbriquées
+### Logique de `rubrique.html`
 
-**Fichiers candidats** :
-- `squelettes/noisettes/inc/actus_timeline.html` — 24 boucles
-- `squelettes/noisettes/sommaire.html` — 17 boucles
+**Fichier** : `squelettes/noisettes/rubrique.html`
 
-Piste : pipeline PHP précalculant les données, ou critère `{jointure}`.
-
----
-
-### 4.1 Déplacer la logique métier vers des pipelines PHP
-
-**Fichier** : `squelettes/noisettes/rubrique.html` — mêle présentation et logique de droits
-
-La logique conditionnelle (rôles, permissions, calculs) devrait être dans `thematique_pipelines.php` via `pre_boucle`/`post_boucle` ou des balises custom dans `balises.php`.
+La condition de rôle (`thematique_afficher_rubrique_utilisateur_prof()`) et le calcul des classes CSS par type de rubrique (`thematique_classe_bloc_rubrique_menu_externe/interne()`) sont extraits en PHP, vérifiés via `recuperer_fond()` en CLI. Le reste du fichier (arbre de navigation, handlers JS inline) mélange encore présentation et logique — refactor plus large à faire avec accès navigateur (risque de régression visuelle sur la sidebar).
 
 ---
 
 ## Accessibilité
 
-### 5.3 Remplacer les `<div>` cliquables par des `<button>`
+### Remplacer les `<div>` cliquables par des `<button>`
 
-Plusieurs `<div onclick>` dans `consigne.js` et les squelettes. Le remplacement impacte les règles CSS ciblant `.bouton_reponse_consigne`. À faire conjointement avec une refonte des styles de composants.
+Fait : toutes les div cliquables (consigne.js, reponse.js, article.js, modèles `actu_*`, `rubrique_detail.html`, `ressources_detail.html`, `classes_detail.html`, `reponse_binome_head.html`, icônes de sidebar, badges timeline) sont converties en `<button type="button" class="... btn-reset">`. `.btn-reset` (dans `tokens.css.html`, chargé avant les CSS de composants) fait un `all: unset` + `display: block` neutre, que les règles de composants (chargées après) re-spécialisent normalement (fond, bordure, `display: flex`, etc.) sans rien casser.
 
-> **Progrès** : les boutons de réaction sont désormais accessibles au clavier et aux lecteurs d'écran (#315, 2026-06-25), mais les `<div onclick>` restants dans `consigne.js` et les squelettes demeurent à traiter.
+Exception : `actu_commentaires.html` et `actu_documents.html` gardent une `<div role="button">` — ils contiennent un `<a>` cliquable imbriqué (lien image lightbox), invalide dans un `<button>` (contenu interactif imbriqué interdit en HTML5, risque de casser le clic sur l'image).
 
----
-
-## Maintenabilité
-
-### 6.2 TODO restant dans `controleurs.js`
-
-Ligne ~893 : `// TODO : cela est appelé deux fois minimum à cause de History.js` — comportement connu, non trivial à corriger.
+Vérifié via `recuperer_fond()` en CLI sur plusieurs fonds (`sommaire`, `rubrique`, `ressources_detail`, `classes_detail`, `actus_timeline`, modèles `actu_*`) — rendu correct, balises bien fermées, aucune erreur. Non vérifié dans un vrai navigateur.

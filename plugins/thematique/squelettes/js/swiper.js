@@ -152,7 +152,7 @@ async function initPdfSwipers($documents_portfolio) {
 		// Generate Loader
 		const $loader = $('<div class="swiper-pdf-loader">');
 		if ($imgSrc) { $('<img>').attr('src', $imgSrc).appendTo($loader); }
-		$('<span>').text('Chargement de "' + pdfName + '" ...').appendTo($loader);
+		$('<span>').text(CCN.lang.chargement_de + ' "' + pdfName + '" ...').appendTo($loader);
 		$container.append($loader);
 
 		// Extract delete button before deleting old display
@@ -180,7 +180,7 @@ async function initPdfSwipers($documents_portfolio) {
 		} catch (e) {
 			const $erreur = $('<div class="swiper-pdf-loader">');
 			if ($imgSrc) { $('<img>').attr('src', $imgSrc).appendTo($erreur); }
-			$('<span>').text('Erreur lors du chargement de "' + pdfName + '"').appendTo($erreur);
+			$('<span>').text(CCN.lang.erreur_chargement_de + ' "' + pdfName + '"').appendTo($erreur);
 			$container.empty().append($erreur);
 			continue;
 		}
@@ -256,7 +256,6 @@ async function initPdfSwipersInComment($portfolio_grand) {
 
 	if ($portfolio_grand.length !== 1) return;
 
-
 	const pdfUrl = $portfolio_grand.attr('href');
 	const pdfName = decodeURIComponent(pdfUrl.split('/').pop());
 	const $imgSrc = "";
@@ -267,7 +266,7 @@ async function initPdfSwipersInComment($portfolio_grand) {
 	// Generate Loader
 	const $loader = $('<div class="swiper-pdf-loader">');
 	if ($imgSrc) { $('<img>').attr('src', $imgSrc).appendTo($loader); }
-	$('<span>').text('Chargement de "' + pdfName + '" ...').appendTo($loader);
+	$('<span>').text(CCN.lang.chargement_de + ' "' + pdfName + '" ...').appendTo($loader);
 	$container.append($loader);
 
 	// Generate PDF Swiper
@@ -292,7 +291,7 @@ async function initPdfSwipersInComment($portfolio_grand) {
 	} catch (e) {
 		const $erreur = $('<div class="swiper-pdf-loader">');
 		if ($imgSrc) { $('<img>').attr('src', $imgSrc).appendTo($erreur); }
-		$('<span>').text('Erreur lors du chargement de "' + pdfName + '"').appendTo($erreur);
+		$('<span>').text(CCN.lang.erreur_chargement_de + ' "' + pdfName + '"').appendTo($erreur);
 		$container.empty().append($erreur);
 		return;
 	}

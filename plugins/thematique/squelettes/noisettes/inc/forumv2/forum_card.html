@@ -2,14 +2,18 @@
 	[(#ENV{nombre_reponses}|>{0}|oui)
 		<div class="badge">
 			[(#ENV{nombre_reponses}|=={1}|oui)
-				1&nbsp;réponse
+				<:thematique:nombre_reponses_singulier:>
 			]
 			[(#ENV{nombre_reponses}|>{1}|oui)
-				#ENV{nombre_reponses}&nbsp;réponses
+				<:thematique:nombre_reponses_pluriel{nombre=#ENV{nombre_reponses}}:>
 			]
 		</div>
 	]
-	<div class="col-forum col-forum-icone[ (#ENV{id_rubrique_classe}|oui)bgc_classe_[(#ENV{id_rubrique_classe}|classe_numero)]]">[(#ENV{id_rubrique_classe}|oui)[(#ENV{id_rubrique_classe}|classe_icone)]]</div>
+	<div class="col-forum col-forum-icone-container">
+		<div class="forum-card-icone [ (#ENV{id_rubrique_classe}|oui)bgc_classe_[(#ENV{id_rubrique_classe}|classe_numero)]]">
+			[(#ENV{id_rubrique_classe}|oui)[(#ENV{id_rubrique_classe}|classe_icone)]]
+		</div>
+	</div>
 	<div class="col-forum col-forum-message">
 		<div class="header">
 			<div>#ENV{date_heure}</div>
@@ -18,19 +22,28 @@
 			<div class="contenu-texte">
 				#ENV*{texte}
 			</div>
-			<a class="lire-la-suite" 
-			   onclick="callback_clique_sur_lire_la_suite_du_commentaire(event)" 
+			<a class="lire-la-suite"
+			   role="button" tabindex="0"
+			   onclick="callback_clique_sur_lire_la_suite_du_commentaire(event)"
 			   style="display: none;"
 			>
-				Lire la suite du commentaire
+				<:thematique:lire_la_suite_commentaire:>
 			</a>
 		</div>
-		[(#ENV{est_une_previsualisation}|non)
+		[(#ENV{est_une_previsualisation}|non|et{#ENV{is_root}|=={oui}|oui})
 			<div class="footer forum-actions">
-				<div>
+				
+				<div style="display: flex;
+							align-items: center;"
+				>
+					<BOUCLE_jaime_forum(FORUMS){id_forum=#ENV{id_forum}}>
+						#FORMULAIRE_JAIME
+					</BOUCLE_jaime_forum>
 					[(#ENV{nombre_reponses}|>{0}|oui)
-						<button onclick="callbackCliqueSurVoirLesReponses(event)">
-							Voir les réponses
+						<button onclick="callbackCliqueSurVoirLesReponses(event)"
+								class="link-button voir-les-reponses">
+							<div class="texte-voir-les-reponses"></div>
+							<div class="icon icon-down"></div>
 						</button>
 					]
 				</div>
@@ -42,13 +55,14 @@
 							value="#ENV{id_forum}"
 							data-id-forum="#ENV{id_forum}"
 							onclick="callbackCliqueSurRepondreAuCommentaire(event)"
+							class="link-button"
 						>
-							Répondre
+							<:thematique:repondre:>
 						</button>
 					]
 					[(#SESSION{id_auteur}|non)
 						[(#PLUGIN{cioidc}|oui)
-							<a href="[(#URL_PAGE{login}|parametre_url{url,#SELF}|parametre_url{cioidc,oui})]">Se connecter pour répondre</a>
+							<a href="[(#URL_PAGE{login}|parametre_url{url,#SELF}|parametre_url{cioidc,oui})]"><:thematique:se_connecter_repondre:></a>
 						]
 					]
 				</div>

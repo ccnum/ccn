@@ -3,15 +3,15 @@
 <meta name="author" content="Erasme - pvincent (chez) erasme.org" />
 <meta name="apple-mobile-web-app-capable" content="yes">
 <title>[(#TITRE) - ][(#NOM_SITE_SPIP)]</title>
-<link rel="alternate" type="application/rss+xml" href="#URL_PAGE{backend}" title="Dernières publications">
-<link rel="alternate" type="application/rss+xml" href="#URL_PAGE{rss_maj}" title="Dernières mises à jour">
-<link rel="alternate" type="application/rss+xml" href="#URL_PAGE{rss_forum}" title="Derniers commentaires dans le forum">
+<link rel="alternate" type="application/rss+xml" href="#URL_PAGE{backend}" title="<:thematique:rss_dernieres_publications:>">
+<link rel="alternate" type="application/rss+xml" href="#URL_PAGE{rss_maj}" title="<:thematique:rss_dernieres_maj:>">
+<link rel="alternate" type="application/rss+xml" href="#URL_PAGE{rss_forum}" title="<:thematique:rss_derniers_commentaires:>">
 <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 #INSERT_HEAD
 [(#REM) Favicon forcée pour tous les navigateurs]
-<link rel="icon" type="image/svg+xml" href="[(#CHEMIN{img/pictos_sites/[(#NOM_SITE_SPIP|replace{' ',''}|strtolower)].svg}|timestamp)]" />
-<link rel="shortcut icon" type="image/svg+xml" href="[(#CHEMIN{img/pictos_sites/[(#NOM_SITE_SPIP|replace{' ',''}|strtolower)].svg}|timestamp)]" />
-<link rel="apple-touch-icon" href="[(#CHEMIN{img/pictos_sites/[(#NOM_SITE_SPIP|replace{' ',''}|strtolower)].svg}|timestamp)]" />
+<link rel="icon" type="image/svg+xml" href="[(#VAL{1}|thematique_picto_site)]" />
+<link rel="shortcut icon" type="image/svg+xml" href="[(#VAL{1}|thematique_picto_site)]" />
+<link rel="apple-touch-icon" href="[(#VAL{1}|thematique_picto_site)]" />
 [(#REM) Feuilles de style spécifiques à la page sommaire]
 [(#PAGE|=={sommaire}|oui)
 	<link rel="stylesheet" href="#CHEMIN{css/jquery-ui-1.10.3.custom.min.css}">

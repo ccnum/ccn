@@ -1,0 +1,43 @@
+name: Lint - duplication PHP (thematique)
+
+on:
+  pull_request:
+    paths:
+      - 'plugins/thematique/**/*.php'
+      - '.ci/check_php_duplication.js'
+      - '.ci/php-duplication-baseline.txt'
+      - 'package.json'
+      - 'package-lock.json'
+  push:
+    branches:
+      - dev
+      - main
+    paths:
+      - 'plugins/thematique/**/*.php'
+      - '.ci/check_php_duplication.js'
+      - '.ci/php-duplication-baseline.txt'
+      - 'package.json'
+      - 'package-lock.json'
+
+jobs:
+  check-php-duplication:
+    # Sur une PR dont la source est refonte_graphique, build_refonte.yaml
+    # fait déjà tourner ce même check (job php_duplication) à chaque push
+    # sur cette branche : éviter le doublon.
+    if: github.head_ref != 'refonte_graphique'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Installer les dépendances npm
+        run: npm ci
+
+      - name: Vérifier l'absence de nouvelle duplication PHP
+        run: node .ci/check_php_duplication.js

@@ -6,10 +6,9 @@ l'appelant) et de la liste live des rubriques racine, donc ne doit jamais
 être mise en cache — même si la page englobante (sommaire.html) l'est
 48h. ]
 <div id="menu-ressources" class="bloc_view col">
-	<h3 class="menu-title"><span>Ressources</span></h3>
+	<h3 class="menu-title"><span><:thematique:ressources:></span></h3>
 	<ul class="filter clearfix option-set ressource" data-filter-group="ressource">
-		[(#MODELE{logo_menu, valeur=ressource, class=tooltip menu_logo_ressources menu_logo_type_sidebarView, filter=.ressource_ressources, onclick=callRessource();, title=Ressources})]
-		[(#MODELE{logo_menu, valeur=agora, class=tooltip menu_logo_agora menu_logo_type_sidebarView, filter=.ressource_agora, title=Espace de discussion, onclick=callAgora();})]
+		[(#MODELE{logo_menu, valeur=ressource, class=tooltip menu_logo_ressources menu_logo_type_sidebarView, filter=.ressource_ressources, onclick=callRessource();, title=<:thematique:ressources:>})]
 
 		[(#REM)Espace Doc]
 		[(#ENV{restreint}|?{#SET{docId,#ENV{restreint}}, #SET{docId,false}})]

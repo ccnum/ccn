@@ -42,19 +42,14 @@ function Reponse() {
 				data-reponse-id="${this.id}"
 				style="top:${this.y * 100}%; left:${this.x_absolu / CCN.projet.nombre_jours_total * 100}%;"
 			>
-				<div id="reponse${this.id}"
-					 class="reponse couleur_texte_travail_en_cours reponse_border_${coul}"
+				<button type="button" id="reponse${this.id}"
+					 class="reponse couleur_texte_travail_en_cours reponse_border_${coul} btn-reset"
 				>
 					<div class="first-row">
 						<div class='logo photo bgc_classe_${coul}'
 							style='display:flex;align-items:center;justify-content:center;container-type:size;'
 						>
-							<span role="img"
-								  aria-label="${escHtml(this.nom_classe)}" 
-								  style="font-size:min(70cqw,70cqh)"
-							>
-								${getClassIcon(this.classeIndex)}
-							</span>
+							<span role="img" aria-label="${escHtml(this.nom_classe)}" style="font-size:min(70cqw,70cqh)">${getClassIcon(this.classeIndex)}</span>
 						</div>
 						<div class="titre">
 							${escHtml(this.titre)}
@@ -65,7 +60,7 @@ function Reponse() {
 					</div>
 					${this.nombre_commentaires > 0 ? `<div aria-label="${this.nombre_commentaires} interaction${this.nombre_commentaires > 1 ? 's' : ''}" class="picto_nombre_commentaires">${this.nombre_commentaires}</div>` : ''}
 					<div class="nettoyeur"></div>
-				</div>
+				</button>
 			</div>
 		`);
 
@@ -89,15 +84,33 @@ function Reponse() {
 		this.largeur = this.div_base.outerWidth();
 		this.hauteur = this.div_base.outerHeight() + 7;
 
+		// Pour une position de repli (main.js, this.data.y_genere), reconvertit
+		// le rang [0,1] en pixels dans la zone réellement disponible (marge
+		// haute/basse + hauteur de la carte, connue seulement maintenant
+		// qu'elle est dans le DOM), pour ne déborder ni sous le header ni sur
+		// le footer. Transformation proportionnelle (pas un simple clamp) :
+		// des rangs distincts restent distincts, aucune carte n'atterrit
+		// exactement sur une autre. Une position réelle (issue d'un
+		// glisser-déposer admin) n'est jamais retouchée.
+		if (this.data.y_genere && CCN.projet.hauteur) {
+			const margeHautPx = 20;
+			const margeBasPx = 20;
+			const plagePx = Math.max(0, CCN.projet.hauteur - this.hauteur - margeHautPx - margeBasPx);
+			const yPx = margeHautPx + this.y * plagePx;
+			this.y = yPx / CCN.projet.hauteur;
+			this.div_base.css('top', (this.y * 100) + '%');
+		}
+
 		if (CCN.admin == 0) {
 			$(this.div_base).draggable(
 				{
 					axis: "y",
+					cancel: '',  // Force le drag and drop même s'il y a un button dans la réponse.
 					start: function (event, ui) {
 						$(this).addClass('no_event');
 					},
 					drag: function (event, ui) {
-						updateConnecteur(event.target, ui);
+						updateReponseConnecteurs(event.target, ui);
 					},
 					stop: function (event, ui) {
 						const yy = (ui.offset.top - CCN.projet.timeline.offset().top) / CCN.projet.timeline.height();

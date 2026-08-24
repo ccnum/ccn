@@ -10,22 +10,21 @@
 [(#REM) Annee scolaire]
 #SET{annee_scolaire,#CONST{_ANNEE_SCOLAIRE}}
 
-[(#SET{projet,[(#URL_PAGE{xml, mode=projet}|url_absolue|copie_locale)]})]
+[(#SET{projet,[(#URL_PAGE{json, mode=projet}|url_absolue|copie_locale)]})]
 
 [(#REM) Type d'admin : 0 : total / autrement : nb de rubriques restreintes / -1 : pas admin / -2 pas connecté
 Id de la rubrique restreinte sélectionnée : calculés en un seul appel]
-[(#INCLURE{fond=noisettes/fonction/admin,mode=admin,rub})]
+[(#SET{admin_scope, #ENV{rub}|thematique_admin_scope})]
 [(#SET{admin,#SESSION{admin}})]
 [(#SET{restreint,#SESSION{restreint}})]
 
 [(#REM) Type de rubrique restreinte: consignes, travail_en_cours, blogs, evenements, ressources, classes]
 [(#GET{restreint}|oui)
-	[(#INCLURE{fond=noisettes/fonction/type_objet,id_rubrique=#GET{restreint}})]
-	[(#SET{type_restreint,#SESSION{type}})]
+	[(#SET{type_restreint, #GET{restreint}|thematique_type_objet_rubrique})]
 ]
 
 [(#REM) Type auteur : travail_en_cours,ressources,consignes]
-	[(#SET{type_auteur,[(#MODELE{type_auteur}{id_auteur=#SESSION{id_auteur}})]})]
+	[(#SET{type_auteur, #SESSION{id_auteur}|thematique_type_auteur})]
 
 [(#REM) ******************* AFFICHAGE ***************************** ]
 
@@ -49,10 +48,12 @@ Id de la rubrique restreinte sélectionnée : calculés en un seul appel]
 			crossorigin="anonymous" defer></script>
 	</head>
 	<body>
+	<a href="#global" class="skip-link"><:thematique:aller_au_contenu:></a>
+	<div id="a11y_announcer" class="sr-only" role="status" aria-live="polite"></div>
 	<div id="tooltip-sidebarCache" class="tooltip-sidebarCache"></div>
 	<div id="sidebarCache"></div>
 		[(#TYPE_OBJET|=={evenements}|oui|et{#GET{admin}|<{0}|oui}|non)
-			[(#ENV{page}|in_array{#LISTE{sommaire,article,rubrique,rubrique_detail,forum,groupe_mot,groupe_mot_detail,ressources_detail,timeline,isotope,livrables,auteur_editer,publier_article,syndic_article,menu_haut,call_sidebar}}|non)#SET{page,sommaire}]
+			[(#ENV{page}|in_array{#LISTE{sommaire,article,rubrique,rubrique_detail,forum,ressources_detail,timeline,isotope,livrables,auteur_editer,publier_article,syndic_article,menu_haut,call_sidebar}}|non)#SET{page,sommaire}]
 			<INCLURE{fond=noisettes/#ENV{page}}
 				{admin=#GET{admin}}
 				{restreint=#GET{restreint}}

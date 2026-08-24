@@ -1,5 +1,5 @@
 #!/bin/bash
-set -e
+set -euo pipefail
 
 run_as() {
 	if [ "$(id -u)" = 0 ]; then
@@ -15,8 +15,14 @@ version_greater() {
 }
 
 wait_for_db() {
-	until nc -z -v -w60 "${SPIP_DB_HOST}" "3306"; do
-		echo "Waiting for database ready..."
+	local tries=0
+	until nc -z -w5 "${SPIP_DB_HOST}" "${SPIP_DB_PORT:-3306}"; do
+		tries=$((tries + 1))
+		if [ "$tries" -ge 30 ]; then
+			echo >&2 "ERROR: database ${SPIP_DB_HOST}:${SPIP_DB_PORT:-3306} still unreachable after ${tries} attempts, aborting."
+			exit 1
+		fi
+		echo "Waiting for database ready (${tries}/30)..."
 		sleep 5
 	done
 }
@@ -29,8 +35,7 @@ if [ -f "/var/www/html/ecrire/inc_version.php" ]; then
 	image_version=$(grep -i /usr/src/spip/ecrire/inc_version.php  -e '\$spip_version_branche =' | cut -d '=' -f 2 | cut -d ';' -f 1 | cut -d "'" -f 2 | cut -d '"' -f 2)
 fi
 
-echo $installed_version
-echo $image_version
+echo "SPIP version in volume: ${installed_version} - SPIP version shipped in image: ${image_version}"
 
 if version_greater "$installed_version" "$image_version"; then
 	echo "Can't start SPIP because the version of the data ($installed_version) is higher than the docker image version ($image_version) and downgrading is not supported. Are you sure you have pulled the newest image version?"
@@ -39,21 +44,15 @@ fi
 
 # Reconfigure php.ini
 # set PHP.ini settings for SPIP
+# NB: error logging is configured at build time (error-logging.ini -> /dev/stderr),
+# do not override error_log here or PHP errors disappear from `docker logs`
 ( \
-echo 'display_errors=Off'; \
-echo 'error_log=/var/log/apache2/php.log'; \
-echo 'max_execution_time=${PHP_MAX_EXECUTION_TIME}'; \
-echo 'memory_limit=${PHP_MEMORY_LIMIT}'; \
-echo 'post_max_size=${PHP_POST_MAX_SIZE}'; \
-echo 'upload_max_filesize=${PHP_UPLOAD_MAX_FILESIZE}'; \
-echo 'date.timezone=${PHP_TIMEZONE}'; \
+echo "max_execution_time=${PHP_MAX_EXECUTION_TIME}"; \
+echo "memory_limit=${PHP_MEMORY_LIMIT}"; \
+echo "post_max_size=${PHP_POST_MAX_SIZE}"; \
+echo "upload_max_filesize=${PHP_UPLOAD_MAX_FILESIZE}"; \
+echo "date.timezone=${PHP_TIMEZONE}"; \
 ) > /usr/local/etc/php/conf.d/spip.ini
-
-# Configure Apache port
-if [ "${APACHE_PORT}" != "80" ]; then
-    echo "Listen ${APACHE_PORT}" > /etc/apache2/ports.conf
-    sed -i "s/:80>/:${APACHE_PORT}>/g" /etc/apache2/sites-available/000-default.conf
-fi
 
 
 if version_greater "$image_version" "$installed_version"; then
@@ -76,25 +75,31 @@ if version_greater "$image_version" "$installed_version"; then
 		chown www-data:www-data .htaccess
 	fi
 
-	if [ ${SPIP_DB_SERVER} = "mysql" ]; then
+	if [ "${SPIP_DB_SERVER}" = "mysql" ]; then
 		wait_for_db
 	fi
 
 	# Upgrade SPIP
 	if [ -f config/connect.php ]; then
-		spip core:maj:bdd
-		spip plugins:maj:bdd
+		run_as "spip core:maj:bdd"
+		run_as "spip plugins:maj:bdd"
 	fi
 fi
 
 # Install SPIP
-if [ ${SPIP_DB_SERVER} = "mysql" ]; then
+if [ "${SPIP_DB_SERVER}" = "mysql" ]; then
 	wait_for_db
 fi
-if [[ ! -e config/connect.php && ${SPIP_AUTO_INSTALL} = 1 ]]; then
+if [[ ! -e config/connect.php && "${SPIP_AUTO_INSTALL}" = 1 ]]; then
+	if [ "${SPIP_ADMIN_PASS}" = "adminadmin" ]; then
+		echo >&2 "**********************************************************************"
+		echo >&2 "WARNING: SPIP_ADMIN_PASS is using the default value 'adminadmin'."
+		echo >&2 "Set a strong password via SPIP_ADMIN_PASS before exposing this site."
+		echo >&2 "**********************************************************************"
+	fi
 	# Wait for mysql before install
 	# cf. https://docs.docker.com/compose/startup-order/
-	run_as "spip install \
+	if ! run_as "spip install \
 		--db-server ${SPIP_DB_SERVER} \
 		--db-host ${SPIP_DB_HOST} \
 		--db-login ${SPIP_DB_LOGIN} \
@@ -105,13 +110,9 @@ if [[ ! -e config/connect.php && ${SPIP_AUTO_INSTALL} = 1 ]]; then
 		--admin-nom ${SPIP_ADMIN_NAME} \
 		--admin-login ${SPIP_ADMIN_LOGIN} \
 		--admin-email ${SPIP_ADMIN_EMAIL} \
-		--admin-pass ${SPIP_ADMIN_PASS}" || true
-
-    # Try to depote the repository
-    #if ! spip plugins:svp:depoter https://plugins.spip.net/depots/principal.xml; then
-    #    echo "Warning: Unable to depote repository https://plugins.spip.net/depots/principal.xml"
-        # Optionally handle this error differently, or just continue
-    #fi
+		--admin-pass ${SPIP_ADMIN_PASS}"; then
+		echo >&2 "WARNING: SPIP auto-install failed - complete the installation via the web interface (/ecrire/)"
+	fi
 fi
 
 spip plugins:activer cextras -y
@@ -134,18 +135,19 @@ spip plugins:activer mesfavoris_ccn -y
 spip plugins:activer ccn -y
 
 spip plugins:desactiver imports_utilisateurs -y
+spip plugins:desactiver cicas -y
 
-if [ ${SPIP_PLUGINS_CIOIDC} == true ]; then
+if [ "${SPIP_PLUGINS_CIOIDC:-false}" = true ]; then
 	spip plugins:activer cioidc -y
-	else
+else
 	spip plugins:desactiver cioidc -y
 fi
-if [ ${SPIP_VERSION_SITE} != "thematique" ]; then
+if [ "${SPIP_VERSION_SITE}" != "thematique" ]; then
 	spip plugins:activer vider_rubrique -y
 fi
-spip plugins:activer ${SPIP_VERSION_SITE} -y
-if [ ${PROJET} != "laclasse" ]; then
-	spip plugins:activer thematique_${PROJET} -y
+spip plugins:activer "${SPIP_VERSION_SITE}" -y
+if [ "${PROJET}" != "laclasse" ]; then
+	spip plugins:activer "thematique_${PROJET}" -y
 fi
 spip plugins:maj:bdd
 
@@ -181,6 +183,7 @@ rm -rf config/mes_options.php
 /bin/cat << MAINEOF > config/mes_options.php
 <?php
 if (!defined("_ECRIRE_INC_VERSION")) return;
+\$GLOBALS['spip_header_silencieux'] = 1;
 \$GLOBALS['taille_des_logs'] = 500;
 define('_MAX_LOG', 500000);
 define('_LOG_FILELINE', true);
@@ -199,14 +202,15 @@ define('_MAJ_NOTIF_EMAILS', '');
 // des personalisations par projet
 define('_PROJET', '${PROJET}');
 // plugin api_vimeo : envoi des documents mp4 vers Vimeo
-define('_VIMEO_ACCESS_TOKEN', '${VIMEO_ACCESS_TOKEN}');
+define('_VIMEO_ACCESS_TOKEN', '${VIMEO_ACCESS_TOKEN:-}');
 // false pour un projet CCN qui ne repart pas d'une année sur l'autre :
 // désactive la création automatique de la structure de rentrée (rubrique
 // de l'année + articles jalons, cf
 // plugins/thematique/genie/thematique_rentree_annee.php)
-define('_CCN_PROJET_ACTIVE', '${CCN_PROJET_ACTIVE}' !== 'false');
+define('_CCN_PROJET_ACTIVE', '${CCN_PROJET_ACTIVE:-true}' !== 'false');
 ?>
 MAINEOF
+chown www-data:www-data config/mes_options.php
 
 # TODO(#ISSUE): plugin cicas supprimé, ce fichier ne devrait plus jamais être
 # généré nulle part mais peut subsister sur les déploiements existants -
@@ -215,15 +219,15 @@ rm -f config/_config_cas.php
 
 # Default _config_cioidc.php
 rm -f config/_config_cioidc.php
-if [ ${SPIP_PLUGINS_CIOIDC} = true ]; then
+if [ "${SPIP_PLUGINS_CIOIDC:-false}" = true ]; then
 	/bin/cat << MAINEOF > config/_config_cioidc.php
 <?php
 if (!defined("_ECRIRE_INC_VERSION")) return;
 define('_CIOIDC_MODE_AUTH', 'hybride');
 define('_CIOIDC_NOM_SERVEUR', 'LaClasse');
 define('_CIOIDC_URL_SERVEUR', 'https://www.laclasse.com');
-define('_CIOIDC_CLIENT_NOM', '${SPIP_CIOIDC_CLIENT_NOM}');
-define('_CIOIDC_CLIENT_SECRET', '${SPIP_CIOIDC_CLIENT_SECRET}');
+define('_CIOIDC_CLIENT_NOM', '${SPIP_CIOIDC_CLIENT_NOM:-}');
+define('_CIOIDC_CLIENT_SECRET', '${SPIP_CIOIDC_CLIENT_SECRET:-}');
 define('_CIOIDC_UID_CHAMP_SPIP', 'login');
 define('_CIOIDC_UID_CLAIM', 'uid');
 define('_CIOIDC_CREER_AUTEUR', '6forum');
@@ -235,51 +239,7 @@ define('_CIOIDC_JWKS_URI', 'https://www.laclasse.com/sso/jwks');
 define('_CIOIDC_TOKEN_ENDPOINT_AUTH_METHODS_SUPPORTED', '["client_secret_post"]');
 ?>
 MAINEOF
+	chown www-data:www-data config/_config_cioidc.php
 fi
-
-# Check if DUMP_MEDIA and DUMP_DB are set, else echo no db/media to restore
-#if [ -z "${DUMP_MEDIA}" ] && [ -z "${DUMP_DB}" ]; then
-#    echo "No media and database to restore"
-#elif [ -z "${DUMP_MEDIA}" ]; then
-#    echo "No media to restore"
-#else
-#    # Restore media
-#    echo "Restoring media"
-#
-#    # Check if ./IMG has files and if /tmp/dump/dump.sqlite exists
-#    if [ "$(ls -A ./IMG)" ] && [ -f /tmp/dump/dump.sqlite ]; then
-#        echo "Media and database are already restored, skipping restore step."
-#    else
-#        # Create /tmp/dump folder if it doesn't exist
-#        mkdir -p tmp/dump
-#
-#        # Check if DUMP_MEDIA is a file or a directory
-#        if [ -f "${DUMP_MEDIA}" ]; then
-#            echo "DUMP_MEDIA is a file."
-#        elif [ -d "${DUMP_MEDIA}" ]; then
-#            echo "DUMP_MEDIA is a directory."
-#        fi
-#
-#        # Download media using curl
-#        echo "Downloading media archive..."
-#        curl -o IMG.tar.gz -L "${DUMP_MEDIA}"
-#
-#        # Download database dump using curl
-#        echo "Downloading database dump..."
-#        curl -o tmp/dump/dump.sqlite -L "${DUMP_DB}"
-#
-#        # Extract the media archive
-#        echo "Extracting media archive..."
-#        tar -xzvf IMG.tar.gz
-#
-#        # Restore the database using SPIP CLI
-#        echo "Restoring the database..."
-#        spip sql:dump:restore --name dump
-#
-#        # Clean up the media archive
-#        echo "Cleaning up downloaded archive..."
-#        rm IMG.tar.gz
-#    fi
-#fi
 
 exec "$@"

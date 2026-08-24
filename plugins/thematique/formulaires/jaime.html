@@ -1,4 +1,5 @@
 <!--formulaire_notation-->
+#SET{total, 0}
 <BOUCLE_note(NOTATIONS_OBJETS){objet=(#ENV*{_objet}|objet_type)}{id_objet=#ENV*{_id_objet}}>
 #SET{note_ponderee,#NOTE_PONDEREE}
 #SET{total,#NOMBRE_VOTES}
@@ -20,12 +21,12 @@
 			<input type="hidden" name="notation_id_donnees" id="id_donnees[(#ENV*{_form_id})]" value="[(#ENV*{_id_objet})]" />
 			<input type="hidden" name="content" id="content[(#ENV*{_form_id})]" value="" />
 			[(#ENV{id_notation}|non)
-			<span class="btn_jaime tooltip_bottom" data-tip="J'aime" aria-label="J'aime">
+			<span class="btn_jaime tooltip_bottom" data-tip="<:notation:jaime|attribut_html:>">
 				<input type="submit" class="submit jaime" name="jaime[(#ENV*{_form_id})]" value="<:notation:jaime|attribut_html:>"/>
 			</span>
 			][(#ENV{id_notation}|oui)
-			<span class="btn_jaimeplus tooltip_bottom" data-tip="Je n'aime plus" aria-label="Je n'aime plus">
-				<input type="submit" title="Je n'aime plus" class="submit jaimeplus" name="retirer[(#ENV*{_form_id})]" value="<:notation:jaimeplus|attribut_html:>"/>
+			<span class="btn_jaimeplus tooltip_bottom" data-tip="<:notation:jaimeplus|attribut_html:>">
+				<input type="submit" title="<:notation:jaimeplus|attribut_html:>" class="submit jaimeplus" name="retirer[(#ENV*{_form_id})]" value="<:notation:jaimeplus|attribut_html:>"/>
 			</span>
 			<!--<div class="dejavote"></div>-->
 			]
@@ -33,8 +34,13 @@
 	</form>
 	]
 	[(#ENV**{editable}|non)
-		[(#GET{total}|oui)
-			<span class="btn_jaimeplus no-interactive">
+		[(#ENV{id_notation}|non)
+			<span class="btn_jaime no-interactive tooltip_bottom" data-tip="<:notation:jaime|attribut_html:>">
+				<div class="submit jaime"></div>
+			</span>
+		]
+		[(#ENV{id_notation}|oui)
+			<span class="btn_jaimeplus no-interactive tooltip_bottom" data-tip="<:notation:jaimeplus|attribut_html:>">
 				<div class="submit jaimeplus"></div>
 			</span>
 		]

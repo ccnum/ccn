@@ -8,6 +8,40 @@
 	margin: 0px;
 }
 
+/* --------- Accessibilité --------- */
+
+/* Masque visuellement sans masquer aux lecteurs d'écran (titres techniques,
+   régions live d'annonce de navigation). */
+.sr-only {
+	position: absolute;
+	width: 1px;
+	height: 1px;
+	padding: 0;
+	margin: -1px;
+	overflow: hidden;
+	clip: rect(0, 0, 0, 0);
+	white-space: nowrap;
+	border: 0;
+}
+
+/* Lien d'évitement : masqué comme .sr-only tant qu'il n'a pas le focus
+   clavier, redevient visible au-dessus de tout au Tab. */
+.skip-link {
+	position: absolute;
+	top: -3rem;
+	left: 0.5rem;
+	z-index: 10000;
+	padding: 0.6rem 1rem;
+	background: #fff;
+	color: #000;
+	font-weight: 600;
+	border-radius: 0 0 4px 4px;
+	transition: top 0.15s ease;
+}
+.skip-link:focus {
+	top: 0;
+}
+
 p {  /* Ecrasons le css appliqué sur "*" pour gérer l'exception des paragraphes. */
     display: block;
     margin-block-start: 1em;
@@ -410,6 +444,65 @@ body {
 .icon-connecter {
 	--svg: url("#CHEMIN{img/logo_connecter.svg}");
 }
+/* Avatar de l'utilisateur connecté (menu haut) : masculin par défaut en
+   attendant de savoir d'où viendra l'info de civilité (ENT ou profil SPIP)
+   pour distinguer avatar_feminin/avatar_masculin — .icon-avatar-feminin
+   prévue ici (même rendu, seul le <img src> diffère côté squelette) pour
+   ce jour-là.
+   <img> plutôt que masque CSS : le SVG source (laclasse.com, cross-origin,
+   sans en-tête CORS) n'est pas peint par certains navigateurs en tant que
+   mask-image sans CORS ; un <img> n'a pas cette restriction. Les SVG sont
+   des pictogrammes blancs pleins (fill #FFFFFF) sans fond, donc posés sur
+   un rond de couleur pour rester visibles sur fond clair. */
+.icon-avatar-masculin,
+.icon-avatar-feminin {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	flex: none;
+	width: 40px;
+	height: 40px;
+	border-radius: 50%;
+	background-color: var(--color-default);
+	vertical-align: middle;
+	overflow: hidden;
+}
+.icon-avatar-masculin img,
+.icon-avatar-feminin img {
+	width: 26px;
+	height: 26px;
+}
+/* Vraie photo de profil (ENT laclasse.com) plutôt que le picto blanc plein :
+   remplit le rond au lieu d'être un petit picto centré dessus. */
+.icon-avatar-masculin img.avatar-photo,
+.icon-avatar-feminin img.avatar-photo {
+	width: 40px;
+	height: 40px;
+	object-fit: cover;
+}
+/* Animal (emoji) de sa classe pour un prof, prioritaire sur avatar/SVG dans
+   le menu haut (cf classe_icone() côté PHP) : span plutôt que img, le rond
+   de couleur reste visible autour de l'emoji. */
+.icon-avatar-masculin .avatar-animal,
+.icon-avatar-feminin .avatar-animal {
+	font-size: 20px;
+	line-height: 1;
+}
+/* Repli avatar_masculin.svg utilisé par thematique_logo_carre() (photo d'une
+   consigne/article) : nichée dans un conteneur .photo dont la taille varie
+   selon le contexte d'appel (fiche_titre, header sidebar, card réponse...),
+   contrairement au menu haut qui a une taille fixe — le rond de couleur et
+   le picto s'adaptent donc en pourcentage plutôt qu'en pixels. */
+.photo > .icon-avatar-masculin,
+.photo > .icon-avatar-feminin {
+	width: 100%;
+	height: 100%;
+}
+.photo > .icon-avatar-masculin img:not(.avatar-photo),
+.photo > .icon-avatar-feminin img:not(.avatar-photo) {
+	width: 60%;
+	height: 60%;
+}
 .icon-ecrire {
 	--svg: url("#CHEMIN{img/logo_ecrire.svg}");
 }
@@ -522,6 +615,7 @@ a:hover {
 	padding: 0.4rem 1rem;
 	background-color: white;
 	border-radius: 3px;
+	cursor: pointer;
 }
 
 .sidebar_publier {

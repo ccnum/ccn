@@ -5,8 +5,7 @@
 		#SET{type_objet,#TYPE_OBJET}
 	]
 	[(#ENV{type_objet}|non)
-		[(#INCLURE{fond=noisettes/fonction/type_objet,id_article})]
-		[(#SET{type_objet,#SESSION{type}})]
+		[(#SET{type_objet, #ID_ARTICLE|thematique_type_objet_article})]
 	]
 	[(#GET{type_objet}|in_array{#LISTE{blogs,evenements}}|oui)#SET{pre,article_}]
 
@@ -40,7 +39,7 @@
 		[(#GET{art_lie}|oui)
 			</div>
 			<div class="popup popup_separation_binome">
-				<div class="sidebar_bubble separation_binome">Réponse binôme</div>
+				<div class="sidebar_bubble separation_binome"><:thematique:reponse_binome:></div>
 				<div class="nettoyeur"></div>
 			</div>
 
@@ -56,7 +55,7 @@
 
 	[(#GET{mode}|=={ajax}|oui)
 		[(#REM) Type d'admin : 0 : total / autrement : nb de rubriques restreintes / -1 : pas admin / -2 pas connecté]
-		[(#INCLURE{fond=noisettes/fonction/admin,mode=admin,rub})]
+		[(#SET{admin_scope, #ENV{rub}|thematique_admin_scope})]
 		[(#SET{admin,#SESSION{admin}})]
 		<INCLURE{fond=noisettes/#GET{page}, type_objet=#GET{type_objet}, admin=#GET{admin}, env, ajax} />
 	]

@@ -1,0 +1,43 @@
+name: Lint - duplication HTML (thematique)
+
+on:
+  pull_request:
+    paths:
+      - 'plugins/thematique/**/*.html'
+      - '.ci/check_html_duplication.js'
+      - '.ci/html-duplication-baseline.txt'
+      - 'package.json'
+      - 'package-lock.json'
+  push:
+    branches:
+      - dev
+      - main
+    paths:
+      - 'plugins/thematique/**/*.html'
+      - '.ci/check_html_duplication.js'
+      - '.ci/html-duplication-baseline.txt'
+      - 'package.json'
+      - 'package-lock.json'
+
+jobs:
+  check-html-duplication:
+    # Sur une PR dont la source est refonte_graphique, build_refonte.yaml
+    # fait déjà tourner ce même check (job html_duplication) à chaque push
+    # sur cette branche : éviter le doublon.
+    if: github.head_ref != 'refonte_graphique'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Installer les dépendances npm
+        run: npm ci
+
+      - name: Vérifier l'absence de nouvelle duplication HTML
+        run: node .ci/check_html_duplication.js

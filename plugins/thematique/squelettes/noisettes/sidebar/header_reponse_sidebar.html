@@ -21,27 +21,25 @@ Arguments :
 				</BOUCLE_nom_ecole>
 			</div>
 			<div class="#EDIT{date} date">
-				Publié le [(#DATE|affdate)]
+				<:thematique:publie_le:> [(#DATE|affdate)]
 			</div>
 		</div>
 		<div id="header-col-right">
 			<div id="header-row-1">
+				#SET{numero_mission, #ENV{rang}|sinon{0}|plus{1}}
 				<div class="etiquette-etape">
-					<span class="texte-etiquette">RÉPONSE - MISSION N°[(#ENV{rang}|plus{1})]</span>
+					<span class="texte-etiquette"><:thematique:reponse_mission_numero{numero=#GET{numero_mission}}:></span>
 				</div>
 				<INCLURE{fond=noisettes/sidebar/normal_header_icons, env} />
 			</div>
 			<div id="header-row-2">
 				#ENV{titre_consigne}
 			</div>
-			
-			
-			
 		</div>
 	</div>
 	[(#ENV{type_objet}|in_array{#LISTE{blogs,evenements}}|oui)
 		<div class="popup_titre [popup_titre_(#ENV{type_objet})]">
-			<div class="#EDIT{titre} titre">[(#TITRE)]</div>
+			<h2 class="#EDIT{titre} titre">[(#TITRE)]</h2>
 			<div class="auteur_date">
 				<span class="date #EDIT{date}">[(#DATE|nom_jour)] [(#DATE|affdate)]</span>
 				[<span class="auteur">(#LESAUTEURS)</span>]

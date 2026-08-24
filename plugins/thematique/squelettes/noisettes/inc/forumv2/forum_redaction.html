@@ -1,18 +1,33 @@
 <div class="forum-redaction">
-	<h2>Rédaction de votre commentaire</h2>
+	<h2><:thematique:redaction_commentaire:></h2>
 	[(#ENV**{erreurs/message_erreur})]
-	<p>Rédigez votre commentaire sur cette réponse.</p>
+	<p><:thematique:redigez_commentaire:></p>
 	[(#ENV{id_parent}|>{0}|oui)
-		<p class="forum-redaction__reponse-a">Vous répondez à un commentaire existant.</p>
+		<p class="forum-redaction__reponse-a"><:thematique:reponse_a_commentaire_existant:></p>
 	]
-	[(#ENV**{erreurs/texte})]
+	<p id="texte-erreur" class="erreur" role="alert">[(#ENV**{erreurs/texte})]</p>
 	<div class="editer">
-		<textarea id="texte" name="texte" rows="2" class="forum-redaction__textarea">[(#ENV{texte}|entites_html)]</textarea>
+		<label for="texte" class="sr-only"><:thematique:redigez_commentaire:></label>
+		<textarea id="texte" name="texte" rows="2" class="forum-redaction__textarea" aria-describedby="texte-erreur">[(#ENV{texte}|entites_html)]</textarea>
 	</div>
-	<div style="display: flex; justify-content: end;">
+	<div style="display: flex; 
+				justify-content: end;
+				padding-top: 0.8rem;"
+	>
 		<div class="forum-actions">
-			<button onclick="callbackCliqueSurAnnuler(event)" type="button">Annuler</button>
-			<button type="submit" name="publication_forum_action" value="previsualiser">Prévisualiser</button>
+			<button onclick="callbackCliqueSurAnnuler(event)" 
+					type="button"
+					class="link-button cancel-button"
+			>
+				<:thematique:annuler:>
+			</button>
+			<button type="submit" 
+					name="publication_forum_action" 
+					value="previsualiser"
+					class="previsualisation-button"
+			>
+				<:thematique:previsualiser:>	
+			</button>
 		</div>
 	</div>
 </div>

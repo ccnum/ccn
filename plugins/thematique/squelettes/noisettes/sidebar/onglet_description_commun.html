@@ -18,9 +18,8 @@
 	[(#CONFIG{articles_urlref}|=={oui}|oui)
 		[(#URL_SITE|textebrut|=={''}|non)
 			<div class="sidebar_bubble">
-				<INCLURE{fond=noisettes/js/accordeon, nom=bloc_option_classe_reponse_iframe, ajax} />
 				<div class="bloc_option_doc nettoyeur">
-					<a id="bloc_option_classe_reponse_iframe" class="hac liens_voir bloc_option_doc_ressources" title="<:thematique:contenu_lie:>">
+					<a id="bloc_option_classe_reponse_iframe" class="hac js-accordeon-toggle liens_voir bloc_option_doc_ressources" title="<:thematique:contenu_lie:>">
 						<:thematique:contenu_lie:>
 					</a>
 					<span class="texte nettoyeur bloc_classe_iframe">
@@ -33,7 +32,6 @@
 		]
 		[(#AUTORISER{modifier,article,#ID_ARTICLE}|oui|et{#URL_SITE|textebrut|=={''}|oui}|et{#CONST{_ANNEE_SCOLAIRE}|=={#ANNEE_SCOLAIRE_REELLE}}|oui)
 			<div class="sidebar_bubble">
-				<INCLURE{fond=noisettes/js/accordeon, nom=bloc_option_classe_reponse_iframe, ajax} />
 				<div class="bloc_option_doc nettoyeur">
 					[<div class="#EDIT{url_site} titre_bubble bloc_option_doc_adddocument">(#URL_SITE|textebrut|sinon{<div class=""><:thematique:ajouter_contenu_integre:></div>})</div>]
 				</div>

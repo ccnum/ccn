@@ -3,14 +3,26 @@
 <div id="menu_haut_user" class="bloc_titre">
 	<div id="choix_rubrique_user" name="rubrique_user" class="selectbox" data-select-name="rubrique_user">
 		<button type="button" class="select-toggle first_label">
-			<span class="icon icon-connecter"></span>
+			<span class="icon-avatar-masculin">
+				[(#SESSION{avatar}|non)
+					<img src="https://www.laclasse.com/avatar/avatar_masculin.svg" alt="">
+				]
+				[(#SESSION{avatar}|match{^https?://}|oui)
+					<img src="[(#SESSION{avatar})]" alt="" class="avatar-photo">
+				]
+				[(#SESSION{avatar}|match{^https?://}|non)
+					[(#SESSION{avatar}|oui)
+						<span class="avatar-animal">[(#SESSION{avatar})]</span>
+					]
+				]
+			</span>
 			[(#SESSION{nom})]
 			<span class="icon icon-down"></span>
 		</button>
 		<ul class="select-options">
 			<li class="select-option me-deconnecter">
-				<a href="[(#URL_LOGOUT)]" title="Me déconnecter" style="display: flex; align-items: center;" class="nowrap">
-					Me déconnecter
+				<a href="[(#URL_LOGOUT)]" title="<:thematique:me_deconnecter:>" style="display: flex; align-items: center;" class="nowrap">
+					<:thematique:me_deconnecter:>
 				</a>
 			</li>
 		</ul>
@@ -21,14 +33,14 @@
 <div id="menu_haut_user" class="bloc_titre">
 	<div id="choix_connexion" name="connexion" class="selectbox" data-select-name="connexion">
 		<button type="button" class="select-toggle first_label">
-			<span class="icon icon-connecter"></span>Me connecter
+			<span class="icon icon-connecter"></span><:thematique:me_connecter:>
 			<span class="icon icon-down"></span>
 		</button>
 		<ul class="select-options">
 			[(#PLUGIN{cioidc}|oui)
 				<li class="select-option">
-					<a href="[(#URL_PAGE{login}|parametre_url{url,#SELF}|parametre_url{cioidc,oui})]" title="Se connecter à l'ENT" class="nowrap">
-						Se connecter à l'ENT
+					<a href="[(#URL_PAGE{login}|parametre_url{url,#SELF}|parametre_url{cioidc,oui})]" title="<:thematique:se_connecter_ent:>" class="nowrap">
+						<:thematique:se_connecter_ent:>
 					</a>
 				</li>
 			]

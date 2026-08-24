@@ -1,5 +1,5 @@
 #CACHE{0}
-<INCLURE{fond=noisettes/js/swiper.script}>
+<script src="#CHEMIN{js/swiper.js}"></script>
 <div id="documents_portfolio" class="portfolio">
 	<BOUCLE_documents_joints(DOCUMENTS){vu=non}{id_article}>
 		<div class="spip_documents">
@@ -7,16 +7,16 @@
 				#SET{vimeo_en_cours, oui}
 			]
 			[(#VIMEO_STATUT|=={erreur}|oui)
-				<div class="vimeo_statut vimeo_statut_erreur">Erreur lors de l'envoi de la vidéo vers Vimeo.</div>
+				<div class="vimeo_statut vimeo_statut_erreur"><:thematique:vimeo_statut_erreur:></div>
 			]
 			[(#VIMEO_STATUT|=={envoi}|oui)
-				<div class="vimeo_statut vimeo_statut_encours">Envoi de la vidéo vers Vimeo en cours... [(#VIMEO_PROGRESSION)]%</div>
+				<div class="vimeo_statut vimeo_statut_encours"><:thematique:vimeo_statut_envoi{progression=#VIMEO_PROGRESSION}:></div>
 			]
 			[(#VIMEO_STATUT|=={transcodage}|oui)
-				<div class="vimeo_statut vimeo_statut_encours">Vidéo envoyée, traitement en cours chez Vimeo...</div>
+				<div class="vimeo_statut vimeo_statut_encours"><:thematique:vimeo_statut_transcodage:></div>
 			]
 			[(#VIMEO_STATUT|=={en_attente}|oui)
-				<div class="vimeo_statut vimeo_statut_encours">Vidéo en attente d'envoi vers Vimeo...</div>
+				<div class="vimeo_statut vimeo_statut_encours"><:thematique:vimeo_statut_en_attente:></div>
 			]
 			[(#DISTANT|=={oui}|oui)
 				[(#VIMEO_STATUT|=={disponible}|oui)
@@ -62,16 +62,15 @@
 			[<div class='action_supprimer'>
 				<a href="(#URL_ACTION_AUTEUR{dissocier_document,#ID_ARTICLE-article-#ID_DOCUMENT-suppr-safe,#URL_SITE_SPIP/spip.php?article#ID_ARTICLE&var_mode=recalcul})"
 					class='supprimer_couleur'
-					onClick='return confirmation("Êtes-vous sûr de vouloir supprimer ce document ?")'
-					title='Supprimer ce document'>
+					onClick='return confirmation("<:thematique:confirmation_supprimer_document:>")'
+					title='<:thematique:supprimer_document:>'>
 				</a>
 			</div>]
 			]
 			[(#GET{embed_video}|match{iframe}|oui)
 				[(#AUTORISER{modifier,article,#ID_ARTICLE}|oui)
 					<div class="bloc_modifier_mdp_video">
-						<INCLURE{fond=noisettes/js/accordeon, nom=bloc_modifier_mdp_video-#ID_DOCUMENT, ajax} />
-						<a id="bloc_modifier_mdp_video-#ID_DOCUMENT" class="hac lien_modifier" title="<:thematique:modifier_mot_de_passe_video:>"><:thematique:modifier_mot_de_passe_video:></a>
+						<a id="bloc_modifier_mdp_video-#ID_DOCUMENT" class="hac js-accordeon-toggle lien_modifier" title="<:thematique:modifier_mot_de_passe_video:>"><:thematique:modifier_mot_de_passe_video:></a>
 						<div class="masquer formulaire_spip">
 							<div class="ajax">#FORMULAIRE_MODIFIER_VIDEO_PASSWORD{#ID_DOCUMENT}</div>
 						</div>

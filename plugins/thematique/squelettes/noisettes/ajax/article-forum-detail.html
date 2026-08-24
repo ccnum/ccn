@@ -1,4 +1,4 @@
-<INCLURE{fond=noisettes/js/swiper.script}>
+<script src="#CHEMIN{js/swiper.js}"></script>
 #CACHE{24*3600}
 [<div class="lien_forum"><a class="lienss" href="(#PARAMETRES_FORUM|url_reponse_forum)">> <:repondre_article:></a></div>]
 <B_Forums>
@@ -12,22 +12,23 @@
 
 	<ul class="forum">
 	<BOUCLE_Forums(FORUMS){id_article?}{id_breve?}{!par date}>
-		#SET{type_objet,#MODELE{type_objet}{id_auteur}}
+		#SET{type_objet,#ID_AUTEUR|thematique_type_objet_auteur}
+		#SET{id_rubrique_classe,#ARRAY{id_auteur,#ID_AUTEUR,objet,article,id_objet,#ENV{id_article}}|classe_id_rubrique_forum}
 
 		[(#REM)Pour l'instant on se rabat sur les consignes pour les couleurs (TO DO)]
 		[(#GET{type_objet}|=={''}|oui) #SET{type_objet,consignes} ]
 		[(#GET{type_objet}|=={ressources}|oui) #SET{type_objet,consignes} ]
 
 		<div id="forum#ID_FORUM" class="intervention_item_around">
-			<div class="intervention_item bgc_classe_[(#MODELE{nb2col}{id_auteur})]">
-				<div class="triggertoggleshow intervention couleur_texte[_(#GET{type_objet})] [couleur_(#GET{type_objet})[(#MODELE{nb2col}{id_auteur})]]">
+			<div class="intervention_item bgc_classe_[(#GET{id_rubrique_classe}|classe_numero)]">
+				<div class="triggertoggleshow intervention couleur_texte[_(#GET{type_objet})] [couleur_(#GET{type_objet})[(#GET{id_rubrique_classe}|classe_numero)]]">
 				[(#REM)Le nombre de réponses est repris de #TOTAL_BOUCLE de BOUCLE_forums_fils
 				plus bas (via le script en fin de bloc), pour éviter de relancer la même
 				requête FORUMS une deuxième fois juste pour la compter.]
 				<div class="intervention_nb_reponses" id="nb_reponses#ID_FORUM">0</div>
 				<div class="intervention_header">
 					<div class="photo">
-						[(#MODELE{logo_carre}{id_auteur}{titre=#TITRE})]
+						[(#ID_AUTEUR|thematique_logo_carre{auteur})]
 					</div>
 					<BOUCLE_forum_billet_auteur(AUTEURS){id_auteur}{tout}>
 						[<div class="intervention_auteur">(#NOM)</div>]
@@ -37,8 +38,8 @@
 						<div class="forum">
 							[<a href="(#URL_ACTION_AUTEUR{instituer_forum,#ID_FORUM-forum-suppr-safe,#URL_SITE_SPIP/spip.php?article#_principale:ID_ARTICLE&var_mode=recalcul})"
 							class='supprimer_couleur'
-							onClick='return confirmation("Êtes-vous sûr de vouloir supprimer ce message ?")'
-							title='Supprimer ce message'>
+							onClick='return confirmation("<:thematique:confirmation_supprimer_message:>")'
+							title='<:thematique:supprimer_message:>'>
 							<div class='action_supprimer'></div>
 							</a>]
 						</div>
@@ -46,7 +47,7 @@
 				</div>
 			</div>
 
-			<div class="toggleshow intervention_item_content couleur_intervention_item[(#MODELE{nb2col}{id_auteur})]">
+			<div class="toggleshow intervention_item_content couleur_intervention_item[(#GET{id_rubrique_classe}|classe_numero)]">
 				[<div class="#EDIT{titre} titre">(#TITRE)</div>]
 				[<div class="#EDIT{texte} bloc_texte">(#TEXTE|liens_ouvrants)</div>]
 				<BOUCLE_documents_joints(DOCUMENTS) {id_forum} {tout} {doublons}>
@@ -103,28 +104,29 @@
 		<B_forums_fils>
 			<ul class="toggleshow forum intervention_answers">
 				<BOUCLE_forums_fils(FORUMS){id_parent}{par date}>
-					#SET{type_objet,#MODELE{type_objet}{id_auteur}}
+					#SET{type_objet,#ID_AUTEUR|thematique_type_objet_auteur}
+					#SET{id_rubrique_classe,#ARRAY{id_auteur,#ID_AUTEUR,objet,article,id_objet,#ENV{id_article}}|classe_id_rubrique_forum}
 					[(#GET{type_objet}|=={''}|oui) #SET{type_objet,consignes} ]
-					<div id="forum#ID_FORUM" class="intervention_item bgc_classe_[(#MODELE{nb2col}{id_auteur})]">
-						<div class="intervention couleur_texte[_(#GET{type_objet})] [couleur_(#GET{type_objet})[(#MODELE{nb2col}{id_auteur})]]">
+					<div id="forum#ID_FORUM" class="intervention_item bgc_classe_[(#GET{id_rubrique_classe}|classe_numero)]">
+						<div class="intervention couleur_texte[_(#GET{type_objet})] [couleur_(#GET{type_objet})[(#GET{id_rubrique_classe}|classe_numero)]]">
 							<div class="intervention_header">
 								<div class="photo">
-									[(#MODELE{logo_carre}{id_auteur}{titre=#TITRE})]
+									[(#ID_AUTEUR|thematique_logo_carre{auteur})]
 								</div>
 								[<div class="intervention_auteur">(#NOM)</div>]
 								[<div class="intervention_date">(#DATE|affdate)</div>]
 								[(#AUTORISER{instituer,forum,#ID_FORUM}|oui)
 									[<a href="(#URL_ACTION_AUTEUR{instituer_forum,#ID_FORUM-forum-suppr-safe,#URL_SITE_SPIP/spip.php?article#_principale:ID_ARTICLE&var_mode=recalcul})"
 										class='supprimer_couleur'
-										onClick='return confirmation("Êtes-vous sûr de vouloir supprimer ce message ?")'
-										title='Supprimer ce message'>
+										onClick='return confirmation("<:thematique:confirmation_supprimer_message:>")'
+										title='<:thematique:supprimer_message:>'>
 										<div class='action_supprimer'></div>
 									</a>]
 								]
 							</div>
 						</div>
 
-						<div class="intervention_item_content couleur_intervention_item[(#MODELE{nb2col}{id_auteur})]">
+						<div class="intervention_item_content couleur_intervention_item[(#GET{id_rubrique_classe}|classe_numero)]">
 							[<div class="#EDIT{titre} titre">(#TITRE)</div>]
 							[<div class="#EDIT{texte} bloc_texte">(#TEXTE|liens_ouvrants)</div>]
 							<BOUCLE_documents_joints3(DOCUMENTS) {id_forum} {tout} {doublons}>
@@ -159,8 +161,8 @@
 		</B_forums_fils>
 
 		<div class="toggleshow intervention_callto_answer">
-			<a id="ajaxf1#ID_FORUM" class="hac liens_voir" title="Répondre à ce message">
-				<i class="material-icons md-24">&#xE8AF;</i>&nbsp;&nbsp;&nbsp;Répondre à ce message
+			<a id="ajaxf1#ID_FORUM" class="hac liens_voir" title="<:thematique:repondre_a_ce_message:>">
+				<i class="material-icons md-24">&#xE8AF;</i>&nbsp;&nbsp;&nbsp;<:thematique:repondre_a_ce_message:>
 			</a>
 			<div id="ajax_callback_forum_#ID_FORUM" class="intervention_new_answer bloc_texte" style='display: none;'></div>
 		</div>

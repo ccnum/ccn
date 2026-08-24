@@ -1,8 +1,11 @@
 let CCN = {};
 
 CCN.debug = false;
-CCN.nomMois = ["Janv.", "Fév.", "Mars", "Avril", "Mai", "Juin", "Juil.", "Août", "Sept.", "Oct.", "Nov.", "Déc."];
-CCN.nomCompletMois = ["janvier", "février", "mars", "avril", "mai", "juin", "juillet", "août", "septembre", "octobre", "novembre", "décembre"];
+// CCN.nomMois / CCN.nomCompletMois sont affectés depuis CCN.lang.mois_courts/
+// mois_complets (cf noisettes/timeline.html, lang/thematique_fr.php), une fois
+// ce dernier disponible.
+CCN.nomMois = [];
+CCN.nomCompletMois = [];
 CCN.travailEnCoursId;
 CCN.couleurBlog;
 CCN.dureeTransition;
@@ -40,32 +43,6 @@ function decodeHtmlEntities(str) {
 	const el = document.createElement('textarea');
 	el.innerHTML = str;
 	return el.value;
-}
-
-/**
- *  Retourne la valeur du noeud XML demandé.
- *
- * @param   {string} tagName - Nom du noeud demandé
- * @param   xml - Ressource XML
- * @returns {string} Valeur du noeud demandé
- */
-
-function getXMLNodeValue(tagName, xml) {
-	const node = xml.getElementsByTagName(tagName)[0];
-	return node && node.childNodes[0] ? node.childNodes[0].nodeValue : null;
-}
-
-/**
- * Retourne vrai si le noeud existe.
- *
- * @param   {string} tagName - Nom du noeud demandé
- * @param   xml - Ressource XML
- * @returns {boolean} <tt>true</tt> si le noeuf existe, <tt>false</tt> sinon
- */
-
-function hasXMLNodeValue(tagName, xml) {
-	const node = xml.getElementsByTagName(tagName)[0];
-	return node ? node.childNodes[0] : null;
 }
 
 /**

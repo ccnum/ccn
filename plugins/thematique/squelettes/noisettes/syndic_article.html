@@ -7,17 +7,8 @@
 		<div class="sidebar_bubble">
 		[(#MODE|!={ajax-detail}|oui)<div class="popup [popup_(#ENV{type_objet})]">]
 
-			[(#REM) ---------------- titre & logo ----------------
-			<div class="fiche_titre couleur_texte_[(#TYPE_OBJET)] couleur_[(#TYPE_OBJET)][(#MODELE{nb2col}{id_article})]">
-				<div class="texte">
-					<div class="photo">[(#MODELE{logo_carre}{id_rubrique=#ID_RUBRIQUE})]</div>
-					<div class="#EDIT{titre} titre">[(#TITRE)]</div>
-					<div class="auteur_date">[(#NOM) - ][(#DATE|affdate)]</div>
-				</div>
-			</div>]
-
 			<div class="fiche_titre">
-				<div class="#EDIT{titre} titre">[(#TITRE)]</div>
+				<h2 class="#EDIT{titre} titre">[(#TITRE)]</h2>
 				<div class="auteur_date">
 						[<div>(#LESAUTEURS)</div>]
 						[<span class="#EDIT{date}">(#DATE|affdate)</span>]
@@ -31,7 +22,7 @@
 				[(#REM)Texte]
 				<div id="bloc_texte">
 				<p class="spip">[(#DESCRIPTIF|liens_ouvrants|replace{href, target="_blank" rel="noopener noreferrer" href})]</p>
-				<p class="spip droite"><a href="[(#URL_ARTICLE)]" target="_blank" rel="noopener noreferrer" class="syndic_article_lire_suite">Lire la suite</a></p>
+				<p class="spip droite"><a href="[(#URL_ARTICLE)]" target="_blank" rel="noopener noreferrer" class="syndic_article_lire_suite"><:thematique:lire_la_suite:></a></p>
 				</div>
 			</div>
 

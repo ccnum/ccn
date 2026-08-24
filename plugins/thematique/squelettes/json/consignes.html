@@ -1,0 +1,68 @@
+#CACHE{60}
+
+[(#REM) Pré-passe silencieuse : collecte les ids de réponses (articles) pour
+compter leurs messages de forum en une seule requête groupée
+(thematique_comptes_forums), plutôt qu'une requête FORUMS par réponse dans
+la boucle d'affichage ci-dessous. ]
+#SET{ids_reponses,#ARRAY}
+<BOUCLE_rubrique_ids(RUBRIQUES){titre_mot=consignes}{!par id_rubrique}{tout}>
+	<BOUCLE_consigne_ids(ARTICLES){branche}{date>=#CONST{_DATE_DEBUT}}{date<=#CONST{_DATE_FIN}}{!titre_mot IN cap-sur-l-annee,la-rencontre}>
+		<BOUCLE_reponse_ids(ARTICLES){id_consigne=#ID_ARTICLE}>
+			#SET_PUSH{ids_reponses,#ID_ARTICLE}
+		</BOUCLE_reponse_ids>
+	</BOUCLE_consigne_ids>
+</BOUCLE_rubrique_ids>
+#SET{comptes_forum,#GET{ids_reponses}|thematique_comptes_forums}
+
+#SET{n_consigne,0}
+{
+"consignes": [
+<BOUCLE_rubrique(RUBRIQUES){titre_mot=consignes}{!par id_rubrique}{tout}>
+
+	[(#REM) Les 2 articles jalons du projet ("Cap sur l'année"/"La Rencontre",
+	cf thematique_rentree_annee.php) ne sont pas de vraies missions (pas
+	d'image de classe ni de réponses associées) : exclus ici. ]
+	<BOUCLE_consigne(ARTICLES){branche}{par date}{date>=#CONST{_DATE_DEBUT}}{date<=#CONST{_DATE_FIN}}{!titre_mot IN cap-sur-l-annee,la-rencontre}>
+		#SET{intervenant_nom,''}
+		#SET{id_auteur_consigne,0}
+		<BOUCLE_auteur_consigne(AUTEURS){id_article}{0,1}>
+			#SET{intervenant_nom,#NOM}
+			#SET{id_auteur_consigne,#ID_AUTEUR}
+		</BOUCLE_auteur_consigne>
+		[(#REM) Photo de la consigne : avatar de l'auteur de l'article, ou
+		logo de sa rubrique (classe/intervenant) en repli — voir
+		thematique_image_auteur_ou_classe() pour le détail de la priorité.
+		image_generique signale le repli "picto générique sans fond" à
+		consigne.js, qui doit alors l'envelopper (icon-avatar-masculin) pour
+		qu'il reste visible — voir thematique_image_est_avatar_generique(). ]
+		#SET{image,#GET{id_auteur_consigne}|thematique_image_auteur_ou_classe{#ID_RUBRIQUE}}
+		#SET{image_generique,#GET{image}|thematique_image_est_avatar_generique}
+		#SET{livrable,false}
+		<BOUCLE_mots(MOTS){id_article}{titre=livrable}>
+			#SET{livrable,true}
+		</BOUCLE_mots>
+		#SET{n_reponse,0}
+		[(#GET{n_consigne}|>{0}|oui),]
+		{
+			"id": #ID_ARTICLE,
+			"rang": #COMPTEUR_BOUCLE,
+			"intervenant_id": #ID_RUBRIQUE,
+			"intervenant_nom": [(#GET{intervenant_nom}|json_encode)],
+			"titre": [(#TITRE|json_encode)],
+			"date": "[(#DATE|affdate{'Y-m-d'})]",
+			"image": [(#GET{image}|json_encode)],
+			"image_generique": [(#GET{image_generique}|json_encode)],
+			"y": [(#Y|sinon{0})],
+			"livrable": #GET{livrable},
+			"reponses": [
+			<BOUCLE_reponse(ARTICLES){id_consigne=#ID_ARTICLE}{par id_rubrique}>
+				[(#GET{n_reponse}|>{0}|oui),]{"id":#ID_ARTICLE,"classe_id":#ID_RUBRIQUE,"date":"[(#DATE|affdate{'Y-m-d'})]","texte":[(#TITRE|couper{60}|json_encode)],"commentaires":[(#GET{comptes_forum}|table_valeur{#ID_ARTICLE,0})],"y":[(#Y|sinon{0})]}
+				[(#SET{n_reponse,#GET{n_reponse}|plus{1}})]
+			</BOUCLE_reponse>
+			]
+		}
+		[(#SET{n_consigne,#GET{n_consigne}|plus{1}})]
+	</BOUCLE_consigne>
+</BOUCLE_rubrique>
+]
+}

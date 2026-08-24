@@ -68,6 +68,7 @@
 	--color-consigne: #7D7BFD;
 	--color-default: #1E2055;
 	--color-bleu-fond: #DEE0FF;
+	--color-blog-not-selected: #9b9db8;
 	--color-gris: #F5F5F5;
 	--color-background-tabs: #F5F5FF;
 	--color-background-sidebar-encadre: #DBDCFF;
@@ -133,4 +134,16 @@
 	--font-size2: 15.6px;
 	--font-size3: 24px;
 
+}
+
+/* Remet à zéro les styles par défaut du navigateur sur un <button> utilisé
+comme conteneur cliquable générique (remplace les div[role=button] qu'il
+remplaçait) : chargé avant components.css/sidebar.css, donc leurs propres
+règles (fond, bordure, padding, position...) reprennent la main sur ce que
+`all: unset` a remis à l'état initial. */
+.btn-reset {
+	all: unset;
+	display: block;
+	box-sizing: border-box;
+	cursor: pointer;
 }

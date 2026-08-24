@@ -31,33 +31,18 @@ function Projet() {
 		this.couleur_1erplan2 = data.couleur_1erplan2;
 		this.couleur_1erplan3 = data.couleur_1erplan3;
 		this.zoom_consignes = data.zoom_consignes;
+		this.largeur = data.largeur;
+		this.hauteur = data.hauteur;
 		this.timeline_parent = $('#timeline');
 		this.timeline_background = $('#timeline_background');
 		this.timeline_fixed = $('#timeline_fixed');
 		this.timeline = $('#timeline_wrapin');
 		this.timeline_width = 100; // Pourcentage
 
-		// Liste y consignes
-
-		const liste_y_consignes = data.liste_y_consignes.split(",");
-		this.liste_y_consignes = [];
-		for (let i = 0; i < liste_y_consignes.length; i++) {
-			this.liste_y_consignes.push(parseFloat(liste_y_consignes[i]));
-		}
-
-		// Liste y articles de blog
-		const liste_y_blogs = data.liste_y_blogs.split(",");
-		this.liste_y_blogs = [];
-		for (let i = 0; i < liste_y_blogs.length; i++) {
-			this.liste_y_blogs.push(parseFloat(liste_y_blogs[i]));
-		}
-
-		// Liste y articles d'événement
-		const liste_y_evenements = data.liste_y_evenements.split(",");
-		this.liste_y_evenements = [];
-		for (let i = 0; i < liste_y_evenements.length; i++) {
-			this.liste_y_evenements.push(parseFloat(liste_y_evenements[i]));
-		}
+		// Listes y (consignes, articles de blog, articles d'événement)
+		this.liste_y_consignes = data.seq_posy_consignes;
+		this.liste_y_blogs = data.seq_posy_blogs;
+		this.liste_y_evenements = data.seq_posy_evenements;
 
 		if (data.image_fond && !data.image_fond.trim().includes('..') && !/^https?:\/\//i.test(data.image_fond.trim())) {
 			this.timeline_parent.css({ 'background-image': 'url("' + encodeURI(data.image_fond.trim()) + '")' });
@@ -71,7 +56,6 @@ function Projet() {
 		this.url_popup_livrables = data.url_popup_livrables;
 		this.url_popup_evenement = data.url_popup_evenement;
 		this.url_popup_ressources = data.url_popup_ressources;
-		this.url_popup_agora = data.url_popup_agora;
 		this.url_popup_classes = data.url_popup_classes;
 		this.url_popup_chat = data.url_popup_chat;
 		this.url_popup_chat2 = data.url_popup_chat2;
@@ -162,7 +146,7 @@ function Projet() {
 		for (let i = 0; i < CCN.articlesEvenement.length; i++) {
 			$(CCN.articlesEvenement[i].div_base).fadeIn(3000);
 		}
-
+		deflouterToutesLesBulles();
 		this.setTimelineZoom();
 
 		$('.connecteur_timeline').addClass('hide');

@@ -7,26 +7,105 @@ on:
   workflow_dispatch:
 
 jobs:
-  spip:
+  lang_hardcoded:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v7
+
+      - name: Set up Python
+        uses: actions/setup-python@v7
+        with:
+          python-version: '3.x'
+
+      - name: Vérifier l'absence de nouveau texte en dur
+        run: python3 .ci/check_lang_hardcoded.py
+
+  lang_keys:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Set up Python
+        uses: actions/setup-python@v7
+        with:
+          python-version: '3.x'
+
+      - name: Vérifier la validité des clés de langue référencées
+        run: python3 .ci/check_lang_keys.py
+
+  hardcoded_paths:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Set up Python
+        uses: actions/setup-python@v7
+        with:
+          python-version: '3.x'
+
+      - name: Vérifier l'absence de nouveau lien en dur (hors #CHEMIN)
+        run: python3 .ci/check_hardcoded_paths.py
+
+  html_duplication:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Installer les dépendances npm
+        run: npm ci
+
+      - name: Vérifier l'absence de nouvelle duplication HTML
+        run: node .ci/check_html_duplication.js
+
+  php_duplication:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Installer les dépendances npm
+        run: npm ci
+
+      - name: Vérifier l'absence de nouvelle duplication PHP
+        run: node .ci/check_php_duplication.js
+
+  spip:
+    needs: [lang_hardcoded, lang_keys, hardcoded_paths, html_duplication, php_duplication]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
 
       - name: Set up QEMU
-        uses: docker/setup-qemu-action@v3
+        uses: docker/setup-qemu-action@v4
 
       - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3
+        uses: docker/setup-buildx-action@v4
 
       - name: Login to Docker Hub
-        uses: docker/login-action@v3
+        uses: docker/login-action@v4
         with:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
 
       - name: Build and push
-        uses: docker/build-push-action@v5
+        uses: docker/build-push-action@v7
         with:
           push: true
           context: .

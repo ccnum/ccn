@@ -1,0 +1,29 @@
+[(#REM)
+	Lien ajax vers un article, dans le menu arborescent d'une rubrique
+	(squelettes/noisettes/rubrique.html, boucles sous_articles3 et
+	sous_articles) : script d'ouverture en popup + <li> du menu.
+	Factorisé car les deux boucles appelantes produisaient un HTML/JS
+	identique (repéré par le lint CI de duplication).
+
+	Paramètres attendus (#ENV) :
+	- id_article, id_parent, id_consigne : valeurs de la boucle ARTICLES
+	- art1 : #GET{art1} de l'appelant, pour la classe active du lien
+]
+#CACHE{0}
+<script type="text/javascript">
+	$('#ajax#ENV{id_article}').on('click', function() {
+		call({
+			'type':'article',
+			'type_objet':'travail_en_cours',
+			'id_article':'#ENV{id_article}',
+			'id_parent':'#ENV{id_parent}',
+			'mode':'ajax-detail'
+			[(#ENV{id_consigne}|oui|?{", 'type_entite': 'reponse'"})]
+		});
+	});
+</script>
+<li class="ressources_classe_consignes">
+	<a id="ajax#ENV{id_article}" href="#" class="ajax [(#EXPOSE) [(#ENV{art1}|=={#ENV{id_article}}|oui)gauche_menu_on]]">
+		[(#ENV{titre}|couper{50})]
+	</a>
+</li>

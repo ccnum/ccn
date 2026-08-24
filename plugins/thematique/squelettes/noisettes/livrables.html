@@ -1,11 +1,10 @@
 <div class="popup popup_livrable">
 	<INCLURE{fond=noisettes/call_sidebar,type_objet, ajax} />
-	<INCLURE{fond=noisettes/fonction/type_role} />
 	[(#REM) ---------------- titre & logo ---------------- ]
 	<div class="sidebar_bubble">
 		<div class="fiche_titre">
 			<div class="texte">
-				<div class="titre">Livrables attendus</div>
+				<h2 class="titre"><:thematique:livrables_attendus:></h2>
 			</div>
 		</div>
 	</div>
@@ -25,12 +24,12 @@
 						});
 					</script>
 					<a id="ajax#ID_ARTICLE" href="#" class="hac ajax[ (#EXPOSE)]">
-						<div class="livrable couleur_consignes[(#ID_RUBRIQUE|nb2col)]" data-id="[(#ID_ARTICLE)]">
+						<div class="livrable couleur_consignes[(#ID_RUBRIQUE|classe_numero)]" data-id="[(#ID_ARTICLE)]">
 							<div class="header">
 								<h3>#TITRE</h3>
 							</div>
 							<span class="profil">
-								[(#MODELE{logo_carre}{id_rubrique=#ID_RUBRIQUE}{titre=#GET{intervenant}})]
+								[(#ID_RUBRIQUE|thematique_logo_carre)]
 								<h4>#GET{intervenant}</h4>
 							</span>
 						</div>

@@ -11,7 +11,7 @@ function activateSidebarCacheTooltip() {
 
 	sidebarCache.addEventListener("mousemove", function(e) {
 		tooltip.style.display = "block";
-		tooltip.textContent = "Fermer la modale";
+		tooltip.textContent = CCN.lang.fermer_la_modale;
 
 		const offset = 12;
 		let x = e.clientX + offset;

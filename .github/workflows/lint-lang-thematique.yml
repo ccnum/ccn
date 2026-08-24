@@ -1,0 +1,39 @@
+name: Lint - texte en dur (plugin thematique)
+
+on:
+  pull_request:
+    paths:
+      - 'plugins/thematique/**'
+      - '.ci/**'
+  push:
+    branches:
+      - dev
+      - main
+    paths:
+      - 'plugins/thematique/**'
+      - '.ci/**'
+
+jobs:
+  check-lang-hardcoded:
+    # Sur une PR dont la source est refonte_graphique, build_refonte.yaml
+    # fait déjà tourner ces mêmes checks (jobs lang_hardcoded/lang_keys/
+    # hardcoded_paths) à chaque push sur cette branche : éviter le doublon.
+    if: github.head_ref != 'refonte_graphique'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Set up Python
+        uses: actions/setup-python@v7
+        with:
+          python-version: '3.x'
+
+      - name: Vérifier l'absence de nouveau texte en dur
+        run: python3 .ci/check_lang_hardcoded.py
+
+      - name: Vérifier la validité des clés de langue référencées
+        run: python3 .ci/check_lang_keys.py
+
+      - name: Vérifier l'absence de nouveau lien en dur (hors #CHEMIN)
+        run: python3 .ci/check_hardcoded_paths.py

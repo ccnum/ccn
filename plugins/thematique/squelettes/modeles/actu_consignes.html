@@ -4,11 +4,11 @@
 	#SET{auteur_consigne,#LESAUTEURS*}
 	<BOUCLE_auteur(RUBRIQUES){id_rubrique}{tout}>#SET{auteur_consigne0,#TITRE}</BOUCLE_auteur>
 
-	<div class="actualites-actu bgc_classe_[(#ID_RUBRIQUE|nb2col)] js-call-consigne" data-id-objet="#ID_OBJET">
-		<span class="profil">[(#MODELE{logo_carre, taille=17}{id_rubrique=#ID_RUBRIQUE}{titre=#TITRE})]</span>
-		<span class="actualites-titre">Nouvelle consigne de <b>#GET{auteur_consigne}</b> sur <b>#GET{titre_consigne}.</b> </span><br>
+	<button type="button" class="actualites-actu bgc_classe_[(#ID_RUBRIQUE|classe_numero)] js-call-consigne btn-reset" data-id-objet="#ID_OBJET">
+		<span class="profil">[(#ID_RUBRIQUE|thematique_logo_carre{rubrique,17})]</span>
+		<span class="actualites-titre"><:thematique:nouvelle_consigne_de_sur{auteur=#GET{auteur_consigne},titre=#GET{titre_consigne}}:></span><br>
 		<p class="actualites-actu-date">[(#DATE_MODIF|affdate)]</p>
 		<!--<div class="actualites-actu-date">[(#GET{date_consigne}|affdate)]</div>
 		<div class="actualites-texte #EDIT{texte}">[(#TEXTE|couper{80})]</div>-->
-	</div>
+	</button>
 </BOUCLE_consigne>

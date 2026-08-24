@@ -25,6 +25,7 @@ function Consigne() {
 		this.x = this.data.nombre_jours;
 		this.y = this.data.y; // Entre 0 et 1
 		this.image = this.data.image;
+		this.image_generique = !!this.data.image_generique;
 		this.select = false;
 		this.date_texte = formatDateLongue(this.data.date_texte);
 		this.reponses = [];
@@ -50,16 +51,22 @@ function Consigne() {
 		classes_triees.forEach((classe, index) => {
 			let disabled = 'disabled';
 			let iconSpan = '';
+			let coulClasse = '';
 			const nomClasse = decodeHtmlEntities(classe.nom);
 			if (this.reponses_id.includes(classe.id)) {
 				disabled = '';
-				iconSpan = `<span role="img" aria-label="${escHtml(nomClasse)}" style="font-size:min(70cqw,70cqh)" class="bgc_classe_${index}">
-					${getClassIcon(index)}
-				</span>`;
+				// bgc_classe_${index} sur le conteneur circulaire (comme dans
+				// reponse.js), pas sur le span de l'emoji : posée sur le span, le
+				// fond ne colorait qu'une petite boîte texte (visible en carré une
+				// fois l'emoji réduit à sa taille réelle par le padding de
+				// .reponse_puce), au lieu de tout le cercle découpé par
+				// border-radius:50%+overflow:hidden du conteneur.
+				coulClasse = `bgc_classe_${index}`;
+				iconSpan = `<span role="img" aria-label="${escHtml(nomClasse)}" style="font-size:min(70cqw,70cqh)">${getClassIcon(index)}</span>`;
 			}
 
 			reponses_puces += `
-				<div class='reponse_puce ${disabled} tooltip logo'
+				<div class='reponse_puce ${disabled} ${coulClasse} tooltip logo'
 					data-tip='${escHtml(nomClasse)}'
 					style='display:flex;align-items:center;justify-content:center;container-type:size;'>
 					${iconSpan}
@@ -70,23 +77,24 @@ function Consigne() {
 				 class="timeline_item consigne_haute"
 				 style="top:${this.y * 100}%; left:${this.x / CCN.projet.nombre_jours_total * 100}%;"
 			>
-				<img class="card-bg"
-					 src="${CCN.urlRoot}img/cards_background.svg"
-					 alt=""
-					 style="display: none"/>
-				<div id="consigne${this.id}"
-					class="consigne couleur_texte_consignes couleur_consignes${coul}"
+				${this.isLastConsigne
+					? `<img class="card-bg" src="${CCN.urlRoot}img/cards_background.svg" alt="" />`
+					: ''}
+				<button type="button" id="consigne${this.id}"
+					class="consigne couleur_texte_consignes couleur_consignes${coul} btn-reset"
 					data-id="${this.id}"
 					data-index="${this.numero}"
 				>
 					${this.data.nombre_commentaires > 0 ? `<div aria-label="${this.data.nombre_commentaires} interaction${this.data.nombre_commentaires > 1 ? 's' : ''}" class="picto_nombre_commentaires">${this.data.nombre_commentaires}</div>` : ''}
 					<div class="etiquette-etape">
 						<img class="logo-etiquette" src="" alt="" />
-						<span class="texte-etiquette">Étape N°${this.numero+1}</span>
+						<span class="texte-etiquette">${CCN.lang.consigne_etape.replace('@numero@', this.numero+1)}</span>
 					</div>
 					<div class="texte">
 						<div class="first-row">
-							<div class="photo"><img src="${this.data.image}" alt="${escHtml(this.intervenant_nom)}" /></div>
+							<div class="photo">${this.image_generique
+								? `<span class="icon-avatar-masculin"><img src="${this.data.image}" alt="${escHtml(this.intervenant_nom)}" /></span>`
+								: `<img src="${this.data.image}" alt="${escHtml(this.intervenant_nom)}" />`}</div>
 							<div class="titre"></div>
 						</div>
 						<div class="second-row">
@@ -96,15 +104,15 @@ function Consigne() {
 						</div>
 					</div>
 					<div class="nettoyeur"></div>
-				</div>
-				<div class="bouton_reponse_consigne">
-					<img src="${CCN.urlRoot}img/reponse_plus.png" alt="" title="R&eacute;pondre &agrave; la consigne">
-					<div style="white-space: nowrap;">Répondre&nbsp;&agrave;&nbsp;la mission</div>
-				</div>
-				<div class="bouton_reponse_consigne">
-					<img src="${CCN.urlRoot}img/reponse_plus.png" alt="" title="Accéder à ma réponse">
-					<div style="white-space: nowrap;">Ma réponse</div>
-				</div>
+				</button>
+				<button type="button" class="bouton_reponse_consigne btn-reset">
+					<img src="${CCN.urlRoot}img/reponse_plus.png" alt="" title="${CCN.lang.repondre_a_la_consigne}">
+					<div style="white-space: nowrap;">${CCN.lang.repondre_a_la_mission}</div>
+				</button>
+				<button type="button" class="bouton_reponse_consigne btn-reset">
+					<img src="${CCN.urlRoot}img/reponse_plus.png" alt="" title="${CCN.lang.acceder_a_ma_reponse}">
+					<div style="white-space: nowrap;">${CCN.lang.ma_reponse}</div>
+				</button>
 			</div>
 		`);
 
@@ -116,7 +124,6 @@ function Consigne() {
 
 		if(this.isLastConsigne) {
 			this.div_base.addClass("derniere-etape")
-			this.div_base.find(".card-bg").show();
 			if(this.isLivrable) {
 				this.div_base.find(".texte-etiquette").first().text("PROJETS FINAUX !");
 				this.div_base.find(".logo-etiquette").first().attr("src", `${CCN.urlRoot}img/sparks.svg`)
@@ -140,16 +147,16 @@ function Consigne() {
 
 		if (CCN.admin == 0) {
 			const leftPercent = CCN.projet.nombre_jours_total > 0 ? this.x / CCN.projet.nombre_jours_total * 100 : 0;
-
 			this.div_base.draggable({
 				axis: "y",
+				cancel: '', // Force le drag and drop même s'il y a un button dans la consigne.
 				start: function (event, ui) {
 					$(this).addClass('no_event');
 				},
 				drag: function (event, ui) {
 					// jQuery UI va écrire un left en px — on le réécrit en % immédiatement
 					ui.position.left = CCN.projet.timeline.width() * leftPercent / 100;
-					updateConnecteurs();
+					updateConsigneConnecteurs(event.target, ui);
 				},
 				stop: function (event, ui) {
 					const yy = (ui.offset.top - CCN.projet.timeline.offset().top) / CCN.projet.timeline.height();
@@ -170,7 +177,7 @@ function Consigne() {
 	/**
 	 * Affiche le bouton <tt>Répondre à la question</tt>.
 	 *
-	 * @see loadConsignes
+	 * @see initConsignes
 	 */
 	this.showNewReponseButtonInTimeline = function () {
 		if ((CCN.idRestreint > 0)
@@ -187,7 +194,7 @@ function Consigne() {
 	 *
 	 * @param {Number} answerId - Id de la réponse de la classe courante
 	 *
-	 * @see loadConsignes
+	 * @see initConsignes
 	 */
 	this.showMyReponseButtonInTimeline = function (answerId) {
 		if ((CCN.idRestreint > 0)
@@ -226,7 +233,7 @@ function Consigne() {
 		const rafEnd = Date.now() + 2300;
 
 		function rafConnecteurs() {
-			updateConnecteurs();
+			updateAllConnecteurs();
 			if (Date.now() < rafEnd) {
 				rafId = requestAnimationFrame(rafConnecteurs);
 			}

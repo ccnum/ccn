@@ -2,8 +2,7 @@
 [(#REM) Type objet: consignes, travail_en_cours, blogs, evenements,ressources]
 
 [(#REM) Type objet]
-[(#INCLURE{fond=noisettes/fonction/type_objet,id_rubrique})]
-[(#SET{type_objet,#SESSION{type}})]
+[(#SET{type_objet, #ENV{id_rubrique}|thematique_type_objet_rubrique})]
 
 [(#REM) Mode d'ouverture]
 	#SET{mode,complet}

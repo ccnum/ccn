@@ -305,7 +305,9 @@
 	font-weight: bold;
 	font-size: 14px;
 	line-height: 20px;
-	color: #ccc;
+	/* #ccc donnait un ratio ~1.4:1 sur le fond #eee de .popup_titre (WCAG
+	   AA exige 4.5:1) : #6b6b6b passe à ~4.6:1 en gardant un ton "secondaire". */
+	color: #6b6b6b;
 }
 
 .popup .popup_titre li {
@@ -318,7 +320,9 @@
 }
 
 .popup .popup_titre li span {
-	color: #ccc;
+	/* #ccc donnait un ratio ~1.4:1 sur le fond #eee de .popup_titre (WCAG
+	   AA exige 4.5:1) : #6b6b6b passe à ~4.6:1 en gardant un ton "secondaire". */
+	color: #6b6b6b;
 }
 
 .popup .popup_titre_blogs {
@@ -535,8 +539,8 @@
 	overflow: auto;
 }
 
-/* Colonne "Bibliothèque" (Ressources/Agora/Projets finis), cf callRessource/
-   callAgora/callLivrables. Visible uniquement aux côtés du panneau principal
+/* Colonne "Bibliothèque" (Ressources/Projets finis), cf callRessource/
+   callLivrables. Visible uniquement aux côtés du panneau principal
    en mode colonnes ; pas de place pour elle en plein écran. */
 #sidebar_lateral_around {
 	display: none;
@@ -1116,8 +1120,11 @@ ul#forum, .lien_forum {
 	cursor: pointer;
 }
 
-.ressource_rubrique_titre:focus-visible,
-.ressource_article:focus-visible {
+/* Focus clavier générique pour toutes les div cliquables marquées
+role="button" (cf le pattern déjà établi ici, repris ailleurs plutôt que
+remplacer ces div par de vrais <button>, qui impliquerait de refaire tous
+les styles de composants). */
+:is([role="button"], .btn-reset):focus-visible {
 	outline: 2px solid currentColor;
 	outline-offset: -2px;
 }
@@ -1165,13 +1172,14 @@ ul#forum, .lien_forum {
 	width: 100%;
 	background: #eee;
 	height: calc(100vh - var(--header-height) - var(--footer-height));
+	box-sizing: border-box;
 }
 
 #timeline_responsive {
 	flex: 1;
 	position: relative;
 	transition: all 500ms ease;
-	overflow: hidden;
+	overflow: visible;
 }
 
 .hasSidebarOpen #timeline_responsive {
@@ -1493,6 +1501,7 @@ décalerait le reste de la mise en page, ex: bouton Publier). */
 	top: 24px;
 	z-index: 102;
 	cursor: pointer;
+	display: block;
 }
 
 .badge_timeline_debut { left: 20px; }
@@ -1863,4 +1872,25 @@ réservé dans badge_timeline_label_img (coin haut-gauche du badge). */
 
 .reponses_intervenant_relance {
 	margin-top: 1rem;
+}
+
+.card_reponse {
+	display: flex;
+	align-items: center;
+	gap: 1em;
+	padding: 0.4rem;
+	border-radius: 4.9998px;
+}
+
+.card_reponse_icone {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	border-radius: 50%;
+	font-size: 1.2rem;
+	padding: 0.2rem;
+}
+
+.card_reponse_titre {
+	font-weight: 500;
 }
