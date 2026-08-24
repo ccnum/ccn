@@ -26,7 +26,7 @@
 			<a class="lire-la-suite"
 			   role="button" tabindex="0"
 			   onclick="callback_clique_sur_lire_la_suite_du_commentaire(event)"
-			   style="display: none;"
+			   hidden
 			>
 				<:thematique:lire_la_suite_commentaire:>
 			</a>
@@ -37,11 +37,12 @@
 			}
 
 			#SET{peut_modifier_ou_supr,
-				#SESSION{id_auteur}|et{#ENV{id_auteur}|=={#SESSION{id_auteur}}}
+				#SESSION{id_auteur}|oui
+				|et{#ENV{id_auteur}|=={#SESSION{id_auteur}}}
 			}
 
 			#SET{peut_repondre,
-				#ENV{is_root}
+				#ENV{is_root}|=={oui}
 				|et{#SESSION{id_auteur}}
 				|et{#ENV{id_auteur}|!={#SESSION{id_auteur}}}
 			}

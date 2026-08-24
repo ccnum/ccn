@@ -24,7 +24,7 @@ function initForum() {
         const bouton = card.querySelector('.lire-la-suite');
         // Vérifie si le texte dépasse la limite
         if (hauteurComplete > hauteurVisible) {
-            bouton.style.display = '';
+            bouton.removeAttribute("hidden")
         }
     });
 }
@@ -57,7 +57,11 @@ function callbackCliqueSurRepondreAuCommentaire(e) {
 	formulaireDePublication
 		.querySelector(':scope > .forum-formulaire-reponse-zone')
 		.appendChild(formulaireMobile);
-	formulaireMobile.hidden = false;
+	formulaireMobile.removeAttribute("hidden");
+    const rootForum = document.querySelector(".forum-liste")
+    rootForum.querySelectorAll(".forum-commentaire-container").forEach(cardRoot=>{
+        cardRoot.removeAttribute("hidden");
+    })
 }
 
 function callbackCliqueSurModifierMonCommentaire(e) {
@@ -74,38 +78,50 @@ function callbackCliqueSurModifierMonCommentaire(e) {
 	formulaireMobile.querySelector('.id-forum').value = idForum;
 	formulaireMobile.querySelector('.forum-redaction__textarea').value = texteBrut; // <- le fix
 
-	const formulaireDePublication = bouton.closest('.forum-commentaire');
-	formulaireDePublication
-		.querySelector(':scope > .forum-formulaire-reponse-zone')
-		.appendChild(formulaireMobile);
-	formulaireMobile.hidden = false;
+    const formulaireContainer = bouton.closest(".forum-commentaire-container")
+    formulaireContainer.hidden = true;
+
+    formulaireContainer.parentNode.insertBefore(formulaireMobile, formulaireContainer)
+	formulaireMobile.removeAttribute("hidden");
 }
 
 function callbackCliqueSurCommenter(e) {
     const racineFormulaire = e.currentTarget.closest(".forum-article")
     const formulaireDePublication = racineFormulaire.querySelector(".forum-commentaire-racine")
     const encadre = racineFormulaire.querySelector(".encadre-message")
-    encadre.style.display = "none" 
-    formulaireDePublication.hidden = false
+    encadre.hidden = true 
+    formulaireDePublication.removeAttribute("hidden");
 }
 
 function callbackCliqueSurAnnuler(e) {
+    console.log("callback click sur annuler");
+    
     const racineFormulaire = e.currentTarget.closest(".forum-commentaire-racine, .forum-commentaire")
-    const champParent = racineFormulaire.querySelector(".js-forum-id-parent")
-    let formulaire
-    if(champParent.value == 0) {  // Cas formulaire de publication racine
-        const racinePage = e.currentTarget.closest(".forum-article")
-        formulaire = racinePage.querySelector(".forum-commentaire-racine")
-        const encadre = racinePage.querySelector(".encadre-message")
-        encadre.style.display = "flex"  
-    } else {  // Cas formulaire de réponse à une réponse
-        formulaire = document.querySelector('#forum-formulaire-reponse');
+    const cestLeFormulaireRepondre = !!racineFormulaire
+    if(cestLeFormulaireRepondre) {
+        const champParent = racineFormulaire.querySelector(".js-forum-id-parent")
+        let formulaire
+        if(champParent.value == 0) {  // Cas formulaire de publication racine
+            const racinePage = e.currentTarget.closest(".forum-article")
+            formulaire = racinePage.querySelector(".forum-commentaire-racine")
+            const encadre = racinePage.querySelector(".encadre-message")
+            encadre.removeAttribute("hidden");
+        } else {  // Cas formulaire de réponse à une réponse
+            formulaire = document.querySelector('#forum-formulaire-reponse');
+        }
+        console.log({formulaire});
+        formulaire.hidden = true
+        const textarea = racineFormulaire.querySelector("textarea#texte")
+        if (textarea) {
+            textarea.value = ""
+        }
+    } else { // C'est le formulaire modifier
+        const formulaireCourant = document.getElementById("forum-formulaire-reponse")
+        const cardToDisplay = formulaireCourant.nextElementSibling
+        cardToDisplay.removeAttribute("hidden");
+        formulaireCourant.hidden = true
     }
-    formulaire.hidden = true
-    const textarea = racineFormulaire.querySelector("textarea#texte")
-    if (textarea) {
-        textarea.value = ""
-    }
+    
 }
 
 function callback_clique_sur_lire_la_suite_du_commentaire(e) {
