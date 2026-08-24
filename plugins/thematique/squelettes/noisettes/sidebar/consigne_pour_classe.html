@@ -1,6 +1,5 @@
 #CACHE{0}
 <INCLURE{fond=noisettes/sidebar/inc/entete_et_ouverture, fond_header=noisettes/sidebar/header_sidebar, env} />
-
 		<div id="tabs-article-#ID_ARTICLE" class="container-tabs">
 			<div id="mission-tabs">
 				<div>
@@ -10,7 +9,7 @@
 					<div class="tabs-content">
 						<INCLURE{
 							fond=noisettes/sidebar/onglet_description_role_simple,
-							id_article=#GET{id_consigne},
+							id_article=#ENV{id_article},
 							env
 						} />
 					</div>

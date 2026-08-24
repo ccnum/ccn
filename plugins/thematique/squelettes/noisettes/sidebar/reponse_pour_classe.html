@@ -19,14 +19,14 @@ calculé par l'appelant (noisettes/article.html) ]
 						[(#ENV{c_est_ma_reponse}|=={oui}|oui)
 							<INCLURE{
 								fond=noisettes/sidebar/onglet_reponse_modifiable,
-								id_article=#GET{id_consigne},
+								id_article=#ENV{id_article},
 								env
 							} />
 						]
 						[(#ENV{c_est_ma_reponse}|=={oui}|non)
 							<INCLURE{
 								fond=noisettes/sidebar/onglet_reponse_non_modifiable,
-								id_article=#GET{id_consigne},
+								id_article=#ENV{id_article},
 								env
 							} />
 						]
