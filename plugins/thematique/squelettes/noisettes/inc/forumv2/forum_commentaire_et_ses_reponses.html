@@ -6,21 +6,33 @@
 #SET{date_heure, #ENV{forum}|table_valeur{date_heure}|affdate}
 #SET{texte, #ENV{forum}|table_valeur{texte}|propre}
 #SET{id_rubrique_classe, #ENV{forum}|classe_id_rubrique_forum}
-<div class="forum-commentaire[(#GET{is_root}|=={oui}|?{' is-root',''})]">
-	<INCLURE{fond=noisettes/inc/forumv2/forum_card,
-		id_forum=#GET{id_forum},
-		nombre_reponses=#GET{nombre_reponses},
-		date_heure=#GET{date_heure},
-		texte=#GET{texte},
-		id_rubrique_classe=#GET{id_rubrique_classe},
-		is_root=#GET{is_root},
-	}>
-	<B_reponses>
-		<div class="reponse-list" hidden>
-			<BOUCLE_reponses(DATA){source tableau, #ENV{forum}|table_valeur{reponses}}>
-				<INCLURE{fond=noisettes/inc/forumv2/forum_commentaire_et_ses_reponses}{forum=#VALEUR} />
-			</BOUCLE_reponses>
-		</div>
-	</B_reponses>
-	<div class="forum-formulaire-reponse-zone"></div>
+#SET{nom_auteur, #ENV{forum}|table_valeur{auteur}}
+#SET{est_recent, #ENV{forum}|table_valeur{est_recent}}
+#SET{id_auteur, #ENV{forum}|table_valeur{id_auteur}}
+<div class="forum-commentaire-container[(#GET{est_recent}|oui) forum-message-recent]">
+	<div class="succes-commentaire">
+		<div class="icon-check-circle icon"></div>
+		<div><:thematique:commentaire_poste_succes:></div>
+	</div>
+	<div class="forum-commentaire[(#GET{is_root}|=={oui}|?{' is-root',''})]">
+		<INCLURE{fond=noisettes/inc/forumv2/forum_card,
+			id_forum=#GET{id_forum},
+			nombre_reponses=#GET{nombre_reponses},
+			nom_auteur=#GET{nom_auteur},
+			date_heure=#GET{date_heure},
+			texte=#GET{texte},
+			id_rubrique_classe=#GET{id_rubrique_classe},
+			is_root=#GET{is_root},
+			id_auteur=#GET{id_auteur}
+		}>
+		<B_reponses>
+			<div class="reponse-list" hidden>
+				<BOUCLE_reponses(DATA){source tableau, #ENV{forum}|table_valeur{reponses}}>
+					<INCLURE{fond=noisettes/inc/forumv2/forum_commentaire_et_ses_reponses}{forum=#VALEUR} />
+				</BOUCLE_reponses>
+			</div>
+		</B_reponses>
+		<div class="forum-formulaire-reponse-zone"></div>
+	</div>
 </div>
+
