@@ -62,13 +62,13 @@ function Consigne() {
 				// .reponse_puce), au lieu de tout le cercle découpé par
 				// border-radius:50%+overflow:hidden du conteneur.
 				coulClasse = `bgc_classe_${index}`;
-				iconSpan = `<span role="img" aria-label="${escHtml(nomClasse)}" style="font-size:min(70cqw,70cqh)">${getClassIcon(index)}</span>`;
+				iconSpan = `<span role="img" aria-label="${escHtml(nomClasse)}" style="font-size:100%">${getClassIcon(index)}</span>`;
 			}
 
 			reponses_puces += `
 				<div class='reponse_puce ${disabled} ${coulClasse} tooltip logo'
 					data-tip='${escHtml(nomClasse)}'
-					style='display:flex;align-items:center;justify-content:center;container-type:size;'>
+				>
 					${iconSpan}
 				</div>`;
 		});
