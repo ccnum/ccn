@@ -749,6 +749,8 @@ function thematique_id_rubrique_article($id_article) {
  */
 function classe_id_rubrique_auteur($id_auteur) {
 	$rangs = thematique_classes_rangs();
+	spip_log("rang=", "debug");
+	spip_log($rangs, "debug");
 	if (!$rangs) {
 		return null;
 	}
@@ -788,14 +790,12 @@ function classe_id_rubrique_forum($forum) {
 	if ($id_rubrique) {
 		return $id_rubrique;
 	}
-
 	if (($forum['objet'] ?? '') === 'article' && !empty($forum['id_objet'])) {
 		$id_rubrique = (int) sql_getfetsel('id_rubrique', 'spip_articles', 'id_article=' . intval($forum['id_objet']));
 		if ($id_rubrique && isset(thematique_classes_rangs()[$id_rubrique])) {
 			return $id_rubrique;
 		}
 	}
-
 	return null;
 }
 
@@ -1186,23 +1186,31 @@ function thematique_voir_mission() {
 }
 
 function filtre_afficher_forum_arbre($id_article) {
+	include_spip('inc/session');
 	$forums = sql_allfetsel(
 		'*',
 		'spip_forum',
 		"objet='article' AND id_objet=" . intval($id_article) . ' AND statut=' . sql_quote('publie'),
 		'',
-		'date_heure'
+		'date_heure DESC'
 	);
 	if (!$forums) {
 		return '';
 	}
+
+	$id_forum_recent = null;
+	if ($val = session_get('forum_commentaire_succes')) {
+		$id_forum_recent = intval($val);
+		session_set('forum_commentaire_succes', ''); // on "consomme" le flag
+	}
+
 	// Index des commentaires par parent
 	$parents = [];
 	foreach ($forums as $forum) {
 		$parents[$forum['id_parent']][] = $forum;
 	}
 	// Construction récursive de l'arbre à partir de la racine
-	$arbre = forum_construire_arbre(0, $parents);
+	$arbre = forum_construire_arbre(0, $parents, $id_forum_recent);
 	return forum_rendre_branche($arbre);
 }
 
@@ -1607,13 +1615,16 @@ function thematique_picto_site($valeur_ignoree = null, $avec_timestamp = 'oui') 
 	return $chemin;
 }
 
-function forum_construire_arbre($id_parent, &$parents) {
+function forum_construire_arbre($id_parent, &$parents, $id_forum_recent = null) {
+	spip_log("$id_forum_recent=" . $id_forum_recent, "debug");
 	if (!isset($parents[$id_parent])) {
 		return [];
 	}
 	$res = [];
 	foreach ($parents[$id_parent] as $forum) {
-		$forum['reponses'] = forum_construire_arbre($forum['id_forum'], $parents);
+
+		$forum['est_recent'] = ($id_forum_recent !== null && intval($forum['id_forum']) === $id_forum_recent);
+		$forum['reponses'] = forum_construire_arbre($forum['id_forum'], $parents, $id_forum_recent);
 		$res[] = $forum;
 	}
 	return $res;
@@ -1628,3 +1639,5 @@ function forum_rendre_branche($forums) {
 	}
 	return $html;
 }
+
+

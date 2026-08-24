@@ -8,12 +8,23 @@
 
 <input type="hidden" name="texte" value="#ENV{texte}">
 <input type="hidden" name="id_article" value="#ENV{id_article}">
+<BOUCLE_auteur(AUTEURS){id_auteur=#SESSION{id_auteur}}>
+    #SET{nom_auteur, #NOM}
+</BOUCLE_auteur>
+<input type="hidden" name="nom_auteur" value="#GET{nom_auteur}">
 <input
     type="hidden"
     name="id_parent"
     value="#ENV{id_parent,0}"
     class="js-forum-id-parent"
 />
+<input
+    type="hidden"
+    name="id_forum"
+    class="id-forum"
+    value="#ENV{id_forum,0}"
+/>
+
 
 [(#ENV{etat_affichage}|=={succes}|oui)
     <INCLURE
@@ -27,6 +38,7 @@
     [(#ENV{affichage}|=={previsualisation}|oui)
         <INCLURE
             {fond=noisettes/inc/forumv2/forum_previsualisation}
+            {nom_auteur=#GET{nom_auteur}}
             {env}
         />
     ]

@@ -35,3 +35,27 @@ function autoriser_article_modererforum_dist($faire, $type, $id, $qui, $opt) {
 
 	return in_array($role, ['prof', 'intervenant', 'admin'], true);
 }
+
+function autoriser_forumsupprimer_dist($faire, $type, $id, $qui, $opt) {
+	if (!$qui['id_auteur']) {
+		return false;
+	}
+
+	$forum = sql_fetsel('id_auteur', 'spip_forum', 'id_forum=' . intval($id));
+	if (!$forum) {
+		return false;
+	}
+
+	$id_auteur_commentaire = intval($forum['id_auteur']);
+
+	// L'auteur peut toujours supprimer son propre commentaire
+	if ($id_auteur_commentaire === intval($qui['id_auteur'])) {
+		return true;
+	}
+
+	// Sinon, un compte non-élève peut supprimer le commentaire d'un élève
+	$role_visiteur = thematique_donner_role($qui['id_auteur']);
+	$role_auteur_commentaire = thematique_donner_role($id_auteur_commentaire);
+
+	return $role_visiteur !== 'eleve' && $role_auteur_commentaire === 'eleve';
+}

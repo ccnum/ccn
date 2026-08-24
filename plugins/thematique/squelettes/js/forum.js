@@ -43,23 +43,42 @@ function callbackCliqueSurVoirLesReponses(e) {
  * Déplace le formulaire caché en dessous du message auquel on veut répondre.
  */
 function callbackCliqueSurRepondreAuCommentaire(e) {
-    const bouton = e.target
-    if (!bouton) {
-        return;
-    }
-    const idForum = bouton.dataset.idForum;
-    const formulaireCache = document.querySelector(
-        '#forum-formulaire-reponse'
-    );
-    const champParent = formulaireCache.querySelector(
-        '.js-forum-id-parent'
-    );
-    champParent.value = idForum;
-    const formulaireDePublication = bouton.closest('.forum-commentaire');
-    formulaireDePublication
-        .querySelector(':scope > .forum-formulaire-reponse-zone')
-        .appendChild(formulaireCache);
-    formulaireCache.hidden = false;
+	const bouton = e.target;
+	if (!bouton) return;
+
+	const idForum = bouton.dataset.idForum;
+	const formulaireMobile = document.querySelector('#forum-formulaire-reponse');
+
+	formulaireMobile.querySelector('.js-forum-id-parent').value = idForum;
+	formulaireMobile.querySelector('.id-forum').value = 0;
+	formulaireMobile.querySelector('.forum-redaction__textarea').value = ''; // on repart d'un textarea vide
+
+	const formulaireDePublication = bouton.closest('.forum-commentaire');
+	formulaireDePublication
+		.querySelector(':scope > .forum-formulaire-reponse-zone')
+		.appendChild(formulaireMobile);
+	formulaireMobile.hidden = false;
+}
+
+function callbackCliqueSurModifierMonCommentaire(e) {
+    console.log("modifier");
+    
+	const bouton = e.target;
+	if (!bouton) return;
+
+	const idForum = bouton.dataset.idForum;
+	const texteBrut = bouton.dataset.texteBrut ?? '';
+	const formulaireMobile = document.querySelector('#forum-formulaire-reponse');
+
+	formulaireMobile.querySelector('.js-forum-id-parent').value = '';
+	formulaireMobile.querySelector('.id-forum').value = idForum;
+	formulaireMobile.querySelector('.forum-redaction__textarea').value = texteBrut; // <- le fix
+
+	const formulaireDePublication = bouton.closest('.forum-commentaire');
+	formulaireDePublication
+		.querySelector(':scope > .forum-formulaire-reponse-zone')
+		.appendChild(formulaireMobile);
+	formulaireMobile.hidden = false;
 }
 
 function callbackCliqueSurCommenter(e) {
@@ -96,4 +115,26 @@ function callback_clique_sur_lire_la_suite_du_commentaire(e) {
     e.currentTarget.textContent = ouvert
     ? CCN.lang.forum_reduire
     : CCN.lang.lire_la_suite_commentaire;
+}
+
+async function callbackCliqueSurSupprimerMonCommentaire(e) {
+	const bouton = e.target;
+	if (!bouton) return;
+
+	if (!window.confirm('Supprimer ce commentaire ?')) {
+		return;
+	}
+
+	const url = bouton.dataset.url;
+	const conteneurCommentaire = bouton.closest('.forum-commentaire');
+
+	try {
+		const reponse = await fetch(url, { method: 'GET', credentials: 'same-origin' });
+		if (!reponse.ok) {
+			throw new Error('Échec de la suppression');
+		}
+		conteneurCommentaire.remove();
+	} catch (erreur) {
+		window.alert('La suppression a échoué.');
+	}
 }
