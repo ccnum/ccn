@@ -69,6 +69,40 @@ function thematique_cioidc_est_webmestre($uai_liste, bool $is_enseignant) {
 	return $is_webmestre;
 }
 
+// Nom d'un établissement depuis son UAI (ex: "0440001A", cf ENTAllUai/
+// _THEMATIQUE_RNE_WEBMESTRES), via l'API publique "Annuaire de l'éducation"
+// (data.education.gouv.fr, sans clé — cf issue #44). Passe par
+// recuperer_url_cache() (cache fichier SPIP, cf ecrire/inc/distant.php)
+// plutôt qu'un appel direct à chaque connexion SSO : un nom d'établissement
+// change quasiment jamais, un aller-retour réseau au login serait une
+// dépendance externe synchrone inutile — et recuperer_url_cache() réutilise
+// le dernier résultat en cache si l'API est temporairement indisponible,
+// plutôt que de faire échouer la résolution (et donc perdre l'info) le temps
+// d'un incident réseau.
+function thematique_cioidc_nom_etablissement($uai) {
+	$uai = trim((string) $uai);
+	if (!preg_match('/^[0-9]{7}[A-Za-z]$/', $uai)) {
+		return '';
+	}
+
+	include_spip('inc/distant');
+	$url = 'https://data.education.gouv.fr/api/explore/v2.1/catalog/datasets/fr-en-annuaire-education/records'
+		. '?where=' . urlencode('identifiant_de_l_etablissement="' . $uai . '"')
+		. '&select=nom_etablissement&limit=1';
+
+	// 30 jours : cf commentaire ci-dessus, inutile de retaper l'API plus souvent.
+	$reponse = recuperer_url_cache($url, ['delai_cache' => 30 * 86400]);
+	if (!$reponse || empty($reponse['page'])) {
+		spip_log("userinfo échec résolution établissement uai=$uai", 'cioidc' . _LOG_ERREUR);
+		return '';
+	}
+
+	$donnees = json_decode($reponse['page'], true);
+	$nom_etablissement = $donnees['results'][0]['nom_etablissement'] ?? '';
+	spip_log("userinfo résolution établissement uai=$uai => " . ($nom_etablissement ?: '(introuvable)'), 'cioidc');
+	return $nom_etablissement;
+}
+
 // Rôle ENT affiché (Enseignant/Tuteur/Élève), remplacé par "Admin" pour un webmestre :
 // affiché ci-dessous à la suite du nom plutôt que le rôle ENT d'origine.
 function thematique_cioidc_role_affiche(string $profils, bool $is_webmestre) {
@@ -84,11 +118,19 @@ function thematique_cioidc_role_affiche(string $profils, bool $is_webmestre) {
 	return null;
 }
 
-// Nom affiché : prénom/nom ENT, suivi du rôle ENT et de la classe (première classe
+// Nom affiché : prénom/nom ENT, suivi du rôle ENT, de la classe (première classe
 // réelle du prof) pour distinguer dans la liste des auteurs un même prof intervenant
-// sur plusieurs CCN (cf issue #44). Le group_name reçu de l'ENT est préfixé par
-// "CCN - " : préfixe redondant qu'on retire.
-function thematique_cioidc_nom_affiche(array $flux_data, array $classes_reelles, ?string $role_ent) {
+// sur plusieurs CCN (cf issue #44), et enfin du nom de son établissement (résolu
+// depuis le premier UAI de $uai_liste — cf thematique_cioidc_nom_etablissement(),
+// même issue #44 : demande initiale de Jonathan L., seule la classe avait pu être
+// ajoutée faute de nom d'établissement direct dans l'ENT). Le group_name reçu de
+// l'ENT est préfixé par "CCN - " : préfixe redondant qu'on retire.
+function thematique_cioidc_nom_affiche(
+	array $flux_data,
+	array $classes_reelles,
+	?string $role_ent,
+	array $uai_liste = []
+) {
 	$prenom = $flux_data['LaclassePrenom'] ?? '';
 	$nom_famille = $flux_data['LaclasseNom'] ?? '';
 	$nom = trim($prenom . ' ' . $nom_famille);
@@ -100,6 +142,10 @@ function thematique_cioidc_nom_affiche(array $flux_data, array $classes_reelles,
 			$groupe_classe = substr($groupe_classe, strlen('CCN - '));
 		}
 		$nom .= ' - ' . $groupe_classe;
+	}
+	if ($nom && ($uai = (string) ($uai_liste[0] ?? ''))
+		&& ($nom_etablissement = thematique_cioidc_nom_etablissement($uai))) {
+		$nom .= ' - ' . $nom_etablissement;
 	}
 	return $nom;
 }
