@@ -237,10 +237,14 @@ function setContentFromState(state, title, url) {
 	if (state.id_objet != "0") {
 		// Consigne
 		if (state.type_objet == "consignes") {
-			for (let k = 0; k < CCN.consignes.length; k++) {
-				if (CCN.consignes[k].id == state.id_objet) {
-					callConsigne(state.id_objet);
-					break;
+			if (state.id_objet == CCN.idArticleCapSurAnnee || state.id_objet == CCN.idArticleLaRencontre) {
+				callArticleJalon(state.id_objet);
+			} else {
+				for (let k = 0; k < CCN.consignes.length; k++) {
+					if (CCN.consignes[k].id == state.id_objet) {
+						callConsigne(state.id_objet);
+						break;
+					}
 				}
 			}
 		}
@@ -677,17 +681,20 @@ function callArticleJalon(id_article) {
 	changeTimelineMode('consignes');
 	setFullscreenModeToCols(true);
 
-	const url = "./spip.php?page=article&id_article=" + id_article + "&mode=ajax-detail";
+	const url = "./spip.php?page=article&id_article=" + id_article + "&type_objet=consignes&mode=ajax-detail";
 	loadContentInMainSidebar(
 		url,
 		() => {
 			updateUrl(
 				{
+					'type_objet': 'consignes',
+					'id_objet': id_article,
 					'id_article': id_article,
 					'page': 'article'
 				}, "", "./spip.php?page=article&id_article=" + id_article + "&mode=complet"
 			);
-		}
+		},
+		"consigne"
 	);
 }
 

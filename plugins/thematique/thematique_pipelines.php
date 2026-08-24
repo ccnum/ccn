@@ -242,11 +242,12 @@ function thematique_cioidc_userinfo($flux) {
 	$is_enseignant = (strpos($profils, 'ENS') !== false);
 	spip_log('userinfo ENTPersonProfils=' . $profils . ' => enseignant:' . ($is_enseignant ? 'oui' : 'non'), 'cioidc');
 
-	$is_webmestre = thematique_cioidc_est_webmestre($flux['data']['ENTAllUai'] ?? [], $is_enseignant);
+	$uai_liste = thematique_cioidc_normaliser_liste($flux['data']['ENTAllUai'] ?? []);
+	$is_webmestre = thematique_cioidc_est_webmestre($uai_liste, $is_enseignant);
 	$is_eleve = (strpos($profils, 'ELV') !== false);
 	$role_ent = thematique_cioidc_role_affiche($profils, $is_webmestre);
 
-	$nom = thematique_cioidc_nom_affiche($flux['data'], $classes_reelles, $role_ent);
+	$nom = thematique_cioidc_nom_affiche($flux['data'], $classes_reelles, $role_ent, $uai_liste);
 	$auteur = thematique_cioidc_maj_champ($auteur, 'nom', $nom, 'du nom');
 
 	$annee_scolaire = thematique_annee_scolaire();

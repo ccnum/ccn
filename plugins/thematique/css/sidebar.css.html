@@ -1433,6 +1433,19 @@ décalerait le reste de la mise en page, ex: bouton Publier). */
 	height: 450px !important;
 }
 
+/* .texte_jalon (span #EDIT{texte} de l'article jalon) reste display:inline
+par défaut : l'icône crayon que SPIP y insère se flotte alors (float:right,
+cf plugins/crayons/css/crayons.css) au bord droit du bloc englobant
+(.sidebar_bubble, pleine largeur de la popup) au lieu de suivre le texte —
+très visible tant que le texte du jalon n'est pas encore rédigé (texte de
+repli court, cf jalon_texte_a_completer). En display:inline-block, le span
+se réduit à la largeur de son contenu et le crayon flotté vient bien se
+coller juste après le texte. */
+.texte_jalon {
+	display: inline-block;
+	max-width: 100%;
+}
+
 .bloc_documents {
 	padding: 0 10px 0 10px;
 	clear: both;

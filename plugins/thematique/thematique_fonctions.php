@@ -1473,7 +1473,15 @@ function thematique_id_rubrique_classe_auteur($id_auteur) {
  * `#ID_RUBRIQUE|thematique_logo_carre{rubrique,40}` (taille explicite).
  *
  * Résolution de la rubrique de repli (même logique que l'ancien modèle) :
- * - $objet='article' : sa propre rubrique.
+ * - $objet='article' : sa propre rubrique. L'auteur essayé en priorité
+ *   (cf docstring ci-dessus) est le premier auteur lié à l'article — absent
+ *   jusqu'ici, ce qui cassait la priorité "avatar de l'auteur d'abord"
+ *   pourtant documentée, en particulier pour les articles jalons
+ *   ("Cap sur l'année"/"La Rencontre", cf #359) : rattachés à
+ *   "Consignes", une rubrique sans logo propre, ils retombaient
+ *   directement sur le picto générique du site sans jamais essayer la
+ *   photo de leur auteur (intervenant/admin) pourtant déjà affichée en
+ *   toutes lettres juste à côté (cf noisettes/sidebar/inc/header_gauche_photo_auteur.html).
  * - $objet='auteur' : rubrique de classe liée à l'auteur (cf
  *   thematique_id_rubrique_classe_auteur()).
  * - $objet='rubrique' (par défaut) ou 'mot' : $id_objet tel quel.
@@ -1504,6 +1512,13 @@ function thematique_logo_carre($id_objet = 0, $objet = 'rubrique', $taille = 50)
 
 	if ($objet === 'article') {
 		$id_rubrique = intval(sql_getfetsel('id_rubrique', 'spip_articles', 'id_article=' . $id_objet));
+		$id_auteur = intval(sql_getfetsel(
+			'id_auteur',
+			'spip_auteurs_liens',
+			"objet='article' AND id_objet=" . $id_objet,
+			'',
+			'id_auteur'
+		));
 	} elseif ($objet === 'auteur') {
 		$id_rubrique = thematique_id_rubrique_classe_auteur($id_auteur);
 	}
