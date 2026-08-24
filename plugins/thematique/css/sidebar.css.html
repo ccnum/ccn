@@ -1667,13 +1667,16 @@ réservé dans badge_timeline_label_img (coin haut-gauche du badge). */
 	flex-direction: column;
 	align-items: center;
 }
-.sidebar_bubble:not(.header-reponse) #header-col-left {
+.popup_consignes #header-col-left {
 	border-bottom: 3px solid var(--color-bleu-fond);
 }
 #header-col-right {
 	flex: 1;
 	padding: 12px;
 	background-color: var(--color-bleu-fond);
+}
+.popup_travail_en_cours #header-col-right {
+	background-color: white;
 }
 #header-row-1 {
     display: flex;
@@ -1774,7 +1777,7 @@ réservé dans badge_timeline_label_img (coin haut-gauche du badge). */
 }
 
 .image-classe-dans-reponse {
-	width: 33%;
+	width: 4rem;
     aspect-ratio: 1 / 1;
 	border-radius: 50%;
     overflow: hidden;
