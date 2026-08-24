@@ -749,8 +749,6 @@ function thematique_id_rubrique_article($id_article) {
  */
 function classe_id_rubrique_auteur($id_auteur) {
 	$rangs = thematique_classes_rangs();
-	spip_log("rang=", "debug");
-	spip_log($rangs, "debug");
 	if (!$rangs) {
 		return null;
 	}

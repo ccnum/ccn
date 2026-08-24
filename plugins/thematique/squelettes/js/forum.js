@@ -137,7 +137,7 @@ async function callbackCliqueSurSupprimerMonCommentaire(e) {
 	const bouton = e.target;
 	if (!bouton) return;
 
-	if (!window.confirm('Supprimer ce commentaire ?')) {
+	if (!window.confirm(CCN.lang.message_avant_supression_commentaire)) {
 		return;
 	}
 
@@ -147,10 +147,10 @@ async function callbackCliqueSurSupprimerMonCommentaire(e) {
 	try {
 		const reponse = await fetch(url, { method: 'GET', credentials: 'same-origin' });
 		if (!reponse.ok) {
-			throw new Error('Échec de la suppression');
+			throw new Error(CCN.lang.echec_de_la_supression);
 		}
 		conteneurCommentaire.remove();
 	} catch (erreur) {
-		window.alert('La suppression a échoué.');
+		window.alert(CCN.lang.echec_de_la_supression);
 	}
 }

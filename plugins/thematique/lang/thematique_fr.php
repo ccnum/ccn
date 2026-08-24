@@ -101,6 +101,8 @@ return [
 	'ma_reponse'                     => 'Ma réponse',
 	'me_connecter'                   => 'Me connecter',
 	'me_deconnecter'                 => 'Me déconnecter',
+	'message_avant_supression_commentaire' => 'Supprimer ce commentaire ?',
+	'echec_de_la_supression'  		 => 'La suppression a échoué.',
 	'modifier'                       => 'Modifier',
 	'modifier_descriptif_groupe_travail' => 'Modifier le descriptif du groupe de travail',
 	'modifier_le_logo'               => 'Modifier le logo',
