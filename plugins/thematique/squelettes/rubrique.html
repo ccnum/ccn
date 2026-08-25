@@ -19,7 +19,7 @@
 [(#GET{mode}|=={detail}|oui)
 	<INCLURE{fond=noisettes/rubrique, type_objet=#GET{type_objet}, env, ajax} />
 ]
-[(#GET{mode}|=={complet}|oui)<!-- ici -->
+[(#GET{mode}|=={complet}|oui)
 	<INCLURE{fond=layout, id_rubrique, type_objet=#GET{type_objet}, page=sommaire, id_objet=#ID_ARTICLE, env, ajax} />
 ]
 
