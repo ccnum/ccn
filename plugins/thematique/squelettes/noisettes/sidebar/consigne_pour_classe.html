@@ -2,18 +2,12 @@
 <INCLURE{fond=noisettes/sidebar/inc/entete_et_ouverture, fond_header=noisettes/sidebar/header_sidebar, env} />
 		<div id="tabs-article-#ID_ARTICLE" class="container-tabs">
 			<div id="mission-tabs">
-				<div>
-					<div class="tabs-title">
-						<:thematique:description_mission:>
-					</div>
-					<div class="tabs-content">
-						<INCLURE{
-							fond=noisettes/sidebar/onglet_description_role_simple,
-							id_article=#ENV{id_article},
-							env
-						} />
-					</div>
-				</div>
+				<INCLURE{
+					fond=noisettes/sidebar/inc/onglet_description_mission_tab,
+					fond_description=noisettes/sidebar/onglet_description_role_simple,
+					id_article=#ENV{id_article},
+					env
+				} />
 				#SET{libelle_onglet_commentaires, #VAL{thematique:titre_onglet_comentaire_pour_classe}|_T}
 				<INCLURE{fond=noisettes/sidebar/inc/onglet_commentaires_tab, libelle_onglet=#GET{libelle_onglet_commentaires}, env} />
 			</div>

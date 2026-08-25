@@ -3,18 +3,12 @@
 
 		<div id="tabs-article-#ID_ARTICLE" class="container-tabs">
 			<div id="mission-tabs">
-				<div>
-					<div class="tabs-title">
-						<:thematique:description_mission:>
-					</div>
-					<div class="tabs-content">
-						<INCLURE{
-							fond=noisettes/sidebar/onglet_description_autre,
-							id_article=#ENV{id_article},
-							env
-						} />
-					</div>
-				</div>
+				<INCLURE{
+					fond=noisettes/sidebar/inc/onglet_description_mission_tab,
+					fond_description=noisettes/sidebar/onglet_description_autre,
+					id_article=#ENV{id_article},
+					env
+				} />
 				<INCLURE{fond=noisettes/sidebar/inc/onglet_commentaires_tab, env} />
 
 			</div>
