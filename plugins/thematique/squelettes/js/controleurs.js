@@ -195,7 +195,6 @@ function setContentFromState(state, title, url) {
 			break;
 		}
 	}
-	console.log(currentState);
 	
 	currentState = state;
 	if (isSamePage) { return; }
@@ -281,9 +280,7 @@ function setContentFromState(state, title, url) {
 			callArticleEvenement(state.id_objet, "article");
 		}
 	}
-	else { // state.id_objet == 0)
-		console.log({typeobjet: state.type_objet, page: state.page} );
-		
+	else {
 		// Ressource
 		if (state.type_objet == "ressources") {
 
@@ -340,8 +337,6 @@ function getHauteurZone() {
  * @param {string} type - Peut être <tt>consignes</tt>, <tt>blogs</tt> ou <tt>evenements</tt>
  */
 async function changeTimelineMode(type) {
-	console.log("changeTimelineMode");
-	
 	const classCss = {};
 	classCss.consignes = 'show_consignes';
 	classCss.blogs = 'show_blogs';
@@ -991,13 +986,14 @@ function updateReponseConnecteurs(reponseObject, ui) {
 	const timelineTop = CCN.timelineLayerConsignes.offset().top;
 	const timelineHeight = CCN.timelineLayerConsignes.height();
 	const picto = reponseDOM.find(".picto_nombre_commentaires")
+	const cardMaxHeight = picto ? picto.offset().top : reponseDOM.offset().top
 
 	const x1 = consigneDOM.offset().left + consigneDOM.outerWidth();
 	const y1 = consigneDOM.offset().top  + consigneDOM.outerHeight() / 2 - timelineTop;
 	const x2 = reponseDOM.offset().left;
     const adjustedUiPositionTop = handleObjectCollisionWithMenus(
 		ui.position.top,
-		picto.offset().top,
+		cardMaxHeight,
 		reponseDOM.offset().top,
 		reponseDOM.outerHeight(),
 		timelineTop,
