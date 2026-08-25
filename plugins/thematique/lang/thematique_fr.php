@@ -191,6 +191,7 @@ return [
 	'reponses_intervenant_il_manque' => 'Il manque encore',
 	'reponses_intervenant_ont_repondu' => 'Ont répondu',
 	'reponses_intervenant_relance_message' => 'La date limite approche ? Pensez à encourager les dernières classes à déposer leur réponse. Vous pouvez le faire directement dans l’espace de discussion.',
+	'reponses_intervenant_ok_message'=> 'Tout le monde a répondu !',
 	'reponses_intervenant_relancer'  => 'Relancer',
 	'reseaux_sociaux'                => 'Réseaux sociaux',
 	'se_connecter_ent'               => 'Se connecter à l\'ENT',
