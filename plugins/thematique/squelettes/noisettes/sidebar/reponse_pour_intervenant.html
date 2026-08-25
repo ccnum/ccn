@@ -1,18 +1,14 @@
 #CACHE{0}
-<INCLURE{fond=noisettes/sidebar/inc/entete_et_ouverture, fond_header=noisettes/sidebar/header_reponse_sidebar, env} />
-
-		<div id="tabs-article-#ID_ARTICLE" class="container-tabs">
-			<div id="mission-tabs">
-				<div>
-					<div class="tabs-title">
-						<:thematique:titre_onglet_reponse_pour_intervenant:>
-					</div>
-					<div class="tabs-content">
-						<INCLURE{fond=noisettes/sidebar/onglet_reponse_non_modifiable, env} />
-					</div>
-				</div>
-				<INCLURE{fond=noisettes/sidebar/inc/onglet_commentaires_tab, env} />
+<div id="tabs-article-#ID_ARTICLE" class="container-tabs">
+	<div id="mission-tabs">
+		<div>
+			<div class="tabs-title">
+				<:thematique:titre_onglet_reponse_pour_intervenant:>
+			</div>
+			<div class="tabs-content">
+				<INCLURE{fond=noisettes/sidebar/onglet_reponse_non_modifiable, env} />
 			</div>
 		</div>
+		<INCLURE{fond=noisettes/sidebar/inc/onglet_commentaires_tab, env} />
 	</div>
 </div>
