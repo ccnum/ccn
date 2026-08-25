@@ -44,7 +44,6 @@
 			#SET{peut_repondre,
 				#ENV{is_root}|=={oui}
 				|et{#SESSION{id_auteur}}
-				|et{#ENV{id_auteur}|!={#SESSION{id_auteur}}}
 			}
 
 			#SET{peut_voir_le_bouton_se_connecter,
