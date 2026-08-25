@@ -41,10 +41,42 @@
 			</div>
 		]
 	]
-	<div class="sidebar_bubble">
-		<div class="bloc_documents">
-			<INCLURE{fond=noisettes/inc/ajouter_document, id_article, env, ajax=documents} />
-			<INCLURE{fond=#ENV{fond_bloc_ajout_document}, id_article, env} />
+	[(#REM) Ce bloc va être amené à disparaitre, il ne correspond pas au figma
+		<div class="sidebar_bubble">
+			<div class="bloc_documents">
+				<INCLURE{fond=noisettes/inc/ajouter_document, id_article, env, ajax=documents} />
+				<INCLURE{fond=#ENV{fond_bloc_ajout_document}, id_article, env} />
+			</div>
 		</div>
+	] 
+	<div class="encadre-message">
+		<div>
+			<:thematique:ca_vous_inspire:>
+		</div>
+		<button class="bouton_encadre rempli"
+				onclick="repondreALaMission()"
+		>
+			<span class="icon icon-publier"
+				  style="background-color: var(--color-default);
+				  		 height: 1rem;
+						 width: 1rem;"
+			></span>
+			<div><:thematique:repondre:></div>
+		</button>
 	</div>
+	<div style="margin-top: 1rem;
+				display: flex;
+				gap: 0.2rem;"
+	>
+		<div><strong><:thematique:besoin_dinspi:></strong></div>
+		<div><:thematique:regardez_les_reponses:></div>
+	</div>
+	<div style="display: flex;
+				white-space: nowrap;
+				gap: 0.2rem;"
+	>
+		<div><strong><:thematique:besoin_daide:></strong></div>
+		<div><:thematique:nhesitez_pas:></div>
+	</div>
+
 </BOUCLE_desc>
