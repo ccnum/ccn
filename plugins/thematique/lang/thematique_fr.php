@@ -153,6 +153,7 @@ return [
 	'nouvelle_consigne_de_sur'       => 'Nouvelle consigne de&nbsp;<b>@auteur@</b> sur&nbsp;<b>@titre@.</b>',
 	'ordre_chargement_documents'     => 'Vos documents apparaîtront par ordre de chargement (du premier au dernier document chargé)',
 	'pas_article_syndique'           => 'Pas d\'article syndiqué',
+	'pas_de_description'           	 => 'Pas de description',
 	'parametres_generaux'            => 'Paramètres généraux',
 	'permalien'                      => 'Permalien',
 	'publie_le'                      => 'Publié le',
@@ -250,6 +251,12 @@ return [
 	'veuillez_connecter_enregistrer_commenter' => 'Veuillez vous <b>connecter</b> ou vous <b>enregistrer</b> pour <b>commenter</b>.',
 	'voir_ma_reponse'                => 'Voir ma réponse',
 
+	// Fiche participant
+	'label_header_fiche_participant' => 'Classe participante',
+	'titre_onglet_publications' => 'Publications',
+	'titre_onglet_commentaires' => 'Discussions',
+	'bouton_publication_card' => 'Voir la ressource',
+
 	// Menu du bas (sommaire.html et fichiers menu_*.html)
 	'ascendant'                      => 'Ascendant',
 	'cap_sur_annee'                  => 'Cap sur l\'année',
@@ -275,8 +282,7 @@ return [
 	'tous_les_medias'                => 'Tous les médias',
 	'toutes_les_actualites'          => 'Toutes les actualités',
 	'tri'                            => 'Tri',
-	'classes_participantes_prefixe'  => 'Les',
-	'classes_participantes_suffixe'  => 'classes participantes',
+	'les_participants'  => 'Les participants',
 
 	// inc-head.html (liens rel=alternate)
 	'rss_dernieres_publications'     => 'Dernières publications',

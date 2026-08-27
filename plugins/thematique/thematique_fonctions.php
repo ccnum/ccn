@@ -1637,4 +1637,26 @@ function forum_rendre_branche($forums) {
 	return $html;
 }
 
+function filtre_titre_consigne($id_consigne) {
+    if (!$id_consigne) return '';
+    return sql_getfetsel('titre', 'spip_articles', 'id_article=' . intval($id_consigne));
+}
 
+function filtre_rang_consigne($id_consigne) {
+    if (!$id_consigne) return '';
+
+    $date_consigne = sql_getfetsel(
+        'date',
+        'spip_articles',
+        'id_article=' . intval($id_consigne) . ' AND id_consigne=0'
+    );
+    if (!$date_consigne) return '';
+
+    return sql_countsel(
+        'spip_articles',
+        'id_consigne = 0'
+        . ' AND date >= ' . sql_quote(_DATE_DEBUT)
+        . ' AND date <= ' . sql_quote($date_consigne)
+        . ' AND id_article IN (SELECT DISTINCT id_consigne FROM spip_articles WHERE id_consigne > 0)'
+    );
+}
