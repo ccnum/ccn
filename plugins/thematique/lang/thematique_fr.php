@@ -153,6 +153,7 @@ return [
 	'nouvelle_consigne_de_sur'       => 'Nouvelle consigne de&nbsp;<b>@auteur@</b> sur&nbsp;<b>@titre@.</b>',
 	'ordre_chargement_documents'     => 'Vos documents apparaîtront par ordre de chargement (du premier au dernier document chargé)',
 	'pas_article_syndique'           => 'Pas d\'article syndiqué',
+	'pas_de_description'           	 => 'Pas de description',
 	'parametres_generaux'            => 'Paramètres généraux',
 	'permalien'                      => 'Permalien',
 	'publie_le'                      => 'Publié le',

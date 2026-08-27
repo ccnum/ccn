@@ -3,14 +3,16 @@
 	#SET{nom_classe, #TITRE}
 </BOUCLE_classe>
 <div class="bloc_article">
-	<INCLURE{
-		fond=noisettes/sidebar/page_participant/header_presentation_classe,
-		id_rubrique=#ENV{id_objet}, 
-		nom_classe=#GET{nom_classe},
-		description_classe=#GET{description_classe},
-		ajax,
-		env
-	} />
+	<div>
+		<INCLURE{
+			fond=noisettes/sidebar/page_participant/header_presentation_classe,
+			id_rubrique=#ENV{id_objet}, 
+			nom_classe=#GET{nom_classe},
+			description_classe=#GET{description_classe},
+			ajax,
+			env
+		} />
+	</div>
 	<div style="flex: 1;
 				min-height: 0;"
 	>

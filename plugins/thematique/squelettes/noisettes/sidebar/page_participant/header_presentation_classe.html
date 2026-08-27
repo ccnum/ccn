@@ -14,7 +14,12 @@
 				<INCLURE{fond=noisettes/sidebar/normal_header_icons, env} />
 			</div>
 			<div id="header-row-2">
+				[(#ENV{description_classe}|oui)
 					#ENV*{description_classe}
+				]
+				[(#ENV{description_classe}|non)
+					<:thematique:pas_de_description:>
+				]
 			</div>
 		</div>
 	</div>
