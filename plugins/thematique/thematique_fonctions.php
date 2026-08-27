@@ -1660,3 +1660,24 @@ function filtre_rang_consigne($id_consigne) {
         . ' AND id_article IN (SELECT DISTINCT id_consigne FROM spip_articles WHERE id_consigne > 0)'
     );
 }
+
+
+/**
+ * Transforme un id_auteur de prof ou élève en id_rubrique de classe.
+ */
+function filtre_auteur_vers_classe($id_auteur) {
+    if (!$id_auteur) {
+        return '';
+    }
+
+    $result = sql_getfetsel(
+        'sr.id_rubrique',
+        'spip_auteurs_liens AS sal
+         JOIN spip_rubriques AS sr ON sr.id_rubrique = sal.id_objet
+         JOIN spip_rubriques AS sr2 ON sr.id_parent = sr2.id_rubrique',
+        'sal.id_auteur = ' . intval($id_auteur) . '
+         AND sr2.titre = ' . sql_quote('Travail des classes')
+    );
+
+    return $result;
+}
