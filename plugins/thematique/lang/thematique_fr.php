@@ -16,6 +16,7 @@ return [
 	'annuler'                        => 'Annuler',
 	'attendre_livrable_final'        => 'J\'attends le livrable final de cette consigne',
 	'aucune_actualite'               => 'Il n\'a aucune actualité pour le moment',
+	'aucun_commentaire'				 => 'Il n\'y a aucun commentaire pour le moment.',
 	'ajouter_contenu_integre'        => 'Ajouter un contenu intégré (url)',
 	'ajouter_document'               => 'Ajouter un document',
 	'ajouter_encyclopedie'           => 'Ajouter à l\'encyclopédie',

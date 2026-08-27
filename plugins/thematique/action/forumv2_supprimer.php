@@ -17,7 +17,7 @@ function action_forumv2_supprimer_dist() {
 	$arg = $securiser_action();
 
 	$id_forum = intval($arg);
-	if (!autoriser('forumsupprimer', 'forum', $id_forum)) {
+	if (session_get('role') !== 'admin' && !autoriser('forumsupprimer', 'forum', $id_forum)) {
 		include_spip('inc/minipres');
 		echo minipres();
 		exit;

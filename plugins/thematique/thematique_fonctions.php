@@ -1193,7 +1193,7 @@ function filtre_afficher_forum_arbre($id_article) {
 		'date_heure DESC'
 	);
 	if (!$forums) {
-		return '';
+		return _T('thematique:aucun_commentaire');
 	}
 
 	$id_forum_recent = null;

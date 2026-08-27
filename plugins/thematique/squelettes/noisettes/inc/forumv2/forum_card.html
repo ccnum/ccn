@@ -41,6 +41,10 @@
 				|et{#ENV{id_auteur}|=={#SESSION{id_auteur}}}
 			}
 
+			[(#SESSION{role}|=={admin}|oui)
+				#SET{peut_modifier_ou_supr, oui}
+			]
+
 			#SET{peut_repondre,
 				#ENV{is_root}|=={oui}
 				|et{#SESSION{id_auteur}}
