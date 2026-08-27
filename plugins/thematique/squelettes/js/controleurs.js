@@ -592,24 +592,6 @@ function callClasses() {
 }
 
 /**
- * Appelle le chargement des livrables
- * dans la sidebar principale
- *
- * @see loadContentInLateralSidebar
- */
-
-function callLivrables() {
-	changeTimelineMode('consignes');
-	showSidebar();
-	toggleSidebarExpand();
-	updateMenuIcon(['livrables'], 'sidebarView');
-
-	blankMainSidebar('livrables');
-	setFullscreenModeToCols(true);
-
-	loadContentInLateralSidebar(CCN.projet.url_popup_livrables);
-}
-/**
  * Appelle le chargement d'un article de blog dans la sidebar principale
  * et met à jour l'URL du navigateur en conséquence.
  *
