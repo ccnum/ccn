@@ -49,34 +49,41 @@
 			</div>
 		</div>
 	] 
-	<div class="encadre-message">
-		<div>
-			<:thematique:ca_vous_inspire:>
-		</div>
-		<button class="bouton-lisere rempli"
-				onclick="repondreALaMission()"
-		>
-			<span class="icon icon-publier"
-				  style="background-color: var(--color-default);
-				  		 height: 1rem;
-						 width: 1rem;"
-			></span>
-			<div><:thematique:repondre:></div>
-		</button>
-	</div>
-	<div style="margin-top: 1rem;
-				display: flex;
-				gap: 0.2rem;"
-	>
-		<div><strong><:thematique:besoin_dinspi:></strong></div>
-		<div><:thematique:regardez_les_reponses:></div>
-	</div>
-	<div style="display: flex;
-				white-space: nowrap;
-				gap: 0.2rem;"
-	>
-		<div><strong><:thematique:besoin_daide:></strong></div>
-		<div><:thematique:nhesitez_pas:></div>
-	</div>
-
+	[(#SESSION{role}|in_array{#LISTE{prof,admin}}|oui)
+		#SET{a_deja_repondu, non}
+		<BOUCLE_reponse(ARTICLES){id_consigne=#ENV{id_article}}{id_rubrique}>
+			#SET{a_deja_repondu, oui}
+		</BOUCLE_reponse>
+		[(#GET{a_deja_repondu}|=={non}|ou{#SESSION{role}|=={admin}}|oui)
+			<div class="encadre-message">
+				<div>
+					<:thematique:ca_vous_inspire:>
+				</div>
+				<button class="bouton-lisere rempli"
+						onclick="repondreALaMission()"
+				>
+					<span class="icon icon-publier"
+						style="background-color: var(--color-default);
+								height: 1rem;
+								width: 1rem;"
+					></span>
+					<div><:thematique:repondre:></div>
+				</button>
+			</div>
+			<div style="margin-top: 1rem;
+						display: flex;
+						gap: 0.2rem;"
+			>
+				<div><strong><:thematique:besoin_dinspi:></strong></div>
+				<div><:thematique:regardez_les_reponses:></div>
+			</div>
+			<div style="display: flex;
+						white-space: nowrap;
+						gap: 0.2rem;"
+			>
+				<div><strong><:thematique:besoin_daide:></strong></div>
+				<div><:thematique:nhesitez_pas:></div>
+			</div>
+		]
+	]
 </BOUCLE_desc>

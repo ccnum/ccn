@@ -69,12 +69,12 @@
 	]
 
 	[(#GET{on_est_proprietaire_de_la_consigne}|oui)
-		[(#GET{tout_le_monde_a_repondu}|oui)
+		[(#GET{tout_le_monde_a_repondu}=={oui}|oui)
 			<div class="encadre-message reponses_intervenant_relance">
 				<p><:thematique:reponses_intervenant_ok_message:></p>
 			</div>
 		]
-		[(#GET{tout_le_monde_a_repondu}|non) 
+		[(#GET{tout_le_monde_a_repondu}=={non}|oui) 
 			<div class="encadre-message reponses_intervenant_relance">
 				<p><:thematique:reponses_intervenant_relance_message:></p>
 				<button class="bouton_encadre" 
