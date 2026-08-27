@@ -7,7 +7,9 @@
 				#SESSION{id_auteur}|filtre_auteur_vers_classe|classe_numero
 			})]
 			<span class="icon-avatar-masculin"
-				  style="background-color: var(--color-classe-light-[(#GET{id_rubrique_classe})]);"
+				[(#GET{id_rubrique_classe}|oui)
+					style="background-color: var(--color-classe-light-#GET{id_rubrique_classe});"
+				]
 			>
 				[(#SESSION{avatar}|non)
 					<img src="https://www.laclasse.com/avatar/avatar_masculin.svg" alt="">
