@@ -2,7 +2,7 @@
 	<div class="encadre-message">
 		<p><:thematique:envie_de_reagir:></p>
 		[(#SESSION{id_auteur}|oui)
-			<button class="bouton_encadre" onclick="callbackCliqueSurCommenter(event)"><:thematique:commenter:></button>
+			<button class="bouton-lisere" onclick="callbackCliqueSurCommenter(event)"><:thematique:commenter:></button>
 		]
 		[(#SESSION{id_auteur}|non)
 			[(#PLUGIN{cioidc}|oui)
