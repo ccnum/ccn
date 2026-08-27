@@ -1660,13 +1660,3 @@ function filtre_rang_consigne($id_consigne) {
         . ' AND id_article IN (SELECT DISTINCT id_consigne FROM spip_articles WHERE id_consigne > 0)'
     );
 }
-
-function filtre_ids_consignes_annee($date_debut, $date_fin) {
-    $ids = sql_allfetsel(
-        'DISTINCT id_consigne',
-        'spip_articles',
-        'id_consigne > 0'
-    );
-    $liste = array_map(fn($row) => $row['id_consigne'], $ids);
-    return $liste ? implode(',', $liste) : '0';
-}
