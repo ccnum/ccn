@@ -199,13 +199,13 @@ function setContentFromState(state, title, url) {
 	currentState = state;
 	if (isSamePage) { return; }
 
+	antifloodHashChange = true;
 	// Repousse l'url du navigateur (ex: retour à l'url courte du site
 	// quand showWholeTimeline() referme la sidebar), si demandé par l'appelant.
 	if (url !== undefined) {
 		updateUrl(state, title, url);
 	}
 
-	antifloodHashChange = true;
 	// Ressource
 	if ((state.type_objet == '0'
 		&& state.id_objet == '0')
@@ -341,33 +341,24 @@ async function changeTimelineMode(type) {
 	classCss.consignes = 'show_consignes';
 	classCss.blogs = 'show_blogs';
 	classCss.evenements = 'show_evenements';
-
 	if (!$('body').hasClass(classCss[type])) {
 		if (type === 'blogs' || type === 'evenements') {
 			await ensureArticlesLoaded(type);
 		}
-
 		attachTimelineLayer(type);
-
 		for (const other of ['consignes', 'blogs', 'evenements']) {
 			if (other !== type) {
 				detachTimelineLayer(other);
 			}
 		}
-
 		for (const index in classCss) {
 			$('body').removeClass(classCss[index]);
 		}
-		
-		CCN.projet.showWholeTimeline();
-
 		$('body').addClass(classCss[type]);
-
+		CCN.projet.showWholeTimeline();
 		updateMenuIcon([type], 'timelineMode');
 	}
-
 	$('#menu_bas .logo a.menu_logo_type_sidebarView').removeClass('selected');
-
 }
 
 
