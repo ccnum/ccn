@@ -364,20 +364,10 @@ async function changeTimelineMode(type) {
 		$('body').addClass(classCss[type]);
 
 		updateMenuIcon([type], 'timelineMode');
-		await do_stuff_after_timeline_mode_has_been_changed(type)
 	}
 
 	$('#menu_bas .logo a.menu_logo_type_sidebarView').removeClass('selected');
 
-}
-
-async function do_stuff_after_timeline_mode_has_been_changed(type) {
-	if (type === 'blogs' || type === 'evenements') {
-		await ensureArticlesLoaded(type);
-		document.querySelectorAll(".article_blog").forEach(blog=>{
-			initBulle(blog, CCN.urlImgBlog, 'black')
-		})
-	}
 }
 
 
@@ -798,7 +788,7 @@ function callArticleEvenement(id_objet, type_objet) {
 				}, CCN.lang.evenement, "./spip.php?page=" + type_objet + "&id_article=" + id_objet + "&mode=complet"
 			);
 		},
-		"article"
+		"evenement"
 	);
 
 }
@@ -1111,11 +1101,9 @@ function loadContentInMainSidebar(url, callback, typeContenu) {
 		$('#sidebar_content').scrollTop(0);
 		updatePageTitleFromSidebarContent();
 		_sidebarFocusFirst();
-		if(["consigne", "reponse", "blog", "classe"].includes(typeContenu)) {
+		if(["consigne", "reponse", "blog", "evenement", "classe"].includes(typeContenu)) {
 			initMissionTabs();
-			if(["consigne", "reponse"].includes(typeContenu)) {
-				initCommentaires();
-			}
+			initCommentaires();
 		}
 		if(typeContenu === "publication_mission") {
 			// initCompteurCaracteres()

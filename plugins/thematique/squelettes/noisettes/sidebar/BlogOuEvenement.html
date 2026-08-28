@@ -2,6 +2,14 @@
 [(#REM) Affichage simple d'un article blogs/evenements (pas de workflow "mission" :
 juste description + discussion), cf noisettes/article.html ]
 
+[(#ENV{type_objet}|=={blogs}|oui)
+	#SET{titre_description, #VAL{thematique:titre_onglet_blog}|_T}
+]
+
+[(#ENV{type_objet}|=={evenements}|oui)
+	#SET{titre_description, #VAL{thematique:titre_onglet_salle_des_pros}|_T}
+]
+
 <BOUCLE_police(MOTS){id_rubrique}{type=police}>#SET{police,#TITRE}</BOUCLE_police>
 <div class="[popup_(#ENV{type_objet})]">
 	<div id="bloc_article-#ID_ARTICLE" class="bloc_article[ (#GET{police})]">
@@ -16,7 +24,7 @@ juste description + discussion), cf noisettes/article.html ]
 			<div id="mission-tabs">
 				<div>
 					<div class="tabs-title">
-						<:thematique:titre_onglet_blog:>
+						#GET{titre_description}
 					</div>
 					<div class="tabs-content">
 						<BOUCLE_contenu_message(ARTICLES){id_article}>
@@ -26,7 +34,7 @@ juste description + discussion), cf noisettes/article.html ]
 				</div>
 				<div data-tab-id="commentaires">
 					<div class="tabs-title">
-						<:thematique:titre_onglet_comentaire_pour_blog:>
+						<:thematique:titre_onglet_comentaire_pour_blog_ou_event:>
 						#SET{nombre_commentaires,#ID_ARTICLE|thematique_nombre_commentaires}
 						[(#GET{nombre_commentaires}|>{0}|oui)<div class="picto_nombre_commentaires">#GET{nombre_commentaires}</div>]
 					</div>

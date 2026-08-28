@@ -34,6 +34,6 @@
 		</div>
 	]
 	[(#ENV{type_objet}|in_array{#LISTE{blogs,evenements,ressources,agora}}|oui)
-		<INCLURE{fond=noisettes/sidebar/blog, env, ajax} />
+		<INCLURE{fond=noisettes/sidebar/BlogOuEvenement, env, ajax} />
 	]
 </BOUCLE_principale>
