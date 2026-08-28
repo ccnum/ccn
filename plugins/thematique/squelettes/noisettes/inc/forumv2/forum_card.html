@@ -11,7 +11,10 @@
 	]
 	<div class="col-forum col-forum-icone-container">
 		<div class="forum-card-icone [ (#ENV{id_rubrique_classe}|oui)bgc_classe_[(#ENV{id_rubrique_classe}|classe_numero)]]">
-			[(#ENV{id_rubrique_classe}|oui)[(#ENV{id_rubrique_classe}|classe_icone)]]
+			[(#ENV{
+				id_rubrique_classe,
+				#ENV{id_auteur}|filtre_auteur_vers_classe
+			}|classe_icone)]
 		</div>
 	</div>
 	<div class="col-forum col-forum-message">
