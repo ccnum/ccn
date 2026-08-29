@@ -118,36 +118,29 @@ function thematique_cioidc_role_affiche(string $profils, bool $is_webmestre) {
 	return null;
 }
 
-// Nom affiché : prénom/nom ENT, suivi du rôle ENT, de la classe (première classe
-// réelle du prof) pour distinguer dans la liste des auteurs un même prof intervenant
-// sur plusieurs CCN (cf issue #44), et enfin du nom de son établissement (résolu
-// depuis le premier UAI de $uai_liste — cf thematique_cioidc_nom_etablissement(),
-// même issue #44 : demande initiale de Jonathan L., seule la classe avait pu être
-// ajoutée faute de nom d'établissement direct dans l'ENT). Le group_name reçu de
-// l'ENT est préfixé par "CCN - " : préfixe redondant qu'on retire.
-function thematique_cioidc_nom_affiche(
-	array $flux_data,
-	array $classes_reelles,
-	?string $role_ent,
-	array $uai_liste = []
-) {
-	$prenom = $flux_data['LaclassePrenom'] ?? '';
-	$nom_famille = $flux_data['LaclasseNom'] ?? '';
-	$nom = trim($prenom . ' ' . $nom_famille);
-	if ($nom && $role_ent) {
-		$nom .= ' - ' . $role_ent;
+// Nom affiché : rôle ENT, suivi de la classe (première classe réelle du prof) pour
+// distinguer dans la liste des auteurs un même prof intervenant sur plusieurs CCN
+// (cf issue #44), et enfin du nom de son établissement (résolu depuis le premier
+// UAI de $uai_liste — cf thematique_cioidc_nom_etablissement()). Plus de
+// prénom/nom de la personne : décidé finalement sur l'issue #44, seuls le rôle, la
+// classe et le collège identifient l'auteur. Le group_name reçu de l'ENT est
+// préfixé par "CCN - " : préfixe redondant qu'on retire.
+function thematique_cioidc_nom_affiche(array $classes_reelles, ?string $role_ent, array $uai_liste = []) {
+	$parties = [];
+	if ($role_ent) {
+		$parties[] = $role_ent;
 	}
-	if ($nom && ($groupe_classe = $classes_reelles[0]->group_name ?? null)) {
+	if ($groupe_classe = $classes_reelles[0]->group_name ?? null) {
 		if (stripos($groupe_classe, 'CCN - ') === 0) {
 			$groupe_classe = substr($groupe_classe, strlen('CCN - '));
 		}
-		$nom .= ' - ' . $groupe_classe;
+		$parties[] = $groupe_classe;
 	}
-	if ($nom && ($uai = (string) ($uai_liste[0] ?? ''))
+	if (($uai = (string) ($uai_liste[0] ?? ''))
 		&& ($nom_etablissement = thematique_cioidc_nom_etablissement($uai))) {
-		$nom .= ' - ' . $nom_etablissement;
+		$parties[] = $nom_etablissement;
 	}
-	return $nom;
+	return implode(' - ', $parties);
 }
 
 // Résout le secteur de l'année scolaire en cours (ex: "2025"), et sous ce secteur les
