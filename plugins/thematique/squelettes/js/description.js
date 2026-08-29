@@ -1,3 +1,3 @@
 function repondreALaMission() {
-    alert("Ce bouton va ouvrir la page de saisie de réponse.");
+    alert(CCN.lang.repondre_a_la_mission_alerte);
 }

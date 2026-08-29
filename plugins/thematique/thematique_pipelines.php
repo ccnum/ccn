@@ -228,11 +228,11 @@ function thematique_cioidc_userinfo($flux) {
 		return $flux;
 	}
 	spip_log('userinfo auteur trouvé id=' . $auteur['id_auteur'] . ' nom=' . $auteur['nom'], 'cioidc');
-	$auteur = thematique_cioidc_maj_champ($auteur, 'email', $email, "de l'email");
+	$auteur = thematique_cioidc_maj_champ($auteur, 'email', $email, 'du champ email');
 	// URL de la photo de profil laclasse.com (avatar réel, distinct des pictos
 	// icon-avatar-masculin/feminin utilisés en repli quand l'ENT n'en fournit pas).
 	$avatar = $flux['data']['avatar'] ?? '';
-	$auteur = thematique_cioidc_maj_champ($auteur, 'avatar', $avatar, "de l'avatar");
+	$auteur = thematique_cioidc_maj_champ($auteur, 'avatar', $avatar, 'du champ avatar');
 
 	$classes_groupes = thematique_cioidc_normaliser_liste($flux['data']['ENTClassesGroupes'] ?? []);
 	$classes_reelles = thematique_cioidc_classes_reelles($classes_groupes);

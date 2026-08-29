@@ -173,6 +173,7 @@ return [
 	'reponses_des_classes'           => 'Réponses des classes',
 	'repondre_a_la_consigne'         => 'Répondre à la consigne',
 	'repondre_a_la_mission'          => 'Répondre à la mission',
+	'repondre_a_la_mission_alerte'   => 'Ce bouton va ouvrir la page de saisie de réponse.',
 	'repondre'                       => 'Répondre',
 	'repondre_a_ce_message'          => 'Répondre à ce message',
 	'reponse_de_sur'                 => 'Réponse de&nbsp;<b>@auteur@</b> sur&nbsp;<b>@titre@.</b>',
