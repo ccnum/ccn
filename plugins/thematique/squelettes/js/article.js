@@ -40,7 +40,6 @@ function Article() {
 		}
 
 		const isBlog = type === 'blogs';
-		const prefix = isBlog ? 'article_blog' : 'article_evenement';
 		const urlImg = isBlog ? CCN.urlImgBlog : CCN.urlImgEvenement;
 		const layer = isBlog ? CCN.timelineLayerBlogs : CCN.timelineLayerEvenements;
 		const date_texte = formatDateCourte(this.date);
@@ -58,11 +57,10 @@ function Article() {
 			const classe_article = 'article_blog' + (est_magazine ? ' article_blog2' : '');
 
 			html = `
-				<div class="timeline_item ${prefix}_container" style="top:${this.y * 100}%; left:${this.x / CCN.projet.nombre_jours_total * 100}%;">
+				<div class="timeline_item article_blog_container" style="top:${this.y * 100}%; left:${this.x / CCN.projet.nombre_jours_total * 100}%;">
 					<div id="article_blog${this.id}" class="${classe_article} bulle_bd">
-						<svg class="bubble_svg" aria-hidden="true"></svg>
 						<div class="bulle_contenu">
-							<div class="${prefix}_date">${dateSure}</div>
+							<div class="article_blog_date">${dateSure}</div>
 							<div class="bulle-texte">${titreSur}</div>
 						</div>
 						${picto_commentaires}
@@ -71,12 +69,11 @@ function Article() {
 			`;
 		} else {
 			html = `
-				<div class="timeline_item ${prefix}_container" style="top:${this.y * 100}%; left:${this.x / CCN.projet.nombre_jours_total * 100}%;">
+				<div class="timeline_item article_evenement_container" style="top:${this.y * 100}%; left:${this.x / CCN.projet.nombre_jours_total * 100}%;">
 					<div id="article_evenement${this.id}" class="article_evenement">
-						<svg class="bubble_svg"></svg>
 						<div class="article_evenement_inner">
 							<div class="bulle_contenu">
-								<div class="${prefix}_date">${dateSure}</div>
+								<div class="article_evenement_date">${dateSure}</div>
 								<div class="bulle-texte">${titreSur}</div>
 							</div>
 						</div>

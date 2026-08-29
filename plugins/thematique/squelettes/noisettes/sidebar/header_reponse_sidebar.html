@@ -7,7 +7,6 @@ Arguments :
 - type_objet
 - rang
 ]
-
 <BOUCLE_article_sidebar(ARTICLES){id_article}{tout}>
 <div class="sidebar_bubble header-reponse">
 	<div id="row_header">
@@ -24,7 +23,7 @@ Arguments :
 				<:thematique:publie_le:> [(#DATE|affdate)]
 			</div>
 		</div>
-		<div id="header-col-right">
+		<div id="header-col-right" style="border-bottom: 2px solid var(--color-classe-light-[(#ENV{id_rubrique}|classe_numero)])">
 			<div id="header-row-1">
 				#SET{numero_mission, #ENV{rang}|sinon{0}|plus{1}}
 				<div class="etiquette-etape">
@@ -33,7 +32,7 @@ Arguments :
 				<INCLURE{fond=noisettes/sidebar/normal_header_icons, env} />
 			</div>
 			<div id="header-row-2">
-				#ENV{titre_consigne}
+				#TITRE
 			</div>
 		</div>
 	</div>

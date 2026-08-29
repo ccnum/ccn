@@ -788,14 +788,12 @@ function classe_id_rubrique_forum($forum) {
 	if ($id_rubrique) {
 		return $id_rubrique;
 	}
-
 	if (($forum['objet'] ?? '') === 'article' && !empty($forum['id_objet'])) {
 		$id_rubrique = (int) sql_getfetsel('id_rubrique', 'spip_articles', 'id_article=' . intval($forum['id_objet']));
 		if ($id_rubrique && isset(thematique_classes_rangs()[$id_rubrique])) {
 			return $id_rubrique;
 		}
 	}
-
 	return null;
 }
 
@@ -1186,23 +1184,31 @@ function thematique_voir_mission() {
 }
 
 function filtre_afficher_forum_arbre($id_article) {
+	include_spip('inc/session');
 	$forums = sql_allfetsel(
 		'*',
 		'spip_forum',
 		"objet='article' AND id_objet=" . intval($id_article) . ' AND statut=' . sql_quote('publie'),
 		'',
-		'date_heure'
+		'date_heure DESC'
 	);
 	if (!$forums) {
-		return '';
+		return _T('thematique:aucun_commentaire');
 	}
+
+	$id_forum_recent = null;
+	if ($val = session_get('forum_commentaire_succes')) {
+		$id_forum_recent = intval($val);
+		session_set('forum_commentaire_succes', ''); // on "consomme" le flag
+	}
+
 	// Index des commentaires par parent
 	$parents = [];
 	foreach ($forums as $forum) {
 		$parents[$forum['id_parent']][] = $forum;
 	}
 	// Construction récursive de l'arbre à partir de la racine
-	$arbre = forum_construire_arbre(0, $parents);
+	$arbre = forum_construire_arbre(0, $parents, $id_forum_recent);
 	return forum_rendre_branche($arbre);
 }
 
@@ -1607,13 +1613,15 @@ function thematique_picto_site($valeur_ignoree = null, $avec_timestamp = 'oui') 
 	return $chemin;
 }
 
-function forum_construire_arbre($id_parent, &$parents) {
+function forum_construire_arbre($id_parent, &$parents, $id_forum_recent = null) {
 	if (!isset($parents[$id_parent])) {
 		return [];
 	}
 	$res = [];
 	foreach ($parents[$id_parent] as $forum) {
-		$forum['reponses'] = forum_construire_arbre($forum['id_forum'], $parents);
+
+		$forum['est_recent'] = ($id_forum_recent !== null && intval($forum['id_forum']) === $id_forum_recent);
+		$forum['reponses'] = forum_construire_arbre($forum['id_forum'], $parents, $id_forum_recent);
 		$res[] = $forum;
 	}
 	return $res;
@@ -1627,4 +1635,49 @@ function forum_rendre_branche($forums) {
 		]);
 	}
 	return $html;
+}
+
+function filtre_titre_consigne($id_consigne) {
+    if (!$id_consigne) return '';
+    return sql_getfetsel('titre', 'spip_articles', 'id_article=' . intval($id_consigne));
+}
+
+function filtre_rang_consigne($id_consigne) {
+    if (!$id_consigne) return '';
+
+    $date_consigne = sql_getfetsel(
+        'date',
+        'spip_articles',
+        'id_article=' . intval($id_consigne) . ' AND id_consigne=0'
+    );
+    if (!$date_consigne) return '';
+
+    return sql_countsel(
+        'spip_articles',
+        'id_consigne = 0'
+        . ' AND date >= ' . sql_quote(_DATE_DEBUT)
+        . ' AND date <= ' . sql_quote($date_consigne)
+        . ' AND id_article IN (SELECT DISTINCT id_consigne FROM spip_articles WHERE id_consigne > 0)'
+    );
+}
+
+
+/**
+ * Transforme un id_auteur de prof ou élève en id_rubrique de classe.
+ */
+function filtre_auteur_vers_classe($id_auteur) {
+    if (!$id_auteur) {
+        return '';
+    }
+
+    $result = sql_getfetsel(
+        'sr.id_rubrique',
+        'spip_auteurs_liens AS sal
+         JOIN spip_rubriques AS sr ON sr.id_rubrique = sal.id_objet
+         JOIN spip_rubriques AS sr2 ON sr.id_parent = sr2.id_rubrique',
+        'sal.id_auteur = ' . intval($id_auteur) . '
+         AND sr2.titre = ' . sql_quote('Travail des classes')
+    );
+
+    return $result;
 }

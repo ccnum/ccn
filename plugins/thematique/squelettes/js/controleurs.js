@@ -195,18 +195,17 @@ function setContentFromState(state, title, url) {
 			break;
 		}
 	}
-	console.log(currentState);
 	
 	currentState = state;
 	if (isSamePage) { return; }
 
+	antifloodHashChange = true;
 	// Repousse l'url du navigateur (ex: retour à l'url courte du site
 	// quand showWholeTimeline() referme la sidebar), si demandé par l'appelant.
 	if (url !== undefined) {
 		updateUrl(state, title, url);
 	}
 
-	antifloodHashChange = true;
 	// Ressource
 	if ((state.type_objet == '0'
 		&& state.id_objet == '0')
@@ -281,9 +280,7 @@ function setContentFromState(state, title, url) {
 			callArticleEvenement(state.id_objet, "article");
 		}
 	}
-	else { // state.id_objet == 0)
-		console.log({typeobjet: state.type_objet, page: state.page} );
-		
+	else {
 		// Ressource
 		if (state.type_objet == "ressources") {
 
@@ -340,49 +337,28 @@ function getHauteurZone() {
  * @param {string} type - Peut être <tt>consignes</tt>, <tt>blogs</tt> ou <tt>evenements</tt>
  */
 async function changeTimelineMode(type) {
-	console.log("changeTimelineMode");
-	
 	const classCss = {};
 	classCss.consignes = 'show_consignes';
 	classCss.blogs = 'show_blogs';
 	classCss.evenements = 'show_evenements';
-
 	if (!$('body').hasClass(classCss[type])) {
 		if (type === 'blogs' || type === 'evenements') {
 			await ensureArticlesLoaded(type);
 		}
-
 		attachTimelineLayer(type);
-
 		for (const other of ['consignes', 'blogs', 'evenements']) {
 			if (other !== type) {
 				detachTimelineLayer(other);
 			}
 		}
-
 		for (const index in classCss) {
 			$('body').removeClass(classCss[index]);
 		}
-		
-		CCN.projet.showWholeTimeline();
-
 		$('body').addClass(classCss[type]);
-
+		CCN.projet.showWholeTimeline();
 		updateMenuIcon([type], 'timelineMode');
-		await do_stuff_after_timeline_mode_has_been_changed(type)
 	}
-
 	$('#menu_bas .logo a.menu_logo_type_sidebarView').removeClass('selected');
-
-}
-
-async function do_stuff_after_timeline_mode_has_been_changed(type) {
-	if (type === 'blogs' || type === 'evenements') {
-		await ensureArticlesLoaded(type);
-		document.querySelectorAll(".article_blog").forEach(blog=>{
-			initBulle(blog, CCN.urlImgBlog, 'black')
-		})
-	}
 }
 
 
@@ -559,7 +535,6 @@ function callClasse(id_classe) {
 
 	if (id_classe !== '' && !Number.isInteger(Number(id_classe))) return;
 	changeTimelineMode('consignes');
-	expandSidebar();
 	setFullscreenModeToCols(false);
 	updateMenuIcon(['classes', 'classes-' + id_classe], 'sidebarView');
 
@@ -579,7 +554,7 @@ function callClasse(id_classe) {
 				}, "Classe", "./spip.php?page=rubrique&id_objet=" + id_classe + "&mode=complet&type_objet=classes"
 			);
 		},
-		"ressource"
+		"classe"
 	);
 }
 /**
@@ -597,24 +572,6 @@ function callClasses() {
 	blankMainSidebar('travail_en_cours');
 }
 
-/**
- * Appelle le chargement des livrables
- * dans la sidebar principale
- *
- * @see loadContentInLateralSidebar
- */
-
-function callLivrables() {
-	changeTimelineMode('consignes');
-	showSidebar();
-	toggleSidebarExpand();
-	updateMenuIcon(['livrables'], 'sidebarView');
-
-	blankMainSidebar('livrables');
-	setFullscreenModeToCols(true);
-
-	loadContentInLateralSidebar(CCN.projet.url_popup_livrables);
-}
 /**
  * Appelle le chargement d'un article de blog dans la sidebar principale
  * et met à jour l'URL du navigateur en conséquence.
@@ -822,7 +779,7 @@ function callArticleEvenement(id_objet, type_objet) {
 				}, CCN.lang.evenement, "./spip.php?page=" + type_objet + "&id_article=" + id_objet + "&mode=complet"
 			);
 		},
-		"article"
+		"evenement"
 	);
 
 }
@@ -846,7 +803,6 @@ function createReponse(id_consigne, id_rubrique_classe, numero) {
 
 	const url = CCN.projet.url_popup_reponseajout + "&id_consigne=" + id_consigne + "&id_rubrique=" + id_rubrique_classe + "&rang=" + rang + "&date_limite=" + dateLimite;
 	loadContentInMainSidebar(url, null, "publication_mission");
-
 }
 /**
  * Cherche la réponse correspondant à un id_reponse dans CCN.consignes.
@@ -991,13 +947,14 @@ function updateReponseConnecteurs(reponseObject, ui) {
 	const timelineTop = CCN.timelineLayerConsignes.offset().top;
 	const timelineHeight = CCN.timelineLayerConsignes.height();
 	const picto = reponseDOM.find(".picto_nombre_commentaires")
+	const cardMaxHeight = picto ? picto.offset().top : reponseDOM.offset().top
 
 	const x1 = consigneDOM.offset().left + consigneDOM.outerWidth();
 	const y1 = consigneDOM.offset().top  + consigneDOM.outerHeight() / 2 - timelineTop;
 	const x2 = reponseDOM.offset().left;
     const adjustedUiPositionTop = handleObjectCollisionWithMenus(
 		ui.position.top,
-		picto.offset().top,
+		cardMaxHeight,
 		reponseDOM.offset().top,
 		reponseDOM.outerHeight(),
 		timelineTop,
@@ -1135,11 +1092,9 @@ function loadContentInMainSidebar(url, callback, typeContenu) {
 		$('#sidebar_content').scrollTop(0);
 		updatePageTitleFromSidebarContent();
 		_sidebarFocusFirst();
-		if(["consigne", "reponse", "blog"].includes(typeContenu)) {
+		if(["consigne", "reponse", "blog", "evenement", "classe"].includes(typeContenu)) {
 			initMissionTabs();
-			if(["consigne", "reponse"].includes(typeContenu)) {
-				initCommentaires();
-			}
+			initCommentaires();
 		}
 		if(typeContenu === "publication_mission") {
 			// initCompteurCaracteres()
@@ -1291,88 +1246,6 @@ function selectBlog(blogId) {
 		blog.classList.add("blured")
 	})
 	timelineItem.classList.add("blured")
-}
-
-
-function initBulle(conteneur, urlSvg, couleur) {
-    const svgPlaceholder = conteneur.querySelector('.bubble_svg');
-
-    fetch(urlSvg)
-        .then(reponse => reponse.text())
-        .then(texteSvg => {
-            const temp = document.createElement('div');
-            temp.innerHTML = texteSvg.trim();
-            const svgEl = temp.querySelector('svg');
-
-            svgEl.classList.add('bubble_svg');
-            svgEl.setAttribute('preserveAspectRatio', 'none');
-            svgPlaceholder.replaceWith(svgEl);
-
-            if (couleur) conteneur.style.setProperty('--bulle-couleur', couleur);
-
-            // attend que les polices soient prêtes avant de mesurer le texte
-            document.fonts.ready.then(() => {
-                ajusterBulle(conteneur);
-				conteneur.closest(".timeline_item").classList.remove("flou")
-            });
-        });
-}
-
-/**
- * Redimensionne la bulle autour de son texte, en cherchant un ratio proche du carré.
- */
-function ajusterBulle(conteneur) {
-	const contenu = conteneur.querySelector('.bulle_contenu');
-    const LARGEUR_MIN = 70;   // px, taille plancher
-    const MARGE = 1.5;       // marge interne autour du texte (35%)
-	const MAX_ITERATIONS = 6;
-	const TOLERANCE = 4; // px, pour détecter la convergence
-
-    // 1. mesure du texte sur une seule ligne
- 	// IMPORTANT : on repart de zéro à chaque appel, pour ne pas
-    // hériter d'une taille calculée lors d'un appel précédent
-    conteneur.style.width = '';
-    conteneur.style.height = '';
-    contenu.style.maxWidth = 'none';
-    contenu.style.whiteSpace = 'nowrap';
-
-    const largeurNaturelle = contenu.scrollWidth;
-    const hauteurLigne = contenu.scrollHeight;
-    contenu.style.whiteSpace = '';
-
-    // 2. largeur cible ≈ racine carrée de la surface -> tend vers un carré
-    let largeurCible = Math.max(LARGEUR_MIN, Math.sqrt(largeurNaturelle * hauteurLigne));
-	let largeurPrecedente = null;
-
-	for (let i = 0; i < MAX_ITERATIONS; i++) {
-		contenu.style.maxWidth = largeurCible + 'px';
-
-        const largeurReelle = contenu.offsetWidth;
-        const hauteurReelle = contenu.scrollHeight;
-
-        // convergence : la largeur cible ne bouge quasiment plus
-        if (largeurPrecedente !== null && Math.abs(largeurCible - largeurPrecedente) < TOLERANCE) {
-            break;
-        }
-
-        largeurPrecedente = largeurCible;
-        largeurCible = Math.max(LARGEUR_MIN, Math.sqrt(largeurReelle * hauteurReelle));
-	}
-
-
-	const largeurFinale = contenu.offsetWidth;
-    const hauteurFinale = contenu.scrollHeight;
-
-    // 5. la bulle épouse le texte + marge
-    conteneur.style.width = (largeurFinale * MARGE) + 'px';
-    conteneur.style.height = (hauteurFinale * MARGE) + 'px';
-}
-
-/**
- * Change juste la couleur de fond de la bulle.
- */
-function colorerBulle(conteneur, couleur) {
-    conteneur.style.setProperty('--bulle-couleur', couleur);
 }
 
 function deflouterToutesLesBulles() {

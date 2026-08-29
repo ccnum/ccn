@@ -3,7 +3,14 @@
 <div id="menu_haut_user" class="bloc_titre">
 	<div id="choix_rubrique_user" name="rubrique_user" class="selectbox" data-select-name="rubrique_user">
 		<button type="button" class="select-toggle first_label">
-			<span class="icon-avatar-masculin">
+			[(#SET{id_rubrique_classe,
+				#SESSION{id_auteur}|filtre_auteur_vers_classe|classe_numero
+			})]
+			<span class="icon-avatar-masculin"
+				[(#GET{id_rubrique_classe}|oui)
+					style="background-color: var(--color-classe-light-#GET{id_rubrique_classe});"
+				]
+			>
 				[(#SESSION{avatar}|non)
 					<img src="https://www.laclasse.com/avatar/avatar_masculin.svg" alt="">
 				]
@@ -12,7 +19,10 @@
 				]
 				[(#SESSION{avatar}|match{^https?://}|non)
 					[(#SESSION{avatar}|oui)
-						<span class="avatar-animal">[(#SESSION{avatar})]</span>
+						<span class="avatar-animal">
+							[(#SESSION{avatar})]
+						</span>
+						
 					]
 				]
 			</span>

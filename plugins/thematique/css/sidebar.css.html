@@ -1159,6 +1159,13 @@ les styles de composants). */
 	height: 100%;
 }
 
+#sidebar_main_inner > .ajaxbloc {
+	display: flex;
+	flex-direction: column;
+	height: 100%;
+	min-height: 0;
+}
+
 #sidebar_main_inner > .syndic_article_lire_suite {
 	display: none;
 }
@@ -1667,13 +1674,17 @@ réservé dans badge_timeline_label_img (coin haut-gauche du badge). */
 	flex-direction: column;
 	align-items: center;
 }
-.sidebar_bubble:not(.header-reponse) #header-col-left {
+.popup_consignes #header-col-left {
 	border-bottom: 3px solid var(--color-bleu-fond);
 }
 #header-col-right {
 	flex: 1;
 	padding: 12px;
 	background-color: var(--color-bleu-fond);
+	min-width: 72%;
+}
+.popup_travail_en_cours #header-col-right {
+	background-color: white;
 }
 #header-row-1 {
     display: flex;
@@ -1758,6 +1769,13 @@ réservé dans badge_timeline_label_img (coin haut-gauche du badge). */
 	flex-shrink: 0; /* ne se compresse jamais, garde sa hauteur naturelle */
 }
 
+.bloc_article > .ajaxbloc {
+	display: flex;
+	flex: 1;
+	flex-direction: column;
+	min-height: 0;
+}
+
 #mission-tabs {
 	height: 100%;
 	flex: 1;
@@ -1772,9 +1790,16 @@ réservé dans badge_timeline_label_img (coin haut-gauche du badge). */
 	overflow-y: auto;
 	background-color: var(--color-background-tabs);
 }
+.ctabs {
+	flex: 1;
+	min-height: 0;
+}
+.ctabs-content .sidebar_bubble {
+	background-color: var(--color-background-tabs);
+} 
 
 .image-classe-dans-reponse {
-	width: 33%;
+	width: 4rem;
     aspect-ratio: 1 / 1;
 	border-radius: 50%;
     overflow: hidden;
@@ -1906,4 +1931,10 @@ réservé dans badge_timeline_label_img (coin haut-gauche du badge). */
 
 .card_reponse_titre {
 	font-weight: 500;
+}
+
+.consigne-title-container {
+	font-weight: 600;
+	line-height: 19px;
+	font-size: 0.9rem;
 }

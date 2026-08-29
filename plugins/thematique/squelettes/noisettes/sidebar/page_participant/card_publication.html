@@ -1,0 +1,22 @@
+<div style="background-color: white;
+            border-radius: 5px;
+            padding: 1rem;"
+>
+    <div class="date-container">
+        [(#ENV{date}|affdate)]
+    </div>
+    <div class="consigne-title-container">
+        #ENV{titre_consigne}
+    </div>
+    <div style="display: flex;
+                justify-content: space-between;
+                margin-top: 0.1rem;
+                align-items: end;"
+    >
+        <div style="font-size: 0.7rem;">MISSION N°#ENV{rang_mission}</div>
+        <button onclick="callReponse(#ENV{id_reponse})"
+                class="bouton-lisere">
+                <:thematique:bouton_publication_card:>
+        </button>
+    </div>
+</div>
