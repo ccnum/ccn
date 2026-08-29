@@ -274,7 +274,7 @@ return [
 	'menu_publier'                   => 'Publier',
 	'missions'                       => 'Missions',
 	'nouvelle_mission'               => 'Une nouvelle mission',
-	'information_salle_des_profs'    => 'Une information dans la salle des profs',
+	'information_salle_des_profs'    => 'Une information dans la salle des pros',
 	'nouvelle_ressource'             => 'Une ressource',
 	'nouvel_evenement_agenda'        => 'Un événement dans l\'agenda',
 	'par_date'                       => 'Par date',
