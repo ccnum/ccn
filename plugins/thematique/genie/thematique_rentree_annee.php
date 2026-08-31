@@ -39,7 +39,7 @@ function genie_thematique_rentree_annee_dist($last) {
 		return 1;
 	}
 
-	if (date('n') != 8) {
+	if (date('n') != 9) {
 		spip_log(
 			'thematique_rentree_annee : hors fenêtre (mois=' . date('n') . ', déclenché seulement en août), on ne fait rien',
 			'thematique'
