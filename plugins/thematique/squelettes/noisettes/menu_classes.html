@@ -7,6 +7,7 @@ l'est 48h, sans quoi une classe ajoutée reste invisible jusqu'à expiration
 du cache de la page. ]
 <div id="menu-classes" class="bloc_view col">
 	#SET{hasYearRub,false}
+	#SET{id_intervenant_annee, ''|thematique_intervenant_annee}
 	[(#REM) =============== ]
 	[(#REM) AFFICHAGE TOTAL ]
 	[(#REM) =============== ]
@@ -21,6 +22,14 @@ du cache de la page. ]
 	[(#REM) AFFICHAGE LISTE CLASSES ]
 	[(#REM) ======================= ]
 	<ul class="filter clearfix option-set" data-filter-group="classe">
+		[(#REM) ======== INTERVENANT DE L'ANNÉE (affiché en tête de liste) ======== ]
+		<BOUCLE_intervenant_annee(AUTEURS){id_auteur=#GET{id_intervenant_annee}}{0,1}>
+			<li class="intervenant-annee">
+				<span class="intervenant-annee-label"><:thematique:intervenant_annee:></span>
+				<span class="intervenant-annee-nom">#NOM</span>
+			</li>
+		</BOUCLE_intervenant_annee>
+
 		#SET{nb_classes, 0}
 
 		[(#REM) ======== BOUCLE 1 : rubrique de l'année en cours ======== ]

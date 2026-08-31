@@ -284,6 +284,7 @@ return [
 	'toutes_les_actualites'          => 'Toutes les actualités',
 	'tri'                            => 'Tri',
 	'les_participants'  => 'Les participants',
+	'intervenant_annee'              => 'Intervenant :',
 
 	// inc-head.html (liens rel=alternate)
 	'rss_dernieres_publications'     => 'Dernières publications',

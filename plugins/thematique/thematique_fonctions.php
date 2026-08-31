@@ -901,6 +901,37 @@ function thematique_premier_intervenant($id_rubrique) {
 }
 
 /**
+ * Intervenant "de l'année" : premier intervenant trouvé (au sens
+ * thematique_premier_intervenant) sur la rubrique racine nommée par
+ * l'année scolaire active. Repli sur la première rubrique taguée
+ * travail_en_cours si aucune rubrique racine n'est nommée par l'année
+ * (mêmes rubriques que celles utilisées par noisettes/menu_classes.html
+ * pour lister les classes). Mis en cache mémoire par requête.
+ *
+ * @return int 0 si aucun intervenant trouvé
+ */
+function thematique_intervenant_annee() {
+	static $cache = null;
+	if ($cache !== null) {
+		return $cache;
+	}
+
+	$id_rubrique_annee = sql_getfetsel(
+		'id_rubrique',
+		'spip_rubriques',
+		'id_parent=0 AND titre LIKE ' . sql_quote('%' . constant('_ANNEE_SCOLAIRE') . '%')
+	);
+
+	if ($id_rubrique_annee) {
+		return $cache = thematique_premier_intervenant(intval($id_rubrique_annee));
+	}
+
+	$id_rubrique_travail = thematique_id_rubrique_a_mot('travail_en_cours');
+
+	return $cache = $id_rubrique_travail ? thematique_premier_intervenant($id_rubrique_travail) : 0;
+}
+
+/**
  * Première rubrique enfant de $id_parent taguée du mot-clé $titre_mot.
  *
  * @param int $id_parent
