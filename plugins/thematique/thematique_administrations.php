@@ -63,6 +63,11 @@ function thematique_upgrade($nom_meta_base_version, $version_cible) {
 	// rétroactivement sur tous les sites déjà installés.
 	$maj['3.4.0'] = [['thematique_ajouter_mots_clef']];
 
+	// spip_auteurs.nom_complet (prénom+nom réels, cf #SESSION{nom_complet} dans
+	// authentification.html) : nouveau champ extra, à créer en base.
+	$maj['3.4.1'] = [];
+	cextras_api_upgrade(thematique_declarer_champs_extras(), $maj['3.4.1']);
+
 	include_spip('base/upgrade');
 	maj_plugin($nom_meta_base_version, $version_cible, $maj);
 }
