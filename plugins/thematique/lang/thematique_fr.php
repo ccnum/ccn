@@ -261,6 +261,7 @@ return [
 	'bouton_publication_card' => 'Voir la ressource',
 
 	// Menu du bas (sommaire.html et fichiers menu_*.html)
+	'article_non_publie'			 => 'Article non publié',
 	'ascendant'                      => 'Ascendant',
 	'cap_sur_annee'                  => 'Cap sur l\'année',
 	'descendant'                     => 'Descendant',

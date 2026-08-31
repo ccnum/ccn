@@ -237,7 +237,7 @@ function setContentFromState(state, title, url) {
 		// Consigne
 		if (state.type_objet == "consignes") {
 			if (state.id_objet == CCN.idArticleCapSurAnnee || state.id_objet == CCN.idArticleLaRencontre) {
-				callArticleJalon(state.id_objet);
+				callArticleJalon(state.id_objet == CCN.idArticleCapSurAnnee);
 			} else {
 				for (let k = 0; k < CCN.consignes.length; k++) {
 					if (CCN.consignes[k].id == state.id_objet) {
@@ -628,12 +628,13 @@ function callRessource() {
  * Appelle le chargement d'un article jalon ("Cap sur l'année" / "La Rencontre")
  * dans la sidebar principale.
  *
- * @param {number} id_article
+ * @param {Boolean} est_debut
  *
  * @see loadContentInMainSidebar
  */
 
-function callArticleJalon(id_article) {
+function callArticleJalon(est_debut) {
+	const id_article = est_debut ? CCN.idArticleCapSurAnnee : CCN.idArticleLaRencontre
 	if (!Number.isInteger(Number(id_article)) || id_article <= 0) return;
 	changeTimelineMode('consignes');
 	setFullscreenModeToCols(true);

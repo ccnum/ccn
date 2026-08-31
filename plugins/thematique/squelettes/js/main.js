@@ -352,10 +352,8 @@ function updateBadgeJalon(prefixe, idArticle, statut) {
 	}
 
 	// L'image de fond du badge (étiquette + pastille "Article non publié"
-	// éventuelle) change selon le statut, cf les data-svg-publie /
-	// data-svg-non-publie posés dans sommaire.html.
-	const svg = nonPublie ? $badge.data('svg-non-publie') : $badge.data('svg-publie');
-	$badge.find('.badge_timeline_label_img').attr('src', svg);
+	// éventuelle) change selon le statut
+	$badge.toggleClass('est-publie', !nonPublie);
 	$badge.show();
 }
 

@@ -1,0 +1,21 @@
+<button type="button" 
+        id="badge_[(#ENV{est_debut}|?{'cap_sur_annee','la_rencontre'})]"
+        class="badge_timeline badge_timeline_[(#ENV{est_debut}|=={oui}|?{'debut','fin'})] btn-reset" 
+        style="display:none;" 
+        onclick="callArticleJalon([(#ENV{est_debut}|=={oui}|?{'true','false'})])"
+        title="#ENV{texte}"
+>
+    <div class="premiere-ligne">
+        <div class="badge_timeline_icone">[(#VAL{1}|thematique_picto_site|balise_img_svg)]</div>
+        <div class="badge-texte">
+            #ENV{texte}
+        </div>
+    </div>
+    <div class="deuxieme-ligne">
+        <div class="cadre">
+            <div class="exclamation-circle icon"></div>
+            <div><:thematique:article_non_publie:></div>
+        </div>
+    </div>
+    <div class="fond-badge"></div>
+</button>

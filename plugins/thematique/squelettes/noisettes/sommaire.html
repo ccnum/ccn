@@ -34,18 +34,18 @@ et/ou
 					<div class="timeline_trigger"></div>
 				</div>
 				<div id="timeline_background"></div>
-				<button type="button" id="badge_cap_sur_annee" class="badge_timeline badge_timeline_debut btn-reset" style="display:none;" onclick="callArticleJalon(CCN.idArticleCapSurAnnee)"
-					data-svg-publie="[(#CHEMIN{img/badge_label_cap_sur_annee_publie.svg}|attribut_url)]"
-					data-svg-non-publie="[(#CHEMIN{img/badge_label_cap_sur_annee_non_publie.svg}|attribut_url)]">
-					<img class="badge_timeline_label_img" src="[(#CHEMIN{img/badge_label_cap_sur_annee_publie.svg}|attribut_url)]" alt="<:thematique:cap_sur_annee:>" />
-					<span class="badge_timeline_icone">[(#VAL{1}|thematique_picto_site|balise_img_svg)]</span>
-				</button>
-				<button type="button" id="badge_la_rencontre" class="badge_timeline badge_timeline_fin btn-reset" style="display:none;" onclick="callArticleJalon(CCN.idArticleLaRencontre)"
-					data-svg-publie="[(#CHEMIN{img/badge_label_la_rencontre_publie.svg}|attribut_url)]"
-					data-svg-non-publie="[(#CHEMIN{img/badge_label_la_rencontre_non_publie.svg}|attribut_url)]">
-					<img class="badge_timeline_label_img" src="[(#CHEMIN{img/badge_label_la_rencontre_publie.svg}|attribut_url)]" alt="<:thematique:la_rencontre:>" />
-					<span class="badge_timeline_icone"><img src="[(#CHEMIN{img/logo_la_rencontre.svg}|attribut_url)]" alt="" /></span>
-				</button>
+				<INCLURE{fond=noisettes/card_jalon,
+						est_debut=oui,
+						texte=<:thematique:cap_sur_annee:>,
+						env, 
+						ajax
+				} />
+				<INCLURE{fond=noisettes/card_jalon,
+						est_debut=non,
+						texte=<:thematique:la_rencontre:>,
+						env, 
+						ajax
+				} />
 			</div>
 		</div>
 		<div id="sidebar" role="dialog" aria-modal="true" aria-hidden="true">
