@@ -1638,46 +1638,51 @@ function forum_rendre_branche($forums) {
 }
 
 function filtre_titre_consigne($id_consigne) {
-    if (!$id_consigne) return '';
-    return sql_getfetsel('titre', 'spip_articles', 'id_article=' . intval($id_consigne));
+	if (!$id_consigne) {
+		return '';
+	}
+	return sql_getfetsel('titre', 'spip_articles', 'id_article=' . intval($id_consigne));
 }
 
 function filtre_rang_consigne($id_consigne) {
-    if (!$id_consigne) return '';
+	if (!$id_consigne) {
+		return '';
+	}
 
-    $date_consigne = sql_getfetsel(
-        'date',
-        'spip_articles',
-        'id_article=' . intval($id_consigne) . ' AND id_consigne=0'
-    );
-    if (!$date_consigne) return '';
+	$date_consigne = sql_getfetsel(
+		'date',
+		'spip_articles',
+		'id_article=' . intval($id_consigne) . ' AND id_consigne=0'
+	);
+	if (!$date_consigne) {
+		return '';
+	}
 
-    return sql_countsel(
-        'spip_articles',
-        'id_consigne = 0'
-        . ' AND date >= ' . sql_quote(_DATE_DEBUT)
-        . ' AND date <= ' . sql_quote($date_consigne)
-        . ' AND id_article IN (SELECT DISTINCT id_consigne FROM spip_articles WHERE id_consigne > 0)'
-    );
+	return sql_countsel(
+		'spip_articles',
+		'id_consigne = 0'
+		. ' AND date >= ' . sql_quote(_DATE_DEBUT)
+		. ' AND date <= ' . sql_quote($date_consigne)
+		. ' AND id_article IN (SELECT DISTINCT id_consigne FROM spip_articles WHERE id_consigne > 0)'
+	);
 }
-
 
 /**
  * Transforme un id_auteur de prof ou élève en id_rubrique de classe.
  */
 function filtre_auteur_vers_classe($id_auteur) {
-    if (!$id_auteur) {
-        return '';
-    }
+	if (!$id_auteur) {
+		return '';
+	}
 
-    $result = sql_getfetsel(
-        'sr.id_rubrique',
-        'spip_auteurs_liens AS sal
+	$result = sql_getfetsel(
+		'sr.id_rubrique',
+		'spip_auteurs_liens AS sal
          JOIN spip_rubriques AS sr ON sr.id_rubrique = sal.id_objet
          JOIN spip_rubriques AS sr2 ON sr.id_parent = sr2.id_rubrique',
-        'sal.id_auteur = ' . intval($id_auteur) . '
+		'sal.id_auteur = ' . intval($id_auteur) . '
          AND sr2.titre = ' . sql_quote('Travail des classes')
-    );
+	);
 
-    return $result;
+	return $result;
 }
