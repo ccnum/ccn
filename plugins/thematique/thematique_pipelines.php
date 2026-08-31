@@ -233,6 +233,10 @@ function thematique_cioidc_userinfo($flux) {
 	// icon-avatar-masculin/feminin utilisés en repli quand l'ENT n'en fournit pas).
 	$avatar = $flux['data']['avatar'] ?? '';
 	$auteur = thematique_cioidc_maj_champ($auteur, 'avatar', $avatar, 'du champ avatar');
+	// Prénom + nom réels, distincts du champ 'nom' (rôle/classe/collège, cf #44) —
+	// exposés en session pour l'affichage dans le menu haut (#SESSION{nom_complet}).
+	$nom_complet = thematique_cioidc_nom_complet($flux['data']);
+	$auteur = thematique_cioidc_maj_champ($auteur, 'nom_complet', $nom_complet, 'du nom complet');
 
 	$classes_groupes = thematique_cioidc_normaliser_liste($flux['data']['ENTClassesGroupes'] ?? []);
 	$classes_reelles = thematique_cioidc_classes_reelles($classes_groupes);

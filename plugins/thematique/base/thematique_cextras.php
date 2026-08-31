@@ -52,6 +52,15 @@ function thematique_declarer_champs_extras($champs = []) {
 		'thematique:champ_extra_ent_statut',
 		"varchar(255) NOT NULL DEFAULT ''"
 	);
+	// Prénom + nom réels (ex: "Intervenant CCN"), alimenté depuis l'ENT (attribut
+	// 'name') — distinct du champ 'nom' qui affiche rôle/classe/collège (cf #44) :
+	// utilisé là où on veut identifier la personne plutôt que sa fonction (menu haut).
+	$champs['spip_auteurs']['nom_complet'] = thematique_champ_extra_simple(
+		'nom_complet',
+		'thematique:champ_extra_nom_complet',
+		"varchar(255) NOT NULL DEFAULT ''",
+		'webmestre'
+	);
 
 	$champs['spip_rubriques']['url_id_doc'] = thematique_champ_extra_simple(
 		'url_id_doc',

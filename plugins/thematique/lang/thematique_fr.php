@@ -296,6 +296,7 @@ return [
 	'champ_extra_ent'                => 'Identifiant ENT',
 	'champ_extra_ent_statut'         => 'Statut ENT',
 	'champ_extra_avatar'             => 'Avatar',
+	'champ_extra_nom_complet'        => 'Prénom Nom',
 	'champ_extra_url_id_doc'         => 'URL ou identifiant du document',
 	'champ_extra_id_rubrique_lien'   => 'Rubrique liée',
 	'champ_extra_position_x'         => 'Position X',

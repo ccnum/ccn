@@ -26,7 +26,8 @@
 					]
 				]
 			</span>
-			[(#SESSION{nom})]
+			[(#SESSION{nom_complet}|oui)#SESSION{nom_complet}]
+			[(#SESSION{nom_complet}|non)#SESSION{nom}]
 			<span class="icon icon-down"></span>
 		</button>
 		<ul class="select-options">

@@ -15,7 +15,7 @@ if (!defined('_ECRIRE_INC_VERSION')) {
 // le même critère en priorité, sinon on met à jour un autre compte (ex: un doublon
 // historique retrouvé par email) que celui qui sera effectivement connecté.
 function thematique_cioidc_resoudre_auteur($uid, $email) {
-	$champs = 'id_auteur,nom,statut,email,webmestre,avatar';
+	$champs = 'id_auteur,nom,nom_complet,statut,email,webmestre,avatar';
 	$auteur = $uid ? sql_fetsel($champs, 'spip_auteurs', 'login=' . sql_quote($uid)) : null;
 	if (!$auteur) {
 		$auteur = sql_fetsel($champs, 'spip_auteurs', 'email=' . sql_quote($email));
@@ -124,6 +124,18 @@ function thematique_cioidc_role_affiche(string $profils, bool $is_webmestre, boo
 		return _T('thematique:cioidc_role_eleve');
 	}
 	return null;
+}
+
+// Prénom + nom réels de la personne (ex: "Intervenant CCN"), tels que fournis par
+// l'ENT — à distinguer de thematique_cioidc_nom_affiche() qui construit le libellé
+// rôle/classe/collège (cf #44). Utilisé là où on veut identifier la personne plutôt
+// que sa fonction (menu haut). 'name' est déjà le prénom+nom concaténés côté ENT ;
+// repli sur LaclassePrenom/LaclasseNom si jamais absent.
+function thematique_cioidc_nom_complet(array $data) {
+	if (!empty($data['name'])) {
+		return trim((string) $data['name']);
+	}
+	return trim(($data['LaclassePrenom'] ?? '') . ' ' . ($data['LaclasseNom'] ?? ''));
 }
 
 // Nom affiché : rôle ENT, suivi de la classe (première classe réelle du prof) pour
