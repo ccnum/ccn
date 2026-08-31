@@ -31,6 +31,7 @@ return [
 	'cioidc_projet_archive_texte'    => 'Ce projet ne repart pas cette année : seuls les comptes administrateurs peuvent s\'y connecter. Contactez un administrateur si vous pensez qu\'il s\'agit d\'une erreur.',
 	'cioidc_projet_archive_titre'    => 'Ce projet CCN est archivé',
 	'cioidc_role_eleve'              => 'Élève',
+	'cioidc_role_intervenant'        => 'Intervenant',
 	'classe'                         => 'Classe',
 	'article_publie'                 => 'Article publié.',
 	'article_publie_succes'          => 'Article publié !',

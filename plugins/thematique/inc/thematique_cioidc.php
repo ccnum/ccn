@@ -103,17 +103,25 @@ function thematique_cioidc_nom_etablissement($uai) {
 	return $nom_etablissement;
 }
 
-// Rôle ENT affiché (Enseignant/Tuteur/Élève), remplacé par "Admin" pour un webmestre :
-// affiché ci-dessous à la suite du nom plutôt que le rôle ENT d'origine.
-function thematique_cioidc_role_affiche(string $profils, bool $is_webmestre) {
+// Rôle ENT affiché (Enseignant/Intervenant/Tuteur/Élève), remplacé par "Admin" pour un
+// webmestre : affiché ci-dessous à la suite du nom plutôt que le rôle ENT d'origine.
+// L'ENT laclasse.com n'a pas de profil dédié "intervenant" : un intervenant est envoyé
+// avec le même profil ENS qu'un vrai prof (cf issue signalée en session — un intervenant
+// ressortait "Enseignant"). Seule la présence d'une classe réelle (ENTClassesGroupes,
+// cf thematique_cioidc_classes_reelles()) distingue les deux : un ENS sans classe réelle
+// (seulement un groupe projet ENTGroupesLibres) est un intervenant.
+function thematique_cioidc_role_affiche(string $profils, bool $is_webmestre, bool $a_une_classe_reelle) {
 	if ($is_webmestre) {
 		return 'Admin';
 	}
-	$roles_ent = ['ENS' => 'Enseignant', 'TUT' => 'Tuteur', 'ELV' => _T('thematique:cioidc_role_eleve')];
-	foreach ($roles_ent as $code => $libelle) {
-		if (strpos($profils, $code) !== false) {
-			return $libelle;
-		}
+	if (strpos($profils, 'ENS') !== false) {
+		return $a_une_classe_reelle ? 'Enseignant' : _T('thematique:cioidc_role_intervenant');
+	}
+	if (strpos($profils, 'TUT') !== false) {
+		return 'Tuteur';
+	}
+	if (strpos($profils, 'ELV') !== false) {
+		return _T('thematique:cioidc_role_eleve');
 	}
 	return null;
 }

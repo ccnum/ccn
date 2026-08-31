@@ -246,7 +246,7 @@ function thematique_cioidc_userinfo($flux) {
 	$uai_liste = thematique_cioidc_normaliser_liste($flux['data']['ENTAllUai'] ?? []);
 	$is_webmestre = thematique_cioidc_est_webmestre($uai_liste, $is_enseignant);
 	$is_eleve = (strpos($profils, 'ELV') !== false);
-	$role_ent = thematique_cioidc_role_affiche($profils, $is_webmestre);
+	$role_ent = thematique_cioidc_role_affiche($profils, $is_webmestre, count($classes_reelles) > 0);
 
 	$nom = thematique_cioidc_nom_affiche($classes_reelles, $role_ent, $uai_liste);
 	$auteur = thematique_cioidc_maj_champ($auteur, 'nom', $nom, 'du nom');
