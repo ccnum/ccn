@@ -258,7 +258,7 @@ return [
 	'label_header_fiche_participant' => 'Classe participante',
 	'titre_onglet_publications' => 'Publications',
 	'titre_onglet_commentaires' => 'Discussions',
-	'bouton_publication_card' => 'Voir la ressource',
+	'bouton_publication_card' => 'Voir la réponse',
 
 	// Menu du bas (sommaire.html et fichiers menu_*.html)
 	'article_non_publie'			 => 'Article non publié',
