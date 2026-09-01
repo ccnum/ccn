@@ -634,10 +634,23 @@ function callRessource() {
  */
 
 function callArticleJalon(est_debut) {
-	const id_article = est_debut ? CCN.idArticleCapSurAnnee : CCN.idArticleLaRencontre
+	const id_article = est_debut ? CCN.idArticleCapSurAnnee : CCN.idArticleLaRencontre;
 	if (!Number.isInteger(Number(id_article)) || id_article <= 0) return;
 	changeTimelineMode('consignes');
 	setFullscreenModeToCols(true);
+
+	// Même zoom qu'une consigne (cf showInTimeline dans consigne.js) :
+	// la fenêtre affiche le même nombre de jours (nombre_jours_max de la
+	// consigne voisine, 30 à défaut) et se positionne sur le jalon
+	// (début de l'année pour « Cap sur l'année », fin pour « La Rencontre »).
+	const consigneVoisine = est_debut
+		? CCN.consignes[0]
+		: CCN.consignes[CCN.consignes.length - 1];
+	const nombre_jours = consigneVoisine ? consigneVoisine.nombre_jours_max : 30;
+	const x_dest = est_debut
+		? 0
+		: CCN.projet.nombre_jours_total - nombre_jours;
+	CCN.projet.showRangeOfTimeline(nombre_jours, x_dest, 0);
 
 	const url = "./spip.php?page=article&id_article=" + id_article + "&type_objet=consignes&mode=ajax-detail";
 	loadContentInMainSidebar(
