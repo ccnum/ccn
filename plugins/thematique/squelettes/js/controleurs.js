@@ -794,7 +794,7 @@ function callArticleEvenement(id_objet, type_objet) {
  *
  * @see loadContentInMainSidebar
  */
-function createReponse(id_consigne, id_rubrique_classe, numero) {
+function createReponse(id_consigne, id_rubrique_auteur, numero) {
 	changeTimelineMode('consignes');
 
 	const consigneData = CCN.consignes && CCN.consignes.find(c => c.id == id_consigne);
