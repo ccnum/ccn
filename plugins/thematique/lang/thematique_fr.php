@@ -47,7 +47,7 @@ return [
 	'commenter_title'                => 'commenter',
 	'confirmation_supprimer_commentaire' => 'Êtes-vous sûr de vouloir supprimer ce commentaire ?',
 	'consigne'						 => 'consigne',
-	'consigne_etape'                 => 'Étape N°@numero@',
+	'consigne_etape'                 => 'Mission N°@numero@',
 	'mission_numero'                 => 'MISSION N°@numero@',
 	'reponse_mission_numero'         => 'RÉPONSE - MISSION N°@numero@',
 	'contenu_lie'                    => 'Contenu lié',
