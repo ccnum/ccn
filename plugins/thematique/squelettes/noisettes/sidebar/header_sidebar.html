@@ -12,7 +12,7 @@
 				</BOUCLE_test_jalon_header>
 				#SET{numero_mission, #ENV{rang}|sinon{0}|plus{1}}
 				<div class="etiquette-etape">
-					[(#GET{est_jalon}|=={oui}|oui)<span class="texte-etiquette">[(#TITRE)]</span>]
+					[(#GET{est_jalon}|=={oui}|oui)<span class="texte-etiquette"><:thematique:cap_sur_annee:></span>]
 					[(#GET{est_jalon}|=={non}|oui)<span class="texte-etiquette"><:thematique:mission_numero{numero=#GET{numero_mission}}:></span>]
 				</div>
 				<INCLURE{fond=noisettes/sidebar/normal_header_icons, env} />
