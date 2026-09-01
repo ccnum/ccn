@@ -801,9 +801,8 @@ function createReponse(id_consigne, id_rubrique_classe, numero) {
 	const nextConsigne = consigneData ? CCN.consignes.find(c => c.numero === consigneData.numero + 1) : null;
 	const dateLimite   = nextConsigne ? nextConsigne.data.date_texte : '';
 	const rang         = consigneData ? consigneData.numero : (numero || '');
-
-	const url = CCN.projet.url_popup_reponseajout + "&id_consigne=" + id_consigne + "&id_rubrique=" + id_rubrique_classe + "&rang=" + rang + "&date_limite=" + dateLimite;
-	loadContentInMainSidebar(url, null, "publication_mission");
+	const url = CCN.projet.url_popup_reponseajout + "&id_consigne=" + id_consigne + "&id_rubrique=" + id_rubrique_auteur + "&rang=" + rang + "&date_limite=" + dateLimite;
+	loadContentInMainSidebar(url, null, "publication_article");
 }
 /**
  * Cherche la réponse correspondant à un id_reponse dans CCN.consignes.
@@ -948,7 +947,7 @@ function updateReponseConnecteurs(reponseObject, ui) {
 	const timelineTop = CCN.timelineLayerConsignes.offset().top;
 	const timelineHeight = CCN.timelineLayerConsignes.height();
 	const picto = reponseDOM.find(".picto_nombre_commentaires")
-	const cardMaxHeight = picto ? picto.offset().top : reponseDOM.offset().top
+	const cardMaxHeight = picto.length>0 ? picto.offset().top : reponseDOM.offset().top
 
 	const x1 = consigneDOM.offset().left + consigneDOM.outerWidth();
 	const y1 = consigneDOM.offset().top  + consigneDOM.outerHeight() / 2 - timelineTop;
@@ -1069,7 +1068,7 @@ function initMissionTabs() {
  *
  * @param {string} url - URL de la page à charger avec AJAX
  * @param {?function(string)} callback - Appelé avec la réponse une fois le contenu chargé
- * @param {string} typeContenu - Type de contenu chargé : <tt>consigne</tt>, <tt>reponse</tt>, <tt>publication_mission</tt>…
+ * @param {string} typeContenu - Type de contenu chargé : <tt>consigne</tt>, <tt>reponse</tt>, <tt>publication_article</tt>…
  *
  * @see loadContentInLateralSidebar
  */
@@ -1097,7 +1096,7 @@ function loadContentInMainSidebar(url, callback, typeContenu) {
 			initMissionTabs();
 			initCommentaires();
 		}
-		if(typeContenu === "publication_mission") {
+		if(typeContenu === "publication_article") {
 			// initCompteurCaracteres()
 			initPublierFormulaire();
 		}

@@ -386,6 +386,15 @@ function thematique_type_objet_rubrique($id_rubrique) {
 	return $cache[$id_rubrique] = null;
 }
 
+function thematique_rendre_type_article_affichable($type_article) {
+	if($type_article == 'consignes') {
+		return _T('thematique:consigne');
+	}
+	if($type_article == 'travail_en_cours') {
+		return _T('thematique:reponse_minuscule');
+	}
+}
+
 /**
  * Type de contenu d'un article : "travail_en_cours" s'il répond à une
  * consigne (id_consigne renseigné), sinon celui porté par sa rubrique
@@ -1716,4 +1725,19 @@ function filtre_auteur_vers_classe($id_auteur) {
 	);
 
 	return $result;
+}
+
+function thematique_trouver_reponse_a_une_consigne($id_consigne, $id_rubrique_classe) {
+	if(!$id_consigne || !$id_rubrique_classe) {
+		return false;
+	}
+	$article = sql_fetsel(
+		'*',
+		'spip_articles',
+		[
+			'id_consigne = ' . intval($id_consigne),
+			'id_rubrique = ' . intval($id_rubrique_classe),
+		]
+	);
+	return $article;
 }

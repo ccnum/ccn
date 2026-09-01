@@ -17,4 +17,8 @@
 	[(#GET{mode}|=={ajax-detail}|oui)#SET{page,publier_article}]
 
 
-<INCLURE{fond=noisettes/sidebar/publier_mission/publier_mission, env} />
+<INCLURE{
+	fond=noisettes/sidebar/publier_article/publier_article, 
+	type_article=#GET{type_objet}, 
+	env
+} />

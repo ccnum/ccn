@@ -1,17 +1,17 @@
 /**
- * Formulaire de publication d'une mission (consigne), affiché dans la
+ * Formulaire de publication d'un article, affiché dans la
  * sidebar principale en 2 étapes. Fonctions appelées directement depuis
  * les attributs onclick du squelette du formulaire.
  */
 
 /**
  * Réinitialise le formulaire à l'étape 1 (masque l'étape 2 et le bouton
- * "précédent"). Appelé au chargement du fond "publication_mission"
+ * "précédent"). Appelé au chargement du fond "publication_article"
  * (cf loadContentInMainSidebar dans controleurs.js).
  */
 function initPublierFormulaire() {
     const etape2 = document.getElementById("sidebar-etape-2-container")
-    const boutonPrecedentElement = document.querySelector("#bouton-etape-precedente-mission")
+    const boutonPrecedentElement = document.querySelector("#bouton-etape-precedente-article")
     etape2.style.display = "none";
     boutonPrecedentElement.style.display = "none";
 }
@@ -43,12 +43,12 @@ function initCompteurCaracteres() {
 /**
  * Passe le formulaire de l'étape 1 à l'étape 2.
  */
-function creationMissionEtapeSuivante() {
+function creationArticleEtapeSuivante() {
     const etape1 = document.getElementById("sidebar-etape-1-container")
     const etape2 = document.getElementById("sidebar-etape-2-container")
-    const boutonPrecedentElement = document.querySelector("#bouton-etape-precedente-mission")
-    const boutonSuivantElement = document.querySelector("#bouton-etape-suivante-mission")
-    const boutonEnregistrerElement = document.querySelector("#bouton-enregistrer-mission")
+    const boutonPrecedentElement = document.querySelector("#bouton-etape-precedente-article")
+    const boutonSuivantElement = document.querySelector("#bouton-etape-suivante-article")
+    const boutonEnregistrerElement = document.querySelector("#bouton-enregistrer-article")
     etape1.style.display = "none"
     etape2.style.display = "block"
     boutonPrecedentElement.style.display = "block";
@@ -59,12 +59,12 @@ function creationMissionEtapeSuivante() {
 /**
  * Revient de l'étape 2 à l'étape 1 du formulaire.
  */
-function creationMissionEtapePrecedente() {
+function creationArticleEtapePrecedente() {
     const etape1 = document.getElementById("sidebar-etape-1-container")
     const etape2 = document.getElementById("sidebar-etape-2-container")
-    const boutonPrecedentElement = document.querySelector("#bouton-etape-precedente-mission")
-    const boutonSuivantElement = document.querySelector("#bouton-etape-suivante-mission")
-    const boutonEnregistrerElement = document.querySelector("#bouton-enregistrer-mission")
+    const boutonPrecedentElement = document.querySelector("#bouton-etape-precedente-article")
+    const boutonSuivantElement = document.querySelector("#bouton-etape-suivante-article")
+    const boutonEnregistrerElement = document.querySelector("#bouton-enregistrer-article")
     etape1.style.display = "block"
     etape2.style.display = "none"
     boutonPrecedentElement.style.display = "none";
@@ -73,9 +73,9 @@ function creationMissionEtapePrecedente() {
 }
 
 /**
- * Soumet le formulaire "#formulaire_publier_mission".
+ * Soumet le formulaire "#formulaire_publier_article".
  */
-function creationMissionEnregistrer() {
-    const formulaire = document.getElementById("formulaire_publier_mission")
+function creationArticleEnregistrer() {
+    const formulaire = document.getElementById("formulaire_publier_article")
     formulaire.requestSubmit();
 }

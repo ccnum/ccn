@@ -5,19 +5,24 @@
 	<form method="post"
 		  action="#ENV{action}"
 		  enctype="multipart/form-data"
-		  id="formulaire_publier_mission"
+		  id="formulaire_publier_article"
 	>
 		<div>
 			#ACTION_FORMULAIRE{#ENV{action}}
+			<input type="hidden"
+				   name="id_article"
+				   value="#ENV{id_article}" 
+			/>
             <input type="hidden"
 				   name="id_parent"
 				   value="#ENV{id_parent}" 
 			/>
-
+			
 
 			<div class="editer-groupe">
 				<div id="sidebar-etape-1-container">
-					<h3><:thematique:etape1_redaction_mission:></h3>
+					[(#SET{type_article_affichable, #ENV{type_article}|thematique_rendre_type_article_affichable})]
+					<h3><:thematique:etape1_redaction_article{type_article=#GET{type_article_affichable}}:></h3>
 					<div class="editer editer_titre obligatoire[ (#ENV**{erreurs}|table_valeur{titre}|oui)erreur]">
 						<label for="titre"><:info_titre:></label>
 						[<span class="erreur_message">(#ENV**{erreurs}|table_valeur{titre})</span>]
@@ -34,12 +39,12 @@
 						[<span class="erreur_message">(#ENV**{erreurs}|table_valeur{texte})</span>]
 
 						<textarea name="texte"
-								id="texte"
-								rows="10"
-								class="inserer_barre_edition inserer_previsualisation"
-								data-barre="edition"
-								data-id="article-#ENV{id_article,new}"
-						></textarea>
+								  id="texte"
+								  rows="10"
+								  class="inserer_barre_edition inserer_previsualisation"
+								  data-barre="edition"
+								  data-id="article-#ENV{id_article,new}"
+						>#ENV{texte}</textarea>
 					</div>
 
 					<div class="editer editer_attendre_livrable">

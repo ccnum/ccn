@@ -14,18 +14,42 @@ if (!defined('_ECRIRE_INC_VERSION')) {
 	return;
 }
 
-function formulaires_public_publier_article_charger_dist($id_rubrique, $id_consigne = 0) {
-	include_spip('inc/editer');
-	include_spip('prive/formulaires/editer_article');
+function formulaires_public_publier_article_charger_dist(
+    $id_rubrique,
+    $type_article,
+    $id_consigne = 0
+) {
+    $valeurs = [
+        'id_rubrique'       => $id_rubrique,
+        'id_parent'         => $id_rubrique,
+        'id_consigne'       => $id_consigne,
+        'type_article'      => $type_article,
+        'id_article'        => 0,
+        'titre'             => '',
+        'texte'             => '',
+        'attendre_livrable' => '',
+    ];
 
-	$valeurs = formulaires_editer_objet_charger('article', 'new', $id_rubrique);
+    // Si on répond à une consigne, chercher une éventuelle réponse existante
+    if ($id_consigne) {
+        $reponse = thematique_trouver_reponse_a_une_consigne(
+            $id_consigne,
+            $id_rubrique
+        );
 
-	// Variables utiles au squelette
-	$valeurs['id_rubrique'] = $id_rubrique;
-	$valeurs['id_parent'] = $id_rubrique;
-	$valeurs['id_consigne'] = $id_consigne;
+        if ($reponse) {
+            $valeurs['id_article'] = $reponse['id_article'];
+            $valeurs['titre'] = $reponse['titre'];
+            $valeurs['texte'] = $reponse['texte'];
+            $valeurs['id_rubrique'] = $reponse['id_rubrique'];
+            $valeurs['id_consigne'] = $reponse['id_consigne'];
 
-	return $valeurs;
+            if (isset($reponse['attendre_livrable'])) {
+                $valeurs['attendre_livrable'] = $reponse['attendre_livrable'];
+            }
+        }
+    }
+    return $valeurs;
 }
 
 function formulaires_public_publier_article_verifier_dist($id_rubrique, $id_consigne = 0) {
@@ -40,45 +64,94 @@ function formulaires_public_publier_article_verifier_dist($id_rubrique, $id_cons
 	return $erreurs;
 }
 
-function formulaires_public_publier_article_traiter_dist($id_rubrique, $id_consigne = 0) {
-	include_spip('inc/editer');
-	include_spip('prive/formulaires/editer_article');
 
-	$res = formulaires_editer_objet_traiter('article', 'new', $id_rubrique);
+function formulaires_public_publier_article_traiter_dist(
+    $id_rubrique,
+    $type_article,
+    $id_consigne = 0
+) {
+    include_spip('inc/editer');
+    include_spip('prive/formulaires/editer_article');
 
-	if (empty($res['erreurs']) && !empty($res['id_article'])) {
-		include_spip('inc/joindre_document');
-		$files = joindre_trouver_http_post_files('fichier_upload');
-		if ($files) {
-			$ajouter_documents = charger_fonction('ajouter_documents', 'action');
-			$ajouter_documents(
-				'new',
-				$files,
-				'article',
-				$res['id_article'],
-				'document'
-			);
-		}
+    // Si une réponse existe déjà, id_article est transmis par le formulaire.
+    // Sinon, on crée un nouvel article.
+    $id_article = intval(_request('id_article'));
 
-		if ($id_consigne) {
-			include_spip('action/editer_objet');
-			objet_modifier('article', $res['id_article'], [
-				'id_consigne' => $id_consigne,
-			]);
-		}
-		article_instituer($res['id_article'], [
-			'statut' => 'publie',
-		]);
-		$res['message_ok'] = _T('thematique:article_publie_succes');
-		$res['redirect'] = generer_url_public('article', 'id_article=' . $res['id_article'] . '&mode=complet');
+	if (!$id_article) {
+        $id_article = 'new';
+    }
 
-		if (_request('attendre_livrable') === 'oui') {
-			include_spip('action/editer_liens');
+    $res = formulaires_editer_objet_traiter(
+        'article',
+        $id_article,
+        $id_rubrique
+    );
 
-			if ($id_mot_livrable = sql_getfetsel('id_mot', 'spip_mots', "titre='livrable'")) {
-				objet_associer(['mots' => $id_mot_livrable], ['articles' => $res['id_article']]);
-			}
-		}
-	}
-	return $res;
+    if (empty($res['erreurs']) && !empty($res['id_article'])) {
+
+        $id_article = $res['id_article'];
+
+        // Ajouter les documents joints
+        include_spip('inc/joindre_document');
+        $files = joindre_trouver_http_post_files('fichier_upload');
+        if ($files) {
+            $ajouter_documents = charger_fonction('ajouter_documents', 'action');
+
+            $ajouter_documents(
+                'new',
+                $files,
+                'article',
+                $id_article,
+                'document'
+            );
+        }
+
+        // Si c'est une réponse à une consigne,
+        // associer l'article à la consigne.
+        if ($id_consigne) {
+            include_spip('action/editer_objet');
+            objet_modifier(
+                'article',
+                $id_article,
+                [
+                    'id_consigne' => intval($id_consigne),
+                ]
+            );
+        }
+
+        // Publier l'article
+        article_instituer(
+            $id_article,
+            [
+                'statut' => 'publie',
+            ]
+        );
+
+        $res['message_ok'] = _T('thematique:article_publie_succes');
+
+        $res['redirect'] = generer_url_public(
+            'article',
+            'id_article=' . $id_article . '&mode=complet'
+        );
+
+        // Associer le mot-clé "livrable"
+        if (_request('attendre_livrable') === 'oui') {
+            include_spip('action/editer_liens');
+
+            if ($id_mot_livrable = sql_getfetsel(
+                'id_mot',
+                'spip_mots',
+                "titre='livrable'"
+            )) {
+                objet_associer(
+                    ['mots' => $id_mot_livrable],
+                    ['articles' => $id_article]
+                );
+            }
+        }
+    }
+
+    return $res;
 }
+
+

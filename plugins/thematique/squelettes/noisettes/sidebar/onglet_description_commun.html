@@ -59,8 +59,22 @@
 				<div>
 					<:thematique:ca_vous_inspire:>
 				</div>
+				#SET{id_rubrique_classe, #SESSION{id_auteur}|filtre_auteur_vers_classe}
+				[(#SESSION{role}|=={admin}|oui)
+					[(#REM) Si on est admin, on doit publier à la place d'une classe.
+							Je choisit la premère de la liste
+					]
+					<BOUCLE_FiltreAnnee(RUBRIQUES){racine}{titre LIKE %(#CONST{_ANNEE_SCOLAIRE})%}>
+						#SET{hasYearRub,true}
+						<BOUCLE_rubMot(RUBRIQUES){id_parent}{titre_mot=travail_en_cours}>
+							<BOUCLE_rubLoop(RUBRIQUES){id_parent}{tous}{par id_rubrique}{0,1}>
+								#SET{id_rubrique_classe, #ID_RUBRIQUE}
+							</BOUCLE_rubLoop>
+						</BOUCLE_rubMot>
+					</BOUCLE_FiltreAnnee>
+				]
 				<button class="bouton-lisere rempli"
-						onclick="repondreALaMission()"
+						onclick="createReponse( #ENV{id_article} , #GET{id_rubrique_classe} )"
 				>
 					<span class="icon icon-publier"
 						style="background-color: var(--color-default);
