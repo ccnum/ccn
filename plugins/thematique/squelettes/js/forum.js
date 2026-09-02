@@ -92,31 +92,37 @@ function callbackCliqueSurCommenter(e) {
 }
 
 function callbackCliqueSurAnnuler(e) {
-    const racineFormulaire = e.currentTarget.closest(".forum-commentaire-racine, .forum-commentaire")
-    const cestLeFormulaireRepondre = !!racineFormulaire
-    if(cestLeFormulaireRepondre) {
-        const champParent = racineFormulaire.querySelector(".js-forum-id-parent")
-        let formulaire
-        if(champParent.value == 0) {  // Cas formulaire de publication racine
-            const racinePage = e.currentTarget.closest(".forum-article")
-            formulaire = racinePage.querySelector(".forum-commentaire-racine")
-            const encadre = racinePage.querySelector(".encadre-message")
-            encadre.removeAttribute("hidden");
-        } else {  // Cas formulaire de réponse à une réponse
-            formulaire = document.querySelector('#forum-formulaire-reponse');
-        }
-        formulaire.hidden = true
-        const textarea = racineFormulaire.querySelector("textarea#texte")
+    const formulaireRacine = e.currentTarget.closest(".forum-commentaire-racine")
+    if (formulaireRacine) { // Cas formulaire de publication racine
+        const racinePage = e.currentTarget.closest(".forum-article")
+        const encadre = racinePage.querySelector(".encadre-message")
+        encadre.removeAttribute("hidden");
+        formulaireRacine.hidden = true
+        const textarea = formulaireRacine.querySelector("textarea#texte")
         if (textarea) {
             textarea.value = ""
         }
-    } else { // C'est le formulaire modifier
-        const formulaireCourant = document.getElementById("forum-formulaire-reponse")
-        const cardToDisplay = formulaireCourant.nextElementSibling
-        cardToDisplay.removeAttribute("hidden");
-        formulaireCourant.hidden = true
+        return
     }
-    
+
+    // Formulaire mobile partagé (#forum-formulaire-reponse), utilisé aussi
+    // bien pour répondre à un commentaire que pour modifier le sien : on ne
+    // peut pas distinguer les deux cas via la position dans le DOM (une
+    // réponse imbriquée déplace ce formulaire à l'intérieur d'un ancêtre
+    // .forum-commentaire, comme le ferait aussi une modification), donc on
+    // se base sur le champ id-forum du formulaire lui-même.
+    const formulaireMobile = document.getElementById("forum-formulaire-reponse")
+    const champIdForum = formulaireMobile.querySelector(".id-forum")
+    const cestUneModification = !!champIdForum && champIdForum.value != 0
+    const textarea = formulaireMobile.querySelector("textarea#texte")
+    if (textarea) {
+        textarea.value = ""
+    }
+    if (cestUneModification) {
+        const cardToDisplay = formulaireMobile.nextElementSibling
+        cardToDisplay.removeAttribute("hidden");
+    }
+    formulaireMobile.hidden = true
 }
 
 function callback_clique_sur_lire_la_suite_du_commentaire(e) {
