@@ -88,7 +88,7 @@ function Consigne() {
 					${this.data.nombre_commentaires > 0 ? `<div aria-label="${this.data.nombre_commentaires} interaction${this.data.nombre_commentaires > 1 ? 's' : ''}" class="picto_nombre_commentaires">${this.data.nombre_commentaires}</div>` : ''}
 					<div class="etiquette-etape">
 						<img class="logo-etiquette" src="" alt="" />
-						<span class="texte-etiquette">${CCN.lang.consigne_etape.replace('@numero@', this.numero+1)}</span>
+						<span class="texte-etiquette">${CCN.lang.mission_numero.replace('@numero@', this.numero+1)}</span>
 					</div>
 					<div class="texte">
 						<div class="first-row">
