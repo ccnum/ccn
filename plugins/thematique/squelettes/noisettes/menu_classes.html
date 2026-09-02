@@ -5,6 +5,8 @@
 jamais être mise en cache — même si la page englobante (sommaire.html)
 l'est 48h, sans quoi une classe ajoutée reste invisible jusqu'à expiration
 du cache de la page. ]
+#SET{nb_classes_annee, #VAL{''}|thematique_classes_rangs|count}
+[(#GET{nb_classes_annee}|>{0}|oui)
 <div id="menu-classes" class="bloc_view col">
 	#SET{hasYearRub,false}
 	#SET{id_intervenant_annee, ''|thematique_intervenant_annee}
@@ -53,3 +55,4 @@ du cache de la page. ]
 	</ul>
 	<script>thematiqueApplyDeferredCount('nb_classes_valeur', '#GET{nb_classes}');</script>
 </div>
+]
