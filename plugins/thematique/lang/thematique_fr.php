@@ -237,7 +237,7 @@ return [
 	'titre_onglet_blog' 			 => 'Agenda',
 	'titre_onglet_comentaire'        => 'Commentaires',
 	'titre_onglet_comentaire_pour_blog_ou_event' => 'Discussions',
-	'titre_onglet_comentaire_pour_classe' => 'Discussions',
+	'titre_onglet_comentaire_pour_classe' => 'Discussions autour de la mission',
 	'titre_onglet_comentaire_pour_jalon' => 'Discussions',
 	'titre_onglet_description_cap'   => 'Le Cap sur l\'année',
 	'titre_onglet_liste_des_reponses'=> 'Suivi des réponses',
