@@ -119,12 +119,22 @@ function cextras_editer_contenu_objet($flux){
 	// recuperer les saisies de l'objet en cours
 	$objet = $flux['args']['type'];
 	include_spip('inc/cextras');
-	if ($saisies = champs_extras_objet( table_objet_sql($objet) )) {
+	if ($saisies = champs_extras_objet(table_objet_sql($objet))) {
 		// filtrer simplement les saisies que la personne en cours peut voir
 		$saisies = champs_extras_autorisation('modifier', $objet, $saisies, $flux['args']);
 		// pour chaque saisie presente, de type champs extras (hors fieldset et autres)
 		// ajouter un flag d'edition
 		$saisies = champs_extras_ajouter_drapeau_edition($saisies);
+
+		//  Si l'objet déclare déjà ses champs en saisies, les champs extras ont déjà été ajoutées au fond via `cextras_formulaire_saisies()` (pipeline `formulaire_saisie`) (cas du plugin coordonnées)
+		//  Pour le savoir, on se contente de compter le nombre de saisies deja déclarés : si supérieures au nombre de saisies en champ extra, c'est que c'est le cas
+		if (
+			isset($flux['args']['contexte']['_saisies'])
+			&& count($flux['args']['contexte']['_saisies']) > count($saisies)
+		) {
+			return $flux;
+		}
+
 		// ajouter au formulaire
 		$ajout = recuperer_fond('inclure/generer_saisies', array_merge($flux['args']['contexte'], array('saisies'=>$saisies)));
 
