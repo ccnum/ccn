@@ -1,0 +1,23 @@
+#!/usr/bin/env php
+<?php
+// spipmu
+// USAGE: spipmu {glob} {command}
+// spipmu * plugins:lister
+// spipmu *.domaine.tld plugins:lister
+
+if (file_exists(__DIR__ . '/../vendor/autoload.php')) {
+	require_once __DIR__ . '/../vendor/autoload.php';
+} elseif (file_exists(__DIR__ . '/../../../autoload.php')) {
+	require_once __DIR__ . '/../../../autoload.php';
+} else {
+	throw new \Exception("Can't find autoloader. Need Composer install ?");
+}
+
+use Spip\Cli\Mutualisation\Application;
+
+#ini_set('display_errors', 'On');
+
+$app = new Application([
+		'path.spip-cli' => __DIR__ . DIRECTORY_SEPARATOR . 'spip'
+]);
+$app->run();
