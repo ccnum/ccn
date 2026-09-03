@@ -116,7 +116,7 @@ function facteur_envoyer_mail_test($destinataire, $titre, &$message_html, $optio
 	if (test_plugin_actif('medias') and !empty($options['piece_jointe'])) {
 		include_spip('inc/documents');
 		// trouver une piece jointe dans les documents si possible, la plus legere possible, c'est juste pour le principe
-		// mais de preference un pdf car ça trig moins les antispam qu'un fichier office par exemple
+		// mais de preference un pdf car Ã§a trig moins les antispam qu'un fichier office par exemple
 		foreach (['pdf', '%'] as $ext) {
 			$docs = sql_allfetsel('*', 'spip_documents', 'extension LIKE ' . sql_quote($ext) . ' AND media=' . sql_quote('file') . ' AND distant=' . sql_quote('non') . ' AND brise=0', '', 'taille', '0,10');
 			foreach ($docs as $doc) {
@@ -136,16 +136,25 @@ function facteur_envoyer_mail_test($destinataire, $titre, &$message_html, $optio
 	}
 
 	// trouver un article, de preference dans la langue du site, avec une image jointe
-	foreach ([$GLOBALS['meta']['langue_site'], '%'] as $lang) {
-		foreach (['%<img%', '%<emb%', '%<doc%', '%'] as $modele) {
-			if ($modele === '%' and $lang !== '%') {
-				continue;
-			}
-			$id_article = sql_getfetsel('id_article', 'spip_articles', "statut='publie' AND lang LIKE " . sql_quote($lang) . ' AND texte LIKE ' . sql_quote($modele), '', 'LENGTH(texte) DESC,id_article', '0,1');
-			if ($id_article) {
-				break 2;
+	$id_article = 0;
+	if (defined('_FACTEUR_TESTER_MAIL_ID_ARTICLE')) {
+		$id_article = sql_getfetsel('id_article', 'spip_articles', "statut='publie' AND id_article=" . intval(_FACTEUR_TESTER_MAIL_ID_ARTICLE));
+	}
+	if (!$id_article) {
+		foreach ([$GLOBALS['meta']['langue_site'], '%'] as $lang) {
+			foreach (['%<img%', '%<emb%', '%<doc%', '%'] as $modele) {
+				if ($modele === '%' and $lang !== '%') {
+					continue;
+				}
+				$id_article = sql_getfetsel('id_article', 'spip_articles', "statut='publie' AND lang LIKE " . sql_quote($lang) . ' AND texte LIKE ' . sql_quote($modele), '', 'LENGTH(texte) DESC,id_article', '0,1');
+				if ($id_article) {
+					break 2;
+				}
 			}
 		}
+	}
+	if (!$id_article) {
+		return _T('facteur:erreur') . ' ' . _T('facteur:erreur_aucun_article_test');
 	}
 
 	$message_html	= recuperer_fond('emails/test_email_html', ['piece_jointe' => $piece_jointe, 'id_article' => $id_article]);

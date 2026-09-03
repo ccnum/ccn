@@ -623,6 +623,9 @@ class FacteurMail extends PHPMailer {
 	 * @throws Exception
 	 */
 	public function Send() {
+		if ($this->Mailer === 'mail' && !function_exists('mail')) {
+			throw new Exception('Echec envoi: la fonction mail() de PHP est désactivée');
+		}
 		$this->forceFromIfNeeded();
 		if ($this->convertMessageToIso8859) {
 			$this->convertMessageFromUtf8ToIso8859();
