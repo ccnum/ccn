@@ -55,48 +55,50 @@
 			#SET{a_deja_repondu, oui}
 		</BOUCLE_reponse>
 		[(#GET{a_deja_repondu}|=={non}|ou{#SESSION{role}|=={admin}}|oui)
-			<div class="encadre-message">
-				<div>
-					<:thematique:ca_vous_inspire:>
-				</div>
-				#SET{id_rubrique_classe, #SESSION{id_auteur}|filtre_auteur_vers_classe}
-				[(#SESSION{role}|=={admin}|oui)
-					[(#REM) Si on est admin, on doit publier à la place d'une classe.
-							Je choisit la premère de la liste
+			<div class="footer-description">
+				<div class="encadre-message">
+					<div>
+						<:thematique:ca_vous_inspire:>
+					</div>
+					#SET{id_rubrique_classe, #SESSION{id_auteur}|filtre_auteur_vers_classe}
+					[(#SESSION{role}|=={admin}|oui)
+						[(#REM) Si on est admin, on doit publier à la place d'une classe.
+								Je choisit la premère de la liste
+						]
+						<BOUCLE_FiltreAnnee(RUBRIQUES){racine}{titre LIKE %(#CONST{_ANNEE_SCOLAIRE})%}>
+							#SET{hasYearRub,true}
+							<BOUCLE_rubMot(RUBRIQUES){id_parent}{titre_mot=travail_en_cours}>
+								<BOUCLE_rubLoop(RUBRIQUES){id_parent}{tous}{par id_rubrique}{0,1}>
+									#SET{id_rubrique_classe, #ID_RUBRIQUE}
+								</BOUCLE_rubLoop>
+							</BOUCLE_rubMot>
+						</BOUCLE_FiltreAnnee>
 					]
-					<BOUCLE_FiltreAnnee(RUBRIQUES){racine}{titre LIKE %(#CONST{_ANNEE_SCOLAIRE})%}>
-						#SET{hasYearRub,true}
-						<BOUCLE_rubMot(RUBRIQUES){id_parent}{titre_mot=travail_en_cours}>
-							<BOUCLE_rubLoop(RUBRIQUES){id_parent}{tous}{par id_rubrique}{0,1}>
-								#SET{id_rubrique_classe, #ID_RUBRIQUE}
-							</BOUCLE_rubLoop>
-						</BOUCLE_rubMot>
-					</BOUCLE_FiltreAnnee>
-				]
-				<button class="bouton-lisere rempli"
-						onclick="createReponse( #ENV{id_article} , #GET{id_rubrique_classe} )"
+					<button class="bouton-lisere rempli"
+							onclick="createReponse( #ENV{id_article} , #GET{id_rubrique_classe} )"
+					>
+						<span class="icon icon-publier"
+							style="background-color: var(--color-default);
+									height: 1rem;
+									width: 1rem;"
+						></span>
+						<div><:thematique:repondre:></div>
+					</button>
+				</div>
+				<div style="margin-top: 1rem;
+							display: flex;
+							gap: 0.2rem;"
 				>
-					<span class="icon icon-publier"
-						style="background-color: var(--color-default);
-								height: 1rem;
-								width: 1rem;"
-					></span>
-					<div><:thematique:repondre:></div>
-				</button>
-			</div>
-			<div style="margin-top: 1rem;
-						display: flex;
-						gap: 0.2rem;"
-			>
-				<div><strong><:thematique:besoin_dinspi:></strong></div>
-				<div><:thematique:regardez_les_reponses:></div>
-			</div>
-			<div style="display: flex;
-						white-space: nowrap;
-						gap: 0.2rem;"
-			>
-				<div><strong><:thematique:besoin_daide:></strong></div>
-				<div><:thematique:nhesitez_pas:></div>
+					<div><strong><:thematique:besoin_dinspi:></strong></div>
+					<div><:thematique:regardez_les_reponses:></div>
+				</div>
+				<div style="display: flex;
+							white-space: nowrap;
+							gap: 0.2rem;"
+				>
+					<div><strong><:thematique:besoin_daide:></strong></div>
+					<div><:thematique:nhesitez_pas:></div>
+				</div>
 			</div>
 		]
 	]
