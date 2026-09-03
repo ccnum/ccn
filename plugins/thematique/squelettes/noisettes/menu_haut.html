@@ -1,4 +1,9 @@
-#CACHE{300}
+#CACHE{0}
+<!-- Dépend de la session : inclut authentification.html et choix_rubrique_admin2.html,
+     tous deux #CACHE{0} car dépendants du rôle/statut en session (cf CLAUDE.md). Un
+     #CACHE{n} ici figerait leur rendu pour tous les visiteurs pendant n secondes,
+     malgré leur propre #CACHE{0} interne (le cache se calcule sur la sortie déjà
+     assemblée du fond englobant). -->
 <div id="menu_haut_gauche">
 	<div id="menu_haut_ccn">
 		<a href="https://erasme.org/projets/classes_culturelles_numeriques_ccn" target="_blank" rel="noopener noreferrer">[(#CHEMIN{img/logos/ccn_full.svg}|balise_img)]</a>
