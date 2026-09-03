@@ -318,17 +318,29 @@ function thematique_ascendants_rubrique($id_rubrique) {
 	return $ids;
 }
 
+/**
+ * Id du mot-clé (spip_mots) portant un titre donné, mis en cache mémoire
+ * par requête — une seule résolution par titre distinct, quel que soit le
+ * nombre d'appels (id_rubrique_a_mot, hierarchie_a_mot, classes_rangs, ...).
+ *
+ * @param string $titre_mot
+ * @return int 0 si non trouvé
+ */
+function thematique_id_mot($titre_mot) {
+	static $cache = [];
+	if (!array_key_exists($titre_mot, $cache)) {
+		$cache[$titre_mot] = (int) sql_getfetsel('id_mot', 'spip_mots', 'titre=' . sql_quote($titre_mot));
+	}
+	return $cache[$titre_mot];
+}
+
 function thematique_hierarchie_a_mot($id_rubrique, $titre_mot) {
 	$ascendants = thematique_ascendants_rubrique($id_rubrique);
 	if (!$ascendants) {
 		return false;
 	}
 
-	static $cache_mot = [];
-	if (!isset($cache_mot[$titre_mot])) {
-		$cache_mot[$titre_mot] = sql_getfetsel('id_mot', 'spip_mots', 'titre=' . sql_quote($titre_mot));
-	}
-	$id_mot = $cache_mot[$titre_mot];
+	$id_mot = thematique_id_mot($titre_mot);
 	if (!$id_mot) {
 		return false; // le mot-clé n'existe même pas
 	}
@@ -621,7 +633,7 @@ function thematique_classes_rangs() {
 	}
 	$rangs = [];
 
-	$id_mot = sql_getfetsel('id_mot', 'spip_mots', 'titre=' . sql_quote('travail_en_cours'));
+	$id_mot = thematique_id_mot('travail_en_cours');
 	if (!$id_mot) {
 		return $rangs;
 	}
@@ -677,7 +689,7 @@ function thematique_a_classes_annee() {
 		return $a_classes;
 	}
 
-	$id_mot = sql_getfetsel('id_mot', 'spip_mots', 'titre=' . sql_quote('travail_en_cours'));
+	$id_mot = thematique_id_mot('travail_en_cours');
 	$annee_scolaire = thematique_annee_scolaire();
 	$id_annee = $id_mot
 		? sql_getfetsel(
@@ -921,7 +933,7 @@ function thematique_assurer_structure_annee() {
 		if (!$id_rub) {
 			continue;
 		}
-		$id_mot = sql_getfetsel('id_mot', 'spip_mots', 'titre=' . sql_quote($titre_mot));
+		$id_mot = thematique_id_mot($titre_mot);
 		if ($id_mot) {
 			objet_associer(['mots' => intval($id_mot)], ['rubriques' => intval($id_rub)]);
 		}
@@ -938,7 +950,7 @@ function thematique_assurer_structure_annee() {
  * @return int 0 si aucun intervenant trouvé
  */
 function thematique_premier_intervenant($id_rubrique) {
-	$id_mot_consignes = sql_getfetsel('id_mot', 'spip_mots', "titre='consignes'");
+	$id_mot_consignes = thematique_id_mot('consignes');
 	if (!$id_mot_consignes) {
 		return 0;
 	}
@@ -1008,7 +1020,7 @@ function thematique_id_rubrique_enfant_a_mot($id_parent, $titre_mot, $orderby = 
 	if (!$id_parent) {
 		return 0;
 	}
-	$id_mot = sql_getfetsel('id_mot', 'spip_mots', 'titre=' . sql_quote($titre_mot));
+	$id_mot = thematique_id_mot($titre_mot);
 	if (!$id_mot) {
 		return 0;
 	}
@@ -1040,7 +1052,7 @@ function thematique_id_rubrique_enfant_a_mot($id_parent, $titre_mot, $orderby = 
  * @return int[]
  */
 function thematique_ids_rubriques_racine_a_mot($titre_mot) {
-	$id_mot = sql_getfetsel('id_mot', 'spip_mots', 'titre=' . sql_quote($titre_mot));
+	$id_mot = thematique_id_mot($titre_mot);
 	if (!$id_mot) {
 		return [];
 	}
@@ -1091,7 +1103,7 @@ function thematique_id_rubrique_a_mot($titre_mot) {
 	}
 
 	include_spip('base/abstract_sql');
-	$id_mot = sql_getfetsel('id_mot', 'spip_mots', 'titre=' . sql_quote($titre_mot));
+	$id_mot = thematique_id_mot($titre_mot);
 	if (!$id_mot) {
 		return $cache[$titre_mot] = 0;
 	}
@@ -1126,7 +1138,7 @@ function thematique_article_a_mot($titre_mot) {
 	}
 
 	include_spip('base/abstract_sql');
-	$id_mot = sql_getfetsel('id_mot', 'spip_mots', 'titre=' . sql_quote($titre_mot));
+	$id_mot = thematique_id_mot($titre_mot);
 	if (!$id_mot) {
 		return $cache[$titre_mot] = '0|';
 	}
@@ -1184,7 +1196,7 @@ function thematique_ids_rubriques_petits_enfants_a_mot($id_grandparent, $titre_m
 	if (!$id_grandparent) {
 		return [];
 	}
-	$id_mot = sql_getfetsel('id_mot', 'spip_mots', 'titre=' . sql_quote($titre_mot));
+	$id_mot = thematique_id_mot($titre_mot);
 	if (!$id_mot) {
 		return [];
 	}
