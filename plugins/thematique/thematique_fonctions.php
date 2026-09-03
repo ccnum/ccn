@@ -1256,6 +1256,30 @@ function thematique_id_rubrique_mission() {
 }
 
 /**
+ * Indique si au moins une mission (article) existe dans la rubrique
+ * "Consignes" de l'année active (cf thematique_id_rubrique_mission()).
+ * Aucun repli sur une année antérieure — même principe que
+ * thematique_a_classes_annee() : sert à masquer le bloc "Missions" du menu
+ * bas (menu_consignes.html) tant que l'année scolaire n'a pas de mission,
+ * plutôt que d'afficher un titre vide.
+ *
+ * @return bool
+ */
+function thematique_a_missions_annee() {
+	static $a_missions = null;
+	if ($a_missions !== null) {
+		return $a_missions;
+	}
+
+	$id_rubrique = thematique_id_rubrique_mission();
+	if (!$id_rubrique) {
+		return $a_missions = false;
+	}
+
+	return $a_missions = (bool) sql_getfetsel('id_article', 'spip_articles', 'id_rubrique=' . intval($id_rubrique));
+}
+
+/**
  * Est-ce que le menu "Publier > Une nouvelle mission" doit être proposé à
  * l'utilisateur connecté : admin, ou intervenant (issue #404 — dépendre en
  * plus de #SESSION{admin}>0, càd d'une rubrique en admin restreint dans
