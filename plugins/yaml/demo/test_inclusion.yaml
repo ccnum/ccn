@@ -15,3 +15,27 @@ parametres:
     options:
       nom: 'selection'
       defaut: 'limite'
+
+5: '5 sections'
+15: '15 sections'
+30: '30 sections'
+
+saisies:
+  -
+    saisie: 'selection'
+    options:
+      nom: 'heure_pas'
+      label: '<:saisies:option_heure_pas_label:>'
+      explication: '<:saisies:option_heure_pas_explication:>'
+      data:
+        1: '1 minute'
+        2: '2 minutes'
+        5: '5 minutes'
+        15: '15 minutes'
+        30: '30 minutes'
+      defaut: 30
+    verifier:
+      type: 'entier'
+      options:
+        min: 1
+        max: 30

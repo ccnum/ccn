@@ -52,3 +52,17 @@ div#footer ul {width: 24%; border-top: 1px solid #ccc; list-style: none; padding
 div#footer li {padding:0; border-bottom: 1px solid #ccc;}
 div#footer li a {color:#aaa; text-decoration: none;}
 div#footer li a:hover {color:#eee; text-decoration: underline; background-color: #666;}
+
+/* Tableaux de tests : lisibilité des verdicts */
+table.spip {width:100%; margin:1em 0; table-layout:fixed;}
+table.spip th, table.spip td {padding:0.4em 0.6em; vertical-align:top; text-align:left; border:1px solid #ddd;}
+table.spip thead th {background-color:#798f74; color:#fff; font-weight:bold;}
+table.spip .row_odd {background-color:#fafafa;}
+table.spip .row_even {background-color:#fff;}
+table.spip code {font-size:0.85em; word-break:break-all; overflow-wrap:anywhere;}
+table.spip td, table.spip th {overflow-wrap:anywhere;}
+table.spip tr.echec {background-color:#fbe4e4;}
+table.spip tr.echec td, table.spip tr.echec th {border-color:#e0a0a0;}
+p.bilan {padding:0.6em 1em; border-radius:3px;}
+p.bilan.ok {background-color:#e4f3e4; border:1px solid #a0c0a0;}
+p.bilan.echec {background-color:#fbe4e4; border:1px solid #e0a0a0;}

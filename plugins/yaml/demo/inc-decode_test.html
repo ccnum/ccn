@@ -1,11 +1,20 @@
 <h2 class="h2">YAML DECODE[ : (#ENV{test}|strtoupper)]</h2>
+
 #SET{options, #ARRAY{show_error, #EVAL{true}}}
-[(#ENV{test}|=={inclusion}|ou{#ENV{inclure}}|oui)
+[(#ENV{test}|=={inclusion}|oui)
 	#SET{options, #GET{options}|array_merge{#ARRAY{include, #EVAL{true}}}}
 ]
-<BOUCLE_tests(DATA) {source table, #ENV{librairies}}>
-	#SET{fichier, #ENV{fichier, demo/test_#VALEUR.yaml}}
-	#SET{options, #GET{options}|array_merge{#ARRAY{library, #VALEUR}}}
-	<h3 class="h3">LIBRAIRIE : [(#VALEUR) - ][FICHIER : (#GET{fichier})]</h3>
-	[<p>(#GET{fichier}|decoder_fichier_yaml{#GET{options}}|bel_env)</p>]
-</BOUCLE_tests>
+
+#SET{resultat, #ENV{fichier}|decoder_fichier_yaml{#GET{options}}}
+
+<table class="spip">
+	<tbody>
+		<tr><th>Fichier</th><td><code>[(#GET{resultat}|table_valeur{fichier})]</code></td></tr>
+		<tr><th>Inclusions</th><td>[(#GET{options}|table_valeur{include}|?{traitées, non demandées})]</td></tr>
+		<tr><th>Durée</th><td>[(#GET{resultat}|table_valeur{duree})]</td></tr>
+		<tr><th>$erreur</th><td>[(#GET{resultat}|table_valeur{erreur}|sinon{<em>vide</em>})]</td></tr>
+	</tbody>
+</table>
+
+<h3 class="h3">Structure obtenue</h3>
+[<p>(#GET{resultat}|table_valeur{yaml}|print_r{1}|highlight_string{1})</p>]

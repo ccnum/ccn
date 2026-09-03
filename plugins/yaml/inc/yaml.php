@@ -4,17 +4,13 @@ if (!defined('_ECRIRE_INC_VERSION')) {
 	return;
 }
 
-if (!defined('_LIB_YAML')) {
-	/**
-	 * Les valeurs possibles sont :
-	 * - 'symfony' pour le composant YAML le plus récent de Symfony
-	 * - 'spyc' pour la librairie YAML spyc la plus récente
-	 * - 'libyaml' pour le composant PECL basé sur la librairie libYAML écrite en C.
-	 */
-	define('_LIB_YAML', 'symfony');
-}
-
 /**
+ * Encode une structure de données PHP en une chaine YAML.
+ *
+ * La chaine est rendue, jamais écrite : la ranger quelque part appartient à l'appelant. La fonction
+ * n'échoue pas — une valeur que la librairie ne sait pas représenter, une ressource par exemple, est
+ * rendue sous la forme `null`.
+ *
  * @api
  *
  * @param mixed $structure
@@ -26,62 +22,83 @@ if (!defined('_LIB_YAML')) {
  *        Chaîne YAML construite, prête pour être éventuellement écrite dans un fichier.
  */
 function yaml_encode($structure, $options = []) {
+	require_once __DIR__ . '/symfony.php';
 
-	// Déterminer la librairie à utiliser
-	$librairie = _LIB_YAML;
-	if (!empty($options['library'])) {
-		$librairie = $options['library'];
-	}
-
-	// Déterminer la fonction à appeler à partir de la librairie utilisée.
-	require_once _DIR_PLUGIN_YAML . 'inc/' . $librairie . '.php';
-	$encoder = $librairie . '_yaml_encode';
-
-	return $encoder($structure, $options);
+	return symfony_yaml_encode($structure, $options);
 }
 
 
-if (!function_exists('yaml_decode')) {
-	/**
-	 * @api
-	 *
-	 * @param string $input
-	 *        La chaîne YAML à décoder.
-	 * @param array $options
-	 *        Tableau associatif des options du parsing.
-	 *        - 'show_error' : indicateur d'affichage des erreurs de parsing, false par défaut.
-	 *
-	 * @return mixed
-	 */
-	function yaml_decode($input, $options = []) {
-
-		// Déterminer la librairie à utiliser
-		$librairie = _LIB_YAML;
-		if (!empty($options['library'])) {
-			$librairie = $options['library'];
-		}
-
-		// Déterminer la fonction à appeler à partir de la librairie utilisée.
-		require_once _DIR_PLUGIN_YAML . 'inc/' . $librairie . '.php';
-		$decoder = $librairie . '_yaml_decode';
-
-		return $decoder($input, $options);
-	}
-}
-
-/*
+/**
+ * Décode une chaine YAML en une structure de données PHP.
+ *
+ * Un document YAML pouvant décrire aussi bien une map qu'une liste ou un scalaire, le type rendu est
+ * quelconque. Aucune exception ne sort : une erreur d'analyse rend `false` et est journalisée dans le
+ * canal `yaml`. Comme `false` est aussi un document valide, **c'est `$erreur` qui décrit l'échec**, pas la
+ * valeur de retour.
+ *
  * @api
  *
- * Decode un fichier en utilisant yaml_decode
- * @param string $fichier
- */
-/**
- * @param $fichier
+ * @param string $input
+ *        La chaîne YAML à décoder.
+ * @param array $options
+ *        Tableau associatif des options du parsing.
+ *        - 'show_error' : indicateur d'affichage des erreurs de parsing, false par défaut.
+ * @param string $erreur
+ *        Passé par référence : message d'erreur d'analyse, chaine vide si tout va bien.
  *
- * @return array|mixed
+ * @return mixed
+ *        La structure décodée, de n'importe quel type ; `false` en cas d'erreur d'analyse.
  */
-function yaml_decode_file($fichier, $options = []) {
+function yaml_decode($input, $options = [], &$erreur = null) {
+	require_once __DIR__ . '/symfony.php';
 
+	return symfony_yaml_decode($input, $options, $erreur);
+}
+
+/**
+ * Décode une chaine YAML pour la boucle `DATA` de SPIP, qui n'accepte qu'un tableau.
+ *
+ * C'est l'implémentation unique derrière les deux points d'entrée que le noyau peut retenir —
+ * `inc_yaml_to_array()` dans `yaml_fonctions.php` et `inc_yaml_to_array_dist()` dans
+ * `inc/yaml_to_array.php` —, lesquels ne sont que des adaptateurs. Elle est ici pour qu'ils ne puissent
+ * pas diverger : c'est exactement ce qui était arrivé, l'un rendant la valeur brute et l'autre `null`.
+ *
+ * Le contrat vient de l'appelant : l'itérateur `DATA` ignore ce qui n'est pas un tableau, et le noyau
+ * applique la même règle à ses propres formats — voir `inc_json_to_array_dist()`. Un document YAML
+ * pouvant décrire un scalaire, tout ce qui n'est pas un tableau est donc ramené à `[]`.
+ *
+ * @api
+ * @param string $input
+ * @return array
+ */
+function yaml_to_array($input) {
+	$yaml = yaml_decode($input);
+	if (is_object($yaml)) {
+		$yaml = (array) $yaml;
+	}
+
+	return is_array($yaml) ? $yaml : [];
+}
+
+/** 
+ * Decode un fichier en utilisant yaml_decode
+ * 
+ * Options
+ * - include: true pour gérer les inclusions de la forme `'inclure:chemin/fichier.yaml'`
+ * 
+ * @api
+ * @param string|false $fichier
+ *        Chemin déjà résolu. `false` est accepté sans dommage : c'est ce que rend `find_in_path()`
+ *        quand le fichier est absent.
+ * @param array{include?: bool, ...<string,mixed>} $options
+ * @param string $erreur
+ *        Passé par référence : message d'échec, chaine vide si tout s'est bien passé.
+ * @return mixed
+ *        La structure décodée ; `[]` faute de document lisible, `false` sur un YAML malformé.
+ */
+function yaml_decode_file($fichier, $options = [], &$erreur = null) {
+
+	$erreur = '';
 	$retour = [];
 
 	// Traitement des options
@@ -90,100 +107,175 @@ function yaml_decode_file($fichier, $options = []) {
 	}
 
 	// Lecture du fichier YAML.
-	lire_fichier($fichier, $yaml);
-
-	// Décodage du contenu YAML en structure de données PHP.
-	if ($yaml) {
-		$retour = yaml_decode($yaml, $options);
+	// - le test sur $fichier est indispensable : find_in_path() rend false quand le fichier est absent,
+	//   et lire_fichier(false) appelle fopen('') qui lève une ValueError en PHP 8.
+	// - le test sur '' plutôt que sur la vérité de $yaml : un fichier ne contenant que `0` est un YAML
+	//   valide, que `if ($yaml)` écartait sans le décoder. Un fichier vide n'est pas une erreur.
+	if (!$fichier) {
+		$erreur = 'Chemin de fichier YAML vide';
+	} elseif (!lire_fichier($fichier, $yaml)) {
+		$erreur = "Fichier YAML introuvable ou illisible : {$fichier}";
+	} elseif ($yaml !== '') {
+		// Décodage du contenu YAML en structure de données PHP.
+		$retour = yaml_decode($yaml, $options, $erreur);
 		if ($options['include']) {
-			$retour = decode_inclusions($retour, $options);
+			$retour = yaml_decode_inclusions($retour, $options, $erreur);
 		}
 	}
 
 	return $retour;
 }
 
-/*
- * @internal
- *
+
+/**
  * Charge les inclusions de YAML dans un tableau
+ *
  * Les inclusions sont indiquees dans le tableau via la valeur 'inclure:rep/fichier.yaml' ou rep indique le chemin relatif.
  * On passe donc par find_in_path() pour trouver le fichier
- * @param array $tableau
- */
-function decode_inclusions($parsed, $options = []) {
-
-	if (is_array($parsed)) {
-		$retour = [];
-		foreach ($parsed as $cle => $valeur) {
-			if (is_string($valeur) && substr($valeur, 0, 8) == 'inclure:' && substr($valeur, -5) == '.yaml') {
-				$inclusion = find_in_path(substr($valeur, 8));
-				if ($inclusion) {
-					$retour = array_merge($retour, yaml_decode_file($inclusion, $options));
-				} else {
-					$retour = array_merge($retour, [$cle => $valeur]);
-				}
-			} elseif (is_array($valeur)) {
-				$retour = array_merge($retour, [$cle => decode_inclusions($valeur, $options)]);
-			} else {
-				$retour = array_merge($retour, [$cle => $valeur]);
-			}
-		}
-	} elseif (is_string($parsed) && substr($parsed, 0, 8) == 'inclure:' && substr($parsed, -5) == '.yaml') {
-		$inclusion = find_in_path(substr($parsed, 8));
-		if ($inclusion) {
-			$retour = yaml_decode_file($inclusion, $options);
-		} else {
-			$retour = $parsed;
-		}
-	} else {
-		$retour = $parsed;
-	}
-
-	return $retour;
-}
-
-/*
+ *
  * @api
+ * @param array $tableau
+ * @param array $options
+ * @param string $erreur
+ *        Passé par référence : message d'échec, chaine vide si tout s'est bien passé. En cas d'inclusions
+ *        multiples, la première erreur rencontrée est conservée.
+ * @return mixed
+ */
+function yaml_charger_inclusions($tableau, $options = [], &$erreur = null) {
+	$erreur = '';
+	$options['include'] = true;
+	return yaml_decode_inclusions($tableau, $options, $erreur);
+}
+
+
+if (!function_exists('array_is_list')) {
+    function array_is_list(array $array): bool {
+        $i = 0;
+        foreach ($array as $k => $v) {
+            if ($k !== $i++) {
+                return false;
+            }
+        }
+        return true;
+    }
+}
+
+
+/**
+ * Charge les inclusions `inclure:fichier.yaml` d’un décodage YAML
  *
- * Charge les inclusions de YAML dans un tableau
  * Les inclusions sont indiquees dans le tableau via la valeur 'inclure:rep/fichier.yaml' ou rep indique le chemin relatif.
  * On passe donc par find_in_path() pour trouver le fichier
- * @param array $tableau
+ * 
+ * Plusieurs cas… 
+ * 
+ * Soit
+ * ```yaml
+ * # a.yaml
+ * - 'a.1'
+ * - 'a.2'
+ * ```
+ * 
+ * Sur une liste, le contenu inclu remplace l’inclusion
+ * ```yaml
+ * - 'avant'
+ * - 'inclure:a.yaml'
+ * - 'inclure:b.yaml'
+ * - 'apres'
+ * ```
+ * 
+ * Sortie équivalente à
+ * ```yaml
+ * - 'avant'
+ * - 'a.1'
+ * - 'a.2'
+ * - 'b.1'
+ * - 'b.2'
+ * - 'apres'
+ * ```
+ * 
+ * Avec des cles nommées, le contenu est intégré dans la clé
+ * ```yaml
+ * avant: 'avant'
+ * a: 'inclure:a.yaml'
+ * b: 'inclure:b.yaml'
+ * apres: 'apres'
+ * ```
+ * 
+ * Sortie équivalente à 
+ * ```
+ * avant: 'avant'
+ * a: 
+ *   - 'a.1'
+ *   - 'a.2;
+ * b:
+ *   - 'b.1'
+ *   - 'b.2'
+ * apres: 'apres'
+ * ```
+ * 
+ * @internal
+ * @param mixed $parsed
+ * @param array $options
+ * @param string $erreur
+ *        Passé par référence : la première erreur rencontrée, jamais écrasée par une inclusion suivante.
+ * @return mixed
  */
-function yaml_charger_inclusions($tableau, $options = []) {
-
-	// Eviter de traiter l'inclure avec la nouvelle approche
-	if (isset($options['include'])) {
-		unset($options['include']);
-	}
-
-	if (is_array($tableau)) {
-		$retour = [];
-		foreach ($tableau as $cle => $valeur) {
-			if (is_string($valeur) && substr($valeur, 0, 8) == 'inclure:' && substr($valeur, -5) == '.yaml') {
-				$inclusion = find_in_path(substr($valeur, 8));
-				if ($inclusion) {
-					$retour = array_merge($retour, yaml_charger_inclusions(yaml_decode_file($inclusion), $options));
-				} else {
-					$retour = array_merge($retour, [$cle => $valeur]);
+function yaml_decode_inclusions($parsed, $options = [], &$erreur = null) {
+	if (is_array($parsed)) {
+		$res = [];
+		foreach ($parsed as $key => $value) {
+			$file = yaml_is_to_include_file($value);
+			if ('' !== $file) {
+				// La première erreur rencontrée est conservée : une inclusion en échec ne doit pas
+				// effacer l'erreur du document parent.
+				$content = yaml_decode_file($file, $options, $sous_erreur);
+				if ($sous_erreur and !$erreur) {
+					$erreur = $sous_erreur;
 				}
-			} elseif (is_array($valeur)) {
-				$retour = array_merge($retour, [$cle => yaml_charger_inclusions($valeur, $options)]);
+				if (array_is_list($parsed)) {
+					$res = array_merge($res, $content);
+				} else {
+					$res = array_merge($res, [$key => $content]);
+				}
+				continue;
+			}
+
+			$content = yaml_decode_inclusions($value, $options, $erreur);
+			if (array_is_list($parsed)) {
+				$res = array_merge($res, [$content]);
 			} else {
-				$retour = array_replace($retour, [$cle => $valeur]);//Array_replace plutôt qu'array_merge pour préserver $cle si numérique
+				$res[$key] = $content;
 			}
 		}
-	} elseif (is_string($tableau) && substr($tableau, 0, 8) == 'inclure:' && substr($tableau, -5) == '.yaml') {
-		$inclusion = find_in_path(substr($tableau, 8));
-		if ($inclusion) {
-			$retour = yaml_charger_inclusions(yaml_decode_file($inclusion, $options));
-		} else {
-			$retour = $tableau;
-		}
-	} else {
-		$retour = $tableau;
+		return $res;
 	}
 
-	return $retour;
+	$file = yaml_is_to_include_file($parsed);
+	if ('' !== $file) {
+		$retour = yaml_decode_file($file, $options, $sous_erreur);
+		if ($sous_erreur and !$erreur) {
+			$erreur = $sous_erreur;
+		}
+		return $retour;
+	}
+
+	return $parsed;
+}
+
+/**
+ * Retourne le chemin du fichier, si c’est une inclusion à faire
+ * 
+ * @internal
+ * @param mixed $parsed
+ * @return string
+ *        Chemin résolu par `find_in_path()`, ou chaine vide si la valeur n'est pas une inclusion ou si le
+ *        fichier désigné est introuvable.
+ */
+function yaml_is_to_include_file($parsed) {
+	// if (is_string($value) && str_starts_with($value, 'inclure:') && str_ends_with($value, '.yaml')) {
+	if (is_string($parsed) && substr($parsed, 0, 8) == 'inclure:' && substr($parsed, -5) == '.yaml') {
+		return find_in_path(substr($parsed, 8)) ?: '';
+	}
+	return '';
 }

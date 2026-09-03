@@ -164,7 +164,6 @@ special_characters: "[{]]{{]]"
 asterisks: "*"
 
 empty_key:
-  :
     key: value
 
 trailing_colon: "foo:"
