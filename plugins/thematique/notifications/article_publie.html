@@ -4,23 +4,70 @@
   (c) 2009 SPIP
   Distribue sous licence GPL
 
+  Personnalisation CCN (issue #217) : mise en page basée sur la charte visuelle
+  du forum (couleurs et carte de type .forum-card, cf plugins/thematique/css/
+  tokens.css.html et forum.css.html) plutôt que sur le squelette d'origine du
+  plugin notifications. Le texte complet de l'article n'est volontairement pas
+  affiché (juste un extrait) : le mail ne doit pas se substituer à la
+  consultation en ligne (cf discussion issue #217).
+
 ]
 <BOUCLE_art(ARTICLES){id_article}{statut?}{tout}>
 #SET{auteurs,#LESAUTEURS}
+#SET{type_objet,#ID_ARTICLE|thematique_type_objet_article}
+#SET{type_libelle,#GET{type_objet}|thematique_rendre_type_article_affichable|sinon{#NOM_SITE_SPIP}}
 <BOUCLE_rubrique(RUBRIQUES){id_rubrique=#ID_SECTEUR}>#SET{titre_secteur, #TITRE}</BOUCLE_rubrique>
+#SET{url_article,#URL_ARTICLE|url_absolue|parametre_url{rub,#GET{titre_secteur}}|parametre_url{mode,complet}}
 <title>[(#VAL{notifications:article_publie_sujet}|_T{#ARRAY{nom_site_spip,#NOM_SITE_SPIP,titre,#TITRE}}|nettoyer_titre_email)]</title>
 
 <body>
 <div class="header">
-<h1><:notifications:article_valide_titre|trim|trim{-}:></h1>
-<p>
-[(#SET{titre,[<a href="[(#URL_ARTICLE|url_absolue|parametre_url{rub,#GET{titre_secteur}}|parametre_url{mode,complet})]"><strong>(#TITRE)</strong></a>]})]
-[(#VAL{notifications:article_publie_detail}|_T{#ARRAY{titre,#GET{titre},connect_nom,#SESSION{nom}}})]
-</p>
-<hr />
-</div>
+	<h1 style="color:#000AFF;font-family:'Poppins', Verdana, Geneva, sans-serif;font-size:22px;font-weight:700;margin:0 0 16px;">
+		[(#VAL{thematique:notif_publication_titre}|_T{#ARRAY{type,#GET{type_libelle}}})]
+	</h1>
+	<p style="color:#1E2055;font-family:'Poppins', Verdana, Geneva, sans-serif;font-size:15px;line-height:150%;margin:0 0 24px;">
+		[(#VAL{thematique:notif_publication_detail}|_T{#ARRAY{auteur,#GET{auteurs}|sinon{#NOM_SITE_SPIP},type,#GET{type_libelle}}})]
+	</p>
 
-<INCLURE{fond=notifications/inc-article,id_article} />
+	<table border="0" cellpadding="0" cellspacing="0" width="100%" style="border:1px solid #000AFF;border-radius:5px;">
+		<tr>
+			<td style="padding:16px;">
+				<table border="0" cellpadding="0" cellspacing="0" width="100%">
+					<tr>
+						<td width="40" valign="top">
+							<table border="0" cellpadding="0" cellspacing="0" width="40" height="40" style="width:40px;height:40px;border-radius:50%;background-color:#000AFF;">
+								<tr>
+									<td align="center" valign="middle" style="color:#FFFFFF;font-size:18px;line-height:40px;height:40px;">📄</td>
+								</tr>
+							</table>
+						</td>
+						<td valign="top" style="padding-left:12px;">
+							<table border="0" cellpadding="0" cellspacing="0" width="100%">
+								<tr>
+									<td valign="top" style="font-family:'Poppins', Verdana, Geneva, sans-serif;font-weight:600;color:#1E2055;font-size:15px;">
+										#TITRE - <em>#GET{type_libelle}</em>
+									</td>
+									<td align="right" valign="top" style="font-family:'Poppins', Verdana, Geneva, sans-serif;color:#6a6a6a;font-size:13px;white-space:nowrap;padding-left:10px;">
+										[(#DATE|affdate)]
+									</td>
+								</tr>
+							</table>
+							<div style="font-family:'Poppins', Verdana, Geneva, sans-serif;color:#1E2055;font-size:14px;line-height:150%;margin-top:8px;">
+								[(#INTRODUCTION|sinon{#CHAPO}|sinon{#TEXTE}|textebrut|couper{220})]
+							</div>
+						</td>
+					</tr>
+				</table>
+			</td>
+		</tr>
+	</table>
+
+	<div style="text-align:center;margin-top:24px;">
+		<a href="#GET{url_article}" style="display:inline-block;background-color:#000AFF;color:#FFFFFF;font-family:'Poppins', Verdana, Geneva, sans-serif;font-weight:600;font-size:15px;text-decoration:none;padding:12px 28px;border-radius:6px;">
+			<:thematique:notif_bouton_consulter:>
+		</a>
+	</div>
+</div>
 </body>
 </BOUCLE_art>
 #FILTRE{facteur_email_wrap_to_html}

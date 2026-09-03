@@ -292,6 +292,12 @@ return [
 	'les_participants'  => 'Les participants',
 	'intervenant_annee'              => 'Intervenant :',
 
+	// notifications/article_publie.html (mail de notification, issue #217)
+	'notif_publication_titre'        => 'Une nouvelle publication dans @type@ !',
+	'notif_publication_detail'       => '@auteur@ a publié un nouvel élément dans l\'espace <em>@type@</em>.',
+	'notif_bouton_consulter'         => 'Consulter sur la plateforme',
+	'notif_aide_contact'             => 'Si vous rencontrez des difficultés pour accéder à la page en question ou que vous avez des questions relatives à ce mail, contactez le service support : @email@.',
+
 	// inc-head.html (liens rel=alternate)
 	'rss_dernieres_publications'     => 'Dernières publications',
 	'rss_dernieres_maj'              => 'Dernières mises à jour',

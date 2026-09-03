@@ -1,0 +1,91 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html dir="#LANG_DIR" lang="#LANG">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	<title>[(#ENV*{sujet})]</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<style type="text/css">
+		#outlook a {padding: 0;}
+		body {width: 100% !important;}
+		body {margin: 0;padding: 0;}
+		img {border: none;font-size: inherit;font-weight: bold;height: auto;line-height: 100%;outline: none;text-decoration: none;}
+		#backgroundTable {height: 100% !important;margin: 0;padding: 0;width: 100% !important;}
+		body, .backgroundTable {background-color: #F5F5FF;}
+		#templateContainer {border: 1px solid #DEE0FF;max-width: 600px !important;}
+		#templateContainer, .bodyContent {background-color: #FFFFFF;margin-top: 40px;}
+		.bodyContent {padding: 30px;}
+		.bodyContent .text {max-width: 540px;}
+		.bodyContent div {color: #1E2055;font-family: 'Poppins', Verdana, Geneva, sans-serif;line-height: 150%;text-align: #LANG_LEFT;}
+		.bodyContent div a:link, .bodyContent div a:visited {color: #000AFF;font-weight: 600;text-decoration: underline;}
+		.bodyContent img {display: inline;margin-bottom: 10px;max-width: 100%;}
+		hr { height: 1px; margin: 1.5em 0; border: 0; background: #DEE0FF; color: #DEE0FF; }
+		.text {word-wrap:break-word;}
+		@media only screen and (max-width: 600px) {
+			html,body {width: 100% !important;}
+			body, .backgroundTable {background-color: #ffffff !important;}
+			table,tbody,td,tr {display:block;max-width:100%;}
+			.bodyContent {padding:0 0 10px !important;}
+			.bodyContent .text {max-width: 100%;}
+			#templateContainer {width: 100% !important;border: 0 !important;margin-top: 0}
+			#templateBody {width: 100% !important;}
+		}
+	</style>
+</head>
+<body leftmargin="0" marginwidth="0" topmargin="0" marginheight="0" offset="0"
+			style="margin: 0;padding: 0;width: 100% !important;background-color: #F5F5FF;">
+<center>
+	[<div style="display:none;display:none !important;">(#ENV{intro,''})</div>]
+	<table border="0" cellpadding="0" cellspacing="0" height="100%" width="100%" id="backgroundTable"
+				 style="margin: 0;padding: 0;height: 100% !important;width: 100% !important;background-color: #F5F5FF;">
+		<tr>
+			<td align="center" valign="top">
+				<table border="0" cellpadding="0" cellspacing="0" width="600" id="templateContainer"
+							 style="border: 1px solid #DEE0FF;background-color: #FFFFFF;max-width: 600px !important;">
+					<tr id="templateHead">
+						<td class="headContent" style="padding:20px 30px;background: #DEE0FF;" valign="middle">
+							<table border="0" cellpadding="0" cellspacing="0" width="100%">
+								<tr>
+									<td width="1" valign="middle" style="white-space:nowrap;">
+										<img src="[(#CHEMIN{img/logos/ccn_full.svg}|url_absolue)]" alt="CCN" height="32" style="height:32px;width:auto;display:block;" />
+									</td>
+									<td valign="middle" style="padding-left:14px;font-family:'Poppins', Verdana, Geneva, sans-serif;font-size:16px;font-weight:600;color:#1E2055;">
+										#NOM_SITE_SPIP
+									</td>
+								</tr>
+							</table>
+						</td>
+					</tr>
+					<tr>
+						<td align="center" valign="top">
+							<table border="0" cellpadding="0" cellspacing="0" width="600" id="templateBody">
+								<tr>
+									<td valign="top" class="bodyContent" style="background-color: #FFFFFF;padding:30px;">
+										<table border="0" cellpadding="10" cellspacing="0" width="100%">
+											<tr>
+												<td valign="top">
+													<div class='text' style="color:#1E2055;font-family:'Poppins', Verdana, Geneva, sans-serif;font-size:100%;line-height:150%;text-align:#LANG_LEFT;word-wrap:break-word;">
+														[(#ENV*{html,#ENV*{texte}|replace{'<','&lt;'}|facteur_nl2br_si_pas_autobr|propre|replace{'<br />\s*<br />(\s*<br />)+?','<br /> <br />'}|concat{'<br /> <br />'}})]
+													</div>
+												</td>
+											</tr>
+											<tr>
+												<td align="left" valign="top" style="padding-top:20px;border-top:1px solid #DEE0FF;">
+													<div style="color:#6a6a6a;font-family:'Poppins', Verdana, Geneva, sans-serif;font-size:13px;line-height:150%;text-align:#LANG_LEFT;">
+														<:thematique:notif_aide_contact{email=#CONFIG{email_webmaster}}:>
+													</div>
+												</td>
+											</tr>
+										</table>
+									</td>
+								</tr>
+							</table>
+						</td>
+					</tr>
+				</table>
+				<br>
+			</td>
+		</tr>
+	</table>
+</center>
+</body>
+</html>

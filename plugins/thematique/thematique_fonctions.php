@@ -387,11 +387,22 @@ function thematique_type_objet_rubrique($id_rubrique) {
 }
 
 function thematique_rendre_type_article_affichable($type_article) {
-	if($type_article == 'consignes') {
+	if ($type_article == 'consignes') {
 		return _T('thematique:consigne');
 	}
-	if($type_article == 'travail_en_cours') {
+	if ($type_article == 'travail_en_cours') {
 		return _T('thematique:reponse_minuscule');
+	}
+	// autres types portés par la rubrique (cf thematique_type_objet_rubrique) :
+	// utilisés notamment dans les mails de notification (issue #217).
+	$autres = [
+		'blogs' => 'salle_des_pros',
+		'evenements' => 'agenda',
+		'ressources' => 'ressources',
+		'agora' => 'agora',
+	];
+	if (isset($autres[$type_article])) {
+		return _T('thematique:' . $autres[$type_article]);
 	}
 }
 
@@ -1728,16 +1739,13 @@ function filtre_auteur_vers_classe($id_auteur) {
 }
 
 function thematique_trouver_reponse_a_une_consigne($id_consigne, $id_rubrique_classe) {
-	if(!$id_consigne || !$id_rubrique_classe) {
+	if (!$id_consigne || !$id_rubrique_classe) {
 		return false;
 	}
 	$article = sql_fetsel(
 		'*',
 		'spip_articles',
-		[
-			'id_consigne = ' . intval($id_consigne),
-			'id_rubrique = ' . intval($id_rubrique_classe),
-		]
+		['id_consigne = ' . intval($id_consigne), 'id_rubrique = ' . intval($id_rubrique_classe)]
 	);
 	return $article;
 }
