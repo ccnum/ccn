@@ -145,33 +145,32 @@ function Consigne() {
 		this.div_reponse_plus.on('click', () => createReponse(_thisId, _thisIdRestreint, _thisNumero));
 		this.div_consigne.on('click', () => callConsigne(_thisId));
 
-		if (CCN.admin == 0) {
-			const leftPercent = CCN.projet.nombre_jours_total > 0 ? this.x / CCN.projet.nombre_jours_total * 100 : 0;
-			this.div_base.draggable({
-				axis: "y",
-				cancel: '', // Force le drag and drop même s'il y a un button dans la consigne.
-				start: function (event, ui) {
-					$(this).addClass('no_event');
-				},
-				drag: function (event, ui) {
-					// jQuery UI va écrire un left en px — on le réécrit en % immédiatement
-					ui.position.left = CCN.projet.timeline.width() * leftPercent / 100;
-					updateConsigneConnecteurs(event.target, ui);
-				},
-				stop: function (event, ui) {
-					const yy = (ui.offset.top - CCN.projet.timeline.offset().top) / CCN.projet.timeline.height();
-
+		const leftPercent = CCN.projet.nombre_jours_total > 0 ? this.x / CCN.projet.nombre_jours_total * 100 : 0;
+		this.div_base.draggable({
+			axis: "y",
+			cancel: '', // Force le drag and drop même s'il y a un button dans la consigne.
+			start: function (event, ui) {
+				$(this).addClass('no_event');
+			},
+			drag: function (event, ui) {
+				// jQuery UI va écrire un left en px — on le réécrit en % immédiatement
+				ui.position.left = CCN.projet.timeline.width() * leftPercent / 100;
+				updateConsigneConnecteurs(event.target, ui);
+			},
+			stop: function (event, ui) {
+				const yy = (ui.offset.top - CCN.projet.timeline.offset().top) / CCN.projet.timeline.height();
+				if (CCN.admin == 0) {
 					$.post("spip.php?page=ajax&mode=article-sauve-coordonnees", { id_objet: _thisId, type_objet: "article", X: 0, Y: yy });
-					$(this).removeClass('no_event');
-					this.y = yy;
-					// Réécrit les deux coords en %
-					$(this).css({
-						top:  (yy * 100) + '%',
-						left: leftPercent + '%'
-					});
 				}
-			});
-		}
+				this.y = yy;
+				// Réécrit les deux coords en %
+				$(this).css({
+					top:  (yy * 100) + '%',
+					left: leftPercent + '%'
+				});
+				$(this).removeClass('no_event');
+			}
+		});
 	}
 
 	/**

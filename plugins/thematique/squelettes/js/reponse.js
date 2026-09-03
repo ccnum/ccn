@@ -100,29 +100,27 @@ function Reponse() {
 			this.y = yPx / CCN.projet.hauteur;
 			this.div_base.css('top', (this.y * 100) + '%');
 		}
-
-		if (CCN.admin == 0) {
-			$(this.div_base).draggable(
-				{
-					axis: "y",
-					cancel: '',  // Force le drag and drop même s'il y a un button dans la réponse.
-					start: function (event, ui) {
-						$(this).addClass('no_event');
-					},
-					drag: function (event, ui) {
-						updateReponseConnecteurs(event.target, ui);
-					},
-					stop: function (event, ui) {
-						const yy = (ui.offset.top - CCN.projet.timeline.offset().top) / CCN.projet.timeline.height();
-
+		$(this.div_base).draggable(
+			{
+				axis: "y",
+				cancel: '',  // Force le drag and drop même s'il y a un button dans la réponse.
+				start: function (event, ui) {
+					$(this).addClass('no_event');
+				},
+				drag: function (event, ui) {
+					updateReponseConnecteurs(event.target, ui);
+				},
+				stop: function (event, ui) {
+					$(this).removeClass('no_event');
+					const yy = (ui.offset.top - CCN.projet.timeline.offset().top) / CCN.projet.timeline.height();
+					if (CCN.admin == 0) {
 						$.post("spip.php?page=ajax&mode=article-sauve-coordonnees", { id_objet: _thisId, type_objet: "article", X: 0, Y: yy });
-						$(this).removeClass('no_event');
-						this.y = yy;
-						$(this).css({ 'top': (yy * 100) + '%' });
 					}
+					this.y = yy;
+					$(this).css({ 'top': (yy * 100) + '%' });
 				}
-			);
-		}
+			}
+		);
 	}
 
 	/**

@@ -22,7 +22,7 @@ la boucle d'affichage ci-dessous. ]
 	[(#REM) Les 2 articles jalons du projet ("Cap sur l'année"/"La Rencontre",
 	cf thematique_rentree_annee.php) ne sont pas de vraies missions (pas
 	d'image de classe ni de réponses associées) : exclus ici. ]
-	<BOUCLE_consigne(ARTICLES){branche}{par date}{date>=#CONST{_DATE_DEBUT}}{date<=#CONST{_DATE_FIN}}{!titre_mot IN cap-sur-l-annee,la-rencontre}>
+	<BOUCLE_consigne(ARTICLES){branche}{doublons}{par date}{date>=#CONST{_DATE_DEBUT}}{date<=#CONST{_DATE_FIN}}{!titre_mot IN cap-sur-l-annee,la-rencontre}>
 		#SET{intervenant_nom,''}
 		#SET{id_auteur_consigne,0}
 		<BOUCLE_auteur_consigne(AUTEURS){id_article}{0,1}>
