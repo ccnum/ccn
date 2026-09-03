@@ -202,7 +202,7 @@ function thematique_ajouter_mots_clef() {
 	// (cf genie/thematique_rentree_annee.php), pas des articles "présentation"
 	// au sens strict, mais rattachés à ce groupe existant plutôt qu'un
 	// groupe dédié pour 2 mots-clés seulement.
-	foreach (['laclasse.com', 'sommaire_edito', 'livrable', 'cap-sur-l-annee', 'la-rencontre'] as $mot) {
+	foreach (['laclasse.com', 'sommaire_edito', 'cap-sur-l-annee', 'la-rencontre'] as $mot) {
 		thematique_ajouter_mot($mot, $id_groupe);
 	}
 

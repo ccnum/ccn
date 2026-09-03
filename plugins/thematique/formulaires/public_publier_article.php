@@ -27,7 +27,6 @@ function formulaires_public_publier_article_charger_dist(
         'id_article'        => 0,
         'titre'             => '',
         'texte'             => '',
-        'attendre_livrable' => '',
     ];
 
     // Si on répond à une consigne, chercher une éventuelle réponse existante
@@ -43,10 +42,6 @@ function formulaires_public_publier_article_charger_dist(
             $valeurs['texte'] = $reponse['texte'];
             $valeurs['id_rubrique'] = $reponse['id_rubrique'];
             $valeurs['id_consigne'] = $reponse['id_consigne'];
-
-            if (isset($reponse['attendre_livrable'])) {
-                $valeurs['attendre_livrable'] = $reponse['attendre_livrable'];
-            }
         }
     }
     return $valeurs;
@@ -133,22 +128,6 @@ function formulaires_public_publier_article_traiter_dist(
             'article',
             'id_article=' . $id_article . '&mode=complet'
         );
-
-        // Associer le mot-clé "livrable"
-        if (_request('attendre_livrable') === 'oui') {
-            include_spip('action/editer_liens');
-
-            if ($id_mot_livrable = sql_getfetsel(
-                'id_mot',
-                'spip_mots',
-                "titre='livrable'"
-            )) {
-                objet_associer(
-                    ['mots' => $id_mot_livrable],
-                    ['articles' => $id_article]
-                );
-            }
-        }
     }
 
     return $res;

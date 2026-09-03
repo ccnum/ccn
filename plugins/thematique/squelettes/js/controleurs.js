@@ -1199,7 +1199,6 @@ function setFullscreenModeToCols(setCols) {
 function _blankMainSidebarTemplates(key) {
 	const templates = {
 		'travail_en_cours': `<div class="sidebar_bubble"><div class="fiche_titre couleur_texte_ressources couleur_ressources0"><div class="texte"><div class="titre">${CCN.lang.sidebar_travail_en_cours_titre}</div></div></div></div><div class="sidebar_bubble sidebar_bubble_blank">${CCN.lang.sidebar_travail_en_cours_texte}</div>`,
-		'livrables':        `<div class="sidebar_bubble"><div class="fiche_titre couleur_texte_livrables couleur_livrables0"><div class="texte"><div class="titre">${CCN.lang.sidebar_livrables_titre}</div></div></div></div><div class="sidebar_bubble sidebar_bubble_blank">${CCN.lang.sidebar_livrables_texte}</div>`,
 		'ressources':       `<div class="sidebar_bubble"><div class="fiche_titre couleur_texte_ressources couleur_ressources0"><div class="texte"><div class="titre">${CCN.lang.sidebar_ressources_titre}</div></div></div></div><div class="sidebar_bubble sidebar_bubble_blank">${CCN.lang.sidebar_ressources_texte}</div>`,
 	};
 	return templates[key];

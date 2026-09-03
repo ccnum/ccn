@@ -183,7 +183,6 @@ function initConsignes(data) {
 		dataForConsigne.image = jsonConsigne.image;
 		dataForConsigne.image_generique = jsonConsigne.image_generique;
 		dataForConsigne.y = jsonConsigne.y;
-		dataForConsigne.isLivrable = jsonConsigne.livrable;
 		dataForConsigne.isLastConsigne = (i==jsonConsignes.length-1)
 
 		if (indexY >= CCN.projet.liste_y_consignes.length) {

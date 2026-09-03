@@ -220,7 +220,6 @@ return [
 	'supprimer_mon_commentaire'      => 'Supprimer mon commentaire',
 	'supprimer_numero_badge'         => 'Supprimer le numéro de badge',
 	'sidebar_livrables_texte'        => 'Naviguez dans l\'espace livrables grâce à la barre latérale sur votre droite.',
-	'sidebar_livrables_titre'        => 'Espace livrables',
 	'sidebar_ressources_texte'       => 'Naviguez dans l\'espace ressources grâce à la barre latérale sur votre droite.',
 	'sidebar_ressources_titre'       => 'Espace ressources',
 	'sidebar_travail_en_cours_texte' => 'Naviguez dans l\'espace travail en cours grâce à la barre latérale sur votre droite.',

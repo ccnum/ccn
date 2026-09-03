@@ -46,22 +46,6 @@
 								  data-id="article-#ENV{id_article,new}"
 						>#ENV{texte}</textarea>
 					</div>
-
-					<div class="editer editer_attendre_livrable">
-						<div class="choix">
-							<label for="attendre_livrable">
-								<:thematique:consigne_attend_livrable:>
-							</label>
-							<input
-								style="width: 1rem; height: 1rem;"
-								type="checkbox"
-								name="attendre_livrable"
-								id="attendre_livrable"
-								value="oui"
-								[(#ENV{attendre_livrable}|=={oui}|oui)checked="checked"] />
-
-						</div>
-					</div>
 				</div>
 				<div id="sidebar-etape-2-container">
 					<h3><:thematique:etape2_ajouter_document:></h3>
