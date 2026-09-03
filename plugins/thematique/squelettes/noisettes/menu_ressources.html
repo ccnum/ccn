@@ -13,9 +13,22 @@ l'appelant) et de la liste live des rubriques racine, donc ne doit jamais
 		[(#REM)Espace Doc]
 		[(#ENV{restreint}|?{#SET{docId,#ENV{restreint}}, #SET{docId,false}})]
 
-		<BOUCLE_espace_doc(RUBRIQUES){tous}{racine}{titre==^[20]}{!par titre}{0,1}>
+		[(#REM) |trim indispensable sur #DESCRIPTIF : textebrut() (cf
+		ecrire/inc/filtres.php) réduit les &nbsp; à un simple espace au lieu
+		de les supprimer — un descriptif "vide" au sens de l'éditeur (ex:
+		<p>&nbsp;</p>) redevient donc " " (non vide pour SPIP) sans le
+		trim, et le lien s'affichait avec href=" " même sans lien
+		réellement saisi dans la rubrique.
+
+		titre LIKE _ANNEE_SCOLAIRE (même critère que menu_classes.html), pas
+		{titre==^[20]}{!par titre} : cette regex ne ciblait pas l'année
+		active, juste "la rubrique racine la plus récente dont le titre
+		commence par 2 ou 0" — tant que la rubrique de l'année active
+		n'existe pas (ou n'a pas ce format), elle retombait sur celle de
+		l'année précédente et affichait son lien. ]
+		<BOUCLE_espace_doc(RUBRIQUES){tous}{racine}{titre LIKE %(#CONST{_ANNEE_SCOLAIRE})%}{0,1}>
 		[<li class="logo">
-			<a class="logo_menu-doc menu_logo_type_sidebarView tooltip" href="(#DESCRIPTIF|textebrut)" aria-label="<:thematique:cartable_ligne:>" data-tip="<:thematique:cartable_ligne:>" target="_blank" rel="noopener noreferrer"></a>
+			<a class="logo_menu-doc menu_logo_type_sidebarView tooltip" href="(#DESCRIPTIF|textebrut|trim)" aria-label="<:thematique:cartable_ligne:>" data-tip="<:thematique:cartable_ligne:>" target="_blank" rel="noopener noreferrer"></a>
 		</li>
 		]
 		</BOUCLE_espace_doc>
