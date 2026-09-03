@@ -148,13 +148,7 @@ function saisies_formulaire_charger($flux) {
 	if ($saisies) {
 		// Si c'est un formulaire de config, on va régler automatiquement les defaut
 		if (strpos($flux['args']['form'], 'configurer_') === 0) {
-			$par_nom = saisies_lister_par_nom($saisies);
-			$contexte = [];
-			if (isset($par_nom['_meta_casier'])) {
-				$meta = $par_nom['_meta_casier']['options']['defaut'];
-			} else {
-				$meta = str_replace('configurer_', '', $flux['args']['form']);
-			}
+			$meta = saisies_configurer_determiner_casier($flux['args']['form'], $saisies);
 			$saisies = saisies_preremplir_defaut_depuis_config($saisies, $meta);
 		}
 
@@ -219,6 +213,20 @@ function saisies_formulaire_charger_generer_hidden_ancienne_valeur_depubliee($fl
 	} else {
 		return '';
 	}
+}
+
+/**
+ * Déterminer le casier de configuration d'un formulaire `configurer_xxx`
+ * Par défaut le casier est le `xxx` de `configurer_xxx`, mais une saisie
+ * `_meta_casier` peut en imposer un autre.
+ *
+ * @param string $form nom du formulaire
+ * @param array $saisies description des saisies
+ * @return string nom du casier
+ **/
+function saisies_configurer_determiner_casier(string $form, array $saisies): string {
+	$par_nom = saisies_lister_par_nom($saisies);
+	return $par_nom['_meta_casier']['options']['defaut'] ?? str_replace('configurer_', '', $form);
 }
 
 /**
@@ -441,7 +449,7 @@ function saisies_formulaire_receptionner_deplacer_choix_alternatif(array $flux, 
 **/
 function saisies_formulaire_receptionner_retablir_cle_secrete($flux, $saisies) {
 	if (strpos($flux['args']['form'], 'configurer_') === 0) {
-		$config = str_replace('configurer_', '', $flux['args']['form']);
+		$config = saisies_configurer_determiner_casier($flux['args']['form'], $saisies);
 		$avec_cle_secrete = saisies_lister_avec_option('cle_secrete', $saisies);
 		foreach ($avec_cle_secrete as $name => $description) {
 			if (!saisies_request($name)) {

@@ -304,10 +304,17 @@ function saisies_fieldset_onglet() {
 	var container_reportValidity = function(selector) {
 		var retour = true;
 		$(selector).find('[name]').each(function() {
-			retour = retour && $(this).get(0).reportValidity();//Un seul `false` et tout est `false`
+			let champ = $(this).get(0);
+
+			// Si c'est bien un champ de formulaire, pouvant être vérifié en JS
+			if (typeof champ.reportValidity === 'function') {
+				retour = retour && champ.reportValidity(); //Un seul `false` et tout est `false`
+			}
 		});
+
 		return retour;
 	}
+	
 	// C'est parti
 	init();
 }
