@@ -43,9 +43,6 @@ async function loadDemarrage(fichier) {
 	initClasses(data.classes);
 	initConsignes(data.consignes);
 
-	// Seules les missions (classes + consignes) sont chargées au démarrage.
-	// Agenda (blogs) et blog pédagogique (evenements) sont chargés à la demande,
-	// au clic sur le menu-timeline (voir ensureArticlesLoaded).
 	initTimeline();
 }
 /**
@@ -79,7 +76,6 @@ function initProjet(dataForProjet) {
  * @param {string} type - "blogs" ou "evenements"
  * @returns {Promise<void>}
  */
-
 async function ensureArticlesLoaded(type) {
 	if (type === 'blogs' && !CCN.articlesBlogLoaded) {
 		CCN.articlesBlogLoaded = true;

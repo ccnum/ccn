@@ -342,15 +342,6 @@ async function changeTimelineMode(type) {
 	classCss.blogs = 'show_blogs';
 	classCss.evenements = 'show_evenements';
 	if (!$('body').hasClass(classCss[type])) {
-		if (type === 'blogs' || type === 'evenements') {
-			await ensureArticlesLoaded(type);
-		}
-		attachTimelineLayer(type);
-		for (const other of ['consignes', 'blogs', 'evenements']) {
-			if (other !== type) {
-				detachTimelineLayer(other);
-			}
-		}
 		for (const index in classCss) {
 			$('body').removeClass(classCss[index]);
 		}
