@@ -54,6 +54,11 @@
 				</div>
 			]
 			-->
+			<div class="editer editer_date[ (#ENV**{erreurs/date}|oui)erreur]">
+				<label for="date"><:thematique:date_article:></label>[
+				<span class='erreur_message'>(#ENV**{erreurs/date})</span>
+				]<input type='date' class='text' name='date' id='date' value="[(#ENV**{date}|substr{0,10})]" />
+			</div>
 			[<div class="editer editer_parent[ (#ENV**{erreurs/id_rubrique}|oui)erreur]">
 				<label for="id_parent"><:titre_cadre_interieur_rubrique:><em class="aide">#AIDER{id_parent}</em></label>
 				(#VAL|chercher_rubrique{#ENV{id_article},#ENV{id_parent},'article',#ENV{id_secteur},#ENV**{config/restreint},0,form_simple})

@@ -50,6 +50,7 @@ return [
 	'mission_numero'                 => 'Mission N°@numero@',
 	'reponse_mission_numero'         => 'RÉPONSE - MISSION N°@numero@',
 	'contenu_lie'                    => 'Contenu lié',
+	'date_article'                   => 'Date',
 	'descriptif_a_completer'         => 'Double-cliquer pour compléter le descriptif de ma classe - @titre@.',
 	'desactiver'                     => 'Désactiver',
 	'document_sans_titre'            => 'Document sans titre',
