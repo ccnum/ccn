@@ -1119,13 +1119,31 @@ function thematique_id_rubrique_a_mot($titre_mot) {
 }
 
 /**
- * Premier article (au sens id_article croissant) portant un mot-clé donné,
- * sous la forme "id|statut" (ou "0|" si absent) — mis en cache mémoire par
- * requête.
+ * Article jalon (cap-sur-l-annee / la-rencontre) de l'année scolaire active
+ * portant un mot-clé donné, sous la forme "id|statut" (ou "0|" si absent) —
+ * mis en cache mémoire par requête.
  *
- * Remplace squelettes/modeles/art_mot_clef.html (BOUCLE ARTICLES non
- * cachée, relancée à chaque #MODELE{art_mot_clef}{titre_mot}). Même format
- * de sortie (cf squelettes/js/main.js, qui fait un split('|') dessus).
+ * Scopé au sous-arbre de la rubrique racine de l'année active (via
+ * id_secteur, champ SPIP natif qui vaut l'id de la rubrique de tête de
+ * branche pour toute rubrique/article qu'elle contient, quelle que soit sa
+ * profondeur) : genie/thematique_rentree_annee.php crée l'article jalon
+ * sous "Consignes", mais celui-ci est ensuite assigné à un intervenant
+ * ("C'est ensuite à lui de les compléter et de les publier", cf ce
+ * fichier) qui peut le déplacer dans sa propre rubrique de travail — un
+ * scope limité à "Consignes" en id_rubrique direct le perdrait dès qu'il
+ * est déplacé. id_secteur reste correct dans tous les cas puisqu'il ne
+ * change pas tant que l'article demeure dans le sous-arbre de l'année.
+ * Plusieurs années peuvent avoir chacune leur propre "Cap sur l'année" en
+ * base simultanément. Avant ce scope, la requête ne filtrait que par
+ * mot-clé et prenait le plus petit id_article toutes années confondues :
+ * le badge restait figé sur l'article jalon de la toute première année
+ * traitée par le cron, quelle que soit l'année sélectionnée par le visiteur
+ * (cookie/GET, cf thematique_annee_scolaire()).
+ *
+ * Remplace à l'origine squelettes/modeles/art_mot_clef.html (BOUCLE
+ * ARTICLES non cachée, relancée à chaque #MODELE{art_mot_clef}{titre_mot}),
+ * qui avait le même défaut de scope. Même format de sortie (cf
+ * squelettes/js/main.js, qui fait un split('|') dessus).
  *
  * @param string $titre_mot
  * @return string
@@ -1143,10 +1161,20 @@ function thematique_article_a_mot($titre_mot) {
 		return $cache[$titre_mot] = '0|';
 	}
 
+	$id_rubrique_annee = thematique_id_rubrique_annee_active();
+	if (!$id_rubrique_annee) {
+		return $cache[$titre_mot] = '0|';
+	}
+
 	$article = sql_fetsel(
 		'a.id_article, a.statut',
 		['spip_articles AS a', 'spip_mots_liens AS ml'],
-		['ml.id_objet=a.id_article', 'ml.objet=' . sql_quote('article'), 'ml.id_mot=' . intval($id_mot)],
+		[
+			'ml.id_objet=a.id_article',
+			'ml.objet=' . sql_quote('article'),
+			'ml.id_mot=' . intval($id_mot),
+			'a.id_secteur=' . intval($id_rubrique_annee),
+		],
 		'',
 		'a.id_article',
 		'0,1'
