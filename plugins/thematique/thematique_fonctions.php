@@ -1257,8 +1257,12 @@ function thematique_id_rubrique_mission() {
 
 /**
  * Est-ce que le menu "Publier > Une nouvelle mission" doit être proposé à
- * l'utilisateur connecté : admin, ou intervenant avec au moins une rubrique
- * restreinte (cf choix_rubrique_admin2.html).
+ * l'utilisateur connecté : admin, ou intervenant (issue #404 — dépendre en
+ * plus de #SESSION{admin}>0, càd d'une rubrique en admin restreint dans
+ * spip_auteurs_liens, privait de ce bouton les intervenants sans un tel
+ * lien, alors que le rôle seul suffit à déterminer la rubrique cible : cf
+ * le repli sur thematique_id_rubrique_mission() dans
+ * choix_rubrique_admin2.html quand CCN.idRestreint est vide).
  *
  * @return string 'oui'|'non'
  */
@@ -1266,14 +1270,13 @@ function thematique_voir_mission() {
 	include_spip('inc/session');
 	$role = session_get('role');
 	$statut = session_get('statut');
-	$admin = session_get('admin');
 
 	// thematique_donner_role() priorise les mots-clés de hiérarchie
 	// (travail_en_cours/consignes) sur le statut SPIP : un vrai webmestre
 	// (statut 0minirezo) peut donc se retrouver avec $role='intervenant'
 	// s'il est aussi rattaché à une hiérarchie "consignes". On vérifie le
 	// statut directement pour ne pas le priver du bouton.
-	if ($statut === '0minirezo' || $role === 'admin' || ($role === 'intervenant' && $admin > 0)) {
+	if ($statut === '0minirezo' || in_array($role, ['admin', 'intervenant'], true)) {
 		return 'oui';
 	}
 	return 'non';
