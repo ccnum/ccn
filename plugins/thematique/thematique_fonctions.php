@@ -659,6 +659,51 @@ function thematique_classes_rangs() {
 }
 
 /**
+ * Indique si des classes existent pour l'année scolaire active — sans le
+ * repli sur une année antérieure que fait thematique_classes_rangs() (repli
+ * légitime pour la stabilité des icônes/rangs, mais qui masquerait ici le
+ * vrai problème : tant que la rubrique de l'année active n'existe pas, on
+ * veut détecter "pas encore de participants pour cette année", pas
+ * retomber silencieusement sur ceux de l'année précédente).
+ *
+ * Sert de garde pour masquer le bloc "Les participants" du menu bas tant
+ * que l'année scolaire n'a pas été créée (cf menu_classes.html).
+ *
+ * @return bool
+ */
+function thematique_a_classes_annee() {
+	static $a_classes = null;
+	if ($a_classes !== null) {
+		return $a_classes;
+	}
+
+	$id_mot = sql_getfetsel('id_mot', 'spip_mots', 'titre=' . sql_quote('travail_en_cours'));
+	$annee_scolaire = thematique_annee_scolaire();
+	$id_annee = $id_mot
+		? sql_getfetsel(
+			'id_rubrique',
+			'spip_rubriques',
+			'titre LIKE ' . sql_quote('%' . $annee_scolaire . '%') . ' AND id_parent=0'
+		)
+		: null;
+
+	if (!$id_mot || !$id_annee) {
+		return $a_classes = false;
+	}
+
+	// Alias (r/ml) obligatoires, cf thematique_classes_rangs().
+	$from = ['spip_rubriques AS r', 'spip_mots_liens AS ml'];
+	$where = [
+		'ml.id_objet=r.id_rubrique',
+		'ml.objet=' . sql_quote('rubrique'),
+		'ml.id_mot=' . intval($id_mot),
+		'r.id_parent=' . intval($id_annee),
+	];
+
+	return $a_classes = (bool) sql_getfetsel('r.id_rubrique', $from, $where);
+}
+
+/**
  * Numéro de couleur (0-9) d'une classe : son rang d'affichage (cf
  * thematique_classes_rangs()) modulo le nombre de couleurs/icônes
  * disponibles (cf classe_icone()).
