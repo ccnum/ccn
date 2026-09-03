@@ -168,7 +168,7 @@ return [
 	'production_classe'              => 'Production de la classe',
 	'profil_de_publication'          => 'Profil de publication',
 	'redaction_commentaire'          => 'Rédaction de votre commentaire',
-	'redigez_commentaire'            => 'Choisissez un titre et rédigez votre commentaire sur cette réponse.',
+	'redigez_commentaire'            => 'Rédigez votre commentaire sur cette réponse.',
 	'regardez_les_reponses'			 => 'Regardez les réponses des autres classes.',
 	'relisez_commentaire'            => 'Relisez votre commentaire avant de le publier.',
 	'reponse_a_commentaire_existant' => 'Vous répondez à un commentaire existant.',
