@@ -30,6 +30,9 @@ juste description + discussion), cf noisettes/article.html ]
 						<BOUCLE_contenu_message(ARTICLES){id_article}>
 							#TEXTE
 						</BOUCLE_contenu_message>
+						<div class="bloc_documents">
+							<INCLURE{fond=noisettes/inc/ajouter_document, id_article, env, ajax=documents} />
+						</div>
 					</div>
 				</div>
 				<div data-tab-id="commentaires">

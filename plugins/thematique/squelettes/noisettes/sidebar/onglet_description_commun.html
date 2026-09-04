@@ -41,14 +41,12 @@
 			</div>
 		]
 	]
-	[(#REM) Ce bloc va être amené à disparaitre, il ne correspond pas au figma
-		<div class="sidebar_bubble">
-			<div class="bloc_documents">
-				<INCLURE{fond=noisettes/inc/ajouter_document, id_article, env, ajax=documents} />
-				<INCLURE{fond=#ENV{fond_bloc_ajout_document}, id_article, env} />
-			</div>
+	<div class="sidebar_bubble">
+		<div class="bloc_documents">
+			<INCLURE{fond=noisettes/inc/ajouter_document, id_article, env, ajax=documents} />
+			<INCLURE{fond=#ENV{fond_bloc_ajout_document}, id_article, env} />
 		</div>
-	] 
+	</div>
 	[(#SESSION{role}|in_array{#LISTE{prof,admin}}|oui)
 		#SET{a_deja_repondu, non}
 		<BOUCLE_reponse(ARTICLES){id_consigne=#ENV{id_article}}{id_rubrique}>
