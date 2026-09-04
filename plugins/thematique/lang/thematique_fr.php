@@ -249,6 +249,7 @@ return [
 	'titre_page_importer_user'       => 'Import des utilisateurs',
 	'supprimer_document'             => 'Supprimer ce document',
 	'supprimer_message'              => 'Supprimer ce message',
+	'telecharger_document'           => 'Télécharger le document',
 	'vimeo_statut_erreur'            => 'Erreur lors de l\'envoi de la vidéo vers Vimeo.',
 	'vimeo_statut_envoi'             => 'Envoi de la vidéo vers Vimeo en cours... @progression@%',
 	'vimeo_statut_en_attente'        => 'Vidéo en attente d\'envoi vers Vimeo...',

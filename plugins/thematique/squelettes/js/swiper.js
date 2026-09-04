@@ -96,6 +96,19 @@ function initImagesSwiper($documents_portfolio) {
 
 		$slide.append($imgClone);
 
+		// Titre du document (#350) et téléchargement, absents de la preview
+		// une fois l'ancien lien masqué ci-dessus.
+		const titre = $link.attr('title');
+		if (titre) {
+			$slide.append($('<div class="swiper-slide-caption"></div>').text(titre));
+		}
+		$slide.append(
+			$('<a class="swiper-slide-download icon icon-telecharger"></a>')
+				.attr('href', $link.attr('href'))
+				.attr('download', '')
+				.attr('title', CCN.lang.telecharger_document)
+		);
+
 		// Clone & add the delete button
 		const $btnSupprimer = $doc.find('.action_supprimer').first();
 		if ($btnSupprimer.length) {
@@ -170,6 +183,21 @@ async function initPdfSwipers($documents_portfolio) {
 			</div>
 		`);
 		$container.append($pdfSwiper);
+
+		// Titre du document (#350) et téléchargement, absents une fois
+		// l'ancien lien remplacé par le rendu canvas par page ci-dessous.
+		const titre = $link.attr('title');
+		const $meta = $('<div class="swiper-pdf-meta"></div>');
+		if (titre) {
+			$meta.append($('<div class="swiper-slide-caption"></div>').text(titre));
+		}
+		$meta.append(
+			$('<a class="swiper-slide-download icon icon-telecharger"></a>')
+				.attr('href', pdfUrl)
+				.attr('download', '')
+				.attr('title', CCN.lang.telecharger_document)
+		);
+		$container.append($meta);
 
 		let pdf;
 
