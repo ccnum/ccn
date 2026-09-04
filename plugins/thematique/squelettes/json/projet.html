@@ -51,7 +51,7 @@
 	"url_popup_evenement": [(#URL_PAGE{article, mode=ajax-detail&type_objet=evenements}|html_entity_decode|json_encode)],
 	"url_popup_ressources": [(#URL_PAGE{rubrique, id_rubrique=#GET{id_rubrique_ressources}&mode=ajax-detail&type_objet=ressources}|html_entity_decode|json_encode)],
 	"url_popup_classes": [(#URL_PAGE{rubrique, id_rubrique=#GET{id_rubrique_travail_en_cours}&mode=ajax-detail&type_objet=travail_en_cours}|html_entity_decode|json_encode)],
-	"url_popup_evenement_creer": [(#URL_PAGE{rubrique, id_rubrique=#GET{id_rubrique_evenements}&mode=ajax-detail&type_objet=evenements}|html_entity_decode|json_encode)],
+	"url_popup_evenement_creer": [(#URL_PAGE{publier, id_rubrique=#GET{id_rubrique_evenements}&mode=ajax-detail&type_objet=evenements}|html_entity_decode|json_encode)],
 	"url_popup_chat": "",
 	"url_popup_chat2": "",
 	"id_rubrique_ressources": [(#GET{id_rubrique_ressources}|intval)],

@@ -625,25 +625,23 @@ function callRessource() {
 }
 
 /**
- * Vide la sidebar principale et charge le formulaire de création d'un
- * évènement d'agenda dans la sidebar secondaire (#412 : le menu "Publier >
- * Un évènement dans l'agenda" ne faisait qu'un changeTimelineMode sans
- * jamais ouvrir de formulaire).
+ * Charge le formulaire de création d'un évènement d'agenda dans la sidebar
+ * principale (#412 : le menu "Publier > Un évènement dans l'agenda" ne
+ * faisait qu'un changeTimelineMode sans jamais ouvrir de formulaire).
  *
- * @see loadContentInLateralSidebar
- * @see callRessource
+ * page=rubrique (cf callRessource) est une page de NAVIGATION dans une
+ * arborescence, pas un formulaire générique : elle ne gère pas type_objet=
+ * evenements et retombe sur un rendu par défaut ("Classe participante").
+ * page=publier (comme url_popup_reponseajout/createReponse) est le bon
+ * point d'entrée, générique par type_objet.
+ *
+ * @see loadContentInMainSidebar
+ * @see createReponse
  */
 
 function callEvenementCreer() {
 	changeTimelineMode('evenements');
-	showSidebar();
-	toggleSidebarExpand();
-	updateMenuIcon(['evenements'], 'sidebarView');
-
-	blankMainSidebar('evenements');
-	setFullscreenModeToCols(true);
-
-	loadContentInLateralSidebar(CCN.projet.url_popup_evenement_creer);
+	loadContentInMainSidebar(CCN.projet.url_popup_evenement_creer, null, "publication_article");
 }
 
 /**
@@ -1222,7 +1220,6 @@ function _blankMainSidebarTemplates(key) {
 	const templates = {
 		'travail_en_cours': `<div class="sidebar_bubble"><div class="fiche_titre couleur_texte_ressources couleur_ressources0"><div class="texte"><div class="titre">${CCN.lang.sidebar_travail_en_cours_titre}</div></div></div></div><div class="sidebar_bubble sidebar_bubble_blank">${CCN.lang.sidebar_travail_en_cours_texte}</div>`,
 		'ressources':       `<div class="sidebar_bubble"><div class="fiche_titre couleur_texte_ressources couleur_ressources0"><div class="texte"><div class="titre">${CCN.lang.sidebar_ressources_titre}</div></div></div></div><div class="sidebar_bubble sidebar_bubble_blank">${CCN.lang.sidebar_ressources_texte}</div>`,
-		'evenements':       `<div class="sidebar_bubble"><div class="fiche_titre couleur_texte_ressources couleur_ressources0"><div class="texte"><div class="titre">${CCN.lang.sidebar_evenements_titre}</div></div></div></div><div class="sidebar_bubble sidebar_bubble_blank">${CCN.lang.sidebar_evenements_texte}</div>`,
 	};
 	return templates[key];
 }
