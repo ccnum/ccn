@@ -264,6 +264,15 @@ function thematique_role_voit_salle_profs($role) {
 }
 
 /**
+ * Est-ce que le rôle donné peut publier (menu "Publier" du header : mission,
+ * ressource, évènement) : prof, intervenant, admin. Un élève n'a accès qu'au
+ * forum, pas à ce menu.
+ */
+function thematique_role_publie($role) {
+	return in_array($role, ['prof', 'intervenant', 'admin']);
+}
+
+/**
  * Fond sidebar à inclure pour une consigne (mission), selon le rôle de session.
  * Par défaut (visiteur non connecté, admin, eleve) : vue "autre",
  * pas de différence apparente entre "autre" et "eleve".

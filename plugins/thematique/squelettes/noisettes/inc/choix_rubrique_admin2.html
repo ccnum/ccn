@@ -12,7 +12,7 @@
 
 #SET{voir_mission, #VAL{1}|thematique_voir_mission}
 
-[(#SESSION{id_auteur}|oui)
+[(#SESSION{role}|thematique_role_publie|oui)
 <div id="menu_haut_rubrique" class="bloc_titre">
 	<div id="choix_rubrique_admin2" name="rubrique_admin" class="selectbox" data-select-name="rubrique_admin">
 		<button type="button" class="select-toggle first_label">
