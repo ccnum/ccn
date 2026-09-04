@@ -50,10 +50,9 @@
 				<div id="sidebar-etape-2-container">
 					<h3><:thematique:etape2_ajouter_document:></h3>
 
-					<input type="file"
-						name="fichier_upload[]"
-						multiple="multiple"
-					/>
+					[(#SAISIE_FICHIER{bigup, fichier_upload,
+						label=<:thematique:ajouter_document:>,
+						multiple=oui})]
 				</div>
 
 			</div>
