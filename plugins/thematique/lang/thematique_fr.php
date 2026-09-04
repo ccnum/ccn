@@ -220,6 +220,8 @@ return [
 	'supprimer_le_texte'             => 'Supprimer le texte',
 	'supprimer_mon_commentaire'      => 'Supprimer mon commentaire',
 	'supprimer_numero_badge'         => 'Supprimer le numéro de badge',
+	'sidebar_evenements_texte'       => 'Naviguez dans l\'agenda grâce à la barre latérale sur votre droite.',
+	'sidebar_evenements_titre'       => 'Agenda',
 	'sidebar_livrables_texte'        => 'Naviguez dans l\'espace livrables grâce à la barre latérale sur votre droite.',
 	'sidebar_ressources_texte'       => 'Naviguez dans l\'espace ressources grâce à la barre latérale sur votre droite.',
 	'sidebar_ressources_titre'       => 'Espace ressources',
