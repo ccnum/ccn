@@ -56,11 +56,20 @@
 				</li>
 			]
 			[(#PLUGIN{cioidc}|non)
-				<li class="select-option select-option-login-spip">
-					#FORMULAIRE_LOGIN{#SELF}
+				<li class="select-option">
+					<a href="#" class="nowrap js-ouvrir-login-modal" title="<:thematique:se_connecter:>">
+						<:thematique:se_connecter:>
+					</a>
 				</li>
 			]
 		</ul>
 	</div>
+	[(#PLUGIN{cioidc}|non)
+	<div id="login_modal" class="login-modal">
+		<div class="login-modal-content">
+			<div class="ajax">#FORMULAIRE_LOGIN{#SELF}</div>
+		</div>
+	</div>
+	]
 </div>
 ]

@@ -205,6 +205,7 @@ return [
 	'reponses_intervenant_ok_message'=> 'Tout le monde a répondu !',
 	'reponses_intervenant_relancer'  => 'Relancer',
 	'reseaux_sociaux'                => 'Réseaux sociaux',
+	'se_connecter'                   => 'Se connecter',
 	'se_connecter_ent'               => 'Se connecter à l\'ENT',
 	'se_connecter_ent_commenter'     => 'Se connecter à l\'ENT pour commenter',
 	'se_connecter_repondre'          => 'Se connecter pour répondre',
