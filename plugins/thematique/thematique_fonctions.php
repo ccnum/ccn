@@ -219,6 +219,18 @@ function thematique_donner_role($id_auteur) {
 	include_spip('base/abstract_sql');
 	include_spip('inc/session'); // pour session_get/session_set si besoin
 
+	$statut = sql_getfetsel('statut', 'spip_auteurs', 'id_auteur=' . intval($id_auteur));
+
+	// ELEVE : statut 6forum, vérifié avant les mots-clés de hiérarchie —
+	// thematique_cioidc_associer_rubriques() rattache l'élève à la MÊME
+	// rubrique de classe que son prof (hiérarchie "travail_en_cours"), donc
+	// le test de hiérarchie ci-dessous serait vrai pour lui aussi et le
+	// classerait à tort comme "prof" si on ne l'excluait pas ici.
+	if ($statut === '6forum') {
+		$cache[$id_auteur] = 'eleve';
+		return 'eleve';
+	}
+
 	// PROF : rattaché (via rubriques) à une hiérarchie contenant le mot "travail_en_cours"
 	if (thematique_auteur_a_mot_dans_hierarchie($id_auteur, 'travail_en_cours')) {
 		$cache[$id_auteur] = 'prof';
@@ -231,15 +243,12 @@ function thematique_donner_role($id_auteur) {
 		return 'intervenant';
 	}
 
-	// ADMIN / ELEVE selon statut
-	$statut = sql_getfetsel('statut', 'spip_auteurs', 'id_auteur=' . intval($id_auteur));
+	// ADMIN selon statut (webmestre non rattaché à une hiérarchie ci-dessus —
+	// un webmestre rattaché à "consignes" est volontairement classé
+	// "intervenant" par le test au-dessus, cf thematique_voir_mission()).
 	if ($statut === '0minirezo') {
 		$cache[$id_auteur] = 'admin';
 		return 'admin';
-	}
-	if ($statut === '6forum') {
-		$cache[$id_auteur] = 'eleve';
-		return 'eleve';
 	}
 
 	$cache[$id_auteur] = null;

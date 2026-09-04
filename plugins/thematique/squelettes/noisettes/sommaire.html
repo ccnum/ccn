@@ -5,7 +5,7 @@
 et/ou
 -#ENV{vue_date} : 01/10/2011
 ]
-<script>CCN.role = "[(#SESSION{role})]";</script>
+<INCLURE{fond=noisettes/inc/ccn_role} />
 <div id="zone" class="zone_timeline zone"[ (#VUE|=={classe}|oui) style="display:none;"]>
 	<INCLURE{fond=noisettes/timeline, env, ajax} />
 </div>
@@ -76,9 +76,7 @@ et/ou
 
 				[(#MODELE{logo_menu}{valeur=blog}{class=tooltip menu_logo_blogs}{filter=.ressource_blogs}{onclick=changeTimelineMode('blogs');}{title=<:thematique:agenda:>})]
 
-				[(#SESSION{role}|thematique_role_voit_salle_profs|oui)
-					[(#MODELE{logo_menu}{valeur=evenement}{class=tooltip menu_logo_evenements}{filter=.ressource_evenements}{onclick=changeTimelineMode('evenements');}{title=<:thematique:salle_des_pros:>})]
-				]
+				<INCLURE{fond=noisettes/inc/logo_salle_profs} />
 			</ul>
 		</div>
 
