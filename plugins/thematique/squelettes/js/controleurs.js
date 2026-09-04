@@ -645,6 +645,24 @@ function callEvenementCreer() {
 }
 
 /**
+ * Charge le formulaire de création d'une nouvelle mission (menu "Publier >
+ * Une nouvelle mission") en plein écran, contrairement à une réponse à une
+ * consigne existante (cf createReponse) qui reste affichée en colonnes pour
+ * garder la consigne visible à côté.
+ *
+ * @param {number} id_rubrique_auteur
+ *
+ * @see createReponse
+ * @see setFullscreenModeToCols
+ */
+
+function callNouvelleMission(id_rubrique_auteur) {
+	expandSidebar();
+	setFullscreenModeToCols(false);
+	createReponse(0, id_rubrique_auteur, 0);
+}
+
+/**
  * Appelle le chargement d'un article jalon ("Cap sur l'année" / "La Rencontre")
  * dans la sidebar principale.
  *
@@ -1129,11 +1147,6 @@ function loadContentInMainSidebar(url, callback, typeContenu) {
 			initMissionTabs();
 			initCommentaires();
 		}
-		if(typeContenu === "publication_article") {
-			// initCompteurCaracteres()
-			initPublierFormulaire();
-		}
-
 		// Diaporama images/PDF du portfolio de pièces jointes (#350) : le
 		// contenu arrive toujours ici en ajax, jamais au $(document).ready
 		// initial de documents_portfolio_swiper_init.js, qui ne se déclenche

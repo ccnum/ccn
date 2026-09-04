@@ -218,6 +218,14 @@ p.boutons:has(input[type="submit"]) {
 	margin-bottom: 0;
 }
 
+/* Astérisque des champs obligatoires (classe "obligatoire" posée par les
+   squelettes de formulaire, ex. public_publier_article.html) : le thème
+   privé SPIP le fait via son propre css, non chargé sur le site public. */
+.editer-groupe .editer.obligatoire label::after {
+	content: " *";
+	color: red;
+}
+
 .editer-groupe .choix {
 	display: flex;
 	gap: 1rem;
@@ -226,6 +234,67 @@ p.boutons:has(input[type="submit"]) {
 	border-radius: 3px;
 	margin-top: 4px;
 	clear: both;
+}
+
+/* Formulaire "Publier une mission" (cf callNouvelleMission dans
+   controleurs.js) : ouvert en plein écran, découpé en 1/3 upload de
+   document - 2/3 rédaction de l'article. Repasse en une colonne sous
+   900px (le mode plein écran ne garantit pas un écran large).
+
+   #sidebar-etape-2-container et #formulaire_publier_article (et non
+   #sidebar-etape-1-container, qui n'est plus qu'un id sémantique porté
+   par un <h3>) sont les deux enfants flex directs de .editer-groupe :
+   #FORMULAIRE_JOINDRE_DOCUMENT{} génère son propre <form>, or un <form>
+   ne peut pas être imbriqué dans #formulaire_publier_article — l'upload
+   de document (étape 2) est donc un formulaire ajax frère, en dehors du
+   <form> de rédaction (étape 1), pas un enfant. */
+.formulaire_public_publier_article .editer-groupe {
+	display: flex;
+	flex-direction: row;
+	align-items: flex-start;
+	gap: 24px;
+}
+
+.formulaire_public_publier_article #sidebar-etape-2-container {
+	order: 1;
+	flex: 0 1 calc(33% - 12px);
+	max-width: calc(33% - 12px);
+}
+
+.formulaire_public_publier_article #formulaire_publier_article {
+	order: 2;
+	flex: 1 1 calc(66% - 12px);
+	max-width: calc(66% - 12px);
+}
+
+@media (max-width: 900px) {
+	.formulaire_public_publier_article .editer-groupe {
+		flex-direction: column;
+	}
+
+	.formulaire_public_publier_article #sidebar-etape-2-container,
+	.formulaire_public_publier_article #formulaire_publier_article {
+		order: initial;
+		max-width: 100%;
+	}
+}
+
+/* Raccourci <docXX>/<imgXX> d'un document listé dans
+   sidebar-etape-2-container, à copier-coller dans le champ "texte"
+   (cf noisettes/inc/publier_article_documents.html et
+   copierRaccourciDocument() dans publier_article.js). */
+#documents_publier_article .raccourci {
+	display: inline-block;
+	font-family: monospace;
+	font-size: 0.9em;
+	cursor: pointer;
+	padding: 1px 4px;
+	border-radius: 3px;
+	background: #eee;
+}
+
+#documents_publier_article .raccourci.copie {
+	background: #d4edda;
 }
 
 /*Forum*/

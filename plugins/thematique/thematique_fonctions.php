@@ -437,6 +437,33 @@ function thematique_rendre_type_article_affichable($type_article) {
 }
 
 /**
+ * id_objet à utiliser pour joindre un document (#FORMULAIRE_JOINDRE_DOCUMENT)
+ * à un article qui n'existe pas encore en base — cas du formulaire public de
+ * publication (sidebar-etape-2-container), où l'upload de document doit être
+ * possible avant l'enregistrement de l'article.
+ *
+ * Reprend le hack natif du plugin medias (cf medias_affiche_gauche() /
+ * medias_post_insertion() dans plugins-dist/medias/medias_pipelines.php) :
+ * un article inexistant est représenté par l'id_objet négatif -id_auteur.
+ * Les documents joints à ce pseudo-id sont automatiquement réassociés au
+ * véritable id_article par le pipeline post_insertion dès que l'article est
+ * créé (au submit du formulaire) — aucun code de liaison à écrire côté
+ * thematique.
+ *
+ * @param int|string $id_article
+ *   id_article réel si connu (0 ou vide sinon, ex. nouvel article)
+ * @return int
+ */
+function thematique_id_objet_document_temp($id_article) {
+	$id_article = intval($id_article);
+	if ($id_article) {
+		return $id_article;
+	}
+
+	return 0 - intval($GLOBALS['visiteur_session']['id_auteur'] ?? 0);
+}
+
+/**
  * Type de contenu d'un article : "travail_en_cours" s'il répond à une
  * consigne (id_consigne renseigné), sinon celui porté par sa rubrique
  * (cf thematique_type_objet_rubrique).

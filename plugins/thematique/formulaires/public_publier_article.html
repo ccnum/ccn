@@ -2,59 +2,39 @@
 	[<p class="reponse_formulaire reponse_formulaire_ok">(#ENV*{message_ok})</p>]
 	[<p class="reponse_formulaire reponse_formulaire_erreur">(#ENV*{message_erreur})</p>]
 
-	<form method="post"
-		  action="#ENV{action}"
-		  enctype="multipart/form-data"
-		  id="formulaire_publier_article"
-	>
-		<div>
-			#ACTION_FORMULAIRE{#ENV{action}}
-			<input type="hidden"
-				   name="id_article"
-				   value="#ENV{id_article}" 
-			/>
-            <input type="hidden"
-				   name="id_parent"
-				   value="#ENV{id_parent}" 
-			/>
-			
+	#SET{id_objet_document, #ENV{id_article}|thematique_id_objet_document_temp}
 
-			<div class="editer-groupe">
-				<div id="sidebar-etape-1-container">
-					[(#SET{type_article_affichable, #ENV{type_article}|thematique_rendre_type_article_affichable})]
-					<h3><:thematique:etape1_redaction_article{type_article=#GET{type_article_affichable}}:></h3>
-					<div class="editer editer_titre obligatoire[ (#ENV**{erreurs}|table_valeur{titre}|oui)erreur]">
-						<label for="titre"><:info_titre:></label>
-						[<span class="erreur_message">(#ENV**{erreurs}|table_valeur{titre})</span>]
-						<input
-							type="text"
-							class="text"
-							name="titre"
-							id="titre"
-							value="#ENV{titre}" />
-					</div>
+	<div class="editer-groupe">
+		<div id="sidebar-etape-2-container">
+			<h3><:thematique:ajouter_document:></h3>
 
-					<div class="editer editer_texte obligatoire[ (#ENV**{erreurs}|table_valeur{texte}|oui)erreur]">
-						<label for="texte"><:info_texte:></label>
-						[<span class="erreur_message">(#ENV**{erreurs}|table_valeur{texte})</span>]
-
-						<textarea name="texte"
-								  id="texte"
-								  rows="10"
-								  class="inserer_barre_edition inserer_previsualisation"
-								  data-barre="edition"
-								  data-id="article-#ENV{id_article,new}"
-						>#ENV{texte}</textarea>
-					</div>
-				</div>
-				<div id="sidebar-etape-2-container">
-					<h3><:thematique:etape2_ajouter_document:></h3>
-
-					[(#SAISIE_FICHIER{bigup, fichier_upload,
-						label=<:thematique:ajouter_document:>,
-						multiple=oui})]
-				</div>
-
+			<div class="ajax">
+				#FORMULAIRE_JOINDRE_DOCUMENT{new,#GET{id_objet_document},article}
 			</div>
+			<INCLURE{fond=noisettes/inc/publier_article_documents, id_objet=#GET{id_objet_document}, objet=article, ajax=documents} />
 		</div>
-	</form>
+
+		<form method="post" action="#ENV{action}" enctype="multipart/form-data" id="formulaire_publier_article" >
+			<div>
+				#ACTION_FORMULAIRE{#ENV{action}}
+				<input type="hidden" name="id_article" value="#ENV{id_article}" />
+				<input type="hidden" name="id_parent" value="#ENV{id_parent}" />
+
+				[(#SET{type_article_affichable, #ENV{type_article}|thematique_rendre_type_article_affichable})]
+				<h3><:thematique:etape1_redaction_article{type_article=#GET{type_article_affichable}}:></h3>
+				<div class="editer editer_titre obligatoire[ (#ENV**{erreurs}|table_valeur{titre}|oui)erreur]">
+					<label for="titre"><:info_titre:></label>
+					[<span class="erreur_message">(#ENV**{erreurs}|table_valeur{titre})</span>]
+					<input type="text" class="text" name="titre" id="titre" value="#ENV{titre}" required />
+				</div>
+
+				<div class="editer editer_texte obligatoire[ (#ENV**{erreurs}|table_valeur{texte}|oui)erreur]">
+					<label for="texte"><:info_texte:></label>
+					[<span class="erreur_message">(#ENV**{erreurs}|table_valeur{texte})</span>]
+
+					<textarea name="texte" id="texte" rows="10" class="inserer_barre_edition inserer_previsualisation" data-barre="edition" data-id="article-#ENV{id_article,new}" required
+					>#ENV{texte}</textarea>
+				</div>
+			</div>
+		</form>
+	</div>

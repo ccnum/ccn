@@ -23,11 +23,6 @@ function formulaires_public_publier_article_charger_dist($id_rubrique, $type_art
 		'id_article' => 0,
 		'titre' => '',
 		'texte' => '',
-		// active la recherche/réinjection des fichiers uploadés par bigup
-		// dans $_FILES (cf #SAISIE_FICHIER dans le squelette), pour que
-		// joindre_trouver_http_post_files('fichier_upload') plus bas
-		// continue de les retrouver.
-		'_bigup_rechercher_fichiers' => true,
 	];
 
 	// Si on répond à une consigne, chercher une éventuelle réponse existante
@@ -75,34 +70,29 @@ function formulaires_public_publier_article_traiter_dist($id_rubrique, $type_art
 
 		$id_article = $res['id_article'];
 
-		// Ajouter les documents joints
-		include_spip('inc/joindre_document');
-		$files = joindre_trouver_http_post_files('fichier_upload');
-		if ($files) {
-			$ajouter_documents = charger_fonction('ajouter_documents', 'action');
-
-			$ajouter_documents(
-				'new',
-				$files,
-				'article',
-				$id_article,
-				'document'
-			);
-		}
+		// Les documents joints via #FORMULAIRE_JOINDRE_DOCUMENT (sidebar-etape-2-container,
+		// cf public_publier_article.html) sont déjà en base à ce stade — soit
+		// liés directement à $id_article (réponse à consigne existante), soit
+		// à l'id_objet temporaire -id_auteur (nouvel article) : dans ce
+		// second cas ils sont automatiquement réassociés à $id_article par le
+		// pipeline post_insertion du plugin medias
+		// (cf medias_post_insertion() dans plugins-dist/medias/medias_pipelines.php),
+		// déclenché par formulaires_editer_objet_traiter() ci-dessus. Rien à
+		// faire ici.
 
 		// Si c'est une réponse à une consigne,
 		// associer l'article à la consigne.
 		if ($id_consigne) {
 			include_spip('action/editer_objet');
 			objet_modifier('article', $id_article, [
-					'id_consigne' => intval($id_consigne),
-				]);
+				'id_consigne' => intval($id_consigne),
+			]);
 		}
 
 		// Publier l'article
 		article_instituer($id_article, [
-				'statut' => 'publie',
-			]);
+			'statut' => 'publie',
+		]);
 
 		$res['message_ok'] = _T('thematique:article_publie_succes');
 

@@ -1,20 +1,9 @@
 /**
- * Formulaire de publication d'un article, affiché dans la
- * sidebar principale en 2 étapes. Fonctions appelées directement depuis
- * les attributs onclick du squelette du formulaire.
+ * Formulaire de publication d'un article, affiché dans la sidebar
+ * principale avec ses 2 blocs (rédaction / document) visibles simultanément
+ * (cf editor.css.html). Fonctions appelées directement depuis les attributs
+ * onclick du squelette du formulaire.
  */
-
-/**
- * Réinitialise le formulaire à l'étape 1 (masque l'étape 2 et le bouton
- * "précédent"). Appelé au chargement du fond "publication_article"
- * (cf loadContentInMainSidebar dans controleurs.js).
- */
-function initPublierFormulaire() {
-    const etape2 = document.getElementById("sidebar-etape-2-container")
-    const boutonPrecedentElement = document.querySelector("#bouton-etape-precedente-article")
-    etape2.style.display = "none";
-    boutonPrecedentElement.style.display = "none";
-}
 
 /**
  * Branche le compteur de caractères sur le champ associé au label
@@ -41,41 +30,24 @@ function initCompteurCaracteres() {
 }
 
 /**
- * Passe le formulaire de l'étape 1 à l'étape 2.
- */
-function creationArticleEtapeSuivante() {
-    const etape1 = document.getElementById("sidebar-etape-1-container")
-    const etape2 = document.getElementById("sidebar-etape-2-container")
-    const boutonPrecedentElement = document.querySelector("#bouton-etape-precedente-article")
-    const boutonSuivantElement = document.querySelector("#bouton-etape-suivante-article")
-    const boutonEnregistrerElement = document.querySelector("#bouton-enregistrer-article")
-    etape1.style.display = "none"
-    etape2.style.display = "block"
-    boutonPrecedentElement.style.display = "block";
-    boutonSuivantElement.style.display = "none";
-    boutonEnregistrerElement.style.display = "block";
-}
-
-/**
- * Revient de l'étape 2 à l'étape 1 du formulaire.
- */
-function creationArticleEtapePrecedente() {
-    const etape1 = document.getElementById("sidebar-etape-1-container")
-    const etape2 = document.getElementById("sidebar-etape-2-container")
-    const boutonPrecedentElement = document.querySelector("#bouton-etape-precedente-article")
-    const boutonSuivantElement = document.querySelector("#bouton-etape-suivante-article")
-    const boutonEnregistrerElement = document.querySelector("#bouton-enregistrer-article")
-    etape1.style.display = "block"
-    etape2.style.display = "none"
-    boutonPrecedentElement.style.display = "none";
-    boutonSuivantElement.style.display = "block";
-    boutonEnregistrerElement.style.display = "none";
-}
-
-/**
  * Soumet le formulaire "#formulaire_publier_article".
  */
 function creationArticleEnregistrer() {
     const formulaire = document.getElementById("formulaire_publier_article")
     formulaire.requestSubmit();
+}
+
+/**
+ * Copie dans le presse-papier le raccourci SPIP (<docXX>/<imgXX>) d'un
+ * document listé dans sidebar-etape-2-container (cf
+ * noisettes/inc/publier_article_documents.html), pour le coller dans le
+ * champ "texte". Affiche brièvement la classe "copie" sur l'élément cliqué
+ * en retour visuel.
+ */
+function copierRaccourciDocument(element) {
+    const raccourci = element.textContent
+    navigator.clipboard.writeText(raccourci).then(() => {
+        element.classList.add("copie")
+        setTimeout(() => element.classList.remove("copie"), 1000)
+    })
 }
