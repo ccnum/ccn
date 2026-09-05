@@ -8,9 +8,9 @@
 	CCN.urlImgEvenement = "[(#CHEMIN{#ENV{chemin}/img/logo_evenement_#NOM_SITE_SPIP.png}|sinon{#ENV{chemin}/img/logo_evenement.png}|image_reduire{150,94}|extraire_attribut{src})]";
 
 	CCN.admin = [(#ENV{admin}|intval)];
-	CCN.idRestreint = [(#ENV{restreint}|sinon{0})];
+	CCN.idRestreint = [(#ENV{restreint}|intval)];
 	CCN.typeRestreint = [(#ENV{type_restreint}|json_encode)];
-	CCN.classeSelection = [(#ENV{restreint}|sinon{0})];
+	CCN.classeSelection = [(#ENV{restreint}|intval)];
 
 	CCN.dateToShowAtInit = [(#ENV{vue_date,0}|json_encode)];
 	CCN.typePopupToShowAtInit = [(#ENV{type_objet,0}|json_encode)];

@@ -1128,12 +1128,14 @@ function loadContentInMainSidebar(url, callback, typeContenu) {
 	showSidebar();
 	emptyMainSidebar();
 
-	$('#sidebar_main_inner').load(url, function (response, status, xhr) {
+	// $.get() plutôt que $(elem).load(url) : .load() coupe silencieusement
+	// l'url au premier espace et traite le reste comme un sélecteur jQuery à
+	// appliquer sur la réponse — une valeur imprévue (id, date...) contenant
+	// un espace dans l'url casse le chargement avec une erreur Sizzle
+	// "unrecognized expression" au lieu d'un simple 404/erreur réseau.
+	$.get(url).done(function (response) {
 
-		if (status === "error") {
-			if (CCN.debug) { console.error("Erreur de chargement :", xhr.status, xhr.statusText); }
-			return;
-		}
+		$('#sidebar_main_inner').html(response);
 
 		if (!response || response.trim() === "") {
 			if (CCN.debug) { console.warn(CCN.lang.reponse_vide); }
@@ -1161,6 +1163,10 @@ function loadContentInMainSidebar(url, callback, typeContenu) {
 			callback(response);
 		}
 
+		antifloodHashChange = false;
+	}).fail(function (xhr, status) {
+		if (CCN.debug) { console.error("Erreur de chargement :", xhr.status, xhr.statusText); }
+		$('body').removeClass('loading');
 		antifloodHashChange = false;
 	});
 }
