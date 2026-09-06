@@ -8,9 +8,10 @@
 
 <input type="hidden" name="texte" value="#ENV{texte}">
 <input type="hidden" name="id_article" value="#ENV{id_article}">
-<BOUCLE_auteur(AUTEURS){id_auteur=#SESSION{id_auteur}}>
-    #SET{nom_auteur, #NOM}
-</BOUCLE_auteur>
+[(#REM) Nom + rôle/classe/collège, pas #NOM seul (classe/collège uniquement) :
+       un commentaire identifie l'individu, cf thematique_nom_auteur_commentaire
+       (#44) ]
+#SET{nom_auteur, #SESSION{id_auteur}|thematique_nom_auteur_commentaire}
 <input type="hidden" name="nom_auteur" value="#GET{nom_auteur}">
 <input
     type="hidden"

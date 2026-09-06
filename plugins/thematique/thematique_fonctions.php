@@ -1164,6 +1164,49 @@ function thematique_id_rubrique_a_mot($titre_mot) {
 }
 
 /**
+ * Nom affiché pour l'auteur d'un commentaire (forumv2) : prénom+nom réel de
+ * la personne (spip_auteurs.nom_complet, cf thematique_cioidc_nom_complet)
+ * suivi du rôle/classe/collège (spip_auteurs.nom, cf
+ * thematique_cioidc_nom_affiche) — pour identifier l'individu qui commente,
+ * contrairement aux missions/publications qui n'affichent que classe et
+ * collège (#NOM seul, sans nom_complet) (issue #44, spec finale : "on
+ * commente en tant qu'individu, on publie en tant que classe").
+ *
+ * nom_complet est vide pour un compte non passé par le SSO CIOIDC (ex.
+ * webmestre créé manuellement) : repli sur nom seul dans ce cas.
+ *
+ * @param int $id_auteur
+ * @return string
+ */
+function thematique_nom_auteur_commentaire($id_auteur) {
+	static $cache = [];
+
+	$id_auteur = intval($id_auteur);
+	if (!$id_auteur) {
+		return '';
+	}
+	if (array_key_exists($id_auteur, $cache)) {
+		return $cache[$id_auteur];
+	}
+
+	$auteur = sql_fetsel('nom, nom_complet', 'spip_auteurs', 'id_auteur=' . $id_auteur);
+	if (!$auteur) {
+		return $cache[$id_auteur] = '';
+	}
+
+	$nom = trim($auteur['nom'] ?? '');
+	$nom_complet = trim($auteur['nom_complet'] ?? '');
+	if ($nom_complet === '') {
+		return $cache[$id_auteur] = $nom;
+	}
+	if ($nom === '') {
+		return $cache[$id_auteur] = $nom_complet;
+	}
+
+	return $cache[$id_auteur] = $nom_complet . ' - ' . $nom;
+}
+
+/**
  * Article jalon (cap-sur-l-annee / la-rencontre) de l'année scolaire active
  * portant un mot-clé donné, sous la forme "id|statut" (ou "0|" si absent) —
  * mis en cache mémoire par requête.
