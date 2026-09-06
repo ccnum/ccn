@@ -67,7 +67,11 @@
 	[(#PLUGIN{cioidc}|non)
 	<div id="login_modal" class="login-modal">
 		<div class="login-modal-content">
-			<div class="ajax">#FORMULAIRE_LOGIN{#SELF}</div>
+			<!-- cible différente de self() : formulaires_login_traiter_dist() ne renvoie
+			'redirect' que si $cible != self(), sinon aucune redirection n'a lieu après
+			une connexion réussie et le div.ajax se recharge seul, sans rafraîchir le
+			menu utilisateur qui reste affiché "déconnecté". -->
+			<div class="ajax">#FORMULAIRE_LOGIN{#SELF|parametre_url{connecte,oui}}</div>
 		</div>
 	</div>
 	]
