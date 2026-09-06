@@ -426,8 +426,8 @@ function thematique_rendre_type_article_affichable($type_article) {
 	// autres types portés par la rubrique (cf thematique_type_objet_rubrique) :
 	// utilisés notamment dans les mails de notification (issue #217).
 	$autres = [
-		'blogs' => 'salle_des_pros',
-		'evenements' => 'agenda',
+		'blogs' => 'agenda',
+		'evenements' => 'salle_des_pros',
 		'ressources' => 'ressources',
 		'agora' => 'agora',
 	];

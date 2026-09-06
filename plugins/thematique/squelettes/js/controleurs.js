@@ -631,24 +631,35 @@ function callRessource() {
  *
  * page=rubrique (cf callRessource) est une page de NAVIGATION dans une
  * arborescence, pas un formulaire générique : elle ne gère pas type_objet=
- * evenements et retombe sur un rendu par défaut ("Classe participante").
+ * blogs et retombe sur un rendu par défaut ("Classe participante").
  * page=publier (comme url_popup_reponseajout/createReponse) est le bon
  * point d'entrée, générique par type_objet.
  *
- * expandSidebar() est indispensable : #sidebar_main_around n'est visible
- * qu'avec la classe hasSidebarExpanded sur body (cf sidebar.css.html). Sans
- * cet appel le formulaire est bien chargé en ajax mais reste invisible tant
- * qu'un autre clic n'ajoute pas la classe par ailleurs (#412 bis).
+ * type_objet=blogs et non evenements : cf thematique_type_objet_rubrique
+ * (thematique_fonctions.php) — "evenements" est le type de la Salle des
+ * pros, réservée aux profs (cf noisettes/inc/logo_salle_profs.html,
+ * thematique_role_voit_salle_profs), alors que "blogs" est l'Agenda public
+ * (menu_logo_blogs dans noisettes/sommaire.html). Les deux avaient été
+ * intervertis dans un premier temps (#412).
+ *
+ * changeTimelineMode() est asynchrone : la première fois qu'on bascule vers
+ * un mode pas encore actif, elle attend le chargement JSON des articles
+ * puis termine par showWholeTimeline(), qui appelle closeSidebar() (cf
+ * projet.js). Sans l'await ci-dessous, cette fermeture arrivait APRÈS coup,
+ * juste après que loadContentInMainSidebar ait ouvert le formulaire — d'où
+ * un formulaire qui s'affichait puis se refermait aussitôt tout seul
+ * (invisible au premier clic, correct au second une fois le mode déjà
+ * actif, donc changeTimelineMode devenue un no-op) (#412 bis).
  *
  * @see loadContentInMainSidebar
  * @see createReponse
  */
 
-function callEvenementCreer() {
-	changeTimelineMode('evenements');
+async function callEvenementCreer() {
+	await changeTimelineMode('blogs');
 	expandSidebar();
 	setFullscreenModeToCols(false);
-	updateMenuIcon(['evenements'], 'mainView');
+	updateMenuIcon(['blogs'], 'mainView');
 	loadContentInMainSidebar(CCN.projet.url_popup_evenement_creer, null, "publication_article");
 }
 

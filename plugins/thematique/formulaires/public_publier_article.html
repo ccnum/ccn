@@ -28,7 +28,7 @@
 					<input type="text" class="text" name="titre" id="titre" value="#ENV{titre}" required />
 				</div>
 
-				[(#ENV{type_article}|=={evenements}|oui)
+				[(#ENV{type_article}|=={blogs}|oui)
 				<div class="editer editer_date[ (#ENV**{erreurs}|table_valeur{date}|oui)erreur]">
 					<label for="date"><:thematique:date_article:></label>
 					[<span class="erreur_message">(#ENV**{erreurs}|table_valeur{date})</span>]
