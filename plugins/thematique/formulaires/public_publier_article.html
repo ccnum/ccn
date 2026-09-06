@@ -28,6 +28,14 @@
 					<input type="text" class="text" name="titre" id="titre" value="#ENV{titre}" required />
 				</div>
 
+				[(#ENV{type_article}|=={evenements}|oui)
+				<div class="editer editer_date[ (#ENV**{erreurs}|table_valeur{date}|oui)erreur]">
+					<label for="date"><:thematique:date_article:></label>
+					[<span class="erreur_message">(#ENV**{erreurs}|table_valeur{date})</span>]
+					<input type="date" class="text" name="date" id="date" value="[(#ENV**{date}|substr{0,10})]" />
+				</div>
+				]
+
 				<div class="editer editer_texte obligatoire[ (#ENV**{erreurs}|table_valeur{texte}|oui)erreur]">
 					<label for="texte"><:info_texte:></label>
 					[<span class="erreur_message">(#ENV**{erreurs}|table_valeur{texte})</span>]

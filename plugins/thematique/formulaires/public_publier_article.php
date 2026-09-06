@@ -23,6 +23,7 @@ function formulaires_public_publier_article_charger_dist($id_rubrique, $type_art
 		'id_article' => 0,
 		'titre' => '',
 		'texte' => '',
+		'date' => '',
 	];
 
 	// Si on répond à une consigne, chercher une éventuelle réponse existante
