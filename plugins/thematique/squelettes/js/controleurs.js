@@ -357,6 +357,15 @@ async function changeTimelineMode(type) {
 		$('body').addClass(classCss[type]);
 		CCN.projet.showWholeTimeline();
 		updateMenuIcon([type], 'timelineMode');
+
+		// "Cap sur l'année"/"La Rencontre" sont des jalons de mission :
+		// aucun sens en dehors du mode consignes (agenda, salle des pros).
+		if (type === 'consignes') {
+			updateBadgeJalon('cap_sur_annee', CCN.idArticleCapSurAnnee, CCN.statutCapSurAnnee);
+			updateBadgeJalon('la_rencontre', CCN.idArticleLaRencontre, CCN.statutLaRencontre);
+		} else {
+			$('#badge_cap_sur_annee, #badge_la_rencontre').hide();
+		}
 	}
 	$('#menu_bas .logo a.menu_logo_type_sidebarView').removeClass('selected');
 }
