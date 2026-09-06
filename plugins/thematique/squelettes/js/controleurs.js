@@ -635,12 +635,20 @@ function callRessource() {
  * page=publier (comme url_popup_reponseajout/createReponse) est le bon
  * point d'entrée, générique par type_objet.
  *
+ * expandSidebar() est indispensable : #sidebar_main_around n'est visible
+ * qu'avec la classe hasSidebarExpanded sur body (cf sidebar.css.html). Sans
+ * cet appel le formulaire est bien chargé en ajax mais reste invisible tant
+ * qu'un autre clic n'ajoute pas la classe par ailleurs (#412 bis).
+ *
  * @see loadContentInMainSidebar
  * @see createReponse
  */
 
 function callEvenementCreer() {
 	changeTimelineMode('evenements');
+	expandSidebar();
+	setFullscreenModeToCols(false);
+	updateMenuIcon(['evenements'], 'mainView');
 	loadContentInMainSidebar(CCN.projet.url_popup_evenement_creer, null, "publication_article");
 }
 
