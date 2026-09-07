@@ -9,3 +9,9 @@ if (!defined('_ECRIRE_INC_VERSION')) {
 if (!defined('_FICTIONS_ID_BLOG_PEDA')) {
 	define('_FICTIONS_ID_BLOG_PEDA', 12);
 }
+
+// Rubrique "blog auteur" (#229) : à surcharger dans mes_options.php du site une fois la
+// rubrique créée (format à valider avec @cmonnet). 0 = aucun effet tant que non défini.
+if (!defined('_FICTIONS_ID_BLOG_AUTEUR')) {
+	define('_FICTIONS_ID_BLOG_AUTEUR', 0);
+}

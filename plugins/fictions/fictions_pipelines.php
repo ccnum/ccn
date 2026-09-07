@@ -25,6 +25,9 @@ function fictions_post_edition($flux) {
 	include_spip('action/editer_objet');
 
 	$blog = sql_getfetsel('id_rubrique', 'spip_rubriques', 'titre LIKE ' . sql_quote('%Blog Pédagogique%'));
+	// #229 : la rubrique blog auteur suit la même mécanique de publication automatique
+	// que le blog pédagogique, une fois la rubrique créée et la constante surchargée.
+	$blogs_ids = array_filter([(int) $blog, _FICTIONS_ID_BLOG_AUTEUR]);
 
 	if ($statut === 'prop') {
 		// Publier l'article que l'on vient de modifier
@@ -36,7 +39,7 @@ function fictions_post_edition($flux) {
 		}
 	}
 
-	if ($blog && (int)$blog === $id_rubrique && $statut === 'prepa') {
+	if (in_array($id_rubrique, $blogs_ids, true) && $statut === 'prepa') {
 		objet_modifier('article', $id_objet, ['statut' => 'publie']);
 	}
 

@@ -77,7 +77,7 @@
 
 						<!-- END PROLOGUE -->
 						<!-- Boucle affichage des cadavres -->
-						<BOUCLE_cadavres(ARTICLES){id_rubrique}{statut IN publie,prop}{id_rubrique != #EVAL{_FICTIONS_ID_BLOG_PEDA}}{par id_article}>
+						<BOUCLE_cadavres(ARTICLES){id_rubrique}{statut IN publie,prop}{id_rubrique != #EVAL{_FICTIONS_ID_BLOG_PEDA}}{id_rubrique != #EVAL{_FICTIONS_ID_BLOG_AUTEUR}}{par id_article}>
 							[(#SESSION{webmestre}|=={oui}|non)
 							<!-- L'UTILISATEUR N'EST PAS WEBMESTRE / ECRIVAIN -->
 								[(#GET{var_id_zone}|=={#ID_RUBRIQUE}|oui)
