@@ -6,7 +6,7 @@ function valider_chapitre($id_article, $id_rubrique) {
 
 	// Publication
 	autoriser_exception('modifier', 'article', $id_article);
-	sql_updateq('spip_articles', ["statut" => "publie"], 'id_article=' . intval($id_article));
+	objet_modifier('article', intval($id_article), ['statut' => 'publie']);
 	autoriser_exception('modifier', 'article', $id_article, false);
 
 	$envoyer_mail = charger_fonction('envoyer_mail', 'inc');
