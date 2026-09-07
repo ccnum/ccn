@@ -1,0 +1,1 @@
+23L | plugins/petitfablab/squelettes/formulaires/editer_article.php:23 <-> plugins/thematique/formulaires/public_editer_article.php:21
