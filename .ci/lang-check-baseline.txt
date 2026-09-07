@@ -1,26 +1,5 @@
 plugins/ccn/ccn_pipelines.php:52: Compression vidéo document #
 plugins/fictions/fictions_pipelines.php:33: %Blog Pédagogique%
-plugins/fictions/squelettes/footer.html:17: Accéder au forum
-plugins/fictions/squelettes/footer.html:21: Mot de passe oublié ?
-plugins/fictions/squelettes/footer.html:26: Blog de l'auteur
-plugins/fictions/squelettes/footer.html:43: Année scolaire :
-plugins/fictions/squelettes/forum.html:55: Répondre à ce message
-plugins/fictions/squelettes/inclure/chapitre-ecriture-script.html:21: onClick='return confirmation("Etes vous sûr de vouloir supprimer ce document ?")
-plugins/fictions/squelettes/inclure/chapitre-ecriture.html:5: Édition en cours
-plugins/fictions/squelettes/inclure/chapitre-verrouille.html:5: Chapitre verrouillé
-plugins/fictions/squelettes/inclure/forum.html:10: Personne n'a encore commenté.
-plugins/fictions/squelettes/inclure/head.html:31: .attr('title', ($(this).attr('title') || $(this).text()).trim() + ' (nouvelle fe
-plugins/fictions/squelettes/inclure/liste-cadavres-fin.html:12: Télécharger le pdf
-plugins/fictions/squelettes/inclure/logos-script-forum.html:14: Accéder à la fiche script
-plugins/fictions/squelettes/inclure/logos-script-forum.html:34: Accéder au forum
-plugins/fictions/squelettes/inclure/rubrique.html:26: écrire
-plugins/fictions/squelettes/lecture-script.html:27: $confirmation= attribut_html("Etes vous sûr de vouloir supprimer ce document ?")
-plugins/fictions/squelettes/page.html:17: Retour à l'accueil
-plugins/fictions/squelettes/rubrique.html:13: Retour à l'accueil
-plugins/fictions/squelettes/sommaire-legende.html:11: Chapitre en cours d’écriture
-plugins/fictions/squelettes/sommaire-legende.html:16: Chapitre à écrire
-plugins/fictions/squelettes/sommaire-legende.html:21: Chapitre déjà écrit
-plugins/fictions/squelettes/sommaire-legende.html:6: Chapitre verrouillé
 plugins/petitfablab/petitfablab_fonctions.php:15: Vous venez d\'écrire un chapitre !
 plugins/petitfablab/petitfablab_fonctions.php:17: <br />Merci d'avoir participé au petit fablab d'écriture !
 plugins/petitfablab/petitfablab_fonctions.php:19: <br />A très bientôt<br />

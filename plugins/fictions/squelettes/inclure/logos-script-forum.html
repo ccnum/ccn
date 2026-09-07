@@ -13,7 +13,7 @@
 		<!-- SCRIPT -->
 		[(#GET{script}|oui)
 			<a href="#URL_PAGE{lecture-script,id_article=#ID_ARTICLE}" class="mediabox boxIframe boxWidth-520px boxHeight-80pc">
-				<img src="[(#CHEMIN{img/lecture/bt_script_hover.png})]" width="30" height="30" alt="Accéder à la fiche script" />
+				<img src="[(#CHEMIN{img/lecture/bt_script_hover.png})]" width="30" height="30" alt="<:fictions:acceder_a_la_fiche_script:>" />
 			</a>
 		]
 		[(#GET{script}|non)
@@ -33,7 +33,7 @@
 			<a href="#URL_SITE_SPIP/?page=[(#SESSION{id_auteur}|non|?{'lecture-',''})]forum&id_article=#ID_ARTICLE" class="mediabox boxIframe boxWidth-730px boxHeight-97pc">
 				<img src="[(#CHEMIN{img/lecture/bt_forum.png})]"
 					class="btn-rollover" data-src-hover="#CHEMIN{img/lecture/bt_forum_hover.png}"
-					width="30" height="30" alt="Accéder au forum" />
+					width="30" height="30" alt="<:fictions:acceder_au_forum:>" />
 			</a>
 		]
 	[(#CLASS|=={nodiv}|non)</div>]
