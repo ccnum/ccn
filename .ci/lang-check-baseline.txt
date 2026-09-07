@@ -1,2 +1,48 @@
-thematique_administrations.php:225: Blog pédagogique
-thematique_administrations.php:226: Contenu éditorial
+plugins/fictions/fictions_pipelines.php:33: %Blog Pédagogique%
+plugins/fictions/squelettes/footer.html:17: Accéder au forum
+plugins/fictions/squelettes/footer.html:21: Mot de passe oublié ?
+plugins/fictions/squelettes/footer.html:26: Blog de l'auteur
+plugins/fictions/squelettes/footer.html:43: Année scolaire :
+plugins/fictions/squelettes/forum.html:65: Répondre à ce message
+plugins/fictions/squelettes/inclure/chapitre-ecriture-script.html:21: onClick='return confirmation("Etes vous sûr de vouloir supprimer ce document ?")
+plugins/fictions/squelettes/inclure/chapitre-ecriture.html:5: Édition en cours
+plugins/fictions/squelettes/inclure/chapitre-verrouille.html:5: Chapitre verrouillé
+plugins/fictions/squelettes/inclure/forum.html:10: Personne n'a encore commenté.
+plugins/fictions/squelettes/inclure/head.html:31: .attr('title', ($(this).attr('title') || $(this).text()).trim() + ' (nouvelle fe
+plugins/fictions/squelettes/inclure/liste-cadavres-fin.html:12: Télécharger le pdf
+plugins/fictions/squelettes/inclure/logos-script-forum.html:14: Accéder à la fiche script
+plugins/fictions/squelettes/inclure/logos-script-forum.html:34: Accéder au forum
+plugins/fictions/squelettes/inclure/rubrique.html:26: écrire
+plugins/fictions/squelettes/lecture-script.html:36: $confirmation= attribut_html("Etes vous sûr de vouloir supprimer ce document ?")
+plugins/fictions/squelettes/page.html:37: Retour à l'accueil
+plugins/fictions/squelettes/rubrique.html:32: Retour à l'accueil
+plugins/fictions/squelettes/sommaire-legende.html:11: Chapitre en cours d’écriture
+plugins/fictions/squelettes/sommaire-legende.html:16: Chapitre à écrire
+plugins/fictions/squelettes/sommaire-legende.html:21: Chapitre déjà écrit
+plugins/fictions/squelettes/sommaire-legende.html:6: Chapitre verrouillé
+plugins/petitfablab/petitfablab_fonctions.php:15: Vous venez d\'écrire un chapitre !
+plugins/petitfablab/petitfablab_fonctions.php:17: <br />Merci d'avoir participé au petit fablab d'écriture !
+plugins/petitfablab/petitfablab_fonctions.php:19: <br />A très bientôt<br />
+plugins/petitfablab/petitfablab_fonctions.php:20: <br />Le petit fablab d'écriture est un dispositif imaginé par Erasme, laboratoi
+plugins/petitfablab/petitfablab_fonctions.php:27: Petit Fab Lab d\'écriture
+plugins/petitfablab/petitfablab_fonctions.php:50: Bonjour à tous,
+plugins/petitfablab/petitfablab_fonctions.php:51: <br />Félicitations votre histoire est en ligne.
+plugins/petitfablab/petitfablab_fonctions.php:53: <br />A très bientôt<br />
+plugins/petitfablab/petitfablab_fonctions.php:54: <br />Le petit fablab d'écriture est un dispositif imaginé par Erasme, laboratoi
+plugins/petitfablab/petitfablab_fonctions.php:61: Petit Fab Lab d\'écriture
+plugins/petitfablab/squelettes/formulaires/editer_article.html:38: Numéro de téléphone (pour être contacté pour l'édition)
+plugins/petitfablab/squelettes/inclure/footer.html:12: Vers la version collèges
+plugins/petitfablab/squelettes/inclure/footer.html:8: Mot de passe oublié ?
+plugins/petitfablab/squelettes/inclure/layout_init.html:68: écrire
+plugins/petitfablab/squelettes/inclure/logos-script-forum.html:17: accéder à la fiche script
+plugins/petitfablab/squelettes/inclure/logos-script-forum.html:17: width="30" height="30" title="accéder à la fiche script"
+plugins/petitfablab/squelettes/inclure/rubrique.html:38: Vous pouvez laisser la place au suivant et recevrez bientôt votre histoire par m
+plugins/petitfablab/squelettes/inclure/rubrique.html:54: A vous d'écrire !
+plugins/petitfablab/squelettes/inclure/rubrique.html:56: Lisez le prologue et poursuivez l’histoire en vous inspirant des fins de chapitr
+plugins/petitfablab/squelettes/lecture-script.html:29: $confirmation= attribut_html("Etes vous sûr de vouloir supprimer ce document ?")
+plugins/petitfablab/squelettes/sommaire.html:30: Voici la grille des histoires en cours d'écriture :
+plugins/petitfablab/squelettes/sommaire.html:34: Et les histoires terminées :
+plugins/petitfablab/squelettes/sommaire.html:48: Seules les histoires des rubriques dont vous êtes administrateur.ice s’affichent
+plugins/petitfablab/squelettes/sommaire.html:83: Dans quelle rubrique souhaitez-vous créé votre nouvelle histoire ?
+plugins/thematique/thematique_administrations.php:225: Blog pédagogique
+plugins/thematique/thematique_administrations.php:226: Contenu éditorial
