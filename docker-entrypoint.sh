@@ -150,6 +150,13 @@ fi
 if [ "${SPIP_VERSION_SITE}" != "thematique" ]; then
 	spip plugins:activer vider_rubrique -y
 fi
+if [ "${SPIP_VERSION_SITE}" = "fictions" ] || [ "${SPIP_VERSION_SITE}" = "petitfablab" ]; then
+	# Socle commun aux deux plugins "cadavre exquis" (squelettes/assets
+	# partagés, cf plugins/cadavrexquis/) — nécessaire à necessite dans
+	# leurs paquet.xml respectifs, mais spip plugins:activer n'active pas
+	# automatiquement les dépendances non déjà connues du cache paquets.
+	spip plugins:activer cadavrexquis -y
+fi
 spip plugins:activer "${SPIP_VERSION_SITE}" -y
 if [ "${PROJET}" != "laclasse" ]; then
 	spip plugins:activer "thematique_${PROJET}" -y
