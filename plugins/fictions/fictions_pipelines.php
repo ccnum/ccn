@@ -15,7 +15,13 @@ function fictions_post_edition($flux) {
 
 	$id_objet   = intval($flux['args']['id_objet'] ?? 0);
 	$statut     = $flux['args']['champs_anciens']['statut'] ?? '';
-	$descriptif = $flux['args']['champs_anciens']['descriptif'] ?? '';
+	// #219 : $flux['data'] porte les valeurs tout juste enregistrées (post_edition),
+	// contrairement à champs_anciens qui est l'état AVANT cette modification. Sur le
+	// tout premier enregistrement d'un chapitre, champs_anciens['descriptif'] est
+	// encore vide : lire uniquement l'ancienne valeur faisait sortir cette fonction
+	// avant la cascade prop->publie, laissant le chapitre précédent visible en entier
+	// jusqu'à un enregistrement ultérieur (masquage manuel en attendant).
+	$descriptif = $flux['data']['descriptif'] ?? ($flux['args']['champs_anciens']['descriptif'] ?? '');
 	$id_rubrique = intval($flux['args']['champs_anciens']['id_rubrique'] ?? 0);
 
 	if (!$id_objet || !$statut || $descriptif === '' || !$id_rubrique) {
