@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
 """
 Vérifie que toute clé de langue utilisée dans les plugins thematique,
-fictions et petitfablab (<:module:cle:>, _T('module:cle'), CCN.lang.cle
-côté JS pour thematique) existe bien dans le fichier de langue du module
-concerné.
+fictions, petitfablab et ccn (<:module:cle:>, _T('module:cle'),
+CCN.lang.cle côté JS pour thematique) existe bien dans le fichier de
+langue du module concerné.
 
 Le lint check_lang_hardcoded.py garantit l'absence de texte en dur, mais
 pas la validité des clés utilisées : une clé mal orthographiée s'affiche
@@ -32,7 +32,7 @@ import sys
 from pathlib import Path
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
-PLUGIN_NAMES = ("thematique", "fictions", "petitfablab")
+PLUGIN_NAMES = ("thematique", "fictions", "petitfablab", "ccn")
 
 CCN_LANG_USE_RE = re.compile(r"CCN\.lang\.([a-zA-Z0-9_]+)")
 CCN_LANG_PROP_RE = re.compile(r"^\s*([a-zA-Z0-9_]+)\s*:", re.MULTILINE)

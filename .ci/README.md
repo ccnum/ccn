@@ -1,16 +1,17 @@
 # check_lang_hardcoded.py
 
 Détecte le texte français codé en dur dans `plugins/thematique`,
-`plugins/fictions` et `plugins/petitfablab` (hors `lang/`,
+`plugins/fictions`, `plugins/petitfablab` et `plugins/ccn` (hors `lang/`,
 `squelettes/lang/` et `vendor/` de chacun), pour forcer le passage par
 un item de langue (`<:module:cle:>`/`_T('module:cle')`, `CCN.lang` côté
 JS — ce dernier pont n'existe que pour thematique, cf `check_lang_keys.py`
 ci-dessous).
 
-Seul `thematique` a une vraie convention i18n systématique ; `fictions`
-et `petitfablab` n'en ont quasiment aucune (2026-08 : 22 et 24 entrées
-de baseline respectivement, contre 3 pour thematique à l'origine — texte
-en dur préexistant, pas une régression). Le check les couvre quand même :
+Seul `thematique` a une vraie convention i18n systématique ; `fictions`,
+`petitfablab` et `ccn` n'en ont quasiment aucune (2026-08 : 22, 24 et 1
+entrée(s) de baseline respectivement, contre 3 pour thematique à
+l'origine — texte en dur préexistant, pas une régression). Le check les
+couvre quand même :
 il n'impose pas de migration rétroactive (la baseline absorbe l'existant),
 mais empêche d'en rajouter.
 
@@ -28,7 +29,7 @@ python3 .ci/check_lang_hardcoded.py
 Le script échoue (exit 1) si du texte en dur absent de
 `lang-check-baseline.txt` est détecté. Le CI (`.github/workflows/lint-lang.yml`)
 exécute ce même check sur toute PR touchant `plugins/thematique/**`,
-`plugins/fictions/**` ou `plugins/petitfablab/**`.
+`plugins/fictions/**`, `plugins/petitfablab/**` ou `plugins/ccn/**`.
 
 ## Exceptions dans la baseline
 
@@ -80,18 +81,20 @@ en dur, mais pas la validité des clés utilisées. Une clé mal orthographiée
 (`<:thematique:mauvaize_cle:>`) s'affiche telle quelle en prod sans faire
 échouer le lint anti-texte-en-dur.
 
-`check_lang_keys.py` couvre `plugins/thematique`, `plugins/fictions` et
-`plugins/petitfablab` : pour chacun, toute clé référencée doit exister :
+`check_lang_keys.py` couvre `plugins/thematique`, `plugins/fictions`,
+`plugins/petitfablab` et `plugins/ccn` : pour chacun, toute clé
+référencée doit exister :
 - `<:module:cle:>` et `_T('module:cle')` (module = nom du plugin) →
   doivent exister dans son fichier de langue, cherché à la fois en
-  `lang/<module>_fr.php` (thematique) et `squelettes/lang/<module>_fr.php`
-  (petitfablab — autre emplacement). `fictions` n'a pas de fichier de
-  langue du tout : la moindre clé `<:fictions:...:>` y ferait donc
-  immédiatement échouer le check (aucune actuellement) ;
+  `lang/<module>_fr.php` (thematique, ccn) et
+  `squelettes/lang/<module>_fr.php` (petitfablab — autre emplacement).
+  `fictions` n'a pas de fichier de langue du tout : la moindre clé
+  `<:fictions:...:>` y ferait donc immédiatement échouer le check
+  (aucune actuellement) ;
 - `CCN.lang.cle` côté JS → doit exister comme propriété de l'objet
   `CCN.lang` construit dans `plugins/thematique/squelettes/noisettes/timeline.html`.
   Vérifié uniquement pour thematique : c'est le seul plugin à avoir ce
-  pont PHP → JS, `fictions`/`petitfablab` ne l'utilisent pas.
+  pont PHP → JS, les trois autres ne l'utilisent pas.
 
 Usage local :
 
@@ -106,7 +109,7 @@ sans exception tolérée.
 # check_hardcoded_paths.py
 
 Détecte deux types de liens en dur dans les squelettes `.html` de
-`plugins/thematique`, `plugins/fictions` et `plugins/petitfablab` :
+`plugins/thematique`, `plugins/fictions`, `plugins/petitfablab` et `plugins/ccn` :
 
 1. Ressources du plugin (`img/`, `css/`, `js/`, `pdf/`) qui n'utilisent pas
    `#CHEMIN{...}` (ou `#ENV{chemin}`/`#DOSSIER_SQUELETTE`). Un chemin
@@ -139,12 +142,12 @@ pour régénérer après un faux positif volontaire).
 # check_html_duplication.js
 
 Détecte le HTML/squelette SPIP dupliqué (copier-coller) dans les plugins
-maison (`plugins/petitfablab`, `plugins/fictions`, `plugins/thematique`),
-via [jscpd](https://github.com/kucherenko/jscpd) (`node_modules/.bin/jscpd`,
-dépendance dev npm — seul script `.ci/` en Node, les autres sont en
-PHP/Python).
+maison (`plugins/petitfablab`, `plugins/fictions`, `plugins/thematique`,
+`plugins/ccn`), via [jscpd](https://github.com/kucherenko/jscpd)
+(`node_modules/.bin/jscpd`, dépendance dev npm — seul script `.ci/` en
+Node, les autres sont en PHP/Python).
 
-Limité à ces trois plugins (pas tout `plugins/`) : ce sont les seuls
+Limité à ces quatre plugins (pas tout `plugins/`) : ce sont les seuls
 développés/maintenus ici, les autres sont des plugins tiers vendorisés
 (contrib SPIP) qu'on ne cherche pas à refactorer.
 
@@ -159,13 +162,13 @@ node .ci/check_html_duplication.js [--baseline=PATH] [--write-baseline]
 Comme pour les checks Python, seule une nouvelle duplication (absente de
 `html-duplication-baseline.txt`) fait échouer le script — le volume déjà
 présent (8 clones pour thematique seul lors de la mise en place, 2026-08 ;
-44 depuis l'élargissement à fictions/petitfablab) est toléré tel quel ;
+44 depuis l'élargissement à fictions/petitfablab/ccn) est toléré tel quel ;
 `--write-baseline` régénère le fichier après vérification du diff.
 
 # check_php_duplication.js
 
 Même principe que `check_html_duplication.js` (jscpd), appliqué au PHP de
-`plugins/thematique`, `plugins/fictions` et `plugins/petitfablab`
+`plugins/thematique`, `plugins/fictions`, `plugins/petitfablab` et `plugins/ccn`
 (pattern `**/*.php` au lieu de `**/*.html`).
 
 Usage local (nécessite `npm ci` au préalable) :
@@ -179,11 +182,12 @@ node .ci/check_php_duplication.js [--baseline=PATH] [--write-baseline]
 Baseline dans `.ci/php-duplication-baseline.txt` : vide pour thematique
 seul depuis la factorisation des 8 clones détectés à la mise en place
 (2026-08, cf ci-dessous) ; 1 entrée depuis l'élargissement à
-fictions/petitfablab (`petitfablab/squelettes/formulaires/editer_article.php`
+fictions/petitfablab/ccn (`petitfablab/squelettes/formulaires/editer_article.php`
 vs `thematique/formulaires/public_editer_article.php`, non traitée —
 deux plugins différents, pas de fonction commune évidente sans dépendance
-croisée). Même mécanisme que les autres checks : `--write-baseline` après
-vérification du diff pour accepter une nouvelle duplication.
+croisée). ccn n'ajoute aucune nouvelle entrée. Même mécanisme que les
+autres checks : `--write-baseline` après vérification du diff pour
+accepter une nouvelle duplication.
 
 ## Duplications déjà traitées (2026-08)
 

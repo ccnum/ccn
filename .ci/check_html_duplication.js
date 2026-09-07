@@ -2,10 +2,11 @@
 
 /**
  * Détecte le HTML/squelette SPIP dupliqué (copier-coller) dans les plugins
- * maison (plugins/thematique, plugins/fictions, plugins/petitfablab), via
- * jscpd (node_modules/.bin/jscpd, installé en dépendance dev npm).
+ * maison (plugins/thematique, plugins/fictions, plugins/petitfablab,
+ * plugins/ccn), via jscpd (node_modules/.bin/jscpd, installé en
+ * dépendance dev npm).
  *
- * Limité à ces trois plugins (pas tout plugins/) : ce sont les seuls
+ * Limité à ces quatre plugins (pas tout plugins/) : ce sont les seuls
  * développés/maintenus ici, les autres sont des plugins tiers vendorisés
  * (contrib SPIP) qu'on ne cherche pas à refactorer.
  *
@@ -35,7 +36,7 @@ const os = require('node:os');
 const path = require('node:path');
 
 const repoRoot = path.dirname(__dirname);
-const scanRoots = ['plugins/thematique', 'plugins/fictions', 'plugins/petitfablab'].map((p) => path.join(repoRoot, p));
+const scanRoots = ['plugins/thematique', 'plugins/fictions', 'plugins/petitfablab', 'plugins/ccn'].map((p) => path.join(repoRoot, p));
 const jscpdBin = path.join(repoRoot, 'node_modules', '.bin', 'jscpd');
 
 const args = process.argv.slice(2);

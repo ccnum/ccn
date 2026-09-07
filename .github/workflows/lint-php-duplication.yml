@@ -1,4 +1,4 @@
-name: Lint - duplication PHP (thematique, fictions, petitfablab)
+name: Lint - duplication PHP (thematique, fictions, petitfablab, ccn)
 
 on:
   pull_request:
@@ -6,6 +6,7 @@ on:
       - 'plugins/thematique/**/*.php'
       - 'plugins/fictions/**/*.php'
       - 'plugins/petitfablab/**/*.php'
+      - 'plugins/ccn/**/*.php'
       - '.ci/check_php_duplication.js'
       - '.ci/php-duplication-baseline.txt'
       - 'package.json'
@@ -18,6 +19,7 @@ on:
       - 'plugins/thematique/**/*.php'
       - 'plugins/fictions/**/*.php'
       - 'plugins/petitfablab/**/*.php'
+      - 'plugins/ccn/**/*.php'
       - '.ci/check_php_duplication.js'
       - '.ci/php-duplication-baseline.txt'
       - 'package.json'

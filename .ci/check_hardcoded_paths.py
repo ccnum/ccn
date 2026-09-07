@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 Détecte deux types de liens en dur dans les plugins maison (thematique,
-fictions, petitfablab) :
+fictions, petitfablab, ccn) :
 
 1. Ressources du plugin (img/, css/, js/, pdf/) référencées sans passer
    par #CHEMIN{...} (ou #ENV{chemin}/#DOSSIER_SQUELETTE), qui cassent si
@@ -36,7 +36,7 @@ import sys
 from pathlib import Path
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
-PLUGIN_ROOTS = [REPO_ROOT / "plugins" / name for name in ("thematique", "fictions", "petitfablab")]
+PLUGIN_ROOTS = [REPO_ROOT / "plugins" / name for name in ("thematique", "fictions", "petitfablab", "ccn")]
 EXCLUDE_DIRS = {root / "lang" for root in PLUGIN_ROOTS} | {root / "vendor" for root in PLUGIN_ROOTS}
 
 RESOURCE_DIRS = ("img", "css", "js", "pdf")

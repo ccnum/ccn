@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 Détecte le texte français codé en dur dans les plugins thematique,
-fictions et petitfablab, pour forcer le passage par un item de langue
+fictions, petitfablab et ccn, pour forcer le passage par un item de langue
 (<:module:cle:> / _T('module:cle'), CCN.lang côté JS pour thematique
 uniquement — seul plugin à avoir ce pont PHP->JS, cf .ci/README.md).
 
@@ -25,7 +25,7 @@ import sys
 from pathlib import Path
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
-PLUGIN_NAMES = ("thematique", "fictions", "petitfablab")
+PLUGIN_NAMES = ("thematique", "fictions", "petitfablab", "ccn")
 PLUGIN_ROOTS = [REPO_ROOT / "plugins" / name for name in PLUGIN_NAMES]
 SCAN_DIRS = PLUGIN_ROOTS
 EXCLUDE_DIRS = set()
