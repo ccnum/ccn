@@ -9,7 +9,7 @@
 			<h3><:thematique:ajouter_document:></h3>
 
 			<div class="ajax">
-				#FORMULAIRE_JOINDRE_DOCUMENT{new,#GET{id_objet_document},article}
+				#FORMULAIRE_JOINDRE_DOCUMENT_MISSION{#GET{id_objet_document},article}
 			</div>
 			<INCLURE{fond=noisettes/inc/publier_article_documents, id_objet=#GET{id_objet_document}, objet=article, ajax=documents} />
 		</div>
