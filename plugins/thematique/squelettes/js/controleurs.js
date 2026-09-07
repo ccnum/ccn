@@ -892,7 +892,11 @@ function createReponse(id_consigne, id_rubrique_auteur, numero) {
 function findReponseById(id_reponse) {
 	for (const consigne of CCN.consignes) {
 		for (const reponse of consigne.reponses) {
-			if (reponse.id === id_reponse) {
+			// == et non === : reponse.id est un nombre (JSON), id_reponse peut
+			// être une chaîne (lien direct/F5, cf setContentFromState() qui
+			// transmet id_objet tel que lu dans l'URL) — comme partout ailleurs
+			// dans ce fichier (showConsigneInTimeline, showReponseInTimeline).
+			if (reponse.id == id_reponse) {
 				return { consigne, reponse };
 			}
 		}

@@ -68,6 +68,59 @@ function thematique_annee_scolaire() {
 }
 
 /**
+ * Année scolaire réelle d'une rubrique, déduite du titre de sa rubrique
+ * racine (les racines sont nommées par année, cf thematique_assurer_structure_annee()
+ * et thematique_id_rubrique_annee_active()) — indépendante du cookie/GET de
+ * sélection (contrairement à thematique_annee_scolaire()).
+ *
+ * Sert à rouvrir correctement un lien direct vers une mission/réponse
+ * d'une année différente de celle active par défaut : sans ça, un
+ * id_article valide dans l'URL ne suffit pas à retrouver son contenu, qui
+ * n'est chargé côté client (JSON) que pour l'année active (cf
+ * thematique_pre_boucle(), noisettes/timeline.html).
+ *
+ * @param int $id_rubrique
+ * @return int Année scolaire (ex: 2025), 0 si indéterminable
+ */
+function thematique_annee_rubrique($id_rubrique) {
+	static $cache = [];
+	$id_rubrique = intval($id_rubrique);
+	if (isset($cache[$id_rubrique])) {
+		return $cache[$id_rubrique];
+	}
+
+	include_spip('base/abstract_sql');
+	$ascendants = thematique_ascendants_rubrique($id_rubrique);
+	$id_racine = $ascendants ? end($ascendants) : 0;
+	$titre_racine = $id_racine ? sql_getfetsel('titre', 'spip_rubriques', 'id_rubrique=' . $id_racine) : '';
+
+	$annee = 0;
+	if ($titre_racine && preg_match('/(\d{4})/', $titre_racine, $m)) {
+		$annee = intval($m[1]);
+	}
+
+	return $cache[$id_rubrique] = $annee;
+}
+
+/**
+ * Année scolaire réelle d'un article, cf thematique_annee_rubrique().
+ *
+ * @param int $id_article
+ * @return int Année scolaire (ex: 2025), 0 si indéterminable
+ */
+function thematique_annee_article($id_article) {
+	$id_article = intval($id_article);
+	if (!$id_article) {
+		return 0;
+	}
+
+	include_spip('base/abstract_sql');
+	$id_rubrique = intval(sql_getfetsel('id_rubrique', 'spip_articles', 'id_article=' . $id_article));
+
+	return thematique_annee_rubrique($id_rubrique);
+}
+
+/**
  * Année scolaire réelle (calendaire), indépendante du cookie/GET de
  * sélection d'année (cf plugins/ccn/ccn_options.php). Sert à distinguer
  * l'année scolaire réellement en cours d'une année archivée consultée

@@ -9,6 +9,17 @@
 [(#REM) ******************* VARIABLES ***************************** ]
 [(#REM) Annee scolaire]
 #SET{annee_scolaire,#CONST{_ANNEE_SCOLAIRE}}
+[(#REM) Lien direct vers une mission/réponse (F5, lien partagé) d'une année
+différente de celle active par défaut : sans ce réalignement, son
+id_article est correct dans l'URL mais son contenu (chargé en JSON,
+filtré par année scolaire) n'est jamais chargé côté client, et la popup
+correspondante ne peut pas se rouvrir (cf noisettes/timeline.html). ]
+[(#ENV{id_article}|oui)
+	#SET{annee_scolaire_article, #ENV{id_article}|thematique_annee_article}
+	[(#GET{annee_scolaire_article}|oui)
+		#SET{annee_scolaire, #GET{annee_scolaire_article}}
+	]
+]
 
 [(#SET{projet,[(#URL_PAGE{json, mode=projet}|url_absolue|copie_locale)]})]
 
