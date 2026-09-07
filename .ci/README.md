@@ -1,17 +1,23 @@
 # check_lang_hardcoded.py
 
-Détecte le texte français codé en dur dans tout le plugin `plugins/thematique`
-(hors `lang/` et `vendor/`), pour forcer le passage par des items de langue
-(`lang/thematique_fr.php` côté PHP/squelette, `CCN.lang` côté JS).
+Détecte le texte français codé en dur dans `plugins/thematique`,
+`plugins/fictions` et `plugins/petitfablab` (hors `lang/`,
+`squelettes/lang/` et `vendor/` de chacun), pour forcer le passage par
+un item de langue (`<:module:cle:>`/`_T('module:cle')`, `CCN.lang` côté
+JS — ce dernier pont n'existe que pour thematique, cf `check_lang_keys.py`
+ci-dessous).
 
-Pour l'instant limité au plugin thematique (seul plugin i18n-isé à ce
-jour) — à généraliser (argument `--scan`) si d'autres plugins adoptent
-la même convention.
+Seul `thematique` a une vraie convention i18n systématique ; `fictions`
+et `petitfablab` n'en ont quasiment aucune (2026-08 : 22 et 24 entrées
+de baseline respectivement, contre 3 pour thematique à l'origine — texte
+en dur préexistant, pas une régression). Le check les couvre quand même :
+il n'impose pas de migration rétroactive (la baseline absorbe l'existant),
+mais empêche d'en rajouter.
 
-Le scan couvre désormais tout le plugin (et pas seulement
-`squelettes/`+`formulaires/`) : les fichiers `.html` à la racine du plugin
-(ex: `cioidc_erreur_archive.html`) sont de vrais squelettes SPIP rendus au
-visiteur et doivent être traités comme tels.
+Le scan couvre tout le plugin (et pas seulement `squelettes/`+`formulaires/`) :
+les fichiers `.html` à la racine du plugin (ex: `cioidc_erreur_archive.html`
+pour thematique) sont de vrais squelettes SPIP rendus au visiteur et
+doivent être traités comme tels.
 
 Usage local :
 
@@ -20,8 +26,9 @@ python3 .ci/check_lang_hardcoded.py
 ```
 
 Le script échoue (exit 1) si du texte en dur absent de
-`lang-check-baseline.txt` est détecté. Le CI (`.github/workflows/lint-lang-thematique.yml`)
-exécute ce même check sur toute PR touchant `plugins/thematique/**`.
+`lang-check-baseline.txt` est détecté. Le CI (`.github/workflows/lint-lang.yml`)
+exécute ce même check sur toute PR touchant `plugins/thematique/**`,
+`plugins/fictions/**` ou `plugins/petitfablab/**`.
 
 ## Exceptions dans la baseline
 
@@ -73,13 +80,18 @@ en dur, mais pas la validité des clés utilisées. Une clé mal orthographiée
 (`<:thematique:mauvaize_cle:>`) s'affiche telle quelle en prod sans faire
 échouer le lint anti-texte-en-dur.
 
-`check_lang_keys.py` vérifie que toute clé référencée dans le plugin existe
-bien :
-- `<:thematique:cle:>` et `_T('thematique:cle')` → doivent exister dans
-  `lang/thematique_fr.php` ;
+`check_lang_keys.py` couvre `plugins/thematique`, `plugins/fictions` et
+`plugins/petitfablab` : pour chacun, toute clé référencée doit exister :
+- `<:module:cle:>` et `_T('module:cle')` (module = nom du plugin) →
+  doivent exister dans son fichier de langue, cherché à la fois en
+  `lang/<module>_fr.php` (thematique) et `squelettes/lang/<module>_fr.php`
+  (petitfablab — autre emplacement). `fictions` n'a pas de fichier de
+  langue du tout : la moindre clé `<:fictions:...:>` y ferait donc
+  immédiatement échouer le check (aucune actuellement) ;
 - `CCN.lang.cle` côté JS → doit exister comme propriété de l'objet
-  `CCN.lang` construit dans `squelettes/noisettes/timeline.html` (seul pont
-  PHP → JS du plugin).
+  `CCN.lang` construit dans `plugins/thematique/squelettes/noisettes/timeline.html`.
+  Vérifié uniquement pour thematique : c'est le seul plugin à avoir ce
+  pont PHP → JS, `fictions`/`petitfablab` ne l'utilisent pas.
 
 Usage local :
 
@@ -93,7 +105,8 @@ sans exception tolérée.
 
 # check_hardcoded_paths.py
 
-Détecte deux types de liens en dur dans les squelettes `.html` du plugin :
+Détecte deux types de liens en dur dans les squelettes `.html` de
+`plugins/thematique`, `plugins/fictions` et `plugins/petitfablab` :
 
 1. Ressources du plugin (`img/`, `css/`, `js/`, `pdf/`) qui n'utilisent pas
    `#CHEMIN{...}` (ou `#ENV{chemin}`/`#DOSSIER_SQUELETTE`). Un chemin
@@ -145,15 +158,15 @@ node .ci/check_html_duplication.js [--baseline=PATH] [--write-baseline]
 
 Comme pour les checks Python, seule une nouvelle duplication (absente de
 `html-duplication-baseline.txt`) fait échouer le script — le volume déjà
-présent (84 clones lors de la mise en place, 2026-08) est toléré tel quel ;
+présent (8 clones pour thematique seul lors de la mise en place, 2026-08 ;
+44 depuis l'élargissement à fictions/petitfablab) est toléré tel quel ;
 `--write-baseline` régénère le fichier après vérification du diff.
 
 # check_php_duplication.js
 
-Même principe que `check_html_duplication.js` (jscpd), appliqué au PHP du
-plugin `plugins/thematique` (pattern `**/*.php` au lieu de `**/*.html`).
-Limité à ce seul plugin pour l'instant (pas `fictions`/`petitfablab`) — à
-élargir si la convention fait ses preuves ici.
+Même principe que `check_html_duplication.js` (jscpd), appliqué au PHP de
+`plugins/thematique`, `plugins/fictions` et `plugins/petitfablab`
+(pattern `**/*.php` au lieu de `**/*.html`).
 
 Usage local (nécessite `npm ci` au préalable) :
 
@@ -163,10 +176,14 @@ node .ci/check_php_duplication.js [--baseline=PATH] [--write-baseline]
                                    [--min-lines=N] [--min-tokens=N]
 ```
 
-Baseline dans `.ci/php-duplication-baseline.txt`, vide depuis la
-factorisation des 8 clones détectés à la mise en place (2026-08, cf
-ci-dessous). Même mécanisme que les autres checks : `--write-baseline`
-après vérification du diff pour accepter une nouvelle duplication.
+Baseline dans `.ci/php-duplication-baseline.txt` : vide pour thematique
+seul depuis la factorisation des 8 clones détectés à la mise en place
+(2026-08, cf ci-dessous) ; 1 entrée depuis l'élargissement à
+fictions/petitfablab (`petitfablab/squelettes/formulaires/editer_article.php`
+vs `thematique/formulaires/public_editer_article.php`, non traitée —
+deux plugins différents, pas de fonction commune évidente sans dépendance
+croisée). Même mécanisme que les autres checks : `--write-baseline` après
+vérification du diff pour accepter une nouvelle duplication.
 
 ## Duplications déjà traitées (2026-08)
 
