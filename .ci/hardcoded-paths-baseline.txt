@@ -1,0 +1,2 @@
+plugins/fictions/squelettes/footer.html:16: "spip.php?page=auteur_editer&id_auteur=#SESSION{id_auteur}"
+plugins/fictions/squelettes/forum.html:66: "spip.php?page=forum_reponse&id_article=#ID_ARTICLE&(#PARAMETRES_FORUM{#SELF})"

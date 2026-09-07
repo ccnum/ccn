@@ -1,9 +1,11 @@
-name: Lint - duplication PHP (thematique)
+name: Lint - duplication PHP (thematique, fictions, petitfablab)
 
 on:
   pull_request:
     paths:
       - 'plugins/thematique/**/*.php'
+      - 'plugins/fictions/**/*.php'
+      - 'plugins/petitfablab/**/*.php'
       - '.ci/check_php_duplication.js'
       - '.ci/php-duplication-baseline.txt'
       - 'package.json'
@@ -14,6 +16,8 @@ on:
       - main
     paths:
       - 'plugins/thematique/**/*.php'
+      - 'plugins/fictions/**/*.php'
+      - 'plugins/petitfablab/**/*.php'
       - '.ci/check_php_duplication.js'
       - '.ci/php-duplication-baseline.txt'
       - 'package.json'

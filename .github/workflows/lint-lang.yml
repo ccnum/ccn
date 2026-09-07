@@ -1,9 +1,11 @@
-name: Lint - texte en dur (plugin thematique)
+name: Lint - texte en dur (thematique, fictions, petitfablab)
 
 on:
   pull_request:
     paths:
       - 'plugins/thematique/**'
+      - 'plugins/fictions/**'
+      - 'plugins/petitfablab/**'
       - '.ci/**'
   push:
     branches:
@@ -11,6 +13,8 @@ on:
       - main
     paths:
       - 'plugins/thematique/**'
+      - 'plugins/fictions/**'
+      - 'plugins/petitfablab/**'
       - '.ci/**'
 
 jobs:
