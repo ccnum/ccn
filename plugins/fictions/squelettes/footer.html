@@ -25,7 +25,7 @@
 				<a href="[(#DESCRIPTIF|textebrut)]">Espace doc</a>
 				[<a href="(#TEXTE|extraire_attribut{href})">Blog de l'auteur</a>]
 			</BOUCLE_espace_doc>
-			[(#SESSION{id_auteur}|oui)
+			[(#SESSION{statut}|=={0minirezo}|oui)
 			<BOUCLE_blog(RUBRIQUES){titre = 'Blog pédagogique'}{tout}>
 				<a href="#URL_RUBRIQUE">#TITRE</a>
 			</BOUCLE_blog>
