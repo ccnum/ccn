@@ -13,6 +13,7 @@
 	<licence>GNU/GPL</licence>
 
 	<necessite nom="ccn" />
+	<necessite nom="cadavrexquis" />
 	<necessite nom="notifications" />
 	<necessite nom="crayons" />
 	<necessite nom="socialtags" />
