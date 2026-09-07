@@ -7,13 +7,12 @@ un item de langue (`<:module:cle:>`/`_T('module:cle')`, `CCN.lang` côté
 JS — ce dernier pont n'existe que pour thematique, cf `check_lang_keys.py`
 ci-dessous).
 
-Seul `thematique` a une vraie convention i18n systématique ; `fictions`,
-`petitfablab` et `ccn` n'en ont quasiment aucune (2026-08 : 22, 24 et 1
-entrée(s) de baseline respectivement, contre 3 pour thematique à
-l'origine — texte en dur préexistant, pas une régression). Le check les
-couvre quand même :
-il n'impose pas de migration rétroactive (la baseline absorbe l'existant),
-mais empêche d'en rajouter.
+`thematique`, `fictions` (`lang/fictions_fr.php`, 2026-09) et
+`petitfablab` (`squelettes/lang/petitfablab_fr.php`) ont maintenant tous
+les trois une vraie convention i18n. La baseline ne contient plus que 5
+exceptions légitimes (cf ci-dessous) : le check n'impose pas de
+migration rétroactive pour un plugin qui n'aurait pas encore d'items de
+langue, mais empêche d'en rajouter sans en passer un.
 
 Le scan couvre tout le plugin (et pas seulement `squelettes/`+`formulaires/`) :
 les fichiers `.html` à la racine du plugin (ex: `cioidc_erreur_archive.html`
@@ -44,6 +43,17 @@ exécute ce même check sur toute PR touchant `plugins/thematique/**`,
   candidats à un item de langue (la BDD ne se traduit pas au chargement de
   la page). Ajoutées à la baseline lors de l'élargissement du scan à tout
   le plugin (2026-08).
+- `plugins/ccn/ccn_pipelines.php` (`Compression vidéo document #`) :
+  libellé de job passé à `queue_add_job()`, visible seulement dans le
+  moniteur de tâches de fond de l'espace privé (admin), pas dans un
+  squelette public rendu au visiteur. Ajoutée lors de l'extension du
+  scan à `plugins/ccn` (2026-09).
+- `plugins/fictions/fictions_pipelines.php` (`%Blog Pédagogique%`) :
+  motif SQL `LIKE` comparé au titre d'une rubrique en base
+  (`sql_getfetsel(..., 'titre LIKE ' . sql_quote('%Blog Pédagogique%'))`),
+  jamais affiché — le traduire casserait la requête plutôt que
+  d'afficher du texte. Ajoutée lors de la migration i18n de fictions
+  (2026-09, cf `lang/fictions_fr.php`).
 - `thematique_pipelines.php:189,193` (`de l'email`, `de l'avatar`) :
   libellé passé à `thematique_cioidc_maj_champ()` uniquement pour composer
   un message `spip_log(...)` de debug (mise à jour d'un champ auteur via le
