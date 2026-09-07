@@ -2,7 +2,6 @@
 10L | plugins/fictions/squelettes/lecture-script.html:1 <-> plugins/fictions/squelettes/sommaire.html:1
 10L | plugins/fictions/squelettes/page.html:44 <-> plugins/fictions/squelettes/sommaire.html:35
 11L | plugins/fictions/squelettes/inclure/head.html:15 <-> plugins/petitfablab/squelettes/inclure/head.html:16
-11L | plugins/fictions/squelettes/inclure/rubrique-blogpeda.html:29 <-> plugins/fictions/squelettes/inclure/rubrique-blogpeda.html:40
 11L | plugins/petitfablab/squelettes/inclure/layout_end.html:14 <-> plugins/petitfablab/squelettes/inclure/rubrique.html:131
 11L | plugins/thematique/notifications/article_publie_agenda.html:25 <-> plugins/thematique/notifications/forum_poste_article.html:28
 11L | plugins/thematique/notifications/article_publie_generique.html:36 <-> plugins/thematique/notifications/forum_poste_article.html:28

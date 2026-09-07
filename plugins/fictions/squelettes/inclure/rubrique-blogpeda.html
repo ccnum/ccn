@@ -27,26 +27,10 @@
 						]
 						[(#ENV{id_article}|=={0}|non)
 							<BOUCLE_article(ARTICLES){id_article}>
-								<div class="ecriture-chapitre-texte">
-									<div class="ecriture-chapitre-titre">#TITRE</div>
-								</div>
-								<div class="ecriture-chapitre-auteur">
-								</div>
-								<div class="texte_courant #EDIT{texte}">
-									[(#TEXTE|image_reduire{300})]<br />
-								</div>
-								<INCLURE{fond=inclure/forum,id_article} />
+								<INCLURE{fond=inclure/rubrique-blogpeda-article,id_article} />
 							</BOUCLE_article>
 								<BOUCLE_article_default(ARTICLES){!par date}{0,1}>
-									<div class="ecriture-chapitre-texte">
-										<div class="ecriture-chapitre-titre">#TITRE</div>
-									</div>
-									<div class="ecriture-chapitre-auteur">
-									</div>
-									<div class="texte_courant #EDIT{texte}">
-										[(#TEXTE|image_reduire{300})]<br />
-									</div>
-									<INCLURE{fond=inclure/forum,id_article} />
+									<INCLURE{fond=inclure/rubrique-blogpeda-article,id_article} />
 								</BOUCLE_article_default>
 							<//B_article>
 						]
