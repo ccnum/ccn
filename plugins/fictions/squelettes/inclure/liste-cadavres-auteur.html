@@ -25,7 +25,7 @@ ID / NOM AUTEUR
 						<BOUCLE_auteur_tous(AUTEURS){id_article = #ID_ARTICLE}{0,1}>
 							<div class="liste-tooltip-photo">[(#LOGO_AUTEUR|image_reduire{42,42})]</div>
 							<div class="liste-tooltip-auteur">#NOM</div>
-							<div class="liste-tooltip-auteur">
+							<div class="liste-tooltip-extrait">
 								[(#DESCRIPTIF|textebrut|recupererDernieresLignesChapitres{380})]<br />
 							</div>
 						</BOUCLE_auteur_tous>

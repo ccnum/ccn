@@ -740,7 +740,8 @@ a.webmestre.last-small {
 	padding-bottom: 20px;
 }
 
-.liste-tooltip-auteur {
+.liste-tooltip-auteur,
+.liste-tooltip-extrait {
 	width: 120px;
 	float: left;
 	margin: 15px 0px 0px 0px;
