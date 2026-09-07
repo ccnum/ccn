@@ -1943,6 +1943,19 @@ position: relative;
 	background-color: inherit !important;
 }
 
+/* _sidebarFocusFirst() (controleurs.js) donne automatiquement le focus au
+premier élément interactif du panneau à l'ouverture d'une réponse, qui se
+trouve être cette icône de classe (role="button" réutilisé depuis le menu
+du bas) : le contour de focus générique posé sur tous les [role="button"]
+(cf :is([role="button"], .btn-reset):focus-visible plus bas) s'affichait
+donc systématiquement dessus, sans qu'il s'agisse d'une navigation clavier
+réelle de la part du visiteur — supprimé ici uniquement (pas globalement
+sur .logo_menu_classe, qui reste focusable/visible au clavier partout
+ailleurs, ex: le menu du bas). */
+.image-classe-dans-reponse > .logo > .logo_menu_classe:focus-visible {
+	outline: none;
+}
+
 #etape-1-container {
 
 }
