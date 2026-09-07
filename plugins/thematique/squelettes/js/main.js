@@ -210,15 +210,16 @@ function initConsignes(data) {
 		dataForConsigne.reponses = [];
 
 		const liste_jours_max = [];
-		dataForConsigne.nombre_commentaires = 0;
+		// Commentaires sur l'article de la mission elle-même (#399), pas la
+		// somme de ceux de ses réponses (chacune affiche déjà les siens, cf
+		// dataForReponse.nombre_commentaires plus bas).
+		dataForConsigne.nombre_commentaires = jsonConsigne.commentaires || 0;
 
 		for (let j = 0; j < jsonReponses.length; j++) {
 			const date_jours_max = parseDate(jsonReponses[j].date);
 
 			const jours = parseFloat(Math.round((date_jours_max) / (24 * 60 * 60 * 1000))) - dataForConsigne.jour_consigne;
 			liste_jours_max.push(jours);
-
-			dataForConsigne.nombre_commentaires += jsonReponses[j].commentaires;
 
 			dataForConsigne.reponses.push(jsonReponses[j].classe_id);
 		}
