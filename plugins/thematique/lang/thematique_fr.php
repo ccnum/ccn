@@ -293,7 +293,8 @@ return [
 	'les_participants'  => 'Les participants',
 	'intervenant_annee'              => 'Intervenant :',
 
-	// notifications/article_publie.html (mail de notification, issue #217)
+	// emails/texte.html + notifications/article_publie.html (mail de notification, issue #217)
+	'notif_projet'                   => 'Projet “@nom_site_spip@”',
 	'notif_publication_titre'        => 'Une nouvelle publication dans @type@ !',
 	'notif_publication_detail'       => '@auteur@ a publié un nouvel élément dans l\'espace <em>@type@</em>.',
 	'notif_bouton_consulter'         => 'Consulter sur la plateforme',

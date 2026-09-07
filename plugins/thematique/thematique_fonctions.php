@@ -790,7 +790,8 @@ function classe_icone($id_rubrique) {
 }
 
 /**
- * Animal (emoji) de la classe d'un prof, pour son avatar dans le menu haut.
+ * Id de la rubrique-classe d'un prof (celle dont dérive son emoji
+ * d'avatar), mis en cache mémoire par requête.
  *
  * Un prof est lié (spip_auteurs_liens) non seulement à sa/ses classe(s),
  * mais aussi au blog pédagogique et à ses projets (voir
@@ -798,12 +799,14 @@ function classe_icone($id_rubrique) {
  * lien qui est effectivement une classe (présent dans
  * thematique_classes_rangs()), pas n'importe quelle rubrique liée. S'il a
  * plusieurs classes, la première trouvée fait foi (pas de notion de
- * "classe principale").
+ * "classe principale"). Extrait de thematique_avatar_animal() pour être
+ * réutilisable par thematique_avatar_notification_article() (couleur de
+ * fond de l'emoji dans le mail de notification, issue #217).
  *
  * @param int $id_auteur
- * @return string emoji de la classe, ou '' si aucune classe trouvée
+ * @return int id_rubrique de la classe, 0 si aucune classe trouvée
  */
-function thematique_avatar_animal($id_auteur) {
+function thematique_id_rubrique_classe_prof($id_auteur) {
 	static $cache = [];
 	$id_auteur = intval($id_auteur);
 	if (isset($cache[$id_auteur])) {
@@ -818,16 +821,45 @@ function thematique_avatar_animal($id_auteur) {
 		'id_auteur=' . $id_auteur . " AND objet='rubrique'"
 	) : [];
 
-	$animal = '';
+	$id_rubrique = 0;
 	foreach ($rubriques as $r) {
 		if (isset($rangs[$r['id_objet']])) {
-			$animal = classe_icone($r['id_objet']);
+			$id_rubrique = intval($r['id_objet']);
 			break;
 		}
 	}
 
-	$cache[$id_auteur] = $animal;
-	return $animal;
+	$cache[$id_auteur] = $id_rubrique;
+	return $id_rubrique;
+}
+
+/**
+ * Animal (emoji) de la classe d'un prof, pour son avatar dans le menu haut.
+ *
+ * @param int $id_auteur
+ * @return string emoji de la classe, ou '' si aucune classe trouvée
+ */
+function thematique_avatar_animal($id_auteur) {
+	$id_rubrique = thematique_id_rubrique_classe_prof($id_auteur);
+	return $id_rubrique ? classe_icone($id_rubrique) : '';
+}
+
+/**
+ * Couleur de fond (pastel, hex) associée au numéro de classe d'une
+ * rubrique — même palette que --color-classe-light-N dans
+ * css/tokens.css.html, dupliquée ici car les mails de notification
+ * (issue #217) sont rendus hors contexte CSS du site (pas de variables
+ * disponibles pour un client mail).
+ *
+ * @param int $id_rubrique
+ * @return string Couleur hex, '#DEE0FF' (repli neutre) si numéro inconnu
+ */
+function thematique_couleur_classe($id_rubrique) {
+	$couleurs = [
+		'#FFF8D6', '#D6F5EE', '#E8E4F8', '#FFE8D6', '#D6EEFF',
+		'#F0D6F0', '#E8E8E8', '#FFF0D6', '#D6E4FF', '#FFE8E0',
+	];
+	return $couleurs[classe_numero($id_rubrique)] ?? '#DEE0FF';
 }
 
 /**
@@ -1581,6 +1613,76 @@ function thematique_photo_auteur($id_auteur) {
 	}
 
 	$cache[$id_auteur] = $res;
+	return $res;
+}
+
+/**
+ * Avatar "photo ou icône de classe" de l'auteur d'un article, pour la carte
+ * du mail de notification (issue #217) — reprend la même information que
+ * #SESSION{avatar} affichée dans le menu haut (cf
+ * thematique_preparer_fichier_session() et noisettes/inc/authentification.html),
+ * mais généralisée à l'auteur de n'importe quel article plutôt qu'au seul
+ * visiteur en session (un envoi de mail n'a pas de session visiteur), et
+ * complétée par le logo SPIP éventuellement uploadé par l'auteur (que la
+ * session, elle, ignore).
+ *
+ * Priorité : emoji de la classe pour un prof (thematique_avatar_animal(),
+ * prioritaire même sur une photo — même règle que le menu haut), sinon la
+ * photo de l'auteur (thematique_photo_auteur() : logo SPIP uploadé, puis
+ * avatar ENT laclasse.com), sinon aucun avatar connu (repli générique géré
+ * côté squelette).
+ *
+ * Appelée comme filtre : `#ID_ARTICLE|thematique_avatar_notification_article`,
+ * puis chaque champ récupéré via `#GET{avatar}|table_valeur{type}` etc.
+ *
+ * @param int $id_article
+ * @return array{type:string,valeur:string,couleur_fond:string}
+ *   'type' : 'emoji', 'logo' (chemin local, à passer dans |url_absolue),
+ *     'ent' (URL externe déjà absolue) ou '' (aucun avatar connu)
+ *   'valeur' : l'emoji, le chemin ou l'URL selon le type, '' sinon
+ *   'couleur_fond' : couleur de fond (hex) pour le type 'emoji', '' sinon
+ */
+function thematique_avatar_notification_article($id_article) {
+	static $cache = [];
+	$id_article = intval($id_article);
+	if (isset($cache[$id_article])) {
+		return $cache[$id_article];
+	}
+
+	include_spip('base/abstract_sql');
+	$id_auteur = intval(sql_getfetsel(
+		'id_auteur',
+		'spip_auteurs_liens',
+		"objet='article' AND id_objet=" . $id_article,
+		'',
+		'id_auteur'
+	));
+
+	$res = ['type' => '', 'valeur' => '', 'couleur_fond' => ''];
+
+	if ($id_auteur) {
+		if (thematique_donner_role($id_auteur) === 'prof') {
+			$id_rubrique = thematique_id_rubrique_classe_prof($id_auteur);
+			if ($id_rubrique) {
+				$res = [
+					'type' => 'emoji',
+					'valeur' => classe_icone($id_rubrique),
+					'couleur_fond' => thematique_couleur_classe($id_rubrique),
+				];
+			}
+		}
+
+		if (!$res['type']) {
+			$photo = thematique_photo_auteur($id_auteur);
+			if ($photo['logo']) {
+				$res = ['type' => 'logo', 'valeur' => $photo['logo'], 'couleur_fond' => ''];
+			} elseif ($photo['avatar']) {
+				$res = ['type' => 'ent', 'valeur' => $photo['avatar'], 'couleur_fond' => ''];
+			}
+		}
+	}
+
+	$cache[$id_article] = $res;
 	return $res;
 }
 
