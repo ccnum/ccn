@@ -1873,6 +1873,41 @@ function thematique_email_auteur_forum($id_forum) {
 }
 
 /**
+ * Retire d'une liste d'emails ceux qui appartiennent à un compte auteur
+ * passé à la poubelle (statut 5poubelle) — ex : reset de rentrée scolaire,
+ * cf genie_thematique_rentree_poubelle_dist(), qui bascule chaque
+ * septembre tous les comptes non-webmestre en poubelle sans jamais
+ * nettoyer spip_auteurs_liens.
+ *
+ * Volontairement centralisé en fin de thematique_notifications_destinataires()
+ * (dernier hook de la pipeline notifications_destinataires, thematique
+ * nécessitant le plugin notifications) plutôt que corrigé requête par
+ * requête dans ce dernier : ça filtre aussi bien nos propres ajouts que
+ * ceux du plugin notifications (admin restreint, auteurs de l'article,
+ * participants au thread), sans toucher à ce plugin ni aux liens en base
+ * (conservés pour l'historique du site — cf issue Lorène Dimino, sept.
+ * 2026).
+ *
+ * @param array $emails
+ * @return array Liste réindexée, sans les emails de comptes poubelle
+ */
+function thematique_filtrer_emails_poubelle($emails) {
+	$emails = array_filter(array_unique((array) $emails));
+	if (!$emails) {
+		return $emails;
+	}
+
+	include_spip('base/abstract_sql');
+	$emails_poubelle = sql_allfetsel('email', 'spip_auteurs', [sql_in('email', $emails), "statut='5poubelle'"]);
+	$emails_poubelle = array_column($emails_poubelle, 'email');
+	if (!$emails_poubelle) {
+		return array_values($emails);
+	}
+
+	return array_values(array_diff($emails, $emails_poubelle));
+}
+
+/**
  * Tronque un extrait de texte pour une carte de mail de notification
  * (issue #217), avec le suffixe "[…]" utilisé dans les maquettes.
  *
