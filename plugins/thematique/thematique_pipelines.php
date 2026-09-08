@@ -179,6 +179,7 @@ function thematique_notifications_destinataires($flux) {
 		$flux['data'][] = $GLOBALS['meta']['email_envoi'];
 		$article = sql_fetsel('*', 'spip_articles', 'id_article=' . $id_article);
 		if (!$article) {
+			$flux['data'] = thematique_filtrer_emails_poubelle($flux['data']);
 			return $flux;
 		}
 		$titre_rub = sql_getfetsel('titre', 'spip_rubriques', 'id_rubrique=' . intval($article['id_secteur']));
@@ -213,6 +214,8 @@ function thematique_notifications_destinataires($flux) {
 			}
 		}
 	}
+
+	$flux['data'] = thematique_filtrer_emails_poubelle($flux['data']);
 	return $flux;
 }
 
