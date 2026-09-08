@@ -482,7 +482,7 @@ function thematique_rendre_type_article_affichable($type_article) {
 	if ($type_article == 'la-rencontre') {
 		return _T('thematique:la_rencontre');
 	}
-	
+
 	// autres types portés par la rubrique (cf thematique_type_objet_rubrique) :
 	// utilisés notamment dans les mails de notification (issue #217).
 	$autres = [
@@ -1728,6 +1728,29 @@ function thematique_avatar_notification_article($id_article) {
 		'id_auteur'
 	));
 
+	return $cache[$id_article] = thematique_avatar_notification_auteur($id_auteur);
+}
+
+/**
+ * Avatar "photo ou icône de classe" d'un auteur quelconque, pour la carte
+ * du mail de notification (issue #217) — cœur de
+ * thematique_avatar_notification_article(), extrait pour être réutilisable
+ * quand on part directement d'un id_auteur plutôt que d'un article (ex:
+ * auteur d'un commentaire forumv2, cf notifications/forum_poste.html).
+ *
+ * Même règle de priorité : emoji de la classe pour un prof, sinon photo de
+ * l'auteur, sinon aucun avatar connu (repli générique géré côté squelette).
+ *
+ * @param int $id_auteur
+ * @return array{type:string,valeur:string,couleur_fond:string}
+ */
+function thematique_avatar_notification_auteur($id_auteur) {
+	static $cache = [];
+	$id_auteur = intval($id_auteur);
+	if (isset($cache[$id_auteur])) {
+		return $cache[$id_auteur];
+	}
+
 	$res = ['type' => '', 'valeur' => '', 'couleur_fond' => ''];
 
 	if ($id_auteur) {
@@ -1752,8 +1775,141 @@ function thematique_avatar_notification_article($id_article) {
 		}
 	}
 
-	$cache[$id_article] = $res;
-	return $res;
+	return $cache[$id_auteur] = $res;
+}
+
+/**
+ * Numéro d'affichage (1-based) d'une mission (consigne) : son rang parmi
+ * les consignes de sa rubrique triées par date — même règle que
+ * menu_consignes.html (#GET{num}) et header_sidebar.html (#ENV{rang}).
+ * Utilisé pour la carte du mail de notification de commentaire forumv2
+ * (issue #217, cf notifications/forum_poste.html).
+ *
+ * Ne dépend pas de l'année scolaire active en session (contrairement à
+ * thematique_id_rubrique_mission()) : un mail de notification n'a pas de
+ * visiteur en session, et doit rester correct même pour une mission d'une
+ * année passée. La rubrique de référence est donc celle de l'article
+ * lui-même, jamais celle de "l'année active".
+ *
+ * @param int $id_article Une consigne, ou une réponse (id_consigne>0) —
+ *   dans ce cas on résout automatiquement vers sa consigne parente.
+ * @return int Numéro 1-based, ou 0 si l'article n'est rattaché à aucune
+ *   mission retrouvable (rubrique absente, etc.).
+ */
+function thematique_numero_mission($id_article) {
+	static $cache = [];
+	$id_article = intval($id_article);
+	if (isset($cache[$id_article])) {
+		return $cache[$id_article];
+	}
+
+	include_spip('base/abstract_sql');
+	$article = sql_fetsel('id_article, id_consigne, id_rubrique', 'spip_articles', 'id_article=' . $id_article);
+	if (!$article) {
+		return $cache[$id_article] = 0;
+	}
+
+	$id_consigne = intval($article['id_consigne']) ?: $id_article;
+	$consigne = ($id_consigne === $id_article)
+		? $article
+		: sql_fetsel('id_article, id_rubrique', 'spip_articles', 'id_article=' . $id_consigne);
+
+	$rang = 0;
+	if ($consigne) {
+		$missions = sql_allfetsel(
+			'id_article',
+			'spip_articles',
+			'id_rubrique=' . intval($consigne['id_rubrique']) . ' AND id_consigne=0',
+			'',
+			'date'
+		);
+		foreach ($missions as $i => $mission) {
+			if (intval($mission['id_article']) === $id_consigne) {
+				$rang = $i + 1;
+				break;
+			}
+		}
+	}
+
+	return $cache[$id_article] = $rang;
+}
+
+/**
+ * Email de l'auteur d'un commentaire (spip_forum), pour savoir à qui un
+ * commentaire répond — utilisé pour notifier l'auteur d'un commentaire
+ * parent quand quelqu'un lui répond (issue #217, cf
+ * thematique_notifications_destinataires() et
+ * notifications/forum_poste_article.html).
+ *
+ * Priorité : email de son compte SPIP (spip_auteurs.email) si le
+ * commentaire est d'un auteur identifié, sinon la colonne email_auteur du
+ * commentaire lui-même (renseignée pour un commentaire anonyme).
+ *
+ * @param int $id_forum
+ * @return string '' si introuvable ou sans email connu
+ */
+function thematique_email_auteur_forum($id_forum) {
+	static $cache = [];
+	$id_forum = intval($id_forum);
+	if (!$id_forum) {
+		return '';
+	}
+	if (isset($cache[$id_forum])) {
+		return $cache[$id_forum];
+	}
+
+	include_spip('base/abstract_sql');
+	$forum = sql_fetsel('id_auteur, email_auteur', 'spip_forum', 'id_forum=' . $id_forum);
+	if (!$forum) {
+		return $cache[$id_forum] = '';
+	}
+
+	$email = '';
+	if ($forum['id_auteur']) {
+		$email = (string) sql_getfetsel('email', 'spip_auteurs', 'id_auteur=' . intval($forum['id_auteur']));
+	}
+
+	return $cache[$id_forum] = ($email ?: $forum['email_auteur']);
+}
+
+/**
+ * Tronque un extrait de texte pour une carte de mail de notification
+ * (issue #217), avec le suffixe "[…]" utilisé dans les maquettes.
+ *
+ * Existe uniquement pour éviter d'écrire `couper{220,'[…]'}` dans un
+ * squelette : le compilateur de crochets conditionnels de SPIP casse dès
+ * qu'un argument de filtre contient littéralement `[` ou `]`, même hors de
+ * tout bloc `[(...)]` — toute la suite de la chaîne de filtres ressort
+ * alors en texte brut non interprété. Cf le même problème contourné pour
+ * notifications/forum_poste.html.
+ *
+ * @param string $texte
+ * @param int $taille
+ * @return string
+ */
+function thematique_couper_extrait($texte, $taille = 220) {
+	include_spip('inc/texte');
+	return couper($texte, $taille, '&nbsp;[…]');
+}
+
+/**
+ * Indique si $email est celle de l'auteur du commentaire parent $id_parent
+ * — pour choisir, dans la carte du mail de notification, entre le libellé
+ * "On vient de répondre à votre message !" (le destinataire courant est
+ * l'auteur du commentaire auquel on répond) et le libellé générique de la
+ * mission (cf notifications/forum_poste_article.html, issue #217).
+ *
+ * @param int $id_parent 0 si le commentaire notifié n'est pas une réponse
+ * @param string $email Email du destinataire courant du mail (#ENV{notification_email})
+ * @return bool
+ */
+function thematique_est_reponse_a_email($id_parent, $email) {
+	$email = trim((string) $email);
+	if (!$id_parent or !$email) {
+		return false;
+	}
+
+	return strtolower(thematique_email_auteur_forum($id_parent)) === strtolower($email);
 }
 
 /**

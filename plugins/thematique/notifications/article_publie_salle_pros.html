@@ -1,0 +1,83 @@
+[(#REM)
+
+  Personnalisation CCN (issue #217) : mise en page dédiée pour la
+  publication d'un article dans la Salle des pros (type_objet=evenements) —
+  cf notifications/article_publie.html, qui délègue ici au lieu de
+  article_publie_generique.html pour ce cas précis.
+
+]
+<BOUCLE_art(ARTICLES){id_article}{statut?}{tout}>
+#SET{auteurs,#LESAUTEURS|textebrut}
+#SET{avatar,#ID_ARTICLE|thematique_avatar_notification_article}
+#SET{avatar_type,#GET{avatar}|table_valeur{type}}
+#SET{avatar_valeur,#GET{avatar}|table_valeur{valeur}}
+#SET{avatar_couleur,#GET{avatar}|table_valeur{couleur_fond}}
+<BOUCLE_rubrique(RUBRIQUES){id_rubrique=#ID_SECTEUR}>#SET{titre_secteur, #TITRE}</BOUCLE_rubrique>
+#SET{url_article,#URL_ARTICLE|url_absolue|parametre_url{rub,#GET{titre_secteur}}|parametre_url{mode,complet}}
+<title>[(#VAL{thematique:notif_salle_pros_sujet}|_T{#ARRAY{titre,#TITRE}}|nettoyer_titre_email)]</title>
+
+<body>
+<div class="header">
+	<h1 style="color:#000AFF;font-family:'Poppins', Verdana, Geneva, sans-serif;font-size:22px;font-weight:700;margin:0 0 16px;">
+		<:thematique:notif_salle_pros_titre:>
+	</h1>
+	<p style="color:#1E2055;font-family:'Poppins', Verdana, Geneva, sans-serif;font-size:15px;line-height:150%;margin:0 0 24px;">
+		[(#VAL{thematique:notif_salle_pros_detail}|_T{#ARRAY{auteur,#GET{auteurs}|sinon{#NOM_SITE_SPIP}}})]
+	</p>
+
+	<table border="0" cellpadding="0" cellspacing="0" width="100%" style="border:1px solid #000AFF;border-radius:5px;">
+		<tr>
+			<td style="padding:16px;">
+				<table border="0" cellpadding="0" cellspacing="0" width="100%">
+					<tr>
+						<td width="40" valign="top">
+							[(#GET{avatar_type}|=={emoji}|oui)
+							<table border="0" cellpadding="0" cellspacing="0" width="40" height="40" style="width:40px;height:40px;border-radius:50%;background-color:#GET{avatar_couleur};">
+								<tr>
+									<td align="center" valign="middle" style="font-size:18px;line-height:40px;height:40px;">#GET{avatar_valeur}</td>
+								</tr>
+							</table>
+							]
+							[(#GET{avatar_type}|=={logo}|oui)
+							<img src="[(#GET{avatar_valeur}|url_absolue)]" alt="" width="40" height="40" style="width:40px;height:40px;border-radius:50%;display:block;" />
+							]
+							[(#GET{avatar_type}|=={ent}|oui)
+							<img src="#GET{avatar_valeur}" alt="" width="40" height="40" style="width:40px;height:40px;border-radius:50%;display:block;" />
+							]
+							[(#GET{avatar_type}|non)
+							<table border="0" cellpadding="0" cellspacing="0" width="40" height="40" style="width:40px;height:40px;border-radius:50%;background-color:#000AFF;">
+								<tr>
+									<td align="center" valign="middle" style="color:#FFFFFF;font-size:18px;line-height:40px;height:40px;">📄</td>
+								</tr>
+							</table>
+							]
+						</td>
+						<td valign="top" style="padding-left:12px;">
+							<table border="0" cellpadding="0" cellspacing="0" width="100%">
+								<tr>
+									<td valign="top" style="font-family:'Poppins', Verdana, Geneva, sans-serif;font-weight:600;color:#1E2055;font-size:15px;">
+										#TITRE - <em><:thematique:salle_des_pros:></em>
+									</td>
+									<td align="right" valign="top" style="font-family:'Poppins', Verdana, Geneva, sans-serif;color:#6a6a6a;font-size:13px;white-space:nowrap;padding-left:10px;">
+										[(#DATE|affdate)]
+									</td>
+								</tr>
+							</table>
+							<div style="font-family:'Poppins', Verdana, Geneva, sans-serif;color:#1E2055;font-size:14px;line-height:150%;margin-top:8px;">
+								[(#INTRODUCTION|sinon{#CHAPO}|sinon{#TEXTE}|textebrut|thematique_couper_extrait{220})]
+							</div>
+						</td>
+					</tr>
+				</table>
+			</td>
+		</tr>
+	</table>
+
+	<div style="text-align:center;margin-top:24px;">
+		<a href="#GET{url_article}" style="display:inline-block;background-color:#000AFF;color:#FFFFFF;font-family:'Poppins', Verdana, Geneva, sans-serif;font-weight:600;font-size:15px;text-decoration:none;padding:12px 28px;border-radius:6px;">
+			<:thematique:notif_bouton_consulter:>
+		</a>
+	</div>
+</div>
+</body>
+</BOUCLE_art>

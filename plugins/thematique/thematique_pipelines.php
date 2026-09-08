@@ -164,6 +164,14 @@ function thematique_notifications_destinataires($flux) {
 		and $flux['args']['options']['forum']['objet'] === 'article'
 	) {
 		$id_article = intval($flux['args']['options']['forum']['id_objet']);
+
+		// Réponse à un commentaire existant : prévenir en plus l'auteur de ce
+		// commentaire parent (mise en page dédiée "On vient de répondre à
+		// votre message !", cf notifications/forum_poste_article.html).
+		$id_parent = intval($flux['args']['options']['forum']['id_parent'] ?? 0);
+		if ($id_parent and $email_parent = thematique_email_auteur_forum($id_parent)) {
+			$flux['data'][] = $email_parent;
+		}
 	}
 
 	if ($id_article) {
