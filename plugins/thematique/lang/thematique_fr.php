@@ -284,6 +284,7 @@ return [
 	'les_videos'                     => 'Les vidéos',
 	'medias'                         => 'Médias',
 	'menu_actualites'                => 'Actualités',
+	'menu_publications'               => 'Publications',
 	'menu_publier'                   => 'Publier',
 	'missions'                       => 'Missions',
 	'nouvelle_mission'               => 'Une nouvelle mission',
