@@ -85,11 +85,13 @@ function genie_thematique_rentree_annee_dist($last) {
 
 	$jalons = [
 		'cap-sur-l-annee' => [
-			'titre' => "Cap sur l'année",
+			'titre' => _T("thematique:cap_sur_annee"),
+			'texte' => _T("thematique:jalon_texte_a_completer"),
 			'date' => $annee . '-09-15 00:00:00',
 		],
 		'la-rencontre' => [
-			'titre' => 'La Rencontre',
+			'titre' => _T("thematique:la_rencontre"),
+			'texte' => _T("thematique:jalon_texte_a_completer"),
 			'date' => ($annee + 1) . '-06-15 00:00:00',
 		],
 	];
@@ -139,6 +141,7 @@ function genie_thematique_rentree_annee_dist($last) {
 		// significative dans le contexte cron (pas de vrai visiteur_session).
 		$id_article = article_inserer($id_rubrique, [
 			'titre' => $infos['titre'],
+			'texte' => $infos['texte'],
 			'date' => $infos['date'],
 			'statut' => 'prop',
 		]);

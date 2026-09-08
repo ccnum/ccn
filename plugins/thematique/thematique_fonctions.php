@@ -476,6 +476,13 @@ function thematique_rendre_type_article_affichable($type_article) {
 	if ($type_article == 'travail_en_cours') {
 		return _T('thematique:reponse_minuscule');
 	}
+	if ($type_article == 'cap-sur-l-annee') {
+		return _T('thematique:cap_sur_annee');
+	}
+	if ($type_article == 'la-rencontre') {
+		return _T('thematique:la_rencontre');
+	}
+	
 	// autres types portés par la rubrique (cf thematique_type_objet_rubrique) :
 	// utilisés notamment dans les mails de notification (issue #217).
 	$autres = [
@@ -525,6 +532,7 @@ function thematique_id_objet_document_temp($id_article) {
  * @return string|null
  */
 function thematique_type_objet_article($id_article) {
+	static $cache = [];
 	$id_article = intval($id_article);
 	if (!$id_article) {
 		return null;
@@ -536,6 +544,15 @@ function thematique_type_objet_article($id_article) {
 	}
 	if (!empty($article['id_consigne'])) {
 		return 'travail_en_cours';
+	}
+	$mot = sql_getfetsel(
+		'mots.titre',
+		'spip_mots_liens AS liens INNER JOIN spip_mots AS mots ON liens.id_mot=mots.id_mot',
+		'liens.objet=' . sql_quote('article')
+			. ' AND liens.id_objet=' . intval($id_article)
+	);
+	if ($mot) {
+		return $cache[$id_article] = $mot;
 	}
 
 	return thematique_type_objet_rubrique($article['id_rubrique']);

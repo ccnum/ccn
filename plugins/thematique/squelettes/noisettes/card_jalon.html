@@ -1,6 +1,7 @@
 <button type="button" 
-        id="badge_[(#ENV{est_debut}|?{'cap_sur_annee','la_rencontre'})]"
+        id="badge_[(#ENV{est_debut}|=={oui}|?{'cap_sur_annee','la_rencontre'})]"
         class="badge_timeline badge_timeline_[(#ENV{est_debut}|=={oui}|?{'debut','fin'})] btn-reset" 
+        data-est-debut="[(#ENV{est_debut}|=={oui}|?{'true','false'})]"
         style="display:none;" 
         onclick="callArticleJalon([(#ENV{est_debut}|=={oui}|?{'true','false'})])"
         title="#ENV{texte}"

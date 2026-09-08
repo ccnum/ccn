@@ -1,0 +1,16 @@
+#CACHE{0}
+{
+"jalons": [
+    #SET{n_consigne,0}
+	<BOUCLE_consigne(ARTICLES){branche}{doublons}{par date}{date>=#CONST{_DATE_DEBUT}}{date<=#CONST{_DATE_FIN}}{titre_mot IN cap-sur-l-annee,la-rencontre}>
+		[(#GET{n_consigne}|>{0}|oui),]
+        {
+			"id": #ID_ARTICLE,
+			"y": [(#Y|sinon{0})]
+		}
+        
+        [(#SET{n_consigne,#GET{n_consigne}|plus{1}})]
+	</BOUCLE_consigne>
+
+]
+}

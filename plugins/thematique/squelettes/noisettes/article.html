@@ -1,10 +1,19 @@
 <BOUCLE_principale(ARTICLES){id_article}{tous}>
-	[(#SET{admin_scope, #ENV{rub}|thematique_admin_scope})]
+	#SET{admin_scope, #ENV{rub}|thematique_admin_scope}
+	[(#ENV{type_objet}|=={jalon}|oui)
+		<INCLURE{fond=noisettes/sidebar/inc/entete_commun, env} />
+		<div class="popup_jalon">
+			<div id="bloc_article-#ID_ARTICLE" class="bloc_article[ (#GET{police})]">
+				<INCLURE{fond=noisettes/sidebar/inc/entete_container, fond_header=noisettes/sidebar/header_sidebar, env} />
+				<INCLURE{fond=noisettes/sidebar/jalon_pour_tous, env, ajax} />
+			</div>
+		</div>
+	]
 
 	[(#ENV{type_objet}|=={consignes}|oui)
 		#SET{fond_consigne, #SESSION{role}|fond_consigne_pour_role}
 		<INCLURE{fond=noisettes/sidebar/inc/entete_commun, env} />
-		<div class="[popup_(#ENV{type_objet})]">
+		<div class="popup_consignes">
 			<div id="bloc_article-#ID_ARTICLE" class="bloc_article[ (#GET{police})]">
 				<INCLURE{fond=noisettes/sidebar/inc/entete_container, fond_header=noisettes/sidebar/header_sidebar, env} />
 				<INCLURE{fond=noisettes/sidebar/#GET{fond_consigne}, env, ajax} />
@@ -26,7 +35,7 @@
 
 		#SET{fond_reponse, #SESSION{role}|fond_reponse_pour_role}
 		<INCLURE{fond=noisettes/sidebar/inc/entete_commun, env} />
-		<div class="[popup_(#ENV{type_objet})]">
+		<div class="popup_travail_en_cours">
 			<div id="bloc_article-#ID_ARTICLE" class="bloc_article[ (#GET{police})]">
 				<INCLURE{fond=noisettes/sidebar/inc/entete_container, fond_header=noisettes/sidebar/header_reponse_sidebar, env} />
 				<INCLURE{fond=noisettes/sidebar/#GET{fond_reponse}, env, ajax, c_est_ma_reponse=#GET{c_est_ma_reponse}} />

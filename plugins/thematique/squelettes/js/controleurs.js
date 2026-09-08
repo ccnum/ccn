@@ -718,17 +718,18 @@ function callArticleJalon(est_debut) {
 		: CCN.projet.nombre_jours_total - nombre_jours;
 	CCN.projet.showRangeOfTimeline(nombre_jours, x_dest, 0);
 
-	const url = "./spip.php?page=article&id_article=" + id_article + "&type_objet=consignes&mode=ajax-detail";
+	const url = `./spip.php?page=article&id_article=${id_article}&est_debut=${est_debut}&type_objet=jalon&mode=ajax-detail`;
 	loadContentInMainSidebar(
 		url,
 		() => {
 			updateUrl(
 				{
-					'type_objet': 'consignes',
+					'type_objet': 'jalon',
 					'id_objet': id_article,
 					'id_article': id_article,
-					'page': 'article'
-				}, "", "./spip.php?page=article&id_article=" + id_article + "&mode=complet"
+					'page': 'article',
+					'est_debut': est_debut,
+				}, "", `./spip.php?page=article&id_article=${id_article}&est_debut=${est_debut}&mode=complet`
 			);
 		},
 		"consigne"
@@ -883,6 +884,7 @@ function createReponse(id_consigne, id_rubrique_auteur, numero) {
 	const url = CCN.projet.url_popup_reponseajout + "&id_consigne=" + id_consigne + "&id_rubrique=" + id_rubrique_auteur + "&rang=" + rang + "&date_limite=" + dateLimite;
 	loadContentInMainSidebar(url, null, "publication_article");
 }
+
 /**
  * Cherche la réponse correspondant à un id_reponse dans CCN.consignes.
  *

@@ -42,6 +42,7 @@ async function loadDemarrage(fichier) {
 	initProjet(data.projet);
 	initClasses(data.classes);
 	initConsignes(data.consignes);
+	initJalons(data.jalons);
 
 	// Seules les missions (classes + consignes) sont chargées au démarrage.
 	// Agenda (blogs) et blog pédagogique (evenements) sont chargés à la demande,
@@ -293,6 +294,39 @@ function initConsignes(data) {
 
 		CCN.consignes.push(nouvelleConsigne);
 	}
+}
+
+function initJalons(data) {
+	const jsonJalons = data.jalons
+	$('.badge_timeline').each(function (){
+		const est_debut = $( this ).data().estDebut;
+		const _thisId = est_debut ? CCN.idArticleCapSurAnnee : CCN.idArticleLaRencontre;
+		const dataObject = jsonJalons.find(o=>o.id===_thisId)
+		if(dataObject) {
+			const y = dataObject.y
+			$( this ).css({"top": `${y*100}%`})
+
+		}
+		$( this ).draggable({
+			axis: "y",
+			cancel: '', // Force le drag and drop même s'il y a un button dans la consigne.
+			start: function (event, ui) {
+				$(this).addClass('no_event');
+			},
+			stop: function (event, ui) {
+				const yy = (ui.offset.top - CCN.projet.timeline.offset().top) / CCN.projet.timeline.height();
+				if (CCN.admin == 0) {
+					$.post("spip.php?page=ajax&mode=article-sauve-coordonnees", { id_objet: _thisId, type_objet: "article", X: 0, Y: yy });
+				}
+				this.y = yy;
+				// Réécrit les deux coords en %
+				$(this).css({
+					top:  (yy * 100) + '%',
+				});
+				$(this).removeClass('no_event');
+			}
+		});
+	})
 }
 
 /**
