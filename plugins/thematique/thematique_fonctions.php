@@ -1539,31 +1539,48 @@ function thematique_voir_mission() {
 function filtre_afficher_forum_arbre($id_article) {
 	include_spip('inc/session');
 	$forums = sql_allfetsel(
-		'*',
-		'spip_forum',
-		"objet='article' AND id_objet=" . intval($id_article) . ' AND statut=' . sql_quote('publie'),
+		'f.*, a.nom AS auteur_nom, a.nom_complet AS auteur_nom_complet',
+		'spip_forum AS f
+			LEFT JOIN spip_auteurs AS a
+			ON f.id_auteur = a.id_auteur',
+		"f.objet='article'
+			AND f.id_objet=" . intval($id_article) . "
+			AND f.statut=" . sql_quote('publie'),
 		'',
-		'date_heure DESC'
+		'f.date_heure DESC'
 	);
 	if (!$forums) {
 		return _T('thematique:aucun_commentaire');
 	}
-
 	$id_forum_recent = null;
 	if ($val = session_get('forum_commentaire_succes')) {
 		$id_forum_recent = intval($val);
 		session_set('forum_commentaire_succes', ''); // on "consomme" le flag
 	}
-
 	// Index des commentaires par parent
 	$parents = [];
 	foreach ($forums as $forum) {
+		// Reproduit exactement le format de thematique_nom_auteur_commentaire()
+		$nom = trim($forum['auteur_nom'] ?? '');
+		$nom_complet = trim($forum['auteur_nom_complet'] ?? '');
+
+		if ($nom_complet === '') {
+			$forum['auteur'] = $nom;
+		} elseif ($nom === '') {
+			$forum['auteur'] = $nom_complet;
+		} else {
+			$forum['auteur'] = $nom_complet . ' - ' . $nom;
+		}
+
 		$parents[$forum['id_parent']][] = $forum;
 	}
 	// Construction récursive de l'arbre à partir de la racine
 	$arbre = forum_construire_arbre(0, $parents, $id_forum_recent);
 	return forum_rendre_branche($arbre);
 }
+
+
+
 
 /**
  * Compte les messages de forum publiés pour un ensemble d'articles, en une
