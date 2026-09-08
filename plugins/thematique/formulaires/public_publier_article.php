@@ -53,7 +53,30 @@ function formulaires_public_publier_article_verifier_dist($id_rubrique, $id_cons
 	return $erreurs;
 }
 
-function formulaires_public_publier_article_traiter_dist($id_rubrique, $type_article, $id_consigne = 0) {
+
+function formulaires_public_publier_article_traiter_dist(
+    $id_rubrique,
+    $type_article,
+    $id_consigne = 0
+) {
+	// Ceci est un système anti-spam : si on appuie plusieurs fois très vite sur "enregistrer un article",
+	// on ne l'enregistrera qu'une fois.
+	include_spip('inc/session');
+
+	$titre = _request('titre');
+	$texte = _request('texte');
+	$id_auteur = session_get('id_auteur'); // auteur connecté, vient de la session SPIP
+
+	$cle = 'creation_article_' . md5($titre . $texte . $id_rubrique . $type_article . $id_consigne . $id_auteur);
+	$derniere = session_get($cle); // timestamp (int) ou null si absent
+
+	if ($derniere && (time() - $derniere) < 3) {
+		// soumission dupliquée détectée récemment : on bloque
+		return [];
+	}
+	session_set($cle, time());
+
+	spip_log("rubrique au moment de traiter : " . $id_rubrique, "debug");
 	include_spip('inc/editer');
 	include_spip('prive/formulaires/editer_article');
 

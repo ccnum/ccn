@@ -1183,6 +1183,10 @@ function loadContentInMainSidebar(url, callback, typeContenu) {
 			initMissionTabs();
 			initCommentaires();
 		}
+		if(typeContenu === "publication_article") {
+			initCommentaires();
+		}
+
 		// Diaporama images/PDF du portfolio de pièces jointes (#350) : le
 		// contenu arrive toujours ici en ajax, jamais au $(document).ready
 		// initial de documents_portfolio_swiper_init.js, qui ne se déclenche
