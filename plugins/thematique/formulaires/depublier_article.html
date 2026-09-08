@@ -1,9 +1,2 @@
-<form class='formulaire_spip formulaire_publier_article' method='post' action='#ENV{action}'>
-	<div>
-		#ACTION_FORMULAIRE
-		<input type='hidden' name='id_article' value='#ENV{id_article}' />
-		[<div class="reponse_formulaire reponse_formulaire_ok" role="status">(#ENV**{message_ok})</div>]
-		[<div class="reponse_formulaire reponse_formulaire_erreur" role="alert">(#ENV*{message_erreur})</div>]
-		<input type='submit' class='bouton-lisere' value='<:thematique:bouton_depublier_article:>' />
-	</div>
-</form>
+#SET{libelle_bouton,#VAL{thematique:bouton_depublier_article}|_T}
+<INCLURE{fond=formulaires/inc-bouton_publication, env, libelle_bouton=#GET{libelle_bouton}} />
