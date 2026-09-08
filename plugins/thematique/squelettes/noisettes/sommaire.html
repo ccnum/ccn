@@ -7,7 +7,11 @@ et/ou
 ]
 <INCLURE{fond=noisettes/inc/ccn_role} />
 <div id="zone" class="zone_timeline zone"[ (#VUE|=={classe}|oui) style="display:none;"]>
-	<INCLURE{fond=noisettes/timeline, env, ajax} />
+	<INCLURE{fond=noisettes/timeline, 
+			 role=#SESSION{role},
+			 env,
+			 ajax
+	} />
 </div>
 <div id="loading_feedback">Chargement</div>
 <div id="offset"></div>

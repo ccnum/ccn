@@ -11,6 +11,8 @@
 	CCN.idRestreint = [(#ENV{restreint}|intval)];
 	CCN.typeRestreint = [(#ENV{type_restreint}|json_encode)];
 	CCN.classeSelection = [(#ENV{restreint}|intval)];
+	CCN.role = "[(#ENV{role})]";
+
 
 	[(#REM)
 	Repli type_objet/id_objet à partir de id_article seul quand ils sont

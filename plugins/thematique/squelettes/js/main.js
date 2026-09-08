@@ -244,7 +244,7 @@ function initConsignes(data) {
 		const nouvelleConsigne = new Consigne();
 		nouvelleConsigne.init(dataForConsigne);
 
-		let has_current_classe_already_answer = false;
+		let has_current_classe_already_answered = false;
 
 		for (let j = 0; j < jsonReponses.length; j++) {
 			const jsonReponse = jsonReponses[j];
@@ -284,14 +284,16 @@ function initConsignes(data) {
 			nouvelleConsigne.reponses.push(nouvelleReponse);
 
 			if (CCN.classeSelection > 0 && CCN.classeSelection == dataForReponse.classe_id) {
-				has_current_classe_already_answer = true;
+				has_current_classe_already_answered = true;
 			}
 		}
-
-		if (!has_current_classe_already_answer) {
-			nouvelleConsigne.showNewReponseButtonInTimeline();
+		if (CCN.role === 'prof') {
+			if (has_current_classe_already_answered) {
+				nouvelleConsigne.showMyReponseButtonInTimeline();
+			} else {
+				nouvelleConsigne.showNewReponseButtonInTimeline();
+			}
 		}
-
 		CCN.consignes.push(nouvelleConsigne);
 	}
 }
