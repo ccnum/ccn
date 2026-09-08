@@ -1893,6 +1893,31 @@ function thematique_couper_extrait($texte, $taille = 220) {
 }
 
 /**
+ * Titre de la cellule "titre" d'une carte de mail de notification
+ * (issue #217) : le titre de l'article, suivi d'un sous-titre optionnel en
+ * italique ("Titre - Type").
+ *
+ * Existe uniquement pour éviter d'écrire `#SET{x, #GET{y}|filtre{z}}` (un
+ * #GET en argument d'un filtre, dans la valeur d'un #SET) dans un
+ * squelette : cette double imbrication d'accolades corrompt la
+ * compilation de tout le reste du fond — pas seulement de cette ligne, cf
+ * le même genre de piège contourné pour thematique_couper_extrait().
+ *
+ * @param string $titre
+ * @param string $sous_titre Vide pour ne pas afficher de sous-titre
+ * @return string
+ */
+function thematique_carte_titre_notification($titre, $sous_titre = '') {
+	$titre = trim((string) $titre);
+	$sous_titre = trim((string) $sous_titre);
+	if ($sous_titre === '') {
+		return $titre;
+	}
+
+	return $titre . ' - <em>' . $sous_titre . '</em>';
+}
+
+/**
  * Indique si $email est celle de l'auteur du commentaire parent $id_parent
  * — pour choisir, dans la carte du mail de notification, entre le libellé
  * "On vient de répondre à votre message !" (le destinataire courant est

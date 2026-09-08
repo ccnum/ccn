@@ -188,37 +188,28 @@ function thematique_notifications_destinataires($flux) {
 				'thematique'
 			);
 			// Prendre les admin restreint des sous rubriques (des écoles)
-			$id_rubriques = sql_allfetsel('id_rubrique', 'spip_rubriques', 'id_secteur=' . intval($article['id_secteur']));
-			$id_rubriques = array_map('intval', array_column($id_rubriques, 'id_rubrique'));
-			if ($id_rubriques) {
-				$auteurs_restreint = sql_select(
-					'auteurs.id_auteur, auteurs.email',
-					'spip_auteurs AS auteurs JOIN spip_auteurs_liens AS lien ON auteurs.id_auteur=lien.id_auteur',
-					["lien.objet='rubrique'", sql_in('lien.id_objet', $id_rubriques), "auteurs.statut='0minirezo'"]
-				);
-				foreach ($auteurs_restreint as $ar) {
-					spip_log('auteur id=' . intval($ar['id_auteur']), 'thematique');
-					$flux['data'][] = $ar['email'];
-				}
-			}
+			$id_secteur_ref = intval($article['id_secteur']);
 		} else {
 			spip_log('lier au secteur ' . $article['id_secteur'], 'thematique');
 			$annee_scolaire = thematique_annee_scolaire();
 			spip_log('lier à l année ' . $annee_scolaire, 'thematique');
-			$id_secteur = sql_getfetsel('id_secteur', 'spip_rubriques', 'titre LIKE ' . sql_quote('%' . $annee_scolaire . '%'));
-			spip_log('lier au secteur ' . $id_secteur, 'thematique');
-			$id_rubriques = sql_allfetsel('id_rubrique', 'spip_rubriques', 'id_secteur=' . intval($id_secteur));
-			$id_rubriques = array_map('intval', array_column($id_rubriques, 'id_rubrique'));
-			if ($id_rubriques) {
-				$auteurs_restreint = sql_select(
-					'auteurs.id_auteur, auteurs.email',
-					'spip_auteurs AS auteurs JOIN spip_auteurs_liens AS lien ON auteurs.id_auteur=lien.id_auteur',
-					["lien.objet='rubrique'", sql_in('lien.id_objet', $id_rubriques), "auteurs.statut='0minirezo'"]
-				);
-				foreach ($auteurs_restreint as $ar) {
-					spip_log('auteur id=' . intval($ar['id_auteur']), 'thematique');
-					$flux['data'][] = $ar['email'];
-				}
+			$id_secteur_ref = intval(
+				sql_getfetsel('id_secteur', 'spip_rubriques', 'titre LIKE ' . sql_quote('%' . $annee_scolaire . '%'))
+			);
+			spip_log('lier au secteur ' . $id_secteur_ref, 'thematique');
+		}
+
+		$id_rubriques = sql_allfetsel('id_rubrique', 'spip_rubriques', 'id_secteur=' . $id_secteur_ref);
+		$id_rubriques = array_map('intval', array_column($id_rubriques, 'id_rubrique'));
+		if ($id_rubriques) {
+			$auteurs_restreint = sql_select(
+				'auteurs.id_auteur, auteurs.email',
+				'spip_auteurs AS auteurs JOIN spip_auteurs_liens AS lien ON auteurs.id_auteur=lien.id_auteur',
+				["lien.objet='rubrique'", sql_in('lien.id_objet', $id_rubriques), "auteurs.statut='0minirezo'"]
+			);
+			foreach ($auteurs_restreint as $ar) {
+				spip_log('auteur id=' . intval($ar['id_auteur']), 'thematique');
+				$flux['data'][] = $ar['email'];
 			}
 		}
 	}
