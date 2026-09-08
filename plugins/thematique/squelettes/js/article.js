@@ -35,7 +35,7 @@ function Article() {
 		this.x = data.nombre_jours;
 		this.y = data.y;
 
-		if (type === 'evenements' && this.titre.length > 25) {
+		if (this.titre.length > 25) {
 			this.titre = this.titre.substring(0, 25) + "(...)";
 		}
 
