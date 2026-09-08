@@ -31,11 +31,7 @@ function formulaires_forumv2_charger_dist($id_article) {
 	 * on charge le texte actuel du commentaire.
 	 */
 	if ($id_forum && !$texte) {
-		$forum = sql_fetsel(
-			'id_forum, id_article, id_parent, texte',
-			'spip_forum',
-			'id_forum=' . intval($id_forum)
-		);
+		$forum = sql_fetsel('id_forum, id_article, id_parent, texte', 'spip_forum', 'id_forum=' . intval($id_forum));
 
 		if (!$forum) {
 			return [
@@ -125,7 +121,7 @@ function formulaires_forumv2_verifier_dist($id_article) {
 		}
 
 		if (intval($forum['id_objet']) !== intval($id_article)) {
-			$erreurs['message_erreur'] = _T('thematique:erreur_commentaire_422');;
+			$erreurs['message_erreur'] = _T('thematique:erreur_commentaire_422');
 			return $erreurs;
 		}
 
@@ -170,6 +166,15 @@ function formulaires_forumv2_traiter_dist($id_article) {
 				]
 			);
 			session_set('forum_commentaire_succes', $id_forum);
+
+			// forum_inserer() n'est que l'insertion SQL brute : contrairement à
+			// forum_insert_base() (chemin de l'ancien formulaire public forum.php),
+			// elle ne déclenche pas la notification. Sans cet appel explicite, les
+			// destinataires calculés par thematique_notifications_destinataires
+			// (issue #217) ne sont jamais notifiés pour un commentaire forumv2.
+			if ($id_forum && ($notifications = charger_fonction('notifications', 'inc'))) {
+				$notifications('forumposte', $id_forum);
+			}
 		}
 		return [
 			'redirect' => generer_url_public('article', [
