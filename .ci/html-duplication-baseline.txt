@@ -5,6 +5,7 @@
 21L | plugins/thematique/notifications/article_publie_reponse.html:35 <-> plugins/thematique/notifications/forum_poste_article.html:28
 29L | plugins/thematique/formulaires/forum0.html:91 <-> plugins/thematique/formulaires/forum1.html:101
 6L | plugins/thematique/formulaires/forum0.html:39 <-> plugins/thematique/formulaires/forum1.html:40
+7L | plugins/thematique/formulaires/depublier_article.html:1 <-> plugins/thematique/formulaires/publier_article.html:1
 8L | plugins/thematique/formulaires/forum0.html:22 <-> plugins/thematique/formulaires/forum1.html:22
 8L | plugins/thematique/formulaires/forum0.html:30 <-> plugins/thematique/formulaires/forum1.html:30
 9L | plugins/thematique/formulaires/joindre_document_mission.html:1 <-> plugins/thematique/formulaires/joindre_video.html:1
