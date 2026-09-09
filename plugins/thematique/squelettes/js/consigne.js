@@ -193,13 +193,6 @@ function Consigne() {
 	}
 
 	/**
-	 * Fait disparaître le picto du nombre de commentaires d'une consigne.
-	 */
-	this.hideConsignePastille = function () {
-		$("#consigne" + this.id + " .picto_nombre_commentaires").fadeOut('slow');
-	}
-
-	/**
 	 * Affiche la consigne et les réponses associées.
 	 *
 	 * @see showConsigneInTimeline
@@ -224,8 +217,6 @@ function Consigne() {
 		$('.connecteur_timeline[data-consigne-id="' + this.id + '"]').removeClass('hide');
 
 		const y_dest = 0;
-
-		this.hideConsignePastille();
 
 		CCN.projet.showRangeOfTimeline(this.nombre_jours_max, this.x - 3, y_dest);
 
