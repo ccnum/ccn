@@ -596,7 +596,7 @@ function callArticleBlog(id_article) {
 	changeTimelineMode('blogs');
 	setFullscreenModeToCols(false);
 	updateMenuIcon(['blogs'], 'mainView');
-	flouterLesBullesNonSelectionnees(id_article)
+	flouterLesBullesEtLosangesNonSelectionnes(id_article)
 
 	const url = CCN.projet.url_popup_blog + "&page=article&id_article=" + id_article;
 	loadContentInMainSidebar(
@@ -847,6 +847,7 @@ function callArticleEvenement(id_objet, type_objet) {
 	changeTimelineMode('evenements');
 	setFullscreenModeToCols(false);
 	updateMenuIcon(['evenements'], 'mainView');
+	flouterLesBullesEtLosangesNonSelectionnes(id_objet)
 
 	const url = CCN.projet.url_popup_evenement + "&page=" + type_objet + "&id_" + type_objet + "=" + id_objet;
 	loadContentInMainSidebar(
@@ -1349,17 +1350,17 @@ function selectBlog(blogId) {
 	timelineItem.classList.add("blured")
 }
 
-function deflouterToutesLesBulles() {
-	document.querySelectorAll('.article_blog_container').forEach(bulle => {
-		bulle.classList.remove('flou');
+function deflouterToutesLesBullesEtLosanges() {
+	document.querySelectorAll('.article_blog_container, .article_evenement_container').forEach(bulleOuLosange => {
+		bulleOuLosange.classList.remove('flou');
 	});
 }
 
-function flouterLesBullesNonSelectionnees(idBulleSelectionnee) {
-	const article_blog = document.querySelector(`#article_blogarticle_${idBulleSelectionnee}`)
-	const bulleSelectionnee = article_blog.closest(".timeline_item")
-	document.querySelectorAll('.article_blog_container').forEach(bulle => {
-		bulle.classList.add('flou');
+function flouterLesBullesEtLosangesNonSelectionnes(idSelectionnee) {
+	const article_blog = document.querySelector(`#article_blogarticle_${idSelectionnee}, #article_evenementarticle_${idSelectionnee}`)
+	const elementSelectionnee = article_blog.closest(".timeline_item")
+	document.querySelectorAll('.article_blog_container, .article_evenement_container').forEach(bulleOuLosange => {
+		bulleOuLosange.classList.add('flou');
 	})
-	bulleSelectionnee.classList.remove('flou');	
+	elementSelectionnee.classList.remove('flou');	
 }
