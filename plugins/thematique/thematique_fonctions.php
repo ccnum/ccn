@@ -1544,8 +1544,8 @@ function filtre_afficher_forum_arbre($id_article) {
 			LEFT JOIN spip_auteurs AS a
 			ON f.id_auteur = a.id_auteur',
 		"f.objet='article'
-			AND f.id_objet=" . intval($id_article) . "
-			AND f.statut=" . sql_quote('publie'),
+			AND f.id_objet=" . intval($id_article) . '
+			AND f.statut=' . sql_quote('publie'),
 		'',
 		'f.date_heure DESC'
 	);
@@ -1564,7 +1564,12 @@ function filtre_afficher_forum_arbre($id_article) {
 		$nom = trim($forum['auteur_nom'] ?? '');
 		$nom_complet = trim($forum['auteur_nom_complet'] ?? '');
 
-		if ($nom_complet === '') {
+		// id_auteur=0 (ou auteur SPIP supprimé depuis) : la jointure ne
+		// renvoie rien, on garde le nom saisi à la publication (f.auteur,
+		// déjà présent via 'f.*') plutôt que de l'écraser par une chaîne vide.
+		if ($nom_complet === '' && $nom === '') {
+			// rien à faire, $forum['auteur'] reste celui de spip_forum
+		} elseif ($nom_complet === '') {
 			$forum['auteur'] = $nom;
 		} elseif ($nom === '') {
 			$forum['auteur'] = $nom_complet;
@@ -1578,9 +1583,6 @@ function filtre_afficher_forum_arbre($id_article) {
 	$arbre = forum_construire_arbre(0, $parents, $id_forum_recent);
 	return forum_rendre_branche($arbre);
 }
-
-
-
 
 /**
  * Compte les messages de forum publiés pour un ensemble d'articles, en une
