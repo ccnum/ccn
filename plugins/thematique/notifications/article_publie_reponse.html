@@ -1,0 +1,61 @@
+[(#REM)
+
+  Personnalisation CCN (issue #217) : mise en page dédiée pour la
+  publication d'une réponse à une mission (type_objet=travail_en_cours) —
+  cf notifications/article_publie.html, qui délègue ici au lieu de
+  article_publie_generique.html pour ce cas précis.
+
+]
+<BOUCLE_art(ARTICLES){id_article}{statut?}{tout}>
+#SET{numero_mission,#ID_CONSIGNE|thematique_numero_mission}
+#SET{avatar,#ID_ARTICLE|thematique_avatar_notification_article}
+#SET{avatar_type,#GET{avatar}|table_valeur{type}}
+#SET{avatar_valeur,#GET{avatar}|table_valeur{valeur}}
+#SET{avatar_couleur,#GET{avatar}|table_valeur{couleur_fond}}
+<BOUCLE_rubrique_classe(RUBRIQUES){id_rubrique=#ID_RUBRIQUE}>#SET{nom_classe, #TITRE}</BOUCLE_rubrique_classe>
+#SET{titre_mission,#TITRE}
+#SET{nom_intervenant,#VAL{''}}
+<BOUCLE_consigne(ARTICLES){id_article=#ID_CONSIGNE}{tout}>
+	#SET{titre_mission,#TITRE}
+	#SET{nom_intervenant,#LESAUTEURS|textebrut}
+</BOUCLE_consigne>
+<BOUCLE_rubrique(RUBRIQUES){id_rubrique=#ID_SECTEUR}>#SET{titre_secteur, #TITRE}</BOUCLE_rubrique>
+#SET{url_article,#URL_ARTICLE|url_absolue|parametre_url{rub,#GET{titre_secteur}}|parametre_url{mode,complet}}
+#SET{carte_sous_titre,#VAL{''}}
+[(#GET{numero_mission}|oui)
+	#SET{carte_sous_titre,#VAL{thematique:notif_mission_num_court}|_T{#ARRAY{numero,#GET{numero_mission}}}}
+]
+#SET{carte_titre,#TITRE|trim|thematique_carte_titre_notification{#GET{carte_sous_titre}}}
+#SET{carte_date,#DATE|affdate}
+#SET{carte_extrait,#INTRODUCTION|sinon{#CHAPO}|sinon{#TEXTE}|textebrut|thematique_couper_extrait{220}}
+<title>[(#VAL{thematique:notif_reponse_sujet}|_T{#ARRAY{titre,#GET{titre_mission}}}|nettoyer_titre_email)]</title>
+
+<body>
+<div class="header">
+	<h1 style="color:#000AFF;font-family:'Poppins', Verdana, Geneva, sans-serif;font-size:22px;font-weight:700;margin:0 0 16px;">
+		[(#GET{numero_mission}|oui)
+			[(#VAL{thematique:notif_reponse_titre_mission}|_T{#ARRAY{numero,#GET{numero_mission}}})]
+		]
+		[(#GET{numero_mission}|non)
+			[(#VAL{thematique:notif_reponse_titre}|_T{#ARRAY{titre,#GET{titre_mission}}})]
+		]
+	</h1>
+	<p style="color:#1E2055;font-family:'Poppins', Verdana, Geneva, sans-serif;font-size:15px;line-height:150%;margin:0 0 24px;">
+		[(#GET{nom_intervenant}|oui)
+			[(#VAL{thematique:notif_reponse_detail_mission}|_T{#ARRAY{classe,#GET{nom_classe},titre,#GET{titre_mission},intervenant,#GET{nom_intervenant}}})]
+		]
+		[(#GET{nom_intervenant}|non)
+			[(#VAL{thematique:notif_reponse_detail}|_T{#ARRAY{classe,#GET{nom_classe},titre,#GET{titre_mission}}})]
+		]
+	</p>
+
+	<INCLURE{fond=notifications/inc_carte, avatar_type=#GET{avatar_type}, avatar_valeur=#GET{avatar_valeur}, avatar_couleur=#GET{avatar_couleur}, titre=#GET{carte_titre}, date_carte=#GET{carte_date}, extrait=#GET{carte_extrait}} />
+
+	<div style="text-align:center;margin-top:24px;">
+		<a href="#GET{url_article}" style="display:inline-block;background-color:#000AFF;color:#FFFFFF;font-family:'Poppins', Verdana, Geneva, sans-serif;font-weight:600;font-size:15px;text-decoration:none;padding:12px 28px;border-radius:6px;">
+			<:thematique:notif_bouton_decouvrir_proposition:>
+		</a>
+	</div>
+</div>
+</body>
+</BOUCLE_art>

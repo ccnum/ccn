@@ -1,0 +1,41 @@
+[(#REM)
+
+  Personnalisation CCN (issue #217) : mise en page dédiée pour la
+  publication d'un article dans l'Agenda (type_objet=blogs) — cf
+  notifications/article_publie.html, qui délègue ici au lieu de
+  article_publie_generique.html pour ce cas précis.
+
+]
+<BOUCLE_art(ARTICLES){id_article}{statut?}{tout}>
+#SET{auteurs,#LESAUTEURS|textebrut}
+#SET{avatar,#ID_ARTICLE|thematique_avatar_notification_article}
+#SET{avatar_type,#GET{avatar}|table_valeur{type}}
+#SET{avatar_valeur,#GET{avatar}|table_valeur{valeur}}
+#SET{avatar_couleur,#GET{avatar}|table_valeur{couleur_fond}}
+<BOUCLE_rubrique(RUBRIQUES){id_rubrique=#ID_SECTEUR}>#SET{titre_secteur, #TITRE}</BOUCLE_rubrique>
+#SET{url_article,#URL_ARTICLE|url_absolue|parametre_url{rub,#GET{titre_secteur}}|parametre_url{mode,complet}}
+#SET{carte_sous_titre,#VAL{thematique:agenda}|_T}
+#SET{carte_titre,#TITRE|thematique_carte_titre_notification{#GET{carte_sous_titre}}}
+#SET{carte_date,#DATE|affdate}
+#SET{carte_extrait,#INTRODUCTION|sinon{#CHAPO}|sinon{#TEXTE}|textebrut|thematique_couper_extrait{220}}
+<title>[(#VAL{thematique:notif_agenda_sujet}|_T{#ARRAY{titre,#TITRE}}|nettoyer_titre_email)]</title>
+
+<body>
+<div class="header">
+	<h1 style="color:#000AFF;font-family:'Poppins', Verdana, Geneva, sans-serif;font-size:22px;font-weight:700;margin:0 0 16px;">
+		<:thematique:notif_agenda_titre:>
+	</h1>
+	<p style="color:#1E2055;font-family:'Poppins', Verdana, Geneva, sans-serif;font-size:15px;line-height:150%;margin:0 0 24px;">
+		[(#VAL{thematique:notif_agenda_detail}|_T{#ARRAY{auteur,#GET{auteurs}|sinon{#NOM_SITE_SPIP}}})]
+	</p>
+
+	<INCLURE{fond=notifications/inc_carte, avatar_type=#GET{avatar_type}, avatar_valeur=#GET{avatar_valeur}, avatar_couleur=#GET{avatar_couleur}, titre=#GET{carte_titre}, date_carte=#GET{carte_date}, extrait=#GET{carte_extrait}} />
+
+	<div style="text-align:center;margin-top:24px;">
+		<a href="#GET{url_article}" style="display:inline-block;background-color:#000AFF;color:#FFFFFF;font-family:'Poppins', Verdana, Geneva, sans-serif;font-weight:600;font-size:15px;text-decoration:none;padding:12px 28px;border-radius:6px;">
+			<:thematique:notif_bouton_consulter:>
+		</a>
+	</div>
+</div>
+</body>
+</BOUCLE_art>

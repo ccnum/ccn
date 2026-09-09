@@ -268,6 +268,90 @@
 	cursor: auto;
 }
 
+/* Modal du formulaire de login SPIP natif (CIOIDC désactivé, cf
+   noisettes/inc/authentification.html) : ouverte depuis l'option
+   "Se connecter" du dropdown "Me connecter" (menu_haut.js). Une vraie modal
+   plutôt qu'un dropdown : le formulaire a une hauteur/largeur de contenu
+   variable (messages d'erreur, etc.) qui ne rentre pas dans un dropdown
+   contraint par la largeur du bouton "Me connecter". Le fieldset/legend
+   gardent sinon le rendu par défaut du navigateur, et la checkbox
+   "se souvenir de moi" hérite de `.formulaire_spip .editer input {
+   width:100% }`, ce qui la fait s'étirer sur toute la largeur. */
+.login-modal {
+	display: none;
+	position: fixed;
+	inset: 0;
+	background: rgba(0, 0, 0, 0.5);
+	z-index: 4200;
+	overflow-y: auto;
+	padding: 12vh 0 5vh;
+	box-sizing: border-box;
+}
+
+.login-modal.open {
+	display: block;
+}
+
+.login-modal-content {
+	background-color: white;
+	width: 320px;
+	max-width: 90vw;
+	min-height: 20vw;
+	border-radius: 5px;
+	padding: 14px;
+	margin: 0 auto;
+	/* Contient tout enfant flottant (ex. lien "crayon" de SPIP inséré pour un
+	   admin, cf sidebar.css) qui ferait sinon "sortir" visuellement du cadre
+	   blanc sans agrandir sa hauteur. */
+	display: flow-root;
+}
+
+.login-modal-content fieldset {
+	border: 0;
+	margin: 0;
+	padding: 0;
+}
+
+.login-modal-content legend {
+	font-weight: bold;
+	padding: 0 0 10px;
+}
+
+.login-modal-content input[type='checkbox'] {
+	width: auto;
+}
+
+/* editor.css met `border: none !important` sur .formulaire_spip input.text
+   (générique à tous les formulaires) : sur le fond blanc de la modal, les
+   champs deviennent invisibles sans un contour propre à ce contexte. */
+.login-modal-content input.text {
+	border: 1px solid #ccc !important;
+	border-radius: 3px;
+}
+
+/* `.zone-menu form { float:left; height:40px; }` (tout en haut de ce
+   fichier) cible tout <form> dans le header — notre modal étant imbriquée
+   dans #menu_haut.zone-menu, le formulaire de login en hérite : il flottait
+   hors du flux avec une hauteur figée à 40px, faisant "sortir" le bouton
+   "Se connecter" de la carte blanche sans agrandir sa hauteur. */
+#login_modal form {
+	float: none;
+	height: auto;
+}
+
+/* Message d'erreur (identifiants invalides...) : par défaut sans style,
+   texte noir invisible parmi le reste — la modal étant rouverte
+   automatiquement dessus (cf menu_haut.js), il faut qu'il saute aux yeux. */
+.login-modal-content .reponse_formulaire_erreur {
+	background-color: #fce4e4;
+	color: #b30000;
+	border: 1px solid #f5aca6;
+	border-radius: 3px;
+	padding: 8px 10px;
+	margin-bottom: 12px;
+	font-size: 13px;
+}
+
 /* ================================================================ */
 /* ----------------------- END SELECTBOX STYLING ------------------- */
 /* ================================================================ */

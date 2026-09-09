@@ -1,9 +1,9 @@
 #CACHE{0}
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML Basic 1.1//EN" "http://www.w3.org/TR/xhtml-basic/xhtml-basic11.dtd">
+<!DOCTYPE html>
 <html xml:lang="#LANG" lang="#LANG" xmlns="http://www.w3.org/1999/xhtml">
 <head>
 	<meta http-equiv='Content-Type' content='text/html; charset=#CHARSET' />
-	<title>YAML - Demo</title>
+	<title>YAML - Démonstration et tests</title>
 	[<link rel="stylesheet" href="(#CSS{demo/demo.css})" type="text/css" />]
 	#INSERT_HEAD
 </head>
@@ -12,13 +12,14 @@
 <div id="container">
 	<div id="header">
 		<h1>
-			<img height="48" width="48" title="Plugin YAML" alt="Plugin YAML" src="#CHEMIN{yaml.png}"/>
+			<img height="48" width="48" title="Plugin YAML" alt="Plugin YAML" src="#CHEMIN{yaml.svg}"/>
 			PLUGIN YAML[&nbsp;((#PLUGIN{YAML, version}))]
 		</h1>
 	</div>
+
 	#SET{menu_tests,
 		#ARRAY{
-			demo, Fichier démo,
+			demo, Fichier de démonstration,
 			inclusion, Fichier avec inclusions,
 			noisette, Fichier de noisette,
 			saisie, Fichier de saisie,
@@ -32,61 +33,74 @@
 			pages, Toutes les pages noiZetier
 		}
 	}
-	#SET{menu_librairies,
+	#SET{menu_vues,
 		#ARRAY{
-			symfony, Symfony YAML v4,
-			spyc, Spyc
+			limites, Cas limites de l'API,
+			data, Boucle DATA
 		}
 	}
-	#SET{menu_librairies, #GET{menu_librairies}|ajouter_libyaml}
 
-	[(#ENV{scan}|oui)
-		#SET{test, ''}
-		#SET{librairie, toutes}
-	]
-	[(#ENV{scan}|non)
-		#SET{test, #ENV{test, demo}}
-		#SET{librairie, #ENV{librairie, toutes}}
-	]
-	[(#GET{librairie}|=={toutes}|?{
-		#SET{librairies, #GET{menu_librairies}|array_keys},
-		#SET{librairies, #LISTE{#GET{librairie}}}
-	})]
-
+	#SET{vue, #ENV{vue}}
+	#SET{scan, #ENV{scan}}
+	#SET{test, #ENV{test}}
+	[(#GET{vue}|non)[(#GET{scan}|non)[(#GET{test}|non)
+		#SET{test, demo}
+	]]]
 
 	<div id="wrapper">
 		<div id="content">
-		<BOUCLE_test_simple(CONDITION){si #GET{test}|array_key_exists{#GET{menu_tests}}|ou{#ENV{fichier}}}>
-			#SET{fichier, ''}
-			[(#GET{test}|=={demo}|non)
-				#SET{fichier, demo/test_#GET{test}.yaml}
-			]
+
+		<BOUCLE_vue_limites(CONDITION){si #GET{vue}|=={limites}}>
+			<INCLURE{fond=demo/inc-cas_limites, env} />
+		</BOUCLE_vue_limites>
+
+		<BOUCLE_vue_data(CONDITION){si #GET{vue}|=={data}}>
+			<INCLURE{fond=demo/inc-boucle_data, env} />
+		</BOUCLE_vue_data>
+
+		<BOUCLE_test_simple(CONDITION){si #GET{test}|array_key_exists{#GET{menu_tests}}}>
 			<INCLURE{fond=demo/inc-decode_test,
-				fichier=#ENV{fichier, #GET{fichier}},
-				librairies=#GET{librairies},
-				inclure=#ENV{fichier}|?{#EVAL{true}, #EVAL{false}},
+				test=#GET{test},
+				fichier=demo/test_#GET{test}.yaml,
 				env} />
 		</BOUCLE_test_simple>
 
-		<BOUCLE_test_scans(CONDITION){si #ENV{scan}|array_key_exists{#GET{menu_scans}}}>
-			<INCLURE{fond=demo/inc-decode_scan,
-				scan=#ENV{scan},
-				dossier=#GET{dossier},
-				menu_librairies=#GET{menu_librairies},
-				env} />
+		<BOUCLE_test_scans(CONDITION){si #GET{scan}|array_key_exists{#GET{menu_scans}}}>
+			<INCLURE{fond=demo/inc-decode_scan, scan=#GET{scan}, env} />
 		</BOUCLE_test_scans>
+
 		</div>
 	</div>
 
 	<div id="navigation">
+		<div class="menu" id="vues">
+			<h2 class="h2">Tests de l'API</h2>
+			<p>Les cas limites sont joués pour de vrai à chaque affichage : chaque ligne dit ce
+			qu'elle attend, ce qu'elle obtient, et conclut.</p>
+			<ul class="menu-items">
+			<BOUCLE_menu_vues(DATA) {source table, #GET{menu_vues}}>
+				[<li class="item">
+				(#SELF
+					|parametre_url{vue, #CLE}
+					|parametre_url{test, ''}
+					|parametre_url{scan, ''}
+					|lien_ou_expose{
+						[(#VALEUR)],
+						[(#GET{vue}|=={#CLE})]})
+				</li>]
+			</BOUCLE_menu_vues>
+			</ul>
+		</div>
+
 		<div class="menu" id="tests">
-			<h2 class="h2">Décodage - Choisir un test simple</h2>
-			<p>Choisissez un test de lecture et décodage d'un fichier YAML unique représentatif</p>
+			<h2 class="h2">Décoder un fichier</h2>
+			<p>Lecture et décodage d'un fichier YAML représentatif d'un usage réel.</p>
 			<ul class="menu-items">
 			<BOUCLE_menu_tests(DATA) {source table, #GET{menu_tests}}>
 				[<li class="item">
 				(#SELF
 					|parametre_url{test, #CLE}
+					|parametre_url{vue, ''}
 					|parametre_url{scan, ''}
 					|lien_ou_expose{
 						[(#VALEUR)],
@@ -97,41 +111,21 @@
 		</div>
 
 		<div class="menu" id="scans">
-			<h2 class="h2">Décodage - Choisir un scan complet</h2>
-			<p>Choisissez un scan des fichiers YAML d'un type donné et une comparaison des tableaux obtenus pour chaque librairie</p>
+			<h2 class="h2">Décoder tout un dossier</h2>
+			<p>Décodage de tous les fichiers YAML d'un type donné présents sur ce site : de quoi
+			éprouver le plugin sur des fichiers qu'il n'a pas choisis.</p>
 			<ul class="menu-items">
 			<BOUCLE_menu_scans(DATA) {source table, #GET{menu_scans}}>
 				[<li class="item">
 				(#SELF
 					|parametre_url{scan, #CLE}
-					|parametre_url{librairie, toutes}
+					|parametre_url{vue, ''}
 					|parametre_url{test, ''}
 					|lien_ou_expose{
 						[(#VALEUR)],
-						[(#ENV{scan}|=={#CLE})]})
+						[(#GET{scan}|=={#CLE})]})
 				</li>]
 			</BOUCLE_menu_scans>
-			</ul>
-		</div>
-
-		<div class="menu" id="librairies">
-			<h2 class="h2">Librairies disponibles</h2>
-			<p>Choisissez une librairie pour appliquer le test uniquement à cette librairie ou choisissez "Toutes les librairies" pour boucler sur les librairies disponibles</p>
-			<ul class="menu-items">
-				[<li class="item">
-				(#SELF|parametre_url{librairie, ''}
-					|lien_ou_expose{
-						Toutes les librairies,
-						[(#GET{librairie}|=={toutes})]})
-				</li>]
-			<BOUCLE_menu_libs(DATA) {source table, #GET{menu_librairies}}>
-				[<li class="item">
-				(#SELF|parametre_url{librairie, #CLE}
-					|lien_ou_expose{
-						[(#VALEUR)],
-						[(#GET{librairie}|=={#CLE})]})
-				</li>]
-			</BOUCLE_menu_libs>
 			</ul>
 		</div>
 	</div>
@@ -142,16 +136,8 @@
 	<div id="footer">
 		<h3 class="h3">Documentation</h3>
 		<ul>
-			<li>
-				<a href="https://contrib.spip.net/Le-plugin-YAML-v2">
-					<strong>SPIP-Contrib : Le plugin YAML v2</strong>
-				</a>
-			</li>
-			<li>
-				<a href="https://plugins.spip.net/yaml.html">
-					<strong>Plugins SPIP : YAML</strong>
-				</a>
-			</li>
+			<li><a href="https://contrib.spip.net/Le-plugin-YAML-v2"><strong>SPIP-Contrib : Le plugin YAML v2</strong></a></li>
+			<li><a href="https://plugins.spip.net/yaml.html"><strong>Plugins SPIP : YAML</strong></a></li>
 		</ul>
 	</div>
 </div>

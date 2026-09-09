@@ -68,6 +68,59 @@ function thematique_annee_scolaire() {
 }
 
 /**
+ * Année scolaire réelle d'une rubrique, déduite du titre de sa rubrique
+ * racine (les racines sont nommées par année, cf thematique_assurer_structure_annee()
+ * et thematique_id_rubrique_annee_active()) — indépendante du cookie/GET de
+ * sélection (contrairement à thematique_annee_scolaire()).
+ *
+ * Sert à rouvrir correctement un lien direct vers une mission/réponse
+ * d'une année différente de celle active par défaut : sans ça, un
+ * id_article valide dans l'URL ne suffit pas à retrouver son contenu, qui
+ * n'est chargé côté client (JSON) que pour l'année active (cf
+ * thematique_pre_boucle(), noisettes/timeline.html).
+ *
+ * @param int $id_rubrique
+ * @return int Année scolaire (ex: 2025), 0 si indéterminable
+ */
+function thematique_annee_rubrique($id_rubrique) {
+	static $cache = [];
+	$id_rubrique = intval($id_rubrique);
+	if (isset($cache[$id_rubrique])) {
+		return $cache[$id_rubrique];
+	}
+
+	include_spip('base/abstract_sql');
+	$ascendants = thematique_ascendants_rubrique($id_rubrique);
+	$id_racine = $ascendants ? end($ascendants) : 0;
+	$titre_racine = $id_racine ? sql_getfetsel('titre', 'spip_rubriques', 'id_rubrique=' . $id_racine) : '';
+
+	$annee = 0;
+	if ($titre_racine && preg_match('/(\d{4})/', $titre_racine, $m)) {
+		$annee = intval($m[1]);
+	}
+
+	return $cache[$id_rubrique] = $annee;
+}
+
+/**
+ * Année scolaire réelle d'un article, cf thematique_annee_rubrique().
+ *
+ * @param int $id_article
+ * @return int Année scolaire (ex: 2025), 0 si indéterminable
+ */
+function thematique_annee_article($id_article) {
+	$id_article = intval($id_article);
+	if (!$id_article) {
+		return 0;
+	}
+
+	include_spip('base/abstract_sql');
+	$id_rubrique = intval(sql_getfetsel('id_rubrique', 'spip_articles', 'id_article=' . $id_article));
+
+	return thematique_annee_rubrique($id_rubrique);
+}
+
+/**
  * Année scolaire réelle (calendaire), indépendante du cookie/GET de
  * sélection d'année (cf plugins/ccn/ccn_options.php). Sert à distinguer
  * l'année scolaire réellement en cours d'une année archivée consultée
@@ -219,6 +272,18 @@ function thematique_donner_role($id_auteur) {
 	include_spip('base/abstract_sql');
 	include_spip('inc/session'); // pour session_get/session_set si besoin
 
+	$statut = sql_getfetsel('statut', 'spip_auteurs', 'id_auteur=' . intval($id_auteur));
+
+	// ELEVE : statut 6forum, vérifié avant les mots-clés de hiérarchie —
+	// thematique_cioidc_associer_rubriques() rattache l'élève à la MÊME
+	// rubrique de classe que son prof (hiérarchie "travail_en_cours"), donc
+	// le test de hiérarchie ci-dessous serait vrai pour lui aussi et le
+	// classerait à tort comme "prof" si on ne l'excluait pas ici.
+	if ($statut === '6forum') {
+		$cache[$id_auteur] = 'eleve';
+		return 'eleve';
+	}
+
 	// PROF : rattaché (via rubriques) à une hiérarchie contenant le mot "travail_en_cours"
 	if (thematique_auteur_a_mot_dans_hierarchie($id_auteur, 'travail_en_cours')) {
 		$cache[$id_auteur] = 'prof';
@@ -231,15 +296,12 @@ function thematique_donner_role($id_auteur) {
 		return 'intervenant';
 	}
 
-	// ADMIN / ELEVE selon statut
-	$statut = sql_getfetsel('statut', 'spip_auteurs', 'id_auteur=' . intval($id_auteur));
+	// ADMIN selon statut (webmestre non rattaché à une hiérarchie ci-dessus —
+	// un webmestre rattaché à "consignes" est volontairement classé
+	// "intervenant" par le test au-dessus, cf thematique_voir_mission()).
 	if ($statut === '0minirezo') {
 		$cache[$id_auteur] = 'admin';
 		return 'admin';
-	}
-	if ($statut === '6forum') {
-		$cache[$id_auteur] = 'eleve';
-		return 'eleve';
 	}
 
 	$cache[$id_auteur] = null;
@@ -251,6 +313,15 @@ function thematique_donner_role($id_auteur) {
  * (blog pédagogique / "salle des profs") : prof, intervenant, admin.
  */
 function thematique_role_voit_salle_profs($role) {
+	return in_array($role, ['prof', 'intervenant', 'admin']);
+}
+
+/**
+ * Est-ce que le rôle donné peut publier (menu "Publier" du header : mission,
+ * ressource, évènement) : prof, intervenant, admin. Un élève n'a accès qu'au
+ * forum, pas à ce menu.
+ */
+function thematique_role_publie($role) {
 	return in_array($role, ['prof', 'intervenant', 'admin']);
 }
 
@@ -318,17 +389,29 @@ function thematique_ascendants_rubrique($id_rubrique) {
 	return $ids;
 }
 
+/**
+ * Id du mot-clé (spip_mots) portant un titre donné, mis en cache mémoire
+ * par requête — une seule résolution par titre distinct, quel que soit le
+ * nombre d'appels (id_rubrique_a_mot, hierarchie_a_mot, classes_rangs, ...).
+ *
+ * @param string $titre_mot
+ * @return int 0 si non trouvé
+ */
+function thematique_id_mot($titre_mot) {
+	static $cache = [];
+	if (!array_key_exists($titre_mot, $cache)) {
+		$cache[$titre_mot] = (int) sql_getfetsel('id_mot', 'spip_mots', 'titre=' . sql_quote($titre_mot));
+	}
+	return $cache[$titre_mot];
+}
+
 function thematique_hierarchie_a_mot($id_rubrique, $titre_mot) {
 	$ascendants = thematique_ascendants_rubrique($id_rubrique);
 	if (!$ascendants) {
 		return false;
 	}
 
-	static $cache_mot = [];
-	if (!isset($cache_mot[$titre_mot])) {
-		$cache_mot[$titre_mot] = sql_getfetsel('id_mot', 'spip_mots', 'titre=' . sql_quote($titre_mot));
-	}
-	$id_mot = $cache_mot[$titre_mot];
+	$id_mot = thematique_id_mot($titre_mot);
 	if (!$id_mot) {
 		return false; // le mot-clé n'existe même pas
 	}
@@ -386,6 +469,60 @@ function thematique_type_objet_rubrique($id_rubrique) {
 	return $cache[$id_rubrique] = null;
 }
 
+function thematique_rendre_type_article_affichable($type_article) {
+	if ($type_article == 'consignes') {
+		return _T('thematique:consigne');
+	}
+	if ($type_article == 'travail_en_cours') {
+		return _T('thematique:reponse_minuscule');
+	}
+	if ($type_article == 'cap-sur-l-annee') {
+		return _T('thematique:cap_sur_annee');
+	}
+	if ($type_article == 'la-rencontre') {
+		return _T('thematique:la_rencontre');
+	}
+
+	// autres types portés par la rubrique (cf thematique_type_objet_rubrique) :
+	// utilisés notamment dans les mails de notification (issue #217).
+	$autres = [
+		'blogs' => 'agenda',
+		'evenements' => 'salle_des_pros',
+		'ressources' => 'ressources',
+		'agora' => 'agora',
+	];
+	if (isset($autres[$type_article])) {
+		return _T('thematique:' . $autres[$type_article]);
+	}
+}
+
+/**
+ * id_objet à utiliser pour joindre un document (#FORMULAIRE_JOINDRE_DOCUMENT)
+ * à un article qui n'existe pas encore en base — cas du formulaire public de
+ * publication (sidebar-etape-2-container), où l'upload de document doit être
+ * possible avant l'enregistrement de l'article.
+ *
+ * Reprend le hack natif du plugin medias (cf medias_affiche_gauche() /
+ * medias_post_insertion() dans plugins-dist/medias/medias_pipelines.php) :
+ * un article inexistant est représenté par l'id_objet négatif -id_auteur.
+ * Les documents joints à ce pseudo-id sont automatiquement réassociés au
+ * véritable id_article par le pipeline post_insertion dès que l'article est
+ * créé (au submit du formulaire) — aucun code de liaison à écrire côté
+ * thematique.
+ *
+ * @param int|string $id_article
+ *   id_article réel si connu (0 ou vide sinon, ex. nouvel article)
+ * @return int
+ */
+function thematique_id_objet_document_temp($id_article) {
+	$id_article = intval($id_article);
+	if ($id_article) {
+		return $id_article;
+	}
+
+	return 0 - intval($GLOBALS['visiteur_session']['id_auteur'] ?? 0);
+}
+
 /**
  * Type de contenu d'un article : "travail_en_cours" s'il répond à une
  * consigne (id_consigne renseigné), sinon celui porté par sa rubrique
@@ -395,6 +532,7 @@ function thematique_type_objet_rubrique($id_rubrique) {
  * @return string|null
  */
 function thematique_type_objet_article($id_article) {
+	static $cache = [];
 	$id_article = intval($id_article);
 	if (!$id_article) {
 		return null;
@@ -406,6 +544,15 @@ function thematique_type_objet_article($id_article) {
 	}
 	if (!empty($article['id_consigne'])) {
 		return 'travail_en_cours';
+	}
+	$mot = sql_getfetsel(
+		'mots.titre',
+		'spip_mots_liens AS liens INNER JOIN spip_mots AS mots ON liens.id_mot=mots.id_mot',
+		'liens.objet=' . sql_quote('article')
+			. ' AND liens.id_objet=' . intval($id_article)
+	);
+	if ($mot) {
+		return $cache[$id_article] = $mot;
 	}
 
 	return thematique_type_objet_rubrique($article['id_rubrique']);
@@ -601,7 +748,7 @@ function thematique_classes_rangs() {
 	}
 	$rangs = [];
 
-	$id_mot = sql_getfetsel('id_mot', 'spip_mots', 'titre=' . sql_quote('travail_en_cours'));
+	$id_mot = thematique_id_mot('travail_en_cours');
 	if (!$id_mot) {
 		return $rangs;
 	}
@@ -639,6 +786,51 @@ function thematique_classes_rangs() {
 }
 
 /**
+ * Indique si des classes existent pour l'année scolaire active — sans le
+ * repli sur une année antérieure que fait thematique_classes_rangs() (repli
+ * légitime pour la stabilité des icônes/rangs, mais qui masquerait ici le
+ * vrai problème : tant que la rubrique de l'année active n'existe pas, on
+ * veut détecter "pas encore de participants pour cette année", pas
+ * retomber silencieusement sur ceux de l'année précédente).
+ *
+ * Sert de garde pour masquer le bloc "Les participants" du menu bas tant
+ * que l'année scolaire n'a pas été créée (cf menu_classes.html).
+ *
+ * @return bool
+ */
+function thematique_a_classes_annee() {
+	static $a_classes = null;
+	if ($a_classes !== null) {
+		return $a_classes;
+	}
+
+	$id_mot = thematique_id_mot('travail_en_cours');
+	$annee_scolaire = thematique_annee_scolaire();
+	$id_annee = $id_mot
+		? sql_getfetsel(
+			'id_rubrique',
+			'spip_rubriques',
+			'titre LIKE ' . sql_quote('%' . $annee_scolaire . '%') . ' AND id_parent=0'
+		)
+		: null;
+
+	if (!$id_mot || !$id_annee) {
+		return $a_classes = false;
+	}
+
+	// Alias (r/ml) obligatoires, cf thematique_classes_rangs().
+	$from = ['spip_rubriques AS r', 'spip_mots_liens AS ml'];
+	$where = [
+		'ml.id_objet=r.id_rubrique',
+		'ml.objet=' . sql_quote('rubrique'),
+		'ml.id_mot=' . intval($id_mot),
+		'r.id_parent=' . intval($id_annee),
+	];
+
+	return $a_classes = (bool) sql_getfetsel('r.id_rubrique', $from, $where);
+}
+
+/**
  * Numéro de couleur (0-9) d'une classe : son rang d'affichage (cf
  * thematique_classes_rangs()) modulo le nombre de couleurs/icônes
  * disponibles (cf classe_icone()).
@@ -668,7 +860,8 @@ function classe_icone($id_rubrique) {
 }
 
 /**
- * Animal (emoji) de la classe d'un prof, pour son avatar dans le menu haut.
+ * Id de la rubrique-classe d'un prof (celle dont dérive son emoji
+ * d'avatar), mis en cache mémoire par requête.
  *
  * Un prof est lié (spip_auteurs_liens) non seulement à sa/ses classe(s),
  * mais aussi au blog pédagogique et à ses projets (voir
@@ -676,12 +869,14 @@ function classe_icone($id_rubrique) {
  * lien qui est effectivement une classe (présent dans
  * thematique_classes_rangs()), pas n'importe quelle rubrique liée. S'il a
  * plusieurs classes, la première trouvée fait foi (pas de notion de
- * "classe principale").
+ * "classe principale"). Extrait de thematique_avatar_animal() pour être
+ * réutilisable par thematique_avatar_notification_article() (couleur de
+ * fond de l'emoji dans le mail de notification, issue #217).
  *
  * @param int $id_auteur
- * @return string emoji de la classe, ou '' si aucune classe trouvée
+ * @return int id_rubrique de la classe, 0 si aucune classe trouvée
  */
-function thematique_avatar_animal($id_auteur) {
+function thematique_id_rubrique_classe_prof($id_auteur) {
 	static $cache = [];
 	$id_auteur = intval($id_auteur);
 	if (isset($cache[$id_auteur])) {
@@ -696,16 +891,45 @@ function thematique_avatar_animal($id_auteur) {
 		'id_auteur=' . $id_auteur . " AND objet='rubrique'"
 	) : [];
 
-	$animal = '';
+	$id_rubrique = 0;
 	foreach ($rubriques as $r) {
 		if (isset($rangs[$r['id_objet']])) {
-			$animal = classe_icone($r['id_objet']);
+			$id_rubrique = intval($r['id_objet']);
 			break;
 		}
 	}
 
-	$cache[$id_auteur] = $animal;
-	return $animal;
+	$cache[$id_auteur] = $id_rubrique;
+	return $id_rubrique;
+}
+
+/**
+ * Animal (emoji) de la classe d'un prof, pour son avatar dans le menu haut.
+ *
+ * @param int $id_auteur
+ * @return string emoji de la classe, ou '' si aucune classe trouvée
+ */
+function thematique_avatar_animal($id_auteur) {
+	$id_rubrique = thematique_id_rubrique_classe_prof($id_auteur);
+	return $id_rubrique ? classe_icone($id_rubrique) : '';
+}
+
+/**
+ * Couleur de fond (pastel, hex) associée au numéro de classe d'une
+ * rubrique — même palette que --color-classe-light-N dans
+ * css/tokens.css.html, dupliquée ici car les mails de notification
+ * (issue #217) sont rendus hors contexte CSS du site (pas de variables
+ * disponibles pour un client mail).
+ *
+ * @param int $id_rubrique
+ * @return string Couleur hex, '#DEE0FF' (repli neutre) si numéro inconnu
+ */
+function thematique_couleur_classe($id_rubrique) {
+	$couleurs = [
+		'#FFF8D6', '#D6F5EE', '#E8E4F8', '#FFE8D6', '#D6EEFF',
+		'#F0D6F0', '#E8E8E8', '#FFF0D6', '#D6E4FF', '#FFE8E0',
+	];
+	return $couleurs[classe_numero($id_rubrique)] ?? '#DEE0FF';
 }
 
 /**
@@ -856,7 +1080,7 @@ function thematique_assurer_structure_annee() {
 		if (!$id_rub) {
 			continue;
 		}
-		$id_mot = sql_getfetsel('id_mot', 'spip_mots', 'titre=' . sql_quote($titre_mot));
+		$id_mot = thematique_id_mot($titre_mot);
 		if ($id_mot) {
 			objet_associer(['mots' => intval($id_mot)], ['rubriques' => intval($id_rub)]);
 		}
@@ -873,7 +1097,7 @@ function thematique_assurer_structure_annee() {
  * @return int 0 si aucun intervenant trouvé
  */
 function thematique_premier_intervenant($id_rubrique) {
-	$id_mot_consignes = sql_getfetsel('id_mot', 'spip_mots', "titre='consignes'");
+	$id_mot_consignes = thematique_id_mot('consignes');
 	if (!$id_mot_consignes) {
 		return 0;
 	}
@@ -901,6 +1125,37 @@ function thematique_premier_intervenant($id_rubrique) {
 }
 
 /**
+ * Intervenant "de l'année" : premier intervenant trouvé (au sens
+ * thematique_premier_intervenant) sur la rubrique racine nommée par
+ * l'année scolaire active. Repli sur la première rubrique taguée
+ * travail_en_cours si aucune rubrique racine n'est nommée par l'année
+ * (mêmes rubriques que celles utilisées par noisettes/menu_classes.html
+ * pour lister les classes). Mis en cache mémoire par requête.
+ *
+ * @return int 0 si aucun intervenant trouvé
+ */
+function thematique_intervenant_annee() {
+	static $cache = null;
+	if ($cache !== null) {
+		return $cache;
+	}
+
+	$id_rubrique_annee = sql_getfetsel(
+		'id_rubrique',
+		'spip_rubriques',
+		'id_parent=0 AND titre LIKE ' . sql_quote('%' . constant('_ANNEE_SCOLAIRE') . '%')
+	);
+
+	if ($id_rubrique_annee) {
+		return $cache = thematique_premier_intervenant(intval($id_rubrique_annee));
+	}
+
+	$id_rubrique_travail = thematique_id_rubrique_a_mot('travail_en_cours');
+
+	return $cache = $id_rubrique_travail ? thematique_premier_intervenant($id_rubrique_travail) : 0;
+}
+
+/**
  * Première rubrique enfant de $id_parent taguée du mot-clé $titre_mot.
  *
  * @param int $id_parent
@@ -912,7 +1167,7 @@ function thematique_id_rubrique_enfant_a_mot($id_parent, $titre_mot, $orderby = 
 	if (!$id_parent) {
 		return 0;
 	}
-	$id_mot = sql_getfetsel('id_mot', 'spip_mots', 'titre=' . sql_quote($titre_mot));
+	$id_mot = thematique_id_mot($titre_mot);
 	if (!$id_mot) {
 		return 0;
 	}
@@ -944,7 +1199,7 @@ function thematique_id_rubrique_enfant_a_mot($id_parent, $titre_mot, $orderby = 
  * @return int[]
  */
 function thematique_ids_rubriques_racine_a_mot($titre_mot) {
-	$id_mot = sql_getfetsel('id_mot', 'spip_mots', 'titre=' . sql_quote($titre_mot));
+	$id_mot = thematique_id_mot($titre_mot);
 	if (!$id_mot) {
 		return [];
 	}
@@ -995,7 +1250,7 @@ function thematique_id_rubrique_a_mot($titre_mot) {
 	}
 
 	include_spip('base/abstract_sql');
-	$id_mot = sql_getfetsel('id_mot', 'spip_mots', 'titre=' . sql_quote($titre_mot));
+	$id_mot = thematique_id_mot($titre_mot);
 	if (!$id_mot) {
 		return $cache[$titre_mot] = 0;
 	}
@@ -1011,13 +1266,74 @@ function thematique_id_rubrique_a_mot($titre_mot) {
 }
 
 /**
- * Premier article (au sens id_article croissant) portant un mot-clé donné,
- * sous la forme "id|statut" (ou "0|" si absent) — mis en cache mémoire par
- * requête.
+ * Nom affiché pour l'auteur d'un commentaire (forumv2) : prénom+nom réel de
+ * la personne (spip_auteurs.nom_complet, cf thematique_cioidc_nom_complet)
+ * suivi du rôle/classe/collège (spip_auteurs.nom, cf
+ * thematique_cioidc_nom_affiche) — pour identifier l'individu qui commente,
+ * contrairement aux missions/publications qui n'affichent que classe et
+ * collège (#NOM seul, sans nom_complet) (issue #44, spec finale : "on
+ * commente en tant qu'individu, on publie en tant que classe").
  *
- * Remplace squelettes/modeles/art_mot_clef.html (BOUCLE ARTICLES non
- * cachée, relancée à chaque #MODELE{art_mot_clef}{titre_mot}). Même format
- * de sortie (cf squelettes/js/main.js, qui fait un split('|') dessus).
+ * nom_complet est vide pour un compte non passé par le SSO CIOIDC (ex.
+ * webmestre créé manuellement) : repli sur nom seul dans ce cas.
+ *
+ * @param int $id_auteur
+ * @return string
+ */
+function thematique_nom_auteur_commentaire($id_auteur) {
+	static $cache = [];
+
+	$id_auteur = intval($id_auteur);
+	if (!$id_auteur) {
+		return '';
+	}
+	if (array_key_exists($id_auteur, $cache)) {
+		return $cache[$id_auteur];
+	}
+
+	$auteur = sql_fetsel('nom, nom_complet', 'spip_auteurs', 'id_auteur=' . $id_auteur);
+	if (!$auteur) {
+		return $cache[$id_auteur] = '';
+	}
+
+	$nom = trim($auteur['nom'] ?? '');
+	$nom_complet = trim($auteur['nom_complet'] ?? '');
+	if ($nom_complet === '') {
+		return $cache[$id_auteur] = $nom;
+	}
+	if ($nom === '') {
+		return $cache[$id_auteur] = $nom_complet;
+	}
+
+	return $cache[$id_auteur] = $nom_complet . ' - ' . $nom;
+}
+
+/**
+ * Article jalon (cap-sur-l-annee / la-rencontre) de l'année scolaire active
+ * portant un mot-clé donné, sous la forme "id|statut" (ou "0|" si absent) —
+ * mis en cache mémoire par requête.
+ *
+ * Scopé au sous-arbre de la rubrique racine de l'année active (via
+ * id_secteur, champ SPIP natif qui vaut l'id de la rubrique de tête de
+ * branche pour toute rubrique/article qu'elle contient, quelle que soit sa
+ * profondeur) : genie/thematique_rentree_annee.php crée l'article jalon
+ * sous "Consignes", mais celui-ci est ensuite assigné à un intervenant
+ * ("C'est ensuite à lui de les compléter et de les publier", cf ce
+ * fichier) qui peut le déplacer dans sa propre rubrique de travail — un
+ * scope limité à "Consignes" en id_rubrique direct le perdrait dès qu'il
+ * est déplacé. id_secteur reste correct dans tous les cas puisqu'il ne
+ * change pas tant que l'article demeure dans le sous-arbre de l'année.
+ * Plusieurs années peuvent avoir chacune leur propre "Cap sur l'année" en
+ * base simultanément. Avant ce scope, la requête ne filtrait que par
+ * mot-clé et prenait le plus petit id_article toutes années confondues :
+ * le badge restait figé sur l'article jalon de la toute première année
+ * traitée par le cron, quelle que soit l'année sélectionnée par le visiteur
+ * (cookie/GET, cf thematique_annee_scolaire()).
+ *
+ * Remplace à l'origine squelettes/modeles/art_mot_clef.html (BOUCLE
+ * ARTICLES non cachée, relancée à chaque #MODELE{art_mot_clef}{titre_mot}),
+ * qui avait le même défaut de scope. Même format de sortie (cf
+ * squelettes/js/main.js, qui fait un split('|') dessus).
  *
  * @param string $titre_mot
  * @return string
@@ -1030,15 +1346,25 @@ function thematique_article_a_mot($titre_mot) {
 	}
 
 	include_spip('base/abstract_sql');
-	$id_mot = sql_getfetsel('id_mot', 'spip_mots', 'titre=' . sql_quote($titre_mot));
+	$id_mot = thematique_id_mot($titre_mot);
 	if (!$id_mot) {
+		return $cache[$titre_mot] = '0|';
+	}
+
+	$id_rubrique_annee = thematique_id_rubrique_annee_active();
+	if (!$id_rubrique_annee) {
 		return $cache[$titre_mot] = '0|';
 	}
 
 	$article = sql_fetsel(
 		'a.id_article, a.statut',
 		['spip_articles AS a', 'spip_mots_liens AS ml'],
-		['ml.id_objet=a.id_article', 'ml.objet=' . sql_quote('article'), 'ml.id_mot=' . intval($id_mot)],
+		[
+			'ml.id_objet=a.id_article',
+			'ml.objet=' . sql_quote('article'),
+			'ml.id_mot=' . intval($id_mot),
+			'a.id_secteur=' . intval($id_rubrique_annee),
+		],
 		'',
 		'a.id_article',
 		'0,1'
@@ -1088,7 +1414,7 @@ function thematique_ids_rubriques_petits_enfants_a_mot($id_grandparent, $titre_m
 	if (!$id_grandparent) {
 		return [];
 	}
-	$id_mot = sql_getfetsel('id_mot', 'spip_mots', 'titre=' . sql_quote($titre_mot));
+	$id_mot = thematique_id_mot($titre_mot);
 	if (!$id_mot) {
 		return [];
 	}
@@ -1160,9 +1486,37 @@ function thematique_id_rubrique_mission() {
 }
 
 /**
+ * Indique si au moins une mission (article) existe dans la rubrique
+ * "Consignes" de l'année active (cf thematique_id_rubrique_mission()).
+ * Aucun repli sur une année antérieure — même principe que
+ * thematique_a_classes_annee() : sert à masquer le bloc "Missions" du menu
+ * bas (menu_consignes.html) tant que l'année scolaire n'a pas de mission,
+ * plutôt que d'afficher un titre vide.
+ *
+ * @return bool
+ */
+function thematique_a_missions_annee() {
+	static $a_missions = null;
+	if ($a_missions !== null) {
+		return $a_missions;
+	}
+
+	$id_rubrique = thematique_id_rubrique_mission();
+	if (!$id_rubrique) {
+		return $a_missions = false;
+	}
+
+	return $a_missions = (bool) sql_getfetsel('id_article', 'spip_articles', 'id_rubrique=' . intval($id_rubrique));
+}
+
+/**
  * Est-ce que le menu "Publier > Une nouvelle mission" doit être proposé à
- * l'utilisateur connecté : admin, ou intervenant avec au moins une rubrique
- * restreinte (cf choix_rubrique_admin2.html).
+ * l'utilisateur connecté : admin, ou intervenant (issue #404 — dépendre en
+ * plus de #SESSION{admin}>0, càd d'une rubrique en admin restreint dans
+ * spip_auteurs_liens, privait de ce bouton les intervenants sans un tel
+ * lien, alors que le rôle seul suffit à déterminer la rubrique cible : cf
+ * le repli sur thematique_id_rubrique_mission() dans
+ * choix_rubrique_admin2.html quand CCN.idRestreint est vide).
  *
  * @return string 'oui'|'non'
  */
@@ -1170,14 +1524,13 @@ function thematique_voir_mission() {
 	include_spip('inc/session');
 	$role = session_get('role');
 	$statut = session_get('statut');
-	$admin = session_get('admin');
 
 	// thematique_donner_role() priorise les mots-clés de hiérarchie
 	// (travail_en_cours/consignes) sur le statut SPIP : un vrai webmestre
 	// (statut 0minirezo) peut donc se retrouver avec $role='intervenant'
 	// s'il est aussi rattaché à une hiérarchie "consignes". On vérifie le
 	// statut directement pour ne pas le priver du bouton.
-	if ($statut === '0minirezo' || $role === 'admin' || ($role === 'intervenant' && $admin > 0)) {
+	if ($statut === '0minirezo' || in_array($role, ['admin', 'intervenant'], true)) {
 		return 'oui';
 	}
 	return 'non';
@@ -1186,25 +1539,44 @@ function thematique_voir_mission() {
 function filtre_afficher_forum_arbre($id_article) {
 	include_spip('inc/session');
 	$forums = sql_allfetsel(
-		'*',
-		'spip_forum',
-		"objet='article' AND id_objet=" . intval($id_article) . ' AND statut=' . sql_quote('publie'),
+		'f.*, a.nom AS auteur_nom, a.nom_complet AS auteur_nom_complet',
+		'spip_forum AS f
+			LEFT JOIN spip_auteurs AS a
+			ON f.id_auteur = a.id_auteur',
+		"f.objet='article'
+			AND f.id_objet=" . intval($id_article) . '
+			AND f.statut=' . sql_quote('publie'),
 		'',
-		'date_heure DESC'
+		'f.date_heure DESC'
 	);
 	if (!$forums) {
 		return _T('thematique:aucun_commentaire');
 	}
-
 	$id_forum_recent = null;
 	if ($val = session_get('forum_commentaire_succes')) {
 		$id_forum_recent = intval($val);
 		session_set('forum_commentaire_succes', ''); // on "consomme" le flag
 	}
-
 	// Index des commentaires par parent
 	$parents = [];
 	foreach ($forums as $forum) {
+		// Reproduit exactement le format de thematique_nom_auteur_commentaire()
+		$nom = trim($forum['auteur_nom'] ?? '');
+		$nom_complet = trim($forum['auteur_nom_complet'] ?? '');
+
+		// id_auteur=0 (ou auteur SPIP supprimé depuis) : la jointure ne
+		// renvoie rien, on garde le nom saisi à la publication (f.auteur,
+		// déjà présent via 'f.*') plutôt que de l'écraser par une chaîne vide.
+		if ($nom_complet === '' && $nom === '') {
+			// rien à faire, $forum['auteur'] reste celui de spip_forum
+		} elseif ($nom_complet === '') {
+			$forum['auteur'] = $nom;
+		} elseif ($nom === '') {
+			$forum['auteur'] = $nom_complet;
+		} else {
+			$forum['auteur'] = $nom_complet . ' - ' . $nom;
+		}
+
 		$parents[$forum['id_parent']][] = $forum;
 	}
 	// Construction récursive de l'arbre à partir de la racine
@@ -1331,6 +1703,292 @@ function thematique_photo_auteur($id_auteur) {
 
 	$cache[$id_auteur] = $res;
 	return $res;
+}
+
+/**
+ * Avatar "photo ou icône de classe" de l'auteur d'un article, pour la carte
+ * du mail de notification (issue #217) — reprend la même information que
+ * #SESSION{avatar} affichée dans le menu haut (cf
+ * thematique_preparer_fichier_session() et noisettes/inc/authentification.html),
+ * mais généralisée à l'auteur de n'importe quel article plutôt qu'au seul
+ * visiteur en session (un envoi de mail n'a pas de session visiteur), et
+ * complétée par le logo SPIP éventuellement uploadé par l'auteur (que la
+ * session, elle, ignore).
+ *
+ * Priorité : emoji de la classe pour un prof (thematique_avatar_animal(),
+ * prioritaire même sur une photo — même règle que le menu haut), sinon la
+ * photo de l'auteur (thematique_photo_auteur() : logo SPIP uploadé, puis
+ * avatar ENT laclasse.com), sinon aucun avatar connu (repli générique géré
+ * côté squelette).
+ *
+ * Appelée comme filtre : `#ID_ARTICLE|thematique_avatar_notification_article`,
+ * puis chaque champ récupéré via `#GET{avatar}|table_valeur{type}` etc.
+ *
+ * @param int $id_article
+ * @return array{type:string,valeur:string,couleur_fond:string}
+ *   'type' : 'emoji', 'logo' (chemin local, à passer dans |url_absolue),
+ *     'ent' (URL externe déjà absolue) ou '' (aucun avatar connu)
+ *   'valeur' : l'emoji, le chemin ou l'URL selon le type, '' sinon
+ *   'couleur_fond' : couleur de fond (hex) pour le type 'emoji', '' sinon
+ */
+function thematique_avatar_notification_article($id_article) {
+	static $cache = [];
+	$id_article = intval($id_article);
+	if (isset($cache[$id_article])) {
+		return $cache[$id_article];
+	}
+
+	include_spip('base/abstract_sql');
+	$id_auteur = intval(sql_getfetsel(
+		'id_auteur',
+		'spip_auteurs_liens',
+		"objet='article' AND id_objet=" . $id_article,
+		'',
+		'id_auteur'
+	));
+
+	return $cache[$id_article] = thematique_avatar_notification_auteur($id_auteur);
+}
+
+/**
+ * Avatar "photo ou icône de classe" d'un auteur quelconque, pour la carte
+ * du mail de notification (issue #217) — cœur de
+ * thematique_avatar_notification_article(), extrait pour être réutilisable
+ * quand on part directement d'un id_auteur plutôt que d'un article (ex:
+ * auteur d'un commentaire forumv2, cf notifications/forum_poste.html).
+ *
+ * Même règle de priorité : emoji de la classe pour un prof, sinon photo de
+ * l'auteur, sinon aucun avatar connu (repli générique géré côté squelette).
+ *
+ * @param int $id_auteur
+ * @return array{type:string,valeur:string,couleur_fond:string}
+ */
+function thematique_avatar_notification_auteur($id_auteur) {
+	static $cache = [];
+	$id_auteur = intval($id_auteur);
+	if (isset($cache[$id_auteur])) {
+		return $cache[$id_auteur];
+	}
+
+	$res = ['type' => '', 'valeur' => '', 'couleur_fond' => ''];
+
+	if ($id_auteur) {
+		if (thematique_donner_role($id_auteur) === 'prof') {
+			$id_rubrique = thematique_id_rubrique_classe_prof($id_auteur);
+			if ($id_rubrique) {
+				$res = [
+					'type' => 'emoji',
+					'valeur' => classe_icone($id_rubrique),
+					'couleur_fond' => thematique_couleur_classe($id_rubrique),
+				];
+			}
+		}
+
+		if (!$res['type']) {
+			$photo = thematique_photo_auteur($id_auteur);
+			if ($photo['logo']) {
+				$res = ['type' => 'logo', 'valeur' => $photo['logo'], 'couleur_fond' => ''];
+			} elseif ($photo['avatar']) {
+				$res = ['type' => 'ent', 'valeur' => $photo['avatar'], 'couleur_fond' => ''];
+			}
+		}
+	}
+
+	return $cache[$id_auteur] = $res;
+}
+
+/**
+ * Numéro d'affichage (1-based) d'une mission (consigne) : son rang parmi
+ * les consignes de sa rubrique triées par date — même règle que
+ * menu_consignes.html (#GET{num}) et header_sidebar.html (#ENV{rang}).
+ * Utilisé pour la carte du mail de notification de commentaire forumv2
+ * (issue #217, cf notifications/forum_poste.html).
+ *
+ * Ne dépend pas de l'année scolaire active en session (contrairement à
+ * thematique_id_rubrique_mission()) : un mail de notification n'a pas de
+ * visiteur en session, et doit rester correct même pour une mission d'une
+ * année passée. La rubrique de référence est donc celle de l'article
+ * lui-même, jamais celle de "l'année active".
+ *
+ * @param int $id_article Une consigne, ou une réponse (id_consigne>0) —
+ *   dans ce cas on résout automatiquement vers sa consigne parente.
+ * @return int Numéro 1-based, ou 0 si l'article n'est rattaché à aucune
+ *   mission retrouvable (rubrique absente, etc.).
+ */
+function thematique_numero_mission($id_article) {
+	static $cache = [];
+	$id_article = intval($id_article);
+	if (isset($cache[$id_article])) {
+		return $cache[$id_article];
+	}
+
+	include_spip('base/abstract_sql');
+	$article = sql_fetsel('id_article, id_consigne, id_rubrique', 'spip_articles', 'id_article=' . $id_article);
+	if (!$article) {
+		return $cache[$id_article] = 0;
+	}
+
+	$id_consigne = intval($article['id_consigne']) ?: $id_article;
+	$consigne = ($id_consigne === $id_article)
+		? $article
+		: sql_fetsel('id_article, id_rubrique', 'spip_articles', 'id_article=' . $id_consigne);
+
+	$rang = 0;
+	if ($consigne) {
+		$missions = sql_allfetsel(
+			'id_article',
+			'spip_articles',
+			'id_rubrique=' . intval($consigne['id_rubrique']) . ' AND id_consigne=0',
+			'',
+			'date'
+		);
+		foreach ($missions as $i => $mission) {
+			if (intval($mission['id_article']) === $id_consigne) {
+				$rang = $i + 1;
+				break;
+			}
+		}
+	}
+
+	return $cache[$id_article] = $rang;
+}
+
+/**
+ * Email de l'auteur d'un commentaire (spip_forum), pour savoir à qui un
+ * commentaire répond — utilisé pour notifier l'auteur d'un commentaire
+ * parent quand quelqu'un lui répond (issue #217, cf
+ * thematique_notifications_destinataires() et
+ * notifications/forum_poste_article.html).
+ *
+ * Priorité : email de son compte SPIP (spip_auteurs.email) si le
+ * commentaire est d'un auteur identifié, sinon la colonne email_auteur du
+ * commentaire lui-même (renseignée pour un commentaire anonyme).
+ *
+ * @param int $id_forum
+ * @return string '' si introuvable ou sans email connu
+ */
+function thematique_email_auteur_forum($id_forum) {
+	static $cache = [];
+	$id_forum = intval($id_forum);
+	if (!$id_forum) {
+		return '';
+	}
+	if (isset($cache[$id_forum])) {
+		return $cache[$id_forum];
+	}
+
+	include_spip('base/abstract_sql');
+	$forum = sql_fetsel('id_auteur, email_auteur', 'spip_forum', 'id_forum=' . $id_forum);
+	if (!$forum) {
+		return $cache[$id_forum] = '';
+	}
+
+	$email = '';
+	if ($forum['id_auteur']) {
+		$email = (string) sql_getfetsel('email', 'spip_auteurs', 'id_auteur=' . intval($forum['id_auteur']));
+	}
+
+	return $cache[$id_forum] = ($email ?: $forum['email_auteur']);
+}
+
+/**
+ * Retire d'une liste d'emails ceux qui appartiennent à un compte auteur
+ * passé à la poubelle (statut 5poubelle) — ex : reset de rentrée scolaire,
+ * cf genie_thematique_rentree_poubelle_dist(), qui bascule chaque
+ * septembre tous les comptes non-webmestre en poubelle sans jamais
+ * nettoyer spip_auteurs_liens.
+ *
+ * Volontairement centralisé en fin de thematique_notifications_destinataires()
+ * (dernier hook de la pipeline notifications_destinataires, thematique
+ * nécessitant le plugin notifications) plutôt que corrigé requête par
+ * requête dans ce dernier : ça filtre aussi bien nos propres ajouts que
+ * ceux du plugin notifications (admin restreint, auteurs de l'article,
+ * participants au thread), sans toucher à ce plugin ni aux liens en base
+ * (conservés pour l'historique du site — cf issue Lorène Dimino, sept.
+ * 2026).
+ *
+ * @param array $emails
+ * @return array Liste réindexée, sans les emails de comptes poubelle
+ */
+function thematique_filtrer_emails_poubelle($emails) {
+	$emails = array_filter(array_unique((array) $emails));
+	if (!$emails) {
+		return $emails;
+	}
+
+	include_spip('base/abstract_sql');
+	$emails_poubelle = sql_allfetsel('email', 'spip_auteurs', [sql_in('email', $emails), "statut='5poubelle'"]);
+	$emails_poubelle = array_column($emails_poubelle, 'email');
+	if (!$emails_poubelle) {
+		return array_values($emails);
+	}
+
+	return array_values(array_diff($emails, $emails_poubelle));
+}
+
+/**
+ * Tronque un extrait de texte pour une carte de mail de notification
+ * (issue #217), avec le suffixe "[…]" utilisé dans les maquettes.
+ *
+ * Existe uniquement pour éviter d'écrire `couper{220,'[…]'}` dans un
+ * squelette : le compilateur de crochets conditionnels de SPIP casse dès
+ * qu'un argument de filtre contient littéralement `[` ou `]`, même hors de
+ * tout bloc `[(...)]` — toute la suite de la chaîne de filtres ressort
+ * alors en texte brut non interprété. Cf le même problème contourné pour
+ * notifications/forum_poste.html.
+ *
+ * @param string $texte
+ * @param int $taille
+ * @return string
+ */
+function thematique_couper_extrait($texte, $taille = 220) {
+	include_spip('inc/texte');
+	return couper($texte, $taille, '&nbsp;[…]');
+}
+
+/**
+ * Titre de la cellule "titre" d'une carte de mail de notification
+ * (issue #217) : le titre de l'article, suivi d'un sous-titre optionnel en
+ * italique ("Titre - Type").
+ *
+ * Existe uniquement pour éviter d'écrire `#SET{x, #GET{y}|filtre{z}}` (un
+ * #GET en argument d'un filtre, dans la valeur d'un #SET) dans un
+ * squelette : cette double imbrication d'accolades corrompt la
+ * compilation de tout le reste du fond — pas seulement de cette ligne, cf
+ * le même genre de piège contourné pour thematique_couper_extrait().
+ *
+ * @param string $titre
+ * @param string $sous_titre Vide pour ne pas afficher de sous-titre
+ * @return string
+ */
+function thematique_carte_titre_notification($titre, $sous_titre = '') {
+	$titre = trim((string) $titre);
+	$sous_titre = trim((string) $sous_titre);
+	if ($sous_titre === '') {
+		return $titre;
+	}
+
+	return $titre . ' - <em>' . $sous_titre . '</em>';
+}
+
+/**
+ * Indique si $email est celle de l'auteur du commentaire parent $id_parent
+ * — pour choisir, dans la carte du mail de notification, entre le libellé
+ * "On vient de répondre à votre message !" (le destinataire courant est
+ * l'auteur du commentaire auquel on répond) et le libellé générique de la
+ * mission (cf notifications/forum_poste_article.html, issue #217).
+ *
+ * @param int $id_parent 0 si le commentaire notifié n'est pas une réponse
+ * @param string $email Email du destinataire courant du mail (#ENV{notification_email})
+ * @return bool
+ */
+function thematique_est_reponse_a_email($id_parent, $email) {
+	$email = trim((string) $email);
+	if (!$id_parent or !$email) {
+		return false;
+	}
+
+	return strtolower(thematique_email_auteur_forum($id_parent)) === strtolower($email);
 }
 
 /**
@@ -1638,46 +2296,63 @@ function forum_rendre_branche($forums) {
 }
 
 function filtre_titre_consigne($id_consigne) {
-    if (!$id_consigne) return '';
-    return sql_getfetsel('titre', 'spip_articles', 'id_article=' . intval($id_consigne));
+	if (!$id_consigne) {
+		return '';
+	}
+	return sql_getfetsel('titre', 'spip_articles', 'id_article=' . intval($id_consigne));
 }
 
 function filtre_rang_consigne($id_consigne) {
-    if (!$id_consigne) return '';
+	if (!$id_consigne) {
+		return '';
+	}
 
-    $date_consigne = sql_getfetsel(
-        'date',
-        'spip_articles',
-        'id_article=' . intval($id_consigne) . ' AND id_consigne=0'
-    );
-    if (!$date_consigne) return '';
+	$date_consigne = sql_getfetsel(
+		'date',
+		'spip_articles',
+		'id_article=' . intval($id_consigne) . ' AND id_consigne=0'
+	);
+	if (!$date_consigne) {
+		return '';
+	}
 
-    return sql_countsel(
-        'spip_articles',
-        'id_consigne = 0'
-        . ' AND date >= ' . sql_quote(_DATE_DEBUT)
-        . ' AND date <= ' . sql_quote($date_consigne)
-        . ' AND id_article IN (SELECT DISTINCT id_consigne FROM spip_articles WHERE id_consigne > 0)'
-    );
+	return sql_countsel(
+		'spip_articles',
+		'id_consigne = 0'
+		. ' AND date >= ' . sql_quote(_DATE_DEBUT)
+		. ' AND date <= ' . sql_quote($date_consigne)
+		. ' AND id_article IN (SELECT DISTINCT id_consigne FROM spip_articles WHERE id_consigne > 0)'
+	);
 }
-
 
 /**
  * Transforme un id_auteur de prof ou élève en id_rubrique de classe.
  */
 function filtre_auteur_vers_classe($id_auteur) {
-    if (!$id_auteur) {
-        return '';
-    }
+	if (!$id_auteur) {
+		return '';
+	}
 
-    $result = sql_getfetsel(
-        'sr.id_rubrique',
-        'spip_auteurs_liens AS sal
+	$result = sql_getfetsel(
+		'sr.id_rubrique',
+		'spip_auteurs_liens AS sal
          JOIN spip_rubriques AS sr ON sr.id_rubrique = sal.id_objet
          JOIN spip_rubriques AS sr2 ON sr.id_parent = sr2.id_rubrique',
-        'sal.id_auteur = ' . intval($id_auteur) . '
+		'sal.id_auteur = ' . intval($id_auteur) . '
          AND sr2.titre = ' . sql_quote('Travail des classes')
-    );
+	);
 
-    return $result;
+	return $result;
+}
+
+function thematique_trouver_reponse_a_une_consigne($id_consigne, $id_rubrique_classe) {
+	if (!$id_consigne || !$id_rubrique_classe) {
+		return false;
+	}
+	$article = sql_fetsel(
+		'*',
+		'spip_articles',
+		['id_consigne = ' . intval($id_consigne), 'id_rubrique = ' . intval($id_rubrique_classe)]
+	);
+	return $article;
 }

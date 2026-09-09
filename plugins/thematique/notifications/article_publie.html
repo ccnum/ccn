@@ -1,26 +1,42 @@
 [(#REM)
 
-  Squelette
-  (c) 2009 SPIP
-  Distribue sous licence GPL
+  Personnalisation CCN (issue #217) : dispatcher entre plusieurs mises en
+  page — article_publie_reponse.html pour une réponse à une mission
+  (type_objet=travail_en_cours), article_publie_agenda.html pour une date
+  publiée dans l'Agenda (type_objet=blogs), article_publie_generique.html
+  pour tout autre type d'article publié. Surcharge de
+  plugins/notifications/notifications/article_publie.html.
+
+  Fichier séparé pour chaque mise en page, sélectionné via une variable
+  #GET{cas} à plat (plutôt qu'un seul fichier ou des blocs conditionnels
+  imbriqués) : les crochets conditionnels de SPIP ne supportent pas
+  l'imbrication profonde, un bloc long contenant lui-même plusieurs
+  conditions casse le parseur et fait ressortir le contenu en texte brut
+  échappé au lieu de le compiler (cf le même problème rencontré et
+  documenté sur notifications/forum_poste.html).
 
 ]
-<BOUCLE_art(ARTICLES){id_article}{statut?}{tout}>
-#SET{auteurs,#LESAUTEURS}
-<BOUCLE_rubrique(RUBRIQUES){id_rubrique=#ID_SECTEUR}>#SET{titre_secteur, #TITRE}</BOUCLE_rubrique>
-<title>[(#VAL{notifications:article_publie_sujet}|_T{#ARRAY{nom_site_spip,#NOM_SITE_SPIP,titre,#TITRE}}|nettoyer_titre_email)]</title>
-
-<body>
-<div class="header">
-<h1><:notifications:article_valide_titre|trim|trim{-}:></h1>
-<p>
-[(#SET{titre,[<a href="[(#URL_ARTICLE|url_absolue|parametre_url{rub,#GET{titre_secteur}}|parametre_url{mode,complet})]"><strong>(#TITRE)</strong></a>]})]
-[(#VAL{notifications:article_publie_detail}|_T{#ARRAY{titre,#GET{titre},connect_nom,#SESSION{nom}}})]
-</p>
-<hr />
-</div>
-
-<INCLURE{fond=notifications/inc-article,id_article} />
-</body>
-</BOUCLE_art>
+<BOUCLE_type(ARTICLES){id_article}{tout}>
+#SET{type_objet,#ID_ARTICLE|thematique_type_objet_article}
+</BOUCLE_type>
+#SET{cas,generique}
+[(#GET{type_objet}|=={travail_en_cours}|oui) #SET{cas,reponse}]
+[(#GET{type_objet}|=={blogs}|oui) #SET{cas,agenda}]
+[(#GET{type_objet}|=={evenements}|oui) #SET{cas,salle_pros}]
+[(#GET{type_objet}|=={ressources}|oui) #SET{cas,ressource}]
+[(#GET{cas}|=={reponse}|oui)
+	#INCLURE{fond=notifications/article_publie_reponse, env}
+]
+[(#GET{cas}|=={agenda}|oui)
+	#INCLURE{fond=notifications/article_publie_agenda, env}
+]
+[(#GET{cas}|=={salle_pros}|oui)
+	#INCLURE{fond=notifications/article_publie_salle_pros, env}
+]
+[(#GET{cas}|=={ressource}|oui)
+	#INCLURE{fond=notifications/article_publie_ressource, env}
+]
+[(#GET{cas}|=={generique}|oui)
+	#INCLURE{fond=notifications/article_publie_generique, env}
+]
 #FILTRE{facteur_email_wrap_to_html}

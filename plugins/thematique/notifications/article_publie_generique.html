@@ -1,0 +1,52 @@
+[(#REM)
+
+  Squelette
+  (c) 2009 SPIP
+  Distribue sous licence GPL
+
+  Personnalisation CCN (issue #217) : mise en page basée sur la charte visuelle
+  du forum (couleurs et carte de type .forum-card, cf plugins/thematique/css/
+  tokens.css.html et forum.css.html) plutôt que sur le squelette d'origine du
+  plugin notifications. Le texte complet de l'article n'est volontairement pas
+  affiché (juste un extrait) : le mail ne doit pas se substituer à la
+  consultation en ligne (cf discussion issue #217).
+
+  Utilisé par notifications/article_publie.html pour tout article qui n'est
+  pas une réponse à une mission (cf article_publie_reponse.html pour ce cas,
+  avec sa propre mise en page dédiée).
+
+]
+<BOUCLE_art(ARTICLES){id_article}{statut?}{tout}>
+#SET{auteurs,#LESAUTEURS|textebrut}
+#SET{type_objet,#ID_ARTICLE|thematique_type_objet_article}
+#SET{type_libelle,#GET{type_objet}|thematique_rendre_type_article_affichable|sinon{#NOM_SITE_SPIP}}
+#SET{avatar,#ID_ARTICLE|thematique_avatar_notification_article}
+#SET{avatar_type,#GET{avatar}|table_valeur{type}}
+#SET{avatar_valeur,#GET{avatar}|table_valeur{valeur}}
+#SET{avatar_couleur,#GET{avatar}|table_valeur{couleur_fond}}
+<BOUCLE_rubrique(RUBRIQUES){id_rubrique=#ID_SECTEUR}>#SET{titre_secteur, #TITRE}</BOUCLE_rubrique>
+#SET{url_article,#URL_ARTICLE|url_absolue|parametre_url{rub,#GET{titre_secteur}}|parametre_url{mode,complet}}
+#SET{carte_titre,#TITRE|thematique_carte_titre_notification{#GET{type_libelle}}}
+#SET{carte_date,#DATE|affdate}
+#SET{carte_extrait,#INTRODUCTION|sinon{#CHAPO}|sinon{#TEXTE}|textebrut|thematique_couper_extrait{220}}
+<title>[(#VAL{notifications:article_publie_sujet}|_T{#ARRAY{nom_site_spip,#NOM_SITE_SPIP,titre,#TITRE}}|nettoyer_titre_email)]</title>
+
+<body>
+<div class="header">
+	<h1 style="color:#000AFF;font-family:'Poppins', Verdana, Geneva, sans-serif;font-size:22px;font-weight:700;margin:0 0 16px;">
+		[(#VAL{thematique:notif_publication_titre}|_T{#ARRAY{type,#GET{type_libelle}}})]
+	</h1>
+	<p style="color:#1E2055;font-family:'Poppins', Verdana, Geneva, sans-serif;font-size:15px;line-height:150%;margin:0 0 24px;">
+		[(#VAL{thematique:notif_publication_detail}|_T{#ARRAY{auteur,#GET{auteurs}|sinon{#NOM_SITE_SPIP},type,#GET{type_libelle}}})]
+	</p>
+
+	<INCLURE{fond=notifications/inc_carte, avatar_type=#GET{avatar_type}, avatar_valeur=#GET{avatar_valeur}, avatar_couleur=#GET{avatar_couleur}, titre=#GET{carte_titre}, date_carte=#GET{carte_date}, extrait=#GET{carte_extrait}} />
+
+	<div style="text-align:center;margin-top:24px;">
+		<a href="#GET{url_article}" style="display:inline-block;background-color:#000AFF;color:#FFFFFF;font-family:'Poppins', Verdana, Geneva, sans-serif;font-weight:600;font-size:15px;text-decoration:none;padding:12px 28px;border-radius:6px;">
+			<:thematique:notif_bouton_consulter:>
+		</a>
+	</div>
+</div>
+</body>
+</BOUCLE_art>

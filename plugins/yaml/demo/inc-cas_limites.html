@@ -1,0 +1,44 @@
+<h2 class="h2">CAS LIMITES DE L'API</h2>
+
+#SET{bilan, #VAL|yaml_demo_cas_limites_bilan}
+
+<p>Chaque ligne est <strong>exécutée à l'affichage de cette page</strong>. Elle annonce ce qu'elle attend,
+montre ce qu'elle obtient, et conclut. Une ligne rouge est une régression.</p>
+
+[(#GET{bilan}|table_valeur{echecs}|=={0}|oui)
+	<p class="bilan ok"><strong>[(#GET{bilan}|table_valeur{total})] cas, aucun échec.</strong></p>
+]
+[(#GET{bilan}|table_valeur{echecs}|=={0}|non)
+	<p class="bilan echec"><strong>[(#GET{bilan}|table_valeur{echecs})] échec(s) sur [(#GET{bilan}|table_valeur{total})] cas.</strong></p>
+]
+
+<BOUCLE_groupes(DATA) {source table, #VAL|yaml_demo_cas_limites_groupes}>
+	<h3 class="h3">#CLE</h3>
+	<table class="spip">
+		<thead>
+			<tr class="row_first">
+				<th>Cas</th>
+				<th>Appel</th>
+				<th>Attendu</th>
+				<th>Obtenu</th>
+				<th>$erreur</th>
+				<th>Verdict</th>
+			</tr>
+		</thead>
+		<tbody>
+		<BOUCLE_cas(DATA) {source table, #VALEUR}>
+			<tr class="[(#COMPTEUR_BOUCLE|alterner{row_odd,row_even})][(#VALEUR|table_valeur{verdict}|non) echec]">
+				<td>[(#VALEUR|table_valeur{libelle})]</td>
+				<td><code>[(#VALEUR|table_valeur{code}|htmlspecialchars)]</code></td>
+				<td><code>[(#VALEUR|table_valeur{attendu}|yaml_demo_afficher)]</code></td>
+				<td><code>[(#VALEUR|table_valeur{obtenu}|yaml_demo_afficher)]</code></td>
+				<td>[(#VALEUR|table_valeur{erreur}|sinon{<em>vide</em>})]</td>
+				<td>[(#VALEUR|table_valeur{verdict}|oui)✅ OK][(#VALEUR|table_valeur{verdict}|non)❌ [(#VALEUR|table_valeur{detail_texte})]]</td>
+			</tr>
+		</BOUCLE_cas>
+		</tbody>
+	</table>
+</BOUCLE_groupes>
+
+<p><em>Deux cas — l'inclusion résolue et l'encodage d'une valeur non représentable — sont vérifiés par une
+fonction plutôt que par une valeur ; la colonne « Attendu » y affiche <code>bool true</code>.</em></p>

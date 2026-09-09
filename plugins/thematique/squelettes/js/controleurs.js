@@ -237,7 +237,7 @@ function setContentFromState(state, title, url) {
 		// Consigne
 		if (state.type_objet == "consignes") {
 			if (state.id_objet == CCN.idArticleCapSurAnnee || state.id_objet == CCN.idArticleLaRencontre) {
-				callArticleJalon(state.id_objet);
+				callArticleJalon(state.id_objet == CCN.idArticleCapSurAnnee);
 			} else {
 				for (let k = 0; k < CCN.consignes.length; k++) {
 					if (CCN.consignes[k].id == state.id_objet) {
@@ -357,6 +357,15 @@ async function changeTimelineMode(type) {
 		$('body').addClass(classCss[type]);
 		CCN.projet.showWholeTimeline();
 		updateMenuIcon([type], 'timelineMode');
+
+		// "Cap sur l'année"/"La Rencontre" sont des jalons de mission :
+		// aucun sens en dehors du mode consignes (agenda, salle des pros).
+		if (type === 'consignes') {
+			updateBadgeJalon('cap_sur_annee', CCN.idArticleCapSurAnnee, CCN.statutCapSurAnnee);
+			updateBadgeJalon('la_rencontre', CCN.idArticleLaRencontre, CCN.statutLaRencontre);
+		} else {
+			$('#badge_cap_sur_annee, #badge_la_rencontre').hide();
+		}
 	}
 	$('#menu_bas .logo a.menu_logo_type_sidebarView').removeClass('selected');
 }
@@ -587,7 +596,7 @@ function callArticleBlog(id_article) {
 	changeTimelineMode('blogs');
 	setFullscreenModeToCols(false);
 	updateMenuIcon(['blogs'], 'mainView');
-	flouterLesBullesNonSelectionnees(id_article)
+	flouterLesBullesEtLosangesNonSelectionnes(id_article)
 
 	const url = CCN.projet.url_popup_blog + "&page=article&id_article=" + id_article;
 	loadContentInMainSidebar(
@@ -625,30 +634,102 @@ function callRessource() {
 }
 
 /**
+ * Charge le formulaire de création d'un évènement d'agenda dans la sidebar
+ * principale (#412 : le menu "Publier > Un évènement dans l'agenda" ne
+ * faisait qu'un changeTimelineMode sans jamais ouvrir de formulaire).
+ *
+ * page=rubrique (cf callRessource) est une page de NAVIGATION dans une
+ * arborescence, pas un formulaire générique : elle ne gère pas type_objet=
+ * blogs et retombe sur un rendu par défaut ("Classe participante").
+ * page=publier (comme url_popup_reponseajout/createReponse) est le bon
+ * point d'entrée, générique par type_objet.
+ *
+ * type_objet=blogs et non evenements : cf thematique_type_objet_rubrique
+ * (thematique_fonctions.php) — "evenements" est le type de la Salle des
+ * pros, réservée aux profs (cf noisettes/inc/logo_salle_profs.html,
+ * thematique_role_voit_salle_profs), alors que "blogs" est l'Agenda public
+ * (menu_logo_blogs dans noisettes/sommaire.html). Les deux avaient été
+ * intervertis dans un premier temps (#412).
+ *
+ * changeTimelineMode() est asynchrone : la première fois qu'on bascule vers
+ * un mode pas encore actif, elle attend le chargement JSON des articles
+ * puis termine par showWholeTimeline(), qui appelle closeSidebar() (cf
+ * projet.js). Sans l'await ci-dessous, cette fermeture arrivait APRÈS coup,
+ * juste après que loadContentInMainSidebar ait ouvert le formulaire — d'où
+ * un formulaire qui s'affichait puis se refermait aussitôt tout seul
+ * (invisible au premier clic, correct au second une fois le mode déjà
+ * actif, donc changeTimelineMode devenue un no-op) (#412 bis).
+ *
+ * @see loadContentInMainSidebar
+ * @see createReponse
+ */
+
+async function callEvenementCreer() {
+	await changeTimelineMode('blogs');
+	expandSidebar();
+	setFullscreenModeToCols(false);
+	updateMenuIcon(['blogs'], 'mainView');
+	loadContentInMainSidebar(CCN.projet.url_popup_evenement_creer, null, "publication_article");
+}
+
+/**
+ * Charge le formulaire de création d'une nouvelle mission (menu "Publier >
+ * Une nouvelle mission") en plein écran, contrairement à une réponse à une
+ * consigne existante (cf createReponse) qui reste affichée en colonnes pour
+ * garder la consigne visible à côté.
+ *
+ * @param {number} id_rubrique_auteur
+ *
+ * @see createReponse
+ * @see setFullscreenModeToCols
+ */
+
+function callNouvelleMission(id_rubrique_auteur) {
+	expandSidebar();
+	setFullscreenModeToCols(false);
+	createReponse(0, id_rubrique_auteur, 0);
+}
+
+/**
  * Appelle le chargement d'un article jalon ("Cap sur l'année" / "La Rencontre")
  * dans la sidebar principale.
  *
- * @param {number} id_article
+ * @param {Boolean} est_debut
  *
  * @see loadContentInMainSidebar
  */
 
-function callArticleJalon(id_article) {
+function callArticleJalon(est_debut) {
+	const id_article = est_debut ? CCN.idArticleCapSurAnnee : CCN.idArticleLaRencontre;
 	if (!Number.isInteger(Number(id_article)) || id_article <= 0) return;
 	changeTimelineMode('consignes');
 	setFullscreenModeToCols(true);
 
-	const url = "./spip.php?page=article&id_article=" + id_article + "&type_objet=consignes&mode=ajax-detail";
+	// Même zoom qu'une consigne (cf showInTimeline dans consigne.js) :
+	// la fenêtre affiche le même nombre de jours (nombre_jours_max de la
+	// consigne voisine, 30 à défaut) et se positionne sur le jalon
+	// (début de l'année pour « Cap sur l'année », fin pour « La Rencontre »).
+	const consigneVoisine = est_debut
+		? CCN.consignes[0]
+		: CCN.consignes[CCN.consignes.length - 1];
+	const nombre_jours = consigneVoisine ? consigneVoisine.nombre_jours_max : 30;
+	const x_dest = est_debut
+		? 0
+		: CCN.projet.nombre_jours_total - nombre_jours;
+	CCN.projet.showRangeOfTimeline(nombre_jours, x_dest, 0);
+
+	const url = `./spip.php?page=article&id_article=${id_article}&est_debut=${est_debut}&type_objet=jalon&mode=ajax-detail`;
 	loadContentInMainSidebar(
 		url,
 		() => {
 			updateUrl(
 				{
-					'type_objet': 'consignes',
+					'type_objet': 'jalon',
 					'id_objet': id_article,
 					'id_article': id_article,
-					'page': 'article'
-				}, "", "./spip.php?page=article&id_article=" + id_article + "&mode=complet"
+					'page': 'article',
+					'est_debut': est_debut,
+				}, "", `./spip.php?page=article&id_article=${id_article}&est_debut=${est_debut}&mode=complet`
 			);
 		},
 		"consigne"
@@ -766,6 +847,7 @@ function callArticleEvenement(id_objet, type_objet) {
 	changeTimelineMode('evenements');
 	setFullscreenModeToCols(false);
 	updateMenuIcon(['evenements'], 'mainView');
+	flouterLesBullesEtLosangesNonSelectionnes(id_objet)
 
 	const url = CCN.projet.url_popup_evenement + "&page=" + type_objet + "&id_" + type_objet + "=" + id_objet;
 	loadContentInMainSidebar(
@@ -793,17 +875,17 @@ function callArticleEvenement(id_objet, type_objet) {
  *
  * @see loadContentInMainSidebar
  */
-function createReponse(id_consigne, id_rubrique_classe, numero) {
+function createReponse(id_consigne, id_rubrique_auteur, numero) {
 	changeTimelineMode('consignes');
 
 	const consigneData = CCN.consignes && CCN.consignes.find(c => c.id == id_consigne);
 	const nextConsigne = consigneData ? CCN.consignes.find(c => c.numero === consigneData.numero + 1) : null;
 	const dateLimite   = nextConsigne ? nextConsigne.data.date_texte : '';
 	const rang         = consigneData ? consigneData.numero : (numero || '');
-
-	const url = CCN.projet.url_popup_reponseajout + "&id_consigne=" + id_consigne + "&id_rubrique=" + id_rubrique_classe + "&rang=" + rang + "&date_limite=" + dateLimite;
-	loadContentInMainSidebar(url, null, "publication_mission");
+	const url = CCN.projet.url_popup_reponseajout + "&id_consigne=" + id_consigne + "&id_rubrique=" + id_rubrique_auteur + "&rang=" + rang + "&date_limite=" + dateLimite;
+	loadContentInMainSidebar(url, null, "publication_article");
 }
+
 /**
  * Cherche la réponse correspondant à un id_reponse dans CCN.consignes.
  *
@@ -813,7 +895,11 @@ function createReponse(id_consigne, id_rubrique_classe, numero) {
 function findReponseById(id_reponse) {
 	for (const consigne of CCN.consignes) {
 		for (const reponse of consigne.reponses) {
-			if (reponse.id === id_reponse) {
+			// == et non === : reponse.id est un nombre (JSON), id_reponse peut
+			// être une chaîne (lien direct/F5, cf setContentFromState() qui
+			// transmet id_objet tel que lu dans l'URL) — comme partout ailleurs
+			// dans ce fichier (showConsigneInTimeline, showReponseInTimeline).
+			if (reponse.id == id_reponse) {
 				return { consigne, reponse };
 			}
 		}
@@ -947,7 +1033,7 @@ function updateReponseConnecteurs(reponseObject, ui) {
 	const timelineTop = CCN.timelineLayerConsignes.offset().top;
 	const timelineHeight = CCN.timelineLayerConsignes.height();
 	const picto = reponseDOM.find(".picto_nombre_commentaires")
-	const cardMaxHeight = picto ? picto.offset().top : reponseDOM.offset().top
+	const cardMaxHeight = picto.length>0 ? picto.offset().top : reponseDOM.offset().top
 
 	const x1 = consigneDOM.offset().left + consigneDOM.outerWidth();
 	const y1 = consigneDOM.offset().top  + consigneDOM.outerHeight() / 2 - timelineTop;
@@ -1068,7 +1154,7 @@ function initMissionTabs() {
  *
  * @param {string} url - URL de la page à charger avec AJAX
  * @param {?function(string)} callback - Appelé avec la réponse une fois le contenu chargé
- * @param {string} typeContenu - Type de contenu chargé : <tt>consigne</tt>, <tt>reponse</tt>, <tt>publication_mission</tt>…
+ * @param {string} typeContenu - Type de contenu chargé : <tt>consigne</tt>, <tt>reponse</tt>, <tt>publication_article</tt>…
  *
  * @see loadContentInLateralSidebar
  */
@@ -1077,12 +1163,26 @@ function loadContentInMainSidebar(url, callback, typeContenu) {
 	showSidebar();
 	emptyMainSidebar();
 
-	$('#sidebar_main_inner').load(url, function (response, status, xhr) {
+	// Purge &onglet=... laissé par custom-tabs.js (replaceState au clic d'un
+	// onglet, cf initMissionTabs) : sinon il fuite sur ce nouveau contenu,
+	// dont #mission-tabs est réinitialisé plus bas et relirait ce paramètre
+	// périmé pour forcer l'onglet d'un objet qui n'a rien à voir avec celui
+	// où il a été posé (ex: onglet "commentaires" d'une mission qui force
+	// l'onglet "commentaires" sur la réponse de classe cliquée ensuite).
+	const urlSansOnglet = new URL(window.location.href);
+	if (urlSansOnglet.searchParams.has('onglet')) {
+		urlSansOnglet.searchParams.delete('onglet');
+		window.history.replaceState(null, '', urlSansOnglet);
+	}
 
-		if (status === "error") {
-			if (CCN.debug) { console.error("Erreur de chargement :", xhr.status, xhr.statusText); }
-			return;
-		}
+	// $.get() plutôt que $(elem).load(url) : .load() coupe silencieusement
+	// l'url au premier espace et traite le reste comme un sélecteur jQuery à
+	// appliquer sur la réponse — une valeur imprévue (id, date...) contenant
+	// un espace dans l'url casse le chargement avec une erreur Sizzle
+	// "unrecognized expression" au lieu d'un simple 404/erreur réseau.
+	$.get(url).done(function (response) {
+
+		$('#sidebar_main_inner').html(response);
 
 		if (!response || response.trim() === "") {
 			if (CCN.debug) { console.warn(CCN.lang.reponse_vide); }
@@ -1096,9 +1196,8 @@ function loadContentInMainSidebar(url, callback, typeContenu) {
 			initMissionTabs();
 			initCommentaires();
 		}
-		if(typeContenu === "publication_mission") {
-			// initCompteurCaracteres()
-			initPublierFormulaire();
+		if(typeContenu === "publication_article") {
+			initCommentaires();
 		}
 
 		// Diaporama images/PDF du portfolio de pièces jointes (#350) : le
@@ -1115,6 +1214,10 @@ function loadContentInMainSidebar(url, callback, typeContenu) {
 			callback(response);
 		}
 
+		antifloodHashChange = false;
+	}).fail(function (xhr, status) {
+		if (CCN.debug) { console.error("Erreur de chargement :", xhr.status, xhr.statusText); }
+		$('body').removeClass('loading');
 		antifloodHashChange = false;
 	});
 }
@@ -1186,7 +1289,6 @@ function setFullscreenModeToCols(setCols) {
 function _blankMainSidebarTemplates(key) {
 	const templates = {
 		'travail_en_cours': `<div class="sidebar_bubble"><div class="fiche_titre couleur_texte_ressources couleur_ressources0"><div class="texte"><div class="titre">${CCN.lang.sidebar_travail_en_cours_titre}</div></div></div></div><div class="sidebar_bubble sidebar_bubble_blank">${CCN.lang.sidebar_travail_en_cours_texte}</div>`,
-		'livrables':        `<div class="sidebar_bubble"><div class="fiche_titre couleur_texte_livrables couleur_livrables0"><div class="texte"><div class="titre">${CCN.lang.sidebar_livrables_titre}</div></div></div></div><div class="sidebar_bubble sidebar_bubble_blank">${CCN.lang.sidebar_livrables_texte}</div>`,
 		'ressources':       `<div class="sidebar_bubble"><div class="fiche_titre couleur_texte_ressources couleur_ressources0"><div class="texte"><div class="titre">${CCN.lang.sidebar_ressources_titre}</div></div></div></div><div class="sidebar_bubble sidebar_bubble_blank">${CCN.lang.sidebar_ressources_texte}</div>`,
 	};
 	return templates[key];
@@ -1248,17 +1350,17 @@ function selectBlog(blogId) {
 	timelineItem.classList.add("blured")
 }
 
-function deflouterToutesLesBulles() {
-	document.querySelectorAll('.article_blog_container').forEach(bulle => {
-		bulle.classList.remove('flou');
+function deflouterToutesLesBullesEtLosanges() {
+	document.querySelectorAll('.article_blog_container, .article_evenement_container').forEach(bulleOuLosange => {
+		bulleOuLosange.classList.remove('flou');
 	});
 }
 
-function flouterLesBullesNonSelectionnees(idBulleSelectionnee) {
-	const article_blog = document.querySelector(`#article_blogarticle_${idBulleSelectionnee}`)
-	const bulleSelectionnee = article_blog.closest(".timeline_item")
-	document.querySelectorAll('.article_blog_container').forEach(bulle => {
-		bulle.classList.add('flou');
+function flouterLesBullesEtLosangesNonSelectionnes(idSelectionnee) {
+	const article_blog = document.querySelector(`#article_blogarticle_${idSelectionnee}, #article_evenementarticle_${idSelectionnee}`)
+	const elementSelectionnee = article_blog.closest(".timeline_item")
+	document.querySelectorAll('.article_blog_container, .article_evenement_container').forEach(bulleOuLosange => {
+		bulleOuLosange.classList.add('flou');
 	})
-	bulleSelectionnee.classList.remove('flou');	
+	elementSelectionnee.classList.remove('flou');	
 }

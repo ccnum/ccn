@@ -1,0 +1,10 @@
+#CACHE{0}
+[(#REM) Extrait de noisettes/sommaire.html (cache de 48h) : ce test de rôle
+(issue 401 - un élève ne doit pas voir "la salle des profs") doit rester
+dynamique par visiteur, sinon la visibilité de l'icône se fige pendant 48h
+sur celle du premier visiteur ayant déclenché la mise en cache de la page
+(cf noisettes/inc/actus_timeline.html qui fait le même test, déjà en cache
+désactivé pour cette raison). ]
+[(#SESSION{role}|thematique_role_voit_salle_profs|oui)
+	[(#MODELE{logo_menu}{valeur=evenement}{class=tooltip menu_logo_evenements}{filter=.ressource_evenements}{onclick=changeTimelineMode('evenements');}{title=<:thematique:salle_des_pros:>})]
+]

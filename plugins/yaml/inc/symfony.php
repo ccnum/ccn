@@ -20,6 +20,7 @@ use Symfony\Component\Yaml\Exception\ParseException;
  *        - 'indent' : nombre d'espaces pour chaque niveau d'indentation, 2 par défaut.
  *        - 'flags'  : combinaison des flags DUMP_* supportés par la fonction (voir documentation).
  *
+ * @internal
  * @return string
  *        Chaîne YAML construite.
  */
@@ -47,18 +48,33 @@ function symfony_yaml_encode($structure, $options = []) {
  *
  * @param string $input
  *        La chaîne YAML à décoder.
+ * 
+ * @param array|bool $options
  *        Tableau associatif des options du parsing. Cette librairie accepte:
  *        - 'include'    : si vrai indique qu'il faut traiter les inclusions YAML. Cela implique de forcer le flag
  *                         PARSE_CUSTOM_TAGS
  *        - 'flags'      : combinaison des flags PARSE_* supportés par la fonction (voir documentation).
  *        - 'show_error' : indicateur d'affichage des erreurs de parsing, false par défaut.
+ *        Un booléen est encore accepté : c'est l'ancienne signature `$show_error`, antérieure à 2018.
+ * @param string $erreur
+ *        Passé par référence : reçoit le message d'erreur d'analyse, ou une chaine vide si tout s'est bien
+ *        passé. C'est le seul moyen fiable de détecter un échec, la valeur de retour ne pouvant pas le
+ *        signaler — un document YAML valide peut valoir `false`.
  *
+ * @internal
  * @return bool|mixed
- *        Structure PHP produite par le parsing de la chaîne YAML.
+ *        Structure PHP produite par le parsing de la chaîne YAML, `false` en cas d'erreur d'analyse.
  */
-function symfony_yaml_decode($input = true, $options = []) {
+function symfony_yaml_decode($input, $options = [], &$erreur = null) {
 
+	$erreur = '';
 	$parsed = false;
+
+	// Compatibilité ascendante : jusqu'en 2018 le second argument était `$show_error`, un booléen.
+	// L'écriture subsiste dans la zone (champs_extras_interface/formulaires/importer_champs_extras.php).
+	if (is_bool($options)) {
+		$options = ['show_error' => $options];
+	}
 
 	// Traitement des options du parsing.
 	$flags = 0;
@@ -69,12 +85,13 @@ function symfony_yaml_decode($input = true, $options = []) {
 	try {
 		$parsed = Yaml::parse($input, $flags);
 	} catch (ParseException $exception) {
-		if ((is_bool($options) and $options) or (!empty($options['show_error']))) {
-			printf('Unable to parse the YAML string: %s', $exception->getMessage());
+		$erreur = $exception->getMessage();
+		if (!empty($options['show_error'])) {
+			printf('Unable to parse the YAML string: %s', $erreur);
 		}
 
 		// Pour compenser l'absence par défaut d'erreurs, on loge l'erreur dans les logs SPIP.
-		spip_log("Erreur d'analyse YAML : " . $exception->getMessage(), 'yaml' . _LOG_ERREUR);
+		spip_log("Erreur d'analyse YAML : " . $erreur, 'yaml' . _LOG_ERREUR);
 	}
 
 	return $parsed;

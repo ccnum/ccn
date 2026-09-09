@@ -28,24 +28,12 @@ options:
           label_case: '<:saisies:option_horaire_label_case:>'
           valeur_oui: 'oui'
       -
-        saisie: 'input'
-        options:
-          nom: 'defaut'
-          label: '<:saisies:option_defaut_label:>'
-          size: 50
-      - 'inclure:saisies/_base/explication.yaml'
-  -
-    saisie: 'fieldset'
-    options:
-      nom: 'utilisation'
-      label: '<:saisies:option_groupe_utilisation:>'
-    saisies:
-      -
         saisie: 'selection'
         options:
           nom: 'heure_pas'
           label: '<:saisies:option_heure_pas_label:>'
           explication: '<:saisies:option_heure_pas_explication:>'
+          afficher_si: '@horaire@ == "oui"'
           data:
             1: '1 minute'
             2: '2 minutes'
@@ -58,6 +46,19 @@ options:
           options:
             min: 1
             max: 30
+      -
+        saisie: 'input'
+        options:
+          nom: 'defaut'
+          label: '<:saisies:option_defaut_label:>'
+          size: 50
+      - 'inclure:saisies/_base/explication.yaml'
+  -
+    saisie: 'fieldset'
+    options:
+      nom: 'utilisation'
+      label: '<:saisies:option_groupe_utilisation:>'
+    saisies:
       -
         saisie: 'oui_non'
         options:

@@ -1,8 +1,10 @@
-10L | plugins/thematique/formulaires/joindre_document_mission.html:1 <-> plugins/thematique/formulaires/joindre_video.html:1
-12L | plugins/thematique/squelettes/noisettes/sidebar/consigne_pour_autre.html:1 <-> plugins/thematique/squelettes/noisettes/sidebar/consigne_pour_classe.html:1
-13L | plugins/thematique/squelettes/noisettes/ajax/article-forum-detail.html:135 <-> plugins/thematique/squelettes/noisettes/inc/ajouter_document.html:40
+11L | plugins/thematique/notifications/article_publie_agenda.html:25 <-> plugins/thematique/notifications/forum_poste_article.html:28
+11L | plugins/thematique/notifications/article_publie_generique.html:36 <-> plugins/thematique/notifications/forum_poste_article.html:28
+11L | plugins/thematique/notifications/article_publie_ressource.html:25 <-> plugins/thematique/notifications/forum_poste_article.html:28
+11L | plugins/thematique/notifications/article_publie_salle_pros.html:25 <-> plugins/thematique/notifications/forum_poste_article.html:28
+21L | plugins/thematique/notifications/article_publie_reponse.html:35 <-> plugins/thematique/notifications/forum_poste_article.html:28
 29L | plugins/thematique/formulaires/forum0.html:91 <-> plugins/thematique/formulaires/forum1.html:101
 6L | plugins/thematique/formulaires/forum0.html:39 <-> plugins/thematique/formulaires/forum1.html:40
 8L | plugins/thematique/formulaires/forum0.html:22 <-> plugins/thematique/formulaires/forum1.html:22
 8L | plugins/thematique/formulaires/forum0.html:30 <-> plugins/thematique/formulaires/forum1.html:30
-9L | plugins/thematique/squelettes/noisettes/sidebar/consigne_pour_classe.html:4 <-> plugins/thematique/squelettes/noisettes/sidebar/consigne_pour_intervenant.html:32
+9L | plugins/thematique/formulaires/joindre_document_mission.html:1 <-> plugins/thematique/formulaires/joindre_video.html:1

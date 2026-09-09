@@ -8,34 +8,39 @@
 [(#ENV{scan}|=={noisettes}|oui)
 	#SET{options, #GET{options}|array_merge{#ARRAY{include, #EVAL{true}}}}
 ]
-<B_scans>
+#SET{bilan, #GET{fichiers}|yaml_demo_scanner{#GET{options}}}
+
 <h2 class="h2">YAML DECODE :[ TOUTES LES (#ENV{scan}|strtoupper) DISPONIBLES]</h2>
+
+<B_scans>
+<p>Tous les fichiers <code>[(#GET{dossier})]*.yaml</code> trouvés dans le chemin SPIP sont décodés.
+Ce ne sont pas des fichiers du plugin : c'est la mesure la plus honnête de ce qu'il sait lire.</p>
+
 <table class="spip">
-	<caption><strong>Comparaisons des tableaux issus du decodage</strong></caption>
+	<caption><strong>Décodage de [(#GET{bilan}|count)] fichier(s)</strong></caption>
 	<thead>
 		<tr class="row_first">
-			<th>[(#ENV{scan}|ucfirst)]</th>
-		<BOUCLE_head(DATA) {source table, #ENV{menu_librairies}}>
-			<th>#VALEUR</th>
-		</BOUCLE_head>
+			<th>Fichier</th>
+			<th>Type</th>
+			<th>Entrées</th>
+			<th>Durée</th>
+			<th>$erreur</th>
+			<th>Verdict</th>
 		</tr>
 	</thead>
 	<tbody>
-<BOUCLE_scans(DATA) {source table, #GET{fichiers}}>
-	#SET{comparaison, #VALEUR|comparer_decodage{#ENV{menu_librairies}|array_keys}, #GET{options}}
-	<B_ligne_scan>
-		<tr>
-			<th>
-				[(#_scans:CLE|basename{.yaml})]
-			</th>
-	<BOUCLE_ligne_scan(DATA) {source table, #GET{comparaison}}>
-			<th>
-				[(#VALEUR)]
-			</th>
-	</BOUCLE_ligne_scan>
+	<BOUCLE_scans(DATA) {source table, #GET{bilan}}>
+		<tr class="[(#COMPTEUR_BOUCLE|alterner{row_odd,row_even})][(#VALEUR|table_valeur{verdict}|non) echec]">
+			<th>[(#VALEUR|table_valeur{nom})]</th>
+			<td><code>[(#VALEUR|table_valeur{type})]</code></td>
+			<td>[(#VALEUR|table_valeur{entrees})]</td>
+			<td>[(#VALEUR|table_valeur{duree})]</td>
+			<td>[(#VALEUR|table_valeur{erreur}|sinon{<em>vide</em>})]</td>
+			<td>[(#VALEUR|table_valeur{verdict}|?{✅,❌})]</td>
 		</tr>
-	</B_ligne_scan>
-</BOUCLE_scans>
+	</BOUCLE_scans>
 	</tbody>
 </table>
 </B_scans>
+<p>Aucun fichier <code>[(#GET{dossier})]*.yaml</code> n'a été trouvé sur ce site.</p>
+<//B_scans>

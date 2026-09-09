@@ -1,18 +1,22 @@
 #CACHE{60}
 
-[(#REM) Pré-passe silencieuse : collecte les ids de réponses (articles) pour
-compter leurs messages de forum en une seule requête groupée
-(thematique_comptes_forums), plutôt qu'une requête FORUMS par réponse dans
-la boucle d'affichage ci-dessous. ]
-#SET{ids_reponses,#ARRAY}
+[(#REM) Pré-passe silencieuse : collecte les ids des consignes ET de leurs
+réponses (articles) pour compter leurs messages de forum respectifs en une
+seule requête groupée (thematique_comptes_forums), plutôt qu'une requête
+FORUMS par article dans la boucle d'affichage ci-dessous. La consigne a son
+propre décompte (#399 : la pastille de la card mission doit refléter les
+commentaires sur l'article de la mission, pas la somme de ceux de ses
+réponses — cf main.js:dataForConsigne.nombre_commentaires). ]
+#SET{ids_comptage_forum,#ARRAY}
 <BOUCLE_rubrique_ids(RUBRIQUES){titre_mot=consignes}{!par id_rubrique}{tout}>
 	<BOUCLE_consigne_ids(ARTICLES){branche}{date>=#CONST{_DATE_DEBUT}}{date<=#CONST{_DATE_FIN}}{!titre_mot IN cap-sur-l-annee,la-rencontre}>
+		#SET_PUSH{ids_comptage_forum,#ID_ARTICLE}
 		<BOUCLE_reponse_ids(ARTICLES){id_consigne=#ID_ARTICLE}>
-			#SET_PUSH{ids_reponses,#ID_ARTICLE}
+			#SET_PUSH{ids_comptage_forum,#ID_ARTICLE}
 		</BOUCLE_reponse_ids>
 	</BOUCLE_consigne_ids>
 </BOUCLE_rubrique_ids>
-#SET{comptes_forum,#GET{ids_reponses}|thematique_comptes_forums}
+#SET{comptes_forum,#GET{ids_comptage_forum}|thematique_comptes_forums}
 
 #SET{n_consigne,0}
 {
@@ -22,7 +26,7 @@ la boucle d'affichage ci-dessous. ]
 	[(#REM) Les 2 articles jalons du projet ("Cap sur l'année"/"La Rencontre",
 	cf thematique_rentree_annee.php) ne sont pas de vraies missions (pas
 	d'image de classe ni de réponses associées) : exclus ici. ]
-	<BOUCLE_consigne(ARTICLES){branche}{par date}{date>=#CONST{_DATE_DEBUT}}{date<=#CONST{_DATE_FIN}}{!titre_mot IN cap-sur-l-annee,la-rencontre}>
+	<BOUCLE_consigne(ARTICLES){branche}{doublons}{par date}{date>=#CONST{_DATE_DEBUT}}{date<=#CONST{_DATE_FIN}}{!titre_mot IN cap-sur-l-annee,la-rencontre}>
 		#SET{intervenant_nom,''}
 		#SET{id_auteur_consigne,0}
 		<BOUCLE_auteur_consigne(AUTEURS){id_article}{0,1}>
@@ -54,6 +58,7 @@ la boucle d'affichage ci-dessous. ]
 			"image_generique": [(#GET{image_generique}|json_encode)],
 			"y": [(#Y|sinon{0})],
 			"livrable": #GET{livrable},
+			"commentaires": [(#GET{comptes_forum}|table_valeur{#ID_ARTICLE,0})],
 			"reponses": [
 			<BOUCLE_reponse(ARTICLES){id_consigne=#ID_ARTICLE}{par id_rubrique}>
 				[(#GET{n_reponse}|>{0}|oui),]{"id":#ID_ARTICLE,"classe_id":#ID_RUBRIQUE,"date":"[(#DATE|affdate{'Y-m-d'})]","texte":[(#TITRE|couper{60}|json_encode)],"commentaires":[(#GET{comptes_forum}|table_valeur{#ID_ARTICLE,0})],"y":[(#Y|sinon{0})]}

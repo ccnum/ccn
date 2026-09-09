@@ -1,0 +1,52 @@
+[(#REM)
+	Liste des documents joints via le formulaire "joindre_document" dans
+	sidebar-etape-2-container (cf formulaires/public_publier_article.html),
+	rechargée en ajax (ancre "documents") juste après chaque upload — c'est
+	le mécanisme natif de SPIP (cf joindre_document.php:ajaxReload('documents')
+	dans plugins-dist/medias), pas un code de rechargement maison.
+
+	Contrairement à noisettes/inc/ajouter_document.html (qui boucle sur
+	DOCUMENTS{id_article}), on liste ici par id_objet/objet bruts
+	(table documents_liens) : id_objet peut valoir un id_article réel, ou
+	l'id_objet temporaire -id_auteur tant que l'article n'existe pas encore
+	(cf thematique_id_objet_document_temp).
+
+	{statut==.*} : tant que l'article n'existe pas, les documents restent en
+	statut "prop" (rien ne les institue) — sans ce critère explicite, la
+	boucle DOCUMENTS applique le filtrage public par défaut
+	(quete_condition_statut) qui masque tout ce qui n'est pas "publie" pour
+	un visiteur non admin, donc jamais rien ici.
+
+	Classes CSS ("bigup_fichiers"/"fichier"/"description"/"infos"/...)
+	volontairement identiques à saisies/inc-bigup_liste_fichiers.html
+	(plugin bigup) pour réutiliser son css existant.
+]
+#CACHE{0}
+<div id="documents_publier_article" class="bigup_fichiers">
+	<BOUCLE_liens(documents_liens){id_objet}{objet}{vu=non}{fusion id_document}{par id_document}>
+		<BOUCLE_doc(DOCUMENTS){id_document}{statut==.*}>
+			<div class="fichier" id="doc#ID_DOCUMENT">
+				<div class="description">
+					[(#MIME_TYPE|match{image}|oui)
+						<div class="previsualisation [(#EXTENSION)]"><span style="background-image:url([(#FICHIER|image_reduire{100})]);"></span></div>
+					]
+					[(#MIME_TYPE|match{image}|non)
+						<div class="vignette_extension [(#EXTENSION)]"><span></span></div>
+					]
+					<div class="infos">
+						<span class="name"><strong>[(#FICHIER|basename)]</strong></span>
+						<span class="size">[(#TAILLE|taille_en_octets)]</span>
+						[(#MODE|=={image}|oui)#SET{raccourci_prefixe, img}]
+						[(#MODE|=={image}|non)#SET{raccourci_prefixe, doc}]
+						<span class="raccourci" onclick="copierRaccourciDocument(this)" title="<:thematique:copier_raccourci:>">&lt;#GET{raccourci_prefixe}#ID_DOCUMENT&gt;</span>
+					</div>
+					<div class="actions">
+						[(#AUTORISER{dissocierdocuments,#ENV{objet},#ENV{id_objet}}|oui)
+							[(#BOUTON_ACTION{<:thematique:supprimer_document:>,#URL_ACTION_AUTEUR{dissocier_document,#ENV{id_objet}-#ENV{objet}-#ID_DOCUMENT-suppr,#SELF},'ajax submit',<:thematique:confirmation_supprimer_document:>})]
+						]
+					</div>
+				</div>
+			</div>
+		</BOUCLE_doc>
+	</BOUCLE_liens>
+</div>

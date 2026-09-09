@@ -1,10 +1,10 @@
 <paquet
 	prefix="thematique"
 	categorie="squelette"
-	version="3.4.0"
+	version="3.4.1"
 	etat="stable"
 	logo="th.png"
-	schema="3.4.0"
+	schema="3.4.1"
 	documentation="http://www.laclasse.com"
 	compatibilite="[4.3.2;4.*]"
 >

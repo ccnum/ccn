@@ -5,17 +5,18 @@
 	[(#SET{date_heure,[(#ENV{date}|affdate{'d/m/Y H:i'})]})]
 	[(#SET{texte,[(#ENV{texte}|propre)]})]
 
-
-	<INCLURE{fond=noisettes/inc/forumv2/forum_card,
-		nombre_reponses=0,
-		id_auteur=#SESSION{id_auteur},
-		nom_auteur=#ENV{nom_auteur},
-		date_heure=#GET{date_heure},
-		texte=#GET{texte},
-		id_rubrique_classe=(#SESSION{id_auteur}|classe_id_rubrique_auteur),
-		est_une_previsualisation=oui,
-		is_root=oui
-	}>
+	<div class="forum-commentaire is-root">
+		<INCLURE{fond=noisettes/inc/forumv2/forum_card,
+			nombre_reponses=0,
+			id_auteur=#SESSION{id_auteur},
+			nom_auteur=#ENV{nom_auteur},
+			date_heure=#GET{date_heure},
+			texte=#GET{texte},
+			id_rubrique_classe=(#SESSION{id_auteur}|classe_id_rubrique_auteur),
+			est_une_previsualisation=oui,
+			is_root=oui
+		}>
+	</div>
 	<div class="footer-creation-forum">
 		<div class="forum-actions">
 			<button type="submit" name="publication_forum_action" value="rediger" class="link-button cancel-button"><:thematique:retour:></button>

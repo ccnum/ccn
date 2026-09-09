@@ -11,6 +11,14 @@
 			$('#annee_scolaire_more').hide();
 		}
 
+		// La modal de login SPIP natif se ferme au rechargement de page (pas
+		// de classe .open par défaut). En cas d'erreur (identifiants
+		// invalides), le formulaire se réaffiche avec le message dans le
+		// HTML, mais caché derrière la modal fermée si on ne la rouvre pas.
+		if ($('#login_modal .reponse_formulaire_erreur').text().trim() !== '') {
+			$('#login_modal').addClass('open');
+		}
+
 		/**
 		 * Referme toutes les ".selectbox" actuellement ouvertes.
 		 */
@@ -64,6 +72,19 @@
 				$options.on('click', '.select-option', function (e) {
 					e.stopPropagation();
 					var $li = $(this);
+
+					// Option "Se connecter" (formulaire de login SPIP natif,
+					// CIOIDC désactivé) : ouvre la modal dédiée plutôt que de
+					// traiter le clic comme une sélection d'option classique.
+					// stopPropagation() ci-dessus empêche tout listener délégué
+					// sur document de voir ce clic, d'où l'ouverture ici même.
+					if ($li.find('.js-ouvrir-login-modal').length) {
+						e.preventDefault();
+						$('#login_modal').addClass('open');
+						$sel.removeClass('open');
+						return;
+					}
+
 					if (rememberChoice && $li.hasClass("actif")) {
 						return;
 					}
@@ -95,6 +116,14 @@
 
 		// close on outside click
 		$(document).on('click', function () { closeAllSelects(); });
+
+		// Clic sur le fond de la modal de login (en dehors de
+		// .login-modal-content) : on ferme.
+		$(document).on('click', '.login-modal.open', function (e) {
+			if (e.target === this) {
+				$(this).removeClass('open');
+			}
+		});
 	});
 
 })(jQuery);

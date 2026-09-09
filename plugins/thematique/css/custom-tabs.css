@@ -1,7 +1,6 @@
 .ctabs {
     display: flex;
     flex-direction: column;
-    padding: 18px;
     max-height: 100%;
 }
 

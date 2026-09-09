@@ -17,6 +17,34 @@ if (!defined('_ECRIRE_INC_VERSION')) {
 define('_THEMATIQUE_EXTENSIONS_DOCUMENT_MISSION', ['gif', 'jpg', 'jpeg', 'png', 'mp3', 'pdf']);
 
 /**
+ * Valeur de l'attribut HTML accept pour le champ fichier de ce formulaire
+ * (".gif,.jpg,..."), à partir de _THEMATIQUE_EXTENSIONS_DOCUMENT_MISSION.
+ *
+ * Ne peut pas être écrite en dur dans le squelette (`accept=.gif,.jpg,...`) :
+ * le compilateur SPIP découpe les arguments d'un `#SAISIE_XXX{...}` sur
+ * chaque virgule *avant* toute prise en compte des guillemets (ce n'est pas
+ * le tokenizer standard des filtres), donc une valeur avec virgules littérales
+ * y est systématiquement tronquée à son premier fragment (`.gif` seul,
+ * cf issue #407) — y compris entre guillemets. Passer par une balise
+ * calculée (`#GET{...}`) contourne le problème : elle ne contient aucune
+ * virgule dans le squelette source, seulement à l'exécution.
+ *
+ * Appelée comme filtre : `#VAL{1}|thematique_extensions_document_mission_accept}`
+ * (le premier paramètre n'est qu'un porteur, SPIP exige toujours une valeur pipée).
+ *
+ * @param mixed $valeur_ignoree Non utilisé, cf. remarque d'appel ci-dessus
+ * @return string
+ */
+function thematique_extensions_document_mission_accept($valeur_ignoree = null) {
+	static $accept = null;
+	if ($accept === null) {
+		$accept = implode(',', array_map(fn ($ext) => ".$ext", _THEMATIQUE_EXTENSIONS_DOCUMENT_MISSION));
+	}
+
+	return $accept;
+}
+
+/**
  * Trouve le ou les fichiers envoyés dans $_FILES, restreints aux extensions
  * autorisées pour une mission.
  *

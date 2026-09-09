@@ -42,6 +42,7 @@ async function loadDemarrage(fichier) {
 	initProjet(data.projet);
 	initClasses(data.classes);
 	initConsignes(data.consignes);
+	initJalons(data.jalons);
 
 	// Seules les missions (classes + consignes) sont chargées au démarrage.
 	// Agenda (blogs) et blog pédagogique (evenements) sont chargés à la demande,
@@ -183,7 +184,6 @@ function initConsignes(data) {
 		dataForConsigne.image = jsonConsigne.image;
 		dataForConsigne.image_generique = jsonConsigne.image_generique;
 		dataForConsigne.y = jsonConsigne.y;
-		dataForConsigne.isLivrable = jsonConsigne.livrable;
 		dataForConsigne.isLastConsigne = (i==jsonConsignes.length-1)
 
 		if (indexY >= CCN.projet.liste_y_consignes.length) {
@@ -211,15 +211,16 @@ function initConsignes(data) {
 		dataForConsigne.reponses = [];
 
 		const liste_jours_max = [];
-		dataForConsigne.nombre_commentaires = 0;
+		// Commentaires sur l'article de la mission elle-même (#399), pas la
+		// somme de ceux de ses réponses (chacune affiche déjà les siens, cf
+		// dataForReponse.nombre_commentaires plus bas).
+		dataForConsigne.nombre_commentaires = jsonConsigne.commentaires || 0;
 
 		for (let j = 0; j < jsonReponses.length; j++) {
 			const date_jours_max = parseDate(jsonReponses[j].date);
 
 			const jours = parseFloat(Math.round((date_jours_max) / (24 * 60 * 60 * 1000))) - dataForConsigne.jour_consigne;
 			liste_jours_max.push(jours);
-
-			dataForConsigne.nombre_commentaires += jsonReponses[j].commentaires;
 
 			dataForConsigne.reponses.push(jsonReponses[j].classe_id);
 		}
@@ -243,7 +244,7 @@ function initConsignes(data) {
 		const nouvelleConsigne = new Consigne();
 		nouvelleConsigne.init(dataForConsigne);
 
-		let has_current_classe_already_answer = false;
+		let has_current_classe_already_answered = false;
 
 		for (let j = 0; j < jsonReponses.length; j++) {
 			const jsonReponse = jsonReponses[j];
@@ -283,16 +284,51 @@ function initConsignes(data) {
 			nouvelleConsigne.reponses.push(nouvelleReponse);
 
 			if (CCN.classeSelection > 0 && CCN.classeSelection == dataForReponse.classe_id) {
-				has_current_classe_already_answer = true;
+				has_current_classe_already_answered = true;
 			}
 		}
-
-		if (!has_current_classe_already_answer) {
-			nouvelleConsigne.showNewReponseButtonInTimeline();
+		if (CCN.role === 'prof') {
+			if (has_current_classe_already_answered) {
+				nouvelleConsigne.showMyReponseButtonInTimeline();
+			} else {
+				nouvelleConsigne.showNewReponseButtonInTimeline();
+			}
 		}
-
 		CCN.consignes.push(nouvelleConsigne);
 	}
+}
+
+function initJalons(data) {
+	const jsonJalons = data.jalons
+	$('.badge_timeline').each(function (){
+		const est_debut = $( this ).data().estDebut;
+		const _thisId = est_debut ? CCN.idArticleCapSurAnnee : CCN.idArticleLaRencontre;
+		const dataObject = jsonJalons.find(o=>o.id===_thisId)
+		if(dataObject) {
+			const y = dataObject.y
+			$( this ).css({"top": `${y*100}%`})
+
+		}
+		$( this ).draggable({
+			axis: "y",
+			cancel: '', // Force le drag and drop même s'il y a un button dans la consigne.
+			start: function (event, ui) {
+				$(this).addClass('no_event');
+			},
+			stop: function (event, ui) {
+				const yy = (ui.offset.top - CCN.projet.timeline.offset().top) / CCN.projet.timeline.height();
+				if (CCN.admin == 0) {
+					$.post("spip.php?page=ajax&mode=article-sauve-coordonnees", { id_objet: _thisId, type_objet: "article", X: 0, Y: yy });
+				}
+				this.y = yy;
+				// Réécrit les deux coords en %
+				$(this).css({
+					top:  (yy * 100) + '%',
+				});
+				$(this).removeClass('no_event');
+			}
+		});
+	})
 }
 
 /**
@@ -352,10 +388,8 @@ function updateBadgeJalon(prefixe, idArticle, statut) {
 	}
 
 	// L'image de fond du badge (étiquette + pastille "Article non publié"
-	// éventuelle) change selon le statut, cf les data-svg-publie /
-	// data-svg-non-publie posés dans sommaire.html.
-	const svg = nonPublie ? $badge.data('svg-non-publie') : $badge.data('svg-publie');
-	$badge.find('.badge_timeline_label_img').attr('src', svg);
+	// éventuelle) change selon le statut
+	$badge.toggleClass('est-publie', !nonPublie);
 	$badge.show();
 }
 

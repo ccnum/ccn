@@ -8,13 +8,35 @@
 	CCN.urlImgEvenement = "[(#CHEMIN{#ENV{chemin}/img/logo_evenement_#NOM_SITE_SPIP.png}|sinon{#ENV{chemin}/img/logo_evenement.png}|image_reduire{150,94}|extraire_attribut{src})]";
 
 	CCN.admin = [(#ENV{admin}|intval)];
-	CCN.idRestreint = [(#ENV{restreint}|sinon{0})];
+	CCN.idRestreint = [(#ENV{restreint}|intval)];
 	CCN.typeRestreint = [(#ENV{type_restreint}|json_encode)];
-	CCN.classeSelection = [(#ENV{restreint}|sinon{0})];
+	CCN.classeSelection = [(#ENV{restreint}|intval)];
+	CCN.role = "[(#ENV{role})]";
+
+
+	[(#REM)
+	Repli type_objet/id_objet à partir de id_article seul quand ils sont
+	absents de l'URL : callConsigne()/callReponse() (controleurs.js)
+	poussent une URL "?page=article&id_article=X&mode=complet" sans jamais
+	y encoder type_objet/id_objet (seulement dans l'état JS de
+	window.history, perdu au rechargement/F5 ou à l'ouverture d'un lien
+	partagé) — setContentFromState() ne se basant que sur type_objet+
+	id_objet pour rouvrir la popup, une mission/réponse rechargée
+	retombait sur la timeline entière malgré un id_article correct dans
+	l'URL. thematique_type_objet_article() donne le même type que celui
+	posé par callConsigne()/callReponse() ('consignes'/'travail_en_cours'),
+	à partir du seul id_article. ]
+	#SET{type_objet_init, #SELF|parametre_url{type_objet}}
+	#SET{id_objet_init, #SELF|parametre_url{id_objet}}
+	#SET{id_article_init, #SELF|parametre_url{id_article}}
+	[(#GET{type_objet_init}|non)[(#GET{id_article_init}|oui)
+		#SET{type_objet_init, #GET{id_article_init}|thematique_type_objet_article}
+		#SET{id_objet_init, #GET{id_article_init}}
+	]]
 
 	CCN.dateToShowAtInit = [(#ENV{vue_date,0}|json_encode)];
-	CCN.typePopupToShowAtInit = [(#ENV{type_objet,0}|json_encode)];
-	CCN.idObjetToShowAtInit = [(#ENV{id_objet,0}|json_encode)];
+	CCN.typePopupToShowAtInit = [(#GET{type_objet_init}|sinon{0}|json_encode)];
+	CCN.idObjetToShowAtInit = [(#GET{id_objet_init}|sinon{0}|json_encode)];
 	CCN.pageToShowAtInit = [(#SELF|parametre_url{page}|json_encode)];
 	CCN.idRubriqueToShowAtInit = [(#SELF|parametre_url{id_rubrique}|json_encode)];
 	CCN.idArticleToShowAtInit = [(#SELF|parametre_url{id_article}|json_encode)];
@@ -27,7 +49,7 @@
 		reponse: [(#EVAL{"json_encode(_T('thematique:reponse'))"})],
 		reponse_vide: [(#EVAL{"json_encode(_T('thematique:reponse_vide'))"})],
 		evenement: [(#EVAL{"json_encode(_T('thematique:evenement'))"})],
-		consigne_etape: [(#EVAL{"json_encode(_T('thematique:consigne_etape'))"})],
+		mission_numero: [(#EVAL{"json_encode(_T('thematique:mission_numero'))"})],
 		echec_de_la_supression: [(#EVAL{"json_encode(_T('thematique:echec_de_la_supression'))"})],
 		message_avant_supression_commentaire: [(#EVAL{"json_encode(_T('thematique:message_avant_supression_commentaire'))"})],
 		repondre_a_la_consigne: [(#EVAL{"json_encode(_T('thematique:repondre_a_la_consigne'))"})],
@@ -37,7 +59,6 @@
 		ma_reponse: [(#EVAL{"json_encode(_T('thematique:ma_reponse'))"})],
 		sidebar_travail_en_cours_titre: [(#EVAL{"json_encode(_T('thematique:sidebar_travail_en_cours_titre'))"})],
 		sidebar_travail_en_cours_texte: [(#EVAL{"json_encode(_T('thematique:sidebar_travail_en_cours_texte'))"})],
-		sidebar_livrables_titre: [(#EVAL{"json_encode(_T('thematique:sidebar_livrables_titre'))"})],
 		sidebar_livrables_texte: [(#EVAL{"json_encode(_T('thematique:sidebar_livrables_texte'))"})],
 		sidebar_ressources_titre: [(#EVAL{"json_encode(_T('thematique:sidebar_ressources_titre'))"})],
 		sidebar_ressources_texte: [(#EVAL{"json_encode(_T('thematique:sidebar_ressources_texte'))"})],
@@ -47,6 +68,7 @@
 		publier_nouvel_article: [(#EVAL{"json_encode(_T('thematique:publier_nouvel_article'))"})],
 		chargement_de: [(#EVAL{"json_encode(_T('thematique:chargement_de'))"})],
 		erreur_chargement_de: [(#EVAL{"json_encode(_T('thematique:erreur_chargement_de'))"})],
+		telecharger_document: [(#EVAL{"json_encode(_T('thematique:telecharger_document'))"})],
 		fermer_la_modale: [(#EVAL{"json_encode(_T('thematique:fermer_la_modale'))"})],
 		mois_courts: [
 			[(#EVAL{"json_encode(_T('thematique:mois_court_1'))"})], [(#EVAL{"json_encode(_T('thematique:mois_court_2'))"})],

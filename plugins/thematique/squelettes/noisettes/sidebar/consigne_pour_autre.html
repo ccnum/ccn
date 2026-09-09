@@ -7,6 +7,7 @@
 			id_article=#ENV{id_article},
 			env
 		} />
-		<INCLURE{fond=noisettes/sidebar/inc/onglet_commentaires_tab, env} />
+		#SET{libelle_onglet_commentaires, #VAL{thematique:titre_onglet_comentaire_pour_classe}|_T}
+		<INCLURE{fond=noisettes/sidebar/inc/onglet_commentaires_tab, libelle_onglet=#GET{libelle_onglet_commentaires}, env} />
 	</div>
 </div>

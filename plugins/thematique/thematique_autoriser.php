@@ -18,26 +18,34 @@ function autoriser_thematique_configurer_dist($faire, $type, $id, $qui, $opt) {
 }
 
 /**
- * Modération des forums attachés à un article (modifier/supprimer un
- * message) : réservée aux profs/intervenants/admins, jamais aux élèves —
- * y compris sur leurs propres messages. Les élèves ne doivent pouvoir que
- * publier. (issue #356)
+ * Suppression d'un commentaire de forum (issue #356), règle actée par
+ * ChristoErasme le 24/08 :
+ * - un élève ne peut jamais supprimer, même son propre message ;
+ * - un intervenant ne peut supprimer que ses propres messages ;
+ * - un prof peut supprimer ses propres messages, ou ceux d'un élève de sa
+ *   classe (comparaison des rubriques classe via thematique_id_rubrique_-
+ *   classe_prof/_auteur, pas juste "un élève quelconque") ;
+ * - un admin peut tout supprimer.
  *
- * Nom spécifique au type "article" (testé par SPIP avant la version
- * générique autoriser_modererforum) plutôt qu'une surcharge de
- * autoriser_modererforum() : ce nom générique est déjà défini par le
- * plugin autorite (plugins/autorite/inc/autoriser.php), le redéclarer
- * provoque un fatal "Cannot redeclare".
+ * Seule fonction d'autorisation pour cette action : le bouton "supprimer"
+ * (article-forum-detail.html, forum_succes.html) teste désormais
+ * #AUTORISER{forumsupprimer,...} directement, la même permission que
+ * l'action instituer_forum vérifie réellement — plus de double check
+ * incohérent entre affichage et action.
  */
-function autoriser_article_modererforum_dist($faire, $type, $id, $qui, $opt) {
-	include_spip('thematique_fonctions');
-	$role = thematique_donner_role($qui['id_auteur'] ?? 0);
-
-	return in_array($role, ['prof', 'intervenant', 'admin'], true);
-}
-
 function autoriser_forumsupprimer_dist($faire, $type, $id, $qui, $opt) {
-	if (!$qui['id_auteur']) {
+	$id_auteur_visiteur = intval($qui['id_auteur'] ?? 0);
+	if (!$id_auteur_visiteur) {
+		return false;
+	}
+
+	include_spip('thematique_fonctions');
+	$role_visiteur = thematique_donner_role($id_auteur_visiteur);
+
+	if ($role_visiteur === 'admin') {
+		return true;
+	}
+	if ($role_visiteur === 'eleve') {
 		return false;
 	}
 
@@ -45,17 +53,25 @@ function autoriser_forumsupprimer_dist($faire, $type, $id, $qui, $opt) {
 	if (!$forum) {
 		return false;
 	}
-
 	$id_auteur_commentaire = intval($forum['id_auteur']);
 
-	// L'auteur peut toujours supprimer son propre commentaire
-	if ($id_auteur_commentaire === intval($qui['id_auteur'])) {
+	// Ses propres messages : toujours autorisé (prof comme intervenant)
+	if ($id_auteur_commentaire === $id_auteur_visiteur) {
 		return true;
 	}
 
-	// Sinon, un compte non-élève peut supprimer le commentaire d'un élève
-	$role_visiteur = thematique_donner_role($qui['id_auteur']);
-	$role_auteur_commentaire = thematique_donner_role($id_auteur_commentaire);
+	// Intervenant : uniquement ses propres messages
+	if ($role_visiteur === 'intervenant') {
+		return false;
+	}
 
-	return $role_visiteur !== 'eleve' && $role_auteur_commentaire === 'eleve';
+	// Prof : le message d'un élève de sa classe uniquement
+	if (thematique_donner_role($id_auteur_commentaire) !== 'eleve') {
+		return false;
+	}
+
+	$id_rubrique_classe_prof = thematique_id_rubrique_classe_prof($id_auteur_visiteur);
+
+	return $id_rubrique_classe_prof
+		&& $id_rubrique_classe_prof === thematique_id_rubrique_classe_auteur($id_auteur_commentaire);
 }

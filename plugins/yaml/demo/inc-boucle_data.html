@@ -1,0 +1,35 @@
+<h2 class="h2">BOUCLE DATA — SOURCE YAML</h2>
+
+<p>La boucle <code>DATA</code> du noyau sait lire une source YAML sans que le squelette nomme le plugin :
+c'est <code>inc_yaml_to_array()</code> qui répond au <code>charger_fonction('yaml_to_array', 'inc')</code>
+de SPIP. Le fichier lu ici est local au plugin, aucun appel réseau.</p>
+
+<pre><code>&lt;BOUCLE_saisie(DATA){source yaml, &#35;CHEMIN{demo/test_saisie.yaml}}&gt;</code></pre>
+
+<B_saisie>
+<table class="spip">
+	<thead><tr class="row_first"><th>Clé</th><th>Valeur</th></tr></thead>
+	<tbody>
+	<BOUCLE_saisie(DATA){source yaml, #CHEMIN{demo/test_saisie.yaml}}>
+		<tr class="[(#COMPTEUR_BOUCLE|alterner{row_odd,row_even})]">
+			<th>#CLE</th>
+			<td>[(#VALEUR|print_r{1}|highlight_string{1})]</td>
+		</tr>
+	</BOUCLE_saisie>
+	</tbody>
+</table>
+<p>#TOTAL_BOUCLE entrée(s).</p>
+</B_saisie>
+<p><strong>La boucle n'a rien rendu.</strong></p>
+<//B_saisie>
+
+<h3 class="h3">Un document qui n'est pas un tableau</h3>
+<p>Un YAML scalaire ne peut pas peupler une boucle : <code>yaml_to_array()</code> rend alors un tableau
+vide, comme le noyau le fait pour le JSON, et la boucle est simplement vide — sans erreur.</p>
+
+<B_scalaire>
+<p>Inattendu : la boucle a rendu #TOTAL_BOUCLE entrée(s).</p>
+<BOUCLE_scalaire(DATA){source yaml, #CHEMIN{demo/test_scalaire.yaml}}></BOUCLE_scalaire>
+</B_scalaire>
+<p>✅ Boucle vide, comme attendu.</p>
+<//B_scalaire>

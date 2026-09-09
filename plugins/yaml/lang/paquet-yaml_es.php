@@ -3,13 +3,9 @@
 // extrait automatiquement de https://trad.spip.net/tradlang_module/paquet-yaml?lang_cible=es
 // ** ne pas modifier le fichier **
 
-if (!defined('_ECRIRE_INC_VERSION')) {
-	return;
-}
-
-$GLOBALS[$GLOBALS['idx_lang']] = array(
+return [
 
 	// Y
 	'yaml_description' => 'Este plugin proporciona las funciones de lectura/escritura del formato YAML: <code>yaml_decode()</code> y <code>yaml_encode()</code>. También proporciona el formato yaml para el bucle (DATA).',
-	'yaml_slogan' => 'Un formato de archivo simple para editar listas de datos'
-);
+	'yaml_slogan' => 'Un formato de archivo simple para editar listas de datos',
+];

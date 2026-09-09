@@ -77,9 +77,6 @@ function Consigne() {
 				 class="timeline_item consigne_haute"
 				 style="top:${this.y * 100}%; left:${this.x / CCN.projet.nombre_jours_total * 100}%;"
 			>
-				${this.isLastConsigne
-					? `<img class="card-bg" src="${CCN.urlRoot}img/cards_background.svg" alt="" />`
-					: ''}
 				<button type="button" id="consigne${this.id}"
 					class="consigne couleur_texte_consignes couleur_consignes${coul} btn-reset"
 					data-id="${this.id}"
@@ -88,7 +85,7 @@ function Consigne() {
 					${this.data.nombre_commentaires > 0 ? `<div aria-label="${this.data.nombre_commentaires} interaction${this.data.nombre_commentaires > 1 ? 's' : ''}" class="picto_nombre_commentaires">${this.data.nombre_commentaires}</div>` : ''}
 					<div class="etiquette-etape">
 						<img class="logo-etiquette" src="" alt="" />
-						<span class="texte-etiquette">${CCN.lang.consigne_etape.replace('@numero@', this.numero+1)}</span>
+						<span class="texte-etiquette">${CCN.lang.mission_numero.replace('@numero@', this.numero+1)}</span>
 					</div>
 					<div class="texte">
 						<div class="first-row">
@@ -105,11 +102,11 @@ function Consigne() {
 					</div>
 					<div class="nettoyeur"></div>
 				</button>
-				<button type="button" class="bouton_reponse_consigne btn-reset">
+				<button type="button" class="bouton_reponse_consigne repondre btn-reset">
 					<img src="${CCN.urlRoot}img/reponse_plus.png" alt="" title="${CCN.lang.repondre_a_la_consigne}">
 					<div style="white-space: nowrap;">${CCN.lang.repondre_a_la_mission}</div>
 				</button>
-				<button type="button" class="bouton_reponse_consigne btn-reset">
+				<button type="button" class="bouton_reponse_consigne acceder btn-reset">
 					<img src="${CCN.urlRoot}img/reponse_plus.png" alt="" title="${CCN.lang.acceder_a_ma_reponse}">
 					<div style="white-space: nowrap;">${CCN.lang.ma_reponse}</div>
 				</button>
@@ -117,19 +114,14 @@ function Consigne() {
 		`);
 
 		this.div_consigne = this.div_base.find(`#consigne${this.id}`);
-		this.div_reponse_plus = this.div_base.find('.bouton_reponse_consigne').eq(0);
-		this.div_reponse_see = this.div_base.find('.bouton_reponse_consigne').eq(1);
+		this.div_reponse_plus = this.div_base.find('.bouton_reponse_consigne.repondre').eq(0);
+		this.div_reponse_see = this.div_base.find('.bouton_reponse_consigne.acceder').eq(1);
 
 		this.div_base.find(`.titre`).text(this.titre);
 
 		if(this.isLastConsigne) {
 			this.div_base.addClass("derniere-etape")
-			if(this.isLivrable) {
-				this.div_base.find(".texte-etiquette").first().text("PROJETS FINAUX !");
-				this.div_base.find(".logo-etiquette").first().attr("src", `${CCN.urlRoot}img/sparks.svg`)
-			} else {
-				this.div_base.find(".logo-etiquette").first().attr("src", `${CCN.urlRoot}img/location-check.svg`)
-			}
+			this.div_base.find(".logo-etiquette").first().attr("src", `${CCN.urlRoot}img/location-check.svg`)
 		} else {
 			this.div_base.find(".logo-etiquette").hide()
 		}
@@ -145,33 +137,32 @@ function Consigne() {
 		this.div_reponse_plus.on('click', () => createReponse(_thisId, _thisIdRestreint, _thisNumero));
 		this.div_consigne.on('click', () => callConsigne(_thisId));
 
-		if (CCN.admin == 0) {
-			const leftPercent = CCN.projet.nombre_jours_total > 0 ? this.x / CCN.projet.nombre_jours_total * 100 : 0;
-			this.div_base.draggable({
-				axis: "y",
-				cancel: '', // Force le drag and drop même s'il y a un button dans la consigne.
-				start: function (event, ui) {
-					$(this).addClass('no_event');
-				},
-				drag: function (event, ui) {
-					// jQuery UI va écrire un left en px — on le réécrit en % immédiatement
-					ui.position.left = CCN.projet.timeline.width() * leftPercent / 100;
-					updateConsigneConnecteurs(event.target, ui);
-				},
-				stop: function (event, ui) {
-					const yy = (ui.offset.top - CCN.projet.timeline.offset().top) / CCN.projet.timeline.height();
-
+		const leftPercent = CCN.projet.nombre_jours_total > 0 ? this.x / CCN.projet.nombre_jours_total * 100 : 0;
+		this.div_base.draggable({
+			axis: "y",
+			cancel: '', // Force le drag and drop même s'il y a un button dans la consigne.
+			start: function (event, ui) {
+				$(this).addClass('no_event');
+			},
+			drag: function (event, ui) {
+				// jQuery UI va écrire un left en px — on le réécrit en % immédiatement
+				ui.position.left = CCN.projet.timeline.width() * leftPercent / 100;
+				updateConsigneConnecteurs(event.target, ui);
+			},
+			stop: function (event, ui) {
+				const yy = (ui.offset.top - CCN.projet.timeline.offset().top) / CCN.projet.timeline.height();
+				if (CCN.admin == 0) {
 					$.post("spip.php?page=ajax&mode=article-sauve-coordonnees", { id_objet: _thisId, type_objet: "article", X: 0, Y: yy });
-					$(this).removeClass('no_event');
-					this.y = yy;
-					// Réécrit les deux coords en %
-					$(this).css({
-						top:  (yy * 100) + '%',
-						left: leftPercent + '%'
-					});
 				}
-			});
-		}
+				this.y = yy;
+				// Réécrit les deux coords en %
+				$(this).css({
+					top:  (yy * 100) + '%',
+					left: leftPercent + '%'
+				});
+				$(this).removeClass('no_event');
+			}
+		});
 	}
 
 	/**
@@ -180,13 +171,7 @@ function Consigne() {
 	 * @see initConsignes
 	 */
 	this.showNewReponseButtonInTimeline = function () {
-		if ((CCN.idRestreint > 0)
-			&& (CCN.typeRestreint != '')
-			&& (CCN.typeRestreint == 'travail_en_cours')
-		) {
-			this.div_reponse_plus.addClass('show');
-		
-		}
+		this.div_reponse_plus.addClass('show');
 	}
 
 	/**
@@ -197,13 +182,7 @@ function Consigne() {
 	 * @see initConsignes
 	 */
 	this.showMyReponseButtonInTimeline = function (answerId) {
-		if ((CCN.idRestreint > 0)
-			&& (CCN.typeRestreint != '')
-			&& (CCN.typeRestreint == 'travail_en_cours')
-		) {
-			this.div_reponse_see.on('click', () => callReponse(answerId)).addClass('show');
-		}
-		
+		this.div_reponse_see.on('click', () => callReponse(answerId)).addClass('show');
 	}
 
 	/**
@@ -211,13 +190,6 @@ function Consigne() {
 	 */
 	this.showConsignePastille = function () {
 		$("#consigne" + this.id + " .picto_nombre_commentaires").fadeIn('slow');
-	}
-
-	/**
-	 * Fait disparaître le picto du nombre de commentaires d'une consigne.
-	 */
-	this.hideConsignePastille = function () {
-		$("#consigne" + this.id + " .picto_nombre_commentaires").fadeOut('slow');
 	}
 
 	/**
@@ -245,8 +217,6 @@ function Consigne() {
 		$('.connecteur_timeline[data-consigne-id="' + this.id + '"]').removeClass('hide');
 
 		const y_dest = 0;
-
-		this.hideConsignePastille();
 
 		CCN.projet.showRangeOfTimeline(this.nombre_jours_max, this.x - 3, y_dest);
 

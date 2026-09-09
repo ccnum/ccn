@@ -105,7 +105,7 @@ function thematique_insert_head($flux) {
 	}
 
 	$scripts = [
-		'js/publier_mission.js',
+		'js/publier_article.js',
 		'js/addCloseModal.js',
 		'js/forum.js',
 		'js/description.js',
@@ -164,6 +164,14 @@ function thematique_notifications_destinataires($flux) {
 		and $flux['args']['options']['forum']['objet'] === 'article'
 	) {
 		$id_article = intval($flux['args']['options']['forum']['id_objet']);
+
+		// Réponse à un commentaire existant : prévenir en plus l'auteur de ce
+		// commentaire parent (mise en page dédiée "On vient de répondre à
+		// votre message !", cf notifications/forum_poste_article.html).
+		$id_parent = intval($flux['args']['options']['forum']['id_parent'] ?? 0);
+		if ($id_parent and $email_parent = thematique_email_auteur_forum($id_parent)) {
+			$flux['data'][] = $email_parent;
+		}
 	}
 
 	if ($id_article) {
@@ -171,6 +179,7 @@ function thematique_notifications_destinataires($flux) {
 		$flux['data'][] = $GLOBALS['meta']['email_envoi'];
 		$article = sql_fetsel('*', 'spip_articles', 'id_article=' . $id_article);
 		if (!$article) {
+			$flux['data'] = thematique_filtrer_emails_poubelle($flux['data']);
 			return $flux;
 		}
 		$titre_rub = sql_getfetsel('titre', 'spip_rubriques', 'id_rubrique=' . intval($article['id_secteur']));
@@ -180,40 +189,33 @@ function thematique_notifications_destinataires($flux) {
 				'thematique'
 			);
 			// Prendre les admin restreint des sous rubriques (des écoles)
-			$id_rubriques = sql_allfetsel('id_rubrique', 'spip_rubriques', 'id_secteur=' . intval($article['id_secteur']));
-			$id_rubriques = array_map('intval', array_column($id_rubriques, 'id_rubrique'));
-			if ($id_rubriques) {
-				$auteurs_restreint = sql_select(
-					'auteurs.id_auteur, auteurs.email',
-					'spip_auteurs AS auteurs JOIN spip_auteurs_liens AS lien ON auteurs.id_auteur=lien.id_auteur',
-					["lien.objet='rubrique'", sql_in('lien.id_objet', $id_rubriques), "auteurs.statut='0minirezo'"]
-				);
-				foreach ($auteurs_restreint as $ar) {
-					spip_log('auteur id=' . intval($ar['id_auteur']), 'thematique');
-					$flux['data'][] = $ar['email'];
-				}
-			}
+			$id_secteur_ref = intval($article['id_secteur']);
 		} else {
 			spip_log('lier au secteur ' . $article['id_secteur'], 'thematique');
 			$annee_scolaire = thematique_annee_scolaire();
 			spip_log('lier à l année ' . $annee_scolaire, 'thematique');
-			$id_secteur = sql_getfetsel('id_secteur', 'spip_rubriques', 'titre LIKE ' . sql_quote('%' . $annee_scolaire . '%'));
-			spip_log('lier au secteur ' . $id_secteur, 'thematique');
-			$id_rubriques = sql_allfetsel('id_rubrique', 'spip_rubriques', 'id_secteur=' . intval($id_secteur));
-			$id_rubriques = array_map('intval', array_column($id_rubriques, 'id_rubrique'));
-			if ($id_rubriques) {
-				$auteurs_restreint = sql_select(
-					'auteurs.id_auteur, auteurs.email',
-					'spip_auteurs AS auteurs JOIN spip_auteurs_liens AS lien ON auteurs.id_auteur=lien.id_auteur',
-					["lien.objet='rubrique'", sql_in('lien.id_objet', $id_rubriques), "auteurs.statut='0minirezo'"]
-				);
-				foreach ($auteurs_restreint as $ar) {
-					spip_log('auteur id=' . intval($ar['id_auteur']), 'thematique');
-					$flux['data'][] = $ar['email'];
-				}
+			$id_secteur_ref = intval(
+				sql_getfetsel('id_secteur', 'spip_rubriques', 'titre LIKE ' . sql_quote('%' . $annee_scolaire . '%'))
+			);
+			spip_log('lier au secteur ' . $id_secteur_ref, 'thematique');
+		}
+
+		$id_rubriques = sql_allfetsel('id_rubrique', 'spip_rubriques', 'id_secteur=' . $id_secteur_ref);
+		$id_rubriques = array_map('intval', array_column($id_rubriques, 'id_rubrique'));
+		if ($id_rubriques) {
+			$auteurs_restreint = sql_select(
+				'auteurs.id_auteur, auteurs.email',
+				'spip_auteurs AS auteurs JOIN spip_auteurs_liens AS lien ON auteurs.id_auteur=lien.id_auteur',
+				["lien.objet='rubrique'", sql_in('lien.id_objet', $id_rubriques), "auteurs.statut='0minirezo'"]
+			);
+			foreach ($auteurs_restreint as $ar) {
+				spip_log('auteur id=' . intval($ar['id_auteur']), 'thematique');
+				$flux['data'][] = $ar['email'];
 			}
 		}
 	}
+
+	$flux['data'] = thematique_filtrer_emails_poubelle($flux['data']);
 	return $flux;
 }
 
@@ -233,6 +235,10 @@ function thematique_cioidc_userinfo($flux) {
 	// icon-avatar-masculin/feminin utilisés en repli quand l'ENT n'en fournit pas).
 	$avatar = $flux['data']['avatar'] ?? '';
 	$auteur = thematique_cioidc_maj_champ($auteur, 'avatar', $avatar, 'du champ avatar');
+	// Prénom + nom réels, distincts du champ 'nom' (rôle/classe/collège, cf #44) —
+	// exposés en session pour l'affichage dans le menu haut (#SESSION{nom_complet}).
+	$nom_complet = thematique_cioidc_nom_complet($flux['data']);
+	$auteur = thematique_cioidc_maj_champ($auteur, 'nom_complet', $nom_complet, 'du nom complet');
 
 	$classes_groupes = thematique_cioidc_normaliser_liste($flux['data']['ENTClassesGroupes'] ?? []);
 	$classes_reelles = thematique_cioidc_classes_reelles($classes_groupes);
@@ -246,9 +252,9 @@ function thematique_cioidc_userinfo($flux) {
 	$uai_liste = thematique_cioidc_normaliser_liste($flux['data']['ENTAllUai'] ?? []);
 	$is_webmestre = thematique_cioidc_est_webmestre($uai_liste, $is_enseignant);
 	$is_eleve = (strpos($profils, 'ELV') !== false);
-	$role_ent = thematique_cioidc_role_affiche($profils, $is_webmestre);
+	$role_ent = thematique_cioidc_role_affiche($profils, $is_webmestre, count($classes_reelles) > 0);
 
-	$nom = thematique_cioidc_nom_affiche($flux['data'], $classes_reelles, $role_ent, $uai_liste);
+	$nom = thematique_cioidc_nom_affiche($classes_reelles, $role_ent, $uai_liste);
 	$auteur = thematique_cioidc_maj_champ($auteur, 'nom', $nom, 'du nom');
 
 	$annee_scolaire = thematique_annee_scolaire();
@@ -315,9 +321,10 @@ function thematique_cioidc_userinfo($flux) {
 }
 
 /**
- * Enregistre les tâches de fond thematique_rentree_annee et
- * thematique_rentree_poubelle (genie/) via le pipeline plutôt que la
- * balise <genie> de paquet.xml : équivalent en interne (cf
+ * Enregistre les tâches de fond thematique_rentree_annee,
+ * thematique_rentree_poubelle et thematique_maj_nom_auteurs_forum (genie/)
+ * via le pipeline plutôt que la balise <genie> de paquet.xml : équivalent
+ * en interne (cf
  * ecrire/inc/genie.php), mais évalué dynamiquement à chaque calcul des
  * tâches de fond au lieu de nécessiter que SPIP revérifie le paquet du
  * plugin pour les enregistrer.
@@ -328,6 +335,7 @@ function thematique_cioidc_userinfo($flux) {
 function thematique_taches_generales_cron($taches_generales) {
 	$taches_generales['thematique_rentree_annee'] = 86400;
 	$taches_generales['thematique_rentree_poubelle'] = 86400;
+	$taches_generales['thematique_maj_nom_auteurs_forum'] = 86400;
 	return $taches_generales;
 }
 
