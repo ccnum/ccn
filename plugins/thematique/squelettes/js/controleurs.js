@@ -1162,6 +1162,18 @@ function loadContentInMainSidebar(url, callback, typeContenu) {
 	showSidebar();
 	emptyMainSidebar();
 
+	// Purge &onglet=... laissé par custom-tabs.js (replaceState au clic d'un
+	// onglet, cf initMissionTabs) : sinon il fuite sur ce nouveau contenu,
+	// dont #mission-tabs est réinitialisé plus bas et relirait ce paramètre
+	// périmé pour forcer l'onglet d'un objet qui n'a rien à voir avec celui
+	// où il a été posé (ex: onglet "commentaires" d'une mission qui force
+	// l'onglet "commentaires" sur la réponse de classe cliquée ensuite).
+	const urlSansOnglet = new URL(window.location.href);
+	if (urlSansOnglet.searchParams.has('onglet')) {
+		urlSansOnglet.searchParams.delete('onglet');
+		window.history.replaceState(null, '', urlSansOnglet);
+	}
+
 	// $.get() plutôt que $(elem).load(url) : .load() coupe silencieusement
 	// l'url au premier espace et traite le reste comme un sélecteur jQuery à
 	// appliquer sur la réponse — une valeur imprévue (id, date...) contenant
