@@ -34,7 +34,7 @@
 						[<div class="intervention_auteur">(#NOM)</div>]
 					</BOUCLE_forum_billet_auteur>
 					[<div class="intervention_date">(#DATE|affdate)</div>]
-					[(#AUTORISER{instituer,forum,#ID_FORUM}|oui)
+					[(#AUTORISER{forumsupprimer,forum,#ID_FORUM}|oui)
 						<div class="forum">
 							[<a href="(#URL_ACTION_AUTEUR{instituer_forum,#ID_FORUM-forum-suppr-safe,#URL_SITE_SPIP/spip.php?article#_principale:ID_ARTICLE&var_mode=recalcul})"
 							class='supprimer_couleur'
@@ -115,7 +115,7 @@
 								</div>
 								[<div class="intervention_auteur">(#NOM)</div>]
 								[<div class="intervention_date">(#DATE|affdate)</div>]
-								[(#AUTORISER{instituer,forum,#ID_FORUM}|oui)
+								[(#AUTORISER{forumsupprimer,forum,#ID_FORUM}|oui)
 									[<a href="(#URL_ACTION_AUTEUR{instituer_forum,#ID_FORUM-forum-suppr-safe,#URL_SITE_SPIP/spip.php?article#_principale:ID_ARTICLE&var_mode=recalcul})"
 										class='supprimer_couleur'
 										onClick='return confirmation("<:thematique:confirmation_supprimer_message:>")'

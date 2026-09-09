@@ -39,14 +39,12 @@
 				#ENV{is_root}|et{#ENV{nombre_reponses}|>{0}}
 			}
 
-			#SET{peut_modifier_ou_supr,
+			#SET{peut_modifier,
 				#SESSION{id_auteur}|oui
 				|et{#ENV{id_auteur}|=={#SESSION{id_auteur}}}
 			}
 
-			[(#SESSION{role}|=={admin}|oui)
-				#SET{peut_modifier_ou_supr, oui}
-			]
+			#SET{peut_supprimer, #AUTORISER{forumsupprimer, forum, #ENV{id_forum}}}
 
 			#SET{peut_repondre,
 				#ENV{is_root}|=={oui}
@@ -75,7 +73,7 @@
 					]
 				</div>
 				<div class="actions-right">
-					[(#GET{peut_modifier_ou_supr}|oui)
+					[(#GET{peut_modifier}|oui)
 						<button
 							type="submit"
 							name="id_parent"
@@ -87,6 +85,8 @@
 						>
 							<:thematique:modifier:>
 						</button>
+					]
+					[(#GET{peut_supprimer}|oui)
 						<button
 							type="submit"
 							name="id_parent"
@@ -98,7 +98,6 @@
 						>
 							<:thematique:supprimer:>
 						</button>
-						
 					]
 					[(#GET{peut_repondre}|oui)
 						<button
