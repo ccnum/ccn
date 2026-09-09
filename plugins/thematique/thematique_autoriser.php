@@ -70,7 +70,7 @@ function autoriser_forumsupprimer_dist($faire, $type, $id, $qui, $opt) {
 		return false;
 	}
 
-	$id_rubrique_classe_prof = thematique_id_rubrique_classe_prof($id_auteur_visiteur);
+	$id_rubrique_classe_prof = thematique_id_rubrique_classe($id_auteur_visiteur);
 
 	return $id_rubrique_classe_prof
 		&& $id_rubrique_classe_prof === thematique_id_rubrique_classe_auteur($id_auteur_commentaire);

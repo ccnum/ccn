@@ -50,7 +50,7 @@ function thematique_preparer_fichier_session($flux) {
 	$role = thematique_donner_role($id_auteur);
 	$flux['data']['role'] = $role;
 
-	if ($role === 'prof' && $animal = thematique_avatar_animal($id_auteur)) {
+	if (in_array($role, ['prof', 'eleve']) && $animal = thematique_avatar_animal($id_auteur)) {
 		$flux['data']['avatar'] = $animal;
 	}
 	return $flux;

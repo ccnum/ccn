@@ -876,7 +876,7 @@ function classe_icone($id_rubrique) {
  * @param int $id_auteur
  * @return int id_rubrique de la classe, 0 si aucune classe trouvée
  */
-function thematique_id_rubrique_classe_prof($id_auteur) {
+function thematique_id_rubrique_classe($id_auteur) {
 	static $cache = [];
 	$id_auteur = intval($id_auteur);
 	if (isset($cache[$id_auteur])) {
@@ -910,7 +910,7 @@ function thematique_id_rubrique_classe_prof($id_auteur) {
  * @return string emoji de la classe, ou '' si aucune classe trouvée
  */
 function thematique_avatar_animal($id_auteur) {
-	$id_rubrique = thematique_id_rubrique_classe_prof($id_auteur);
+	$id_rubrique = thematique_id_rubrique_classe($id_auteur);
 	return $id_rubrique ? classe_icone($id_rubrique) : '';
 }
 
@@ -1774,7 +1774,7 @@ function thematique_avatar_notification_auteur($id_auteur) {
 
 	if ($id_auteur) {
 		if (thematique_donner_role($id_auteur) === 'prof') {
-			$id_rubrique = thematique_id_rubrique_classe_prof($id_auteur);
+			$id_rubrique = thematique_id_rubrique_classe($id_auteur);
 			if ($id_rubrique) {
 				$res = [
 					'type' => 'emoji',
@@ -2341,7 +2341,6 @@ function filtre_auteur_vers_classe($id_auteur) {
 		'sal.id_auteur = ' . intval($id_auteur) . '
          AND sr2.titre = ' . sql_quote('Travail des classes')
 	);
-
 	return $result;
 }
 

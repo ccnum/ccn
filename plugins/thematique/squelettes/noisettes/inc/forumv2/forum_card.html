@@ -42,7 +42,7 @@
 			#SET{peut_modifier,
 				#SESSION{id_auteur}|oui
 				|et{#ENV{id_auteur}|=={#SESSION{id_auteur}}}
-				|et{SESSION{role}|!={eleve}}
+				|et{#SESSION{role}|!={eleve}}
 			}
 			[(#SESSION{role}|=={admin}|oui)
 				#SET{peut_modifier,oui}
