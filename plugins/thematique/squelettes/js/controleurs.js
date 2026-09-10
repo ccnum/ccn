@@ -1190,6 +1190,23 @@ function loadContentInMainSidebar(url, callback, typeContenu) {
 
 		$('#sidebar_main_inner').html(response);
 
+		// $.get() est intercepté par prive/javascript/ajaxCallback.js (SPIP
+		// coeur) comme n'importe quel jQuery.ajax : il déclenche déjà
+		// jQuery.spip.triggerAjaxLoad(document) tout seul — mais dans son
+		// propre callback "complete", exécuté à la fin de la requête donc
+		// AVANT le .done() ci-dessus (enregistré après coup sur la même
+		// promesse) : ce scan automatique tombe sur l'ancien DOM, avant le
+		// $('#sidebar_main_inner').html(response) qui vient d'injecter le
+		// nouveau contenu. Résultat : les formulaires ajax (#FORMULAIRE_*)
+		// et les blocs ajax=xxx (cf ajaxReload(), ex.
+		// noisettes/inc/publier_article_documents.html) du popup fraîchement
+		// chargé ne sont jamais bindés, et ajaxReload('documents') après un
+		// upload de document ne fait donc rien. On relance nous-mêmes le
+		// scan après l'insertion pour les binder correctement.
+		if (window.jQuery && jQuery.spip && jQuery.spip.triggerAjaxLoad) {
+			jQuery.spip.triggerAjaxLoad(document);
+		}
+
 		if (!response || response.trim() === "") {
 			if (CCN.debug) { console.warn(CCN.lang.reponse_vide); }
 		}

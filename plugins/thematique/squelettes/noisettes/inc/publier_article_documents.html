@@ -36,15 +36,23 @@
 					<div class="infos">
 						<span class="name"><strong>[(#FICHIER|basename)]</strong></span>
 						<span class="size">[(#TAILLE|taille_en_octets)]</span>
-						[(#MODE|=={image}|oui)#SET{raccourci_prefixe, img}]
-						[(#MODE|=={image}|non)#SET{raccourci_prefixe, doc}]
-						<span class="raccourci" onclick="copierRaccourciDocument(this)" title="<:thematique:copier_raccourci:>">&lt;#GET{raccourci_prefixe}#ID_DOCUMENT&gt;</span>
+						[(#DESCRIPTIF|oui)<span class="descriptif">#DESCRIPTIF</span>]
 					</div>
-					<div class="actions">
-						[(#AUTORISER{dissocierdocuments,#ENV{objet},#ENV{id_objet}}|oui)
-							[(#BOUTON_ACTION{<:thematique:supprimer_document:>,#URL_ACTION_AUTEUR{dissocier_document,#ENV{id_objet}-#ENV{objet}-#ID_DOCUMENT-suppr,#SELF},'ajax submit',<:thematique:confirmation_supprimer_document:>})]
-						]
+				</div>
+				<div class="raccourci-ligne">
+					[(#MODE|=={image}|oui)#SET{raccourci_prefixe, img}]
+					[(#MODE|=={image}|non)#SET{raccourci_prefixe, doc}]
+					<span class="raccourci" data-prefixe="#GET{raccourci_prefixe}" data-id-document="#ID_DOCUMENT" onclick="copierRaccourciDocument(this)" title="<:thematique:copier_raccourci:>">&lt;#GET{raccourci_prefixe}#ID_DOCUMENT&gt;</span>
+					<div class="alignement-document">
+						<button type="button" class="lien-alignement" data-align="left" onclick="basculerAlignementDocument(this)">left</button>
+						<button type="button" class="lien-alignement" data-align="center" onclick="basculerAlignementDocument(this)">center</button>
+						<button type="button" class="lien-alignement" data-align="right" onclick="basculerAlignementDocument(this)">right</button>
 					</div>
+				</div>
+				<div class="actions">
+					[(#AUTORISER{dissocierdocuments,#ENV{objet},#ENV{id_objet}}|oui)
+						[(#BOUTON_ACTION{<:thematique:supprimer_document:>,#URL_ACTION_AUTEUR{dissocier_document,#ENV{id_objet}-#ENV{objet}-#ID_DOCUMENT-suppr,#SELF},'ajax submit',<:thematique:confirmation_supprimer_document:>})]
+					]
 				</div>
 			</div>
 		</BOUCLE_doc>

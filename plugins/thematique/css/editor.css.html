@@ -218,6 +218,36 @@ p.boutons:has(input[type="submit"]) {
 	margin-bottom: 0;
 }
 
+/* Titre + date du formulaire "Publier un article" sur une même ligne
+   (cf. #429) : la div .editer_date n'est générée que pour certains types
+   de contenu (cf. public_publier_article.html), .editer-ligne se comporte
+   donc aussi bien avec un que deux champs. */
+.editer-ligne {
+	display: flex;
+	gap: 20px;
+	margin-bottom: 20px;
+}
+
+.editer-ligne .editer {
+	flex: 1;
+	margin-bottom: 0;
+}
+
+@media (max-width: 600px) {
+	.editer-ligne {
+		flex-direction: column;
+		gap: 0;
+	}
+
+	.editer-ligne .editer {
+		margin-bottom: 20px;
+	}
+
+	.editer-ligne .editer:last-child {
+		margin-bottom: 0;
+	}
+}
+
 /* Astérisque des champs obligatoires (classe "obligatoire" posée par les
    squelettes de formulaire, ex. public_publier_article.html) : le thème
    privé SPIP le fait via son propre css, non chargé sur le site public. */
@@ -255,10 +285,17 @@ p.boutons:has(input[type="submit"]) {
 	gap: 24px;
 }
 
+/* Ascenseur propre à la colonne de gauche (dropzone + liste des
+   documents), indépendant de la colonne de droite (rédaction) : les deux
+   colonnes sont deux enfants flex de .editer-groupe avec
+   align-items:flex-start (pas de stretch), donc borner la hauteur de
+   celle-ci et lui donner son propre overflow ne bouge pas l'autre. */
 .formulaire_public_publier_article #sidebar-etape-2-container {
 	order: 1;
 	flex: 0 1 calc(33% - 12px);
 	max-width: calc(33% - 12px);
+	max-height: 65vh;
+	overflow-y: auto;
 }
 
 .formulaire_public_publier_article #formulaire_publier_article {
@@ -295,6 +332,64 @@ p.boutons:has(input[type="submit"]) {
 
 #documents_publier_article .raccourci.copie {
 	background: #d4edda;
+}
+
+#documents_publier_article .descriptif {
+	color: var(--color-gris-en-attente);
+	font-size: 0.85em;
+}
+
+/* Raccourci + alignement, sur leur propre ligne (hors du flex ".description"
+   hérité de saisies/inc-bigup_liste_fichiers.html, cf. la remarque en tête
+   de fichier sur les classes CSS communes). */
+#documents_publier_article .raccourci-ligne {
+	display: flex;
+	align-items: center;
+	flex-wrap: wrap;
+	gap: 0.6em;
+	margin-top: 0.5em;
+}
+
+#documents_publier_article .alignement-document {
+	display: flex;
+	gap: 0.4em;
+}
+
+#documents_publier_article .lien-alignement {
+	background: none;
+	border: 1px solid #ccc;
+	border-radius: 3px;
+	padding: 1px 6px;
+	font-size: 0.8em;
+	color: var(--color-default);
+	cursor: pointer;
+}
+
+#documents_publier_article .lien-alignement.selected {
+	background: var(--color-tonic);
+	border-color: var(--color-tonic);
+	color: white;
+}
+
+/* Supprimer/Détacher/Modifier : en dehors de ".description", donc plus
+   soumis à son "text-align:right" hérité (cf bigup.css) — remis en ligne à
+   gauche, sous le raccourci. */
+#documents_publier_article .actions {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 0.6em;
+	margin: 0.6em 0 0;
+	text-align: left;
+}
+
+.publier-article-formats-autorises {
+	color: var(--color-gris-en-attente);
+	font-size: 0.85em;
+	margin: 0.5em 0 1em;
+}
+
+.publier-article-formats-autorises a {
+	color: var(--color-tonic);
 }
 
 /*Forum*/

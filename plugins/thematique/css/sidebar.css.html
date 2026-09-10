@@ -1973,17 +1973,20 @@ ailleurs, ex: le menu du bas). */
 }
 
 .bouton-publication-article {
+	display: flex;
 	justify-content: center;
 	align-items: center;
 	gap: 2px;
 	color: white;
 	font-family: Poppins;
+	font-size: 0.95rem;
+	font-weight: 500;
 	background-color: var(--color-tonic);
-	width: 6rem;
-	height: 2rem;
-	border-radius: 1rem;
-	padding: 6px 4px;
-	overflow: hidden;
+	width: auto;
+	white-space: nowrap;
+	border-radius: 0.5rem;
+	padding: 12px 24px;
+	cursor: pointer;
 }
 
 .texte-etpae-suivante {
@@ -2021,6 +2024,9 @@ ailleurs, ex: le menu du bas). */
 	display: flex;
 	justify-content: space-between;
 	align-items: center;
+	margin: -18px -18px 0;
+	padding: 18px;
+	background-color: var(--color-bleu-fond);
 }
 
 .publier-article-bandeau {

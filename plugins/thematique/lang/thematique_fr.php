@@ -76,6 +76,7 @@ return [
 	'classe_pas_encore_repondu'      => 'La classe n\'a pas encore répondu à cette consigne.',
 	'format_non_supporte_navigateur' => 'Le format *.@mime_type@ n\'est pas pris en charge par votre navigateur',
 	'format_video_non_accepte'       => 'Format vidéo non accepté : @extension@ (formats acceptés : @extensions@)',
+	'formats_autorises_document'     => 'Formats autorisés : @extensions@. Vous pouvez convertir vos fichiers avec des outils gratuits en ligne comme <a href="https://www.freeconvert.com/" target="_blank" rel="noopener">Files Converter</a>.',
 	'fermer'                         => 'Fermer',
 	'forum'                          => 'Forum',
 	'gerer_les_extraits'             => 'Gérer les extraits',

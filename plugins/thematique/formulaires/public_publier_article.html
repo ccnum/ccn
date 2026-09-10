@@ -11,6 +11,8 @@
 			<div class="ajax">
 				#FORMULAIRE_JOINDRE_DOCUMENT_MISSION{#GET{id_objet_document},article}
 			</div>
+			#SET{extensions_document_mission, #VAL{1}|thematique_extensions_document_mission_liste}
+			<p class="publier-article-formats-autorises"><:thematique:formats_autorises_document{extensions=#GET{extensions_document_mission}}:></p>
 			<INCLURE{fond=noisettes/inc/publier_article_documents, id_objet=#GET{id_objet_document}, objet=article, ajax=documents} />
 		</div>
 
@@ -35,22 +37,24 @@
 				</ul>
 				]
 
-				<div class="editer editer_titre obligatoire[ (#ENV**{erreurs}|table_valeur{titre}|oui)erreur]">
-					<label for="titre"><:info_titre:></label>
-					[<span class="erreur_message">(#ENV**{erreurs}|table_valeur{titre})</span>]
-					<input type="text" class="text" name="titre" id="titre" value="#ENV{titre}" maxlength="50" required />
-					<div class="compteur-caracteres">
-						<label class="nb-caracteres" for="titre">0</label><:thematique:publier_compteur_caracteres:>
+				<div class="editer-ligne">
+					<div class="editer editer_titre obligatoire[ (#ENV**{erreurs}|table_valeur{titre}|oui)erreur]">
+						<label for="titre"><:info_titre:></label>
+						[<span class="erreur_message">(#ENV**{erreurs}|table_valeur{titre})</span>]
+						<input type="text" class="text" name="titre" id="titre" value="#ENV{titre}" maxlength="50" required />
+						<div class="compteur-caracteres">
+							<label class="nb-caracteres" for="titre">0</label><:thematique:publier_compteur_caracteres:>
+						</div>
 					</div>
-				</div>
 
-				[(#ENV{type_article}|in_array{#LISTE{consignes,blogs,evenements}}|oui)
-				<div class="editer editer_date[ (#ENV**{erreurs}|table_valeur{date}|oui)erreur]">
-					<label for="date"><:thematique:date_article:></label>
-					[<span class="erreur_message">(#ENV**{erreurs}|table_valeur{date})</span>]
-					<input type="date" class="text" name="date" id="date" value="[(#ENV**{date}|substr{0,10})]" />
+					[(#ENV{type_article}|in_array{#LISTE{consignes,blogs,evenements}}|oui)
+					<div class="editer editer_date[ (#ENV**{erreurs}|table_valeur{date}|oui)erreur]">
+						<label for="date"><:thematique:date_article:></label>
+						[<span class="erreur_message">(#ENV**{erreurs}|table_valeur{date})</span>]
+						<input type="date" class="text" name="date" id="date" value="[(#ENV**{date}|substr{0,10})]" />
+					</div>
+					]
 				</div>
-				]
 
 				#SET{champ_texte_publication, #ENV{type_article}|thematique_texte_publication{champ_texte}}
 				<div class="editer editer_texte obligatoire[ (#ENV**{erreurs}|table_valeur{texte}|oui)erreur]">
