@@ -508,7 +508,7 @@ function thematique_rendre_type_article_affichable($type_article) {
  * @param string $type_article
  *   consignes, travail_en_cours, ressources, blogs ou evenements
  * @param string $partie
- *   titre, intro, champ_texte ou bouton
+ *   bandeau, titre, intro, champ_texte ou bouton
  * @return string
  *   Vide si aucun texte défini pour cette partie (ex: pas d'intro pour une mission).
  */
@@ -533,6 +533,10 @@ function thematique_texte_publication($type_article, $partie) {
 	// Types non couverts par les maquettes de l'issue #429 (ex: cap-sur-l-annee,
 	// la-rencontre, agora) : on garde l'ancien texte générique.
 	switch ($partie) {
+		case 'bandeau':
+			return _T('thematique:etape1_redaction_article', ['type_article' => thematique_rendre_type_article_affichable(
+				$type_article
+			)]);
 		case 'titre':
 			return _T('thematique:etape1_redaction_article', ['type_article' => thematique_rendre_type_article_affichable(
 				$type_article

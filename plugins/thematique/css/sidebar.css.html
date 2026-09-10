@@ -2019,7 +2019,43 @@ ailleurs, ex: le menu du bas). */
 
 .publier-article-header {
 	display: flex;
-	justify-content: flex-end;
+	justify-content: space-between;
+	align-items: center;
+}
+
+.publier-article-bandeau {
+	position: static;
+	transform: rotate(-3deg);
+}
+
+.publier-article-checklist {
+	list-style: none;
+	padding: 0;
+	margin: 0.5rem 0 1rem;
+	display: flex;
+	flex-wrap: wrap;
+	gap: 0.4rem 1.5rem;
+}
+
+.publier-article-checklist li {
+	display: flex;
+	align-items: center;
+	gap: 0.4em;
+	font-size: 0.85rem;
+}
+
+.publier-article-checklist li::before {
+	content: "\2713";
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	flex-shrink: 0;
+	width: 1.1em;
+	height: 1.1em;
+	border-radius: 50%;
+	background-color: var(--color-tonic);
+	color: white;
+	font-size: 0.7em;
 }
 
 #bouton-container {

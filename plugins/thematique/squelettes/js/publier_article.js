@@ -12,10 +12,15 @@
  */
 function initCompteurCaracteres() {
     const nbCaracteresElement = document.querySelector(".nb-caracteres")
+    if (!nbCaracteresElement) return
     const inputId = nbCaracteresElement.getAttribute("for")
     const inputElement = document.getElementById(inputId)
     const compteurRoot = document.querySelector(".compteur-caracteres")
-    nbCaracteresElement.innerText = 0
+    if (!inputElement || !compteurRoot) return
+    // Longueur initiale du champ et pas 0 en dur : cas d'une réponse à une
+    // consigne déjà rédigée, rechargée avec son titre pré-rempli (cf
+    // formulaires_public_publier_article_charger_dist).
+    nbCaracteresElement.innerText = inputElement.value.length
     inputElement.addEventListener("input", e=>{
         const length = inputElement.value.length
         nbCaracteresElement.innerText = length

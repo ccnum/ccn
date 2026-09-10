@@ -882,7 +882,13 @@ function createReponse(id_consigne, id_rubrique_auteur, numero) {
 	const nextConsigne = consigneData ? CCN.consignes.find(c => c.numero === consigneData.numero + 1) : null;
 	const dateLimite   = nextConsigne ? nextConsigne.data.date_texte : '';
 	const rang         = consigneData ? consigneData.numero : (numero || '');
-	const url = CCN.projet.url_popup_reponseajout + "&id_consigne=" + id_consigne + "&id_rubrique=" + id_rubrique_auteur + "&rang=" + rang + "&date_limite=" + dateLimite;
+	// id_consigne à 0 : création d'une nouvelle mission (cf callNouvelleMission),
+	// pas d'une réponse à une consigne existante — url_popup_reponseajout force
+	// type_objet=travail_en_cours, ce qui affichait à tort les textes "réponse à
+	// la mission" du popup (cf thematique_texte_publication) au lieu de ceux de
+	// "mission".
+	const urlBase = id_consigne ? CCN.projet.url_popup_reponseajout : CCN.projet.url_popup_missionajout;
+	const url = urlBase + "&id_consigne=" + id_consigne + "&id_rubrique=" + id_rubrique_auteur + "&rang=" + rang + "&date_limite=" + dateLimite;
 	loadContentInMainSidebar(url, null, "publication_article");
 }
 
@@ -1198,6 +1204,7 @@ function loadContentInMainSidebar(url, callback, typeContenu) {
 		}
 		if(typeContenu === "publication_article") {
 			initCommentaires();
+			initCompteurCaracteres();
 		}
 
 		// Diaporama images/PDF du portfolio de pièces jointes (#350) : le

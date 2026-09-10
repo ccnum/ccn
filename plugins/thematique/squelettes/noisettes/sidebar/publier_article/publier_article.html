@@ -1,5 +1,7 @@
 <div class="publier-article-container">
+	#SET{bandeau_publication, #ENV{type_article}|thematique_texte_publication{bandeau}}
 	<div class="publier-article-header">
+		<span class="publier-article-bandeau etiquette-etape"><span class="texte-etiquette">#GET{bandeau_publication}</span></span>
 		<button type="button" id="sidebar-close" class="icon btn-reset" aria-label="<:thematique:fermer:>"></button>
 	</div>
 	<div class="ajax publier-article-form-wrapper">
