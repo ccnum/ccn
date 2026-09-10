@@ -121,6 +121,7 @@ return [
 	'modifier'                       => 'Modifier',
 	'modifier_descriptif_groupe_travail' => 'Modifier le descriptif du groupe de travail',
 	'modifier_le_logo'               => 'Modifier le logo',
+	'modifier_ma_reponse'			 => 'Modifier ma réponse',
 	'modifier_mot_de_passe_video'    => 'Modifier le mot de passe',
 	'modifier_nom_groupe_travail'    => 'Modifier le nom du groupe de travail',
 	'modifier_reponse'               => 'Modifier',

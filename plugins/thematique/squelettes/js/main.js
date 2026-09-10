@@ -287,6 +287,7 @@ function initConsignes(data) {
 				has_current_classe_already_answered = true;
 			}
 		}
+		
 		if (CCN.role === 'prof') {
 			if (has_current_classe_already_answered) {
 				nouvelleConsigne.showMyReponseButtonInTimeline();
