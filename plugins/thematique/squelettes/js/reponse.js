@@ -108,6 +108,12 @@ function Reponse() {
 					$(this).addClass('no_event');
 				},
 				drag: function (event, ui) {
+
+					dragNDropWithCollision(this, ui, {
+						timeline: CCN.timelineLayerConsignes,
+						elementAbove: '.picto_nombre_commentaires'
+					});
+
 					updateReponseConnecteurs(event.target, ui);
 				},
 				stop: function (event, ui) {

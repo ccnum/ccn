@@ -146,19 +146,29 @@ function Consigne() {
 				$(this).addClass('no_event');
 			},
 			drag: function (event, ui) {
-				// jQuery UI va écrire un left en px — on le réécrit en % immédiatement
-				ui.position.left = CCN.projet.timeline.width() * leftPercent / 100;
+				ui.position.left =CCN.projet.timeline.width() * leftPercent / 100;
+				dragNDropWithCollision(this, ui, {
+					timeline: CCN.timelineLayerConsignes,
+					elementAbove: '.etiquette-etape'
+				});
 				updateConsigneConnecteurs(event.target, ui);
 			},
 			stop: function (event, ui) {
 				const yy = (ui.offset.top - CCN.projet.timeline.offset().top) / CCN.projet.timeline.height();
 				if (CCN.admin == 0) {
-					$.post("spip.php?page=ajax&mode=article-sauve-coordonnees", { id_objet: _thisId, type_objet: "article", X: 0, Y: yy });
+					$.post(
+						"spip.php?page=ajax&mode=article-sauve-coordonnees",
+						{
+							id_objet: _thisId,
+							type_objet: "article",
+							X: 0,
+							Y: yy
+						}
+					);
 				}
 				this.y = yy;
-				// Réécrit les deux coords en %
 				$(this).css({
-					top:  (yy * 100) + '%',
+					top: (yy * 100) + '%',
 					left: leftPercent + '%'
 				});
 				$(this).removeClass('no_event');

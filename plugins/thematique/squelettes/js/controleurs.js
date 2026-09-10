@@ -985,88 +985,133 @@ function handleObjectCollisionWithMenus(
     return y;
 }
 
+function dragNDropWithCollision(object, ui, options) {
+	const objectDOM = $(object);
+	const timeline = options.timeline;
+	const timelineTop = timeline.offset().top;
+	const timelineBottom = timelineTop + timeline.outerHeight();
+	const objectHeight = objectDOM.outerHeight();
+
+	const elementAbove = options.elementAbove
+		? objectDOM.find(options.elementAbove).first()
+		: $();
+
+	const aboveOffset = elementAbove.length
+		? elementAbove.offset().top - objectDOM.offset().top
+		: 0;
+
+	let minTop = timelineTop - aboveOffset;
+	let maxTop = timelineBottom - objectHeight;
+	if (options.topLimit) {
+		minTop = Math.max(
+			minTop,
+			options.topLimit(objectDOM)
+		);
+	}
+	if (options.bottomLimit) {
+		maxTop = Math.min(
+			maxTop,
+			options.bottomLimit(objectDOM) - objectHeight
+		);
+	}
+	let proposedTop = ui.offset.top;
+	proposedTop = Math.max(
+		minTop,
+		Math.min(proposedTop, maxTop)
+	);
+	/*
+	 * Conversion coordonnées absolues -> coordonnées relatives
+	 * au offsetParent du draggable.
+	 */
+	const parentTop = objectDOM.offsetParent().offset().top;
+	ui.position.top = proposedTop - parentTop;
+	return ui;
+}
+
 function updateConsigneConnecteurs(consigneObject, ui) {
-	const consigneDOM = $(consigneObject)
-	const buttonConsigne = consigneDOM.find('button.consigne').first()
-	const idConsigne = buttonConsigne.data('id')
+	const consigneDOM = $(consigneObject);
+	const buttonConsigne = consigneDOM.find('button.consigne').first();
+	const idConsigne = buttonConsigne.data('id');
 	const connecteursDOM = $(`[id^="connecteur_consigne_${idConsigne}_reponse_"]`);
 	const timelineTop = CCN.timelineLayerConsignes.offset().top;
-	const timelineHeight = CCN.timelineLayerConsignes.height();
-	const etiquette = consigneDOM.find(".etiquette-etape")
-
-	const adjustedUiPositionTop = handleObjectCollisionWithMenus(
-		ui.position.top,
-		etiquette.offset().top,
-		consigneDOM.offset().top,
-		consigneDOM.outerHeight(),
-		timelineTop,
-		timelineHeight
-	);
-	ui.position.top = adjustedUiPositionTop;
-
+	const adjustedUiPositionTop = ui.position.top;
 	const x1 = consigneDOM.offset().left + consigneDOM.outerWidth();
-	const y1 = adjustedUiPositionTop + consigneDOM.outerHeight()/2;
-	connecteursDOM.each(function (){
+	const y1 = adjustedUiPositionTop + consigneDOM.outerHeight() / 2;
+
+	connecteursDOM.each(function () {
 		const connecteur = $(this);
-		const reponseId = connecteur.data('reponse-id')
-		const reponseDOM = $(`#reponse_haute${reponseId}`)
+		const reponseId = connecteur.data('reponse-id');
+		const reponseDOM = $(`#reponse_haute${reponseId}`);
+		const x2 = reponseDOM.offset().left;
+		const y2 =
+			reponseDOM.offset().top +
+			reponseDOM.outerHeight() / 2 -
+			timelineTop;
 
-		const x2 = reponseDOM.offset().left
-		const y2 = reponseDOM.offset().top + reponseDOM.outerHeight()/2 - timelineTop;
+		const length = Math.sqrt(
+			(x1 - x2) * (x1 - x2) +
+			(y1 - y2) * (y1 - y2)
+		);
 
-		const length = Math.sqrt((x1 - x2) * (x1 - x2) + (y1 - y2) * (y1 - y2));
-		const angle = Math.atan2(y2 - y1, x2 - x1) * 180 / Math.PI;
-		const transform = 'rotate(' + angle + 'deg)';
+		const angle =
+			Math.atan2(y2 - y1, x2 - x1) * 180 / Math.PI;
 
-		connecteur.css(
-			{
-				'position': 'absolute',
-				'transform': transform,
-				'left': parseFloat(x1) + 'px',
-				'top': parseFloat(y1) + 'px'
-			}
-		)
-		.width(parseFloat(length) + 'px');
-	})
+		connecteur.css({
+			position: 'absolute',
+			transform: 'rotate(' + angle + 'deg)',
+			left: parseFloat(x1) + 'px',
+			top: parseFloat(y1) + 'px'
+		}).width(parseFloat(length) + 'px');
+	});
 }
 
 function updateReponseConnecteurs(reponseObject, ui) {
-	const reponseDOM = $(reponseObject)
-	const idConsigne = reponseDOM.data('consigne-id')
-	const idReponse = reponseDOM.data('reponse-id')
-	const connecteurDOM = $(`#connecteur_consigne_${idConsigne}_reponse_${idReponse}`);
-	const consigneDOM = $(`#consigne_haute${idConsigne}`);
-	const timelineTop = CCN.timelineLayerConsignes.offset().top;
-	const timelineHeight = CCN.timelineLayerConsignes.height();
-	const picto = reponseDOM.find(".picto_nombre_commentaires")
-	const cardMaxHeight = picto.length>0 ? picto.offset().top : reponseDOM.offset().top
+	const reponseDOM = $(reponseObject);
 
-	const x1 = consigneDOM.offset().left + consigneDOM.outerWidth();
-	const y1 = consigneDOM.offset().top  + consigneDOM.outerHeight() / 2 - timelineTop;
+	const idConsigne = reponseDOM.data('consigne-id');
+	const idReponse = reponseDOM.data('reponse-id');
+
+	const connecteurDOM =
+		$(`#connecteur_consigne_${idConsigne}_reponse_${idReponse}`);
+
+	const consigneDOM =
+		$(`#consigne_haute${idConsigne}`);
+
+	const timelineTop =
+		CCN.timelineLayerConsignes.offset().top;
+
+	// Départ du connecteur : bord droit de la consigne
+	const x1 =
+		consigneDOM.offset().left +
+		consigneDOM.outerWidth();
+
+	const y1 =
+		consigneDOM.offset().top +
+		consigneDOM.outerHeight() / 2 -
+		timelineTop;
+
+	// Arrivée du connecteur : bord gauche de la réponse
 	const x2 = reponseDOM.offset().left;
-    const adjustedUiPositionTop = handleObjectCollisionWithMenus(
-		ui.position.top,
-		cardMaxHeight,
-		reponseDOM.offset().top,
-		reponseDOM.outerHeight(),
-		timelineTop,
-		timelineHeight
+
+	const y2 =
+		ui.position.top +
+		reponseDOM.outerHeight() / 2;
+
+	const length = Math.sqrt(
+		(x1 - x2) * (x1 - x2) +
+		(y1 - y2) * (y1 - y2)
 	);
-    ui.position.top = adjustedUiPositionTop;
-    const y2 = adjustedUiPositionTop + reponseDOM.outerHeight() / 2;
 
-	const length = Math.sqrt((x1 - x2) * (x1 - x2) + (y1 - y2) * (y1 - y2));
-	const angle = Math.atan2(y2 - y1, x2 - x1) * 180 / Math.PI;
-	const transform = 'rotate(' + angle + 'deg)';
+	const angle =
+		Math.atan2(y2 - y1, x2 - x1) * 180 / Math.PI;
 
-	connecteurDOM.css(
-		{
-			'position': 'absolute',
-			'transform': transform,
-			'left': parseFloat(x1) + 'px',
-			'top': parseFloat(y1) + 'px'
-		}
-	)
+	connecteurDOM
+		.css({
+			position: 'absolute',
+			transform: 'rotate(' + angle + 'deg)',
+			left: parseFloat(x1) + 'px',
+			top: parseFloat(y1) + 'px'
+		})
 		.width(parseFloat(length) + 'px');
 }
 
