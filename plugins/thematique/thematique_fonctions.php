@@ -910,8 +910,8 @@ function classe_icone($id_rubrique) {
 }
 
 /**
- * Id de la rubrique-classe d'un prof (celle dont dérive son emoji
- * d'avatar), mis en cache mémoire par requête.
+ * Id de la rubrique-classe d'un auteur (prof ou élève — celle dont dérive
+ * son emoji d'avatar), mis en cache mémoire par requête.
  *
  * Un prof est lié (spip_auteurs_liens) non seulement à sa/ses classe(s),
  * mais aussi au blog pédagogique et à ses projets (voir
@@ -919,9 +919,11 @@ function classe_icone($id_rubrique) {
  * lien qui est effectivement une classe (présent dans
  * thematique_classes_rangs()), pas n'importe quelle rubrique liée. S'il a
  * plusieurs classes, la première trouvée fait foi (pas de notion de
- * "classe principale"). Extrait de thematique_avatar_animal() pour être
- * réutilisable par thematique_avatar_notification_article() (couleur de
- * fond de l'emoji dans le mail de notification, issue #217).
+ * "classe principale"). Un élève n'est en pratique lié qu'à sa seule
+ * classe, donc cette ambiguïté ne le concerne pas. Extrait de
+ * thematique_avatar_animal() pour être réutilisable par
+ * thematique_avatar_notification_article() (couleur de fond de l'emoji dans
+ * le mail de notification, issue #217).
  *
  * @param int $id_auteur
  * @return int id_rubrique de la classe, 0 si aucune classe trouvée
@@ -954,7 +956,8 @@ function thematique_id_rubrique_classe($id_auteur) {
 }
 
 /**
- * Animal (emoji) de la classe d'un prof, pour son avatar dans le menu haut.
+ * Animal (emoji) de la classe d'un auteur (prof ou élève, cf
+ * thematique_preparer_fichier_session), pour son avatar dans le menu haut.
  *
  * @param int $id_auteur
  * @return string emoji de la classe, ou '' si aucune classe trouvée
