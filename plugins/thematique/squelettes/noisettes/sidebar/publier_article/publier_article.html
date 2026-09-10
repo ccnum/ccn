@@ -5,7 +5,8 @@
 	<div class="ajax publier-article-form-wrapper">
 		#FORMULAIRE_PUBLIC_PUBLIER_ARTICLE{#ID_RUBRIQUE, #TYPE_ARTICLE, #ID_CONSIGNE}
 	</div>
+	#SET{bouton_publication, #ENV{type_article}|thematique_texte_publication{bouton}}
 	<div id="bouton-container">
-		<button id="bouton-enregistrer-article" class="bouton-publication-article" onclick="creationArticleEnregistrer()"><:thematique:enregistrer:></button>
+		<button id="bouton-enregistrer-article" class="bouton-publication-article" onclick="creationArticleEnregistrer()">#GET{bouton_publication}</button>
 	</div>
 </div>

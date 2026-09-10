@@ -497,6 +497,56 @@ function thematique_rendre_type_article_affichable($type_article) {
 }
 
 /**
+ * Textes du popup de publication (titre de section, phrase d'intro, libellé
+ * du champ texte, libellé du bouton), propres à chacun des 5 types de
+ * contenu publiables via ce popup (cf commentaire en tête de
+ * squelettes/publier.html) — remplace le texte générique unique utilisé
+ * avant l'issue #429 (maquettes proposées par JulMonaco, 09/2026).
+ *
+ * Appelée comme filtre : `#ENV{type_article}|thematique_texte_publication{titre}`
+ *
+ * @param string $type_article
+ *   consignes, travail_en_cours, ressources, blogs ou evenements
+ * @param string $partie
+ *   titre, intro, champ_texte ou bouton
+ * @return string
+ *   Vide si aucun texte défini pour cette partie (ex: pas d'intro pour une mission).
+ */
+function thematique_texte_publication($type_article, $partie) {
+	static $slugs = [
+		'consignes' => 'mission',
+		'travail_en_cours' => 'reponse_mission',
+		'ressources' => 'ressource',
+		'blogs' => 'evenement',
+		'evenements' => 'information',
+	];
+
+	if (isset($slugs[$type_article])) {
+		$cle = 'thematique:publier_' . $partie . '_' . $slugs[$type_article];
+		// force=>false : une clé absente du fichier de lang renvoie une chaîne
+		// vide plutôt que le "service minimum" de _T() (la clé humanisée) —
+		// utile ici car certaines parties n'ont pas de texte pour tous les
+		// types (ex: pas d'intro pour une mission).
+		return _T($cle, [], ['force' => false]);
+	}
+
+	// Types non couverts par les maquettes de l'issue #429 (ex: cap-sur-l-annee,
+	// la-rencontre, agora) : on garde l'ancien texte générique.
+	switch ($partie) {
+		case 'titre':
+			return _T('thematique:etape1_redaction_article', ['type_article' => thematique_rendre_type_article_affichable(
+				$type_article
+			)]);
+		case 'champ_texte':
+			return _T('info_texte');
+		case 'bouton':
+			return _T('thematique:enregistrer');
+		default:
+			return '';
+	}
+}
+
+/**
  * id_objet à utiliser pour joindre un document (#FORMULAIRE_JOINDRE_DOCUMENT)
  * à un article qui n'existe pas encore en base — cas du formulaire public de
  * publication (sidebar-etape-2-container), où l'upload de document doit être
