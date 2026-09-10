@@ -98,6 +98,20 @@
     padding: 0.1rem;
 }
 
+/* Photo de l'auteur (intervenant sans classe rattachée, cf
+   thematique_avatar_notification_auteur()) à la place de l'emoji de classe. */
+.forum-card .forum-card-icone-photo {
+    padding: 0;
+    overflow: hidden;
+}
+
+.forum-card .forum-card-icone-photo img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 50%;
+}
+
 .forum-card .nom-auteur {
     font-weight: 600;
 }

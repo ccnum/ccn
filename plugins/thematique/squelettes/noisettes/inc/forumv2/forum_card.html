@@ -9,13 +9,26 @@
 			]
 		</div>
 	]
+	#SET{avatar, #ENV{id_auteur}|thematique_avatar_notification_auteur}
+	#SET{avatar_type, #GET{avatar}|table_valeur{type}}
 	<div class="col-forum col-forum-icone-container">
-		<div class="forum-card-icone [ (#ENV{id_rubrique_classe}|oui)bgc_classe_[(#ENV{id_rubrique_classe}|classe_numero)]]">
-			[(#ENV{
-				id_rubrique_classe,
-				#ENV{id_auteur}|filtre_auteur_vers_classe
-			}|classe_icone)]
-		</div>
+		[(#GET{avatar_type}|=={emoji}|oui)
+			<div class="forum-card-icone" style="background-color:#GET{avatar}|table_valeur{couleur_fond};">#GET{avatar}|table_valeur{valeur}</div>
+		]
+		[(#GET{avatar_type}|=={logo}|oui)
+			<div class="forum-card-icone forum-card-icone-photo"><img src="[(#GET{avatar}|table_valeur{valeur}|url_absolue)]" alt="" /></div>
+		]
+		[(#GET{avatar_type}|=={ent}|oui)
+			<div class="forum-card-icone forum-card-icone-photo"><img src="#GET{avatar}|table_valeur{valeur}" alt="" /></div>
+		]
+		[(#GET{avatar_type}|non)
+			<div class="forum-card-icone [ (#ENV{id_rubrique_classe}|oui)bgc_classe_[(#ENV{id_rubrique_classe}|classe_numero)]]">
+				[(#ENV{
+					id_rubrique_classe,
+					#ENV{id_auteur}|filtre_auteur_vers_classe
+				}|classe_icone)]
+			</div>
+		]
 	</div>
 	<div class="col-forum col-forum-message">
 		<div class="header">
