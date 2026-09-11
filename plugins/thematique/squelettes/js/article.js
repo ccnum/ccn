@@ -94,6 +94,7 @@ function Article() {
 
 		const _thisId = this.id_objet;
 		const _thisTypeObjet = this.type_objet;
+		const leftPercent = this.x / CCN.projet.nombre_jours_total * 100;
 
 		this.div_texte.on('click', () => isBlog
 			? callArticleBlog(_thisId)
@@ -106,6 +107,12 @@ function Article() {
 				$(this).children().children().removeAttr("onClick");
 			},
 			drag: function (event, ui) {
+				// axis:"y" ne bloque que le déplacement horizontal via la souris,
+				// mais jQuery UI réécrit quand même `left` en px à chaque frame
+				// (cf. Draggable._mouseDrag) : sans ça, la carte perd son `left`
+				// en % et ne suit plus le zoom horizontal de la timeline une
+				// fois draguée (#366).
+				ui.position.left = CCN.projet.timeline.width() * leftPercent / 100;
 				dragWithCollision(this, ui, {
 					timeline: CCN.timelineLayerConsignes,
 					getVisualBounds: function (objectDOM) {
@@ -131,12 +138,18 @@ function Article() {
 				});
 			},
 			stop: function (event, ui) {
-				if (CCN.admin == 0) {
-					const y_parent = $(this).parent().height();
-					const yy = ui.position.top / y_parent;
+				const y_parent = $(this).parent().height();
+				const yy = ui.position.top / y_parent;
 
+				if (CCN.admin == 0) {
 					$.post("spip.php?page=ajax&mode=article-sauve-coordonnees", { id_objet: _thisId, type_objet: _thisTypeObjet, X: 0, Y: yy });
 				}
+				// Restaure top/left en % : jQuery UI les a figés en px pendant
+				// le drag (cf. commentaire dans `drag` ci-dessus).
+				$(this).css({
+					top: (yy * 100) + '%',
+					left: leftPercent + '%'
+				});
 			}
 		});
 	}
