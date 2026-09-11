@@ -48,7 +48,7 @@ return [
 	'commentaires'                   => 'Commentaires',
 	'commenter'                      => 'Commenter',
 	'commenter_title'                => 'commenter',
-	'copier_raccourci'               => 'Copier le raccourci',
+	'inserer_raccourci'               => 'Insérer dans le texte',
 	'confirmation_supprimer_commentaire' => 'Êtes-vous sûr de vouloir supprimer ce commentaire ?',
 	'consigne'						 => 'consigne',
 	'mission_numero'                 => 'Mission N°@numero@',

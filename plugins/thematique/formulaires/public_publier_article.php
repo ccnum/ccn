@@ -23,7 +23,7 @@ function formulaires_public_publier_article_charger_dist($id_rubrique, $type_art
 		'id_article' => 0,
 		'titre' => '',
 		'texte' => '',
-		'date' => '',
+		'date' => date('Y-m-d'),
 	];
 
 	// Si on répond à une consigne, chercher une éventuelle réponse existante
@@ -36,6 +36,7 @@ function formulaires_public_publier_article_charger_dist($id_rubrique, $type_art
 			$valeurs['texte'] = $reponse['texte'];
 			$valeurs['id_rubrique'] = $reponse['id_rubrique'];
 			$valeurs['id_consigne'] = $reponse['id_consigne'];
+			$valeurs['date'] = $reponse['date'];
 		}
 	}
 	return $valeurs;
@@ -53,12 +54,7 @@ function formulaires_public_publier_article_verifier_dist($id_rubrique, $id_cons
 	return $erreurs;
 }
 
-
-function formulaires_public_publier_article_traiter_dist(
-    $id_rubrique,
-    $type_article,
-    $id_consigne = 0
-) {
+function formulaires_public_publier_article_traiter_dist($id_rubrique, $type_article, $id_consigne = 0) {
 	// Ceci est un système anti-spam : si on appuie plusieurs fois très vite sur "enregistrer un article",
 	// on ne l'enregistrera qu'une fois.
 	include_spip('inc/session');
@@ -76,7 +72,7 @@ function formulaires_public_publier_article_traiter_dist(
 	}
 	session_set($cle, time());
 
-	spip_log("rubrique au moment de traiter : " . $id_rubrique, "debug");
+	spip_log('rubrique au moment de traiter : ' . $id_rubrique, 'debug');
 	include_spip('inc/editer');
 	include_spip('prive/formulaires/editer_article');
 
