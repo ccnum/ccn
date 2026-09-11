@@ -43,43 +43,35 @@ function creationArticleEnregistrer() {
 }
 
 /**
- * Copie dans le presse-papier le raccourci SPIP (<docXX>/<imgXX>) d'un
- * document listé dans sidebar-etape-2-container (cf
- * noisettes/inc/publier_article_documents.html), pour le coller dans le
- * champ "texte". Affiche brièvement la classe "copie" sur l'élément cliqué
- * en retour visuel.
+ * Insère le raccourci SPIP (<docXX>/<imgXX>) d'un document listé dans
+ * sidebar-etape-2-container (cf noisettes/inc/publier_article_documents.html)
+ * directement dans le champ "texte" de l'article - comme dans le BO SPIP, où
+ * cliquer sur un document l'insère dans le texte plutôt que d'obliger un
+ * copier-coller.
+ *
+ * Si ce raccourci est déjà présent dans le texte, on ne le réinsère pas une
+ * deuxième fois (retour visuel "copie" sur l'élément cliqué pour signaler
+ * qu'il est déjà là) ; sinon il est inséré à la position du curseur (ou
+ * ajouté en fin de texte si le champ n'a pas le focus).
  */
-function copierRaccourciDocument(element) {
+function insererRaccourciDocument(element) {
+    const texte = document.getElementById("texte")
+    if (!texte) return
+
     const raccourci = element.textContent
-    navigator.clipboard.writeText(raccourci).then(() => {
-        element.classList.add("copie")
-        setTimeout(() => element.classList.remove("copie"), 1000)
-    })
-}
 
-/**
- * Bascule l'alignement (left/center/right) associé au raccourci d'un
- * document listé dans sidebar-etape-2-container (cf .raccourci-ligne dans
- * noisettes/inc/publier_article_documents.html), en mettant à jour le
- * texte du raccourci affiché (<docXX|left> etc., syntaxe des raccourcis
- * SPIP) — c'est ce texte que copierRaccourciDocument() copie ensuite.
- * Recliquer sur le bouton déjà actif retire l'alignement.
- */
-function basculerAlignementDocument(bouton) {
-    const ligne = bouton.closest(".raccourci-ligne")
-    const raccourciElement = ligne && ligne.querySelector(".raccourci")
-    if (!raccourciElement) return
-
-    const dejaSelectionne = bouton.classList.contains("selected")
-    ligne.querySelectorAll(".lien-alignement").forEach(b => b.classList.remove("selected"))
-
-    const { prefixe, idDocument } = raccourciElement.dataset
-    if (dejaSelectionne) {
-        raccourciElement.textContent = `<${prefixe}${idDocument}>`
-    } else {
-        bouton.classList.add("selected")
-        raccourciElement.textContent = `<${prefixe}${idDocument}|${bouton.dataset.align}>`
+    if (!texte.value.includes(raccourci)) {
+        const debut = texte.selectionStart ?? texte.value.length
+        const fin = texte.selectionEnd ?? texte.value.length
+        texte.value = texte.value.slice(0, debut) + raccourci + texte.value.slice(fin)
+        const position = debut + raccourci.length
+        texte.setSelectionRange(position, position)
+        texte.dispatchEvent(new Event("input", { bubbles: true }))
+        texte.focus()
     }
+
+    element.classList.add("copie")
+    setTimeout(() => element.classList.remove("copie"), 1000)
 }
 
 /**

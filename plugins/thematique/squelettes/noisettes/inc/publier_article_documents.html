@@ -28,7 +28,7 @@
 			<div class="fichier" id="doc#ID_DOCUMENT">
 				<div class="description">
 					[(#MIME_TYPE|match{image}|oui)
-						<div class="previsualisation [(#EXTENSION)]"><span style="background-image:url([(#FICHIER|image_reduire{100})]);"></span></div>
+						<div class="previsualisation [(#EXTENSION)]"><span style="background-image:url([(#FICHIER|image_reduire{100}|extraire_attribut{src})]);"></span></div>
 					]
 					[(#MIME_TYPE|match{image}|non)
 						<div class="vignette_extension [(#EXTENSION)]"><span></span></div>
@@ -42,12 +42,7 @@
 				<div class="raccourci-ligne">
 					[(#MODE|=={image}|oui)#SET{raccourci_prefixe, img}]
 					[(#MODE|=={image}|non)#SET{raccourci_prefixe, doc}]
-					<span class="raccourci" data-prefixe="#GET{raccourci_prefixe}" data-id-document="#ID_DOCUMENT" onclick="copierRaccourciDocument(this)" title="<:thematique:copier_raccourci:>">&lt;#GET{raccourci_prefixe}#ID_DOCUMENT&gt;</span>
-					<div class="alignement-document">
-						<button type="button" class="lien-alignement" data-align="left" onclick="basculerAlignementDocument(this)">left</button>
-						<button type="button" class="lien-alignement" data-align="center" onclick="basculerAlignementDocument(this)">center</button>
-						<button type="button" class="lien-alignement" data-align="right" onclick="basculerAlignementDocument(this)">right</button>
-					</div>
+					<span class="raccourci" data-prefixe="#GET{raccourci_prefixe}" data-id-document="#ID_DOCUMENT" onclick="insererRaccourciDocument(this)" title="<:thematique:inserer_raccourci:>">&lt;#GET{raccourci_prefixe}#ID_DOCUMENT&gt;</span>
 				</div>
 				<div class="actions">
 					[(#AUTORISER{dissocierdocuments,#ENV{objet},#ENV{id_objet}}|oui)

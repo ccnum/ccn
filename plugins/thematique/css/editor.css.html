@@ -317,9 +317,9 @@ p.boutons:has(input[type="submit"]) {
 }
 
 /* Raccourci <docXX>/<imgXX> d'un document listé dans
-   sidebar-etape-2-container, à copier-coller dans le champ "texte"
+   sidebar-etape-2-container : cliquer dessus l'insère dans le champ "texte"
    (cf noisettes/inc/publier_article_documents.html et
-   copierRaccourciDocument() dans publier_article.js). */
+   insererRaccourciDocument() dans publier_article.js). */
 #documents_publier_article .raccourci {
 	display: inline-block;
 	font-family: monospace;
@@ -339,36 +339,15 @@ p.boutons:has(input[type="submit"]) {
 	font-size: 0.85em;
 }
 
-/* Raccourci + alignement, sur leur propre ligne (hors du flex ".description"
-   hérité de saisies/inc-bigup_liste_fichiers.html, cf. la remarque en tête
-   de fichier sur les classes CSS communes). */
+/* Raccourci, sur sa propre ligne (hors du flex ".description" hérité de
+   saisies/inc-bigup_liste_fichiers.html, cf. la remarque en tête de fichier
+   sur les classes CSS communes). */
 #documents_publier_article .raccourci-ligne {
 	display: flex;
 	align-items: center;
 	flex-wrap: wrap;
 	gap: 0.6em;
 	margin-top: 0.5em;
-}
-
-#documents_publier_article .alignement-document {
-	display: flex;
-	gap: 0.4em;
-}
-
-#documents_publier_article .lien-alignement {
-	background: none;
-	border: 1px solid #ccc;
-	border-radius: 3px;
-	padding: 1px 6px;
-	font-size: 0.8em;
-	color: var(--color-default);
-	cursor: pointer;
-}
-
-#documents_publier_article .lien-alignement.selected {
-	background: var(--color-tonic);
-	border-color: var(--color-tonic);
-	color: white;
 }
 
 /* Supprimer/Détacher/Modifier : en dehors de ".description", donc plus
