@@ -18,6 +18,49 @@ function autoriser_thematique_configurer_dist($faire, $type, $id, $qui, $opt) {
 }
 
 /**
+ * Restriction sur le champ 'date' d'un article (issue #420, règle actée par
+ * ChristoErasme le 09/09) : au-delà de l'autorisation standard de modifier
+ * l'article (autoriser_article_modifier_dist()), la date n'est éditable que
+ * par :
+ * - un admin, sur n'importe quel type de contenu (mission, agenda, salle
+ *   des profs, ressource) ;
+ * - un intervenant, uniquement sur un évènement (agenda) ou un billet de
+ *   salle des profs (blogs) — pas sur une mission (consignes) ni une
+ *   ressource.
+ * "Formateur canopé" n'a volontairement pas de traitement distinct : rôle
+ * fusionné avec "intervenant" (thematique_donner_role() ne le distingue pas
+ * — cf discussion #420), mêmes droits que lui pour cette autorisation.
+ *
+ * Le crayon #EDIT{date} passe systématiquement `champ => 'date'` en option
+ * (cf classe_boucle_crayon() et autoriser_crayonner_dist() dans le plugin
+ * crayons) : toute autre demande de modification d'article retombe sur le
+ * comportement standard, inchangé.
+ *
+ * Fait suite au commit 3d1639a6 (#420) qui laissait cette restriction "à
+ * traiter séparément".
+ */
+function autoriser_article_modifier($faire, $type, $id, $qui, $opt) {
+	if (!autoriser_article_modifier_dist($faire, $type, $id, $qui, $opt)) {
+		return false;
+	}
+
+	if (($opt['champ'] ?? null) !== 'date') {
+		return true;
+	}
+
+	include_spip('thematique_fonctions');
+	$role = thematique_donner_role(intval($qui['id_auteur'] ?? 0));
+	if ($role === 'admin') {
+		return true;
+	}
+	if ($role !== 'intervenant') {
+		return false;
+	}
+
+	return in_array(thematique_type_objet_article($id), ['evenements', 'blogs'], true);
+}
+
+/**
  * Suppression d'un commentaire de forum (issue #356), règle actée par
  * ChristoErasme le 24/08 :
  * - un élève ne peut jamais supprimer, même son propre message ;
