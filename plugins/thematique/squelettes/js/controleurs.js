@@ -893,6 +893,31 @@ function createReponse(id_consigne, id_rubrique_auteur, numero) {
 }
 
 /**
+ * Ouvre la modale de publication (#429, noisettes/sidebar/publier_article/)
+ * en mode édition pour un article déjà publié, plutôt qu'un formulaire
+ * d'édition dédié - clic sur le bouton "Modifier" du header d'une mission/
+ * réponse/évènement (cf header_sidebar.html, header_reponse_sidebar.html).
+ *
+ * L'autorisation réelle (et la restriction par rôle sur le champ date) est
+ * revérifiée côté PHP (formulaires_public_publier_article_charger_dist,
+ * thematique_autoriser.php) : ce bouton n'est de toute façon affiché que si
+ * #AUTORISER{modifier,article,...} est vrai pour l'auteur courant.
+ *
+ * @param {number} id_article
+ * @param {string} type_article - consignes/travail_en_cours/blogs/evenements/ressources
+ *
+ * @see loadContentInMainSidebar
+ * @see createReponse
+ */
+function callModifierArticle(id_article, type_article) {
+	if (!Number.isInteger(Number(id_article)) || id_article <= 0) return;
+	expandSidebar();
+	setFullscreenModeToCols(false);
+	const url = CCN.projet.url_popup_modifier_article + "&id_article=" + id_article + "&type_objet=" + type_article;
+	loadContentInMainSidebar(url, null, "publication_article");
+}
+
+/**
  * Cherche la réponse correspondant à un id_reponse dans CCN.consignes.
  *
  * @param   {number} id_reponse
