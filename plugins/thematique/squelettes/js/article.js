@@ -69,7 +69,12 @@ function Article() {
 			`;
 		} else {
 			html = `
-				<div class="timeline_item article_evenement_container" style="top:${this.y * 100}%; left:${this.x / CCN.projet.nombre_jours_total * 100}%;">
+				<div
+					class="timeline_item article_evenement_container"
+					style="top:${this.y * 100}%; left:${this.x / CCN.projet.nombre_jours_total * 100}%;"
+				>
+					<div class="article_evenement_shape"></div>
+					${picto_commentaires}
 					<div id="article_evenement${this.id}" class="article_evenement">
 						<div class="article_evenement_inner">
 							<div class="bulle_contenu">
@@ -77,7 +82,6 @@ function Article() {
 								<div class="bulle-texte">${titreSur}</div>
 							</div>
 						</div>
-						${picto_commentaires}
 					</div>
 				</div>
 			`;
@@ -95,20 +99,45 @@ function Article() {
 			? callArticleBlog(_thisId)
 			: callArticleEvenement(_thisId, _thisTypeObjet)
 		);
-
-		if (CCN.admin == 0) {
-			this.div_base.draggable({
-				axis: "y",
-				cancel: '',  // Force le drag and drop
-				start: function (event, ui) {
-					$(this).children().children().removeAttr("onClick");
-				},
-				stop: function (event, ui) {
+		this.div_base.draggable({
+			axis: "y",
+			cancel: '',  // Force le drag and drop
+			start: function (event, ui) {
+				$(this).children().children().removeAttr("onClick");
+			},
+			drag: function (event, ui) {
+				dragWithCollision(this, ui, {
+					timeline: CCN.timelineLayerConsignes,
+					getVisualBounds: function (objectDOM) {
+						const picto = objectDOM.find('.picto_nombre_commentaires')[0];
+						let topBound;
+						if(picto) {
+							topBound = picto.getBoundingClientRect().top
+						}
+						const shape = objectDOM.find('.article_evenement_shape')[0];
+						if (shape) {
+							const rect = shape.getBoundingClientRect();
+							return {
+								top: topBound ? Math.min(topBound, rect.top) : rect.top,
+								bottom: rect.bottom
+							};
+						}
+						const rect = objectDOM[0].getBoundingClientRect();
+						return {
+							top: topBound ? Math.min(topBound, rect.top) : rect.top,
+							bottom: rect.bottom
+						};
+					}
+				});
+			},
+			stop: function (event, ui) {
+				if (CCN.admin == 0) {
 					const y_parent = $(this).parent().height();
 					const yy = ui.position.top / y_parent;
+
 					$.post("spip.php?page=ajax&mode=article-sauve-coordonnees", { id_objet: _thisId, type_objet: _thisTypeObjet, X: 0, Y: yy });
 				}
-			});
-		}
+			}
+		});
 	}
 }

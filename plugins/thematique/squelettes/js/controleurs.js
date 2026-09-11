@@ -985,46 +985,44 @@ function handleObjectCollisionWithMenus(
     return y;
 }
 
-function dragNDropWithCollision(object, ui, options) {
+function dragWithCollision(object, ui, options) {
 	const objectDOM = $(object);
-	const timeline = options.timeline;
-	const timelineTop = timeline.offset().top;
-	const timelineBottom = timelineTop + timeline.outerHeight();
-	const objectHeight = objectDOM.outerHeight();
+	const timelineDOM = $(options.timeline);
+	const timelineRect = timelineDOM[0].getBoundingClientRect();
+	const getVisualBounds = options.getVisualBounds || function (objectDOM) {
+		const rect = objectDOM[0].getBoundingClientRect();
 
-	const elementAbove = options.elementAbove
-		? objectDOM.find(options.elementAbove).first()
-		: $();
+		return {
+			top: rect.top,
+			bottom: rect.bottom
+		};
+	};
+	const currentBounds = getVisualBounds(objectDOM);
 
-	const aboveOffset = elementAbove.length
-		? elementAbove.offset().top - objectDOM.offset().top
-		: 0;
+	/*
+	 * Distance entre le top de la card et le haut
+	 * de sa représentation visuelle.
+	 *
+	 * Exemple :
+	 * card top     = 200
+	 * élément haut = 170
+	 *
+	 * => visualOffsetTop = -30
+	 */
+	const objectRect = objectDOM[0].getBoundingClientRect();
+	const visualOffsetTop = currentBounds.top - objectRect.top;
+	const visualOffsetBottom = currentBounds.bottom - objectRect.top;
 
-	let minTop = timelineTop - aboveOffset;
-	let maxTop = timelineBottom - objectHeight;
-	if (options.topLimit) {
-		minTop = Math.max(
-			minTop,
-			options.topLimit(objectDOM)
-		);
-	}
-	if (options.bottomLimit) {
-		maxTop = Math.min(
-			maxTop,
-			options.bottomLimit(objectDOM) - objectHeight
-		);
-	}
+	const minTop = timelineRect.top - visualOffsetTop;
+	const maxTop = timelineRect.bottom - visualOffsetBottom;
 	let proposedTop = ui.offset.top;
 	proposedTop = Math.max(
 		minTop,
 		Math.min(proposedTop, maxTop)
 	);
-	/*
-	 * Conversion coordonnées absolues -> coordonnées relatives
-	 * au offsetParent du draggable.
-	 */
-	const parentTop = objectDOM.offsetParent().offset().top;
-	ui.position.top = proposedTop - parentTop;
+	const parent = objectDOM.offsetParent()[0];
+	const parentRect = parent.getBoundingClientRect();
+	ui.position.top = proposedTop - parentRect.top;
 	return ui;
 }
 

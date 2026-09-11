@@ -109,9 +109,23 @@ function Reponse() {
 				},
 				drag: function (event, ui) {
 
-					dragNDropWithCollision(this, ui, {
+					dragWithCollision(this, ui, {
 						timeline: CCN.timelineLayerConsignes,
-						elementAbove: '.picto_nombre_commentaires'
+						getVisualBounds: (objectDOM) => {
+							const cardRect = objectDOM[0].getBoundingClientRect();
+							const picto = objectDOM.find('.picto_nombre_commentaires').first();
+							if (picto.length) {
+								const rect = picto[0].getBoundingClientRect();
+								return {
+									top: rect.top,
+									bottom: cardRect.bottom
+								};
+							}
+							return {
+								top: cardRect.top,
+								bottom: cardRect.bottom
+							};
+						}
 					});
 
 					updateReponseConnecteurs(event.target, ui);

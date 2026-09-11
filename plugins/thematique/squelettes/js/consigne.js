@@ -147,9 +147,24 @@ function Consigne() {
 			},
 			drag: function (event, ui) {
 				ui.position.left =CCN.projet.timeline.width() * leftPercent / 100;
-				dragNDropWithCollision(this, ui, {
+				dragWithCollision(this, ui, {
 					timeline: CCN.timelineLayerConsignes,
-					elementAbove: '.etiquette-etape'
+
+					getVisualBounds: (objectDOM) => {
+						const cardRect = objectDOM[0].getBoundingClientRect();
+						const etiquette = objectDOM.find('.etiquette-etape').first();
+						if (etiquette.length) {
+							const rect = etiquette[0].getBoundingClientRect();
+							return {
+								top: rect.top,
+								bottom: cardRect.bottom
+							};
+						}
+						return {
+							top: cardRect.top,
+							bottom: cardRect.bottom
+						};
+					}
 				});
 				updateConsigneConnecteurs(event.target, ui);
 			},
