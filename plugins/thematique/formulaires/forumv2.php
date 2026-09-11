@@ -177,9 +177,18 @@ function formulaires_forumv2_traiter_dist($id_article) {
 			}
 		}
 		return [
+			// Un commentaire publié via ce formulaire "ajax" est en fait suivi
+			// d'une vraie navigation (SPIP coeur remplace la page via
+			// document.location.replace() dès qu'il détecte une redirection,
+			// cf ajax_redirect dans prive/javascript/ajaxCallback.js) : sans
+			// onglet=commentaires ici, la mission se recharge bien mais
+			// retombe sur son premier onglet au lieu de rester sur les
+			// commentaires (cf urlParam 'onglet' de #mission-tabs, initMissionTabs
+			// dans controleurs.js).
 			'redirect' => generer_url_public('article', [
 				'id_article' => $id_article,
 				'mode' => 'complet',
+				'onglet' => 'commentaires',
 			]),
 		];
 	}
