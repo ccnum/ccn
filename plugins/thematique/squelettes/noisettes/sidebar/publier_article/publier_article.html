@@ -1,13 +1,20 @@
 <div class="publier-article-container">
-	#SET{bandeau_publication, #ENV{type_article}|thematique_texte_publication{bandeau}}
+	[(#REM) Édition d'un article existant (#429/#420 : bouton "Modifier" du header
+	réutilisant cette même modale, cf callModifierArticle() dans controleurs.js)
+	plutôt que création : id_article présent dès l'ouverture du popup. ]
+	#SET{est_edition, #ENV{id_article}|oui}
+
+	[(#GET{est_edition}|non)#SET{bandeau_publication, #ENV{type_article}|thematique_texte_publication{bandeau}}]
+	[(#GET{est_edition}|oui)#SET{bandeau_publication, <:thematique:modifier_publication:>}]
 	<div class="publier-article-header">
 		<span class="publier-article-bandeau etiquette-etape"><span class="texte-etiquette">#GET{bandeau_publication}</span></span>
 		<button type="button" id="sidebar-close" class="icon btn-reset" aria-label="<:thematique:fermer:>"></button>
 	</div>
 	<div class="ajax publier-article-form-wrapper">
-		#FORMULAIRE_PUBLIC_PUBLIER_ARTICLE{#ID_RUBRIQUE, #TYPE_ARTICLE, #ID_CONSIGNE}
+		#FORMULAIRE_PUBLIC_PUBLIER_ARTICLE{#ID_RUBRIQUE, #TYPE_ARTICLE, #ID_CONSIGNE, #ENV{id_article}}
 	</div>
-	#SET{bouton_publication, #ENV{type_article}|thematique_texte_publication{bouton}}
+	[(#GET{est_edition}|non)#SET{bouton_publication, #ENV{type_article}|thematique_texte_publication{bouton}}]
+	[(#GET{est_edition}|oui)#SET{bouton_publication, <:thematique:enregistrer:>}]
 	<div id="bouton-container">
 		<button id="bouton-enregistrer-article" class="bouton-publication-article" onclick="creationArticleEnregistrer()">#GET{bouton_publication}</button>
 	</div>

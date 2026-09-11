@@ -33,12 +33,19 @@ Arguments :
 			</div>
 			<div id="header-row-2">
 				#TITRE
+				[(#AUTORISER{modifier,article,#ID_ARTICLE}|oui)
+				<button type="button" class="bouton-modifier-article btn-reset" onclick="callModifierArticle(#ID_ARTICLE, '#ENV{type_objet}')"><:thematique:modifier:></button>
+				]
 			</div>
 		</div>
 	</div>
 	[(#ENV{type_objet}|in_array{#LISTE{blogs,evenements}}|oui)
 		<div class="popup_titre [popup_titre_(#ENV{type_objet})]">
-			<h2 class="#EDIT{titre} titre">[(#TITRE)]</h2>
+			<h2 class="#EDIT{titre} titre">[(#TITRE)]
+				[(#AUTORISER{modifier,article,#ID_ARTICLE}|oui)
+				<button type="button" class="bouton-modifier-article btn-reset" onclick="callModifierArticle(#ID_ARTICLE, '#ENV{type_objet}')"><:thematique:modifier:></button>
+				]
+			</h2>
 			<div class="auteur_date">
 				<span class="date #EDIT{date}">[(#DATE|nom_jour)] [(#DATE|affdate)]</span>
 				[<span class="auteur">(#LESAUTEURS)</span>]

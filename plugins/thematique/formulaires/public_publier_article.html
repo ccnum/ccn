@@ -3,6 +3,10 @@
 	[<p class="reponse_formulaire reponse_formulaire_erreur">(#ENV*{message_erreur})</p>]
 
 	#SET{id_objet_document, #ENV{id_article}|thematique_id_objet_document_temp}
+	[(#REM) Édition d'un article déjà publié (#429/#420, cf callModifierArticle() /
+	le bouton "Modifier" du header) plutôt que création : id_article non nul dès
+	le chargement du formulaire. ]
+	#SET{est_edition, #ENV{id_article}|oui}
 
 	<div class="editer-groupe">
 		<div id="sidebar-etape-2-container">
@@ -22,19 +26,27 @@
 				<input type="hidden" name="id_article" value="#ENV{id_article}" />
 				<input type="hidden" name="id_parent" value="#ENV{id_parent}" />
 
+				[(#GET{est_edition}|non)
 				#SET{titre_publication, #ENV{type_article}|thematique_texte_publication{titre}}
 				#SET{intro_publication, #ENV{type_article}|thematique_texte_publication{intro}}
+				]
+				[(#GET{est_edition}|oui)
+				#SET{titre_publication, <:thematique:modifier_publication:>}
+				#SET{intro_publication, ''}
+				]
 				<h3>#GET{titre_publication}</h3>
 				[(#GET{intro_publication}|oui)
 				<p class="publier-article-intro">#GET{intro_publication}</p>
 				]
 
+				[(#GET{est_edition}|non)
 				[(#ENV{type_article}|=={consignes}|oui)
 				<ul class="publier-article-checklist">
 					<li><:thematique:publier_checklist_phrases_courtes:></li>
 					<li><:thematique:publier_checklist_eviter_majuscules:></li>
 					<li><:thematique:publier_checklist_ajouter_images:></li>
 				</ul>
+				]
 				]
 
 				<div class="editer-ligne">
@@ -48,11 +60,13 @@
 					</div>
 
 					[(#ENV{type_article}|in_array{#LISTE{consignes,blogs,evenements}}|oui)
+					[(#ENV{peut_modifier_date}|oui)
 					<div class="editer editer_date[ (#ENV**{erreurs}|table_valeur{date}|oui)erreur]">
 						<label for="date"><:thematique:date_article:></label>
 						[<span class="erreur_message">(#ENV**{erreurs}|table_valeur{date})</span>]
 						<input type="date" class="text" name="date" id="date" value="[(#ENV**{date}|substr{0,10})]" />
 					</div>
+					]
 					]
 				</div>
 

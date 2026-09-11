@@ -11,6 +11,9 @@
                         font-size: 14px;"
             >
                 [(#TITRE)]
+                [(#AUTORISER{modifier,article,#ID_ARTICLE}|oui)
+                <button type="button" class="bouton-modifier-article btn-reset" onclick="callModifierArticle(#ID_ARTICLE, '#ENV{type_objet}')"><:thematique:modifier:></button>
+                ]
             </div>
 		</div>
 	</div>
