@@ -38,26 +38,46 @@ function autoriser_thematique_configurer_dist($faire, $type, $id, $qui, $opt) {
  *
  * Fait suite au commit 3d1639a6 (#420) qui laissait cette restriction "à
  * traiter séparément".
+ *
+ * Garde `function_exists` : le plugin contrib `autorite` (plugins/autorite,
+ * pas maison) déclare lui aussi `autoriser_article_modifier()` en dur (pas
+ * de suffixe `_dist`) dans inc/autoriser.php, conditionnellement à sa
+ * config stockée en meta (clé `autorite`, ex. option "auteur peut modifier
+ * son article"). PHP ne permet pas de redéclarer une fonction : sans ce
+ * garde, sur un environnement où cette config est active (ex. validation),
+ * l'inclusion de ce fichier fatalait (Cannot redeclare
+ * autoriser_article_modifier()) → 500 sur tout le site. Si `autorite` a
+ * gagné la déclaration, la restriction #420 sur le champ date est
+ * inactive : à vérifier si la config `autorite` en question sert encore
+ * réellement sur cet environnement, auquel cas il faudrait soit la
+ * désactiver, soit fusionner la logique dans le fichier `autorite` lui-même.
  */
-function autoriser_article_modifier($faire, $type, $id, $qui, $opt) {
-	if (!autoriser_article_modifier_dist($faire, $type, $id, $qui, $opt)) {
-		return false;
-	}
+if (!function_exists('autoriser_article_modifier')) {
+	function autoriser_article_modifier($faire, $type, $id, $qui, $opt) {
+		if (!autoriser_article_modifier_dist($faire, $type, $id, $qui, $opt)) {
+			return false;
+		}
 
-	if (($opt['champ'] ?? null) !== 'date') {
-		return true;
-	}
+		if (($opt['champ'] ?? null) !== 'date') {
+			return true;
+		}
 
-	include_spip('thematique_fonctions');
-	$role = thematique_donner_role(intval($qui['id_auteur'] ?? 0));
-	if ($role === 'admin') {
-		return true;
-	}
-	if ($role !== 'intervenant') {
-		return false;
-	}
+		include_spip('thematique_fonctions');
+		$role = thematique_donner_role(intval($qui['id_auteur'] ?? 0));
+		if ($role === 'admin') {
+			return true;
+		}
+		if ($role !== 'intervenant') {
+			return false;
+		}
 
-	return in_array(thematique_type_objet_article($id), ['evenements', 'blogs'], true);
+		return in_array(thematique_type_objet_article($id), ['evenements', 'blogs'], true);
+	}
+} else {
+	spip_log(
+		'thematique_autoriser : autoriser_article_modifier() déjà déclarée (probablement par le plugin autorite) — restriction #420 sur le champ date non appliquée',
+		'thematique' . _LOG_ERREUR
+	);
 }
 
 /**
