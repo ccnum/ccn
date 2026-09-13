@@ -188,6 +188,8 @@ rm -rf config/mes_options.php
 /bin/cat << MAINEOF > config/mes_options.php
 <?php
 if (!defined("_ECRIRE_INC_VERSION")) return;
+error_reporting(E_ALL ^ E_NOTICE);
+ini_set('display_errors', 'On');
 \$GLOBALS['spip_header_silencieux'] = 1;
 \$GLOBALS['taille_des_logs'] = 500;
 define('_MAX_LOG', 500000);
