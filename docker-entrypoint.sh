@@ -184,12 +184,21 @@ spip config:ecrire -p notifications thread_forum:0
 spip config:ecrire formats_documents_forum:".pdf,.jpg,.jpeg,.png,.gif,.mp4"
 
 # Default mes_options
+# display_errors : uniquement en dev (SPIP_DEBUG=true), jamais par défaut -
+# afficher les erreurs PHP aux visiteurs fuiterait des infos (chemins,
+# requêtes SQL...) sur un environnement public. error_reporting reste actif
+# dans tous les cas : ça ne fait que piloter ce qui part dans les logs
+# (tmp/log/spip.log), pas ce qui s'affiche.
+DISPLAY_ERRORS="Off"
+if [ "${SPIP_DEBUG:-false}" = true ]; then
+	DISPLAY_ERRORS="On"
+fi
 rm -rf config/mes_options.php
 /bin/cat << MAINEOF > config/mes_options.php
 <?php
 if (!defined("_ECRIRE_INC_VERSION")) return;
 error_reporting(E_ALL ^ E_NOTICE);
-ini_set('display_errors', 'On');
+ini_set('display_errors', '${DISPLAY_ERRORS}');
 \$GLOBALS['spip_header_silencieux'] = 1;
 \$GLOBALS['taille_des_logs'] = 500;
 define('_MAX_LOG', 500000);
