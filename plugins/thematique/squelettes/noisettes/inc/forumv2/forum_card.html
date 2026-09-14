@@ -1,3 +1,9 @@
+[(#REM) #CACHE{0} : ciblé par sa propre <INCLURE>, avec un cache indépendant
+de celui du fond appelant — voir la note dans
+noisettes/inc/forumv2/forum_commentaire_et_ses_reponses.html. Les boutons
+Modifier/Répondre/Se connecter ci-dessous dépendent de #SESSION et ne
+doivent jamais être figés dans le cache. ]
+#CACHE{0}
 <div class="forum-card">
 	[(#ENV{nombre_reponses}|>{0}|oui)
 		<div class="badge">
@@ -9,13 +15,19 @@
 			]
 		</div>
 	]
+	#SET{image, #ENV{id_auteur}|thematique_image_auteur_ou_classe{#ENV{id_rubrique_classe}}}
+	#SET{image_generique, #GET{image}|thematique_image_est_avatar_generique}
 	<div class="col-forum col-forum-icone-container">
-		<div class="forum-card-icone [ (#ENV{id_rubrique_classe}|oui)bgc_classe_[(#ENV{id_rubrique_classe}|classe_numero)]]">
-			[(#ENV{
-				id_rubrique_classe,
-				#ENV{id_auteur}|filtre_auteur_vers_classe
-			}|classe_icone)]
-		</div>
+		[(#GET{image_generique}|oui)
+			<div class="forum-card-icone icon-avatar-masculin [ (#ENV{id_rubrique_classe}|oui)bgc_classe_[(#ENV{id_rubrique_classe}|classe_numero)]]">
+				<img src="#GET{image}" alt="" />
+			</div>
+		]
+		[(#GET{image_generique}|non)
+			<div class="forum-card-icone forum-card-icone-photo">
+				<img src="#GET{image}" alt="" />
+			</div>
+		]
 	</div>
 	<div class="col-forum col-forum-message">
 		<div class="header">
@@ -39,16 +51,37 @@
 				#ENV{is_root}|et{#ENV{nombre_reponses}|>{0}}
 			}
 
+			[(#REM) #437 : une fois la nouvelle année scolaire créée, plus personne
+			(admin compris) ne peut plus répondre/modifier un commentaire d'un
+			article d'une année passée — le serveur (formulaires_forumv2_verifier_dist)
+			l'interdit déjà, mais les boutons doivent aussi disparaître ici. ]
+			#SET{annee_passee, #ENV{id_article}|thematique_annee_article|thematique_annee_est_passee}
+
 			#SET{peut_modifier,
 				#SESSION{id_auteur}|oui
 				|et{#ENV{id_auteur}|=={#SESSION{id_auteur}}}
+				|et{#SESSION{role}|!={eleve}}
 			}
+			[(#SESSION{role}|=={admin}|oui)
+				#SET{peut_modifier,oui}
+			]
+			[(#REM) #SET{peut_modifier,non} serait un piège : "non" est un texte
+			littéral non vide, donc "vrai" comme n'importe quelle chaîne non
+			vide pour |oui juste en dessous — ça n'aurait rien désactivé
+			(pire : ça aurait explicitement forcé peut_modifier à vrai pour
+			tout le monde, y compris un visiteur anonyme, dès qu'une année est
+			passée). #VAL{''} est la seule façon de mettre une vraie chaîne
+			vide ici. ]
+			[(#GET{annee_passee}|oui)
+				#SET{peut_modifier,#VAL{''}}
+			]
 
 			#SET{peut_supprimer, #AUTORISER{forumsupprimer, forum, #ENV{id_forum}}}
 
 			#SET{peut_repondre,
 				#ENV{is_root}|=={oui}
 				|et{#SESSION{id_auteur}}
+				|et{#GET{annee_passee}|non}
 			}
 
 			#SET{peut_voir_le_bouton_se_connecter,

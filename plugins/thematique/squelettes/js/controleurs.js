@@ -96,6 +96,18 @@ $(function () {
 		return false;
 	});
 
+	// Ouvre la modal de login SPIP natif (#login_modal, cf
+	// noisettes/inc/authentification.html), quel que soit l'endroit d'où on
+	// clique (menu haut, mais aussi ex. onglet_commentaires.html chargé en
+	// ajax dans la sidebar) — CIOIDC désactivé. Délégué sur document pour
+	// fonctionner depuis un fragment ajax, contrairement au binding
+	// spécifique au menu déroulant dans menu_haut.js (scopé à
+	// .select-options, qui stoppe la propagation avant d'arriver ici).
+	$(document).on('click', '.js-ouvrir-login-modal', function (e) {
+		e.preventDefault();
+		$('#login_modal').addClass('open');
+	});
+
 	$('#timeline_fixed').on(
 		'click', function (event) {
 			event.stopPropagation();
@@ -882,7 +894,38 @@ function createReponse(id_consigne, id_rubrique_auteur, numero) {
 	const nextConsigne = consigneData ? CCN.consignes.find(c => c.numero === consigneData.numero + 1) : null;
 	const dateLimite   = nextConsigne ? nextConsigne.data.date_texte : '';
 	const rang         = consigneData ? consigneData.numero : (numero || '');
-	const url = CCN.projet.url_popup_reponseajout + "&id_consigne=" + id_consigne + "&id_rubrique=" + id_rubrique_auteur + "&rang=" + rang + "&date_limite=" + dateLimite;
+	// id_consigne à 0 : création d'une nouvelle mission (cf callNouvelleMission),
+	// pas d'une réponse à une consigne existante — url_popup_reponseajout force
+	// type_objet=travail_en_cours, ce qui affichait à tort les textes "réponse à
+	// la mission" du popup (cf thematique_texte_publication) au lieu de ceux de
+	// "mission".
+	const urlBase = id_consigne ? CCN.projet.url_popup_reponseajout : CCN.projet.url_popup_missionajout;
+	const url = urlBase + "&id_consigne=" + id_consigne + "&id_rubrique=" + id_rubrique_auteur + "&rang=" + rang + "&date_limite=" + dateLimite;
+	loadContentInMainSidebar(url, null, "publication_article");
+}
+
+/**
+ * Ouvre la modale de publication (#429, noisettes/sidebar/publier_article/)
+ * en mode édition pour un article déjà publié, plutôt qu'un formulaire
+ * d'édition dédié - clic sur le bouton "Modifier" du header d'une mission/
+ * réponse/évènement (cf header_sidebar.html, header_reponse_sidebar.html).
+ *
+ * L'autorisation réelle (et la restriction par rôle sur le champ date) est
+ * revérifiée côté PHP (formulaires_public_publier_article_charger_dist,
+ * thematique_autoriser.php) : ce bouton n'est de toute façon affiché que si
+ * #AUTORISER{modifier,article,...} est vrai pour l'auteur courant.
+ *
+ * @param {number} id_article
+ * @param {string} type_article - consignes/travail_en_cours/blogs/evenements/ressources
+ *
+ * @see loadContentInMainSidebar
+ * @see createReponse
+ */
+function callModifierArticle(id_article, type_article) {
+	if (!Number.isInteger(Number(id_article)) || id_article <= 0) return;
+	expandSidebar();
+	setFullscreenModeToCols(false);
+	const url = CCN.projet.url_popup_modifier_article + "&id_article=" + id_article + "&type_objet=" + type_article;
 	loadContentInMainSidebar(url, null, "publication_article");
 }
 
@@ -979,88 +1022,131 @@ function handleObjectCollisionWithMenus(
     return y;
 }
 
+function dragWithCollision(object, ui, options) {
+	const objectDOM = $(object);
+	const timelineDOM = $(options.timeline);
+	const timelineRect = timelineDOM[0].getBoundingClientRect();
+	const getVisualBounds = options.getVisualBounds || function (objectDOM) {
+		const rect = objectDOM[0].getBoundingClientRect();
+
+		return {
+			top: rect.top,
+			bottom: rect.bottom
+		};
+	};
+	const currentBounds = getVisualBounds(objectDOM);
+
+	/*
+	 * Distance entre le top de la card et le haut
+	 * de sa représentation visuelle.
+	 *
+	 * Exemple :
+	 * card top     = 200
+	 * élément haut = 170
+	 *
+	 * => visualOffsetTop = -30
+	 */
+	const objectRect = objectDOM[0].getBoundingClientRect();
+	const visualOffsetTop = currentBounds.top - objectRect.top;
+	const visualOffsetBottom = currentBounds.bottom - objectRect.top;
+
+	const minTop = timelineRect.top - visualOffsetTop;
+	const maxTop = timelineRect.bottom - visualOffsetBottom;
+	let proposedTop = ui.offset.top;
+	proposedTop = Math.max(
+		minTop,
+		Math.min(proposedTop, maxTop)
+	);
+	const parent = objectDOM.offsetParent()[0];
+	const parentRect = parent.getBoundingClientRect();
+	ui.position.top = proposedTop - parentRect.top;
+	return ui;
+}
+
 function updateConsigneConnecteurs(consigneObject, ui) {
-	const consigneDOM = $(consigneObject)
-	const buttonConsigne = consigneDOM.find('button.consigne').first()
-	const idConsigne = buttonConsigne.data('id')
+	const consigneDOM = $(consigneObject);
+	const buttonConsigne = consigneDOM.find('button.consigne').first();
+	const idConsigne = buttonConsigne.data('id');
 	const connecteursDOM = $(`[id^="connecteur_consigne_${idConsigne}_reponse_"]`);
 	const timelineTop = CCN.timelineLayerConsignes.offset().top;
-	const timelineHeight = CCN.timelineLayerConsignes.height();
-	const etiquette = consigneDOM.find(".etiquette-etape")
-
-	const adjustedUiPositionTop = handleObjectCollisionWithMenus(
-		ui.position.top,
-		etiquette.offset().top,
-		consigneDOM.offset().top,
-		consigneDOM.outerHeight(),
-		timelineTop,
-		timelineHeight
-	);
-	ui.position.top = adjustedUiPositionTop;
-
+	const adjustedUiPositionTop = ui.position.top;
 	const x1 = consigneDOM.offset().left + consigneDOM.outerWidth();
-	const y1 = adjustedUiPositionTop + consigneDOM.outerHeight()/2;
-	connecteursDOM.each(function (){
+	const y1 = adjustedUiPositionTop + consigneDOM.outerHeight() / 2;
+
+	connecteursDOM.each(function () {
 		const connecteur = $(this);
-		const reponseId = connecteur.data('reponse-id')
-		const reponseDOM = $(`#reponse_haute${reponseId}`)
+		const reponseId = connecteur.data('reponse-id');
+		const reponseDOM = $(`#reponse_haute${reponseId}`);
+		const x2 = reponseDOM.offset().left;
+		const y2 =
+			reponseDOM.offset().top +
+			reponseDOM.outerHeight() / 2 -
+			timelineTop;
 
-		const x2 = reponseDOM.offset().left
-		const y2 = reponseDOM.offset().top + reponseDOM.outerHeight()/2 - timelineTop;
+		const length = Math.sqrt(
+			(x1 - x2) * (x1 - x2) +
+			(y1 - y2) * (y1 - y2)
+		);
 
-		const length = Math.sqrt((x1 - x2) * (x1 - x2) + (y1 - y2) * (y1 - y2));
-		const angle = Math.atan2(y2 - y1, x2 - x1) * 180 / Math.PI;
-		const transform = 'rotate(' + angle + 'deg)';
+		const angle =
+			Math.atan2(y2 - y1, x2 - x1) * 180 / Math.PI;
 
-		connecteur.css(
-			{
-				'position': 'absolute',
-				'transform': transform,
-				'left': parseFloat(x1) + 'px',
-				'top': parseFloat(y1) + 'px'
-			}
-		)
-		.width(parseFloat(length) + 'px');
-	})
+		connecteur.css({
+			position: 'absolute',
+			transform: 'rotate(' + angle + 'deg)',
+			left: parseFloat(x1) + 'px',
+			top: parseFloat(y1) + 'px'
+		}).width(parseFloat(length) + 'px');
+	});
 }
 
 function updateReponseConnecteurs(reponseObject, ui) {
-	const reponseDOM = $(reponseObject)
-	const idConsigne = reponseDOM.data('consigne-id')
-	const idReponse = reponseDOM.data('reponse-id')
-	const connecteurDOM = $(`#connecteur_consigne_${idConsigne}_reponse_${idReponse}`);
-	const consigneDOM = $(`#consigne_haute${idConsigne}`);
-	const timelineTop = CCN.timelineLayerConsignes.offset().top;
-	const timelineHeight = CCN.timelineLayerConsignes.height();
-	const picto = reponseDOM.find(".picto_nombre_commentaires")
-	const cardMaxHeight = picto.length>0 ? picto.offset().top : reponseDOM.offset().top
+	const reponseDOM = $(reponseObject);
 
-	const x1 = consigneDOM.offset().left + consigneDOM.outerWidth();
-	const y1 = consigneDOM.offset().top  + consigneDOM.outerHeight() / 2 - timelineTop;
+	const idConsigne = reponseDOM.data('consigne-id');
+	const idReponse = reponseDOM.data('reponse-id');
+
+	const connecteurDOM =
+		$(`#connecteur_consigne_${idConsigne}_reponse_${idReponse}`);
+
+	const consigneDOM =
+		$(`#consigne_haute${idConsigne}`);
+
+	const timelineTop =
+		CCN.timelineLayerConsignes.offset().top;
+
+	// Départ du connecteur : bord droit de la consigne
+	const x1 =
+		consigneDOM.offset().left +
+		consigneDOM.outerWidth();
+
+	const y1 =
+		consigneDOM.offset().top +
+		consigneDOM.outerHeight() / 2 -
+		timelineTop;
+
+	// Arrivée du connecteur : bord gauche de la réponse
 	const x2 = reponseDOM.offset().left;
-    const adjustedUiPositionTop = handleObjectCollisionWithMenus(
-		ui.position.top,
-		cardMaxHeight,
-		reponseDOM.offset().top,
-		reponseDOM.outerHeight(),
-		timelineTop,
-		timelineHeight
+
+	const y2 =
+		ui.position.top +
+		reponseDOM.outerHeight() / 2;
+
+	const length = Math.sqrt(
+		(x1 - x2) * (x1 - x2) +
+		(y1 - y2) * (y1 - y2)
 	);
-    ui.position.top = adjustedUiPositionTop;
-    const y2 = adjustedUiPositionTop + reponseDOM.outerHeight() / 2;
 
-	const length = Math.sqrt((x1 - x2) * (x1 - x2) + (y1 - y2) * (y1 - y2));
-	const angle = Math.atan2(y2 - y1, x2 - x1) * 180 / Math.PI;
-	const transform = 'rotate(' + angle + 'deg)';
+	const angle =
+		Math.atan2(y2 - y1, x2 - x1) * 180 / Math.PI;
 
-	connecteurDOM.css(
-		{
-			'position': 'absolute',
-			'transform': transform,
-			'left': parseFloat(x1) + 'px',
-			'top': parseFloat(y1) + 'px'
-		}
-	)
+	connecteurDOM
+		.css({
+			position: 'absolute',
+			transform: 'rotate(' + angle + 'deg)',
+			left: parseFloat(x1) + 'px',
+			top: parseFloat(y1) + 'px'
+		})
 		.width(parseFloat(length) + 'px');
 }
 
@@ -1184,6 +1270,23 @@ function loadContentInMainSidebar(url, callback, typeContenu) {
 
 		$('#sidebar_main_inner').html(response);
 
+		// $.get() est intercepté par prive/javascript/ajaxCallback.js (SPIP
+		// coeur) comme n'importe quel jQuery.ajax : il déclenche déjà
+		// jQuery.spip.triggerAjaxLoad(document) tout seul — mais dans son
+		// propre callback "complete", exécuté à la fin de la requête donc
+		// AVANT le .done() ci-dessus (enregistré après coup sur la même
+		// promesse) : ce scan automatique tombe sur l'ancien DOM, avant le
+		// $('#sidebar_main_inner').html(response) qui vient d'injecter le
+		// nouveau contenu. Résultat : les formulaires ajax (#FORMULAIRE_*)
+		// et les blocs ajax=xxx (cf ajaxReload(), ex.
+		// noisettes/inc/publier_article_documents.html) du popup fraîchement
+		// chargé ne sont jamais bindés, et ajaxReload('documents') après un
+		// upload de document ne fait donc rien. On relance nous-mêmes le
+		// scan après l'insertion pour les binder correctement.
+		if (window.jQuery && jQuery.spip && jQuery.spip.triggerAjaxLoad) {
+			jQuery.spip.triggerAjaxLoad(document);
+		}
+
 		if (!response || response.trim() === "") {
 			if (CCN.debug) { console.warn(CCN.lang.reponse_vide); }
 		}
@@ -1198,16 +1301,7 @@ function loadContentInMainSidebar(url, callback, typeContenu) {
 		}
 		if(typeContenu === "publication_article") {
 			initCommentaires();
-		}
-
-		// Diaporama images/PDF du portfolio de pièces jointes (#350) : le
-		// contenu arrive toujours ici en ajax, jamais au $(document).ready
-		// initial de documents_portfolio_swiper_init.js, qui ne se déclenche
-		// donc jamais en usage réel sans cet appel.
-		const $documentsPortfolio = $('#sidebar_main_inner').find('#documents_portfolio');
-		if ($documentsPortfolio.length) {
-			initImagesSwiper($documentsPortfolio);
-			initPdfSwipers($documentsPortfolio);
+			initCompteurCaracteres();
 		}
 
 		if (callback) {

@@ -1,3 +1,2 @@
-genie/thematique_rentree_annee.php:53: Cap sur l'année
-thematique_administrations.php:209: Blog pédagogique
-thematique_administrations.php:210: Contenu éditorial
+thematique_administrations.php:225: Blog pédagogique
+thematique_administrations.php:226: Contenu éditorial

@@ -18,6 +18,76 @@ function autoriser_thematique_configurer_dist($faire, $type, $id, $qui, $opt) {
 }
 
 /**
+ * Restriction sur le champ 'date' d'un article (issue #420, règle actée par
+ * ChristoErasme le 09/09) : au-delà de l'autorisation standard de modifier
+ * l'article (autoriser_article_modifier_dist()), la date n'est éditable que
+ * par :
+ * - un admin, sur n'importe quel type de contenu (mission, agenda, salle
+ *   des profs, ressource) ;
+ * - un intervenant, uniquement sur un évènement (agenda) ou un billet de
+ *   salle des profs (blogs) — pas sur une mission (consignes) ni une
+ *   ressource.
+ * "Formateur canopé" n'a volontairement pas de traitement distinct : rôle
+ * fusionné avec "intervenant" (thematique_donner_role() ne le distingue pas
+ * — cf discussion #420), mêmes droits que lui pour cette autorisation.
+ *
+ * Le crayon #EDIT{date} passe systématiquement `champ => 'date'` en option
+ * (cf classe_boucle_crayon() et autoriser_crayonner_dist() dans le plugin
+ * crayons) : toute autre demande de modification d'article retombe sur le
+ * comportement standard, inchangé.
+ *
+ * Fait suite au commit 3d1639a6 (#420) qui laissait cette restriction "à
+ * traiter séparément".
+ *
+ * Garde `function_exists` : le plugin contrib `autorite` (plugins/autorite,
+ * pas maison) déclare lui aussi `autoriser_article_modifier()` en dur (pas
+ * de suffixe `_dist`) dans inc/autoriser.php, conditionnellement à sa
+ * config stockée en meta (clé `autorite`, ex. option "auteur peut modifier
+ * son article"). PHP ne permet pas de redéclarer une fonction : sans ce
+ * garde, sur un environnement où cette config est active (ex. validation),
+ * l'inclusion de ce fichier fatalait (Cannot redeclare
+ * autoriser_article_modifier()) → 500 sur tout le site. Si `autorite` a
+ * gagné la déclaration, la restriction #420 sur le champ date est
+ * inactive : à vérifier si la config `autorite` en question sert encore
+ * réellement sur cet environnement, auquel cas il faudrait soit la
+ * désactiver, soit fusionner la logique dans le fichier `autorite` lui-même.
+ */
+if (!function_exists('autoriser_article_modifier')) {
+	function autoriser_article_modifier($faire, $type, $id, $qui, $opt) {
+		if (!autoriser_article_modifier_dist($faire, $type, $id, $qui, $opt)) {
+			return false;
+		}
+
+		// Issue #437 : une fois la nouvelle année scolaire créée, plus
+		// personne (admin compris) ne peut modifier un contenu (mission,
+		// réponse, événement, billet, ressource) d'une année passée.
+		include_spip('thematique_fonctions');
+		if (thematique_annee_est_passee(thematique_annee_article($id))) {
+			return false;
+		}
+
+		if (($opt['champ'] ?? null) !== 'date') {
+			return true;
+		}
+
+		$role = thematique_donner_role(intval($qui['id_auteur'] ?? 0));
+		if ($role === 'admin') {
+			return true;
+		}
+		if ($role !== 'intervenant') {
+			return false;
+		}
+
+		return in_array(thematique_type_objet_article($id), ['evenements', 'blogs'], true);
+	}
+} else {
+	spip_log(
+		'thematique_autoriser : autoriser_article_modifier() déjà déclarée (probablement par le plugin autorite) — restriction #420 sur le champ date non appliquée',
+		'thematique' . _LOG_ERREUR
+	);
+}
+
+/**
  * Suppression d'un commentaire de forum (issue #356), règle actée par
  * ChristoErasme le 24/08 :
  * - un élève ne peut jamais supprimer, même son propre message ;
@@ -40,6 +110,19 @@ function autoriser_forumsupprimer_dist($faire, $type, $id, $qui, $opt) {
 	}
 
 	include_spip('thematique_fonctions');
+
+	$forum = sql_fetsel('id_auteur, id_objet', 'spip_forum', 'id_forum=' . intval($id) . " AND objet='article'");
+	if (!$forum) {
+		return false;
+	}
+
+	// Issue #437 : plus aucune suppression de commentaire (admin compris)
+	// sur un article d'une année scolaire passée, une fois la nouvelle
+	// année créée.
+	if (thematique_annee_est_passee(thematique_annee_article(intval($forum['id_objet'])))) {
+		return false;
+	}
+
 	$role_visiteur = thematique_donner_role($id_auteur_visiteur);
 
 	if ($role_visiteur === 'admin') {
@@ -49,10 +132,6 @@ function autoriser_forumsupprimer_dist($faire, $type, $id, $qui, $opt) {
 		return false;
 	}
 
-	$forum = sql_fetsel('id_auteur', 'spip_forum', 'id_forum=' . intval($id));
-	if (!$forum) {
-		return false;
-	}
 	$id_auteur_commentaire = intval($forum['id_auteur']);
 
 	// Ses propres messages : toujours autorisé (prof comme intervenant)
@@ -70,7 +149,7 @@ function autoriser_forumsupprimer_dist($faire, $type, $id, $qui, $opt) {
 		return false;
 	}
 
-	$id_rubrique_classe_prof = thematique_id_rubrique_classe_prof($id_auteur_visiteur);
+	$id_rubrique_classe_prof = thematique_id_rubrique_classe($id_auteur_visiteur);
 
 	return $id_rubrique_classe_prof
 		&& $id_rubrique_classe_prof === thematique_id_rubrique_classe_auteur($id_auteur_commentaire);

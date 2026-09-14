@@ -38,7 +38,7 @@
     display: flex;
     gap: 1rem;
     border: none;
-    background-color: white;
+    background-color: transparent;
     text-decoration: underline;
     color: var(--color-default);
     cursor: pointer;
@@ -96,6 +96,20 @@
     font-size: 1.5rem;
     border-radius: 50%;
     padding: 0.1rem;
+}
+
+/* Photo de l'auteur (logo SPIP, avatar ENT ou logo de classe en repli, cf
+   thematique_image_auteur_ou_classe()) à la place de l'emoji de classe. */
+.forum-card .forum-card-icone-photo {
+    padding: 0;
+    overflow: hidden;
+}
+
+.forum-card .forum-card-icone-photo img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 50%;
 }
 
 .forum-card .nom-auteur {

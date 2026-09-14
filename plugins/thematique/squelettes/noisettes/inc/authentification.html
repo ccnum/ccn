@@ -6,8 +6,10 @@
 			[(#SET{id_rubrique_classe,
 				#SESSION{id_auteur}|filtre_auteur_vers_classe|classe_numero
 			})]
+			
+
 			<span class="icon-avatar-masculin"
-				[(#GET{id_rubrique_classe}|oui)
+				[(#GET{id_rubrique_classe}|ou{#GET{id_rubrique_classe}|=={0}}|oui)
 					style="background-color: var(--color-classe-light-#GET{id_rubrique_classe});"
 				]
 			>

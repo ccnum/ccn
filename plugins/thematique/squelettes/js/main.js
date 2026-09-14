@@ -287,6 +287,7 @@ function initConsignes(data) {
 				has_current_classe_already_answered = true;
 			}
 		}
+		
 		if (CCN.role === 'prof') {
 			if (has_current_classe_already_answered) {
 				nouvelleConsigne.showMyReponseButtonInTimeline();
@@ -314,6 +315,26 @@ function initJalons(data) {
 			cancel: '', // Force le drag and drop même s'il y a un button dans la consigne.
 			start: function (event, ui) {
 				$(this).addClass('no_event');
+			},
+			drag: function (event, ui) {
+				dragWithCollision(this, ui, {
+					timeline: CCN.timelineLayerConsignes,
+					getVisualBounds: function (objectDOM) {
+						const grosCercle = objectDOM.find('.badge_timeline_icone')[0];
+						let rect = grosCercle.getBoundingClientRect();
+						const top = rect.top;
+						let bottomMostElement;
+						if(objectDOM.hasClass("est-publie")) {
+							bottomMostElement = objectDOM
+						} else {
+							bottomMostElement = objectDOM.find(".etiquette-associee-container")
+						}
+						return {
+							top,
+							bottom: bottomMostElement[0].getBoundingClientRect().bottom
+						};
+					}
+				});
 			},
 			stop: function (event, ui) {
 				const yy = (ui.offset.top - CCN.projet.timeline.offset().top) / CCN.projet.timeline.height();

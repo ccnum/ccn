@@ -102,20 +102,21 @@ function Consigne() {
 					</div>
 					<div class="nettoyeur"></div>
 				</button>
-				<button type="button" class="bouton_reponse_consigne repondre btn-reset">
-					<img src="${CCN.urlRoot}img/reponse_plus.png" alt="" title="${CCN.lang.repondre_a_la_consigne}">
-					<div style="white-space: nowrap;">${CCN.lang.repondre_a_la_mission}</div>
-				</button>
-				<button type="button" class="bouton_reponse_consigne acceder btn-reset">
-					<img src="${CCN.urlRoot}img/reponse_plus.png" alt="" title="${CCN.lang.acceder_a_ma_reponse}">
-					<div style="white-space: nowrap;">${CCN.lang.ma_reponse}</div>
-				</button>
+				<div class="etiquette-associee bouton_reponse_consigne repondre hidden">
+					<div class="icon-publier icon"></div>
+					<div>${CCN.lang.repondre_a_la_mission}</div>
+				</div>
+				<div class="etiquette-associee bouton_reponse_consigne acceder hidden">
+					<div class="icon-publier icon"></div>
+					<div>${CCN.lang.modifier_ma_reponse}</div>
+				</div>
 			</div>
 		`);
 
 		this.div_consigne = this.div_base.find(`#consigne${this.id}`);
 		this.div_reponse_plus = this.div_base.find('.bouton_reponse_consigne.repondre').eq(0);
-		this.div_reponse_see = this.div_base.find('.bouton_reponse_consigne.acceder').eq(1);
+		this.div_reponse_see = this.div_base.find('.bouton_reponse_consigne.acceder').eq(0);
+		this.div_reponse_see.on('click', () => callReponse(answerId)).addClass('show');
 
 		this.div_base.find(`.titre`).text(this.titre);
 
@@ -145,19 +146,44 @@ function Consigne() {
 				$(this).addClass('no_event');
 			},
 			drag: function (event, ui) {
-				// jQuery UI va écrire un left en px — on le réécrit en % immédiatement
-				ui.position.left = CCN.projet.timeline.width() * leftPercent / 100;
+				ui.position.left =CCN.projet.timeline.width() * leftPercent / 100;
+				dragWithCollision(this, ui, {
+					timeline: CCN.timelineLayerConsignes,
+
+					getVisualBounds: (objectDOM) => {
+						const cardRect = objectDOM[0].getBoundingClientRect();
+						const etiquette = objectDOM.find('.etiquette-etape').first();
+						if (etiquette.length) {
+							const rect = etiquette[0].getBoundingClientRect();
+							return {
+								top: rect.top,
+								bottom: cardRect.bottom
+							};
+						}
+						return {
+							top: cardRect.top,
+							bottom: cardRect.bottom
+						};
+					}
+				});
 				updateConsigneConnecteurs(event.target, ui);
 			},
 			stop: function (event, ui) {
 				const yy = (ui.offset.top - CCN.projet.timeline.offset().top) / CCN.projet.timeline.height();
 				if (CCN.admin == 0) {
-					$.post("spip.php?page=ajax&mode=article-sauve-coordonnees", { id_objet: _thisId, type_objet: "article", X: 0, Y: yy });
+					$.post(
+						"spip.php?page=ajax&mode=article-sauve-coordonnees",
+						{
+							id_objet: _thisId,
+							type_objet: "article",
+							X: 0,
+							Y: yy
+						}
+					);
 				}
 				this.y = yy;
-				// Réécrit les deux coords en %
 				$(this).css({
-					top:  (yy * 100) + '%',
+					top: (yy * 100) + '%',
 					left: leftPercent + '%'
 				});
 				$(this).removeClass('no_event');
@@ -171,7 +197,7 @@ function Consigne() {
 	 * @see initConsignes
 	 */
 	this.showNewReponseButtonInTimeline = function () {
-		this.div_reponse_plus.addClass('show');
+		this.div_reponse_plus.removeClass("hidden")
 	}
 
 	/**
@@ -182,7 +208,7 @@ function Consigne() {
 	 * @see initConsignes
 	 */
 	this.showMyReponseButtonInTimeline = function (answerId) {
-		this.div_reponse_see.on('click', () => callReponse(answerId)).addClass('show');
+		this.div_reponse_see.removeClass("hidden")
 	}
 
 	/**

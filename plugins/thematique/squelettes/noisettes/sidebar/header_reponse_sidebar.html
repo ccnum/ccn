@@ -1,12 +1,18 @@
-[(#REM) 
-Arguments : 
+[(#REM)
+Arguments :
 - id_article
 - titre_parent
 - titre_consigne
 - id_consigne
 - type_objet
 - rang
+
+#CACHE{0} : ciblé par sa propre <INCLURE>, avec un cache indépendant de
+celui de la page appelante — voir la note dans
+noisettes/sidebar/header_sidebar.html et inc/bouton_modifier_article.html
+(#437), inclus plus bas.
 ]
+#CACHE{0}
 <BOUCLE_article_sidebar(ARTICLES){id_article}{tout}>
 <div class="sidebar_bubble header-reponse">
 	<div id="row_header">
@@ -33,12 +39,15 @@ Arguments :
 			</div>
 			<div id="header-row-2">
 				#TITRE
+				<INCLURE{fond=noisettes/sidebar/inc/bouton_modifier_article, id_article=#ID_ARTICLE, type_objet=#ENV{type_objet}} />
 			</div>
 		</div>
 	</div>
 	[(#ENV{type_objet}|in_array{#LISTE{blogs,evenements}}|oui)
 		<div class="popup_titre [popup_titre_(#ENV{type_objet})]">
-			<h2 class="#EDIT{titre} titre">[(#TITRE)]</h2>
+			<h2 class="#EDIT{titre} titre">[(#TITRE)]
+				<INCLURE{fond=noisettes/sidebar/inc/bouton_modifier_article, id_article=#ID_ARTICLE, type_objet=#ENV{type_objet}} />
+			</h2>
 			<div class="auteur_date">
 				<span class="date #EDIT{date}">[(#DATE|nom_jour)] [(#DATE|affdate)]</span>
 				[<span class="auteur">(#LESAUTEURS)</span>]

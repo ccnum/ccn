@@ -139,6 +139,22 @@ function balise_ANNEE_SCOLAIRE_REELLE_dist($p) {
 }
 
 /**
+ * Une année scolaire est-elle une année passée (archivée), au sens de
+ * l'issue #437 : dès que la structure de la nouvelle année existe
+ * (thematique_rentree_annee(), déclenché en août), toute année strictement
+ * antérieure à thematique_annee_scolaire_reelle() devient non éditable —
+ * y compris pour un admin, y compris si l'année sélectionnée via le cookie/
+ * GET (thematique_annee_scolaire()) est justement cette année archivée.
+ *
+ * @param int $annee Année scolaire (ex: 2024), 0 si indéterminable
+ * @return bool
+ */
+function thematique_annee_est_passee($annee) {
+	$annee = intval($annee);
+	return $annee > 0 && $annee < thematique_annee_scolaire_reelle();
+}
+
+/**
  * Cherche une rubrique par titre sous un parent, la crée (publiée) si absente.
  *
  * @param string $nom
@@ -493,6 +509,60 @@ function thematique_rendre_type_article_affichable($type_article) {
 	];
 	if (isset($autres[$type_article])) {
 		return _T('thematique:' . $autres[$type_article]);
+	}
+}
+
+/**
+ * Textes du popup de publication (titre de section, phrase d'intro, libellé
+ * du champ texte, libellé du bouton), propres à chacun des 5 types de
+ * contenu publiables via ce popup (cf commentaire en tête de
+ * squelettes/publier.html) — remplace le texte générique unique utilisé
+ * avant l'issue #429 (maquettes proposées par JulMonaco, 09/2026).
+ *
+ * Appelée comme filtre : `#ENV{type_article}|thematique_texte_publication{titre}`
+ *
+ * @param string $type_article
+ *   consignes, travail_en_cours, ressources, blogs ou evenements
+ * @param string $partie
+ *   bandeau, titre, intro, champ_texte ou bouton
+ * @return string
+ *   Vide si aucun texte défini pour cette partie (ex: pas d'intro pour une mission).
+ */
+function thematique_texte_publication($type_article, $partie) {
+	static $slugs = [
+		'consignes' => 'mission',
+		'travail_en_cours' => 'reponse_mission',
+		'ressources' => 'ressource',
+		'blogs' => 'evenement',
+		'evenements' => 'information',
+	];
+
+	if (isset($slugs[$type_article])) {
+		$cle = 'thematique:publier_' . $partie . '_' . $slugs[$type_article];
+		// force=>false : une clé absente du fichier de lang renvoie une chaîne
+		// vide plutôt que le "service minimum" de _T() (la clé humanisée) —
+		// utile ici car certaines parties n'ont pas de texte pour tous les
+		// types (ex: pas d'intro pour une mission).
+		return _T($cle, [], ['force' => false]);
+	}
+
+	// Types non couverts par les maquettes de l'issue #429 (ex: cap-sur-l-annee,
+	// la-rencontre, agora) : on garde l'ancien texte générique.
+	switch ($partie) {
+		case 'bandeau':
+			return _T('thematique:etape1_redaction_article', ['type_article' => thematique_rendre_type_article_affichable(
+				$type_article
+			)]);
+		case 'titre':
+			return _T('thematique:etape1_redaction_article', ['type_article' => thematique_rendre_type_article_affichable(
+				$type_article
+			)]);
+		case 'champ_texte':
+			return _T('info_texte');
+		case 'bouton':
+			return _T('thematique:enregistrer');
+		default:
+			return '';
 	}
 }
 
@@ -860,8 +930,8 @@ function classe_icone($id_rubrique) {
 }
 
 /**
- * Id de la rubrique-classe d'un prof (celle dont dérive son emoji
- * d'avatar), mis en cache mémoire par requête.
+ * Id de la rubrique-classe d'un auteur (prof ou élève — celle dont dérive
+ * son emoji d'avatar), mis en cache mémoire par requête.
  *
  * Un prof est lié (spip_auteurs_liens) non seulement à sa/ses classe(s),
  * mais aussi au blog pédagogique et à ses projets (voir
@@ -869,14 +939,16 @@ function classe_icone($id_rubrique) {
  * lien qui est effectivement une classe (présent dans
  * thematique_classes_rangs()), pas n'importe quelle rubrique liée. S'il a
  * plusieurs classes, la première trouvée fait foi (pas de notion de
- * "classe principale"). Extrait de thematique_avatar_animal() pour être
- * réutilisable par thematique_avatar_notification_article() (couleur de
- * fond de l'emoji dans le mail de notification, issue #217).
+ * "classe principale"). Un élève n'est en pratique lié qu'à sa seule
+ * classe, donc cette ambiguïté ne le concerne pas. Extrait de
+ * thematique_avatar_animal() pour être réutilisable par
+ * thematique_avatar_notification_article() (couleur de fond de l'emoji dans
+ * le mail de notification, issue #217).
  *
  * @param int $id_auteur
  * @return int id_rubrique de la classe, 0 si aucune classe trouvée
  */
-function thematique_id_rubrique_classe_prof($id_auteur) {
+function thematique_id_rubrique_classe($id_auteur) {
 	static $cache = [];
 	$id_auteur = intval($id_auteur);
 	if (isset($cache[$id_auteur])) {
@@ -904,13 +976,14 @@ function thematique_id_rubrique_classe_prof($id_auteur) {
 }
 
 /**
- * Animal (emoji) de la classe d'un prof, pour son avatar dans le menu haut.
+ * Animal (emoji) de la classe d'un auteur (prof ou élève, cf
+ * thematique_preparer_fichier_session), pour son avatar dans le menu haut.
  *
  * @param int $id_auteur
  * @return string emoji de la classe, ou '' si aucune classe trouvée
  */
 function thematique_avatar_animal($id_auteur) {
-	$id_rubrique = thematique_id_rubrique_classe_prof($id_auteur);
+	$id_rubrique = thematique_id_rubrique_classe($id_auteur);
 	return $id_rubrique ? classe_icone($id_rubrique) : '';
 }
 
@@ -1774,7 +1847,7 @@ function thematique_avatar_notification_auteur($id_auteur) {
 
 	if ($id_auteur) {
 		if (thematique_donner_role($id_auteur) === 'prof') {
-			$id_rubrique = thematique_id_rubrique_classe_prof($id_auteur);
+			$id_rubrique = thematique_id_rubrique_classe($id_auteur);
 			if ($id_rubrique) {
 				$res = [
 					'type' => 'emoji',
@@ -1889,6 +1962,31 @@ function thematique_email_auteur_forum($id_forum) {
 	}
 
 	return $cache[$id_forum] = ($email ?: $forum['email_auteur']);
+}
+
+/**
+ * Id de l'auteur d'un commentaire, 0 si introuvable ou si l'auteur n'est pas
+ * un compte SPIP connu (commentateur anonyme, seul email_auteur renseigné).
+ * Mis en cache mémoire par requête.
+ *
+ * Sert à thematique_notifications_destinataires() pour ne pas notifier un
+ * élève qu'on a répondu à son propre commentaire (issue #217).
+ *
+ * @param int $id_forum
+ * @return int
+ */
+function thematique_id_auteur_forum($id_forum) {
+	static $cache = [];
+	$id_forum = intval($id_forum);
+	if (!$id_forum) {
+		return 0;
+	}
+	if (isset($cache[$id_forum])) {
+		return $cache[$id_forum];
+	}
+
+	include_spip('base/abstract_sql');
+	return $cache[$id_forum] = intval(sql_getfetsel('id_auteur', 'spip_forum', 'id_forum=' . $id_forum));
 }
 
 /**
@@ -2341,7 +2439,6 @@ function filtre_auteur_vers_classe($id_auteur) {
 		'sal.id_auteur = ' . intval($id_auteur) . '
          AND sr2.titre = ' . sql_quote('Travail des classes')
 	);
-
 	return $result;
 }
 
@@ -2355,4 +2452,69 @@ function thematique_trouver_reponse_a_une_consigne($id_consigne, $id_rubrique_cl
 		['id_consigne = ' . intval($id_consigne), 'id_rubrique = ' . intval($id_rubrique_classe)]
 	);
 	return $article;
+}
+
+/**
+ * Extensions de fichier acceptées pour un document joint à une mission
+ * (formulaires/joindre_document_mission.php). Définie ici (thematique_fonctions.php,
+ * chargé pour toute compilation de squelette du plugin) et non dans
+ * joindre_document_mission.php : les filtres ci-dessous
+ * (thematique_extensions_document_mission_accept/_liste) sont utilisés
+ * depuis d'autres formulaires (public_publier_article.html) dont le
+ * fichier .php associé ne charge jamais joindre_document_mission.php — un
+ * filtre inconnu au moment de la compilation de LEUR squelette est
+ * silencieusement supprimé par le compilateur SPIP (aucune erreur, la
+ * valeur "brute" passe telle quelle), cf issue #429.
+ */
+define('_THEMATIQUE_EXTENSIONS_DOCUMENT_MISSION', ['gif', 'jpg', 'jpeg', 'png', 'mp3', 'pdf']);
+
+/**
+ * Valeur de l'attribut HTML accept d'un champ fichier de document de
+ * mission (".gif,.jpg,..."), à partir de _THEMATIQUE_EXTENSIONS_DOCUMENT_MISSION.
+ *
+ * Ne peut pas être écrite en dur dans le squelette (`accept=.gif,.jpg,...`) :
+ * le compilateur SPIP découpe les arguments d'un `#SAISIE_XXX{...}` sur
+ * chaque virgule *avant* toute prise en compte des guillemets (ce n'est pas
+ * le tokenizer standard des filtres), donc une valeur avec virgules littérales
+ * y est systématiquement tronquée à son premier fragment (`.gif` seul,
+ * cf issue #407) — y compris entre guillemets. Passer par une balise
+ * calculée (`#GET{...}`) contourne le problème : elle ne contient aucune
+ * virgule dans le squelette source, seulement à l'exécution.
+ *
+ * Appelée comme filtre : `#VAL{1}|thematique_extensions_document_mission_accept}`
+ * (le premier paramètre n'est qu'un porteur, SPIP exige toujours une valeur pipée).
+ *
+ * @param mixed $valeur_ignoree Non utilisé, cf. remarque d'appel ci-dessus
+ * @return string
+ */
+function thematique_extensions_document_mission_accept($valeur_ignoree = null) {
+	static $accept = null;
+	if ($accept === null) {
+		$accept = implode(',', array_map(fn ($ext) => ".$ext", _THEMATIQUE_EXTENSIONS_DOCUMENT_MISSION));
+	}
+
+	return $accept;
+}
+
+/**
+ * Liste lisible des extensions acceptées pour un document de mission
+ * ("gif, jpg, jpeg, png, mp3, pdf"), pour le texte d'aide affiché sous la
+ * zone de dépôt (cf lang:formats_autorises_document,
+ * noisettes/sidebar-etape-2-container dans formulaires/public_publier_article.html).
+ *
+ * Même contournement que thematique_extensions_document_mission_accept :
+ * appelée comme filtre (#VAL{1}|thematique_extensions_document_mission_liste),
+ * SPIP exige toujours un premier paramètre pipé même si la valeur n'est pas
+ * utilisée.
+ *
+ * @param mixed $valeur_ignoree Non utilisé, cf. remarque d'appel ci-dessus
+ * @return string
+ */
+function thematique_extensions_document_mission_liste($valeur_ignoree = null) {
+	static $liste = null;
+	if ($liste === null) {
+		$liste = implode(', ', _THEMATIQUE_EXTENSIONS_DOCUMENT_MISSION);
+	}
+
+	return $liste;
 }

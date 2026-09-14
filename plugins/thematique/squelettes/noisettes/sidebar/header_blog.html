@@ -1,3 +1,5 @@
+[(#REM) #CACHE{0} : cache de fond indépendant, cf noisettes/sidebar/header_sidebar.html. ]
+#CACHE{0}
 <BOUCLE_article_sidebar(ARTICLES){id_article}{tout}>
 <div class="sidebar_bubble">
 	<div id="row_header">
@@ -11,6 +13,7 @@
                         font-size: 14px;"
             >
                 [(#TITRE)]
+                <INCLURE{fond=noisettes/sidebar/inc/bouton_modifier_article, id_article=#ID_ARTICLE, type_objet=#ENV{type_objet}} />
             </div>
 		</div>
 	</div>

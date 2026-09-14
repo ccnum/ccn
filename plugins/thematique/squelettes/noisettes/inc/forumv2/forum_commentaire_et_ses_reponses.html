@@ -1,6 +1,16 @@
-
+[(#REM) #CACHE{0} : ce fond est appelé directement en PHP via recuperer_fond()
+(forum_rendre_branche() dans thematique_fonctions.php), en dehors de toute
+compilation de squelette parent — le #CACHE{0} des fonds englobants
+(consigne_pour_*.html, BlogOuEvenement.html, etc.) ne s'applique donc pas ici.
+Sans lui, SPIP met en cache le HTML de #GET{peut_modifier}/#GET{peut_repondre}
+(dépendants de #SESSION) pour ce commentaire, et le sert tel quel à
+n'importe quel autre visiteur tant que le commentaire ne change pas :
+un élève peut alors voir "Modifier" ou "Se connecter pour répondre" figés
+depuis le rendu d'une autre session (admin, anonyme...). ]
+#CACHE{0}
 
 #SET{id_forum, #ENV{forum}|table_valeur{id_forum}}
+#SET{id_article, #ENV{forum}|table_valeur{id_objet}}
 #SET{is_root, #ENV{forum}|table_valeur{id_parent}|?{non,oui}}
 #SET{nombre_reponses, #ENV{forum}|table_valeur{reponses}|count}
 #SET{date_heure, #ENV{forum}|table_valeur{date_heure}|affdate}
@@ -17,6 +27,7 @@
 	<div class="forum-commentaire[(#GET{is_root}|=={oui}|?{' is-root',''})]">
 		<INCLURE{fond=noisettes/inc/forumv2/forum_card,
 			id_forum=#GET{id_forum},
+			id_article=#GET{id_article},
 			nombre_reponses=#GET{nombre_reponses},
 			nom_auteur=#GET{nom_auteur},
 			date_heure=#GET{date_heure},

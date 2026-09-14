@@ -102,6 +102,15 @@ function formulaires_forumv2_verifier_dist($id_article) {
 		$erreurs['texte'] = 'Le texte est obligatoire.';
 	}
 
+	// Issue #437 : plus aucune publication/édition de commentaire (admin
+	// compris) sur un article d'une année scolaire passée, une fois la
+	// nouvelle année créée.
+	include_spip('thematique_fonctions');
+	if (thematique_annee_est_passee(thematique_annee_article($id_article))) {
+		$erreurs['message_erreur'] = _T('info_acces_interdit');
+		return $erreurs;
+	}
+
 	/**
 	 * En mode édition, vérifier que le commentaire existe
 	 * et que l'utilisateur connecté en est bien l'auteur.
@@ -177,9 +186,18 @@ function formulaires_forumv2_traiter_dist($id_article) {
 			}
 		}
 		return [
+			// Un commentaire publié via ce formulaire "ajax" est en fait suivi
+			// d'une vraie navigation (SPIP coeur remplace la page via
+			// document.location.replace() dès qu'il détecte une redirection,
+			// cf ajax_redirect dans prive/javascript/ajaxCallback.js) : sans
+			// onglet=commentaires ici, la mission se recharge bien mais
+			// retombe sur son premier onglet au lieu de rester sur les
+			// commentaires (cf urlParam 'onglet' de #mission-tabs, initMissionTabs
+			// dans controleurs.js).
 			'redirect' => generer_url_public('article', [
 				'id_article' => $id_article,
 				'mode' => 'complet',
+				'onglet' => 'commentaires',
 			]),
 		];
 	}
