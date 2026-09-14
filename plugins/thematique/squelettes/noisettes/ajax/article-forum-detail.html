@@ -1,4 +1,3 @@
-<script src="#CHEMIN{js/swiper.js}"></script>
 #CACHE{24*3600}
 [<div class="lien_forum"><a class="lienss" href="(#PARAMETRES_FORUM|url_reponse_forum)">> <:repondre_article:></a></div>]
 <B_Forums>
@@ -171,13 +170,4 @@
 	</ul>
 </B_Forums>
 <//B_Forums>
-<!-- Je mets le script ici pour être sûr qu'il soit executé (pas de spip conditionnel) -->
-<script>
-	$(function() {
-		const $portfolio_grand_list = $('.portfolio_grand');
-		$portfolio_grand_list.each(function(_index, portfolio_grand) {
-			initPdfSwipersInComment($(portfolio_grand));
-		});
-	});
-</script>
 

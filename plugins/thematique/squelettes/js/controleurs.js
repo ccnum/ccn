@@ -1292,16 +1292,6 @@ function loadContentInMainSidebar(url, callback, typeContenu) {
 			initCompteurCaracteres();
 		}
 
-		// Diaporama images/PDF du portfolio de pièces jointes (#350) : le
-		// contenu arrive toujours ici en ajax, jamais au $(document).ready
-		// initial de documents_portfolio_swiper_init.js, qui ne se déclenche
-		// donc jamais en usage réel sans cet appel.
-		const $documentsPortfolio = $('#sidebar_main_inner').find('#documents_portfolio');
-		if ($documentsPortfolio.length) {
-			initImagesSwiper($documentsPortfolio);
-			initPdfSwipers($documentsPortfolio);
-		}
-
 		if (callback) {
 			callback(response);
 		}
