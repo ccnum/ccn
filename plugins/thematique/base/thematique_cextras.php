@@ -67,18 +67,22 @@ function thematique_declarer_champs_extras($champs = []) {
 		'thematique:champ_extra_url_id_doc',
 		'text'
 	);
+	// bigint(21), identique à la déclaration de la vraie colonne dans
+	// thematique_install.php (thematique_declarer_tables_principales) : les
+	// deux DOIVENT rester synchronisés, cf le commentaire là-bas (issue #369).
 	$champs['spip_rubriques']['id_rubrique_lien'] = thematique_champ_extra_simple(
 		'id_rubrique_lien',
 		'thematique:champ_extra_id_rubrique_lien',
-		'text'
+		"bigint(21) NOT NULL DEFAULT '0'"
 	);
 
 	$champs['spip_articles']['x'] = thematique_champ_extra_simple('x', 'thematique:champ_extra_position_x', 'float');
 	$champs['spip_articles']['y'] = thematique_champ_extra_simple('y', 'thematique:champ_extra_position_y', 'float');
+	// bigint(21) : idem, cf commentaire ci-dessus sur id_rubrique_lien.
 	$champs['spip_articles']['id_consigne'] = thematique_champ_extra_simple(
 		'id_consigne',
 		'thematique:champ_extra_id_consigne',
-		"int(5) NOT NULL DEFAULT '0'"
+		"bigint(21) NOT NULL DEFAULT '0'"
 	);
 
 	return $champs;
