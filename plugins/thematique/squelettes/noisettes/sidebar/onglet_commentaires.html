@@ -17,6 +17,13 @@ doivent jamais être figés dans le cache. ]
 			[(#PLUGIN{cioidc}|oui)
 				<a class="bouton_encadre" href="[(#URL_PAGE{login}|parametre_url{url,#SELF}|parametre_url{cioidc,oui})]"><:thematique:se_connecter_ent_commenter:></a>
 			]
+			[(#REM) CIOIDC absent/désactivé : repli sur le formulaire de login SPIP
+			natif, comme noisettes/inc/authentification.html (menu haut) — la
+			modal #login_modal qu'il ouvre existe déjà globalement (rendue dans
+			le header de chaque page), inutile de la dupliquer ici. ]
+			[(#PLUGIN{cioidc}|non)
+				<a class="bouton_encadre js-ouvrir-login-modal" href="#"><:thematique:se_connecter:></a>
+			]
 		]
 	</div>
 	]

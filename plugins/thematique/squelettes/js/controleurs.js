@@ -96,6 +96,18 @@ $(function () {
 		return false;
 	});
 
+	// Ouvre la modal de login SPIP natif (#login_modal, cf
+	// noisettes/inc/authentification.html), quel que soit l'endroit d'où on
+	// clique (menu haut, mais aussi ex. onglet_commentaires.html chargé en
+	// ajax dans la sidebar) — CIOIDC désactivé. Délégué sur document pour
+	// fonctionner depuis un fragment ajax, contrairement au binding
+	// spécifique au menu déroulant dans menu_haut.js (scopé à
+	// .select-options, qui stoppe la propagation avant d'arriver ici).
+	$(document).on('click', '.js-ouvrir-login-modal', function (e) {
+		e.preventDefault();
+		$('#login_modal').addClass('open');
+	});
+
 	$('#timeline_fixed').on(
 		'click', function (event) {
 			event.stopPropagation();
