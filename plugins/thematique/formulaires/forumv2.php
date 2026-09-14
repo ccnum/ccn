@@ -102,6 +102,15 @@ function formulaires_forumv2_verifier_dist($id_article) {
 		$erreurs['texte'] = 'Le texte est obligatoire.';
 	}
 
+	// Issue #437 : plus aucune publication/édition de commentaire (admin
+	// compris) sur un article d'une année scolaire passée, une fois la
+	// nouvelle année créée.
+	include_spip('thematique_fonctions');
+	if (thematique_annee_est_passee(thematique_annee_article($id_article))) {
+		$erreurs['message_erreur'] = _T('info_acces_interdit');
+		return $erreurs;
+	}
+
 	/**
 	 * En mode édition, vérifier que le commentaire existe
 	 * et que l'utilisateur connecté en est bien l'auteur.

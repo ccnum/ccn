@@ -58,11 +58,18 @@ if (!function_exists('autoriser_article_modifier')) {
 			return false;
 		}
 
+		// Issue #437 : une fois la nouvelle année scolaire créée, plus
+		// personne (admin compris) ne peut modifier un contenu (mission,
+		// réponse, événement, billet, ressource) d'une année passée.
+		include_spip('thematique_fonctions');
+		if (thematique_annee_est_passee(thematique_annee_article($id))) {
+			return false;
+		}
+
 		if (($opt['champ'] ?? null) !== 'date') {
 			return true;
 		}
 
-		include_spip('thematique_fonctions');
 		$role = thematique_donner_role(intval($qui['id_auteur'] ?? 0));
 		if ($role === 'admin') {
 			return true;
@@ -103,6 +110,19 @@ function autoriser_forumsupprimer_dist($faire, $type, $id, $qui, $opt) {
 	}
 
 	include_spip('thematique_fonctions');
+
+	$forum = sql_fetsel('id_auteur, id_objet', 'spip_forum', 'id_forum=' . intval($id) . " AND objet='article'");
+	if (!$forum) {
+		return false;
+	}
+
+	// Issue #437 : plus aucune suppression de commentaire (admin compris)
+	// sur un article d'une année scolaire passée, une fois la nouvelle
+	// année créée.
+	if (thematique_annee_est_passee(thematique_annee_article(intval($forum['id_objet'])))) {
+		return false;
+	}
+
 	$role_visiteur = thematique_donner_role($id_auteur_visiteur);
 
 	if ($role_visiteur === 'admin') {
@@ -112,10 +132,6 @@ function autoriser_forumsupprimer_dist($faire, $type, $id, $qui, $opt) {
 		return false;
 	}
 
-	$forum = sql_fetsel('id_auteur', 'spip_forum', 'id_forum=' . intval($id));
-	if (!$forum) {
-		return false;
-	}
 	$id_auteur_commentaire = intval($forum['id_auteur']);
 
 	// Ses propres messages : toujours autorisé (prof comme intervenant)

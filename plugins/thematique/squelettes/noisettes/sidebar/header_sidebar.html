@@ -1,5 +1,10 @@
 <!--debut header consigne-->
 
+[(#REM) #CACHE{0} : ciblé par sa propre <INCLURE> (noisettes/article.html via
+inc/entete_container.html), avec un cache indépendant de celui de la page
+appelante — voir aussi la note dans inc/bouton_modifier_article.html (#437),
+inclus plus bas et lui-même dépendant de #SESSION/#AUTORISER. ]
+#CACHE{0}
 <BOUCLE_article_sidebar(ARTICLES){id_article}{tout}>
 <div class="sidebar_bubble">
 	<div id="row_header">
@@ -19,9 +24,7 @@
 			</div>
 			<div id="header-row-2" class="#EDIT{titre} titre">
 				#TITRE
-				[(#AUTORISER{modifier,article,#ID_ARTICLE}|oui)
-				<button type="button" class="bouton-modifier-article btn-reset" onclick="callModifierArticle(#ID_ARTICLE, '#ENV{type_objet}')"><:thematique:modifier:></button>
-				]
+				<INCLURE{fond=noisettes/sidebar/inc/bouton_modifier_article, id_article=#ID_ARTICLE, type_objet=#ENV{type_objet}} />
 			</div>
 		</div>
 	</div>

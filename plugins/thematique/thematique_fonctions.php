@@ -139,6 +139,22 @@ function balise_ANNEE_SCOLAIRE_REELLE_dist($p) {
 }
 
 /**
+ * Une année scolaire est-elle une année passée (archivée), au sens de
+ * l'issue #437 : dès que la structure de la nouvelle année existe
+ * (thematique_rentree_annee(), déclenché en août), toute année strictement
+ * antérieure à thematique_annee_scolaire_reelle() devient non éditable —
+ * y compris pour un admin, y compris si l'année sélectionnée via le cookie/
+ * GET (thematique_annee_scolaire()) est justement cette année archivée.
+ *
+ * @param int $annee Année scolaire (ex: 2024), 0 si indéterminable
+ * @return bool
+ */
+function thematique_annee_est_passee($annee) {
+	$annee = intval($annee);
+	return $annee > 0 && $annee < thematique_annee_scolaire_reelle();
+}
+
+/**
  * Cherche une rubrique par titre sous un parent, la crée (publiée) si absente.
  *
  * @param string $nom
