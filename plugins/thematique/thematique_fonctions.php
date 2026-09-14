@@ -1965,6 +1965,31 @@ function thematique_email_auteur_forum($id_forum) {
 }
 
 /**
+ * Id de l'auteur d'un commentaire, 0 si introuvable ou si l'auteur n'est pas
+ * un compte SPIP connu (commentateur anonyme, seul email_auteur renseigné).
+ * Mis en cache mémoire par requête.
+ *
+ * Sert à thematique_notifications_destinataires() pour ne pas notifier un
+ * élève qu'on a répondu à son propre commentaire (issue #217).
+ *
+ * @param int $id_forum
+ * @return int
+ */
+function thematique_id_auteur_forum($id_forum) {
+	static $cache = [];
+	$id_forum = intval($id_forum);
+	if (!$id_forum) {
+		return 0;
+	}
+	if (isset($cache[$id_forum])) {
+		return $cache[$id_forum];
+	}
+
+	include_spip('base/abstract_sql');
+	return $cache[$id_forum] = intval(sql_getfetsel('id_auteur', 'spip_forum', 'id_forum=' . $id_forum));
+}
+
+/**
  * Retire d'une liste d'emails ceux qui appartiennent à un compte auteur
  * passé à la poubelle (statut 5poubelle) — ex : reset de rentrée scolaire,
  * cf genie_thematique_rentree_poubelle_dist(), qui bascule chaque

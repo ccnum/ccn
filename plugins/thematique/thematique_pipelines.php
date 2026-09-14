@@ -166,9 +166,15 @@ function thematique_notifications_destinataires($flux) {
 
 		// Réponse à un commentaire existant : prévenir en plus l'auteur de ce
 		// commentaire parent (mise en page dédiée "On vient de répondre à
-		// votre message !", cf notifications/forum_poste_article.html).
+		// votre message !", cf notifications/forum_poste_article.html) —
+		// sauf si c'est un élève (issue #217) : prof/intervenant/admin et
+		// commentateur anonyme restent notifiés normalement.
 		$id_parent = intval($flux['args']['options']['forum']['id_parent'] ?? 0);
-		if ($id_parent and $email_parent = thematique_email_auteur_forum($id_parent)) {
+		if (
+			$id_parent
+			and thematique_donner_role(thematique_id_auteur_forum($id_parent)) !== 'eleve'
+			and $email_parent = thematique_email_auteur_forum($id_parent)
+		) {
 			$flux['data'][] = $email_parent;
 		}
 	}
