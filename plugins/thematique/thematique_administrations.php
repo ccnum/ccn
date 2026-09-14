@@ -63,6 +63,27 @@ function thematique_upgrade($nom_meta_base_version, $version_cible) {
 	// rétroactivement sur tous les sites déjà installés.
 	$maj['3.4.0'] = [['thematique_ajouter_mots_clef']];
 
+	// spip_auteurs.nom_complet (prénom+nom réels, cf #SESSION{nom_complet} dans
+	// authentification.html) : nouveau champ extra, à créer en base.
+	$maj['3.4.1'] = [];
+	cextras_api_upgrade(thematique_declarer_champs_extras(), $maj['3.4.1']);
+
+	// Issue #369 : id_consigne (spip_articles) et id_rubrique_lien
+	// (spip_rubriques) étaient déclarés avec un type différent ici
+	// (bigint(21), via thematique_install.php) et côté champs extras
+	// (int(5)/text, via thematique_cextras.php) — mismatch qui casse l'ADD
+	// INDEX sur une (dés)installation/activation du plugin (MySQL interdit
+	// un préfixe de longueur d'index sur une colonne numérique). Les deux
+	// déclarations sont maintenant alignées sur bigint(21).
+	// maj_tables()/cextras_api_upgrade() n'ALTERent jamais le type d'une
+	// colonne déjà existante (seulement les colonnes/clés manquantes) :
+	// cette entrée de version n'a donc d'effet que sur une (ré)installation
+	// complète du plugin (table recréée/champs recréés depuis $maj['create']).
+	// Un site déjà touché par le bug doit corriger sa colonne manuellement
+	// (cf le correctif posté par le rapporteur sur l'issue #369).
+	$maj['3.4.2'] = [['maj_tables', ['spip_articles', 'spip_rubriques']]];
+	cextras_api_upgrade(thematique_declarer_champs_extras(), $maj['3.4.2']);
+
 	include_spip('base/upgrade');
 	maj_plugin($nom_meta_base_version, $version_cible, $maj);
 }
@@ -197,7 +218,7 @@ function thematique_ajouter_mots_clef() {
 	// (cf genie/thematique_rentree_annee.php), pas des articles "présentation"
 	// au sens strict, mais rattachés à ce groupe existant plutôt qu'un
 	// groupe dédié pour 2 mots-clés seulement.
-	foreach (['laclasse.com', 'sommaire_edito', 'livrable', 'cap-sur-l-annee', 'la-rencontre'] as $mot) {
+	foreach (['laclasse.com', 'sommaire_edito', 'cap-sur-l-annee', 'la-rencontre'] as $mot) {
 		thematique_ajouter_mot($mot, $id_groupe);
 	}
 

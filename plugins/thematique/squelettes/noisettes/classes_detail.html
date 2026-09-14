@@ -20,15 +20,18 @@
 
 					<BOUCLE_classes(RUBRIQUES){id_parent=#ID_RUBRIQUE}{par titre}{tout}{0,50}>
 						<div class="ressources_rubrique">
-							<button type="button" class="ressource_rubrique_titre btn-reset" id="ajax_go_to_classe_#ID_RUBRIQUE" onclick="callClasse('#ID_RUBRIQUE')"><h3>#TITRE</h3></button>
+							<button type="button" 
+									class="ressource_rubrique_titre btn-reset"
+									id="ajax_go_to_classe_#ID_RUBRIQUE" 
+									onclick="callClasse('#ID_RUBRIQUE')"
+							>
+								<h3>#TITRE</h3>
+							</button>
 						</div>
 					</BOUCLE_classes>
-
 					<div class="introduction nettoyeur"></div>
 				</div>
 			</div>
 		</div>
-
 	</div>
-
 </BOUCLE_principale>

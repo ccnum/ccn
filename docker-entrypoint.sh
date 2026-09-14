@@ -188,6 +188,8 @@ rm -rf config/mes_options.php
 /bin/cat << MAINEOF > config/mes_options.php
 <?php
 if (!defined("_ECRIRE_INC_VERSION")) return;
+error_reporting(E_ALL ^ E_NOTICE);
+ini_set('display_errors', 'On');
 \$GLOBALS['spip_header_silencieux'] = 1;
 \$GLOBALS['taille_des_logs'] = 500;
 define('_MAX_LOG', 500000);
@@ -216,11 +218,6 @@ define('_CCN_PROJET_ACTIVE', '${CCN_PROJET_ACTIVE:-true}' !== 'false');
 ?>
 MAINEOF
 chown www-data:www-data config/mes_options.php
-
-# TODO(#ISSUE): plugin cicas supprimé, ce fichier ne devrait plus jamais être
-# généré nulle part mais peut subsister sur les déploiements existants -
-# à retirer une fois qu'on est sûr qu'aucun environnement n'en a plus besoin
-rm -f config/_config_cas.php
 
 # Default _config_cioidc.php
 rm -f config/_config_cioidc.php

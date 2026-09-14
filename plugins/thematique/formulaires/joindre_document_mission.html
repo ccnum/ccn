@@ -6,10 +6,11 @@
 	<form action="#ENV{action}" method="post" enctype='multipart/form-data'><div>
 		#ACTION_FORMULAIRE
 
+		#SET{accept_document_mission, #VAL{1}|thematique_extensions_document_mission_accept}
 		<div class="editer-groupe">
 			[(#SAISIE_FICHIER{bigup, document,
 				label=<:thematique:label_fichier_document_mission:>,
-				accept=.gif,.jpg,.jpeg,.png,.mp3,.pdf,
+				accept=#GET{accept_document_mission},
 				multiple=oui})]
 		</div>
 

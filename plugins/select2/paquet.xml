@@ -1,7 +1,7 @@
 <paquet
 	prefix="select2"
 	categorie="edition"
-	version="2.1.0"
+	version="2.1.2"
 	etat="stable"
 	compatibilite="[4.2.0;4.*]"
 	logo="prive/themes/spip/images/select2-64.png"

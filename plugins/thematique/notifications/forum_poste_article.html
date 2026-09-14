@@ -1,0 +1,61 @@
+[(#REM)
+
+  Personnalisation CCN (issue #217) : mise en page reprenant celle
+  d'article_publie.html (titre, carte bordée avec avatar, bouton) pour un
+  commentaire posté sur un article (forumv2), plutôt que le squelette
+  d'origine du plugin notifications (liens de modération en boutons
+  rouge/gris) — cf notifications/forum_poste.html et discussion issue #217.
+
+]
+<BOUCLE_art(ARTICLES){id_article=#ENV{id_objet}}{tout}>
+#SET{numero_mission,#ID_ARTICLE|thematique_numero_mission}
+#SET{est_reponse_a_moi,#ENV{id_parent}|thematique_est_reponse_a_email{#ENV{notification_email}}}
+#SET{cas,generique}
+[(#GET{numero_mission}|oui) #SET{cas,mission}]
+[(#GET{est_reponse_a_moi}|oui) #SET{cas,reponse}]
+#SET{avatar,#ENV{id_auteur}|thematique_avatar_notification_auteur}
+#SET{avatar_type,#GET{avatar}|table_valeur{type}}
+#SET{avatar_valeur,#GET{avatar}|table_valeur{valeur}}
+#SET{avatar_couleur,#GET{avatar}|table_valeur{couleur_fond}}
+<BOUCLE_rubrique(RUBRIQUES){id_rubrique=#ID_SECTEUR}>#SET{titre_secteur, #TITRE}</BOUCLE_rubrique>
+#SET{url_article,#URL_ARTICLE|url_absolue|parametre_url{rub,#GET{titre_secteur}}|parametre_url{mode,complet}}
+#SET{carte_date,#ENV{date_heure}|affdate}
+#SET{carte_extrait,#ENV{texte}|thematique_couper_extrait{200}}
+<title>[(#VAL{thematique:notif_commentaire_sujet}|_T{#ARRAY{titre,#TITRE}}|nettoyer_titre_email)]</title>
+
+<body>
+<div class="header">
+	<h1 style="color:#000AFF;font-family:'Poppins', Verdana, Geneva, sans-serif;font-size:22px;font-weight:700;margin:0 0 16px;">
+		[(#GET{cas}|=={reponse}|oui)
+			<:thematique:notif_commentaire_reponse_titre:>
+		]
+		[(#GET{cas}|=={mission}|oui)
+			[(#VAL{thematique:notif_commentaire_titre_mission}|_T{#ARRAY{numero,#GET{numero_mission}}})]
+		]
+		[(#GET{cas}|=={generique}|oui)
+			[(#VAL{thematique:notif_commentaire_titre}|_T{#ARRAY{titre,#TITRE}})]
+		]
+	</h1>
+	<p style="color:#1E2055;font-family:'Poppins', Verdana, Geneva, sans-serif;font-size:15px;line-height:150%;margin:0 0 24px;">
+		[(#GET{cas}|=={reponse}|oui)
+			[(#VAL{thematique:notif_commentaire_reponse_detail}|_T{#ARRAY{auteur,#ENV{auteur},titre,#TITRE}})]
+		]
+		[(#GET{cas}|=={mission}|oui)
+			[(#VAL{thematique:notif_commentaire_detail_mission}|_T{#ARRAY{auteur,#ENV{auteur},numero,#GET{numero_mission},titre,#TITRE}})]
+		]
+		[(#GET{cas}|=={generique}|oui)
+			[(#VAL{thematique:notif_commentaire_detail}|_T{#ARRAY{auteur,#ENV{auteur},titre,#TITRE}})]
+		]
+	</p>
+
+	<INCLURE{fond=notifications/inc_carte, avatar_type=#GET{avatar_type}, avatar_valeur=#GET{avatar_valeur}, avatar_couleur=#GET{avatar_couleur}, avatar_secours_emoji=💬, avatar_secours_fond=#DEE0FF, avatar_secours_couleur=#1E2055, titre=#ENV{auteur}, date_carte=#GET{carte_date}, extrait=#GET{carte_extrait}} />
+
+	<div style="text-align:center;margin-top:24px;">
+		<a href="#GET{url_article}" style="display:inline-block;background-color:#000AFF;color:#FFFFFF;font-family:'Poppins', Verdana, Geneva, sans-serif;font-weight:600;font-size:15px;text-decoration:none;padding:12px 28px;border-radius:6px;">
+			[(#GET{cas}|=={reponse}|oui) <:thematique:notif_bouton_repondre_message:>]
+			[(#GET{cas}|=={reponse}|non) <:thematique:notif_bouton_lire_message:>]
+		</a>
+	</div>
+</div>
+</body>
+</BOUCLE_art>

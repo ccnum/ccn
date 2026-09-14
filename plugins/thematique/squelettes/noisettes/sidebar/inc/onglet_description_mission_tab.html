@@ -1,0 +1,24 @@
+[(#REM)
+Onglet "Description de la mission" (titre + contenu), commun aux fonds
+noisettes/sidebar/consigne_pour_*.html.
+
+Paramètres :
+- fond_description : fond à inclure pour le contenu (obligatoire, ex:
+  noisettes/sidebar/onglet_description_role_simple ou
+  noisettes/sidebar/onglet_description_autre)
+- id_article : id de l'article décrit (défaut #ID_ARTICLE)
+]
+#SET{id_article, #ENV{id_article}|sinon{#ID_ARTICLE}}
+
+<div>
+	<div class="tabs-title">
+		<:thematique:description_mission:>
+	</div>
+	<div class="tabs-content">
+		<INCLURE{
+			fond=#ENV{fond_description},
+			id_article=#GET{id_article},
+			env
+		} />
+	</div>
+</div>

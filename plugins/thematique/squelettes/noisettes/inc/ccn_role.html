@@ -1,0 +1,6 @@
+#CACHE{0}
+[(#REM) Extrait de noisettes/sommaire.html (cache de 48h) : le rôle de
+session doit rester dynamique par visiteur, sinon le rôle affiché/utilisé
+côté JS (cf CCN.role dans main.js) se fige pendant 48h sur celui du premier
+visiteur ayant déclenché la mise en cache de la page. ]
+<script>CCN.role = "[(#SESSION{role})]";</script>

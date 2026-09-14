@@ -1,0 +1,44 @@
+[(#REM)
+
+  Carte (avatar + titre + date + extrait) d'un mail de notification
+  (issue #217), factorisée pour éviter la duplication entre les différents
+  fonds notifications/article_publie_*.html et
+  notifications/forum_poste_article.html.
+
+  Paramètres :
+  - avatar_type, avatar_valeur, avatar_couleur, avatar_secours_* : cf inc_avatar.html
+  - titre : contenu HTML de la cellule de titre, déjà construit par l'appelant
+    (ex: "#TITRE - <em>Agenda</em>")
+  - date : texte déjà formaté (ex: #DATE|affdate)
+  - extrait : contenu HTML de l'extrait, déjà tronqué par l'appelant
+    (cf thematique_couper_extrait())
+
+]
+<table border="0" cellpadding="0" cellspacing="0" width="100%" style="border:1px solid #000AFF;border-radius:5px;">
+	<tr>
+		<td style="padding:16px;">
+			<table border="0" cellpadding="0" cellspacing="0" width="100%">
+				<tr>
+					<td width="40" valign="top">
+						<INCLURE{fond=notifications/inc_avatar, avatar_type=#ENV{avatar_type}, avatar_valeur=#ENV{avatar_valeur}, avatar_couleur=#ENV{avatar_couleur}, avatar_secours_emoji=#ENV{avatar_secours_emoji}, avatar_secours_fond=#ENV{avatar_secours_fond}, avatar_secours_couleur=#ENV{avatar_secours_couleur}} />
+					</td>
+					<td valign="top" style="padding-left:12px;">
+						<table border="0" cellpadding="0" cellspacing="0" width="100%">
+							<tr>
+								<td valign="top" style="font-family:'Poppins', Verdana, Geneva, sans-serif;font-weight:600;color:#1E2055;font-size:15px;">
+									#ENV*{titre}
+								</td>
+								<td align="right" valign="top" style="font-family:'Poppins', Verdana, Geneva, sans-serif;color:#6a6a6a;font-size:13px;white-space:nowrap;padding-left:10px;">
+									#ENV*{date_carte}
+								</td>
+							</tr>
+						</table>
+						<div style="font-family:'Poppins', Verdana, Geneva, sans-serif;color:#1E2055;font-size:14px;line-height:150%;margin-top:8px;">
+							#ENV*{extrait}
+						</div>
+					</td>
+				</tr>
+			</table>
+		</td>
+	</tr>
+</table>

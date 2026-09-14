@@ -18,6 +18,7 @@ return [
 	'email_envoye_par' => 'Envoyé par @site@',
 	'email_test_envoye' => 'L’email de test a correctement été envoyé. Si vous ne le recevez pas correctement, vérifiez la configuration de votre serveur ou contactez un administrateur du serveur.',
 	'erreur' => 'Erreur',
+	'erreur_aucun_article_test' => 'Aucun article trouvé pour tester l\'envoi de mail par le Facteur',
 	'erreur_confirm_ip_sans_hostname' => 'Voulez-vous vraiment utiliser cette adresse IP comme SMTP Host ?',
 	'erreur_dans_log' => ' : consultez le fichier log pour plus de détails',
 	'erreur_envoi_bloque_constante' => 'Envoi bloqué par la constante <tt>_TEST_EMAIL_DEST</tt>.
@@ -66,8 +67,8 @@ Vérifiez votre fichier <tt>mes_options.php</tt>',
 	'label_email_test_from' => 'Expéditeur',
 	'label_email_test_from_placeholder' => 'from@example.org (optionnel)',
 	'label_email_test_important' => 'Cet email est important',
-	'label_facteur_forcer_from_everytime' => 'Forcer cette adresse d’envoi quand le <tt>From</tt> est différent',
 	'label_facteur_forcer_from' => 'Forcer cette adresse d’envoi quand le <tt>From</tt> n’est pas sur le même domaine',
+	'label_facteur_forcer_from_everytime' => 'Forcer cette adresse d’envoi quand le <tt>From</tt> est différent',
 	'label_message_envoye' => 'Message envoyé :',
 
 	// M

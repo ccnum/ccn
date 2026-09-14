@@ -23,6 +23,22 @@ function balise_ANNEE_SCOLAIRE_dist($p) {
 	return $p;
 }
 
+/**
+ * Valeur de l'attribut HTML accept="" à poser sur un input file, pour que
+ * le sélecteur de fichiers du navigateur ne propose pas d'emblée des
+ * formats de toute façon rejetés côté serveur par ccn_verifier_uploads()
+ * (cf inc/uploads.php, chargé ici à la volée car pas autoload).
+ */
+function balise_ATTRIBUT_ACCEPT_DOCUMENTS_dist($p) {
+	$p->code = 'ccn_attribut_accept_documents_balise()';
+	return $p;
+}
+
+function ccn_attribut_accept_documents_balise() {
+	include_spip('inc/uploads');
+	return ccn_attribut_accept_documents();
+}
+
 function balise_ANNEE_ACTUELLE_dist($p) {
 	if (intval(date('m')) >= 9) {
 		$p->code = intval(date('Y'));

@@ -69,7 +69,8 @@
 		valeur=#GET{heure},
 		type=time,
 		size=4,
-		maxlength=5
+		maxlength=5,
+		step=#ENV{heure_pas,30}|mult{60}
 		}/>
 </div>
 ]

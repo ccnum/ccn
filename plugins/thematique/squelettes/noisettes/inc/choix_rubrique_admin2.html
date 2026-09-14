@@ -12,16 +12,17 @@
 
 #SET{voir_mission, #VAL{1}|thematique_voir_mission}
 
-[(#SESSION{id_auteur}|oui)
+[(#SESSION{role}|thematique_role_publie|oui)
 <div id="menu_haut_rubrique" class="bloc_titre">
 	<div id="choix_rubrique_admin2" name="rubrique_admin" class="selectbox" data-select-name="rubrique_admin">
 		<button type="button" class="select-toggle first_label">
 			<span class="icon icon-publier"></span>
 			<:thematique:menu_publier:>
+			<span class="icon icon-down"></span>
 		</button>
 		<ul class="select-options choix_rubrique_wrapper">
 			[(#GET{voir_mission}|=={oui}|oui)
-				<li onClick='createReponse(0, CCN.idRestreint || [(#GET{id_rubrique_mission}|intval)], 0);'
+				<li onClick='callNouvelleMission(CCN.idRestreint || [(#GET{id_rubrique_mission}|intval)]);'
 					class="select-option"
 					data-value="#ID_RUBRIQUE"
 				>
@@ -40,7 +41,7 @@
 			>
 				<:thematique:nouvelle_ressource:>
 			</li>
-			<li onClick='changeTimelineMode("blogs");'
+			<li onClick='callEvenementCreer();'
 				class="select-option"
 				data-value="#ID_RUBRIQUE"
 			>

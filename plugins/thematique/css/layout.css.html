@@ -178,6 +178,7 @@ body {
 	.first_label {
 		min-width: 165px;
 		display: flex;
+		gap: 0.8rem;
 		align-items: center;
 		.icon-down {
 			margin-left: auto;
@@ -444,6 +445,9 @@ body {
 .icon-connecter {
 	--svg: url("#CHEMIN{img/logo_connecter.svg}");
 }
+.icon-telecharger {
+	--svg: url("#CHEMIN{img/logo_telecharger.svg}");
+}
 /* Avatar de l'utilisateur connecté (menu haut) : masculin par défaut en
    attendant de savoir d'où viendra l'info de civilité (ENT ou profil SPIP)
    pour distinguer avatar_feminin/avatar_masculin — .icon-avatar-feminin
@@ -616,6 +620,11 @@ a:hover {
 	background-color: white;
 	border-radius: 3px;
 	cursor: pointer;
+}
+
+button.rempli {
+	display: flex;
+	gap: 0.4rem;
 }
 
 .sidebar_publier {

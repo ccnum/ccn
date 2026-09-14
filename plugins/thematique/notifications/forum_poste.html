@@ -1,0 +1,23 @@
+[(#REM)
+
+  Personnalisation CCN (issue #217) : surcharge de
+  plugins/notifications/notifications/forum_poste.html, valable uniquement
+  pour un commentaire sur un article (seul cas posté par forumv2, cf
+  CLAUDE.md). Un commentaire sur un autre type d'objet (rubrique, forum
+  général de l'espace privé...) retombe sur forum_poste_defaut.html, copie
+  conforme du squelette d'origine du plugin notifications.
+
+  Répartition sur deux fonds distincts plutôt qu'un seul fichier avec un
+  gros bloc conditionnel englobant : les crochets conditionnels de SPIP ne
+  supportent pas l'imbrication profonde, un bloc aussi long contenant
+  lui-même plusieurs conditions casse le parseur et fait ressortir le
+  contenu en texte brut échappé au lieu de le compiler.
+
+]
+[(#ENV{objet}|=={article}|oui)
+	#INCLURE{fond=notifications/forum_poste_article, env}
+]
+[(#ENV{objet}|=={article}|non)
+	#INCLURE{fond=notifications/forum_poste_defaut, env}
+]
+#FILTRE{facteur_email_wrap_to_html}

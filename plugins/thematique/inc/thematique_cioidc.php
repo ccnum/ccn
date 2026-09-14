@@ -15,7 +15,7 @@ if (!defined('_ECRIRE_INC_VERSION')) {
 // le même critère en priorité, sinon on met à jour un autre compte (ex: un doublon
 // historique retrouvé par email) que celui qui sera effectivement connecté.
 function thematique_cioidc_resoudre_auteur($uid, $email) {
-	$champs = 'id_auteur,nom,statut,email,webmestre,avatar';
+	$champs = 'id_auteur,nom,nom_complet,statut,email,webmestre,avatar';
 	$auteur = $uid ? sql_fetsel($champs, 'spip_auteurs', 'login=' . sql_quote($uid)) : null;
 	if (!$auteur) {
 		$auteur = sql_fetsel($champs, 'spip_auteurs', 'email=' . sql_quote($email));
@@ -103,51 +103,64 @@ function thematique_cioidc_nom_etablissement($uai) {
 	return $nom_etablissement;
 }
 
-// Rôle ENT affiché (Enseignant/Tuteur/Élève), remplacé par "Admin" pour un webmestre :
-// affiché ci-dessous à la suite du nom plutôt que le rôle ENT d'origine.
-function thematique_cioidc_role_affiche(string $profils, bool $is_webmestre) {
+// Rôle ENT affiché (Enseignant/Intervenant/Tuteur/Élève), remplacé par "Admin" pour un
+// webmestre : affiché ci-dessous à la suite du nom plutôt que le rôle ENT d'origine.
+// L'ENT laclasse.com n'a pas de profil dédié "intervenant" : un intervenant est envoyé
+// avec le même profil ENS qu'un vrai prof (cf issue signalée en session — un intervenant
+// ressortait "Enseignant"). Seule la présence d'une classe réelle (ENTClassesGroupes,
+// cf thematique_cioidc_classes_reelles()) distingue les deux : un ENS sans classe réelle
+// (seulement un groupe projet ENTGroupesLibres) est un intervenant.
+function thematique_cioidc_role_affiche(string $profils, bool $is_webmestre, bool $a_une_classe_reelle) {
 	if ($is_webmestre) {
 		return 'Admin';
 	}
-	$roles_ent = ['ENS' => 'Enseignant', 'TUT' => 'Tuteur', 'ELV' => _T('thematique:cioidc_role_eleve')];
-	foreach ($roles_ent as $code => $libelle) {
-		if (strpos($profils, $code) !== false) {
-			return $libelle;
-		}
+	if (strpos($profils, 'ENS') !== false) {
+		return $a_une_classe_reelle ? 'Enseignant' : _T('thematique:cioidc_role_intervenant');
+	}
+	if (strpos($profils, 'TUT') !== false) {
+		return 'Tuteur';
+	}
+	if (strpos($profils, 'ELV') !== false) {
+		return _T('thematique:cioidc_role_eleve');
 	}
 	return null;
 }
 
-// Nom affiché : prénom/nom ENT, suivi du rôle ENT, de la classe (première classe
-// réelle du prof) pour distinguer dans la liste des auteurs un même prof intervenant
-// sur plusieurs CCN (cf issue #44), et enfin du nom de son établissement (résolu
-// depuis le premier UAI de $uai_liste — cf thematique_cioidc_nom_etablissement(),
-// même issue #44 : demande initiale de Jonathan L., seule la classe avait pu être
-// ajoutée faute de nom d'établissement direct dans l'ENT). Le group_name reçu de
-// l'ENT est préfixé par "CCN - " : préfixe redondant qu'on retire.
-function thematique_cioidc_nom_affiche(
-	array $flux_data,
-	array $classes_reelles,
-	?string $role_ent,
-	array $uai_liste = []
-) {
-	$prenom = $flux_data['LaclassePrenom'] ?? '';
-	$nom_famille = $flux_data['LaclasseNom'] ?? '';
-	$nom = trim($prenom . ' ' . $nom_famille);
-	if ($nom && $role_ent) {
-		$nom .= ' - ' . $role_ent;
+// Prénom + nom réels de la personne (ex: "Intervenant CCN"), tels que fournis par
+// l'ENT — à distinguer de thematique_cioidc_nom_affiche() qui construit le libellé
+// rôle/classe/collège (cf #44). Utilisé là où on veut identifier la personne plutôt
+// que sa fonction (menu haut). 'name' est déjà le prénom+nom concaténés côté ENT ;
+// repli sur LaclassePrenom/LaclasseNom si jamais absent.
+function thematique_cioidc_nom_complet(array $data) {
+	if (!empty($data['name'])) {
+		return trim((string) $data['name']);
 	}
-	if ($nom && ($groupe_classe = $classes_reelles[0]->group_name ?? null)) {
+	return trim(($data['LaclassePrenom'] ?? '') . ' ' . ($data['LaclasseNom'] ?? ''));
+}
+
+// Nom affiché : rôle ENT, suivi de la classe (première classe réelle du prof) pour
+// distinguer dans la liste des auteurs un même prof intervenant sur plusieurs CCN
+// (cf issue #44), et enfin du nom de son établissement (résolu depuis le premier
+// UAI de $uai_liste — cf thematique_cioidc_nom_etablissement()). Plus de
+// prénom/nom de la personne : décidé finalement sur l'issue #44, seuls le rôle, la
+// classe et le collège identifient l'auteur. Le group_name reçu de l'ENT est
+// préfixé par "CCN - " : préfixe redondant qu'on retire.
+function thematique_cioidc_nom_affiche(array $classes_reelles, ?string $role_ent, array $uai_liste = []) {
+	$parties = [];
+	if ($role_ent) {
+		$parties[] = $role_ent;
+	}
+	if ($groupe_classe = $classes_reelles[0]->group_name ?? null) {
 		if (stripos($groupe_classe, 'CCN - ') === 0) {
 			$groupe_classe = substr($groupe_classe, strlen('CCN - '));
 		}
-		$nom .= ' - ' . $groupe_classe;
+		$parties[] = $groupe_classe;
 	}
-	if ($nom && ($uai = (string) ($uai_liste[0] ?? ''))
+	if (($uai = (string) ($uai_liste[0] ?? ''))
 		&& ($nom_etablissement = thematique_cioidc_nom_etablissement($uai))) {
-		$nom .= ' - ' . $nom_etablissement;
+		$parties[] = $nom_etablissement;
 	}
-	return $nom;
+	return implode(' - ', $parties);
 }
 
 // Résout le secteur de l'année scolaire en cours (ex: "2025"), et sous ce secteur les

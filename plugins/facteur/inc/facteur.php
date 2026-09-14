@@ -110,6 +110,7 @@ function facteur_envoyer_mail($destinataires, string $sujet, array $message, int
 	$cc = facteur_preparer_liste_emails($cc);
 	$bcc = facteur_preparer_liste_emails($bcc);
 	$erreur = facteur_destinataires($facteur, $destinataires, $cc, $bcc);
+	// si aucun destinataire valide on a une erreur et on va pas plus loin
 	if ($erreur) {
 		spip_log($erreur, 'mail.' . _LOG_ERREUR);
 		if ($exceptions) {
@@ -127,11 +128,7 @@ function facteur_envoyer_mail($destinataires, string $sujet, array $message, int
 		$from = $GLOBALS['meta']['email_envoi'];
 		if (empty($from) or !email_valide($from)) {
 			spip_log('Meta email_envoi invalide. Le mail sera probablement vu comme spam.', 'mail.' . _LOG_ERREUR);
-			if (is_array($destinataires) && count($destinataires) > 0) {
-				$from = $destinataires[0];
-			} else {
-				$from = $destinataires;
-			}
+			$from = reset($destinataires);
 		}
 	}
 
@@ -220,6 +217,13 @@ function facteur_envoyer_mail($destinataires, string $sujet, array $message, int
 		}
 	}
 
+	// indiquer au facteur si c'est un essai final ou non
+	// et envoyer un header X-retry si c'est un retry
+	$facteur->setIsFinalTry($try >= _FACTEUR_NOMBRE_ESSAIS_ENVOI_MAIL);
+	if ($try > 0) {
+		$facteur->addCustomHeader('X-retry',(string)$try . ($facteur->getIsFinalTry() ? '-last' : ''));
+	}
+
 	// On passe dans un pipeline pour modifier tout le facteur avant l'envoi
 	/** @var \SPIP\Facteur\FacteurMail $facteur */
 	$facteur = pipeline('facteur_pre_envoi', $facteur);
@@ -234,7 +238,7 @@ function facteur_envoyer_mail($destinataires, string $sujet, array $message, int
 	// mais on delegue la gestion de cet envoi au facteur qui est le seul a savoir quoi faire
 	// en fonction de la reponse et du modus operandi pour connaitre le status du message
 	$dest_alertes = $facteur->Sender;
-	if (($try >= _FACTEUR_NOMBRE_ESSAIS_SEUIL_NOTIFIE) and $important and $dest_alertes) {
+	if ($facteur->getIsFinalTry() && $important && $dest_alertes) {
 		$dest = (is_array($destinataires) ? implode(', ', $destinataires) : $destinataires);
 		$sujet_alerte = _T('facteur:sujet_alerte_mail_fail', ['dest' => $dest, 'sujet' => $sujet]);
 		$args = func_get_args();
@@ -250,8 +254,6 @@ function facteur_envoyer_mail($destinataires, string $sujet, array $message, int
 		$facteur->setSendFailFunction('envoyer_mail', $args, 'inc/');
 	}
 
-	// indiquer au facteur si c'est un essai final ou non
-	$facteur->setIsFinalTry($try >= _FACTEUR_NOMBRE_ESSAIS_ENVOI_MAIL);
 	$retour = $facteur->Send();
 
 	if (!$retour) {

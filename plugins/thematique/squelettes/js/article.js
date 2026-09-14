@@ -35,12 +35,11 @@ function Article() {
 		this.x = data.nombre_jours;
 		this.y = data.y;
 
-		if (type === 'evenements' && this.titre.length > 25) {
+		if (this.titre.length > 25) {
 			this.titre = this.titre.substring(0, 25) + "(...)";
 		}
 
 		const isBlog = type === 'blogs';
-		const prefix = isBlog ? 'article_blog' : 'article_evenement';
 		const urlImg = isBlog ? CCN.urlImgBlog : CCN.urlImgEvenement;
 		const layer = isBlog ? CCN.timelineLayerBlogs : CCN.timelineLayerEvenements;
 		const date_texte = formatDateCourte(this.date);
@@ -58,11 +57,10 @@ function Article() {
 			const classe_article = 'article_blog' + (est_magazine ? ' article_blog2' : '');
 
 			html = `
-				<div class="timeline_item ${prefix}_container" style="top:${this.y * 100}%; left:${this.x / CCN.projet.nombre_jours_total * 100}%;">
+				<div class="timeline_item article_blog_container" style="top:${this.y * 100}%; left:${this.x / CCN.projet.nombre_jours_total * 100}%;">
 					<div id="article_blog${this.id}" class="${classe_article} bulle_bd">
-						<svg class="bubble_svg" aria-hidden="true"></svg>
 						<div class="bulle_contenu">
-							<div class="${prefix}_date">${dateSure}</div>
+							<div class="article_blog_date">${dateSure}</div>
 							<div class="bulle-texte">${titreSur}</div>
 						</div>
 						${picto_commentaires}
@@ -71,16 +69,19 @@ function Article() {
 			`;
 		} else {
 			html = `
-				<div class="timeline_item ${prefix}_container" style="top:${this.y * 100}%; left:${this.x / CCN.projet.nombre_jours_total * 100}%;">
+				<div
+					class="timeline_item article_evenement_container"
+					style="top:${this.y * 100}%; left:${this.x / CCN.projet.nombre_jours_total * 100}%;"
+				>
+					<div class="article_evenement_shape"></div>
+					${picto_commentaires}
 					<div id="article_evenement${this.id}" class="article_evenement">
-						<svg class="bubble_svg"></svg>
 						<div class="article_evenement_inner">
 							<div class="bulle_contenu">
-								<div class="${prefix}_date">${dateSure}</div>
+								<div class="article_evenement_date">${dateSure}</div>
 								<div class="bulle-texte">${titreSur}</div>
 							</div>
 						</div>
-						${picto_commentaires}
 					</div>
 				</div>
 			`;
@@ -93,25 +94,63 @@ function Article() {
 
 		const _thisId = this.id_objet;
 		const _thisTypeObjet = this.type_objet;
+		const leftPercent = this.x / CCN.projet.nombre_jours_total * 100;
 
 		this.div_texte.on('click', () => isBlog
 			? callArticleBlog(_thisId)
 			: callArticleEvenement(_thisId, _thisTypeObjet)
 		);
+		this.div_base.draggable({
+			axis: "y",
+			cancel: '',  // Force le drag and drop
+			start: function (event, ui) {
+				$(this).children().children().removeAttr("onClick");
+			},
+			drag: function (event, ui) {
+				// axis:"y" ne bloque que le déplacement horizontal via la souris,
+				// mais jQuery UI réécrit quand même `left` en px à chaque frame
+				// (cf. Draggable._mouseDrag) : sans ça, la carte perd son `left`
+				// en % et ne suit plus le zoom horizontal de la timeline une
+				// fois draguée (#366).
+				ui.position.left = CCN.projet.timeline.width() * leftPercent / 100;
+				dragWithCollision(this, ui, {
+					timeline: CCN.timelineLayerConsignes,
+					getVisualBounds: function (objectDOM) {
+						const picto = objectDOM.find('.picto_nombre_commentaires')[0];
+						let topBound;
+						if(picto) {
+							topBound = picto.getBoundingClientRect().top
+						}
+						const shape = objectDOM.find('.article_evenement_shape')[0];
+						if (shape) {
+							const rect = shape.getBoundingClientRect();
+							return {
+								top: topBound ? Math.min(topBound, rect.top) : rect.top,
+								bottom: rect.bottom
+							};
+						}
+						const rect = objectDOM[0].getBoundingClientRect();
+						return {
+							top: topBound ? Math.min(topBound, rect.top) : rect.top,
+							bottom: rect.bottom
+						};
+					}
+				});
+			},
+			stop: function (event, ui) {
+				const y_parent = $(this).parent().height();
+				const yy = ui.position.top / y_parent;
 
-		if (CCN.admin == 0) {
-			this.div_base.draggable({
-				axis: "y",
-				cancel: '',  // Force le drag and drop
-				start: function (event, ui) {
-					$(this).children().children().removeAttr("onClick");
-				},
-				stop: function (event, ui) {
-					const y_parent = $(this).parent().height();
-					const yy = ui.position.top / y_parent;
+				if (CCN.admin == 0) {
 					$.post("spip.php?page=ajax&mode=article-sauve-coordonnees", { id_objet: _thisId, type_objet: _thisTypeObjet, X: 0, Y: yy });
 				}
-			});
-		}
+				// Restaure top/left en % : jQuery UI les a figés en px pendant
+				// le drag (cf. commentaire dans `drag` ci-dessus).
+				$(this).css({
+					top: (yy * 100) + '%',
+					left: leftPercent + '%'
+				});
+			}
+		});
 	}
 }

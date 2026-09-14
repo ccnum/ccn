@@ -52,9 +52,11 @@ function Projet() {
 		this.url_popup_consigne = data.url_popup_consigne;
 		this.url_popup_reponse = data.url_popup_reponse;
 		this.url_popup_reponseajout = data.url_popup_reponseajout;
+		this.url_popup_missionajout = data.url_popup_missionajout;
 		this.url_popup_blog = data.url_popup_blog;
 		this.url_popup_livrables = data.url_popup_livrables;
 		this.url_popup_evenement = data.url_popup_evenement;
+		this.url_popup_evenement_creer = data.url_popup_evenement_creer;
 		this.url_popup_ressources = data.url_popup_ressources;
 		this.url_popup_classes = data.url_popup_classes;
 		this.url_popup_chat = data.url_popup_chat;
@@ -146,7 +148,7 @@ function Projet() {
 		for (let i = 0; i < CCN.articlesEvenement.length; i++) {
 			$(CCN.articlesEvenement[i].div_base).fadeIn(3000);
 		}
-		deflouterToutesLesBulles();
+		deflouterToutesLesBullesEtLosanges();
 		this.setTimelineZoom();
 
 		$('.connecteur_timeline').addClass('hide');

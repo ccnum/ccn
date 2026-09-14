@@ -14,7 +14,10 @@ if (!defined('_ECRIRE_INC_VERSION')) {
  * @package SPIP\Thematique\Formulaires
  */
 
-define('_THEMATIQUE_EXTENSIONS_DOCUMENT_MISSION', ['gif', 'jpg', 'jpeg', 'png', 'mp3', 'pdf']);
+// _THEMATIQUE_EXTENSIONS_DOCUMENT_MISSION et les filtres
+// thematique_extensions_document_mission_accept/_liste sont définis dans
+// thematique_fonctions.php (chargé pour toute compilation de squelette du
+// plugin), pas ici — cf le commentaire à leur définition pour le pourquoi.
 
 /**
  * Trouve le ou les fichiers envoyés dans $_FILES, restreints aux extensions

@@ -1,26 +1,49 @@
-
+[(#REM) #CACHE{0} : ce fond est appelé directement en PHP via recuperer_fond()
+(forum_rendre_branche() dans thematique_fonctions.php), en dehors de toute
+compilation de squelette parent — le #CACHE{0} des fonds englobants
+(consigne_pour_*.html, BlogOuEvenement.html, etc.) ne s'applique donc pas ici.
+Sans lui, SPIP met en cache le HTML de #GET{peut_modifier}/#GET{peut_repondre}
+(dépendants de #SESSION) pour ce commentaire, et le sert tel quel à
+n'importe quel autre visiteur tant que le commentaire ne change pas :
+un élève peut alors voir "Modifier" ou "Se connecter pour répondre" figés
+depuis le rendu d'une autre session (admin, anonyme...). ]
+#CACHE{0}
 
 #SET{id_forum, #ENV{forum}|table_valeur{id_forum}}
+#SET{id_article, #ENV{forum}|table_valeur{id_objet}}
 #SET{is_root, #ENV{forum}|table_valeur{id_parent}|?{non,oui}}
 #SET{nombre_reponses, #ENV{forum}|table_valeur{reponses}|count}
 #SET{date_heure, #ENV{forum}|table_valeur{date_heure}|affdate}
 #SET{texte, #ENV{forum}|table_valeur{texte}|propre}
 #SET{id_rubrique_classe, #ENV{forum}|classe_id_rubrique_forum}
-<div class="forum-commentaire[(#GET{is_root}|=={oui}|?{' is-root',''})]">
-	<INCLURE{fond=noisettes/inc/forumv2/forum_card,
-		id_forum=#GET{id_forum},
-		nombre_reponses=#GET{nombre_reponses},
-		date_heure=#GET{date_heure},
-		texte=#GET{texte},
-		id_rubrique_classe=#GET{id_rubrique_classe},
-		is_root=#GET{is_root},
-	}>
-	<B_reponses>
-		<div class="reponse-list" hidden>
-			<BOUCLE_reponses(DATA){source tableau, #ENV{forum}|table_valeur{reponses}}>
-				<INCLURE{fond=noisettes/inc/forumv2/forum_commentaire_et_ses_reponses}{forum=#VALEUR} />
-			</BOUCLE_reponses>
-		</div>
-	</B_reponses>
-	<div class="forum-formulaire-reponse-zone"></div>
+#SET{nom_auteur, #ENV{forum}|table_valeur{auteur}}
+#SET{est_recent, #ENV{forum}|table_valeur{est_recent}}
+#SET{id_auteur, #ENV{forum}|table_valeur{id_auteur}}
+<div class="forum-commentaire-container[(#GET{est_recent}|oui) forum-message-recent]">
+	<div class="succes-commentaire">
+		<div class="icon-check-circle icon"></div>
+		<div><:thematique:commentaire_poste_succes:></div>
+	</div>
+	<div class="forum-commentaire[(#GET{is_root}|=={oui}|?{' is-root',''})]">
+		<INCLURE{fond=noisettes/inc/forumv2/forum_card,
+			id_forum=#GET{id_forum},
+			id_article=#GET{id_article},
+			nombre_reponses=#GET{nombre_reponses},
+			nom_auteur=#GET{nom_auteur},
+			date_heure=#GET{date_heure},
+			texte=#GET{texte},
+			id_rubrique_classe=#GET{id_rubrique_classe},
+			is_root=#GET{is_root},
+			id_auteur=#GET{id_auteur}
+		}>
+		<B_reponses>
+			<div class="reponse-list" hidden>
+				<BOUCLE_reponses(DATA){source tableau, #ENV{forum}|table_valeur{reponses}}>
+					<INCLURE{fond=noisettes/inc/forumv2/forum_commentaire_et_ses_reponses}{forum=#VALEUR} />
+				</BOUCLE_reponses>
+			</div>
+		</B_reponses>
+		<div class="forum-formulaire-reponse-zone"></div>
+	</div>
 </div>
+

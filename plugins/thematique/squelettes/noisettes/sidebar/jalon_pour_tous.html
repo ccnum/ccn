@@ -1,0 +1,21 @@
+<div id="tabs-article-#ID_ARTICLE" class="container-tabs">
+    <div id="mission-tabs">
+        <div>
+            #SET{titre_onglet_jalon,#VAL{thematique:titre_onglet_description_cap}|_T}
+            [(#ENV{est_debut}|=={true}|non)
+                #SET{titre_onglet_jalon,#VAL{thematique:la_rencontre}|_T}
+            ]
+            <div class="tabs-title">
+                #GET{titre_onglet_jalon}
+            </div>
+            <div class="tabs-content">
+                <INCLURE{
+                    fond=noisettes/sidebar/onglet_description_jalon,
+                    env
+                } />
+            </div>
+        </div>
+        #SET{libelle_onglet_commentaires, #VAL{thematique:titre_onglet_comentaire_pour_jalon}|_T}
+        <INCLURE{fond=noisettes/sidebar/inc/onglet_commentaires_tab, libelle_onglet=#GET{libelle_onglet_commentaires}, env} />  
+    </div>
+</div>

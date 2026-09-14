@@ -3,14 +3,10 @@
 // extrait automatiquement de https://trad.spip.net/tradlang_module/paquet-yaml?lang_cible=sk
 // ** ne pas modifier le fichier **
 
-if (!defined('_ECRIRE_INC_VERSION')) {
-	return;
-}
-
-$GLOBALS[$GLOBALS['idx_lang']] = array(
+return [
 
 	// Y
 	'yaml_description' => 'Tento zásuvný modul ponúka funkcie čítanie/zápisu formátu YAML:
 	<code>yaml_decode()</code> a <code>yaml_encode()</code>. Poskytuje formát yaml aj pre cyklus (DATA).',
-	'yaml_slogan' => 'Jednoduchý formát súborov na upravovanie zoznamov dát'
-);
+	'yaml_slogan' => 'Jednoduchý formát súborov na upravovanie zoznamov dát',
+];
