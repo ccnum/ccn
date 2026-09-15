@@ -53,6 +53,7 @@ function Projet() {
 		this.url_popup_reponse = data.url_popup_reponse;
 		this.url_popup_reponseajout = data.url_popup_reponseajout;
 		this.url_popup_missionajout = data.url_popup_missionajout;
+		this.url_popup_modifier_article = data.url_popup_modifier_article;
 		this.url_popup_blog = data.url_popup_blog;
 		this.url_popup_livrables = data.url_popup_livrables;
 		this.url_popup_evenement = data.url_popup_evenement;

@@ -89,6 +89,10 @@ $(function () {
 		callLivrable($(this).data('id-article'), 'openDetails');
 	});
 
+	$(document).on('click', '.js-call-modifier-article', function () {
+		callModifierArticle($(this).data('id-article'), $(this).data('type-objet'));
+	});
+
 	// Accordéons génériques (bloc_option_doc, forum, réponses...) : affiche/masque
 	// le bloc juste après le déclencheur cliqué (cf noisettes/*.html, class="js-accordeon-toggle").
 	$(document).on('click', '.js-accordeon-toggle', function () {

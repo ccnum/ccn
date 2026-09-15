@@ -1,14 +1,9 @@
 <!--debut header consigne-->
-
-[(#REM) #CACHE{0} : ciblé par sa propre <INCLURE> (noisettes/article.html via
-inc/entete_container.html), avec un cache indépendant de celui de la page
-appelante — voir aussi la note dans inc/bouton_modifier_article.html (#437),
-inclus plus bas et lui-même dépendant de #SESSION/#AUTORISER. ]
 #CACHE{0}
 <BOUCLE_article_sidebar(ARTICLES){id_article}{tout}>
 <div class="sidebar_bubble">
 	<div id="row_header">
-		<INCLURE{fond=noisettes/sidebar/inc/header_gauche_photo_auteur, id_article=#ID_ARTICLE} />
+		<INCLURE{fond=noisettes/sidebar/inc/header_gauche_photo_auteur, id_article} />
 		<div id="header-col-right">
 			<div id="header-row-1">
 				#SET{est_jalon, non}
@@ -22,9 +17,9 @@ inclus plus bas et lui-même dépendant de #SESSION/#AUTORISER. ]
 				</div>
 				<INCLURE{fond=noisettes/sidebar/normal_header_icons, env} />
 			</div>
-			<div id="header-row-2" class="#EDIT{titre} titre">
+			<div id="header-row-2" class="titre">
 				#TITRE
-				<INCLURE{fond=noisettes/sidebar/inc/bouton_modifier_article, id_article=#ID_ARTICLE, type_objet=#ENV{type_objet}} />
+				<INCLURE{fond=noisettes/sidebar/inc/bouton_modifier_article, id_article, type_objet} />
 			</div>
 		</div>
 	</div>

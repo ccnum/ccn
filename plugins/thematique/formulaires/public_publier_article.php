@@ -41,6 +41,14 @@ function formulaires_public_publier_article_charger_dist(
 	// (cf thematique_autoriser.php) - un accès direct à cette URL sans
 	// autorisation retombe silencieusement sur le formulaire de création
 	// vierge plutôt que d'exposer le contenu de l'article visé.
+	//
+	// include_spip('inc/autoriser') : ce charger_dist peut être atteint via
+	// le squelette ajax-detail de la page publier (callModifierArticle,
+	// controleurs.js) dans un contexte où inc/autoriser n'a pas encore été
+	// inclus, contrairement à un #AUTORISER{} compilé en squelette (qui
+	// génère lui-même ce garde) - sans ça, autoriser() est une fonction
+	// non définie et la requête part en erreur 500/503.
+	include_spip('inc/autoriser');
 	if ($id_article && autoriser('modifier', 'article', $id_article)) {
 		$article = sql_fetsel(
 			'id_article, id_rubrique, titre, texte, date',

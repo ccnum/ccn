@@ -1,23 +1,18 @@
 [(#REM)
 Bouton "Modifier" du titre d'un article (mission/réponse/billet), factorisé
-depuis header_sidebar.html/header_reponse_sidebar.html/header_blog.html
-(sinon dupliqué à l'identique, cf check_html_duplication.js).
-
+depuis header_sidebar.html/header_reponse_sidebar.html/header_blog.html.
 Paramètres attendus : id_article, type_objet.
-
-#CACHE{0} : ciblé par sa propre <INCLURE>, avec un cache indépendant de
-celui du fond appelant (le #CACHE{0} des headers ne s'applique pas ici).
-
-#437 : #AUTORISER{modifier,article,...} ne suffit pas seul — sur les sites
-où le plugin tiers "autorite" est configuré avec l'option
-"auteur_mod_article" (spip_meta 'autorite'), sa propre déclaration de
-autoriser_article_modifier() gagne la course function_exists() sur celle
-de thematique_autoriser.php et ignore donc totalement la restriction
-"année passée" — d'où ce second verrou, indépendant, posé ici.
+Le clic est géré en JS par délégation (classe js-call-modifier-article,
+cf controleurs.js) plutôt qu'un onclick inline : sur ce SPIP, une balise
+entre parenthèses littérales dans le texte affiché par un bloc
+conditionnel entre crochets peut faire planter ou dérailler la
+compilation. Ne jamais réintroduire de caractère dièse dans ce
+commentaire, même en évoquant une balise : ça suffit à faire planter la
+compilation de ce bloc REM lui-même.
 ]
 #CACHE{0}
-[(#AUTORISER{modifier,article,#ENV{id_article}}|oui)
-[(#ENV{id_article}|thematique_annee_article|thematique_annee_est_passee|non)
-<button type="button" class="bouton-modifier-article btn-reset" onclick="callModifierArticle(#ENV{id_article}, '#ENV{type_objet}')"><:thematique:modifier:></button>
-]
+#SET{peut_modifier, #AUTORISER{modifier,article,#ENV{id_article}}}
+#SET{annee_active, #ENV{id_article}|thematique_annee_article|thematique_annee_est_passee|non}
+[(#GET{peut_modifier}|et{#GET{annee_active}})
+<button type="button" class="bouton-modifier-article btn-reset js-call-modifier-article" data-id-article="#ENV{id_article}" data-type-objet="#ENV{type_objet}"><:thematique:modifier:></button>
 ]

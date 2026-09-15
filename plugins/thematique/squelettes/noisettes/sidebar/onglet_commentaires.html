@@ -1,9 +1,3 @@
-[(#REM) #CACHE{0} : ciblé par sa propre <INCLURE> (depuis
-inc/onglet_commentaires_tab.html), avec un cache indépendant de celui de
-la page appelante — voir la note dans
-noisettes/sidebar/header_sidebar.html. Le pavé et les boutons ci-dessous
-dépendent de #SESSION et de l'année scolaire de l'article (cf #437) et ne
-doivent jamais être figés dans le cache. ]
 #CACHE{0}
 #SET{annee_passee, #ENV{id_article}|thematique_annee_article|thematique_annee_est_passee}
 <div class="forum-article">

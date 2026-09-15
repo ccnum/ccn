@@ -26,17 +26,22 @@
 				<input type="hidden" name="id_article" value="#ENV{id_article}" />
 				<input type="hidden" name="id_parent" value="#ENV{id_parent}" />
 
+				[(#REM)
+				titre_publication/intro_publication : SET nu, hors crochets, puis
+				simple affichage de la balise GET dans les blocs conditionnels
+				plus bas. Sur ce SPIP, une chaîne de filtres directement dans le
+				texte affiché par le second de deux blocs conditionnels adjacents
+				entre crochets n'est pas exécutée (elle ressort en clair) - d'où
+				le calcul préalable en dehors. Ne jamais réintroduire de
+				caractère dièse dans ce commentaire.
+				]
+				#SET{titre_creation, #ENV{type_article}|thematique_texte_publication{titre}}
+				#SET{intro_creation, #ENV{type_article}|thematique_texte_publication{intro}}
+				<h3>[(#GET{est_edition}|oui)<:thematique:modifier_publication:>][(#GET{est_edition}|non)#GET{titre_creation}]</h3>
 				[(#GET{est_edition}|non)
-				#SET{titre_publication, #ENV{type_article}|thematique_texte_publication{titre}}
-				#SET{intro_publication, #ENV{type_article}|thematique_texte_publication{intro}}
+				[(#GET{intro_creation}|oui)
+				<p class="publier-article-intro">#GET{intro_creation}</p>
 				]
-				[(#GET{est_edition}|oui)
-				#SET{titre_publication, <:thematique:modifier_publication:>}
-				#SET{intro_publication, ''}
-				]
-				<h3>#GET{titre_publication}</h3>
-				[(#GET{intro_publication}|oui)
-				<p class="publier-article-intro">#GET{intro_publication}</p>
 				]
 
 				[(#GET{est_edition}|non)
