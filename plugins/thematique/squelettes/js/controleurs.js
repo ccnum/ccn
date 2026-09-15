@@ -1253,18 +1253,6 @@ function loadContentInMainSidebar(url, callback, typeContenu) {
 	showSidebar();
 	emptyMainSidebar();
 
-	// Purge &onglet=... laissé par custom-tabs.js (replaceState au clic d'un
-	// onglet, cf initMissionTabs) : sinon il fuite sur ce nouveau contenu,
-	// dont #mission-tabs est réinitialisé plus bas et relirait ce paramètre
-	// périmé pour forcer l'onglet d'un objet qui n'a rien à voir avec celui
-	// où il a été posé (ex: onglet "commentaires" d'une mission qui force
-	// l'onglet "commentaires" sur la réponse de classe cliquée ensuite).
-	const urlSansOnglet = new URL(window.location.href);
-	if (urlSansOnglet.searchParams.has('onglet')) {
-		urlSansOnglet.searchParams.delete('onglet');
-		window.history.replaceState(null, '', urlSansOnglet);
-	}
-
 	// $.get() plutôt que $(elem).load(url) : .load() coupe silencieusement
 	// l'url au premier espace et traite le reste comme un sélecteur jQuery à
 	// appliquer sur la réponse — une valeur imprévue (id, date...) contenant
@@ -1306,6 +1294,21 @@ function loadContentInMainSidebar(url, callback, typeContenu) {
 		if(typeContenu === "publication_article") {
 			initCommentaires();
 			initCompteurCaracteres();
+		}
+
+		// Purge &onglet=... une fois ce chargement terminé (et initMissionTabs()
+		// déjà passé dessus, ci-dessus, s'il devait s'en servir) : sinon il fuite
+		// sur le PROCHAIN contenu chargé dans cette même sidebar, dont
+		// #mission-tabs serait réinitialisé et relirait ce paramètre périmé pour
+		// forcer l'onglet d'un objet qui n'a rien à voir avec celui où il a été
+		// posé (ex: onglet "commentaires" d'une mission qui force l'onglet
+		// "commentaires" sur la réponse de classe cliquée ensuite). Purger avant
+		// ce point (en début de fonction) empêchait initMissionTabs() de jamais
+		// voir ce paramètre, y compris pour CE chargement-ci.
+		const urlSansOnglet = new URL(window.location.href);
+		if (urlSansOnglet.searchParams.has('onglet')) {
+			urlSansOnglet.searchParams.delete('onglet');
+			window.history.replaceState(null, '', urlSansOnglet);
 		}
 
 		if (callback) {

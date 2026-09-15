@@ -111,7 +111,15 @@ function Projet() {
 	 * @see Projet#showRangeOfTimeline
 	 * @see Projet#setTimelineZoom
 	 */
-	this.showWholeTimeline = function () {
+	// pushUrl=false (cf initTimeline() dans main.js, #422) : au tout premier
+	// appel du bootstrap, avant de savoir s'il faut rouvrir un objet précis
+	// depuis l'URL (id_article, onglet...), écraser l'URL avec "./" ici la
+	// détruit avant même que ce second état ne soit appliqué — la mission
+	// se rouvre bien juste après, mais sur une URL qui a perdu onglet=... (et,
+	// si ce second appel échouait pour une raison quelconque, l'utilisateur
+	// resterait bloqué sur "./", d'où le "redirigé vers la page d'accueil"
+	// initialement rapporté).
+	this.showWholeTimeline = function (pushUrl = true) {
 		canShowConsigneSidebar = false;
 
 		setContentFromState(
@@ -120,7 +128,7 @@ function Projet() {
 					'type_objet': '0',
 					'id_objet': '0'
 				}
-			}, 'CCN', './'
+			}, 'CCN', pushUrl ? './' : undefined
 		);
 		$('#menu-consignes .filter a, #menu-classes .filter a').removeClass('selected');
 		$('#menu-consignes .logo_menu-tout, #menu-classes .logo_menu-tout').addClass('selected');

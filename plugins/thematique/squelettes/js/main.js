@@ -424,7 +424,11 @@ function initTimeline() {
 	window.onpopstate = onHashChange;
 
 	CCN.projet.initTimelineMonths();
-	CCN.projet.showWholeTimeline();
+	// pushUrl=false : ce premier appel ne doit pas écraser l'URL courante
+	// (id_article, onglet...) avant que l'état réel ne soit restauré plus
+	// bas dans cette même fonction (cf #422 et le commentaire sur
+	// Projet#showWholeTimeline dans projet.js).
+	CCN.projet.showWholeTimeline(false);
 	changeTimelineMode('consignes');
 
 	updateBadgeJalon('cap_sur_annee', CCN.idArticleCapSurAnnee, CCN.statutCapSurAnnee);

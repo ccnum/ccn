@@ -1,7 +1,7 @@
-[(#REM) #CACHE{0} : ciblé par sa propre <INCLURE>, avec un cache indépendant
-de celui du fond appelant — voir la note dans
+[(#REM) Le cache (paramètre 0) cible sa propre inclusion, avec un cache
+indépendant de celui du fond appelant — voir la note dans
 noisettes/inc/forumv2/forum_commentaire_et_ses_reponses.html. Les boutons
-Modifier/Répondre/Se connecter ci-dessous dépendent de #SESSION et ne
+Modifier/Répondre/Se connecter ci-dessous dépendent de la session et ne
 doivent jamais être figés dans le cache. ]
 #CACHE{0}
 <div class="forum-card">

@@ -220,7 +220,7 @@ function notifications_notifications_destinataires($flux) {
 			$exclurepublic = ",'publie'";
 		}
 		$id_forum = $flux['args']['id'];
-		if ($t = $options['forum']
+		if ($t = ($options['forum'] ?? null)
 			or $t = sql_fetsel('*', 'spip_forum', 'id_forum=' . intval($id_forum))
 		) {
 
