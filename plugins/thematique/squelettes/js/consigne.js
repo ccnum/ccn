@@ -25,6 +25,7 @@ function Consigne() {
 		this.x = this.data.nombre_jours;
 		this.y = this.data.y; // Entre 0 et 1
 		this.image = this.data.image;
+		this.image_est_url = !!this.data.image_est_url;
 		this.image_generique = !!this.data.image_generique;
 		this.select = false;
 		this.date_texte = formatDateLongue(this.data.date_texte);
@@ -89,9 +90,11 @@ function Consigne() {
 					</div>
 					<div class="texte">
 						<div class="first-row">
-							<div class="photo">${this.image_generique
-								? `<span class="icon-avatar-masculin"><img src="${this.data.image}" alt="${escHtml(this.intervenant_nom)}" /></span>`
-								: `<img src="${this.data.image}" alt="${escHtml(this.intervenant_nom)}" />`}</div>
+							<div class="photo">${!this.image_est_url
+								? `<span class="icon-avatar-masculin"><span class="avatar-animal">${escHtml(this.data.image)}</span></span>`
+								: this.image_generique
+									? `<span class="icon-avatar-masculin"><img src="${this.data.image}" alt="${escHtml(this.intervenant_nom)}" /></span>`
+									: `<img src="${this.data.image}" alt="${escHtml(this.intervenant_nom)}" />`}</div>
 							<div class="titre"></div>
 						</div>
 						<div class="second-row">

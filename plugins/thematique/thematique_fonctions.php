@@ -2100,23 +2100,31 @@ function thematique_est_reponse_a_email($id_parent, $email) {
 }
 
 /**
- * Image d'une consigne : avatar de l'auteur de l'article, ou logo de sa
- * rubrique (classe/intervenant) en repli, mis en cache mémoire par requête.
+ * Image d'une consigne : émoji animal de la classe pour un prof/élève, sinon
+ * avatar de l'auteur de l'article, sinon logo de sa rubrique (classe/
+ * intervenant) en repli, mis en cache mémoire par requête.
  *
- * Priorité : logo SPIP uploadé par l'auteur, puis son avatar ENT, puis le
- * logo de la rubrique — jamais le logo de l'article lui-même. Repli final
- * identique à thematique_logo_carre() : _THEMATIQUE_AVATAR_GENERIQUE_MASCULIN
- * si l'auteur existe, sinon picto du site. Le résultat est injecté tel quel
- * en `src` d'un `<img>` côté JS (squelettes/js/consigne.js) : un '' y
- * produirait un `<img src="">` sans avatar, et l'avatar générique (picto
- * blanc plein sans fond) y serait invisible sans le fond de couleur que
- * fournit la classe CSS .icon-avatar-masculin — voir
- * thematique_image_est_avatar_generique(), à appeler côté squelette pour
- * savoir s'il faut ce wrapper (cf squelettes/json/consignes.html).
+ * Priorité : émoji animal (prof/élève, #446 - même repli que #SESSION{avatar},
+ * cf thematique_preparer_fichier_session()), puis logo SPIP uploadé par
+ * l'auteur, puis son avatar ENT, puis le logo de la rubrique — jamais le
+ * logo de l'article lui-même. Repli final identique à
+ * thematique_logo_carre() : _THEMATIQUE_AVATAR_GENERIQUE_MASCULIN si
+ * l'auteur existe, sinon picto du site.
+ *
+ * Le résultat n'est PAS toujours une URL (cas de l'émoji) : les appelants
+ * (squelettes/json/consignes.html + squelettes/js/consigne.js,
+ * noisettes/inc/forumv2/forum_card.html) doivent tester
+ * thematique_image_est_url() avant d'injecter en `src` d'un `<img>`, sous
+ * peine d'un `<img src="🐝">` cassé. Un '' produirait pareillement un
+ * `<img src="">` sans avatar, et l'avatar générique (picto blanc plein sans
+ * fond) serait invisible sans le fond de couleur que fournit la classe CSS
+ * .icon-avatar-masculin — voir thematique_image_est_avatar_generique(), à
+ * appeler côté squelette pour savoir s'il faut ce wrapper (utile aussi pour
+ * l'émoji, qui a besoin du même fond).
  *
  * @param int $id_auteur 0 si l'article n'a pas d'auteur identifié
  * @param int $id_rubrique Rubrique de repli (classe/intervenant)
- * @return string URL (relative au site ou externe) de l'image, jamais ''
+ * @return string Émoji, ou URL (relative au site ou externe), jamais ''
  */
 function thematique_image_auteur_ou_classe($id_auteur, $id_rubrique) {
 	static $cache = [];
@@ -2125,6 +2133,19 @@ function thematique_image_auteur_ou_classe($id_auteur, $id_rubrique) {
 	$cle = $id_auteur . ':' . $id_rubrique;
 	if (isset($cache[$cle])) {
 		return $cache[$cle];
+	}
+
+	// #446 : pour un prof/élève, l'émoji animal de sa classe prime sur sa
+	// photo ENT éventuelle - même priorité que #SESSION{avatar} (cf
+	// thematique_preparer_fichier_session()). Seul cas où cette fonction
+	// renvoie autre chose qu'une URL : les deux appelants (consigne.js via
+	// json/consignes.html, et forum_card.html) doivent tester
+	// thematique_image_est_url() pour savoir s'ils affichent un <img> ou
+	// l'émoji brut.
+	$role = thematique_donner_role($id_auteur);
+	if (in_array($role, ['prof', 'eleve']) && $animal = thematique_avatar_animal($id_auteur)) {
+		$cache[$cle] = $animal;
+		return $animal;
 	}
 
 	$photo = thematique_photo_auteur($id_auteur);
@@ -2155,18 +2176,37 @@ function thematique_image_auteur_ou_classe($id_auteur, $id_rubrique) {
  * squelettes/json/consignes.html et squelettes/js/consigne.js).
  *
  * Comparaison sur le nom de fichier (avatar_masculin.svg / avatar_feminin.svg
- * — même repli que dans le menu haut, cf authentification.html), pas sur
- * l'URL exacte de _THEMATIQUE_AVATAR_GENERIQUE_MASCULIN : l'ENT lui-même
- * renvoie souvent ce même pictogramme générique comme "avatar" d'un compte
- * sans photo (colonne spip_auteurs.avatar), donc $image peut arriver ici
- * par ce chemin-là plutôt que par notre repli interne — dans les deux cas
- * c'est le même picto blanc sans fond, à envelopper pareil.
+ * / avatar_neutre.svg — même repli que dans le menu haut, cf
+ * authentification.html), pas sur l'URL exacte de
+ * _THEMATIQUE_AVATAR_GENERIQUE_MASCULIN : l'ENT lui-même renvoie souvent ce
+ * même type de pictogramme générique comme "avatar" d'un compte sans photo
+ * (colonne spip_auteurs.avatar, dont "neutre" - #446), donc $image peut
+ * arriver ici par ce chemin-là plutôt que par notre repli interne — dans
+ * tous les cas c'est le même picto blanc sans fond, à envelopper pareil.
  *
  * @param string $image Retour de thematique_image_auteur_ou_classe()
  * @return bool
  */
 function thematique_image_est_avatar_generique($image) {
-	return (bool) preg_match('#/avatar_(masculin|feminin)\.svg(?:\?|$)#', (string) $image);
+	return (bool) preg_match('#/avatar_(masculin|feminin|neutre)\.svg(?:\?|$)#', (string) $image);
+}
+
+/**
+ * Indique si une valeur renvoyée par thematique_image_auteur_ou_classe()
+ * est une URL/chemin (à afficher en `<img src>`) plutôt qu'un émoji animal
+ * de classe (#446, à afficher tel quel, texte brut dans un `<span>`).
+ *
+ * Test sur la présence d'un "/" plutôt qu'un préfixe http(s):// : les
+ * chemins renvoyés par thematique_chemin_logo()/thematique_picto_site()
+ * (find_in_path()) sont relatifs au site, sans schéma ni slash de tête -
+ * mais toujours avec au moins un "/" interne, contrairement à un émoji
+ * (classe_icone(), un seul caractère, jamais de "/").
+ *
+ * @param string $image Retour de thematique_image_auteur_ou_classe()
+ * @return bool
+ */
+function thematique_image_est_url($image) {
+	return str_contains((string) $image, '/');
 }
 
 /**

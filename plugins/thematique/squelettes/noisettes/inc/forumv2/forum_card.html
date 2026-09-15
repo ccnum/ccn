@@ -16,14 +16,21 @@ doivent jamais être figés dans le cache. ]
 		</div>
 	]
 	#SET{image, #ENV{id_auteur}|thematique_image_auteur_ou_classe{#ENV{id_rubrique_classe}}}
-	#SET{image_generique, #GET{image}|thematique_image_est_avatar_generique}
+	#SET{image_est_url, #GET{image}|thematique_image_est_url}
+	#SET{image_est_generique_url, #GET{image_est_url}|et{#GET{image}|thematique_image_est_avatar_generique}}
+	#SET{image_est_photo, #GET{image_est_url}|et{#GET{image}|thematique_image_est_avatar_generique|non}}
 	<div class="col-forum col-forum-icone-container">
-		[(#GET{image_generique}|oui)
+		[(#GET{image_est_url}|non)
+			<div class="forum-card-icone icon-avatar-masculin [ (#ENV{id_rubrique_classe}|oui)bgc_classe_[(#ENV{id_rubrique_classe}|classe_numero)]]">
+				<span class="avatar-animal">#GET{image}</span>
+			</div>
+		]
+		[(#GET{image_est_generique_url}|oui)
 			<div class="forum-card-icone icon-avatar-masculin [ (#ENV{id_rubrique_classe}|oui)bgc_classe_[(#ENV{id_rubrique_classe}|classe_numero)]]">
 				<img src="#GET{image}" alt="" />
 			</div>
 		]
-		[(#GET{image_generique}|non)
+		[(#GET{image_est_photo}|oui)
 			<div class="forum-card-icone forum-card-icone-photo">
 				<img src="#GET{image}" alt="" />
 			</div>
