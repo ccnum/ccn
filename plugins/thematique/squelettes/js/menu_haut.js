@@ -100,8 +100,13 @@
 					// react to known select names
 					var name = $sel.attr('data-select-name') || $sel.attr('name');
 					if (name == 'annee_scolaire') {
-						// ccn_options.php lit ?annee_scolaire= et pose le cookie côté serveur
-						var url = new URL(window.location.href);
+						// ccn_options.php lit ?annee_scolaire= et pose le cookie côté serveur.
+						// #436 : repartir de l'URL courante (avec id_article, mode=complet...)
+						// gardait une mission ouverte d'une autre année sélectionnée, dont le
+						// rechargement retombait silencieusement sur l'année en cours (la
+						// mission n'existe pas dans la nouvelle année). On repart donc toujours
+						// de l'URL de base, sans id_article/page/mode.
+						var url = new URL(window.location.origin + window.location.pathname);
 						url.searchParams.set('annee_scolaire', val);
 						window.location.href = url.toString();
 					}
