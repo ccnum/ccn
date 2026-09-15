@@ -1,14 +1,14 @@
 [(#REM)
 Bouton "Modifier" du titre d'un article (mission/réponse/billet), factorisé
 depuis header_sidebar.html/header_reponse_sidebar.html/header_blog.html
-(sinon dupliqué à l'identique, cf check_html_duplication.js).
+(sinon dupliqué, cf check_html_duplication.js).
 
 Paramètres attendus : id_article, type_objet.
 
-#CACHE{0} : ciblé par sa propre <INCLURE>, avec un cache indépendant de
-celui du fond appelant (le #CACHE{0} des headers ne s'applique pas ici).
+CACHE(0) : ciblé par sa propre INCLURE, avec un cache indépendant de
+celui du fond appelant (le CACHE(0) des headers ne s'applique pas ici).
 
-#437 : #AUTORISER{modifier,article,...} ne suffit pas seul — sur les sites
+#437 : AUTORISER(modifier, article, id) ne suffit pas seul — sur les sites
 où le plugin tiers "autorite" est configuré avec l'option
 "auteur_mod_article" (spip_meta 'autorite'), sa propre déclaration de
 autoriser_article_modifier() gagne la course function_exists() sur celle
@@ -16,8 +16,11 @@ de thematique_autoriser.php et ignore donc totalement la restriction
 "année passée" — d'où ce second verrou, indépendant, posé ici.
 ]
 #CACHE{0}
-[(#AUTORISER{modifier,article,#ENV{id_article}}|oui)
-[(#ENV{id_article}|thematique_annee_article|thematique_annee_est_passee|non)
-<button type="button" class="bouton-modifier-article btn-reset" onclick="callModifierArticle(#ENV{id_article}, '#ENV{type_objet}')"><:thematique:modifier:></button>
-]
+[(#AUTORISER{modifier,article,#ENV{id_article}})
+    [(#ENV{id_article}|thematique_annee_article|thematique_annee_est_passee|non)
+        <button type="button" 
+                class="bouton-modifier-article btn-reset" 
+                onclick="callModifierArticle('#ENV{id_article}', '#ENV{type_objet}')"
+        ><:thematique:modifier:></button>
+    ]
 ]
