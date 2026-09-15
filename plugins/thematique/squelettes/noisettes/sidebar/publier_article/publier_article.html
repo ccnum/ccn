@@ -5,12 +5,9 @@
 	#SET{est_edition, #ENV{id_article}|oui}
 
 	[(#REM)
-	bandeau_publication/bouton_publication : SET nu, hors crochets, puis
-	simple affichage de la balise GET dans les blocs conditionnels plus bas.
-	Sur ce SPIP, une chaîne de filtres directement dans le texte affiché par
-	le second de deux blocs conditionnels adjacents entre crochets n'est pas
-	exécutée (elle ressort en clair) - d'où le calcul préalable en dehors.
-	Ne jamais réintroduire de caractère dièse dans ce commentaire.
+	bandeau_publication/bouton_publication : calcul en SET nu avant affichage,
+	même limite de compilation que titre_publication/intro_publication dans
+	public_publier_article.html - voir le commentaire là-bas pour le détail.
 	]
 	#SET{bandeau_creation, #ENV{type_article}|thematique_texte_publication{bandeau}}
 	#SET{bouton_creation, #ENV{type_article}|thematique_texte_publication{bouton}}
