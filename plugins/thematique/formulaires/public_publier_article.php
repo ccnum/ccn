@@ -89,6 +89,7 @@ function formulaires_public_publier_article_charger_dist(
 }
 
 function formulaires_public_publier_article_verifier_dist($id_rubrique, $id_consigne = 0, $id_article = 0) {
+	include_spip('inc/autoriser');
 	include_spip('inc/editer');
 	include_spip('prive/formulaires/editer_article');
 
@@ -117,6 +118,7 @@ function formulaires_public_publier_article_traiter_dist(
 	// Ceci est un système anti-spam : si on appuie plusieurs fois très vite sur "enregistrer un article",
 	// on ne l'enregistrera qu'une fois.
 	include_spip('inc/session');
+	include_spip('inc/autoriser');
 
 	$titre = _request('titre');
 	$texte = _request('texte');
