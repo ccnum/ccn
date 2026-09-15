@@ -26,6 +26,29 @@ if (isset($_GET['annee_scolaire'])) {
 	unset($_annee_get);
 }
 
+// Ne jamais retenir une année dont la rubrique racine n'existe pas encore sur
+// CETTE instance : le calcul calendaire ci-dessus suppose que la rentrée a
+// déjà créé la rubrique de l'année en cours (cf genie/thematique_rentree_annee.php,
+// déclenché le 1er septembre mais pas instantané - fenêtre de battement avant
+// le prochain passage du cron), et une instance CCN peut aussi ne jamais ouvrir
+// une année donnée. Sans ce repli, tout le site (menu, filtrage des boucles
+// RUBRIQUES/ARTICLES par #CONST{_ANNEE_SCOLAIRE}) pointe sur une année vide.
+// Repli sur la dernière rubrique racine d'année réellement existante (titre
+// numérique pur, ex. "2025" - cf thematique_assurer_structure_annee()).
+include_spip('base/abstract_sql');
+$_annee_existante = sql_getfetsel(
+	'titre',
+	'spip_rubriques',
+	'id_parent=0 AND titre REGEXP ' . sql_quote('^[0-9]{4}$') . ' AND titre<=' . sql_quote((string) $annee_scolaire),
+	'',
+	'titre DESC',
+	'0,1'
+);
+if ($_annee_existante !== null && $_annee_existante !== false && $_annee_existante !== '') {
+	$annee_scolaire = intval($_annee_existante);
+}
+unset($_annee_existante);
+
 $annee_scolaire = intval($annee_scolaire);
 define('_ANNEE_SCOLAIRE', $annee_scolaire);
 define('_COOKIE_ANNEE_SCOLAIRE', 'laclasse_annee_scolaire');
