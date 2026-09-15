@@ -62,7 +62,17 @@ function thematique_afficher_rubrique_utilisateur_prof($motcle, $role) {
 function thematique_annee_scolaire() {
 	static $annee_scolaire = null;
 	if ($annee_scolaire === null) {
-		$annee_scolaire = intval(constant('_ANNEE_SCOLAIRE'));
+		// #450 : repli calendaire si _ANNEE_SCOLAIRE (définie dans
+		// ccn_options.php, requête SQL incluse) n'est pas encore disponible à
+		// ce point du bootstrap - ex. preparer_fichier_session déclenché avant
+		// que les options du plugin ccn n'aient fini de se charger pour cette
+		// requête. Sans ce repli, constant() lève une erreur fatale qui casse
+		// la création de session pour tout visiteur.
+		if (defined('_ANNEE_SCOLAIRE')) {
+			$annee_scolaire = intval(constant('_ANNEE_SCOLAIRE'));
+		} else {
+			$annee_scolaire = intval(date('m')) >= 9 ? intval(date('Y')) : intval(date('Y')) - 1;
+		}
 	}
 	return $annee_scolaire;
 }
@@ -1216,7 +1226,7 @@ function thematique_intervenant_annee() {
 	$id_rubrique_annee = sql_getfetsel(
 		'id_rubrique',
 		'spip_rubriques',
-		'id_parent=0 AND titre LIKE ' . sql_quote('%' . constant('_ANNEE_SCOLAIRE') . '%')
+		'id_parent=0 AND titre LIKE ' . sql_quote('%' . thematique_annee_scolaire() . '%')
 	);
 
 	if ($id_rubrique_annee) {
