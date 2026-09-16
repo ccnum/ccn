@@ -41,15 +41,22 @@
 		[(#GET{type_objet}|=={travail_en_cours}|et{#ENV{id_objet}|non}|oui)
 			#SET{vue_classes_liste,oui}
 		]
-
 		[(#GET{type_objet}|=={ressources}|oui)
-			<INCLURE{fond=noisettes/ressources_detail, type_objet=#GET{type_objet}, admin=#GET{admin}, env, ajax} />
+			<INCLURE{fond=noisettes/sidebar/ressource/ressource_menu, env, ajax} />
+		]
+		[(#GET{type_objet}|=={ressource_detail}|oui)
+			<INCLURE{fond=noisettes/sidebar/ressource/ressource_detail2, env, ajax} />
 		]
 		[(#GET{vue_classes_liste}|=={oui}|oui)
+			
 			<INCLURE{fond=noisettes/classes_detail, type_objet=#GET{type_objet}, admin=#GET{admin}, env, ajax} />
 		]
-		[(#GET{type_objet}|=={ressources}|non|et{#GET{vue_classes_liste}|=={non}}|oui)
-			<INCLURE{fond=noisettes/sidebar/page_participant/classe_detail, type_objet=#GET{type_objet}, admin=#GET{admin}, env, ajax} />
+		[(#GET{type_objet}|!={ressources}|oui)
+			[(#GET{type_objet}|!={ressource_detail}|oui)
+				[(#GET{vue_classes_liste}|!={oui}|oui)
+					<INCLURE{fond=noisettes/sidebar/page_participant/classe_detail, type_objet=#GET{type_objet}, admin=#GET{admin}, env, ajax} />
+				]
+			]
 		]
 	]
 ]

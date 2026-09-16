@@ -1861,3 +1861,67 @@ ailleurs, ex: le menu du bas). */
 	line-height: 19px;
 	font-size: 0.9rem;
 }
+
+.sidebar_lateral, .sidebar_lateral_inner {
+	height: 100%;
+}
+
+.ressource-menu{
+	height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.ressource-header {
+	background-color: var(--color-bleu-fond);
+	padding: 1rem;
+	flex-shrink: 0;
+}
+
+.ressource-header .etiquette-etape {
+	width: fit-content;
+}
+
+.ressource-detail-container {
+	height: 100%;
+	background-color: white;
+	padding: 1rem;
+	color: var(--color-default);
+	font-family: Poppins;
+}
+
+.ressource-detail-container button {
+	font-family: Poppins;
+}
+
+.ressource-card-container {
+	background-color: white;
+	border-radius: 5px;
+	padding: 1rem;
+}
+
+.ressource-card-container.selected {
+	background-color: var(--color-tonic);
+	color: white;
+}
+.ressource-card-container.selected button, .ressource-card-container:hover button {
+	background-color: white;
+}
+
+.liste-ressources {
+	padding-top: 1rem;
+}
+
+.filter-buttons {
+	border-bottom: 1px solid black;
+	flex-shrink: 0;
+}
+
+.ressource-content {
+	padding: 1rem;
+	flex: 1;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+}
+

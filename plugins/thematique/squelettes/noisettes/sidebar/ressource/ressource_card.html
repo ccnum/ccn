@@ -1,0 +1,20 @@
+<div class="ressource-card-container">
+    <div style="display: flex;">
+        <div>[(#ENV{date}|affdate)]</div>
+    </div>
+    <div>
+        #ENV{titre}
+    </div>
+    <div style="display: flex;
+                justify-content: space-between;
+                align-items: end;"
+    >
+        <div><:thematique:publie_par:> #ENV{nom_auteur}</div>
+        <button class="bouton-lisere"
+                onclick="voirLaRessource(event)"
+                data-id-article="#ENV{id_article}"
+        >
+            <:thematique:voir_la_ressource:>
+        </button>
+    </div>
+</div>

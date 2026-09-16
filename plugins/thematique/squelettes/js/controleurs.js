@@ -176,11 +176,31 @@ function getCurrentTimelineMode() {
 	return 'consignes';
 }
 
+
+let currentState = {};
+
+function replaceInCurrentState(object) {
+	currentState = {...currentState, ...object}
+}
+
+function setInUrl(object) {
+    const url = new URL(window.location.href);
+	Object.keys(object).forEach(k=>{
+		url.searchParams.set(k, object[k]);
+	})
+    return url.toString();
+}
+
+function removeFromUrl(key) {
+  const url = new URL(window.location.href);
+  url.searchParams.delete(key);
+  window.history.replaceState({}, '', url);
+}
+
 /**
  * Initialise la vue depuis l'URL donnée
  * ou depuis l'état de l'historique donné
  */
-let currentState = {};
 function setContentFromState(state, title, url) {
 
 	if (typeof state.data !== 'object' || state.data == null) {
@@ -231,20 +251,22 @@ function setContentFromState(state, title, url) {
 	}
 
 	if (state.type_objet == "ressources") {
-		callRessource();
-
+		
 		if (state.page == 'rubrique') {
 			if (state.id_rubrique != CCN.idRubriqueRessources) {
 				callRessourceRubrique(state.id_rubrique, 'ressources');
 			}
 		}
 
-		if (state.page == 'article') {
-			callRessourceArticle(state.id_article, 'ressources');
+		else if (state.page == 'article') {
+			callRessource(state.id_article)
 		}
 
-		if (state.page == 'syndic_article') {
+		else if (state.page == 'syndic_article') {
 			callRessourceSyndicArticle(state.id_syndic_article, 'ressources');
+		}
+		else {
+			callRessource()
 		}
 	}
 
@@ -643,9 +665,35 @@ function callRessource(id_article) {
 	updateMenuIcon(['ressources'], 'sidebarView');
 
 	blankMainSidebar('ressources');
-	setFullscreenModeToCols(true);
+	const stateParams = {
+		type_objet: 'ressources',
+		page: 'article',
+	}
+	const urlParams = {
+		page: 'article',
+		mode: 'complet',
+		type_objet: 'ressources'
+	}
+	loadContentInMainSidebar(
+		CCN.projet.url_popup_ressources, 
+		() => {
+			updateUrl(
+				stateParams, 
+				"", 
+				`./spip.php?${new URLSearchParams(urlParams).toString()}`
+			);
+			if(id_article) {
+				selectionnerRessource(id_article)
+			}
+		}, 
+		"ressource"
+	);
+}
 
-	loadContentInLateralSidebar(CCN.projet.url_popup_ressources);
+function loadArticleInLateralSidebar(id_article) {
+	emptyLateralSidebar();
+	loadContentInLateralSidebar(`${CCN.projet.url_popup_ressources_detail}&id_article=${id_article}`);
+	setLateralSidebarExpanded(id_article);
 }
 
 /**
@@ -701,8 +749,15 @@ async function callEvenementCreer() {
 
 function callNouvelleMission(id_rubrique_auteur) {
 	expandSidebar();
-	setFullscreenModeToCols(false);
+	setLateralSidebarExpanded(false);
 	createReponse(0, id_rubrique_auteur, 0);
+}
+
+function callNouvelleRessource(id_rubrique_auteur) {
+	expandSidebar();
+	setLateralSidebarExpanded(false);
+	const url = CCN.projet.url_popup_ressources_ajout + "&id_rubrique=" + id_rubrique_auteur;
+	loadContentInMainSidebar(url, null, "publication_article");
 }
 
 /**
@@ -1366,8 +1421,6 @@ function loadContentInLateralSidebar(url, callback) {
 	// un espace dans l'url casse le chargement avec une erreur Sizzle
 	// "unrecognized expression" au lieu d'un simple 404/erreur réseau.
 	$.get(url).done(function (response) {
-		console.log({response});
-		
 		$('#sidebar_lateral_inner').html(response);
 		if (!response || response.trim() === "") {
 			if (CCN.debug) { console.warn(CCN.lang.reponse_vide); }
@@ -1391,7 +1444,6 @@ function loadContentInLateralSidebar(url, callback) {
  */
 
 function setLateralSidebarExpanded(setCols) {
-	console.log({setCols});
 	const lateralWasExpanded = $('body').hasClass('hasLateralSidebarExpanded')
 	
 	$('body').toggleClass('hasLateralSidebarExpanded', Boolean(setCols));
