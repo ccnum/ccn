@@ -8,7 +8,7 @@
 		}
 	}
 
-	#sidebar {
+	#sidebar_main_around {
 		width: var(--sidebar-width-normal);
 	}
 
@@ -55,11 +55,11 @@ du menu bas (calculées en px pour l'écran large) débordent sur un viewport
 plus étroit — on les repasse en tailles fluides/empilables plutôt que de
 refaire toute la mise en page. */
 @media screen and (max-width: 1024px) {
-	#sidebar {
+	#sidebar_main_around {
 		width: min(var(--sidebar-width-normal), 92vw);
 	}
 
-	.hasSidebarExpanded #sidebar {
+	.hasSidebarExpanded #sidebar_main_around {
 		width: min(var(--sidebar-width-large), 96vw);
 	}
 

@@ -123,14 +123,13 @@ $(function () {
 		toggleSidebarExpand();
 	});
 
-	$(document).on('click', '#sidebar-close', function () {
+	$(document).on('click', '#sidebar_main_around #sidebar-close', function () {
 		if (CCN.projet) {
 			CCN.projet.showWholeTimeline();
 		} else {
 			closeSidebar();
 		}
 	});
-
 	$(document).on('click', '#sidebarCache', function () {
 		$('body').removeClass('hasSidebarExpanded');
 	});
@@ -315,6 +314,7 @@ function expandSidebar() {
     if ($('body').hasClass('hasSidebarExpanded')) return; // déjà ouvert
 
     $('body').addClass('hasSidebarExpanded');
+	$('body').removeClass('hasLateralSidebarExpanded');
 }
 
 function collapseSidebar() {
@@ -482,7 +482,7 @@ function callConsigne(id_consigne) {
 
 	const url = CCN.projet.url_popup_consigne + "&id_article=" + id_consigne + "&rang=" + numero + "&date_limite=" + dateLimite;
 	showConsigneInTimeline(id_consigne);
-	setFullscreenModeToCols(false);
+	setLateralSidebarExpanded(false);
 	updateMenuIcon(['consignes-' + id_consigne], 'mainView');
 
 	loadContentInMainSidebar(
@@ -518,7 +518,7 @@ function callReponse(id_reponse) {
 
 	if (!Number.isInteger(Number(id_reponse))) return;
 	changeTimelineMode('consignes');
-	setFullscreenModeToCols(false);
+	setLateralSidebarExpanded(false);
 
 	const id_consigne = getIdConsigneFromIdReponse(id_reponse);
 
@@ -560,7 +560,7 @@ function callClasse(id_classe) {
 
 	if (id_classe !== '' && !Number.isInteger(Number(id_classe))) return;
 	changeTimelineMode('consignes');
-	setFullscreenModeToCols(false);
+	setLateralSidebarExpanded(false);
 	updateMenuIcon(['classes', 'classes-' + id_classe], 'sidebarView');
 
 	let url = CCN.projet.url_popup_classes;
@@ -591,7 +591,7 @@ function callClasses() {
 	changeTimelineMode('consignes');
 	showSidebar();
 	toggleSidebarExpand();
-	setFullscreenModeToCols(false);
+	setLateralSidebarExpanded(false);
 	updateMenuIcon(['classes'], 'sidebarView');
 
 	blankMainSidebar('travail_en_cours');
@@ -610,7 +610,7 @@ function callClasses() {
 function callArticleBlog(id_article) {
 	if (!Number.isInteger(Number(id_article))) return;
 	changeTimelineMode('blogs');
-	setFullscreenModeToCols(false);
+	setLateralSidebarExpanded(false);
 	updateMenuIcon(['blogs'], 'mainView');
 	flouterLesBullesEtLosangesNonSelectionnes(id_article)
 
@@ -637,10 +637,9 @@ function callArticleBlog(id_article) {
  * @see loadContentInLateralSidebar
  */
 
-function callRessource() {
+function callRessource(id_article) {
 	changeTimelineMode('consignes');
 	showSidebar();
-	toggleSidebarExpand();
 	updateMenuIcon(['ressources'], 'sidebarView');
 
 	blankMainSidebar('ressources');
@@ -683,7 +682,7 @@ function callRessource() {
 async function callEvenementCreer() {
 	await changeTimelineMode('blogs');
 	expandSidebar();
-	setFullscreenModeToCols(false);
+	setLateralSidebarExpanded(false);
 	updateMenuIcon(['blogs'], 'mainView');
 	loadContentInMainSidebar(CCN.projet.url_popup_evenement_creer, null, "publication_article");
 }
@@ -719,7 +718,7 @@ function callArticleJalon(est_debut) {
 	const id_article = est_debut ? CCN.idArticleCapSurAnnee : CCN.idArticleLaRencontre;
 	if (!Number.isInteger(Number(id_article)) || id_article <= 0) return;
 	changeTimelineMode('consignes');
-	setFullscreenModeToCols(true);
+	setLateralSidebarExpanded(true);
 
 	// Même zoom qu'une consigne (cf showInTimeline dans consigne.js) :
 	// la fenêtre affiche le même nombre de jours (nombre_jours_max de la
@@ -764,7 +763,7 @@ function callArticleJalon(est_debut) {
 function callRessourceArticle(id_article, type_objet) {
 	if (!Number.isInteger(Number(id_article))) return;
 	changeTimelineMode('consignes');
-	setFullscreenModeToCols(true);
+	setLateralSidebarExpanded(true);
 	updateMenuIcon([type_objet], 'sidebarView');
 
 	const url = "./spip.php?page=article&id_article=" + id_article + "&type_objet=" + type_objet + "&mode=ajax-detail";
@@ -796,7 +795,7 @@ function callRessourceArticle(id_article, type_objet) {
 function callRessourceSyndicArticle(id_syndic_article, type_objet) {
 	if (!Number.isInteger(Number(id_syndic_article))) return;
 	changeTimelineMode('consignes');
-	setFullscreenModeToCols(true);
+	setLateralSidebarExpanded(true);
 	updateMenuIcon([type_objet], 'sidebarView');
 
 	const url = "./spip.php?page=syndic_article&id_syndic_article=" + id_syndic_article + "&type_objet=" + type_objet + "&mode=ajax-detail";
@@ -828,7 +827,7 @@ function callRessourceSyndicArticle(id_syndic_article, type_objet) {
 function callRessourceRubrique(id_rubrique, type_objet) {
 	if (!Number.isInteger(Number(id_rubrique))) return;
 	changeTimelineMode('consignes');
-	setFullscreenModeToCols(true);
+	setLateralSidebarExpanded(true);
 	updateMenuIcon([type_objet], 'sidebarView');
 
 	const url = "./spip.php?page=rubrique&id_rubrique=" + id_rubrique + "&type_objet=" + type_objet + "&mode=ajax-detail";
@@ -861,7 +860,7 @@ function callArticleEvenement(id_objet, type_objet) {
 	if (!Number.isInteger(Number(id_objet))) return;
 	if (!['article', 'syndic_article'].includes(type_objet)) return;
 	changeTimelineMode('evenements');
-	setFullscreenModeToCols(false);
+	setLateralSidebarExpanded(false);
 	updateMenuIcon(['evenements'], 'mainView');
 	flouterLesBullesEtLosangesNonSelectionnes(id_objet)
 
@@ -928,7 +927,7 @@ function createReponse(id_consigne, id_rubrique_auteur, numero) {
 function callModifierArticle(id_article, type_article) {
 	if (!Number.isInteger(Number(id_article)) || id_article <= 0) return;
 	expandSidebar();
-	setFullscreenModeToCols(false);
+	setLateralSidebarExpanded(false);
 	const url = CCN.projet.url_popup_modifier_article + "&id_article=" + id_article + "&type_objet=" + type_article;
 	loadContentInMainSidebar(url, null, "publication_article");
 }
@@ -1352,31 +1351,66 @@ function emptyMainSidebar() {
 	$('#sidebar_main_inner').html('<div class="popup"><div class="sidebar_bubble sidebar_bubble_empty"></div></div>');
 }
 
-/**
- * Charge l'URL dans la sidebar latérale (colonne de navigation "Bibliothèque"
- * pour Ressources/Projets finis, cf CCN.projet.url_popup_*).
- *
- * Contrairement à l'ancienne version (avant #157ba4c0), l'affichage de cette
- * colonne n'est plus piloté par une classe JS dédiée : elle est visible dès
- * que .hasSidebarExpanded.modeCols s'applique (cf sidebar.css.html), au même
- * titre que #sidebar_main_around.
- *
- * @param {string} url - URL de la page à charger avec AJAX
- */
-function loadContentInLateralSidebar(url) {
-	$('#sidebar_lateral_inner').load(url);
+function emptyLateralSidebar() {
+	$('#sidebar_lateral_inner').html('<div class="popup"><div class="sidebar_bubble sidebar_bubble_empty"></div></div>');
+}
+
+function loadContentInLateralSidebar(url, callback) {
+
+	$('body').addClass('loading');
+	emptyLateralSidebar();
+
+	// $.get() plutôt que $(elem).load(url) : .load() coupe silencieusement
+	// l'url au premier espace et traite le reste comme un sélecteur jQuery à
+	// appliquer sur la réponse — une valeur imprévue (id, date...) contenant
+	// un espace dans l'url casse le chargement avec une erreur Sizzle
+	// "unrecognized expression" au lieu d'un simple 404/erreur réseau.
+	$.get(url).done(function (response) {
+		console.log({response});
+		
+		$('#sidebar_lateral_inner').html(response);
+		if (!response || response.trim() === "") {
+			if (CCN.debug) { console.warn(CCN.lang.reponse_vide); }
+		}
+		$('body').removeClass('loading');
+		$('#sidebar_content').scrollTop(0);
+		if (callback) {
+			callback(response);
+		}
+
+		antifloodHashChange = false;
+	}).fail(function (xhr, status) {
+		if (CCN.debug) { console.error("Erreur de chargement :", xhr.status, xhr.statusText); }
+		$('body').removeClass('loading');
+		antifloodHashChange = false;
+	});
 }
 
 /**
  * Définit l'affichage plein écran de/des sidebars
  */
 
-function setFullscreenModeToCols(setCols) {
-	if (setCols == true) {
-		$('body').addClass('modeCols').removeClass('modeFullscreen');
-	} else {
-		$('body').removeClass('modeCols').addClass('modeFullscreen');
+function setLateralSidebarExpanded(setCols) {
+	console.log({setCols});
+	const lateralWasExpanded = $('body').hasClass('hasLateralSidebarExpanded')
+	
+	$('body').toggleClass('hasLateralSidebarExpanded', Boolean(setCols));
+	if(setCols) {
+		$('body').removeClass('hasSidebarExpanded');
+		if(!lateralWasExpanded) {
+			initLateralSidebar()
+		}
 	}
+}
+
+function initLateralSidebar() {
+	$(document).on('click', '#sidebar_lateral_around #sidebar-close', function () {
+		$('body').removeClass('hasLateralSidebarExpanded');
+		$('body').removeClass('hasSidebarExpanded');
+		removeFromUrl("id_article")
+	});
+
+	
 }
 
 /**
@@ -1414,7 +1448,7 @@ function showSidebar() {
 }
 
 function closeSidebar() {
-	$('body').removeClass('hasSidebarOpen hasSidebarExpanded');
+	$('body').removeClass('hasSidebarOpen hasSidebarExpanded hasLateralSidebarExpanded');
 	$('#sidebar').removeClass('show').attr('aria-hidden', 'true');
 	$('#menu_bas .logo a').not('#menu-timeline .logo a').removeClass('selected');
 	document.title = _originalDocumentTitle;
@@ -1428,7 +1462,8 @@ function closeSidebar() {
 		// Une fois le panneau glissé hors écran, on vide son contenu
 		// pour ne pas le garder chargé inutilement (poids DOM sur mobile).
 		if (!$('body').hasClass('hasSidebarOpen')) {
-			$('#sidebar_main_inner').empty();
+			emptyMainSidebar();
+			emptyLateralSidebar();
 		}
 	}, 500);
 }
