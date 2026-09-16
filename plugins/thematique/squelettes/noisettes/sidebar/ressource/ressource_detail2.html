@@ -1,0 +1,78 @@
+<div class="ressource-detail-container">
+    [(#ENV{id_article}|>{0}|oui)
+        <BOUCLE_articles(ARTICLES){id_article}{tout}>
+            <BOUCLE_auteur(AUTEURS){id_article}>
+                #SET{nom_auteur, #NOM}
+            </BOUCLE_auteur>
+            <div style="display: flex;
+                        justify-content: space-between;"
+            >
+                <div style="font-weight: 600;
+                            font-size: 1rem;"
+                >
+                            #TITRE
+                </div>
+                <button type="button" id="sidebar-close" class="icon btn-reset" aria-label="<:thematique:fermer:>"></button>
+            </div>
+            <div style="font-size: 0.8rem;">#VAL{#DATE|affdate}</div>
+            <div><:thematique:publie_par:> #GET{nom_auteur}</div>
+            <div style="background-color: var(--color-gris-4);
+                        padding: 1rem;"
+            >#TEXTE</div>
+            <div class="sidebar-reaction-container">
+                [(#INCLURE{fond=inclure/favoris_ccn, objet=article, id_objet=#ENV{id_article}, ajax})]
+            </div>
+            <div style="background-color: var(--color-gris-3);
+                        padding: 0.5rem;
+                        width: fit-content;"
+            >
+                <:thematique:COMMENTAIRES:>
+            </div>
+            <div style="background-color: var(--color-gris-4);
+                        padding: 1rem;
+                        border-top: 1px solid black;"
+            >
+                <button style="display: flex;
+                               gap: 0.2rem;
+                               background-color: var(--color-gris-3);
+                               border: none;
+                               padding: 1rem;"
+                        onclick=""
+                >
+                    <div style="height: 1rem;
+                                width: 1rem;
+                                margin-right: 0.4rem;
+                                background-color: var(--color-default);" 
+                         class="icon icon-publier"
+                    ></div>
+                    <div><:thematique:poster_un_message:></div>
+                </button>
+                [(#SESSION{id_auteur}|oui)
+                    <div class="forum-commentaire-racine ajax" hidden>
+                        #FORMULAIRE_FORUMV2{#ENV{id_article}, 0}
+                    </div>
+                ]
+                <!-- Arbre des commentaires -->
+                <div class="forum-liste">
+                    [(#ENV{id_article}|afficher_forum_arbre)]
+                </div>
+                [(#SESSION{id_auteur}|oui)
+                    <!-- Formulaire de réponse unique, il ne s'affiche que lorsque l'on clique sur "Répondre" à un commentaire, ou "Modifier" -->
+                    <div id="forum-formulaire-reponse" class="forum-formulaire-reponse ajax" hidden>
+                        #FORMULAIRE_FORUMV2{#ENV{id_article}, 0}
+                    </div>
+                ]
+            </div>
+        </BOUCLE_articles>
+    ]
+    [(#ENV{id_article}|>{0}|non)
+        <div style="display: flex;
+             align-items: center;
+             justify-content: center;
+             height: 100%;"
+        >
+            <:thematique:veuillez_selectionner_une_ressource:>
+        </div>
+    ]
+</div>
+

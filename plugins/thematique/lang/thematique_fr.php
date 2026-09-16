@@ -27,6 +27,7 @@ return [
 	'ca_vous_inspire'				 => 'Ça vous inspire ? C\'est maintenant à vous de remplir la mission ! Rédigez votre réponse.',
 	'changer_lextrait'               => 'Changer l\'extrait',
 	'chantier_ccn'                   => 'Cette partie des CCN est en chantier, veuillez réessayer plus tard.',
+	'COMMENTAIRES'					 => 'COMMENTAIRES',
 	'cioidc_blog_pedagogique'        => 'Blog pédagogique',
 	'cioidc_projet_archive_texte'    => 'Ce projet ne repart pas cette année : seuls les comptes administrateurs peuvent s\'y connecter. Contactez un administrateur si vous pensez qu\'il s\'agit d\'une erreur.',
 	'cioidc_projet_archive_titre'    => 'Ce projet CCN est archivé',
@@ -127,6 +128,7 @@ return [
 	'modifier_mot_de_passe_video'    => 'Modifier le mot de passe',
 	'modifier_nom_groupe_travail'    => 'Modifier le nom du groupe de travail',
 	'modifier_reponse'               => 'Modifier',
+	'poster_un_message'				 => 'Poster un message',
 	// Textes du popup de publication par type de contenu (cf thematique_texte_publication
 	// dans thematique_fonctions.php), issus des maquettes de l'issue #429 :
 	'publier_bandeau_mission'        => 'Publier une mission',
@@ -163,6 +165,7 @@ return [
 	'ne_pas_afficher_webnapperon'    => 'Ne pas afficher cet article sur le Webnapperon',
 	'nouveau_titre'                  => 'nouveau titre',
 	'necessaire_connexion_commenter' => 'Il est nécessaire de vous connecter afin de poster un commentaire',
+	'message_encadre_ressource' 	 => 'Vous souhaitez partager une ressource qui peut être utile au bon déroulement du projet ? Publiez-la ici.',
 	'mois_complet_1'                 => 'janvier',
 	'mois_complet_2'                 => 'février',
 	'mois_complet_3'                 => 'mars',
@@ -198,6 +201,7 @@ return [
 	'parametres_generaux'            => 'Paramètres généraux',
 	'permalien'                      => 'Permalien',
 	'publie_le'                      => 'Publié le',
+	'publie_par'					 => 'Publié par',
 	'production_transversale'        => 'Production transversale',
 	'publier_nouvel_article'         => 'Publier un nouvel article',
 	'personne_na_commente'           => 'Personne n\'a encore commenté.',
@@ -269,6 +273,7 @@ return [
 	'titre_trop_long'                => 'Le titre ne peut pas dépasser @max@ caractères.',
 	'titre_du_formulaire'            => 'Titre du formulaire',
 	'telecharger'                    => 'Télécharger',
+	'texte_accueil_ressource'		 => 'Retrouvez ici des ressources utiles proposées par la personne intervenante et les partenaires qui vous permettent d’approfondir le sujet !',
 	'texte_par_defaut_cap_sur_l_annee' => 'Vous n’avez pas encore rédigé et publié de contenu. Cette page n’est donc pas visible pour les autres utilisateurs. Cliquez sur le bouton “Compléter” pour rédiger votre contenu et le faire ainsi apparaître pour les autres utilisateurs.',
 	'travaillant_dessus'             => 'travaillant dessus',
 	'tutoriels'                      => 'Tutoriels',
@@ -288,6 +293,7 @@ return [
 	'supprimer_document'             => 'Supprimer ce document',
 	'supprimer_message'              => 'Supprimer ce message',
 	'telecharger_document'           => 'Télécharger le document',
+	'veuillez_selectionner_une_ressource' => 'Veuillez selectionner une ressource.',
 	'vimeo_statut_erreur'            => 'Erreur lors de l\'envoi de la vidéo vers Vimeo.',
 	'vimeo_statut_envoi'             => 'Envoi de la vidéo vers Vimeo en cours... @progression@%',
 	'vimeo_statut_en_attente'        => 'Vidéo en attente d\'envoi vers Vimeo...',
@@ -295,6 +301,7 @@ return [
 	'vimeo_statut_transcodage'       => 'Vidéo envoyée, traitement en cours chez Vimeo...',
 	'verification_commentaire'       => 'Vérification de votre commentaire',
 	'veuillez_connecter_enregistrer_commenter' => 'Veuillez vous <b>connecter</b> ou vous <b>enregistrer</b> pour <b>commenter</b>.',
+	'voir_la_ressource'				 => 'Voir la ressource',
 	'voir_ma_reponse'                => 'Voir ma réponse',
 
 	// Fiche participant

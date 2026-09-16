@@ -1,0 +1,68 @@
+<div class="ressource-menu">
+    <div class="ressource-header">
+        <div style="display: flex; justify-content: end;">
+            <INCLURE{fond=noisettes/sidebar/normal_header_icons, env} />
+        </div>
+        <div style="display: flex;
+                    justify-content: center;
+                    margin-top: -1rem;
+                    margin-bottom: 0.4rem;"
+        >
+            <div class="etiquette-etape">
+                <img class="logo-etiquette" src="" alt="" style="display: none;">
+                <span class="texte-etiquette"><:thematique:ressources:></span>
+            </div>      
+        </div>
+        <div>
+            <strong><:thematique:texte_accueil_ressource:></strong>
+        </div>
+    </div>
+    <div class="ressource-content">
+        <div class="filter-buttons">
+            <button onclick=""
+                    style="background-color: var(--color-tonic);
+                    padding: 0.4rem 0.8rem;
+                    border: none;
+                    border-radius: 5px 5px 0 0;
+                    color: white;"
+            >
+                Tout
+            </button>
+        </div>
+        <div style="background-color: var(--color-background-tabs);
+                    padding: 1rem;
+                    flex: 1;
+                    min-height: 0;
+                    display: flex;
+                    flex-direction: column;
+                    overflow-y: auto;"
+        >
+            <div class="encadre-message">
+                <div>
+                    <:thematique:message_encadre_ressource:>
+                </div>
+                <button onclick="alert('Publions une ressource gaiment')"
+                        class="bouton-lisere">
+                    <:thematique:publier_bandeau_ressource:>
+                </button>
+            </div>
+            <div class="liste-ressources">
+                <BOUCLE_mot(MOTS){titre=ressources}>
+                    <BOUCLE_articles(ARTICLES){id_mot}{date>=#CONST{_DATE_DEBUT}}{date<=#CONST{_DATE_FIN}}{tout}>
+                        <BOUCLE_auteur(AUTEURS){id_article}>
+                            #SET{nom_auteur, #NOM}
+                        </BOUCLE_auteur>
+                        <INCLURE{
+                            fond=noisettes/sidebar/ressource/ressource_card, 
+                            date=#DATE,
+                            titre=#TITRE,
+                            nom_auteur=#GET{nom_auteur},
+                            id_article=#ID_ARTICLE,
+                            env
+                        } />
+                    </BOUCLE_articles>
+                </BOUCLE_mot>
+            </div>
+        </div>
+    </div>
+</div>

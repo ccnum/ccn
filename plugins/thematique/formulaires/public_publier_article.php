@@ -140,6 +140,7 @@ function formulaires_public_publier_article_traiter_dist(
 	// Si une réponse existe déjà, ou qu'on édite un article existant,
 	// id_article est transmis par le formulaire. Sinon, on crée un nouvel article.
 	$id_article = intval(_request('id_article'));
+
 	$edition = (bool) $id_article;
 
 	if (!$id_article) {
@@ -157,6 +158,7 @@ function formulaires_public_publier_article_traiter_dist(
 	if (empty($res['erreurs']) && !empty($res['id_article'])) {
 
 		$id_article = $res['id_article'];
+		spip_log("id_article = " . $id_article, 'debug');
 
 		// Les documents joints via #FORMULAIRE_JOINDRE_DOCUMENT (sidebar-etape-2-container,
 		// cf public_publier_article.html) sont déjà en base à ce stade — soit
@@ -167,6 +169,24 @@ function formulaires_public_publier_article_traiter_dist(
 		// (cf medias_post_insertion() dans plugins-dist/medias/medias_pipelines.php),
 		// déclenché par formulaires_editer_objet_traiter() ci-dessus. Rien à
 		// faire ici.
+
+		include_spip('action/editer_liens');
+
+		// Lier l'auteur connecté à l'article (source = auteur, car auteur est associable)
+		if ($id_auteur) {
+			objet_associer(['auteur' => $id_auteur], ['article' => $id_article]);
+		}
+
+		// Lier le mot clef à l'article (source = mot, car mot est associable)
+		$id_mot = sql_getfetsel('id_mot', 'spip_mots', 'titre=' . sql_quote($type_article));
+		if ($id_mot) {
+			objet_associer(['mot' => $id_mot], ['article' => $id_article]);
+		} else {
+			spip_log(
+				'formulaires_public_publier_article : aucun mot clef trouvé pour type_article=' . $type_article,
+				'thematique' . _LOG_AVERTISSEMENT
+			);
+		}
 
 		// Si c'est une réponse à une consigne,
 		// associer l'article à la consigne.

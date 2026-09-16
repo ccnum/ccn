@@ -59,6 +59,8 @@ function Projet() {
 		this.url_popup_evenement = data.url_popup_evenement;
 		this.url_popup_evenement_creer = data.url_popup_evenement_creer;
 		this.url_popup_ressources = data.url_popup_ressources;
+		this.url_popup_ressources_detail = data.url_popup_ressources_detail;
+		this.url_popup_ressources_ajout = data.url_popup_ressources_ajout;
 		this.url_popup_classes = data.url_popup_classes;
 		this.url_popup_chat = data.url_popup_chat;
 		this.url_popup_chat2 = data.url_popup_chat2;
