@@ -90,17 +90,9 @@ et/ou
 
 		<INCLURE{fond=noisettes/menu_ressources, env, ajax} />
 
-		[(#REM) Actualités]
+		[(#REM) Actualités : bloc (titre inclus) entièrement masqué si vide, cf actus_timeline.html]
 		[(#CONST{_PROJET}|!={laclasse}|oui)
-			<div id="menu-actualites" class="bloc_view col">
-				<h3><span><:thematique:menu_actualites:></span></h3>
-				<ul class="actualites-ul filter clearfix option-set" data-filter-group="classe">
-					[(#MODELE{logo_menu}{valeur=tout}{title=<:thematique:toutes_les_actualites:>}{class=menu_logo_type_sidebarView menu_logo_actualites}{onclick=callActualites();})]
-				</ul>
-				<div class="actualites-inner filter clearfix option-set" data-filter-group="actualites">
-					<INCLURE{fond=noisettes/inc/actus_timeline, nb_actus=5, ajax} />
-				</div>
-			</div>
+			<INCLURE{fond=noisettes/inc/actus_timeline, nb_actus=5, ajax} />
 		]
 
 		<div id="menu-classe" [(#VUE|=={classe}|non) style="display:none;"]>

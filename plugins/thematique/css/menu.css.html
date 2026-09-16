@@ -148,32 +148,63 @@
 	margin-right: 3px;
 }
 
+/* Liste des actus dans le menu bas : contexte compact, une ligne tronquée
+par actu (titre + icône), date/vignette réservées à la popup "toutes les
+actualités" (.popup .actualites-actu, cf plus bas). Avant, .actualites-inner
+faisait une hauteur fixe de 27px avec overflow:hidden alors que chaque
+.actualites-actu (jusqu'à 5) faisait elle-même 27px de haut : seule la
+première actu était visible, les autres étaient invisibles sans scroll ni
+indication. */
 #menu_bas .actualites-inner {
-	height: 27px;
-	display: inline-block;
-	overflow: hidden;
+	display: block;
+	max-height: 160px;
+	overflow-y: auto;
 }
 
 #menu_bas .actualites-actu {
-	cursor: pointer
-}
-
-#menu_bas .actualites-actu:hover {
-	background: rgba(194, 194, 194, 1);
+	cursor: pointer;
+	display: block;
+	font-size: 12px;
+	line-height: 30px;
+	height: 30px;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	background: var(--color-gris-3);
+	padding: 0 10px;
+	box-sizing: border-box;
+	margin-bottom: 4px;
+	border-radius: var(--border-radius-sm);
+	color: var(--color-default);
 }
 
 #menu_bas .actualites-actu:last-child {
 	margin-bottom: 0;
 }
-#menu_bas .actualites-actu {
-	font-size: 11px;
-	line-height: 14px;
-	height: 27px;
-	background: rgb(204, 204, 204);
-	padding: 7px 10px;
-	box-sizing: border-box;
-	margin-bottom: 5px;
-	border-radius: 0px;
+
+#menu_bas .actualites-actu:hover,
+#menu_bas .actualites-actu:focus-visible {
+	filter: brightness(0.94);
+}
+
+#menu_bas .actualites-actu .profil {
+	display: inline-block;
+	vertical-align: middle;
+	margin-right: 6px;
+}
+
+/* Date/vignette : la ligne de 30px n'a pas la place pour ça, réservé à la
+popup ; .date (actu_documents/actu_livrables) et .actualites-actu-date
+(actu_commentaires/actu_travail_en_cours/actu_consignes) sont deux classes
+différentes pour la même info, à masquer toutes les deux ici. */
+#menu_bas .actualites-actu .date,
+#menu_bas .actualites-actu-date,
+#menu_bas .actualites-texte,
+#menu_bas .actualites-actu img,
+#menu_bas .actualites-actu a.mediabox,
+#menu_bas .actualites-actu .img-container,
+#menu_bas .actualites-actu br {
+	display: none;
 }
 
 .popup .actualites-actu {
@@ -362,7 +393,6 @@
 	color: gray
 }
 
-#menu_bas .actualites-actu-date, #menu_bas .actualites-texte { display: none; }
 #menu_bas .actualites-titre { font-weight: normal; font-size: 1em; }
 /* Logos */
 

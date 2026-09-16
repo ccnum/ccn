@@ -49,35 +49,39 @@ déjà résolus. ]
 </BOUCLE_dataConsignes>
 
 <B_dataContenu>
-	<BOUCLE_dataContenu(DATA){source table, #GET{contenu}}{!par date}>
-		<BOUCLE_triDate(DATA){source table, #VALEUR}>
-			<BOUCLE_test(DATA){source table, #VALEUR}>
-			</BOUCLE_test>
+<div id="menu-actualites" class="bloc_view col">
+	<h3 class="menu-title"><span><:thematique:menu_actualites:></span></h3>
+	<ul class="actualites-ul filter clearfix option-set" data-filter-group="classe">
+		[(#MODELE{logo_menu}{valeur=tout}{title=<:thematique:toutes_les_actualites:>}{class=menu_logo_type_sidebarView menu_logo_actualites}{onclick=callActualites();})]
+	</ul>
+	<div class="actualites-inner filter clearfix option-set" data-filter-group="actualites">
+		<BOUCLE_dataContenu(DATA){source table, #GET{contenu}}{!par date}>
+			<BOUCLE_triDate(DATA){source table, #VALEUR}>
+				<BOUCLE_test(DATA){source table, #VALEUR}>
+				</BOUCLE_test>
 
-			<BOUCLE_affiche_livrable(DATA){source table, #VALEUR}{cle=livrable}>
-				[(#REM) Nouveaux documents sur livrable]
-				[(#MODELE{actu_livrables}{id_article=#VALEUR})]
-			</BOUCLE_affiche_livrable>
+				<BOUCLE_affiche_livrable(DATA){source table, #VALEUR}{cle=livrable}>
+					[(#REM) Nouveaux documents sur livrable]
+					[(#MODELE{actu_livrables}{id_article=#VALEUR})]
+				</BOUCLE_affiche_livrable>
 
-			<BOUCLE_affiche_doc(DATA){source table, #VALEUR}{cle=doc}>
-				[(#REM) Nouveaux documents ]
-				[(#MODELE{actu_documents}{id_article=#VALEUR})]
-			</BOUCLE_affiche_doc>
-			<BOUCLE_affiche_forum(DATA){source table, #VALEUR}{cle=forum}>
-				[(#REM) Nouveaux commentaires ]
-				[(#MODELE{actu_commentaires}{id_forum=#VALEUR})]
-			</BOUCLE_affiche_forum>
-			<BOUCLE_affiche_consignes(DATA){source table, #VALEUR}{cle=consigne}>
-				[(#REM) Nouvelles consignes ]
-				[(#REM)[(#MODELE{actu_consignes}{id_objet=#VALEUR})]]
-				[(#MODELE{actu_travail_en_cours}{id_objet=#VALEUR})]
-			</BOUCLE_affiche_consignes>
-			<BOUCLE_affiche_ressources(DATA){source table, #VALEUR}{cle=ressources}>
-			</BOUCLE_affiche_ressources>
-		</BOUCLE_triDate>
-	</BOUCLE_dataContenu>
-</B_dataContenu>
-	<div class="actualites-actu bgc_classe_1">
-		<p><:thematique:aucune_actualite:></p>
+				<BOUCLE_affiche_doc(DATA){source table, #VALEUR}{cle=doc}>
+					[(#REM) Nouveaux documents ]
+					[(#MODELE{actu_documents}{id_article=#VALEUR})]
+				</BOUCLE_affiche_doc>
+				<BOUCLE_affiche_forum(DATA){source table, #VALEUR}{cle=forum}>
+					[(#REM) Nouveaux commentaires ]
+					[(#MODELE{actu_commentaires}{id_forum=#VALEUR})]
+				</BOUCLE_affiche_forum>
+				<BOUCLE_affiche_consignes(DATA){source table, #VALEUR}{cle=consigne}>
+					[(#REM) Nouvelles consignes ]
+					[(#REM)[(#MODELE{actu_consignes}{id_objet=#VALEUR})]]
+					[(#MODELE{actu_travail_en_cours}{id_objet=#VALEUR})]
+				</BOUCLE_affiche_consignes>
+				<BOUCLE_affiche_ressources(DATA){source table, #VALEUR}{cle=ressources}>
+				</BOUCLE_affiche_ressources>
+			</BOUCLE_triDate>
+		</BOUCLE_dataContenu>
 	</div>
-<//B_dataContenu>
+</div>
+</B_dataContenu>
