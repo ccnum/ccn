@@ -688,12 +688,9 @@ function callRessource(id_article) {
 		}, 
 		"ressource"
 	);
-	console.log(CCN.projet.url_popup_ressources_detail);
 }
 
 function loadArticleInLateralSidebar(id_article) {
-	console.log("loadArticleInLateralSidebar");
-	
 	emptyLateralSidebar();
 	loadContentInLateralSidebar(`${CCN.projet.url_popup_ressources_detail}&id_article=${id_article}`);
 	setLateralSidebarExpanded(id_article);
@@ -1424,8 +1421,6 @@ function loadContentInLateralSidebar(url, callback) {
 	// un espace dans l'url casse le chargement avec une erreur Sizzle
 	// "unrecognized expression" au lieu d'un simple 404/erreur réseau.
 	$.get(url).done(function (response) {
-		console.log({response});
-		
 		$('#sidebar_lateral_inner').html(response);
 		if (!response || response.trim() === "") {
 			if (CCN.debug) { console.warn(CCN.lang.reponse_vide); }
@@ -1449,7 +1444,6 @@ function loadContentInLateralSidebar(url, callback) {
  */
 
 function setLateralSidebarExpanded(setCols) {
-	console.log({setCols});
 	const lateralWasExpanded = $('body').hasClass('hasLateralSidebarExpanded')
 	
 	$('body').toggleClass('hasLateralSidebarExpanded', Boolean(setCols));
