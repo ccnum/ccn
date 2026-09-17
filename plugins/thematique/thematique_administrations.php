@@ -84,8 +84,238 @@ function thematique_upgrade($nom_meta_base_version, $version_cible) {
 	$maj['3.4.2'] = [['maj_tables', ['spip_articles', 'spip_rubriques']]];
 	cextras_api_upgrade(thematique_declarer_champs_extras(), $maj['3.4.2']);
 
+	$maj['3.4.3'] = [['thematique_migrer_bibliotheques']];
+
 	include_spip('base/upgrade');
 	maj_plugin($nom_meta_base_version, $version_cible, $maj);
+}
+
+/**
+ * Fusionne les deux arborescences "Bibliothèque" :
+ *
+ * - la Bibliothèque racine (id_parent = 0)
+ * - la Bibliothèque située sous la rubrique "2018"
+ *
+ * Tous les articles des sous-rubriques sont déplacés vers la
+ * Bibliothèque racine.
+ *
+ * Les auteurs liés aux rubriques supprimées sont également liés
+ * à la Bibliothèque racine avant suppression de leurs anciennes
+ * associations.
+ *
+ * Les associations (mots-clés) <-> (rubriques supprimées) sont supprimées.
+ *
+ * Enfin :
+ * - la Bibliothèque racine est renommée en Ressources ;
+ * - toutes les rubriques de l'arborescence sont supprimées,
+ *   sauf la racine.
+ */
+function thematique_migrer_bibliotheques() {
+    // -----------------------------------------------------------------
+    // 1. Trouver la Bibliothèque racine
+    // -----------------------------------------------------------------
+
+    $id_bibliotheque = intval(sql_getfetsel(
+        'id_rubrique',
+        'spip_rubriques',
+        'titre=' . sql_quote('Bibliothèque') . ' AND id_parent=0'
+    ));
+
+    if (!$id_bibliotheque) {
+        // Rien à migrer.
+        return;
+    }
+
+    // -----------------------------------------------------------------
+    // 2. Trouver la Bibliothèque située sous 2018
+    // -----------------------------------------------------------------
+
+    $id_2018 = intval(sql_getfetsel(
+        'id_rubrique',
+        'spip_rubriques',
+        'titre=' . sql_quote('2018')
+    ));
+
+    $id_bibliotheque_2018 = 0;
+
+    if ($id_2018) {
+        $id_bibliotheque_2018 = intval(sql_getfetsel(
+            'id_rubrique',
+            'spip_rubriques',
+            'titre=' . sql_quote('Bibliothèque')
+            . ' AND id_parent=' . $id_2018
+        ));
+    }
+
+    // -----------------------------------------------------------------
+    // 3. Construire récursivement les deux arborescences
+    //
+    // Le tableau est construit en profondeur : les enfants sont
+    // placés avant leurs parents. C'est utile pour supprimer ensuite
+    // les rubriques dans le bon ordre.
+    // -----------------------------------------------------------------
+
+    $vus = [];
+
+    $rubriques_a_traiter = [];
+
+    $ajouter_arborescence = function ($id_rubrique) use (&$ajouter_arborescence, &$vus, &$rubriques_a_traiter) {
+        $id_rubrique = intval($id_rubrique);
+
+        if (!$id_rubrique || isset($vus[$id_rubrique])) {
+            return;
+        }
+
+        $vus[$id_rubrique] = true;
+
+        $enfants = sql_allfetsel(
+            'id_rubrique',
+            'spip_rubriques',
+            'id_parent=' . $id_rubrique
+        );
+
+        foreach ($enfants as $enfant) {
+            $ajouter_arborescence($enfant['id_rubrique']);
+        }
+
+        // Les enfants sont ajoutés avant le parent.
+        $rubriques_a_traiter[] = $id_rubrique;
+    };
+
+    // Bibliothèque racine + tous ses descendants.
+    $ajouter_arborescence($id_bibliotheque);
+
+    // Bibliothèque 2018 + tous ses descendants.
+    if ($id_bibliotheque_2018) {
+        $ajouter_arborescence($id_bibliotheque_2018);
+    }
+
+    // -----------------------------------------------------------------
+    // 4. Déplacer tous les articles vers la Bibliothèque racine
+    //
+    // On ne touche pas aux associations des articles : seul
+    // id_rubrique est modifié.
+    // -----------------------------------------------------------------
+
+    foreach ($rubriques_a_traiter as $id_rubrique) {
+        if ($id_rubrique == $id_bibliotheque) {
+            continue;
+        }
+
+        sql_updateq(
+            'spip_articles',
+            ['id_rubrique' => $id_bibliotheque],
+            'id_rubrique=' . intval($id_rubrique)
+        );
+    }
+
+    // -----------------------------------------------------------------
+    // 5. Pour chaque auteur lié à une rubrique supprimée :
+    //    créer l'association avec la Bibliothèque racine si nécessaire.
+    // -----------------------------------------------------------------
+
+    foreach ($rubriques_a_traiter as $id_rubrique) {
+        if ($id_rubrique == $id_bibliotheque) {
+            continue;
+        }
+
+        $auteurs = sql_allfetsel(
+            'id_auteur',
+            'spip_auteurs_liens',
+            'objet=' . sql_quote('rubrique')
+            . ' AND id_objet=' . intval($id_rubrique)
+        );
+
+        foreach ($auteurs as $auteur) {
+            $id_auteur = intval($auteur['id_auteur']);
+
+            if (!$id_auteur) {
+                continue;
+            }
+
+            $deja_lie = sql_countsel(
+                'spip_auteurs_liens',
+                'id_auteur=' . $id_auteur
+                . ' AND id_objet=' . $id_bibliotheque
+                . ' AND objet=' . sql_quote('rubrique')
+            );
+
+            if (!$deja_lie) {
+                sql_insertq(
+                    'spip_auteurs_liens',
+                    [
+                        'id_auteur' => $id_auteur,
+                        'id_objet' => $id_bibliotheque,
+                        'objet' => 'rubrique',
+                    ]
+                );
+            }
+        }
+    }
+
+    // -----------------------------------------------------------------
+    // 6. Supprimer les associations mots-clés <-> rubriques
+    //    des rubriques qui vont disparaître.
+    // -----------------------------------------------------------------
+
+    foreach ($rubriques_a_traiter as $id_rubrique) {
+        if ($id_rubrique == $id_bibliotheque) {
+            continue;
+        }
+
+        sql_delete(
+            'spip_mots_liens',
+            'objet=' . sql_quote('rubrique')
+            . ' AND id_objet=' . intval($id_rubrique)
+        );
+    }
+
+    // -----------------------------------------------------------------
+    // 7. Supprimer les anciennes associations auteurs <-> rubriques.
+    //
+    // Les associations vers la Bibliothèque racine viennent d'être
+    // conservées ou créées ci-dessus.
+    // -----------------------------------------------------------------
+
+    foreach ($rubriques_a_traiter as $id_rubrique) {
+        if ($id_rubrique == $id_bibliotheque) {
+            continue;
+        }
+
+        sql_delete(
+            'spip_auteurs_liens',
+            'objet=' . sql_quote('rubrique')
+            . ' AND id_objet=' . intval($id_rubrique)
+        );
+    }
+
+    // -----------------------------------------------------------------
+    // 8. Supprimer les rubriques devenues inutiles.
+    //
+    // Comme les descendants sont dans le tableau avant leurs parents,
+    // on supprime d'abord les feuilles puis on remonte.
+    // -----------------------------------------------------------------
+
+    foreach ($rubriques_a_traiter as $id_rubrique) {
+        if ($id_rubrique == $id_bibliotheque) {
+            continue;
+        }
+
+        sql_delete(
+            'spip_rubriques',
+            'id_rubrique=' . intval($id_rubrique)
+        );
+    }
+
+    // -----------------------------------------------------------------
+    // 9. Renommer la Bibliothèque racine en Ressources.
+    // -----------------------------------------------------------------
+
+    sql_updateq(
+        'spip_rubriques',
+        ['titre' => 'Ressources'],
+        'id_rubrique=' . $id_bibliotheque
+    );
 }
 
 function thematique_vider_tables($nom_meta_base_version) {
