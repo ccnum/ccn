@@ -9,7 +9,7 @@ commentaires sur l'article de la mission, pas la somme de ceux de ses
 réponses — cf main.js:dataForConsigne.nombre_commentaires). ]
 #SET{ids_comptage_forum,#ARRAY}
 <BOUCLE_rubrique_ids(RUBRIQUES){titre_mot=consignes}{!par id_rubrique}{tout}>
-	<BOUCLE_consigne_ids(ARTICLES){branche}{titre_mot=consignes}{date>=#CONST{_DATE_DEBUT}}{date<=#CONST{_DATE_FIN}}{!titre_mot IN cap-sur-l-annee,la-rencontre}>
+	<BOUCLE_consigne_ids(ARTICLES){branche}{date>=#CONST{_DATE_DEBUT}}{date<=#CONST{_DATE_FIN}}{!titre_mot IN cap-sur-l-annee,la-rencontre}>
 		#SET_PUSH{ids_comptage_forum,#ID_ARTICLE}
 		<BOUCLE_reponse_ids(ARTICLES){id_consigne=#ID_ARTICLE}>
 			#SET_PUSH{ids_comptage_forum,#ID_ARTICLE}
@@ -26,7 +26,7 @@ réponses — cf main.js:dataForConsigne.nombre_commentaires). ]
 	[(#REM) Les 2 articles jalons du projet ("Cap sur l'année"/"La Rencontre",
 	cf thematique_rentree_annee.php) ne sont pas de vraies missions (pas
 	d'image de classe ni de réponses associées) : exclus ici. ]
-	<BOUCLE_consigne(ARTICLES){branche}{doublons}{par date}{titre_mot=consignes}{date>=#CONST{_DATE_DEBUT}}{date<=#CONST{_DATE_FIN}}{!titre_mot IN cap-sur-l-annee,la-rencontre}>
+	<BOUCLE_consigne(ARTICLES){branche}{doublons}{par date}{date>=#CONST{_DATE_DEBUT}}{date<=#CONST{_DATE_FIN}}{!titre_mot IN cap-sur-l-annee,la-rencontre}>
 		#SET{intervenant_nom,''}
 		#SET{id_auteur_consigne,0}
 		<BOUCLE_auteur_consigne(AUTEURS){id_article}{0,1}>
