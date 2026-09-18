@@ -182,6 +182,7 @@ function initConsignes(data) {
 		dataForConsigne.intervenant_id = jsonConsigne.intervenant_id;
 		dataForConsigne.titre = jsonConsigne.titre;
 		dataForConsigne.image = jsonConsigne.image;
+		dataForConsigne.image_est_url = jsonConsigne.image_est_url;
 		dataForConsigne.image_generique = jsonConsigne.image_generique;
 		dataForConsigne.y = jsonConsigne.y;
 		dataForConsigne.isLastConsigne = (i==jsonConsignes.length-1)

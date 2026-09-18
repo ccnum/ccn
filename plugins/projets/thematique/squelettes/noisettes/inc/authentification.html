@@ -16,15 +16,15 @@
 				[(#SESSION{avatar}|non)
 					<img src="https://www.laclasse.com/avatar/avatar_masculin.svg" alt="">
 				]
-				[(#SESSION{avatar}|match{^https?://}|oui)
+				[(#SESSION{avatar}|thematique_image_est_url|oui)
 					<img src="[(#SESSION{avatar})]" alt="" class="avatar-photo">
 				]
-				[(#SESSION{avatar}|match{^https?://}|non)
+				[(#SESSION{avatar}|thematique_image_est_url|non)
 					[(#SESSION{avatar}|oui)
 						<span class="avatar-animal">
 							[(#SESSION{avatar})]
 						</span>
-						
+
 					]
 				]
 			</span>
