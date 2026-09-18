@@ -753,10 +753,10 @@ function callNouvelleMission(id_rubrique_auteur) {
 	createReponse(0, id_rubrique_auteur, 0);
 }
 
-function callNouvelleRessource(id_rubrique_auteur) {
+function callNouvelleRessource() {
 	expandSidebar();
 	setLateralSidebarExpanded(false);
-	const url = CCN.projet.url_popup_ressources_ajout + "&id_rubrique=" + id_rubrique_auteur;
+	const url = CCN.projet.url_popup_ressources_ajout;
 	loadContentInMainSidebar(url, null, "publication_article");
 }
 

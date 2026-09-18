@@ -74,6 +74,7 @@ function formulaires_public_publier_article_charger_dist(
 			$valeurs['titre'] = $reponse['titre'];
 			$valeurs['texte'] = $reponse['texte'];
 			$valeurs['id_rubrique'] = $reponse['id_rubrique'];
+			$valeurs['id_parent'] = $reponse['id_rubrique'];
 			$valeurs['id_consigne'] = $reponse['id_consigne'];
 			$valeurs['date'] = $reponse['date'];
 		}
@@ -115,8 +116,6 @@ function formulaires_public_publier_article_traiter_dist(
 	$id_consigne = 0,
 	$id_article = 0
 ) {
-	// Ceci est un système anti-spam : si on appuie plusieurs fois très vite sur "enregistrer un article",
-	// on ne l'enregistrera qu'une fois.
 	include_spip('inc/session');
 	include_spip('inc/autoriser');
 
@@ -124,16 +123,17 @@ function formulaires_public_publier_article_traiter_dist(
 	$texte = _request('texte');
 	$id_auteur = session_get('id_auteur'); // auteur connecté, vient de la session SPIP
 
+	// Ceci est un système anti-spam : si on appuie plusieurs fois très vite sur "enregistrer un article",
+	// on ne l'enregistrera qu'une fois.
 	$cle = 'creation_article_' . md5($titre . $texte . $id_rubrique . $type_article . $id_consigne . $id_auteur);
 	$derniere = session_get($cle); // timestamp (int) ou null si absent
-
 	if ($derniere && (time() - $derniere) < 3) {
 		// soumission dupliquée détectée récemment : on bloque
 		return [];
 	}
 	session_set($cle, time());
 
-	spip_log('rubrique au moment de traiter : ' . $id_rubrique, 'debug');
+	
 	include_spip('inc/editer');
 	include_spip('prive/formulaires/editer_article');
 
@@ -152,13 +152,26 @@ function formulaires_public_publier_article_traiter_dist(
 		// l'applique telle quelle.
 		set_request('date');
 	}
-
+	// Les ressources sont créées depuis la page "Ressources" (popup sans
+	// id_rubrique, cf callNouvelleRessource) : la rubrique cible est forcée
+	// côté serveur. Le core la relit depuis la requête HTTP (cf
+	// action_editer_article_dist : _request('id_parent')), le 3e argument de
+	// formulaires_editer_objet_traiter() étant ignoré — d'où le set_request.
+	if ($type_article == 'ressources') {
+		$id_ressources = sql_getfetsel(
+			'id_rubrique', 
+			'spip_rubriques', 
+			'titre=' . sql_quote('Ressources')
+		);
+		if ($id_ressources) {
+			$id_rubrique = $id_ressources;
+			set_request('id_parent', $id_rubrique);
+		}
+	}
 	$res = formulaires_editer_objet_traiter('article', $id_article, $id_rubrique);
-
 	if (empty($res['erreurs']) && !empty($res['id_article'])) {
 
 		$id_article = $res['id_article'];
-		spip_log("id_article = " . $id_article, 'debug');
 
 		// Les documents joints via #FORMULAIRE_JOINDRE_DOCUMENT (sidebar-etape-2-container,
 		// cf public_publier_article.html) sont déjà en base à ce stade — soit
@@ -176,18 +189,6 @@ function formulaires_public_publier_article_traiter_dist(
 		if ($id_auteur) {
 			objet_associer(['auteur' => $id_auteur], ['article' => $id_article]);
 		}
-
-		// Lier le mot clef à l'article (source = mot, car mot est associable)
-		$id_mot = sql_getfetsel('id_mot', 'spip_mots', 'titre=' . sql_quote($type_article));
-		if ($id_mot) {
-			objet_associer(['mot' => $id_mot], ['article' => $id_article]);
-		} else {
-			spip_log(
-				'formulaires_public_publier_article : aucun mot clef trouvé pour type_article=' . $type_article,
-				'thematique' . _LOG_AVERTISSEMENT
-			);
-		}
-
 		// Si c'est une réponse à une consigne,
 		// associer l'article à la consigne.
 		if ($id_consigne) {
@@ -197,10 +198,41 @@ function formulaires_public_publier_article_traiter_dist(
 			]);
 		}
 
-		// Publier l'article (sans effet si déjà publié : cas d'une édition)
+		// Publier l'article (sans effet si déjà publié : cas d'une édition).
+		// article_instituer() exige 'publierdans' sur la rubrique de
+		// l'article (cf ecrire/action/editer_article.php) : les admins
+		// restreints (statut 0minirezo, liés à leurs rubriques via
+		// spip_auteurs_liens objet='rubrique') ne l'ont donc pas sur une
+		// rubrique hors de leurs restrictions (ex. la rubrique globale
+		// "Ressources") et l'article
+		// resterait en 'prepa', invisible du front — sans aucun message
+		// d'erreur. L'accès à ce formulaire est déjà borné aux rôles
+		// "publie" (thematique_role_publie, cf le menu "Publier" du header),
+		// la création étant elle-même contrôlée par 'creerarticledans' dans
+		// action_editer_article : on accorde donc l'autorisation
+		// exceptionnelle pour le hit courant.
+		$id_rubrique_article = sql_getfetsel(
+			'id_rubrique',
+			'spip_articles',
+			'id_article=' . intval($id_article)
+		);
+		if ($id_rubrique_article) {
+			autoriser_exception('publierdans', 'rubrique', $id_rubrique_article, true);
+		}
 		article_instituer($id_article, [
 			'statut' => 'publie',
 		]);
+
+		// article_instituer() refuse silencieusement (un simple spip_log en
+		// 'editer_article X refus ...') : vérifier le statut final pour que
+		// un refus ne laisse pas un article en 'prepa' sans explication.
+		$statut_final = sql_getfetsel('statut', 'spip_articles', 'id_article=' . intval($id_article));
+		if ($statut_final !== 'publie') {
+			spip_log(
+				"publication de l'article $id_article refusée (statut restant : " . var_export($statut_final, true) . ")",
+				'thematique' . _LOG_ERREUR
+			);
+		}
 
 		$res['message_ok'] = $edition
 			? _T('thematique:article_modifie_succes')
