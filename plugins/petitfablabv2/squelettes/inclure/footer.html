@@ -5,11 +5,11 @@
  		<div id="footer-nav-left">
 	        [(#SESSION{id_auteur}|oui)Bonjour <b><a class="mediabox boxIframe boxWidth-730px boxHeight-550px" href="[(#URL_PAGE{auteur_editer,id_auteur=#SESSION{id_auteur}})]">#SESSION{nom}</a></b>&nbsp;&nbsp;|]
 	        [(#SESSION{id_auteur}|non)<a href="[(#URL_PAGE{login}|parametre_url{url,#SELF}|parametre_url{cioidc,oui})]">Se connecter</a>&nbsp;&nbsp;|]
-	        <a href="http://www.laclasse.com/pls/public/!page.laclasse?contexte=QUESTION&rubrique=0"><:petitfablab:mot_de_passe_oublie:></a>
+	        <a href="http://www.laclasse.com/pls/public/!page.laclasse?contexte=QUESTION&rubrique=0"><:petitfablabv2:mot_de_passe_oublie:></a>
         </div>
 
         <div id="footer-nav">
-            <a href="http://fictions.laclasse.com/"><:petitfablab:vers_version_colleges:></a>
+            <a href="http://fictions.laclasse.com/"><:petitfablabv2:vers_version_colleges:></a>
             <!--
             <span id="rub_jeu" title="Choisir la chambre de jeu">
                 Room :

@@ -36,7 +36,7 @@
 
 			[(#ENV**{config}|table_valeur{articles_ps}|=={non}|?{#ENV**{ps,''},' '}|oui)
 			<div class="editer editer_ps[ (#ENV**{erreurs}|table_valeur{ps}|oui)erreur]">
-				<label for="ps"><:petitfablab:numero_telephone_edition:></label>[
+				<label for="ps"><:petitfablabv2:numero_telephone_edition:></label>[
 				<span class='erreur_message'>(#ENV**{erreurs}|table_valeur{ps})</span>
 				]<textarea placeholder="Indices" class='cadre2 bleu2' name='ps' id='ps'[ lang='(#LANGUE)'] rows='5' cols='40'>[(#ENV**{ps})]</textarea>
 			</div>]

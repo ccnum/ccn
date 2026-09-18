@@ -1,5 +1,5 @@
 <paquet
-	prefix="fictions"
+	prefix="fictionsv2"
 	categorie="squelette"
 	version="1.0.2"
 	etat="stable"
@@ -25,5 +25,5 @@
 
 	<utilise nom="cioidc" />
 
-	<pipeline nom="post_edition" inclure="fictions_pipelines.php" />
+	<pipeline nom="post_edition" inclure="fictionsv2_pipelines.php" />
 </paquet>

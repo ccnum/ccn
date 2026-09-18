@@ -23,7 +23,7 @@ function formulaires_creer_histoire_saisies_dist($rub_parent, $retour = '') {
 		'saisie' => 'checkbox',
 		'options' => [
 			'nom' => 'prologue',
-			'label' => _T('petitfablab:creer_histoire_prologue'),
+			'label' => _T('petitfablabv2:creer_histoire_prologue'),
 			'obligatoire' => 'oui',
 			'data' => $prologues
 		]
@@ -38,7 +38,7 @@ function formulaires_creer_histoire_traiter_dist($rub_parent, $retour = '') {
 
 	$prologues = _request('prologue');
 	if (!is_array($prologues) || empty($prologues)) {
-		return ['message_erreur' => _T('petitfablab:creer_histoire_prologue')];
+		return ['message_erreur' => _T('petitfablabv2:creer_histoire_prologue')];
 	}
 
 	$rub = [];

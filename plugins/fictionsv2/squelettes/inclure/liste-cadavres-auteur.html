@@ -8,7 +8,7 @@ ID / NOM AUTEUR
 #SET{var_nom_auteur,#SESSION{nom}}
 #SET{i,0}
 
-<BOUCLE_rubriques_toutes(RUBRIQUES){id_parent=#ENV{id_rubrique}}{id_rubrique != #EVAL{_FICTIONS_ID_BLOG_PEDA}}{id_rubrique != #EVAL{_FICTIONS_ID_BLOG_AUTEUR}}{par titre}>
+<BOUCLE_rubriques_toutes(RUBRIQUES){id_parent=#ENV{id_rubrique}}{id_rubrique != #EVAL{_FICTIONSV2_ID_BLOG_PEDA}}{id_rubrique != #EVAL{_FICTIONSV2_ID_BLOG_AUTEUR}}{par titre}>
 	#SET{i,#GET{i}|plus{1}}
 	<div class="liste-colonnes">
 		<div class="liste-title">#GET{i}</div>

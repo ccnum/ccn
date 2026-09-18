@@ -24,7 +24,7 @@
 						{   $action="documenter";
 							$redirect="#SELF";
 							$arg="-#ID_ARTICLE/article/#ID_DOCUMENT";
-							$confirmation= attribut_html(_T('fictions:confirmation_suppression_document'));
+							$confirmation= attribut_html(_T('fictionsv2:confirmation_suppression_document'));
 							echo "<a href='".securiser_action_auteur($action, $arg, $redirect, $mode=false, $att='')."' class='rouge droite ajax' onClick='return confirmation(\"$confirmation\")' title='supprimer ce document' ><div class='action_supprimer'></div></a>";
 						}
 				?>

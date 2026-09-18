@@ -12,19 +12,19 @@ function valider_chapitre($id_article, $id_rubrique) {
 	$envoyer_mail = charger_fonction('envoyer_mail', 'inc');
 	// mail
 	$bcc = sql_getfetsel("soustitre", "spip_articles", "id_article = " . intval($id_article));
-	$sujet = _T('petitfablab:sujet_chapitre_publie');
+	$sujet = _T('petitfablabv2:sujet_chapitre_publie');
 	$html = "Bonjour,";
-	$html .= _T('petitfablab:mail_merci_participation');
+	$html .= _T('petitfablabv2:mail_merci_participation');
 	$html .= "<br />Accédez dès maintenant à votre chapitre en ligne : http://petitfablab.laclasse.com/spip.php?page=lecture&id_rubrique=" . $id_rubrique . ". Un deuxième message vous préviendra lorsque votre histoire sera disponible.";
-	$html .= _T('petitfablab:mail_a_bientot');
-	$html .= _T('petitfablab:mail_description_dispositif');
+	$html .= _T('petitfablabv2:mail_a_bientot');
+	$html .= _T('petitfablabv2:mail_description_dispositif');
 	$html .= "<br />Suivez nos actualités sur le blog https://petit-fablab-ecriture.tumblr.com/";
 
 	$contenu_html = recuperer_fond('emails/texte', ['html' => $html]);
 	$corps = [
 		'html' => $contenu_html,
 		'from' => 'noreply@petitfablab.laclasse.com',
-		'nom_envoyeur' => _T('petitfablab:nom_envoyeur'),
+		'nom_envoyeur' => _T('petitfablabv2:nom_envoyeur'),
 		'bcc' => ['cmonnet@erasme.org', $bcc]
 	];
 	if (isset($bcc) && ($bcc != "") && (filter_var($bcc, FILTER_VALIDATE_EMAIL))) {
@@ -46,19 +46,19 @@ function valider_chapitre($id_article, $id_rubrique) {
 			}
 		}
 
-		$sujet = _T('petitfablab:sujet_histoire_en_ligne');
-		$html = _T('petitfablab:mail_bonjour_tous');
-		$html .= _T('petitfablab:mail_felicitations');
+		$sujet = _T('petitfablabv2:sujet_histoire_en_ligne');
+		$html = _T('petitfablabv2:mail_bonjour_tous');
+		$html .= _T('petitfablabv2:mail_felicitations');
 		$html .= "<br />Discutez de l'édition de votre histoire avec vos co-auteurs par retour de mail : http://petitfablab.laclasse.com/spip.php?page=lecture&id_rubrique=" . $id_rubrique;
-		$html .= _T('petitfablab:mail_a_bientot');
-		$html .= _T('petitfablab:mail_description_dispositif');
+		$html .= _T('petitfablabv2:mail_a_bientot');
+		$html .= _T('petitfablabv2:mail_description_dispositif');
 		$html .= "<br />Suivez nos actualités sur le blog https://petit-fablab-ecriture.tumblr.com/";
 
 		$contenu_html = recuperer_fond('emails/texte', ['html' => $html]);
 		$corps = [
 			'html' => $contenu_html,
 			'from' => 'noreply@petitfablab.laclasse.com',
-			'nom_envoyeur' => _T('petitfablab:nom_envoyeur'),
+			'nom_envoyeur' => _T('petitfablabv2:nom_envoyeur'),
 			'bcc' => $bcc
 		];
 		$envoyer_mail("petitfablab@gmail.com", $sujet, $corps);

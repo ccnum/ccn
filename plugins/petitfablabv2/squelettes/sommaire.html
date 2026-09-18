@@ -27,11 +27,11 @@
 				[(#FIN|=={#GET{var_fin}}|non)
 					<div class="content-right-large">
 						<div class="texte-presentation">
-							<div class="bord"><:petitfablab:grille_histoires_en_cours:></div>
+							<div class="bord"><:petitfablabv2:grille_histoires_en_cours:></div>
 							<INCLURE{fond=inclure/liste-cadavres-visiteur,rub_jeu=#GET{rub_jeu}} />
 						</div>
 						<div class="texte-presentation">
-							<div class="bord"><:petitfablab:et_les_histoires_terminees:></div>
+							<div class="bord"><:petitfablabv2:et_les_histoires_terminees:></div>
 							<INCLURE{fond=inclure/liste-cadavres-fin,rub_jeu=#GET{rub_jeu}} />
 						</div>
 					</div>
@@ -45,7 +45,7 @@
 						[(#ENV{creer}|non)
 							<div class="bord">
 								<b>Reprendre une histoire en cours :</b> quelle histoire dans la liste ci-dessous souhaitez-vous lancer sur ce poste ?
-								<br /><i><:petitfablab:seules_histoires_administrateur:></i>
+								<br /><i><:petitfablabv2:seules_histoires_administrateur:></i>
 							</div>
 							<BOUCLE_admin(RUBRIQUES){titre==jeu}{tout}>
 								<B_admin1>
@@ -80,7 +80,7 @@
 									</ul>
 								<//B_admin1>
 							</BOUCLE_admin>
-							<div class="bord"><:petitfablab:dans_quelle_rubrique:></div>
+							<div class="bord"><:petitfablabv2:dans_quelle_rubrique:></div>
 							<BOUCLE_admin2(RUBRIQUES){titre==jeu}{tout}>
 								<BOUCLE_admin21(RUBRIQUES){id_parent=#ID_RUBRIQUE}{id_auteur=#SESSION{id_auteur}}{par num titre, titre}{'<br />'}>
 									<a href="[(#SELF|parametre_url{creer,#ID_RUBRIQUE})]">#TITRE</a>
