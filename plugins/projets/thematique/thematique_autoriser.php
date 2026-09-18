@@ -39,7 +39,7 @@ function autoriser_thematique_configurer_dist($faire, $type, $id, $qui, $opt) {
  * Fait suite au commit 3d1639a6 (#420) qui laissait cette restriction "à
  * traiter séparément".
  *
- * Garde `function_exists` : le plugin contrib `autorite` (plugins/autorite,
+ * Garde `function_exists` : le plugin contrib `autorite` (plugins/spip/autorite,
  * pas maison) déclare lui aussi `autoriser_article_modifier()` en dur (pas
  * de suffixe `_dist`) dans inc/autoriser.php, conditionnellement à sa
  * config stockée en meta (clé `autorite`, ex. option "auteur peut modifier

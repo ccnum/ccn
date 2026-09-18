@@ -1,6 +1,6 @@
-plugins/ccn/ccn_pipelines.php:52: Compression vidéo document #
-plugins/fictions/fictions_pipelines.php:33: %Blog Pédagogique%
-plugins/thematique/thematique_administrations.php:102: Bibliothèque
-plugins/thematique/thematique_administrations.php:126: Bibliothèque
-plugins/thematique/thematique_administrations.php:436: Blog pédagogique
-plugins/thematique/thematique_administrations.php:437: Contenu éditorial
+plugins/projets/ccn/ccn_pipelines.php:52: Compression vidéo document #
+plugins/projets/fictions/fictions_pipelines.php:33: %Blog Pédagogique%
+plugins/projets/thematique/thematique_administrations.php:102: Bibliothèque
+plugins/projets/thematique/thematique_administrations.php:126: Bibliothèque
+plugins/projets/thematique/thematique_administrations.php:436: Blog pédagogique
+plugins/projets/thematique/thematique_administrations.php:437: Contenu éditorial

@@ -5,7 +5,7 @@
  * site (ccn_verifier_uploads() ci-dessous en fait la vérification
  * serveur), à partir de la méta 'formats_documents_forum'. Utilisée pour
  * générer l'attribut HTML accept="" des inputs file correspondants (cf
- * plugins/thematique/formulaires/forum0.html/forum1.html et
+ * plugins/projets/thematique/formulaires/forum0.html/forum1.html et
  * formulaires/methodes_upload/upload.html), afin que le sélecteur de
  * fichiers du navigateur ne propose pas d'emblée des formats qui seront de
  * toute façon rejetés côté serveur.

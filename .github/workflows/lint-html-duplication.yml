@@ -3,10 +3,10 @@ name: Lint - duplication HTML (thematique, fictions, petitfablab, ccn)
 on:
   pull_request:
     paths:
-      - 'plugins/thematique/**/*.html'
-      - 'plugins/fictions/**/*.html'
-      - 'plugins/petitfablab/**/*.html'
-      - 'plugins/ccn/**/*.html'
+      - 'plugins/projets/thematique/**/*.html'
+      - 'plugins/projets/fictions/**/*.html'
+      - 'plugins/projets/petitfablab/**/*.html'
+      - 'plugins/projets/ccn/**/*.html'
       - '.ci/check_html_duplication.js'
       - '.ci/html-duplication-baseline.txt'
       - 'package.json'
@@ -16,10 +16,10 @@ on:
       - dev
       - main
     paths:
-      - 'plugins/thematique/**/*.html'
-      - 'plugins/fictions/**/*.html'
-      - 'plugins/petitfablab/**/*.html'
-      - 'plugins/ccn/**/*.html'
+      - 'plugins/projets/thematique/**/*.html'
+      - 'plugins/projets/fictions/**/*.html'
+      - 'plugins/projets/petitfablab/**/*.html'
+      - 'plugins/projets/ccn/**/*.html'
       - '.ci/check_html_duplication.js'
       - '.ci/html-duplication-baseline.txt'
       - 'package.json'

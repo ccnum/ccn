@@ -80,7 +80,7 @@ def iter_files(plugin_root: Path, exclude_dirs: set):
 
 def check_plugin(name: str):
     """Renvoie (missing, lang_key_count, ccn_lang_prop_count) pour un plugin."""
-    plugin_root = REPO_ROOT / "plugins" / name
+    plugin_root = REPO_ROOT / "plugins" / "projets" / name
     lang_file = find_lang_file(plugin_root, name)
     lang_keys = load_lang_keys(lang_file)
 

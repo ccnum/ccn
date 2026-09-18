@@ -51,7 +51,7 @@ function thematique_afficher_rubrique_utilisateur_prof($motcle, $role) {
 }
 
 /**
- * Année scolaire courante (cookie/GET, cf plugins/ccn/ccn_options.php).
+ * Année scolaire courante (cookie/GET, cf plugins/projets/ccn/ccn_options.php).
  *
  * Doit rester dans ce fichier _fonctions.php (auto-inclus à chaque appel),
  * pas dans _pipelines.php : le pipeline pre_boucle interpole l'appel à cette
@@ -132,7 +132,7 @@ function thematique_annee_article($id_article) {
 
 /**
  * Année scolaire réelle (calendaire), indépendante du cookie/GET de
- * sélection d'année (cf plugins/ccn/ccn_options.php). Sert à distinguer
+ * sélection d'année (cf plugins/projets/ccn/ccn_options.php). Sert à distinguer
  * l'année scolaire réellement en cours d'une année archivée consultée
  * via le sélecteur du menu haut.
  */

@@ -1,7 +1,7 @@
 # check_lang_hardcoded.py
 
-Détecte le texte français codé en dur dans `plugins/thematique`,
-`plugins/fictions`, `plugins/petitfablab` et `plugins/ccn` (hors `lang/`,
+Détecte le texte français codé en dur dans `plugins/projets/thematique`,
+`plugins/projets/fictions`, `plugins/projets/petitfablab` et `plugins/projets/ccn` (hors `lang/`,
 `squelettes/lang/` et `vendor/` de chacun), pour forcer le passage par
 un item de langue (`<:module:cle:>`/`_T('module:cle')`, `CCN.lang` côté
 JS — ce dernier pont n'existe que pour thematique, cf `check_lang_keys.py`
@@ -27,8 +27,8 @@ python3 .ci/check_lang_hardcoded.py
 
 Le script échoue (exit 1) si du texte en dur absent de
 `lang-check-baseline.txt` est détecté. Le CI (`.github/workflows/lint-lang.yml`)
-exécute ce même check sur toute PR touchant `plugins/thematique/**`,
-`plugins/fictions/**`, `plugins/petitfablab/**` ou `plugins/ccn/**`.
+exécute ce même check sur toute PR touchant `plugins/projets/thematique/**`,
+`plugins/projets/fictions/**`, `plugins/projets/petitfablab/**` ou `plugins/projets/ccn/**`.
 
 ## Exceptions dans la baseline
 
@@ -43,12 +43,12 @@ exécute ce même check sur toute PR touchant `plugins/thematique/**`,
   candidats à un item de langue (la BDD ne se traduit pas au chargement de
   la page). Ajoutées à la baseline lors de l'élargissement du scan à tout
   le plugin (2026-08).
-- `plugins/ccn/ccn_pipelines.php` (`Compression vidéo document #`) :
+- `plugins/projets/ccn/ccn_pipelines.php` (`Compression vidéo document #`) :
   libellé de job passé à `queue_add_job()`, visible seulement dans le
   moniteur de tâches de fond de l'espace privé (admin), pas dans un
   squelette public rendu au visiteur. Ajoutée lors de l'extension du
-  scan à `plugins/ccn` (2026-09).
-- `plugins/fictions/fictions_pipelines.php` (`%Blog Pédagogique%`) :
+  scan à `plugins/projets/ccn` (2026-09).
+- `plugins/projets/fictions/fictions_pipelines.php` (`%Blog Pédagogique%`) :
   motif SQL `LIKE` comparé au titre d'une rubrique en base
   (`sql_getfetsel(..., 'titre LIKE ' . sql_quote('%Blog Pédagogique%'))`),
   jamais affiché — le traduire casserait la requête plutôt que
@@ -91,8 +91,8 @@ en dur, mais pas la validité des clés utilisées. Une clé mal orthographiée
 (`<:thematique:mauvaize_cle:>`) s'affiche telle quelle en prod sans faire
 échouer le lint anti-texte-en-dur.
 
-`check_lang_keys.py` couvre `plugins/thematique`, `plugins/fictions`,
-`plugins/petitfablab` et `plugins/ccn` : pour chacun, toute clé
+`check_lang_keys.py` couvre `plugins/projets/thematique`, `plugins/projets/fictions`,
+`plugins/projets/petitfablab` et `plugins/projets/ccn` : pour chacun, toute clé
 référencée doit exister :
 - `<:module:cle:>` et `_T('module:cle')` (module = nom du plugin) →
   doivent exister dans son fichier de langue, cherché à la fois en
@@ -102,7 +102,7 @@ référencée doit exister :
   `<:fictions:...:>` y ferait donc immédiatement échouer le check
   (aucune actuellement) ;
 - `CCN.lang.cle` côté JS → doit exister comme propriété de l'objet
-  `CCN.lang` construit dans `plugins/thematique/squelettes/noisettes/timeline.html`.
+  `CCN.lang` construit dans `plugins/projets/thematique/squelettes/noisettes/timeline.html`.
   Vérifié uniquement pour thematique : c'est le seul plugin à avoir ce
   pont PHP → JS, les trois autres ne l'utilisent pas.
 
@@ -119,7 +119,7 @@ sans exception tolérée.
 # check_hardcoded_paths.py
 
 Détecte deux types de liens en dur dans les squelettes `.html` de
-`plugins/thematique`, `plugins/fictions`, `plugins/petitfablab` et `plugins/ccn` :
+`plugins/projets/thematique`, `plugins/projets/fictions`, `plugins/projets/petitfablab` et `plugins/projets/ccn` :
 
 1. Ressources du plugin (`img/`, `css/`, `js/`, `pdf/`) qui n'utilisent pas
    `#CHEMIN{...}` (ou `#ENV{chemin}`/`#DOSSIER_SQUELETTE`). Un chemin
@@ -152,8 +152,8 @@ pour régénérer après un faux positif volontaire).
 # check_html_duplication.js
 
 Détecte le HTML/squelette SPIP dupliqué (copier-coller) dans les plugins
-maison (`plugins/petitfablab`, `plugins/fictions`, `plugins/thematique`,
-`plugins/ccn`), via [jscpd](https://github.com/kucherenko/jscpd)
+maison (`plugins/projets/petitfablab`, `plugins/projets/fictions`, `plugins/projets/thematique`,
+`plugins/projets/ccn`), via [jscpd](https://github.com/kucherenko/jscpd)
 (`node_modules/.bin/jscpd`, dépendance dev npm — seul script `.ci/` en
 Node, les autres sont en PHP/Python).
 
@@ -178,7 +178,7 @@ présent (8 clones pour thematique seul lors de la mise en place, 2026-08 ;
 # check_php_duplication.js
 
 Même principe que `check_html_duplication.js` (jscpd), appliqué au PHP de
-`plugins/thematique`, `plugins/fictions`, `plugins/petitfablab` et `plugins/ccn`
+`plugins/projets/thematique`, `plugins/projets/fictions`, `plugins/projets/petitfablab` et `plugins/projets/ccn`
 (pattern `**/*.php` au lieu de `**/*.html`).
 
 Usage local (nécessite `npm ci` au préalable) :

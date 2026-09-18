@@ -3,20 +3,20 @@ name: Lint - texte en dur (thematique, fictions, petitfablab, ccn)
 on:
   pull_request:
     paths:
-      - 'plugins/thematique/**'
-      - 'plugins/fictions/**'
-      - 'plugins/petitfablab/**'
-      - 'plugins/ccn/**'
+      - 'plugins/projets/thematique/**'
+      - 'plugins/projets/fictions/**'
+      - 'plugins/projets/petitfablab/**'
+      - 'plugins/projets/ccn/**'
       - '.ci/**'
   push:
     branches:
       - dev
       - main
     paths:
-      - 'plugins/thematique/**'
-      - 'plugins/fictions/**'
-      - 'plugins/petitfablab/**'
-      - 'plugins/ccn/**'
+      - 'plugins/projets/thematique/**'
+      - 'plugins/projets/fictions/**'
+      - 'plugins/projets/petitfablab/**'
+      - 'plugins/projets/ccn/**'
       - '.ci/**'
 
 jobs:

@@ -152,7 +152,7 @@ if [ "${SPIP_VERSION_SITE}" != "thematique" ]; then
 fi
 if [ "${SPIP_VERSION_SITE}" = "fictionsv2" ] || [ "${SPIP_VERSION_SITE}" = "petitfablabv2" ]; then
 	# Socle commun aux deux plugins "cadavre exquis" (squelettes/assets
-	# partagés, cf plugins/cadavrexquis/) — nécessaire à necessite dans
+	# partagés, cf plugins/projets/cadavrexquis/) — nécessaire à necessite dans
 	# leurs paquet.xml respectifs, mais spip plugins:activer n'active pas
 	# automatiquement les dépendances non déjà connues du cache paquets.
 	spip plugins:activer cadavrexquis -y
@@ -229,7 +229,7 @@ define('_VIMEO_ACCESS_TOKEN', '${VIMEO_ACCESS_TOKEN:-}');
 // false pour un projet CCN qui ne repart pas d'une année sur l'autre :
 // désactive la création automatique de la structure de rentrée (rubrique
 // de l'année + articles jalons, cf
-// plugins/thematique/genie/thematique_rentree_annee.php)
+// plugins/projets/thematique/genie/thematique_rentree_annee.php)
 define('_CCN_PROJET_ACTIVE', '${CCN_PROJET_ACTIVE:-true}' !== 'false');
 ?>
 MAINEOF

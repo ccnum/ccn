@@ -36,7 +36,7 @@ const os = require('node:os');
 const path = require('node:path');
 
 const repoRoot = path.dirname(__dirname);
-const scanRoots = ['plugins/thematique', 'plugins/fictions', 'plugins/petitfablab', 'plugins/ccn'].map((p) => path.join(repoRoot, p));
+const scanRoots = ['plugins/projets/thematique', 'plugins/projets/fictions', 'plugins/projets/petitfablab', 'plugins/projets/ccn'].map((p) => path.join(repoRoot, p));
 const jscpdBin = path.join(repoRoot, 'node_modules', '.bin', 'jscpd');
 
 const args = process.argv.slice(2);

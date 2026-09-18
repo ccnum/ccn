@@ -236,7 +236,7 @@ function thematique_cioidc_calculer_statut(bool $is_webmestre, string $profils, 
 // l'appelant) : un webmestre qui se connecte pour la première fois sur ce site précis
 // n'a pas encore 'oui' en base avant ce point (chaque CCN a sa propre table
 // spip_auteurs), il serait bloqué à tort si on testait plus tôt. cioidc_session()
-// (plugins/cioidc/inc/cioidc_session.php) ouvre la session juste après ce pipeline :
+// (plugins/spip/cioidc/inc/cioidc_session.php) ouvre la session juste après ce pipeline :
 // rediriger ici empêche la session de s'ouvrir, sans avoir à toucher au plugin tiers
 // cioidc.
 function thematique_cioidc_bloquer_si_archive(array $auteur) {

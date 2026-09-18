@@ -25,7 +25,7 @@ if (!defined('_ECRIRE_INC_VERSION')) {
  * défini depuis la variable d'environnement Docker CCN_PROJET_ACTIVE) pour
  * les CCN qui ne repartent pas d'une année sur l'autre.
  *
- * @see plugins/thematique/genie/thematique_rentree_poubelle.php pour le
+ * @see plugins/projets/thematique/genie/thematique_rentree_poubelle.php pour le
  *      même schéma de déclenchement (une fois par an, en septembre).
  *
  * @param int $last
