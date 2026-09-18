@@ -47,8 +47,8 @@
                 </button>
             </div>
             <div class="liste-ressources">
-                <BOUCLE_mot(MOTS){titre=ressources}>
-                    <BOUCLE_articles(ARTICLES){id_mot}{date>=#CONST{_DATE_DEBUT}}{date<=#CONST{_DATE_FIN}}{tout}>
+                <BOUCLE_rubrique(RUBRIQUES){titre=Ressources}>
+                    <BOUCLE_articles(ARTICLES){id_rubrique}>
                         <BOUCLE_auteur(AUTEURS){id_article}>
                             #SET{nom_auteur, #NOM}
                         </BOUCLE_auteur>
@@ -61,7 +61,7 @@
                             env
                         } />
                     </BOUCLE_articles>
-                </BOUCLE_mot>
+                </BOUCLE_rubrique>
             </div>
         </div>
     </div>
