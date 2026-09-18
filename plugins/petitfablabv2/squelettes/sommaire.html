@@ -1,0 +1,167 @@
+#SET{rub_jeu,#ENV{rub_jeu}}
+<BOUCLE_jeu(RUBRIQUES){si #ENV{rub_jeu}|non}{titre==jeu}{!par id_rubrique}{tout}>
+	<BOUCLE_j1(RUBRIQUES){id_parent=#ID_RUBRIQUE}{0,1}{!par id_rubrique}{tout}>
+		#SET{rub_jeu, #ID_RUBRIQUE}
+	</BOUCLE_j1>
+</BOUCLE_jeu>
+[(#SESSION{login}|oui)#SET{ecriture,oui}]
+<INCLURE{fond=inclure/layout_init,ecriture=oui} />
+[(#ENV{liste}|non)<meta http-equiv="refresh" content="300" />]
+
+<!-- BOOK -->
+<div id="global-ecriture">
+	<div id="global-spacer"></div>
+	<div class="global-content">
+		<div class="content">
+			<div class="content-left-small">
+				<INCLURE{fond=inclure/colonne_gauche,id_rubrique=#GET{rub_jeu}, liste} />
+			</div>
+			[(#ENV{liste}|non)
+			<div class="content-right-large">
+				<div class="texte-presentation" style="position: relative; margin: 60px 20px 0px 100px;">
+					[<div class="#EDIT{descriptif}" style="border-left: 5px #ff6b6b solid; padding-left: 15px; padding-right: 5px;">
+						(#DESCRIPTIF)
+					</div>]
+				</div>
+				<!-- LISTE DES CADAVRES -->
+				[(#FIN|=={#GET{var_fin}}|non)
+					<div class="content-right-large">
+						<div class="texte-presentation">
+							<div class="bord"><:petitfablab:grille_histoires_en_cours:></div>
+							<INCLURE{fond=inclure/liste-cadavres-visiteur,rub_jeu=#GET{rub_jeu}} />
+						</div>
+						<div class="texte-presentation">
+							<div class="bord"><:petitfablab:et_les_histoires_terminees:></div>
+							<INCLURE{fond=inclure/liste-cadavres-fin,rub_jeu=#GET{rub_jeu}} />
+						</div>
+					</div>
+				]
+			</div>
+			]
+			[(#ENV{liste}|oui)
+			<div class="content-right-large">
+				<div class="texte-presentation">
+					[(#SESSION{id_auteur}|oui)
+						[(#ENV{creer}|non)
+							<div class="bord">
+								<b>Reprendre une histoire en cours :</b> quelle histoire dans la liste ci-dessous souhaitez-vous lancer sur ce poste ?
+								<br /><i><:petitfablab:seules_histoires_administrateur:></i>
+							</div>
+							<BOUCLE_admin(RUBRIQUES){titre==jeu}{tout}>
+								<B_admin1>
+								<ul>
+								<BOUCLE_admin1(RUBRIQUES){tous}{id_parent=#ID_RUBRIQUE}{id_auteur=#SESSION{id_auteur}}{par num titre, titre}{'<br />'}>
+									<li>
+										#TITRE
+										<B_admin1112>
+											<ul>
+										<BOUCLE_admin1112(RUBRIQUES){tous}{id_parent=#ID_RUBRIQUE}{par num titre, titre}>
+											<li><a target="_blank" href="[(#SELF|parametre_url{liste,''}|parametre_url{page,ecriture}|parametre_url{rub_jeu,#ID_RUBRIQUE})]">#TITRE</a></li>
+										</BOUCLE_admin1112>
+											</ul>
+										</B_admin1112>
+									</li>
+								</BOUCLE_admin1>
+								</ul>
+								</B_admin1>
+									<ul>
+									<BOUCLE_admin11(RUBRIQUES){tous}{id_parent=#ID_RUBRIQUE}{par num titre, titre}>
+										<li>
+											#TITRE
+											<B_admin111>
+												<ul>
+											<BOUCLE_admin111(RUBRIQUES){tous}{id_parent=#ID_RUBRIQUE}{par num titre, titre}>
+												<li><a target="_blank" href="[(#SELF|parametre_url{liste,''}|parametre_url{page,ecriture}|parametre_url{rub_jeu,#ID_RUBRIQUE})]">#TITRE</a></li>
+											</BOUCLE_admin111>
+												</ul>
+											</B_admin111>
+										</li>
+									</BOUCLE_admin11>
+									</ul>
+								<//B_admin1>
+							</BOUCLE_admin>
+							<div class="bord"><:petitfablab:dans_quelle_rubrique:></div>
+							<BOUCLE_admin2(RUBRIQUES){titre==jeu}{tout}>
+								<BOUCLE_admin21(RUBRIQUES){id_parent=#ID_RUBRIQUE}{id_auteur=#SESSION{id_auteur}}{par num titre, titre}{'<br />'}>
+									<a href="[(#SELF|parametre_url{creer,#ID_RUBRIQUE})]">#TITRE</a>
+								</BOUCLE_admin21>
+									<BOUCLE_admin211(RUBRIQUES){id_parent=#ID_RUBRIQUE}{par num titre, titre}{'<br />'}>
+										<a href="[(#SELF|parametre_url{creer,#ID_RUBRIQUE})]">#TITRE</a>
+									</BOUCLE_admin211>
+								<//B_admin21>
+							</BOUCLE_admin2>
+						]
+						[(#ENV{creer}|oui)
+							[(#ENV{creer}|=={ok}|non)
+							<div class="bord">
+								Actuellement dans la rubrique[ <b>(#INFO_TITRE{rubrique,#ENV{creer}})</b> ] on trouve les prologues suivant et leur utilisation :
+								<ul>
+								<BOUCLE_prologue(ARTICLES){id_rubrique=#ENV{creer}}>
+									<li>
+										[(#TITRE)(id_article[ (#ID_ARTICLE)])]<B_auteurs> par <BOUCLE_auteurs(AUTEURS){id_article}>#NOM</BOUCLE_auteurs>
+										<B_rub_prologue>
+											<ul>
+											<BOUCLE_rub_prologue(RUBRIQUES){descriptif=#ID_ARTICLE}{tous}><li>#TITRE</li></BOUCLE_rub_prologue>
+											</ul>
+										</B_rub_prologue>
+									</li>
+								</BOUCLE_prologue>
+								</ul>
+							</div>
+							<div class="ajax">#FORMULAIRE_CREER_HISTOIRE{#ENV{creer},#SELF|parametre_url{creer,ok}}</div>
+							]
+							[(#ENV{creer}|=={ok}|oui)
+							<BOUCLE_admin_retour(RUBRIQUES){id_rubrique IN #ENV{rub}}{tous}{'<br />'}>
+								<a href="[(#SELF|parametre_url{creer|liste|rub,''}|parametre_url{page,ecriture}|parametre_url{rub_jeu,#ID_RUBRIQUE})]">#TITRE</a>
+							</BOUCLE_admin_retour>
+							]
+						]
+					]
+					[(#SESSION{id_auteur}|non)
+					<div class="ajax">#FORMULAIRE_LOGIN{#SELF|parametre_url{liste,log}}</div>
+					]
+				</div>
+			</div>
+			]
+		</div>
+	</div>
+</div>
+
+<INCLURE{fond=inclure/layout_end,ecriture=oui,rub_hist=#GET{rub_hist}} />
+
+<script type="text/javascript">
+$(document).ready(function() {
+	// RESIZE
+ 	window.onresize = resize_global_content;
+	resize_global_content();
+
+	// NICESCROLL
+
+	//
+	$('.liste-link').mouseover(function() {
+		var offset = $(this).offset();
+		var content_tooltip = $(this).find('.liste-tooltip-content').html();
+		$('#liste-tooltip').show();
+		$('#liste-tooltip').html(content_tooltip);
+		var hauteur_tooltip = $('#liste-tooltip-content').height();
+		$('#liste-tooltip').height(hauteur_tooltip);
+		var toptooltip = Math.round(offset.top);
+		toptooltip = toptooltip - hauteur_tooltip;
+		var lefttooltip = Math.round(offset.left);
+		lefttooltip -= 95;
+		$('#liste-tooltip').css('top', toptooltip -5);
+		$('#liste-tooltip').css('left', lefttooltip + 2);
+	});
+	$('.liste-link').mouseout(function() {
+		$('#liste-tooltip').hide();
+	});
+});
+// RESIZE
+function resize_global_content() {
+	h = $(window).height();
+	h -=61;
+	$('.global-content').height(h);
+	stitches_margin = ((h-60) - 258)/4;
+	$(".stitches-inner").css({'margin-top':stitches_margin});
+}
+</script>
