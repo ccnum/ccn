@@ -1621,7 +1621,15 @@ function thematique_a_missions_annee() {
 		return $a_missions = false;
 	}
 
-	return $a_missions = (bool) sql_getfetsel('id_article', 'spip_articles', 'id_rubrique=' . intval($id_rubrique));
+	// Issue #465 : ne compter que les missions publiées, cohérent avec le
+	// {statut=publie} de la BOUCLE_consignes de menu_consignes.html — sinon
+	// le bloc "Missions" pouvait s'afficher (titre + 0 icône) pour une
+	// rubrique ne contenant que des articles en poubelle/prop.
+	return $a_missions = (bool) sql_getfetsel(
+		'id_article',
+		'spip_articles',
+		'id_rubrique=' . intval($id_rubrique) . " AND statut='publie'"
+	);
 }
 
 /**
