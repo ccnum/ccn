@@ -1392,6 +1392,38 @@ function thematique_nom_auteur_commentaire($id_auteur) {
 }
 
 /**
+ * Un article est-il un jalon du projet (cap-sur-l-annee / la-rencontre,
+ * cf genie/thematique_rentree_annee.php) — mêmes mots-clés que
+ * header_sidebar.html (BOUCLE_test_jalon_header), mis en cache mémoire par
+ * requête. Sert notamment à ouvrir l'édition des jalons à tout intervenant
+ * (issue #468), pas seulement à l'unique auteur assigné à la création par
+ * le cron ou aux admins.
+ *
+ * @param int $id_article
+ * @return bool
+ */
+function thematique_article_est_jalon($id_article) {
+	static $cache = [];
+	$id_article = intval($id_article);
+	if (!$id_article) {
+		return false;
+	}
+	if (isset($cache[$id_article])) {
+		return $cache[$id_article];
+	}
+
+	$mot = sql_getfetsel(
+		'mots.titre',
+		'spip_mots_liens AS liens INNER JOIN spip_mots AS mots ON liens.id_mot=mots.id_mot',
+		'liens.objet=' . sql_quote('article')
+			. ' AND liens.id_objet=' . $id_article
+			. ' AND mots.titre IN (' . sql_quote('cap-sur-l-annee') . ',' . sql_quote('la-rencontre') . ')'
+	);
+
+	return $cache[$id_article] = (bool) $mot;
+}
+
+/**
  * Article jalon (cap-sur-l-annee / la-rencontre) de l'année scolaire active
  * portant un mot-clé donné, sous la forme "id|statut" (ou "0|" si absent) —
  * mis en cache mémoire par requête.

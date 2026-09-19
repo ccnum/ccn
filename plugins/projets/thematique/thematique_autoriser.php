@@ -54,14 +54,29 @@ function autoriser_thematique_configurer_dist($faire, $type, $id, $qui, $opt) {
  */
 if (!function_exists('autoriser_article_modifier')) {
 	function autoriser_article_modifier($faire, $type, $id, $qui, $opt) {
+		include_spip('thematique_fonctions');
+
 		if (!autoriser_article_modifier_dist($faire, $type, $id, $qui, $opt)) {
-			return false;
+			// Issue #468 : les jalons du projet (Cap sur l'année / La Rencontre,
+			// cf genie/thematique_rentree_annee.php) sont créés en statut 'prop'
+			// et liés au seul "premier intervenant" trouvé sur le projet — la
+			// règle SPIP standard (auteurs_objet()) ne laisse alors QUE lui (ou
+			// un admin) les éditer. N'importe quel intervenant du projet doit
+			// pouvoir les compléter, pas seulement celui assigné à la création.
+			if (
+				(($opt['statut'] ?? null) === null || !in_array($opt['statut'], ['publie', 'refuse'], true))
+				&& thematique_donner_role(intval($qui['id_auteur'] ?? 0)) === 'intervenant'
+				&& thematique_article_est_jalon($id)
+			) {
+				// on continue, sous les mêmes garde-fous (année passée, champ date) que le cas normal
+			} else {
+				return false;
+			}
 		}
 
 		// Issue #437 : une fois la nouvelle année scolaire créée, plus
 		// personne (admin compris) ne peut modifier un contenu (mission,
 		// réponse, événement, billet, ressource) d'une année passée.
-		include_spip('thematique_fonctions');
 		if (thematique_annee_est_passee(thematique_annee_article($id))) {
 			return false;
 		}
