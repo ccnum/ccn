@@ -91,231 +91,166 @@ function thematique_upgrade($nom_meta_base_version, $version_cible) {
 }
 
 /**
- * Fusionne les deux arborescences "Bibliothèque" :
+ * Réorganise l'arborescence "Ressources" (issue #299, décision du 18/09) :
  *
- * - la Bibliothèque racine (id_parent = 0)
- * - la Bibliothèque située sous la rubrique "2018"
+ * 1. trouve la rubrique racine (id_parent = 0) portant le mot-clé
+ *    "ressources" (celle créée par thematique_configurer_rubriques(),
+ *    jusqu'ici titrée "Espace Ressources") ;
+ * 2. parmi ses rubriques filles déjà existantes, en renomme 3 en
+ *    "Méthodologie", "Pédagogie" et "Thématique" (pas de création : on
+ *    réutilise des rubriques déjà là, pour ne perdre aucun contenu déjà
+ *    lié à elles) ;
+ * 3. déplace tous les articles de tout le secteur (racine + toutes ses
+ *    sous-rubriques, à toute profondeur) vers la rubrique "Pédagogie" ;
+ * 4. supprime toutes les rubriques du secteur devenues inutiles (tout sauf
+ *    la racine et les 3 rubriques renommées) ;
+ * 5. renomme la racine en "Ressources".
  *
- * Tous les articles des sous-rubriques sont déplacés vers la
- * Bibliothèque racine.
- *
- * Les auteurs liés aux rubriques supprimées sont également liés
- * à la Bibliothèque racine avant suppression de leurs anciennes
- * associations.
- *
- * Les associations (mots-clés) <-> (rubriques supprimées) sont supprimées.
- *
- * Enfin :
- * - la Bibliothèque racine est renommée en Ressources ;
- * - toutes les rubriques de l'arborescence sont supprimées,
- *   sauf la racine.
+ * Idempotente : si la racine est déjà titrée "Ressources" et possède déjà
+ * une fille "Pédagogie", on considère la migration déjà faite et on ne
+ * touche à rien (évite de re-brasser les rubriques à un réexécution du
+ * job de maj, cf thematique_rentree_annee.php pour le même principe de
+ * garde).
  */
 function thematique_migrer_bibliotheques() {
-    // -----------------------------------------------------------------
-    // 1. Trouver la Bibliothèque racine
-    // -----------------------------------------------------------------
+	// -----------------------------------------------------------------
+	// 1. Trouver la rubrique racine "ressources" (mot-clé, pas titre :
+	// le titre est justement ce qu'on va changer, et thematique_-
+	// configurer_rubriques() n'a jamais garanti "Bibliothèque" comme titre).
+	// -----------------------------------------------------------------
 
-    $id_bibliotheque = intval(sql_getfetsel(
-        'id_rubrique',
-        'spip_rubriques',
-        'titre=' . sql_quote('Bibliothèque') . ' AND id_parent=0'
-    ));
+	$id_racine = (int) sql_getfetsel(
+		'sr.id_rubrique',
+		'spip_rubriques AS sr
+			INNER JOIN spip_mots_liens AS sml ON (sr.id_rubrique=sml.id_objet AND sml.objet=' . sql_quote('rubrique') . ')
+			INNER JOIN spip_mots AS sm ON sml.id_mot=sm.id_mot',
+		'sm.titre=' . sql_quote('ressources') . ' AND sr.id_parent=0'
+	);
 
-    if (!$id_bibliotheque) {
-        // Rien à migrer.
-        return;
-    }
+	if (!$id_racine) {
+		spip_log(
+			'thematique_migrer_bibliotheques : aucune rubrique racine taguée "ressources", rien à migrer',
+			'thematique'
+		);
+		return;
+	}
 
-    // -----------------------------------------------------------------
-    // 2. Trouver la Bibliothèque située sous 2018
-    // -----------------------------------------------------------------
+	// -----------------------------------------------------------------
+	// Garde d'idempotence : déjà migré ?
+	// -----------------------------------------------------------------
 
-    $id_2018 = intval(sql_getfetsel(
-        'id_rubrique',
-        'spip_rubriques',
-        'titre=' . sql_quote('2018')
-    ));
+	$deja_migre = sql_countsel('spip_rubriques', 'id_parent=' . $id_racine . ' AND titre=' . sql_quote('Pédagogie'));
+	if ($deja_migre) {
+		spip_log(
+			"thematique_migrer_bibliotheques : rubrique #$id_racine déjà migrée (fille 'Pédagogie' présente), rien à faire",
+			'thematique'
+		);
+		return;
+	}
 
-    $id_bibliotheque_2018 = 0;
+	// -----------------------------------------------------------------
+	// 2. Choisir 3 rubriques filles déjà existantes et les renommer.
+	//
+	// Ordre par id_rubrique : arbitraire mais déterministe (peu importe
+	// laquelle des 3 devient laquelle, tout le contenu est de toute façon
+	// re-regroupé dans "Pédagogie" juste après).
+	// -----------------------------------------------------------------
 
-    if ($id_2018) {
-        $id_bibliotheque_2018 = intval(sql_getfetsel(
-            'id_rubrique',
-            'spip_rubriques',
-            'titre=' . sql_quote('Bibliothèque')
-            . ' AND id_parent=' . $id_2018
-        ));
-    }
+	$enfants = sql_allfetsel('id_rubrique', 'spip_rubriques', 'id_parent=' . $id_racine, '', 'id_rubrique ASC');
 
-    // -----------------------------------------------------------------
-    // 3. Construire récursivement les deux arborescences
-    //
-    // Le tableau est construit en profondeur : les enfants sont
-    // placés avant leurs parents. C'est utile pour supprimer ensuite
-    // les rubriques dans le bon ordre.
-    // -----------------------------------------------------------------
+	if (count($enfants) < 3) {
+		spip_log(
+			'thematique_migrer_bibliotheques : rubrique #' . $id_racine . ' a moins de 3 sous-rubriques (' . count(
+				$enfants
+			) . '), abandon (rien à renommer)',
+			'thematique' . _LOG_ERREUR
+		);
+		return;
+	}
 
-    $vus = [];
+	$nouveaux_titres = ['Méthodologie', 'Pédagogie', 'Thématique'];
+	$id_pedagogie = 0;
 
-    $rubriques_a_traiter = [];
+	foreach (array_slice($enfants, 0, 3) as $index => $enfant) {
+		$id_enfant = intval($enfant['id_rubrique']);
+		$titre = $nouveaux_titres[$index];
 
-    $ajouter_arborescence = function ($id_rubrique) use (&$ajouter_arborescence, &$vus, &$rubriques_a_traiter) {
-        $id_rubrique = intval($id_rubrique);
+		sql_updateq('spip_rubriques', ['titre' => $titre], 'id_rubrique=' . $id_enfant);
 
-        if (!$id_rubrique || isset($vus[$id_rubrique])) {
-            return;
-        }
+		if ($titre === 'Pédagogie') {
+			$id_pedagogie = $id_enfant;
+		}
+	}
 
-        $vus[$id_rubrique] = true;
+	// -----------------------------------------------------------------
+	// 3. Construire récursivement toute l'arborescence du secteur
+	// (racine comprise), enfants avant parents — utile pour supprimer
+	// ensuite dans le bon ordre.
+	// -----------------------------------------------------------------
 
-        $enfants = sql_allfetsel(
-            'id_rubrique',
-            'spip_rubriques',
-            'id_parent=' . $id_rubrique
-        );
+	$vus = [];
+	$rubriques_du_secteur = [];
 
-        foreach ($enfants as $enfant) {
-            $ajouter_arborescence($enfant['id_rubrique']);
-        }
+	$ajouter_arborescence = function ($id_rubrique) use (&$ajouter_arborescence, &$vus, &$rubriques_du_secteur) {
+		$id_rubrique = intval($id_rubrique);
 
-        // Les enfants sont ajoutés avant le parent.
-        $rubriques_a_traiter[] = $id_rubrique;
-    };
+		if (!$id_rubrique || isset($vus[$id_rubrique])) {
+			return;
+		}
+		$vus[$id_rubrique] = true;
 
-    // Bibliothèque racine + tous ses descendants.
-    $ajouter_arborescence($id_bibliotheque);
+		$enfants = sql_allfetsel('id_rubrique', 'spip_rubriques', 'id_parent=' . $id_rubrique);
+		foreach ($enfants as $enfant) {
+			$ajouter_arborescence($enfant['id_rubrique']);
+		}
 
-    // Bibliothèque 2018 + tous ses descendants.
-    if ($id_bibliotheque_2018) {
-        $ajouter_arborescence($id_bibliotheque_2018);
-    }
+		$rubriques_du_secteur[] = $id_rubrique;
+	};
 
-    // -----------------------------------------------------------------
-    // 4. Déplacer tous les articles vers la Bibliothèque racine
-    //
-    // On ne touche pas aux associations des articles : seul
-    // id_rubrique est modifié.
-    // -----------------------------------------------------------------
+	$ajouter_arborescence($id_racine);
 
-    foreach ($rubriques_a_traiter as $id_rubrique) {
-        if ($id_rubrique == $id_bibliotheque) {
-            continue;
-        }
+	// -----------------------------------------------------------------
+	// 4. Déplacer tous les articles du secteur vers "Pédagogie".
+	// -----------------------------------------------------------------
 
-        sql_updateq(
-            'spip_articles',
-            ['id_rubrique' => $id_bibliotheque],
-            'id_rubrique=' . intval($id_rubrique)
-        );
-    }
+	foreach ($rubriques_du_secteur as $id_rubrique) {
+		if ($id_rubrique === $id_pedagogie) {
+			continue;
+		}
 
-    // -----------------------------------------------------------------
-    // 5. Pour chaque auteur lié à une rubrique supprimée :
-    //    créer l'association avec la Bibliothèque racine si nécessaire.
-    // -----------------------------------------------------------------
+		sql_updateq('spip_articles', ['id_rubrique' => $id_pedagogie], 'id_rubrique=' . $id_rubrique);
+	}
 
-    foreach ($rubriques_a_traiter as $id_rubrique) {
-        if ($id_rubrique == $id_bibliotheque) {
-            continue;
-        }
+	// -----------------------------------------------------------------
+	// 5. Supprimer les rubriques du secteur devenues inutiles : tout sauf
+	// la racine et les 3 rubriques renommées à l'étape 2. On nettoie
+	// d'abord leurs associations mots-clés/auteurs (spip_rubriques n'a pas
+	// de suppression en cascade), puis on les supprime feuilles d'abord.
+	// -----------------------------------------------------------------
 
-        $auteurs = sql_allfetsel(
-            'id_auteur',
-            'spip_auteurs_liens',
-            'objet=' . sql_quote('rubrique')
-            . ' AND id_objet=' . intval($id_rubrique)
-        );
+	$id_a_conserver = array_merge([$id_racine], array_column(array_slice($enfants, 0, 3), 'id_rubrique'));
+	$id_a_conserver = array_map('intval', $id_a_conserver);
 
-        foreach ($auteurs as $auteur) {
-            $id_auteur = intval($auteur['id_auteur']);
+	foreach ($rubriques_du_secteur as $id_rubrique) {
+		if (in_array($id_rubrique, $id_a_conserver, true)) {
+			continue;
+		}
 
-            if (!$id_auteur) {
-                continue;
-            }
+		sql_delete('spip_mots_liens', 'objet=' . sql_quote('rubrique') . ' AND id_objet=' . $id_rubrique);
+		sql_delete('spip_auteurs_liens', 'objet=' . sql_quote('rubrique') . ' AND id_objet=' . $id_rubrique);
+		sql_delete('spip_rubriques', 'id_rubrique=' . $id_rubrique);
+	}
 
-            $deja_lie = sql_countsel(
-                'spip_auteurs_liens',
-                'id_auteur=' . $id_auteur
-                . ' AND id_objet=' . $id_bibliotheque
-                . ' AND objet=' . sql_quote('rubrique')
-            );
+	// -----------------------------------------------------------------
+	// 6. Renommer la racine en "Ressources".
+	// -----------------------------------------------------------------
 
-            if (!$deja_lie) {
-                sql_insertq(
-                    'spip_auteurs_liens',
-                    [
-                        'id_auteur' => $id_auteur,
-                        'id_objet' => $id_bibliotheque,
-                        'objet' => 'rubrique',
-                    ]
-                );
-            }
-        }
-    }
+	sql_updateq('spip_rubriques', ['titre' => 'Ressources'], 'id_rubrique=' . $id_racine);
 
-    // -----------------------------------------------------------------
-    // 6. Supprimer les associations mots-clés <-> rubriques
-    //    des rubriques qui vont disparaître.
-    // -----------------------------------------------------------------
-
-    foreach ($rubriques_a_traiter as $id_rubrique) {
-        if ($id_rubrique == $id_bibliotheque) {
-            continue;
-        }
-
-        sql_delete(
-            'spip_mots_liens',
-            'objet=' . sql_quote('rubrique')
-            . ' AND id_objet=' . intval($id_rubrique)
-        );
-    }
-
-    // -----------------------------------------------------------------
-    // 7. Supprimer les anciennes associations auteurs <-> rubriques.
-    //
-    // Les associations vers la Bibliothèque racine viennent d'être
-    // conservées ou créées ci-dessus.
-    // -----------------------------------------------------------------
-
-    foreach ($rubriques_a_traiter as $id_rubrique) {
-        if ($id_rubrique == $id_bibliotheque) {
-            continue;
-        }
-
-        sql_delete(
-            'spip_auteurs_liens',
-            'objet=' . sql_quote('rubrique')
-            . ' AND id_objet=' . intval($id_rubrique)
-        );
-    }
-
-    // -----------------------------------------------------------------
-    // 8. Supprimer les rubriques devenues inutiles.
-    //
-    // Comme les descendants sont dans le tableau avant leurs parents,
-    // on supprime d'abord les feuilles puis on remonte.
-    // -----------------------------------------------------------------
-
-    foreach ($rubriques_a_traiter as $id_rubrique) {
-        if ($id_rubrique == $id_bibliotheque) {
-            continue;
-        }
-
-        sql_delete(
-            'spip_rubriques',
-            'id_rubrique=' . intval($id_rubrique)
-        );
-    }
-
-    // -----------------------------------------------------------------
-    // 9. Renommer la Bibliothèque racine en Ressources.
-    // -----------------------------------------------------------------
-
-    sql_updateq(
-        'spip_rubriques',
-        ['titre' => 'Ressources'],
-        'id_rubrique=' . $id_bibliotheque
-    );
+	spip_log(
+		"thematique_migrer_bibliotheques : secteur #$id_racine migré, articles regroupés dans 'Pédagogie' (#$id_pedagogie)",
+		'thematique'
+	);
 }
 
 function thematique_vider_tables($nom_meta_base_version) {
