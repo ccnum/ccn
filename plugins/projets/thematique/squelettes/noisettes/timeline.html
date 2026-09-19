@@ -12,6 +12,10 @@
 	CCN.typeRestreint = [(#ENV{type_restreint}|json_encode)];
 	CCN.classeSelection = [(#ENV{restreint}|intval)];
 	CCN.role = "[(#ENV{role})]";
+	// Issue #437 : l'année affichée par la timeline (#ENV{annee_scolaire}) est
+	// l'année sélectionnée, pas forcément l'année réelle en cours — sert à
+	// masquer le bouton "répondre à la mission" sur une année archivée.
+	CCN.anneeEstPassee = [(#ENV{annee_scolaire}|thematique_annee_est_passee|json_encode)];
 
 
 	[(#REM)

@@ -292,7 +292,9 @@ function initConsignes(data) {
 		if (CCN.role === 'prof') {
 			if (has_current_classe_already_answered) {
 				nouvelleConsigne.showMyReponseButtonInTimeline();
-			} else {
+			} else if (!CCN.anneeEstPassee) {
+				// Issue #437 : sur une année archivée, on ne propose pas de créer
+				// une nouvelle réponse ; consulter une réponse existante reste ok.
 				nouvelleConsigne.showNewReponseButtonInTimeline();
 			}
 		}
