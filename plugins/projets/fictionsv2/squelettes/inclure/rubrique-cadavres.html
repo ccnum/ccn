@@ -8,9 +8,8 @@ publication d'un chapitre par un joueur. Extrait de inclure/rubrique.html
 cacheable sans risquer d'afficher un état de jeu périmé.
 ]
 #CACHE{0}
-<!-- ID et nom de l'auteur connecté -->
+<!-- ID de l'auteur connecté -->
 #SET{var_id_auteur,#SESSION{id_auteur}}
-#SET{var_nom_auteur,#SESSION{nom}}
 <!-- On recupere l'id du chapitre à masquer -->
 <BOUCLE_max_cadavres(ARTICLES){id_rubrique}{statut IN publie,prop}{par date}> </BOUCLE_max_cadavres>
 #SET{var_max_cadavres, #TOTAL_BOUCLE}
@@ -42,10 +41,19 @@ cacheable sans risquer d'afficher un état de jeu périmé.
 		<!-- L'utilisateur n'est pas sur son espace de travail -->
 			[(#GET{id_cadavre_hidden}|=={#_cadavres:COMPTEUR_BOUCLE}|oui)
 			<!-- Affichage du chapitre masque N-1 -->
+				[(#REM) #441 : comparaison par id_auteur (fiable, via une sous-boucle
+				AUTEURS - #NOM ou #ID_AUTEUR seuls ne sont pas fiables/disponibles
+				directement dans une boucle ARTICLES) plutôt que par #NOM (deux
+				auteurs peuvent porter le même nom affiché). ]
 				<!-- Si l'utilisateur est l'auteur du chapitre N-1  -->
-				[(#NOM|=={#GET{var_nom_auteur}}|oui)<INCLURE{fond=inclure/chapitre-visible,id_article} />]
+				<BOUCLE_est_auteur_chapitre(AUTEURS){id_article}{id_auteur=#GET{var_id_auteur}}{0,1}>
+					<INCLURE{fond=inclure/chapitre-visible,id_article} />
+				</BOUCLE_est_auteur_chapitre>
 				<!-- Si l'utilisateur n'est pas l'auteur du chapitre N-1  -->
-				[(#NOM|!={#GET{var_nom_auteur}}|oui)<INCLURE{fond=inclure/chapitre-visible,id_article,fin=non} />]
+				<BOUCLE_est_auteur_chapitre_sinon(AUTEURS){id_article}{0,1}>
+					<INCLURE{fond=inclure/chapitre-visible,id_article,fin=non} />
+				</BOUCLE_est_auteur_chapitre_sinon>
+				<//B_est_auteur_chapitre>
 			]
 			<!-- Affichage du chapitre masque N VERROUILLE -->
 			[(#GET{id_cadavre_hidden}|!={#_cadavres:COMPTEUR_BOUCLE}|oui)

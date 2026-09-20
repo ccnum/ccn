@@ -2,9 +2,8 @@
 RUBRIQUE.HTML > RUBRIQUE-BOUTON.HTML
 (affichage des boutons d'accès rapide dans la page rubrique.html)
 -->
-<!-- ID et nom de l'auteur connecté -->
+<!-- ID de l'auteur connecté -->
 #SET{var_id_auteur,#SESSION{id_auteur}}
-#SET{var_nom_auteur,#SESSION{nom}}
 
 <!-- on recupere l'id de la rubrique de travail -->
 <BOUCLE_id_zone_2(spip_auteurs_liens){objet = rubrique}{spip_auteurs_liens.id_auteur =  #GET{var_id_auteur}}{0,1}>
@@ -19,10 +18,11 @@ RUBRIQUE.HTML > RUBRIQUE-BOUTON.HTML
 <BOUCLE_annee(RUBRIQUES){titre==#ANNEE_SCOLAIRE}{tout}{0,1}>
 	<BOUCLE_rubriques_toutes(RUBRIQUES){id_parent=#ID_RUBRIQUE}{id_rubrique != #EVAL{_FICTIONSV2_ID_BLOG_PEDA}}{id_rubrique != #EVAL{_FICTIONSV2_ID_BLOG_AUTEUR}}>
 		<BOUCLE_zone_ecrivain_article(ARTICLES){id_rubrique}{!par date}{0,1}>
+			[(#REM) #441 : comparaison par #ID_AUTEUR (fiable) plutôt que par
+			#NOM (deux auteurs peuvent porter le même nom affiché). ]
 			<BOUCLE_zone_ecrivain_auteur(AUTEURS){id_article}{0,1}>
-				#SET{var_auteur, #NOM}
 				[(#SESSION{webmestre}|=={#GET{var_oui}}|?{' ',''})
-					[(#GET{var_nom_auteur}|=={#GET{var_auteur}}|?{' ',''})
+					[(#GET{var_id_auteur}|=={#ID_AUTEUR}|?{' ',''})
 					#SET{id_rubrique_prev, #ID_RUBRIQUE|moins{1}}
 					#SET{var_id_zone_2, #ID_RUBRIQUE}
 					]
