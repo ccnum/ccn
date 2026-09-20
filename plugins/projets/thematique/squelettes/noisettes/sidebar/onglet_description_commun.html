@@ -13,7 +13,7 @@
 	<div class="sidebar_bubble">
 		<div class="nettoyeur0"></div>
 		[(#TEXTE|oui)
-			<div class="bloc_texte">
+			<div class="bloc_texte bloc_texte_avec_modifier">
 				[<span class="spip">(#TEXTE|liens_ouvrants|image_reduire{500})</span>]
 				[(#REM) Issue 420 : même comportement que le crayon du titre —
 				un clic ouvre la modale de publication complète (titre, date,
@@ -50,8 +50,11 @@
 	]
 	<div class="sidebar_bubble">
 		<div class="bloc_documents">
+			[(#REM) Issue 420 : le bouton "Ajouter un document" dédié disparaît,
+			la modale complète ouverte par "Modifier" (cf plus haut) gère déjà
+			l'ajout de documents. La liste des documents déjà joints reste
+			affichée pour rester consultable/supprimable sans ouvrir la modale. ]
 			<INCLURE{fond=noisettes/inc/ajouter_document, id_article, env, ajax=documents} />
-			<INCLURE{fond=#ENV{fond_bloc_ajout_document}, id_article, env} />
 		</div>
 	</div>
 	[(#SESSION{role}|in_array{#LISTE{prof,admin}}|oui)
