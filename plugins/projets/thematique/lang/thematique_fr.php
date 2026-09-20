@@ -132,7 +132,7 @@ return [
 	// dans thematique_fonctions.php), issus des maquettes de l'issue #429 :
 	'publier_bandeau_mission'        => 'Publier une mission',
 	'publier_titre_mission'          => 'Rédiger votre mission',
-	'publier_champ_texte_mission'    => 'Réponse',
+	'publier_champ_texte_mission'    => 'Contenu',
 	'publier_bouton_mission'         => 'Publier la mission',
 	'publier_bandeau_reponse_mission' => 'Publier une réponse',
 	'publier_titre_reponse_mission'  => 'Rédiger votre réponse à la mission',
