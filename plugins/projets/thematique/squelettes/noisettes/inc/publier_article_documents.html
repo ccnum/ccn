@@ -40,8 +40,8 @@
 					</div>
 				</div>
 				<div class="raccourci-ligne">
-					[(#MODE|=={image}|oui)#SET{raccourci_prefixe, img}]
-					[(#MODE|=={image}|non)#SET{raccourci_prefixe, doc}]
+					[(#MIME_TYPE|match{image}|oui)#SET{raccourci_prefixe, img}]
+					[(#MIME_TYPE|match{image}|non)#SET{raccourci_prefixe, doc}]
 					<span class="raccourci" data-prefixe="#GET{raccourci_prefixe}" data-id-document="#ID_DOCUMENT" onclick="insererRaccourciDocument(this)" title="<:thematique:inserer_raccourci:>">&lt;#GET{raccourci_prefixe}#ID_DOCUMENT&gt;</span>
 				</div>
 				<div class="actions">
