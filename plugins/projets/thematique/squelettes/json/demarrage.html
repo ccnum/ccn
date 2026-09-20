@@ -1,4 +1,9 @@
-#CACHE{60}
+[(#REM) #CACHE{0} : assemble des fonds qui dépendent de
+#CONST{_ANNEE_SCOLAIRE} (cookie, cf ccn_options.php et le commentaire de
+json.html) — SPIP ne varie pas le cache par cookie, un #CACHE{60} sert la
+mauvaise année aux autres visiteurs/sessions pendant 60s après un
+changement d'année. ]
+#CACHE{0}
 {
     "projet": <INCLURE{fond=json/projet}{env}>,
     "classes": <INCLURE{fond=json/classes}{env}>,

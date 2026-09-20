@@ -116,6 +116,14 @@
 	border-color: var(--border-color-classe-9) !important;
 }
 
+/* Repli si la classe d'une réponse n'est pas (ou plus) dans la liste des
+classes de l'année active (cf reponse.js, this.classeIndex == -1) : gris
+neutre plutôt que fond transparent (invisible). */
+.bgc_classe_defaut {
+	background-color: var(--color-gris-2) !important;
+	border-color: var(--color-gris-2) !important;
+}
+
 /* .bgc_classe_N pose son fond en !important : sans cette règle plus
 spécifique et elle aussi !important, .selected ne peut jamais reprendre
 la main pour indiquer la classe sélectionnée dans le menu du bas. */
@@ -153,5 +161,8 @@ la main pour indiquer la classe sélectionnée dans le menu du bas. */
 }
 .reponse_border_9 {
 	border-color: var(--color-classe-9) !important;
+}
+.reponse_border_defaut {
+	border-color: var(--color-gris-2) !important;
 }
 

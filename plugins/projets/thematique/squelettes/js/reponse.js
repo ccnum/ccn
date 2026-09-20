@@ -32,7 +32,13 @@ function Reponse() {
 	 * Crée l'élément DOM et l'intègre dans la timeline.
 	 */
 	this.initDOM = function () {
-		const coul = this.classeIndex;
+		// this.classeIndex vaut -1 si la classe de cette réponse n'est pas (ou
+		// plus) dans this.data.classes (classe archivée/supprimée) : aucune
+		// règle CSS bgc_classe_-1/reponse_border_-1 n'existe, donc sans ce
+		// repli sur "defaut" le trait de connexion et la pastille classe
+		// restent invisibles (fond transparent) plutôt que d'afficher une
+		// couleur neutre.
+		const coul = this.classeIndex >= 0 ? this.classeIndex : 'defaut';
 		const date_texte = formatDateCourte(this.date);
 
 		this.div_base = $(`

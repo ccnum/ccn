@@ -1,4 +1,8 @@
-#CACHE{60}
+[(#REM) #CACHE{0} : dépend de #CONST{_ANNEE_SCOLAIRE} (cookie, cf
+ccn_options.php et le commentaire de json.html) — SPIP ne varie pas le
+cache par cookie, un #CACHE{60} sert la mauvaise année aux autres
+visiteurs/sessions pendant 60s après un changement d'année. ]
+#CACHE{0}
 [(#REM) Type objet: consignes, travail_en_cours, blogs, evenements,ressources]
 
 [(#REM) Image de fond]

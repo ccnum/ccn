@@ -27,6 +27,9 @@ CCN.timelineLayerEvenements;
 const CLASS_ICONS = ['🐝', '🦩', '🦉', '🦔', '🐟', '🐙', '🐜', '🦁', '🦋', '🦊'];
 
 function getClassIcon(index) {
+    if (index < 0) {
+        return '❔';
+    }
     return CLASS_ICONS[index % CLASS_ICONS.length];
 }
 
