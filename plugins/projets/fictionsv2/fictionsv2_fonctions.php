@@ -51,13 +51,3 @@ function recupererDernieresLignesChapitres(string $texteChapitre = '', int $nbDe
     }
     return $chaineAConcatenerAuDebut . mb_substr($texteChapitre, -$nbDeDerniersCaracteresAAfficher);
 }
-
-function anneeAAfficher($derniereRubriqueAnneeTrouveeDansSpip = '') {
-    if (isset($_GET['annee_scolaire'])) {
-        $_annee = intval($_GET['annee_scolaire']);
-        if ($_annee > 2011 && $_annee < 2100) {
-            return $_annee;
-        }
-    }
-    return $derniereRubriqueAnneeTrouveeDansSpip;
-}
