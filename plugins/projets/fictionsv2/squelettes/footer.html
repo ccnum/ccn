@@ -1,6 +1,12 @@
-#CACHE{0}
+[(#REM) #CACHE{300} : #ENV{annee_scolaire} (passé explicitement par les
+squelettes appelants, cf #459) fait varier la clé de cache par année scolaire
+- une constante PHP dérivée d'un cookie (#EVAL{_ANNEE_SCOLAIRE}) ne le ferait
+pas. Le "Bonjour X" et les liens dépendant de #SESSION{} restent corrects :
+SPIP varie automatiquement le cache par session dès qu'un squelette utilise
+#SESSION{} directement dans son corps, ce qui est le cas ici. ]
+#CACHE{300}
 #SET{id_art,0}
-<BOUCLE_annee(RUBRIQUES){titre==#EVAL{_ANNEE_SCOLAIRE}}{tout}{0,1}>
+<BOUCLE_annee(RUBRIQUES){titre==#ENV{annee_scolaire}}{tout}{0,1}>
 	<BOUCLE_id_forum(ARTICLES){titre_mot==agora}{id_rubrique}{0,1}>
 		#SET{id_art,#ID_ARTICLE}
 	</BOUCLE_id_forum>
@@ -20,7 +26,7 @@
 			]
 			[(#SESSION{id_auteur}|non)<a href="[(#PLUGIN{cioidc}|oui|?{'?url=spip.php%3Fpage%3Dsommaire&cioidc=oui','?page=login&url=.%2F'})]" class="">Se connecter</a>&nbsp;&nbsp;|<a href="http://www.laclasse.com/pls/public/!page.laclasse?contexte=QUESTION&rubrique=0"><:fictionsv2:mot_de_passe_oublie:></a>]
 
-			<BOUCLE_espace_doc(RUBRIQUES){titre==#EVAL{_ANNEE_SCOLAIRE}}>
+			<BOUCLE_espace_doc(RUBRIQUES){titre==#ENV{annee_scolaire}}>
 				<!-- #ID_RUBRIQUE -->
 				<a href="[(#DESCRIPTIF|textebrut)]">Espace doc</a>
 				[<a href="(#TEXTE|extraire_attribut{href})"><:fictionsv2:blog_de_lauteur:></a>]
@@ -44,7 +50,7 @@
 					<select id="select_annee_scolaire" name="annee_scolaire" onchange="reload_cookie('[(#URL_SITE_SPIP)]','[(#EVAL{_COOKIE_ANNEE_SCOLAIRE})]',this.value)">
 						<option value="#">---</option>
 						<BOUCLE_vieux(ARTICLES){par date}{date!=0000-00-00 00:00:00}{0,1}{tout}>
-						<option value="[(#DATE|annee)]">[(#DATE|annee|afficher_options_date{[(#DATE|mois)],#EVAL{_ANNEE_SCOLAIRE}})]</option>
+						<option value="[(#DATE|annee)]">[(#DATE|annee|afficher_options_date{[(#DATE|mois)],#ENV{annee_scolaire}})]</option>
 						</BOUCLE_vieux>
 						<option value="2011">2011/2012</option>
 						<option value="2010">2010/2011</option>

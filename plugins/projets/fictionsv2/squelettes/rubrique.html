@@ -18,7 +18,7 @@
 	[(#TITRE|=={'Blog pédagogique'}|non)<INCLURE{fond=inclure/rubrique,id_rubrique} />]
 	[(#TITRE|=={'Blog pédagogique'}|et{#SESSION{statut}|=={0minirezo}|oui}|oui)<INCLURE{fond=inclure/rubrique-blogpeda,id_rubrique,id_article} />]
 
-	<INCLURE{fond=footer} />
+	<INCLURE{fond=footer, annee_scolaire=#EVAL{_ANNEE_SCOLAIRE}} />
 </body>
 
 <style>
