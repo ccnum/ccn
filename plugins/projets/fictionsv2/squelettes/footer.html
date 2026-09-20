@@ -47,21 +47,26 @@ SPIP varie automatiquement le cache par session dès qu'un squelette utilise
 			<span id="annee_scolaire">
 				<form name="annee_scolaire" style="display:inline;">
 					<label for="select_annee_scolaire"><:fictionsv2:annee_scolaire:></label>
-					[(#REM) #459 : liste les vraies années scolaires existantes (rubriques
-					racine au titre numérique, même convention que #CONST{_ANNEE_SCOLAIRE}
-					dans ccn_options.php) plutôt qu'une année plancher devinée depuis la
-					date du plus vieil article, complétée à la main par 2 options
-					("2011"/"2010") qui redirigeaient vers airchive.laclasse.com - un site
-					qui n'existe plus (404). afficher_options_date{} génère elle-même la
-					série complète d'<option> depuis l'année scolaire réelle jusqu'à cette
-					année plancher, donc un seul appel suffit (l'imbriquer dans un <option>
+					[(#REM) #459/#453 : liste les vraies années scolaires existantes (cf
+					BOUCLE_rubrique_contenant_annees ci-dessous) plutôt qu'une année
+					plancher devinée depuis la date du plus vieil article, complétée à
+					la main par 2 options ("2011"/"2010") qui redirigeaient vers
+					airchive.laclasse.com - un site qui n'existe plus (404).
+					afficher_options_date{} génère elle-même la série complète
+					d'<option> depuis l'année scolaire réelle jusqu'à cette année
+					plancher, donc un seul appel suffit (l'imbriquer dans un <option>
 					comme avant produisait en plus un HTML invalide, <option> dans
 					<option>). ]
 					<select id="select_annee_scolaire" name="annee_scolaire" onchange="reload_cookie('[(#URL_SITE_SPIP)]','[(#EVAL{_COOKIE_ANNEE_SCOLAIRE})]',this.value)">
 						<option value="#">---</option>
-						<BOUCLE_premiere_annee(RUBRIQUES){racine}{titre REGEXP ^[0-9]{4}$}{par titre}{0,1}>
-							[(#TITRE|afficher_options_date{9,#ENV{annee_scolaire}})]
-						</BOUCLE_premiere_annee>
+						[(#REM) #453 : rubrique parent repérée par mot-clé "rubrique-contenant-annees"
+						(même convention que sommaire.html, BOUCLE_rubrique_contenant_annees_2),
+						plutôt que de supposer les rubriques années à la racine du site. ]
+						<BOUCLE_rubrique_contenant_annees(RUBRIQUES){titre_mot=rubrique-contenant-annees}{0,1}>
+							<BOUCLE_premiere_annee(RUBRIQUES){id_parent}{par titre}{0,1}>
+								[(#TITRE|afficher_options_date{9,#ENV{annee_scolaire}})]
+							</BOUCLE_premiere_annee>
+						</BOUCLE_rubrique_contenant_annees>
 					</select>
 				</form>
 			</span>
