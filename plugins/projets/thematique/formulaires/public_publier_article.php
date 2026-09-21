@@ -89,7 +89,12 @@ function formulaires_public_publier_article_charger_dist(
 	return $valeurs;
 }
 
-function formulaires_public_publier_article_verifier_dist($id_rubrique, $id_consigne = 0, $id_article = 0) {
+function formulaires_public_publier_article_verifier_dist(
+	$id_rubrique,
+	$type_article,
+	$id_consigne = 0,
+	$id_article = 0
+) {
 	include_spip('inc/autoriser');
 	include_spip('inc/editer');
 	include_spip('prive/formulaires/editer_article');
@@ -133,7 +138,6 @@ function formulaires_public_publier_article_traiter_dist(
 	}
 	session_set($cle, time());
 
-	
 	include_spip('inc/editer');
 	include_spip('prive/formulaires/editer_article');
 
@@ -158,11 +162,7 @@ function formulaires_public_publier_article_traiter_dist(
 	// action_editer_article_dist : _request('id_parent')), le 3e argument de
 	// formulaires_editer_objet_traiter() étant ignoré — d'où le set_request.
 	if ($type_article == 'ressources') {
-		$id_ressources = sql_getfetsel(
-			'id_rubrique', 
-			'spip_rubriques', 
-			'titre=' . sql_quote('Ressources')
-		);
+		$id_ressources = sql_getfetsel('id_rubrique', 'spip_rubriques', 'titre=' . sql_quote('Ressources'));
 		if ($id_ressources) {
 			$id_rubrique = $id_ressources;
 			set_request('id_parent', $id_rubrique);
@@ -211,11 +211,7 @@ function formulaires_public_publier_article_traiter_dist(
 		// la création étant elle-même contrôlée par 'creerarticledans' dans
 		// action_editer_article : on accorde donc l'autorisation
 		// exceptionnelle pour le hit courant.
-		$id_rubrique_article = sql_getfetsel(
-			'id_rubrique',
-			'spip_articles',
-			'id_article=' . intval($id_article)
-		);
+		$id_rubrique_article = sql_getfetsel('id_rubrique', 'spip_articles', 'id_article=' . intval($id_article));
 		if ($id_rubrique_article) {
 			autoriser_exception('publierdans', 'rubrique', $id_rubrique_article, true);
 		}
@@ -229,7 +225,7 @@ function formulaires_public_publier_article_traiter_dist(
 		$statut_final = sql_getfetsel('statut', 'spip_articles', 'id_article=' . intval($id_article));
 		if ($statut_final !== 'publie') {
 			spip_log(
-				"publication de l'article $id_article refusée (statut restant : " . var_export($statut_final, true) . ")",
+				"publication de l'article $id_article refusée (statut restant : " . var_export($statut_final, true) . ')',
 				'thematique' . _LOG_ERREUR
 			);
 		}
