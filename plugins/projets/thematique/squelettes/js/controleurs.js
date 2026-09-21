@@ -736,6 +736,25 @@ async function callEvenementCreer() {
 }
 
 /**
+ * Charge le formulaire de création d'une information de la Salle des pros
+ * (menu "Publier > Information en salle des pros", #461) : jusqu'ici un
+ * simple stub (alert("chantier_ccn")) dans choix_rubrique_admin2.html,
+ * jamais câblé à un formulaire — un intervenant n'avait donc aucun moyen
+ * d'y publier malgré l'autorisation backend (thematique_role_publie).
+ * type_objet=evenements (cf commentaire de callEvenementCreer sur
+ * l'inversion blogs/evenements, #412).
+ *
+ * @see callEvenementCreer
+ */
+async function callInformationCreer() {
+	await changeTimelineMode('evenements');
+	expandSidebar();
+	setLateralSidebarExpanded(false);
+	updateMenuIcon(['evenements'], 'mainView');
+	loadContentInMainSidebar(CCN.projet.url_popup_information_creer, null, "publication_article");
+}
+
+/**
  * Charge le formulaire de création d'une nouvelle mission (menu "Publier >
  * Une nouvelle mission") en plein écran, contrairement à une réponse à une
  * consigne existante (cf createReponse) qui reste affichée en colonnes pour
