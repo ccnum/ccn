@@ -1,0 +1,269 @@
+/**
+ * Génère une consigne.
+ *
+ * @constructor
+ */
+
+function Consigne() {
+
+	/**
+	 * Initialise la consigne.
+	 *
+	 * @param {Object} data - Données à affecter à l'instance
+	 */
+	this.init = function (data) {
+		this.data = data;
+		this.id = this.data.id;
+		this.intervenant_id = this.data.intervenant_id;
+		this.numero = this.data.numero;
+		this.titre = decodeHtmlEntities(this.data.titre);
+
+		this.nombre_reponses = this.data.nombre_reponses;
+		this.reponses_id = this.data.reponses.map(Number);
+		this.nombre_commentaires = this.data.nombre_commentaires;
+		this.nombre_jours = this.data.nombre_jours;
+		this.x = this.data.nombre_jours;
+		this.y = this.data.y; // Entre 0 et 1
+		this.image = this.data.image;
+		this.image_est_url = !!this.data.image_est_url;
+		this.image_generique = !!this.data.image_generique;
+		this.select = false;
+		this.date_texte = formatDateLongue(this.data.date_texte);
+		this.reponses = [];
+		this.intervenant_nom = decodeHtmlEntities(this.data.intervenant_nom);
+		this.nombre_jours_max = this.data.nombre_jours_max;
+
+		if (this.nombre_jours_max <= 0) {
+			this.nombre_jours_max = data.nombre_jours;
+		}
+		this.isLivrable = this.data.isLivrable;
+		this.isLastConsigne = this.data.isLastConsigne;
+
+		this.initDOM();
+	}
+
+	/**
+	 * Crée l'élément DOM et l'intègre dans la timeline.
+	 */
+	this.initDOM = function () {
+		const coul = String(this.data.intervenant_id).slice(-1);
+		const classes_triees = [...this.data.classes].sort((c1, c2)=>c1.id-c2.id);
+		let reponses_puces = '';
+		classes_triees.forEach((classe, index) => {
+			let disabled = 'disabled';
+			let iconSpan = '';
+			let coulClasse = '';
+			const nomClasse = decodeHtmlEntities(classe.nom);
+			if (this.reponses_id.includes(classe.id)) {
+				disabled = '';
+				// bgc_classe_${index} sur le conteneur circulaire (comme dans
+				// reponse.js), pas sur le span de l'emoji : posée sur le span, le
+				// fond ne colorait qu'une petite boîte texte (visible en carré une
+				// fois l'emoji réduit à sa taille réelle par le padding de
+				// .reponse_puce), au lieu de tout le cercle découpé par
+				// border-radius:50%+overflow:hidden du conteneur.
+				coulClasse = `bgc_classe_${index}`;
+				iconSpan = `<span role="img" aria-label="${escHtml(nomClasse)}" style="font-size:100%">${getClassIcon(index)}</span>`;
+			}
+
+			reponses_puces += `
+				<div class='reponse_puce ${disabled} ${coulClasse} tooltip logo'
+					data-tip='${escHtml(nomClasse)}'
+				>
+					${iconSpan}
+				</div>`;
+		});
+		this.div_base = $(`
+			<div id="consigne_haute${this.id}"
+				 class="timeline_item consigne_haute"
+				 style="top:${this.y * 100}%; left:${this.x / CCN.projet.nombre_jours_total * 100}%;"
+			>
+				<button type="button" id="consigne${this.id}"
+					class="consigne couleur_texte_consignes couleur_consignes${coul} btn-reset"
+					data-id="${this.id}"
+					data-index="${this.numero}"
+				>
+					${this.data.nombre_commentaires > 0 ? `<div aria-label="${this.data.nombre_commentaires} interaction${this.data.nombre_commentaires > 1 ? 's' : ''}" class="picto_nombre_commentaires">${this.data.nombre_commentaires}</div>` : ''}
+					<div class="etiquette-etape">
+						<img class="logo-etiquette" src="" alt="" />
+						<span class="texte-etiquette">${CCN.lang.mission_numero.replace('@numero@', this.numero+1)}</span>
+					</div>
+					<div class="texte">
+						<div class="first-row">
+							<div class="photo">${!this.image_est_url
+								? `<span class="icon-avatar-masculin"><span class="avatar-animal">${escHtml(this.data.image)}</span></span>`
+								: this.image_generique
+									? `<span class="icon-avatar-masculin"><img src="${this.data.image}" alt="${escHtml(this.intervenant_nom)}" /></span>`
+									: `<img src="${this.data.image}" alt="${escHtml(this.intervenant_nom)}" />`}</div>
+							<div class="titre"></div>
+						</div>
+						<div class="second-row">
+							<div class="picto_nombre_reponses">
+								${reponses_puces}
+							</div>
+						</div>
+					</div>
+					<div class="nettoyeur"></div>
+				</button>
+				<div class="etiquette-associee bouton_reponse_consigne repondre hidden">
+					<div class="icon-publier icon"></div>
+					<div>${CCN.lang.repondre_a_la_mission}</div>
+				</div>
+				<div class="etiquette-associee bouton_reponse_consigne acceder hidden">
+					<div class="icon-publier icon"></div>
+					<div>${CCN.lang.modifier_ma_reponse}</div>
+				</div>
+			</div>
+		`);
+
+		this.div_consigne = this.div_base.find(`#consigne${this.id}`);
+		this.div_reponse_plus = this.div_base.find('.bouton_reponse_consigne.repondre').eq(0);
+		this.div_reponse_see = this.div_base.find('.bouton_reponse_consigne.acceder').eq(0);
+		this.div_reponse_see.on('click', () => callReponse(answerId)).addClass('show');
+
+		this.div_base.find(`.titre`).text(this.titre);
+
+		if(this.isLastConsigne) {
+			this.div_base.addClass("derniere-etape")
+			this.div_base.find(".logo-etiquette").first().attr("src", `${CCN.urlRoot}img/location-check.svg`)
+		} else {
+			this.div_base.find(".logo-etiquette").hide()
+		}
+		CCN.timelineLayerConsignes.prepend(this.div_base);
+
+		this.largeur = this.div_base.outerWidth();
+		this.hauteur = this.div_base.outerHeight();
+
+		const _thisId = this.id;
+		const _thisIdRestreint = parseInt(CCN.idRestreint, 10);
+		const _thisNumero = parseInt(this.numero, 10);
+
+		this.div_reponse_plus.on('click', () => createReponse(_thisId, _thisIdRestreint, _thisNumero));
+		this.div_consigne.on('click', () => callConsigne(_thisId));
+
+		const leftPercent = CCN.projet.nombre_jours_total > 0 ? this.x / CCN.projet.nombre_jours_total * 100 : 0;
+		this.div_base.draggable({
+			axis: "y",
+			cancel: '', // Force le drag and drop même s'il y a un button dans la consigne.
+			start: function (event, ui) {
+				$(this).addClass('no_event');
+			},
+			drag: function (event, ui) {
+				ui.position.left =CCN.projet.timeline.width() * leftPercent / 100;
+				dragWithCollision(this, ui, {
+					timeline: CCN.timelineLayerConsignes,
+
+					getVisualBounds: (objectDOM) => {
+						const cardRect = objectDOM[0].getBoundingClientRect();
+						const etiquette = objectDOM.find('.etiquette-etape').first();
+						if (etiquette.length) {
+							const rect = etiquette[0].getBoundingClientRect();
+							return {
+								top: rect.top,
+								bottom: cardRect.bottom
+							};
+						}
+						return {
+							top: cardRect.top,
+							bottom: cardRect.bottom
+						};
+					}
+				});
+				updateConsigneConnecteurs(event.target, ui);
+			},
+			stop: function (event, ui) {
+				const yy = (ui.offset.top - CCN.projet.timeline.offset().top) / CCN.projet.timeline.height();
+				if (CCN.admin == 0) {
+					$.post(
+						"spip.php?page=ajax&mode=article-sauve-coordonnees",
+						{
+							id_objet: _thisId,
+							type_objet: "article",
+							X: 0,
+							Y: yy
+						}
+					);
+				}
+				this.y = yy;
+				$(this).css({
+					top: (yy * 100) + '%',
+					left: leftPercent + '%'
+				});
+				$(this).removeClass('no_event');
+			}
+		});
+	}
+
+	/**
+	 * Affiche le bouton <tt>Répondre à la question</tt>.
+	 *
+	 * @see initConsignes
+	 */
+	this.showNewReponseButtonInTimeline = function () {
+		this.div_reponse_plus.removeClass("hidden")
+	}
+
+	/**
+	 * Affiche le bouton <tt>Consulter ma réponse</tt>.
+	 *
+	 * @param {Number} answerId - Id de la réponse de la classe courante
+	 *
+	 * @see initConsignes
+	 */
+	this.showMyReponseButtonInTimeline = function (answerId) {
+		this.div_reponse_see.removeClass("hidden")
+	}
+
+	/**
+	 * Fait apparaître le picto du nombre de commentaires d'une consigne.
+	 */
+	this.showConsignePastille = function () {
+		$("#consigne" + this.id + " .picto_nombre_commentaires").fadeIn('slow');
+	}
+
+	/**
+	 * Affiche la consigne et les réponses associées.
+	 *
+	 * @see showConsigneInTimeline
+	 * @see callConsigne
+	 *
+	 */
+	this.showInTimeline = function () {
+
+		let rafId;
+		const rafEnd = Date.now() + 2300;
+
+		function rafConnecteurs() {
+			updateAllConnecteurs();
+			if (Date.now() < rafEnd) {
+				rafId = requestAnimationFrame(rafConnecteurs);
+			}
+		}
+		rafId = requestAnimationFrame(rafConnecteurs);
+		CCN.projet.rafConnecteurs = rafId;
+
+		$('.connecteur_timeline').addClass('hide');
+		$('.connecteur_timeline[data-consigne-id="' + this.id + '"]').removeClass('hide');
+
+		const y_dest = 0;
+
+		CCN.projet.showRangeOfTimeline(this.nombre_jours_max, this.x - 3, y_dest);
+
+		$('.consigne_haute').not('#consigne_haute' + this.id).addClass('hide');
+		$('.reponse_haute').not('.reponse_haute_consigne_parent' + this.id).addClass('hide');
+
+		$('#consigne_haute' + this.id).removeClass('hide');
+		$('.reponse_haute_consigne_parent' + this.id).removeClass('hide');
+
+		for (let i = 0; i < CCN.articlesBlog.length; i++) {
+			$(CCN.articlesBlog[i].div_base).hide();
+		}
+
+		for (let i = 0; i < CCN.articlesEvenement.length; i++) {
+			$(CCN.articlesEvenement[i].div_base).hide();
+		}
+
+		this.select = true;
+	}
+}
+

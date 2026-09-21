@@ -1,0 +1,78 @@
+<BOUCLE_principale(RUBRIQUES){id_rubrique}>
+	[(#REM) #CACHE{300} : la partie qui change à chaque publication de
+	chapitre (verrouillage du jeu, cf #459) est extraite dans
+	inclure/rubrique-cadavres.html, qui reste #CACHE{0}. Le reste (titre,
+	navigation, prologue) ne dépend que de l'année scolaire, portée
+	explicitement par #ENV{annee_scolaire} (passé par le squelette
+	rubrique.html) plutôt que #EVAL{_ANNEE_SCOLAIRE} (constante dérivée
+	d'un cookie, que SPIP ne fait pas varier dans sa clé de cache). ]
+	#CACHE{300}
+	<!-- TOOLTIP -->
+	<div id="liste-tooltip">
+	</div>
+
+	<!-- NAVIGATION ANCRE-->
+	<div id="ecriture-navigation">
+		<a href="#" id="nav-top"><img src="#CHEMIN{img/ecriture/fleche-top.png}" alt="Haut de page" width="9" height="12" /></a>
+		<a href="#" id="nav-script">script</a>
+		<a href="#" id="nav-forum">forum</a>
+		<a href="#" id="nav-ecrire"><:fictionsv2:ecrire:></a>
+	</div>
+
+	<!-- BOOK -->
+	<div id="global-ecriture">
+		<div id="global-spacer">
+		</div>
+		<div class="global-content">
+			<div class="content">
+				<div class="content-left-small">
+					<div id="titre_site">
+						<a href="#URL_SITE_SPIP" title="Accueil"><strong>fictions</strong></a><a href="http://www.laclasse.com" title="http://www.laclasse.com">.laclasse.com</a>
+					</div>
+					<!-- LISTE CADAVRE SMALL-->
+					<div id="ecriture-liste">
+						[(#SESSION{id_auteur}|oui)<INCLURE{fond=inclure/liste-cadavres-auteur-small} />]
+					</div>
+				</div>
+				<div class="content-right-large">
+					<div id="ecriture">
+						<!-- PROLOGUE -->
+						<div class="ecriture-chapitre">
+							<div class="ecriture-chapitre-picto">
+								<div id="open_prologue">
+									<img src="#CHEMIN{img/ecriture/bt-open-prologue.png}" alt="Ouvrir le prologue"
+										class="btn-rollover" data-src-hover="#CHEMIN{img/ecriture/bt-open-prologue-hover.png}"
+										width="25" height="25" />
+								</div>
+								<div id="close_prologue">
+									<img src="#CHEMIN{img/ecriture/bt-close-prologue.png}" alt="Fermer le prologue"
+										class="btn-rollover" data-src-hover="#CHEMIN{img/ecriture/bt-close-prologue_hover.png}"
+										width="25" height="25" />
+								</div>
+							</div>
+
+							<BOUCLE_annee(RUBRIQUES){titre==#ENV{annee_scolaire}}{tout}{0,1}>
+								<BOUCLE_article(ARTICLES){id_rubrique}{titre LIKE prologue}{tout}{0,1}>
+									<div class="ecriture-chapitre-texte">
+										<div class="ecriture-chapitre-surtitre">—</div>
+										<div class="ecriture-chapitre-titre">#TITRE</div>
+									</div>
+									<div class="ecriture-chapitre-auteur">
+									</div>
+									<div class="texte_courant #EDIT{texte}" id="texte_prologue">
+										#TEXTE<br />
+									</div>
+								</BOUCLE_article>
+							</BOUCLE_annee>
+
+						</div>
+						<hr />
+
+						<!-- END PROLOGUE -->
+						<INCLURE{fond=inclure/rubrique-cadavres, id_rubrique} />
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</BOUCLE_principale>

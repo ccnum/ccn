@@ -1,0 +1,12 @@
+[(#REM) #CACHE{0} : ce dispatcher englobe des modes (classes, consignes,
+projet, demarrage) qui dépendent de #CONST{_ANNEE_SCOLAIRE}, calculée à
+partir d'un cookie (cf ccn_options.php). SPIP ne varie pas automatiquement
+le cache par cookie (seul #SESSION{} déclenche un cache par session, comme
+pour mode=articles), donc un #CACHE{60} ici servait pendant 60s la même
+réponse JSON à toutes les années scolaires sélectionnées, quel que soit le
+visiteur — d'où des mismatchs classe/mission après un changement d'année. ]
+#CACHE{0}
+#HTTP_HEADER{Content-Type: application/json; charset=#CHARSET}
+[(#ENV{mode}|in_array{#LISTE{consignes,classes,projet,articles,ajax,demarrage}}|oui)
+<INCLURE{fond=json/#ENV{mode}}{env}>
+]

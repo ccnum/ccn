@@ -35,7 +35,7 @@ comportement semble périmé :
 rm -rf sites/<site>.ddev.site/tmp/cache/*
 ```
 
-### Qualité de code (par plugin, ex. `plugins/thematique/`)
+### Qualité de code (par plugin, ex. `plugins/projets/thematique/`)
 ```
 composer check-cs             # vendor/bin/ecs check --ansi (Easy Coding Standard, style)
 composer fix-cs               # ecs --fix : corrige automatiquement le style
@@ -47,7 +47,7 @@ Un run automatisé de `ecs`/`rector` peut modifier des fichiers en tâche de fon
 session (corrections triviales : style, compat PHP8) — vérifier `git status`/`git diff` avant de
 committer, ces changements peuvent se mélanger aux tiens.
 
-### Lint CI (plugin `thematique` uniquement, exécuté sur toute PR touchant `plugins/thematique/**`)
+### Lint CI (plugin `thematique` uniquement, exécuté sur toute PR touchant `plugins/projets/thematique/**`)
 ```
 python3 .ci/check_lang_hardcoded.py    # texte FR en dur hors lang/ (baseline: .ci/lang-check-baseline.txt)
 python3 .ci/check_lang_keys.py         # clés <:thematique:xxx:> / CCN.lang.xxx invalides
@@ -104,7 +104,7 @@ comptes. Exposé via `#SESSION{role}` — ne pas le recalculer ailleurs.
 ce rôle.
 
 ### Année scolaire
-`_ANNEE_SCOLAIRE` (constante PHP, définie dans `plugins/ccn/ccn_options.php`) pilote quasi toute
+`_ANNEE_SCOLAIRE` (constante PHP, définie dans `plugins/projets/ccn/ccn_options.php`) pilote quasi toute
 la structure de contenu : les rubriques racines sont nommées/organisées par année, et
 `thematique_pre_boucle()` (pipeline `pre_boucle`) filtre automatiquement les boucles
 `ARTICLES`/`SYNDIC_ARTICLES` sur la période de l'année scolaire active — sauf modificateur

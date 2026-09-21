@@ -1,0 +1,107 @@
+<?php
+
+function valider_chapitre($id_article, $id_rubrique) {
+	include_spip('action/editer_objet');
+	include_spip('inc/autoriser');
+
+	// Publication
+	autoriser_exception('modifier', 'article', $id_article);
+	objet_modifier('article', intval($id_article), ['statut' => 'publie']);
+	autoriser_exception('modifier', 'article', $id_article, false);
+
+	$envoyer_mail = charger_fonction('envoyer_mail', 'inc');
+	// mail
+	$bcc = sql_getfetsel("soustitre", "spip_articles", "id_article = " . intval($id_article));
+	$sujet = _T('petitfablabv2:sujet_chapitre_publie');
+	$html = "Bonjour,";
+	$html .= _T('petitfablabv2:mail_merci_participation');
+	$html .= "<br />Accédez dès maintenant à votre chapitre en ligne : http://petitfablab.laclasse.com/spip.php?page=lecture&id_rubrique=" . $id_rubrique . ". Un deuxième message vous préviendra lorsque votre histoire sera disponible.";
+	$html .= _T('petitfablabv2:mail_a_bientot');
+	$html .= _T('petitfablabv2:mail_description_dispositif');
+	$html .= "<br />Suivez nos actualités sur le blog https://petit-fablab-ecriture.tumblr.com/";
+
+	$contenu_html = recuperer_fond('emails/texte', ['html' => $html]);
+	$corps = [
+		'html' => $contenu_html,
+		'from' => 'noreply@petitfablab.laclasse.com',
+		'nom_envoyeur' => _T('petitfablabv2:nom_envoyeur'),
+		'bcc' => ['cmonnet@erasme.org', $bcc]
+	];
+	if (isset($bcc) && ($bcc != "") && (filter_var($bcc, FILTER_VALIDATE_EMAIL))) {
+		$envoyer_mail("petitfablab@gmail.com", $sujet, $corps);
+	}
+
+	// Si 5ème chapitre
+	$n = sql_countsel("titre", "spip_articles", ["statut=" . sql_quote('publie'), "id_rubrique=" . intval($id_rubrique)]);
+	if ($n == 5) {
+		$id_parent = sql_getfetsel("id_parent", "spip_rubriques", "id_rubrique=" . intval($id_rubrique));
+		$rub_hist = creer_histoire($id_parent);
+		$bcc = ['cmonnet@erasme.org'];
+		if ($resultats = sql_allfetsel("soustitre", "spip_articles", "id_rubrique = " . intval($id_rubrique))) {
+			// boucler sur les resultats
+			foreach ($resultats as $res) {
+				if (filter_var($res['soustitre'], FILTER_VALIDATE_EMAIL)) {
+					$bcc[] = $res['soustitre'];
+				}
+			}
+		}
+
+		$sujet = _T('petitfablabv2:sujet_histoire_en_ligne');
+		$html = _T('petitfablabv2:mail_bonjour_tous');
+		$html .= _T('petitfablabv2:mail_felicitations');
+		$html .= "<br />Discutez de l'édition de votre histoire avec vos co-auteurs par retour de mail : http://petitfablab.laclasse.com/spip.php?page=lecture&id_rubrique=" . $id_rubrique;
+		$html .= _T('petitfablabv2:mail_a_bientot');
+		$html .= _T('petitfablabv2:mail_description_dispositif');
+		$html .= "<br />Suivez nos actualités sur le blog https://petit-fablab-ecriture.tumblr.com/";
+
+		$contenu_html = recuperer_fond('emails/texte', ['html' => $html]);
+		$corps = [
+			'html' => $contenu_html,
+			'from' => 'noreply@petitfablab.laclasse.com',
+			'nom_envoyeur' => _T('petitfablabv2:nom_envoyeur'),
+			'bcc' => $bcc
+		];
+		$envoyer_mail("petitfablab@gmail.com", $sujet, $corps);
+	}
+
+	// return if last chapitre
+	if (isset($rub_hist)) {
+		return $rub_hist;
+	}
+}
+
+// annee_rub, balise_ANNEE_SCOLAIRE_dist, balise_ANNEE_ACTUELLE_dist, afficher_options_date
+// sont définis par le plugin ccn (ccn_fonctions.php)
+
+function balise_NOM_AUTEUR_dist($p) {
+	$p->code = "'Violaine Schwartz'";
+	return $p;
+}
+
+// Si balise_FIN_dist = false -> affichage de la grille sur la page d'accueil
+// Si balise_FIN_dist = true -> affichage des couvertures et liens pdf sur la page d'accueil
+
+function balise_FIN_dist($p) {
+	$p->code = "'true'";
+	return $p;
+}
+
+// Si balise_LECTURE_dist = false -> les textes sont masqués dans la vue lecture
+// Si balise_LECTURE_dist = true -> les textes sont affichés dans la vue lecture
+
+function balise_LECTURE_dist($p) {
+	$p->code = "'true'";
+	return $p;
+}
+
+/**
+ * Filtre pour couper le texte à l'affichage
+ */
+function filtre_cleanCut($string, $length = 380, $cutString = '(...)') {
+	if (strlen($string) <= $length) {
+		return $string;
+	}
+	$str = substr($string, strlen($string) - $length - 7, strlen($string));
+	return $cutString . substr($str, stripos($str, ' '));
+}
+

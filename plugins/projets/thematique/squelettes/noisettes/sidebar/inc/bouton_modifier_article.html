@@ -1,0 +1,18 @@
+[(#REM)
+Bouton "Modifier" du titre d'un article (mission/réponse/billet), factorisé
+depuis header_sidebar.html/header_reponse_sidebar.html/header_blog.html.
+Paramètres attendus : id_article, type_objet.
+Le clic est géré en JS par délégation (classe js-call-modifier-article,
+cf controleurs.js) plutôt qu'un onclick inline : sur ce SPIP, une balise
+entre parenthèses littérales dans le texte affiché par un bloc
+conditionnel entre crochets peut faire planter ou dérailler la
+compilation. Ne jamais réintroduire de caractère dièse dans ce
+commentaire, même en évoquant une balise : ça suffit à faire planter la
+compilation de ce bloc REM lui-même.
+]
+#CACHE{0}
+#SET{peut_modifier, #AUTORISER{modifier,article,#ENV{id_article}}}
+#SET{annee_active, #ENV{id_article}|thematique_annee_article|thematique_annee_est_passee|non}
+[(#GET{peut_modifier}|et{#GET{annee_active}})
+<button type="button" class="bouton-modifier-article btn-reset js-call-modifier-article" data-id-article="#ENV{id_article}" data-type-objet="#ENV{type_objet}"><:thematique:modifier:></button>
+]

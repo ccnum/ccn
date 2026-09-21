@@ -1,6 +1,6 @@
 # CCN
 
-![](plugins/thematique/th.png)
+![](plugins/projets/thematique/th.png)
 
 
 This monorepo contains all the plugins for SPIP CMS :

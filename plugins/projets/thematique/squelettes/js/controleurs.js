@@ -1,0 +1,1573 @@
+let canShowConsigneSidebar = false;
+
+let _sidebarTrigger = null;
+
+// Titre de page d'origine (avant toute navigation ajax dans la sidebar), pour
+// le restaurer à la fermeture. Cf. updatePageTitleFromSidebarContent().
+const _originalDocumentTitle = document.title;
+
+/**
+ * Dans cette architecture SPA-like, la navigation (article, rubrique,
+ * forum…) charge du contenu en ajax dans la sidebar sans jamais recharger la
+ * page : document.title ne bouge donc jamais tout seul, et un lecteur
+ * d'écran n'a aucun repère de changement de "page". On répercute ici le
+ * titre du contenu affiché sur document.title, et on l'annonce dans la
+ * région #a11y_announcer (cf layout.html) pour un lecteur d'écran.
+ *
+ * @see loadContentInMainSidebar
+ */
+function updatePageTitleFromSidebarContent() {
+	const $titre = $('#sidebar_main_inner .fiche_titre .titre, #sidebar_main_inner .popup_titre .titre').first();
+	const titre = $titre.length ? $titre.text().trim() : '';
+	document.title = titre ? `${titre} - ${_originalDocumentTitle}` : _originalDocumentTitle;
+	$('#a11y_announcer').text(titre);
+}
+
+const SIDEBAR_FOCUSABLE = 'a[href], button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])';
+
+function _sidebarFocusableElements() {
+	return $('#sidebar').find(SIDEBAR_FOCUSABLE).filter(':visible');
+}
+
+// Active au clavier (Entrée/Espace) les divs cliquables marquées role="button",
+// utilisées pour la navigation (rubriques, articles) au lieu de vrais <a>/<button>.
+$(document).on('keydown.clickableRole', '[role="button"]', function (e) {
+	if (e.key === 'Enter' || e.key === ' ' || e.key === 'Spacebar') {
+		e.preventDefault();
+		this.click();
+	}
+});
+
+$(document).on('keydown.sidebarFocusTrap', function (e) {
+	if (!$('body').hasClass('hasSidebarOpen')) {
+		return;
+	}
+	if (e.key === 'Escape') {
+		// Le plugin crayons gère déjà Échap pour fermer son propre formulaire
+		// d'édition, sans stopper la propagation : sans ce garde-fou, on fermait
+		// toute la sidebar en même temps, laissant l'affichage à moitié grisé.
+		if ($(e.target).closest('.crayon-html').length) {
+			return;
+		}
+		closeSidebar();
+		return;
+	}
+	if (e.key !== 'Tab') {
+		return;
+	}
+	const $focusable = _sidebarFocusableElements();
+	if ($focusable.length === 0) {
+		return;
+	}
+	const first = $focusable.first()[0];
+	const last = $focusable.last()[0];
+	if (e.shiftKey) {
+		if (document.activeElement === first) {
+			e.preventDefault();
+			last.focus();
+		}
+	} else {
+		if (document.activeElement === last) {
+			e.preventDefault();
+			first.focus();
+		}
+	}
+});
+
+$(function () {
+
+	$(document).on('click', '.js-call-consigne', function () {
+		callConsigne($(this).data('id-objet'));
+	});
+
+	$(document).on('click', '.js-call-reponse', function () {
+		callReponse($(this).data('id-article'));
+	});
+
+	$(document).on('click', '.js-call-livrable', function () {
+		callLivrable(null, 'open');
+		callLivrable($(this).data('id-article'), 'openDetails');
+	});
+
+	$(document).on('click', '.js-call-modifier-article', function () {
+		callModifierArticle($(this).data('id-article'), $(this).data('type-objet'));
+	});
+
+	// Accordéons génériques (bloc_option_doc, forum, réponses...) : affiche/masque
+	// le bloc juste après le déclencheur cliqué (cf noisettes/*.html, class="js-accordeon-toggle").
+	$(document).on('click', '.js-accordeon-toggle', function () {
+		$(this).next().toggleClass('masquer');
+		return false;
+	});
+
+	// Ouvre la modal de login SPIP natif (#login_modal, cf
+	// noisettes/inc/authentification.html), quel que soit l'endroit d'où on
+	// clique (menu haut, mais aussi ex. onglet_commentaires.html chargé en
+	// ajax dans la sidebar) — CIOIDC désactivé. Délégué sur document pour
+	// fonctionner depuis un fragment ajax, contrairement au binding
+	// spécifique au menu déroulant dans menu_haut.js (scopé à
+	// .select-options, qui stoppe la propagation avant d'arriver ici).
+	$(document).on('click', '.js-ouvrir-login-modal', function (e) {
+		e.preventDefault();
+		$('#login_modal').addClass('open');
+	});
+
+	$('#timeline_fixed').on(
+		'click', function (event) {
+			event.stopPropagation();
+			CCN.projet.showWholeTimeline();
+		}
+	);
+
+	$(document).on('click', '#sidebarExpand', function () {
+		toggleSidebarExpand();
+	});
+
+	$(document).on('click', '#sidebar_main_around #sidebar-close', function () {
+		if (CCN.projet) {
+			CCN.projet.showWholeTimeline();
+		} else {
+			closeSidebar();
+		}
+	});
+	$(document).on('click', '#sidebarCache', function () {
+		$('body').removeClass('hasSidebarExpanded');
+	});
+
+	$(".logo").not('#menu-classes-select ul a').tooltip(
+		{
+			appendTo: "body", // On garde ça pour éviter le bug des images déplacées !
+			position: {
+				my: "center bottom-4",
+				at: "center top",
+				using: function (position, feedback) {
+					$(this).css(position);
+					$("<div>")
+						.addClass("arrow")
+						.addClass(feedback.vertical)
+						.addClass(feedback.horizontal)
+						.appendTo(this);
+				},
+				collision: "fit",
+			},
+			show: {
+				duration: 100,
+				effect: 'fadeIn'
+			},
+			hide: {
+				duration: 100,
+				effect: 'fadeOut'
+			}
+		}
+	);
+});
+
+let antifloodHashChange = false;
+
+function onHashChange(event) {
+	if (antifloodHashChange === false) {
+		setContentFromState({ data: event.state });
+	}
+}
+
+function getCurrentTimelineMode() {
+	if ($('body').hasClass('show_blogs')) return 'blogs';
+	if ($('body').hasClass('show_evenements')) return 'evenements';
+	return 'consignes';
+}
+
+
+let currentState = {};
+
+function replaceInCurrentState(object) {
+	currentState = {...currentState, ...object}
+}
+
+function setInUrl(object) {
+    const url = new URL(window.location.href);
+	Object.keys(object).forEach(k=>{
+		url.searchParams.set(k, object[k]);
+	})
+    return url.toString();
+}
+
+function removeFromUrl(key) {
+  const url = new URL(window.location.href);
+  url.searchParams.delete(key);
+  window.history.replaceState({}, '', url);
+}
+
+/**
+ * Initialise la vue depuis l'URL donnée
+ * ou depuis l'état de l'historique donné
+ */
+function setContentFromState(state, title, url) {
+
+	if (typeof state.data !== 'object' || state.data == null) {
+		return;
+	}
+	state = state.data;
+
+	if (state.type_objet == undefined) { state.type_objet = ''; }
+	if (state.page == undefined) { state.page = ''; }
+	if (state.id_rubrique == undefined) { state.id_rubrique = ''; }
+	if (state.id_article == undefined) { state.id_article = ''; }
+	if (state.id_syndic_article == undefined) { state.id_syndic_article = ''; }
+	if (state.id_objet == undefined) { state.id_objet = ''; }
+
+	if (currentState.type_objet == undefined) { currentState.type_objet = ''; }
+	if (currentState.page == undefined) { currentState.page = ''; }
+	if (currentState.id_rubrique == undefined) { currentState.id_rubrique = ''; }
+	if (currentState.id_article == undefined) { currentState.id_article = ''; }
+	if (currentState.id_syndic_article == undefined) { currentState.id_syndic_article = ''; }
+	if (currentState.id_objet == undefined) { currentState.id_objet = ''; }
+
+	let isSamePage = true;
+
+	for (const index of Object.keys(state)) {
+		if (state[index] != currentState[index]) {
+			isSamePage = false;
+			break;
+		}
+	}
+	
+	currentState = state;
+	if (isSamePage) { return; }
+
+	antifloodHashChange = true;
+	// Repousse l'url du navigateur (ex: retour à l'url courte du site
+	// quand showWholeTimeline() referme la sidebar), si demandé par l'appelant.
+	if (url !== undefined) {
+		updateUrl(state, title, url);
+	}
+
+	// Ressource
+	if ((state.type_objet == '0'
+		&& state.id_objet == '0')
+		|| (state.type_objet == ''
+			&& state.id_objet == '')
+	) {
+		CCN.projet.showWholeTimeline();
+	}
+
+	if (state.type_objet == "ressources") {
+		
+		if (state.page == 'rubrique') {
+			if (state.id_rubrique != CCN.idRubriqueRessources) {
+				callRessourceRubrique(state.id_rubrique, 'ressources');
+			}
+		}
+
+		else if (state.page == 'article') {
+			callRessource(state.id_article)
+		}
+
+		else if (state.page == 'syndic_article') {
+			callRessourceSyndicArticle(state.id_syndic_article, 'ressources');
+		}
+		else {
+			callRessource()
+		}
+	}
+
+	if (state.id_objet != "0") {
+		// Consigne
+		if (state.type_objet == "consignes") {
+			if (state.id_objet == CCN.idArticleCapSurAnnee || state.id_objet == CCN.idArticleLaRencontre) {
+				callArticleJalon(state.id_objet == CCN.idArticleCapSurAnnee);
+			} else {
+				for (let k = 0; k < CCN.consignes.length; k++) {
+					if (CCN.consignes[k].id == state.id_objet) {
+						callConsigne(state.id_objet);
+						break;
+					}
+				}
+			}
+		}
+
+		// Réponse
+		if (state.type_objet == "travail_en_cours") {
+			outer: for (let k = 0; k < CCN.consignes.length; k++) {
+				for (let l = 0; l < CCN.consignes[k].reponses.length; l++) {
+					if (CCN.consignes[k].reponses[l].id == state.id_objet) {
+						callReponse(state.id_objet);
+						break outer;
+					}
+				}
+			}
+		}
+
+		// Classe
+		if (state.type_objet == "classes") {
+			for (let k = 0; k < CCN.classes.length; k++) {
+				if (CCN.classes[k].id == state.id_objet) {
+					callClasse(state.id_objet);
+					break;
+				}
+			}
+		}
+
+		// Article de blog
+		if (state.type_objet == "blogs") {
+			callArticleBlog(state.id_objet, "article");
+		}
+
+		// Article d'événement
+		if (state.type_objet == "evenements") {
+			callArticleEvenement(state.id_objet, "article");
+		}
+	}
+	else {
+		// Ressource
+		if (state.type_objet == "ressources") {
+
+		} else if (state.type_objet == 'travail_en_cours') {
+			if (state.page == 'rubrique') {
+				callClasses();
+			}
+		} else {
+			changeTimelineMode(getCurrentTimelineMode());
+		}
+	}
+
+}
+
+function expandSidebar() {
+    if ($('body').hasClass('hasSidebarExpanded')) return; // déjà ouvert
+
+    $('body').addClass('hasSidebarExpanded');
+	$('body').removeClass('hasLateralSidebarExpanded');
+}
+
+function collapseSidebar() {
+    if (!$('body').hasClass('hasSidebarExpanded')) return; // déjà fermé
+
+    $('body').removeClass('hasSidebarExpanded');
+}
+
+function toggleSidebarExpand() {
+    if ($('body').hasClass('hasSidebarExpanded')) {
+        collapseSidebar();
+    } else {
+        expandSidebar();
+    }
+}
+
+/**
+ * Définit la largeur de la zone.
+ */
+
+function getLargeurZone() {
+	return $(window).width() * 0.98;
+}
+
+/**
+ * Définit la hauteur de la zone.
+ */
+
+function getHauteurZone() {
+	return $('#timeline').height();
+}
+
+/**
+ * Change le mode d'affichage de la timeline.
+ *
+ * @param {string} type - Peut être <tt>consignes</tt>, <tt>blogs</tt> ou <tt>evenements</tt>
+ */
+async function changeTimelineMode(type) {
+	const classCss = {};
+	classCss.consignes = 'show_consignes';
+	classCss.blogs = 'show_blogs';
+	classCss.evenements = 'show_evenements';
+	if (!$('body').hasClass(classCss[type])) {
+		if (type === 'blogs' || type === 'evenements') {
+			await ensureArticlesLoaded(type);
+		}
+		attachTimelineLayer(type);
+		for (const other of ['consignes', 'blogs', 'evenements']) {
+			if (other !== type) {
+				detachTimelineLayer(other);
+			}
+		}
+		for (const index in classCss) {
+			$('body').removeClass(classCss[index]);
+		}
+		$('body').addClass(classCss[type]);
+		CCN.projet.showWholeTimeline();
+		updateMenuIcon([type], 'timelineMode');
+
+		// "Cap sur l'année"/"La Rencontre" sont des jalons de mission :
+		// aucun sens en dehors du mode consignes (agenda, salle des pros).
+		if (type === 'consignes') {
+			updateBadgeJalon('cap_sur_annee', CCN.idArticleCapSurAnnee, CCN.statutCapSurAnnee);
+			updateBadgeJalon('la_rencontre', CCN.idArticleLaRencontre, CCN.statutLaRencontre);
+		} else {
+			$('#badge_cap_sur_annee, #badge_la_rencontre').hide();
+		}
+	}
+	$('#menu_bas .logo a.menu_logo_type_sidebarView').removeClass('selected');
+}
+
+
+/**
+ * Gère les événements lors du click sur une consigne et appelle {@link consigne#showInTimeline}.
+ *
+ * @param {number} numero - ID SPIP de l'objet
+ *
+ * @example
+ * // Avec l'ID SPIP #146 de la consigne
+ * showConsigneInTimeline(146, true);
+ *
+ * @see callConsigne
+ * @see consigne#showInTimeline
+ */
+
+function showConsigneInTimeline(numero) {
+	for (const consigne of CCN.consignes) {
+		if (consigne.id == numero) {
+			consigne.showInTimeline();
+		}
+	}
+}
+/**
+ * Gère les événements lors du click sur une réponse et appelle {@link reponse#showInTimeline}.
+ *
+ * @param {number} numero - ID SPIP de l'objet
+ *
+ * @example
+ * // Avec l'ID SPIP #146 de la consigne
+ * showReponseInTimeline(146);
+ *
+ * @see callConsigne
+ * @see consigne#ouvre
+ */
+
+function showReponseInTimeline(numero) {
+	for (const consigne of CCN.consignes) {
+		for (const reponse of consigne.reponses) {
+			if (reponse.id == numero) {
+				reponse.showInTimeline();
+			}
+		}
+	}
+}
+/**
+ * Redirige vers la fonction la plus appropriée
+ * pour charger l'élément
+ *
+ * @param {Object} opts - Données identifiant l'élément
+ * @param {string} opts.type - Le type de la page à charger (<tt>rubrique</tt>, <tt>article</tt>…)
+ * @param {string} opts.mode - La modalité d'affichage de la page (<tt>ajax</tt>, <tt>ajax-detail</tt>, <tt>detail</tt>)
+ * @param {string} [opts.id_rubrique] - L'id de la rubrique si c'est une <tt>rubrique</tt>
+ * @param {string} [opts.id_article] - L'id de l'article si c'est un <tt>article</tt>
+ * @param {string} [opts.id_consigne] - L'id de la consigne si c'est une réponse de classe
+ *
+ * @see callConsigne
+ * @see callReponse
+ * @see callClasse
+ */
+
+function call(opts) {
+
+	if (opts.type == 'rubrique' && opts.type_objet == 'travail_en_cours') {
+		toggleSidebarExpand();
+		// Classe
+		callClasse(opts.id_rubrique);
+	}
+
+	if (opts.type == 'article' && opts.type_objet == 'travail_en_cours' && opts.type_entite == 'reponse') {
+		// Réponse d'une classe
+		callReponse(opts.id_article);
+	}
+}
+
+/**
+ * Appelle le chargement de la consigne
+ * dans la sidebar principale et appelle
+ * l'affichage de la consigne dans la timeline.
+ *
+ * @param {number} id_consigne - ID de la consigne
+ *
+ * @see loadContentInMainSidebar
+ * @see showConsigneInTimeline
+ */
+function callConsigne(id_consigne) {
+
+	if (!Number.isInteger(Number(id_consigne))) return;
+	changeTimelineMode('consignes');
+
+	// récupérer le rang déjà connu côté JS
+	const consigneData = CCN.consignes.find(c => c.id == id_consigne);
+	const numero       = consigneData ? consigneData.numero : '';
+	const nextConsigne = consigneData ? CCN.consignes.find(c => c.numero === consigneData.numero + 1) : null;
+	const dateLimite   = nextConsigne ? nextConsigne.data.date_texte : '';
+
+	const url = CCN.projet.url_popup_consigne + "&id_article=" + id_consigne + "&rang=" + numero + "&date_limite=" + dateLimite;
+	showConsigneInTimeline(id_consigne);
+	setLateralSidebarExpanded(false);
+	updateMenuIcon(['consignes-' + id_consigne], 'mainView');
+
+	loadContentInMainSidebar(
+		url,
+		() => {
+			updateUrl(
+				{
+					'type_objet': 'consignes',
+					'id_objet': id_consigne,
+					'id_rubrique': id_consigne,
+					'page': 'article',
+				}, 'Consigne', "./spip.php?page=article&id_article=" + id_consigne + "&mode=complet"
+			);
+		},
+		"consigne"
+	);
+
+}
+/**
+ * Appelle le chargement de la réponse
+ * dans la sidebar principale et appelle
+ * le chargement de la réponse dans la sidebar secondaire.
+ *
+ * @param {number} id_reponse - ID de la réponse
+ * @param {number} id_consigne - ID de la consigne parente
+ *
+ * @see loadContentInMainSidebar
+ * @see loadContentInLateralSidebar
+ * @see showConsigneInTimeline
+ */
+
+function callReponse(id_reponse) {
+
+	if (!Number.isInteger(Number(id_reponse))) return;
+	changeTimelineMode('consignes');
+	setLateralSidebarExpanded(false);
+
+	const id_consigne = getIdConsigneFromIdReponse(id_reponse);
+
+	const id_classe = getIdClasseFromIdReponse(id_reponse);
+
+	updateMenuIcon(['consignes-' + id_consigne, 'classes-' + id_classe], 'mainView');
+
+	const url = CCN.projet.url_popup_reponse + "&id_article=" + id_reponse;
+
+	showConsigneInTimeline(id_consigne);
+	loadContentInMainSidebar(
+		url,
+		() => {
+			updateUrl(
+				{
+					'type_objet': 'travail_en_cours',
+					'id_objet': id_reponse,
+					'id_article': id_reponse,
+					'page': 'article'
+				}, CCN.lang.reponse, "./spip.php?page=article&id_article=" + id_reponse + "&mode=complet"
+			);
+		},
+		"reponse"
+	);
+	showReponseInTimeline(id_reponse);
+
+}
+/**
+ * Appelle le chargement de la classe
+ * dans la sidebar principale, en plein écran (pas de colonne latérale
+ * de navigation entre classes, cf callClasses).
+ *
+ * @param {number} id_classe - ID de la classe
+ *
+ * @see loadContentInMainSidebar
+ */
+
+function callClasse(id_classe) {
+
+	if (id_classe !== '' && !Number.isInteger(Number(id_classe))) return;
+	changeTimelineMode('consignes');
+	setLateralSidebarExpanded(false);
+	updateMenuIcon(['classes', 'classes-' + id_classe], 'sidebarView');
+
+	let url = CCN.projet.url_popup_classes;
+	if (id_classe != '') {
+		url = CCN.projet.url_popup_classes + '&id_objet=' + id_classe + '&type_objet=travail_en_cours';
+	}
+	loadContentInMainSidebar(
+		url,
+		() => {
+			updateUrl(
+				{
+					'type_objet': 'classes',
+					'id_objet': id_classe,
+					'id_rubrique': id_classe,
+					'page': 'rubrique'
+				}, "Classe", "./spip.php?page=rubrique&id_objet=" + id_classe + "&mode=complet&type_objet=classes"
+			);
+		},
+		"classe"
+	);
+}
+/**
+ * Appelle le chargement des classes
+ * dans la sidebar principale
+ */
+
+function callClasses() {
+	changeTimelineMode('consignes');
+	showSidebar();
+	toggleSidebarExpand();
+	setLateralSidebarExpanded(false);
+	updateMenuIcon(['classes'], 'sidebarView');
+
+	blankMainSidebar('travail_en_cours');
+}
+
+/**
+ * Appelle le chargement d'un article de blog dans la sidebar principale
+ * et met à jour l'URL du navigateur en conséquence.
+ *
+ * @param {number} id_article
+ *
+ * @see loadContentInMainSidebar
+ * @see loadContentInLateralSidebar
+ */
+
+function callArticleBlog(id_article) {
+	if (!Number.isInteger(Number(id_article))) return;
+	changeTimelineMode('blogs');
+	setLateralSidebarExpanded(false);
+	updateMenuIcon(['blogs'], 'mainView');
+	flouterLesBullesEtLosangesNonSelectionnes(id_article)
+
+	const url = CCN.projet.url_popup_blog + "&page=article&id_article=" + id_article;
+	loadContentInMainSidebar(
+		url,
+		() => {
+			updateUrl(
+				{
+					'type_objet': 'blogs',
+					'id_objet': id_article,
+					'id_article': id_article,
+					'page': 'article'
+				}, "Blog", "./spip.php?page=article&id_article=" + id_article + "&mode=complet"
+			);
+		},
+		"blog"
+	);
+}
+/**
+ * Vide la sidebar principale et charge la liste des ressources
+ * dans la sidebar secondaire.
+ *
+ * @see loadContentInLateralSidebar
+ */
+
+function callRessource(id_article) {
+	changeTimelineMode('consignes');
+	showSidebar();
+	updateMenuIcon(['ressources'], 'sidebarView');
+
+	blankMainSidebar('ressources');
+	const stateParams = {
+		type_objet: 'ressources',
+		page: 'article',
+	}
+	const urlParams = {
+		page: 'article',
+		mode: 'complet',
+		type_objet: 'ressources'
+	}
+	loadContentInMainSidebar(
+		CCN.projet.url_popup_ressources, 
+		() => {
+			updateUrl(
+				stateParams, 
+				"", 
+				`./spip.php?${new URLSearchParams(urlParams).toString()}`
+			);
+			if(id_article) {
+				selectionnerRessource(id_article)
+			}
+		}, 
+		"ressource"
+	);
+}
+
+function loadArticleInLateralSidebar(id_article) {
+	emptyLateralSidebar();
+	loadContentInLateralSidebar(`${CCN.projet.url_popup_ressources_detail}&id_article=${id_article}`);
+	setLateralSidebarExpanded(id_article);
+}
+
+/**
+ * Charge le formulaire de création d'un évènement d'agenda dans la sidebar
+ * principale (#412 : le menu "Publier > Un évènement dans l'agenda" ne
+ * faisait qu'un changeTimelineMode sans jamais ouvrir de formulaire).
+ *
+ * page=rubrique (cf callRessource) est une page de NAVIGATION dans une
+ * arborescence, pas un formulaire générique : elle ne gère pas type_objet=
+ * blogs et retombe sur un rendu par défaut ("Classe participante").
+ * page=publier (comme url_popup_reponseajout/createReponse) est le bon
+ * point d'entrée, générique par type_objet.
+ *
+ * type_objet=blogs et non evenements : cf thematique_type_objet_rubrique
+ * (thematique_fonctions.php) — "evenements" est le type de la Salle des
+ * pros, réservée aux profs (cf noisettes/inc/logo_salle_profs.html,
+ * thematique_role_voit_salle_profs), alors que "blogs" est l'Agenda public
+ * (menu_logo_blogs dans noisettes/sommaire.html). Les deux avaient été
+ * intervertis dans un premier temps (#412).
+ *
+ * changeTimelineMode() est asynchrone : la première fois qu'on bascule vers
+ * un mode pas encore actif, elle attend le chargement JSON des articles
+ * puis termine par showWholeTimeline(), qui appelle closeSidebar() (cf
+ * projet.js). Sans l'await ci-dessous, cette fermeture arrivait APRÈS coup,
+ * juste après que loadContentInMainSidebar ait ouvert le formulaire — d'où
+ * un formulaire qui s'affichait puis se refermait aussitôt tout seul
+ * (invisible au premier clic, correct au second une fois le mode déjà
+ * actif, donc changeTimelineMode devenue un no-op) (#412 bis).
+ *
+ * @see loadContentInMainSidebar
+ * @see createReponse
+ */
+
+async function callEvenementCreer() {
+	await changeTimelineMode('blogs');
+	expandSidebar();
+	setLateralSidebarExpanded(false);
+	updateMenuIcon(['blogs'], 'mainView');
+	loadContentInMainSidebar(CCN.projet.url_popup_evenement_creer, null, "publication_article");
+}
+
+/**
+ * Charge le formulaire de création d'une information de la Salle des pros
+ * (menu "Publier > Information en salle des pros", #461) : jusqu'ici un
+ * simple stub (alert("chantier_ccn")) dans choix_rubrique_admin2.html,
+ * jamais câblé à un formulaire — un intervenant n'avait donc aucun moyen
+ * d'y publier malgré l'autorisation backend (thematique_role_publie).
+ * type_objet=evenements (cf commentaire de callEvenementCreer sur
+ * l'inversion blogs/evenements, #412).
+ *
+ * @see callEvenementCreer
+ */
+async function callInformationCreer() {
+	await changeTimelineMode('evenements');
+	expandSidebar();
+	setLateralSidebarExpanded(false);
+	updateMenuIcon(['evenements'], 'mainView');
+	loadContentInMainSidebar(CCN.projet.url_popup_information_creer, null, "publication_article");
+}
+
+/**
+ * Charge le formulaire de création d'une nouvelle mission (menu "Publier >
+ * Une nouvelle mission") en plein écran, contrairement à une réponse à une
+ * consigne existante (cf createReponse) qui reste affichée en colonnes pour
+ * garder la consigne visible à côté.
+ *
+ * @param {number} id_rubrique_auteur
+ *
+ * @see createReponse
+ * @see setFullscreenModeToCols
+ */
+
+function callNouvelleMission(id_rubrique_auteur) {
+	expandSidebar();
+	setLateralSidebarExpanded(false);
+	createReponse(0, id_rubrique_auteur, 0);
+}
+
+function callNouvelleRessource() {
+	expandSidebar();
+	setLateralSidebarExpanded(false);
+	const url = CCN.projet.url_popup_ressources_ajout;
+	loadContentInMainSidebar(url, null, "publication_article");
+}
+
+/**
+ * Appelle le chargement d'un article jalon ("Cap sur l'année" / "La Rencontre")
+ * dans la sidebar principale.
+ *
+ * @param {Boolean} est_debut
+ *
+ * @see loadContentInMainSidebar
+ */
+
+function callArticleJalon(est_debut) {
+	const id_article = est_debut ? CCN.idArticleCapSurAnnee : CCN.idArticleLaRencontre;
+	if (!Number.isInteger(Number(id_article)) || id_article <= 0) return;
+	changeTimelineMode('consignes');
+	setLateralSidebarExpanded(false);
+
+	// Même zoom qu'une consigne (cf showInTimeline dans consigne.js) :
+	// la fenêtre affiche le même nombre de jours (nombre_jours_max de la
+	// consigne voisine, 30 à défaut) et se positionne sur le jalon
+	// (début de l'année pour « Cap sur l'année », fin pour « La Rencontre »).
+	const consigneVoisine = est_debut
+		? CCN.consignes[0]
+		: CCN.consignes[CCN.consignes.length - 1];
+	const nombre_jours = consigneVoisine ? consigneVoisine.nombre_jours_max : 30;
+	const x_dest = est_debut
+		? 0
+		: CCN.projet.nombre_jours_total - nombre_jours;
+	CCN.projet.showRangeOfTimeline(nombre_jours, x_dest, 0);
+
+	const url = `./spip.php?page=article&id_article=${id_article}&est_debut=${est_debut}&type_objet=jalon&mode=ajax-detail`;
+	loadContentInMainSidebar(
+		url,
+		() => {
+			updateUrl(
+				{
+					'type_objet': 'jalon',
+					'id_objet': id_article,
+					'id_article': id_article,
+					'page': 'article',
+					'est_debut': est_debut,
+				}, "", `./spip.php?page=article&id_article=${id_article}&est_debut=${est_debut}&mode=complet`
+			);
+		},
+		"consigne"
+	);
+}
+
+/**
+ * Appelle le chargement d'un article ressource dans la sidebar principale.
+ *
+ * @param {number} id_article
+ * @param {string} type_objet
+ *
+ * @see loadContentInMainSidebar
+ */
+
+function callRessourceArticle(id_article, type_objet) {
+	if (!Number.isInteger(Number(id_article))) return;
+	changeTimelineMode('consignes');
+	setLateralSidebarExpanded(true);
+	updateMenuIcon([type_objet], 'sidebarView');
+
+	const url = "./spip.php?page=article&id_article=" + id_article + "&type_objet=" + type_objet + "&mode=ajax-detail";
+	loadContentInMainSidebar(
+		url,
+		() => {
+			updateUrl(
+				{
+					'type_objet': type_objet,
+					'id_article': id_article,
+					'page': 'article'
+				}, "Ressources", "./spip.php?page=article&id_article=" + id_article + "&type_objet=" + type_objet + "&mode=complet"
+			);
+		},
+		"ressource"
+	);
+}
+
+/**
+ * Appelle le chargement d'un article syndiqué (ressource externe)
+ * dans la sidebar principale.
+ *
+ * @param {number} id_syndic_article
+ * @param {string} type_objet
+ *
+ * @see loadContentInMainSidebar
+ */
+
+function callRessourceSyndicArticle(id_syndic_article, type_objet) {
+	if (!Number.isInteger(Number(id_syndic_article))) return;
+	changeTimelineMode('consignes');
+	setLateralSidebarExpanded(true);
+	updateMenuIcon([type_objet], 'sidebarView');
+
+	const url = "./spip.php?page=syndic_article&id_syndic_article=" + id_syndic_article + "&type_objet=" + type_objet + "&mode=ajax-detail";
+	loadContentInMainSidebar(
+		url,
+		() => {
+			updateUrl(
+				{
+					'type_objet': type_objet,
+					'id_syndic_article': id_syndic_article,
+					'page': 'article'
+				}, "Ressources", "./spip.php?page=syndic_article&id_syndic_article=" + id_syndic_article + "&type_objet=" + type_objet + "&mode=complet"
+			);
+		},
+		"ressource"
+	);
+}
+
+/**
+ * Appelle le chargement d'une rubrique ressource
+ * dans la sidebar principale.
+ *
+ * @param {number} id_rubrique
+ * @param {string} type_objet
+ *
+ * @see loadContentInMainSidebar
+ */
+
+function callRessourceRubrique(id_rubrique, type_objet) {
+	if (!Number.isInteger(Number(id_rubrique))) return;
+	changeTimelineMode('consignes');
+	setLateralSidebarExpanded(true);
+	updateMenuIcon([type_objet], 'sidebarView');
+
+	const url = "./spip.php?page=rubrique&id_rubrique=" + id_rubrique + "&type_objet=" + type_objet + "&mode=ajax-detail";
+	loadContentInMainSidebar(
+		url,
+		() => {
+			updateUrl(
+				{
+					'type_objet': type_objet,
+					'id_rubrique': id_rubrique,
+					'page': 'rubrique'
+				}, "Ressources", "./spip.php?page=rubrique&id_rubrique=" + id_rubrique + "&type_objet=" + type_objet + "&mode=complet"
+			);
+		},
+		"ressource"
+	);
+}
+/**
+ * Appelle le chargement d'un article ou syndic_article d'événement
+ * dans la sidebar principale et met à jour l'URL du navigateur.
+ *
+ * @param {number} id_objet
+ * @param {string} type_objet - "article" ou "syndic_article"
+ *
+ * @see loadContentInMainSidebar
+ * @see loadContentInLateralSidebar
+ */
+
+function callArticleEvenement(id_objet, type_objet) {
+	if (!Number.isInteger(Number(id_objet))) return;
+	if (!['article', 'syndic_article'].includes(type_objet)) return;
+	changeTimelineMode('evenements');
+	setLateralSidebarExpanded(false);
+	updateMenuIcon(['evenements'], 'mainView');
+	flouterLesBullesEtLosangesNonSelectionnes(id_objet)
+
+	const url = CCN.projet.url_popup_evenement + "&page=" + type_objet + "&id_" + type_objet + "=" + id_objet;
+	loadContentInMainSidebar(
+		url,
+		() => {
+			updateUrl(
+				{
+					'type_objet': 'evenements',
+					'id_article': id_objet,
+					'page': type_objet
+				}, CCN.lang.evenement, "./spip.php?page=" + type_objet + "&id_article=" + id_objet + "&mode=complet"
+			);
+		},
+		"evenement"
+	);
+
+}
+/**
+ * Charge le formulaire de publication d'une réponse à une consigne
+ * dans la sidebar principale.
+ *
+ * @param {number} id_consigne
+ * @param {number} id_rubrique_classe
+ * @param {number} numero - Rang de la consigne, utilisé si absente de CCN.consignes
+ *
+ * @see loadContentInMainSidebar
+ */
+function createReponse(id_consigne, id_rubrique_auteur, numero) {
+	changeTimelineMode('consignes');
+
+	const consigneData = CCN.consignes && CCN.consignes.find(c => c.id == id_consigne);
+	const nextConsigne = consigneData ? CCN.consignes.find(c => c.numero === consigneData.numero + 1) : null;
+	const dateLimite   = nextConsigne ? nextConsigne.data.date_texte : '';
+	const rang         = consigneData ? consigneData.numero : (numero || '');
+	// id_consigne à 0 : création d'une nouvelle mission (cf callNouvelleMission),
+	// pas d'une réponse à une consigne existante — url_popup_reponseajout force
+	// type_objet=travail_en_cours, ce qui affichait à tort les textes "réponse à
+	// la mission" du popup (cf thematique_texte_publication) au lieu de ceux de
+	// "mission".
+	const urlBase = id_consigne ? CCN.projet.url_popup_reponseajout : CCN.projet.url_popup_missionajout;
+	const url = urlBase + "&id_consigne=" + id_consigne + "&id_rubrique=" + id_rubrique_auteur + "&rang=" + rang + "&date_limite=" + dateLimite;
+	loadContentInMainSidebar(url, null, "publication_article");
+}
+
+/**
+ * Ouvre la modale de publication (#429, noisettes/sidebar/publier_article/)
+ * en mode édition pour un article déjà publié, plutôt qu'un formulaire
+ * d'édition dédié - clic sur le bouton "Modifier" du header d'une mission/
+ * réponse/évènement (cf header_sidebar.html, header_reponse_sidebar.html).
+ *
+ * L'autorisation réelle (et la restriction par rôle sur le champ date) est
+ * revérifiée côté PHP (formulaires_public_publier_article_charger_dist,
+ * thematique_autoriser.php) : ce bouton n'est de toute façon affiché que si
+ * #AUTORISER{modifier,article,...} est vrai pour l'auteur courant.
+ *
+ * @param {number} id_article
+ * @param {string} type_article - consignes/travail_en_cours/blogs/evenements/ressources
+ *
+ * @see loadContentInMainSidebar
+ * @see createReponse
+ */
+function callModifierArticle(id_article, type_article) {
+	if (!Number.isInteger(Number(id_article)) || id_article <= 0) return;
+	expandSidebar();
+	setLateralSidebarExpanded(false);
+	const url = CCN.projet.url_popup_modifier_article + "&id_article=" + id_article + "&type_objet=" + type_article;
+	loadContentInMainSidebar(url, null, "publication_article");
+}
+
+/**
+ * Cherche la réponse correspondant à un id_reponse dans CCN.consignes.
+ *
+ * @param   {number} id_reponse
+ * @returns {{consigne: object, reponse: object}|null}
+ */
+function findReponseById(id_reponse) {
+	for (const consigne of CCN.consignes) {
+		for (const reponse of consigne.reponses) {
+			// == et non === : reponse.id est un nombre (JSON), id_reponse peut
+			// être une chaîne (lien direct/F5, cf setContentFromState() qui
+			// transmet id_objet tel que lu dans l'URL) — comme partout ailleurs
+			// dans ce fichier (showConsigneInTimeline, showReponseInTimeline).
+			if (reponse.id == id_reponse) {
+				return { consigne, reponse };
+			}
+		}
+	}
+	return null;
+}
+
+/**
+ * @param {number} id_reponse
+ * @returns {number|null} Id de la consigne parente
+ */
+function getIdConsigneFromIdReponse(id_reponse) {
+	const found = findReponseById(id_reponse);
+	return found ? found.consigne.id : null;
+}
+
+/**
+ * @param {number} id_reponse
+ * @returns {number|null} Id de la classe parente
+ */
+function getIdClasseFromIdReponse(id_reponse) {
+	const found = findReponseById(id_reponse);
+	return found ? found.reponse.classe_id : null;
+}
+
+/**
+ * Met à jour les connecteurs de la timeline.
+ * <br>
+ * La fonction est appelée de manière récursive (<tt>setInterval(…, 1)</tt>)
+ * afin de mettre à jour en même temps que la transition CSS de la timeline.
+ */
+function updateAllConnecteurs() {
+	$('.connecteur_timeline').each(
+		function () {
+
+			const connecteur_consigne = $('#consigne_haute' + $(this).data('consigne-id'));
+			const connecteur_reponse = $('#reponse_haute' + $(this).data('reponse-id'));
+
+			const connecteur = $(this);
+
+			const x1 = connecteur_consigne.offset().left + connecteur_consigne.outerWidth();
+			const y1 = connecteur_consigne.offset().top;
+			const x2 = connecteur_reponse.offset().left;
+			const y2 = connecteur_reponse.offset().top;
+
+			const length = Math.sqrt((x1 - x2) * (x1 - x2) + (y1 - y2) * (y1 - y2));
+			const angle = Math.atan2(y2 - y1, x2 - x1) * 180 / Math.PI;
+			const transform = 'rotate(' + angle + 'deg)';
+
+			connecteur.css(
+				{
+					'position': 'absolute',
+					'transform': transform,
+					'left': parseFloat(x1) + 'px',
+					'top': parseFloat(y1) + 'px'
+				}
+			)
+				.width(parseFloat(length) + 'px');
+		}
+	);
+}
+
+
+
+function handleObjectCollisionWithMenus(
+	y, 
+	etiquetteTop,
+	objectTop,
+	objectHeight,
+	timelineTop, 
+	timelineHeight
+) {
+	const yMin = objectTop-etiquetteTop;
+    const yMax = timelineHeight - objectHeight;
+    if (y < yMin) return yMin;
+    if (y > yMax) return yMax;
+    return y;
+}
+
+function dragWithCollision(object, ui, options) {
+	const objectDOM = $(object);
+	const timelineDOM = $(options.timeline);
+	const timelineRect = timelineDOM[0].getBoundingClientRect();
+	const getVisualBounds = options.getVisualBounds || function (objectDOM) {
+		const rect = objectDOM[0].getBoundingClientRect();
+
+		return {
+			top: rect.top,
+			bottom: rect.bottom
+		};
+	};
+	const currentBounds = getVisualBounds(objectDOM);
+
+	/*
+	 * Distance entre le top de la card et le haut
+	 * de sa représentation visuelle.
+	 *
+	 * Exemple :
+	 * card top     = 200
+	 * élément haut = 170
+	 *
+	 * => visualOffsetTop = -30
+	 */
+	const objectRect = objectDOM[0].getBoundingClientRect();
+	const visualOffsetTop = currentBounds.top - objectRect.top;
+	const visualOffsetBottom = currentBounds.bottom - objectRect.top;
+
+	const minTop = timelineRect.top - visualOffsetTop;
+	const maxTop = timelineRect.bottom - visualOffsetBottom;
+	let proposedTop = ui.offset.top;
+	proposedTop = Math.max(
+		minTop,
+		Math.min(proposedTop, maxTop)
+	);
+	const parent = objectDOM.offsetParent()[0];
+	const parentRect = parent.getBoundingClientRect();
+	ui.position.top = proposedTop - parentRect.top;
+	return ui;
+}
+
+function updateConsigneConnecteurs(consigneObject, ui) {
+	const consigneDOM = $(consigneObject);
+	const buttonConsigne = consigneDOM.find('button.consigne').first();
+	const idConsigne = buttonConsigne.data('id');
+	const connecteursDOM = $(`[id^="connecteur_consigne_${idConsigne}_reponse_"]`);
+	const timelineTop = CCN.timelineLayerConsignes.offset().top;
+	const adjustedUiPositionTop = ui.position.top;
+	const x1 = consigneDOM.offset().left + consigneDOM.outerWidth();
+	const y1 = adjustedUiPositionTop + consigneDOM.outerHeight() / 2;
+
+	connecteursDOM.each(function () {
+		const connecteur = $(this);
+		const reponseId = connecteur.data('reponse-id');
+		const reponseDOM = $(`#reponse_haute${reponseId}`);
+		const x2 = reponseDOM.offset().left;
+		const y2 =
+			reponseDOM.offset().top +
+			reponseDOM.outerHeight() / 2 -
+			timelineTop;
+
+		const length = Math.sqrt(
+			(x1 - x2) * (x1 - x2) +
+			(y1 - y2) * (y1 - y2)
+		);
+
+		const angle =
+			Math.atan2(y2 - y1, x2 - x1) * 180 / Math.PI;
+
+		connecteur.css({
+			position: 'absolute',
+			transform: 'rotate(' + angle + 'deg)',
+			left: parseFloat(x1) + 'px',
+			top: parseFloat(y1) + 'px'
+		}).width(parseFloat(length) + 'px');
+	});
+}
+
+function updateReponseConnecteurs(reponseObject, ui) {
+	const reponseDOM = $(reponseObject);
+
+	const idConsigne = reponseDOM.data('consigne-id');
+	const idReponse = reponseDOM.data('reponse-id');
+
+	const connecteurDOM =
+		$(`#connecteur_consigne_${idConsigne}_reponse_${idReponse}`);
+
+	const consigneDOM =
+		$(`#consigne_haute${idConsigne}`);
+
+	const timelineTop =
+		CCN.timelineLayerConsignes.offset().top;
+
+	// Départ du connecteur : bord droit de la consigne
+	const x1 =
+		consigneDOM.offset().left +
+		consigneDOM.outerWidth();
+
+	const y1 =
+		consigneDOM.offset().top +
+		consigneDOM.outerHeight() / 2 -
+		timelineTop;
+
+	// Arrivée du connecteur : bord gauche de la réponse
+	const x2 = reponseDOM.offset().left;
+
+	const y2 =
+		ui.position.top +
+		reponseDOM.outerHeight() / 2;
+
+	const length = Math.sqrt(
+		(x1 - x2) * (x1 - x2) +
+		(y1 - y2) * (y1 - y2)
+	);
+
+	const angle =
+		Math.atan2(y2 - y1, x2 - x1) * 180 / Math.PI;
+
+	connecteurDOM
+		.css({
+			position: 'absolute',
+			transform: 'rotate(' + angle + 'deg)',
+			left: parseFloat(x1) + 'px',
+			top: parseFloat(y1) + 'px'
+		})
+		.width(parseFloat(length) + 'px');
+}
+
+/**
+ * Met à jour l'URL
+ */
+
+function updateUrl(object, title, url) {
+
+	currentState = object;
+	if (CCN.hash != '') {
+		if (CCN.hash.substring(0, 5) == 'forum') {
+
+		} else {
+
+			window.history.pushState(object, title, url + '#' + CCN.hash);
+
+		}
+
+		setTimeout(
+			function () {
+
+				if (/^[\w-]+$/.test(CCN.hash)) {
+					const anchor = $("#" + CCN.hash);
+					if (anchor.length > 0) {
+						// Ce bloc est appelé au moins deux fois : on utilise .show() plutôt
+						// qu'un trigger('click') sur .triggertoggleshow, qui ferait un
+						// slideToggle et refermerait l'item au second appel.
+
+						// Forum : ouvre les items
+						anchor.find('.toggleshow').show();
+						anchor.closest('.intervention_item_around').find('.toggleshow').show();
+
+						$('#sidebar_content, #sidebar_main_inner, #sidebar_lateral_inner').animate({ scrollTop: anchor.offset().top - 60 }, 'slow');
+					}
+				}
+
+				CCN.hash = '';
+			}, 500
+		);
+	} else {
+		window.history.pushState(object, title, url);
+	}
+}
+/**
+ * Met à jour le cookie et recharge la page.
+ *
+ * @param {string} url - URL de la page de destination
+ * @param {string} cookie_nom - Nom du cookie
+ * @param {string} cookie_valeur - Valeur du cookie
+ */
+
+function setCookie(url, cookie_nom, cookie_valeur) {
+	document.cookie = cookie_nom + "=" + encodeURIComponent(cookie_valeur) + "; SameSite=Strict; Secure";
+}
+/**
+ * Gère le rechargement de la page.
+ *
+ * @param {string} url - URL de la page à charger avec AJAX ou <tt>self</tt> pour recharger la même page
+ *
+ * @see setCookie
+ */
+
+function reload(url) {
+	if (url === 'self') {
+		location.reload(true);
+	} else if ((url.startsWith('/') && !url.startsWith('//')) || url.startsWith(window.location.origin)) {
+		window.location.href = url;
+	}
+}
+
+/**
+ * Initialise le système d'onglets #mission-tabs s'il est présent.
+ * Appelable sans risque plusieurs fois (customTabs est idempotent) :
+ * couvre à la fois le chargement de page complet (voir main.js) et
+ * la navigation ajax (voir loadContentInMainSidebar).
+ */
+function initMissionTabs() {
+	const missionTabs = $('#mission-tabs');
+	if (missionTabs.length > 0) {
+		missionTabs.customTabs({
+			urlParam: 'onglet',
+			pushHistory: false  // "false" pour que "précédent" ne navigue pas entre les onglets
+		});
+	}
+}
+
+/**
+ * Charge une URL dans la sidebar principale, avec état de chargement
+ * (classe <tt>loading</tt> sur <tt>body</tt>) et callback de fin.
+ *
+ * @param {string} url - URL de la page à charger avec AJAX
+ * @param {?function(string)} callback - Appelé avec la réponse une fois le contenu chargé
+ * @param {string} typeContenu - Type de contenu chargé : <tt>consigne</tt>, <tt>reponse</tt>, <tt>publication_article</tt>…
+ *
+ * @see loadContentInLateralSidebar
+ */
+function loadContentInMainSidebar(url, callback, typeContenu) {
+	$('body').addClass('loading');
+	showSidebar();
+	emptyMainSidebar();
+
+	// $.get() plutôt que $(elem).load(url) : .load() coupe silencieusement
+	// l'url au premier espace et traite le reste comme un sélecteur jQuery à
+	// appliquer sur la réponse — une valeur imprévue (id, date...) contenant
+	// un espace dans l'url casse le chargement avec une erreur Sizzle
+	// "unrecognized expression" au lieu d'un simple 404/erreur réseau.
+	$.get(url).done(function (response) {
+
+		$('#sidebar_main_inner').html(response);
+
+		// $.get() est intercepté par prive/javascript/ajaxCallback.js (SPIP
+		// coeur) comme n'importe quel jQuery.ajax : il déclenche déjà
+		// jQuery.spip.triggerAjaxLoad(document) tout seul — mais dans son
+		// propre callback "complete", exécuté à la fin de la requête donc
+		// AVANT le .done() ci-dessus (enregistré après coup sur la même
+		// promesse) : ce scan automatique tombe sur l'ancien DOM, avant le
+		// $('#sidebar_main_inner').html(response) qui vient d'injecter le
+		// nouveau contenu. Résultat : les formulaires ajax (#FORMULAIRE_*)
+		// et les blocs ajax=xxx (cf ajaxReload(), ex.
+		// noisettes/inc/publier_article_documents.html) du popup fraîchement
+		// chargé ne sont jamais bindés, et ajaxReload('documents') après un
+		// upload de document ne fait donc rien. On relance nous-mêmes le
+		// scan après l'insertion pour les binder correctement.
+		if (window.jQuery && jQuery.spip && jQuery.spip.triggerAjaxLoad) {
+			jQuery.spip.triggerAjaxLoad(document);
+		}
+
+		if (!response || response.trim() === "") {
+			if (CCN.debug) { console.warn(CCN.lang.reponse_vide); }
+		}
+
+		$('body').removeClass('loading');
+		$('#sidebar_content').scrollTop(0);
+		updatePageTitleFromSidebarContent();
+		_sidebarFocusFirst();
+		if(["consigne", "reponse", "blog", "evenement", "classe"].includes(typeContenu)) {
+			initMissionTabs();
+			initCommentaires();
+		}
+		if(typeContenu === "publication_article") {
+			initCommentaires();
+			initCompteurCaracteres();
+		}
+
+		// Purge &onglet=... une fois ce chargement terminé (et initMissionTabs()
+		// déjà passé dessus, ci-dessus, s'il devait s'en servir) : sinon il fuite
+		// sur le PROCHAIN contenu chargé dans cette même sidebar, dont
+		// #mission-tabs serait réinitialisé et relirait ce paramètre périmé pour
+		// forcer l'onglet d'un objet qui n'a rien à voir avec celui où il a été
+		// posé (ex: onglet "commentaires" d'une mission qui force l'onglet
+		// "commentaires" sur la réponse de classe cliquée ensuite). Purger avant
+		// ce point (en début de fonction) empêchait initMissionTabs() de jamais
+		// voir ce paramètre, y compris pour CE chargement-ci.
+		const urlSansOnglet = new URL(window.location.href);
+		if (urlSansOnglet.searchParams.has('onglet')) {
+			urlSansOnglet.searchParams.delete('onglet');
+			window.history.replaceState(null, '', urlSansOnglet);
+		}
+
+		if (callback) {
+			callback(response);
+		}
+
+		antifloodHashChange = false;
+	}).fail(function (xhr, status) {
+		if (CCN.debug) { console.error("Erreur de chargement :", xhr.status, xhr.statusText); }
+		$('body').removeClass('loading');
+		antifloodHashChange = false;
+	});
+}
+
+/**
+ * Update le menu
+ */
+function updateMenuIcon(ids, mode) {
+	if (mode === 'timelineMode' || mode === 'mainView') {
+		$('#menu_bas .logo a').removeClass('selected');
+		for (const id of ids) {
+			$('.menu_logo_' + id).addClass('selected');
+		}
+	}
+
+	if (mode === 'sidebarView') {
+		$('#menu_bas .logo a.menu_logo_type_sidebarView').removeClass('selected');
+		$('#menu_bas .logo a.logo_menu_classe').removeClass('selected');
+		for (const id of ids) {
+			$('.menu_logo_' + id).addClass('selected');
+		}
+	}
+}
+
+/**
+ * Vide la sidebar principale.
+ *
+ * @see loadContentInMainSidebar
+ */
+function emptyMainSidebar() {
+	$('#sidebar_main_inner').html('<div class="popup"><div class="sidebar_bubble sidebar_bubble_empty"></div></div>');
+}
+
+function emptyLateralSidebar() {
+	$('#sidebar_lateral_inner').html('<div class="popup"><div class="sidebar_bubble sidebar_bubble_empty"></div></div>');
+}
+
+function loadContentInLateralSidebar(url, callback) {
+
+	$('body').addClass('loading');
+	emptyLateralSidebar();
+
+	// $.get() plutôt que $(elem).load(url) : .load() coupe silencieusement
+	// l'url au premier espace et traite le reste comme un sélecteur jQuery à
+	// appliquer sur la réponse — une valeur imprévue (id, date...) contenant
+	// un espace dans l'url casse le chargement avec une erreur Sizzle
+	// "unrecognized expression" au lieu d'un simple 404/erreur réseau.
+	$.get(url).done(function (response) {
+		$('#sidebar_lateral_inner').html(response);
+		if (!response || response.trim() === "") {
+			if (CCN.debug) { console.warn(CCN.lang.reponse_vide); }
+		}
+		$('body').removeClass('loading');
+		$('#sidebar_content').scrollTop(0);
+		if (callback) {
+			callback(response);
+		}
+
+		antifloodHashChange = false;
+	}).fail(function (xhr, status) {
+		if (CCN.debug) { console.error("Erreur de chargement :", xhr.status, xhr.statusText); }
+		$('body').removeClass('loading');
+		antifloodHashChange = false;
+	});
+}
+
+/**
+ * Définit l'affichage plein écran de/des sidebars
+ */
+
+function setLateralSidebarExpanded(setCols) {
+	const lateralWasExpanded = $('body').hasClass('hasLateralSidebarExpanded')
+	
+	$('body').toggleClass('hasLateralSidebarExpanded', Boolean(setCols));
+	if(setCols) {
+		$('body').removeClass('hasSidebarExpanded');
+		if(!lateralWasExpanded) {
+			initLateralSidebar()
+		}
+	}
+}
+
+function initLateralSidebar() {
+	$(document).on('click', '#sidebar_lateral_around #sidebar-close', function () {
+		$('body').removeClass('hasLateralSidebarExpanded');
+		$('body').removeClass('hasSidebarExpanded');
+		removeFromUrl("id_article")
+	});
+
+	
+}
+
+/**
+ * Ajoute un bloc blanc vide dans la sidebar principale.
+ *
+ * @see loadContentInMainSidebar
+ */
+
+// Construite à l'appel (pas au chargement du script) : CCN.lang n'est
+// disponible qu'une fois noisettes/timeline.html exécuté, plus tard.
+function _blankMainSidebarTemplates(key) {
+	const templates = {
+		'travail_en_cours': `<div class="sidebar_bubble"><div class="fiche_titre couleur_texte_ressources couleur_ressources0"><div class="texte"><div class="titre">${CCN.lang.sidebar_travail_en_cours_titre}</div></div></div></div><div class="sidebar_bubble sidebar_bubble_blank">${CCN.lang.sidebar_travail_en_cours_texte}</div>`,
+		'ressources':       `<div class="sidebar_bubble"><div class="fiche_titre couleur_texte_ressources couleur_ressources0"><div class="texte"><div class="titre">${CCN.lang.sidebar_ressources_titre}</div></div></div></div><div class="sidebar_bubble sidebar_bubble_blank">${CCN.lang.sidebar_ressources_texte}</div>`,
+	};
+	return templates[key];
+}
+
+function blankMainSidebar(key) {
+	const html = _blankMainSidebarTemplates(key) || '';
+	$('#sidebar_main_inner').html('<div class="popup popup_blank">' + html + '</div>');
+}
+
+/**
+ * Affiche la sidebar principale.
+ *
+ * @see loadContentInMainSidebar
+ */
+
+function showSidebar() {
+	_sidebarTrigger = document.activeElement;
+	$('body').addClass('hasSidebarOpen');
+	$('#sidebar').addClass('show').attr('aria-hidden', 'false');
+	updateAllConnecteurs();
+}
+
+function closeSidebar() {
+	$('body').removeClass('hasSidebarOpen hasSidebarExpanded hasLateralSidebarExpanded');
+	$('#sidebar').removeClass('show').attr('aria-hidden', 'true');
+	$('#menu_bas .logo a').not('#menu-timeline .logo a').removeClass('selected');
+	document.title = _originalDocumentTitle;
+	if (_sidebarTrigger && typeof _sidebarTrigger.focus === 'function') {
+		_sidebarTrigger.focus();
+	}
+	_sidebarTrigger = null;
+	const interval = setInterval(updateAllConnecteurs, 16);
+	setTimeout(() => {
+		clearInterval(interval);
+		// Une fois le panneau glissé hors écran, on vide son contenu
+		// pour ne pas le garder chargé inutilement (poids DOM sur mobile).
+		if (!$('body').hasClass('hasSidebarOpen')) {
+			emptyMainSidebar();
+			emptyLateralSidebar();
+		}
+	}, 500);
+}
+
+function _sidebarFocusFirst() {
+	const $focusable = _sidebarFocusableElements();
+	if ($focusable.length) {
+		$focusable.first().focus();
+	} else {
+		$('#sidebar').attr('tabindex', '-1').focus();
+	}
+}
+
+function selectBlog(blogId) {
+	const selected = document.querySelector(`.article_blogarticle_${blogId}`)
+	const timelineItem = selected.closest(".timeline_item")
+	document.querySelectorAll(".article_blog").forEach(blog=>{
+		blog.classList.add("blured")
+	})
+	timelineItem.classList.add("blured")
+}
+
+function deflouterToutesLesBullesEtLosanges() {
+	document.querySelectorAll('.article_blog_container, .article_evenement_container').forEach(bulleOuLosange => {
+		bulleOuLosange.classList.remove('flou');
+	});
+}
+
+function flouterLesBullesEtLosangesNonSelectionnes(idSelectionnee) {
+	const article_blog = document.querySelector(`#article_blogarticle_${idSelectionnee}, #article_evenementarticle_${idSelectionnee}`)
+	const elementSelectionnee = article_blog.closest(".timeline_item")
+	document.querySelectorAll('.article_blog_container, .article_evenement_container').forEach(bulleOuLosange => {
+		bulleOuLosange.classList.add('flou');
+	})
+	elementSelectionnee.classList.remove('flou');	
+}

@@ -1,0 +1,140 @@
+#CACHE{48*3600}
+[(#REM)Page principale - Pour vue de détail forcée à l'ouverture :
+-#ENV{type_objet} : consignes, travail_en_cours, blogs, evenements, ressources
+-#ENV{id_objet} : id_objet
+et/ou
+-#ENV{vue_date} : 01/10/2011
+]
+<INCLURE{fond=noisettes/inc/ccn_role} />
+<div id="zone" class="zone_timeline zone"[ (#VUE|=={classe}|oui) style="display:none;"]>
+	<INCLURE{fond=noisettes/timeline, 
+			 role=#SESSION{role},
+			 env,
+			 ajax
+	} />
+</div>
+<div id="loading_feedback">Chargement</div>
+<div id="offset"></div>
+<div id="global">
+	<h1 class="sr-only">[(#NOM_SITE_SPIP)]</h1>
+	<div id="menu_haut" class="zone-menu">
+		<INCLURE{fond=noisettes/menu_haut, id_auteur=#SESSION{id_auteur}, env, ajax}>
+	</div>
+
+	<div id="timeline">
+		<div id="timeline_responsive">
+			<div id="timeline_fixed"></div>
+			<div id="timeline_wrapin">
+				<div class="timeline_layer" id="timeline_layer_consignes">
+					<div class="timeline_trigger"></div>
+				</div>
+				<div class="timeline_layer" id="timeline_layer_blogs">
+					<div class="timeline_trigger"></div>
+				</div>
+				<div class="timeline_layer" id="timeline_layer_evenements">
+					<div class="timeline_trigger"></div>
+				</div>
+				<div class="timeline_layer" id="timeline_layer_livrables">
+					<div class="timeline_trigger"></div>
+				</div>
+				<div id="timeline_background"></div>
+				<INCLURE{fond=noisettes/card_jalon,
+						est_debut=oui,
+						texte=<:thematique:cap_sur_annee:>,
+						env, 
+						ajax
+				} />
+				<INCLURE{fond=noisettes/card_jalon,
+						est_debut=non,
+						texte=<:thematique:la_rencontre:>,
+						env, 
+						ajax
+				} />
+			</div>
+		</div>
+		<div id="sidebar" role="dialog" aria-modal="true" aria-hidden="true">
+			<div id="sidebar_content">
+				<div id="sidebar_main_around">
+					<div id="sidebar_main">
+						<div id="sidebar_main_inner" class="sidebar_content_inner">
+						</div>
+					</div>
+				</div>
+
+				<div id="sidebar_lateral_around">
+					<div id="sidebar_lateral">
+						<div id="sidebar_lateral_inner" class="sidebar_lateral_inner">
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div id="menu_bas" class="clearfix combo-filters zone-menu">
+		[(#REM)Timeline]
+		<div id="menu-timeline" class="bloc_view col">
+			<h3 class="menu-title"><span><:thematique:menu_publications:></span></h3>
+			<ul class="filter clearfix option-set ressource" data-filter-group="ressource">
+				[(#MODELE{logo_menu}{valeur=consignes}{class=tooltip menu_logo_consignes selected}{onclick=changeTimelineMode('consignes');CCN.projet.showWholeTimeline();}{title=<:thematique:missions:>})]
+
+				[(#MODELE{logo_menu}{valeur=blog}{class=tooltip menu_logo_blogs}{filter=.ressource_blogs}{onclick=changeTimelineMode('blogs');}{title=<:thematique:agenda:>})]
+
+				<INCLURE{fond=noisettes/inc/logo_salle_profs} />
+			</ul>
+		</div>
+
+		<INCLURE{fond=noisettes/menu_consignes, env, ajax} />
+
+		<INCLURE{fond=noisettes/menu_classes, env, ajax} />
+
+		<INCLURE{fond=noisettes/menu_ressources, env, ajax} />
+
+		[(#REM) Actualités : bloc (titre inclus) entièrement masqué si vide, cf actus_timeline.html]
+		[(#CONST{_PROJET}|!={laclasse}|oui)
+			<INCLURE{fond=noisettes/inc/actus_timeline, nb_actus=5, ajax} />
+		]
+
+		<div id="menu-classe" [(#VUE|=={classe}|non) style="display:none;"]>
+			[(#REM) Médias]
+			<div id="menu-medias" class="bloc_view col">
+				<h3><span><:thematique:medias:></span></h3>
+				<ul class="filter clearfix option-set ressource" data-filter-group="media">
+					[(#MODELE{logo_menu}{valeur=tout}{class=selected}{title=<:thematique:tous_les_medias:>})]
+					[(#MODELE{logo_menu}{valeur=texte}{filter=.texte}{title=<:thematique:les_textes:>})]
+					[(#MODELE{logo_menu}{valeur=image}{filter=.image}{title=<:thematique:les_images:>})]
+					[(#MODELE{logo_menu}{valeur=son}{filter=.son}{title=<:thematique:les_sons:>})]
+					[(#MODELE{logo_menu}{valeur=video}{filter=.video}{title=<:thematique:les_videos:>})]
+					[(#MODELE{logo_menu}{valeur=autre}{filter=.autre}{title=<:thematique:les_documents:>})]
+				</ul>
+			</div>
+
+			[(#REM) Tri]
+			<div id="menu-tris" class="bloc_view col">
+				<h3><span><:thematique:tri:></span></h3>
+				<ul id="sort-by" class="option-set clearfix" data-option-key="sortBy">
+					[(#MODELE{logo_menu}{valeur=date}{option=date}{title=<:thematique:par_date:>}{class=selected})]
+					[(#MODELE{logo_menu}{valeur=notation}{option=notation}{title=<:thematique:par_notation:>})]
+				</ul>
+				<ul id="sort-direction" class="option-set clearfix" data-option-key="sortAscending">
+					[(#MODELE{logo_menu}{valeur=descendant}{option=false}{title=<:thematique:descendant:>}{class=selected})]
+					[(#MODELE{logo_menu}{valeur=ascendant}{option=true}{title=<:thematique:ascendant:>})]
+				</ul>
+			</div>
+		</div>
+
+		[(#CONST{_PROJET}|=={laclasse}|oui)
+		<ul id="menu_bas_logos">
+			<li>
+				<a href="https://www.laclasse.com/" class="logo_service_public" target="_blank" rel="noopener noreferrer">[(#CHEMIN{img/logos/laclasse_short.svg}|balise_img|image_reduire{*,28})]</a>
+			</li>
+			<li>
+				<a href="https://erasme.org" class="logo_service_public" target="_blank" rel="noopener noreferrer">[(#CHEMIN{img/logos/erasme.svg}|balise_img)]</a>
+			</li>
+			<li>
+				<a id="menu_bas_logos_metropole_lyon" href="https://www.grandlyon.com/" class="logo_service_public" target="_blank" rel="noopener noreferrer">[(#CHEMIN{img/logos/metropolelyon.svg}|balise_img|image_reduire{*,40})]</a>
+			</li>
+		</ul>
+		]
+	</div>
+</div>

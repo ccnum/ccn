@@ -1,0 +1,88 @@
+<div class="formulaire_spip formulaire_public_publier_article">
+	[<p class="reponse_formulaire reponse_formulaire_ok">(#ENV*{message_ok})</p>]
+	[<p class="reponse_formulaire reponse_formulaire_erreur">(#ENV*{message_erreur})</p>]
+
+	#SET{id_objet_document, #ENV{id_article}|thematique_id_objet_document_temp}
+	[(#REM) Édition d'un article déjà publié (#429/#420, cf callModifierArticle() /
+	le bouton "Modifier" du header) plutôt que création : id_article non nul dès
+	le chargement du formulaire. ]
+	#SET{est_edition, #ENV{id_article}|oui}
+
+	<div class="editer-groupe">
+		<div id="sidebar-etape-2-container">
+			<h3><:thematique:ajouter_document:></h3>
+
+			<div class="ajax">
+				#FORMULAIRE_JOINDRE_DOCUMENT_MISSION{#GET{id_objet_document},article}
+			</div>
+			#SET{extensions_document_mission, #VAL{1}|thematique_extensions_document_mission_liste}
+			<p class="publier-article-formats-autorises"><:thematique:formats_autorises_document{extensions=#GET{extensions_document_mission}}:></p>
+			<INCLURE{fond=noisettes/inc/publier_article_documents, id_objet=#GET{id_objet_document}, objet=article, ajax=documents} />
+		</div>
+
+		<form method="post" action="#ENV{action}" enctype="multipart/form-data" id="formulaire_publier_article" >
+			<div>
+				#ACTION_FORMULAIRE{#ENV{action}}
+				<input type="hidden" name="id_article" value="#ENV{id_article}" />
+				<input type="hidden" name="id_parent" value="#ENV{id_parent}" />
+
+				[(#REM)
+				titre_publication/intro_publication : SET nu, hors crochets, puis
+				simple affichage de la balise GET dans les blocs conditionnels
+				plus bas. Sur ce SPIP, une chaîne de filtres directement dans le
+				texte affiché par le second de deux blocs conditionnels adjacents
+				entre crochets n'est pas exécutée (elle ressort en clair) - d'où
+				le calcul préalable en dehors. Ne jamais réintroduire de
+				caractère dièse dans ce commentaire.
+				]
+				#SET{titre_creation, #ENV{type_article}|thematique_texte_publication{titre}}
+				#SET{intro_creation, #ENV{type_article}|thematique_texte_publication{intro}}
+				<h3>[(#GET{est_edition}|oui)<:thematique:modifier_publication:>][(#GET{est_edition}|non)#GET{titre_creation}]</h3>
+				[(#GET{est_edition}|non)
+				[(#GET{intro_creation}|oui)
+				<p class="publier-article-intro">#GET{intro_creation}</p>
+				]
+				]
+
+				[(#GET{est_edition}|non)
+				[(#ENV{type_article}|=={consignes}|oui)
+				<ul class="publier-article-checklist">
+					<li><:thematique:publier_checklist_phrases_courtes:></li>
+					<li><:thematique:publier_checklist_eviter_majuscules:></li>
+					<li><:thematique:publier_checklist_ajouter_images:></li>
+				</ul>
+				]
+				]
+
+				<div class="editer-ligne">
+					<div class="editer editer_titre obligatoire[ (#ENV**{erreurs}|table_valeur{titre}|oui)erreur]">
+						<label for="titre"><:info_titre:></label>
+						[<span class="erreur_message">(#ENV**{erreurs}|table_valeur{titre})</span>]
+						<input type="text" class="text" name="titre" id="titre" value="#ENV{titre}" maxlength="50" required />
+						<div class="compteur-caracteres">
+							<label class="nb-caracteres" for="titre">0</label><:thematique:publier_compteur_caracteres:>
+						</div>
+					</div>
+
+					[(#ENV{type_article}|in_array{#LISTE{consignes,blogs,evenements}}|oui)
+					[(#ENV{peut_modifier_date}|oui)
+					<div class="editer editer_date[ (#ENV**{erreurs}|table_valeur{date}|oui)erreur]">
+						<label for="date"><:thematique:date_article:></label>
+						[<span class="erreur_message">(#ENV**{erreurs}|table_valeur{date})</span>]
+						<input type="date" class="text" name="date" id="date" value="[(#ENV**{date}|substr{0,10})]" />
+					</div>
+					]
+					]
+				</div>
+
+				#SET{champ_texte_publication, #ENV{type_article}|thematique_texte_publication{champ_texte}}
+				<div class="editer editer_texte obligatoire[ (#ENV**{erreurs}|table_valeur{texte}|oui)erreur]">
+					<label for="texte">#GET{champ_texte_publication}</label>
+					[<span class="erreur_message">(#ENV**{erreurs}|table_valeur{texte})</span>]
+
+					<textarea name="texte" id="texte" rows="10" class="inserer_barre_edition inserer_previsualisation" data-barre="edition" data-id="article-#ENV{id_article,new}" required
+					>#ENV{texte}</textarea>
+				</div>
+			</div>
+		</form>
+	</div>

@@ -1,11 +1,12 @@
 #!/usr/bin/env python3
 """
-Détecte le texte français codé en dur dans le plugin thematique, pour
-forcer le passage par des items de langue (lang/thematique_fr.php +
-CCN.lang côté JS).
+Détecte le texte français codé en dur dans les plugins thematique,
+fictions, petitfablab et ccn, pour forcer le passage par un item de langue
+(<:module:cle:> / _T('module:cle'), CCN.lang côté JS pour thematique
+uniquement — seul plugin à avoir ce pont PHP->JS, cf .ci/README.md).
 
 Fonctionnement :
-- Scanne tout le plugin plugins/thematique (hors lang/ et vendor/).
+- Scanne chaque plugin (hors lang/, squelettes/lang/ et vendor/).
 - Repère les chaînes contenant des caractères accentués français en dehors
   des tags de langue <:module:cle:>, des appels _T(...)/CCN.lang.xxx, et de
   quelques zones à ignorer (commentaires, attributs techniques).
@@ -24,9 +25,12 @@ import sys
 from pathlib import Path
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
-PLUGIN_ROOT = REPO_ROOT / "plugins" / "thematique"
-SCAN_DIRS = [PLUGIN_ROOT]
-EXCLUDE_DIRS = {PLUGIN_ROOT / "lang", PLUGIN_ROOT / "vendor"}
+PLUGIN_NAMES = ("thematique", "fictions", "petitfablab", "ccn")
+PLUGIN_ROOTS = [REPO_ROOT / "plugins" / "projets" / name for name in PLUGIN_NAMES]
+SCAN_DIRS = PLUGIN_ROOTS
+EXCLUDE_DIRS = set()
+for root in PLUGIN_ROOTS:
+    EXCLUDE_DIRS |= {root / "lang", root / "squelettes" / "lang", root / "vendor"}
 
 ACCENTED = "àâäéèêëïîôöùûüçœÀÂÄÉÈÊËÏÎÔÖÙÛÜÇŒ"
 ACCENTED_RE = re.compile(f"[{ACCENTED}]")
@@ -185,7 +189,7 @@ def iter_files():
 def run_scan():
     results = {}
     for path in iter_files():
-        rel = path.relative_to(PLUGIN_ROOT)
+        rel = path.relative_to(REPO_ROOT)
         if path.suffix in HTML_EXTS:
             findings = scan_html(path)
         elif path.suffix in JS_EXTS:
@@ -231,9 +235,9 @@ def main():
             print(f"  {line}")
         print(
             "\nCorrige-le en passant par un item de langue "
-            "(<:thematique:cle:> côté squelette, _T('thematique:cle') côté "
-            "PHP, CCN.lang.cle côté JS), ou si c'est un faux positif "
-            "volontaire, régénère la baseline avec --write-baseline."
+            "(<:module:cle:> côté squelette, _T('module:cle') côté PHP, "
+            "ou CCN.lang.cle côté JS pour thematique), ou si c'est un faux "
+            "positif volontaire, régénère la baseline avec --write-baseline."
         )
         return 1
 

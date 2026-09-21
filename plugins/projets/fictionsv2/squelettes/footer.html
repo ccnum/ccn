@@ -1,0 +1,75 @@
+[(#REM) #CACHE{300} : #ENV{annee_scolaire} (passé explicitement par les
+squelettes appelants, cf #459) fait varier la clé de cache par année scolaire
+- une constante PHP dérivée d'un cookie (#EVAL{_ANNEE_SCOLAIRE}) ne le ferait
+pas. Le "Bonjour X" et les liens dépendant de #SESSION{} restent corrects :
+SPIP varie automatiquement le cache par session dès qu'un squelette utilise
+#SESSION{} directement dans son corps, ce qui est le cas ici. ]
+#CACHE{300}
+#SET{id_art,0}
+<BOUCLE_annee(RUBRIQUES){titre==#ENV{annee_scolaire}}{tout}{0,1}>
+	<BOUCLE_id_forum(ARTICLES){titre_mot==agora}{id_rubrique}{0,1}>
+		#SET{id_art,#ID_ARTICLE}
+	</BOUCLE_id_forum>
+</BOUCLE_annee>
+
+<script type="text/javascript" src="#CHEMIN{js/footer.js}"></script>
+
+<div id="footer">
+	<div id="footer-inner">
+
+		<div id="footer-nav-left">
+			[(#SESSION{id_auteur}|oui)
+			Bonjour <b><a class="mediabox boxIframe boxWidth-730px boxHeight-550px" href="#URL_PAGE{auteur_editer, id_auteur=#SESSION{id_auteur}}">#SESSION{nom}</a></b>
+			[(#GET{id_art}|=={0}|non)[(#SESSION{statut}|=={0minirezo}|oui)&nbsp;&nbsp;|&nbsp;&nbsp;<a href="#URL_SITE_SPIP/?page=forum&id_article=#GET{id_art}" class="mediabox boxIframe boxWidth-730px boxHeight-97pc"><:fictionsv2:acceder_au_forum:><img src="[(#CHEMIN{img/lecture/bt_forum.png})]"
+					class="btn-rollover" data-src-hover="#CHEMIN{img/lecture/bt_forum_hover.png}"
+					width="20" height="20" title="forum" style="height: 20px; line-height: 20px; vertical-align: middle; padding-left: 5px; display: none;"/></a>]]
+			]
+			[(#SESSION{id_auteur}|non)<a href="[(#PLUGIN{cioidc}|oui|?{'?url=spip.php%3Fpage%3Dsommaire&cioidc=oui','?page=login&url=.%2F'})]" class="">Se connecter</a>&nbsp;&nbsp;|<a href="http://www.laclasse.com/pls/public/!page.laclasse?contexte=QUESTION&rubrique=0"><:fictionsv2:mot_de_passe_oublie:></a>]
+
+			<BOUCLE_espace_doc(RUBRIQUES){titre==#ENV{annee_scolaire}}>
+				<!-- #ID_RUBRIQUE -->
+				<a href="[(#DESCRIPTIF|textebrut)]">Espace doc</a>
+				[<a href="(#TEXTE|extraire_attribut{href})"><:fictionsv2:blog_de_lauteur:></a>]
+			</BOUCLE_espace_doc>
+			[(#SESSION{statut}|=={0minirezo}|oui)
+			<BOUCLE_blog(RUBRIQUES){titre = 'Blog pédagogique'}{tout}>
+				<a href="#URL_RUBRIQUE">#TITRE</a>
+			</BOUCLE_blog>
+			]
+		</div>
+
+		<div id="footer-nav">
+			<BOUCLE_page_footer(ARTICLES){id_rubrique=12}{!id_article=49}>
+			<a href="#URL_PAGE{page, id_article=#ID_ARTICLE}">#TITRE</a>&nbsp;&nbsp;|
+			</BOUCLE_page_footer>
+			<a href="http://www.laclasse.com/">Laclasse.com</a>&nbsp;&nbsp;|&nbsp;&nbsp;
+			[(#REM)[(#SESSION{login}|oui)<a href="#URL_SITE_SPIP?scenario=jeu">Vers la version jeu</a>&nbsp;&nbsp;|]]
+			<span id="annee_scolaire">
+				<form name="annee_scolaire" style="display:inline;">
+					<label for="select_annee_scolaire"><:fictionsv2:annee_scolaire:></label>
+					[(#REM) #459/#453 : liste les vraies années scolaires existantes (cf
+					BOUCLE_rubrique_contenant_annees ci-dessous) plutôt qu'une année
+					plancher devinée depuis la date du plus vieil article, complétée à
+					la main par 2 options ("2011"/"2010") qui redirigeaient vers
+					airchive.laclasse.com - un site qui n'existe plus (404).
+					afficher_options_date{} génère elle-même la série complète
+					d'<option> depuis l'année scolaire réelle jusqu'à cette année
+					plancher, donc un seul appel suffit (l'imbriquer dans un <option>
+					comme avant produisait en plus un HTML invalide, <option> dans
+					<option>). ]
+					<select id="select_annee_scolaire" name="annee_scolaire" onchange="reload_cookie('[(#URL_SITE_SPIP)]','[(#EVAL{_COOKIE_ANNEE_SCOLAIRE})]',this.value)">
+						<option value="#">---</option>
+						[(#REM) #453 : rubrique parent repérée par mot-clé "rubrique-contenant-annees"
+						(même convention que sommaire.html, BOUCLE_rubrique_contenant_annees_2),
+						plutôt que de supposer les rubriques années à la racine du site. ]
+						<BOUCLE_rubrique_contenant_annees(RUBRIQUES){titre_mot=rubrique-contenant-annees}{0,1}>
+							<BOUCLE_premiere_annee(RUBRIQUES){id_parent}{par titre}{0,1}>
+								[(#TITRE|afficher_options_date{9,#ENV{annee_scolaire}})]
+							</BOUCLE_premiere_annee>
+						</BOUCLE_rubrique_contenant_annees>
+					</select>
+				</form>
+			</span>
+		</div>
+	</div>
+</div>

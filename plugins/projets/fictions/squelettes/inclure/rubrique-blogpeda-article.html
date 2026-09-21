@@ -1,0 +1,18 @@
+<!--
+RUBRIQUE-BLOGPEDA.HTML > RUBRIQUE-BLOGPEDA-ARTICLE.HTML
+(affichage d'un article de blog pédagogique — factorisé car identique entre
+BOUCLE_article et son fallback BOUCLE_article_default, cf rubrique-blogpeda.html.
+Ré-ouvre sa propre boucle sur #ENV{id_article} : hors d'une BOUCLE, #TITRE/#TEXTE
+ne se résolvent pas juste en passant id_article en paramètre d'INCLURE.)
+-->
+<BOUCLE_rubrique_blogpeda_article(ARTICLES){id_article}>
+	<div class="ecriture-chapitre-texte">
+		<div class="ecriture-chapitre-titre">#TITRE</div>
+	</div>
+	<div class="ecriture-chapitre-auteur">
+	</div>
+	<div class="texte_courant #EDIT{texte}">
+		[(#TEXTE|image_reduire{300})]<br />
+	</div>
+</BOUCLE_rubrique_blogpeda_article>
+<INCLURE{fond=inclure/forum,id_article} />

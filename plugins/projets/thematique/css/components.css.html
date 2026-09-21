@@ -1,0 +1,995 @@
+/* ---------------------------------------------------------------- */
+/* -------------------- BLOCS MODULAIRES -------------------------- */
+/* ---------------------------------------------------------------- */
+
+.hidden {
+	display: none !important;
+}
+
+.consigne {
+	margin: 0;
+	padding: 0.625em;
+	border-radius: 0.3125em;
+	position: relative;
+	z-index: 1;
+	box-sizing: border-box;
+	border: 2px solid var(--color-tonic);
+	background-color: white;
+}
+
+.consigne_haute img {
+	-webkit-user-drag: none;
+	user-drag: none;
+	user-select: none;
+}
+
+.consigne_haute:hover {
+	z-index: 3000;
+}
+
+.photo {
+	background-color: white;
+	width: fit-content;
+}
+
+.consigne .photo {
+	width: 1.5625em;
+	height: 1.5625em;
+	border-radius: 50%;
+	overflow: hidden;
+}
+
+.consigne .photo img {
+	width: 100%;
+	height: auto;
+}
+
+.consigne .titre {
+	font-size: 0.675em;
+	font-family: 'Poppins', sans-serif;
+	font-weight: 600;
+	width: 119px;
+	line-height: 17px;
+}
+
+.consigne .texte {
+	display: flex;
+	flex-direction: column;
+	gap: 0.625em;
+}
+
+.consigne .texte .first-row {
+	display: flex;
+	align-items: center;
+	gap: 0.625em;
+}
+
+.consigne .texte .second-row {
+	border-top: 1px solid #000AFF;
+	padding-top: 0.5em;
+}
+
+.consigne .picto_nombre_reponses {
+	display: grid;
+	grid-template-columns: repeat(5, max-content);
+	grid-template-rows: repeat(2, auto);
+	justify-content: center;
+	gap: 0.29em;
+	z-index: 10;
+	font-size: 0.875em;
+	font-weight: bold;
+}
+
+.consigne .reponse_puce {
+	/* width+height explicites plutôt que width+aspect-ratio seul : en item de
+	   grille, l'align-items:stretch par défaut du conteneur (picto_nombre_reponses)
+	   étire la puce à la hauteur de sa ligne (calculée sur le contenu le plus
+	   haut), ce qui écrase l'aspect-ratio et rend les puces ovales — surtout
+	   visible sur petit écran où la grille a moins de marge. align-self:center
+	   empêche cet étirement. */
+	width: 1.2em;
+	height: 1.2em;
+	align-self: center;
+	justify-self: center;
+	border-radius: 50%;
+	overflow: hidden;
+	/* box-sizing:border-box + padding : le span emoji (font-size:min(70cqw,70cqh),
+	   cf consigne.js) se dimensionne sur le content-box de cette puce, pas sur
+	   son border-box. En rognant le content-box via ce padding, on réduit d'autant
+	   le glyphe rendu et on lui laisse une vraie marge dans le cercle — le rendu
+	   couleur des emoji système (Apple Color Emoji / Noto / Segoe UI Emoji)
+	   déborde souvent de son propre em carré, et se faisait rogner en bas par le
+	   overflow:hidden du cercle quand le glyphe frôlait le bord. */
+	display: flex;
+	align-items:center;
+	justify-content:center;
+	container-type:size;
+	box-sizing: border-box;
+	padding: 0.18em;
+}
+
+.consigne .reponse_puce.disabled {
+	background-color: #E9E9EF;
+}
+
+/* Icône de classe (emoji) : [role="img"] ne sert qu'à ça dans ce plugin
+   (consigne.js, reponse.js, rubrique_detail.html, logo_menu_classe.html).
+   Le décalage horizontal observé (issue #374) venait d'espaces blancs
+   parasites dans le HTML généré (retour à la ligne autour de l'emoji dans
+   le template) — corrigé côté squelette/JS, pas ici.
+   line-height:1.3 (et non 1) : les puces emoji dans un cercle
+   (.reponse_puce notamment) sont en overflow:hidden. Avec line-height:1,
+   le rendu couleur des emoji système (Apple Color Emoji / Noto / Segoe UI
+   Emoji) déborde souvent de sa propre boîte de ligne — le glyphe se fait
+   rogner en bas par le cercle. Un line-height:1.3 restitue la marge
+   verticale nécessaire sans réintroduire la dérive horizontale (qui ne
+   dépendait pas du line-height, seulement des espaces blancs). */
+span[role="img"] {
+	line-height: 1.3;
+}
+
+.bouton_reponse_consigne:after {
+	position: absolute;
+	content: "";
+	display: block;
+
+}
+
+.bouton_reponse_consigne {
+    height: 2.75em;
+    background: white;
+    border-radius: 0.25em;
+    box-shadow: 0 2px 7px rgba(0, 0, 0, 0.3);
+    z-index: 10;
+    font-size: 0.65em;
+    padding: 0.83em;
+    box-sizing: border-box;
+    display: none;
+    white-space: nowrap;
+}
+
+.bouton_reponse_consigne.show {
+	display: flex;
+	align-items: center;
+}
+
+.bouton_reponse_consigne img {
+	display: inline-block;
+	vertical-align: -0.25em;
+	height: 1.42em;
+	width: auto;
+	margin-right: 0.33em;
+}
+
+.reponse {
+	display: flex;
+	flex-direction: column;
+	padding: 10px;
+	padding-bottom: 4px;
+	box-shadow: 0px 2px 7px rgba(0, 0, 0, 0.2);
+	border-radius: 5px;
+	background-color: white;
+	color: var(--color-default);
+	border: 4px solid var(--color-tonic);
+}
+
+.reponse:hover, .reponse_haute:hover {
+	z-index: 1000;
+}
+
+.reponse .photo {
+	width: 29px;
+    height: 29px;
+	overflow: hidden;
+	border-radius: 50%;
+	margin: -10px 10px 0 -10px;
+}
+
+.reponse .photo img {
+	width: 100%;
+	height: auto;
+}
+
+.reponse .titre {
+	font-weight: 500;
+	font-size: 14.6px;
+	line-height: 21px;
+	width: 90%;
+}
+
+.reponse .auteur_date {
+	text-transform: uppercase;
+	font-size: 10px;
+	font-weight: 500;
+	line-height: 15px;
+	max-width: 220px;
+}
+
+.reponse .first-row {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	width: 200px;
+	padding: 10px;
+}
+
+.reponse .second-row {
+	border-top: 1px solid #000AFF;
+    padding-top: 0.5em;
+}
+
+.auteur_date {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	margin-top: 0px;
+	padding-top: 7px;
+}
+
+.intervention_auteur {
+	font-size: 17px;
+	color: white;
+	display: inline-block;
+	vertical-align: middle;
+	line-height: 20px;
+	width: calc(100% - 160px);
+}
+
+.intervention_date {
+	font-size: 10px;
+	line-height: 14px;
+	color: rgba(255,255,255,.8);
+	text-transform: uppercase;
+	letter-spacing: 1px;
+	font-weight: bold;
+	text-align: right;
+	position: absolute;
+	top: 22px;
+	right: 35px;
+}
+
+.intervention_item_around {
+	position: relative;
+}
+
+.intervention_item_around .toggleshow {
+	display: none;
+}
+
+.intervention_item_content a {
+	color: white;
+	text-decoration: underline !important;
+}
+
+.intervention_nb_reponses {
+	position: absolute;
+	top: -15px;
+	right: -7px;
+	padding: 0;
+	font-size: 14px;
+	font-weight: bold;
+	width: 30px;
+	height: 30px;
+	background: #FFD659;
+	margin-left: 10px;
+	color: #3D2E00;
+	box-shadow: 0 2px 5px rgba(0,0,0,.3);
+	line-height: 30px;
+	text-align: center;
+	border-radius: 50%;
+	z-index: 10;
+}
+
+.reponse .picto_nombre_commentaires {
+	position: absolute;
+	top: -15px;
+	right: -15px;
+	padding: 0;
+	font-size: 14px;
+	font-weight: bold;
+	width: 30px;
+	height: 30px;
+	background: #FFD659;
+	margin-left: 10px;
+	color: #3D2E00;
+	line-height: 30px;
+	text-align: center;
+	border-radius: 50%;
+}
+
+.consigne .picto_nombre_commentaires {
+	position: absolute;
+	top: -1.3em;
+	right: -0.45em;
+	padding: 6px;
+	font-size: 14px;
+	width: 1.3em;
+	height: 1.3em;
+	background: #FFD659;
+	color: var(--color-default);
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	border-radius: 50%;
+}
+
+.ctabs-nav .picto_nombre_commentaires {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	width: 1.3em;
+	height: 1.3em;
+	margin-left: 0.4em;
+	padding: 0;
+	font-size: 0.875em;
+	background: #FFD659;
+	color: var(--color-default);
+	border-radius: 50%;
+	vertical-align: middle;
+}
+
+.etiquette-etape {
+	padding: 3px 7px;
+	display: flex;
+	gap: 0.29em;
+	background-color: white;
+	color: var(--color-tonic);
+	border: 1px solid var(--color-tonic);
+	font-size: 0.65em;
+	font-family: 'Poppins', sans-serif;
+	font-weight: 500;
+	transform: rotate(-3deg);
+	border-radius: 0.29em;
+	white-space: nowrap;
+}
+
+.consigne .etiquette-etape {
+	position: absolute;
+	top: -30px;
+	left: 15px;
+}
+
+.texte-etiquette {
+	display: flex;
+	align-items: center;
+	font-size: 0.8rem;
+	text-transform: uppercase;
+}
+
+.consigne_haute.derniere-etape .etiquette-etape {
+	background-color: var(--color-tonic);
+	color: white;
+	border: 1px solid white;
+	left: 10px;
+}
+
+
+/* * * * * * * *
+
+	FICHE CLASSE
+
+*/
+
+.classe_consigne {
+	margin: 10px;
+	text-align: left;
+	border-radius: 3px;
+	opacity: 0.9;
+	&:hover {
+		opacity: 1;
+	}
+    background: var(--color-consigne);
+	color: white;
+}
+.classe_consigne_reponse {
+	padding: 15px 15px 15px 17px;
+	position: relative;
+	font-size: 0;
+	cursor: pointer;
+	border-radius: 3px;
+}
+
+.classe_consigne_reponse_photo {
+	display: inline-block;
+	width: 38px;
+	height: 38px;
+	box-shadow: 0 3px 15px rgba(0, 0, 0, 0.3);
+	border-radius: 3px;
+	overflow: hidden;
+	background: white;
+	margin-right: 15px;
+	vertical-align: middle;
+}
+.classe_consigne_reponse_photo img {
+	width: 100%;
+	height: auto;
+}
+
+.classe_consigne_reponse_titre {
+	display: inline-block;
+	vertical-align: middle;
+	width: calc(100% - 60px);
+	font-size: 17px;
+	line-height: 20px;
+}
+
+.classe_consigne_reponse_consigne {
+	background: rgba(0,0,0,.2);
+	padding: 15px 15px 15px 69px;
+	color: white;
+	cursor: pointer;
+}
+.classe_consigne_reponse_date {
+	font-size: 13px;
+	color: rgba(255, 255, 255, 0.47);
+	margin-bottom: 3px;
+	line-height: 13px;
+}
+.classe_consigne_reponse_consigne_titre {
+	font-size: 15px;
+	line-height: 19px;
+	color: white;
+}
+
+
+.classe_consigne_reponse_classe {
+	margin: 10px -15px -15px -15px;
+	background: rgba(0,0,0,0.1);
+	padding-left: 68px;
+	padding-top: 5px;
+	padding-bottom: 5px;
+	font-size: 9px;
+	text-transform: uppercase;
+	letter-spacing: 1px;
+    color: rgba(255, 255, 255, 0.59);
+}
+
+.bloc_option_reponses_consignes_classe.cache {padding: 0 !important}
+
+
+.consigne_no_reponse {
+	background: #dcdcdc;
+}
+
+.consigne_no_reponse .classe_consigne_reponse {
+	color: #757575;
+}
+
+.consigne_no_reponse .classe_consigne_reponse_photo {
+	visibility: hidden;
+}
+
+.consigne_no_reponse .classe_consigne_reponse_consigne {
+	background: #c3c3c3
+}
+
+.consigne_no_reponse .classe_consigne_reponse_consigne_titre {
+	color: #585858;
+}
+
+.consigne_no_reponse .classe_consigne_reponse_date {
+	color: rgba(49, 49, 49, 0.5)
+}
+
+.reponse_goto_classe.pointer {
+	cursor: pointer;
+}
+
+
+.reponse_goto_consigne {
+	background: rgba(0, 0, 0, 0.1);
+	padding: 10px;
+	border-radius: 2px;
+	margin-top: 10px;
+	text-transform: initial;
+	letter-spacing: 0;
+	font-size: 13px;
+	color: white;
+	line-height: 16px;
+	cursor: pointer;
+}
+
+.reponse_goto_consigne:hover {
+	background: rgba(0, 0, 0, 0.2);
+}
+
+
+.reponse_goto_consigne_label {
+	color: rgba(255,255,255,.6)
+}
+
+.reponse_goto_consigne:hover .reponse_goto_consigne_label {
+	color: white;
+}
+
+
+.timeline_item.article_blog_container {
+	min-width: 100px;
+	min-height: 100px;
+	padding: 0;
+	display: inline-block;
+	transform: scale(0.4);
+	
+	color: var(--color-default);
+}
+
+.show_blogs .article_blog_container{
+	transform: scale(1);
+}
+
+.article_blog_container .article_blog{
+	position: relative;
+    width: 114px;
+    aspect-ratio: 1 / 1;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    box-sizing: border-box;
+}
+
+.article_blog_container.flou, .article_evenement_container.flou {
+    filter: blur(2px);
+}
+.article_evenement_container.flou .article_evenement_shape {
+	background-color: #a2a3ba;
+}
+
+.timeline_item.article_evenement_container {
+	width: 150px;
+	height: 100px;
+	padding: 0;
+	box-sizing: border-box;
+	transform: scale(0.4);
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+.show_evenements .article_evenement_container{
+	transform: scale(1);
+}
+
+.article_evenement_shape {
+	content: "";
+	display: block;
+	position: absolute;
+	width: 109px;
+	aspect-ratio: 1 / 1;
+	border-radius: 10px;
+	background-color: var(--color-bleu-fond);
+	z-index: -1;
+	left: 50%;
+	top: 50%;
+	transform: translate(-50%, -50%) rotate(45deg) skew(-10deg, -10deg);
+	transition: all 500ms ease;
+}
+
+.article_evenement_container .article_evenement{
+	font-size: var(--font-size1);
+	color: rgba(255,255,255, 0);
+	width: 100%;
+	height: 100px;
+	position: absolute;
+	top: 0;
+	left: 0;
+	padding: 0 30px;
+	box-sizing: border-box;
+	background: rgba(0, 0, 0, 0);
+	transform: translate(0, 8px);
+}
+
+.show_evenements .article_evenement_container .article_evenement {
+	color: var(--color-default);
+}
+
+.article_blog_container .article_blog2{
+	color: yellow;
+	font-family: Courier, "Courier New", FreeMono, "Liberation Mono", monospace;
+	font-size: var(--font-size2);
+}
+
+.article_blog_container .article_blog .article_blog_inner {
+	width: 60%;
+    text-align: center;
+}
+
+.bulle_bd {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    /* évite tout saut visuel avant le premier calcul JS */
+    min-width: 6rem;
+    min-height: 6rem;
+	--svg: url('#CHEMIN{img/bulle.svg}');
+    
+
+}
+
+.bulle_bd:before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background-color: var(--color-bleu-fond);
+    mask-image: var(--svg);
+    -webkit-mask-image: var(--svg);
+    mask-size: 100% 100%;
+    -webkit-mask-size: 100% 100%;
+    mask-repeat: no-repeat;
+    -webkit-mask-repeat: no-repeat;
+}
+
+.bulle_contenu {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+	z-index: 1;
+}
+
+.bulle_contenu .article_blog_date, .bulle_contenu .article_evenement_date {
+	color: var(--color-tonic);
+	font-size: 14px;
+	font-style: italic;
+	font-weight: 300;
+}
+
+.bulle_bd .bulle-texte {
+	margin-top: 0.3rem;
+	padding: 0 1rem;
+}
+
+.article_blog .picto_nombre_commentaires {
+	position: absolute;
+	top: -5px;
+	right: -5px;
+	padding: 0;
+	font-size: 14px;
+	font-weight: bold;
+	width: 30px;
+	height: 30px;
+	background: #FFD659;
+	margin-left: 10px;
+	color: #3D2E00;
+	line-height: 30px;
+	text-align: center;
+	border-radius: 50%;
+	transform: scale(0);
+	z-index: 2;
+}
+
+.show_blogs .article_blog .picto_nombre_commentaires {
+	transform: scale(1);
+}
+
+.bulle-texte {
+	font-weight: 600;
+    font-size: 13px;
+    line-height: 131%;
+	text-align: center;
+}
+
+.article_blog_container button {
+	position: relative;
+}
+
+.forum_vide {
+	margin: 20px;
+	font-size: 14px;
+	color: #333
+}
+
+.forum_commenter {
+	background: #DEDEDE;
+	border-radius: 4px;
+	margin: 0px 10px 10px 10px;
+}
+
+.forum_commenter_head.bloc_option_doc_comment {
+	padding: 20px 20px 20px 58px;
+	display: block;
+	font-size: 14px;
+	background-repeat: no-repeat;
+	background-position: 25px 55% !important;
+}
+
+.article_evenement_container  .picto_nombre_commentaires {
+	position: relative;
+    top: 8px;
+    right: -11px;
+	padding: 0;
+	font-size: 14px;
+	font-weight: bold;
+	width: 30px;
+	height: 30px;
+	background: #FFD659;
+	margin-left: 60px;
+	margin-top: -115px;
+	color: #3D2E00;
+	box-shadow: 0 2px 5px rgba(0,0,0,.3);
+	line-height: 30px;
+	text-align: center;
+	border-radius: 50%;
+}
+
+.article_evenement_container img {
+	position: relative;
+	top: 31px;
+	left: 37px;
+	width: 0px;
+	height: 0px;
+}
+
+/* * * * * * * *
+
+	CONSIGNES / RÉPONSES / SUPPRESSION (forum, portfolio)
+
+*/
+
+.consigne_reponses {
+	width: 26px;
+	height: 32px;
+	font-size: var(--font-size2);
+	font-weight: bold;
+	text-align: center;
+	display: table-cell;
+	vertical-align: middle;
+	background-image: url(#ENV{chemin}/img/reponse.png);
+}
+
+.consigne_reponses_classe {
+	width: 26px;
+	height: 32px;
+	font-size: var(--font-size2);
+	font-weight: bold;
+	text-align: center;
+	display: table-cell;
+	vertical-align: middle;
+	background-image: url(#ENV{chemin}/img/reponse_classe.png);
+}
+
+.reponse_plus {
+	float: left;
+	white-space: nowrap;
+	color: #00A0F0;
+	font-size: var(--font-size1);
+	font-weight: bold;
+	margin-left: 41px;
+	margin-top: 2px;
+}
+
+.intervention .action_supprimer {
+	position: absolute;
+	z-index: 1000;
+	right: 1px;
+	top: 5px;
+	background-color: white;
+	border-radius: 50%;
+	width: 30px;
+	height: 30px;
+}
+
+.action_supprimer, .formulaire_editer_rubrique .action_supprimer {
+	background: url(#ENV{chemin}/img/logo_supprimer_off_15.png) no-repeat center center / 12px auto;
+	position: relative;
+	z-index: 2;
+}
+.action_supprimer:hover, .formulaire_editer_rubrique .action_supprimer:hover {
+	background: url(#ENV{chemin}/img/logo_supprimer_off_15_white.png) no-repeat scroll center center / 12px auto tomato;
+	border-radius: 0 3px 3px 0;
+	position: relative;
+	z-index: 2;
+}
+
+.forum .action_supprimer {
+	position: absolute;
+	top: 0;
+	right: 0;
+	float: none;
+	margin: 0;
+	bottom: 0;
+	width: 30px;
+	height: 100%;
+	z-index: 5;
+	background-color: rgba(0, 0, 0, 0);
+}
+
+.forum .action_supprimer:hover {
+	background-color: tomato;
+}
+
+.portfolio_grand .action_supprimer {
+	position: absolute;
+	top: 0;
+	right: 0;
+	float: none;
+	margin: 0;
+	bottom: 0;
+	width: 30px;
+	height: 100%;
+	z-index: 5;
+	background-color: rgba(0, 0, 0, 0);
+}
+
+.portfolio_grand {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+}
+
+.portfolio_grand .audio {
+	width: 100%;
+	display: flex;
+	justify-content: center;
+}
+
+.portfolio_grand .icone img {
+	padding-left: 15px;
+	height: auto;
+	width: 25px;
+}
+
+.portfolio_grand .action_supprimer:hover {
+	background-color: tomato;
+}
+
+.nb-reponses-container {
+	position: absolute;
+	top: -0.5rem;
+	left: 60%;
+	background-color: yellow;
+	border-radius: 50%;
+	width: 3rem;
+	height: 1rem;
+}
+
+.bouton-lisere {
+    background-color: white;
+    padding: 0.5rem 0.8rem;
+    border: 2px solid var(--color-tonic);
+    border-radius: 5px;
+    font-family: 'Poppins';
+	cursor: pointer;
+}
+
+.etiquette-associee {
+    position: relative;
+    display: flex;
+    align-items: center;
+    padding: 0.4rem 14px;
+    width: fit-content;
+    background-color: var(--etiquette-background-color);
+    color: var(--etiquette-border-color);
+    border: 1px solid var(--etiquette-border-color, #000);
+
+    /* valeur par défaut de la couleur de bordure du triangle */
+    --etiquette-border-color: white;
+	--etiquette-background-color: var(--color-tonic);
+}
+
+.etiquette-associee::after {
+    content: "";
+    position: absolute;
+    top: -8px;
+    left: 50%;
+    transform: translateX(-50%);
+    border-left: 10px solid transparent;
+    border-right: 10px solid transparent;
+    border-bottom: 10px solid var(--etiquette-background-color);
+    filter: drop-shadow(0 -1px 0 var(--etiquette-border-color));
+}
+
+
+.etiquette-associee .icon {
+    --svg: url("#CHEMIN{img/logo_ecrire_plein.svg}");
+    width: 1rem;
+    height: 1rem;
+    margin-right: 0.4rem;
+    background-color: var(--etiquette-border-color);
+}
+
+.etiquette-associee .icon {
+    width: 1rem;
+    height: 1rem;
+    margin-right: 0.4rem;
+}
+
+.badge_timeline {
+	position: absolute;
+	top: 24px;
+	z-index: 102;
+	cursor: pointer;
+}
+
+.badge_timeline .etiquette-associee-container {
+	position: relative;
+	top: -12px;
+    left: 34px;
+}
+
+.etiquette-associee.acceder {
+	--etiquette-background-color: white;
+	--etiquette-border-color: var(--color-default);
+}
+
+.badge_timeline .etiquette-associee {
+	--etiquette-border-color: var(--color-default);
+	--etiquette-background-color: var(--color-pastille-en-haut-a-droite);
+}
+
+.badge_timeline .etiquette-associee .icon {
+	--svg: url("#CHEMIN{img/exclamation-circle.svg}");
+}
+
+.badge-texte {
+	color: white;
+	font-weight: 500;
+    font-size: 14.6px;
+    text-transform: uppercase;
+}
+
+.badge_timeline .premiere-ligne {
+	display: flex;
+    align-items: center;
+}
+
+.badge_timeline.est-publie .deuxieme-ligne {
+	display: none;
+}
+
+.fond-badge {
+	position: absolute;
+	top: 0;
+    width: 13rem;
+    height: 3.7rem;
+    z-index: -1;
+    transform: rotate(-3deg);
+	background-color: var(--color-gris-2);
+    border: 1px solid white;
+    border-radius: 4px;
+}
+.badge_timeline_fin .fond-badge {
+    width: 12rem;
+}
+.badge_timeline.est-publie .fond-badge {
+	background-color: var(--color-tonic) !important;
+}
+
+.badge_timeline_debut { left: 20px; }
+.badge_timeline_fin { right: 150px; }
+
+/* Rond de l'icône par-site, positionné en absolu par-dessus le rond vide (coin haut-gauche du badge). */
+.badge_timeline_icone {
+position: relative;
+    position: relative;
+    left: -7px;
+    top: -19px;
+    z-index: 1;
+    background: white;
+    border-radius: 50%;
+    aspect-ratio: 1 / 1;
+    width: 45px;
+    padding-top: 10px;
+    padding-left: 14px;
+    padding-right: 10px;
+    padding-bottom: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, .2);
+    overflow: hidden;
+	--icon-color: var(--color-gris-2);
+}
+.badge_timeline.est-publie .badge_timeline_icone {
+	--icon-color: var(--color-tonic);
+}
+
+.badge_timeline_icone img {
+	object-fit: contain;
+    position: relative;
+    left: -3px;
+    top: -2px;
+}
+

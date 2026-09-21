@@ -1,0 +1,37 @@
+<BOUCLE_principale(RUBRIQUES){id_rubrique}{tous}>
+<INCLURE{fond=inclure/tete-html} />
+<body>
+<a href="#contenu-principal" class="skip-link">Aller au contenu principal</a>
+	<!-- BOUTON CONNEXION -->
+	<INCLURE{fond=inclure/authentification} />
+	<!-- ELEMENTS GRAPHIQUES-->
+	<INCLURE{fond=inclure/book-graphiques, suffixe=-ecriture} />
+
+	<!-- RETOUR INDEX -->
+	<div id="bouton-retour">
+		<a href="#URL_SITE_SPIP">
+			<img src="#CHEMIN{img/global/bt-retour.png}" alt="<:fictions:retour_a_laccueil:>"
+				class="btn-rollover" data-src-hover="#CHEMIN{img/global/bt-retour-hover.png}"
+				width="54" height="54" />
+		</a>
+	</div>
+	[(#TITRE|=={'Blog pédagogique'}|non)<INCLURE{fond=inclure/rubrique,id_rubrique} />]
+	[(#TITRE|=={'Blog pédagogique'}|et{#SESSION{statut}|=={0minirezo}|oui}|oui)<INCLURE{fond=inclure/rubrique-blogpeda,id_rubrique,id_article} />]
+
+	<INCLURE{fond=footer} />
+</body>
+
+<style>
+	.crayon-html {background-image:url('#CHEMIN{img/global/tooltip-background.png}');background-repeat:repeat;}
+	.crayon-html .formulaire_spip textarea {height:300px;background-color:#FFF;}
+	.formulaire_crayon {width:500px;margin-left:auto;margin-right:auto;margin-top:40px;z-index:9999}
+	.resizehandle{display:none;}
+	/*.markItUpFooter{display:none;}*/
+	.crayon-html .crayon-boutons {position:relative;width: auto; padding: 10px 45px 0 0;margin:5px 0px 0px 0px; }
+	.crayon-html .crayon-boutons button { width: auto; height: 32px; text-indent: 0; cursor: pointer; background: #ff6b6b; color: #FFF; border-radius: 5px; font-family:Arial, Helvetica, sans-serif; font-size:13px; margin:0px 0px 0px 10px; float:left;}
+</style>
+
+<script type="text/javascript" src="#CHEMIN{js/rubrique.js}"></script>
+
+</html>
+</BOUCLE_principale>

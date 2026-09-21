@@ -1,0 +1,16 @@
+<INCLURE{fond=inclure/tete-html} />
+
+<body data-compteur="#ENV{compteur}">
+<a href="#contenu-principal" class="skip-link">Aller au contenu principal</a>
+
+<!-- ELEMENTS GRAPHIQUES-->
+<INCLURE{fond=inclure/book-graphiques} />
+
+<INCLURE{fond=inclure/lecture-corps, id_rubrique, fin, compteur} />
+
+<INCLURE{fond=footer, annee_scolaire=#EVAL{_ANNEE_SCOLAIRE}}/>
+</body>
+
+<script type="text/javascript" src="#CHEMIN{js/lecture.js}"></script>
+
+</html>

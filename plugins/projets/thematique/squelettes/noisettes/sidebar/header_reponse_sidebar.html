@@ -1,0 +1,53 @@
+[(#REM)
+Arguments :
+- id_article
+- titre_parent
+- titre_consigne
+- id_consigne
+- type_objet
+- rang
+]
+#CACHE{0}
+<BOUCLE_article_sidebar(ARTICLES){id_article}{tout}>
+<div class="sidebar_bubble header-reponse">
+	<div id="row_header" style="background-color: var(--color-classe-light-[(#ENV{id_rubrique}|classe_numero)]);">
+		<div id="header-col-left">
+			<div class="image-classe-dans-reponse">
+				<INCLURE{fond=modeles/classe_icone, id_rubrique=#ID_RUBRIQUE, titre=#ENV{titre_parent}} />
+			</div>
+			<div class="#EDIT{titre} titre">
+				<BOUCLE_nom_ecole(RUBRIQUES){id_rubrique}{tout}>
+					#TITRE
+				</BOUCLE_nom_ecole>
+			</div>
+			<div class="#EDIT{date} date">
+				<:thematique:publie_le:> [(#DATE|affdate)]
+			</div>
+		</div>
+		<div id="header-col-right" style="border-bottom: 2px solid var(--color-classe-light-[(#ENV{id_rubrique}|classe_numero)])">
+			<div id="header-row-1">
+				#SET{numero_mission, #ENV{rang}|sinon{0}|plus{1}}
+				<div class="etiquette-etape">
+					<span class="texte-etiquette"><:thematique:reponse_mission_numero{numero=#GET{numero_mission}}:></span>
+				</div>
+				<INCLURE{fond=noisettes/sidebar/normal_header_icons, env} />
+			</div>
+			<div id="header-row-2">
+				#TITRE
+				<INCLURE{fond=noisettes/sidebar/inc/bouton_modifier_article, id_article=#ID_ARTICLE, type_objet=#ENV{type_objet}} />
+			</div>
+		</div>
+	</div>
+	[(#ENV{type_objet}|in_array{#LISTE{blogs,evenements}}|oui)
+		<div class="popup_titre [popup_titre_(#ENV{type_objet})]">
+			<h2 class="#EDIT{titre} titre">[(#TITRE)]
+				<INCLURE{fond=noisettes/sidebar/inc/bouton_modifier_article, id_article=#ID_ARTICLE, type_objet=#ENV{type_objet}} />
+			</h2>
+			<div class="auteur_date">
+				<span class="date #EDIT{date}">[(#DATE|nom_jour)] [(#DATE|affdate)]</span>
+				[<span class="auteur">(#LESAUTEURS)</span>]
+			</div>
+		</div>
+	]
+</div>
+</BOUCLE_article_sidebar>

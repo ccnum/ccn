@@ -1,0 +1,29 @@
+<paquet
+	prefix="fictionsv2"
+	categorie="squelette"
+	version="1.0.2"
+	etat="stable"
+	logo=""
+	schema=""
+	documentation="http://www.laclasse.com"
+	compatibilite="[4.3.2;4.*]"
+>
+	<nom>Fictions</nom>
+	<auteur>Patrick Vincent</auteur>
+	<licence>GNU/GPL</licence>
+
+	<necessite nom="ccn" />
+	<necessite nom="cadavrexquis" />
+	<necessite nom="cextras" compatibilite="[3.0.5;[" />
+	<necessite nom="crayons" />
+	<necessite nom="jqueryui" compatibilite="[1.8.21;[" />
+	<necessite nom="notation" />
+	<necessite nom="notifications" />
+	<necessite nom="socialtags" />
+	<necessite nom="spip_bonux" />
+	<necessite nom="vider_rubrique" />
+
+	<utilise nom="cioidc" />
+
+	<pipeline nom="post_edition" inclure="fictionsv2_pipelines.php" />
+</paquet>
