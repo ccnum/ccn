@@ -792,7 +792,7 @@ function callArticleJalon(est_debut) {
 	const id_article = est_debut ? CCN.idArticleCapSurAnnee : CCN.idArticleLaRencontre;
 	if (!Number.isInteger(Number(id_article)) || id_article <= 0) return;
 	changeTimelineMode('consignes');
-	setLateralSidebarExpanded(true);
+	setLateralSidebarExpanded(false);
 
 	// Même zoom qu'une consigne (cf showInTimeline dans consigne.js) :
 	// la fenêtre affiche le même nombre de jours (nombre_jours_max de la
