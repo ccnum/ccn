@@ -1,32 +1,13 @@
-<style>
-    .filter-buttons { display: flex; flex-wrap: wrap; }
-    .filter-buttons .filtre-ressources {
-        background-color: var(--color-background-tabs);
-        padding: 0.4rem 0.8rem;
-        border: none;
-        border-radius: 5px 5px 0 0;
-        color: inherit;
-        cursor: pointer;
-    }
-    .filter-buttons .filtre-ressources.actif {
-        background-color: var(--color-tonic);
-        color: white;
-    }
-</style>
 <div class="ressource-menu">
     <div class="ressource-header">
-        <div style="display: flex; justify-content: end;">
+        <div class="ressource-header-icons">
             <INCLURE{fond=noisettes/sidebar/normal_header_icons, env} />
         </div>
-        <div style="display: flex;
-                    justify-content: center;
-                    margin-top: -1rem;
-                    margin-bottom: 0.4rem;"
-        >
+        <div class="ressource-header-etiquette">
             <div class="etiquette-etape">
-                <img class="logo-etiquette" src="" alt="" style="display: none;">
+                <img class="logo-etiquette" src="" alt="">
                 <span class="texte-etiquette"><:thematique:ressources:></span>
-            </div>      
+            </div>
         </div>
         <div>
             <strong><:thematique:texte_accueil_ressource:></strong>
@@ -52,14 +33,7 @@
                     </button>
                 </BOUCLE_sous_rubriques>
             </div>
-            <div style="background-color: var(--color-background-tabs);
-                        padding: 1rem;
-                        flex: 1;
-                        min-height: 0;
-                        display: flex;
-                        flex-direction: column;
-                        overflow-y: auto;"
-            >
+            <div class="ressource-liste-container">
                 <div class="encadre-message">
                     <div>
                         <:thematique:message_encadre_ressource:>

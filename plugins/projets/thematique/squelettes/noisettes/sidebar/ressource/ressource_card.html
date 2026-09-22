@@ -1,15 +1,8 @@
 <div class="ressource-card-container" data-id-rubrique="#ENV{id_rubrique}">
-    <div style="display: flex;">
-        <div>[(#ENV{date}|affdate)]</div>
-    </div>
-    <div>
-        #ENV{titre}
-    </div>
-    <div style="display: flex;
-                justify-content: space-between;
-                align-items: end;"
-    >
-        <div><:thematique:publie_par:> #ENV{nom_auteur}</div>
+    <div class="ressource-card-date">[(#ENV{date}|affdate)]</div>
+    <div class="ressource-card-titre">#ENV{titre}</div>
+    <div class="ressource-card-footer">
+        <span class="ressource-card-auteur"><:thematique:publie_par:> #ENV{nom_auteur}</span>
         <button class="bouton-lisere"
                 onclick="voirLaRessource(event)"
                 data-id-article="#ENV{id_article}"
