@@ -50,11 +50,12 @@ function balise_ANNEE_ACTUELLE_dist($p) {
 
 function afficher_options_date($annee, $mois, $annee_scolaire) {
 	$texte = '';
-	if (intval(date('m')) >= 9) {
-		$annee_actuelle = intval(date('Y'));
-	} else {
-		$annee_actuelle = intval(date('Y')) - 1;
-	}
+	// _ANNEE_SCOLAIRE (ccn_options.php) plutôt qu'un calcul calendaire brut :
+	// la rubrique racine de l'année scolaire réelle peut ne pas encore exister
+	// (rentrée pas encore jouée) - _ANNEE_SCOLAIRE se replie déjà sur la
+	// dernière année existante, ce qui évite de lister ici une option d'année
+	// sans contenu.
+	$annee_actuelle = _ANNEE_SCOLAIRE;
 	if ($mois < 9) {
 		$annee--;
 	}
