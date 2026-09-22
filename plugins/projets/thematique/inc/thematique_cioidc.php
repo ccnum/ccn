@@ -201,14 +201,24 @@ function thematique_cioidc_groupes_libres_pertinents(array $groupes_libres, stri
 	if (!$nom_site) {
 		return [];
 	}
+
+	// Issue #274 : un "groupe libre" ENT est nommé librement par un
+	// enseignant (pas administré par l'établissement) — un simple stripos()
+	// matchait n'importe quel nom contenant nom_site/annee_scolaire comme
+	// simples sous-chaînes, sans limite de mot (ex: un nom de groupe
+	// contenant accidentellement, ou en forgeant délibérément, ces
+	// sous-chaînes). Ce rattachement donne désormais un vrai droit de
+	// création d'article dans la rubrique-projet correspondante (cf
+	// autoriser_rubrique_creerarticledans, thematique_autoriser.php) : on
+	// exige donc que nom_site et annee_scolaire apparaissent comme des mots
+	// entiers (limites \b), pas comme simples sous-chaînes.
+	$motif_site = '/\b' . preg_quote($nom_site, '/') . '\b/iu';
+	$motif_annee = '/\b' . preg_quote($annee_scolaire, '/') . '\b/u';
+
 	$pertinents = [];
 	foreach ($groupes_libres as $groupe) {
 		$nom_groupe = $groupe->name ?? '';
-		if (
-			$nom_groupe
-			&& stripos($nom_groupe, $nom_site) !== false
-			&& strpos($nom_groupe, $annee_scolaire) !== false
-		) {
+		if ($nom_groupe && preg_match($motif_site, $nom_groupe) && preg_match($motif_annee, $nom_groupe)) {
 			$pertinents[] = $groupe;
 		}
 	}

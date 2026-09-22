@@ -18,6 +18,61 @@ function autoriser_thematique_configurer_dist($faire, $type, $id, $qui, $opt) {
 }
 
 /**
+ * Restreint la création d'article dans une rubrique (issue #274) : le cœur
+ * SPIP (autoriser_rubrique_creerarticledans_dist) se contente de vérifier
+ * que la rubrique est "visible" — sans plugin de restriction par branche
+ * installé, autoriser('voir','rubrique',...) est vrai pour tout le monde
+ * (cf autoriser_voir_dist) : n'importe quel compte 1comite (prof,
+ * intervenant) pouvait donc créer un article dans N'IMPORTE QUELLE
+ * rubrique du site, pas seulement la sienne — le formulaire public de
+ * publication (formulaires/public_publier_article.php) transmet un
+ * id_rubrique posté en HTTP, contraint seulement visuellement côté
+ * squelette (choix des boutons affichés), jamais revérifié côté serveur.
+ *
+ * Un admin garde un accès complet (comportement inchangé). Pour les autres
+ * rôles, la rubrique ciblée doit être une rubrique à laquelle l'auteur est
+ * effectivement lié (spip_auteurs_liens) : sa/ses classe(s), son(ses)
+ * projet(s) d'intervenant, le blog pédagogique — même mécanisme que
+ * thematique_id_rubrique_classe/_auteur. Exception : la rubrique globale
+ * "Ressources", ouverte à tout rédacteur (cf le hack côté serveur qui y
+ * force id_rubrique dans public_publier_article.php, indépendamment de la
+ * valeur postée).
+ *
+ * Corollaire : le rattachement d'un auteur à une rubrique via l'ENT
+ * (thematique_cioidc_associer_rubriques) donne désormais un vrai droit de
+ * création dans cette rubrique — d'où le resserrement du filtrage des
+ * "groupes libres" pertinents dans inc/thematique_cioidc.php (même issue).
+ */
+function autoriser_rubrique_creerarticledans($faire, $type, $id, $qui, $opt) {
+	if (!autoriser_rubrique_creerarticledans_dist($faire, $type, $id, $qui, $opt)) {
+		return false;
+	}
+
+	$id_auteur = intval($qui['id_auteur'] ?? 0);
+	if (!$id_auteur) {
+		return false;
+	}
+
+	include_spip('thematique_fonctions');
+	if (thematique_donner_role($id_auteur) === 'admin') {
+		return true;
+	}
+
+	static $id_ressources = null;
+	if ($id_ressources === null) {
+		$id_ressources = (int) sql_getfetsel('id_rubrique', 'spip_rubriques', 'titre=' . sql_quote('Ressources'));
+	}
+	if ($id_ressources && intval($id) === $id_ressources) {
+		return true;
+	}
+
+	return (bool) sql_countsel(
+		'spip_auteurs_liens',
+		'id_auteur=' . $id_auteur . " AND objet='rubrique' AND id_objet=" . intval($id)
+	);
+}
+
+/**
  * Restriction sur le champ 'date' d'un article (issue #420, règle actée par
  * ChristoErasme le 09/09) : au-delà de l'autorisation standard de modifier
  * l'article (autoriser_article_modifier_dist()), la date n'est éditable que

@@ -2545,6 +2545,37 @@ function thematique_trouver_reponse_a_une_consigne($id_consigne, $id_rubrique_cl
 }
 
 /**
+ * Un `id_consigne` référence-t-il bien une mission ("consigne") réelle et
+ * publiée (issue #274) ? `id_consigne` est un champ extra bigint posté tel
+ * quel par le formulaire public de publication
+ * (formulaires/public_publier_article.php) : sans ce contrôle, un
+ * id_consigne arbitraire (pointant vers n'importe quel autre article, publié
+ * ou non, mission ou pas) était accepté sans vérification et écrit sur
+ * l'article créé/modifié.
+ *
+ * Une "consigne" est un article dont le type porté par sa rubrique
+ * (cf thematique_type_objet_rubrique) est 'consignes' — et non lui-même une
+ * réponse (thematique_type_objet_article() renverrait alors
+ * 'travail_en_cours', jamais 'consignes').
+ *
+ * @param int $id_consigne
+ * @return bool
+ */
+function thematique_consigne_valide($id_consigne) {
+	$id_consigne = intval($id_consigne);
+	if (!$id_consigne) {
+		return false;
+	}
+
+	$statut = sql_getfetsel('statut', 'spip_articles', 'id_article=' . $id_consigne);
+	if ($statut !== 'publie') {
+		return false;
+	}
+
+	return thematique_type_objet_article($id_consigne) === 'consignes';
+}
+
+/**
  * Extensions de fichier acceptées pour un document joint à une mission
  * (formulaires/joindre_document_mission.php). Définie ici (thematique_fonctions.php,
  * chargé pour toute compilation de squelette du plugin) et non dans

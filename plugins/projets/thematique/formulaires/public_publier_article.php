@@ -64,9 +64,13 @@ function formulaires_public_publier_article_charger_dist(
 			$valeurs['id_parent'] = $article['id_rubrique'];
 			$valeurs['date'] = $article['date'];
 		}
-	} elseif ($id_consigne) {
+	} elseif ($id_consigne && thematique_consigne_valide($id_consigne)) {
 		// Sinon, si on répond à une consigne, chercher une éventuelle
 		// réponse existante (édition de sa propre réponse).
+		//
+		// thematique_consigne_valide() (issue #274) : id_consigne posté en
+		// HTTP, on ne fait pas confiance à un id pointant vers un article
+		// arbitraire (pas une mission, ou pas encore publiée).
 		$reponse = thematique_trouver_reponse_a_une_consigne($id_consigne, $id_rubrique);
 
 		if ($reponse) {
@@ -97,13 +101,36 @@ function formulaires_public_publier_article_verifier_dist(
 ) {
 	include_spip('inc/autoriser');
 	include_spip('inc/editer');
+	include_spip('inc/session');
 	include_spip('prive/formulaires/editer_article');
+	include_spip('thematique_fonctions');
+
+	// Issue #274 : ce formulaire n'était protégé par aucun contrôle de rôle
+	// côté serveur — seul le menu "Publier" est masqué aux élèves/visiteurs
+	// côté squelette (thematique_role_publie), un accès direct à l'URL (ou
+	// un POST forgé) atteignait ce traitement sans distinction de rôle. Un
+	// élève/visiteur n'a légitimement aucun cas d'usage ici (ni création, ni
+	// édition, ni réponse à une consigne).
+	$role_visiteur = thematique_donner_role(intval(session_get('id_auteur') ?? 0));
+	if (!$role_visiteur || $role_visiteur === 'eleve') {
+		return ['message_erreur' => _T('info_acces_interdit')];
+	}
 
 	$id_article_poste = intval(_request('id_article'));
 
 	// cf la même vérification dans le charger : un id_article posté sans
 	// autorisation de modification ne doit rien pouvoir écrire.
 	if ($id_article_poste && !autoriser('modifier', 'article', $id_article_poste)) {
+		return ['message_erreur' => _T('info_acces_interdit')];
+	}
+
+	// id_consigne posté sans référencer une mission publiée existante (issue
+	// #274, cf thematique_consigne_valide) : on ne laisse pas passer une
+	// valeur qui serait de toute façon ignorée en traitement, plutôt que de
+	// créer silencieusement un article avec un id_consigne qu'on n'aura pas
+	// écrit.
+	include_spip('thematique_fonctions');
+	if ($id_consigne && !thematique_consigne_valide($id_consigne)) {
 		return ['message_erreur' => _T('info_acces_interdit')];
 	}
 
@@ -123,10 +150,18 @@ function formulaires_public_publier_article_traiter_dist(
 ) {
 	include_spip('inc/session');
 	include_spip('inc/autoriser');
+	include_spip('thematique_fonctions');
 
 	$titre = _request('titre');
 	$texte = _request('texte');
 	$id_auteur = session_get('id_auteur'); // auteur connecté, vient de la session SPIP
+
+	// cf la même vérification dans _verifier_dist (issue #274) : revérifiée
+	// ici, _traiter_dist pouvant être invoqué indépendamment.
+	$role_visiteur = thematique_donner_role(intval($id_auteur ?? 0));
+	if (!$role_visiteur || $role_visiteur === 'eleve') {
+		return ['message_erreur' => _T('info_acces_interdit')];
+	}
 
 	// Ceci est un système anti-spam : si on appuie plusieurs fois très vite sur "enregistrer un article",
 	// on ne l'enregistrera qu'une fois.
@@ -189,9 +224,14 @@ function formulaires_public_publier_article_traiter_dist(
 		if ($id_auteur) {
 			objet_associer(['auteur' => $id_auteur], ['article' => $id_article]);
 		}
-		// Si c'est une réponse à une consigne,
-		// associer l'article à la consigne.
-		if ($id_consigne) {
+		// Si c'est une réponse à une consigne, associer l'article à la
+		// consigne — déjà validée en _verifier_dist (thematique_consigne_valide,
+		// issue #274), mais on revérifie ici : _traiter_dist peut être invoqué
+		// indépendamment d'un appel préalable à _verifier_dist (cf l'API des
+		// formulaires CVT), on ne fait donc confiance à aucun état supposé
+		// acquis d'une autre étape pour une écriture en base.
+		include_spip('thematique_fonctions');
+		if ($id_consigne && thematique_consigne_valide($id_consigne)) {
 			include_spip('action/editer_objet');
 			objet_modifier('article', $id_article, [
 				'id_consigne' => intval($id_consigne),
@@ -217,7 +257,7 @@ function formulaires_public_publier_article_traiter_dist(
 		}
 		article_instituer($id_article, [
 			'statut' => 'publie',
-			'date' => _request('date')
+			'date' => _request('date'),
 		]);
 
 		// article_instituer() refuse silencieusement (un simple spip_log en
