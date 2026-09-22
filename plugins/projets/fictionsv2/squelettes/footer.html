@@ -1,9 +1,3 @@
-[(#REM) #CACHE{300} : #ENV{annee_scolaire} (passé explicitement par les
-squelettes appelants, cf #459) fait varier la clé de cache par année scolaire
-- une constante PHP dérivée d'un cookie (#EVAL{_ANNEE_SCOLAIRE}) ne le ferait
-pas. Le "Bonjour X" et les liens dépendant de #SESSION{} restent corrects :
-SPIP varie automatiquement le cache par session dès qu'un squelette utilise
-#SESSION{} directement dans son corps, ce qui est le cas ici. ]
 #CACHE{300}
 #SET{id_art,0}
 <BOUCLE_annee(RUBRIQUES){titre==#ENV{annee_scolaire}}{tout}{0,1}>
@@ -47,21 +41,8 @@ SPIP varie automatiquement le cache par session dès qu'un squelette utilise
 			<span id="annee_scolaire">
 				<form name="annee_scolaire" style="display:inline;">
 					<label for="select_annee_scolaire"><:fictionsv2:annee_scolaire:></label>
-					[(#REM) #459/#453 : liste les vraies années scolaires existantes (cf
-					BOUCLE_rubrique_contenant_annees ci-dessous) plutôt qu'une année
-					plancher devinée depuis la date du plus vieil article, complétée à
-					la main par 2 options ("2011"/"2010") qui redirigeaient vers
-					airchive.laclasse.com - un site qui n'existe plus (404).
-					afficher_options_date{} génère elle-même la série complète
-					d'<option> depuis l'année scolaire réelle jusqu'à cette année
-					plancher, donc un seul appel suffit (l'imbriquer dans un <option>
-					comme avant produisait en plus un HTML invalide, <option> dans
-					<option>). ]
 					<select id="select_annee_scolaire" name="annee_scolaire" onchange="reload_cookie('[(#URL_SITE_SPIP)]','[(#EVAL{_COOKIE_ANNEE_SCOLAIRE})]',this.value)">
 						<option value="#">---</option>
-						[(#REM) #453 : rubrique parent repérée par mot-clé "rubrique-contenant-annees"
-						(même convention que sommaire.html, BOUCLE_rubrique_contenant_annees_2),
-						plutôt que de supposer les rubriques années à la racine du site. ]
 						<BOUCLE_rubrique_contenant_annees(RUBRIQUES){titre_mot=rubrique-contenant-annees}{0,1}>
 							<BOUCLE_premiere_annee(RUBRIQUES){id_parent}{par titre}{0,1}>
 								[(#TITRE|afficher_options_date{9,#ENV{annee_scolaire}})]
