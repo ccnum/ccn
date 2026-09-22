@@ -579,12 +579,10 @@ function callReponse(id_reponse) {
  */
 
 function callClasse(id_classe) {
-
 	if (id_classe !== '' && !Number.isInteger(Number(id_classe))) return;
 	changeTimelineMode('consignes');
 	setLateralSidebarExpanded(false);
 	updateMenuIcon(['classes', 'classes-' + id_classe], 'sidebarView');
-
 	let url = CCN.projet.url_popup_classes;
 	if (id_classe != '') {
 		url = CCN.projet.url_popup_classes + '&id_objet=' + id_classe + '&type_objet=travail_en_cours';
@@ -611,7 +609,7 @@ function callClasse(id_classe) {
 
 function callClasses() {
 	changeTimelineMode('consignes');
-	showSidebar();
+	showSidebar({zoomTimeline: false});
 	toggleSidebarExpand();
 	setLateralSidebarExpanded(false);
 	updateMenuIcon(['classes'], 'sidebarView');
@@ -635,7 +633,6 @@ function callArticleBlog(id_article) {
 	setLateralSidebarExpanded(false);
 	updateMenuIcon(['blogs'], 'mainView');
 	flouterLesBullesEtLosangesNonSelectionnes(id_article)
-
 	const url = CCN.projet.url_popup_blog + "&page=article&id_article=" + id_article;
 	loadContentInMainSidebar(
 		url,
@@ -661,7 +658,7 @@ function callArticleBlog(id_article) {
 
 function callRessource(id_article) {
 	changeTimelineMode('consignes');
-	showSidebar();
+	showSidebar({zoomTimeline: false});
 	updateMenuIcon(['ressources'], 'sidebarView');
 
 	blankMainSidebar('ressources');
@@ -1323,7 +1320,16 @@ function initMissionTabs() {
  */
 function loadContentInMainSidebar(url, callback, typeContenu) {
 	$('body').addClass('loading');
-	showSidebar();
+	const contenusQuiNeZoomentPas = [
+		'classe', 
+		'publication_article', 
+		'ressource',
+		'blog',
+		'evenement'
+	]
+	showSidebar({
+		zoomTimeline: !contenusQuiNeZoomentPas.includes(typeContenu)
+	});
 	emptyMainSidebar();
 
 	// $.get() plutôt que $(elem).load(url) : .load() coupe silencieusement
@@ -1511,15 +1517,17 @@ function blankMainSidebar(key) {
  * @see loadContentInMainSidebar
  */
 
-function showSidebar() {
+function showSidebar({zoomTimeline = true} = {}) {
 	_sidebarTrigger = document.activeElement;
-	$('body').addClass('hasSidebarOpen');
+	$('body')
+		.addClass('hasSidebarOpen')
+		.toggleClass('sidebarNoTimelineZoom', !zoomTimeline);
 	$('#sidebar').addClass('show').attr('aria-hidden', 'false');
 	updateAllConnecteurs();
 }
 
 function closeSidebar() {
-	$('body').removeClass('hasSidebarOpen hasSidebarExpanded hasLateralSidebarExpanded');
+	$('body').removeClass('hasSidebarOpen hasSidebarExpanded hasLateralSidebarExpanded sidebarNoTimelineZoom');
 	$('#sidebar').removeClass('show').attr('aria-hidden', 'true');
 	$('#menu_bas .logo a').not('#menu-timeline .logo a').removeClass('selected');
 	document.title = _originalDocumentTitle;
