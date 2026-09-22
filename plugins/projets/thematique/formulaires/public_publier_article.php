@@ -217,6 +217,7 @@ function formulaires_public_publier_article_traiter_dist(
 		}
 		article_instituer($id_article, [
 			'statut' => 'publie',
+			'date' => _request('date')
 		]);
 
 		// article_instituer() refuse silencieusement (un simple spip_log en
