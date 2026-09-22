@@ -763,7 +763,8 @@ async function callInformationCreer() {
  * @see setFullscreenModeToCols
  */
 
-function callNouvelleMission(id_rubrique_auteur) {
+async function callNouvelleMission(id_rubrique_auteur) {
+	await changeTimelineMode('consignes');
 	expandSidebar();
 	setLateralSidebarExpanded(false);
 	createReponse(0, id_rubrique_auteur, 0);
