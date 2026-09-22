@@ -1096,16 +1096,16 @@ les styles de composants). */
 	overflow: visible;
 }
 
-.hasSidebarOpen #timeline_responsive {
+.hasSidebarOpen:not(.sidebarNoTimelineZoom) #timeline_responsive {
 	width: calc(100% - var(--sidebar-width-large) - var(--sidebar-margin-right));
     flex: none;
 }
 
-.hasSidebarExpanded #timeline_responsive, .hasLateralSidebarExpanded #timeline_responsive {
+.hasSidebarExpanded:not(.sidebarNoTimelineZoom) #timeline_responsive, 
+.hasLateralSidebarExpanded:not(.sidebarNoTimelineZoom) #timeline_responsive {
     width: calc(175px); /* seul le menu latéral reste visible */
     flex: none;
 }
-
 
 #timeline_wrapin {
 	position: absolute;
