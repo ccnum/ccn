@@ -104,7 +104,7 @@ function Article() {
 			axis: "y",
 			cancel: '',  // Force le drag and drop
 			start: function (event, ui) {
-				$(this).children().children().removeAttr("onClick");
+				$(this).addClass('no_event');
 			},
 			drag: function (event, ui) {
 				// axis:"y" ne bloque que le déplacement horizontal via la souris,
@@ -138,6 +138,7 @@ function Article() {
 				});
 			},
 			stop: function (event, ui) {
+				$(this).removeClass('no_event');
 				const y_parent = $(this).parent().height();
 				const yy = ui.position.top / y_parent;
 
