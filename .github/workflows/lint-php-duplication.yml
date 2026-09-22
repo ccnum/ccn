@@ -11,26 +11,13 @@ on:
       - '.ci/php-duplication-baseline.txt'
       - 'package.json'
       - 'package-lock.json'
-  push:
-    branches:
-      - dev
-      - main
-    paths:
-      - 'plugins/projets/thematique/**/*.php'
-      - 'plugins/projets/fictions/**/*.php'
-      - 'plugins/projets/petitfablab/**/*.php'
-      - 'plugins/projets/ccn/**/*.php'
-      - '.ci/check_php_duplication.js'
-      - '.ci/php-duplication-baseline.txt'
-      - 'package.json'
-      - 'package-lock.json'
 
 jobs:
   check-php-duplication:
-    # Sur une PR dont la source est refonte_graphique, build_refonte.yaml
-    # fait déjà tourner ce même check (job php_duplication) à chaque push
-    # sur cette branche : éviter le doublon.
-    if: github.head_ref != 'refonte_graphique'
+    # Pas de déclencheur push (dev/main) : build_dev.yml fait déjà tourner ce
+    # même check (job php_duplication) à chaque push sur dev - éviter le
+    # doublon en parallèle. main ne reçoit que des merges de PR (déjà
+    # couverts par le déclencheur pull_request ci-dessus).
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
