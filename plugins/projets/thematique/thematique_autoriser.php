@@ -42,33 +42,52 @@ function autoriser_thematique_configurer_dist($faire, $type, $id, $qui, $opt) {
  * (thematique_cioidc_associer_rubriques) donne désormais un vrai droit de
  * création dans cette rubrique — d'où le resserrement du filtrage des
  * "groupes libres" pertinents dans inc/thematique_cioidc.php (même issue).
+ *
+ * Garde `function_exists` : comme pour `autoriser_article_modifier`
+ * ci-dessous, le plugin contrib `autorite` (plugins/spip/autorite, pas
+ * maison) déclare conditionnellement (config meta `$GLOBALS['autorite'][...]`)
+ * sa propre `autoriser_rubrique_creerarticledans()` dans inc/autoriser.php —
+ * PHP fatalait (Cannot redeclare) sans ce garde sur un environnement où
+ * cette config est active (500 sur tout le site à l'activation du plugin,
+ * cf le crash constaté après le déploiement de ce correctif). Si `autorite`
+ * a gagné la déclaration, cette restriction #274 est inactive (son
+ * fallback delègue à `autoriser_voir_dist`, aussi permissif que le
+ * comportement d'origine) : à traiter avec le même suivi que pour
+ * `autoriser_article_modifier`.
  */
-function autoriser_rubrique_creerarticledans($faire, $type, $id, $qui, $opt) {
-	if (!autoriser_rubrique_creerarticledans_dist($faire, $type, $id, $qui, $opt)) {
-		return false;
-	}
+if (!function_exists('autoriser_rubrique_creerarticledans')) {
+	function autoriser_rubrique_creerarticledans($faire, $type, $id, $qui, $opt) {
+		if (!autoriser_rubrique_creerarticledans_dist($faire, $type, $id, $qui, $opt)) {
+			return false;
+		}
 
-	$id_auteur = intval($qui['id_auteur'] ?? 0);
-	if (!$id_auteur) {
-		return false;
-	}
+		$id_auteur = intval($qui['id_auteur'] ?? 0);
+		if (!$id_auteur) {
+			return false;
+		}
 
-	include_spip('thematique_fonctions');
-	if (thematique_donner_role($id_auteur) === 'admin') {
-		return true;
-	}
+		include_spip('thematique_fonctions');
+		if (thematique_donner_role($id_auteur) === 'admin') {
+			return true;
+		}
 
-	static $id_ressources = null;
-	if ($id_ressources === null) {
-		$id_ressources = (int) sql_getfetsel('id_rubrique', 'spip_rubriques', 'titre=' . sql_quote('Ressources'));
-	}
-	if ($id_ressources && intval($id) === $id_ressources) {
-		return true;
-	}
+		static $id_ressources = null;
+		if ($id_ressources === null) {
+			$id_ressources = (int) sql_getfetsel('id_rubrique', 'spip_rubriques', 'titre=' . sql_quote('Ressources'));
+		}
+		if ($id_ressources && intval($id) === $id_ressources) {
+			return true;
+		}
 
-	return (bool) sql_countsel(
-		'spip_auteurs_liens',
-		'id_auteur=' . $id_auteur . " AND objet='rubrique' AND id_objet=" . intval($id)
+		return (bool) sql_countsel(
+			'spip_auteurs_liens',
+			'id_auteur=' . $id_auteur . " AND objet='rubrique' AND id_objet=" . intval($id)
+		);
+	}
+} else {
+	spip_log(
+		'thematique_autoriser : autoriser_rubrique_creerarticledans() déjà déclarée (probablement par le plugin autorite) — restriction #274 sur la création d\'article non appliquée',
+		'thematique' . _LOG_ERREUR
 	);
 }
 
