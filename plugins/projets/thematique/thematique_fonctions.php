@@ -2545,6 +2545,56 @@ function thematique_trouver_reponse_a_une_consigne($id_consigne, $id_rubrique_cl
 }
 
 /**
+ * L'auteur $id_auteur a-t-il le droit de créer un article dans la rubrique
+ * $id_rubrique (issue #274) ?
+ *
+ * Un admin a accès à tout. Sinon, la rubrique globale "Ressources" est
+ * ouverte à tout rédacteur (cf le hack côté serveur qui y force id_rubrique
+ * dans public_publier_article.php, indépendamment de la valeur postée).
+ * Pour toute autre rubrique, l'auteur doit y être effectivement lié
+ * (spip_auteurs_liens) : sa/ses classe(s), son(ses) projet(s)
+ * d'intervenant, le blog pédagogique — même mécanisme que
+ * thematique_id_rubrique_classe/_auteur.
+ *
+ * Appelée à la fois par autoriser_rubrique_creerarticledans()
+ * (thematique_autoriser.php) ET directement par
+ * formulaires/public_publier_article.php : le hook `autoriser()` est
+ * shadowé sur les sites où l'option "Auteur modifie article" du plugin
+ * contrib `autorite` est active (déclare sa propre
+ * autoriser_rubrique_creerarticledans(), très permissive — cf le
+ * commentaire dans thematique_autoriser.php), ce qui rendrait la
+ * restriction inopérante si on ne comptait que sur `autoriser()`.
+ *
+ * @param int $id_auteur
+ * @param int $id_rubrique
+ * @return bool
+ */
+function thematique_auteur_peut_creer_dans_rubrique($id_auteur, $id_rubrique) {
+	$id_auteur = intval($id_auteur);
+	$id_rubrique = intval($id_rubrique);
+	if (!$id_auteur || !$id_rubrique) {
+		return false;
+	}
+
+	if (thematique_donner_role($id_auteur) === 'admin') {
+		return true;
+	}
+
+	static $id_ressources = null;
+	if ($id_ressources === null) {
+		$id_ressources = (int) sql_getfetsel('id_rubrique', 'spip_rubriques', 'titre=' . sql_quote('Ressources'));
+	}
+	if ($id_ressources && $id_rubrique === $id_ressources) {
+		return true;
+	}
+
+	return (bool) sql_countsel(
+		'spip_auteurs_liens',
+		'id_auteur=' . $id_auteur . " AND objet='rubrique' AND id_objet=" . $id_rubrique
+	);
+}
+
+/**
  * Un `id_consigne` référence-t-il bien une mission ("consigne") réelle et
  * publiée (issue #274) ? `id_consigne` est un champ extra bigint posté tel
  * quel par le formulaire public de publication

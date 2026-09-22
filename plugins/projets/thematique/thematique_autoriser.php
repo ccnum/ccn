@@ -45,15 +45,19 @@ function autoriser_thematique_configurer_dist($faire, $type, $id, $qui, $opt) {
  *
  * Garde `function_exists` : comme pour `autoriser_article_modifier`
  * ci-dessous, le plugin contrib `autorite` (plugins/spip/autorite, pas
- * maison) déclare conditionnellement (config meta `$GLOBALS['autorite'][...]`)
- * sa propre `autoriser_rubrique_creerarticledans()` dans inc/autoriser.php —
- * PHP fatalait (Cannot redeclare) sans ce garde sur un environnement où
- * cette config est active (500 sur tout le site à l'activation du plugin,
- * cf le crash constaté après le déploiement de ce correctif). Si `autorite`
- * a gagné la déclaration, cette restriction #274 est inactive (son
- * fallback delègue à `autoriser_voir_dist`, aussi permissif que le
- * comportement d'origine) : à traiter avec le même suivi que pour
- * `autoriser_article_modifier`.
+ * maison) déclare conditionnellement (dès que l'option "Auteur modifie
+ * article" de sa page de configuration est cochée, meta
+ * `$GLOBALS['autorite']['auteur_mod_article']`) sa propre
+ * `autoriser_rubrique_creerarticledans()` dans inc/autoriser.php — PHP
+ * fatalait (Cannot redeclare) sans ce garde (500 sur tout le site, cf le
+ * crash constaté sur ccn-ontourne après le déploiement initial de ce
+ * correctif). Sur un tel site, cette fonction-ci est inactive : la
+ * restriction #274 est donc appliquée directement dans
+ * formulaires/public_publier_article.php (thematique_auteur_peut_creer_-
+ * dans_rubrique), qui ne dépend pas du hook autoriser() et s'applique
+ * quelle que soit la config d'autorite. Cette fonction reste utile sur les
+ * environnements où l'option autorite n'est pas activée (couverture plus
+ * large que le seul formulaire de publication).
  */
 if (!function_exists('autoriser_rubrique_creerarticledans')) {
 	function autoriser_rubrique_creerarticledans($faire, $type, $id, $qui, $opt) {
@@ -61,32 +65,12 @@ if (!function_exists('autoriser_rubrique_creerarticledans')) {
 			return false;
 		}
 
-		$id_auteur = intval($qui['id_auteur'] ?? 0);
-		if (!$id_auteur) {
-			return false;
-		}
-
 		include_spip('thematique_fonctions');
-		if (thematique_donner_role($id_auteur) === 'admin') {
-			return true;
-		}
-
-		static $id_ressources = null;
-		if ($id_ressources === null) {
-			$id_ressources = (int) sql_getfetsel('id_rubrique', 'spip_rubriques', 'titre=' . sql_quote('Ressources'));
-		}
-		if ($id_ressources && intval($id) === $id_ressources) {
-			return true;
-		}
-
-		return (bool) sql_countsel(
-			'spip_auteurs_liens',
-			'id_auteur=' . $id_auteur . " AND objet='rubrique' AND id_objet=" . intval($id)
-		);
+		return thematique_auteur_peut_creer_dans_rubrique($qui['id_auteur'] ?? 0, $id);
 	}
 } else {
 	spip_log(
-		'thematique_autoriser : autoriser_rubrique_creerarticledans() déjà déclarée (probablement par le plugin autorite) — restriction #274 sur la création d\'article non appliquée',
+		'thematique_autoriser : autoriser_rubrique_creerarticledans() déjà déclarée (probablement par le plugin autorite, option "Auteur modifie article") — restriction #274 appliquée uniquement dans public_publier_article.php',
 		'thematique' . _LOG_ERREUR
 	);
 }
@@ -113,39 +97,64 @@ if (!function_exists('autoriser_rubrique_creerarticledans')) {
  * Fait suite au commit 3d1639a6 (#420) qui laissait cette restriction "à
  * traiter séparément".
  *
- * Garde `function_exists` : le plugin contrib `autorite` (plugins/spip/autorite,
- * pas maison) déclare lui aussi `autoriser_article_modifier()` en dur (pas
- * de suffixe `_dist`) dans inc/autoriser.php, conditionnellement à sa
- * config stockée en meta (clé `autorite`, ex. option "auteur peut modifier
- * son article"). PHP ne permet pas de redéclarer une fonction : sans ce
- * garde, sur un environnement où cette config est active (ex. validation),
- * l'inclusion de ce fichier fatalait (Cannot redeclare
- * autoriser_article_modifier()) → 500 sur tout le site. Si `autorite` a
- * gagné la déclaration, la restriction #420 sur le champ date est
- * inactive : à vérifier si la config `autorite` en question sert encore
- * réellement sur cet environnement, auquel cas il faudrait soit la
- * désactiver, soit fusionner la logique dans le fichier `autorite` lui-même.
+ * Historique du garde `function_exists` : le plugin contrib `autorite`
+ * (plugins/spip/autorite, pas maison, désinstallé — issue #274) déclarait
+ * lui aussi `autoriser_article_modifier()` en dur (pas de suffixe `_dist`)
+ * dans inc/autoriser.php, conditionnellement à sa config stockée en meta
+ * (option "auteur peut modifier son article" — `auteur_mod_article`,
+ * activée en prod sur ccn-ontourne via docker-entrypoint.sh). PHP ne
+ * permettant pas de redéclarer une fonction, cette config activait un
+ * `autoriser_article_modifier()` concurrent qui, chargé avant celui-ci,
+ * empêchait la déclaration de CETTE fonction (sans le garde
+ * `function_exists`, Fatal error "Cannot redeclare" → 500 sur tout le
+ * site) — et de toute façon SHADOWAIT silencieusement les restrictions
+ * #420/#468/#437 ci-dessous plutôt que de les compléter, tant qu'il gagnait
+ * la déclaration. D'où la désinstallation du plugin plutôt que la
+ * désactivation de la seule option : la logique qu'il fournissait
+ * ("l'auteur peut modifier son propre article même publié", nécessaire aux
+ * crayons de ré-édition d'une mission/ressource/évènement déjà publiée) est
+ * reprise explicitement ci-dessous, sous les mêmes garde-fous (#437, champ
+ * date) que le reste de cette fonction — au lieu de shadower le tout comme
+ * le faisait autorite.
  */
 if (!function_exists('autoriser_article_modifier')) {
 	function autoriser_article_modifier($faire, $type, $id, $qui, $opt) {
 		include_spip('thematique_fonctions');
 
 		if (!autoriser_article_modifier_dist($faire, $type, $id, $qui, $opt)) {
+			$id_auteur_visiteur = intval($qui['id_auteur'] ?? 0);
+
 			// Issue #468 : les jalons du projet (Cap sur l'année / La Rencontre,
 			// cf genie/thematique_rentree_annee.php) sont créés en statut 'prop'
 			// et liés au seul "premier intervenant" trouvé sur le projet — la
 			// règle SPIP standard (auteurs_objet()) ne laisse alors QUE lui (ou
 			// un admin) les éditer. N'importe quel intervenant du projet doit
 			// pouvoir les compléter, pas seulement celui assigné à la création.
-			if (
+			$exception_jalon =
 				(($opt['statut'] ?? null) === null || !in_array($opt['statut'], ['publie', 'refuse'], true))
-				&& thematique_donner_role(intval($qui['id_auteur'] ?? 0)) === 'intervenant'
-				&& thematique_article_est_jalon($id)
-			) {
-				// on continue, sous les mêmes garde-fous (année passée, champ date) que le cas normal
-			} else {
+				&& thematique_donner_role($id_auteur_visiteur) === 'intervenant'
+				&& thematique_article_est_jalon($id);
+
+			// Reprise de l'ancienne option "auteur_mod_article" du plugin
+			// autorite (cf docstring ci-dessus) : l'auteur d'un article peut
+			// le modifier même une fois publié — sinon un prof/intervenant ne
+			// pourrait plus jamais corriger sa mission/ressource/évènement
+			// après publication (autoriser_article_modifier_dist() n'autorise
+			// l'auteur que sur un article encore en 'prop'/'prepa'/'poubelle',
+			// pas 'publie').
+			$statut_article = sql_getfetsel('statut', 'spip_articles', 'id_article=' . intval($id));
+			$exception_auteur_propre_article =
+				$id_auteur_visiteur
+				&& $statut_article !== 'refuse'
+				&& sql_countsel(
+					'spip_auteurs_liens',
+					"objet='article' AND id_objet=" . intval($id) . ' AND id_auteur=' . $id_auteur_visiteur
+				);
+
+			if (!$exception_jalon && !$exception_auteur_propre_article) {
 				return false;
 			}
+			// on continue, sous les mêmes garde-fous (année passée, champ date) que le cas normal
 		}
 
 		// Issue #437 : une fois la nouvelle année scolaire créée, plus

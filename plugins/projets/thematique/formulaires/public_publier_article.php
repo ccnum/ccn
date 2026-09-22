@@ -134,6 +134,20 @@ function formulaires_public_publier_article_verifier_dist(
 		return ['message_erreur' => _T('info_acces_interdit')];
 	}
 
+	// Issue #274 : à la création (pas une édition, cf $id_article_poste
+	// ci-dessus), id_rubrique doit être une rubrique où l'auteur connecté a
+	// effectivement le droit de créer (thematique_auteur_peut_creer_dans_-
+	// rubrique) — sans ce contrôle, n'importe quel id_rubrique posté en HTTP
+	// était accepté (autoriser('creerarticledans',...) shadowé par le
+	// plugin autorite sur ce site, cf thematique_autoriser.php). Exclu pour
+	// 'ressources' : id_rubrique posté n'est pas significatif pour ce type,
+	// la vraie rubrique cible est forcée côté serveur en traitement.
+	if (!$id_article_poste && $type_article !== 'ressources'
+		&& !thematique_auteur_peut_creer_dans_rubrique(session_get('id_auteur'), $id_rubrique)
+	) {
+		return ['message_erreur' => _T('info_acces_interdit')];
+	}
+
 	$erreurs = formulaires_editer_objet_verifier('article', $id_article_poste ?: 'new', ['titre', 'texte']);
 	$max_caracteres = 50;
 	if (empty($erreurs['titre']) && strlen(_request('titre')) > $max_caracteres) {
@@ -183,6 +197,11 @@ function formulaires_public_publier_article_traiter_dist(
 	$edition = (bool) $id_article;
 
 	if (!$id_article) {
+		// cf la même vérification dans _verifier_dist (issue #274) : revérifiée
+		// ici, _traiter_dist pouvant être invoqué indépendamment.
+		if ($type_article !== 'ressources' && !thematique_auteur_peut_creer_dans_rubrique($id_auteur, $id_rubrique)) {
+			return ['message_erreur' => _T('info_acces_interdit')];
+		}
 		$id_article = 'new';
 	} elseif (!autoriser('modifier', 'article', $id_article, null, ['champ' => 'date'])) {
 		// Champ date non autorisé pour ce rôle sur cet article (#420) : même
