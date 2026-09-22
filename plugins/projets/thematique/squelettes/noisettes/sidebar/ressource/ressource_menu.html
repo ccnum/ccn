@@ -24,13 +24,17 @@
                     <:thematique:filtre_ressources_tout:>
                 </button>
                 <BOUCLE_sous_rubriques(RUBRIQUES){id_parent}{par num titre, titre}{tout}>
-                    <button type="button"
-                            class="filtre-ressources"
-                            data-id-rubrique="#ID_RUBRIQUE"
-                            onclick="filtrerRessources(this)"
-                    >
-                        #TITRE
-                    </button>
+                    #SET{titre_sous_rubrique, #TITRE}
+                    #SET{id_sous_rubrique, #ID_RUBRIQUE}
+                    <BOUCLE_verif_contenu(ARTICLES){id_rubrique}{statut=publie}{tous}{0,1}>
+                        <button type="button"
+                                class="filtre-ressources"
+                                data-id-rubrique="#GET{id_sous_rubrique}"
+                                onclick="filtrerRessources(this)"
+                        >
+                            #GET{titre_sous_rubrique}
+                        </button>
+                    </BOUCLE_verif_contenu>
                 </BOUCLE_sous_rubriques>
             </div>
             <div class="ressource-liste-container">
