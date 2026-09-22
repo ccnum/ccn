@@ -15,13 +15,13 @@ function thematique_declarer_tables_principales($tables_principales) {
 	// longueur sur une colonne numérique (issue #369, provoqué par un
 	// correctif précédent — cf 6f4bcaf0 — qui masquait ce mismatch avec un
 	// préfixe de longueur "id_consigne(20)" au lieu de le supprimer).
-	$tables_principales['spip_articles']['field']['id_consigne'] = 'bigint(21) NOT NULL';
-	$tables_principales['spip_articles']['field']['X'] = 'float NOT NULL';
-	$tables_principales['spip_articles']['field']['Y'] = 'float NOT NULL';
+	$tables_principales['spip_articles']['field']['id_consigne'] = 'bigint(21) NOT NULL DEFAULT 0';
+	$tables_principales['spip_articles']['field']['X'] = 'float NOT NULL DEFAULT 0';
+	$tables_principales['spip_articles']['field']['Y'] = 'float NOT NULL DEFAULT 0';
 	$tables_principales['spip_articles']['key']['id_consigne'] = 'id_consigne';
-	$tables_principales['spip_syndic_articles']['field']['X'] = 'float NOT NULL';
-	$tables_principales['spip_syndic_articles']['field']['Y'] = 'float NOT NULL';
-	$tables_principales['spip_rubriques']['field']['id_rubrique_lien'] = 'bigint(21) NOT NULL';
+	$tables_principales['spip_syndic_articles']['field']['X'] = 'float NOT NULL DEFAULT 0';
+	$tables_principales['spip_syndic_articles']['field']['Y'] = 'float NOT NULL DEFAULT 0';
+	$tables_principales['spip_rubriques']['field']['id_rubrique_lien'] = 'bigint(21) NOT NULL DEFAULT 0';
 	$tables_principales['spip_rubriques']['key']['id_rubrique_lien'] = 'id_rubrique_lien';
 
 	$nom = $GLOBALS['meta']['nom_site'];
