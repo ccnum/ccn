@@ -1,3 +1,18 @@
+<style>
+    .filter-buttons { display: flex; flex-wrap: wrap; }
+    .filter-buttons .filtre-ressources {
+        background-color: var(--color-background-tabs);
+        padding: 0.4rem 0.8rem;
+        border: none;
+        border-radius: 5px 5px 0 0;
+        color: inherit;
+        cursor: pointer;
+    }
+    .filter-buttons .filtre-ressources.actif {
+        background-color: var(--color-tonic);
+        color: white;
+    }
+</style>
 <div class="ressource-menu">
     <div class="ressource-header">
         <div style="display: flex; justify-content: end;">
@@ -18,51 +33,59 @@
         </div>
     </div>
     <div class="ressource-content">
-        <div class="filter-buttons">
-            <button onclick=""
-                    style="background-color: var(--color-tonic);
-                    padding: 0.4rem 0.8rem;
-                    border: none;
-                    border-radius: 5px 5px 0 0;
-                    color: white;"
-            >
-                Tout
-            </button>
-        </div>
-        <div style="background-color: var(--color-background-tabs);
-                    padding: 1rem;
-                    flex: 1;
-                    min-height: 0;
-                    display: flex;
-                    flex-direction: column;
-                    overflow-y: auto;"
-        >
-            <div class="encadre-message">
-                <div>
-                    <:thematique:message_encadre_ressource:>
-                </div>
-                <button onclick="callNouvelleRessource()"
-                        class="bouton-lisere">
-                    <:thematique:publier_bandeau_ressource:>
+        <BOUCLE_rubrique(RUBRIQUES){titre_mot=ressources}{racine}{0,1}>
+            <div class="filter-buttons">
+                <button type="button"
+                        class="filtre-ressources actif"
+                        data-id-rubrique=""
+                        onclick="filtrerRessources(this)"
+                >
+                    <:thematique:filtre_ressources_tout:>
                 </button>
+                <BOUCLE_sous_rubriques(RUBRIQUES){id_parent}{par num titre, titre}{tout}>
+                    <button type="button"
+                            class="filtre-ressources"
+                            data-id-rubrique="#ID_RUBRIQUE"
+                            onclick="filtrerRessources(this)"
+                    >
+                        #TITRE
+                    </button>
+                </BOUCLE_sous_rubriques>
             </div>
-            <div class="liste-ressources">
-                <BOUCLE_rubrique(RUBRIQUES){titre=Ressources}>
-                    <BOUCLE_articles(ARTICLES){id_rubrique}>
+            <div style="background-color: var(--color-background-tabs);
+                        padding: 1rem;
+                        flex: 1;
+                        min-height: 0;
+                        display: flex;
+                        flex-direction: column;
+                        overflow-y: auto;"
+            >
+                <div class="encadre-message">
+                    <div>
+                        <:thematique:message_encadre_ressource:>
+                    </div>
+                    <button onclick="callNouvelleRessource()"
+                            class="bouton-lisere">
+                        <:thematique:publier_bandeau_ressource:>
+                    </button>
+                </div>
+                <div class="liste-ressources">
+                    <BOUCLE_articles(ARTICLES){id_secteur}{par date}{tous}>
                         <BOUCLE_auteur(AUTEURS){id_article}>
                             #SET{nom_auteur, #NOM}
                         </BOUCLE_auteur>
                         <INCLURE{
-                            fond=noisettes/sidebar/ressource/ressource_card, 
+                            fond=noisettes/sidebar/ressource/ressource_card,
                             date=#DATE,
                             titre=#TITRE,
                             nom_auteur=#GET{nom_auteur},
                             id_article=#ID_ARTICLE,
+                            id_rubrique=#ID_RUBRIQUE,
                             env
                         } />
                     </BOUCLE_articles>
-                </BOUCLE_rubrique>
+                </div>
             </div>
-        </div>
+        </BOUCLE_rubrique>
     </div>
 </div>

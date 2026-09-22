@@ -238,6 +238,7 @@ return [
 	'reponse_binome'                 => 'Réponse binôme',
 	'reponses_du_binome'             => 'Réponses du binôme',
 	'ressources'                     => 'Ressources',
+	'filtre_ressources_tout'         => 'Tout',
 	'reponses_autres_classes'        => 'Réponses des autres classes',
 	'retour'                         => 'Retour',
 	'reponses_intervenant_il_manque' => 'Il manque encore',
