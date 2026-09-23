@@ -1,8 +1,14 @@
 #CACHE{0}
-<div class="sidebar-reaction-container">
-	[(#INCLURE{fond=inclure/favoris_ccn, objet=article, id_objet=#ID_ARTICLE, ajax})]
-</div>
 <BOUCLE_desc(ARTICLES){id_article=#ENV{id_article}}{tous}>
+	[(#TEXTE|oui)
+		#SET{type_objet_courant, #ID_ARTICLE|thematique_type_objet_article}
+		<div class="bouton-modifier-container">
+			<INCLURE{fond=noisettes/sidebar/inc/bouton_modifier_article, id_article=#ID_ARTICLE, type_objet=#GET{type_objet_courant}} />
+		</div>
+	]
+	<div class="sidebar-reaction-container">
+		[(#INCLURE{fond=inclure/favoris_ccn, objet=article, id_objet=#ID_ARTICLE, ajax})]
+	</div>
 	[(#AUTORISER{modifier, article, #ID_ARTICLE}|oui|et{#TEXTE|non|et{#GET{nb_doc}|=={0}|oui}}|et{#ADMIN|=={-1}|non}|et{#CONST{_ANNEE_SCOLAIRE}|=={#ANNEE_SCOLAIRE_REELLE}}|oui)
 		<div class="sidebar_bubble">
 			<div class="date" id="entete_publication" style="display: block;">
@@ -12,18 +18,11 @@
 	]
 	<div class="sidebar_bubble">
 		<div class="nettoyeur0"></div>
-		[(#TEXTE|oui)
+		
 			<div class="bloc_texte bloc_texte_avec_modifier">
 				[<span class="spip">(#TEXTE|liens_ouvrants|image_reduire{500})</span>]
-				[(#REM) Issue 420 : même comportement que le crayon du titre —
-				un clic ouvre la modale de publication complète (titre, date,
-				contenu, documents), pas juste un mini-formulaire limité au
-				texte comme le rendait auparavant le crayon natif du plugin
-				crayons (EDIT sur ce champ). ]
-				#SET{type_objet_courant, #ID_ARTICLE|thematique_type_objet_article}
-				<INCLURE{fond=noisettes/sidebar/inc/bouton_modifier_article, id_article=#ID_ARTICLE, type_objet=#GET{type_objet_courant}} />
 			</div>
-		]
+		
 	</div>
 	[(#CONFIG{articles_urlref}|=={oui}|oui)
 		[(#URL_SITE|textebrut|=={''}|non)

@@ -215,3 +215,45 @@ div.socialtags {
 .nowrap {
 	white-space: nowrap;
 }
+
+.crayon-init {
+    display: flex;
+    align-items: center;
+    gap: 0.4em;
+}
+
+.crayon-init .crayon-crayon {
+    background: none !important;  /* on retire l'icône SPIP par défaut */
+	width: 1em;
+    height: 1em;
+    display: inline-block;
+}
+
+.crayon-init .crayon-crayon::before {
+    content: "";
+    display: block;
+    width: 1rem;
+    height: 0.7rem;
+    background-color: var(--color-tonic);
+    -webkit-mask: url(#CHEMIN{img/logo_ecrire_plein.svg}) no-repeat center / contain;
+    mask: url(#CHEMIN{img/logo_ecrire_plein.svg}) no-repeat center / contain;
+}
+
+.crayon-init > .crayon-icones {
+    order: 1; 
+	top: -8px !important;  
+	position: relative;
+    display: inline-block;
+    width: 1em !important;
+    height: 1em !important;
+    flex-shrink: 0;   /* évite qu'il soit écrasé si le texte est long */
+}
+
+.crayon-init > .crayon-icones em {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    margin: 0;
+}
+

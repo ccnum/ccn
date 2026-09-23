@@ -14,5 +14,12 @@ compilation de ce bloc REM lui-même.
 #SET{peut_modifier, #AUTORISER{modifier,article,#ENV{id_article}}}
 #SET{annee_active, #ENV{id_article}|thematique_annee_article|thematique_annee_est_passee|non}
 [(#GET{peut_modifier}|et{#GET{annee_active}})
-<button type="button" class="bouton-modifier-article btn-reset js-call-modifier-article" data-id-article="#ENV{id_article}" data-type-objet="#ENV{type_objet}"><:thematique:modifier:></button>
+<button type="button" 
+        class="bouton-modifier-article btn-reset js-call-modifier-article" 
+        data-id-article="#ENV{id_article}" 
+        data-type-objet="#ENV{type_objet}"
+>
+    <span class="icon icon-publier"></span>
+    <div><:thematique:modifier:></div>
+</button>
 ]
