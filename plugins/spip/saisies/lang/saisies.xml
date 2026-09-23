@@ -33,7 +33,7 @@
 		<traducteur nom="Davood Hossein" lien="https://trad.spip.net/auteur/davood-hossein" />
 	</langue>
 	<langue code="fr" url="https://trad.spip.net/tradlang_module/saisies?lang_cible=fr" total="320" traduits="320" relire="0" modifs="0" nouveaux="0" pourcent="100.00" />
-	<langue code="fr_tu" url="https://trad.spip.net/tradlang_module/saisies?lang_cible=fr_tu" total="320" traduits="310" relire="0" modifs="1" nouveaux="9" pourcent="96.88">
+	<langue code="fr_tu" url="https://trad.spip.net/tradlang_module/saisies?lang_cible=fr_tu" total="320" traduits="320" relire="0" modifs="0" nouveaux="0" pourcent="100.00">
 		<traducteur nom="beatnick" lien="https://trad.spip.net/auteur/beatnick" />
 		<traducteur nom="Cerf" lien="https://trad.spip.net/auteur/cerf" />
 		<traducteur nom="Maïeul" lien="https://trad.spip.net/auteur/maieul" />

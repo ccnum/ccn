@@ -40,7 +40,7 @@ options:
             5: '5 minutes'
             15: '15 minutes'
             30: '30 minutes'
-          defaut: 30
+          defaut: 1
         verifier:
           type: 'entier'
           options:

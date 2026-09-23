@@ -145,8 +145,10 @@ function saisies_generer_html($champ, $env = []) {
 	// Attention, en cas de multi-étapes, on passe le contexte de toutes les saisies, classées par etape en cherchant par priorité dans `saisies_par_etapes`, puis `_saisies_par_etapes`, puis `saisies` qu'on regroupe en étapes.
 	if (isset($env['_etape']) && isset($env['saisies_par_etapes'])) {
 		$contexte['_saisies'] = $env['saisies_par_etapes'];
+		$contexte['_saisies']['options'] = $env['_saisies']['options'] ?? [];
 	} elseif (isset($env['_etape']) && isset($env['_saisies_par_etapes'])) {
 		$contexte['_saisies'] = $env['_saisies_par_etapes'];
+		$contexte['_saisies']['options'] = $env['_saisies']['options'] ?? [];
 	} else {
 		$contexte['_saisies'] = isset($env['saisies']) ? $env['saisies'] : [];
 	}

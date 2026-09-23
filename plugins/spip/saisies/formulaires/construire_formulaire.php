@@ -564,6 +564,9 @@ function construire_formulaire_generer_saisie_configurable(array $saisie, array 
 	// On désactive les options globales
 	unset($env['_contenu']['options']);
 
+	// Le catalogue complet est réservé à la palette du constructeur
+	unset($env['_saisies_disponibles_par_categories'], $env['_saisies_groupes_disponibles']);
+
 	// On cherche si ya un formulaire de config
 	$formulaire_config = isset($env['erreurs']['configurer_' . $nom]) ? $env['erreurs']['configurer_' . $nom] : '';
 

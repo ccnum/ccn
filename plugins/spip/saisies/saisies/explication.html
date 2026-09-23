@@ -1,4 +1,3 @@
-#CACHE{24*3600*31,statique}
 #SET{texte,#ENV*{texte}|propre}
 [(#SET{selector,#ENV{id}|replace{^champ_,explication_}})]
 <div class="editer pleine_largeur editer_explication[ explication_(#ENV{nom}|saisie_nom2classe)][ (#ENV{conteneur_class,#ENV{li_class}})][ (#ENV{type_saisie}|saisie_type2classe)]"[ data-id="(#ENV{id_saisie})"][ data-afficher_si="(#ENV*{afficher_si}|saisies_afficher_si_js{#ENV{_saisies}})"]>

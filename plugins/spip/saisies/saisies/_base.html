@@ -66,7 +66,7 @@
 	[(#REM)<!-- Si la saisie est autonome, ne pas l'encapusler-->]
 	#SET{saisies_autonomes,#VAL|saisies_autonomes}
 	[(#ENV{type_saisie}|in_array{#GET{saisies_autonomes}}|oui)
-	<INCLURE{fond=saisies/#ENV{type_saisie},env,nom=#GET{name},obligatoire=#GET{obligatoire},disable=#GET{disable},readonly=#GET{readonly},id=#GET{id}} />
+	[(#INCLURE{fond=saisies/#ENV{type_saisie},env,nom=#GET{name},obligatoire=#GET{obligatoire},disable=#GET{disable},readonly=#GET{readonly},id=#GET{id}})]
 	]
 
 	[(#ENV{type_saisie}|in_array{#GET{saisies_autonomes}}|non)
@@ -124,7 +124,7 @@
 			[<em class='attention'>(#ENV*{attention})</em>]
 
 			[(#REM)<!-- appeler la saisie proprement dite -->]
-			<INCLURE{fond=saisies/#ENV{type_saisie},env,nom=#GET{name},id=#GET{id},disable=#GET{disable},readonly=#GET{readonly},describedby=#GET{describedby}|trim} />
+			[(#INCLURE{fond=saisies/#ENV{type_saisie},env,nom=#GET{name},id=#GET{id},disable=#GET{disable},readonly=#GET{readonly},describedby=#GET{describedby}|trim})]
 
 			[<p class="explication explication_apres" id="explication_apres_#GET{id}">(#ENV*{explication_apres})</p>]
 
