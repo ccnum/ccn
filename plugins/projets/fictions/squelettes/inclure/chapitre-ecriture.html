@@ -17,10 +17,14 @@ RUBRIQUE.HTML > CHAPITRE-ECRITURE.HTML
 			<div class="ecriture-chapitre-nom">#NOM</div>
 		</BOUCLE_auteur_article>
 	</div>
+	[(#REM) fin=oui : chapitre en cours d'une autre équipe (rubrique.html),
+	on n'en montre que l'en-tête, comme chapitre-verrouille.html. ]
+	[(#ENV{fin}|=={oui}|non)
 	<!-- TEXTE  -->
 	<div class="texte_courant ecriture-edition #EDIT{descriptif}">
 		[(#DESCRIPTIF)]
 	</div>
 	<INCLURE{fond=inclure/chapitre-ecriture-script, id_article} />
+	]
 </div>
 </BOUCLE_article>
