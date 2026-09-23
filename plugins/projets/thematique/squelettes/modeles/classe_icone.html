@@ -4,12 +4,15 @@
 classe_numero() (thematique_fonctions.php) à partir de id_rubrique : stables
 et calculables depuis n'importe quelle page, sans dépendre d'une session
 partagée ni de l'ordre dans lequel les pages sont visitées. ]
+[(#REM) id_rubrique peut venir de l'URL (id_objet, cf. classe_detail.html) :
+forcé en entier avant d'être réinjecté dans des attributs et du JS. ]
+#SET{id_rubrique, #ENV{id_rubrique}|intval}
 [(#MODELE{logo_menu_classe,
-	valeur=#ENV{id_rubrique},
-	filter=.#ENV{id_rubrique},
+	valeur=#GET{id_rubrique},
+	filter=.#GET{id_rubrique},
 	title=#ENV{titre},
-	class=menu_logo_classes-[(#ENV{id_rubrique}) ],
+	class=menu_logo_classes-[(#GET{id_rubrique}) ],
 	texte=[(#ENV{titre}|couper{2})],
-	NUMERO=[(#ENV{id_rubrique}|classe_numero)],
-	ICONE=[(#ENV{id_rubrique}|classe_icone)]
+	NUMERO=[(#GET{id_rubrique}|classe_numero)],
+	ICONE=[(#GET{id_rubrique}|classe_icone)]
 })]
