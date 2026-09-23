@@ -4,13 +4,16 @@
 
 .formulaire_spip input.text {
 	color: #222 !important;
-	background-color: white !important;
+	background-color: var(--color-gris-4) !important;
 	padding: 10px 9px !important;
 	border: none !important;
 	margin-top: 0 !important;
 	margin-left: 0 !important;
 	outline: none !important;
 	box-sizing: border-box;
+}
+.formulaire_spip textarea {
+	background-color: var(--color-gris-4);
 }
 
 .editer_titre input.text,
@@ -208,6 +211,9 @@ p.boutons:has(input[type="submit"]) {
 	font-size: 14px !important;
 	color: var(--color-default) !important;
 	line-height: 18px !important;
+	padding-bottom: 18px;
+	padding-left: 0.5rem;
+	padding-right: 1rem;
 }
 
 .editer-groupe .editer {
@@ -278,11 +284,19 @@ p.boutons:has(input[type="submit"]) {
    ne peut pas être imbriqué dans #formulaire_publier_article — l'upload
    de document (étape 2) est donc un formulaire ajax frère, en dehors du
    <form> de rédaction (étape 1), pas un enfant. */
-.formulaire_public_publier_article .editer-groupe {
+.formulaire_public_publier_article > .editer-groupe {
 	display: flex;
-	flex-direction: row;
-	align-items: flex-start;
-	gap: 24px;
+	gap: 36px;
+	height: 100%;
+	min-height: 0;
+}
+
+.ajax.publier-article-form-wrapper {
+	height: 100%;
+}
+
+.formulaire_public_publier_article {
+	height: 100%;
 }
 
 /* Ascenseur propre à la colonne de gauche (dropzone + liste des
@@ -291,17 +305,35 @@ p.boutons:has(input[type="submit"]) {
    align-items:flex-start (pas de stretch), donc borner la hauteur de
    celle-ci et lui donner son propre overflow ne bouge pas l'autre. */
 .formulaire_public_publier_article #sidebar-etape-2-container {
-	order: 1;
-	flex: 0 1 calc(33% - 12px);
-	max-width: calc(33% - 12px);
-	max-height: 65vh;
+	min-height: 0;
+	min-width: 0;
 	overflow-y: auto;
+	flex: 1;
 }
 
 .formulaire_public_publier_article #formulaire_publier_article {
-	order: 2;
-	flex: 1 1 calc(66% - 12px);
-	max-width: calc(66% - 12px);
+	flex: 2;
+	display: flex;
+	flex-direction: column;
+}
+
+#formulaire_publier_article div:first-of-type {
+	min-height: 0;
+	overflow-y: auto;
+}
+
+#formulaire_publier_article {
+	label[for=date],
+	label[for=titre]:not(.nb-caracteres),
+	label[for=texte] {
+		font-size: medium;
+	}
+}
+
+.formulaire_public_publier_article #formulaire_publier_article > div:first-child {
+	flex: 0 0 auto;
+	min-height: 0;
+	overflow: visible;
 }
 
 @media (max-width: 900px) {

@@ -10,15 +10,15 @@
 	public_publier_article.html - voir le commentaire là-bas pour le détail.
 	]
 	#SET{bandeau_creation, #ENV{type_article}|thematique_texte_publication{bandeau}}
-	#SET{bouton_creation, #ENV{type_article}|thematique_texte_publication{bouton}}
 	<div class="publier-article-header">
-		<span class="publier-article-bandeau etiquette-etape"><span class="texte-etiquette">[(#GET{est_edition}|oui)<:thematique:modifier_publication:>][(#GET{est_edition}|non)#GET{bandeau_creation}]</span></span>
-		<button type="button" id="sidebar-close" class="icon btn-reset" aria-label="<:thematique:fermer:>"></button>
+		<div class="page-inner">
+			<span class="publier-article-bandeau etiquette-etape"><span class="texte-etiquette">[(#GET{est_edition}|oui)<:thematique:modifier_publication:>][(#GET{est_edition}|non)#GET{bandeau_creation}]</span></span>
+			<button type="button" id="sidebar-close" class="icon btn-reset" aria-label="<:thematique:fermer:>"></button>
+		</div>
 	</div>
 	<div class="ajax publier-article-form-wrapper">
-		#FORMULAIRE_PUBLIC_PUBLIER_ARTICLE{#ID_RUBRIQUE, #TYPE_ARTICLE, #ID_CONSIGNE, #ENV{id_article}}
-	</div>
-	<div id="bouton-container">
-		<button id="bouton-enregistrer-article" class="bouton-publication-article" onclick="creationArticleEnregistrer()">[(#GET{est_edition}|oui)<:thematique:enregistrer:>][(#GET{est_edition}|non)#GET{bouton_creation}]</button>
+		<div class="page-inner">
+			#FORMULAIRE_PUBLIC_PUBLIER_ARTICLE{#ID_RUBRIQUE, #TYPE_ARTICLE, #ID_CONSIGNE, #ENV{id_article}}
+		</div>
 	</div>
 </div>

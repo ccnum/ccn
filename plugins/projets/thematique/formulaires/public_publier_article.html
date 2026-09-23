@@ -80,9 +80,24 @@
 					<label for="texte">#GET{champ_texte_publication}</label>
 					[<span class="erreur_message">(#ENV**{erreurs}|table_valeur{texte})</span>]
 
-					<textarea name="texte" id="texte" rows="10" class="inserer_barre_edition inserer_previsualisation" data-barre="edition" data-id="article-#ENV{id_article,new}" required
+					<textarea name="texte" id="texte" rows="6" class="inserer_barre_edition inserer_previsualisation" data-barre="edition" data-id="article-#ENV{id_article,new}" required
 					>#ENV{texte}</textarea>
 				</div>
 			</div>
+			#SET{bouton_creation, #ENV{type_article}|thematique_texte_publication{bouton}}
+			<div id="bouton-container">
+				<button id="bouton-enregistrer-article" 
+						class="bouton-lisere" 
+						onclick="creationArticleEnregistrer()"
+				>
+						[(#ENV{id_article}|oui)
+							<:thematique:enregistrer:>
+						]
+						[(#ENV{id_article}|non)
+							#GET{bouton_creation}
+						]
+				</button>
+			</div>
 		</form>
 	</div>
+	
