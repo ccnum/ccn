@@ -4,6 +4,20 @@ function valider_chapitre($id_article, $id_rubrique) {
 	include_spip('action/editer_objet');
 	include_spip('inc/autoriser');
 
+	// Seul un auteur de l'article peut valider son propre chapitre : l'id_article
+	// vient de l'URL, et autoriser_exception() ci-dessous lève tout contrôle d'accès.
+	$id_auteur = (int) ($GLOBALS['visiteur_session']['id_auteur'] ?? 0);
+	if (
+		!$id_auteur
+		or !sql_countsel('spip_auteurs_liens', [
+			"objet='article'",
+			'id_objet=' . intval($id_article),
+			'id_auteur=' . $id_auteur,
+		])
+	) {
+		return '';
+	}
+
 	// Publication
 	autoriser_exception('modifier', 'article', $id_article);
 	objet_modifier('article', intval($id_article), ['statut' => 'publie']);
