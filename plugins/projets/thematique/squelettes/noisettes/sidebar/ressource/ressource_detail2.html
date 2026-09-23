@@ -1,64 +1,65 @@
 <div class="ressource-detail-container">
-    [(#ENV{id_article}|>{0}|oui)
-        <BOUCLE_articles(ARTICLES){id_article}{tout}>
-            <BOUCLE_auteur(AUTEURS){id_article}>
-                #SET{nom_auteur, #NOM}
-            </BOUCLE_auteur>
-            <div style="display: flex;
-                        justify-content: space-between;"
-            >
-                <div style="font-weight: 600;
-                            font-size: 1rem;"
+    <div class="ressource-header" 
+         style="background-color: var(--color-bleu-fond);
+                display: flex;
+                justify-content: end;
+                align-items: center;"
+    >
+        <button type="button" 
+                id="sidebar-close" 
+                class="icon btn-reset" 
+                aria-label="<:thematique:fermer:>"
+                onclick="fermerUneRessource()"
+        ></button>
+    </div>
+    <div class="ressource-detail">
+        [(#ENV{id_article}|>{0}|oui)
+            <BOUCLE_articles(ARTICLES){id_article}{tout}>
+                <BOUCLE_auteur(AUTEURS){id_article}>
+                    #SET{nom_auteur, #NOM}
+                </BOUCLE_auteur>
+                <div style="display: flex;
+                            justify-content: space-between;"
                 >
-                            #TITRE
+                    <div style="font-weight: 600;
+                                font-size: 1rem;"
+                    >
+                                #TITRE
+                    </div>
                 </div>
-                <button type="button" id="sidebar-close" class="icon btn-reset" aria-label="<:thematique:fermer:>"></button>
-            </div>
-            <div style="font-size: 0.8rem;">#VAL{#DATE|affdate}</div>
-            <div><:thematique:publie_par:> #GET{nom_auteur}</div>
-            <div style="background-color: var(--color-gris-4);
-                        padding: 1rem;"
-            >#TEXTE</div>
-            <div class="sidebar-reaction-container">
-                [(#INCLURE{fond=inclure/favoris_ccn, objet=article, id_objet=#ENV{id_article}, ajax})]
-            </div>
-            <div style="background-color: var(--color-gris-3);
-                        padding: 0.5rem;
-                        width: fit-content;"
-            >
-                <:thematique:COMMENTAIRES:>
-            </div>
-            <div style="background-color: var(--color-gris-4);
-                        padding: 1rem;
-                        border-top: 1px solid black;"
-            >
-                <button style="display: flex;
-                               gap: 0.2rem;
-                               background-color: var(--color-gris-3);
-                               border: none;
-                               padding: 1rem;"
-                        onclick=""
+                <div style="font-size: 0.8rem;">#VAL{#DATE|affdate}</div>
+                <div style="margin-bottom: 1rem;">
+                    <:thematique:publie_par:> #GET{nom_auteur}
+                </div>
+                <div style="background-color: var(--color-background-tabs);
+                            padding: 1rem;"
+                >#TEXTE</div>
+                <div class="sidebar-reaction-container">
+                    [(#INCLURE{fond=inclure/favoris_ccn, objet=article, id_objet=#ENV{id_article}, ajax})]
+                </div>
+                <div style="background-color: var(--color-gris-3);
+                            padding: 0.5rem;
+                            width: fit-content;"
                 >
-                    <div style="height: 1rem;
-                                width: 1rem;
-                                margin-right: 0.4rem;
-                                background-color: var(--color-default);" 
-                         class="icon icon-publier"
-                    ></div>
-                    <div><:thematique:poster_un_message:></div>
-                </button>
-                <INCLURE{fond=noisettes/sidebar/onglet_commentaires, env} />
+                    <:thematique:COMMENTAIRES:>
+                </div>
+                <div style="background-color: var(--color-gris-4);
+                            padding: 1rem;
+                            border-top: 1px solid black;"
+                >
+                    <INCLURE{fond=noisettes/sidebar/onglet_commentaires, env} />
+                </div>
+            </BOUCLE_articles>
+        ]
+        [(#ENV{id_article}|>{0}|non)
+            <div style="display: flex;
+                align-items: center;
+                justify-content: center;
+                height: 100%;"
+            >
+                <:thematique:veuillez_selectionner_une_ressource:>
             </div>
-        </BOUCLE_articles>
-    ]
-    [(#ENV{id_article}|>{0}|non)
-        <div style="display: flex;
-             align-items: center;
-             justify-content: center;
-             height: 100%;"
-        >
-            <:thematique:veuillez_selectionner_une_ressource:>
-        </div>
-    ]
+        ]
+    </div>
 </div>
 

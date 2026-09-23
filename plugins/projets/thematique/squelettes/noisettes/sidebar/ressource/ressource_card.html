@@ -1,13 +1,14 @@
-<div class="ressource-card-container" data-id-rubrique="#ENV{id_rubrique}">
+<button class="ressource-card-container" 
+     data-id-rubrique="#ENV{id_rubrique}"
+     data-id-article="#ENV{id_article}"
+     onclick="voirLaRessource(event)"
+>
     <div class="ressource-card-date">[(#ENV{date}|affdate)]</div>
     <div class="ressource-card-titre">#ENV{titre}</div>
     <div class="ressource-card-footer">
         <span class="ressource-card-auteur"><:thematique:publie_par:> #ENV{nom_auteur}</span>
-        <button class="bouton-lisere"
-                onclick="voirLaRessource(event)"
-                data-id-article="#ENV{id_article}"
-        >
+        <div class="link-button">
             <:thematique:voir_la_ressource:>
-        </button>
+        </div>
     </div>
-</div>
+</button>

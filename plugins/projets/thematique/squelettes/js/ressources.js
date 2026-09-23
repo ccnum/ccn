@@ -27,14 +27,10 @@ function filtrerRessources(bouton) {
 
 function selectionnerRessource(id_article) {
     loadArticleInLateralSidebar(id_article);
-
-    document.querySelectorAll(".ressource-card-container").forEach(card => {
-        card.classList.remove("selected");
-    });
-
+    deselectionnerTout()
     const card = document.querySelector(
-        `.ressource-card-container [data-id-article="${id_article}"]`
-    )?.closest(".ressource-card-container");
+        `.ressource-card-container[data-id-article="${id_article}"]`
+    );
 
     card?.classList.add("selected");
 
@@ -45,4 +41,14 @@ function selectionnerRessource(id_article) {
     );
 
     replaceInCurrentState({ id_objet: id_article });
+}
+
+function deselectionnerTout() {
+    document.querySelectorAll(".ressource-card-container").forEach(card => {
+        card.classList.remove("selected");
+    });
+}
+
+function fermerUneRessource() {
+    deselectionnerTout()
 }

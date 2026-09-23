@@ -549,7 +549,6 @@
 #sidebar_lateral_around {
 	width: 0;
 	max-height: 100%;
-	overflow: auto;
 	transition: width 0.3s ease;
 }
 
@@ -1774,7 +1773,7 @@ ailleurs, ex: le menu du bas). */
 .publier-article-header > .page-inner {
   padding: 18px 0;
   display: flex;
-  lign-items: center;
+  align-items: center;
   justify-content: space-between;
 }
 
@@ -1935,11 +1934,19 @@ ailleurs, ex: le menu du bas). */
 }
 
 .ressource-detail-container {
+	display: flex;
+	flex-direction: column;
 	height: 100%;
 	background-color: white;
-	padding: 1rem;
 	color: var(--color-default);
 	font-family: Poppins;
+}
+
+.ressource-detail {
+	flex: 1;
+	min-height: 0;
+	overflow-y: auto;
+	padding: 20px;
 }
 
 .ressource-detail-container button {
@@ -1952,25 +1959,30 @@ ailleurs, ex: le menu du bas). */
 	padding: 1rem;
 	display: flex;
 	flex-direction: column;
+	align-items: start;
 	gap: 0.4rem;
 	border: 1px solid var(--color-gris-3);
+	cursor: pointer;
+	font-family: Poppins;
 }
 
 .ressource-card-container.selected {
 	background-color: var(--color-tonic);
 	color: white;
 }
-.ressource-card-container.selected button, .ressource-card-container:hover button {
-	background-color: white;
+
+.ressource-card-container.selected .link-button {
+	color: white;
 }
 
 .ressource-card-date {
-	font-size: 0.8rem;
+	font-size: 11px;
 	opacity: 0.7;
 }
 
 .ressource-card-titre {
-	font-weight: 500;
+	font-weight: 600;
+	font-size: 14px;
 }
 
 .ressource-card-footer {
@@ -1978,11 +1990,15 @@ ailleurs, ex: le menu du bas). */
 	justify-content: space-between;
 	align-items: end;
 	gap: 0.4rem;
+	width: 100%;
+}
+
+.ressource-card-footer .link-button {
+	color: var(--color-tonic);
 }
 
 .ressource-card-auteur {
-	font-size: 0.8rem;
-	opacity: 0.7;
+	font-size: 11px;
 }
 
 .liste-ressources {
