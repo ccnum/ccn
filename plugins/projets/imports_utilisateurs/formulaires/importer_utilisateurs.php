@@ -51,7 +51,13 @@ function formulaires_importer_utilisateurs_verifier_dist() {
 		$erreurs['file_import'] = _T('info_obligatoire');
 	} elseif (!_request('go')) {
 		$test = importer_utilisateurs_data($filename);
-		$head = array_keys(reset($test));
+		// Les cellules viennent d'un fichier fourni de l'extérieur et sont
+		// rendues par |propre dans l'aperçu : on les échappe (et le | qui
+		// casserait le tableau SPIP) pour qu'aucun HTML n'y soit interprété.
+		$echapper = function ($cellule) {
+			return str_replace('|', '&#124;', spip_htmlspecialchars((string) $cellule, ENT_QUOTES));
+		};
+		$head = array_map($echapper, array_keys(reset($test)));
 
 		$erreurs['test'] = "\n";
 		$erreurs['test'] .= "|{{" . implode("}}|{{", $head) . "}}|\n";
@@ -59,7 +65,7 @@ function formulaires_importer_utilisateurs_verifier_dist() {
 		$nbmax = 200;
 		$count = count($test) - 1;
 		while ($row = array_shift($test) and $nbmax--) {
-			$erreurs['test'] .= "|" . implode("|", $row) . "|\n";
+			$erreurs['test'] .= "|" . implode("|", array_map($echapper, $row)) . "|\n";
 		}
 		$erreurs['test'] .= "\n\n";
 		$erreurs['test'] .= "<p class='explication'>{{" . singulier_ou_pluriel(
