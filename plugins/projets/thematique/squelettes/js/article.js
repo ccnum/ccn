@@ -96,10 +96,11 @@ function Article() {
 		const _thisTypeObjet = this.type_objet;
 		const leftPercent = this.x / CCN.projet.nombre_jours_total * 100;
 
-		this.div_texte.on('click', () => isBlog
-			? callArticleBlog(_thisId)
-			: callArticleEvenement(_thisId, _thisTypeObjet)
-		);
+		this.div_texte.on('click', () => {
+			isBlog ? callArticleBlog(_thisId)
+				   : callArticleEvenement(_thisId, _thisTypeObjet)
+			CCN.projet.showRangeOfTimeline(30, this.x - 3);
+		});
 		this.div_base.draggable({
 			axis: "y",
 			cancel: '',  // Force le drag and drop

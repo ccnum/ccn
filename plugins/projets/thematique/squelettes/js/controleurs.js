@@ -1315,9 +1315,7 @@ function loadContentInMainSidebar(url, callback, typeContenu) {
 	const contenusQuiNeZoomentPas = [
 		'classe', 
 		'publication_article', 
-		'ressource',
-		'blog',
-		'evenement'
+		'ressource'
 	]
 	showSidebar({
 		zoomTimeline: !contenusQuiNeZoomentPas.includes(typeContenu)

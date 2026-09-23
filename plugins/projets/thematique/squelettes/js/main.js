@@ -394,7 +394,7 @@ function initTimeline() {
 			}
 		);
 
-	$('.mois, .timeline_trigger').on(
+	$('.mois, .timeline_trigger, #timeline_cache').on(
 		'click', function () {
 			
 			CCN.projet.showWholeTimeline();
