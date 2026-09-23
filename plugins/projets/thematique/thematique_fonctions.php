@@ -1659,6 +1659,20 @@ function thematique_voir_mission() {
 	return 'non';
 }
 
+/**
+ * Rendu HTML d'un texte de commentaire forumv2.
+ *
+ * Les commentaires sont lus en SQL brut (filtre_afficher_forum_arbre()) et non
+ * via une boucle FORUMS : le safehtml() que le plugin forum applique d'office
+ * à #TEXTE ne joue donc pas. Il doit être appelé ici, en PHP, sur la sortie de
+ * propre() : un |safehtml posé dans le squelette ne verrait pas les <script>,
+ * que propre() met de côté et ne rétablit qu'en fin de chaîne de filtres.
+ */
+function thematique_texte_forum($texte) {
+	include_spip('inc/texte');
+	return safehtml(propre((string) $texte));
+}
+
 function filtre_afficher_forum_arbre($id_article) {
 	include_spip('inc/session');
 	$forums = sql_allfetsel(

@@ -3,7 +3,7 @@
 	<p><:thematique:relisez_commentaire:></p>
 
 	[(#SET{date_heure,[(#ENV{date}|affdate{'d/m/Y H:i'})]})]
-	[(#SET{texte,[(#ENV{texte}|propre)]})]
+	#SET{texte, #ENV{texte}|thematique_texte_forum}
 
 	<div class="forum-commentaire is-root">
 		<INCLURE{fond=noisettes/inc/forumv2/forum_card,
