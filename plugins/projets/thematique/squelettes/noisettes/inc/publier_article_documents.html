@@ -26,28 +26,51 @@
 	<BOUCLE_liens(documents_liens){id_objet}{objet}{vu=non}{fusion id_document}{par id_document}>
 		<BOUCLE_doc(DOCUMENTS){id_document}{statut==.*}>
 			<div class="fichier" id="doc#ID_DOCUMENT">
-				<div class="description">
+				<div class="left-col">
 					[(#MIME_TYPE|match{image}|oui)
 						<div class="previsualisation [(#EXTENSION)]"><span style="background-image:url([(#FICHIER|image_reduire{100}|extraire_attribut{src})]);"></span></div>
 					]
 					[(#MIME_TYPE|match{image}|non)
 						<div class="vignette_extension [(#EXTENSION)]"><span></span></div>
 					]
-					<div class="infos">
-						<span class="name"><strong>[(#FICHIER|basename)]</strong></span>
-						<span class="size">[(#TAILLE|taille_en_octets)]</span>
-						[(#DESCRIPTIF|oui)<span class="descriptif">#DESCRIPTIF</span>]
+				</div>
+				<div class="right-col">
+					<div class="document-ligne-1">
+						<div class="name"><strong>[(#FICHIER|basename)]</strong></div>
+						<div class="actions-card">
+							<div class="icon-wrapper">
+								<div class="icon icon-publier" onclick="alert('edition du titre')"></div>
+							</div>
+							[(#AUTORISER{dissocierdocuments,#ENV{objet},#ENV{id_objet}}|oui)
+								[(#BOUTON_ACTION{
+									<div class="icon-wrapper">
+										<div class="icon xmark-simple"></div>
+									</div>,
+									#URL_ACTION_AUTEUR{dissocier_document,#ENV{id_objet}-#ENV{objet}-#ID_DOCUMENT-suppr,#SELF},
+									'ajax submit',
+									<:thematique:confirmation_supprimer_document:>
+								})]
+							]
+						</div>
 					</div>
-				</div>
-				<div class="raccourci-ligne">
-					[(#MIME_TYPE|match{image}|oui)#SET{raccourci_prefixe, img}]
-					[(#MIME_TYPE|match{image}|non)#SET{raccourci_prefixe, doc}]
-					<span class="raccourci" data-prefixe="#GET{raccourci_prefixe}" data-id-document="#ID_DOCUMENT" onclick="insererRaccourciDocument(this)" title="<:thematique:inserer_raccourci:>">&lt;#GET{raccourci_prefixe}#ID_DOCUMENT&gt;</span>
-				</div>
-				<div class="actions">
-					[(#AUTORISER{dissocierdocuments,#ENV{objet},#ENV{id_objet}}|oui)
-						[(#BOUTON_ACTION{<:thematique:supprimer_document:>,#URL_ACTION_AUTEUR{dissocier_document,#ENV{id_objet}-#ENV{objet}-#ID_DOCUMENT-suppr,#SELF},'ajax submit',<:thematique:confirmation_supprimer_document:>})]
-					]
+					<div class="document-ligne-2">
+						<div class="size">[(#TAILLE|taille_en_octets)]</div>
+					</div>
+					<div class="document-ligne-3">
+						<div class="link-button">
+							Insérer
+						</div>
+						[(#MIME_TYPE|match{image}|oui)#SET{raccourci_prefixe, img}]
+						[(#MIME_TYPE|match{image}|non)#SET{raccourci_prefixe, doc}]
+						<span class="raccourci" 
+							  data-prefixe="#GET{raccourci_prefixe}" 
+							  data-id-document="#ID_DOCUMENT" 
+							  onclick="insererRaccourciDocument(this)" 
+							  title="<:thematique:inserer_raccourci:>"
+						>
+							&lt;#GET{raccourci_prefixe}#ID_DOCUMENT&gt;
+						</span>
+					</div>
 				</div>
 			</div>
 		</BOUCLE_doc>

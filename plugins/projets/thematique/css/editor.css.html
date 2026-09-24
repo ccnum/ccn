@@ -348,49 +348,73 @@ p.boutons:has(input[type="submit"]) {
 	}
 }
 
-/* Raccourci <docXX>/<imgXX> d'un document listé dans
-   sidebar-etape-2-container : cliquer dessus l'insère dans le champ "texte"
-   (cf noisettes/inc/publier_article_documents.html et
-   insererRaccourciDocument() dans publier_article.js). */
-#documents_publier_article .raccourci {
+.fichier {
+	display: flex;
+	border: 1px solid lightgrey;
+	border-radius: 5px;
+}
+
+.fichier .document-ligne-1 {
+	display: flex;
+	justify-content: space-between;
+}
+
+.fichier .right-col {
+	flex: 1;
+}
+
+/************ Réécriture du visuel généré par #BOUTON_ACTION **********/
+
+.fichier .document-ligne-1 .bouton_action_post:has(.circle-xmark) {
 	display: inline-block;
-	font-family: monospace;
-	font-size: 0.9em;
-	cursor: pointer;
-	padding: 1px 4px;
-	border-radius: 3px;
-	background: #eee;
 }
 
-#documents_publier_article .raccourci.copie {
-	background: #d4edda;
+.fichier .document-ligne-1 button.submit {
+    border: 0;
+    padding: 0;
+    margin: 0;
+    background: transparent;
+    box-shadow: none;
+    cursor: pointer;
 }
 
-#documents_publier_article .descriptif {
-	color: var(--color-gris-2);
-	font-size: 0.85em;
-}
-
-/* Raccourci, sur sa propre ligne (hors du flex ".description" hérité de
-   saisies/inc-bigup_liste_fichiers.html, cf. la remarque en tête de fichier
-   sur les classes CSS communes). */
-#documents_publier_article .raccourci-ligne {
-	display: flex;
+.fichier .document-ligne-1 .icon-wrapper {
+    display: inline-flex;
 	align-items: center;
-	flex-wrap: wrap;
-	gap: 0.6em;
-	margin-top: 0.5em;
+	justify-content: center;
+	width: 20px;
+	height: 20px;
+	background-color: #e9e9ed;
+	border-radius: 50%;
+	vertical-align: middle;
 }
 
-/* Supprimer/Détacher/Modifier : en dehors de ".description", donc plus
-   soumis à son "text-align:right" hérité (cf bigup.css) — remis en ligne à
-   gauche, sous le raccourci. */
-#documents_publier_article .actions {
+.fichier .document-ligne-1 .icon-wrapper .icon {
+	/*background-color: #e9e9ed; */
+	background-color: var(--color-default);
+   	width: 60%;
+    height: 60%;
+}
+
+/************ Fin de la réécriture du visuel généré par #BOUTON_ACTION **********/
+
+.fichier .actions-card {
 	display: flex;
-	flex-wrap: wrap;
-	gap: 0.6em;
-	margin: 0.6em 0 0;
-	text-align: left;
+	gap: 0.5rem;
+}
+
+.fichier .document-ligne-3 {
+	display: flex;
+	justify-content: end;
+	align-items: center;
+}
+
+.fichier .document-ligne-3 .raccourci {
+	background-color: #4d54ff;
+    border-radius: 17px;
+    padding: 0.2rem;
+    color: white;
+    margin-left: 0.5rem;
 }
 
 .publier-article-formats-autorises {
