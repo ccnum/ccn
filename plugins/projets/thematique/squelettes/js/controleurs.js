@@ -996,7 +996,8 @@ function createReponse(id_consigne, id_rubrique_auteur, numero) {
 	// "mission".
 	const urlBase = id_consigne ? CCN.projet.url_popup_reponseajout : CCN.projet.url_popup_missionajout;
 	const url = urlBase + "&id_consigne=" + id_consigne + "&id_rubrique=" + id_rubrique_auteur + "&rang=" + rang + "&date_limite=" + dateLimite;
-	loadContentInMainSidebar(url, null, "publication_article");
+	loadContentInMainSidebar(url, ()=>{expandSidebar()}, "publication_article");
+
 }
 
 /**
