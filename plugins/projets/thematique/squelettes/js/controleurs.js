@@ -123,12 +123,41 @@ $(function () {
 		toggleSidebarExpand();
 	});
 
+
+
+	
+
 	$(document).on('click', '#sidebar_main_around #sidebar-close', function () {
-		if (CCN.projet) {
-			CCN.projet.showWholeTimeline();
-		} else {
-			closeSidebar();
+		if (!CCN.projet) {
+			return closeSidebar();
 		}
+			
+		const $container = $(this).closest('.publier-article-container');
+
+		if (!$container.length) {
+			return CCN.projet.showWholeTimeline();
+		}
+
+		const id_article = parseInt(
+			$container.find('input[name="id_article"]').val(),
+			10
+		);
+
+		if (id_article > 0) {
+			const type_article = $container.find('input[name="type_article"]').val()
+			if(!type_article) return CCN.projet.showWholeTimeline();
+			const typeToAction = {
+				"consignes": callConsigne,
+				"blogs": callArticleBlog,
+				"evenements": callArticleEvenement,
+				"travail_en_cours": callReponse
+			}
+			typeToAction[type_article](id_article);
+			collapseSidebar();
+			return
+		}
+
+		CCN.projet.showWholeTimeline();
 	});
 	$(document).on('click', '#sidebarCache', function () {
 		$('body').removeClass('hasSidebarExpanded');
