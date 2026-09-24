@@ -1018,6 +1018,7 @@ function createReponse(id_consigne, id_rubrique_auteur, numero) {
  */
 function callModifierArticle(id_article, type_article) {
 	if (!Number.isInteger(Number(id_article)) || id_article <= 0) return;
+	CCN.projet.showWholeTimeline()
 	expandSidebar();
 	setLateralSidebarExpanded(false);
 	const url = CCN.projet.url_popup_modifier_article + "&id_article=" + id_article + "&type_objet=" + type_article;
