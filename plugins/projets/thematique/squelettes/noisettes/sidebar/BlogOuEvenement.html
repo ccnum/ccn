@@ -28,6 +28,9 @@ juste description + discussion), cf noisettes/article.html ]
 					</div>
 					<div class="tabs-content">
 						<BOUCLE_contenu_message(ARTICLES){id_article}>
+							<div class="bouton-modifier-container">
+								<INCLURE{fond=noisettes/sidebar/inc/bouton_modifier_article, id_article=#ID_ARTICLE, type_objet=#ENV{type_objet}} />
+							</div>
 							#TEXTE
 						</BOUCLE_contenu_message>
 						<div class="bloc_documents">

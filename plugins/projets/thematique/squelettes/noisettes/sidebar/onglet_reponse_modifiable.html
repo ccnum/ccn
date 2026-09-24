@@ -2,6 +2,9 @@
 	[(#INCLURE{fond=inclure/favoris_ccn, objet=article, id_objet=#ID_ARTICLE, ajax})]
 </div>
 <BOUCLE_desc(ARTICLES){id_article=#ENV{id_article}}{tous}>
+	<div class="bouton-modifier-container">
+		<INCLURE{fond=noisettes/sidebar/inc/bouton_modifier_article, id_article=#ID_ARTICLE, type_objet=travail_en_cours} />
+	</div>
 	#TEXTE
 </BOUCLE_desc>
 <div style="display: flex; justify-content: flex-end;">

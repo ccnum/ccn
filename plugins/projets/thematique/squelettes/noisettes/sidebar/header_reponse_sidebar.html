@@ -32,22 +32,10 @@ Arguments :
 				</div>
 				<INCLURE{fond=noisettes/sidebar/normal_header_icons, env} />
 			</div>
-			<div id="header-row-2">
+			<div id="header-row-2"  class="#EDIT{titre}">
 				#TITRE
-				<INCLURE{fond=noisettes/sidebar/inc/bouton_modifier_article, id_article=#ID_ARTICLE, type_objet=#ENV{type_objet}} />
 			</div>
 		</div>
 	</div>
-	[(#ENV{type_objet}|in_array{#LISTE{blogs,evenements}}|oui)
-		<div class="popup_titre [popup_titre_(#ENV{type_objet})]">
-			<h2 class="#EDIT{titre} titre">[(#TITRE)]
-				<INCLURE{fond=noisettes/sidebar/inc/bouton_modifier_article, id_article=#ID_ARTICLE, type_objet=#ENV{type_objet}} />
-			</h2>
-			<div class="auteur_date">
-				<span class="date #EDIT{date}">[(#DATE|nom_jour)] [(#DATE|affdate)]</span>
-				[<span class="auteur">(#LESAUTEURS)</span>]
-			</div>
-		</div>
-	]
 </div>
 </BOUCLE_article_sidebar>
