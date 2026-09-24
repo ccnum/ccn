@@ -363,7 +363,7 @@ function setContentFromState(state, title, url) {
 
 function expandSidebar() {
     if ($('body').hasClass('hasSidebarExpanded')) return; // déjà ouvert
-
+	CCN.projet.showWholeTimeline()
     $('body').addClass('hasSidebarExpanded');
 	$('body').removeClass('hasLateralSidebarExpanded');
 }
@@ -512,10 +512,9 @@ function call(opts) {
  * @see showConsigneInTimeline
  */
 function callConsigne(id_consigne) {
-
 	if (!Number.isInteger(Number(id_consigne))) return;
 	changeTimelineMode('consignes');
-
+	collapseSidebar()
 	// récupérer le rang déjà connu côté JS
 	const consigneData = CCN.consignes.find(c => c.id == id_consigne);
 	const numero       = consigneData ? consigneData.numero : '';
@@ -1019,7 +1018,6 @@ function createReponse(id_consigne, id_rubrique_auteur, numero) {
  */
 function callModifierArticle(id_article, type_article) {
 	if (!Number.isInteger(Number(id_article)) || id_article <= 0) return;
-	CCN.projet.showWholeTimeline()
 	expandSidebar();
 	setLateralSidebarExpanded(false);
 	const url = CCN.projet.url_popup_modifier_article + "&id_article=" + id_article + "&type_objet=" + type_article;
