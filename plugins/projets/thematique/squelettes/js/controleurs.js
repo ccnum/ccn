@@ -600,7 +600,7 @@ function callReponse(id_reponse) {
 
 function callClasse(id_classe) {
 	if (id_classe !== '' && !Number.isInteger(Number(id_classe))) return;
-	changeTimelineMode('consignes');
+	CCN.projet.showWholeTimeline();
 	setLateralSidebarExpanded(false);
 	updateMenuIcon(['classes', 'classes-' + id_classe], 'sidebarView');
 	let url = CCN.projet.url_popup_classes;
