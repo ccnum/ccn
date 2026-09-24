@@ -240,29 +240,36 @@ function importer_utilisateurs_importe($filename) {
 			"nom" => $prenom . ' ' . $nom,
 			"login" => $login,
 			"email" => $email,
-			"statut" => '0minirezo',
+			"statut" => '1comite',
 			"webmestre" => 'non'
 		];
-		if ($id_auteur = sql_getfetsel('id_auteur', 'spip_auteurs', 'login=' . sql_quote($login))) {
-			sql_updateq('spip_auteurs', $champs, 'id_auteur=' . intval($id_auteur));
+		$id_auteur = null;
+		if ($id_auteur_existant = sql_getfetsel('id_auteur', 'spip_auteurs', 'login=' . sql_quote($login))) {
+			// Verifier que l'admin courant a le droit de modifier cet auteur
+			if (!autoriser('modifier', 'auteur', $id_auteur_existant)) {
+				$res['erreurs'][] = "L'utilisateur '$login' existe deja mais l'admin courant ne peut pas le modifier.";
+				continue;
+			}
+			sql_updateq('spip_auteurs', $champs, 'id_auteur=' . intval($id_auteur_existant));
+			$id_auteur = $id_auteur_existant;
 		} else {
 			$id_auteur = sql_insertq('spip_auteurs', $champs);
 		}
-		if (is_array(preg_split('/[,;]/', $admin_rubriques))) {
-			$admin_rubriques = preg_split('/[,;]/', $admin_rubriques);
+		if ($admin_rubriques = preg_split('/[,;]/', $admin_rubriques)) {
 			foreach ($admin_rubriques as $a_r) {
-				objet_associer(['id_auteur' => $id_auteur], ['rubrique' => $a_r]);
+				$a_r = trim($a_r);
+				if ($a_r and is_numeric($a_r) and autoriser('voir', 'rubrique', intval($a_r))) {
+					objet_associer(['id_auteur' => $id_auteur], ['rubrique' => intval($a_r)]);
+				}
 			}
-		} else {
-			objet_associer(['id_auteur' => $id_auteur], ['rubrique' => $admin_rubriques]);
 		}
-		if (is_array(preg_split('/[,;]/', $auteur_articles))) {
-			$auteur_articles = preg_split('/[,;]/', $auteur_articles);
+		if ($auteur_articles = preg_split('/[,;]/', $auteur_articles)) {
 			foreach ($auteur_articles as $a_r) {
-				objet_associer(['id_auteur' => $id_auteur], ['article' => $a_r]);
+				$a_r = trim($a_r);
+				if ($a_r and is_numeric($a_r) and autoriser('modifier', 'article', intval($a_r))) {
+					objet_associer(['id_auteur' => $id_auteur], ['article' => intval($a_r)]);
+				}
 			}
-		} else {
-			objet_associer(['id_auteur' => $id_auteur], ['article' => $auteur_articles]);
 		}
 		$count++;
 	}

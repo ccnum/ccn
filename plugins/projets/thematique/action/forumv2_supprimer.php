@@ -31,6 +31,12 @@ function action_forumv2_supprimer_dist() {
 
 	if ($redirect = _request('redirect')) {
 		include_spip('inc/headers');
-		redirige_par_entete($redirect);
+		// Bloquer les redirections vers un domaine externe (utilise la fonction du core)
+		$redirect = securiser_redirect_action($redirect);
+		if ($redirect) {
+			redirige_par_entete($redirect);
+		} else {
+			redirige_par_entete('spip.php?page=sommaire');
+		}
 	}
 }

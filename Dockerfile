@@ -129,6 +129,10 @@ RUN set -eux; \
 	echo 'ServerTokens Prod'; \
 	echo 'Header unset Composed-By'; \
 	echo 'Header unset X-Powered-By'; \
+	echo 'Header always set X-Content-Type-Options "nosniff"'; \
+	echo 'Header always set X-Frame-Options "DENY"'; \
+	echo 'Header always set Referrer-Policy "strict-origin-when-cross-origin"'; \
+	echo 'Header always set Strict-Transport-Security "max-age=31536000; includeSubDomains" "expr=req_headers:X-Forwarded-Proto == \"https\""'; \
 	} > /etc/apache2/conf-enabled/spip_headers.conf; \
 	# https://httpd.apache.org/docs/2.4/mod/mod_remoteip.html
 	a2enmod remoteip; \
@@ -187,13 +191,13 @@ ENV SPIP_DB_SERVER=mysql
 ENV SPIP_DB_HOST=mysql
 ENV SPIP_DB_PORT=3306
 ENV SPIP_DB_LOGIN=spip
-ENV SPIP_DB_PASS=spip
+ENV SPIP_DB_PASS=CHANGEME_DB_PASS
 ENV SPIP_DB_NAME=spip
 ENV SPIP_DB_PREFIX=spip
 ENV SPIP_ADMIN_NAME=Admin
 ENV SPIP_ADMIN_LOGIN=admin
 ENV SPIP_ADMIN_EMAIL=admin@spip
-ENV SPIP_ADMIN_PASS=adminadmin
+ENV SPIP_ADMIN_PASS=CHANGEME_ADMIN_PASS
 ENV SPIP_SITE_ADDRESS=http://localhost
 ENV SPIP_VERSION_SITE=thematique
 ENV PROJET=laclasse
