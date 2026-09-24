@@ -49,6 +49,7 @@ return [
 	'commentaires'                   => 'Commentaires',
 	'commenter'                      => 'Commenter',
 	'commenter_title'                => 'commenter',
+	'inserer'						 => 'Insérer',
 	'inserer_raccourci'               => 'Insérer dans le texte',
 	'confirmation_supprimer_commentaire' => 'Êtes-vous sûr de vouloir supprimer ce commentaire ?',
 	'consigne'						 => 'consigne',
