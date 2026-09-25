@@ -10,13 +10,15 @@
 
 	<div class="editer-groupe">
 		<div id="sidebar-etape-2-container">
-			<h3><:thematique:ajouter_document:></h3>
-
-			<div class="ajax">
-				#FORMULAIRE_JOINDRE_DOCUMENT_MISSION{#GET{id_objet_document},article}
+			<div style="flex: 0 0 auto;">
+				<h3><:thematique:ajouter_document:></h3>
+				<div class="ajax">
+					#FORMULAIRE_JOINDRE_DOCUMENT_MISSION{#GET{id_objet_document},article}
+				</div>
+				#SET{extensions_document_mission, #VAL{1}|thematique_extensions_document_mission_liste}
+				<p class="publier-article-formats-autorises"><:thematique:formats_autorises_document{extensions=#GET{extensions_document_mission}}:></p>
 			</div>
-			#SET{extensions_document_mission, #VAL{1}|thematique_extensions_document_mission_liste}
-			<p class="publier-article-formats-autorises"><:thematique:formats_autorises_document{extensions=#GET{extensions_document_mission}}:></p>
+			
 			<INCLURE{fond=noisettes/inc/publier_article_documents, id_objet=#GET{id_objet_document}, objet=article, ajax=documents} />
 		</div>
 

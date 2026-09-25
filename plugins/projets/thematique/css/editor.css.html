@@ -211,13 +211,16 @@ p.boutons:has(input[type="submit"]) {
 	font-size: 14px !important;
 	color: var(--color-default) !important;
 	line-height: 18px !important;
-	padding-bottom: 18px;
 	padding-left: 0.5rem;
 	padding-right: 1rem;
 }
 
 .editer-groupe .editer {
 	margin-bottom: 20px;
+}
+
+.editer-groupe .dropfileor {
+	margin: 0.4rem 0;
 }
 
 .editer-groupe .editer:last-child {
@@ -305,10 +308,19 @@ p.boutons:has(input[type="submit"]) {
    align-items:flex-start (pas de stretch), donc borner la hauteur de
    celle-ci et lui donner son propre overflow ne bouge pas l'autre. */
 .formulaire_public_publier_article #sidebar-etape-2-container {
-	min-height: 0;
-	min-width: 0;
-	overflow-y: auto;
 	flex: 1;
+	display: flex;
+    flex-direction: column;
+}
+
+#sidebar-etape-2-container .ajax-id-documents {
+	flex: 1;
+    min-height: 0;
+}
+
+#documents_publier_article {
+	height: 100%;
+    overflow-y: auto;
 }
 
 .formulaire_public_publier_article #formulaire_publier_article {
