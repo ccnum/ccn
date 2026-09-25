@@ -43,41 +43,34 @@ if (isset($_GET['annee_scolaire'])) {
 // une année donnée. Sans ce repli, tout le site (menu, filtrage des boucles
 // RUBRIQUES/ARTICLES par #CONST{_ANNEE_SCOLAIRE}) pointe sur une année vide.
 // Repli sur la dernière rubrique d'année réellement existante (titre
-// numérique pur, ex. "2025"). Deux conventions coexistent selon le plugin :
-// rubriques années à la racine (thematique, cf thematique_assurer_structure_annee())
-// ou enfants d'une rubrique repérée par le mot-clé "rubrique-contenant-annees"
-// (fictionsv2/petitfablabv2, cf #453 sur fictionsv2/squelettes/footer.html) -
-// on cherche dans les deux structures.
-include_spip('base/abstract_sql');
-$_id_rubrique_contenant_annees = sql_getfetsel(
-	'r.id_rubrique',
-	['spip_rubriques AS r', 'spip_mots_liens AS ml', 'spip_mots AS m'],
-	[
-		'ml.id_objet=r.id_rubrique',
-		'ml.objet=' . sql_quote('rubrique'),
-		'ml.id_mot=m.id_mot',
-		'm.titre=' . sql_quote('rubrique-contenant-annees'),
-	],
-	'',
-	'r.id_rubrique',
-	'0,1'
-);
-$_id_parents_annees = [0];
-if ($_id_rubrique_contenant_annees) {
-	$_id_parents_annees[] = intval($_id_rubrique_contenant_annees);
+// numérique pur, ex. "2025"). Les années peuvent être à la racine
+// (thematique), enfants d'une rubrique tagée "rubrique-contenant-annees"
+// (fictionsv2) ou enfants d'une rubrique parente arbitraire (ex: 177 sur
+// certains sites) — on cherche le titre de l'année où qu'elle se trouve.
+//
+// Ce repli ne s'applique que si l'année vient du calcul calendaire pur
+// (pas de cookie, pas de GET) : si l'utilisateur a explicitement choisi
+// une année (via le sélecteur du footer), on conserve son choix même si
+// la rubrique n'existe pas — le site affichera alors simplement du vide
+// plutôt que de masquer le choix en pointant vers une autre année.
+$_choix_explicite = isset($_COOKIE['laclasse_annee_scolaire'])
+	|| isset($_GET['annee_scolaire']);
+if (!$_choix_explicite) {
+	include_spip('base/abstract_sql');
+	$_annee_existante = sql_getfetsel(
+		'titre',
+		'spip_rubriques',
+		'titre REGEXP ' . sql_quote('^[0-9]{4}$') . ' AND titre<=' . sql_quote((string) $annee_scolaire),
+		'',
+		'titre DESC',
+		'0,1'
+	);
+	if ($_annee_existante !== null && $_annee_existante !== false && $_annee_existante !== '') {
+		$annee_scolaire = intval($_annee_existante);
+	}
+	unset($_annee_existante);
 }
-$_annee_existante = sql_getfetsel(
-	'titre',
-	'spip_rubriques',
-	sql_in('id_parent', $_id_parents_annees) . ' AND titre REGEXP ' . sql_quote('^[0-9]{4}$') . ' AND titre<=' . sql_quote((string) $annee_scolaire),
-	'',
-	'titre DESC',
-	'0,1'
-);
-if ($_annee_existante !== null && $_annee_existante !== false && $_annee_existante !== '') {
-	$annee_scolaire = intval($_annee_existante);
-}
-unset($_annee_existante, $_id_rubrique_contenant_annees, $_id_parents_annees);
+unset($_choix_explicite);
 
 $annee_scolaire = intval($annee_scolaire);
 define('_ANNEE_SCOLAIRE', $annee_scolaire);

@@ -183,7 +183,6 @@ function formulaires_public_publier_article_verifier_dist(
 	)) {
 		$date_postee = _request('date');
 		if ($date_postee) {
-			$annee_reelle = thematique_annee_scolaire_reelle();
 			$date_min = constant('_DATE_DEBUT') ?: date('Y-09-01');
 			$date_max = constant('_DATE_FIN') ?: date('Y-09-01');
 			if ($date_postee < $date_min || $date_postee > $date_max) {
