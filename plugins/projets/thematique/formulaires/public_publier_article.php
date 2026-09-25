@@ -88,6 +88,20 @@ function formulaires_public_publier_article_charger_dist(
 		}
 	}
 
+	// Nettoyage des documents orphelins du temp ID -id_auteur : les docs
+	// uploadés lors d'une session précédente et non soumis restent liés à
+	// ce pseudo-id (négatif) et réapparaissent à l'ouverture suivante du
+	// formulaire (#464). On les supprime uniquement en création (pas
+	// d'id_article réel) : en édition, l'id_objet document est l'id_article
+	// réel, pas le temp, donc ce cleanup ne s'applique pas.
+	if (!$valeurs['id_article']) {
+		$id_temp = 0 - intval($GLOBALS['visiteur_session']['id_auteur'] ?? 0);
+		$liens = sql_allfetsel('*', 'spip_documents_liens', "id_objet=$id_temp AND objet='article'");
+		foreach ($liens as $lien) {
+			sql_delete('spip_documents_liens', 'id_document=' . intval($lien['id_document']));
+		}
+	}
+
 	// Champ date affiché/verrouillé selon le rôle (#420) : toujours éditable
 	// à la création (pas encore d'id_article), sinon soumis aux mêmes règles
 	// que le crayon #EDIT{date} (cf thematique_autoriser.php).
