@@ -2,9 +2,14 @@
 RUBRIQUE.HTML > LISTE-CADAVRES-AUTEUR-SMALL.HTML
 (petite grille des cadavres)
 
-ID / NOM AUTEUR
+Les règles d'autorisation pour déterminer si un chapitre appartient
+à l'utilisateur connecté sont centralisées dans
+inc/fictionsv2_autorisation.php (#441).
 ]
 #CACHE{0}
+
+<!-- Contexte pour les fonctions d'autorisation (session) -->
+#SET{id_auteur_fv2,#SESSION{id_auteur}|session_set{id_auteur_fv2}}
 
 #SET{i,0}
 
@@ -33,16 +38,7 @@ ID / NOM AUTEUR
 					</div>
 				</div>
 
-				#SET{var_oui, oui}
-				<BOUCLE_auteur_actif(AUTEURS){id_article = #ID_ARTICLE}{id_auteur=#SESSION{id_auteur}}{0,1}>
-				<a href="#_articles_tous:URL_RUBRIQUE" class="liste-link-single auteur [(#_articles_tous:COMPTEUR_BOUCLE|=={#_articles_tous:TOTAL_BOUCLE}|?{'last-small',''})]"></a>
-				</BOUCLE_auteur_actif>
-					[(#REM) #441 : comparaison par #ID_AUTEUR (fiable) plutôt que par
-					#NOM (deux auteurs peuvent porter le même nom affiché). ]
-					<BOUCLE_auteur_actif1(AUTEURS){id_article = #ID_ARTICLE}{0,1}>
-					<a href="#_articles_tous:URL_RUBRIQUE" class="liste-link-single [(#ID_AUTEUR|=={#SESSION{id_auteur}}|?{'auteur','verrouille'})] [(#_articles_tous:COMPTEUR_BOUCLE|=={#_articles_tous:TOTAL_BOUCLE}|?{'last-small',''})]"></a>
-					</BOUCLE_auteur_actif1>
-				<//B_auteur_actif>
+				<a href="#_articles_tous:URL_RUBRIQUE" class="liste-link-single [(#ID_ARTICLE|EST_AUTEUR_DROITS|?{'auteur','verrouille'})] [(#_articles_tous:COMPTEUR_BOUCLE|=={#_articles_tous:TOTAL_BOUCLE}|?{'last-small',''})]"></a>
 
 			</div>
 			<div class="liste-link-spacer-3"></div>

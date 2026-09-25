@@ -69,7 +69,23 @@
 						<hr />
 
 						<!-- END PROLOGUE -->
-						<INCLURE{fond=inclure/rubrique-cadavres, id_rubrique} />
+						[(#REM) Calcul du contexte pour les droits d'accès (#441) :
+						- id_auteur : auteur connecté
+						- max_cadavres : nombre total d'articles publie+prop dans la rubrique
+						- id_zone : dernière rubrique liée à l'auteur via spip_auteurs_liens
+						Ces valeurs sont passées à rubrique-cadavres.html puis stockées en session. ]
+						#SET{var_id_auteur,#SESSION{id_auteur}}
+						<BOUCLE_count_articles(ARTICLES){id_rubrique}{statut IN publie,prop}{0,1}>
+						#SET{var_max_cadavres,#TOTAL_BOUCLE}
+						</BOUCLE_count_articles>
+						<BOUCLE_id_zone(spip_auteurs_liens){objet=rubrique}{spip_auteurs_liens.id_auteur=#GET{var_id_auteur}}{0,1}>
+							#SET{var_id_zone,#ID_OBJET}
+						</BOUCLE_id_zone>
+						<INCLURE{fond=inclure/rubrique-cadavres,
+							id_rubrique,
+							max_cadavres=#GET{var_max_cadavres},
+							id_zone=#GET{var_id_zone},
+							id_auteur=#GET{var_id_auteur}} />
 					</div>
 				</div>
 			</div>

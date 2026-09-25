@@ -6,87 +6,30 @@ visible/masqué/verrouillé pour l'auteur courant) : change à chaque
 publication d'un chapitre par un joueur. Extrait de inclure/rubrique.html
 (#459) pour que le reste de cette page (titre, navigation, prologue) reste
 cacheable sans risquer d'afficher un état de jeu périmé.
+
+Les règles d'autorisation sont centralisées dans
+inc/fictionsv2_autorisation.php (#441). Le contexte est passé par
+INCLURE depuis squelettes/inclure/rubrique.html et stocké en session.
 ]
 #CACHE{0}
-<!-- ID de l'auteur connecté -->
-#SET{var_id_auteur,#SESSION{id_auteur}}
-<!-- On recupere l'id du chapitre à masquer -->
-<BOUCLE_max_cadavres(ARTICLES){id_rubrique}{statut IN publie,prop}{par date}> </BOUCLE_max_cadavres>
-#SET{var_max_cadavres, #TOTAL_BOUCLE}
-</B_max_cadavres>
-#SET{id_cadavre_hidden, #GET{var_max_cadavres}|moins{1}}
-<!-- on recupere l'id de la rubrique de travail -->
-<BOUCLE_id_zone(spip_auteurs_liens){objet = rubrique}{spip_auteurs_liens.id_auteur = #GET{var_id_auteur}}{0,1}>
-#SET{var_id_zone, #ID_OBJET}
-</BOUCLE_id_zone>
+
+<!-- Contexte pour les fonctions d'autorisation (session) -->
+#SET{id_auteur_fv2,#ENV{id_auteur}|session_set{id_auteur_fv2}}
+#SET{webmaster_fv2,#SESSION{webmestre}|session_set{webmaster_fv2}}
+#SET{max_cadavres_fv2,#ENV{max_cadavres}|session_set{max_cadavres_fv2}}
+#SET{zone_fv2,#ENV{id_zone}|session_set{zone_fv2}}
+
 <!-- Boucle affichage des cadavres -->
 <BOUCLE_cadavres(ARTICLES){id_rubrique}{statut IN publie,prop}{id_rubrique != #EVAL{_FICTIONSV2_ID_BLOG_PEDA}}{id_rubrique != #EVAL{_FICTIONSV2_ID_BLOG_AUTEUR}}{par id_article}>
-	[(#SESSION{webmestre}|=={oui}|non)
-	<!-- L'UTILISATEUR N'EST PAS WEBMESTRE / ECRIVAIN -->
-		[(#GET{var_id_zone}|=={#ID_RUBRIQUE}|oui)
-		<!-- L'utilisateur est sur son espace de travail -->
-			<!-- Affichage du chapitre masque N-1 -->
-			[(#GET{id_cadavre_hidden}|=={#_cadavres:COMPTEUR_BOUCLE}|oui)<INCLURE{fond=inclure/chapitre-visible,id_article} />]
-
-			<!-- Affichage du chapitre N VERROUILLE -->
-			[(#GET{id_cadavre_hidden}|!={#_cadavres:COMPTEUR_BOUCLE}|oui)
-				<!-- precedent chapitre VERROUILLE-->
-				[(#COMPTEUR_BOUCLE|!={#GET{var_max_cadavres}}|oui)<INCLURE{fond=inclure/chapitre-visible,id_article,fin=non} />]
-				<!-- dernier chapitre ECRITURE-->
-				[(#COMPTEUR_BOUCLE|=={#GET{var_max_cadavres}}|oui)<INCLURE{fond=inclure/chapitre-ecriture,id_article} />]
-			]
+	[(#ID_ARTICLE|LECTURE_DROITS{montre}|oui)
+		[(#ID_ARTICLE|LECTURE_DROITS{mode}|=={'visible'}|oui)
+			<INCLURE{fond=inclure/chapitre-visible,id_article} />
 		]
-
-		[(#GET{var_id_zone}|!={#ID_RUBRIQUE}|oui)
-		<!-- L'utilisateur n'est pas sur son espace de travail -->
-			[(#GET{id_cadavre_hidden}|=={#_cadavres:COMPTEUR_BOUCLE}|oui)
-			<!-- Affichage du chapitre masque N-1 -->
-				[(#REM) #441 : comparaison par id_auteur (fiable, via une sous-boucle
-				AUTEURS - #NOM ou #ID_AUTEUR seuls ne sont pas fiables/disponibles
-				directement dans une boucle ARTICLES) plutôt que par #NOM (deux
-				auteurs peuvent porter le même nom affiché). ]
-				<!-- Si l'utilisateur est l'auteur du chapitre N-1  -->
-				<BOUCLE_est_auteur_chapitre(AUTEURS){id_article}{id_auteur=#GET{var_id_auteur}}{0,1}>
-					<INCLURE{fond=inclure/chapitre-visible,id_article} />
-				</BOUCLE_est_auteur_chapitre>
-				<!-- Si l'utilisateur n'est pas l'auteur du chapitre N-1  -->
-				<BOUCLE_est_auteur_chapitre_sinon(AUTEURS){id_article}{0,1}>
-					<INCLURE{fond=inclure/chapitre-visible,id_article,fin=non} />
-				</BOUCLE_est_auteur_chapitre_sinon>
-				<//B_est_auteur_chapitre>
-			]
-			<!-- Affichage du chapitre masque N VERROUILLE -->
-			[(#GET{id_cadavre_hidden}|!={#_cadavres:COMPTEUR_BOUCLE}|oui)
-				#SET{var_oui, oui}
-				<!-- Si l'utilisateur est webmestre -->
-				[(#SESSION{webmestre}|=={oui}|oui)
-					<!-- precedent chapitre VERROUILLE-->
-					[(#COMPTEUR_BOUCLE|!={#GET{var_max_cadavres}}|oui)<INCLURE{fond=inclure/chapitre-visible,id_article,fin=non} />]
-					<!-- dernier chapitre ECRITURE -->
-					[(#COMPTEUR_BOUCLE|=={#GET{var_max_cadavres}}|oui)<INCLURE{fond=inclure/chapitre-ecriture,id_article} />]
-				]
-				<!-- Si l'utilisateur n'est pas webmestre -->
-				[(#SESSION{webmestre}|=={oui}|non)
-					<!-- precedent chapitre VERROUILLE-->
-					[(#COMPTEUR_BOUCLE|!={#GET{var_max_cadavres}}|oui)<INCLURE{fond=inclure/chapitre-visible,id_article,fin=non} />]
-					<!-- dernier chapitre ECRITURE -->
-					[(#COMPTEUR_BOUCLE|=={#GET{var_max_cadavres}}|oui)<INCLURE{fond=inclure/chapitre-ecriture,fin=oui,id_article} />]
-				]
-			]
+		[(#ID_ARTICLE|LECTURE_DROITS{mode}|=={'verrouille'}|oui)
+			<INCLURE{fond=inclure/chapitre-verrouille,id_article} />
 		]
-	]
-	[(#SESSION{webmestre}|=={oui}|oui)
-	<!-- L'UTILISATEUR EST WEBMESTRE / ECRIVAIN -->
-
-		<!-- Affichage du chapitre masque N-1 -->
-		[(#GET{id_cadavre_hidden}|=={#_cadavres:COMPTEUR_BOUCLE}|oui)<INCLURE{fond=inclure/chapitre-visible,id_article} />]
-
-		<!-- Affichage du chapitre N VERROUILLE -->
-		[(#GET{id_cadavre_hidden}|!={#_cadavres:COMPTEUR_BOUCLE}|oui)
-			<!-- precedent chapitre VERROUILLE-->
-			[(#COMPTEUR_BOUCLE|!={#GET{var_max_cadavres}}|oui)<INCLURE{fond=inclure/chapitre-verrouille,id_article,fin=non} />]
-			<!-- dernier chapitre ECRITURE-->
-			[(#COMPTEUR_BOUCLE|=={#GET{var_max_cadavres}}|oui)<INCLURE{fond=inclure/chapitre-ecriture,id_article} />]
+		[(#ID_ARTICLE|LECTURE_DROITS{mode}|=={'ecriture'}|oui)
+			<INCLURE{fond=inclure/chapitre-ecriture,id_article} />
 		]
 	]
 </BOUCLE_cadavres>
