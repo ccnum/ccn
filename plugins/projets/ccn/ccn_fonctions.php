@@ -48,14 +48,16 @@ function balise_ANNEE_ACTUELLE_dist($p) {
 	return $p;
 }
 
-function afficher_options_date($annee, $mois, $annee_scolaire) {
+function afficher_options_date($annee, $mois, $annee_scolaire, $annee_max = null) {
 	$texte = '';
 	// _ANNEE_SCOLAIRE (ccn_options.php) plutôt qu'un calcul calendaire brut :
 	// la rubrique racine de l'année scolaire réelle peut ne pas encore exister
 	// (rentrée pas encore jouée) - _ANNEE_SCOLAIRE se replie déjà sur la
 	// dernière année existante, ce qui évite de lister ici une option d'année
-	// sans contenu.
-	$annee_actuelle = _ANNEE_SCOLAIRE;
+	// sans contenu. Si $annee_max est passé, il est utilisé à la place (utile
+	// pour le sélecteur de footer où on veut toujours afficher toutes les
+	// années disponibles, pas seulement celles jusqu'à l'année sélectionnée).
+	$annee_actuelle = $annee_max ?? _ANNEE_SCOLAIRE;
 	if ($mois < 9) {
 		$annee--;
 	}

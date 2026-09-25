@@ -45,7 +45,7 @@
 						<option value="#">---</option>
 						<BOUCLE_rubrique_contenant_annees(RUBRIQUES){titre_mot=rubrique-contenant-annees}{0,1}>
 							<BOUCLE_premiere_annee(RUBRIQUES){id_parent}{par titre}{0,1}>
-								[(#TITRE|afficher_options_date{9,#ENV{annee_scolaire}})]
+								[(#TITRE|afficher_options_date{9,#ENV{annee_scolaire},#CONST{_ANNEE_ACTUELLE_CALCULEE}})]
 							</BOUCLE_premiere_annee>
 						</BOUCLE_rubrique_contenant_annees>
 					</select>

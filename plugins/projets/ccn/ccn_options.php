@@ -17,6 +17,15 @@ if ($_annee_cookie > 2011 && $_annee_cookie < 2100) {
 }
 unset($_annee_cookie);
 
+// Année courante calculée (sans cookie) — utile pour le sélecteur de footer qui
+// doit toujours afficher toutes les années disponibles, pas seulement celles
+// jusqu'à l'année sélectionnée.
+if (intval(date('m')) >= 9) {
+	define('_ANNEE_ACTUELLE_CALCULEE', intval(date('Y')));
+} else {
+	define('_ANNEE_ACTUELLE_CALCULEE', intval(date('Y')) - 1);
+}
+
 if (isset($_GET['annee_scolaire'])) {
 	$_annee_get = intval($_GET['annee_scolaire']);
 	if ($_annee_get > 2011 && $_annee_get < 2100) {
@@ -27,7 +36,7 @@ if (isset($_GET['annee_scolaire'])) {
 }
 
 // Ne jamais retenir une année dont la rubrique n'existe pas encore sur CETTE
-// instance : le calcul calendaire ci-dessus suppose que la rentrée a déjà
+// instance : le calcul calendaire ci-dessous suppose que la rentrée a déjà
 // créé la rubrique de l'année en cours (cf genie/thematique_rentree_annee.php,
 // déclenché le 1er septembre mais pas instantané - fenêtre de battement avant
 // le prochain passage du cron), et une instance CCN peut aussi ne jamais ouvrir
