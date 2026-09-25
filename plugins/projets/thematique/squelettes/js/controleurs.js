@@ -363,7 +363,8 @@ function setContentFromState(state, title, url) {
 
 function expandSidebar() {
     if ($('body').hasClass('hasSidebarExpanded')) return; // déjà ouvert
-	CCN.projet.showWholeTimeline()
+	CCN.projet.showRangeOfTimeline(CCN.projet.nombre_jours_total, 0, 0);
+	deflouterToutesLesBullesEtLosanges();
     $('body').addClass('hasSidebarExpanded');
 	$('body').removeClass('hasLateralSidebarExpanded');
 }
