@@ -2602,9 +2602,19 @@ function thematique_auteur_peut_creer_dans_rubrique($id_auteur, $id_rubrique) {
 		return true;
 	}
 
+	// cf thematique_hierarchie_a_mot : même logique de remontée des
+	// ascendants (thematique_ascendants_rubrique inclut $id_rubrique
+	// lui-même), pour couvrir le cas d'un auteur lié à une rubrique parente
+	// (ex. la classe) plutôt qu'à la sous-rubrique précise visée (ex. une
+	// mission) - un lien direct exact sur $id_rubrique ne suffit pas.
+	$ascendants = thematique_ascendants_rubrique($id_rubrique);
+	if (!$ascendants) {
+		return false;
+	}
+
 	return (bool) sql_countsel(
 		'spip_auteurs_liens',
-		'id_auteur=' . $id_auteur . " AND objet='rubrique' AND id_objet=" . $id_rubrique
+		'id_auteur=' . $id_auteur . " AND objet='rubrique' AND id_objet IN (" . implode(',', $ascendants) . ')'
 	);
 }
 
