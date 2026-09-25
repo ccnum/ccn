@@ -19,8 +19,10 @@ INCLURE depuis squelettes/inclure/rubrique.html et stocké en session.
 #SET{max_cadavres_fv2,#ENV{max_cadavres}|session_set{max_cadavres_fv2}}
 #SET{zone_fv2,#ENV{id_zone}|session_set{zone_fv2}}
 
+#SET{id_blog_pedagogique, (#VAL{blog_pedagogique}|fictionsv2_id_rubrique_a_mot)}
+
 <!-- Boucle affichage des cadavres -->
-<BOUCLE_cadavres(ARTICLES){id_rubrique}{statut IN publie,prop}{id_rubrique != #EVAL{_FICTIONSV2_ID_BLOG_PEDA}}{id_rubrique != #EVAL{_FICTIONSV2_ID_BLOG_AUTEUR}}{par id_article}>
+<BOUCLE_cadavres(ARTICLES){id_rubrique}{statut IN publie,prop}{id_rubrique != #GET{id_blog_pedagogique}}{id_rubrique != #EVAL{_FICTIONSV2_ID_BLOG_AUTEUR}}{par id_article}>
 	[(#ID_ARTICLE|LECTURE_DROITS{montre}|oui)
 		[(#ID_ARTICLE|LECTURE_DROITS{mode}|=={'visible'}|oui)
 			<INCLURE{fond=inclure/chapitre-visible,id_article} />

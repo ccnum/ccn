@@ -12,7 +12,7 @@
 	<!-- ELEMENTS GRAPHIQUES-->
 	<INCLURE{fond=inclure/book-graphiques, suffixe=-ecriture} />
 	<BOUCLE_annee(RUBRIQUES){titre==#EVAL{_ANNEE_SCOLAIRE}}{tout}{0,1}>#SET{id_rubrique,#ID_RUBRIQUE}
-		<BOUCLE_article(ARTICLES){id_rubrique}{titre LIKE presentation}{tout}{0,1}>
+		<BOUCLE_article(ARTICLES){id_rubrique}{titre_mot=presentation}{tout}{0,1}>
 		<!-- BOOK -->
 		<div id="global-ecriture">
 		<a id="contenu-principal" tabindex="-1"></a>

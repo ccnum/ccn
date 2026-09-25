@@ -1,10 +1,10 @@
 <paquet
 	prefix="fictionsv2"
 	categorie="squelette"
-	version="1.0.2"
+	version="1.0.3"
 	etat="stable"
 	logo=""
-	schema=""
+	schema="1.0.0"
 	documentation="http://www.laclasse.com"
 	compatibilite="[4.3.2;4.*]"
 >

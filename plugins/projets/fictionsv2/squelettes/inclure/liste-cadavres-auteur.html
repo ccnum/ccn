@@ -12,7 +12,8 @@ inc/fictionsv2_autorisation.php (#441).
 
 #SET{i,0}
 
-<BOUCLE_rubriques_toutes(RUBRIQUES){id_parent=#ENV{id_rubrique}}{id_rubrique != #EVAL{_FICTIONSV2_ID_BLOG_PEDA}}{id_rubrique != #EVAL{_FICTIONSV2_ID_BLOG_AUTEUR}}{par titre}>
+#SET{id_blog_pedagogique, (#VAL{blog_pedagogique}|fictionsv2_id_rubrique_a_mot)}
+<BOUCLE_rubriques_toutes(RUBRIQUES){id_parent=#ENV{id_rubrique}}{id_rubrique != #GET{id_blog_pedagogique}}{id_rubrique != #EVAL{_FICTIONSV2_ID_BLOG_AUTEUR}}{par titre}>
 	#SET{i,#GET{i}|plus{1}}
 	<div class="liste-colonnes">
 		<div class="liste-title">#GET{i}</div>

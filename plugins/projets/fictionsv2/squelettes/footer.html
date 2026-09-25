@@ -26,14 +26,14 @@
 				[<a href="(#TEXTE|extraire_attribut{href})"><:fictionsv2:blog_de_lauteur:></a>]
 			</BOUCLE_espace_doc>
 			[(#SESSION{statut}|=={0minirezo}|oui)
-			<BOUCLE_blog(RUBRIQUES){titre = 'Blog pédagogique'}{tout}>
+			<BOUCLE_blog(RUBRIQUES){titre_mot=blog_pedagogique}{tout}>
 				<a href="#URL_RUBRIQUE">#TITRE</a>
 			</BOUCLE_blog>
 			]
 		</div>
 
 		<div id="footer-nav">
-			<BOUCLE_page_footer(ARTICLES){id_rubrique=12}{!id_article=49}>
+			<BOUCLE_page_footer(ARTICLES){titre_mot=blog_pedagogique}{!titre_mot=presentation}>
 			<a href="#URL_PAGE{page, id_article=#ID_ARTICLE}">#TITRE</a>&nbsp;&nbsp;|
 			</BOUCLE_page_footer>
 			<a href="http://www.laclasse.com/">Laclasse.com</a>&nbsp;&nbsp;|&nbsp;&nbsp;

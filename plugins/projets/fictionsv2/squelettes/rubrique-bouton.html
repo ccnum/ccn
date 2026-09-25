@@ -15,8 +15,9 @@ RUBRIQUE.HTML > RUBRIQUE-BOUTON.HTML
 
 <!-- cas spécifique de l'ecrivain (impossible de determiner une zone de travail) -->
 #SET{var_oui, oui}
+#SET{id_blog_pedagogique, (#VAL{blog_pedagogique}|fictionsv2_id_rubrique_a_mot)}
 <BOUCLE_annee(RUBRIQUES){titre==#ANNEE_SCOLAIRE}{tout}{0,1}>
-	<BOUCLE_rubriques_toutes(RUBRIQUES){id_parent=#ID_RUBRIQUE}{id_rubrique != #EVAL{_FICTIONSV2_ID_BLOG_PEDA}}{id_rubrique != #EVAL{_FICTIONSV2_ID_BLOG_AUTEUR}}>
+	<BOUCLE_rubriques_toutes(RUBRIQUES){id_parent=#ID_RUBRIQUE}{id_rubrique != #GET{id_blog_pedagogique}}{id_rubrique != #EVAL{_FICTIONSV2_ID_BLOG_AUTEUR}}>
 		<BOUCLE_zone_ecrivain_article(ARTICLES){id_rubrique}{!par date}{0,1}>
 			[(#REM) #441 : comparaison par #ID_AUTEUR (fiable) plutôt que par
 			#NOM (deux auteurs peuvent porter le même nom affiché). ]

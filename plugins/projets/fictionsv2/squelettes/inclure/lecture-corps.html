@@ -45,7 +45,7 @@ mise en forme du squelette source différait, la sortie HTML est byte-identique)
 						</BOUCLE_lecture_titre_rubrique_prologue>
 
 						<BOUCLE_annee(RUBRIQUES){titre==#EVAL{_ANNEE_SCOLAIRE}}{tout}{0,1}>
-							<BOUCLE_article(ARTICLES){id_rubrique}{titre LIKE prologue}{tout}{0,1}>
+							<BOUCLE_article(ARTICLES){id_rubrique}{titre_mot=prologue}{tout}{0,1}>
 								<h1 class="prologue">#TITRE</h1>
 								<div class="texte-courant-lecture texte-prologue">
 									#TEXTE

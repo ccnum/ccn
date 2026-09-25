@@ -30,7 +30,7 @@ function fictionsv2_post_edition($flux) {
 
 	include_spip('action/editer_objet');
 
-	$blog = sql_getfetsel('id_rubrique', 'spip_rubriques', 'titre LIKE ' . sql_quote('%Blog Pédagogique%'));
+	$blog = fictionsv2_id_rubrique_a_mot('blog_pedagogique');
 	// #229 : la rubrique blog auteur suit la même mécanique de publication automatique
 	// que le blog pédagogique, une fois la rubrique créée et la constante surchargée.
 	$blogs_ids = array_filter([(int) $blog, _FICTIONSV2_ID_BLOG_AUTEUR]);

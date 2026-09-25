@@ -15,8 +15,11 @@
 				width="54" height="54" />
 		</a>
 	</div>
-	[(#TITRE|=={'Blog pédagogique'}|non)<INCLURE{fond=inclure/rubrique,id_rubrique,annee_scolaire=#EVAL{_ANNEE_SCOLAIRE}} />]
-	[(#TITRE|=={'Blog pédagogique'}|et{#SESSION{statut}|=={0minirezo}|oui}|oui)<INCLURE{fond=inclure/rubrique-blogpeda,id_rubrique,id_article} />]
+	<BOUCLE_blog_check(MOTS){id_rubrique}{titre=blog_pedagogique}{0,1}>
+	#SET{is_blog_pedagogique,#COMPTEUR_BOUCLE}
+	</BOUCLE_blog_check>
+	[(#GET{is_blog_pedagogique}|=={0}|oui)<INCLURE{fond=inclure/rubrique,id_rubrique,annee_scolaire=#EVAL{_ANNEE_SCOLAIRE}} />]
+	[(#GET{is_blog_pedagogique}|>{0}|oui{#SESSION{statut}|=={0minirezo}|oui}|oui)<INCLURE{fond=inclure/rubrique-blogpeda,id_rubrique,id_article} />]
 
 	<INCLURE{fond=footer, annee_scolaire=#EVAL{_ANNEE_SCOLAIRE}} />
 </body>

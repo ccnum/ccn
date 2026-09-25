@@ -2,7 +2,8 @@
 SOMMAIRE.HTML > LISTE-CADAVRE-FIN.HTML
 (grille des cadavres affiché à la fin du jeu)
 -->
-<BOUCLE_rubriques_toutes(RUBRIQUES){id_parent=#ENV{id_rubrique}}{id_rubrique != #EVAL{_FICTIONSV2_ID_BLOG_PEDA}}{id_rubrique != #EVAL{_FICTIONSV2_ID_BLOG_AUTEUR}}{par id_rubrique}>
+#SET{id_blog_pedagogique, (#VAL{blog_pedagogique}|fictionsv2_id_rubrique_a_mot)}
+<BOUCLE_rubriques_toutes(RUBRIQUES){id_parent=#ENV{id_rubrique}}{id_rubrique != #GET{id_blog_pedagogique}}{id_rubrique != #EVAL{_FICTIONSV2_ID_BLOG_AUTEUR}}{par id_rubrique}>
 	<div class="liste-fin-rubrique">
 		<!--<div class="liste-title">#ID_RUBRIQUE</div>-->
 		<!-- COUVERTURE LIVRE -->
