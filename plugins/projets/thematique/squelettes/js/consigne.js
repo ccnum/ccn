@@ -119,7 +119,7 @@ function Consigne() {
 		this.div_consigne = this.div_base.find(`#consigne${this.id}`);
 		this.div_reponse_plus = this.div_base.find('.bouton_reponse_consigne.repondre').eq(0);
 		this.div_reponse_see = this.div_base.find('.bouton_reponse_consigne.acceder').eq(0);
-		this.div_reponse_see.on('click', () => callReponse(answerId)).addClass('show');
+		this.div_reponse_see.on('click', () => callReponse(this.id_reponse_courante)).addClass('show');
 
 		this.div_base.find(`.titre`).text(this.titre);
 
@@ -135,10 +135,10 @@ function Consigne() {
 		this.hauteur = this.div_base.outerHeight();
 
 		const _thisId = this.id;
-		const _thisIdRestreint = parseInt(CCN.idRestreint, 10);
-		const _thisNumero = parseInt(this.numero, 10);
+		const _thisIdRubriqueClasse = parseInt(CCN.idRubriqueClasseAuteur, 10);
 
-		this.div_reponse_plus.on('click', () => createReponse(_thisId, _thisIdRestreint, _thisNumero));
+		this.div_reponse_plus.on('click', () => createReponse(_thisId, _thisIdRubriqueClasse));
+
 		this.div_consigne.on('click', () => callConsigne(_thisId));
 
 		const leftPercent = CCN.projet.nombre_jours_total > 0 ? this.x / CCN.projet.nombre_jours_total * 100 : 0;
@@ -211,6 +211,7 @@ function Consigne() {
 	 * @see initConsignes
 	 */
 	this.showMyReponseButtonInTimeline = function (answerId) {
+		this.id_reponse_courante = answerId;
 		this.div_reponse_see.removeClass("hidden")
 	}
 

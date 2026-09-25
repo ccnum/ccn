@@ -177,6 +177,7 @@ function initConsignes(data) {
 		nouvelleConsigne.init(dataForConsigne);
 
 		let has_current_classe_already_answered = false;
+		let reponse_courante_id = null;
 
 		for (let j = 0; j < jsonReponses.length; j++) {
 			const jsonReponse = jsonReponses[j];
@@ -217,12 +218,13 @@ function initConsignes(data) {
 
 			if (CCN.classeSelection > 0 && CCN.classeSelection == dataForReponse.classe_id) {
 				has_current_classe_already_answered = true;
+				reponse_courante_id = dataForReponse.id;
 			}
 		}
 		
 		if (CCN.role === 'prof') {
 			if (has_current_classe_already_answered) {
-				nouvelleConsigne.showMyReponseButtonInTimeline();
+				nouvelleConsigne.showMyReponseButtonInTimeline(reponse_courante_id);
 			} else if (!CCN.anneeEstPassee) {
 				// Issue #437 : sur une année archivée, on ne propose pas de créer
 				// une nouvelle réponse ; consulter une réponse existante reste ok.

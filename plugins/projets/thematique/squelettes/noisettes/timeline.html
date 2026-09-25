@@ -11,6 +11,26 @@
 	CCN.idRestreint = [(#ENV{restreint}|intval)];
 	CCN.typeRestreint = [(#ENV{type_restreint}|json_encode)];
 	CCN.classeSelection = [(#ENV{restreint}|intval)];
+
+	/* Recopiage de ce qui est marqué dans onglet_description_commun.html
+	C'est comme cela qu'on récupère la rubrique de la classe associé à l'auteur courant. */
+
+	#SET{id_rubrique_classe, #SESSION{id_auteur}|filtre_auteur_vers_classe}
+	[(#SESSION{role}|=={admin}|oui)
+		[(#REM) Si on est admin, on doit publier à la place d'une classe.
+				Je choisit la premère de la liste
+		]
+		<BOUCLE_FiltreAnnee(RUBRIQUES){racine}{titre LIKE %(#CONST{_ANNEE_SCOLAIRE})%}>
+			#SET{hasYearRub,true}
+			<BOUCLE_rubMot(RUBRIQUES){id_parent}{titre_mot=travail_en_cours}>
+				<BOUCLE_rubLoop(RUBRIQUES){id_parent}{tous}{par id_rubrique}{0,1}>
+					#SET{id_rubrique_classe, #ID_RUBRIQUE}
+				</BOUCLE_rubLoop>
+			</BOUCLE_rubMot>
+		</BOUCLE_FiltreAnnee>
+	]
+	CCN.idRubriqueClasseAuteur = "#GET{id_rubrique_classe}";
+	
 	CCN.role = "[(#ENV{role})]";
 	// Issue #437 : l'année affichée par la timeline (#ENV{annee_scolaire}) est
 	// l'année sélectionnée, pas forcément l'année réelle en cours — sert à
