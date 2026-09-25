@@ -2612,6 +2612,20 @@ function thematique_auteur_peut_creer_dans_rubrique($id_auteur, $id_rubrique) {
 		return false;
 	}
 
+	// Intervenant lié à une hiérarchie "consignes" : autorisé à créer dans
+	// les hiérarchies "travail_en_cours" (rubriques de classe où les réponses
+	// sont déposées). C'est le parcours attendu pour un intervenant qui répond
+	// à une mission : il est lié à ses projets/consignes (SSO) mais PAS aux
+	// rubriques de classe cibles, donc le check d'ancêtre ci-dessous
+	// échouerait systématiquement. Cf issue #469.
+	if (thematique_auteur_a_mot_dans_hierarchie($id_auteur, 'consignes')) {
+		foreach ($ascendants as $asc) {
+			if (thematique_hierarchie_a_mot($asc, 'travail_en_cours')) {
+				return true;
+			}
+		}
+	}
+
 	return (bool) sql_countsel(
 		'spip_auteurs_liens',
 		'id_auteur=' . $id_auteur . " AND objet='rubrique' AND id_objet IN (" . implode(',', $ascendants) . ')'
