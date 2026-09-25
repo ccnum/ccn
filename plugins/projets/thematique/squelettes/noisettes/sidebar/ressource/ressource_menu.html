@@ -38,15 +38,18 @@
                 </BOUCLE_sous_rubriques>
             </div>
             <div class="ressource-liste-container">
-                <div class="encadre-message">
+                <div class="encadre-message"[(#CONST{_ANNEE_SCOLAIRE}|=={#ANNEE_SCOLAIRE_REELLE}|non)|?{, style="display:none;"}]>
                     <div>
                         <:thematique:message_encadre_ressource:>
                     </div>
+                    [(#CONST{_ANNEE_SCOLAIRE}|=={#ANNEE_SCOLAIRE_REELLE}|oui)
+                    [(#SESSION{role}|thematique_role_publie|oui)
                     <button onclick="callNouvelleRessource()"
                             class="bouton-lisere">
                         <:thematique:publier_bandeau_ressource:>
                     </button>
-                </div>
+                    ]
+                    ]
                 <div class="liste-ressources">
                     <BOUCLE_articles(ARTICLES){id_secteur}{par date}{tous}>
                         <BOUCLE_auteur(AUTEURS){id_article}>
