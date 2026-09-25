@@ -29,6 +29,10 @@ function formulaires_public_publier_article_charger_dist(
 		'titre' => '',
 		'texte' => '',
 		'date' => date('Y-m-d'),
+		// Bornes min/max pour le sélecteur date HTML5 : #440.
+		'annee_scolaire' => thematique_annee_scolaire_reelle(),
+		'min_date_school_year' => constant('_DATE_DEBUT') ?: date('Y-09-01'),
+		'max_date_school_year' => constant('_DATE_FIN') ?: date('Y-09-01'),
 	];
 
 	// Édition directe d'un article déjà publié (issue #429 : réutilise la
@@ -152,6 +156,29 @@ function formulaires_public_publier_article_verifier_dist(
 	$max_caracteres = 50;
 	if (empty($erreurs['titre']) && strlen(_request('titre')) > $max_caracteres) {
 		$erreurs['titre'] = _T('thematique:titre_trop_long', ['max' => $max_caracteres]);
+	}
+
+	// Validation date hors année scolaire : uniquement à la création,
+	// l'édition d'un article existant conserve sa date historique (#440).
+	if (!$id_article_poste && $role_visiteur !== 'eleve' && autoriser(
+		'modifier',
+		'article',
+		$id_article_poste ?: 'new',
+		null,
+		['champ' => 'date']
+	)) {
+		$date_postee = _request('date');
+		if ($date_postee) {
+			$annee_reelle = thematique_annee_scolaire_reelle();
+			$date_min = constant('_DATE_DEBUT') ?: date('Y-09-01');
+			$date_max = constant('_DATE_FIN') ?: date('Y-09-01');
+			if ($date_postee < $date_min || $date_postee > $date_max) {
+				$erreurs['date'] = _T('thematique:date_hors_annee_scolaire', [
+					'min' => $date_min,
+					'max' => $date_max,
+				]);
+			}
+		}
 	}
 	return $erreurs;
 }

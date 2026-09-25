@@ -57,6 +57,7 @@ return [
 	'reponse_mission_numero'         => 'RÉPONSE - MISSION N°@numero@',
 	'contenu_lie'                    => 'Contenu lié',
 	'date_article'                   => 'Date',
+	'date_hors_annee_scolaire'       => 'La date doit être comprise entre le @min@ et le @max@.',
 	'descriptif_a_completer'         => 'Double-cliquer pour compléter le descriptif de ma classe - @titre@.',
 	'desactiver'                     => 'Désactiver',
 	'document_sans_titre'            => 'Document sans titre',

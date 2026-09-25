@@ -72,7 +72,10 @@
 					<div class="editer editer_date[ (#ENV**{erreurs}|table_valeur{date}|oui)erreur]">
 						<label for="date"><:thematique:date_article:></label>
 						[<span class="erreur_message">(#ENV**{erreurs}|table_valeur{date})</span>]
-						<input type="date" class="text" name="date" id="date" value="[(#ENV**{date}|substr{0,10})]" />
+						<input type="date" class="text" name="date" id="date" 
+								value="[(#ENV**{date}|substr{0,10})]" 
+								min="#ENV{min_date_school_year}" 
+								max="#ENV{max_date_school_year}" />
 					</div>
 					]
 					]
