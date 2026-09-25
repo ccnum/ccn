@@ -348,7 +348,7 @@ function thematique_role_voit_salle_profs($role) {
  * forum, pas à ce menu.
  */
 function thematique_role_publie($role) {
-	return in_array($role, ['intervenant', 'admin']);
+	return in_array($role, ['prof', 'intervenant', 'admin']);
 }
 
 /**
