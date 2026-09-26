@@ -15,6 +15,7 @@
     </div>
     <div class="ressource-content">
         <BOUCLE_rubrique(RUBRIQUES){titre_mot=ressources}{racine}{0,1}>
+            [(#REM)
             <div class="filter-buttons">
                 <button type="button"
                         class="filtre-ressources actif"
@@ -37,8 +38,9 @@
                     </BOUCLE_verif_contenu>
                 </BOUCLE_sous_rubriques>
             </div>
+           ]
             <div class="ressource-liste-container">
-                <div class="encadre-message"[(#CONST{_ANNEE_SCOLAIRE}|=={#ANNEE_SCOLAIRE_REELLE}|non)|?{, style="display:none;"}]>
+                <div class="encadre-message"[(#CONST{_ANNEE_SCOLAIRE}|=={#ANNEE_SCOLAIRE_REELLE}|non)style="display:none;"]>
                     <div>
                         <:thematique:message_encadre_ressource:>
                     </div>
