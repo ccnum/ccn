@@ -2062,5 +2062,103 @@ ailleurs, ex: le menu du bas). */
 	background-color: var(--color-background-tabs);
 }
 
+/* --- Ressource detail2 (styles extraits du template inline) --- */
+
+/* Sélecteur scoped : le .ressource-header du detail2 est un enfant direct de .ressource-detail-container */
+.ressource-detail-container > .ressource-header {
+	background-color: var(--color-bleu-fond);
+	display: flex;
+	justify-content: end;
+	align-items: center;
+}
+
+.ressource-detail .ressource-detail-title {
+	display: flex;
+	justify-content: space-between;
+}
+
+.ressource-detail-title-text {
+	font-weight: 600;
+	font-size: 1rem;
+}
+
+.ressource-detail .ressource-detail-date {
+	font-size: 0.8rem;
+}
+
+.ressource-detail .ressource-detail-author {
+	margin-bottom: 1rem;
+}
+
+.ressource-detail .ressource-detail-text {
+	background-color: var(--color-background-tabs);
+	padding: 1rem;
+}
+
+.ressource-detail .ressource-detail-comments-header {
+	background-color: var(--color-gris-3);
+	padding: 0.5rem;
+	width: fit-content;
+}
+
+.ressource-detail .ressource-detail-comments-body {
+	background-color: var(--color-gris-4);
+	padding: 1rem;
+	border-top: 1px solid black;
+}
+
+.ressource-detail .ressource-detail-placeholder {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	height: 100%;
+}
+
+/* --- Header blog (styles extraits du template inline) --- */
+
+.header-icons-wrap {
+	display: flex;
+	justify-content: end;
+}
+
+.header-titre {
+	font-weight: 700;
+	font-size: 14px;
+}
+
+/* --- Card publication (styles extraits du template inline) --- */
+
+.card-publication-wrap {
+	background-color: white;
+	border-radius: 5px;
+	padding: 1rem;
+}
+
+.card-publication-meta {
+	display: flex;
+	justify-content: space-between;
+	margin-top: 0.1rem;
+	align-items: end;
+}
+
+.mission-rank {
+	font-size: 0.7rem;
+}
+
+/* --- Publications list (styles extraits du template inline) --- */
+
+.publications-list {
+	display: flex;
+	flex-direction: column;
+	gap: 1rem;
+}
+
+/* --- Modifier action (styles extraits du template inline) --- */
+
+.modifier-action {
+	display: flex;
+	justify-content: flex-end;
+}
+
 
 

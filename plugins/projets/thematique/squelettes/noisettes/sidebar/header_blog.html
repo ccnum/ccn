@@ -5,16 +5,12 @@
 	<div id="row_header">
 		<INCLURE{fond=noisettes/sidebar/inc/header_gauche_photo_auteur, id_article=#ID_ARTICLE} />
 		<div id="header-col-right">
-			<div style="display: flex;
-                        justify-content: end;">
-                <INCLURE{fond=noisettes/sidebar/normal_header_icons, env} />
-            </div>
-            <div style="font-weight: 700;
-                        font-size: 14px;"
-                 class="#EDIT{titre}"
-            >
-                [(#TITRE)]
-            </div>
+			<div class="header-icons-wrap">
+				<INCLURE{fond=noisettes/sidebar/normal_header_icons, env} />
+			</div>
+			<div class="header-titre #EDIT{titre}">
+				[(#TITRE)]
+			</div>
 		</div>
 	</div>
 </div>
