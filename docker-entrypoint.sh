@@ -155,6 +155,11 @@ if [ "${SPIP_PLUGINS_CIOIDC:-false}" = true ]; then
 else
 	spip plugins:desactiver cioidc -y
 fi
+if [ "${SPIP_PLUGINS_API_VIMEO:-false}" = true ]; then
+	spip plugins:activer api_vimeo -y
+else
+	spip plugins:desactiver api_vimeo -y
+fi
 if [ "${SPIP_VERSION_SITE}" != "thematique" ]; then
 	spip plugins:activer vider_rubrique -y
 fi
