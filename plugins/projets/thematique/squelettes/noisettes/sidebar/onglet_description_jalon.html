@@ -1,6 +1,19 @@
 <div class="sidebar-reaction-container">
     [(#INCLURE{fond=inclure/favoris_ccn, objet=article, id_objet=#ID_ARTICLE, ajax})]
 </div>
+<div class="sidebar_bubble">
+    <div id="header-col-left">
+        <div class="photo">[(#ID_ARTICLE|thematique_logo_carre{article})]</div>
+        <div class="auteur">
+            <BOUCLE_auteur_consigne_jalon(AUTEURS){id_article}{tout}>
+                #NOM
+            </BOUCLE_auteur_consigne_jalon>
+        </div>
+        <div class="date">
+            <:thematique:publie_le:> [(#DATE|affdate)]
+        </div>
+    </div>
+</div>
 <BOUCLE_jalon_texte(ARTICLES){id_article=#ID_ARTICLE}{tous}>
     <div class="sidebar_bubble">
         <span class="spip texte_jalon #EDIT{texte}">[(#TEXTE|propre)]</span>
