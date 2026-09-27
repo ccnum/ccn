@@ -23,6 +23,9 @@
 					<:thematique:publie_par:> #GET{nom_auteur}
 				</div>
 				<div class="ressource-detail-text">#TEXTE</div>
+				<div class="ressource-detail-documents">
+					<INCLURE{fond=noisettes/inc/ajouter_document, env} />
+				</div>
 				<div class="sidebar-reaction-container">
 					[(#INCLURE{fond=inclure/favoris_ccn, objet=article, id_objet=#ENV{id_article}, ajax})]
 				</div>
