@@ -45,7 +45,7 @@
 						<option value="#">---</option>
 						<BOUCLE_rubrique_contenant_annees(RUBRIQUES){titre_mot=rubrique-contenant-annees}{0,1}>
 							<BOUCLE_annees(RUBRIQUES){id_parent}{par titre}{tout}>
-								<option value="#TITRE"[(#TITRE|=={#ENV{annee_scolaire}}|oui) selected]>#TITRE|fictionsv2_annee_label</option>
+								<option value="#TITRE"[(#TITRE|=={#ENV{annee_scolaire}}|oui) selected]>[(#TITRE|fictionsv2_annee_label)]</option>
 							</BOUCLE_annees>
 						</BOUCLE_rubrique_contenant_annees>
 					</select>
