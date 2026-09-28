@@ -1,11 +1,6 @@
 name: Lint - config CCN dans docker-entrypoint.sh
 
 on:
-  pull_request:
-    paths:
-      - 'docker-entrypoint.sh'
-      - 'Dockerfile'
-      - '.ci/check_docker_entrypoint.py'
   push:
     branches:
       - dev

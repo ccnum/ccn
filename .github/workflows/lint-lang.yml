@@ -1,7 +1,10 @@
 name: Lint - texte en dur (thematique, fictions, petitfablab, ccn)
 
 on:
-  pull_request:
+  push:
+    branches:
+      - dev
+      - main
     paths:
       - 'plugins/projets/thematique/**'
       - 'plugins/projets/fictions/**'
@@ -11,10 +14,6 @@ on:
 
 jobs:
   check-lang-hardcoded:
-    # Pas de déclencheur push (dev/main) : build_dev.yml fait déjà tourner ces
-    # mêmes checks (jobs lang_hardcoded/lang_keys/hardcoded_paths) à chaque
-    # push sur dev - éviter le doublon en parallèle. main ne reçoit que des
-    # merges de PR (déjà couverts par le déclencheur pull_request ci-dessus).
     runs-on: ubuntu-latest
     steps:
       - name: Checkout

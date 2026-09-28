@@ -1,7 +1,10 @@
 name: Lint - duplication PHP (thematique, fictions, petitfablab, ccn)
 
 on:
-  pull_request:
+  push:
+    branches:
+      - dev
+      - main
     paths:
       - 'plugins/projets/thematique/**/*.php'
       - 'plugins/projets/fictions/**/*.php'
@@ -14,10 +17,6 @@ on:
 
 jobs:
   check-php-duplication:
-    # Pas de déclencheur push (dev/main) : build_dev.yml fait déjà tourner ce
-    # même check (job php_duplication) à chaque push sur dev - éviter le
-    # doublon en parallèle. main ne reçoit que des merges de PR (déjà
-    # couverts par le déclencheur pull_request ci-dessus).
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
