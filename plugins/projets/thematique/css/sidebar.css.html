@@ -1593,10 +1593,16 @@ coller juste après le texte. */
 }
 
 #header-col-left .photo {
-	width: 50px;
+    width: 50px;
     height: 50px;
     border-radius: 50%;
     overflow: hidden;
+
+    box-sizing: border-box;
+    padding: 10px;              /* marge blanche autour du SVG */
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 #header-col-left .photo > img {
@@ -1604,6 +1610,12 @@ coller juste après le texte. */
     height: 100%;
     object-fit: cover;
     object-position: center;
+}
+
+#header-col-left .photo svg {
+    width: 100%;
+    height: 100%;
+    display: block;             /* évite l'espace de ligne de base sous un SVG inline */
 }
 
 #header-col-left .auteur {
