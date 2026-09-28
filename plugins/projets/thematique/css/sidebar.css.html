@@ -1691,20 +1691,23 @@ coller juste après le texte. */
 }
 
 .image-classe-dans-reponse {
-	width: 4rem;
+    width: 4rem;
     aspect-ratio: 1 / 1;
-	border-radius: 50%;
+    background-color: white;
+    border-radius: 50%;
     overflow: hidden;
-	background-color: white;
+    container-type: size; /* nécessaire pour cqw / cqh */
 }
 
-.image-classe-dans-reponse > .logo {
-	display: flex;
+.image-classe-dans-reponse > .logo,
+.image-classe-dans-reponse > .logo > a {
+    display: flex;
     align-items: center;
-	height: 100%;
-	width: 100%;
-	background-color: inherit !important;
+    justify-content: center;
+    height: 100%;
+    width: 100%;
 }
+
 
 .image-classe-dans-reponse > .logo > .logo_menu_classe {
 	background-color: inherit !important;
