@@ -104,11 +104,11 @@ function balise_PAGE_dist($p) {
 	if (isset($_GET['page']) && is_string($_GET['page']) && $_GET['page'] !== '') {
 		$page = $_GET['page'];
 	}
-	// Via REQUEST_URI fallback : extraire le nom de la page depuis l'URL
+	// Via REQUEST_URI fallback
 	else {
 		$uri = $_SERVER['REQUEST_URI'] ?? '';
-		// SPIP URL : /spip.php?page=lecture&id_article=123
-		if (preg_match('#[?&]page=([^&\s#]+)#', $uri, $m)) {
+		$uri = parse_url($uri, PHP_URL_QUERY) ?? '';
+		if (preg_match('/page=([^&]+)/', $uri, $m)) {
 			$page = $m[1];
 		}
 	}
