@@ -44,9 +44,9 @@
 					<select id="select_annee_scolaire" name="annee_scolaire" onchange="reload_cookie('[(#URL_SITE_SPIP)]','[(#EVAL{_COOKIE_ANNEE_SCOLAIRE})]',this.value)">
 						<option value="#">---</option>
 						<BOUCLE_rubrique_contenant_annees(RUBRIQUES){titre_mot=rubrique-contenant-annees}{0,1}>
-							<BOUCLE_premiere_annee(RUBRIQUES){id_parent}{par titre}{0,1}>
-								[(#TITRE|afficher_options_date{9,#ENV{annee_scolaire},#CONST{_ANNEE_ACTUELLE_CALCULEE}})]
-							</BOUCLE_premiere_annee>
+							<BOUCLE_annees(RUBRIQUES){id_parent}{par titre}{tout}>
+								<option value="#TITRE"[(#TITRE|=={#ENV{annee_scolaire}}|oui) selected]>#TITRE|fictionsv2_annee_label</option>
+							</BOUCLE_annees>
 						</BOUCLE_rubrique_contenant_annees>
 					</select>
 				</form>

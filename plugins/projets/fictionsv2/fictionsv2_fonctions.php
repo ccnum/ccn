@@ -140,3 +140,15 @@ function fictionsv2_js_page($page) {
 
 	return isset($map[$page]) ? $map[$page] : $page;
 }
+
+/**
+ * Formate une année scolaire : "2025" -> "2025/2026".
+ * Utilisable comme filtre SPIP : [(#TITRE|fictionsv2_annee_label)]
+ */
+function fictionsv2_annee_label($annee) {
+	$annee = intval($annee);
+	if ($annee < 2000 || $annee > 2100) {
+		return $annee;
+	}
+	return $annee . '/' . ($annee + 1);
+}
