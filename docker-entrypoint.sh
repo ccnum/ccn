@@ -171,6 +171,22 @@ if [ "${SPIP_VERSION_SITE}" = "fictionsv2" ] || [ "${SPIP_VERSION_SITE}" = "peti
 	spip plugins:activer cadavrexquis -y
 fi
 spip plugins:activer "${SPIP_VERSION_SITE}" -y
+case "${SPIP_VERSION_SITE}" in
+	fictionsv2)
+		spip plugins:desactiver fictions -y
+		;;
+	fictions)
+		spip plugins:desactiver fictionsv2 -y
+		spip plugins:activer cadavrexquis -y
+		;;
+	petitfablabv2)
+		spip plugins:desactiver petitfablab -y
+		;;
+	petitfablab)
+		spip plugins:desactiver petitfablabv2 -y
+		spip plugins:activer cadavrexquis -y
+		;;
+esac
 if [ "${PROJET}" != "laclasse" ]; then
 	spip plugins:activer "thematique_${PROJET}" -y
 fi
