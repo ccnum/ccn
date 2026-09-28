@@ -113,8 +113,7 @@ function balise_PAGE_dist($p) {
 		}
 	}
 
-	$p->code = '$page';
-	$p->is_cache = false;
+	$p->result = $page;
 	return $p;
 }
 
@@ -143,9 +142,9 @@ function fictionsv2_js_page($page) {
 
 /**
  * Formate une année scolaire : "2025" -> "2025/2026".
- * Utilisable comme filtre SPIP : [(#TITRE|fictionsv2_annee_label)]
+ * Utilisable comme filtre SPIP : [(#TITRE|filtre_fictionsv2_annee_label)]
  */
-function fictionsv2_annee_label($annee) {
+function filtre_fictionsv2_annee_label($annee) {
 	$annee = intval($annee);
 	if ($annee < 2000 || $annee > 2100) {
 		return $annee;
