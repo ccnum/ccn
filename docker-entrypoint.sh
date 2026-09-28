@@ -155,7 +155,7 @@ if [ "${SPIP_PLUGINS_CIOIDC:-false}" = true ]; then
 else
 	spip plugins:desactiver cioidc -y
 fi
-if [ "${SPIP_PLUGINS_API_VIMEO:-false}" = true ]; then
+if [ "${VIMEO_ACCESS_TOKEN:-}" != "" ]; then
 	spip plugins:activer api_vimeo -y
 else
 	spip plugins:desactiver api_vimeo -y
