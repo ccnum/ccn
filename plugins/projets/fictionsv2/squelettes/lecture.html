@@ -1,7 +1,7 @@
 <INCLURE{fond=inclure/tete-html} />
 
 <body data-compteur="#ENV{compteur}">
-<a href="#contenu-principal" class="skip-link">Aller au contenu principal</a>
+<a href="#contenu-principal" class="skip-link"><:fictionsv2:skip_contenu_principal:></a>
 
 <!-- ELEMENTS GRAPHIQUES-->
 <INCLURE{fond=inclure/book-graphiques} />
@@ -11,6 +11,6 @@
 <INCLURE{fond=footer, annee_scolaire=#EVAL{_ANNEE_SCOLAIRE}}/>
 </body>
 
-<script type="text/javascript" src="#CHEMIN{js/lecture.js}"></script>
+	<INCLURE{fond=modeles/js} />
 
 </html>

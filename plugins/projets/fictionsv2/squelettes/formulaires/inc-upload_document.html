@@ -5,6 +5,6 @@
 		[<span class='erreur_message'>(#ENV*{erreurs/fichier_upload})</span>]
 		<input class='file multi' type="file" name="fichier_upload[]" value='#ENV{fichier_upload}' id="fichier_upload#GET{domid}" accept="[(#CONFIG{formats_documents_forum})]" size='14' />
 	</div>
-	[<small>Formats autorisés : (#CONFIG{formats_documents_forum}|replace{',', ', '}) — max. (#CONFIG{bigup/max_file_size}) Mo</small>]
+	[<small><:fictionsv2:formats_max_taille{(#CONFIG{formats_documents_forum}|replace{',', ', '}), (#CONFIG{bigup/max_file_size})} ></small>]
 	<p class='boutons'><input class='submit' type="submit" name="joindre_upload" value="<:bouton_download:>"/></p>
 </div>

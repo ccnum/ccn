@@ -9,7 +9,7 @@
 
 	<BOUCLE_lecture_script(ARTICLES){id_article}>
 		<div id="script-ecrivain-lecture">
-			<div class="script-titre">SCRIPT | #GET{var_auteur_article}</div>
+			<div class="script-titre"><:fictionsv2:script_titre_prefixe:>#GET{var_auteur_article}</div>
 			<div class="script-texte">#TEXTE</div>
 			<BOUCLE_doc(DOCUMENTS){id_article}{mode?}>
 			<div style="clear: both; padding: 5px;">
@@ -36,6 +36,6 @@
 </div>
 </body>
 
-<script type="text/javascript" src="#CHEMIN{js/lecture-script.js}"></script>
+	<INCLURE{fond=modeles/js} />
 
 </html>

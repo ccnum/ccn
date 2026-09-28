@@ -20,13 +20,13 @@
 			<a href="#URL_PAGE{lecture-script,id_article=#ID_ARTICLE}" class="mediabox boxIframe boxWidth-520px boxHeight-80pc">
 				<img src="[(#CHEMIN{img/lecture/bt_script.png})]"
 					class="btn-rollover" data-src-hover="#CHEMIN{img/lecture/bt_script_hover.png}"
-					width="30" height="30" alt="Fiche script (vide)" />
+					width="30" height="30" 					alt="<:fictionsv2:fiche_script_vide:>" />
 			</a>
 		]
 		<!-- FORUM -->
 		[(#GET{forum}|oui)
 			<a href="#URL_SITE_SPIP/?page=[(#SESSION{id_auteur}|non|?{'lecture-',''})]forum&id_article=#ID_ARTICLE" class="mediabox boxIframe boxWidth-730px boxHeight-97pc">
-				<img src="[(#CHEMIN{img/lecture/bt_forum_hover.png})]" width="30" height="30" alt="Voir le forum" />
+				<img src="[(#CHEMIN{img/lecture/bt_forum_hover.png})]" width="30" height="30" alt="<:fictionsv2:voir_le_forum:>" />
 			</a>
 		]
 		[(#GET{forum}|non)

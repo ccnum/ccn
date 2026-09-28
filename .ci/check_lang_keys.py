@@ -32,7 +32,7 @@ import sys
 from pathlib import Path
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
-PLUGIN_NAMES = ("thematique", "fictions", "petitfablab", "ccn")
+PLUGIN_NAMES = ("thematique", "fictions", "fictionsv2", "petitfablab", "petitfablabv2", "ccn")
 
 CCN_LANG_USE_RE = re.compile(r"CCN\.lang\.([a-zA-Z0-9_]+)")
 CCN_LANG_PROP_RE = re.compile(r"^\s*([a-zA-Z0-9_]+)\s*:", re.MULTILINE)

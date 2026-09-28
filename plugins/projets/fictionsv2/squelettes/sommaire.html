@@ -1,6 +1,6 @@
 <INCLURE{fond=inclure/tete-html} />
 <body>
-<a href="#contenu-principal" class="skip-link">Aller au contenu principal</a>
+<a href="#contenu-principal" class="skip-link"><:fictionsv2:skip_contenu_principal:></a>
 
 	<!-- TOOLTIP -->
 	<div id="liste-tooltip">
@@ -21,7 +21,7 @@
 				<div class="content">
 					<div class="content-left-small">
 						<div id="titre_site">
-							<a href="#URL_SITE_SPIP" title="Accueil"><strong>fictions</strong></a>
+							<a href="#URL_SITE_SPIP" title="<:fictionsv2:accueil:>"><strong>fictions</strong></a>
 							<a href="https://www.laclasse.com" title="https://www.laclasse.com">.laclasse.com</a>
 						</div>
 						<div id="image-presentation">[(#LOGO_ARTICLE|image_reduire{100})]</div>
@@ -76,5 +76,5 @@
 	<INCLURE{fond=footer, annee_scolaire=#EVAL{_ANNEE_SCOLAIRE}} />
 </body>
 
-<script type="text/javascript" src="#CHEMIN{js/sommaire.js}"></script>
+	<INCLURE{fond=modeles/js} />
 </html>
