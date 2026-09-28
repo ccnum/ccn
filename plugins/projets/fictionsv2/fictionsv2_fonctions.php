@@ -88,3 +88,55 @@ function recupererDernieresLignesChapitres(string $texteChapitre = '', int $nbDe
     }
     return $chaineAConcatenerAuDebut . mb_substr($texteChapitre, -$nbDeDerniersCaracteresAAfficher);
 }
+
+/**
+ * Balise PAGE : retourne le nom de la page SPIP courante.
+ * Détecté via $_GET['page'] ou $_SERVER['REQUEST_URI'] en fallback.
+ * Utilisable dans les squelettes : [(#PAGE)]
+ *
+ * Pages supportées : sommaire, page, rubrique, article, forum, forum_reponse,
+ *                    lecture, lecture-texte, lecture-script
+ */
+function balise_PAGE_dist($p) {
+	$page = '';
+
+	// Via $_GET['page']
+	if (isset($_GET['page']) && is_string($_GET['page']) && $_GET['page'] !== '') {
+		$page = $_GET['page'];
+	}
+	// Via REQUEST_URI fallback : extraire le nom de la page depuis l'URL
+	else {
+		$uri = $_SERVER['REQUEST_URI'] ?? '';
+		// SPIP URL : /spip.php?page=lecture&id_article=123
+		if (preg_match('#[?&]page=([^&\s#]+)#', $uri, $m)) {
+			$page = $m[1];
+		}
+	}
+
+	$p->code = '$page';
+	$p->is_cache = false;
+	return $p;
+}
+
+/**
+ * Filtre fictionsv2_js_page : mappe un nom de page SPIP vers le nom de fichier JS.
+ * Utilisable comme filtre SPIP : [(#PAGE|fictionsv2_js_page)]
+ * Ex: sommaire -> sommaire, lecture-texte -> lecture-texte, forum -> forum
+ */
+function fictionsv2_js_page($page) {
+	// Mapping explicite page -> fichier JS (certains noms de page ≠ nom de fichier)
+	$map = [
+		'sommaire' => 'sommaire',
+		'page' => 'page',
+		'rubrique' => 'rubrique',
+		'article' => 'page', // les articles utilisent le squelette page.html
+		'forum' => 'forum',
+		'forum_reponse' => 'forum',
+		'lecture' => 'lecture',
+		'lecture-texte' => 'lecture',
+		'lecture-script' => 'lecture-script',
+		'lecture_forum' => 'forum',
+	];
+
+	return isset($map[$page]) ? $map[$page] : $page;
+}
