@@ -160,33 +160,27 @@ if [ "${VIMEO_ACCESS_TOKEN:-}" != "" ]; then
 else
 	spip plugins:desactiver api_vimeo -y
 fi
+case "${SPIP_VERSION_SITE}" in
+	fictionsv2|fictions)
+		spip plugins:desactiver fictionsv2 -y
+		spip plugins:desactiver fictions -y
+		spip plugins:activer "${SPIP_VERSION_SITE}" -y
+		spip plugins:activer cadavrexquis -y
+		;;
+	petitfablabv2|petitfablab)
+		spip plugins:desactiver petitfablabv2 -y
+		spip plugins:desactiver petitfablab -y
+		spip plugins:activer "${SPIP_VERSION_SITE}" -y
+		spip plugins:activer cadavrexquis -y
+		;;
+	*)
+		spip plugins:desactiver cadavrexquis -y
+		spip plugins:activer "${SPIP_VERSION_SITE}" -y
+		;;
+esac
 if [ "${SPIP_VERSION_SITE}" != "thematique" ]; then
 	spip plugins:activer vider_rubrique -y
 fi
-if [ "${SPIP_VERSION_SITE}" = "fictionsv2" ] || [ "${SPIP_VERSION_SITE}" = "petitfablabv2" ]; then
-	# Socle commun aux deux plugins "cadavre exquis" (squelettes/assets
-	# partagés, cf plugins/projets/cadavrexquis/) — nécessaire à necessite dans
-	# leurs paquet.xml respectifs, mais spip plugins:activer n'active pas
-	# automatiquement les dépendances non déjà connues du cache paquets.
-	spip plugins:activer cadavrexquis -y
-fi
-spip plugins:activer "${SPIP_VERSION_SITE}" -y
-case "${SPIP_VERSION_SITE}" in
-	fictionsv2)
-		spip plugins:desactiver fictions -y
-		;;
-	fictions)
-		spip plugins:desactiver fictionsv2 -y
-		spip plugins:activer cadavrexquis -y
-		;;
-	petitfablabv2)
-		spip plugins:desactiver petitfablab -y
-		;;
-	petitfablab)
-		spip plugins:desactiver petitfablabv2 -y
-		spip plugins:activer cadavrexquis -y
-		;;
-esac
 if [ "${PROJET}" != "laclasse" ]; then
 	spip plugins:activer "thematique_${PROJET}" -y
 fi
