@@ -970,7 +970,8 @@ function thematique_id_rubrique_classe($id_auteur) {
 	$rubriques = $id_auteur ? sql_allfetsel(
 		'id_objet',
 		'spip_auteurs_liens',
-		'id_auteur=' . $id_auteur . " AND objet='rubrique'"
+		'id_auteur=' . $id_auteur . " AND objet='rubrique'",
+		'id_objet ASC'
 	) : [];
 
 	$id_rubrique = 0;
@@ -2535,15 +2536,7 @@ function filtre_auteur_vers_classe($id_auteur) {
 		return '';
 	}
 
-	$result = sql_getfetsel(
-		'sr.id_rubrique',
-		'spip_auteurs_liens AS sal
-         JOIN spip_rubriques AS sr ON sr.id_rubrique = sal.id_objet
-         JOIN spip_rubriques AS sr2 ON sr.id_parent = sr2.id_rubrique',
-		'sal.id_auteur = ' . intval($id_auteur) . '
-         AND sr2.titre = ' . sql_quote('Travail des classes')
-	);
-	return $result;
+	return (string) thematique_id_rubrique_classe($id_auteur);
 }
 
 function thematique_trouver_reponse_a_une_consigne($id_consigne, $id_rubrique_classe) {
