@@ -117,6 +117,7 @@ return [
 	'ma_reponse'                     => 'Ma réponse',
 	'me_connecter'                   => 'Me connecter',
 	'me_deconnecter'                 => 'Me déconnecter',
+	'rediger_pour_la_classe'         => 'Je rédige pour la classe :',
 	'message_avant_supression_commentaire' => 'Supprimer ce commentaire entraînera aussi la suppression de toutes les éventuelles réponses à ce commentaire. Continuer ?',
 	'echec_de_la_supression'  		 => 'La suppression a échoué.',
 	'message_jalon_pas_publie'		 => 'Publier ce contenu le rendra visible pour tous les utilisateurs dont les classes et élèves.',

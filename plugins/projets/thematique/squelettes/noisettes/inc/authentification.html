@@ -33,6 +33,30 @@
 			<span class="icon icon-down"></span>
 		</button>
 		<ul class="select-options">
+			[(#REM) Prof rattaché à plusieurs classes : choix de la classe active
+			(celle où il rédige, et de son emoji), cf action
+			thematique_choisir_classe. Retour à l'accueil après le choix, comme
+			le sélecteur d'année : une popup ouverte garderait sinon l'ancienne
+			classe (bouton "Répondre"). ]
+			#SET{classes, #SESSION{id_auteur}|thematique_classes_auteur}
+			#SET{classe_active, #SESSION{id_auteur}|filtre_auteur_vers_classe}
+			<B_choix_classe>
+			<li class="select-option-titre"><:thematique:rediger_pour_la_classe:></li>
+			<BOUCLE_choix_classe(RUBRIQUES){id_rubrique IN #GET{classes}}{par id_rubrique}{tout}{si #GET{classes}|count|>{1}}>
+			[(#ID_RUBRIQUE|=={#GET{classe_active}}|oui)
+				<li class="select-option choix-classe actif" title="[(#TITRE|attribut_html)]">
+					<span>[(#ID_RUBRIQUE|classe_icone)] #TITRE</span>
+				</li>
+			]
+			[(#ID_RUBRIQUE|=={#GET{classe_active}}|non)
+				<li class="select-option choix-classe" title="[(#TITRE|attribut_html)]">
+					<a href="[(#URL_ACTION_AUTEUR{thematique_choisir_classe, #ID_RUBRIQUE, #URL_SITE_SPIP})]" rel="nofollow">
+						[(#ID_RUBRIQUE|classe_icone)] #TITRE
+					</a>
+				</li>
+			]
+			</BOUCLE_choix_classe>
+			</B_choix_classe>
 			<li class="select-option me-deconnecter">
 				<a href="[(#URL_LOGOUT)]" title="<:thematique:me_deconnecter:>" style="display: flex; align-items: center;" class="nowrap">
 					<:thematique:me_deconnecter:>

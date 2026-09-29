@@ -85,6 +85,19 @@
 						return;
 					}
 
+					// Choix de la classe active (prof multi-classes, cf
+					// authentification.html) : suivre le lien de l'option (action
+					// SPIP), sans toucher au libellé du bouton, qui porte l'avatar.
+					if ($li.hasClass('choix-classe')) {
+						e.preventDefault();
+						var href = $li.find('a').attr('href');
+						if (href) {
+							window.location.href = href;
+						}
+						$sel.removeClass('open');
+						return;
+					}
+
 					if (rememberChoice && $li.hasClass("actif")) {
 						return;
 					}

@@ -50,7 +50,11 @@ function thematique_preparer_fichier_session($flux) {
 	$role = thematique_donner_role($id_auteur);
 	$flux['data']['role'] = $role;
 
-	if (in_array($role, ['prof', 'eleve']) && $animal = thematique_avatar_animal($id_auteur)) {
+	// Classe active lue dans la session en cours d'écriture (pas via
+	// session_get() : ce pipeline peut aussi écrire la session d'un autre
+	// auteur, cf actualiser_sessions()).
+	$classe_active = intval($flux['data']['classe_active'] ?? 0);
+	if (in_array($role, ['prof', 'eleve']) && $animal = thematique_avatar_animal($id_auteur, $classe_active)) {
 		$flux['data']['avatar'] = $animal;
 	}
 	return $flux;

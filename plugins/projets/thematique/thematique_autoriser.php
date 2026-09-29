@@ -247,8 +247,10 @@ function autoriser_forumsupprimer_dist($faire, $type, $id, $qui, $opt) {
 		return false;
 	}
 
-	$id_rubrique_classe_prof = thematique_id_rubrique_classe($id_auteur_visiteur);
+	// Un prof peut avoir plusieurs classes : n'importe laquelle, pas
+	// seulement sa classe active.
+	$id_rubrique_classe_eleve = thematique_id_rubrique_classe_auteur($id_auteur_commentaire);
 
-	return $id_rubrique_classe_prof
-		&& $id_rubrique_classe_prof === thematique_id_rubrique_classe_auteur($id_auteur_commentaire);
+	return $id_rubrique_classe_eleve
+		&& in_array($id_rubrique_classe_eleve, thematique_classes_auteur($id_auteur_visiteur), true);
 }
