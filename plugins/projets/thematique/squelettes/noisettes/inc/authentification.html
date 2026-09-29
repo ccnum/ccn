@@ -50,7 +50,7 @@
 			]
 			[(#ID_RUBRIQUE|=={#GET{classe_active}}|non)
 				<li class="select-option choix-classe" title="[(#TITRE|attribut_html)]">
-					<a href="[(#URL_ACTION_AUTEUR{thematique_choisir_classe, #ID_RUBRIQUE, #URL_SITE_SPIP})]" rel="nofollow">
+					<a href="[(#URL_ACTION_AUTEUR{thematique_choisir_classe, #ID_RUBRIQUE, #VAL{./}})]" rel="nofollow">
 						[(#ID_RUBRIQUE|classe_icone)] #TITRE
 					</a>
 				</li>
