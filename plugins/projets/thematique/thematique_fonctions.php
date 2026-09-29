@@ -1109,7 +1109,9 @@ function classe_id_rubrique_auteur($id_auteur) {
  * Id de la rubrique de classe à utiliser pour une carte de commentaire forum
  * (avec classe_icone()/classe_numero()).
  *
- * Priorité à la classe actuelle de l'auteur (cf classe_id_rubrique_auteur) ;
+ * Priorité à la classe mémorisée dans le commentaire (spip_forum.id_classe,
+ * classe active de l'auteur à l'écriture), puis à la classe actuelle de
+ * l'auteur (cf classe_id_rubrique_auteur) ;
  * repli sur la rubrique de l'article commenté pour les commentaires
  * d'élèves dont le compte n'a jamais été rattaché à une classe (créé
  * avant l'ajout de ce rattachement dans thematique_cioidc_userinfo, et
@@ -1124,6 +1126,11 @@ function classe_id_rubrique_auteur($id_auteur) {
  * @return int|null
  */
 function classe_id_rubrique_forum($forum) {
+	// Classe mémorisée à l'écriture du commentaire (forumv2, cf
+	// formulaires/forumv2.php) : prime sur la classe actuelle de l'auteur.
+	if ($id_classe = intval($forum['id_classe'] ?? 0)) {
+		return $id_classe;
+	}
 	$id_rubrique = classe_id_rubrique_auteur($forum['id_auteur'] ?? 0);
 	if ($id_rubrique) {
 		return $id_rubrique;
@@ -2229,10 +2236,20 @@ function thematique_image_auteur_ou_classe($id_auteur, $id_rubrique) {
 	// json/consignes.html, et forum_card.html) doivent tester
 	// thematique_image_est_url() pour savoir s'ils affichent un <img> ou
 	// l'émoji brut.
+	// Si $id_rubrique est une classe (ex: classe mémorisée d'un commentaire
+	// forumv2, cf classe_id_rubrique_forum()), c'est son émoji qui compte,
+	// pas celui de la classe actuelle de l'auteur : un prof à plusieurs
+	// classes garde sur chaque commentaire l'animal de la classe au nom de
+	// laquelle il l'a écrit, cohérent avec la couleur de fond de la carte.
 	$role = thematique_donner_role($id_auteur);
-	if (in_array($role, ['prof', 'eleve']) && $animal = thematique_avatar_animal($id_auteur)) {
-		$cache[$cle] = $animal;
-		return $animal;
+	if (in_array($role, ['prof', 'eleve'])) {
+		$animal = isset(thematique_classes_rangs()[$id_rubrique])
+			? classe_icone($id_rubrique)
+			: thematique_avatar_animal($id_auteur);
+		if ($animal) {
+			$cache[$cle] = $animal;
+			return $animal;
+		}
 	}
 
 	$photo = thematique_photo_auteur($id_auteur);
