@@ -2,31 +2,29 @@
     [(#INCLURE{fond=inclure/favoris_ccn, objet=article, id_objet=#ID_ARTICLE, ajax})]
 </div>
 <BOUCLE_jalon_texte(ARTICLES){id_article=#ID_ARTICLE}{tous}>
-    <div class="sidebar_bubble">
-        <span class="spip texte_jalon #EDIT{texte}">[(#TEXTE|propre)]</span>
-    </div>
-    <div class="sidebar_bubble">
-        <div class="bloc_documents">
-            <INCLURE{fond=noisettes/inc/bloc_documents, id_article, env} />
+    <div class="fond-bleu-contenu">
+        <div class="sidebar_bubble">
+            <span class="spip texte_jalon #EDIT{texte}">[(#TEXTE|propre)]</span>
         </div>
-    </div>
-    <div class="encadre-message">
-        [(#STATUT|=={publie}|oui)
-            <div>
-                <:thematique:message_jalon_publie:>
+        <div class="sidebar_bubble">
+            <div class="bloc_documents">
+                <INCLURE{fond=noisettes/inc/bloc_documents, id_article, env} />
             </div>
-            <div class="ajax">
-                #FORMULAIRE_DEPUBLIER_ARTICLE{#ID_ARTICLE}
+        </div>
+        <div style="display: flex; justify-content: end;">
+            <div style="width: fit-content;">
+                [(#STATUT|=={publie}|oui)
+                    <div class="ajax">
+                        #FORMULAIRE_DEPUBLIER_ARTICLE{#ID_ARTICLE}
+                    </div>
+                ]
+                [(#STATUT|=={publie}|non)
+                    <div class="ajax">
+                        #FORMULAIRE_PUBLIER_ARTICLE{#ID_ARTICLE}
+                    </div>
+                ]
             </div>
-        ]
-        [(#STATUT|=={publie}|non)
-            <div>
-                <:thematique:message_jalon_publie:>
-            </div>
-            <div class="ajax">
-                #FORMULAIRE_PUBLIER_ARTICLE{#ID_ARTICLE}
-            </div>
-        ]
+        </div>
     </div>
     
 </BOUCLE_jalon_texte>

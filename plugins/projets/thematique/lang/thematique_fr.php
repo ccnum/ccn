@@ -276,7 +276,7 @@ return [
 	'titre_du_formulaire'            => 'Titre du formulaire',
 	'telecharger'                    => 'Télécharger',
 	'texte_accueil_ressource'		 => 'Retrouvez ici des ressources utiles proposées par la personne intervenante et les partenaires qui vous permettent d’approfondir le sujet !',
-	'texte_par_defaut_cap_sur_l_annee' => 'Vous n’avez pas encore rédigé et publié de contenu. Cette page n’est donc pas visible pour les autres utilisateurs. Cliquez sur le bouton “Compléter” pour rédiger votre contenu et le faire ainsi apparaître pour les autres utilisateurs.',
+	'texte_par_defaut_cap_sur_l_annee' => 'Veuillez modifier ce message, puis cliquer sur le bouton "Publier"',
 	'travaillant_dessus'             => 'travaillant dessus',
 	'tutoriels'                      => 'Tutoriels',
 	'titre_onglet_blog' 			 => 'Agenda',
