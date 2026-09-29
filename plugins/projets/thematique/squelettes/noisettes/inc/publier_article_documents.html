@@ -43,7 +43,8 @@
 					<div class="document-ligne-1">
 						<div class="name"><strong>[(#FICHIER|basename)]</strong></div>
 						<div class="actions-card">
-							<div class="icon-wrapper">
+							<!-- Il faut ré-afficher cette icone plus tard, pour éditer le titre de la PJ. -->
+							<div class="icon-wrapper" style="display: none;">
 								<div class="icon icon-publier" onclick="alert('edition du titre')"></div>
 							</div>
 							[(#AUTORISER{dissocierdocuments,#ENV{objet},#ENV{id_objet}}|oui)
