@@ -260,7 +260,7 @@ if [ "${SPIP_PLUGINS_CIOIDC:-false}" = true ]; then
 <?php
 if (!defined("_ECRIRE_INC_VERSION")) return;
 define('_CIOIDC_MODE_AUTH', 'hybride');
-define('_CIOIDC_NOM_SERVEUR', 'LaClasse');
+define('_CIOIDC_NOM_SERVEUR', 'LaClasse.com');
 define('_CIOIDC_URL_SERVEUR', 'https://www.laclasse.com');
 define('_CIOIDC_CLIENT_NOM', '${SPIP_CIOIDC_CLIENT_NOM:-}');
 define('_CIOIDC_CLIENT_SECRET', '${SPIP_CIOIDC_CLIENT_SECRET:-}');
