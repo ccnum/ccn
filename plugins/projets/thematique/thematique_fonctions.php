@@ -2735,3 +2735,15 @@ function thematique_extensions_document_mission_liste($valeur_ignoree = null) {
 
 	return $liste;
 }
+
+/**
+ * Classes de l'année avec leur contenu, pour la page de nettoyage des classes
+ * vides (prive/squelettes/contenu/thematique_classes_vides.html).
+ *
+ * @param string $annee
+ * @return array
+ */
+function thematique_classes_nettoyage($annee) {
+	include_spip('inc/thematique_classes_vides');
+	return thematique_classes_annee_avec_contenu($annee);
+}

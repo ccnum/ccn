@@ -1,0 +1,45 @@
+[(#REM) Nettoyage des rubriques de classe vides d'une année scolaire (classes
+créées à tort par la connexion SSO de comptes ENT hors projet), cf
+inc/thematique_classes_vides.php. Réservé aux webmestres.
+Accès : ecrire/?exec=thematique_classes_vides (option &annee=2026) ]
+[(#AUTORISER{webmestre}|sinon_interdire_acces)]
+#SET{annee, #ENV{annee}|match{^\d{4}$}|sinon{#CONST{_ANNEE_SCOLAIRE}}}
+#SET{classes, #GET{annee}|thematique_classes_nettoyage}
+#SET{nb_vides, #GET{classes}|array_column{vide}|array_filter|count}
+
+<h1 class="grostitre"><:thematique:classes_vides_titre:> #GET{annee}</h1>
+
+[(#ENV{supprimees}|strlen|oui)
+<div class="notice success"><:thematique:classes_vides_supprimees{nb=#ENV{supprimees}|intval}:></div>
+]
+
+<p class="explication"><:thematique:classes_vides_explication:></p>
+
+<form method="get" action="#URL_ECRIRE">
+	<input type="hidden" name="exec" value="thematique_classes_vides" />
+	<label for="annee"><:thematique:classes_vides_annee:></label>
+	<input type="text" id="annee" name="annee" value="#GET{annee}" size="4" />
+	<button type="submit" class="btn btn_mini"><:thematique:classes_vides_afficher:></button>
+</form>
+
+<B_classes>
+<table class="spip liste">
+	<tbody>
+	<BOUCLE_classes(DATA){source table, #GET{classes}}>
+		<tr class="[(#VALEUR{vide}|?{row_even,row_odd})]">
+			<td class="id">#VALEUR{id_rubrique}</td>
+			<td class="titre"><a href="[(#URL_ECRIRE{rubrique, id_rubrique=#VALEUR{id_rubrique}})]">#VALEUR{titre}</a></td>
+			<td>[(#VALEUR{vide}|oui)<:thematique:classes_vides_etat_vide:>][(#VALEUR{vide}|non)<:thematique:classes_vides_etat_contenu{nb=#VALEUR{nb_contenu}}:>]</td>
+		</tr>
+	</BOUCLE_classes>
+	</tbody>
+</table>
+
+<p><:thematique:classes_vides_nb{nb=#GET{nb_vides}, total=#TOTAL_BOUCLE}:></p>
+
+[(#GET{nb_vides}|oui)
+	#BOUTON_ACTION{<:thematique:classes_vides_supprimer:>, #URL_ACTION_AUTEUR{thematique_supprimer_classes_vides, #GET{annee}}, '', <:thematique:classes_vides_confirmer:>}
+]
+</B_classes>
+<p><:thematique:classes_vides_aucune_classe:></p>
+<//B_classes>

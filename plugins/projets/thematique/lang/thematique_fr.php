@@ -388,4 +388,17 @@ return [
 	'champ_extra_position_x'         => 'Position X',
 	'champ_extra_position_y'         => 'Position Y',
 	'champ_extra_id_consigne'        => 'Consigne liée',
+
+	// Nettoyage des classes vides (prive/squelettes/contenu/thematique_classes_vides.html)
+	'classes_vides_titre'            => 'Classes vides',
+	'classes_vides_explication'      => 'Classes (sous « Travail des classes » de l\'année) sans aucun article, sous-rubrique ni document. Seules ces rubriques de classe sont supprimées : les auteurs et le reste du site ne sont pas touchés.',
+	'classes_vides_annee'            => 'Année scolaire',
+	'classes_vides_afficher'         => 'Afficher',
+	'classes_vides_aucune_classe'    => 'Aucune classe pour cette année.',
+	'classes_vides_etat_vide'        => 'Vide, sera supprimée',
+	'classes_vides_etat_contenu'     => 'Contient @nb@ élément(s), conservée',
+	'classes_vides_nb'               => '@nb@ classe(s) vide(s) sur @total@.',
+	'classes_vides_supprimer'        => 'Supprimer les classes vides',
+	'classes_vides_confirmer'        => 'Supprimer définitivement les classes vides de cette année ?',
+	'classes_vides_supprimees'       => '@nb@ classe(s) vide(s) supprimée(s).',
 ];
