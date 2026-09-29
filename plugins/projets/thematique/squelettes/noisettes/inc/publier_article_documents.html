@@ -57,19 +57,24 @@
 						<div class="size">[(#TAILLE|taille_en_octets)]</div>
 					</div>
 					<div class="document-ligne-3">
-						<div class="link-button">
-							<:thematique:inserer:>
-						</div>
 						[(#MIME_TYPE|match{image}|oui)#SET{raccourci_prefixe, img}]
 						[(#MIME_TYPE|match{image}|non)#SET{raccourci_prefixe, doc}]
-						<span class="raccourci" 
-							  data-prefixe="#GET{raccourci_prefixe}" 
-							  data-id-document="#ID_DOCUMENT" 
-							  onclick="insererRaccourciDocument(this)" 
-							  title="<:thematique:inserer_raccourci:>"
-						>
-							&lt;#GET{raccourci_prefixe}#ID_DOCUMENT&gt;
-						</span>
+
+						<div class="racourcis-container"
+							data-prefixe="#GET{raccourci_prefixe}"
+							data-id-document="#ID_DOCUMENT"
+							onclick="insererRaccourciDocument(this)"
+							title="...">
+
+							<div class="link-button">
+								*<*:thematique\:inserer:>
+							</div>
+
+							<span class="raccourci">
+								&lt;#GET{raccourci_prefixe}#ID_DOCUMENT&gt;
+							</span>
+
+						</div>
 					</div>
 				</div>
 			</div>

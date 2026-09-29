@@ -55,23 +55,32 @@ function creationArticleEnregistrer() {
  * ajouté en fin de texte si le champ n'a pas le focus).
  */
 function insererRaccourciDocument(element) {
-    const texte = document.getElementById("texte")
-    if (!texte) return
+    const texte = document.getElementById("texte");
+    if (!texte || !element) return;
+    const raccourciElement = element.querySelector(".raccourci");
+    if (!raccourciElement) return;
 
-    const raccourci = element.textContent
+    const raccourci = raccourciElement.textContent.trim();
+    if (!raccourci) return;
 
     if (!texte.value.includes(raccourci)) {
-        const debut = texte.selectionStart ?? texte.value.length
-        const fin = texte.selectionEnd ?? texte.value.length
-        texte.value = texte.value.slice(0, debut) + raccourci + texte.value.slice(fin)
-        const position = debut + raccourci.length
-        texte.setSelectionRange(position, position)
-        texte.dispatchEvent(new Event("input", { bubbles: true }))
-        texte.focus()
+        const debut = texte.selectionStart ?? texte.value.length;
+        const fin = texte.selectionEnd ?? texte.value.length;
+
+        texte.value =
+            texte.value.slice(0, debut) +
+            raccourci +
+            texte.value.slice(fin);
+
+        const position = debut + raccourci.length;
+
+        texte.setSelectionRange(position, position);
+        texte.dispatchEvent(new Event("input", { bubbles: true }));
+        texte.focus();
     }
 
-    element.classList.add("copie")
-    setTimeout(() => element.classList.remove("copie"), 1000)
+    element.classList.add("copie");
+    setTimeout(() => element.classList.remove("copie"), 1000);
 }
 
 /**
