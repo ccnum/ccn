@@ -160,7 +160,9 @@ function filtre_fictionsv2_annee_label($annee) {
 function fictionsv2_id_rubrique_annee($annee): int {
 	static $cache = [];
 	$annee = (string) intval($annee);
-	if (!array_key_exists($annee, $cache)) {
+	// 0 non mis en cache : la rubrique peut être créée plus loin dans la même requête
+	// (cf fictionsv2_assurer_structure_annee()).
+	if (empty($cache[$annee])) {
 		$cache[$annee] = (int) sql_getfetsel('id_rubrique', 'spip_rubriques', 'titre=' . sql_quote($annee), '', 'id_rubrique', '0,1');
 	}
 	return $cache[$annee];

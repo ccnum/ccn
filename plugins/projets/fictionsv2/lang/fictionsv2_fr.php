@@ -45,7 +45,10 @@ return [
 	'suffixe_nouvelle_fenetre'          => ' (nouvelle fenêtre)',
 	'supprimer_document_titre'          => 'supprimer ce document',
 	'telecharger_le_pdf'                => 'Télécharger le pdf',
+	'titre_chapitre1_defaut'            => '1/ Chapitre 1',
 	'titre_chapitre_defaut'             => 'Titre du chapitre',
 	'titre_histoire_numero'             => '@num@. Histoire @num@',
+	'titre_presentation_defaut'         => 'Présentation',
+	'titre_prologue_defaut'             => 'Prologue',
 	'voir_le_forum'                     => 'Voir le forum',
 ];

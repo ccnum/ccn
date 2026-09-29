@@ -5,6 +5,8 @@ if (!defined('_ECRIRE_INC_VERSION')) {
 }
 
 function fictionsv2_post_edition($flux) {
+	fictionsv2_post_edition_rubrique_annee($flux);
+
 	if ($flux['args']['action'] !== 'modifier' || isset($flux['args']['data'])) {
 		return $flux;
 	}
@@ -128,4 +130,36 @@ function fictionsv2_calculer_rubriques($flux) {
 		], 'id_rubrique=' . intval($row['id']));
 	}
 	return $flux;
+}
+
+/**
+ * Tâches de fond : création de la structure de l'année scolaire à la rentrée.
+ */
+function fictionsv2_taches_generales_cron($taches_generales) {
+	$taches_generales['fictionsv2_rentree_annee'] = 86400;
+	return $taches_generales;
+}
+
+/**
+ * Une rubrique d'année ("2026") créée ou renommée à la main sous la rubrique des années
+ * reçoit tout de suite ses articles (Présentation, Prologue, chapitre 1 commun, footer),
+ * sans attendre la tâche de rentrée (cf fictionsv2_assurer_structure_annee()).
+ * Dans l'espace privé, une rubrique est insérée ("Nouvelle rubrique") puis titrée par
+ * une modification : c'est ce passage du titre à une année qui déclenche.
+ */
+function fictionsv2_post_edition_rubrique_annee($flux) {
+	if (($flux['args']['objet'] ?? '') !== 'rubrique' || ($flux['args']['action'] ?? '') !== 'modifier') {
+		return;
+	}
+	$titre = trim((string) ($flux['data']['titre'] ?? ''));
+	if (!preg_match('/^\d{4}$/', $titre) || $titre === trim((string) ($flux['args']['champs_anciens']['titre'] ?? ''))) {
+		return;
+	}
+	$id_rubrique = intval($flux['args']['id_objet'] ?? 0);
+	include_spip('inc/fictionsv2_rentree');
+	if (!fictionsv2_est_rubrique_des_annees(intval(sql_getfetsel('id_parent', 'spip_rubriques', 'id_rubrique=' . $id_rubrique)))) {
+		return;
+	}
+	[, $ok] = fictionsv2_assurer_structure_annee(intval($titre));
+	spip_log("fictionsv2 rubrique d'année $titre (#$id_rubrique) titrée à la main : structure " . ($ok ? 'OK' : 'incomplète'), 'fictionsv2');
 }
