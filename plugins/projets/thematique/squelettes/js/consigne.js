@@ -119,7 +119,7 @@ function Consigne() {
 		this.div_consigne = this.div_base.find(`#consigne${this.id}`);
 		this.div_reponse_plus = this.div_base.find('.bouton_reponse_consigne.repondre').eq(0);
 		this.div_reponse_see = this.div_base.find('.bouton_reponse_consigne.acceder').eq(0);
-		this.div_reponse_see.on('click', () => callReponse(this.id_reponse_courante)).addClass('show');
+		this.div_reponse_see.on('click', () => callModifierArticle(this.id_reponse_courante, 'travail_en_cours')).addClass('show');
 
 		this.div_base.find(`.titre`).text(this.titre);
 

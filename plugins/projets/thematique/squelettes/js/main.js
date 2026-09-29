@@ -216,7 +216,7 @@ function initConsignes(data) {
 			nouvelleReponse.init(dataForReponse);
 			nouvelleConsigne.reponses.push(nouvelleReponse);
 
-			if (CCN.classeSelection > 0 && CCN.classeSelection == dataForReponse.classe_id) {
+			if (CCN.idRubriqueClasseAuteur > 0 && CCN.idRubriqueClasseAuteur == dataForReponse.classe_id) {
 				has_current_classe_already_answered = true;
 				reponse_courante_id = dataForReponse.id;
 			}
