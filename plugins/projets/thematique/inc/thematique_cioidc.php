@@ -198,31 +198,38 @@ function thematique_cioidc_rubriques_annee(string $annee_scolaire) {
 // thématique de CE site (meta nom_site) et de l'année scolaire en cours sont
 // pertinents ici.
 function thematique_cioidc_groupes_libres_pertinents(array $groupes_libres, string $nom_site, string $annee_scolaire) {
-	if (!$nom_site) {
+	// nom_site peut être un nom de domaine (ex: "petitfablab.laclasse.com") : seul le
+	// premier segment identifie la thématique.
+	$site = thematique_cioidc_normaliser_nom(explode('.', $nom_site)[0]);
+	if (!$site) {
 		return [];
 	}
 
 	// Issue #274 : un "groupe libre" ENT est nommé librement par un
-	// enseignant (pas administré par l'établissement) — un simple stripos()
-	// matchait n'importe quel nom contenant nom_site/annee_scolaire comme
-	// simples sous-chaînes, sans limite de mot (ex: un nom de groupe
-	// contenant accidentellement, ou en forgeant délibérément, ces
-	// sous-chaînes). Ce rattachement donne désormais un vrai droit de
-	// création d'article dans la rubrique-projet correspondante (cf
-	// autoriser_rubrique_creerarticledans, thematique_autoriser.php) : on
-	// exige donc que nom_site et annee_scolaire apparaissent comme des mots
-	// entiers (limites \b), pas comme simples sous-chaînes.
-	$motif_site = '/\b' . preg_quote($nom_site, '/') . '\b/iu';
-	$motif_annee = '/\b' . preg_quote($annee_scolaire, '/') . '\b/u';
+	// enseignant (pas administré par l'établissement). Ce rattachement donne
+	// un vrai droit de création d'article dans la rubrique-projet
+	// correspondante (cf autoriser_rubrique_creerarticledans,
+	// thematique_autoriser.php) et de création de ses classes : on exige donc
+	// que le nom du groupe COMMENCE par "<thématique> <année>" (ex: "On tourne
+	// 2026"), pas qu'il contienne ces mots n'importe où ("Fictions 2026" ou
+	// "CCN - Test 2026" ne comptent pas sur ontourne). Comparaison sur les noms
+	// normalisés : nom_site vaut "ontourne" en prod quand le groupe ENT s'appelle
+	// "On tourne 2026", un motif \bontourne\b ne reconnaissait aucun groupe.
+	$prefixe = $site . thematique_cioidc_normaliser_nom($annee_scolaire);
 
 	$pertinents = [];
 	foreach ($groupes_libres as $groupe) {
-		$nom_groupe = $groupe->name ?? '';
-		if ($nom_groupe && preg_match($motif_site, $nom_groupe) && preg_match($motif_annee, $nom_groupe)) {
+		if (str_starts_with(thematique_cioidc_normaliser_nom($groupe->name ?? ''), $prefixe)) {
 			$pertinents[] = $groupe;
 		}
 	}
 	return $pertinents;
+}
+
+// Minuscules sans accents, espaces ni ponctuation : "On tourne 2026" => "ontourne2026".
+function thematique_cioidc_normaliser_nom(string $nom) {
+	include_spip('inc/charsets');
+	return preg_replace('/[^a-z0-9]/', '', strtolower(translitteration($nom)));
 }
 
 // Statut SPIP selon le rôle ENT. Un enseignant sans classe réelle ni groupe projet
@@ -260,10 +267,13 @@ function thematique_cioidc_bloquer_si_archive(array $auteur) {
 	}
 }
 
-// Rubriques de classe/projet à lier à l'auteur : rôle prof (classes réelles + groupes
-// projet pertinents) ou rôle élève (même classe que son prof, même recherche/création,
-// pour rattacher l'élève à sa classe à son tour, ex: affichage de l'emoji de classe
-// hors du contexte d'une rubrique).
+// Rubriques de classe/projet à lier à l'auteur.
+// Seul un prof inscrit au projet de CE site pour l'année (groupe libre pertinent, cf
+// thematique_cioidc_groupes_libres_pertinents()) fait créer ses classes ENT sous
+// "Travail des classes" : sinon n'importe quel prof/élève laclasse.com passant sur le
+// site y ajoutait sa classe comme "participant" (cf noisettes/menu_classes.html).
+// Un élève est seulement rattaché à sa classe si elle existe déjà (créée par son prof
+// ou un admin), ex: affichage de l'emoji de classe hors du contexte d'une rubrique.
 function thematique_cioidc_resoudre_liens_rubriques(
 	bool $is_enseignant,
 	bool $is_webmestre,
@@ -276,7 +286,7 @@ function thematique_cioidc_resoudre_liens_rubriques(
 	$classes_a_lier = [];
 	$projets_a_lier = [];
 
-	if ($is_enseignant && !$is_webmestre) {
+	if ($is_enseignant && !$is_webmestre && $groupes_libres_pertinents) {
 		foreach ($classes_reelles as $groupe) {
 			if ($id_classe = thematique_trouver_ou_creer_rubrique($groupe->group_name, $id_travail_classes)) {
 				$classes_a_lier[] = $id_classe;
@@ -289,7 +299,7 @@ function thematique_cioidc_resoudre_liens_rubriques(
 		}
 	} elseif ($is_eleve) {
 		foreach ($classes_reelles as $groupe) {
-			if ($id_classe = thematique_trouver_ou_creer_rubrique($groupe->group_name, $id_travail_classes)) {
+			if ($id_classe = thematique_trouver_rubrique($groupe->group_name, $id_travail_classes)) {
 				$classes_a_lier[] = $id_classe;
 			}
 		}

@@ -165,13 +165,13 @@ function thematique_annee_est_passee($annee) {
 }
 
 /**
- * Cherche une rubrique par titre sous un parent, la crée (publiée) si absente.
+ * Cherche une rubrique par titre sous un parent, sans jamais la créer.
  *
  * @param string $nom
  * @param int $id_parent
  * @return int|null
  */
-function thematique_trouver_ou_creer_rubrique($nom, $id_parent) {
+function thematique_trouver_rubrique($nom, $id_parent) {
 	if (!$id_parent || empty($nom)) {
 		return null;
 	}
@@ -184,6 +184,21 @@ function thematique_trouver_ou_creer_rubrique($nom, $id_parent) {
 		'userinfo recherche rubrique name=' . $nom . ' id_parent=' . $id_parent . ' => id_rubrique=' . $id_rubrique,
 		'cioidc'
 	);
+	return $id_rubrique ?: null;
+}
+
+/**
+ * Cherche une rubrique par titre sous un parent, la crée (publiée) si absente.
+ *
+ * @param string $nom
+ * @param int $id_parent
+ * @return int|null
+ */
+function thematique_trouver_ou_creer_rubrique($nom, $id_parent) {
+	if (!$id_parent || empty($nom)) {
+		return null;
+	}
+	$id_rubrique = thematique_trouver_rubrique($nom, $id_parent);
 	if (!$id_rubrique) {
 		include_spip('inc/rubriques');
 		$id_rubrique = creer_rubrique_nommee($nom, $id_parent);
