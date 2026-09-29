@@ -276,7 +276,9 @@ function thematique_cioidc_userinfo($flux) {
 		'cioidc'
 	);
 
-	$a_un_groupe_pertinent = count($classes_reelles) > 0 || count($groupes_libres_pertinents) > 0;
+	// Seule l'inscription au projet de ce site pour l'année (groupe libre pertinent)
+	// compte : une classe ENT quelconque ne fait plus d'un prof un rédacteur de ce CCN.
+	$a_un_groupe_pertinent = count($groupes_libres_pertinents) > 0;
 	$statut = thematique_cioidc_calculer_statut($is_webmestre, $profils, $a_un_groupe_pertinent);
 	spip_log('userinfo groupe_pertinent=' . ($a_un_groupe_pertinent ? 'oui' : 'non') . ' => statut:' . $statut, 'cioidc');
 	$auteur = thematique_cioidc_maj_champ($auteur, 'statut', $statut, 'du statut');

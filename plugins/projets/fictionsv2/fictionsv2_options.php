@@ -11,3 +11,10 @@ if (!defined('_ECRIRE_INC_VERSION')) {
 if (!defined('_FICTIONSV2_ID_BLOG_AUTEUR')) {
 	define('_FICTIONSV2_ID_BLOG_AUTEUR', 0);
 }
+
+// À partir de cette année scolaire, le premier chapitre de chaque histoire n'est plus
+// une copie par histoire mais l'article unique de la rubrique de l'année portant le
+// mot-clé "chapitre1" (cf fictionsv2_id_chapitre1()).
+if (!defined('_FICTIONSV2_ANNEE_CHAPITRE1_COMMUN')) {
+	define('_FICTIONSV2_ANNEE_CHAPITRE1_COMMUN', 2026);
+}

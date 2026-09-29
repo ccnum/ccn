@@ -1,0 +1,70 @@
+name: Lint
+
+# Workflow réutilisable, jamais déclenché seul : appelé par build_dev.yml et
+# build_main.yaml, dont le build/push Docker attend sa réussite (needs: lint).
+# Les lints ne tournent ainsi qu'avant un déploiement, et un lint en échec
+# bloque la publication de l'image.
+on:
+  workflow_call:
+
+jobs:
+  lang:
+    name: Texte en dur, clés de langue, liens en dur
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Set up Python
+        uses: actions/setup-python@v7
+        with:
+          python-version: '3.x'
+
+      - name: Vérifier l'absence de nouveau texte en dur
+        run: python3 .ci/check_lang_hardcoded.py
+
+      - name: Vérifier la validité des clés de langue référencées
+        run: python3 .ci/check_lang_keys.py
+
+      - name: Vérifier l'absence de nouveau lien en dur (hors #CHEMIN)
+        run: python3 .ci/check_hardcoded_paths.py
+
+  duplication:
+    name: Duplication HTML/PHP
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+          cache: 'npm'
+
+      - name: Installer les dépendances npm
+        run: npm ci
+
+      - name: Vérifier l'absence de nouvelle duplication HTML
+        run: node .ci/check_html_duplication.js
+
+      - name: Vérifier l'absence de nouvelle duplication PHP
+        run: node .ci/check_php_duplication.js
+
+  docker_entrypoint:
+    name: Config CCN dans docker-entrypoint.sh
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Set up Python
+        uses: actions/setup-python@v7
+        with:
+          python-version: '3.x'
+
+      - name: Vérifier la syntaxe du script
+        run: bash -n docker-entrypoint.sh
+
+      - name: Vérifier la présence des blocs de config CCN
+        run: python3 .ci/check_docker_entrypoint.py

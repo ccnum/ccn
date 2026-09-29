@@ -1,6 +1,6 @@
 plugins/projets/ccn/ccn_pipelines.php:52: Compression vidéo document #
 plugins/projets/fictions/fictions_pipelines.php:33: %Blog Pédagogique%
-plugins/projets/fictionsv2/install/fictionsv2_install.php:49: %Blog Pédagogique%
+plugins/projets/fictionsv2/fictionsv2_administrations.php:52: %Blog Pédagogique%
 plugins/projets/thematique/thematique_administrations.php:118: Pédagogie
 plugins/projets/thematique/thematique_administrations.php:139: Méthodologie
 plugins/projets/thematique/thematique_administrations.php:139: Pédagogie
