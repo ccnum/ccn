@@ -23,8 +23,13 @@
 ]
 #CACHE{0}
 <div id="documents_publier_article" class="bigup_fichiers">
-	<BOUCLE_liens(documents_liens){id_objet}{objet}{vu=non}{fusion id_document}{par id_document}>
-		<BOUCLE_doc(DOCUMENTS){id_document}{statut==.*}>
+	<BOUCLE_liens(documents_liens)
+		{id_objet=#ID_OBJET}
+		{objet=article}
+		{vu=non}
+		{fusion id_document}
+		{par id_document}>
+    	<BOUCLE_doc(DOCUMENTS){id_document}>
 			<div class="fichier" id="doc#ID_DOCUMENT">
 				<div class="left-col">
 					[(#MIME_TYPE|match{image}|oui)
