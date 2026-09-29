@@ -1,7 +1,0 @@
-#CACHE{24*3600*31,statique}
-[(#REM)
-		Zone de saisie d'adresse mail.
-]
-<p hidden id="format_email_#ENV{id}"><:saisies:format_email_attendu:></p>
-#SET{describedby, #ENV{describedby}|concat{' ',format_email_#ENV{id}} }
-<INCLURE{fond=saisies/input, env, describedby=#GET{describedby}, type=email}>

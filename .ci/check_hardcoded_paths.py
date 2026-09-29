@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """
-Détecte deux types de liens en dur dans le plugin thematique :
+Détecte deux types de liens en dur dans les plugins maison (thematique,
+fictions, petitfablab, ccn) :
 
 1. Ressources du plugin (img/, css/, js/, pdf/) référencées sans passer
    par #CHEMIN{...} (ou #ENV{chemin}/#DOSSIER_SQUELETTE), qui cassent si
@@ -10,11 +11,12 @@ Détecte deux types de liens en dur dans le plugin thematique :
    ni un déplacement de l'installation SPIP.
 
 Fonctionnement :
-- Scanne les squelettes .html du plugin plugins/thematique (hors lang/
-  et vendor/) : ce sont les seuls fichiers compilés par SPIP, donc les
-  seuls où #CHEMIN/#URL_PAGE ont un sens (un .css brut ou un .js ne sont
-  pas compilés — chemins relatifs classiques et spip.php?page=... y
-  restent la seule option, ils sont donc hors scope de ce check).
+- Scanne les squelettes .html de plugins/thematique, plugins/fictions et
+  plugins/petitfablab (hors lang/ et vendor/) : ce sont les seuls
+  fichiers compilés par SPIP, donc les seuls où #CHEMIN/#URL_PAGE ont un
+  sens (un .css brut ou un .js ne sont pas compilés — chemins relatifs
+  classiques et spip.php?page=... y restent la seule option, ils sont
+  donc hors scope de ce check).
 - Repère les attributs src=/href=/data-*= et les url(...) CSS qui
   référencent un segment img/, css/, js/ ou pdf/ sans passer par
   #CHEMIN{...}, #ENV{chemin} ou #DOSSIER_SQUELETTE, et qui ne sont pas
@@ -34,8 +36,8 @@ import sys
 from pathlib import Path
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
-PLUGIN_ROOT = REPO_ROOT / "plugins" / "thematique"
-EXCLUDE_DIRS = {PLUGIN_ROOT / "lang", PLUGIN_ROOT / "vendor"}
+PLUGIN_ROOTS = [REPO_ROOT / "plugins" / "projets" / name for name in ("thematique", "fictions", "petitfablab", "ccn")]
+EXCLUDE_DIRS = {root / "lang" for root in PLUGIN_ROOTS} | {root / "vendor" for root in PLUGIN_ROOTS}
 
 RESOURCE_DIRS = ("img", "css", "js", "pdf")
 
@@ -101,18 +103,21 @@ def scan_html(path: Path):
 
 
 def iter_files():
-    for path in sorted(PLUGIN_ROOT.rglob("*.html")):
-        if not path.is_file():
+    for root in PLUGIN_ROOTS:
+        if not root.exists():
             continue
-        if any(str(path).startswith(str(ex)) for ex in EXCLUDE_DIRS):
-            continue
-        yield path
+        for path in sorted(root.rglob("*.html")):
+            if not path.is_file():
+                continue
+            if any(str(path).startswith(str(ex)) for ex in EXCLUDE_DIRS):
+                continue
+            yield path
 
 
 def run_scan():
     results = {}
     for path in iter_files():
-        rel = path.relative_to(PLUGIN_ROOT)
+        rel = path.relative_to(REPO_ROOT)
         for lineno, snippet in scan_html(path):
             key = f"{rel}:{lineno}: {snippet}"
             results[key] = True

@@ -86,7 +86,6 @@ jobs:
         run: node .ci/check_php_duplication.js
 
   spip:
-    needs: [lang_hardcoded, lang_keys, hardcoded_paths, html_duplication, php_duplication]
     runs-on: ubuntu-latest
     steps:
       - name: Checkout

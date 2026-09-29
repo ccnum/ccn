@@ -1,0 +1,39 @@
+#CACHE{0}
+#SET{annee_passee, #ENV{id_article}|thematique_annee_article|thematique_annee_est_passee}
+<div class="forum-article">
+	[(#GET{annee_passee}|non)
+	<div class="encadre-message">
+		<p><:thematique:envie_de_reagir:></p>
+		[(#SESSION{id_auteur}|oui)
+			<button class="bouton-lisere" onclick="callbackCliqueSurCommenter(event)"><:thematique:commenter:></button>
+		]
+		[(#SESSION{id_auteur}|non)
+			[(#PLUGIN{cioidc}|oui)
+				<a class="bouton_encadre" href="[(#URL_PAGE{login}|parametre_url{url,#SELF}|parametre_url{cioidc,oui})]"><:thematique:se_connecter_ent_commenter:></a>
+			]
+			[(#REM) CIOIDC absent/désactivé : repli sur le formulaire de login SPIP
+			natif, comme noisettes/inc/authentification.html (menu haut) — la
+			modal #login_modal qu'il ouvre existe déjà globalement (rendue dans
+			le header de chaque page), inutile de la dupliquer ici. ]
+			[(#PLUGIN{cioidc}|non)
+				<a class="bouton_encadre js-ouvrir-login-modal" href="#"><:thematique:se_connecter:></a>
+			]
+		]
+	</div>
+	]
+	[(#SESSION{id_auteur}|oui)
+		<div class="forum-commentaire-racine ajax" hidden>
+			#FORMULAIRE_FORUMV2{#ENV{id_article}, 0}
+		</div>
+	]
+	<!-- Arbre des commentaires -->
+	<div class="forum-liste">
+		[(#ENV{id_article}|afficher_forum_arbre)]
+	</div>
+	[(#SESSION{id_auteur}|oui)
+		<!-- Formulaire de réponse unique, il ne s'affiche que lorsque l'on clique sur "Répondre" à un commentaire, ou "Modifier" -->
+		<div id="forum-formulaire-reponse" class="forum-formulaire-reponse ajax" hidden>
+			#FORMULAIRE_FORUMV2{#ENV{id_article}, 0}
+		</div>
+	]
+</div>

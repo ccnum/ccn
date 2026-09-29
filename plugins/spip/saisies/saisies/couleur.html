@@ -1,0 +1,9 @@
+[(#REM)
+
+    ### /!\ En Couleur si plugin Palette ###
+
+	Memes parametres que saisies/input, mais redefinit
+	size et class.
+]
+[(#SET{class,[(#ENV{readonly}|?{[(#ENV{class}) ]text,[(#ENV{class}) ]palette})]})]
+<INCLURE{fond=saisies/input, env, type=color, size=7, class=#GET{class}}>

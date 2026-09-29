@@ -1,0 +1,81 @@
+#CACHE{0}
+[(#SESSION{id_auteur}|oui)
+<div id="menu_haut_user" class="bloc_titre">
+	<div id="choix_rubrique_user" name="rubrique_user" class="selectbox" data-select-name="rubrique_user">
+		<button type="button" class="select-toggle first_label">
+			[(#SET{id_rubrique_classe,
+				#SESSION{id_auteur}|filtre_auteur_vers_classe|classe_numero
+			})]
+			
+
+			<span class="icon-avatar-masculin"
+				[(#GET{id_rubrique_classe}|ou{#GET{id_rubrique_classe}|=={0}}|oui)
+					style="background-color: var(--color-classe-light-#GET{id_rubrique_classe});"
+				]
+			>
+				[(#SESSION{avatar}|non)
+					<img src="https://www.laclasse.com/avatar/avatar_masculin.svg" alt="">
+				]
+				[(#SESSION{avatar}|thematique_image_est_url|oui)
+					<img src="[(#SESSION{avatar})]" alt="" class="avatar-photo">
+				]
+				[(#SESSION{avatar}|thematique_image_est_url|non)
+					[(#SESSION{avatar}|oui)
+						<span class="avatar-animal">
+							[(#SESSION{avatar})]
+						</span>
+
+					]
+				]
+			</span>
+			[(#SESSION{nom_complet}|oui)#SESSION{nom_complet}]
+			[(#SESSION{nom_complet}|non)#SESSION{nom}]
+			<span class="icon icon-down"></span>
+		</button>
+		<ul class="select-options">
+			<li class="select-option me-deconnecter">
+				<a href="[(#URL_LOGOUT)]" title="<:thematique:me_deconnecter:>" style="display: flex; align-items: center;" class="nowrap">
+					<:thematique:me_deconnecter:>
+				</a>
+			</li>
+		</ul>
+	</div>
+</div>
+]
+[(#SESSION{id_auteur}|non)
+<div id="menu_haut_user" class="bloc_titre">
+	<div id="choix_connexion" name="connexion" class="selectbox" data-select-name="connexion">
+		<button type="button" class="select-toggle first_label">
+			<span class="icon icon-connecter"></span><:thematique:me_connecter:>
+			<span class="icon icon-down"></span>
+		</button>
+		<ul class="select-options">
+			[(#PLUGIN{cioidc}|oui)
+				<li class="select-option">
+					<a href="[(#URL_PAGE{login}|parametre_url{url,#SELF}|parametre_url{cioidc,oui})]" title="<:thematique:se_connecter_ent:>" class="nowrap">
+						<:thematique:se_connecter_ent:>
+					</a>
+				</li>
+			]
+			[(#PLUGIN{cioidc}|non)
+				<li class="select-option">
+					<a href="#" class="nowrap js-ouvrir-login-modal" title="<:thematique:se_connecter:>">
+						<:thematique:se_connecter:>
+					</a>
+				</li>
+			]
+		</ul>
+	</div>
+	[(#PLUGIN{cioidc}|non)
+	<div id="login_modal" class="login-modal">
+		<div class="login-modal-content">
+			<!-- cible différente de self() : formulaires_login_traiter_dist() ne renvoie
+			'redirect' que si $cible != self(), sinon aucune redirection n'a lieu après
+			une connexion réussie et le div.ajax se recharge seul, sans rafraîchir le
+			menu utilisateur qui reste affiché "déconnecté". -->
+			<div class="ajax">#FORMULAIRE_LOGIN{#SELF|parametre_url{connecte,oui}}</div>
+		</div>
+	</div>
+	]
+</div>
+]

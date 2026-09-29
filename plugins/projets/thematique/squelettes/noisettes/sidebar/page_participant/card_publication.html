@@ -1,0 +1,15 @@
+<div class="card-publication-wrap">
+	<div class="date-container">
+		[(#ENV{date}|affdate)]
+	</div>
+	<div class="consigne-title-container">
+		#ENV{titre_consigne}
+	</div>
+	<div class="card-publication-meta">
+		<div class="mission-rank">MISSION N&#176;#ENV{rang_mission}</div>
+		<button onclick="callReponse(#ENV{id_reponse})"
+				class="bouton-lisere">
+			<:thematique:bouton_publication_card:>
+		</button>
+	</div>
+</div>

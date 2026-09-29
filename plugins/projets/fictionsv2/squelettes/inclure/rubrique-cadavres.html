@@ -1,0 +1,37 @@
+[(#REM)
+RUBRIQUE.HTML > INCLURE/RUBRIQUE.HTML > INCLURE/RUBRIQUE-CADAVRES.HTML
+
+État de verrouillage du jeu d'écriture collaborative (quel chapitre est
+visible/masqué/verrouillé pour l'auteur courant) : change à chaque
+publication d'un chapitre par un joueur. Extrait de inclure/rubrique.html
+(#459) pour que le reste de cette page (titre, navigation, prologue) reste
+cacheable sans risquer d'afficher un état de jeu périmé.
+
+Les règles d'autorisation sont centralisées dans
+inc/fictionsv2_autorisation.php (#441). Le contexte est passé par
+INCLURE depuis squelettes/inclure/rubrique.html et stocké en session.
+]
+#CACHE{0}
+
+<!-- Contexte pour les fonctions d'autorisation (session) -->
+#SET{id_auteur_fv2,#ENV{id_auteur}|session_set{id_auteur_fv2}}
+#SET{webmaster_fv2,#SESSION{webmestre}|session_set{webmaster_fv2}}
+#SET{max_cadavres_fv2,#ENV{max_cadavres}|session_set{max_cadavres_fv2}}
+#SET{zone_fv2,#ENV{id_zone}|session_set{zone_fv2}}
+
+#SET{id_blog_pedagogique, (#VAL{blog_pedagogique}|fictionsv2_id_rubrique_a_mot)}
+
+<!-- Boucle affichage des cadavres -->
+<BOUCLE_cadavres(ARTICLES){id_rubrique}{statut IN publie,prop}{id_rubrique != #GET{id_blog_pedagogique}}{id_rubrique != #EVAL{_FICTIONSV2_ID_BLOG_AUTEUR}}{par id_article}>
+	[(#ID_ARTICLE|LECTURE_DROITS{montre}|oui)
+		[(#ID_ARTICLE|LECTURE_DROITS{mode}|=={'visible'}|oui)
+			<INCLURE{fond=inclure/chapitre-visible,id_article} />
+		]
+		[(#ID_ARTICLE|LECTURE_DROITS{mode}|=={'verrouille'}|oui)
+			<INCLURE{fond=inclure/chapitre-verrouille,id_article} />
+		]
+		[(#ID_ARTICLE|LECTURE_DROITS{mode}|=={'ecriture'}|oui)
+			<INCLURE{fond=inclure/chapitre-ecriture,id_article} />
+		]
+	]
+</BOUCLE_cadavres>

@@ -1,0 +1,16 @@
+<div class="formulaire_spip formulaire_editer formulaire_#FORM">
+	[<p class="reponse_formulaire reponse_formulaire_ok">(#ENV*{message_ok})</p>]
+	[<p class="reponse_formulaire reponse_formulaire_erreur">(#ENV*{message_erreur})</p>]
+	[(#ENV{editable}|oui)
+	<form method='post' action='#ENV{action}'><div>
+		[(#REM) les hidden qui declencheront le service du formulaire parametre : url d'action ]
+		#ACTION_FORMULAIRE{#ENV{action}}
+		<div class="editer-groupe">
+			#GENERER_SAISIES{#ENV{_saisies}}
+		</div>
+		<p class="boutons">
+			<input type="submit" class="button" value="<:bouton_valider:>" />
+		</p>
+	</div></form>
+	]
+</div>

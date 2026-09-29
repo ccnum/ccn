@@ -1,17 +1,23 @@
 # check_lang_hardcoded.py
 
-Détecte le texte français codé en dur dans tout le plugin `plugins/thematique`
-(hors `lang/` et `vendor/`), pour forcer le passage par des items de langue
-(`lang/thematique_fr.php` côté PHP/squelette, `CCN.lang` côté JS).
+Détecte le texte français codé en dur dans `plugins/projets/thematique`,
+`plugins/projets/fictions`, `plugins/projets/petitfablab` et `plugins/projets/ccn` (hors `lang/`,
+`squelettes/lang/` et `vendor/` de chacun), pour forcer le passage par
+un item de langue (`<:module:cle:>`/`_T('module:cle')`, `CCN.lang` côté
+JS — ce dernier pont n'existe que pour thematique, cf `check_lang_keys.py`
+ci-dessous).
 
-Pour l'instant limité au plugin thematique (seul plugin i18n-isé à ce
-jour) — à généraliser (argument `--scan`) si d'autres plugins adoptent
-la même convention.
+`thematique`, `fictions` (`lang/fictions_fr.php`, 2026-09) et
+`petitfablab` (`squelettes/lang/petitfablab_fr.php`) ont maintenant tous
+les trois une vraie convention i18n. La baseline ne contient plus que 5
+exceptions légitimes (cf ci-dessous) : le check n'impose pas de
+migration rétroactive pour un plugin qui n'aurait pas encore d'items de
+langue, mais empêche d'en rajouter sans en passer un.
 
-Le scan couvre désormais tout le plugin (et pas seulement
-`squelettes/`+`formulaires/`) : les fichiers `.html` à la racine du plugin
-(ex: `cioidc_erreur_archive.html`) sont de vrais squelettes SPIP rendus au
-visiteur et doivent être traités comme tels.
+Le scan couvre tout le plugin (et pas seulement `squelettes/`+`formulaires/`) :
+les fichiers `.html` à la racine du plugin (ex: `cioidc_erreur_archive.html`
+pour thematique) sont de vrais squelettes SPIP rendus au visiteur et
+doivent être traités comme tels.
 
 Usage local :
 
@@ -20,8 +26,9 @@ python3 .ci/check_lang_hardcoded.py
 ```
 
 Le script échoue (exit 1) si du texte en dur absent de
-`lang-check-baseline.txt` est détecté. Le CI (`.github/workflows/lint-lang-thematique.yml`)
-exécute ce même check sur toute PR touchant `plugins/thematique/**`.
+`lang-check-baseline.txt` est détecté. Le CI (`.github/workflows/lint-lang.yml`)
+exécute ce même check sur toute PR touchant `plugins/projets/thematique/**`,
+`plugins/projets/fictions/**`, `plugins/projets/petitfablab/**` ou `plugins/projets/ccn/**`.
 
 ## Exceptions dans la baseline
 
@@ -36,6 +43,17 @@ exécute ce même check sur toute PR touchant `plugins/thematique/**`.
   candidats à un item de langue (la BDD ne se traduit pas au chargement de
   la page). Ajoutées à la baseline lors de l'élargissement du scan à tout
   le plugin (2026-08).
+- `plugins/projets/ccn/ccn_pipelines.php` (`Compression vidéo document #`) :
+  libellé de job passé à `queue_add_job()`, visible seulement dans le
+  moniteur de tâches de fond de l'espace privé (admin), pas dans un
+  squelette public rendu au visiteur. Ajoutée lors de l'extension du
+  scan à `plugins/projets/ccn` (2026-09).
+- `plugins/projets/fictions/fictions_pipelines.php` (`%Blog Pédagogique%`) :
+  motif SQL `LIKE` comparé au titre d'une rubrique en base
+  (`sql_getfetsel(..., 'titre LIKE ' . sql_quote('%Blog Pédagogique%'))`),
+  jamais affiché — le traduire casserait la requête plutôt que
+  d'afficher du texte. Ajoutée lors de la migration i18n de fictions
+  (2026-09, cf `lang/fictions_fr.php`).
 - `thematique_pipelines.php:189,193` (`de l'email`, `de l'avatar`) :
   libellé passé à `thematique_cioidc_maj_champ()` uniquement pour composer
   un message `spip_log(...)` de debug (mise à jour d'un champ auteur via le
@@ -73,13 +91,20 @@ en dur, mais pas la validité des clés utilisées. Une clé mal orthographiée
 (`<:thematique:mauvaize_cle:>`) s'affiche telle quelle en prod sans faire
 échouer le lint anti-texte-en-dur.
 
-`check_lang_keys.py` vérifie que toute clé référencée dans le plugin existe
-bien :
-- `<:thematique:cle:>` et `_T('thematique:cle')` → doivent exister dans
-  `lang/thematique_fr.php` ;
+`check_lang_keys.py` couvre `plugins/projets/thematique`, `plugins/projets/fictions`,
+`plugins/projets/petitfablab` et `plugins/projets/ccn` : pour chacun, toute clé
+référencée doit exister :
+- `<:module:cle:>` et `_T('module:cle')` (module = nom du plugin) →
+  doivent exister dans son fichier de langue, cherché à la fois en
+  `lang/<module>_fr.php` (thematique, ccn) et
+  `squelettes/lang/<module>_fr.php` (petitfablab — autre emplacement).
+  `fictions` n'a pas de fichier de langue du tout : la moindre clé
+  `<:fictions:...:>` y ferait donc immédiatement échouer le check
+  (aucune actuellement) ;
 - `CCN.lang.cle` côté JS → doit exister comme propriété de l'objet
-  `CCN.lang` construit dans `squelettes/noisettes/timeline.html` (seul pont
-  PHP → JS du plugin).
+  `CCN.lang` construit dans `plugins/projets/thematique/squelettes/noisettes/timeline.html`.
+  Vérifié uniquement pour thematique : c'est le seul plugin à avoir ce
+  pont PHP → JS, les trois autres ne l'utilisent pas.
 
 Usage local :
 
@@ -93,7 +118,8 @@ sans exception tolérée.
 
 # check_hardcoded_paths.py
 
-Détecte deux types de liens en dur dans les squelettes `.html` du plugin :
+Détecte deux types de liens en dur dans les squelettes `.html` de
+`plugins/projets/thematique`, `plugins/projets/fictions`, `plugins/projets/petitfablab` et `plugins/projets/ccn` :
 
 1. Ressources du plugin (`img/`, `css/`, `js/`, `pdf/`) qui n'utilisent pas
    `#CHEMIN{...}` (ou `#ENV{chemin}`/`#DOSSIER_SQUELETTE`). Un chemin
@@ -126,12 +152,12 @@ pour régénérer après un faux positif volontaire).
 # check_html_duplication.js
 
 Détecte le HTML/squelette SPIP dupliqué (copier-coller) dans les plugins
-maison (`plugins/petitfablab`, `plugins/fictions`, `plugins/thematique`),
-via [jscpd](https://github.com/kucherenko/jscpd) (`node_modules/.bin/jscpd`,
-dépendance dev npm — seul script `.ci/` en Node, les autres sont en
-PHP/Python).
+maison (`plugins/projets/petitfablab`, `plugins/projets/fictions`, `plugins/projets/thematique`,
+`plugins/projets/ccn`), via [jscpd](https://github.com/kucherenko/jscpd)
+(`node_modules/.bin/jscpd`, dépendance dev npm — seul script `.ci/` en
+Node, les autres sont en PHP/Python).
 
-Limité à ces trois plugins (pas tout `plugins/`) : ce sont les seuls
+Limité à ces quatre plugins (pas tout `plugins/`) : ce sont les seuls
 développés/maintenus ici, les autres sont des plugins tiers vendorisés
 (contrib SPIP) qu'on ne cherche pas à refactorer.
 
@@ -145,15 +171,15 @@ node .ci/check_html_duplication.js [--baseline=PATH] [--write-baseline]
 
 Comme pour les checks Python, seule une nouvelle duplication (absente de
 `html-duplication-baseline.txt`) fait échouer le script — le volume déjà
-présent (84 clones lors de la mise en place, 2026-08) est toléré tel quel ;
+présent (8 clones pour thematique seul lors de la mise en place, 2026-08 ;
+44 depuis l'élargissement à fictions/petitfablab/ccn) est toléré tel quel ;
 `--write-baseline` régénère le fichier après vérification du diff.
 
 # check_php_duplication.js
 
-Même principe que `check_html_duplication.js` (jscpd), appliqué au PHP du
-plugin `plugins/thematique` (pattern `**/*.php` au lieu de `**/*.html`).
-Limité à ce seul plugin pour l'instant (pas `fictions`/`petitfablab`) — à
-élargir si la convention fait ses preuves ici.
+Même principe que `check_html_duplication.js` (jscpd), appliqué au PHP de
+`plugins/projets/thematique`, `plugins/projets/fictions`, `plugins/projets/petitfablab` et `plugins/projets/ccn`
+(pattern `**/*.php` au lieu de `**/*.html`).
 
 Usage local (nécessite `npm ci` au préalable) :
 
@@ -163,10 +189,15 @@ node .ci/check_php_duplication.js [--baseline=PATH] [--write-baseline]
                                    [--min-lines=N] [--min-tokens=N]
 ```
 
-Baseline dans `.ci/php-duplication-baseline.txt`, vide depuis la
-factorisation des 8 clones détectés à la mise en place (2026-08, cf
-ci-dessous). Même mécanisme que les autres checks : `--write-baseline`
-après vérification du diff pour accepter une nouvelle duplication.
+Baseline dans `.ci/php-duplication-baseline.txt` : vide pour thematique
+seul depuis la factorisation des 8 clones détectés à la mise en place
+(2026-08, cf ci-dessous) ; 1 entrée depuis l'élargissement à
+fictions/petitfablab/ccn (`petitfablab/squelettes/formulaires/editer_article.php`
+vs `thematique/formulaires/public_editer_article.php`, non traitée —
+deux plugins différents, pas de fonction commune évidente sans dépendance
+croisée). ccn n'ajoute aucune nouvelle entrée. Même mécanisme que les
+autres checks : `--write-baseline` après vérification du diff pour
+accepter une nouvelle duplication.
 
 ## Duplications déjà traitées (2026-08)
 

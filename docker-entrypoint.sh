@@ -133,7 +133,6 @@ spip plugins:activer socialtags -y
 spip plugins:activer spip_bonux -y
 spip plugins:activer verifier -y
 spip plugins:activer yaml -y
-spip plugins:activer autorite -y
 spip plugins:activer simplog -y
 spip plugins:activer mesfavoris -y
 spip plugins:activer mesfavoris_ccn -y
@@ -141,26 +140,52 @@ spip plugins:activer ccn -y
 
 spip plugins:desactiver imports_utilisateurs -y
 spip plugins:desactiver cicas -y
+# Plugin contrib désactivé (issue #274) : son option "auteur_mod_article"
+# (cf les spip config:ecrire supprimés plus bas) déclare une version très
+# permissive de autoriser_article_modifier()/autoriser_rubrique_-
+# creerarticledans() (plugins/spip/autorite/inc/autoriser.php), sans garde
+# function_exists côté autorite — elle prenait systématiquement le pas sur
+# la logique métier de thematique_autoriser.php (restrictions #420 et
+# #274), la rendant inopérante, et son activation combinée au correctif
+# #274 a provoqué un Fatal error "Cannot redeclare" sur ccn-ontourne.
+spip plugins:desactiver autorite -y
 
 if [ "${SPIP_PLUGINS_CIOIDC:-false}" = true ]; then
 	spip plugins:activer cioidc -y
 else
 	spip plugins:desactiver cioidc -y
 fi
+if [ "${VIMEO_ACCESS_TOKEN:-}" != "" ]; then
+	spip plugins:activer api_vimeo -y
+else
+	spip plugins:desactiver api_vimeo -y
+fi
+case "${SPIP_VERSION_SITE}" in
+	fictionsv2|fictions)
+		spip plugins:desactiver fictionsv2 -y
+		spip plugins:desactiver fictions -y
+		spip plugins:activer "${SPIP_VERSION_SITE}" -y
+		spip plugins:activer cadavrexquis -y
+		;;
+	petitfablabv2|petitfablab)
+		spip plugins:desactiver petitfablabv2 -y
+		spip plugins:desactiver petitfablab -y
+		spip plugins:activer "${SPIP_VERSION_SITE}" -y
+		spip plugins:activer cadavrexquis -y
+		;;
+	*)
+		spip plugins:desactiver cadavrexquis -y
+		spip plugins:activer "${SPIP_VERSION_SITE}" -y
+		;;
+esac
 if [ "${SPIP_VERSION_SITE}" != "thematique" ]; then
 	spip plugins:activer vider_rubrique -y
 fi
-spip plugins:activer "${SPIP_VERSION_SITE}" -y
 if [ "${PROJET}" != "laclasse" ]; then
 	spip plugins:activer "thematique_${PROJET}" -y
 fi
 spip plugins:maj:bdd
 
-spip config:ecrire -p autorite auteur_mod_email:0
-spip config:ecrire -p autorite auteur_mod_article:1
-spip config:ecrire -p autorite auteur_modere_forum:0
-spip config:ecrire -p autorite editer_forums:1
-spip config:ecrire -p autorite publierdans:15
 spip config:ecrire -p bigup charger_public:1
 # Ce réglage ne pilote que le contrôle JS côté navigateur (bigup_config()) : la
 # vraie limite serveur est appliquée par ccn_verifier_uploads() (100 Mo, sauf
@@ -184,12 +209,21 @@ spip config:ecrire -p notifications thread_forum:0
 spip config:ecrire formats_documents_forum:".pdf,.jpg,.jpeg,.png,.gif,.mp4"
 
 # Default mes_options
+# display_errors : uniquement en dev (SPIP_DEBUG=true), jamais par défaut -
+# afficher les erreurs PHP aux visiteurs fuiterait des infos (chemins,
+# requêtes SQL...) sur un environnement public. error_reporting reste actif
+# dans tous les cas : ça ne fait que piloter ce qui part dans les logs
+# (tmp/log/spip.log), pas ce qui s'affiche.
+DISPLAY_ERRORS="Off"
+if [ "${SPIP_DEBUG:-false}" = true ]; then
+	DISPLAY_ERRORS="On"
+fi
 rm -rf config/mes_options.php
 /bin/cat << MAINEOF > config/mes_options.php
 <?php
 if (!defined("_ECRIRE_INC_VERSION")) return;
 error_reporting(E_ALL ^ E_NOTICE);
-ini_set('display_errors', 'On');
+ini_set('display_errors', '${DISPLAY_ERRORS}');
 \$GLOBALS['spip_header_silencieux'] = 1;
 \$GLOBALS['taille_des_logs'] = 500;
 define('_MAX_LOG', 500000);
@@ -213,7 +247,7 @@ define('_VIMEO_ACCESS_TOKEN', '${VIMEO_ACCESS_TOKEN:-}');
 // false pour un projet CCN qui ne repart pas d'une année sur l'autre :
 // désactive la création automatique de la structure de rentrée (rubrique
 // de l'année + articles jalons, cf
-// plugins/thematique/genie/thematique_rentree_annee.php)
+// plugins/projets/thematique/genie/thematique_rentree_annee.php)
 define('_CCN_PROJET_ACTIVE', '${CCN_PROJET_ACTIVE:-true}' !== 'false');
 ?>
 MAINEOF

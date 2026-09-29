@@ -1,0 +1,65 @@
+<!--
+PAGE-TYPE.HTML
+(page de contenu type)
+ -->
+<INCLURE{fond=inclure/tete-html} />
+<body>
+<a href="#contenu-principal" class="skip-link">Aller au contenu principal</a>
+	<div id="liste-tooltip">
+	</div>
+
+	<!-- BOUTON CONNEXION -->
+	<INCLURE{fond=inclure/authentification} />
+
+	<!-- ELEMENTS GRAPHIQUES-->
+	<INCLURE{fond=inclure/book-graphiques, suffixe=-ecriture} />
+
+	<!-- RETOUR INDEX -->
+	<div id="bouton-retour">
+		<a href="#URL_SITE_SPIP">
+			<img src="#CHEMIN{img/global/bt-retour.png}" alt="<:fictions:retour_a_laccueil:>"
+				class="btn-rollover" data-src-hover="#CHEMIN{img/global/bt-retour-hover.png}"
+				width="54" height="54" />
+		</a>
+	</div>
+
+	<!-- BOOK -->
+	<div id="global-ecriture">
+		<a id="contenu-principal" tabindex="-1"></a>
+		<div id="global-spacer">
+		</div>
+		<div class="global-content">
+			<div class="content">
+			<BOUCLE_annee(RUBRIQUES){titre==#EVAL{_ANNEE_SCOLAIRE}}{tout}{0,1}>
+				<BOUCLE_art(ARTICLES){id_rubrique}{titre LIKE presentation}{tout}{0,1}>
+				<div class="content-left-small">
+					<div id="titre_site">
+						<a href="#URL_SITE_SPIP" title="Accueil"><strong>fictions</strong></a><a href="http://www.laclasse.com" title="http://www.laclasse.com">.laclasse.com</a>
+					</div>
+					<div id="image-presentation">[(#LOGO_ARTICLE||image_reduire{100})]</div>
+					<div id="texte-presentation" class="#EDIT{texte}">
+						[(#TEXTE)]
+					</div>
+				</div>
+				</BOUCLE_art>
+			</BOUCLE_annee>
+			<div class="content-right-large">
+				<BOUCLE_page_article(ARTICLES){id_article}>
+					<!-- TEXTE PAGE -->
+					<div id="page-type">
+						<div class="page-type-titre">
+							#TITRE
+						</div>
+						<div class="page-type-texte #EDIT{texte}">
+							#TEXTE
+						</div>
+					</div>
+				</BOUCLE_page_article>
+			</div>
+		</div>
+	</div>
+	<INCLURE{fond=footer} />
+</body>
+
+<script type="text/javascript" src="#CHEMIN{js/page.js}"></script>
+</html>

@@ -1,0 +1,23 @@
+<paquet
+	prefix="cadavrexquis"
+	categorie="squelette"
+	version="1.0.0"
+	etat="stable"
+	logo=""
+	schema=""
+	documentation="http://www.laclasse.com"
+	compatibilite="[4.3.2;4.*]"
+>
+	<nom>Cadavre exquis</nom>
+	<auteur>Erasme</auteur>
+	<licence>GNU/GPL</licence>
+
+	<!--
+	Socle commun aux deux plugins "cadavre exquis" (fictions et petitfablab,
+	cf issue #385) : squelettes/assets partagés entre les deux, factorisés
+	ici pour éviter la duplication. Ne contient rien de spécifique à l'un
+	ou l'autre — le parcours "école/collège" reste dans fictions, le
+	parcours "médiathèque/atelier" dans petitfablab.
+	-->
+	<necessite nom="ccn" />
+</paquet>
