@@ -54,70 +54,21 @@ mise en forme du squelette source différait, la sortie HTML est byte-identique)
 						</BOUCLE_annee>
 					</div>
 
+					[(#REM) Chapitre 1 commun (article "chapitre1" de l'année, cf
+					fictionsv2_id_chapitre1()) : page 2, les chapitres de l'histoire sont décalés d'une page. ]
+					#SET{id_chapitre1, #ID_RUBRIQUE|fictionsv2_id_chapitre1_histoire}
+					#SET{decalage, #GET{id_chapitre1}|?{2,1}}
+					[(#GET{id_chapitre1}|oui)<INCLURE{fond=inclure/lecture-page, id_article=#GET{id_chapitre1}, id_histoire=#ID_RUBRIQUE, cote=gauche, num=2, fin} />]
 					<BOUCLE_lecture_gauche(ARTICLES){id_rubrique}{par date}>
-						<div class="lecture-page" id="page-gauche-[(#COMPTEUR_BOUCLE|plus{1})]" data-num="[(#COMPTEUR_BOUCLE|plus{1})]">
-							<!-- BOUTONS OPTIONS GAUCHE-->
-							<div class="lecture-options">
-								<BOUCLE_lecture_titre_rubrique_droite2(RUBRIQUES){id_rubrique = #ID_RUBRIQUE}>
-									<span class="lecture-titre-cadavre">#TITRE</span>
-								</BOUCLE_lecture_titre_rubrique_droite2>
-
-								<div class="lecture-chapitre-auteur">
-									<BOUCLE_auteur_article2(AUTEURS){id_article}{0,1}>
-										<div class="ecriture-chapitre-avatar">[(#LOGO_AUTEUR|image_reduire{42,42}|inserer_attribut{alt,#NOM})]</div>
-										<div class="ecriture-chapitre-nom">#NOM</div>
-									</BOUCLE_auteur_article2>
-									[(#ENV{fin}|=={oui}|non)
-										<INCLURE{fond=inclure/logos-script-forum,id_article,class=ecriture-chapitre-liens}>
-									]
-								</div>
-							</div>
-							<!-- CONTENT GAUCHE -->
-							<h1 class="nettoyeur">#SURTITRE</h1>
-							<h2>#TITRE</h2>
-							#SET{var_lecture, false}
-							[(#ANNEE_ACTUELLE|=={#EVAL{_ANNEE_SCOLAIRE}}|non)
-								<INCLURE{fond=lecture-texte-visible, id_article}>
-							]
-							[(#ANNEE_ACTUELLE|=={#EVAL{_ANNEE_SCOLAIRE}}|oui)
-								[(#LECTURE|!={#GET{var_lecture}}|oui)<INCLURE{fond=lecture-texte-visible, id_article}>]
-								[(#LECTURE|=={#GET{var_lecture}}|oui)<INCLURE{fond=lecture-texte, id_article}>]
-							]
-
-						</div>
+						<INCLURE{fond=inclure/lecture-page, id_article, id_histoire=#ID_RUBRIQUE, cote=gauche, num=#COMPTEUR_BOUCLE|plus{#GET{decalage}}, fin} />
 					</BOUCLE_lecture_gauche>
 				</div>
 
 				<!-- PAGE DROITE -->
 				<div class="content-right">
+					[(#GET{id_chapitre1}|oui)<INCLURE{fond=inclure/lecture-page, id_article=#GET{id_chapitre1}, id_histoire=#ID_RUBRIQUE, cote=droite, num=2, fin} />]
 					<BOUCLE_lecture_droite(ARTICLES){id_rubrique}{par date}>
-						<div class="lecture-page" id="page-droite-[(#COMPTEUR_BOUCLE|plus{1})]" data-num="[(#COMPTEUR_BOUCLE|plus{1})]">
-							<!-- BOUTONS OPTIONS GAUCHE-->
-							<div class="lecture-options">
-								<BOUCLE_lecture_titre_rubrique_droite(RUBRIQUES){id_rubrique = #ID_RUBRIQUE}>
-									<span class="lecture-titre-cadavre">#TITRE</span>
-								</BOUCLE_lecture_titre_rubrique_droite>
-								<div class="lecture-chapitre-auteur">
-									<BOUCLE_auteur_article(AUTEURS){id_article}{0,1}>
-										<div class="ecriture-chapitre-avatar">[(#LOGO_AUTEUR|image_reduire{42,42}|inserer_attribut{alt,#NOM})]</div>
-										<div class="ecriture-chapitre-nom">#NOM</div>
-									</BOUCLE_auteur_article>
-									[(#ENV{fin}|=={oui}|non)
-										<INCLURE{fond=inclure/logos-script-forum,id_article,class=ecriture-chapitre-liens}>
-									]
-								</div>
-							</div>
-							<!-- CONTENT GAUCHE -->
-							<h1 class="nettoyeur">#SURTITRE</h1>
-							<h2>#TITRE</h2>
-							[(#ANNEE_ACTUELLE|=={#EVAL{_ANNEE_SCOLAIRE}}|non)
-								<INCLURE{fond=lecture-texte-visible, id_article}>
-							]
-							[(#ANNEE_ACTUELLE|=={#EVAL{_ANNEE_SCOLAIRE}}|oui)
-								[(#LECTURE|!={#GET{var_lecture}}|oui)<INCLURE{fond=lecture-texte-visible, id_article}>]
-								[(#LECTURE|=={#GET{var_lecture}}|oui)<INCLURE{fond=lecture-texte, id_article}>]
-							]
-						</div>
+						<INCLURE{fond=inclure/lecture-page, id_article, id_histoire=#ID_RUBRIQUE, cote=droite, num=#COMPTEUR_BOUCLE|plus{#GET{decalage}}, fin} />
 					</BOUCLE_lecture_droite>
 				</div>
 			</div>

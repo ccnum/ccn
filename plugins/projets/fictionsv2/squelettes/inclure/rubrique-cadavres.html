@@ -21,6 +21,21 @@ INCLURE depuis squelettes/inclure/rubrique.html et stocké en session.
 
 #SET{id_blog_pedagogique, (#VAL{blog_pedagogique}|fictionsv2_id_rubrique_a_mot)}
 
+[(#REM) Chapitre 1 commun (article "chapitre1" de l'année, cf fictionsv2_id_chapitre1()) :
+hors de la rubrique de l'histoire, donc absent de la boucle ci-dessous et du rang calculé
+par fictionsv2_lecture_droits(). Même règle que pour un chapitre N-1 : visible tant que
+le chapitre 2 (seul chapitre publie/prop de l'histoire) est en cours d'écriture, toujours
+pour le webmestre. ]
+#SET{id_chapitre1, #ENV{id_rubrique}|fictionsv2_id_chapitre1_histoire}
+[(#REM) Compté ici plutôt que via #ENV{max_cadavres} : inclure/rubrique.html le calcule
+avec {0,1} et le total de cette boucle, qui vaut donc toujours 1. ]
+#SET{chapitre1_n_moins_1, #ENV{id_rubrique}|fictionsv2_nb_chapitres_histoire|=={1}}
+[(#GET{id_chapitre1}|et{#ENV{id_auteur}}|oui)
+	[(#SESSION{webmestre}|=={oui}|ou{#GET{chapitre1_n_moins_1}}|oui)
+		<INCLURE{fond=inclure/chapitre-visible,id_article=#GET{id_chapitre1}} />
+	]
+]
+
 <!-- Boucle affichage des cadavres -->
 <BOUCLE_cadavres(ARTICLES){id_rubrique}{statut IN publie,prop}{id_rubrique != #GET{id_blog_pedagogique}}{id_rubrique != #EVAL{_FICTIONSV2_ID_BLOG_AUTEUR}}{par id_article}>
 	[(#ID_ARTICLE|LECTURE_DROITS{montre}|oui)

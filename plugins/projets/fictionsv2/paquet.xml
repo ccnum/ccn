@@ -1,7 +1,7 @@
 <paquet
 	prefix="fictionsv2"
 	categorie="squelette"
-	version="1.0.3"
+	version="1.0.4"
 	etat="stable"
 	logo=""
 	schema="1.0.0"
@@ -26,4 +26,6 @@
 	<utilise nom="cioidc" />
 
 	<pipeline nom="post_edition" inclure="fictionsv2_pipelines.php" />
+	<pipeline nom="cioidc_userinfo" inclure="fictionsv2_pipelines.php" />
+	<pipeline nom="calculer_rubriques" inclure="fictionsv2_pipelines.php" />
 </paquet>

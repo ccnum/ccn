@@ -72,3 +72,60 @@ function fictionsv2_post_edition($flux) {
 
 	return $flux;
 }
+
+/**
+ * Connexion SSO : un prof inscrit au projet de l'année (groupe libre ENT "Fictions
+ * <année>") crée sa rubrique d'histoire à sa première connexion (cf inc/fictionsv2_cioidc.php).
+ * Année calendaire réelle, pas _ANNEE_SCOLAIRE qui suit le cookie du sélecteur d'année.
+ */
+function fictionsv2_cioidc_userinfo($flux) {
+	include_spip('inc/fictionsv2_cioidc');
+
+	$uid = (string) (reset($flux['args']) ?: '');
+	$profils = (string) ($flux['data']['ENTPersonProfils [ENS|TUT|ELV]'] ?? '');
+	if (!$uid || strpos($profils, 'ENS') === false) {
+		return $flux;
+	}
+
+	$annee = intval(_ANNEE_ACTUELLE_CALCULEE);
+	$groupes_libres = fictionsv2_cioidc_normaliser_liste($flux['data']['ENTGroupesLibres'] ?? []);
+	if (!fictionsv2_cioidc_est_inscrit($groupes_libres, $GLOBALS['meta']['nom_site'] ?? '', $annee)) {
+		spip_log("fictionsv2 uid=$uid non inscrit au projet $annee, aucune histoire créée", 'cioidc');
+		return $flux;
+	}
+
+	fictionsv2_cioidc_histoire_prof($uid, $annee);
+	return $flux;
+}
+
+/**
+ * À partir de _FICTIONSV2_ANNEE_CHAPITRE1_COMMUN, le chapitre 1 publié n'est plus dans
+ * l'histoire (article "chapitre1" commun de l'année) : une histoire dont le chapitre 2
+ * est encore en cours d'écriture (prop) n'a aucun article publié, et SPIP la dépublierait,
+ * la retirant des boucles RUBRIQUES du site. On la garde publiée tant qu'elle a un
+ * chapitre publié ou à écrire ; une histoire désactivée (tout en prepa) reste masquée.
+ */
+function fictionsv2_calculer_rubriques($flux) {
+	$annees = sql_allfetsel(
+		'id_rubrique',
+		'spip_rubriques',
+		'titre REGEXP ' . sql_quote('^[0-9]{4}$') . ' AND titre>=' . sql_quote((string) _FICTIONSV2_ANNEE_CHAPITRE1_COMMUN)
+	);
+	if (!$annees) {
+		return $flux;
+	}
+
+	$histoires = sql_allfetsel(
+		'R.id_rubrique AS id, max(A.date) AS date_h',
+		'spip_rubriques AS R JOIN spip_articles AS A ON R.id_rubrique=A.id_rubrique',
+		[sql_in('R.id_parent', array_column($annees, 'id_rubrique')), sql_in('A.statut', ['publie', 'prop'])],
+		'R.id_rubrique'
+	);
+	foreach ($histoires as $row) {
+		sql_update('spip_rubriques', [
+			'statut_tmp' => sql_quote('publie'),
+			'date_tmp' => 'GREATEST(date_tmp, ' . sql_quote($row['date_h']) . ')',
+		], 'id_rubrique=' . intval($row['id']));
+	}
+	return $flux;
+}

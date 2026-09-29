@@ -151,3 +151,76 @@ function filtre_fictionsv2_annee_label($annee) {
 	}
 	return $annee . '/' . ($annee + 1);
 }
+
+/**
+ * Retourne l'ID de la rubrique de l'année scolaire donnée (titre "2026"), avec cache
+ * par requête. Même recherche que les squelettes ({titre==#EVAL{_ANNEE_SCOLAIRE}}{tout}) :
+ * la rubrique de l'année est cherchée où qu'elle soit (ex: sous "Collèges").
+ */
+function fictionsv2_id_rubrique_annee($annee): int {
+	static $cache = [];
+	$annee = (string) intval($annee);
+	if (!array_key_exists($annee, $cache)) {
+		$cache[$annee] = (int) sql_getfetsel('id_rubrique', 'spip_rubriques', 'titre=' . sql_quote($annee), '', 'id_rubrique', '0,1');
+	}
+	return $cache[$annee];
+}
+
+/**
+ * Retourne l'ID de l'article "chapitre 1" commun à toutes les histoires d'une année :
+ * article de la rubrique de l'année portant le mot-clé "chapitre1". À partir de
+ * _FICTIONSV2_ANNEE_CHAPITRE1_COMMUN, le premier chapitre n'est plus copié dans chaque
+ * histoire mais affiché depuis cet article unique. 0 si aucun (années antérieures).
+ * Utilisable comme filtre SPIP : [(#ANNEE_SCOLAIRE|fictionsv2_id_chapitre1)]
+ */
+function fictionsv2_id_chapitre1($annee): int {
+	static $cache = [];
+	$annee = intval($annee);
+	if (array_key_exists($annee, $cache)) {
+		return $cache[$annee];
+	}
+	$id_mot = fictionsv2_id_mot('chapitre1');
+	$id_annee = fictionsv2_id_rubrique_annee($annee);
+	if ($annee < _FICTIONSV2_ANNEE_CHAPITRE1_COMMUN || !$id_mot || !$id_annee) {
+		return $cache[$annee] = 0;
+	}
+	return $cache[$annee] = (int) sql_getfetsel(
+		'a.id_article',
+		['spip_articles AS a', 'spip_mots_liens AS ml'],
+		[
+			'ml.id_objet=a.id_article',
+			'ml.objet=' . sql_quote('article'),
+			'ml.id_mot=' . intval($id_mot),
+			'a.id_rubrique=' . intval($id_annee),
+			'a.statut=' . sql_quote('publie'),
+		],
+		'',
+		'a.id_article',
+		'0,1'
+	);
+}
+
+/**
+ * Chapitre 1 commun de l'histoire donnée : l'année est le titre de sa rubrique parente
+ * (et non _ANNEE_SCOLAIRE, qui suit le cookie du sélecteur d'année).
+ * Utilisable comme filtre SPIP : [(#ID_RUBRIQUE|fictionsv2_id_chapitre1_histoire)]
+ */
+function fictionsv2_id_chapitre1_histoire($id_rubrique): int {
+	$annee = sql_getfetsel(
+		'p.titre',
+		['spip_rubriques AS r', 'spip_rubriques AS p'],
+		['p.id_rubrique=r.id_parent', 'r.id_rubrique=' . intval($id_rubrique)]
+	);
+	return preg_match('/^\d{4}$/', (string) $annee) ? fictionsv2_id_chapitre1($annee) : 0;
+}
+
+/**
+ * Nombre de chapitres écrits ou en cours d'écriture (publie + prop) d'une histoire.
+ * Utilisable comme filtre SPIP : [(#ID_RUBRIQUE|fictionsv2_nb_chapitres_histoire)]
+ */
+function fictionsv2_nb_chapitres_histoire($id_rubrique): int {
+	return (int) sql_countsel('spip_articles', [
+		'id_rubrique=' . intval($id_rubrique),
+		sql_in('statut', ['publie', 'prop']),
+	]);
+}
