@@ -11,7 +11,12 @@ permissions:
   contents: write
 
 jobs:
+  lint:
+    if: ${{ github.event.pull_request.merged == true }}
+    uses: ./.github/workflows/lint.yml
+
   create_tag:
+    needs: lint
     runs-on: ubuntu-latest
     steps:
       ### Step 1: Check out the repository

@@ -26,9 +26,10 @@ python3 .ci/check_lang_hardcoded.py
 ```
 
 Le script échoue (exit 1) si du texte en dur absent de
-`lang-check-baseline.txt` est détecté. Le CI (`.github/workflows/lint-lang.yml`)
-exécute ce même check sur toute PR touchant `plugins/projets/thematique/**`,
-`plugins/projets/fictions/**`, `plugins/projets/petitfablab/**` ou `plugins/projets/ccn/**`.
+`lang-check-baseline.txt` est détecté. Le CI (`.github/workflows/lint.yml`,
+workflow réutilisable) exécute ce même check, avec tous les autres lints, avant
+chaque build Docker (`build_dev.yml` sur push `dev`, `build_main.yaml` au merge
+d'une PR dans `main`) : un lint en échec bloque la publication de l'image.
 
 ## Exceptions dans la baseline
 

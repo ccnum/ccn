@@ -47,7 +47,7 @@ Un run automatisé de `ecs`/`rector` peut modifier des fichiers en tâche de fon
 session (corrections triviales : style, compat PHP8) — vérifier `git status`/`git diff` avant de
 committer, ces changements peuvent se mélanger aux tiens.
 
-### Lint CI (plugin `thematique` uniquement, exécuté sur toute PR touchant `plugins/projets/thematique/**`)
+### Lint CI (`.github/workflows/lint.yml`, exécuté uniquement avant chaque build Docker `dev`/`main`, qu'il bloque en cas d'échec)
 ```
 python3 .ci/check_lang_hardcoded.py    # texte FR en dur hors lang/ (baseline: .ci/lang-check-baseline.txt)
 python3 .ci/check_lang_keys.py         # clés <:thematique:xxx:> / CCN.lang.xxx invalides
