@@ -1,53 +1,21 @@
-<form
-    method="post"
-    action="#ENV{action}"
-    class="forum-formulaire"
->
+<form method="post" action="#ENV{action}" class="forum-formulaire">
+	#ACTION_FORMULAIRE
 
-#ACTION_FORMULAIRE
+	[(#REM) Nom + rôle/classe/collège, pas #NOM seul (classe/collège uniquement) :
+	un commentaire identifie l'individu, cf thematique_nom_auteur_commentaire
+	(#44) ]
+	#SET{nom_auteur, #SESSION{id_auteur}|thematique_nom_auteur_commentaire}
 
-<input type="hidden" name="texte" value="#ENV{texte}">
-<input type="hidden" name="id_article" value="#ENV{id_article}">
-[(#REM) Nom + rôle/classe/collège, pas #NOM seul (classe/collège uniquement) :
-       un commentaire identifie l'individu, cf thematique_nom_auteur_commentaire
-       (#44) ]
-#SET{nom_auteur, #SESSION{id_auteur}|thematique_nom_auteur_commentaire}
-<input type="hidden" name="nom_auteur" value="#GET{nom_auteur}">
-<input
-    type="hidden"
-    name="id_parent"
-    value="#ENV{id_parent,0}"
-    class="js-forum-id-parent"
-/>
-<input
-    type="hidden"
-    name="id_forum"
-    class="id-forum"
-    value="#ENV{id_forum,0}"
-/>
+	<input type="hidden" name="texte" value="#ENV{texte}">
+	<input type="hidden" name="id_article" value="#ENV{id_article}">
+	<input type="hidden" name="nom_auteur" value="[(#GET{nom_auteur}|attribut_html)]">
+	<input type="hidden" name="id_parent" value="#ENV{id_parent,0}" class="js-forum-id-parent">
+	<input type="hidden" name="id_forum" value="#ENV{id_forum,0}" class="id-forum">
 
-
-[(#ENV{etat_affichage}|=={succes}|oui)
-    <INCLURE
-        {fond=noisettes/inc/forumv2/forum_succes}
-        {env}
-    />
-
-]
-
-[(#ENV{etat_affichage}|=={succes}|non)
-    [(#ENV{affichage}|=={previsualisation}|oui)
-        <INCLURE
-            {fond=noisettes/inc/forumv2/forum_previsualisation}
-            {nom_auteur=#GET{nom_auteur}}
-            {env}
-        />
-    ]
-    [(#ENV{affichage}|=={redaction}|oui)
-        <INCLURE
-            {fond=noisettes/inc/forumv2/forum_redaction}
-            {env}
-        />
-    ]
-]
+	[(#ENV{affichage}|=={previsualisation}|oui)
+		<INCLURE{fond=noisettes/inc/forumv2/forum_previsualisation}{nom_auteur=#GET{nom_auteur}}{env}>
+	]
+	[(#ENV{affichage}|=={redaction}|oui)
+		<INCLURE{fond=noisettes/inc/forumv2/forum_redaction}{env}>
+	]
 </form>

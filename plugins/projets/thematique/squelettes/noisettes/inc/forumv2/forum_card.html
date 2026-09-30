@@ -17,22 +17,17 @@ doivent jamais être figés dans le cache. ]
 	]
 	#SET{image, #ENV{id_auteur}|thematique_image_auteur_ou_classe{#ENV{id_rubrique_classe}}}
 	#SET{image_est_url, #GET{image}|thematique_image_est_url}
-	#SET{image_est_generique_url, #GET{image_est_url}|et{#GET{image}|thematique_image_est_avatar_generique}}
 	#SET{image_est_photo, #GET{image_est_url}|et{#GET{image}|thematique_image_est_avatar_generique|non}}
 	<div class="col-forum col-forum-icone-container">
-		[(#GET{image_est_url}|non)
-			<div class="forum-card-icone icon-avatar-masculin [ (#ENV{id_rubrique_classe}|oui)bgc_classe_[(#ENV{id_rubrique_classe}|classe_numero)]]">
-				<span class="avatar-animal">#GET{image}</span>
-			</div>
-		]
-		[(#GET{image_est_generique_url}|oui)
-			<div class="forum-card-icone icon-avatar-masculin [ (#ENV{id_rubrique_classe}|oui)bgc_classe_[(#ENV{id_rubrique_classe}|classe_numero)]]">
-				<img src="#GET{image}" alt="" />
-			</div>
-		]
 		[(#GET{image_est_photo}|oui)
 			<div class="forum-card-icone forum-card-icone-photo">
-				<img src="#GET{image}" alt="" />
+				<img src="#GET{image}" alt="">
+			</div>
+		]
+		[(#GET{image_est_photo}|non)
+			<div class="forum-card-icone icon-avatar-masculin[ (#ENV{id_rubrique_classe}|oui)bgc_classe_[(#ENV{id_rubrique_classe}|classe_numero)]]">
+				[(#GET{image_est_url}|oui)<img src="#GET{image}" alt="">]
+				[(#GET{image_est_url}|non)<span class="avatar-animal">#GET{image}</span>]
 			</div>
 		]
 	</div>
@@ -45,11 +40,7 @@ doivent jamais être figés dans le cache. ]
 			<div class="contenu-texte">
 				#ENV*{texte}
 			</div>
-			<a class="lire-la-suite"
-			   role="button" tabindex="0"
-			   onclick="callback_clique_sur_lire_la_suite_du_commentaire(event)"
-			   hidden
-			>
+			<a class="lire-la-suite" role="button" tabindex="0" onclick="callback_clique_sur_lire_la_suite_du_commentaire(event)" hidden>
 				<:thematique:lire_la_suite_commentaire:>
 			</a>
 		</div>
@@ -96,7 +87,6 @@ doivent jamais être figés dans le cache. ]
 				|et{#SESSION{id_auteur}|non}
 				|et{#PLUGIN{cioidc}|oui}
 			}
-			<div></div>
 			<div class="footer forum-actions">
 				<div class="actions-left">
 					<BOUCLE_jaime_forum(FORUMS){id_forum=#ENV{id_forum}}>
@@ -105,8 +95,7 @@ doivent jamais être figés dans le cache. ]
 				</div>
 				<div class="action-middle">
 					[(#GET{peut_voir_reponses}|oui)
-						<button onclick="callbackCliqueSurVoirLesReponses(event)"
-								class="link-button voir-les-reponses">
+						<button type="button" class="link-button voir-les-reponses" onclick="callbackCliqueSurVoirLesReponses(event)">
 							<div class="texte-voir-les-reponses"></div>
 							<div class="icon icon-down"></div>
 						</button>
@@ -132,7 +121,7 @@ doivent jamais être figés dans le cache. ]
 							name="id_parent"
 							value="#ENV{id_forum}"
 							data-id-forum="#ENV{id_forum}"
-							data-url="#URL_ACTION_AUTEUR{forumv2_supprimer, #ID_FORUM, #URL_PAGE{article}}"
+							data-url="#URL_ACTION_AUTEUR{forumv2_supprimer, #ENV{id_forum}, #URL_PAGE{article}}"
 							class="link-button"
 							onclick="callbackCliqueSurSupprimerMonCommentaire(event)"
 						>
@@ -154,7 +143,7 @@ doivent jamais être figés dans le cache. ]
 					[(#GET{peut_voir_le_bouton_se_connecter}|oui)
 						<a href="[(#URL_PAGE{login}|parametre_url{url,#SELF}|parametre_url{cioidc,oui})]">
 							<:thematique:se_connecter_repondre:>
-						</a>	
+						</a>
 					]
 				</div>
 			</div>
