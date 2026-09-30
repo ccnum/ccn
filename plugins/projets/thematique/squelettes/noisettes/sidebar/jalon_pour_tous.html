@@ -9,10 +9,7 @@
                 #GET{titre_onglet_jalon}
             </div>
             <div class="tabs-content">
-                <INCLURE{
-                    fond=noisettes/sidebar/onglet_description_jalon,
-                    env
-                } />
+                <INCLURE{fond=noisettes/sidebar/onglet_description_jalon, id_article} />
             </div>
         </div>
         #SET{libelle_onglet_commentaires, #VAL{thematique:titre_onglet_comentaire_pour_jalon}|_T}
