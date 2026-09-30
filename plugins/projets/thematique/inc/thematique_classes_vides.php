@@ -20,7 +20,7 @@ if (!defined('_ECRIRE_INC_VERSION')) {
  * travail_en_cours, de la rubrique racine de l'année), avec leur contenu.
  *
  * @param string $annee ex: "2026"
- * @return array Liste de ['id_rubrique', 'titre', 'contenu' => [type => nb], 'nb_contenu', 'vide' => bool]
+ * @return array Liste de ['id_rubrique', 'titre', 'maj', 'contenu' => [type => nb], 'nb_contenu', 'vide' => bool]
  */
 function thematique_classes_annee_avec_contenu($annee) {
 	$id_annee = (int) sql_getfetsel(
@@ -49,7 +49,7 @@ function thematique_classes_annee_avec_contenu($annee) {
 
 	$classes = [];
 	foreach (sql_allfetsel(
-		'id_rubrique, titre',
+		'id_rubrique, titre, maj',
 		'spip_rubriques',
 		sql_in('id_parent', $conteneurs),
 		'',
@@ -59,6 +59,7 @@ function thematique_classes_annee_avec_contenu($annee) {
 		$classes[] = [
 			'id_rubrique' => (int) $classe['id_rubrique'],
 			'titre' => $classe['titre'],
+			'maj' => $classe['maj'],
 			'contenu' => $contenu,
 			'nb_contenu' => array_sum($contenu),
 			'vide' => !$contenu,

@@ -64,6 +64,7 @@ return [
 	'classes_vides_etat_contenu'                 => 'Contient @nb@ élément(s), conservée',
 	'classes_vides_etat_vide'                    => 'Vide, sera supprimée',
 	'classes_vides_explication'                  => 'Classes (sous « Travail des classes » de l’année) sans aucun article, sous-rubrique ni document. Seules ces rubriques de classe sont supprimées : les auteurs et le reste du site ne sont pas touchés.',
+	'classes_vides_maj'                          => 'Dernière modification de la rubrique',
 	'classes_vides_nb'                           => '@nb@ classe(s) vide(s) sur @total@.',
 	'classes_vides_supprimees'                   => '@nb@ classe(s) vide(s) supprimée(s).',
 	'classes_vides_supprimer'                    => 'Supprimer les classes vides',

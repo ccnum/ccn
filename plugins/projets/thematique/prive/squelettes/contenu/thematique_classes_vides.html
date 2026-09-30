@@ -33,6 +33,7 @@ en argument d'un item de langue n'y est pas compilé comme tel (erreur
 		<tr class="[(#VALEUR{vide}|?{row_even,row_odd})]">
 			<td class="id">#VALEUR{id_rubrique}</td>
 			<td class="titre"><a href="[(#URL_ECRIRE{rubrique, id_rubrique=#VALEUR{id_rubrique}})]">#VALEUR{titre}</a></td>
+			<td class="date" title="<:thematique:classes_vides_maj:>">[(#VALEUR{maj}|affdate_heure)]</td>
 			<td>[(#VALEUR{vide}|oui)<:thematique:classes_vides_etat_vide:>][(#VALEUR{vide}|non)<:thematique:classes_vides_etat_contenu{nb=#VALEUR{nb_contenu}}:>]</td>
 		</tr>
 	</BOUCLE_classes>
