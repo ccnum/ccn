@@ -54,7 +54,7 @@
 					]
 				</div>
 				<div class="liste-ressources">
-					<BOUCLE_articles(ARTICLES){id_secteur}{par date}{tous}>
+					<BOUCLE_articles(ARTICLES){id_secteur}{par date}{inverse}{tous}>
 						<BOUCLE_auteur(AUTEURS){id_article}>
 							#SET{nom_auteur, #NOM}
 						</BOUCLE_auteur>
