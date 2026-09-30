@@ -90,18 +90,8 @@ function api_vimeo_post_edition(array $flux): array {
 			// Différé en tâche de fond : la compression ffmpeg éventuelle
 			// (plugin ccn, priorité 5) et l'upload TUS vers Vimeo peuvent être
 			// longs et ne doivent pas bloquer la requête d'ajout du document.
-			spip_log("Document #$id_document (mp4) : mise en file d'attente de l'envoi Vimeo", 'api_vimeo' . _LOG_INFO_IMPORTANTE);
-			sql_updateq('spip_documents', ['vimeo_statut' => 'en_attente', 'vimeo_progression' => 0], 'id_document=' . $id_document);
-			include_spip('inc/queue');
-			queue_add_job(
-				'api_vimeo_upload_job',
-				'Envoi Vimeo document #' . $id_document,
-				[$id_document],
-				'inc/api_vimeo',
-				false,
-				0,
-				0
-			);
+			include_spip('inc/api_vimeo');
+			api_vimeo_mettre_en_file($id_document);
 		}
 		return $flux;
 	}
@@ -113,6 +103,43 @@ function api_vimeo_post_edition(array $flux): array {
 		if ($doc && strpos($doc['fichier'], 'vimeo.com') !== false) {
 			api_vimeo_set_password($doc['fichier'], $flux['data']['vimeo_password']);
 		}
+	}
+
+	return $flux;
+}
+
+/**
+ * Sous chaque document mp4 encore stocké localement, listé dans le BO
+ * (document_desc/document_case du plugin medias) : bouton d'envoi à la
+ * demande vers Vimeo (cf action/api_vimeo_envoyer.php), ou statut de
+ * l'envoi s'il est en cours.
+ */
+function api_vimeo_document_desc_actions(array $flux): array {
+	$id_document = intval($flux['args']['id_document'] ?? 0);
+	if (!$id_document) {
+		return $flux;
+	}
+
+	$doc = sql_fetsel('extension, distant, vimeo_statut', 'spip_documents', 'id_document=' . $id_document);
+	if (!$doc || strtolower($doc['extension']) !== 'mp4' || $doc['distant'] === 'oui') {
+		return $flux;
+	}
+
+	include_spip('inc/autoriser');
+	if (!autoriser('modifier', 'document', $id_document)) {
+		return $flux;
+	}
+
+	include_spip('inc/api_vimeo');
+	if (api_vimeo_envoi_possible($doc)) {
+		$libelle = _T($doc['vimeo_statut'] === 'erreur' ? 'api_vimeo:bouton_renvoyer_vimeo' : 'api_vimeo:bouton_envoyer_vimeo');
+		$flux['data'] .= bouton_action(
+			$libelle,
+			generer_action_auteur('api_vimeo_envoyer', $id_document, self()),
+			'ajax noscroll btn_secondaire btn_mini'
+		);
+	} else {
+		$flux['data'] .= '<span class="api_vimeo_statut">' . _T('api_vimeo:statut_envoi_en_cours') . '</span>';
 	}
 
 	return $flux;
