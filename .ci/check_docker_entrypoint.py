@@ -22,6 +22,7 @@ ENTRYPOINT = REPO_ROOT / "docker-entrypoint.sh"
 # (marqueur, explication affichée si absent)
 REQUIRED_MARKERS = [
     ("spip plugins:activer ccn", "activation du plugin ccn"),
+    ("spip plugins:activer mesfavoris_ccn", "activation de mesfavoris_ccn (necessite de thematique : inclure/favoris_ccn)"),
     ("SPIP_PLUGINS_CIOIDC", "activation conditionnelle du plugin cioidc"),
     ("spip config:ecrire formats_documents_forum", "réglage des formats de forum autorisés"),
     ("spip config:ecrire image_process:imagick", "bascule GD -> Imagick pour les vignettes"),
