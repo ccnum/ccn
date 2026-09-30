@@ -8,7 +8,6 @@ du cache de la page. ]
 #SET{a_classes_annee, #VAL{''}|thematique_a_classes_annee}
 [(#GET{a_classes_annee}|oui)
 <div id="menu-classes" class="bloc_view col">
-	#SET{hasYearRub,false}
 	#SET{id_intervenant_annee, ''|thematique_intervenant_annee}
 	[(#REM) =============== ]
 	[(#REM) AFFICHAGE TOTAL ]
@@ -34,24 +33,17 @@ du cache de la page. ]
 
 		#SET{nb_classes, 0}
 
-		[(#REM) ======== BOUCLE 1 : rubrique de l'année en cours ======== ]
-		<BOUCLE_FiltreAnnee(RUBRIQUES){racine}{titre LIKE %(#CONST{_ANNEE_SCOLAIRE})%}>
-			#SET{hasYearRub,true}
-			<BOUCLE_rubMot(RUBRIQUES){id_parent}{titre_mot=travail_en_cours}>
-				<BOUCLE_rubLoop(RUBRIQUES){id_parent}{tous}{par id_rubrique}>
-					<INCLURE{fond=modeles/classe_icone,id_rubrique,titre} />
-					#SET{nb_classes, #GET{nb_classes}|plus{1}}
-				</BOUCLE_rubLoop>
-			</BOUCLE_rubMot>
-		</BOUCLE_FiltreAnnee>
-
-		[(#REM) ======== BOUCLE 2 : fallback si pas de rubrique année ======== ]
-		<BOUCLE_r3(RUBRIQUES){titre_mot==travail_en_cours}{tous}{si #GET{hasYearRub}|=={false}}{!par date}>
-			<BOUCLE_c3(RUBRIQUES){id_parent}{tous}{par id_rubrique}>
-				<INCLURE{fond=modeles/classe_icone,id_rubrique,titre} />
-				#SET{nb_classes, #GET{nb_classes}|plus{1}}
-			</BOUCLE_c3>
-		</BOUCLE_r3>
+		[(#REM) Classes = sous-rubriques de "Travail des classes" de l'année
+		active, résolue en PHP sans filtre de statut : une boucle RUBRIQUES
+		sans critère tous ignorait la rubrique de l'année dès qu'elle n'avait
+		plus de contenu publié, et l'ancien repli listait alors les classes de
+		toutes les années. id_travail est non nul ici, garanti par
+		thematique_a_classes_annee() plus haut. ]
+		#SET{id_travail, #VAL{''}|thematique_id_rubrique_annee_active|thematique_id_rubrique_enfant_a_mot{travail_en_cours}}
+		<BOUCLE_classes(RUBRIQUES){id_parent=#GET{id_travail}}{tous}{par id_rubrique}>
+			<INCLURE{fond=modeles/classe_icone,id_rubrique,titre} />
+			#SET{nb_classes, #GET{nb_classes}|plus{1}}
+		</BOUCLE_classes>
 	</ul>
 	<script>thematiqueApplyDeferredCount('nb_classes_valeur', '#GET{nb_classes}');</script>
 </div>

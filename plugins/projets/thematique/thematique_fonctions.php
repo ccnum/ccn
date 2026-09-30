@@ -899,30 +899,13 @@ function thematique_a_classes_annee() {
 		return $a_classes;
 	}
 
-	$id_mot = thematique_id_mot('travail_en_cours');
-	$annee_scolaire = thematique_annee_scolaire();
-	$id_annee = $id_mot
-		? sql_getfetsel(
-			'id_rubrique',
-			'spip_rubriques',
-			'titre LIKE ' . sql_quote('%' . $annee_scolaire . '%') . ' AND id_parent=0'
-		)
-		: null;
+	// Il faut au moins une rubrique de classe sous "Travail des classes" :
+	// la seule présence de ce conteneur (créé vide à chaque rentrée, ou vidé
+	// par le nettoyage des classes vides) affichait le bloc sans participant.
+	$id_travail = thematique_id_rubrique_enfant_a_mot(thematique_id_rubrique_annee_active(), 'travail_en_cours');
 
-	if (!$id_mot || !$id_annee) {
-		return $a_classes = false;
-	}
-
-	// Alias (r/ml) obligatoires, cf thematique_classes_rangs().
-	$from = ['spip_rubriques AS r', 'spip_mots_liens AS ml'];
-	$where = [
-		'ml.id_objet=r.id_rubrique',
-		'ml.objet=' . sql_quote('rubrique'),
-		'ml.id_mot=' . intval($id_mot),
-		'r.id_parent=' . intval($id_annee),
-	];
-
-	return $a_classes = (bool) sql_getfetsel('r.id_rubrique', $from, $where);
+	return $a_classes = $id_travail
+		&& sql_getfetsel('id_rubrique', 'spip_rubriques', 'id_parent=' . intval($id_travail));
 }
 
 /**
