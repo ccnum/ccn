@@ -26,10 +26,12 @@
 	<BOUCLE_liens(documents_liens)
 		{id_objet=#ID_OBJET}
 		{objet=article}
-		{vu=non}
 		{fusion id_document}
 		{par id_document}>
-    	<BOUCLE_doc(DOCUMENTS){id_document}>
+
+			
+
+	    	<BOUCLE_doc(DOCUMENTS){id_document}{statut==.*}>
 			<div class="fichier" id="doc#ID_DOCUMENT">
 				<div class="left-col">
 					[(#MIME_TYPE|match{image}|oui)
