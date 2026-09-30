@@ -16,7 +16,7 @@
 				<span class="icon icon-down"></span>
 			</button>
 			<ul class="select-options">
-				<BOUCLE_dates(RUBRIQUES){!par titre}{racine}{titre==^[2]}>
+				<BOUCLE_dates(RUBRIQUES){!par titre}{tout}{racine}{titre==^[2]}>
 				[(#ENV{annee_scolaire}|=={#TITRE}|oui)
 					<li class="select-option actif" data-value="#TITRE">#TITRE/[(#TITRE|plus{1})]</li>
 				]
