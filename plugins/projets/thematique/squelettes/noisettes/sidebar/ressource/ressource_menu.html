@@ -38,7 +38,7 @@
 					</BOUCLE_verif_contenu>
 				</BOUCLE_sous_rubriques>
 			</div>
-		   ]
+			]
 			<div class="ressource-liste-container">
 				<div class="encadre-message"[(#CONST{_ANNEE_SCOLAIRE}|=={#ANNEE_SCOLAIRE_REELLE}|non)style="display:none;"]>
 					<div>
@@ -54,7 +54,7 @@
 					]
 				</div>
 				<div class="liste-ressources">
-					<BOUCLE_articles(ARTICLES){id_secteur}{par date}{inverse}{tous}>
+					<BOUCLE_articles(ARTICLES){id_secteur}{!par date}{tous}>
 						<BOUCLE_auteur(AUTEURS){id_article}>
 							#SET{nom_auteur, #NOM}
 						</BOUCLE_auteur>
