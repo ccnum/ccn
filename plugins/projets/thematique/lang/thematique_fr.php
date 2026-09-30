@@ -104,7 +104,7 @@ return [
 	'info_nb_auteurs_importer'       => 'Vous allez importer @nb@ auteurs',
 	'jalon_texte_a_completer'        => 'Vous n’avez pas encore rédigé et publié de contenu. Cette page n’est donc pas visible pour les autres utilisateurs. Cliquez sur le bouton “Compléter” pour rédiger votre contenu et le faire ainsi apparaître pour les autres utilisateurs.',
 	'label_file_import'              => 'Fichier à importer',
-	'label_fichier_document_mission' => 'Fichier (formats acceptés : gif jpg png mp3 pdf)',
+	'label_fichier_document_mission' => 'Fichier (formats acceptés : gif jpg png mp3 mp4 pdf)',
 	'label_fichier_video'            => 'Fichier vidéo (formats acceptés : mp4 mov avi mkv webm)',
 	'legend'                         => 'Paramètres généraux',
 	'les_classes_participantes'      => 'Les classes participantes',

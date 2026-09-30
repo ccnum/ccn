@@ -2717,7 +2717,7 @@ function thematique_consigne_valide($id_consigne) {
  * silencieusement supprimé par le compilateur SPIP (aucune erreur, la
  * valeur "brute" passe telle quelle), cf issue #429.
  */
-define('_THEMATIQUE_EXTENSIONS_DOCUMENT_MISSION', ['gif', 'jpg', 'jpeg', 'png', 'mp3', 'pdf']);
+define('_THEMATIQUE_EXTENSIONS_DOCUMENT_MISSION', ['gif', 'jpg', 'jpeg', 'png', 'mp3', 'mp4', 'pdf']);
 
 /**
  * Valeur de l'attribut HTML accept d'un champ fichier de document de
@@ -2749,7 +2749,7 @@ function thematique_extensions_document_mission_accept($valeur_ignoree = null) {
 
 /**
  * Liste lisible des extensions acceptées pour un document de mission
- * ("gif, jpg, jpeg, png, mp3, pdf"), pour le texte d'aide affiché sous la
+ * ("gif, jpg, jpeg, png, mp3, mp4, pdf"), pour le texte d'aide affiché sous la
  * zone de dépôt (cf lang:formats_autorises_document,
  * noisettes/sidebar-etape-2-container dans formulaires/public_publier_article.html).
  *
