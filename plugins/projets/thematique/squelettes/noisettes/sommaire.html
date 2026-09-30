@@ -39,18 +39,8 @@ et/ou
 					<div class="timeline_trigger"></div>
 				</div>
 				<div id="timeline_background"></div>
-				<INCLURE{fond=noisettes/card_jalon,
-						est_debut=oui,
-						texte=<:thematique:cap_sur_annee:>,
-						env, 
-						ajax
-				} />
-				<INCLURE{fond=noisettes/card_jalon,
-						est_debut=non,
-						texte=<:thematique:la_rencontre:>,
-						env, 
-						ajax
-				} />
+				<INCLURE{fond=noisettes/card_jalon, est_debut=oui, texte=<:thematique:cap_sur_annee:>, ajax} />
+				<INCLURE{fond=noisettes/card_jalon, est_debut=non, texte=<:thematique:la_rencontre:>, ajax} />
 			</div>
 		</div>
 		<div id="sidebar" role="dialog" aria-modal="true" aria-hidden="true">
@@ -87,9 +77,9 @@ et/ou
 
 		<INCLURE{fond=noisettes/menu_consignes, env, ajax} />
 
-		<INCLURE{fond=noisettes/menu_classes, env, ajax} />
+		<INCLURE{fond=noisettes/menu_classes, ajax} />
 
-		<INCLURE{fond=noisettes/menu_ressources, env, ajax} />
+		<INCLURE{fond=noisettes/menu_ressources, restreint=#ENV{restreint}, ajax} />
 
 		[(#REM) Actualités : bloc (titre inclus) entièrement masqué si vide, cf actus_timeline.html]
 		[(#CONST{_PROJET}|!={laclasse}|oui)
