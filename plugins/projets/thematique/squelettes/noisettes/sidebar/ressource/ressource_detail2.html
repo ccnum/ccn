@@ -14,12 +14,10 @@
 					#SET{nom_auteur, #NOM}
 				</BOUCLE_auteur>
 				<div class="ressource-detail-title">
-					<div class="ressource-detail-title-text">
-						#TITRE
-					</div>
-					<INCLURE{fond=noisettes/sidebar/inc/bouton_modifier_article, id_article=#ENV{id_article}, type_objet=ressources} />
+					<div class="ressource-detail-title-text">#TITRE</div>
+					<INCLURE{fond=noisettes/sidebar/inc/bouton_modifier_article, id_article, type_objet=ressources} />
 				</div>
-				<div class="ressource-detail-date">#VAL{#DATE|affdate}</div>
+				<div class="ressource-detail-date">[(#DATE|affdate)]</div>
 				<div class="ressource-detail-author">
 					<:thematique:publie_par:> #GET{nom_auteur}
 				</div>
@@ -31,7 +29,7 @@
 					[(#INCLURE{fond=inclure/favoris_ccn, objet=article, id_objet=#ENV{id_article}, ajax})]
 				</div>
 				<div class="ressource-detail-comments-header">
-					<:thematique:COMMENTAIRES:>
+					<:thematique:commentaires:>
 				</div>
 				<div class="ressource-detail-comments-body">
 					<INCLURE{fond=noisettes/sidebar/onglet_commentaires, env} />

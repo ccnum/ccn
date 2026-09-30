@@ -14,11 +14,7 @@ juste description + discussion), cf noisettes/article.html ]
 <div class="[popup_(#ENV{type_objet})]">
 	<div id="bloc_article-#ID_ARTICLE" class="bloc_article[ (#GET{police})]">
 		<div id="sidebar-header-container">
-			<INCLURE{
-				fond=noisettes/sidebar/header_blog,
-				id_article=#ID_ARTICLE, ajax,
-				env
-			} />
+			<INCLURE{fond=noisettes/sidebar/header_blog, id_article=#ID_ARTICLE, ajax, env} />
 		</div>
 		<div id="tabs-article-#ID_ARTICLE" class="container-tabs">
 			<div id="mission-tabs">
