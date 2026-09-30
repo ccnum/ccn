@@ -6,4 +6,13 @@
 		<INCLURE{fond=noisettes/sidebar/inc/bouton_modifier_article, id_article=#ID_ARTICLE, type_objet=travail_en_cours} />
 	</div>
 	#TEXTE
+	[(#REM) Documents joints non insérés dans le texte (critère vu=non, cf
+	ajouter_document.html) : sans ce bloc, les pièces jointes des réponses
+	n'apparaissaient que si leur raccourci docXX était dans le texte, ce
+	qui n'est le cas d'aucune réponse des années précédentes (issue 512). ]
+	<div class="sidebar_bubble">
+		<div class="bloc_documents">
+			<INCLURE{fond=noisettes/inc/bloc_documents, id_article} />
+		</div>
+	</div>
 </BOUCLE_desc>
