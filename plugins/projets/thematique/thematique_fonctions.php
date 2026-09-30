@@ -1004,6 +1004,9 @@ function thematique_id_rubrique_classe($id_auteur, $classe_active = null) {
 		return 0;
 	}
 
+	if (!_THEMATIQUE_CHOIX_CLASSE) {
+		return $classes[0];
+	}
 	if ($classe_active === null) {
 		include_spip('inc/session');
 		$classe_active = intval(session_get('id_auteur')) === intval($id_auteur)

@@ -23,7 +23,7 @@ function action_thematique_choisir_classe_dist() {
 	$id_auteur = intval(session_get('id_auteur'));
 
 	// Uniquement une de ses propres classes
-	if ($id_auteur && in_array($id_rubrique, thematique_classes_auteur($id_auteur), true)) {
+	if (_THEMATIQUE_CHOIX_CLASSE && $id_auteur && in_array($id_rubrique, thematique_classes_auteur($id_auteur), true)) {
 		session_set('classe_active', $id_rubrique);
 	}
 }
