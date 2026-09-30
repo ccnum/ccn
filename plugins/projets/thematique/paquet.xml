@@ -35,4 +35,6 @@
 	<pipeline nom="affichage_final" inclure="thematique_pipelines.php" />
 	<pipeline nom="taches_generales_cron" inclure="thematique_pipelines.php" />
 	<pipeline nom="autoriser" inclure="thematique_autoriser.php" />
+
+	<menu nom="thematique_classes_vides" titre="thematique:classes_vides_titre" parent="menu_administration" icone="images/rubrique-xx.svg" />
 </paquet>

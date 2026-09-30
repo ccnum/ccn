@@ -18,6 +18,15 @@ function autoriser_thematique_configurer_dist($faire, $type, $id, $qui, $opt) {
 }
 
 /**
+ * Entrée "Classes vides" du menu Maintenance du BO (cf <menu> de paquet.xml),
+ * réservée aux webmestres comme la page elle-même
+ * (prive/squelettes/contenu/thematique_classes_vides.html).
+ */
+function autoriser_thematiqueclassesvides_menu_dist($faire, $type, $id, $qui, $opt) {
+	return autoriser('webmestre', $type, $id, $qui, $opt);
+}
+
+/**
  * Restreint la création d'article dans une rubrique (issue #274) : le cœur
  * SPIP (autoriser_rubrique_creerarticledans_dist) se contente de vérifier
  * que la rubrique est "visible" — sans plugin de restriction par branche
