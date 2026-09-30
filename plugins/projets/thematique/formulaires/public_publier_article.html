@@ -92,10 +92,7 @@
 			</div>
 			#SET{bouton_creation, #ENV{type_article}|thematique_texte_publication{bouton}}
 			<div id="bouton-container">
-				<button id="bouton-enregistrer-article" 
-						class="bouton-lisere" 
-						onclick="creationArticleEnregistrer()"
-				>
+				<button type="submit" id="bouton-enregistrer-article" class="bouton-lisere">
 						[(#ENV{id_article}|oui)
 							<:thematique:enregistrer:>
 						]
