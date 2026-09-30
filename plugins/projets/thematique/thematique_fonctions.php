@@ -528,7 +528,7 @@ function thematique_rendre_type_article_affichable($type_article) {
 	// utilisés notamment dans les mails de notification (issue #217).
 	$autres = [
 		'blogs' => 'agenda',
-		'evenements' => 'salle_des_pros',
+		'evenements' => 'salle_des_profs',
 		'ressources' => 'ressources',
 		'agora' => 'agora',
 	];

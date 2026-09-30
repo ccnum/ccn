@@ -205,7 +205,7 @@ if (!function_exists('autoriser_article_modifier')) {
  * - un admin peut tout supprimer.
  *
  * Seule fonction d'autorisation pour cette action : le bouton "supprimer"
- * (article-forum-detail.html, forum_succes.html) teste désormais
+ * (article-forum-detail.html, forumv2/forum_card.html) teste désormais
  * #AUTORISER{forumsupprimer,...} directement, la même permission que
  * l'action instituer_forum vérifie réellement — plus de double check
  * incohérent entre affichage et action.

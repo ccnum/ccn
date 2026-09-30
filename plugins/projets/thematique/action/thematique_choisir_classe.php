@@ -26,6 +26,4 @@ function action_thematique_choisir_classe_dist() {
 	if ($id_auteur && in_array($id_rubrique, thematique_classes_auteur($id_auteur), true)) {
 		session_set('classe_active', $id_rubrique);
 	}
-	// Redirection vers _request('redirect') gérée (et sécurisée) par
-	// traiter_appels_actions() (ecrire/public/aiguiller.php).
 }

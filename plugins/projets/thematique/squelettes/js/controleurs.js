@@ -125,13 +125,13 @@ $(function () {
 
 
 
-	
+
 
 	$(document).on('click', '#sidebar_main_around #sidebar-close', function () {
 		if (!CCN.projet) {
 			return closeSidebar();
 		}
-			
+
 		const $container = $(this).closest('.publier-article-container');
 
 		if (!$container.length) {
@@ -259,7 +259,7 @@ function setContentFromState(state, title, url) {
 			break;
 		}
 	}
-	
+
 	currentState = state;
 	if (isSamePage) { return; }
 
@@ -280,7 +280,7 @@ function setContentFromState(state, title, url) {
 	}
 
 	if (state.type_objet == "ressources") {
-		
+
 		if (state.page == 'rubrique') {
 			if (state.id_rubrique != CCN.idRubriqueRessources) {
 				callRessourceRubrique(state.id_rubrique, 'ressources');
@@ -692,17 +692,17 @@ function callRessource(id_article) {
 		type_objet: 'ressources'
 	}
 	loadContentInMainSidebar(
-		CCN.projet.url_popup_ressources, 
+		CCN.projet.url_popup_ressources,
 		() => {
 			updateUrl(
-				stateParams, 
-				"", 
+				stateParams,
+				"",
 				`./spip.php?${new URLSearchParams(urlParams).toString()}`
 			);
 			if(id_article) {
 				selectionnerRessource(id_article)
 			}
-		}, 
+		},
 		"ressource"
 	);
 }
@@ -753,7 +753,7 @@ async function callEvenementCreer() {
 }
 
 /**
- * Charge le formulaire de création d'une information de la Salle des pros
+ * Charge le formulaire de création d'une information de la Salle des profs
  * (menu "Publier > Information en salle des pros", #461) : jusqu'ici un
  * simple stub (alert("chantier_ccn")) dans choix_rubrique_admin2.html,
  * jamais câblé à un formulaire — un intervenant n'avait donc aucun moyen
@@ -1104,11 +1104,11 @@ function updateAllConnecteurs() {
 
 
 function handleObjectCollisionWithMenus(
-	y, 
+	y,
 	etiquetteTop,
 	objectTop,
 	objectHeight,
-	timelineTop, 
+	timelineTop,
 	timelineHeight
 ) {
 	const yMin = objectTop-etiquetteTop;
@@ -1343,8 +1343,8 @@ function initMissionTabs() {
 function loadContentInMainSidebar(url, callback, typeContenu) {
 	$('body').addClass('loading');
 	const contenusQuiNeZoomentPas = [
-		'classe', 
-		'publication_article', 
+		'classe',
+		'publication_article',
 		'ressource'
 	]
 	showSidebar({
@@ -1490,7 +1490,7 @@ function loadContentInLateralSidebar(url, callback) {
 
 function setLateralSidebarExpanded(setCols) {
 	const lateralWasExpanded = $('body').hasClass('hasLateralSidebarExpanded')
-	
+
 	$('body').toggleClass('hasLateralSidebarExpanded', Boolean(setCols));
 	if(setCols) {
 		$('body').removeClass('hasSidebarExpanded');
@@ -1507,7 +1507,7 @@ function initLateralSidebar() {
 		removeFromUrl("id_article")
 	});
 
-	
+
 }
 
 /**
@@ -1597,5 +1597,5 @@ function flouterLesBullesEtLosangesNonSelectionnes(idSelectionnee) {
 	document.querySelectorAll('.article_blog_container, .article_evenement_container').forEach(bulleOuLosange => {
 		bulleOuLosange.classList.add('flou');
 	})
-	elementSelectionnee.classList.remove('flou');	
+	elementSelectionnee.classList.remove('flou');
 }

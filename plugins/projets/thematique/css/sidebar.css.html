@@ -966,6 +966,9 @@ li a, li a:hover {
 	display: flex;
 	align-items: center;
 	gap: 8px;
+	/* border-box : sinon le padding s'ajoute au flex-basis 100% (cf .portfolio
+	   ci-dessus) et pousse "Télécharger" hors du cadre à droite. */
+	box-sizing: border-box;
 	padding: 0 10px 12px;
 	font-size: 12px;
 	color: var(--color-default);

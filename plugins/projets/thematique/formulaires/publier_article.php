@@ -13,6 +13,14 @@ if (!defined('_ECRIRE_INC_VERSION')) {
  */
 
 function formulaires_publier_article_charger_dist($id_article) {
+	// Même autorisation que verifier() : sans elle, le bouton s'affichait
+	// aussi aux visiteurs non connectés (l'action était refusée, mais seulement
+	// après le clic).
+	include_spip('inc/autoriser');
+	if (!autoriser('modifier', 'article', $id_article)) {
+		return false;
+	}
+
 	return [
 		'id_article' => $id_article,
 	];
