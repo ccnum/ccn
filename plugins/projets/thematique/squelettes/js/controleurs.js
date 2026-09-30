@@ -150,8 +150,13 @@ $(function () {
 				"consignes": callConsigne,
 				"blogs": callArticleBlog,
 				"evenements": callArticleEvenement,
-				"travail_en_cours": callReponse
+				"travail_en_cours": callReponse,
+				"ressources": (id) => callRessourceArticle(id, "ressources")
 			}
+			// Type sans action de réaffichage : on ferme simplement plutôt que
+			// de planter sur un appel undefined, qui laissait la croix inopérante
+			// (issue #507, édition d'une ressource).
+			if (!typeToAction[type_article]) return CCN.projet.showWholeTimeline();
 			typeToAction[type_article](id_article);
 			collapseSidebar();
 			return
