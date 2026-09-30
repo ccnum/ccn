@@ -42,7 +42,7 @@ en argument d'un item de langue n'y est pas compilé comme tel (erreur
 <p><:thematique:classes_vides_nb{nb=#GET{nb_vides}, total=#TOTAL_BOUCLE}:></p>
 
 [(#GET{nb_vides}|oui)
-	#BOUTON_ACTION{<:thematique:classes_vides_supprimer:>, #URL_ACTION_AUTEUR{thematique_supprimer_classes_vides, #GET{annee}}, '', <:thematique:classes_vides_confirmer:>}
+	[(#BOUTON_ACTION{<:thematique:classes_vides_supprimer:>, #URL_ACTION_AUTEUR{thematique_supprimer_classes_vides, #GET{annee}}, '', <:thematique:classes_vides_confirmer:>})]
 ]
 </B_classes>
 <p><:thematique:classes_vides_aucune_classe:></p>
