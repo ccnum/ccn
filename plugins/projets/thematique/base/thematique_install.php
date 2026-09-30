@@ -23,6 +23,11 @@ function thematique_declarer_tables_principales($tables_principales) {
 	$tables_principales['spip_syndic_articles']['field']['Y'] = 'float NOT NULL DEFAULT 0';
 	$tables_principales['spip_rubriques']['field']['id_rubrique_lien'] = 'bigint(21) NOT NULL DEFAULT 0';
 	$tables_principales['spip_rubriques']['key']['id_rubrique_lien'] = 'id_rubrique_lien';
+	// Classe (rubrique) au nom de laquelle un commentaire forumv2 a été écrit :
+	// la classe active de son auteur au moment de l'écriture (un prof peut en
+	// avoir plusieurs, cf thematique_id_rubrique_classe()). 0 = inconnue
+	// (commentaire antérieur, ou auteur sans classe).
+	$tables_principales['spip_forum']['field']['id_classe'] = 'bigint(21) NOT NULL DEFAULT 0';
 
 	$nom = $GLOBALS['meta']['nom_site'];
 	if ((strpos($nom, 'design') !== false) || (strpos($nom, 'zerogaspi') !== false)) {

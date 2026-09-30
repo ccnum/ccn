@@ -6,11 +6,15 @@ Accès : ecrire/?exec=thematique_classes_vides (option &annee=2026) ]
 #SET{annee, #ENV{annee}|match{^\d{4}$}|sinon{#CONST{_ANNEE_SCOLAIRE}}}
 #SET{classes, #GET{annee}|thematique_classes_nettoyage}
 #SET{nb_vides, #GET{classes}|array_column{vide}|array_filter|count}
+[(#REM) Calculé hors de l'item de langue : un filtre sur une balise passée
+en argument d'un item de langue n'y est pas compilé comme tel (erreur
+"Filtre supprimees non défini"). ]
+#SET{nb_supprimees, #ENV{supprimees}|intval}
 
 <h1 class="grostitre"><:thematique:classes_vides_titre:> #GET{annee}</h1>
 
 [(#ENV{supprimees}|strlen|oui)
-<div class="notice success"><:thematique:classes_vides_supprimees{nb=#ENV{supprimees}|intval}:></div>
+<div class="notice success"><:thematique:classes_vides_supprimees{nb=#GET{nb_supprimees}}:></div>
 ]
 
 <p class="explication"><:thematique:classes_vides_explication:></p>

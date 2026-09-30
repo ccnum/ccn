@@ -5,6 +5,38 @@ if (!defined('_ECRIRE_INC_VERSION')) {
 }
 
 /**
+ * Met en file d'attente l'envoi Vimeo d'un document mp4 local : à l'ajout
+ * du document (cf api_vimeo_post_edition) ou à la demande depuis le BO
+ * (cf action/api_vimeo_envoyer.php).
+ */
+function api_vimeo_mettre_en_file(int $id_document): void {
+	spip_log("Document #$id_document (mp4) : mise en file d'attente de l'envoi Vimeo", 'api_vimeo' . _LOG_INFO_IMPORTANTE);
+	api_vimeo_maj_statut($id_document, 'en_attente', 0);
+	include_spip('inc/queue');
+	queue_add_job(
+		'api_vimeo_upload_job',
+		'Envoi Vimeo document #' . $id_document,
+		[$id_document],
+		'inc/api_vimeo',
+		true,
+		0,
+		0
+	);
+}
+
+/**
+ * Un document peut-il être (r)envoyé sur Vimeo à la demande : mp4 encore
+ * stocké localement, et pas d'envoi déjà en cours.
+ *
+ * @param array $doc Ligne spip_documents (extension, distant, vimeo_statut)
+ */
+function api_vimeo_envoi_possible(array $doc): bool {
+	return strtolower($doc['extension'] ?? '') === 'mp4'
+		&& ($doc['distant'] ?? '') !== 'oui'
+		&& !in_array($doc['vimeo_statut'] ?? '', ['en_attente', 'envoi', 'transcodage']);
+}
+
+/**
  * Tâche de fond (cf plugin ccn, queue_add_job) : recharge le document
  * depuis la base (son fichier a pu être remplacé entre-temps par la
  * compression ffmpeg) puis l'envoie vers Vimeo.

@@ -299,6 +299,27 @@ différentes pour la même info, à masquer toutes les deux ici. */
 	cursor: auto;
 }
 
+/* Choix de la classe active d'un prof multi-classes (authentification.html) */
+.select-option-titre {
+	padding: 8px 14px 4px;
+	font-size: 0.8em;
+	color: var(--color-gris-2);
+	white-space: normal;
+}
+
+.select-option.choix-classe {
+	white-space: normal;
+}
+
+.select-option.choix-classe a {
+	color: inherit;
+	text-decoration: none;
+}
+
+.select-option.choix-classe.actif {
+	color: inherit;
+}
+
 /* Modal du formulaire de login SPIP natif (CIOIDC désactivé, cf
    noisettes/inc/authentification.html) : ouverte depuis l'option
    "Se connecter" du dropdown "Me connecter" (menu_haut.js). Une vraie modal

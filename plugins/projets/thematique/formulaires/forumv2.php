@@ -164,6 +164,7 @@ function formulaires_forumv2_traiter_dist($id_article) {
 		} else {
 			$id_parent = intval(_request('id_parent'));
 			$id_auteur = $GLOBALS['visiteur_session']['id_auteur'] ?? 0;
+			include_spip('thematique_fonctions');
 			$id_forum = forum_inserer(
 				$id_parent,
 				[
@@ -172,6 +173,9 @@ function formulaires_forumv2_traiter_dist($id_article) {
 					'texte' => _request('texte'),
 					'auteur' => _request('nom_auteur'),
 					'statut' => 'publie',
+					// Classe active de l'auteur à l'écriture : le commentaire la
+					// garde même si le prof change ensuite de classe active.
+					'id_classe' => thematique_id_rubrique_classe($id_auteur),
 				]
 			);
 			session_set('forum_commentaire_succes', $id_forum);

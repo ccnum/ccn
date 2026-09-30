@@ -955,25 +955,21 @@ function classe_icone($id_rubrique) {
 }
 
 /**
- * Id de la rubrique-classe d'un auteur (prof ou élève — celle dont dérive
- * son emoji d'avatar), mis en cache mémoire par requête.
+ * Classes (rubriques) auxquelles un auteur est rattaché, par id croissant,
+ * mises en cache mémoire par requête.
  *
  * Un prof est lié (spip_auteurs_liens) non seulement à sa/ses classe(s),
  * mais aussi au blog pédagogique et à ses projets (voir
- * thematique_cioidc_associer_rubriques) : on ne retient donc que le premier
- * lien qui est effectivement une classe (présent dans
- * thematique_classes_rangs()), pas n'importe quelle rubrique liée. S'il a
- * plusieurs classes, la première trouvée fait foi (pas de notion de
- * "classe principale"). Un élève n'est en pratique lié qu'à sa seule
- * classe, donc cette ambiguïté ne le concerne pas. Extrait de
- * thematique_avatar_animal() pour être réutilisable par
- * thematique_avatar_notification_article() (couleur de fond de l'emoji dans
- * le mail de notification, issue #217).
+ * thematique_cioidc_associer_rubriques) : on ne retient donc que les liens
+ * qui sont effectivement des classes (présentes dans
+ * thematique_classes_rangs()). Un élève n'est en pratique lié qu'à sa
+ * seule classe ; un prof peut en avoir plusieurs (cf
+ * thematique_id_rubrique_classe() pour le choix de la classe active).
  *
  * @param int $id_auteur
- * @return int id_rubrique de la classe, 0 si aucune classe trouvée
+ * @return int[]
  */
-function thematique_id_rubrique_classe($id_auteur) {
+function thematique_classes_auteur($id_auteur) {
 	static $cache = [];
 	$id_auteur = intval($id_auteur);
 	if (isset($cache[$id_auteur])) {
@@ -986,19 +982,54 @@ function thematique_id_rubrique_classe($id_auteur) {
 		'id_objet',
 		'spip_auteurs_liens',
 		'id_auteur=' . $id_auteur . " AND objet='rubrique'",
-		'id_objet ASC'
+		'',
+		'id_objet'
 	) : [];
 
-	$id_rubrique = 0;
+	$classes = [];
 	foreach ($rubriques as $r) {
 		if (isset($rangs[$r['id_objet']])) {
-			$id_rubrique = intval($r['id_objet']);
-			break;
+			$classes[] = intval($r['id_objet']);
 		}
 	}
 
-	$cache[$id_auteur] = $id_rubrique;
-	return $id_rubrique;
+	return $cache[$id_auteur] = $classes;
+}
+
+/**
+ * Id de la rubrique-classe d'un auteur (prof ou élève) : celle dont dérive
+ * son emoji d'avatar, et celle dans laquelle un prof rédige (réponse à une
+ * mission, cf filtre_auteur_vers_classe()).
+ *
+ * Un prof rattaché à plusieurs classes choisit sa classe active dans le
+ * menu haut (action thematique_choisir_classe, mémorisée en
+ * #SESSION{classe_active}) ; sans choix valide, la première classe (par id)
+ * fait foi. Le choix en session ne s'applique qu'à l'auteur connecté : pour
+ * un autre auteur (carte de commentaire, mail de notification), c'est
+ * toujours sa première classe.
+ *
+ * @param int $id_auteur
+ * @param int|null $classe_active classe souhaitée ; null = lue dans la
+ *   session si $id_auteur est l'auteur connecté (paramètre explicite pour
+ *   thematique_preparer_fichier_session(), qui travaille sur la session en
+ *   cours d'écriture)
+ * @return int id_rubrique de la classe, 0 si aucune classe trouvée
+ */
+function thematique_id_rubrique_classe($id_auteur, $classe_active = null) {
+	$classes = thematique_classes_auteur($id_auteur);
+	if (!$classes) {
+		return 0;
+	}
+
+	if ($classe_active === null) {
+		include_spip('inc/session');
+		$classe_active = intval(session_get('id_auteur')) === intval($id_auteur)
+			? session_get('classe_active')
+			: 0;
+	}
+	$classe_active = intval($classe_active);
+
+	return in_array($classe_active, $classes, true) ? $classe_active : $classes[0];
 }
 
 /**
@@ -1006,10 +1037,11 @@ function thematique_id_rubrique_classe($id_auteur) {
  * thematique_preparer_fichier_session), pour son avatar dans le menu haut.
  *
  * @param int $id_auteur
+ * @param int|null $classe_active cf thematique_id_rubrique_classe()
  * @return string emoji de la classe, ou '' si aucune classe trouvée
  */
-function thematique_avatar_animal($id_auteur) {
-	$id_rubrique = thematique_id_rubrique_classe($id_auteur);
+function thematique_avatar_animal($id_auteur, $classe_active = null) {
+	$id_rubrique = thematique_id_rubrique_classe($id_auteur, $classe_active);
 	return $id_rubrique ? classe_icone($id_rubrique) : '';
 }
 
@@ -1063,36 +1095,23 @@ function thematique_id_rubrique_article($id_article) {
  * qui rattache l'auteur à sa rubrique de classe via objet_associer).
  * À utiliser avec les filtres classe_icone()/classe_numero() habituels.
  *
- * Restreint explicitement aux rubriques reconnues comme "classe" (cf
- * thematique_classes_rangs()) pour ignorer d'éventuels autres liens
- * d'un prof (blog pédagogique, rubrique de projet).
+ * Alias de thematique_id_rubrique_classe() (classe active du prof
+ * connecté, sinon première classe), qui renvoie null plutôt que 0.
  *
  * @param int $id_auteur
  * @return int|null
  */
 function classe_id_rubrique_auteur($id_auteur) {
-	$rangs = thematique_classes_rangs();
-	if (!$rangs) {
-		return null;
-	}
-
-	$id_rubrique = sql_getfetsel(
-		'id_objet',
-		'spip_auteurs_liens',
-		'id_auteur=' . intval($id_auteur) . ' AND objet=' . sql_quote('rubrique') . ' AND ' . sql_in(
-			'id_objet',
-			array_keys($rangs)
-		)
-	);
-
-	return $id_rubrique ? (int) $id_rubrique : null;
+	return thematique_id_rubrique_classe($id_auteur) ?: null;
 }
 
 /**
  * Id de la rubrique de classe à utiliser pour une carte de commentaire forum
  * (avec classe_icone()/classe_numero()).
  *
- * Priorité à la classe actuelle de l'auteur (cf classe_id_rubrique_auteur) ;
+ * Priorité à la classe mémorisée dans le commentaire (spip_forum.id_classe,
+ * classe active de l'auteur à l'écriture), puis à la classe actuelle de
+ * l'auteur (cf classe_id_rubrique_auteur) ;
  * repli sur la rubrique de l'article commenté pour les commentaires
  * d'élèves dont le compte n'a jamais été rattaché à une classe (créé
  * avant l'ajout de ce rattachement dans thematique_cioidc_userinfo, et
@@ -1107,6 +1126,11 @@ function classe_id_rubrique_auteur($id_auteur) {
  * @return int|null
  */
 function classe_id_rubrique_forum($forum) {
+	// Classe mémorisée à l'écriture du commentaire (forumv2, cf
+	// formulaires/forumv2.php) : prime sur la classe actuelle de l'auteur.
+	if ($id_classe = intval($forum['id_classe'] ?? 0)) {
+		return $id_classe;
+	}
 	$id_rubrique = classe_id_rubrique_auteur($forum['id_auteur'] ?? 0);
 	if ($id_rubrique) {
 		return $id_rubrique;
@@ -2212,10 +2236,20 @@ function thematique_image_auteur_ou_classe($id_auteur, $id_rubrique) {
 	// json/consignes.html, et forum_card.html) doivent tester
 	// thematique_image_est_url() pour savoir s'ils affichent un <img> ou
 	// l'émoji brut.
+	// Si $id_rubrique est une classe (ex: classe mémorisée d'un commentaire
+	// forumv2, cf classe_id_rubrique_forum()), c'est son émoji qui compte,
+	// pas celui de la classe actuelle de l'auteur : un prof à plusieurs
+	// classes garde sur chaque commentaire l'animal de la classe au nom de
+	// laquelle il l'a écrit, cohérent avec la couleur de fond de la carte.
 	$role = thematique_donner_role($id_auteur);
-	if (in_array($role, ['prof', 'eleve']) && $animal = thematique_avatar_animal($id_auteur)) {
-		$cache[$cle] = $animal;
-		return $animal;
+	if (in_array($role, ['prof', 'eleve'])) {
+		$animal = isset(thematique_classes_rangs()[$id_rubrique])
+			? classe_icone($id_rubrique)
+			: thematique_avatar_animal($id_auteur);
+		if ($animal) {
+			$cache[$cle] = $animal;
+			return $animal;
+		}
 	}
 
 	$photo = thematique_photo_auteur($id_auteur);
@@ -2683,7 +2717,7 @@ function thematique_consigne_valide($id_consigne) {
  * silencieusement supprimé par le compilateur SPIP (aucune erreur, la
  * valeur "brute" passe telle quelle), cf issue #429.
  */
-define('_THEMATIQUE_EXTENSIONS_DOCUMENT_MISSION', ['gif', 'jpg', 'jpeg', 'png', 'mp3', 'pdf']);
+define('_THEMATIQUE_EXTENSIONS_DOCUMENT_MISSION', ['gif', 'jpg', 'jpeg', 'png', 'mp3', 'mp4', 'pdf']);
 
 /**
  * Valeur de l'attribut HTML accept d'un champ fichier de document de
@@ -2715,7 +2749,7 @@ function thematique_extensions_document_mission_accept($valeur_ignoree = null) {
 
 /**
  * Liste lisible des extensions acceptées pour un document de mission
- * ("gif, jpg, jpeg, png, mp3, pdf"), pour le texte d'aide affiché sous la
+ * ("gif, jpg, jpeg, png, mp3, mp4, pdf"), pour le texte d'aide affiché sous la
  * zone de dépôt (cf lang:formats_autorises_document,
  * noisettes/sidebar-etape-2-container dans formulaires/public_publier_article.html).
  *

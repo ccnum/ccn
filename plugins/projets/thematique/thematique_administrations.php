@@ -15,6 +15,7 @@ function thematique_upgrade($nom_meta_base_version, $version_cible) {
 		['maj_tables', ['spip_articles']],
 		['maj_tables', ['spip_syndic_articles']],
 		['maj_tables', ['spip_rubriques']],
+		['maj_tables', ['spip_forum']],
 		['thematique_ajouter_mots_clef'],
 		['ecrire_meta', 'articles_mots', 'oui'],
 		['ecrire_meta', 'activer_sites', 'oui'],
@@ -85,6 +86,10 @@ function thematique_upgrade($nom_meta_base_version, $version_cible) {
 	cextras_api_upgrade(thematique_declarer_champs_extras(), $maj['3.4.2']);
 
 	$maj['3.4.3'] = [['thematique_migrer_bibliotheques']];
+
+	// spip_forum.id_classe : classe au nom de laquelle un commentaire forumv2
+	// est écrit (prof rattaché à plusieurs classes).
+	$maj['3.4.4'] = [['maj_tables', ['spip_forum']]];
 
 	include_spip('base/upgrade');
 	maj_plugin($nom_meta_base_version, $version_cible, $maj);
