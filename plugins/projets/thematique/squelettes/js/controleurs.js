@@ -418,7 +418,7 @@ async function changeTimelineMode(type) {
 		updateMenuIcon([type], 'timelineMode');
 
 		// "Cap sur l'année"/"La Rencontre" sont des jalons de mission :
-		// aucun sens en dehors du mode consignes (agenda, salle des pros).
+		// aucun sens en dehors du mode consignes (agenda, salle des profs).
 		if (type === 'consignes') {
 			updateBadgeJalon('cap_sur_annee', CCN.idArticleCapSurAnnee, CCN.statutCapSurAnnee);
 			updateBadgeJalon('la_rencontre', CCN.idArticleLaRencontre, CCN.statutLaRencontre);
@@ -754,7 +754,7 @@ async function callEvenementCreer() {
 
 /**
  * Charge le formulaire de création d'une information de la Salle des profs
- * (menu "Publier > Information en salle des pros", #461) : jusqu'ici un
+ * (menu "Publier > Information en salle des profs", #461) : jusqu'ici un
  * simple stub (alert("chantier_ccn")) dans choix_rubrique_admin2.html,
  * jamais câblé à un formulaire — un intervenant n'avait donc aucun moyen
  * d'y publier malgré l'autorisation backend (thematique_role_publie).
