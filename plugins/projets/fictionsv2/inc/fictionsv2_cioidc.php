@@ -107,13 +107,20 @@ function fictionsv2_cioidc_histoire_prof(string $uid, int $annee) {
 	$createurs = @unserialize($GLOBALS['meta']['fictionsv2_histoires_createurs'] ?? '') ?: [];
 	$id_rubrique = intval($createurs[$annee][$uid] ?? 0);
 
-	if (!$id_rubrique || !sql_countsel('spip_rubriques', 'id_rubrique=' . $id_rubrique . ' AND id_parent=' . $id_annee)) {
+	if ($id_rubrique && sql_countsel('spip_rubriques', 'id_rubrique=' . $id_rubrique . ' AND id_parent=' . $id_annee)) {
+		spip_log("fictionsv2 histoire déjà créée (id_rubrique=$id_rubrique) pour uid=$uid année=$annee, rien à faire", 'cioidc');
+	} else {
+		if ($id_rubrique) {
+			spip_log("fictionsv2 histoire mémorisée #$id_rubrique introuvable sous l'année #$id_annee pour uid=$uid, nouvelle histoire", 'cioidc');
+		}
 		$numero = fictionsv2_cioidc_prochain_numero($id_annee);
 		$id_rubrique = fictionsv2_cioidc_creer_histoire($id_annee, $numero);
 		if ($id_rubrique) {
 			$createurs[$annee][$uid] = $id_rubrique;
 			ecrire_meta('fictionsv2_histoires_createurs', serialize($createurs), 'non');
 			spip_log("fictionsv2 histoire $numero créée (id_rubrique=$id_rubrique) pour uid=$uid année=$annee", 'cioidc');
+		} else {
+			spip_log("fictionsv2 échec de création de l'histoire $numero pour uid=$uid année=$annee", 'cioidc' . _LOG_ERREUR);
 		}
 	}
 
