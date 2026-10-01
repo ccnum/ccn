@@ -375,6 +375,18 @@ p.boutons:has(input[type="submit"]) {
 	flex: 1;
 }
 
+/* Document déjà inséré dans le texte (#498, cf majDocumentsInseres) */
+.fichier.insere {
+	background-color: #f2f2f2;
+}
+
+.fichier.insere .left-col,
+.fichier.insere .name,
+.fichier.insere .size,
+.fichier.insere .document-ligne-3 {
+	opacity: 0.5;
+}
+
 /************ Réécriture du visuel généré par #BOUTON_ACTION **********/
 
 .fichier .document-ligne-1 .bouton_action_post:has(.circle-xmark) {
