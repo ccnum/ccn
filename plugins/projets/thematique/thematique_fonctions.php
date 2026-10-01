@@ -560,6 +560,8 @@ function thematique_texte_publication($type_article, $partie) {
 		'ressources' => 'ressource',
 		'blogs' => 'evenement',
 		'evenements' => 'information',
+		'cap_sur_l_annee' => 'cap_sur_l_annee',
+		'la_rencontre' => 'la_rencontre'
 	];
 
 	if (isset($slugs[$type_article])) {
@@ -569,25 +571,6 @@ function thematique_texte_publication($type_article, $partie) {
 		// utile ici car certaines parties n'ont pas de texte pour tous les
 		// types (ex: pas d'intro pour une mission).
 		return _T($cle, [], ['force' => false]);
-	}
-
-	// Types non couverts par les maquettes de l'issue #429 (ex: cap-sur-l-annee,
-	// la-rencontre, agora) : on garde l'ancien texte générique.
-	switch ($partie) {
-		case 'bandeau':
-			return _T('thematique:etape1_redaction_article', ['type_article' => thematique_rendre_type_article_affichable(
-				$type_article
-			)]);
-		case 'titre':
-			return _T('thematique:etape1_redaction_article', ['type_article' => thematique_rendre_type_article_affichable(
-				$type_article
-			)]);
-		case 'champ_texte':
-			return _T('info_texte');
-		case 'bouton':
-			return _T('thematique:enregistrer');
-		default:
-			return '';
 	}
 }
 

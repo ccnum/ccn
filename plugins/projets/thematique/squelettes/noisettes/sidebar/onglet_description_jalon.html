@@ -3,6 +3,9 @@
 </div>
 <BOUCLE_jalon_texte(ARTICLES){id_article=#ID_ARTICLE}{tous}>
     <div class="fond-bleu-contenu">
+        <div class="bouton-modifier-container">
+            <INCLURE{fond=noisettes/sidebar/inc/bouton_modifier_article, id_article=#ID_ARTICLE, type_objet=#ENV{est_debut}|=={true}|?{cap_sur_l_annee,la_rencontre}} />
+        </div>
         <div class="sidebar_bubble">
             <span class="spip texte_jalon #EDIT{texte}">[(#TEXTE|propre)]</span>
         </div>

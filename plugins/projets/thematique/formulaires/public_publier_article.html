@@ -42,19 +42,19 @@
 				#SET{intro_creation, #ENV{type_article}|thematique_texte_publication{intro}}
 				<h3>[(#GET{est_edition}|oui)<:thematique:modifier_publication:>][(#GET{est_edition}|non)#GET{titre_creation}]</h3>
 				[(#GET{est_edition}|non)
-				[(#GET{intro_creation}|oui)
-				<p class="publier-article-intro">#GET{intro_creation}</p>
-				]
+					[(#GET{intro_creation}|oui)
+					<p class="publier-article-intro">#GET{intro_creation}</p>
+					]
 				]
 
 				[(#GET{est_edition}|non)
-				[(#ENV{type_article}|=={consignes}|oui)
-				<ul class="publier-article-checklist">
-					<li><:thematique:publier_checklist_phrases_courtes:></li>
-					<li><:thematique:publier_checklist_eviter_majuscules:></li>
-					<li><:thematique:publier_checklist_ajouter_images:></li>
-				</ul>
-				]
+					[(#ENV{type_article}|=={consignes}|oui)
+					<ul class="publier-article-checklist">
+						<li><:thematique:publier_checklist_phrases_courtes:></li>
+						<li><:thematique:publier_checklist_eviter_majuscules:></li>
+						<li><:thematique:publier_checklist_ajouter_images:></li>
+					</ul>
+					]
 				]
 
 				<div class="editer-ligne">
