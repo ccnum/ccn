@@ -6,7 +6,8 @@
 	</BOUCLE_id_forum>
 </BOUCLE_annee>
 
-	<INCLURE{fond=modeles/js, page=sommaire} />
+	[(#REM) #440 : footer.js définit reload_cookie() appelé par le select d'année. ]
+	<INCLURE{fond=modeles/js, page=footer} />
 
 <div id="footer">
 	<div id="footer-inner">
@@ -44,8 +45,11 @@
 					<select id="select_annee_scolaire" name="annee_scolaire" onchange="reload_cookie('[(#URL_SITE_SPIP)]','[(#EVAL{_COOKIE_ANNEE_SCOLAIRE})]',this.value)">
 						<option value="#">---</option>
 						<BOUCLE_rubrique_contenant_annees(RUBRIQUES){titre_mot=rubrique-contenant-annees}{0,1}>
-							<BOUCLE_annees(RUBRIQUES){id_parent}{par titre}{tout}>
-								<option value="#TITRE"[(#TITRE|=={#ENV{annee_scolaire}}|oui) selected]>[(#TITRE|fictionsv2_annee_label)]</option>
+							[(#REM) #440 : plus récente en premier, et uniquement les rubriques au
+							titre "année" (une sœur non numérique, ex. "modele", s'affichait en option
+							"0"). Filtré par |intval : un critère {titre REGEXP ...} vide la boucle. ]
+							<BOUCLE_annees(RUBRIQUES){id_parent}{!par titre}{tout}>
+								[(#TITRE|intval|oui)<option value="#TITRE"[(#TITRE|=={#ENV{annee_scolaire}}|oui) selected]>[(#TITRE|fictionsv2_annee_label)]</option>]
 							</BOUCLE_annees>
 						</BOUCLE_rubrique_contenant_annees>
 					</select>

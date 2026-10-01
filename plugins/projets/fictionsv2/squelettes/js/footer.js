@@ -1,4 +1,8 @@
 function reload_cookie(url, cookie_nom, cookie_valeur) {
+	// option "---" (value="#") : pas une année, ne rien faire
+	if (!/^[0-9]{4}$/.test(cookie_valeur)) {
+		return;
+	}
 	// #440 : le select n'offre plus que des années scolaires réellement
 	// existantes (cf footer.html) - plus besoin de rediriger les anciennes
 	// années vers airchive.laclasse.com, qui n'existe plus (404).
