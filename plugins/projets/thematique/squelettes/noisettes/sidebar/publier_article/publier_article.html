@@ -12,10 +12,18 @@
 	#SET{bandeau_creation, #ENV{type_article}|thematique_texte_publication{bandeau}}
 	<div class="publier-article-header">
 		<div class="page-inner">
-			<span class="publier-article-bandeau etiquette-etape"><span class="texte-etiquette">[(#GET{est_edition}|oui)<:thematique:modifier_publication:>][(#GET{est_edition}|non)#GET{bandeau_creation}]</span></span>
-			<button type="button" id="sidebar-close" class="icon circle-xmark btn-reset" aria-label="<:thematique:fermer:>"></button>
+			<span class="publier-article-bandeau etiquette-etape">
+				<span class="texte-etiquette">
+					[(#GET{est_edition}|oui)<:thematique:modifier_publication:>][(#GET{est_edition}|non)#GET{bandeau_creation}]
+				</span>
+			</span>
 		</div>
 	</div>
+	<button type="button" 
+			id="sidebar-close" 
+			class="icon circle-xmark btn-reset" 
+			aria-label="<:thematique:fermer:>"
+	></button>
 	<div class="ajax publier-article-form-wrapper">
 		<div class="page-inner">
 			#FORMULAIRE_PUBLIC_PUBLIER_ARTICLE{#ID_RUBRIQUE, #TYPE_ARTICLE, #ID_CONSIGNE, #ENV{id_article}}
