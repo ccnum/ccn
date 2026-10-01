@@ -1044,6 +1044,41 @@ function thematique_avatar_animal($id_auteur, $classe_active = null) {
 }
 
 /**
+ * Avatar du menu haut de l'auteur connecté, calculé à l'affichage : même
+ * priorité que #SESSION{avatar} (cf thematique_preparer_fichier_session()),
+ * émoji de la classe pour un prof/élève, sinon photo ENT, sinon ''.
+ *
+ * Issue #489 : #SESSION{avatar} n'est recalculé qu'à l'écriture du fichier de
+ * session, sans mise à jour de la session déjà chargée pour la requête en
+ * cours — au changement d'année, le menu affichait l'animal de l'année
+ * précédente à côté de la couleur (calculée à l'affichage) de la nouvelle,
+ * jusqu'au rechargement suivant. Ici, animal et couleur dérivent de la même
+ * classe, pour la même année.
+ *
+ * @param int $id_auteur
+ * @return string émoji, URL de photo, ou ''
+ */
+function thematique_avatar_menu($id_auteur) {
+	$id_auteur = intval($id_auteur);
+	if (!$id_auteur) {
+		return '';
+	}
+	include_spip('inc/session');
+	if (!in_array(thematique_donner_role($id_auteur), ['prof', 'eleve'])) {
+		// Le pipeline ne met jamais d'animal en session pour ces rôles : la
+		// valeur en session est la photo ENT, à jour.
+		return (string) session_get('avatar');
+	}
+	$animal = thematique_avatar_animal($id_auteur);
+	if ($animal) {
+		return $animal;
+	}
+	// Prof/élève sans classe dans l'année affichée : la session peut encore
+	// contenir l'animal d'une autre année, on relit la photo ENT en base.
+	return thematique_photo_auteur($id_auteur)['avatar'];
+}
+
+/**
  * Couleur de fond (pastel, hex) associée au numéro de classe d'une
  * rubrique — même palette que --color-classe-light-N dans
  * css/tokens.css.html, dupliquée ici car les mails de notification

@@ -6,6 +6,10 @@
 			[(#SET{id_rubrique_classe,
 				#SESSION{id_auteur}|filtre_auteur_vers_classe|classe_numero
 			})]
+			[(#REM) #489 : avatar calculé à l'affichage, comme la couleur ci-dessus
+			(même classe, même année) — la valeur en session gardait l'animal de
+			l'année précédente au changement d'année jusqu'au rechargement suivant. ]
+			#SET{avatar_menu, #SESSION{id_auteur}|thematique_avatar_menu}
 			
 
 			<span class="icon-avatar-masculin"
@@ -13,16 +17,16 @@
 					style="background-color: var(--color-classe-light-#GET{id_rubrique_classe});"
 				]
 			>
-				[(#SESSION{avatar}|non)
+				[(#GET{avatar_menu}|non)
 					<img src="https://www.laclasse.com/avatar/avatar_masculin.svg" alt="">
 				]
-				[(#SESSION{avatar}|thematique_image_est_url|oui)
-					<img src="[(#SESSION{avatar})]" alt="" class="avatar-photo">
+				[(#GET{avatar_menu}|thematique_image_est_url|oui)
+					<img src="[(#GET{avatar_menu})]" alt="" class="avatar-photo">
 				]
-				[(#SESSION{avatar}|thematique_image_est_url|non)
-					[(#SESSION{avatar}|oui)
+				[(#GET{avatar_menu}|thematique_image_est_url|non)
+					[(#GET{avatar_menu}|oui)
 						<span class="avatar-animal">
-							[(#SESSION{avatar})]
+							[(#GET{avatar_menu})]
 						</span>
 
 					]
