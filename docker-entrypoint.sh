@@ -160,27 +160,27 @@ if [ "${VIMEO_ACCESS_TOKEN:-}" != "" ]; then
 else
 	spip plugins:desactiver api_vimeo -y
 fi
+# SPIP écarte un plugin dont une dépendance n'est pas encore active, et
+# "spip plugins:activer" ne renvoie pas d'erreur dans ce cas (il affiche juste
+# "Plugins non actives") : le plugin du site doit être activé dans le même appel
+# que ses dépendances (cadavrexquis, vider_rubrique), SPIP triant alors l'ordre
+# lui-même. Sinon, sur une base neuve, il n'était activé qu'au 2e démarrage.
 case "${SPIP_VERSION_SITE}" in
-	fictionsv2|fictions)
-		spip plugins:desactiver fictionsv2 -y
-		spip plugins:desactiver fictions -y
-		spip plugins:activer "${SPIP_VERSION_SITE}" -y
-		spip plugins:activer cadavrexquis -y
-		;;
-	petitfablabv2|petitfablab)
-		spip plugins:desactiver petitfablabv2 -y
-		spip plugins:desactiver petitfablab -y
-		spip plugins:activer "${SPIP_VERSION_SITE}" -y
-		spip plugins:activer cadavrexquis -y
+	fictionsv2|fictions|petitfablabv2|petitfablab)
+		# Ne désactiver que les autres variantes : désactiver puis réactiver celle
+		# du site laissait le site sans son plugin si la réactivation échouait.
+		for variante in fictionsv2 fictions petitfablabv2 petitfablab; do
+			if [ "${variante}" != "${SPIP_VERSION_SITE}" ]; then
+				spip plugins:desactiver "${variante}" -y
+			fi
+		done
+		spip plugins:activer cadavrexquis vider_rubrique "${SPIP_VERSION_SITE}" -y
 		;;
 	*)
-		spip plugins:desactiver cadavrexquis -y
+		spip plugins:desactiver fictionsv2 fictions petitfablabv2 petitfablab cadavrexquis -y
 		spip plugins:activer "${SPIP_VERSION_SITE}" -y
 		;;
 esac
-if [ "${SPIP_VERSION_SITE}" != "thematique" ]; then
-	spip plugins:activer vider_rubrique -y
-fi
 if [ "${PROJET}" != "laclasse" ]; then
 	spip plugins:activer "thematique_${PROJET}" -y
 fi
