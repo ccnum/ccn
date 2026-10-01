@@ -27,7 +27,7 @@ par fictionsv2_lecture_droits(). Même règle que pour un chapitre N-1 : visible
 le chapitre 2 (seul chapitre publie/prop de l'histoire) est en cours d'écriture, toujours
 pour le webmestre. ]
 #SET{id_chapitre1, #ENV{id_rubrique}|fictionsv2_id_chapitre1_histoire}
-[(#REM) Compté ici plutôt que via #ENV{max_cadavres} : inclure/rubrique.html le calcule
+[(#REM) Compté ici plutôt que via ENV{max_cadavres} : inclure/rubrique.html le calcule
 avec {0,1} et le total de cette boucle, qui vaut donc toujours 1. ]
 #SET{chapitre1_n_moins_1, #ENV{id_rubrique}|fictionsv2_nb_chapitres_histoire|=={1}}
 [(#GET{id_chapitre1}|et{#ENV{id_auteur}}|oui)

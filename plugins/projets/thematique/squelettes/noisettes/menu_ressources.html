@@ -1,7 +1,7 @@
 #CACHE{0}
 [(#REM) Ressources
 
-#CACHE{0} : la boucle espace_doc dépend de #ENV{restreint} (passé par
+CACHE{0} : la boucle espace_doc dépend de ENV{restreint} (passé par
 l'appelant) et de la liste live des rubriques racine, donc ne doit jamais
 être mise en cache — même si la page englobante (sommaire.html) l'est
 48h. ]
@@ -13,7 +13,7 @@ l'appelant) et de la liste live des rubriques racine, donc ne doit jamais
 		[(#REM)Espace Doc]
 		[(#ENV{restreint}|?{#SET{docId,#ENV{restreint}}, #SET{docId,false}})]
 
-		[(#REM) |trim indispensable sur #DESCRIPTIF : textebrut() (cf
+		[(#REM) |trim indispensable sur DESCRIPTIF : textebrut() (cf
 		ecrire/inc/filtres.php) réduit les &nbsp; à un simple espace au lieu
 		de les supprimer — un descriptif "vide" au sens de l'éditeur (ex:
 		<p>&nbsp;</p>) redevient donc " " (non vide pour SPIP) sans le

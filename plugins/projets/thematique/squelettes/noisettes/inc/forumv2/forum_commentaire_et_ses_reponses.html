@@ -1,9 +1,9 @@
-[(#REM) #CACHE{0} : ce fond est appelé directement en PHP via recuperer_fond()
+[(#REM) CACHE{0} : ce fond est appelé directement en PHP via recuperer_fond()
 (forum_rendre_branche() dans thematique_fonctions.php), en dehors de toute
-compilation de squelette parent — le #CACHE{0} des fonds englobants
+compilation de squelette parent — le CACHE{0} des fonds englobants
 (consigne_pour_*.html, BlogOuEvenement.html, etc.) ne s'applique donc pas ici.
-Sans lui, SPIP met en cache le HTML de #GET{peut_modifier}/#GET{peut_repondre}
-(dépendants de #SESSION) pour ce commentaire, et le sert tel quel à
+Sans lui, SPIP met en cache le HTML de GET{peut_modifier}/GET{peut_repondre}
+(dépendants de SESSION) pour ce commentaire, et le sert tel quel à
 n'importe quel autre visiteur tant que le commentaire ne change pas :
 un élève peut alors voir "Modifier" ou "Se connecter pour répondre" figés
 depuis le rendu d'une autre session (admin, anonyme...). ]

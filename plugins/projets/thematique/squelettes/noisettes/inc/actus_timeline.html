@@ -75,7 +75,6 @@ déjà résolus. ]
 				</BOUCLE_affiche_forum>
 				<BOUCLE_affiche_consignes(DATA){source table, #VALEUR}{cle=consigne}>
 					[(#REM) Nouvelles consignes ]
-					[(#REM)[(#MODELE{actu_consignes}{id_objet=#VALEUR})]]
 					[(#MODELE{actu_travail_en_cours}{id_objet=#VALEUR})]
 				</BOUCLE_affiche_consignes>
 				<BOUCLE_affiche_ressources(DATA){source table, #VALEUR}{cle=ressources}>

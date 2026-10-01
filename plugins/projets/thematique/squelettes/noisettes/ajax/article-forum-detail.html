@@ -21,7 +21,7 @@
 		<div id="forum#ID_FORUM" class="intervention_item_around">
 			<div class="intervention_item bgc_classe_[(#GET{id_rubrique_classe}|classe_numero)]">
 				<div class="triggertoggleshow intervention couleur_texte[_(#GET{type_objet})] [couleur_(#GET{type_objet})[(#GET{id_rubrique_classe}|classe_numero)]]">
-				[(#REM)Le nombre de réponses est repris de #TOTAL_BOUCLE de BOUCLE_forums_fils
+				[(#REM)Le nombre de réponses est repris de TOTAL_BOUCLE de BOUCLE_forums_fils
 				plus bas (via le script en fin de bloc), pour éviter de relancer la même
 				requête FORUMS une deuxième fois juste pour la compter.]
 				<div class="intervention_nb_reponses" id="nb_reponses#ID_FORUM">0</div>

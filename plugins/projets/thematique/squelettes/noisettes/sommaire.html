@@ -1,9 +1,9 @@
 #CACHE{48*3600}
 [(#REM)Page principale - Pour vue de détail forcée à l'ouverture :
--#ENV{type_objet} : consignes, travail_en_cours, blogs, evenements, ressources
--#ENV{id_objet} : id_objet
+-ENV{type_objet} : consignes, travail_en_cours, blogs, evenements, ressources
+-ENV{id_objet} : id_objet
 et/ou
--#ENV{vue_date} : 01/10/2011
+-ENV{vue_date} : 01/10/2011
 ]
 <INCLURE{fond=noisettes/inc/ccn_role} />
 <div id="zone" class="zone_timeline zone"[ (#VUE|=={classe}|oui) style="display:none;"]>

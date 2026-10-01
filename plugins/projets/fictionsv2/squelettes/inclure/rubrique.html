@@ -1,10 +1,10 @@
 <BOUCLE_principale(RUBRIQUES){id_rubrique}>
-	[(#REM) #CACHE{300} : la partie qui change à chaque publication de
+	[(#REM) CACHE{300} : la partie qui change à chaque publication de
 	chapitre (verrouillage du jeu, cf #459) est extraite dans
-	inclure/rubrique-cadavres.html, qui reste #CACHE{0}. Le reste (titre,
+	inclure/rubrique-cadavres.html, qui reste CACHE{0}. Le reste (titre,
 	navigation, prologue) ne dépend que de l'année scolaire, portée
-	explicitement par #ENV{annee_scolaire} (passé par le squelette
-	rubrique.html) plutôt que #EVAL{_ANNEE_SCOLAIRE} (constante dérivée
+	explicitement par ENV{annee_scolaire} (passé par le squelette
+	rubrique.html) plutôt que EVAL{_ANNEE_SCOLAIRE} (constante dérivée
 	d'un cookie, que SPIP ne fait pas varier dans sa clé de cache). ]
 	#CACHE{300}
 	<!-- TOOLTIP -->

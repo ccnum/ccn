@@ -63,12 +63,12 @@ doivent jamais être figés dans le cache. ]
 			[(#SESSION{role}|=={admin}|oui)
 				#SET{peut_modifier,oui}
 			]
-			[(#REM) #SET{peut_modifier,non} serait un piège : "non" est un texte
+			[(#REM) SET{peut_modifier,non} serait un piège : "non" est un texte
 			littéral non vide, donc "vrai" comme n'importe quelle chaîne non
 			vide pour |oui juste en dessous — ça n'aurait rien désactivé
 			(pire : ça aurait explicitement forcé peut_modifier à vrai pour
 			tout le monde, y compris un visiteur anonyme, dès qu'une année est
-			passée). #VAL{''} est la seule façon de mettre une vraie chaîne
+			passée). VAL{''} est la seule façon de mettre une vraie chaîne
 			vide ici. ]
 			[(#GET{annee_passee}|oui)
 				#SET{peut_modifier,#VAL{''}}
