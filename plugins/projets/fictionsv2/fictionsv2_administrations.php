@@ -41,6 +41,15 @@ function fictionsv2_upgrade($nom_meta_base_version, $version_cible) {
 		['fictionsv2_migrer_rubrique_contenant_annees'],
 	];
 
+	// Mot année_en_ecriture (vue "fabrication" de l'accueil) créé s'il manque et posé
+	// sur l'année active : la rentrée ne le posait pas, l'année s'affichait comme une
+	// année terminée (cadres de couverture vides). Sans effet là où le mot est déjà
+	// posé (objet_associer ignore un lien existant).
+	$maj['1.0.3'] = [
+		['fictionsv2_ajouter_mots_clef'],
+		['fictionsv2_migrer_annee_en_ecriture'],
+	];
+
 	include_spip('base/upgrade');
 	maj_plugin($nom_meta_base_version, $version_cible, $maj);
 }
@@ -64,6 +73,8 @@ function fictionsv2_ajouter_mots_clef() {
 	fictionsv2_ajouter_mot('blog_pedagogique', $id_groupe);
 	// "rubrique-contenant-annees" — parent des rubriques d'années ("2025", "2026"...)
 	fictionsv2_ajouter_mot('rubrique-contenant-annees', $id_groupe);
+	// "année_en_ecriture" — année en cours d'écriture (vue "fabrication" de l'accueil)
+	fictionsv2_ajouter_mot('année_en_ecriture', $id_groupe);
 
 	// Articles
 	// "presentation" — article de présentation (page)
@@ -114,6 +125,19 @@ function fictionsv2_migrer_rubrique_contenant_annees() {
 	}
 	include_spip('action/editer_liens');
 	objet_associer(['mot' => $id_mot], ['rubrique' => $id_parent]);
+}
+
+/**
+ * Pose année_en_ecriture sur la rubrique de l'année scolaire active (une seule fois,
+ * à la migration).
+ */
+function fictionsv2_migrer_annee_en_ecriture() {
+	include_spip('fictionsv2_fonctions');
+	include_spip('inc/fictionsv2_rentree');
+	$id_annee = fictionsv2_id_rubrique_annee(_ANNEE_SCOLAIRE);
+	if ($id_annee) {
+		fictionsv2_marquer_annee_en_ecriture($id_annee);
+	}
 }
 
 /**

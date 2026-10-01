@@ -54,6 +54,16 @@ function fictionsv2_assurer_structure_annee(int $annee): array {
 
 	$ok = true;
 
+	// Année tout juste mise en place (pas encore d'article de présentation) : elle
+	// s'ouvre en écriture. Sans le mot année_en_ecriture, l'accueil (sommaire.html)
+	// l'affiche comme une année terminée (une couverture et un PDF par histoire),
+	// donc des cadres vides. Posé une seule fois : un admin peut le retirer en fin
+	// d'année pour passer à l'affichage des couvertures, la tâche quotidienne ne le
+	// remet pas.
+	if (!fictionsv2_id_article_a_mot('presentation', $id_annee)) {
+		$ok = fictionsv2_marquer_annee_en_ecriture($id_annee) && $ok;
+	}
+
 	foreach (FICTIONSV2_MOTS_FOOTER as $titre_mot) {
 		$id_source = $id_precedente ? fictionsv2_id_article_a_mot($titre_mot, $id_precedente) : 0;
 		if (!$id_source) {
@@ -79,6 +89,22 @@ function fictionsv2_assurer_structure_annee(int $annee): array {
 	]) && $ok;
 
 	return [$id_annee, $ok];
+}
+
+/**
+ * Associe le mot année_en_ecriture à la rubrique d'année $id_annee (sans effet s'il y
+ * est déjà).
+ */
+function fictionsv2_marquer_annee_en_ecriture(int $id_annee): bool {
+	$id_mot = fictionsv2_id_mot('année_en_ecriture');
+	if (!$id_mot) {
+		spip_log("fictionsv2_rentree_annee : mot-clé 'année_en_ecriture' introuvable, année #$id_annee non marquée", 'fictionsv2' . _LOG_ERREUR);
+		return false;
+	}
+	include_spip('action/editer_liens');
+	objet_associer(['mot' => $id_mot], ['rubrique' => $id_annee]);
+	spip_log("fictionsv2_rentree_annee : année #$id_annee marquée année_en_ecriture", 'fictionsv2');
+	return true;
 }
 
 /**
