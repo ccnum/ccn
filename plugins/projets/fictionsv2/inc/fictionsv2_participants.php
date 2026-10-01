@@ -60,12 +60,12 @@ function fictionsv2_annee_configuree(int $annee): bool {
 }
 
 /**
- * Dates de l'année. Chaque date doit être au format Y-m-d (ou vide) et l'ordre
+ * Contrôle des dates d'une année : chaque date au format Y-m-d (ou vide), et l'ordre
  * lancement <= clôture <= finalisation respecté.
  *
  * @return string '' si OK, sinon le code d'erreur (item de langue fictionsv2:erreur_<code>)
  */
-function fictionsv2_annee_dates_modifier(int $annee, string $lancement, string $cloture, string $finalisation): string {
+function fictionsv2_annee_dates_verifier(string $lancement, string $cloture, string $finalisation): string {
 	foreach ([$lancement, $cloture, $finalisation] as $date) {
 		if ($date !== '' && !preg_match('/^\d{4}-\d{2}-\d{2}$/', $date)) {
 			return 'date_invalide';
@@ -74,8 +74,18 @@ function fictionsv2_annee_dates_modifier(int $annee, string $lancement, string $
 	$renseignees = array_values(array_filter([$lancement, $cloture, $finalisation]));
 	$triees = $renseignees;
 	sort($triees);
-	if ($renseignees !== $triees) {
-		return 'dates_ordre';
+	return $renseignees === $triees ? '' : 'dates_ordre';
+}
+
+/**
+ * Enregistre les dates de l'année après contrôle (cf fictionsv2_annee_dates_verifier()).
+ *
+ * @return string '' si OK, sinon le code d'erreur
+ */
+function fictionsv2_annee_dates_modifier(int $annee, string $lancement, string $cloture, string $finalisation): string {
+	$erreur = fictionsv2_annee_dates_verifier($lancement, $cloture, $finalisation);
+	if ($erreur) {
+		return $erreur;
 	}
 	$config = fictionsv2_annee_config($annee);
 	$config['lancement'] = $lancement;

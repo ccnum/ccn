@@ -1,26 +1,23 @@
 [(#REM) Associations d'une année d'écriture (#525) : calendrier et participants (#518,
 #519), histoires (#520), plan d'associations (#521, #523) et son application aux
-chapitres (#524). Données préparées par fictionsv2_associations_donnees()
-(inc/fictionsv2_plan.php), opérations par action/fictionsv2_associations.php.
-Accès : ecrire/?exec=fictionsv2_associations (option annee=2026). ]
+chapitres (#524). Saisies par formulaires CVT (formulaires/fictionsv2_*), opérations
+ponctuelles (retrait, synchronisation, génération, validation) par
+action/fictionsv2_associations.php via BOUTON_ACTION.
+Accès : ecrire/?exec=fictionsv2_associations (options annee=2026, id_participant=N
+pour modifier un participant). ]
 [(#AUTORISER{fictionsv2associations}|sinon_interdire_acces)]
 #SET{annee, #ENV{annee}|match{^\d{4}$}|sinon{#CONST{_ANNEE_SCOLAIRE}}}
 #SET{d, #GET{annee}|fictionsv2_associations_donnees_filtre}
 #SET{verrouille, #GET{d}|table_valeur{verrouille}}
 #SET{statut_plan, #GET{d}|table_valeur{plan_statut}}
-#SET{participants, #GET{d}|table_valeur{participants}}
 #SET{comptes, #GET{d}|table_valeur{comptes}}
 #SET{cle_phase, #VAL{fictionsv2:phase_}|concat{#GET{d}|table_valeur{phase}}}
 #SET{cle_statut, #VAL{fictionsv2:plan_statut_}|concat{#GET{statut_plan}}}
 #SET{code_ok, #ENV{ok}|match{^[a-z_]+$}}
 #SET{code_erreur, #ENV{erreur}|match{^[a-z_]+$}}
-#SET{arg_dates, #GET{annee}|concat{-dates}}
-#SET{arg_ajouter, #GET{annee}|concat{-ajouter}}
-#SET{arg_modifier, #GET{annee}|concat{-modifier}}
-#SET{arg_retirer, #GET{annee}|concat{-retirer}}
+#SET{self, #URL_ECRIRE{fictionsv2_associations}|parametre_url{annee, #GET{annee}}}
 #SET{arg_synchroniser, #GET{annee}|concat{-synchroniser}}
 #SET{arg_generer, #GET{annee}|concat{-generer}}
-#SET{arg_affectations, #GET{annee}|concat{-affectations}}
 #SET{arg_valider, #GET{annee}|concat{-valider}}
 
 <h1 class="grostitre"><:fictionsv2:associations_titre:> #GET{annee}</h1>
@@ -32,64 +29,48 @@ Accès : ecrire/?exec=fictionsv2_associations (option annee=2026). ]
 <div class="notice error">[(#VAL{fictionsv2:erreur_}|concat{#GET{code_erreur}}|_T)]</div>
 ]
 
-<form method="get" action="#URL_ECRIRE">
+<form method="get" action="#URL_ECRIRE" class="formulaire_spip">
+	<div class="editer-groupe">
+		<div class="editer editer_annee">
+			<label for="annee"><:fictionsv2:associations_annee:></label>
+			<input type="text" class="text" id="annee" name="annee" value="#GET{annee}" size="4" inputmode="numeric" pattern="\d{4}" />
+		</div>
+	</div>
 	<input type="hidden" name="exec" value="fictionsv2_associations" />
-	<label for="annee"><:fictionsv2:associations_annee:></label>
-	<input type="text" id="annee" name="annee" value="#GET{annee}" size="4" />
-	<button type="submit" class="btn btn_mini"><:fictionsv2:associations_afficher:></button>
+	<p class="boutons"><button type="submit" class="btn btn_mini"><:fictionsv2:associations_afficher:></button></p>
 </form>
 
 [(#REM) ----- Calendrier (#518) ----- ]
 <h2><:fictionsv2:associations_calendrier:></h2>
 <p><:fictionsv2:associations_phase:> <strong>[(#GET{cle_phase}|_T)]</strong></p>
-<form method="post" action="[(#URL_ACTION_AUTEUR{fictionsv2_associations, #GET{arg_dates}})]" class="formulaire_spip">
-	<label for="lancement"><:fictionsv2:associations_lancement:></label>
-	<input type="date" id="lancement" name="lancement" value="[(#GET{d}|table_valeur{lancement})]" />
-	<label for="cloture"><:fictionsv2:associations_cloture:></label>
-	<input type="date" id="cloture" name="cloture" value="[(#GET{d}|table_valeur{cloture})]" />
-	<label for="finalisation"><:fictionsv2:associations_finalisation:></label>
-	<input type="date" id="finalisation" name="finalisation" value="[(#GET{d}|table_valeur{finalisation})]" />
-	<button type="submit" class="btn btn_mini"><:fictionsv2:associations_enregistrer:></button>
-</form>
+#FORMULAIRE_FICTIONSV2_CALENDRIER{#GET{annee}}
 
 [(#REM) ----- Participants (#518, #519) ----- ]
 <h2><:fictionsv2:associations_participants:></h2>
-[(#GET{verrouille}|oui)<p class="explication"><:fictionsv2:erreur_plan_verrouille:></p>]
 <B_participants>
 <table class="spip liste">
 	<thead>
 		<tr>
-			<th><:fictionsv2:associations_participant:></th>
-			<th><:fictionsv2:associations_histoire:></th>
-			<th></th>
+			<th scope="col"><:fictionsv2:associations_nom:></th>
+			<th scope="col"><:fictionsv2:associations_type:></th>
+			<th scope="col"><:fictionsv2:associations_compte:></th>
+			<th scope="col"><:fictionsv2:associations_histoire:></th>
+			<th scope="col"></th>
 		</tr>
 	</thead>
 	<tbody>
-	<BOUCLE_participants(DATA){source table, #GET{participants}}>
-		<tr class="[(#COMPTEUR_BOUCLE|alterner{row_odd,row_even})]">
-			<td>
-				<form method="post" action="[(#URL_ACTION_AUTEUR{fictionsv2_associations, #GET{arg_modifier}})]">
-					<input type="hidden" name="id_participant" value="#VALEUR{id}" />
-					<input type="text" name="nom" value="[(#VALEUR{nom}|attribut_html)]" aria-label="<:fictionsv2:associations_nom:>" />
-					<select name="type" aria-label="<:fictionsv2:associations_type:>">
-						<option value="classe"[(#VALEUR{type}|=={classe}|oui) selected="selected"]><:fictionsv2:participant_type_classe:></option>
-						<option value="ecrivain"[(#VALEUR{type}|=={ecrivain}|oui) selected="selected"]><:fictionsv2:participant_type_ecrivain:></option>
-					</select>
-					<select name="id_auteur" aria-label="<:fictionsv2:associations_compte:>">
-						<BOUCLE_comptes_participant(DATA){source table, #GET{comptes}}>
-						<option value="#CLE"[(#CLE|=={#_participants:VALEUR{id_auteur}}|oui) selected="selected"]>#VALEUR</option>
-						</BOUCLE_comptes_participant>
-					</select>
-					<button type="submit" class="btn btn_mini"><:fictionsv2:associations_enregistrer:></button>
-				</form>
-			</td>
+	<BOUCLE_participants(DATA){source table, #GET{d}|table_valeur{participants}}>
+		#SET{cle_type, #VAL{fictionsv2:participant_type_}|concat{#VALEUR{type}}}
+		#SET{arg_retirer, #GET{annee}|concat{-retirer-, #VALEUR{id}}}
+		<tr class="[(#COMPTEUR_BOUCLE|alterner{row_odd,row_even})][(#VALEUR{id}|=={#ENV{id_participant}}|oui) on]">
+			<td><strong>#VALEUR{nom}</strong></td>
+			<td>[(#GET{cle_type}|_T)]</td>
+			<td>#VALEUR{compte}</td>
 			<td>[<a href="[(#URL_ECRIRE{rubrique, id_rubrique=#VALEUR{histoire}})]">(#VALEUR{histoire_titre})</a>]</td>
 			<td>
+				<a href="[(#GET{self}|parametre_url{id_participant, #VALEUR{id}})]#formulaire_fictionsv2_participant" class="btn btn_mini btn_secondaire"><:fictionsv2:associations_modifier:></a>
 				[(#GET{verrouille}|non)
-				<form method="post" action="[(#URL_ACTION_AUTEUR{fictionsv2_associations, #GET{arg_retirer}})]">
-					<input type="hidden" name="id_participant" value="#VALEUR{id}" />
-					<button type="submit" class="btn btn_mini btn_secondaire" onclick="return confirm('<:fictionsv2:associations_retirer_confirmer|texte_script:>');"><:fictionsv2:associations_retirer:></button>
-				</form>
+				[(#BOUTON_ACTION{<:fictionsv2:associations_retirer:>, #URL_ACTION_AUTEUR{fictionsv2_associations, #GET{arg_retirer}}, btn_mini btn_secondaire, <:fictionsv2:associations_retirer_confirmer:>})]
 				]
 			</td>
 		</tr>
@@ -100,36 +81,18 @@ Accès : ecrire/?exec=fictionsv2_associations (option annee=2026). ]
 <p><:fictionsv2:associations_aucun_participant:></p>
 <//B_participants>
 
-[(#GET{verrouille}|non)
-<h3><:fictionsv2:associations_ajouter:></h3>
-<form method="post" action="[(#URL_ACTION_AUTEUR{fictionsv2_associations, #GET{arg_ajouter}})]" class="formulaire_spip">
-	<label for="nouveau_nom"><:fictionsv2:associations_nom:></label>
-	<input type="text" id="nouveau_nom" name="nom" value="" />
-	<label for="nouveau_type"><:fictionsv2:associations_type:></label>
-	<select id="nouveau_type" name="type">
-		<option value="classe"><:fictionsv2:participant_type_classe:></option>
-		<option value="ecrivain"><:fictionsv2:participant_type_ecrivain:></option>
-	</select>
-	<label for="nouveau_compte"><:fictionsv2:associations_compte:></label>
-	<select id="nouveau_compte" name="id_auteur">
-		<BOUCLE_comptes(DATA){source table, #GET{comptes}}>
-		<option value="#CLE">#VALEUR</option>
-		</BOUCLE_comptes>
-	</select>
-	<button type="submit" class="btn btn_mini"><:fictionsv2:associations_ajouter:></button>
-</form>
-]
+<div id="formulaire_fictionsv2_participant">
+	#FORMULAIRE_FICTIONSV2_PARTICIPANT{#GET{annee}, #ENV{id_participant}}
+</div>
 
 [(#REM) ----- Histoires (#520) ----- ]
 <h2><:fictionsv2:associations_histoires:></h2>
 #SET{nb_attendu, #GET{d}|table_valeur{histoires_attendu}}
 #SET{nb_reel, #GET{d}|table_valeur{histoires_reel}}
 <p><:fictionsv2:associations_histoires_nombre{attendu=#GET{nb_attendu}, reel=#GET{nb_reel}}:></p>
-[(#GET{d}|table_valeur{annee_sans_rubrique}|oui)<p class="explication"><:fictionsv2:erreur_annee_sans_rubrique:></p>]
+[(#GET{d}|table_valeur{annee_sans_rubrique}|oui)<p class="notice error"><:fictionsv2:erreur_annee_sans_rubrique:></p>]
 [(#GET{d}|table_valeur{annee_sans_rubrique}|non)
-<form method="post" action="[(#URL_ACTION_AUTEUR{fictionsv2_associations, #GET{arg_synchroniser}})]">
-	<button type="submit" class="btn btn_mini"><:fictionsv2:associations_synchroniser:></button>
-</form>
+	[(#BOUTON_ACTION{<:fictionsv2:associations_synchroniser:>, #URL_ACTION_AUTEUR{fictionsv2_associations, #GET{arg_synchroniser}}, btn_mini})]
 ]
 
 [(#REM) ----- Plan d'associations (#521, #523, #524) ----- ]
@@ -148,49 +111,14 @@ Accès : ecrire/?exec=fictionsv2_associations (option annee=2026). ]
 </B_echeances>
 
 [(#GET{verrouille}|non)
-<form method="post" action="[(#URL_ACTION_AUTEUR{fictionsv2_associations, #GET{arg_generer}})]">
-	<button type="submit" class="btn btn_mini" onclick="return confirm('<:fictionsv2:associations_generer_confirmer|texte_script:>');"><:fictionsv2:associations_generer:></button>
-</form>
+	[(#BOUTON_ACTION{<:fictionsv2:associations_generer:>, #URL_ACTION_AUTEUR{fictionsv2_associations, #GET{arg_generer}}, btn_mini, <:fictionsv2:associations_generer_confirmer:>})]
 ]
 
-<B_plan>
-<form method="post" action="[(#URL_ACTION_AUTEUR{fictionsv2_associations, #GET{arg_affectations}})]">
-<table class="spip liste">
-	<thead>
-		<tr>
-			<th><:fictionsv2:associations_histoire:></th>
-			<BOUCLE_entetes(DATA){source table, #GET{d}|table_valeur{chapitres}}>
-			<th><:fictionsv2:associations_chapitre{chapitre=#VALEUR}:></th>
-			</BOUCLE_entetes>
-		</tr>
-	</thead>
-	<tbody>
-	<BOUCLE_plan(DATA){source table, #GET{d}|table_valeur{plan}}>
-		<tr class="[(#COMPTEUR_BOUCLE|alterner{row_odd,row_even})]">
-			<td><a href="[(#URL_ECRIRE{rubrique, id_rubrique=#VALEUR{id_rubrique}})]">#VALEUR{titre}</a>[ — (#VALEUR{proprietaire})]</td>
-			<BOUCLE_cellules(DATA){source table, #VALEUR{cellules}}>
-			<td>
-				<select name="affectation\[#_plan:VALEUR{id_rubrique}\]\[#VALEUR{chapitre}\]"[(#VALEUR{ecrit}|oui) disabled="disabled"] aria-label="<:fictionsv2:associations_chapitre{chapitre=#VALEUR{chapitre}}:>">
-					<BOUCLE_choix(DATA){source table, #GET{participants}}>
-					<option value="#VALEUR{id}"[(#VALEUR{id}|=={#_cellules:VALEUR{id_participant}}|oui) selected="selected"]>#VALEUR{nom}</option>
-					</BOUCLE_choix>
-				</select>
-				[(#VALEUR{ecrit}|oui)<small><:fictionsv2:associations_chapitre_ecrit:></small>]
-			</td>
-			</BOUCLE_cellules>
-		</tr>
-	</BOUCLE_plan>
-	</tbody>
-</table>
-<button type="submit" class="btn btn_mini"><:fictionsv2:associations_enregistrer_affectations:></button>
-</form>
+#FORMULAIRE_FICTIONSV2_AFFECTATIONS{#GET{annee}}
 
 [(#GET{statut_plan}|=={proposition}|oui)
-<form method="post" action="[(#URL_ACTION_AUTEUR{fictionsv2_associations, #GET{arg_valider}})]">
-	<button type="submit" class="btn" onclick="return confirm('<:fictionsv2:associations_valider_confirmer|texte_script:>');"><:fictionsv2:associations_valider:></button>
-</form>
+	[(#BOUTON_ACTION{<:fictionsv2:associations_valider:>, #URL_ACTION_AUTEUR{fictionsv2_associations, #GET{arg_valider}}, '', <:fictionsv2:associations_valider_confirmer:>})]
 ]
-</B_plan>
 
 [(#REM) ----- Anomalies (#525) ----- ]
 <h2><:fictionsv2:associations_anomalies:></h2>
