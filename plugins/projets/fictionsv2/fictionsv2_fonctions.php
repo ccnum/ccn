@@ -4,6 +4,11 @@
 // sont définis par le plugin ccn (ccn_fonctions.php)
 
 include_spip('base/abstract_sql');
+// Filtres LECTURE_DROITS / ECRITURE_DROITS / EST_AUTEUR_DROITS des squelettes
+// (liste-cadavres-auteur*.html, rubrique-cadavres.html) : SPIP ne charge que
+// <prefixe>_fonctions.php, pas un fichier au nom libre — sans cette inclusion,
+// "Filtre EST_AUTEUR_DROITS non défini" (#441).
+include_spip('lecturedroits');
 
 /**
  * Retourne l'ID du mot-clé correspondant au titre donné, avec cache par requête.
