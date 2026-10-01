@@ -12,8 +12,7 @@
 #SET{avatar_type,#GET{avatar}|table_valeur{type}}
 #SET{avatar_valeur,#GET{avatar}|table_valeur{valeur}}
 #SET{avatar_couleur,#GET{avatar}|table_valeur{couleur_fond}}
-<BOUCLE_rubrique(RUBRIQUES){id_rubrique=#ID_SECTEUR}>#SET{titre_secteur, #TITRE}</BOUCLE_rubrique>
-#SET{url_article,#URL_ARTICLE|url_absolue|parametre_url{rub,#GET{titre_secteur}}|parametre_url{mode,complet}}
+#SET{url_article,#URL_ARTICLE|url_absolue|parametre_url{mode,complet}}
 #SET{carte_sous_titre,#VAL{thematique:agenda}|_T}
 #SET{carte_titre,#TITRE|thematique_carte_titre_notification{#GET{carte_sous_titre}}}
 #SET{carte_date,#DATE|affdate}

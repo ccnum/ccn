@@ -813,9 +813,21 @@ function thematique_admin_scope($id_rubrique_choisie = null) {
 
 	$restreint = ($admin === 1 || $admin === 2) ? $restreint1 : null;
 
+	// La rubrique choisie n'est retenue que si elle existe dans l'année active :
+	// les liens des mails de notification passaient rub=<titre du secteur>
+	// (rub=2026), lu ici comme un id_rubrique — un admin sans rubrique liée
+	// (intervenant d'une CCN sans SSO) publiait ensuite ses missions dans la
+	// rubrique #2026, quelle qu'elle soit (souvent d'une année passée). On
+	// purge aussi une valeur invalide déjà mémorisée en session.
 	$cookie_rubrique = session_get('cookie_rubrique');
 	if (is_numeric($cookie_rubrique) && ($admin > 1 || $admin === 0)) {
-		$restreint = intval($cookie_rubrique);
+		$id_annee_active = thematique_id_rubrique_annee_active();
+		$id_secteur = (int) sql_getfetsel('id_secteur', 'spip_rubriques', 'id_rubrique=' . intval($cookie_rubrique));
+		if ($id_annee_active && $id_secteur === $id_annee_active) {
+			$restreint = intval($cookie_rubrique);
+		} else {
+			session_set('cookie_rubrique', null);
+		}
 	}
 
 	session_set('restreint', $restreint);
