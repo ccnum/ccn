@@ -18,8 +18,8 @@ if (!defined('_ECRIRE_INC_VERSION')) {
  * Appelée aussi dès qu'une rubrique d'année est titrée à la main (cf
  * fictionsv2_post_edition_rubrique_annee()).
  *
- * Les histoires ("01. Histoire 01"...) ne sont pas créées ici mais à la connexion
- * de chaque prof inscrit (cf inc/fictionsv2_cioidc.php).
+ * Les histoires ("01. Histoire 01"...) ne sont pas créées ici mais depuis la liste
+ * des participants de l'année (#520, cf inc/fictionsv2_histoires.php).
  **/
 
 include_spip('fictionsv2_fonctions');
