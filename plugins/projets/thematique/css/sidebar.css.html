@@ -36,6 +36,13 @@
 	text-decoration: none;
 }
 
+/* Mention de la taille maximale sous "Ajouter un document"
+   (noisettes/sidebar/bloc_ajout_document_onglets.html). */
+.bloc_option_doc .taille_max_fichier {
+	color: var(--color-text-light, #888);
+	font-size: 0.85em;
+}
+
 .popup a.hac, .titre_bubble {
 	font-weight: bold;
 }
@@ -198,7 +205,7 @@
 }
 
 .popup_blank {
-	max-height: calc(100vh - 90px - (54px*2));
+	max-height: calc(100vh - 90px - 54px - var(--header-height));
 }
 
 .popup .sidebar_bubble.sidebar_bubble_empty {
@@ -1792,34 +1799,69 @@ ailleurs, ex: le menu du bas). */
 }
 
 .publier-article-container {
+	--marge-x: 34px;
+	--marge-y: 2rem;
+	--close-size: 30px;
+
 	display: flex;
 	flex-direction: column;
 	height: 100%;
 	box-sizing: border-box;
 	gap: 34px;
-	padding-bottom: 18px;
+	position: relative;
 }
+
 
 .page-inner {
-	margin-left: 18px;
-  	margin-right: 18px;
+	box-sizing: border-box;   /* le padding est inclus dans la hauteur */
+	padding: var(--marge-y) var(--marge-x);
+	height: 100%;             /* ou flex: 1 si le parent est en flex column */
+	min-height: 0;
+
+
+	flex: 1;
 }
+
 
 .publier-article-header > .page-inner {
-  padding: 18px 0;
+  min-height: calc(var(--close-size) + 2 * var(--marge-y));
+  padding-right: calc(var(--marge-x) + var(--close-size));
   display: flex;
   align-items: center;
-  justify-content: space-between;
 }
 
-.ajax-form-container > .page-inner {
-  height: 100%;
-  min-height: 0;
+.publier-article-container #sidebar-close {
+  position: absolute;
+  top: var(--marge-y);
+  right: var(--marge-x);
+  width: var(--close-size);
+  height: var(--close-size);
+}
+
+@media (height < 814px) {
+	.publier-article-header {
+		display: none;
+	}
+	.publier-article-container {
+		--marge-x: 16px;
+	}
+	.sidebar-etape-2 {
+		gap: 0.5rem;
+		margin-bottom: 0.6rem;
+	}
+	#sidebar-close {
+		top: 1rem !important;
+	}
 }
 
 .publier-article-form-wrapper {
 	box-sizing: border-box;
 	background-color: white;
+
+	display: flex;
+	flex-direction: column;
+	flex: 1;
+	min-height: 0;
 }
 
 .publier-article-header {
@@ -1870,6 +1912,7 @@ ailleurs, ex: le menu du bas). */
 #bouton-container {
 	display: flex;
 	justify-content: flex-end;
+	margin-top: 1rem;
 }
 
 .reponses_intervenant {

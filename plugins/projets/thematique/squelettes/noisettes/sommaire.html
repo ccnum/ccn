@@ -1,9 +1,9 @@
 #CACHE{48*3600}
 [(#REM)Page principale - Pour vue de détail forcée à l'ouverture :
--#ENV{type_objet} : consignes, travail_en_cours, blogs, evenements, ressources
--#ENV{id_objet} : id_objet
+-ENV{type_objet} : consignes, travail_en_cours, blogs, evenements, ressources
+-ENV{id_objet} : id_objet
 et/ou
--#ENV{vue_date} : 01/10/2011
+-ENV{vue_date} : 01/10/2011
 ]
 <INCLURE{fond=noisettes/inc/ccn_role} />
 <div id="zone" class="zone_timeline zone"[ (#VUE|=={classe}|oui) style="display:none;"]>
@@ -39,18 +39,8 @@ et/ou
 					<div class="timeline_trigger"></div>
 				</div>
 				<div id="timeline_background"></div>
-				<INCLURE{fond=noisettes/card_jalon,
-						est_debut=oui,
-						texte=<:thematique:cap_sur_annee:>,
-						env, 
-						ajax
-				} />
-				<INCLURE{fond=noisettes/card_jalon,
-						est_debut=non,
-						texte=<:thematique:la_rencontre:>,
-						env, 
-						ajax
-				} />
+				<INCLURE{fond=noisettes/card_jalon, est_debut=oui, texte=<:thematique:cap_sur_annee:>, ajax} />
+				<INCLURE{fond=noisettes/card_jalon, est_debut=non, texte=<:thematique:la_rencontre:>, ajax} />
 			</div>
 		</div>
 		<div id="sidebar" role="dialog" aria-modal="true" aria-hidden="true">
@@ -85,11 +75,11 @@ et/ou
 			</ul>
 		</div>
 
-		<INCLURE{fond=noisettes/menu_consignes, env, ajax} />
+		<INCLURE{fond=noisettes/menu_consignes, ajax} />
 
-		<INCLURE{fond=noisettes/menu_classes, env, ajax} />
+		<INCLURE{fond=noisettes/menu_classes, ajax} />
 
-		<INCLURE{fond=noisettes/menu_ressources, env, ajax} />
+		<INCLURE{fond=noisettes/menu_ressources, restreint=#ENV{restreint}, ajax} />
 
 		[(#REM) Actualités : bloc (titre inclus) entièrement masqué si vide, cf actus_timeline.html]
 		[(#CONST{_PROJET}|!={laclasse}|oui)

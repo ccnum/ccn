@@ -10,13 +10,21 @@
 
 	<div class="editer-groupe">
 		<div id="sidebar-etape-2-container">
-			<div style="flex: 0 0 auto;">
-				<h3><:thematique:ajouter_document:></h3>
+			<div class="sidebar-etape-2">
+				<h3 class="titre-col-gauche"><u><:thematique:ajouter_document:></u></h3>
+				<h4 class="sous-titre-col-gauche"><:thematique:publier_document_etape_1:></h4>
 				<div class="ajax">
 					#FORMULAIRE_JOINDRE_DOCUMENT_MISSION{#GET{id_objet_document},article}
+					<div class="publier-article-formats-autorises">
+						#SET{extensions_document_mission, #VAL{1}|thematique_extensions_document_mission_liste}
+						<div style="font-weight: 800;">
+							<:thematique:formats_autorises_document{extensions=#GET{extensions_document_mission}}:>
+						</div>
+						<div><:thematique:formats_autorises_document_texte_apres:></div>
+					</div>
 				</div>
-				#SET{extensions_document_mission, #VAL{1}|thematique_extensions_document_mission_liste}
-				<p class="publier-article-formats-autorises"><:thematique:formats_autorises_document{extensions=#GET{extensions_document_mission}}:></p>
+				<h4 class="sous-titre-col-gauche"><:thematique:publier_document_etape_2:></h4>
+				<div style="font-weight: 400"><:thematique:publier_document_etape_2_texte:></div>
 			</div>
 			
 			<INCLURE{fond=noisettes/inc/publier_article_documents, id_objet=#GET{id_objet_document}, objet=article, ajax=documents} />
@@ -42,19 +50,19 @@
 				#SET{intro_creation, #ENV{type_article}|thematique_texte_publication{intro}}
 				<h3>[(#GET{est_edition}|oui)<:thematique:modifier_publication:>][(#GET{est_edition}|non)#GET{titre_creation}]</h3>
 				[(#GET{est_edition}|non)
-				[(#GET{intro_creation}|oui)
-				<p class="publier-article-intro">#GET{intro_creation}</p>
-				]
+					[(#GET{intro_creation}|oui)
+					<p class="publier-article-intro">#GET{intro_creation}</p>
+					]
 				]
 
 				[(#GET{est_edition}|non)
-				[(#ENV{type_article}|=={consignes}|oui)
-				<ul class="publier-article-checklist">
-					<li><:thematique:publier_checklist_phrases_courtes:></li>
-					<li><:thematique:publier_checklist_eviter_majuscules:></li>
-					<li><:thematique:publier_checklist_ajouter_images:></li>
-				</ul>
-				]
+					[(#ENV{type_article}|=={consignes}|oui)
+					<ul class="publier-article-checklist">
+						<li><:thematique:publier_checklist_phrases_courtes:></li>
+						<li><:thematique:publier_checklist_eviter_majuscules:></li>
+						<li><:thematique:publier_checklist_ajouter_images:></li>
+					</ul>
+					]
 				]
 
 				<div class="editer-ligne">
@@ -92,10 +100,7 @@
 			</div>
 			#SET{bouton_creation, #ENV{type_article}|thematique_texte_publication{bouton}}
 			<div id="bouton-container">
-				<button id="bouton-enregistrer-article" 
-						class="bouton-lisere" 
-						onclick="creationArticleEnregistrer()"
-				>
+				<button type="submit" id="bouton-enregistrer-article" class="bouton-lisere">
 						[(#ENV{id_article}|oui)
 							<:thematique:enregistrer:>
 						]

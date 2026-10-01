@@ -1,5 +1,5 @@
 <div class="publications-list">
-	<BOUCLE_reponses(ARTICLES){id_rubrique}{id_consigne>0}{par date}{inverse}>
+	<BOUCLE_reponses(ARTICLES){id_rubrique}{id_consigne>0}{!par date}>
 		[(#SET{titre_c, #ID_CONSIGNE|filtre_titre_consigne})]
 		[(#SET{rang_c, #ID_CONSIGNE|filtre_rang_consigne})]
 		<INCLURE{fond=noisettes/sidebar/page_participant/card_publication,
@@ -7,8 +7,7 @@
 			titre_consigne=#GET{titre_c},
 			rang_mission=#GET{rang_c},
 			id_reponse=#ID_ARTICLE,
-			ajax,
-			env
+			ajax
 		} />
 	</BOUCLE_reponses>
 </div>

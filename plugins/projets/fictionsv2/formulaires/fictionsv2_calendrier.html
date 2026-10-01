@@ -1,0 +1,32 @@
+<div class="formulaire_spip formulaire_#FORM">
+	[<p class="reponse_formulaire reponse_formulaire_ok">(#ENV*{message_ok})</p>]
+	[<p class="reponse_formulaire reponse_formulaire_erreur">(#ENV*{message_erreur})</p>]
+	[(#ENV{editable})
+	<form method="post" action="#ENV{action}">
+		<div>
+			#ACTION_FORMULAIRE
+			<div class="editer-groupe">
+				<div class="editer editer_lancement[ (#ENV**{erreurs}|table_valeur{lancement}|oui)erreur]">
+					<label for="fictionsv2_lancement"><:fictionsv2:associations_lancement:></label>
+					<p class="explication"><:fictionsv2:associations_lancement_explication:></p>
+					[<span class="erreur_message">(#ENV**{erreurs}|table_valeur{lancement})</span>]
+					<input type="date" class="text date" name="lancement" id="fictionsv2_lancement" value="#ENV{lancement}" />
+				</div>
+				<div class="editer editer_cloture[ (#ENV**{erreurs}|table_valeur{cloture}|oui)erreur]">
+					<label for="fictionsv2_cloture"><:fictionsv2:associations_cloture:></label>
+					<p class="explication"><:fictionsv2:associations_cloture_explication:></p>
+					[<span class="erreur_message">(#ENV**{erreurs}|table_valeur{cloture})</span>]
+					<input type="date" class="text date" name="cloture" id="fictionsv2_cloture" value="#ENV{cloture}" />
+				</div>
+				<div class="editer editer_finalisation[ (#ENV**{erreurs}|table_valeur{finalisation}|oui)erreur]">
+					<label for="fictionsv2_finalisation"><:fictionsv2:associations_finalisation:></label>
+					<p class="explication"><:fictionsv2:associations_finalisation_explication:></p>
+					[<span class="erreur_message">(#ENV**{erreurs}|table_valeur{finalisation})</span>]
+					<input type="date" class="text date" name="finalisation" id="fictionsv2_finalisation" value="#ENV{finalisation}" />
+				</div>
+			</div>
+			<p class="boutons"><button type="submit" class="btn submit"><:fictionsv2:associations_enregistrer:></button></p>
+		</div>
+	</form>
+	]
+</div>

@@ -1,0 +1,31 @@
+[(#REM)
+
+  Corps d'un mail de notification (issue #217) : titre, phrase d'accroche,
+  carte (cf inc_carte.html) et bouton vers la plateforme. Factorisé pour
+  éviter la duplication entre les fonds notifications/article_publie_*.html
+  et notifications/forum_poste_article.html, qui ne font que calculer les
+  textes propres à leur cas.
+
+  Paramètres :
+  - titre, detail : contenu HTML déjà construit par l'appelant
+  - url, bouton : lien et libellé du bouton
+  - avatar_*, carte_titre, date_carte, extrait : transmis à inc_carte.html
+    (carte_titre y devient le paramètre titre)
+
+]
+<div class="header">
+	<h1 style="color:#000AFF;font-family:'Poppins', Verdana, Geneva, sans-serif;font-size:22px;font-weight:700;margin:0 0 16px;">
+		#ENV*{titre}
+	</h1>
+	<p style="color:#1E2055;font-family:'Poppins', Verdana, Geneva, sans-serif;font-size:15px;line-height:150%;margin:0 0 24px;">
+		#ENV*{detail}
+	</p>
+
+	<INCLURE{fond=notifications/inc_carte, avatar_type=#ENV{avatar_type}, avatar_valeur=#ENV{avatar_valeur}, avatar_couleur=#ENV{avatar_couleur}, avatar_secours_emoji=#ENV{avatar_secours_emoji}, avatar_secours_fond=#ENV{avatar_secours_fond}, avatar_secours_couleur=#ENV{avatar_secours_couleur}, titre=#ENV*{carte_titre}, date_carte=#ENV*{date_carte}, extrait=#ENV*{extrait}} />
+
+	<div style="text-align:center;margin-top:24px;">
+		<a href="#ENV*{url}" style="display:inline-block;background-color:#000AFF;color:#FFFFFF;font-family:'Poppins', Verdana, Geneva, sans-serif;font-weight:600;font-size:15px;text-decoration:none;padding:12px 28px;border-radius:6px;">
+			#ENV*{bouton}
+		</a>
+	</div>
+</div>

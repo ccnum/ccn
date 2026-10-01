@@ -1,0 +1,38 @@
+[(#REM)
+
+  Personnalisation CCN (issue #217) : mise en page dédiée pour la
+  publication d'une nouvelle mission (type_objet=consignes), maquette
+  "Une nouvelle mission vous attend !" — cf notifications/article_publie.html,
+  qui délègue ici au lieu de article_publie_generique.html pour ce cas précis.
+
+]
+<BOUCLE_art(ARTICLES){id_article}{statut?}{tout}>
+#SET{numero_mission,#ID_ARTICLE|thematique_numero_mission}
+#SET{nom_intervenant,#LESAUTEURS|textebrut|sinon{#NOM_SITE_SPIP}}
+#SET{titre_mission,#TITRE|trim}
+#SET{avatar,#ID_ARTICLE|thematique_avatar_notification_article}
+#SET{avatar_type,#GET{avatar}|table_valeur{type}}
+#SET{avatar_valeur,#GET{avatar}|table_valeur{valeur}}
+#SET{avatar_couleur,#GET{avatar}|table_valeur{couleur_fond}}
+#SET{url_article,#URL_ARTICLE|url_absolue|parametre_url{mode,complet}}
+#SET{carte_sous_titre,#VAL{''}}
+[(#GET{numero_mission}|oui)
+	#SET{carte_sous_titre,#VAL{thematique:notif_mission_num_court}|_T{#ARRAY{numero,#GET{numero_mission}}}}
+]
+#SET{carte_titre,#TITRE|trim|thematique_carte_titre_notification{#GET{carte_sous_titre}}}
+#SET{carte_date,#DATE|affdate}
+#SET{carte_extrait,#INTRODUCTION|sinon{#CHAPO}|sinon{#TEXTE}|textebrut|thematique_couper_extrait{220}}
+[(#GET{numero_mission}|oui)
+	#SET{mail_detail,#VAL{thematique:notif_mission_detail}|_T{#ARRAY{intervenant,#GET{nom_intervenant},numero,#GET{numero_mission},titre,#GET{titre_mission}}}}
+]
+[(#GET{numero_mission}|non)
+	#SET{mail_detail,#VAL{thematique:notif_mission_detail_sans_numero}|_T{#ARRAY{intervenant,#GET{nom_intervenant},titre,#GET{titre_mission}}}}
+]
+#SET{mail_titre,#VAL{thematique:notif_mission_titre}|_T}
+#SET{mail_bouton,#VAL{thematique:notif_bouton_decouvrir_mission}|_T}
+<title>[(#VAL{thematique:notif_mission_sujet}|_T{#ARRAY{titre,#TITRE}}|nettoyer_titre_email)]</title>
+
+<body>
+<INCLURE{fond=notifications/inc_corps, titre=#GET{mail_titre}, detail=#GET{mail_detail}, url=#GET{url_article}, bouton=#GET{mail_bouton}, avatar_type=#GET{avatar_type}, avatar_valeur=#GET{avatar_valeur}, avatar_couleur=#GET{avatar_couleur}, carte_titre=#GET{carte_titre}, date_carte=#GET{carte_date}, extrait=#GET{carte_extrait}} />
+</body>
+</BOUCLE_art>

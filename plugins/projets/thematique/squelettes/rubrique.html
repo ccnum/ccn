@@ -49,7 +49,7 @@
 		]
 		[(#GET{vue_classes_liste}|=={oui}|oui)
 			
-			<INCLURE{fond=noisettes/classes_detail, type_objet=#GET{type_objet}, admin=#GET{admin}, env, ajax} />
+			<INCLURE{fond=noisettes/classes_detail, id_rubrique, type_objet=#GET{type_objet}, admin=#GET{admin}, ajax} />
 		]
 		[(#GET{type_objet}|!={ressources}|oui)
 			[(#GET{type_objet}|!={ressource_detail}|oui)

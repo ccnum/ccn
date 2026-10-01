@@ -8,16 +8,10 @@ publication d'un chapitre par un joueur. Extrait de inclure/rubrique.html
 cacheable sans risquer d'afficher un état de jeu périmé.
 
 Les règles d'autorisation sont centralisées dans
-inc/fictionsv2_autorisation.php (#441). Le contexte est passé par
-INCLURE depuis squelettes/inclure/rubrique.html et stocké en session.
+inc/fictionsv2_autorisation.php (#441), qui lit elle-même l'auteur connecté
+et compte les chapitres de l'histoire.
 ]
 #CACHE{0}
-
-<!-- Contexte pour les fonctions d'autorisation (session) -->
-#SET{id_auteur_fv2,#ENV{id_auteur}|session_set{id_auteur_fv2}}
-#SET{webmaster_fv2,#SESSION{webmestre}|session_set{webmaster_fv2}}
-#SET{max_cadavres_fv2,#ENV{max_cadavres}|session_set{max_cadavres_fv2}}
-#SET{zone_fv2,#ENV{id_zone}|session_set{zone_fv2}}
 
 #SET{id_blog_pedagogique, (#VAL{blog_pedagogique}|fictionsv2_id_rubrique_a_mot)}
 
@@ -27,8 +21,8 @@ par fictionsv2_lecture_droits(). Même règle que pour un chapitre N-1 : visible
 le chapitre 2 (seul chapitre publie/prop de l'histoire) est en cours d'écriture, toujours
 pour le webmestre. ]
 #SET{id_chapitre1, #ENV{id_rubrique}|fictionsv2_id_chapitre1_histoire}
-[(#REM) Compté ici plutôt que via #ENV{max_cadavres} : inclure/rubrique.html le calcule
-avec {0,1} et le total de cette boucle, qui vaut donc toujours 1. ]
+[(#REM) Compté ici (chapitres publiés ou proposés de l'histoire, hors chapitre 1
+commun) : le chapitre 1 est N-1 tant que l'histoire n'a que son chapitre 2. ]
 #SET{chapitre1_n_moins_1, #ENV{id_rubrique}|fictionsv2_nb_chapitres_histoire|=={1}}
 [(#GET{id_chapitre1}|et{#ENV{id_auteur}}|oui)
 	[(#SESSION{webmestre}|=={oui}|ou{#GET{chapitre1_n_moins_1}}|oui)

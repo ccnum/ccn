@@ -35,12 +35,24 @@ function initCompteurCaracteres() {
 }
 
 /**
- * Soumet le formulaire "#formulaire_publier_article".
+ * Désactive le bouton "Publier" dès l'envoi du formulaire
+ * "#formulaire_publier_article", pour qu'un double clic ne crée pas deux
+ * articles : le formulaire ajax SPIP (ajaxForm, cf
+ * prive/javascript/ajaxCallback.js) renvoie un POST à chaque soumission, et
+ * l'anti-doublon de formulaires_public_publier_article_traiter_dist() (clé
+ * en session) ne voit pas une 2e requête partie avant la fin de la 1re.
+ *
+ * Délégué sur document : ajaxForm, bindé directement sur le formulaire, a
+ * déjà sérialisé et envoyé la requête quand l'évènement arrive ici. Le
+ * formulaire est réinjecté (bouton réactivé) au retour ajax ; réactivation
+ * de secours au cas où la requête échoue sans rechargement.
  */
-function creationArticleEnregistrer() {
-    const formulaire = document.getElementById("formulaire_publier_article")
-    formulaire.requestSubmit();
-}
+jQuery(document).on("submit", "#formulaire_publier_article", function () {
+    const bouton = document.getElementById("bouton-enregistrer-article")
+    if (!bouton) return
+    bouton.disabled = true
+    setTimeout(() => { bouton.disabled = false }, 10000)
+})
 
 /**
  * Insère le raccourci SPIP (<docXX>/<imgXX>) d'un document listé dans
@@ -81,6 +93,37 @@ function insererRaccourciDocument(element) {
 
     element.classList.add("copie");
     setTimeout(() => element.classList.remove("copie"), 1000);
+}
+
+/**
+ * Grise dans la liste des documents joints (cf
+ * noisettes/inc/publier_article_documents.html) ceux dont le raccourci est
+ * déjà présent dans le champ "texte" (#498) : ces documents s'affichent dans
+ * le corps de l'article, les autres en bas de l'article (critère {vu=non},
+ * cf noisettes/inc/ajouter_document.html).
+ *
+ * Même règle que le marquage "vu" du plugin medias (cf
+ * plugins-dist/medias/inc/marquer_doublons_doc.php) : <docN>, <imgN> ou
+ * <embN>, avec ou sans paramètres (<img12|left>).
+ */
+function majDocumentsInseres() {
+    const texte = document.getElementById("texte")
+    const valeur = texte ? texte.value : ""
+    document.querySelectorAll("#documents_publier_article .racourcis-container").forEach(element => {
+        const fichier = element.closest(".fichier")
+        if (!fichier) return
+        const id = element.dataset.idDocument
+        const insere = new RegExp(`<(doc|img|emb)${id}[|>]`, "i").test(valeur)
+        fichier.classList.toggle("insere", insere)
+    })
+}
+
+jQuery(document).on("input change", "#texte", majDocumentsInseres)
+// Liste rechargée en ajax après chaque upload/suppression, et injectée à
+// l'ouverture du popup (cf loadContentInMainSidebar dans controleurs.js,
+// qui relance triggerAjaxLoad).
+if (typeof onAjaxLoad === "function") {
+    onAjaxLoad(majDocumentsInseres)
 }
 
 /**

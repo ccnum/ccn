@@ -1,16 +1,21 @@
-[(#REM) #CACHE{0} : dépend de #CONST{_ANNEE_SCOLAIRE} (cookie, cf
+[(#REM) CACHE{0} : dépend de CONST{_ANNEE_SCOLAIRE} (cookie, cf
 ccn_options.php et le commentaire de json.html) — SPIP ne varie pas le
-cache par cookie, un #CACHE{60} sert la mauvaise année aux autres
+cache par cookie, un CACHE{60} sert la mauvaise année aux autres
 visiteurs/sessions pendant 60s après un changement d'année. ]
 #CACHE{0}
 [(#REM) Type objet: consignes, travail_en_cours, blogs, evenements,ressources]
+
+[(#REM) Année affichée : celle passée en URL (CCN.urlJson), sinon l'année
+active (_ANNEE_SCOLAIRE, cookie compris) — sans ce repli, un appel sans
+annee_scolaire ignorait l'image titrée de l'année et sortait des dates vides. ]
+#SET{annee, #ENV{annee_scolaire}|sinon{#CONST{_ANNEE_SCOLAIRE}}}
 
 [(#REM) Image de fond]
 #SET{anneeEnCours, false}
 <BOUCLE_rub(RUBRIQUES){titre_mot=images_background}{par hasard}{0,1}{tout}>
 	[(#REM) Si l'image dans le contenu editorial porte le TITRE de l'année en cours]
 	<BOUCLE_yearImage(DOCUMENTS){id_rubrique}>
-		<BOUCLE_selectYearImage(DOCUMENTS){id_document}{si #ENV{annee_scolaire}|=={#TITRE}}{si #GET{anneeEnCours}|=={false}}>
+		<BOUCLE_selectYearImage(DOCUMENTS){id_document}{si #GET{annee}|=={#TITRE}}{si #GET{anneeEnCours}|=={false}}>
 			[(#SET{url,[(#URL_DOCUMENT|image_reduire{1600}|extraire_attribut{src})]})]
 			#SET{anneeEnCours, true}
 		</BOUCLE_selectYearImage>
@@ -34,8 +39,8 @@ visiteurs/sessions pendant 60s après un changement d'année. ]
 #SET{id_rubrique_blogs, #VAL{blogs}|thematique_id_rubrique_a_mot}
 #SET{id_rubrique_evenements, #VAL{evenements}|thematique_id_rubrique_a_mot}
 {
-	"date_debut": "[(#ENV{annee_scolaire})]-09-01",
-	"date_fin": "[(#ENV{annee_scolaire}|plus{1})]-09-01",
+	"date_debut": "[(#GET{annee})]-09-01",
+	"date_fin": "[(#GET{annee}|plus{1})]-09-01",
 	"couleur_base_texte": "#000000",
 	"couleur_1erplan1": "#444444",
 	"couleur_1erplan2": "#C0C0C0",

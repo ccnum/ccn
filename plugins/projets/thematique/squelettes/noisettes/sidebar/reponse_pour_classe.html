@@ -14,18 +14,10 @@ calculé par l'appelant (noisettes/article.html) ]
 			</div>
 			<div class="tabs-content">
 				[(#ENV{c_est_ma_reponse}|=={oui}|oui)
-					<INCLURE{
-						fond=noisettes/sidebar/onglet_reponse_modifiable,
-						id_article=#ENV{id_article},
-						env
-					} />
+					<INCLURE{fond=noisettes/sidebar/onglet_reponse_modifiable, id_article} />
 				]
 				[(#ENV{c_est_ma_reponse}|=={oui}|non)
-					<INCLURE{
-						fond=noisettes/sidebar/onglet_reponse_non_modifiable,
-						id_article=#ENV{id_article},
-						env
-					} />
+					<INCLURE{fond=noisettes/sidebar/onglet_reponse_non_modifiable, id_article} />
 				]
 			</div>
 		</div>

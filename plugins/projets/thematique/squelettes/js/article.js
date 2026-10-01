@@ -98,7 +98,7 @@ function Article() {
 
 		this.div_texte.on('click', () => {
 			isBlog ? callArticleBlog(_thisId)
-				   : callArticleEvenement(_thisId, _thisTypeObjet)
+				   : callArticleEvenement(_thisId)
 			CCN.projet.showRangeOfTimeline(30, this.x - 3);
 		});
 		this.div_base.draggable({

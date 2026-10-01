@@ -1,4 +1,4 @@
-[(#REM) #CACHE{0} : cache de fond indépendant, cf noisettes/sidebar/header_sidebar.html. ]
+[(#REM) CACHE{0} : cache de fond indépendant, cf noisettes/sidebar/header_sidebar.html. ]
 #CACHE{0}
 <BOUCLE_article_sidebar(ARTICLES){id_article}{tout}>
 <div class="sidebar_bubble">
@@ -6,7 +6,7 @@
 		<INCLURE{fond=noisettes/sidebar/inc/header_gauche_photo_auteur, id_article=#ID_ARTICLE} />
 		<div id="header-col-right">
 			<div class="header-icons-wrap">
-				<INCLURE{fond=noisettes/sidebar/normal_header_icons, env} />
+				<INCLURE{fond=noisettes/sidebar/normal_header_icons} />
 			</div>
 			<div class="header-titre #EDIT{titre}">
 				[(#TITRE)]

@@ -5,9 +5,6 @@
 #SET{total,#NOMBRE_VOTES}
 </BOUCLE_note>
 <div class="formulaire_notation formulaire_#FORM ajax">
-	[(#REM)
-	[(#NOTATION_ETOILE{[(#GET{note_ponderee})],[(#ENV*{_objet})][(#ENV*{_id_objet})]})]-->
-	]
 	[<p class="reponse_formulaire reponse_formulaire_ok">(#ENV*{message_ok})</p>]
 	[<p class="reponse_formulaire reponse_formulaire_erreur">(#ENV*{message_erreur})</p>]
 	[(#ENV**{editable}|oui)

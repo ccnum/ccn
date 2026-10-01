@@ -9,11 +9,7 @@
  *   #ID_ARTICLE|ECRIRE_DROITS            → 'oui' ou ''
  *   #ID_ARTICLE|EST_AUTEUR_DROITS        → 'oui' ou ''
  *
- * Le contexte doit être écrit en session avant l'appel :
- *   #SET{id_auteur_fv2,#SESSION{id_auteur}|session_set{id_auteur_fv2}}
- *   #SET{max_cadavres_fv2,#GET{var_max_cadavres}|session_set{max_cadavres_fv2}}
- *   #SET{zone_fv2,#GET{var_id_zone}|session_set{zone_fv2}}
- *   #SET{webmaster_fv2,#SESSION{webmestre}|session_set{webmaster_fv2}}
+ * Autonomes : lisent l'auteur connecté en session (cf inc/fictionsv2_autorisation.php).
  */
 
 if (!defined('_ECRIRE_INC_VERSION')) {

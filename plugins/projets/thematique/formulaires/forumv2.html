@@ -1,7 +1,7 @@
 <form method="post" action="#ENV{action}" class="forum-formulaire">
 	#ACTION_FORMULAIRE
 
-	[(#REM) Nom + rôle/classe/collège, pas #NOM seul (classe/collège uniquement) :
+	[(#REM) Nom + rôle/classe/collège, pas NOM seul (classe/collège uniquement) :
 	un commentaire identifie l'individu, cf thematique_nom_auteur_commentaire
 	(#44) ]
 	#SET{nom_auteur, #SESSION{id_auteur}|thematique_nom_auteur_commentaire}

@@ -560,6 +560,8 @@ function thematique_texte_publication($type_article, $partie) {
 		'ressources' => 'ressource',
 		'blogs' => 'evenement',
 		'evenements' => 'information',
+		'cap_sur_l_annee' => 'cap_sur_l_annee',
+		'la_rencontre' => 'la_rencontre'
 	];
 
 	if (isset($slugs[$type_article])) {
@@ -569,25 +571,6 @@ function thematique_texte_publication($type_article, $partie) {
 		// utile ici car certaines parties n'ont pas de texte pour tous les
 		// types (ex: pas d'intro pour une mission).
 		return _T($cle, [], ['force' => false]);
-	}
-
-	// Types non couverts par les maquettes de l'issue #429 (ex: cap-sur-l-annee,
-	// la-rencontre, agora) : on garde l'ancien texte générique.
-	switch ($partie) {
-		case 'bandeau':
-			return _T('thematique:etape1_redaction_article', ['type_article' => thematique_rendre_type_article_affichable(
-				$type_article
-			)]);
-		case 'titre':
-			return _T('thematique:etape1_redaction_article', ['type_article' => thematique_rendre_type_article_affichable(
-				$type_article
-			)]);
-		case 'champ_texte':
-			return _T('info_texte');
-		case 'bouton':
-			return _T('thematique:enregistrer');
-		default:
-			return '';
 	}
 }
 
@@ -813,9 +796,21 @@ function thematique_admin_scope($id_rubrique_choisie = null) {
 
 	$restreint = ($admin === 1 || $admin === 2) ? $restreint1 : null;
 
+	// La rubrique choisie n'est retenue que si elle existe dans l'année active :
+	// les liens des mails de notification passaient rub=<titre du secteur>
+	// (rub=2026), lu ici comme un id_rubrique — un admin sans rubrique liée
+	// (intervenant d'une CCN sans SSO) publiait ensuite ses missions dans la
+	// rubrique #2026, quelle qu'elle soit (souvent d'une année passée). On
+	// purge aussi une valeur invalide déjà mémorisée en session.
 	$cookie_rubrique = session_get('cookie_rubrique');
 	if (is_numeric($cookie_rubrique) && ($admin > 1 || $admin === 0)) {
-		$restreint = intval($cookie_rubrique);
+		$id_annee_active = thematique_id_rubrique_annee_active();
+		$id_secteur = (int) sql_getfetsel('id_secteur', 'spip_rubriques', 'id_rubrique=' . intval($cookie_rubrique));
+		if ($id_annee_active && $id_secteur === $id_annee_active) {
+			$restreint = intval($cookie_rubrique);
+		} else {
+			session_set('cookie_rubrique', null);
+		}
 	}
 
 	session_set('restreint', $restreint);
@@ -1004,6 +999,9 @@ function thematique_id_rubrique_classe($id_auteur, $classe_active = null) {
 		return 0;
 	}
 
+	if (!_THEMATIQUE_CHOIX_CLASSE) {
+		return $classes[0];
+	}
 	if ($classe_active === null) {
 		include_spip('inc/session');
 		$classe_active = intval(session_get('id_auteur')) === intval($id_auteur)
@@ -1026,6 +1024,41 @@ function thematique_id_rubrique_classe($id_auteur, $classe_active = null) {
 function thematique_avatar_animal($id_auteur, $classe_active = null) {
 	$id_rubrique = thematique_id_rubrique_classe($id_auteur, $classe_active);
 	return $id_rubrique ? classe_icone($id_rubrique) : '';
+}
+
+/**
+ * Avatar du menu haut de l'auteur connecté, calculé à l'affichage : même
+ * priorité que #SESSION{avatar} (cf thematique_preparer_fichier_session()),
+ * émoji de la classe pour un prof/élève, sinon photo ENT, sinon ''.
+ *
+ * Issue #489 : #SESSION{avatar} n'est recalculé qu'à l'écriture du fichier de
+ * session, sans mise à jour de la session déjà chargée pour la requête en
+ * cours — au changement d'année, le menu affichait l'animal de l'année
+ * précédente à côté de la couleur (calculée à l'affichage) de la nouvelle,
+ * jusqu'au rechargement suivant. Ici, animal et couleur dérivent de la même
+ * classe, pour la même année.
+ *
+ * @param int $id_auteur
+ * @return string émoji, URL de photo, ou ''
+ */
+function thematique_avatar_menu($id_auteur) {
+	$id_auteur = intval($id_auteur);
+	if (!$id_auteur) {
+		return '';
+	}
+	include_spip('inc/session');
+	if (!in_array(thematique_donner_role($id_auteur), ['prof', 'eleve'])) {
+		// Le pipeline ne met jamais d'animal en session pour ces rôles : la
+		// valeur en session est la photo ENT, à jour.
+		return (string) session_get('avatar');
+	}
+	$animal = thematique_avatar_animal($id_auteur);
+	if ($animal) {
+		return $animal;
+	}
+	// Prof/élève sans classe dans l'année affichée : la session peut encore
+	// contenir l'animal d'une autre année, on relit la photo ENT en base.
+	return thematique_photo_auteur($id_auteur)['avatar'];
 }
 
 /**

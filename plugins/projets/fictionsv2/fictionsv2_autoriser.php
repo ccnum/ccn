@@ -1,0 +1,75 @@
+<?php
+/**
+ * Autorisations de fictionsv2, chargées via le pipeline "autoriser" (cf paquet.xml).
+ */
+
+if (!defined('_ECRIRE_INC_VERSION')) {
+	return;
+}
+
+function fictionsv2_autoriser() {
+}
+
+/**
+ * Association de mots-clés réservée aux admins complets (issue #274).
+ *
+ * Tous les mots de fictionsv2 sont techniques (rubrique-contenant-annees,
+ * blog_pedagogique, presentation, prologue, chapitre1, footer-*...) et pilotent
+ * la structure du site pour tout le monde : un article tagué blog_pedagogique
+ * apparaît dans le footer de toutes les pages, une rubrique taguée
+ * rubrique-contenant-annees fausse le sélecteur d'années. La règle native
+ * (autoriser_associermots_dist) laisse un admin restreint (prof, lié à ses
+ * rubriques de classe) poser n'importe lequel de ces mots depuis /ecrire sur
+ * ce qu'il peut modifier.
+ */
+function autoriser_associermots($faire, $type, $id, $qui, $opt) {
+	if (($qui['statut'] ?? '') !== '0minirezo' || !empty($qui['restreint'])) {
+		return false;
+	}
+	return autoriser_associermots_dist($faire, $type, $id, $qui, $opt);
+}
+
+/**
+ * #AUTORISER{lirechapitre,article,#ID_ARTICLE} : le chapitre est-il affiché à
+ * l'auteur connecté (cf fictionsv2_lecture_droits()).
+ *
+ * Auparavant dans autoriser.php, que rien ne chargeait (seul ce fichier est
+ * déclaré au pipeline autoriser), et nommées autoriser_<faire>_<type> alors que
+ * SPIP cherche autoriser_<type>_<faire> : ces autorisations n'existaient pas (#524).
+ */
+function autoriser_article_lirechapitre_dist($faire, $type, $id, $qui, $opt) {
+	include_spip('inc/fictionsv2_autorisation');
+	return fictionsv2_lecture_droits(intval($id), $qui)['montre'];
+}
+
+/**
+ * #AUTORISER{ecrirechapitre,article,#ID_ARTICLE} : l'auteur connecté peut-il
+ * écrire ce chapitre : webmestre, ou participant affecté au chapitre (lien
+ * auteur ↔ article posé par le plan d'associations), chapitre en cours (#524).
+ */
+function autoriser_article_ecrirechapitre_dist($faire, $type, $id, $qui, $opt) {
+	include_spip('inc/fictionsv2_autorisation');
+	return fictionsv2_ecriture_droits(intval($id), $qui) === 'oui';
+}
+
+/**
+ * #AUTORISER{estauteur,article,#ID_ARTICLE} : l'auteur connecté est-il lié au
+ * chapitre.
+ */
+function autoriser_article_estauteur_dist($faire, $type, $id, $qui, $opt) {
+	include_spip('inc/fictionsv2_autorisation');
+	return fictionsv2_est_auteur_droits(intval($id), $qui) === 'oui';
+}
+
+/**
+ * Page des associations (#525, ecrire/?exec=fictionsv2_associations) et ses opérations :
+ * administrateurs complets et webmestres.
+ */
+function autoriser_fictionsv2associations_dist($faire, $type, $id, $qui, $opt) {
+	return ($qui['webmestre'] ?? '') === 'oui'
+		|| (($qui['statut'] ?? '') === '0minirezo' && empty($qui['restreint']));
+}
+
+function autoriser_fictionsv2associations_menu_dist($faire, $type, $id, $qui, $opt) {
+	return autoriser('fictionsv2associations', $type, $id, $qui, $opt);
+}

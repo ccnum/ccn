@@ -1,0 +1,40 @@
+<div class="formulaire_spip formulaire_#FORM">
+	[<p class="reponse_formulaire reponse_formulaire_ok">(#ENV*{message_ok})</p>]
+	[<p class="reponse_formulaire reponse_formulaire_erreur">(#ENV*{message_erreur})</p>]
+	[(#ENV{editable})
+	<form method="post" action="#ENV{action}">
+		<div>
+			#ACTION_FORMULAIRE
+			<p class="explication"><:fictionsv2:associations_affectations_explication:></p>
+			<table class="spip liste">
+				<thead>
+					<tr>
+						<th scope="col"><:fictionsv2:associations_histoire:></th>
+						<BOUCLE_entetes(DATA){source table, #ENV{_chapitres}}>
+						<th scope="col"><:fictionsv2:associations_chapitre{chapitre=#VALEUR}:></th>
+						</BOUCLE_entetes>
+					</tr>
+				</thead>
+				<tbody>
+				<BOUCLE_plan(DATA){source table, #ENV{_plan}}>
+					<tr class="[(#COMPTEUR_BOUCLE|alterner{row_odd,row_even})]">
+						<th scope="row"><a href="[(#URL_ECRIRE{rubrique, id_rubrique=#VALEUR{id_rubrique}})]">#VALEUR{titre}</a>[<br /><small>(#VALEUR{proprietaire})</small>]</th>
+						<BOUCLE_cellules(DATA){source table, #VALEUR{cellules}}>
+						<td>
+							<select name="affectation\[#_plan:VALEUR{id_rubrique}\]\[#VALEUR{chapitre}\]" class="select"[(#VALEUR{ecrit}|oui) disabled="disabled"] aria-label="<:fictionsv2:associations_chapitre{chapitre=#VALEUR{chapitre}}:>">
+								<BOUCLE_choix(DATA){source table, #ENV{_participants}}>
+								<option value="#VALEUR{id}"[(#VALEUR{id}|=={#_cellules:VALEUR{id_participant}}|oui) selected="selected"]>#VALEUR{nom}</option>
+								</BOUCLE_choix>
+							</select>
+							[(#VALEUR{ecrit}|oui)<br /><small><:fictionsv2:associations_chapitre_ecrit:></small>]
+						</td>
+						</BOUCLE_cellules>
+					</tr>
+				</BOUCLE_plan>
+				</tbody>
+			</table>
+			<p class="boutons"><button type="submit" class="btn submit"><:fictionsv2:associations_enregistrer_affectations:></button></p>
+		</div>
+	</form>
+	]
+</div>

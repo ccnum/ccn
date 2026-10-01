@@ -6,7 +6,8 @@
 	</BOUCLE_id_forum>
 </BOUCLE_annee>
 
-	<INCLURE{fond=modeles/js, page=sommaire} />
+	[(#REM) #440 : footer.js définit reload_cookie() appelé par le select d'année. ]
+	<INCLURE{fond=modeles/js, page=footer} />
 
 <div id="footer">
 	<div id="footer-inner">
@@ -14,6 +15,8 @@
 		<div id="footer-nav-left">
 			[(#SESSION{id_auteur}|oui)
 			<:fictionsv2:bonjour:> <b><a class="mediabox boxIframe boxWidth-730px boxHeight-550px" href="#URL_PAGE{auteur_editer, id_auteur=#SESSION{id_auteur}}">#SESSION{nom}</a></b>
+			[(#REM) #519 : classes gérées par l'enseignant connecté cette année ]
+			[&nbsp;&nbsp;<:fictionsv2:vos_classes:> (#SESSION{id_auteur}|fictionsv2_noms_classes_auteur{#ENV{annee_scolaire}})]
 			[(#GET{id_art}|=={0}|non)[(#SESSION{statut}|=={0minirezo}|oui)&nbsp;&nbsp;|&nbsp;&nbsp;<a href="#URL_SITE_SPIP/?page=forum&id_article=#GET{id_art}" class="mediabox boxIframe boxWidth-730px boxHeight-97pc"><:fictionsv2:acceder_au_forum:><img src="[(#CHEMIN{img/lecture/bt_forum.png})]"
 					class="btn-rollover" data-src-hover="#CHEMIN{img/lecture/bt_forum_hover.png}"
 					width="20" height="20" title="<:fictionsv2:forum:>" style="height: 20px; line-height: 20px; vertical-align: middle; padding-left: 5px; display: none;"/></a>]]
@@ -37,15 +40,17 @@
 			<a href="#URL_PAGE{page, id_article=#ID_ARTICLE}">#TITRE</a>&nbsp;&nbsp;|
 			</BOUCLE_page_footer>
 			<a href="http://www.laclasse.com/">Laclasse.com</a>&nbsp;&nbsp;|&nbsp;&nbsp;
-			[(#REM)[(#SESSION{login}|oui)<a href="#URL_SITE_SPIP?scenario=jeu">Vers la version jeu</a>&nbsp;&nbsp;|]]
 			<span id="annee_scolaire">
 				<form name="annee_scolaire" style="display:inline;">
 					<label for="select_annee_scolaire"><:fictionsv2:annee_scolaire:></label>
 					<select id="select_annee_scolaire" name="annee_scolaire" onchange="reload_cookie('[(#URL_SITE_SPIP)]','[(#EVAL{_COOKIE_ANNEE_SCOLAIRE})]',this.value)">
 						<option value="#">---</option>
 						<BOUCLE_rubrique_contenant_annees(RUBRIQUES){titre_mot=rubrique-contenant-annees}{0,1}>
-							<BOUCLE_annees(RUBRIQUES){id_parent}{par titre}{tout}>
-								<option value="#TITRE"[(#TITRE|=={#ENV{annee_scolaire}}|oui) selected]>[(#TITRE|fictionsv2_annee_label)]</option>
+							[(#REM) #440 : plus récente en premier, et uniquement les rubriques au
+							titre "année" (une sœur non numérique, ex. "modele", s'affichait en option
+							"0"). Filtré par |intval : un critère {titre REGEXP ...} vide la boucle. ]
+							<BOUCLE_annees(RUBRIQUES){id_parent}{!par titre}{tout}>
+								[(#TITRE|intval|oui)<option value="#TITRE"[(#TITRE|=={#ENV{annee_scolaire}}|oui) selected]>[(#TITRE|fictionsv2_annee_label)]</option>]
 							</BOUCLE_annees>
 						</BOUCLE_rubrique_contenant_annees>
 					</select>

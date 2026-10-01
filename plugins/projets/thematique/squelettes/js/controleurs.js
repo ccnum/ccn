@@ -150,8 +150,15 @@ $(function () {
 				"consignes": callConsigne,
 				"blogs": callArticleBlog,
 				"evenements": callArticleEvenement,
-				"travail_en_cours": callReponse
+				"travail_en_cours": callReponse,
+				"ressources": (id) => callRessourceArticle(id, "ressources"),
+				"cap_sur_l_annee": (id) => callArticleJalon(id, true),
+				"la_rencontre": (id) => callArticleJalon(id, false),
 			}
+			// Type sans action de réaffichage : on ferme simplement plutôt que
+			// de planter sur un appel undefined, qui laissait la croix inopérante
+			// (issue #507, édition d'une ressource).
+			if (!typeToAction[type_article]) return CCN.projet.showWholeTimeline();
 			typeToAction[type_article](id_article);
 			collapseSidebar();
 			return
@@ -231,7 +238,6 @@ function removeFromUrl(key) {
  * ou depuis l'état de l'historique donné
  */
 function setContentFromState(state, title, url) {
-
 	if (typeof state.data !== 'object' || state.data == null) {
 		return;
 	}
@@ -302,14 +308,10 @@ function setContentFromState(state, title, url) {
 	if (state.id_objet != "0") {
 		// Consigne
 		if (state.type_objet == "consignes") {
-			if (state.id_objet == CCN.idArticleCapSurAnnee || state.id_objet == CCN.idArticleLaRencontre) {
-				callArticleJalon(state.id_objet == CCN.idArticleCapSurAnnee);
-			} else {
-				for (let k = 0; k < CCN.consignes.length; k++) {
-					if (CCN.consignes[k].id == state.id_objet) {
-						callConsigne(state.id_objet);
-						break;
-					}
+			for (let k = 0; k < CCN.consignes.length; k++) {
+				if (CCN.consignes[k].id == state.id_objet) {
+					callConsigne(state.id_objet);
+					break;
 				}
 			}
 		}
@@ -343,7 +345,14 @@ function setContentFromState(state, title, url) {
 
 		// Article d'événement
 		if (state.type_objet == "evenements") {
-			callArticleEvenement(state.id_objet, "article");
+			callArticleEvenement(state.id_objet);
+		}
+
+		if(state.type_objet === "cap-sur-l-annee") {
+			callArticleJalon(true)
+		}
+		if(state.type_objet === "la-rencontre") {
+			callArticleJalon(false)
 		}
 	}
 	else {
@@ -948,15 +957,14 @@ function callRessourceRubrique(id_rubrique, type_objet) {
  * @see loadContentInLateralSidebar
  */
 
-function callArticleEvenement(id_objet, type_objet) {
+function callArticleEvenement(id_objet) {
 	if (!Number.isInteger(Number(id_objet))) return;
-	if (!['article', 'syndic_article'].includes(type_objet)) return;
 	changeTimelineMode('evenements');
 	setLateralSidebarExpanded(false);
 	updateMenuIcon(['evenements'], 'mainView');
 	flouterLesBullesEtLosangesNonSelectionnes(id_objet)
 
-	const url = CCN.projet.url_popup_evenement + "&page=" + type_objet + "&id_" + type_objet + "=" + id_objet;
+	const url = CCN.projet.url_popup_evenement + "&page=article&id_article=" + id_objet;
 	loadContentInMainSidebar(
 		url,
 		() => {
@@ -964,8 +972,8 @@ function callArticleEvenement(id_objet, type_objet) {
 				{
 					'type_objet': 'evenements',
 					'id_article': id_objet,
-					'page': type_objet
-				}, CCN.lang.evenement, "./spip.php?page=" + type_objet + "&id_article=" + id_objet + "&mode=complet"
+					'page': "article"
+				}, CCN.lang.evenement, "./spip.php?page=article&id_article=" + id_objet + "&mode=complet"
 			);
 		},
 		"evenement"

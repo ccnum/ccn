@@ -76,27 +76,40 @@ function fictionsv2_post_edition($flux) {
 }
 
 /**
- * Connexion SSO : un prof inscrit au projet de l'année (groupe libre ENT "Fictions
- * <année>") crée sa rubrique d'histoire à sa première connexion (cf inc/fictionsv2_cioidc.php).
+ * Connexion SSO : trace l'inscription d'un prof au projet de l'année (groupe libre ENT
+ * "Fictions <année>"). Ne crée plus d'histoire (#520) : une histoire par compte faussait
+ * le compte (un enseignant peut gérer plusieurs classes, #519) ; les histoires se créent
+ * depuis la liste des participants (ecrire/?exec=fictionsv2_associations).
  * Année calendaire réelle, pas _ANNEE_SCOLAIRE qui suit le cookie du sélecteur d'année.
  */
 function fictionsv2_cioidc_userinfo($flux) {
 	include_spip('inc/fictionsv2_cioidc');
 
+	// Mêmes traces que thematique_cioidc_userinfo() : tout ce que l'ENT envoie, puis
+	// chaque décision, pour diagnostiquer une inscription non reconnue.
+	spip_log('fictionsv2 userinfo args=' . json_encode($flux['args']) . ' data=' . json_encode($flux['data']), 'cioidc');
+
 	$uid = (string) (reset($flux['args']) ?: '');
 	$profils = (string) ($flux['data']['ENTPersonProfils [ENS|TUT|ELV]'] ?? '');
-	if (!$uid || strpos($profils, 'ENS') === false) {
+	$is_enseignant = strpos($profils, 'ENS') !== false;
+	spip_log("fictionsv2 userinfo uid=$uid ENTPersonProfils=$profils => enseignant:" . ($is_enseignant ? 'oui' : 'non'), 'cioidc');
+	if (!$uid || !$is_enseignant) {
 		return $flux;
 	}
 
 	$annee = intval(_ANNEE_ACTUELLE_CALCULEE);
+	$nom_site = $GLOBALS['meta']['nom_site'] ?? '';
 	$groupes_libres = fictionsv2_cioidc_normaliser_liste($flux['data']['ENTGroupesLibres'] ?? []);
-	if (!fictionsv2_cioidc_est_inscrit($groupes_libres, $GLOBALS['meta']['nom_site'] ?? '', $annee)) {
-		spip_log("fictionsv2 uid=$uid non inscrit au projet $annee, aucune histoire créée", 'cioidc');
+	spip_log(
+		"fictionsv2 userinfo uid=$uid groupes libres=" . json_encode(array_map(fn($g) => $g->name ?? '', $groupes_libres), JSON_UNESCAPED_UNICODE)
+			. " préfixe attendu=" . fictionsv2_cioidc_normaliser_nom(explode('.', $nom_site)[0]) . $annee,
+		'cioidc'
+	);
+	if (!fictionsv2_cioidc_est_inscrit($groupes_libres, $nom_site, $annee)) {
+		spip_log("fictionsv2 uid=$uid non inscrit au projet $annee", 'cioidc');
 		return $flux;
 	}
-
-	fictionsv2_cioidc_histoire_prof($uid, $annee);
+	spip_log("fictionsv2 uid=$uid inscrit au projet $annee (participants et histoires : ecrire/?exec=fictionsv2_associations)", 'cioidc');
 	return $flux;
 }
 

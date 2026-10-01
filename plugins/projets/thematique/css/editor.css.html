@@ -211,12 +211,20 @@ p.boutons:has(input[type="submit"]) {
 	font-size: 14px !important;
 	color: var(--color-default) !important;
 	line-height: 18px !important;
-	padding-left: 0.5rem;
 	padding-right: 1rem;
 }
 
 .editer-groupe .editer {
 	margin-bottom: 20px;
+}
+
+.editer-groupe .dropfile {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	border-radius: 6px;
+	border: 2px dotted var(--color-tonic);
+	background: repeating-conic-gradient(#f3f3f3 0% 25%, #fff 0% 50%) 0 0 / 40px 40px;  /* damier */
 }
 
 .editer-groupe .dropfileor {
@@ -225,6 +233,10 @@ p.boutons:has(input[type="submit"]) {
 
 .editer-groupe .editer:last-child {
 	margin-bottom: 0;
+}
+
+.editer-groupe .editer-label {
+	display: none;
 }
 
 /* Titre + date du formulaire "Publier un article" sur une même ligne
@@ -289,7 +301,7 @@ p.boutons:has(input[type="submit"]) {
    <form> de rédaction (étape 1), pas un enfant. */
 .formulaire_public_publier_article > .editer-groupe {
 	display: flex;
-	gap: 36px;
+	gap: 68px;
 	height: 100%;
 	min-height: 0;
 }
@@ -300,6 +312,7 @@ p.boutons:has(input[type="submit"]) {
 
 .formulaire_public_publier_article {
 	height: 100%;
+	min-height: 0;
 }
 
 /* Ascenseur propre à la colonne de gauche (dropzone + liste des
@@ -311,7 +324,18 @@ p.boutons:has(input[type="submit"]) {
 	flex: 1;
 	display: flex;
     flex-direction: column;
+	background-color: var(--color-background-tabs);
+	padding: 1rem;
 }
+
+.sidebar-etape-2 {
+	flex: 0 0 auto;
+	display: flex;
+	flex-direction: column;
+	gap: 1rem;
+	margin-bottom: 1rem;
+}
+
 
 #sidebar-etape-2-container .ajax-id-documents {
 	flex: 1;
@@ -375,6 +399,18 @@ p.boutons:has(input[type="submit"]) {
 	flex: 1;
 }
 
+/* Document déjà inséré dans le texte (#498, cf majDocumentsInseres) */
+.fichier.insere {
+	background-color: #f2f2f2;
+}
+
+.fichier.insere .left-col,
+.fichier.insere .name,
+.fichier.insere .size,
+.fichier.insere .document-ligne-3 {
+	opacity: 0.5;
+}
+
 /************ Réécriture du visuel généré par #BOUTON_ACTION **********/
 
 .fichier .document-ligne-1 .bouton_action_post:has(.circle-xmark) {
@@ -435,13 +471,14 @@ p.boutons:has(input[type="submit"]) {
 }
 
 .publier-article-formats-autorises {
-	color: var(--color-gris-2);
+	color: var(--color-tonic);
 	font-size: 0.85em;
-	margin: 0.5em 0 1em;
+	margin-top: 6px;
 }
 
 .publier-article-formats-autorises a {
-	color: var(--color-tonic);
+	color: inherit;
+	text-decoration: underline;
 }
 
 /*Forum*/

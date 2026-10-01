@@ -1,0 +1,133 @@
+[(#REM) Associations d'une année d'écriture (#525) : calendrier et participants (#518,
+#519), histoires (#520), plan d'associations (#521, #523) et son application aux
+chapitres (#524). Saisies par formulaires CVT (formulaires/fictionsv2_*), opérations
+ponctuelles (retrait, synchronisation, génération, validation) par
+action/fictionsv2_associations.php via BOUTON_ACTION.
+Accès : ecrire/?exec=fictionsv2_associations (options annee=2026, id_participant=N
+pour modifier un participant). ]
+[(#AUTORISER{fictionsv2associations}|sinon_interdire_acces)]
+#SET{annee, #ENV{annee}|match{^\d{4}$}|sinon{#CONST{_ANNEE_SCOLAIRE}}}
+#SET{d, #GET{annee}|fictionsv2_associations_donnees_filtre}
+#SET{verrouille, #GET{d}|table_valeur{verrouille}}
+#SET{statut_plan, #GET{d}|table_valeur{plan_statut}}
+#SET{comptes, #GET{d}|table_valeur{comptes}}
+#SET{cle_phase, #VAL{fictionsv2:phase_}|concat{#GET{d}|table_valeur{phase}}}
+#SET{cle_statut, #VAL{fictionsv2:plan_statut_}|concat{#GET{statut_plan}}}
+#SET{code_ok, #ENV{ok}|match{^[a-z_]+$}}
+#SET{code_erreur, #ENV{erreur}|match{^[a-z_]+$}}
+#SET{self, #URL_ECRIRE{fictionsv2_associations}|parametre_url{annee, #GET{annee}}}
+#SET{arg_synchroniser, #GET{annee}|concat{-synchroniser}}
+#SET{arg_generer, #GET{annee}|concat{-generer}}
+#SET{arg_valider, #GET{annee}|concat{-valider}}
+
+<h1 class="grostitre"><:fictionsv2:associations_titre:> #GET{annee}</h1>
+
+[(#GET{code_ok}|oui)
+<div class="notice success">[(#VAL{fictionsv2:ok_}|concat{#GET{code_ok}}|_T)]</div>
+]
+[(#GET{code_erreur}|oui)
+<div class="notice error">[(#VAL{fictionsv2:erreur_}|concat{#GET{code_erreur}}|_T)]</div>
+]
+
+<form method="get" action="#URL_ECRIRE" class="formulaire_spip">
+	<div class="editer-groupe">
+		<div class="editer editer_annee">
+			<label for="annee"><:fictionsv2:associations_annee:></label>
+			<input type="text" class="text" id="annee" name="annee" value="#GET{annee}" size="4" inputmode="numeric" pattern="\d{4}" />
+		</div>
+	</div>
+	<input type="hidden" name="exec" value="fictionsv2_associations" />
+	<p class="boutons"><button type="submit" class="btn btn_mini"><:fictionsv2:associations_afficher:></button></p>
+</form>
+
+[(#REM) ----- Calendrier (#518) ----- ]
+<h2><:fictionsv2:associations_calendrier:></h2>
+<p><:fictionsv2:associations_phase:> <strong>[(#GET{cle_phase}|_T)]</strong></p>
+#FORMULAIRE_FICTIONSV2_CALENDRIER{#GET{annee}}
+
+[(#REM) ----- Participants (#518, #519) ----- ]
+<h2><:fictionsv2:associations_participants:></h2>
+<B_participants>
+<table class="spip liste">
+	<thead>
+		<tr>
+			<th scope="col"><:fictionsv2:associations_nom:></th>
+			<th scope="col"><:fictionsv2:associations_type:></th>
+			<th scope="col"><:fictionsv2:associations_compte:></th>
+			<th scope="col"><:fictionsv2:associations_histoire:></th>
+			<th scope="col"></th>
+		</tr>
+	</thead>
+	<tbody>
+	<BOUCLE_participants(DATA){source table, #GET{d}|table_valeur{participants}}>
+		#SET{cle_type, #VAL{fictionsv2:participant_type_}|concat{#VALEUR{type}}}
+		#SET{arg_retirer, #GET{annee}|concat{-retirer-, #VALEUR{id}}}
+		<tr class="[(#COMPTEUR_BOUCLE|alterner{row_odd,row_even})][(#VALEUR{id}|=={#ENV{id_participant}}|oui) on]">
+			<td><strong>#VALEUR{nom}</strong></td>
+			<td>[(#GET{cle_type}|_T)]</td>
+			<td>#VALEUR{compte}</td>
+			<td>[<a href="[(#URL_ECRIRE{rubrique, id_rubrique=#VALEUR{histoire}})]">(#VALEUR{histoire_titre})</a>]</td>
+			<td>
+				<a href="[(#GET{self}|parametre_url{id_participant, #VALEUR{id}})]#formulaire_fictionsv2_participant" class="btn btn_mini btn_secondaire"><:fictionsv2:associations_modifier:></a>
+				[(#GET{verrouille}|non)
+				[(#BOUTON_ACTION{<:fictionsv2:associations_retirer:>, #URL_ACTION_AUTEUR{fictionsv2_associations, #GET{arg_retirer}}, btn_mini btn_secondaire, <:fictionsv2:associations_retirer_confirmer:>})]
+				]
+			</td>
+		</tr>
+	</BOUCLE_participants>
+	</tbody>
+</table>
+</B_participants>
+<p><:fictionsv2:associations_aucun_participant:></p>
+<//B_participants>
+
+<div id="formulaire_fictionsv2_participant">
+	#FORMULAIRE_FICTIONSV2_PARTICIPANT{#GET{annee}, #ENV{id_participant}}
+</div>
+
+[(#REM) ----- Histoires (#520) ----- ]
+<h2><:fictionsv2:associations_histoires:></h2>
+#SET{nb_attendu, #GET{d}|table_valeur{histoires_attendu}}
+#SET{nb_reel, #GET{d}|table_valeur{histoires_reel}}
+<p><:fictionsv2:associations_histoires_nombre{attendu=#GET{nb_attendu}, reel=#GET{nb_reel}}:></p>
+[(#GET{d}|table_valeur{annee_sans_rubrique}|oui)<p class="notice error"><:fictionsv2:erreur_annee_sans_rubrique:></p>]
+[(#GET{d}|table_valeur{annee_sans_rubrique}|non)
+	[(#BOUTON_ACTION{<:fictionsv2:associations_synchroniser:>, #URL_ACTION_AUTEUR{fictionsv2_associations, #GET{arg_synchroniser}}, btn_mini})]
+]
+
+[(#REM) ----- Plan d'associations (#521, #523, #524) ----- ]
+<h2><:fictionsv2:associations_plan:></h2>
+<p><:fictionsv2:associations_plan_statut:> <strong>[(#GET{cle_statut}|_T)]</strong>[ — (#GET{d}|table_valeur{plan_valide}|affdate_heure)]</p>
+
+<B_echeances>
+<p><:fictionsv2:associations_echeances:></p>
+<ul>
+<BOUCLE_echeances(DATA){source table, #GET{d}|table_valeur{echeances}}>
+	#SET{debut, #VALEUR{debut}|affdate}
+	#SET{fin, #VALEUR{fin}|affdate}
+	<li><:fictionsv2:associations_echeance{chapitre=#CLE, debut=#GET{debut}, fin=#GET{fin}}:></li>
+</BOUCLE_echeances>
+</ul>
+</B_echeances>
+
+[(#GET{verrouille}|non)
+	[(#BOUTON_ACTION{<:fictionsv2:associations_generer:>, #URL_ACTION_AUTEUR{fictionsv2_associations, #GET{arg_generer}}, btn_mini, <:fictionsv2:associations_generer_confirmer:>})]
+]
+
+#FORMULAIRE_FICTIONSV2_AFFECTATIONS{#GET{annee}}
+
+[(#GET{statut_plan}|=={proposition}|oui)
+	[(#BOUTON_ACTION{<:fictionsv2:associations_valider:>, #URL_ACTION_AUTEUR{fictionsv2_associations, #GET{arg_valider}}, '', <:fictionsv2:associations_valider_confirmer:>})]
+]
+
+[(#REM) ----- Anomalies (#525) ----- ]
+<h2><:fictionsv2:associations_anomalies:></h2>
+<B_anomalies>
+<ul class="notice error">
+<BOUCLE_anomalies(DATA){source table, #GET{d}|table_valeur{anomalies}}>
+	<li>#VALEUR</li>
+</BOUCLE_anomalies>
+</ul>
+</B_anomalies>
+<p class="notice success"><:fictionsv2:associations_aucune_anomalie:></p>
+<//B_anomalies>

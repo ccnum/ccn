@@ -1,14 +1,15 @@
 [(#REM)
 
   Personnalisation CCN (issue #217) : dispatcher entre plusieurs mises en
-  page — article_publie_reponse.html pour une réponse à une mission
+  page — article_publie_mission.html pour une nouvelle mission
+  (type_objet=consignes), article_publie_reponse.html pour une réponse à une mission
   (type_objet=travail_en_cours), article_publie_agenda.html pour une date
   publiée dans l'Agenda (type_objet=blogs), article_publie_generique.html
   pour tout autre type d'article publié. Surcharge de
   plugins/notifications/notifications/article_publie.html.
 
   Fichier séparé pour chaque mise en page, sélectionné via une variable
-  #GET{cas} à plat (plutôt qu'un seul fichier ou des blocs conditionnels
+  GET{cas} à plat (plutôt qu'un seul fichier ou des blocs conditionnels
   imbriqués) : les crochets conditionnels de SPIP ne supportent pas
   l'imbrication profonde, un bloc long contenant lui-même plusieurs
   conditions casse le parseur et fait ressortir le contenu en texte brut
@@ -20,10 +21,14 @@
 #SET{type_objet,#ID_ARTICLE|thematique_type_objet_article}
 </BOUCLE_type>
 #SET{cas,generique}
+[(#GET{type_objet}|=={consignes}|oui) #SET{cas,mission}]
 [(#GET{type_objet}|=={travail_en_cours}|oui) #SET{cas,reponse}]
 [(#GET{type_objet}|=={blogs}|oui) #SET{cas,agenda}]
 [(#GET{type_objet}|=={evenements}|oui) #SET{cas,salle_pros}]
 [(#GET{type_objet}|=={ressources}|oui) #SET{cas,ressource}]
+[(#GET{cas}|=={mission}|oui)
+	#INCLURE{fond=notifications/article_publie_mission, env}
+]
 [(#GET{cas}|=={reponse}|oui)
 	#INCLURE{fond=notifications/article_publie_reponse, env}
 ]

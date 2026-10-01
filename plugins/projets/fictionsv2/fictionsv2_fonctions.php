@@ -4,6 +4,11 @@
 // sont définis par le plugin ccn (ccn_fonctions.php)
 
 include_spip('base/abstract_sql');
+// Filtres LECTURE_DROITS / ECRITURE_DROITS / EST_AUTEUR_DROITS des squelettes
+// (liste-cadavres-auteur*.html, rubrique-cadavres.html) : SPIP ne charge que
+// <prefixe>_fonctions.php, pas un fichier au nom libre — sans cette inclusion,
+// "Filtre EST_AUTEUR_DROITS non défini" (#441).
+include_spip('lecturedroits');
 
 /**
  * Retourne l'ID du mot-clé correspondant au titre donné, avec cache par requête.
@@ -225,4 +230,43 @@ function fictionsv2_nb_chapitres_histoire($id_rubrique): int {
 		'id_rubrique=' . intval($id_rubrique),
 		sql_in('statut', ['publie', 'prop']),
 	]);
+}
+
+/**
+ * Noms des classes (participants) gérées par un compte pour une année, séparés par des
+ * virgules (#519), '' si aucune. Filtre :
+ * [(#SESSION{id_auteur}|fictionsv2_noms_classes_auteur{#ENV{annee_scolaire}})]
+ */
+function fictionsv2_noms_classes_auteur($id_auteur, $annee): string {
+	include_spip('inc/fictionsv2_participants');
+	$classes = array_filter(
+		fictionsv2_participants_auteur(intval($annee), intval($id_auteur)),
+		fn($participant) => $participant['type'] === 'classe'
+	);
+	return implode(', ', array_column($classes, 'nom'));
+}
+
+/**
+ * Nom du participant (classe ou écrivain) affecté à un chapitre, '' si aucun : c'est
+ * lui, et non le compte SPIP, qui apparaît sur le site (#518, #524). Filtre :
+ * [(#ID_ARTICLE|fictionsv2_nom_participant_chapitre|sinon{#NOM})]
+ */
+function fictionsv2_nom_participant_chapitre($id_article): string {
+	include_spip('inc/fictionsv2_plan');
+	$id_participant = fictionsv2_participant_chapitre(intval($id_article));
+	if (!$id_participant) {
+		return '';
+	}
+	$id_rubrique = (int) sql_getfetsel('id_rubrique', 'spip_articles', 'id_article=' . intval($id_article));
+	$annee = fictionsv2_annee_histoire($id_rubrique);
+	return (string) (fictionsv2_participants($annee, false)[$id_participant]['nom'] ?? '');
+}
+
+/**
+ * Données de la page des associations (#525). Filtre :
+ * #SET{donnees, #GET{annee}|fictionsv2_associations_donnees}
+ */
+function fictionsv2_associations_donnees_filtre($annee): array {
+	include_spip('inc/fictionsv2_plan');
+	return fictionsv2_associations_donnees(intval($annee));
 }

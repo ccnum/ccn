@@ -5,7 +5,6 @@ if (!defined('_ECRIRE_INC_VERSION')) {
 }
 
 return [
-
 	// E
 	'ccn_extension_non_autorisee' => 'Extension non autorisée : .@ext@. Formats acceptés : @formats@',
 

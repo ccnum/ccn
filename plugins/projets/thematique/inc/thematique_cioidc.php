@@ -267,6 +267,46 @@ function thematique_cioidc_bloquer_si_archive(array $auteur) {
 	}
 }
 
+// Titre de la rubrique d'une classe ENT sous "Travail des classes" : nom de la classe
+// suivi de son établissement (ex: "5EME1 - Collège Jean Jaurès"), pour distinguer deux
+// classes homonymes de collèges différents inscrits au même CCN — sans quoi elles
+// partageaient la même rubrique. L'établissement vient du group_structure_id de la
+// classe (et non du premier UAI du compte : un prof peut enseigner dans plusieurs
+// établissements). Le "/" est remplacé car creer_rubrique_nommee() y voit un
+// séparateur d'arborescence.
+function thematique_cioidc_titre_rubrique_classe($groupe) {
+	$titre = (string) $groupe->group_name;
+	if ($nom_etablissement = thematique_cioidc_nom_etablissement($groupe->group_structure_id ?? '')) {
+		$titre .= ' - ' . $nom_etablissement;
+	}
+	return str_replace('/', '-', $titre);
+}
+
+// Rubrique d'une classe ENT pour un prof : trouvée ou créée sous son titre avec
+// établissement. Une rubrique créée avant l'ajout de l'établissement (titre = nom de
+// classe seul, exactement) est renommée plutôt que dupliquée, pour ne pas perdre son
+// contenu ni ses liens auteurs.
+function thematique_cioidc_rubrique_classe_prof($groupe, $id_travail_classes) {
+	if (!$id_travail_classes) {
+		return null;
+	}
+	$titre = thematique_cioidc_titre_rubrique_classe($groupe);
+	if ($id_classe = thematique_trouver_rubrique($titre, $id_travail_classes)) {
+		return $id_classe;
+	}
+	$id_ancienne = sql_getfetsel(
+		'id_rubrique',
+		'spip_rubriques',
+		'titre = ' . sql_quote($groupe->group_name) . ' AND id_parent=' . intval($id_travail_classes)
+	);
+	if ($id_ancienne && $titre !== $groupe->group_name) {
+		sql_updateq('spip_rubriques', ['titre' => $titre], 'id_rubrique=' . intval($id_ancienne));
+		spip_log("userinfo rubrique classe #$id_ancienne renommée {$groupe->group_name} => $titre", 'cioidc');
+		return $id_ancienne;
+	}
+	return thematique_trouver_ou_creer_rubrique($titre, $id_travail_classes);
+}
+
 // Rubriques de classe/projet à lier à l'auteur.
 // Seul un prof inscrit au projet de CE site pour l'année (groupe libre pertinent, cf
 // thematique_cioidc_groupes_libres_pertinents()) fait créer ses classes ENT sous
@@ -288,7 +328,7 @@ function thematique_cioidc_resoudre_liens_rubriques(
 
 	if ($is_enseignant && !$is_webmestre && $groupes_libres_pertinents) {
 		foreach ($classes_reelles as $groupe) {
-			if ($id_classe = thematique_trouver_ou_creer_rubrique($groupe->group_name, $id_travail_classes)) {
+			if ($id_classe = thematique_cioidc_rubrique_classe_prof($groupe, $id_travail_classes)) {
 				$classes_a_lier[] = $id_classe;
 			}
 		}
@@ -299,7 +339,10 @@ function thematique_cioidc_resoudre_liens_rubriques(
 		}
 	} elseif ($is_eleve) {
 		foreach ($classes_reelles as $groupe) {
-			if ($id_classe = thematique_trouver_rubrique($groupe->group_name, $id_travail_classes)) {
+			if ($id_classe = thematique_trouver_rubrique(
+				thematique_cioidc_titre_rubrique_classe($groupe),
+				$id_travail_classes
+			)) {
 				$classes_a_lier[] = $id_classe;
 			}
 		}
