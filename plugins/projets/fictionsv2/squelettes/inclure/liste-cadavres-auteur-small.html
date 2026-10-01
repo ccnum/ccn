@@ -29,7 +29,7 @@ inc/fictionsv2_autorisation.php (#441).
 						<div class="liste-tooltip-titre-chapitre">#TITRE</div>
 						<BOUCLE_auteur_chapitre1(AUTEURS){id_article}{0,1}>
 						<div class="liste-tooltip-photo">[(#LOGO_AUTEUR||image_reduire{42,42})]</div>
-						<div class="liste-tooltip-auteur">#NOM</div>
+						<div class="liste-tooltip-auteur">[(#ID_ARTICLE|fictionsv2_nom_participant_chapitre|sinon{#NOM})]</div>
 						</BOUCLE_auteur_chapitre1>
 					</div>
 					<div class="liste-tooltip-bulle">
@@ -50,7 +50,7 @@ inc/fictionsv2_autorisation.php (#441).
 						<div class="liste-tooltip-titre-chapitre">#TITRE</div>
 						<BOUCLE_auteur_tous(AUTEURS){id_article = #ID_ARTICLE}{0,1}>
 						<div class="liste-tooltip-photo">[(#LOGO_AUTEUR||image_reduire{42,42})]</div>
-						<div class="liste-tooltip-auteur">#NOM</div>
+						<div class="liste-tooltip-auteur">[(#ID_ARTICLE|fictionsv2_nom_participant_chapitre|sinon{#NOM})]</div>
 						</BOUCLE_auteur_tous>
 					</div>
 					<div class="liste-tooltip-bulle">

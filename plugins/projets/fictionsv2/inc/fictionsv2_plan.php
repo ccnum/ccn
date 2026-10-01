@@ -218,6 +218,8 @@ function fictionsv2_plan_modifier_affectation(int $annee, int $id_rubrique, int 
 	$config['plan'][$id_rubrique][$chapitre] = $id_participant;
 	fictionsv2_annee_config_ecrire($annee, $config);
 	spip_log("fictionsv2 associations $annee : histoire #$id_rubrique chapitre $chapitre affecté au participant #$id_participant", 'fictionsv2');
+	// Plan déjà validé : les liens suivent immédiatement (#524)
+	fictionsv2_plan_appliquer($annee);
 	return '';
 }
 
@@ -239,5 +241,64 @@ function fictionsv2_plan_valider(int $annee): string {
 	$config['plan_valide'] = date('Y-m-d H:i:s');
 	fictionsv2_annee_config_ecrire($annee, $config);
 	spip_log("fictionsv2 associations $annee : plan validé", 'fictionsv2');
+	fictionsv2_plan_appliquer($annee);
 	return '';
+}
+
+/**
+ * Applique le plan validé aux liens SPIP (#524) : chaque chapitre de rotation est lié
+ * (spip_auteurs_liens) au compte du participant affecté, que les droits d'écriture
+ * reconnaissent (fictionsv2_auteur_affecte_chapitre(), #AUTORISER{ecrirechapitre}) ;
+ * les autres comptes sont retirés des chapitres non encore écrits. Un chapitre écrit
+ * garde ses auteurs (historique). Prologue et chapitre 1 commun, hors rotation, ne sont
+ * pas touchés.
+ *
+ * @return array{lies: int, retires: int}
+ */
+function fictionsv2_plan_appliquer(int $annee): array {
+	include_spip('action/editer_liens');
+	$resultat = ['lies' => 0, 'retires' => 0];
+	$config = fictionsv2_annee_config($annee);
+	if ($config['plan_valide'] === '') {
+		return $resultat;
+	}
+	$participants = fictionsv2_participants($annee);
+	foreach ($config['plan'] as $id_rubrique => $affectations) {
+		$chapitres = fictionsv2_chapitres_histoire((int) $id_rubrique);
+		foreach ($affectations as $chapitre => $id_participant) {
+			$id_article = (int) ($chapitres[$chapitre] ?? 0);
+			$id_auteur = (int) ($participants[$id_participant]['id_auteur'] ?? 0);
+			if (!$id_article || !$id_auteur) {
+				continue;
+			}
+			if (!sql_countsel('spip_auteurs_liens', "objet='article' AND id_objet=$id_article AND id_auteur=$id_auteur")) {
+				objet_associer(['auteur' => $id_auteur], ['article' => $id_article]);
+				$resultat['lies']++;
+			}
+			if (fictionsv2_chapitre_ecrit($id_article)) {
+				continue;
+			}
+			$autres = sql_allfetsel('id_auteur', 'spip_auteurs_liens', "objet='article' AND id_objet=$id_article AND id_auteur<>$id_auteur");
+			foreach (array_column($autres, 'id_auteur') as $id_autre) {
+				objet_dissocier(['auteur' => (int) $id_autre], ['article' => $id_article]);
+				$resultat['retires']++;
+			}
+		}
+	}
+	spip_log("fictionsv2 associations $annee : plan appliqué ({$resultat['lies']} lien(s) posé(s), {$resultat['retires']} retiré(s))", 'fictionsv2');
+	return $resultat;
+}
+
+/**
+ * Participant affecté à un chapitre de rotation selon le plan de son année, 0 si aucun.
+ */
+function fictionsv2_participant_chapitre(int $id_article): int {
+	static $cache = [];
+	if (!isset($cache[$id_article])) {
+		$id_rubrique = (int) sql_getfetsel('id_rubrique', 'spip_articles', 'id_article=' . $id_article);
+		$annee = $id_rubrique ? fictionsv2_annee_histoire($id_rubrique) : 0;
+		$chapitre = $annee ? array_search($id_article, fictionsv2_chapitres_histoire($id_rubrique), true) : false;
+		$cache[$id_article] = $chapitre === false ? 0 : (int) (fictionsv2_plan($annee)[$id_rubrique][$chapitre] ?? 0);
+	}
+	return $cache[$id_article];
 }

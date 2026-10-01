@@ -245,3 +245,19 @@ function fictionsv2_noms_classes_auteur($id_auteur, $annee): string {
 	);
 	return implode(', ', array_column($classes, 'nom'));
 }
+
+/**
+ * Nom du participant (classe ou écrivain) affecté à un chapitre, '' si aucun : c'est
+ * lui, et non le compte SPIP, qui apparaît sur le site (#518, #524). Filtre :
+ * [(#ID_ARTICLE|fictionsv2_nom_participant_chapitre|sinon{#NOM})]
+ */
+function fictionsv2_nom_participant_chapitre($id_article): string {
+	include_spip('inc/fictionsv2_plan');
+	$id_participant = fictionsv2_participant_chapitre(intval($id_article));
+	if (!$id_participant) {
+		return '';
+	}
+	$id_rubrique = (int) sql_getfetsel('id_rubrique', 'spip_articles', 'id_article=' . intval($id_article));
+	$annee = fictionsv2_annee_histoire($id_rubrique);
+	return (string) (fictionsv2_participants($annee, false)[$id_participant]['nom'] ?? '');
+}

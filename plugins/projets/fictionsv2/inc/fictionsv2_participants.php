@@ -194,6 +194,10 @@ function fictionsv2_participant_modifier(int $annee, int $id_participant, string
 	);
 	fictionsv2_annee_config_ecrire($annee, $config);
 	spip_log("fictionsv2 associations $annee : participant #$id_participant modifié ($type, " . trim($nom) . ", auteur #$id_auteur)", 'fictionsv2');
+	// Classe qui change d'enseignant (#519) : ses chapitres non écrits passent au
+	// nouveau compte si le plan est validé (#524)
+	include_spip('inc/fictionsv2_plan');
+	fictionsv2_plan_appliquer($annee);
 	return '';
 }
 
