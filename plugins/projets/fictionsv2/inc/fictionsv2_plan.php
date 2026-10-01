@@ -1,0 +1,142 @@
+<?php
+
+if (!defined('_ECRIRE_INC_VERSION')) {
+	return;
+}
+
+/**
+ * Plan d'associations d'une année : qui écrit quel chapitre de quelle histoire.
+ *
+ * Rotation circulaire simple (#521), plus facile à vérifier par un humain qu'un tirage
+ * aléatoire : les participants actifs sont pris dans l'ordre de saisie, le participant
+ * d'indice i possède l'histoire i (cf #520) et écrit le 1er chapitre de rotation
+ * (chapitre 2) de son histoire, le 2e (chapitre 3) de l'histoire i+1, le 3e (chapitre 4)
+ * de l'histoire i+2, modulo le nombre d'histoires. Chaque histoire reçoit ainsi ses
+ * chapitres de trois participants différents, à condition qu'il y en ait au moins trois.
+ * L'écrivain est un participant comme les autres.
+ *
+ * Format d'un plan : [id_rubrique_histoire => [numero_chapitre => id_participant]].
+ */
+
+include_spip('inc/fictionsv2_participants');
+include_spip('inc/fictionsv2_histoires');
+
+/**
+ * Calcule la rotation.
+ *
+ * @param int[] $ordre    id_participant dans l'ordre de rotation
+ * @param int[] $histoires [id_participant => id_rubrique de son histoire]
+ * @return array<int, array<int, int>> plan, vide si moins de participants que de
+ *   chapitres (une histoire recevrait deux chapitres du même participant)
+ */
+function fictionsv2_rotation(array $ordre, array $histoires): array {
+	$ordre = array_values(array_filter($ordre, fn($id) => !empty($histoires[$id])));
+	$n = count($ordre);
+	if ($n < count(FICTIONSV2_CHAPITRES)) {
+		return [];
+	}
+	$plan = [];
+	foreach ($ordre as $i => $id_proprietaire) {
+		foreach (FICTIONSV2_CHAPITRES as $j => $chapitre) {
+			// L'histoire i reçoit son j-ième chapitre de rotation du participant i - j.
+			$plan[(int) $histoires[$id_proprietaire]][$chapitre] = (int) $ordre[($i - $j + $n) % $n];
+		}
+	}
+	return $plan;
+}
+
+/**
+ * Rotation de l'année à partir de ses participants actifs et de leurs histoires.
+ */
+function fictionsv2_rotation_annee(int $annee): array {
+	$etat = fictionsv2_histoires_etat($annee);
+	return fictionsv2_rotation(array_keys(fictionsv2_participants($annee)), $etat['attribuees']);
+}
+
+/**
+ * Anomalies d'un plan, sous forme de codes (item de langue fictionsv2:anomalie_<code>)
+ * avec leurs paramètres.
+ *
+ * @return array<int, array{code: string, params: array}>
+ */
+function fictionsv2_plan_anomalies(int $annee, array $plan): array {
+	$anomalies = [];
+	$participants = fictionsv2_participants($annee);
+	$etat = fictionsv2_histoires_etat($annee);
+	$nom = fn($id) => $participants[$id]['nom'] ?? ('#' . $id);
+
+	if (count($participants) < count(FICTIONSV2_CHAPITRES)) {
+		$anomalies[] = ['code' => 'trop_peu_participants', 'params' => ['nb' => count($participants), 'min' => count(FICTIONSV2_CHAPITRES)]];
+	}
+	$ecrivains = array_filter($participants, fn($p) => $p['type'] === 'ecrivain');
+	if (count($ecrivains) !== 1) {
+		$anomalies[] = ['code' => 'ecrivains', 'params' => ['nb' => count($ecrivains)]];
+	}
+	foreach ($etat['manquantes'] as $id) {
+		$anomalies[] = ['code' => 'histoire_manquante', 'params' => ['participant' => $nom($id)]];
+	}
+	foreach ($etat['en_trop'] as $id_rubrique) {
+		$anomalies[] = ['code' => 'histoire_en_trop', 'params' => ['id_rubrique' => $id_rubrique]];
+	}
+	foreach ($participants as $id => $participant) {
+		if (!sql_countsel('spip_auteurs', 'id_auteur=' . intval($participant['id_auteur']) . " AND statut<>'5poubelle'")) {
+			$anomalies[] = ['code' => 'compte_invalide', 'params' => ['participant' => $participant['nom']]];
+		}
+	}
+
+	$nb_chapitres = array_fill_keys(array_keys($participants), 0);
+	foreach ($etat['attribuees'] as $id_rubrique) {
+		$chapitres_histoire = fictionsv2_chapitres_histoire($id_rubrique);
+		$ecrivains_histoire = [];
+		foreach (FICTIONSV2_CHAPITRES as $chapitre) {
+			$id = (int) ($plan[$id_rubrique][$chapitre] ?? 0);
+			if (!isset($chapitres_histoire[$chapitre])) {
+				$anomalies[] = ['code' => 'chapitre_absent', 'params' => ['id_rubrique' => $id_rubrique, 'chapitre' => $chapitre]];
+			}
+			if (!$id) {
+				$anomalies[] = ['code' => 'chapitre_sans_participant', 'params' => ['id_rubrique' => $id_rubrique, 'chapitre' => $chapitre]];
+				continue;
+			}
+			if (!isset($participants[$id])) {
+				$anomalies[] = ['code' => 'participant_inactif', 'params' => ['id_rubrique' => $id_rubrique, 'chapitre' => $chapitre, 'participant' => $nom($id)]];
+				continue;
+			}
+			if (in_array($id, $ecrivains_histoire, true)) {
+				$anomalies[] = ['code' => 'participant_deux_fois', 'params' => ['id_rubrique' => $id_rubrique, 'participant' => $nom($id)]];
+			}
+			$ecrivains_histoire[] = $id;
+			$nb_chapitres[$id]++;
+		}
+	}
+	if ($plan) {
+		foreach ($nb_chapitres as $id => $nb) {
+			if ($nb !== count(FICTIONSV2_CHAPITRES)) {
+				$anomalies[] = ['code' => 'charge_inegale', 'params' => ['participant' => $nom($id), 'nb' => $nb, 'attendu' => count(FICTIONSV2_CHAPITRES)]];
+			}
+		}
+	}
+	return $anomalies;
+}
+
+/**
+ * Échéances indicatives de chaque chapitre de rotation : la période lancement → clôture
+ * découpée en parts égales (#521, plan calculé pour l'année entière).
+ *
+ * @return array<int, array{debut: string, fin: string}> vide si les dates ne sont pas fixées
+ */
+function fictionsv2_plan_echeances(int $annee): array {
+	$config = fictionsv2_annee_config($annee);
+	if (!$config['lancement'] || !$config['cloture']) {
+		return [];
+	}
+	$debut = strtotime($config['lancement']);
+	$duree = (strtotime($config['cloture']) - $debut) / count(FICTIONSV2_CHAPITRES);
+	$echeances = [];
+	foreach (FICTIONSV2_CHAPITRES as $j => $chapitre) {
+		$echeances[$chapitre] = [
+			'debut' => date('Y-m-d', (int) round($debut + $j * $duree)),
+			'fin' => date('Y-m-d', (int) round($debut + ($j + 1) * $duree) - ($j + 1 < count(FICTIONSV2_CHAPITRES) ? 86400 : 0)),
+		];
+	}
+	return $echeances;
+}
