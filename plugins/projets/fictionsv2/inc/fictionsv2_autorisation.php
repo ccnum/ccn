@@ -28,38 +28,50 @@ include_spip('inc/session');
 include_spip('fictionsv2_fonctions');
 
 /**
- * L'auteur est-il "sur sa zone" pour cet article : lié (spip_auteurs_liens) à la
- * rubrique de l'histoire qui contient l'article. Règle d'origine, avant #441
- * (var_id_zone == ID_RUBRIQUE) : le refactor comparait la rubrique liée à l'id de
- * l'article, jamais égaux, et le mode écriture ne s'activait pour personne. Tous les
- * liens de l'auteur comptent, pas seulement le premier.
+ * Auteur évalué : $qui (tableau auteur passé par autoriser()) ou, à défaut,
+ * l'auteur connecté.
+ *
+ * @return array{0: int, 1: bool} [id_auteur, webmestre]
  */
-function fictionsv2_auteur_sur_zone(int $id_auteur, int $id_rubrique): bool {
-	if (!$id_auteur || !$id_rubrique) {
+function fictionsv2_droits_qui(?array $qui = null): array {
+	if ($qui === null) {
+		return [intval(session_get('id_auteur') ?: 0), session_get('webmestre') === 'oui'];
+	}
+	return [intval($qui['id_auteur'] ?? 0), ($qui['webmestre'] ?? '') === 'oui'];
+}
+
+/**
+ * L'auteur est-il affecté à ce chapitre : lié (spip_auteurs_liens) à l'article du
+ * chapitre (#524). C'est ce lien que pose le plan d'associations annuel (#521, #523) ;
+ * en attendant, il s'ajoute à la main dans /ecrire (auteur de l'article). Les
+ * participants passent d'une histoire à l'autre : un lien à la rubrique de
+ * l'histoire (règle de fictions v1) ne convient pas.
+ */
+function fictionsv2_auteur_affecte_chapitre(int $id_auteur, int $id_article): bool {
+	if (!$id_auteur || !$id_article) {
 		return false;
 	}
 	return (bool) sql_countsel(
 		'spip_auteurs_liens',
-		'id_auteur=' . $id_auteur . " AND objet='rubrique' AND id_objet=" . $id_rubrique
+		'id_auteur=' . $id_auteur . " AND objet='article' AND id_objet=" . $id_article
 	);
 }
 
 /**
  * Lit les droits de lecture d'un chapitre pour l'utilisateur courant.
  *
- * Règles (issu de inclure/rubrique-cadavres.html) :
- *   webmestre : tout visible en mode 'visible'
+ * Règles :
+ *   webmestre : tout visible, 'ecriture' sur le dernier chapitre
  *   N-1       : toujours visible en mode 'visible'
- *   N (dernier, sur sa zone) : visible en mode 'ecriture'
- *   N (dernier, pas sur zone) : visible en mode 'verrouille'
+ *   N (dernier), auteur affecté au chapitre : 'ecriture' (#524)
+ *   N (dernier), autre auteur : 'verrouille'
  *   autres    : masqué
  *
  * @param int $id_article ID de l'article concerné
  * @return array {montre: bool, mode: string}
  */
-function fictionsv2_lecture_droits(int $id_article): array {
-	$id_auteur = intval(session_get('id_auteur') ?: 0);
-	$webmestre = session_get('webmestre') === 'oui';
+function fictionsv2_lecture_droits(int $id_article, ?array $qui = null): array {
+	[$id_auteur, $webmestre] = fictionsv2_droits_qui($qui);
 
 	if (!$id_auteur) {
 		return ['montre' => false, 'mode' => ''];
@@ -77,7 +89,7 @@ function fictionsv2_lecture_droits(int $id_article): array {
 
 	$est_dernier       = ($pos == $max_cadavres);
 	$est_avant_dernier = ($pos == $max_cadavres - 1);
-	$est_sur_zone      = fictionsv2_auteur_sur_zone($id_auteur, $id_rubrique);
+	$est_affecte       = fictionsv2_auteur_affecte_chapitre($id_auteur, $id_article);
 
 	// Webmestre : tout visible, et il peut écrire le dernier chapitre (règle d'origine,
 	// le refactor #441 l'avait laissé en simple lecture)
@@ -90,13 +102,13 @@ function fictionsv2_lecture_droits(int $id_article): array {
 		return ['montre' => true, 'mode' => 'visible'];
 	}
 
-	// N sur sa zone : visible (en cours d'écriture)
-	if ($est_dernier && $est_sur_zone) {
+	// N, auteur affecté au chapitre : en cours d'écriture
+	if ($est_dernier && $est_affecte) {
 		return ['montre' => true, 'mode' => 'ecriture'];
 	}
 
-	// N pas sur sa zone : verrouillé (dernière chance)
-	if ($est_dernier && !$est_sur_zone) {
+	// N, autre auteur : verrouillé
+	if ($est_dernier && !$est_affecte) {
 		return ['montre' => true, 'mode' => 'verrouille'];
 	}
 
@@ -107,16 +119,15 @@ function fictionsv2_lecture_droits(int $id_article): array {
 /**
  * Lit les droits d'écriture d'un chapitre pour l'utilisateur courant.
  *
- * Règles (issu de inclure/rubrique-cadavres.html) :
+ * Règles :
  *   webmestre + dernier : peut écrire
- *   sur sa zone + dernier : peut écrire
+ *   auteur affecté au chapitre + dernier : peut écrire (#524)
  *
  * @param int $id_article ID de l'article concerné
  * @return string 'oui' | ''
  */
-function fictionsv2_ecriture_droits(int $id_article): string {
-	$id_auteur = intval(session_get('id_auteur') ?: 0);
-	$webmestre = session_get('webmestre') === 'oui';
+function fictionsv2_ecriture_droits(int $id_article, ?array $qui = null): string {
+	[$id_auteur, $webmestre] = fictionsv2_droits_qui($qui);
 
 	if (!$id_auteur) {
 		return '';
@@ -133,13 +144,13 @@ function fictionsv2_ecriture_droits(int $id_article): string {
 	}
 
 	$est_dernier       = ($pos == $max_cadavres);
-	$est_sur_zone      = fictionsv2_auteur_sur_zone($id_auteur, $id_rubrique);
+	$est_affecte       = fictionsv2_auteur_affecte_chapitre($id_auteur, $id_article);
 
 	if ($webmestre && $est_dernier) {
 		return 'oui';
 	}
 
-	if ($est_sur_zone && $est_dernier) {
+	if ($est_affecte && $est_dernier) {
 		return 'oui';
 	}
 
@@ -155,8 +166,8 @@ function fictionsv2_ecriture_droits(int $id_article): string {
  * @param int $id_article ID de l'article concerné
  * @return string 'oui' | ''
  */
-function fictionsv2_est_auteur_droits(int $id_article): string {
-	$id_auteur = intval(session_get('id_auteur') ?: 0);
+function fictionsv2_est_auteur_droits(int $id_article, ?array $qui = null): string {
+	[$id_auteur] = fictionsv2_droits_qui($qui);
 	if (!$id_auteur) {
 		return '';
 	}
