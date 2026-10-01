@@ -12,8 +12,8 @@ if (!defined('_ECRIRE_INC_VERSION')) {
 
 $GLOBALS[$GLOBALS['idx_lang']] = [
 	// Messages d'erreur du formulaire
-	'erreur_type_invalide'      => 'Ce type de réaction n\'existe pas ou n\'est pas activé.',
-	'erreur_non_autorise'       => 'Vous n\'êtes pas autorisé à réagir à ce contenu.',
+	'erreur_type_invalide'      => 'Ce type de réaction n’existe pas ou n’est pas activé.',
+	'erreur_non_autorise'       => 'Vous n’êtes pas autorisé à réagir à ce contenu.',
 	'erreur_anonymes_interdits' => 'Les visiteurs non connectés ne peuvent pas réagir à ce contenu.',
 	'erreur_deja_pose'          => 'Vous avez déjà posé cette réaction.',
 	'erreur_type_inconnu'       => 'Type de réaction inconnu.',
