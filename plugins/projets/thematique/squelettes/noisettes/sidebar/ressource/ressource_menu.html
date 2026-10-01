@@ -30,7 +30,11 @@
 					]
 				</div>
 				<div class="liste-ressources">
-					<BOUCLE_articles(ARTICLES){id_secteur}{!par date}{tous}>
+					[(#REM) #516 : pas de critère tous ici. Sur une boucle ARTICLES, il désactive
+					le filtre par année scolaire de thematique_pre_boucle() ET le filtre de
+					statut (ressources en rédaction, proposées ou à la poubelle visibles) :
+					la liste montrait toutes les ressources de toutes les années. ]
+					<BOUCLE_articles(ARTICLES){id_secteur}{!par date}>
 						<BOUCLE_auteur(AUTEURS){id_article}>
 							#SET{nom_auteur, #NOM}
 						</BOUCLE_auteur>
