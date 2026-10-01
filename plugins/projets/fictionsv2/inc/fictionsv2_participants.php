@@ -218,6 +218,20 @@ function fictionsv2_participant_retirer(int $annee, int $id_participant): string
 }
 
 /**
+ * Participants actifs gérés par un compte SPIP (#519) : un enseignant peut gérer
+ * plusieurs classes, chacune reste un participant à part entière (sa propre histoire,
+ * ses propres affectations de chapitres).
+ *
+ * @return array<int, array> [id_participant => participant]
+ */
+function fictionsv2_participants_auteur(int $annee, int $id_auteur): array {
+	return array_filter(
+		fictionsv2_participants($annee),
+		fn($participant) => (int) $participant['id_auteur'] === $id_auteur
+	);
+}
+
+/**
  * Plan verrouillé : validé et écriture démarrée (#523). Défini ici pour que les
  * contrôles des participants n'aient pas à charger tout le plan.
  */

@@ -231,3 +231,17 @@ function fictionsv2_nb_chapitres_histoire($id_rubrique): int {
 		sql_in('statut', ['publie', 'prop']),
 	]);
 }
+
+/**
+ * Noms des classes (participants) gérées par un compte pour une année, séparés par des
+ * virgules (#519), '' si aucune. Filtre :
+ * [(#SESSION{id_auteur}|fictionsv2_noms_classes_auteur{#ENV{annee_scolaire}})]
+ */
+function fictionsv2_noms_classes_auteur($id_auteur, $annee): string {
+	include_spip('inc/fictionsv2_participants');
+	$classes = array_filter(
+		fictionsv2_participants_auteur(intval($annee), intval($id_auteur)),
+		fn($participant) => $participant['type'] === 'classe'
+	);
+	return implode(', ', array_column($classes, 'nom'));
+}

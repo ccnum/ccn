@@ -59,4 +59,5 @@ return [
 	'titre_presentation_defaut'         => 'Présentation',
 	'titre_prologue_defaut'             => 'Prologue',
 	'voir_le_forum'                     => 'Voir le forum',
+	'vos_classes'                       => 'Vos classes :',
 ];
