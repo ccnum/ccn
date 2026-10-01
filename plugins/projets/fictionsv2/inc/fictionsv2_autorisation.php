@@ -2,30 +2,20 @@
 /**
  * Fonctions de calcul des droits d'accès aux chapitres (fictionsv2).
  *
- * Centralise la logique d'autorisation actuellement éparpillée dans les
- * squelettes inclure/rubrique-cadavres.html et inclure/liste-cadavres-auteur*.html.
- * Ces fonctions lisent le contexte via session_get() — le contexte est écrit en
- * session par les squelettes via session_set() au début de la page.
+ * Centralise la logique d'autorisation des squelettes inclure/rubrique-cadavres.html
+ * et inclure/liste-cadavres-auteur*.html (#441).
+ *
+ * Autonomes : l'auteur connecté et son statut webmestre sont lus dans sa session,
+ * le nombre de chapitres de l'histoire est compté ici. Le refactor #441 faisait
+ * transiter ce contexte par #SET{x,valeur|session_set{x}}, qui inverse les
+ * arguments de session_set($nom, $valeur) : le contexte restait vide et aucun
+ * chapitre n'était affiché ni rédigeable.
  *
  * Usage squelette :
- *   #SET{id_auteur_fv2,#SESSION{id_auteur}|session_set{id_auteur_fv2}}
- *   #SET{max_cadavres_fv2,#GET{var_max_cadavres}|session_set{max_cadavres_fv2}}
- *   #SET{zone_fv2,#GET{var_id_zone}|session_set{zone_fv2}}
- *   #SET{webmaster_fv2,#SESSION{webmestre}|session_set{webmaster_fv2}}
- *   #SET{peut_lire,#ID_ARTICLE|LECTURE_DROITS{montre}}
- *   #SET{mode_aff,#ID_ARTICLE|LECTURE_DROITS{mode}}
- *   #SET{peut_ecrire,#ID_ARTICLE|ECRIRE_DROITS}
- *   #SET{est_mon_chapitre,#ID_ARTICLE|EST_AUTEUR_DROITS}
- *
- * Valeurs retournées par LECTURE_DROITS :
- *   'oui' / '' pour montre
- *   'visible' / 'verrouille' / 'ecriture' pour mode
- *
- * Valeur retournée par ECRIRE_DROITS :
- *   'oui' / ''
- *
- * Valeur retournée par EST_AUTEUR_DROITS :
- *   'oui' / ''
+ *   #ID_ARTICLE|LECTURE_DROITS{montre}  'oui' / ''
+ *   #ID_ARTICLE|LECTURE_DROITS{mode}    'visible' / 'verrouille' / 'ecriture'
+ *   #ID_ARTICLE|ECRIRE_DROITS           'oui' / ''
+ *   #ID_ARTICLE|EST_AUTEUR_DROITS       'oui' / ''
  *
  * @package fictionsv2
  */
@@ -35,6 +25,24 @@ if (!defined('_ECRIRE_INC_VERSION')) {
 }
 
 include_spip('inc/session');
+include_spip('fictionsv2_fonctions');
+
+/**
+ * L'auteur est-il "sur sa zone" pour cet article : lié (spip_auteurs_liens) à la
+ * rubrique de l'histoire qui contient l'article. Règle d'origine, avant #441
+ * (var_id_zone == ID_RUBRIQUE) : le refactor comparait la rubrique liée à l'id de
+ * l'article, jamais égaux, et le mode écriture ne s'activait pour personne. Tous les
+ * liens de l'auteur comptent, pas seulement le premier.
+ */
+function fictionsv2_auteur_sur_zone(int $id_auteur, int $id_rubrique): bool {
+	if (!$id_auteur || !$id_rubrique) {
+		return false;
+	}
+	return (bool) sql_countsel(
+		'spip_auteurs_liens',
+		'id_auteur=' . $id_auteur . " AND objet='rubrique' AND id_objet=" . $id_rubrique
+	);
+}
 
 /**
  * Lit les droits de lecture d'un chapitre pour l'utilisateur courant.
@@ -50,26 +58,16 @@ include_spip('inc/session');
  * @return array {montre: bool, mode: string}
  */
 function fictionsv2_lecture_droits(int $id_article): array {
-	$id_auteur      = intval(session_get('id_auteur_fv2') ?: 0);
-	$max_cadavres   = intval(session_get('max_cadavres_fv2') ?: 0);
-	$id_zone        = intval(session_get('zone_fv2') ?: 0);
-	$webmestre      = session_get('webmaster_fv2') === 'oui';
+	$id_auteur = intval(session_get('id_auteur') ?: 0);
+	$webmestre = session_get('webmestre') === 'oui';
 
 	if (!$id_auteur) {
 		return ['montre' => false, 'mode' => ''];
 	}
 
-	// Webmestre voit tout, en mode visible
-	if ($webmestre) {
-		return ['montre' => true, 'mode' => 'visible'];
-	}
-
-	if (!$max_cadavres) {
-		return ['montre' => false, 'mode' => ''];
-	}
-
 	// Rang 1-indexé de l'article dans sa rubrique (publie + prop)
 	$id_rubrique = intval(sql_getfetsel('id_rubrique', 'spip_articles', "id_article=$id_article"));
+	$max_cadavres = fictionsv2_nb_chapitres_histoire($id_rubrique);
 	$pos = sql_countsel('spip_articles',
 		"id_rubrique=$id_rubrique AND statut IN ('publie','prop') AND id_article<=$id_article");
 
@@ -79,7 +77,13 @@ function fictionsv2_lecture_droits(int $id_article): array {
 
 	$est_dernier       = ($pos == $max_cadavres);
 	$est_avant_dernier = ($pos == $max_cadavres - 1);
-	$est_sur_zone      = ($id_zone && $id_article == $id_zone);
+	$est_sur_zone      = fictionsv2_auteur_sur_zone($id_auteur, $id_rubrique);
+
+	// Webmestre : tout visible, et il peut écrire le dernier chapitre (règle d'origine,
+	// le refactor #441 l'avait laissé en simple lecture)
+	if ($webmestre) {
+		return ['montre' => true, 'mode' => $est_dernier ? 'ecriture' : 'visible'];
+	}
 
 	// N-1 : toujours visible
 	if ($est_avant_dernier) {
@@ -111,17 +115,16 @@ function fictionsv2_lecture_droits(int $id_article): array {
  * @return string 'oui' | ''
  */
 function fictionsv2_ecriture_droits(int $id_article): string {
-	$id_auteur      = intval(session_get('id_auteur_fv2') ?: 0);
-	$max_cadavres   = intval(session_get('max_cadavres_fv2') ?: 0);
-	$id_zone        = intval(session_get('zone_fv2') ?: 0);
-	$webmestre      = session_get('webmaster_fv2') === 'oui';
+	$id_auteur = intval(session_get('id_auteur') ?: 0);
+	$webmestre = session_get('webmestre') === 'oui';
 
-	if (!$id_auteur || !$max_cadavres) {
+	if (!$id_auteur) {
 		return '';
 	}
 
 	// Rang 1-indexé de l'article dans sa rubrique (publie + prop)
 	$id_rubrique = intval(sql_getfetsel('id_rubrique', 'spip_articles', "id_article=$id_article"));
+	$max_cadavres = fictionsv2_nb_chapitres_histoire($id_rubrique);
 	$pos = sql_countsel('spip_articles',
 		"id_rubrique=$id_rubrique AND statut IN ('publie','prop') AND id_article<=$id_article");
 
@@ -130,7 +133,7 @@ function fictionsv2_ecriture_droits(int $id_article): string {
 	}
 
 	$est_dernier       = ($pos == $max_cadavres);
-	$est_sur_zone      = ($id_zone && $id_article == $id_zone);
+	$est_sur_zone      = fictionsv2_auteur_sur_zone($id_auteur, $id_rubrique);
 
 	if ($webmestre && $est_dernier) {
 		return 'oui';
@@ -153,13 +156,13 @@ function fictionsv2_ecriture_droits(int $id_article): string {
  * @return string 'oui' | ''
  */
 function fictionsv2_est_auteur_droits(int $id_article): string {
-	$id_auteur = intval(session_get('id_auteur_fv2') ?: 0);
+	$id_auteur = intval(session_get('id_auteur') ?: 0);
 	if (!$id_auteur) {
 		return '';
 	}
 
 	// Vérifier si cet article a un lien avec cet auteur dans spip_auteurs_liens
 	$count = sql_countsel('spip_auteurs_liens',
-		"id_auteur=$id_auteur AND objet='article' AND id_article=$id_article");
+		"id_auteur=$id_auteur AND objet='article' AND id_objet=$id_article");
 	return ($count > 0) ? 'oui' : '';
 }
