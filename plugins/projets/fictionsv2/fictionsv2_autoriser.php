@@ -60,3 +60,16 @@ function autoriser_article_estauteur_dist($faire, $type, $id, $qui, $opt) {
 	include_spip('inc/fictionsv2_autorisation');
 	return fictionsv2_est_auteur_droits(intval($id), $qui) === 'oui';
 }
+
+/**
+ * Page des associations (#525, ecrire/?exec=fictionsv2_associations) et ses opérations :
+ * administrateurs complets et webmestres.
+ */
+function autoriser_fictionsv2associations_dist($faire, $type, $id, $qui, $opt) {
+	return ($qui['webmestre'] ?? '') === 'oui'
+		|| (($qui['statut'] ?? '') === '0minirezo' && empty($qui['restreint']));
+}
+
+function autoriser_fictionsv2associations_menu_dist($faire, $type, $id, $qui, $opt) {
+	return autoriser('fictionsv2associations', $type, $id, $qui, $opt);
+}

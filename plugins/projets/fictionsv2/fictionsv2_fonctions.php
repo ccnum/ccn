@@ -261,3 +261,12 @@ function fictionsv2_nom_participant_chapitre($id_article): string {
 	$annee = fictionsv2_annee_histoire($id_rubrique);
 	return (string) (fictionsv2_participants($annee, false)[$id_participant]['nom'] ?? '');
 }
+
+/**
+ * Données de la page des associations (#525). Filtre :
+ * #SET{donnees, #GET{annee}|fictionsv2_associations_donnees}
+ */
+function fictionsv2_associations_donnees_filtre($annee): array {
+	include_spip('inc/fictionsv2_plan');
+	return fictionsv2_associations_donnees(intval($annee));
+}

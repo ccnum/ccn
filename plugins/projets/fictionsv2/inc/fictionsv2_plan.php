@@ -302,3 +302,79 @@ function fictionsv2_participant_chapitre(int $id_article): int {
 	}
 	return $cache[$id_article];
 }
+
+/**
+ * Toutes les données de la page des associations (#525), prêtes pour des boucles DATA.
+ */
+function fictionsv2_associations_donnees(int $annee): array {
+	$config = fictionsv2_annee_config($annee);
+	$participants = fictionsv2_participants($annee, false);
+	$etat = fictionsv2_histoires_etat($annee);
+	$id_annee = fictionsv2_id_rubrique_annee($annee);
+	$titres = $id_annee ? array_column(sql_allfetsel('id_rubrique, titre', 'spip_rubriques', 'id_parent=' . $id_annee), 'titre', 'id_rubrique') : [];
+	$comptes = [];
+	foreach (sql_allfetsel('id_auteur, nom', 'spip_auteurs', sql_in('statut', ['0minirezo', '1comite']), '', 'nom') as $row) {
+		$comptes[(int) $row['id_auteur']] = $row['nom'];
+	}
+
+	$liste = [];
+	foreach ($participants as $id => $participant) {
+		$id_rubrique = (int) ($etat['attribuees'][$id] ?? 0);
+		$liste[] = $participant + [
+			'id' => $id,
+			'compte' => $comptes[(int) $participant['id_auteur']] ?? ('#' . $participant['id_auteur']),
+			'histoire' => $id_rubrique,
+			'histoire_titre' => $titres[$id_rubrique] ?? '',
+		];
+	}
+
+	$proprietaires = array_flip($etat['attribuees']);
+	$lignes = [];
+	foreach ($config['plan'] as $id_rubrique => $affectations) {
+		$chapitres = fictionsv2_chapitres_histoire((int) $id_rubrique);
+		$cellules = [];
+		foreach (FICTIONSV2_CHAPITRES as $chapitre) {
+			$cellules[] = [
+				'chapitre' => $chapitre,
+				'id_participant' => (int) ($affectations[$chapitre] ?? 0),
+				'ecrit' => isset($chapitres[$chapitre]) && fictionsv2_chapitre_ecrit((int) $chapitres[$chapitre]),
+			];
+		}
+		$lignes[] = [
+			'id_rubrique' => (int) $id_rubrique,
+			'titre' => $titres[$id_rubrique] ?? ('#' . $id_rubrique),
+			'proprietaire' => $participants[$proprietaires[$id_rubrique] ?? 0]['nom'] ?? '',
+			'cellules' => $cellules,
+		];
+	}
+
+	$statut = 'absent';
+	if ($config['plan']) {
+		$statut = $config['plan_valide'] === '' ? 'proposition' : (fictionsv2_plan_verrouille($annee) ? 'verrouille' : 'valide');
+	}
+	$anomalies = [];
+	foreach (fictionsv2_plan_anomalies($annee, $config['plan']) as $anomalie) {
+		// Clé construite (fictionsv2:anomalie_<code>) : items déclarés dans lang/fictionsv2_fr.php
+		$cle = 'fictionsv2:anomalie_' . $anomalie['code'];
+		$anomalies[] = _T($cle, $anomalie['params']);
+	}
+
+	return [
+		'lancement' => $config['lancement'],
+		'cloture' => $config['cloture'],
+		'finalisation' => $config['finalisation'],
+		'phase' => fictionsv2_phase_ecriture($annee),
+		'participants' => $liste,
+		'comptes' => $comptes,
+		'histoires_attendu' => $etat['attendu'],
+		'histoires_reel' => $etat['reel'],
+		'plan_statut' => $statut,
+		'plan_valide' => $config['plan_valide'],
+		'plan' => $lignes,
+		'chapitres' => FICTIONSV2_CHAPITRES,
+		'echeances' => fictionsv2_plan_echeances($annee),
+		'anomalies' => $anomalies,
+		'verrouille' => fictionsv2_plan_verrouille($annee),
+		'annee_sans_rubrique' => !$id_annee,
+	];
+}
