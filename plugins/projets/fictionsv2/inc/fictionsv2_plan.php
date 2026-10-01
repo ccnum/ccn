@@ -140,3 +140,104 @@ function fictionsv2_plan_echeances(int $annee): array {
 	}
 	return $echeances;
 }
+
+/**
+ * Plan enregistré de l'année (#523) : lu tel quel, jamais recalculé à l'affichage.
+ */
+function fictionsv2_plan(int $annee): array {
+	return fictionsv2_annee_config($annee)['plan'];
+}
+
+/**
+ * Des contributions existent-elles déjà dans les histoires de l'année : un chapitre
+ * de rotation publié ou au texte non vide.
+ */
+function fictionsv2_plan_contributions_commencees(int $annee): bool {
+	foreach (fictionsv2_histoires_etat($annee)['attribuees'] as $id_rubrique) {
+		if (fictionsv2_histoire_a_contributions($id_rubrique)) {
+			return true;
+		}
+	}
+	return false;
+}
+
+/**
+ * (Re)génère la proposition de plan : synchronise les histoires (#520) puis calcule la
+ * rotation (#521). Le plan repasse à l'état de proposition (non validé). Refusé une
+ * fois l'écriture lancée sur un plan validé, ou dès qu'une contribution existe : une
+ * régénération réattribuerait des chapitres déjà écrits.
+ *
+ * @return string '' si OK, sinon le code d'erreur
+ */
+function fictionsv2_plan_generer(int $annee): string {
+	if (fictionsv2_plan_verrouille($annee)) {
+		return 'plan_verrouille';
+	}
+	if (fictionsv2_plan_contributions_commencees($annee)) {
+		return 'contributions_commencees';
+	}
+	$synchro = fictionsv2_histoires_synchroniser($annee);
+	if ($synchro['erreur']) {
+		return $synchro['erreur'];
+	}
+	$plan = fictionsv2_rotation_annee($annee);
+	if (!$plan) {
+		return 'plan_impossible';
+	}
+	$config = fictionsv2_annee_config($annee);
+	$config['plan'] = $plan;
+	$config['plan_valide'] = '';
+	fictionsv2_annee_config_ecrire($annee, $config);
+	spip_log("fictionsv2 associations $annee : proposition de plan générée (" . count($plan) . ' histoires)', 'fictionsv2');
+	return '';
+}
+
+/**
+ * Le chapitre a-t-il déjà été écrit (publié ou texte non vide) : son affectation ne
+ * peut plus changer.
+ */
+function fictionsv2_chapitre_ecrit(int $id_article): bool {
+	return (bool) sql_countsel('spip_articles', 'id_article=' . $id_article . " AND (statut='publie' OR descriptif<>'')");
+}
+
+/**
+ * Change le participant d'un chapitre (correction manuelle d'un admin, #523/#525).
+ * Possible même sur un plan validé, tant que le chapitre n'est pas écrit.
+ *
+ * @return string '' si OK, sinon le code d'erreur
+ */
+function fictionsv2_plan_modifier_affectation(int $annee, int $id_rubrique, int $chapitre, int $id_participant): string {
+	$config = fictionsv2_annee_config($annee);
+	if (!isset($config['plan'][$id_rubrique][$chapitre]) || !isset(fictionsv2_participants($annee)[$id_participant])) {
+		return 'affectation_invalide';
+	}
+	$id_article = fictionsv2_chapitres_histoire($id_rubrique)[$chapitre] ?? 0;
+	if ($id_article && fictionsv2_chapitre_ecrit($id_article)) {
+		return 'chapitre_deja_ecrit';
+	}
+	$config['plan'][$id_rubrique][$chapitre] = $id_participant;
+	fictionsv2_annee_config_ecrire($annee, $config);
+	spip_log("fictionsv2 associations $annee : histoire #$id_rubrique chapitre $chapitre affecté au participant #$id_participant", 'fictionsv2');
+	return '';
+}
+
+/**
+ * Valide le plan : refusé s'il est vide ou présente des anomalies. Une fois la phase
+ * d'écriture lancée, un plan validé est verrouillé (cf fictionsv2_plan_verrouille()).
+ *
+ * @return string '' si OK, sinon le code d'erreur
+ */
+function fictionsv2_plan_valider(int $annee): string {
+	$plan = fictionsv2_plan($annee);
+	if (!$plan) {
+		return 'plan_absent';
+	}
+	if (fictionsv2_plan_anomalies($annee, $plan)) {
+		return 'plan_anomalies';
+	}
+	$config = fictionsv2_annee_config($annee);
+	$config['plan_valide'] = date('Y-m-d H:i:s');
+	fictionsv2_annee_config_ecrire($annee, $config);
+	spip_log("fictionsv2 associations $annee : plan validé", 'fictionsv2');
+	return '';
+}
