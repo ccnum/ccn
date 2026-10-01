@@ -150,6 +150,25 @@ python3 .ci/check_hardcoded_paths.py
 Même mécanisme de baseline que `check_lang_hardcoded.py` (`--write-baseline`
 pour régénérer après un faux positif volontaire).
 
+# check_rem.py
+
+Refuse un commentaire SPIP `[(#REM) ...]` des plugins maison
+(`plugins/projets/**/*.html`) qui contient de la syntaxe de squelette :
+balise `#XXX`, `<BOUCLE`/`<INCLURE`, item de langue `<:...:>`, crochet.
+
+Un `[(#REM) texte]` est une balise conditionnelle : son texte est compilé
+comme du squelette (dans une branche jamais exécutée). Un `]` y ferme le
+commentaire trop tôt (la suite s'affiche dans la page), une balise mal
+formée y casse la compilation du squelette entier.
+
+- Citer les balises sans `#` (`CACHE{0}`, `SET{x}`), les boucles sans `<`
+  (`BOUCLE_x`), les items de langue sans `<: :>` (`thematique:cle`), sans
+  crochets.
+- Du code désactivé ne se met pas en `(#REM)` : il se supprime (il reste
+  dans l'historique git).
+
+Pas de baseline : tous les cas existants ont été corrigés (2026-10).
+
 # check_html_duplication.js
 
 Détecte le HTML/squelette SPIP dupliqué (copier-coller) dans les plugins

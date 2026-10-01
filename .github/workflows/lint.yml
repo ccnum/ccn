@@ -29,6 +29,9 @@ jobs:
       - name: Vérifier l'absence de nouveau lien en dur (hors #CHEMIN)
         run: python3 .ci/check_hardcoded_paths.py
 
+      - name: Vérifier l'absence de syntaxe de squelette dans les (#REM)
+        run: python3 .ci/check_rem.py
+
   duplication:
     name: Duplication HTML/PHP
     runs-on: ubuntu-latest

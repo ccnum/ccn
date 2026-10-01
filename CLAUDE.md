@@ -52,6 +52,7 @@ committer, ces changements peuvent se mélanger aux tiens.
 python3 .ci/check_lang_hardcoded.py    # texte FR en dur hors lang/ (baseline: .ci/lang-check-baseline.txt)
 python3 .ci/check_lang_keys.py         # clés <:thematique:xxx:> / CCN.lang.xxx invalides
 python3 .ci/check_hardcoded_paths.py   # chemins img/css/js/pdf ou spip.php?page= en dur (baseline: .ci/hardcoded-paths-baseline.txt)
+python3 .ci/check_rem.py               # syntaxe de squelette (#BALISE, <BOUCLE, <:x:>, crochets) dans un [(#REM) ...]
 ```
 `--write-baseline` sur les deux premiers pour accepter une exception légitime (vérifier le diff
 de la baseline ne contient QUE le cas attendu). Détail des règles/exceptions : `.ci/README.md`.
