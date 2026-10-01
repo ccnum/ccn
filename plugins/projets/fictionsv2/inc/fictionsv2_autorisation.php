@@ -26,6 +26,16 @@ if (!defined('_ECRIRE_INC_VERSION')) {
 
 include_spip('inc/session');
 include_spip('fictionsv2_fonctions');
+include_spip('inc/fictionsv2_participants');
+
+/**
+ * La période d'écriture de l'année de l'histoire est-elle ouverte (#518) : entre
+ * date de lancement et date de clôture. Année non configurée : pas de restriction.
+ */
+function fictionsv2_ecriture_ouverte(int $id_rubrique): bool {
+	$annee = fictionsv2_annee_histoire($id_rubrique);
+	return !$annee || !fictionsv2_annee_configuree($annee) || fictionsv2_phase_ecriture($annee) === 'ouverte';
+}
 
 /**
  * Auteur évalué : $qui (tableau auteur passé par autoriser()) ou, à défaut,
@@ -63,7 +73,7 @@ function fictionsv2_auteur_affecte_chapitre(int $id_auteur, int $id_article): bo
  * Règles :
  *   webmestre : tout visible, 'ecriture' sur le dernier chapitre
  *   N-1       : toujours visible en mode 'visible'
- *   N (dernier), auteur affecté au chapitre : 'ecriture' (#524)
+ *   N (dernier), auteur affecté au chapitre, période d'écriture ouverte : 'ecriture' (#518, #524)
  *   N (dernier), autre auteur : 'verrouille'
  *   autres    : masqué
  *
@@ -89,7 +99,9 @@ function fictionsv2_lecture_droits(int $id_article, ?array $qui = null): array {
 
 	$est_dernier       = ($pos == $max_cadavres);
 	$est_avant_dernier = ($pos == $max_cadavres - 1);
-	$est_affecte       = fictionsv2_auteur_affecte_chapitre($id_auteur, $id_article);
+	// Hors période d'écriture (#518), le participant affecté ne peut plus écrire
+	$est_affecte       = fictionsv2_auteur_affecte_chapitre($id_auteur, $id_article)
+		&& fictionsv2_ecriture_ouverte($id_rubrique);
 
 	// Webmestre : tout visible, et il peut écrire le dernier chapitre (règle d'origine,
 	// le refactor #441 l'avait laissé en simple lecture)
@@ -121,7 +133,7 @@ function fictionsv2_lecture_droits(int $id_article, ?array $qui = null): array {
  *
  * Règles :
  *   webmestre + dernier : peut écrire
- *   auteur affecté au chapitre + dernier : peut écrire (#524)
+ *   auteur affecté au chapitre + dernier + période ouverte : peut écrire (#518, #524)
  *
  * @param int $id_article ID de l'article concerné
  * @return string 'oui' | ''
@@ -144,7 +156,8 @@ function fictionsv2_ecriture_droits(int $id_article, ?array $qui = null): string
 	}
 
 	$est_dernier       = ($pos == $max_cadavres);
-	$est_affecte       = fictionsv2_auteur_affecte_chapitre($id_auteur, $id_article);
+	$est_affecte       = fictionsv2_auteur_affecte_chapitre($id_auteur, $id_article)
+		&& fictionsv2_ecriture_ouverte($id_rubrique);
 
 	if ($webmestre && $est_dernier) {
 		return 'oui';
