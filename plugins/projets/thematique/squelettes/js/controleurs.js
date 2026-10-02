@@ -1310,7 +1310,7 @@ function initMissionTabs() {
 
 /**
  * Charge une URL dans la sidebar principale, avec état de chargement
- * (classe <tt>loading</tt> sur <tt>body</tt>) et callback de fin.
+ * (classe <tt>loading-main-sidebar</tt> sur <tt>body</tt>) et callback de fin.
  *
  * @param {string} url - URL de la page à charger avec AJAX
  * @param {?function(string)} callback - Appelé avec la réponse une fois le contenu chargé
@@ -1319,7 +1319,7 @@ function initMissionTabs() {
  * @see loadContentInLateralSidebar
  */
 function loadContentInMainSidebar(url, callback, typeContenu) {
-	$('body').addClass('loading');
+	$('body').addClass('loading-main-sidebar');
 	const contenusQuiNeZoomentPas = [
 		'classe',
 		'publication_article',
@@ -1329,7 +1329,6 @@ function loadContentInMainSidebar(url, callback, typeContenu) {
 		zoomTimeline: !contenusQuiNeZoomentPas.includes(typeContenu)
 	});
 	emptyMainSidebar();
-
 	// $.get() plutôt que $(elem).load(url) : .load() coupe silencieusement
 	// l'url au premier espace et traite le reste comme un sélecteur jQuery à
 	// appliquer sur la réponse — une valeur imprévue (id, date...) contenant
@@ -1359,8 +1358,7 @@ function loadContentInMainSidebar(url, callback, typeContenu) {
 		if (!response || response.trim() === "") {
 			if (CCN.debug) { console.warn(CCN.lang.reponse_vide); }
 		}
-
-		$('body').removeClass('loading');
+		$('body').removeClass('loading-main-sidebar');
 		$('#sidebar_content').scrollTop(0);
 		updatePageTitleFromSidebarContent();
 		_sidebarFocusFirst();
@@ -1395,7 +1393,7 @@ function loadContentInMainSidebar(url, callback, typeContenu) {
 		antifloodHashChange = false;
 	}).fail(function (xhr, status) {
 		if (CCN.debug) { console.error("Erreur de chargement :", xhr.status, xhr.statusText); }
-		$('body').removeClass('loading');
+		$('body').removeClass('loading-main-sidebar');
 		antifloodHashChange = false;
 	});
 }
@@ -1435,7 +1433,7 @@ function emptyLateralSidebar() {
 
 function loadContentInLateralSidebar(url, callback) {
 
-	$('body').addClass('loading');
+	$('body').addClass('loading-lateral-sidebar');
 	emptyLateralSidebar();
 
 	// $.get() plutôt que $(elem).load(url) : .load() coupe silencieusement
@@ -1448,7 +1446,7 @@ function loadContentInLateralSidebar(url, callback) {
 		if (!response || response.trim() === "") {
 			if (CCN.debug) { console.warn(CCN.lang.reponse_vide); }
 		}
-		$('body').removeClass('loading');
+		$('body').removeClass('loading-lateral-sidebar');
 		$('#sidebar_content').scrollTop(0);
 		if (callback) {
 			callback(response);
@@ -1457,7 +1455,7 @@ function loadContentInLateralSidebar(url, callback) {
 		antifloodHashChange = false;
 	}).fail(function (xhr, status) {
 		if (CCN.debug) { console.error("Erreur de chargement :", xhr.status, xhr.statusText); }
-		$('body').removeClass('loading');
+		$('body').removeClass('loading-lateral-sidebar');
 		antifloodHashChange = false;
 	});
 }
