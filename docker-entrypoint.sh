@@ -202,6 +202,10 @@ spip config:ecrire creer_preview:non
 # de faire planter le process PHP sur de grosses images.
 spip config:ecrire image_process:imagick
 spip config:ecrire -p mediabox active:oui
+# Pas d'upload par glisser-déposer dans les crayons de texte d'article : son
+# onglet "Glissez un document..." s'affiche tronqué à côté de la popup crayon
+# (fictionsv2), et les documents passent par le formulaire ccn_joindre_document.
+spip config:ecrire -p crayons upload:
 spip config:ecrire -p notation acces:ide
 spip config:ecrire -p notation change_note:oui
 spip config:ecrire -p notifications forum_article:0
