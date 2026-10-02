@@ -411,6 +411,12 @@ p.boutons:has(input[type="submit"]) {
 	opacity: 0.5;
 }
 
+/* Déjà dans le texte : "Insérer" ne fait plus rien (cf
+   insererRaccourciDocument), on ne le présente donc plus comme cliquable. */
+.fichier.insere .racourcis-container {
+	pointer-events: none;
+}
+
 /************ Réécriture du visuel généré par #BOUTON_ACTION **********/
 
 .fichier .document-ligne-1 .bouton_action_post:has(.circle-xmark) {
@@ -498,13 +504,6 @@ p.boutons:has(input[type="submit"]) {
 	align-items: center;
 }
 
-.fichier .document-ligne-3 .raccourci {
-	background-color: #4d54ff;
-    border-radius: 17px;
-    padding: 0.2rem;
-    color: white;
-    margin-left: 0.5rem;
-}
 
 .publier-article-formats-autorises {
 	color: var(--color-tonic);

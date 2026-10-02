@@ -69,11 +69,10 @@ jQuery(document).on("submit", "#formulaire_publier_article", function () {
 function insererRaccourciDocument(element) {
     const texte = document.getElementById("texte");
     if (!texte || !element) return;
-    const raccourciElement = element.querySelector(".raccourci");
-    if (!raccourciElement) return;
+    const { prefixe, idDocument } = element.dataset;
+    if (!prefixe || !idDocument) return;
 
-    const raccourci = raccourciElement.textContent.trim();
-    if (!raccourci) return;
+    const raccourci = `<${prefixe}${idDocument}>`;
 
     if (!texte.value.includes(raccourci)) {
         const debut = texte.selectionStart ?? texte.value.length;
@@ -163,6 +162,24 @@ function majDocumentsInseres() {
 
 jQuery(document).on("input change", "#texte", majDocumentsInseres)
 
+/**
+ * Supprimer un document de la liste (croix de sa carte, #BOUTON_ACTION
+ * dissocier_document) retire aussi son raccourci du champ "texte" : sinon
+ * l'article enregistré garderait un <imgN> pointant vers un document
+ * supprimé. L'évènement submit n'arrive qu'une fois la confirmation
+ * acceptée (le onclick du bouton renvoie false sinon).
+ */
+jQuery(document).on("submit", "#documents_publier_article .bouton_action_post", function () {
+    const texte = document.getElementById("texte")
+    const fichier = this.closest(".fichier")
+    const id = fichier && fichier.id.replace(/^doc/, "")
+    if (!texte || !/^\d+$/.test(id)) return
+    const valeur = texte.value.replace(new RegExp(`<(doc|img|emb)${id}(\\|[^>]*)?>`, "gi"), "")
+    if (valeur !== texte.value) {
+        texte.value = valeur
+        texte.dispatchEvent(new Event("input", { bubbles: true }))
+    }
+})
 // Liste rechargée en ajax après chaque upload/suppression, et injectée à
 // l'ouverture du popup (cf loadContentInMainSidebar dans controleurs.js,
 // qui relance triggerAjaxLoad).
