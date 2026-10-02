@@ -1,0 +1,27 @@
+[(#REM)
+	Ajout de document(s) via bigup, cf ccn_joindre_document.php.
+	Classe "formulaire_joindre_document" conservée pour le CSS existant
+	des plugins (ex. thematique/css/editor.css.html). Le bouton "Envoyer"
+	est masqué en CSS par chaque plugin : soumission automatique à la fin
+	de l'upload (js/ccn_joindre.js, chargé ici plutôt que via insert_head
+	pour ne pas dépendre d'une réactivation des plugins sur chaque site).
+]
+<div class='formulaire_spip formulaire_joindre formulaire_joindre_document formulaire_ccn_joindre_document'>
+	<span class="image_loading"></span>
+	[<div class="reponse_formulaire reponse_formulaire_ok" role="status">(#ENV**{message_ok})</div>]
+	[<div class="reponse_formulaire reponse_formulaire_erreur" role="alert">(#ENV**{message_erreur})</div>]
+
+	<form action="#ENV{action}" method="post" enctype='multipart/form-data'><div>
+		#ACTION_FORMULAIRE
+
+		<div class="editer-groupe">
+			[(#SAISIE_FICHIER{bigup, document,
+				label=#ENV{_label},
+				accept=#ENV{_accept},
+				multiple=oui})]
+		</div>
+
+		<p class='boutons'><input class='btn submit' type="submit" name="envoyer_document" value="<:ccn:joindre_document_envoyer:>" /></p>
+	</div></form>
+</div>
+<script type="text/javascript" src="[(#CHEMIN{js/ccn_joindre.js}|timestamp)]"></script>
