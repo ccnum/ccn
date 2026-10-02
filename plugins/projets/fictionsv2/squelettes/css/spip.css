@@ -696,6 +696,14 @@ a.webmestre.last-small {
 	display: none;
 }
 
+.liste-tooltip-inner {
+	height: auto;
+	background-image: url(../img/global/tooltip-background.png);
+	border-radius: 5px;
+	width: 230px;
+	float: left;
+}
+
 .liste-tooltip-bulle {
 	width: 230px;
 	height: 8px;
