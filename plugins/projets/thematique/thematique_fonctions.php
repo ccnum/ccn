@@ -2797,3 +2797,37 @@ function thematique_classes_nettoyage($annee) {
 	include_spip('inc/thematique_classes_vides');
 	return thematique_classes_annee_avec_contenu($annee);
 }
+
+/**
+ * Referme les balises HTML mal équilibrées d'un texte saisi par un
+ * utilisateur, avant de l'afficher dans une structure qui en dépend (#479).
+ *
+ * SPIP (propre) laisse passer tel quel le HTML brut d'un texte d'article : un
+ * `</div>` en trop (copier-coller depuis Word ou une page web) referme alors
+ * les blocs du squelette qui l'entourent. Dans les onglets #mission-tabs
+ * (cf js/custom-tabs.js), la suite de la page se retrouve enfant direct du
+ * conteneur : un "Onglet 2" sans titre apparaît et les vrais onglets
+ * (Discussions, Suivi des réponses) disparaissent.
+ *
+ * On passe par l'algorithme d'analyse de fragment HTML5 (innerHTML d'un div,
+ * PHP 8.4) : c'est exactement ce que fera le navigateur, sauf que le
+ * fragment ne peut pas refermer son conteneur — les balises fermantes
+ * orphelines sont ignorées et les ouvrantes refermées en fin de texte. Rien
+ * n'est filtré (iframes, scripts d'intégration conservés), contrairement à
+ * |safehtml.
+ *
+ * @param string $html
+ * @return string
+ */
+function thematique_html_equilibre($html) {
+	$html = (string) $html;
+	if (strpos($html, '<') === false || !class_exists(\Dom\HTMLDocument::class)) {
+		return $html;
+	}
+
+	$document = \Dom\HTMLDocument::createFromString('<!doctype html><body><div></div>', LIBXML_NOERROR);
+	$conteneur = $document->body->firstElementChild;
+	$conteneur->innerHTML = $html;
+
+	return $conteneur->innerHTML;
+}
