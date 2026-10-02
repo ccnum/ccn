@@ -96,6 +96,49 @@ function insererRaccourciDocument(element) {
 }
 
 /**
+ * Passe le titre d'un document de la liste des pièces jointes en mode
+ * édition (#497, cf formulaires/titrer_document.html) : clic sur le crayon
+ * de la carte. Entrée ou sortie du champ avec un titre changé enregistre
+ * (envoi ajax du formulaire, qui se recharge en mode affichage), Échap ou
+ * sortie sans changement annule.
+ */
+function editerTitreDocument(bouton) {
+    const fichier = bouton.closest(".fichier")
+    const formulaire = fichier && fichier.querySelector(".formulaire_titrer_document")
+    const saisie = formulaire && formulaire.querySelector(".titre-document-saisie")
+    if (!saisie) return
+    saisie.dataset.initial = saisie.value
+    formulaire.classList.add("edition")
+    saisie.focus()
+    saisie.select()
+}
+
+function fermerEditionTitreDocument(saisie) {
+    saisie.value = saisie.dataset.initial ?? saisie.value
+    saisie.closest(".formulaire_titrer_document")?.classList.remove("edition")
+}
+
+jQuery(document)
+    .on("keydown", ".titre-document-saisie", function (e) {
+        if (e.key === "Escape") {
+            e.preventDefault()
+            fermerEditionTitreDocument(this)
+        }
+    })
+    .on("submit", ".formulaire_titrer_document form", function () {
+        const saisie = this.querySelector(".titre-document-saisie")
+        if (saisie) saisie.dataset.envoi = "1"
+    })
+    .on("blur", ".titre-document-saisie", function () {
+        if (this.dataset.envoi) return
+        if (this.value === (this.dataset.initial ?? this.value)) {
+            fermerEditionTitreDocument(this)
+            return
+        }
+        jQuery(this.form).trigger("submit")
+    })
+
+/**
  * Grise dans la liste des documents joints (cf
  * noisettes/inc/publier_article_documents.html) ceux dont le raccourci est
  * déjà présent dans le champ "texte" (#498) : ces documents s'affichent dans
@@ -119,6 +162,7 @@ function majDocumentsInseres() {
 }
 
 jQuery(document).on("input change", "#texte", majDocumentsInseres)
+
 // Liste rechargée en ajax après chaque upload/suppression, et injectée à
 // l'ouverture du popup (cf loadContentInMainSidebar dans controleurs.js,
 // qui relance triggerAjaxLoad).

@@ -46,7 +46,8 @@ $(document).on('keydown.sidebarFocusTrap', function (e) {
 		// Le plugin crayons gère déjà Échap pour fermer son propre formulaire
 		// d'édition, sans stopper la propagation : sans ce garde-fou, on fermait
 		// toute la sidebar en même temps, laissant l'affichage à moitié grisé.
-		if ($(e.target).closest('.crayon-html').length) {
+		// Idem pour l'édition du titre d'un document (#497, cf publier_article.js).
+		if ($(e.target).closest('.crayon-html, .titre-document-saisie').length) {
 			return;
 		}
 		closeSidebar();

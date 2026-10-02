@@ -1,0 +1,18 @@
+[(#REM)
+	Titre d'un document (#497), cf formulaires/titrer_document.php.
+	Affiche le titre, ou le nom du fichier tant qu'il n'y en a pas ; le champ
+	de saisie n'apparaît qu'après un clic sur le crayon de la carte
+	(classe "edition", cf editerTitreDocument dans js/publier_article.js).
+	Le rechargement ajax qui suit l'envoi remplace ce bloc et retire donc
+	la classe : retour à l'affichage simple.
+]
+<div class="formulaire_spip formulaire_titrer_document">
+	[<p class="reponse_formulaire reponse_formulaire_erreur" role="alert">(#ENV*{message_erreur})</p>]
+	<form method="post" action="#ENV{action}"><div>
+		#ACTION_FORMULAIRE
+		<strong class="titre-document">[(#ENV{titre}|sinon{#ENV{_nom_fichier}|entites_html})]</strong>
+		<input type="text" class="text titre-document-saisie" name="titre" value="#ENV{titre}"
+			placeholder="[(#ENV{_nom_fichier}|attribut_html)]"
+			aria-label="<:thematique:titre_document:>" maxlength="255" />
+	</div></form>
+</div>

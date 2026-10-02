@@ -43,12 +43,20 @@
 				</div>
 				<div class="right-col">
 					<div class="document-ligne-1">
-						<div class="name"><strong>[(#FICHIER|basename)]</strong></div>
+						#SET{titre_modifiable, #AUTORISER{modifier,document,#ID_DOCUMENT}|oui}
+						<div class="name">
+							[(#GET{titre_modifiable}|oui)<div class="ajax">#FORMULAIRE_TITRER_DOCUMENT{#ID_DOCUMENT}</div>]
+							[(#GET{titre_modifiable}|non)<strong>[(#TITRE|sinon{#FICHIER|basename})]</strong>]
+						</div>
 						<div class="actions-card">
-							<!-- Il faut ré-afficher cette icone plus tard, pour éditer le titre de la PJ. -->
-							<div class="icon-wrapper" style="display: none;">
-								<div class="icon icon-publier" onclick="alert('edition du titre')"></div>
-							</div>
+							[(#GET{titre_modifiable}|oui)
+							<button type="button" class="icon-wrapper btn-reset"
+								onclick="editerTitreDocument(this)"
+								title="<:thematique:modifier_titre_document:>"
+								aria-label="<:thematique:modifier_titre_document:>">
+								<span class="icon icon-publier"></span>
+							</button>
+							]
 							[(#AUTORISER{dissocierdocuments,#ENV{objet},#ENV{id_objet}}|oui)
 								[(#BOUTON_ACTION{
 									<div class="icon-wrapper">

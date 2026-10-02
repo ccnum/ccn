@@ -451,6 +451,42 @@ p.boutons:has(input[type="submit"]) {
 	gap: 0.5rem;
 }
 
+/* Titre du document éditable en ligne (#497, cf formulaires/titrer_document.html) */
+.fichier .name {
+	flex: 1;
+	min-width: 0;
+	margin-right: 0.5rem;
+}
+
+.formulaire_titrer_document .titre-document {
+	overflow-wrap: anywhere;
+}
+
+.formulaire_titrer_document .titre-document-saisie {
+	display: none;
+	width: 100%;
+	padding: 2px 6px !important;
+	border: solid 1px #ccc !important;
+}
+
+.formulaire_titrer_document .titre-document-saisie:focus-visible {
+	outline: solid 2px var(--color-tonic) !important;
+	outline-offset: 1px;
+}
+
+.formulaire_titrer_document.edition .titre-document {
+	display: none;
+}
+
+.formulaire_titrer_document.edition .titre-document-saisie {
+	display: block;
+}
+
+.formulaire_titrer_document .reponse_formulaire {
+	margin: 0 0 0.3rem;
+	font-size: 0.85em;
+}
+
 .fichier .document-ligne-3 {
 	display: flex;
 	justify-content: end;
