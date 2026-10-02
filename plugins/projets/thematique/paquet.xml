@@ -21,6 +21,7 @@
 	<necessite nom="notation" />
 	<necessite nom="spip_bonux" />
 	<necessite nom="mesfavoris_ccn" />
+	<necessite nom="oembed" />
 
 	<utilise nom="cioidc" />
 	<utilise nom="medias" />
