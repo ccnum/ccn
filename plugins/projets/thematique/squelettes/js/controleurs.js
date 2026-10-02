@@ -152,7 +152,7 @@ $(function () {
 				"blogs": callArticleBlog,
 				"evenements": callArticleEvenement,
 				"travail_en_cours": callReponse,
-				"ressources": (id) => callRessourceArticle(id, "ressources"),
+				"ressources": callRessource,
 				"cap_sur_l_annee": (id) => callArticleJalon(id, true),
 				"la_rencontre": (id) => callArticleJalon(id, false),
 			}
@@ -850,37 +850,6 @@ function callArticleJalon(est_debut) {
 			);
 		},
 		"consigne"
-	);
-}
-
-/**
- * Appelle le chargement d'un article ressource dans la sidebar principale.
- *
- * @param {number} id_article
- * @param {string} type_objet
- *
- * @see loadContentInMainSidebar
- */
-
-function callRessourceArticle(id_article, type_objet) {
-	if (!Number.isInteger(Number(id_article))) return;
-	changeTimelineMode('consignes');
-	setLateralSidebarExpanded(true);
-	updateMenuIcon([type_objet], 'sidebarView');
-
-	const url = "./spip.php?page=article&id_article=" + id_article + "&type_objet=" + type_objet + "&mode=ajax-detail";
-	loadContentInMainSidebar(
-		url,
-		() => {
-			updateUrl(
-				{
-					'type_objet': type_objet,
-					'id_article': id_article,
-					'page': 'article'
-				}, "Ressources", "./spip.php?page=article&id_article=" + id_article + "&type_objet=" + type_objet + "&mode=complet"
-			);
-		},
-		"ressource"
 	);
 }
 

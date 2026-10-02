@@ -1970,34 +1970,42 @@ ailleurs, ex: le menu du bas). */
 }
 
 .ressource-menu{
+	--marge: 1.3rem;
+
 	height: 100%;
     display: flex;
     flex-direction: column;
 }
 
-.ressource-header {
+.ressource-header-container {
 	background-color: var(--color-bleu-fond);
-	padding: var(--marge);
+	padding: calc(var(--marge) * 0.5) var(--marge);
 	flex-shrink: 0;
 }
 
-.ressource-header .etiquette-etape {
+.ressource-header {
+	display: flex;
+	align-items: center;
+	justify-content: end;
+}
+
+.ressource-header-container .etiquette-etape {
 	width: fit-content;
 }
 
-.ressource-header-icons {
+.ressource-header-container-icons {
 	display: flex;
 	justify-content: end;
 }
 
-.ressource-header-etiquette {
+.ressource-header-container-etiquette {
 	display: flex;
 	justify-content: center;
 	margin-top: -1rem;
 	margin-bottom: 0.4rem;
 }
 
-.ressource-header .logo-etiquette {
+.ressource-header-container .logo-etiquette {
 	display: none;
 }
 
@@ -2012,14 +2020,19 @@ ailleurs, ex: le menu du bas). */
 }
 
 .ressource-detail-container {
-	--marge: 1rem;
+	--marge: 1.3rem;
 
-	display: flex;
+	opacity: 0;
+	transition: opacity linear 0.2s;
 	flex-direction: column;
 	height: 100%;
 	background-color: white;
 	color: var(--color-default);
 	font-family: Poppins;
+}
+
+.hasLateralSidebarExpanded .ressource-detail-container {
+	opacity: 1;
 }
 
 .ressource-detail {
@@ -2128,8 +2141,8 @@ ailleurs, ex: le menu du bas). */
 
 /* --- Ressource detail2 (styles extraits du template inline) --- */
 
-/* Sélecteur scoped : le .ressource-header du detail2 est un enfant direct de .ressource-detail-container */
-.ressource-detail-container > .ressource-header {
+/* Sélecteur scoped : le .ressource-header-container du detail2 est un enfant direct de .ressource-detail-container */
+.ressource-detail-container > .ressource-header-container {
 	background-color: var(--color-bleu-fond);
 	display: flex;
 	justify-content: end;
