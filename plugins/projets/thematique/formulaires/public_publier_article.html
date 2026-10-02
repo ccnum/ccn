@@ -12,8 +12,9 @@
 		<div id="sidebar-etape-2-container">
 			<div class="sidebar-etape-2">
 				<div class="sous-titre-col-gauche"><:thematique:publier_document_etape_1:></div>
+				#SET{label_document_mission, #VAL{thematique:label_fichier_document_mission}|_T}
 				<div class="ajax">
-					#FORMULAIRE_JOINDRE_DOCUMENT_MISSION{#GET{id_objet_document},article}
+					#FORMULAIRE_CCN_JOINDRE_DOCUMENT{#GET{id_objet_document},article,#CONST{_THEMATIQUE_EXTENSIONS_DOCUMENT_MISSION},#GET{label_document_mission}}
 					<div class="publier-article-formats-autorises">
 						#SET{extensions_document_mission, #VAL{1}|thematique_extensions_document_mission_liste}
 						<div style="font-weight: 800;">

@@ -2722,46 +2722,16 @@ function thematique_consigne_valide($id_consigne) {
 }
 
 /**
- * Extensions de fichier acceptées pour un document joint à une mission
- * (formulaires/joindre_document_mission.php). Définie ici (thematique_fonctions.php,
- * chargé pour toute compilation de squelette du plugin) et non dans
- * joindre_document_mission.php : les filtres ci-dessous
- * (thematique_extensions_document_mission_accept/_liste) sont utilisés
- * depuis d'autres formulaires (public_publier_article.html) dont le
- * fichier .php associé ne charge jamais joindre_document_mission.php — un
- * filtre inconnu au moment de la compilation de LEUR squelette est
- * silencieusement supprimé par le compilateur SPIP (aucune erreur, la
- * valeur "brute" passe telle quelle), cf issue #429.
+ * Extensions de fichier acceptées pour un document joint à une mission,
+ * passées au formulaire commun du plugin ccn
+ * (#FORMULAIRE_CCN_JOINDRE_DOCUMENT{id, article, #CONST{_THEMATIQUE_EXTENSIONS_DOCUMENT_MISSION}, label},
+ * cf formulaires/public_publier_article.html et
+ * noisettes/sidebar/bloc_ajout_document_onglets.html), qui en déduit
+ * l'attribut accept et refuse les autres formats côté serveur. Définie ici
+ * (thematique_fonctions.php, chargé pour toute compilation de squelette du
+ * plugin) pour être disponible partout, cf issue #429.
  */
 define('_THEMATIQUE_EXTENSIONS_DOCUMENT_MISSION', ['gif', 'jpg', 'jpeg', 'png', 'mp3', 'mp4', 'pdf']);
-
-/**
- * Valeur de l'attribut HTML accept d'un champ fichier de document de
- * mission (".gif,.jpg,..."), à partir de _THEMATIQUE_EXTENSIONS_DOCUMENT_MISSION.
- *
- * Ne peut pas être écrite en dur dans le squelette (`accept=.gif,.jpg,...`) :
- * le compilateur SPIP découpe les arguments d'un `#SAISIE_XXX{...}` sur
- * chaque virgule *avant* toute prise en compte des guillemets (ce n'est pas
- * le tokenizer standard des filtres), donc une valeur avec virgules littérales
- * y est systématiquement tronquée à son premier fragment (`.gif` seul,
- * cf issue #407) — y compris entre guillemets. Passer par une balise
- * calculée (`#GET{...}`) contourne le problème : elle ne contient aucune
- * virgule dans le squelette source, seulement à l'exécution.
- *
- * Appelée comme filtre : `#VAL{1}|thematique_extensions_document_mission_accept}`
- * (le premier paramètre n'est qu'un porteur, SPIP exige toujours une valeur pipée).
- *
- * @param mixed $valeur_ignoree Non utilisé, cf. remarque d'appel ci-dessus
- * @return string
- */
-function thematique_extensions_document_mission_accept($valeur_ignoree = null) {
-	static $accept = null;
-	if ($accept === null) {
-		$accept = implode(',', array_map(fn ($ext) => ".$ext", _THEMATIQUE_EXTENSIONS_DOCUMENT_MISSION));
-	}
-
-	return $accept;
-}
 
 /**
  * Liste lisible des extensions acceptées pour un document de mission
@@ -2769,8 +2739,7 @@ function thematique_extensions_document_mission_accept($valeur_ignoree = null) {
  * zone de dépôt (cf lang:formats_autorises_document,
  * noisettes/sidebar-etape-2-container dans formulaires/public_publier_article.html).
  *
- * Même contournement que thematique_extensions_document_mission_accept :
- * appelée comme filtre (#VAL{1}|thematique_extensions_document_mission_liste),
+ * Appelée comme filtre (#VAL{1}|thematique_extensions_document_mission_liste) :
  * SPIP exige toujours un premier paramètre pipé même si la valeur n'est pas
  * utilisée.
  *
