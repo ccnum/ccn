@@ -165,6 +165,11 @@ function formulaires_public_publier_article_verifier_dist(
 	) {
 		return ['message_erreur' => _T('info_acces_interdit')];
 	}
+	if (!$id_article_poste && $type_article === 'consignes' && !$id_consigne
+		&& !thematique_rubrique_mission_valide($id_rubrique)
+	) {
+		return ['message_erreur' => _T('thematique:mission_rubrique_hors_annee')];
+	}
 
 	$erreurs = formulaires_editer_objet_verifier('article', $id_article_poste ?: 'new', ['titre', 'texte']);
 	$max_caracteres = 50;
@@ -242,6 +247,13 @@ function formulaires_public_publier_article_traiter_dist(
 		if ($type_article !== 'ressources' && !thematique_auteur_peut_creer_dans_rubrique($id_auteur, $id_rubrique)) {
 			return ['message_erreur' => _T('info_acces_interdit')];
 		}
+		if ($type_article === 'consignes' && !$id_consigne && !thematique_rubrique_mission_valide($id_rubrique)) {
+			return ['message_erreur' => _T('thematique:mission_rubrique_hors_annee')];
+		}
+		// Le core crée l'article dans _request('id_parent') (cf
+		// action_editer_article_dist), pas dans $id_rubrique : on aligne la
+		// rubrique réellement utilisée sur celle qui vient d'être vérifiée.
+		set_request('id_parent', $id_rubrique);
 		$id_article = 'new';
 	} elseif (!autoriser('modifier', 'article', $id_article, null, ['champ' => 'date'])) {
 		// Champ date non autorisé pour ce rôle sur cet article (#420) : même

@@ -561,7 +561,7 @@ function thematique_texte_publication($type_article, $partie) {
 		'blogs' => 'evenement',
 		'evenements' => 'information',
 		'cap_sur_l_annee' => 'cap_sur_l_annee',
-		'la_rencontre' => 'la_rencontre'
+		'la_rencontre' => 'la_rencontre',
 	];
 
 	if (isset($slugs[$type_article])) {
@@ -768,9 +768,16 @@ function thematique_admin_scope($id_rubrique_choisie = null) {
 
 	$admin = 0;
 	$restreint1 = null;
+	$nb_rubriques_annee = 0;
 
+	// Issue #462 : la connexion SSO ajoute les liens de l'année sans retirer
+	// ceux des années passées — un intervenant lié à "2018/Travail des
+	// classes" et à son projet 2026 publiait ses missions en 2018. Seules les
+	// rubriques liées de l'année active peuvent servir de rubrique restreinte ;
+	// $admin compte toujours toutes les rubriques liées.
+	$id_annee_active = thematique_id_rubrique_annee_active();
 	$rubriques = sql_allfetsel(
-		'objets.id_rubrique',
+		'objets.id_rubrique, objets.id_secteur',
 		'spip_auteurs_liens AS liens INNER JOIN spip_rubriques AS objets ON liens.id_objet=objets.id_rubrique',
 		'liens.id_auteur=' . $id_auteur
 			. ' AND liens.objet=' . sql_quote('rubrique')
@@ -781,8 +788,11 @@ function thematique_admin_scope($id_rubrique_choisie = null) {
 	);
 	foreach ($rubriques as $rubrique) {
 		$id_rub = intval($rubrique['id_rubrique']);
-		if (thematique_type_objet_rubrique($id_rub) !== 'evenements') {
-			$restreint1 = $id_rub;
+		if ($id_annee_active && intval($rubrique['id_secteur']) === $id_annee_active) {
+			if (thematique_type_objet_rubrique($id_rub) !== 'evenements') {
+				$restreint1 = $id_rub;
+			}
+			$nb_rubriques_annee++;
 		}
 		$admin++;
 	}
@@ -794,7 +804,7 @@ function thematique_admin_scope($id_rubrique_choisie = null) {
 		$admin = -2;
 	}
 
-	$restreint = ($admin === 1 || $admin === 2) ? $restreint1 : null;
+	$restreint = ($admin > 0 && ($nb_rubriques_annee === 1 || $nb_rubriques_annee === 2)) ? $restreint1 : null;
 
 	// La rubrique choisie n'est retenue que si elle existe dans l'année active :
 	// les liens des mails de notification passaient rub=<titre du secteur>
@@ -804,7 +814,6 @@ function thematique_admin_scope($id_rubrique_choisie = null) {
 	// purge aussi une valeur invalide déjà mémorisée en session.
 	$cookie_rubrique = session_get('cookie_rubrique');
 	if (is_numeric($cookie_rubrique) && ($admin > 1 || $admin === 0)) {
-		$id_annee_active = thematique_id_rubrique_annee_active();
 		$id_secteur = (int) sql_getfetsel('id_secteur', 'spip_rubriques', 'id_rubrique=' . intval($cookie_rubrique));
 		if ($id_annee_active && $id_secteur === $id_annee_active) {
 			$restreint = intval($cookie_rubrique);
@@ -1654,6 +1663,25 @@ function thematique_id_rubrique_mission() {
 		: 0;
 
 	return $id_rubrique_mission;
+}
+
+/**
+ * Une nouvelle mission ne peut être créée que sous la rubrique "Consignes"
+ * de l'année active (issue #462 : une rubrique restreinte d'une année
+ * passée, ex. "2018/Travail des classes", faisait publier les missions
+ * d'un intervenant en 2018).
+ *
+ * @param int|string $id_rubrique
+ * @return bool
+ */
+function thematique_rubrique_mission_valide($id_rubrique) {
+	$id_rubrique = intval($id_rubrique);
+	$id_annee_active = thematique_id_rubrique_annee_active();
+	if (!$id_rubrique || !$id_annee_active) {
+		return false;
+	}
+	$id_secteur = (int) sql_getfetsel('id_secteur', 'spip_rubriques', 'id_rubrique=' . $id_rubrique);
+	return $id_secteur === $id_annee_active && thematique_hierarchie_a_mot($id_rubrique, 'consignes');
 }
 
 /**

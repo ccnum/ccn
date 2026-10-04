@@ -158,6 +158,7 @@ return [
 	'message_jalon_publie'                       => 'Si vous dépubliez ce contenu, il ne sera plus visible par les classes et les élèves. Vous serez seul à le voir avec les intervenants et partenaires.',
 	'mis_en_ligne_le_consigne'                   => 'Mis en ligne le @jour@/@mois@/@annee@ en réponse à la consigne :',
 	'mission_numero'                             => 'Mission N°@numero@',
+	'mission_rubrique_hors_annee'                => 'Cette mission ne peut être publiée que dans les consignes de l’année en cours.',
 	'missions'                                   => 'Missions',
 	'modifier'                                   => 'Modifier',
 	'modifier_descriptif_groupe_travail'         => 'Modifier le descriptif du groupe de travail',
