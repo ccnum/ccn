@@ -713,6 +713,10 @@ a.webmestre.last-small {
 	background-position: center;
 }
 
+#liste-tooltip.en-bas .liste-tooltip-bulle {
+	transform: rotate(180deg);
+}
+
 .liste-tooltip-num-cadavre {
 	font-size: 12px;
 	font-weight: bold;
