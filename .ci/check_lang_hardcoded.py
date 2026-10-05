@@ -25,7 +25,7 @@ import sys
 from pathlib import Path
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
-PLUGIN_NAMES = ("thematique", "fictions", "fictionsv2", "petitfablab", "petitfablabv2", "ccn")
+PLUGIN_NAMES = ("thematique", "fictions", "petitfablab", "ccn")
 PLUGIN_ROOTS = [REPO_ROOT / "plugins" / "projets" / name for name in PLUGIN_NAMES]
 SCAN_DIRS = PLUGIN_ROOTS
 EXCLUDE_DIRS = set()

@@ -6,7 +6,7 @@ if (!defined('_ECRIRE_INC_VERSION')) {
 
 /**
  * Formulaire d'ajout de document(s) sur un objet, commun aux sites CCN
- * (thematique : publication de mission ; fictionsv2 : fiche script).
+ * (thematique : publication de mission ; fictions : fiche script).
  * L'envoi passe par bigup (#SAISIE_FICHIER : zone de dépôt, upload par
  * morceaux) ; le formulaire est soumis automatiquement à la fin de l'upload
  * (js/ccn_joindre.js), sans bouton "Envoyer" visible.

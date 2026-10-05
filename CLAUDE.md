@@ -13,7 +13,11 @@ explicite).
 Deux plugins "site" principaux, tous deux dépendant du plugin transverse **`ccn`** (rôle,
 année scolaire, options communes) :
 - **`thematique`** — plugin actif, le plus développé (voir ci-dessous)
-- **`fictions`** — variante sœur
+- **`fictions`** — variante sœur (avec **`petitfablab`**, socle commun `cadavrexquis`)
+
+`fictions` et `petitfablab` sont les anciennes `fictionsv2`/`petitfablabv2` renommées (2026-10) ;
+les anciennes versions sont gardées en `fictions_archive`/`petitfablab_archive`, jamais activées
+(ne pas y travailler). `SPIP_VERSION_SITE` est comparé par "contient" dans `docker-entrypoint.sh`.
 
 `thematique_edifice` dépend de `thematique` (variante pour la plateforme Edifice).
 

@@ -27,7 +27,7 @@ This monorepo contains all the plugins for SPIP CMS :
 | SPIP_SITE_ADDRESS  | Site URL                                                       |
 | SPIP_ADMIN_EMAIL   | Default init Admin email                                       |
 | SPIP_ADMIN_PASS    | Default init Admin password                                    |
-| SPIP_VERSION_SITE  | Défault thematique, possibilite : fictions, erasme             |
+| SPIP_VERSION_SITE  | Défaut thematique ; une valeur contenant "fictions" (ex. fictions, fictionsv2) active le plugin fictions, idem "petitfablab" |
 | SPIP_PLUGINS_CIOIDC | Mettre true si il faut le plugin CIOIDC (connexion SSO LaClasse) |
 | SPIP_CIOIDC_CLIENT_NOM | Identifiant client OpenID Connect enregistré sur le serveur LaClasse (requis si SPIP_PLUGINS_CIOIDC=true) |
 | SPIP_CIOIDC_CLIENT_SECRET | Secret client OpenID Connect enregistré sur le serveur LaClasse (requis si SPIP_PLUGINS_CIOIDC=true) |

@@ -45,7 +45,7 @@ if (isset($_GET['annee_scolaire'])) {
 // Repli sur la dernière rubrique d'année réellement existante (titre
 // numérique pur, ex. "2025"). Les années peuvent être à la racine
 // (thematique), enfants d'une rubrique tagée "rubrique-contenant-annees"
-// (fictionsv2) ou enfants d'une rubrique parente arbitraire (ex: 177 sur
+// (fictions) ou enfants d'une rubrique parente arbitraire (ex: 177 sur
 // certains sites) — on cherche le titre de l'année où qu'elle se trouve.
 //
 // Ce repli ne s'applique que si l'année vient du calcul calendaire pur

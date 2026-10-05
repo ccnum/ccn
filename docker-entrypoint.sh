@@ -165,22 +165,29 @@ fi
 # "Plugins non actives") : le plugin du site doit être activé dans le même appel
 # que ses dépendances (cadavrexquis, vider_rubrique), SPIP triant alors l'ordre
 # lui-même. Sinon, sur une base neuve, il n'était activé qu'au 2e démarrage.
+# Correspondance par "contient" : fictions, fictionsv2 (ancien nom du plugin,
+# encore présent dans des configs de déploiement), voire fictions_archive,
+# activent tous le plugin "fictions" (idem petitfablab). Les variantes
+# *_archive (anciennes versions) ne sont jamais activées par ce script.
 case "${SPIP_VERSION_SITE}" in
-	fictionsv2|fictions|petitfablabv2|petitfablab)
-		# Ne désactiver que les autres variantes : désactiver puis réactiver celle
-		# du site laissait le site sans son plugin si la réactivation échouait.
-		for variante in fictionsv2 fictions petitfablabv2 petitfablab; do
-			if [ "${variante}" != "${SPIP_VERSION_SITE}" ]; then
-				spip plugins:desactiver "${variante}" -y
-			fi
-		done
-		spip plugins:activer cadavrexquis vider_rubrique "${SPIP_VERSION_SITE}" -y
-		;;
-	*)
-		spip plugins:desactiver fictionsv2 fictions petitfablabv2 petitfablab cadavrexquis -y
-		spip plugins:activer "${SPIP_VERSION_SITE}" -y
-		;;
+	*fictions*) plugin_site=fictions ;;
+	*petitfablab*) plugin_site=petitfablab ;;
+	*) plugin_site="" ;;
 esac
+if [ -n "${plugin_site}" ]; then
+	# Ne désactiver que les autres variantes : désactiver puis réactiver celle
+	# du site laissait le site sans son plugin si la réactivation échouait.
+	# fictionsv2/petitfablabv2 : anciens préfixes, dont le répertoire n'existe plus.
+	for variante in fictions petitfablab fictions_archive petitfablab_archive fictionsv2 petitfablabv2; do
+		if [ "${variante}" != "${plugin_site}" ]; then
+			spip plugins:desactiver "${variante}" -y
+		fi
+	done
+	spip plugins:activer cadavrexquis vider_rubrique "${plugin_site}" -y
+else
+	spip plugins:desactiver fictions petitfablab fictions_archive petitfablab_archive fictionsv2 petitfablabv2 cadavrexquis -y
+	spip plugins:activer "${SPIP_VERSION_SITE}" -y
+fi
 if [ "${PROJET}" != "laclasse" ]; then
 	spip plugins:activer "thematique_${PROJET}" -y
 fi

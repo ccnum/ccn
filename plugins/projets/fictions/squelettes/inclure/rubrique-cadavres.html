@@ -1,0 +1,46 @@
+[(#REM)
+RUBRIQUE.HTML > INCLURE/RUBRIQUE.HTML > INCLURE/RUBRIQUE-CADAVRES.HTML
+
+État de verrouillage du jeu d'écriture collaborative (quel chapitre est
+visible/masqué/verrouillé pour l'auteur courant) : change à chaque
+publication d'un chapitre par un joueur. Extrait de inclure/rubrique.html
+(#459) pour que le reste de cette page (titre, navigation, prologue) reste
+cacheable sans risquer d'afficher un état de jeu périmé.
+
+Les règles d'autorisation sont centralisées dans
+inc/fictions_autorisation.php (#441), qui lit elle-même l'auteur connecté
+et compte les chapitres de l'histoire.
+]
+#CACHE{0}
+
+#SET{id_blog_pedagogique, (#VAL{blog_pedagogique}|fictions_id_rubrique_a_mot)}
+
+[(#REM) Chapitre 1 commun (article "chapitre1" de l'année, cf fictions_id_chapitre1()) :
+hors de la rubrique de l'histoire, donc absent de la boucle ci-dessous et du rang calculé
+par fictions_lecture_droits(). Même règle que pour un chapitre N-1 : visible tant que
+le chapitre 2 (seul chapitre publie/prop de l'histoire) est en cours d'écriture, toujours
+pour le webmestre. ]
+#SET{id_chapitre1, #ENV{id_rubrique}|fictions_id_chapitre1_histoire}
+[(#REM) Compté ici (chapitres publiés ou proposés de l'histoire, hors chapitre 1
+commun) : le chapitre 1 est N-1 tant que l'histoire n'a que son chapitre 2. ]
+#SET{chapitre1_n_moins_1, #ENV{id_rubrique}|fictions_nb_chapitres_histoire|=={1}}
+[(#GET{id_chapitre1}|et{#ENV{id_auteur}}|oui)
+	[(#SESSION{webmestre}|=={oui}|ou{#GET{chapitre1_n_moins_1}}|oui)
+		<INCLURE{fond=inclure/chapitre-visible,id_article=#GET{id_chapitre1}} />
+	]
+]
+
+<!-- Boucle affichage des cadavres -->
+<BOUCLE_cadavres(ARTICLES){id_rubrique}{statut IN publie,prop}{id_rubrique != #GET{id_blog_pedagogique}}{id_rubrique != #EVAL{_FICTIONSV2_ID_BLOG_AUTEUR}}{par id_article}>
+	[(#ID_ARTICLE|LECTURE_DROITS{montre}|oui)
+		[(#ID_ARTICLE|LECTURE_DROITS{mode}|=={'visible'}|oui)
+			<INCLURE{fond=inclure/chapitre-visible,id_article} />
+		]
+		[(#ID_ARTICLE|LECTURE_DROITS{mode}|=={'verrouille'}|oui)
+			<INCLURE{fond=inclure/chapitre-verrouille,id_article} />
+		]
+		[(#ID_ARTICLE|LECTURE_DROITS{mode}|=={'ecriture'}|oui)
+			<INCLURE{fond=inclure/chapitre-ecriture,id_article} />
+		]
+	]
+</BOUCLE_cadavres>

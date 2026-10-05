@@ -1,0 +1,70 @@
+[(#REM)
+SOMMAIRE.HTML > LISTE-CADAVRE-AUTEUR.HTML
+(grille des cadavres affichée dans le cas ou un utilisateur est connecté)
+
+Les règles d'autorisation pour déterminer si un chapitre appartient
+à l'utilisateur connecté sont centralisées dans
+inc/fictions_autorisation.php (#441).
+]
+
+
+#SET{i,0}
+
+#SET{id_blog_pedagogique, (#VAL{blog_pedagogique}|fictions_id_rubrique_a_mot)}
+<BOUCLE_rubriques_toutes(RUBRIQUES){id_parent=#ENV{id_rubrique}}{id_rubrique != #GET{id_blog_pedagogique}}{id_rubrique != #EVAL{_FICTIONSV2_ID_BLOG_AUTEUR}}{par titre}>
+	#SET{i,#GET{i}|plus{1}}
+	<div class="liste-colonnes">
+		<div class="liste-title">#GET{i}</div>
+		<!-- LISTE CADAVRES -->
+		[(#REM) Chapitre 1 commun de l'année (cf fictions_id_chapitre1()), hors rubrique de l'histoire ]
+		#SET{id_chapitre1, #ID_RUBRIQUE|fictions_id_chapitre1_histoire}
+		<BOUCLE_chapitre1(ARTICLES){id_article=#GET{id_chapitre1}}>
+			<div class="liste-link">
+				<div class="liste-tooltip-content">
+					<div class="liste-tooltip-inner">
+						<div class="liste-tooltip-num-cadavre"><:fictions:histoire:>#GET{i}</div>
+						<div class="liste-tooltip-titre-chapitre">#TITRE</div>
+						<BOUCLE_auteur_chapitre1(AUTEURS){id_article}{0,1}>
+							<div class="liste-tooltip-photo">[(#LOGO_AUTEUR|image_reduire{42,42})]</div>
+							<div class="liste-tooltip-auteur">[(#ID_ARTICLE|fictions_nom_participant_chapitre|sinon{#NOM})]</div>
+							<div class="liste-tooltip-extrait">
+								[(#DESCRIPTIF|textebrut|recupererDernieresLignesChapitres{380})]<br />
+							</div>
+						</BOUCLE_auteur_chapitre1>
+					</div>
+					<div class="liste-tooltip-bulle">
+					</div>
+				</div>
+				<a href="#_rubriques_toutes:URL_RUBRIQUE" class="liste-link-single verrouille"></a>
+			</div>
+		<div class="liste-link-spacer-5"></div>
+		</BOUCLE_chapitre1>
+		<BOUCLE_articles_tous(ARTICLES){id_rubrique}{statut IN publie,prop}{par id_article}>
+			<!-- mettre boucle ci-dessus par date -->
+			<div class="liste-link">
+			<!-- TOOL TIP CONTENT -->
+				<div class="liste-tooltip-content">
+					<div class="liste-tooltip-inner">
+						<div class="liste-tooltip-num-cadavre"><:fictions:histoire:>#GET{i}</div>
+						<!--<div class="liste-tooltip-num-chapitre">#SURTITRE</div>-->
+						<div class="liste-tooltip-titre-chapitre">#TITRE</div>
+						<BOUCLE_auteur_tous(AUTEURS){id_article = #ID_ARTICLE}{0,1}>
+							<div class="liste-tooltip-photo">[(#LOGO_AUTEUR|image_reduire{42,42})]</div>
+							<div class="liste-tooltip-auteur">[(#ID_ARTICLE|fictions_nom_participant_chapitre|sinon{#NOM})]</div>
+							<div class="liste-tooltip-extrait">
+								[(#DESCRIPTIF|textebrut|recupererDernieresLignesChapitres{380})]<br />
+							</div>
+						</BOUCLE_auteur_tous>
+					</div>
+					<div class="liste-tooltip-bulle">
+					</div>
+				</div>
+
+				<a href="#_articles_tous:URL_RUBRIQUE" class="liste-link-single [(#ID_ARTICLE|EST_AUTEUR_DROITS|?{'auteur','verrouille'})] [(#_articles_tous:COMPTEUR_BOUCLE|=={#_articles_tous:TOTAL_BOUCLE}|?{'last',''})]"></a>
+
+			</div>
+		<div class="liste-link-spacer-5"></div>
+		</BOUCLE_articles_tous>
+	<!-- FIN LISTE CADAVRES -->
+	</div>
+</BOUCLE_rubriques_toutes>
