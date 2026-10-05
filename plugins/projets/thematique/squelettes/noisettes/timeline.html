@@ -2,7 +2,7 @@
 
 	var hash = window.location.hash;
 
-	CCN.urlRoot = "[(#ENV{chemin})]";
+	CCN.urlRoot = [(#ENV*{chemin}|sinon{''}|json_encode)];
 	CCN.urlJson = "[(#URL_PAGE{json}|parametre_url{annee_scolaire,#ENV{annee_scolaire}}|html_entity_decode)]" + "&mode=";
 	CCN.urlImgBlog = "#CHEMIN{img/bulle.svg}";
 	CCN.urlImgEvenement = "[(#CHEMIN{#ENV{chemin}/img/logo_evenement_#NOM_SITE_SPIP.png}|sinon{#ENV{chemin}/img/logo_evenement.png}|image_reduire{150,94}|extraire_attribut{src})]";
@@ -34,7 +34,7 @@
 	]
 	CCN.idRubriqueClasseAuteur = "#GET{id_rubrique_classe}";
 	
-	CCN.role = "[(#ENV{role})]";
+	CCN.role = [(#ENV*{role}|sinon{''}|json_encode)];
 	// Issue #437 : l'année affichée par la timeline (#ENV{annee_scolaire}) est
 	// l'année sélectionnée, pas forcément l'année réelle en cours — sert à
 	// masquer le bouton "répondre à la mission" sur une année archivée.

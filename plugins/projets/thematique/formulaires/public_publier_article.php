@@ -97,8 +97,10 @@ function formulaires_public_publier_article_charger_dist(
 	// formulaire (#464). On les supprime uniquement en création (pas
 	// d'id_article réel) : en édition, l'id_objet document est l'id_article
 	// réel, pas le temp, donc ce cleanup ne s'applique pas.
-	if (!$valeurs['id_article']) {
-		$id_temp = 0 - intval($GLOBALS['visiteur_session']['id_auteur'] ?? 0);
+	// Seulement pour un auteur connecté : pour un anonyme, $id_temp valait 0 et
+	// ce GET supprimait les liens des documents en attente (id_objet=0).
+	$id_temp = 0 - intval($GLOBALS['visiteur_session']['id_auteur'] ?? 0);
+	if (!$valeurs['id_article'] && $id_temp) {
 		$liens = sql_allfetsel('*', 'spip_documents_liens', "id_objet=$id_temp AND objet='article'");
 		foreach ($liens as $lien) {
 			sql_delete('spip_documents_liens', 'id_document=' . intval($lien['id_document']));
@@ -282,6 +284,11 @@ function formulaires_public_publier_article_traiter_dist(
 		if ($id_ressources) {
 			$id_rubrique = $id_ressources;
 			set_request('id_parent', $id_rubrique);
+		} elseif (!$edition) {
+			// Création sans rubrique « Ressources » : id_parent posté aurait décidé
+			// seul de la rubrique (contrôle #274 sauté pour ce type) — on refuse.
+			// En édition, id_parent est déjà figé à la rubrique de l'article.
+			return ['message_erreur' => _T('info_acces_interdit')];
 		}
 	}
 	$res = formulaires_editer_objet_traiter('article', $id_article, $id_rubrique);
