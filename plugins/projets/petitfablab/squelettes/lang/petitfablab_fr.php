@@ -40,6 +40,7 @@ return [
 	'seules_histoires_administrateur'   => 'Seules les histoires des rubriques dont vous êtes administrateur.ice s’affichent ci-dessous.',
 	'sujet_chapitre_publie'             => 'Vous venez d’écrire un chapitre !',
 	'sujet_histoire_en_ligne'           => 'Votre histoire est en ligne !',
+	'supprimer_document_titre'          => 'supprimer ce document',
 
 	// V
 	'vers_version_colleges'             => 'Vers la version collèges',
