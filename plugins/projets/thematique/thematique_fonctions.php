@@ -413,6 +413,24 @@ function thematique_auteur_a_mot_dans_hierarchie($id_auteur, $titre_mot) {
 	return false;
 }
 
+/**
+ * L'auteur est-il lié (spip_auteurs_liens) à $id_rubrique ou à l'une de ses
+ * sous-rubriques ? Ex : intervenant lié à son projet, sous « Consignes ».
+ */
+function thematique_auteur_lie_sous_rubrique($id_auteur, $id_rubrique) {
+	$id_rubrique = intval($id_rubrique);
+	if (!$id_auteur || !$id_rubrique) {
+		return false;
+	}
+	foreach (sql_allfetsel('id_objet', 'spip_auteurs_liens', 'id_auteur=' . intval($id_auteur) . " AND objet='rubrique'") as $r) {
+		$id_lie = intval($r['id_objet']);
+		if ($id_lie === $id_rubrique || in_array($id_rubrique, array_map('intval', thematique_ascendants_rubrique($id_lie)), true)) {
+			return true;
+		}
+	}
+	return false;
+}
+
 function thematique_ascendants_rubrique($id_rubrique) {
 	static $cache = [];
 	$id_rubrique = intval($id_rubrique);
