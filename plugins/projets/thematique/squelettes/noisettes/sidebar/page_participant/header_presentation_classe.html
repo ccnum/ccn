@@ -14,12 +14,14 @@
 				<INCLURE{fond=noisettes/sidebar/normal_header_icons} />
 			</div>
 			<div id="header-row-2">
-				[(#ENV{description_classe}|oui)
-					#ENV*{description_classe}
-				]
-				[(#ENV{description_classe}|non)
+				[(#REM) Description lue ici depuis la rubrique, pas depuis l'environnement :
+				la valeur brute de l'environnement était injectable par l'URL (audit 2026-10, XSS). ]
+				<BOUCLE_description(RUBRIQUES){id_rubrique}{tout}>
+					[(#TEXTE|oui) #TEXTE]
+					[(#TEXTE|non) <:thematique:pas_de_description:>]
+				</BOUCLE_description>
 					<:thematique:pas_de_description:>
-				]
+				<//B_description>
 			</div>
 		</div>
 	</div>
