@@ -46,6 +46,10 @@ function fictions_annee_config(int $annee): array {
 }
 
 function fictions_annee_config_ecrire(int $annee, array $config): void {
+	// Année bornée : sinon n'importe quel entier crée une meta fictions_annee_<n>.
+	if ($annee < 2000 || $annee > 2100) {
+		return;
+	}
 	include_spip('inc/meta');
 	ecrire_meta('fictions_annee_' . $annee, serialize(array_merge(fictions_annee_config_defaut(), $config)), 'non');
 }

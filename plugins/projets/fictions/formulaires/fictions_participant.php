@@ -72,6 +72,10 @@ function formulaires_fictions_participant_verifier_dist($annee, $id_participant 
 }
 
 function formulaires_fictions_participant_traiter_dist($annee, $id_participant = 0) {
+	// charger() n'est pas rappelé au POST : on revérifie le droit ici.
+	if (!autoriser('fictionsassociations')) {
+		return ['message_erreur' => _T('info_acces_interdit')];
+	}
 	include_spip('inc/fictions_participants');
 	$annee = intval($annee);
 	$id_participant = intval($id_participant);

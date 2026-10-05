@@ -160,8 +160,16 @@ function fictions_ecriture_droits(int $id_article, ?array $qui = null): string {
 		return '';
 	}
 
+	// Seul le chapitre en cours d'écriture (prop) s'écrit : le rang ci-dessous,
+	// compté parmi publie + prop, faisait aussi passer un chapitre prepa pour le
+	// dernier (audit 2026-10).
+	$article = sql_fetsel('id_rubrique, statut', 'spip_articles', "id_article=$id_article");
+	if (!$article || $article['statut'] !== 'prop') {
+		return '';
+	}
+
 	// Rang 1-indexé de l'article dans sa rubrique (publie + prop)
-	$id_rubrique = intval(sql_getfetsel('id_rubrique', 'spip_articles', "id_article=$id_article"));
+	$id_rubrique = intval($article['id_rubrique']);
 	$max_cadavres = fictions_nb_chapitres_histoire($id_rubrique);
 	$pos = sql_countsel('spip_articles',
 		"id_rubrique=$id_rubrique AND statut IN ('publie','prop') AND id_article<=$id_article");

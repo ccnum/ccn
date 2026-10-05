@@ -36,6 +36,10 @@ function formulaires_fictions_calendrier_verifier_dist($annee) {
 }
 
 function formulaires_fictions_calendrier_traiter_dist($annee) {
+	// charger() n'est pas rappelé au POST : on revérifie le droit ici.
+	if (!autoriser('fictionsassociations')) {
+		return ['message_erreur' => _T('info_acces_interdit')];
+	}
 	include_spip('inc/fictions_participants');
 	$code = fictions_annee_dates_modifier(
 		intval($annee),

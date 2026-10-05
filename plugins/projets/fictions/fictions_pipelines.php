@@ -85,9 +85,10 @@ function fictions_post_edition($flux) {
 function fictions_cioidc_userinfo($flux) {
 	include_spip('inc/fictions_cioidc');
 
-	// Mêmes traces que thematique_cioidc_userinfo() : tout ce que l'ENT envoie, puis
-	// chaque décision, pour diagnostiquer une inscription non reconnue.
-	spip_log('fictions userinfo args=' . json_encode($flux['args']) . ' data=' . json_encode($flux['data']), 'cioidc');
+	// Mêmes traces que thematique_cioidc_userinfo() : les attributs reçus (pas leurs
+	// valeurs : profil ENT d'élèves), puis chaque décision, pour diagnostiquer une
+	// inscription non reconnue.
+	spip_log('fictions userinfo attributs=' . implode(',', array_keys((array) ($flux['data'] ?? []))), 'cioidc');
 
 	$uid = (string) (reset($flux['args']) ?: '');
 	$profils = (string) ($flux['data']['ENTPersonProfils [ENS|TUT|ELV]'] ?? '');

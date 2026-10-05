@@ -141,29 +141,31 @@ function fictions_histoires_synchroniser(int $annee): array {
 	// Verrou MySQL : deux synchronisations simultanées prendraient le même numéro.
 	$verrou = sql_quote('fictions_histoires_' . $id_annee);
 	sql_query("SELECT GET_LOCK($verrou, 10)");
-
-	$etat = fictions_histoires_etat($annee);
-	$libres = $etat['en_trop'];
-	$config = fictions_annee_config($annee);
-	$config['histoires'] = $etat['attribuees'];
-	foreach ($etat['manquantes'] as $id_participant) {
-		$id_rubrique = (int) array_shift($libres);
-		if ($id_rubrique) {
-			$resultat['attribuees']++;
-		} else {
-			$numeros = fictions_histoires_annee($id_annee);
-			$id_rubrique = fictions_histoire_creer($id_annee, ($numeros ? max($numeros) : 0) + 1);
-			if (!$id_rubrique) {
-				$resultat['erreur'] = 'creation_histoire';
-				break;
+	// finally : le verrou est relâché même si une création d'histoire lève une exception
+	try {
+		$etat = fictions_histoires_etat($annee);
+		$libres = $etat['en_trop'];
+		$config = fictions_annee_config($annee);
+		$config['histoires'] = $etat['attribuees'];
+		foreach ($etat['manquantes'] as $id_participant) {
+			$id_rubrique = (int) array_shift($libres);
+			if ($id_rubrique) {
+				$resultat['attribuees']++;
+			} else {
+				$numeros = fictions_histoires_annee($id_annee);
+				$id_rubrique = fictions_histoire_creer($id_annee, ($numeros ? max($numeros) : 0) + 1);
+				if (!$id_rubrique) {
+					$resultat['erreur'] = 'creation_histoire';
+					break;
+				}
+				$resultat['creees']++;
 			}
-			$resultat['creees']++;
+			$config['histoires'][$id_participant] = $id_rubrique;
+			spip_log("fictions associations $annee : histoire #$id_rubrique attribuée au participant #$id_participant", 'fictions');
 		}
-		$config['histoires'][$id_participant] = $id_rubrique;
-		spip_log("fictions associations $annee : histoire #$id_rubrique attribuée au participant #$id_participant", 'fictions');
+		fictions_annee_config_ecrire($annee, $config);
+	} finally {
+		sql_query("SELECT RELEASE_LOCK($verrou)");
 	}
-	fictions_annee_config_ecrire($annee, $config);
-
-	sql_query("SELECT RELEASE_LOCK($verrou)");
 	return $resultat;
 }
