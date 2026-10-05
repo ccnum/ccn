@@ -5,7 +5,8 @@
 	<div class="bouton-modifier-container">
 		<INCLURE{fond=noisettes/sidebar/inc/bouton_modifier_article, id_article=#ID_ARTICLE, type_objet=travail_en_cours} />
 	</div>
-	#TEXTE
+	[(#TEXTE|liens_ouvrants|image_reduire{250,0}|thematique_html_equilibre)]
+						
 	[(#REM) Documents joints non insérés dans le texte (critère vu=non, cf
 	ajouter_document.html) : sans ce bloc, les pièces jointes des réponses
 	n'apparaissaient que si leur raccourci docXX était dans le texte, ce

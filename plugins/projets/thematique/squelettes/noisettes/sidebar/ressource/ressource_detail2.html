@@ -23,7 +23,7 @@
 				<div class="ressource-detail-author">
 					<:thematique:publie_par:> #GET{nom_auteur}
 				</div>
-				<div class="ressource-detail-text">#TEXTE</div>
+				<div class="ressource-detail-text">[(#TEXTE|liens_ouvrants|image_reduire{250,0}|thematique_html_equilibre)]</div>
 				<div class="ressource-detail-documents">
 					<INCLURE{fond=noisettes/inc/ajouter_document, id_article} />
 				</div>
