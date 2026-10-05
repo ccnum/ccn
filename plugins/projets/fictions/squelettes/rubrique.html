@@ -1,7 +1,7 @@
 <BOUCLE_principale(RUBRIQUES){id_rubrique}{tous}>
 <INCLURE{fond=inclure/tete-html} />
 <body>
-<a href="#contenu-principal" class="skip-link">Aller au contenu principal</a>
+<a href="#contenu-principal" class="skip-link"><:fictions:skip_contenu_principal:></a>
 	<!-- BOUTON CONNEXION -->
 	<INCLURE{fond=inclure/authentification} />
 	<!-- ELEMENTS GRAPHIQUES-->
@@ -15,10 +15,16 @@
 				width="54" height="54" />
 		</a>
 	</div>
-	[(#TITRE|=={'Blog pédagogique'}|non)<INCLURE{fond=inclure/rubrique,id_rubrique} />]
-	[(#TITRE|=={'Blog pédagogique'}|et{#SESSION{statut}|=={0minirezo}|oui}|oui)<INCLURE{fond=inclure/rubrique-blogpeda,id_rubrique,id_article} />]
+	[(#REM) Initialisé à 0 : sans le mot, la boucle ne s'exécute pas et le test == 0
+	ci-dessous échouait, le contenu de l'histoire n'était jamais inclus (page vide). ]
+	#SET{is_blog_pedagogique,0}
+	<BOUCLE_blog_check(MOTS){id_rubrique}{titre=blog_pedagogique}{0,1}>
+	#SET{is_blog_pedagogique,#COMPTEUR_BOUCLE}
+	</BOUCLE_blog_check>
+	[(#GET{is_blog_pedagogique}|=={0}|oui)<INCLURE{fond=inclure/rubrique,id_rubrique,annee_scolaire=#EVAL{_ANNEE_SCOLAIRE}} />]
+	[(#GET{is_blog_pedagogique}|>{0}|et{#SESSION{statut}|=={0minirezo}}|oui)<INCLURE{fond=inclure/rubrique-blogpeda,id_rubrique,id_article} />]
 
-	<INCLURE{fond=footer} />
+	<INCLURE{fond=footer, annee_scolaire=#EVAL{_ANNEE_SCOLAIRE}} />
 </body>
 
 <style>
@@ -31,7 +37,7 @@
 	.crayon-html .crayon-boutons button { width: auto; height: 32px; text-indent: 0; cursor: pointer; background: #ff6b6b; color: #FFF; border-radius: 5px; font-family:Arial, Helvetica, sans-serif; font-size:13px; margin:0px 0px 0px 10px; float:left;}
 </style>
 
-<script type="text/javascript" src="#CHEMIN{js/rubrique.js}"></script>
+	<INCLURE{fond=modeles/js, page=rubrique} />
 
 </html>
 </BOUCLE_principale>

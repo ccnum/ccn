@@ -91,6 +91,20 @@ if version_greater "$image_version" "$installed_version"; then
 	fi
 fi
 
+# .htaccess : celui de l'image (htaccess.txt du dépôt) fait référence et est
+# réappliqué à chaque démarrage — la copie ci-dessus n'a lieu qu'à l'installation
+# ou à une montée de version de SPIP, un volume existant gardait sinon un
+# .htaccess périmé. Une version modifiée à la main est sauvegardée à côté.
+if [ -f /usr/src/spip/htaccess.txt ] && ! cmp -s /usr/src/spip/htaccess.txt .htaccess; then
+	if [ -e .htaccess ]; then
+		sauvegarde=".htaccess.avant-$(date +%Y%m%d%H%M%S)"
+		cp -p .htaccess "${sauvegarde}"
+		echo >&2 ".htaccess différent de celui de l'image : remplacé (ancien sauvegardé dans ${sauvegarde})"
+	fi
+	cp /usr/src/spip/htaccess.txt .htaccess
+	chown www-data:www-data .htaccess
+fi
+
 # Install SPIP
 if [ "${SPIP_DB_SERVER}" = "mysql" ]; then
 	wait_for_db
@@ -165,23 +179,37 @@ fi
 # "Plugins non actives") : le plugin du site doit être activé dans le même appel
 # que ses dépendances (cadavrexquis, vider_rubrique), SPIP triant alors l'ordre
 # lui-même. Sinon, sur une base neuve, il n'était activé qu'au 2e démarrage.
+# Correspondance par "contient" : fictions, fictionsv2 (ancien nom du plugin,
+# encore présent dans des configs de déploiement), voire fictions_archive,
+# activent tous le plugin "fictions" (idem petitfablab). Les variantes
+# *_archive (anciennes versions) ne sont jamais activées par ce script.
 case "${SPIP_VERSION_SITE}" in
-	fictionsv2|fictions|petitfablabv2|petitfablab)
-		# Ne désactiver que les autres variantes : désactiver puis réactiver celle
-		# du site laissait le site sans son plugin si la réactivation échouait.
-		for variante in fictionsv2 fictions petitfablabv2 petitfablab; do
-			if [ "${variante}" != "${SPIP_VERSION_SITE}" ]; then
-				spip plugins:desactiver "${variante}" -y
-			fi
-		done
-		spip plugins:activer cadavrexquis vider_rubrique "${SPIP_VERSION_SITE}" -y
-		;;
-	*)
-		spip plugins:desactiver fictionsv2 fictions petitfablabv2 petitfablab cadavrexquis -y
-		spip plugins:activer "${SPIP_VERSION_SITE}" -y
-		;;
+	*fictions*) plugin_site=fictions ;;
+	*petitfablab*) plugin_site=petitfablab ;;
+	*) plugin_site="" ;;
 esac
-if [ "${PROJET}" != "laclasse" ]; then
+if [ -n "${plugin_site}" ]; then
+	# Ne désactiver que les autres variantes : désactiver puis réactiver celle
+	# du site laissait le site sans son plugin si la réactivation échouait.
+	# fictionsv2/petitfablabv2 : anciens préfixes, dont le répertoire n'existe plus.
+	for variante in fictions petitfablab fictions_archive petitfablab_archive fictionsv2 petitfablabv2; do
+		if [ "${variante}" != "${plugin_site}" ]; then
+			spip plugins:desactiver "${variante}" -y
+		fi
+	done
+	spip plugins:activer cadavrexquis vider_rubrique "${plugin_site}" -y
+	# thematique (et sa variante de projet) n'a rien à faire sur un site
+	# fictions/petitfablab : resté actif d'une configuration antérieure, il y
+	# laissait ses squelettes et pages accessibles.
+	if [ "${PROJET}" != "laclasse" ]; then
+		spip plugins:desactiver "thematique_${PROJET}" -y
+	fi
+	spip plugins:desactiver thematique -y
+else
+	spip plugins:desactiver fictions petitfablab fictions_archive petitfablab_archive fictionsv2 petitfablabv2 cadavrexquis -y
+	spip plugins:activer "${SPIP_VERSION_SITE}" -y
+fi
+if [ -z "${plugin_site}" ] && [ "${PROJET}" != "laclasse" ]; then
 	spip plugins:activer "thematique_${PROJET}" -y
 fi
 spip plugins:maj:bdd
@@ -202,6 +230,10 @@ spip config:ecrire creer_preview:non
 # de faire planter le process PHP sur de grosses images.
 spip config:ecrire image_process:imagick
 spip config:ecrire -p mediabox active:oui
+# Pas d'upload par glisser-déposer dans les crayons de texte d'article : son
+# onglet "Glissez un document..." s'affiche tronqué à côté de la popup crayon
+# (fictionsv2), et les documents passent par le formulaire ccn_joindre_document.
+spip config:ecrire -p crayons upload:
 spip config:ecrire -p notation acces:ide
 spip config:ecrire -p notation change_note:oui
 spip config:ecrire -p notifications forum_article:0

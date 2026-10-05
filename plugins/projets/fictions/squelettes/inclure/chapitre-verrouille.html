@@ -14,7 +14,7 @@ RUBRIQUE.HTML > CHAPITRE-VERROUILLE.HTML
 	<div class="ecriture-chapitre-auteur">
 		<BOUCLE_auteur_article(AUTEURS){id_article}{0,1}>
 			<div class="ecriture-chapitre-avatar">[(#LOGO_AUTEUR|image_reduire{42,42})]</div>
-			<div class="ecriture-chapitre-nom">#NOM</div>
+			<div class="ecriture-chapitre-nom">[(#ID_ARTICLE|fictions_nom_participant_chapitre|sinon{#NOM})]</div>
 		</BOUCLE_auteur_article>
 	</div>
 

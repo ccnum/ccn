@@ -3,8 +3,50 @@
 // annee_rub, balise_ANNEE_SCOLAIRE_dist, balise_ANNEE_ACTUELLE_dist, afficher_options_date
 // sont définis par le plugin ccn (ccn_fonctions.php)
 
-include_spip('action/editer_objet');
 include_spip('base/abstract_sql');
+// Filtres LECTURE_DROITS / ECRITURE_DROITS / EST_AUTEUR_DROITS des squelettes
+// (liste-cadavres-auteur*.html, rubrique-cadavres.html) : SPIP ne charge que
+// <prefixe>_fonctions.php, pas un fichier au nom libre — sans cette inclusion,
+// "Filtre EST_AUTEUR_DROITS non défini" (#441).
+include_spip('lecturedroits');
+
+/**
+ * Retourne l'ID du mot-clé correspondant au titre donné, avec cache par requête.
+ * Utilisable comme filtre SPIP : [(#VALEUR|fictions_id_mot)]
+ */
+function fictions_id_mot(string $titre_mot): int {
+	static $cache = [];
+	if (!array_key_exists($titre_mot, $cache)) {
+		$cache[$titre_mot] = (int) sql_getfetsel('id_mot', 'spip_mots', 'titre=' . sql_quote($titre_mot));
+	}
+	return $cache[$titre_mot];
+}
+
+/**
+ * Retourne l'ID de la première rubrique (à tout niveau) portant le mot-clé donné.
+ * Utilisable comme filtre SPIP : [(#VALEUR|fictions_id_rubrique_a_mot)]
+ */
+function fictions_id_rubrique_a_mot(string $titre_mot): int {
+	static $cache = [];
+
+	if (array_key_exists($titre_mot, $cache)) {
+		return $cache[$titre_mot];
+	}
+
+	$id_mot = fictions_id_mot($titre_mot);
+	if (!$id_mot) {
+		return $cache[$titre_mot] = 0;
+	}
+
+	return $cache[$titre_mot] = (int) sql_getfetsel(
+		'r.id_rubrique',
+		['spip_rubriques AS r', 'spip_mots_liens AS ml'],
+		['ml.id_objet=r.id_rubrique', 'ml.objet=' . sql_quote('rubrique'), 'ml.id_mot=' . intval($id_mot)],
+		'',
+		'r.id_rubrique',
+		'0,1'
+	);
+}
 
 // Si balise_FIN_dist = false -> affichage de la grille sur la page d'accueil
 // Si balise_FIN_dist = true -> affichage des couvertures et liens pdf sur la page d'accueil
@@ -52,12 +94,179 @@ function recupererDernieresLignesChapitres(string $texteChapitre = '', int $nbDe
     return $chaineAConcatenerAuDebut . mb_substr($texteChapitre, -$nbDeDerniersCaracteresAAfficher);
 }
 
-function anneeAAfficher($derniereRubriqueAnneeTrouveeDansSpip = '') {
-    if (isset($_GET['annee_scolaire'])) {
-        $_annee = intval($_GET['annee_scolaire']);
-        if ($_annee > 2011 && $_annee < 2100) {
-            return $_annee;
-        }
-    }
-    return $derniereRubriqueAnneeTrouveeDansSpip;
+/**
+ * Balise PAGE : retourne le nom de la page SPIP courante.
+ * Détecté via $_GET['page'] ou $_SERVER['REQUEST_URI'] en fallback.
+ * Utilisable dans les squelettes : [(#PAGE)]
+ *
+ * Pages supportées : sommaire, page, rubrique, article, forum, forum_reponse,
+ *                    lecture, lecture-texte, lecture-script
+ */
+function balise_PAGE_dist($p) {
+	$page = '';
+
+	// Via $_GET['page']
+	if (isset($_GET['page']) && is_string($_GET['page']) && $_GET['page'] !== '') {
+		$page = $_GET['page'];
+	}
+	// Via REQUEST_URI fallback
+	else {
+		$uri = $_SERVER['REQUEST_URI'] ?? '';
+		$uri = parse_url($uri, PHP_URL_QUERY) ?? '';
+		if (preg_match('/page=([^&]+)/', $uri, $m)) {
+			$page = $m[1];
+		}
+	}
+
+	$p->result = $page;
+	return $p;
+}
+
+/**
+ * Filtre fictions_js_page : mappe un nom de page SPIP vers le nom de fichier JS.
+ * Utilisable comme filtre SPIP : [(#PAGE|fictions_js_page)]
+ * Ex: sommaire -> sommaire, lecture-texte -> lecture-texte, forum -> forum
+ */
+function fictions_js_page($page) {
+	// Mapping explicite page -> fichier JS (certains noms de page ≠ nom de fichier)
+	$map = [
+		'sommaire' => 'sommaire',
+		'page' => 'page',
+		'rubrique' => 'rubrique',
+		'article' => 'page', // les articles utilisent le squelette page.html
+		'forum' => 'forum',
+		'forum_reponse' => 'forum',
+		'lecture' => 'lecture',
+		'lecture-texte' => 'lecture',
+		'lecture-script' => 'lecture-script',
+		'lecture_forum' => 'forum',
+	];
+
+	return isset($map[$page]) ? $map[$page] : $page;
+}
+
+/**
+ * Formate une année scolaire : "2025" -> "2025/2026".
+ * Utilisable comme filtre SPIP : [(#TITRE|filtre_fictions_annee_label)]
+ */
+function filtre_fictions_annee_label($annee) {
+	$annee = intval($annee);
+	if ($annee < 2000 || $annee > 2100) {
+		return $annee;
+	}
+	return $annee . '/' . ($annee + 1);
+}
+
+/**
+ * Retourne l'ID de la rubrique de l'année scolaire donnée (titre "2026"), avec cache
+ * par requête. Même recherche que les squelettes ({titre==#EVAL{_ANNEE_SCOLAIRE}}{tout}) :
+ * la rubrique de l'année est cherchée où qu'elle soit (ex: sous "Collèges").
+ */
+function fictions_id_rubrique_annee($annee): int {
+	static $cache = [];
+	$annee = (string) intval($annee);
+	// 0 non mis en cache : la rubrique peut être créée plus loin dans la même requête
+	// (cf fictions_assurer_structure_annee()).
+	if (empty($cache[$annee])) {
+		$cache[$annee] = (int) sql_getfetsel('id_rubrique', 'spip_rubriques', 'titre=' . sql_quote($annee), '', 'id_rubrique', '0,1');
+	}
+	return $cache[$annee];
+}
+
+/**
+ * Retourne l'ID de l'article "chapitre 1" commun à toutes les histoires d'une année :
+ * article de la rubrique de l'année portant le mot-clé "chapitre1". À partir de
+ * _FICTIONS_ANNEE_CHAPITRE1_COMMUN, le premier chapitre n'est plus copié dans chaque
+ * histoire mais affiché depuis cet article unique. 0 si aucun (années antérieures).
+ * Utilisable comme filtre SPIP : [(#ANNEE_SCOLAIRE|fictions_id_chapitre1)]
+ */
+function fictions_id_chapitre1($annee): int {
+	static $cache = [];
+	$annee = intval($annee);
+	if (array_key_exists($annee, $cache)) {
+		return $cache[$annee];
+	}
+	$id_mot = fictions_id_mot('chapitre1');
+	$id_annee = fictions_id_rubrique_annee($annee);
+	if ($annee < _FICTIONS_ANNEE_CHAPITRE1_COMMUN || !$id_mot || !$id_annee) {
+		return $cache[$annee] = 0;
+	}
+	return $cache[$annee] = (int) sql_getfetsel(
+		'a.id_article',
+		['spip_articles AS a', 'spip_mots_liens AS ml'],
+		[
+			'ml.id_objet=a.id_article',
+			'ml.objet=' . sql_quote('article'),
+			'ml.id_mot=' . intval($id_mot),
+			'a.id_rubrique=' . intval($id_annee),
+			'a.statut=' . sql_quote('publie'),
+		],
+		'',
+		'a.id_article',
+		'0,1'
+	);
+}
+
+/**
+ * Chapitre 1 commun de l'histoire donnée : l'année est le titre de sa rubrique parente
+ * (et non _ANNEE_SCOLAIRE, qui suit le cookie du sélecteur d'année).
+ * Utilisable comme filtre SPIP : [(#ID_RUBRIQUE|fictions_id_chapitre1_histoire)]
+ */
+function fictions_id_chapitre1_histoire($id_rubrique): int {
+	$annee = sql_getfetsel(
+		'p.titre',
+		['spip_rubriques AS r', 'spip_rubriques AS p'],
+		['p.id_rubrique=r.id_parent', 'r.id_rubrique=' . intval($id_rubrique)]
+	);
+	return preg_match('/^\d{4}$/', (string) $annee) ? fictions_id_chapitre1($annee) : 0;
+}
+
+/**
+ * Nombre de chapitres écrits ou en cours d'écriture (publie + prop) d'une histoire.
+ * Utilisable comme filtre SPIP : [(#ID_RUBRIQUE|fictions_nb_chapitres_histoire)]
+ */
+function fictions_nb_chapitres_histoire($id_rubrique): int {
+	return (int) sql_countsel('spip_articles', [
+		'id_rubrique=' . intval($id_rubrique),
+		sql_in('statut', ['publie', 'prop']),
+	]);
+}
+
+/**
+ * Noms des classes (participants) gérées par un compte pour une année, séparés par des
+ * virgules (#519), '' si aucune. Filtre :
+ * [(#SESSION{id_auteur}|fictions_noms_classes_auteur{#ENV{annee_scolaire}})]
+ */
+function fictions_noms_classes_auteur($id_auteur, $annee): string {
+	include_spip('inc/fictions_participants');
+	$classes = array_filter(
+		fictions_participants_auteur(intval($annee), intval($id_auteur)),
+		fn($participant) => $participant['type'] === 'classe'
+	);
+	return implode(', ', array_column($classes, 'nom'));
+}
+
+/**
+ * Nom du participant (classe ou écrivain) affecté à un chapitre, '' si aucun : c'est
+ * lui, et non le compte SPIP, qui apparaît sur le site (#518, #524). Filtre :
+ * [(#ID_ARTICLE|fictions_nom_participant_chapitre|sinon{#NOM})]
+ */
+function fictions_nom_participant_chapitre($id_article): string {
+	include_spip('inc/fictions_plan');
+	$id_participant = fictions_participant_chapitre(intval($id_article));
+	if (!$id_participant) {
+		return '';
+	}
+	$id_rubrique = (int) sql_getfetsel('id_rubrique', 'spip_articles', 'id_article=' . intval($id_article));
+	$annee = fictions_annee_histoire($id_rubrique);
+	return (string) (fictions_participants($annee, false)[$id_participant]['nom'] ?? '');
+}
+
+/**
+ * Données de la page des associations (#525). Filtre :
+ * #SET{donnees, #GET{annee}|fictions_associations_donnees}
+ */
+function fictions_associations_donnees_filtre($annee): array {
+	include_spip('inc/fictions_plan');
+	return fictions_associations_donnees(intval($annee));
 }

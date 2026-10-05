@@ -275,7 +275,7 @@ function initJalons(data) {
 			stop: function (event, ui) {
 				const yy = (ui.offset.top - CCN.projet.timeline.offset().top) / CCN.projet.timeline.height();
 				if (CCN.admin == 0) {
-					$.post("spip.php?page=ajax&mode=article-sauve-coordonnees", { id_objet: _thisId, type_objet: "article", X: 0, Y: yy });
+					$.post(CCN.urlSauverCoordonnees, { id_objet: _thisId, type_objet: "article", X: 0, Y: yy });
 				}
 				this.y = yy;
 				// Réécrit les deux coords en %
@@ -398,7 +398,13 @@ function initTimeline() {
 
 	$('.mois, .timeline_trigger, #timeline_cache').on(
 		'click', function () {
-			CCN.projet.showWholeTimeline();
+			if($('body').hasClass("hasSidebarOpen")) {
+				CCN.projet.showWholeTimeline();
+			} else {
+				if($('body').hasClass("show_consignes"))
+					return
+				changeTimelineMode('consignes');
+			}
 		}
 	);
 

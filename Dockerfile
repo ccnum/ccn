@@ -129,6 +129,12 @@ RUN set -eux; \
 	echo 'ServerTokens Prod'; \
 	echo 'Header unset Composed-By'; \
 	echo 'Header unset X-Powered-By'; \
+	# En-têtes de sécurité (audit 2026-10). Ici plutôt que dans htaccess.txt :
+	# le .htaccess d'un volume déjà déployé n'est jamais recopié. Pas de CSP
+	# stricte (trop de <script>/onclick inline dans les squelettes).
+	echo 'Header always set X-Content-Type-Options "nosniff"'; \
+	echo 'Header always set X-Frame-Options "SAMEORIGIN"'; \
+	echo 'Header always set Referrer-Policy "strict-origin-when-cross-origin"'; \
 	} > /etc/apache2/conf-enabled/spip_headers.conf; \
 	# https://httpd.apache.org/docs/2.4/mod/mod_remoteip.html
 	a2enmod remoteip; \
@@ -214,6 +220,9 @@ ENV APACHE_PORT=80
 EXPOSE ${APACHE_PORT}
 
 COPY ./plugins /usr/src/spip/plugins/
+# .htaccess du dépôt (règles favicon, cache des JS thematique...) à la place de
+# celui de l'archive SPIP ; appliqué au volume par docker-entrypoint.sh.
+COPY ./htaccess.txt /usr/src/spip/htaccess.txt
 COPY --chmod=0755 ./docker-entrypoint.sh /
 
 ENTRYPOINT ["/docker-entrypoint.sh"]

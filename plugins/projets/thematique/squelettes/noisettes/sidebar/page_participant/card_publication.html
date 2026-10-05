@@ -7,7 +7,7 @@
 	</div>
 	<div class="card-publication-meta">
 		<div class="mission-rank">MISSION N&#176;#ENV{rang_mission}</div>
-		<button onclick="callReponse(#ENV{id_reponse})"
+		<button onclick="callReponse([(#ENV{id_reponse}|intval)])"
 				class="bouton-lisere">
 			<:thematique:bouton_publication_card:>
 		</button>

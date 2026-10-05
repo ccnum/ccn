@@ -144,7 +144,7 @@ function Article() {
 				const yy = ui.position.top / y_parent;
 
 				if (CCN.admin == 0) {
-					$.post("spip.php?page=ajax&mode=article-sauve-coordonnees", { id_objet: _thisId, type_objet: _thisTypeObjet, X: 0, Y: yy });
+					$.post(CCN.urlSauverCoordonnees, { id_objet: _thisId, type_objet: _thisTypeObjet, X: 0, Y: yy });
 				}
 				// Restaure top/left en % : jQuery UI les a figés en px pendant
 				// le drag (cf. commentaire dans `drag` ci-dessus).

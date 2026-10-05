@@ -20,16 +20,22 @@ return [
 	// G
 	'grille_histoires_en_cours'         => 'Voici la grille des histoires en cours d’écriture :',
 
+	// H
+	'histoire_complete'                 => 'Cette histoire a déjà ses 5 chapitres.',
+
 	// L
 	'laisser_place_au_suivant'          => 'Vous pouvez laisser la place au suivant et recevrez bientôt votre histoire par mail !',
 	'lisez_le_prologue'                 => 'Lisez le prologue et poursuivez l’histoire en vous inspirant des fins de chapitres précédents.',
 
 	// M
 	'mail_a_bientot'                    => '<br />A très bientôt<br />',
+	'mail_acceder_chapitre'             => '<br />Accédez dès maintenant à votre chapitre en ligne : @url@. Un deuxième message vous préviendra lorsque votre histoire sera disponible.',
 	'mail_bonjour_tous'                 => 'Bonjour à tous,',
 	'mail_description_dispositif'       => '<br />Le petit fablab d’écriture est un dispositif imaginé par Erasme, laboratoire d’innovation ouverte de la Métropole de Lyon, en collaboration avec la Villa Gillet.',
+	'mail_discutez_edition'             => '<br />Discutez de l’édition de votre histoire avec vos co-auteurs par retour de mail : @url@',
 	'mail_felicitations'                => '<br />Félicitations votre histoire est en ligne.',
 	'mail_merci_participation'          => '<br />Merci d’avoir participé au petit fablab d’écriture !',
+	'mail_suivez_blog'                  => '<br />Suivez nos actualités sur le blog @url@',
 	'mot_de_passe_oublie'               => 'Mot de passe oublié ?',
 
 	// N
@@ -40,6 +46,7 @@ return [
 	'seules_histoires_administrateur'   => 'Seules les histoires des rubriques dont vous êtes administrateur.ice s’affichent ci-dessous.',
 	'sujet_chapitre_publie'             => 'Vous venez d’écrire un chapitre !',
 	'sujet_histoire_en_ligne'           => 'Votre histoire est en ligne !',
+	'supprimer_document_titre'          => 'supprimer ce document',
 
 	// V
 	'vers_version_colleges'             => 'Vers la version collèges',

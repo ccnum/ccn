@@ -10,8 +10,8 @@ if (!defined('_ECRIRE_INC_VERSION')) {
  * upload par morceaux) : indispensable pour les grosses vidéos, un upload
  * classique en un seul POST peut saturer la mémoire du serveur (VM
  * redémarrée en OOM avec un simple <input type=file>, cf constat en prod).
- * Logique commune à joindre_document_mission.php factorisée dans
- * inc/thematique_joindre.php.
+ * Logique commune avec le formulaire ccn_joindre_document factorisée dans
+ * inc/ccn_joindre.php (plugin ccn).
  *
  * Le mot de passe est stocké tel quel sur le document (champ extra
  * vimeo_password, cf plugin api_vimeo) : il est appliqué sur Vimeo une fois
@@ -37,9 +37,9 @@ define('_VIMEO_EXTENSIONS_AUTORISEES', ['mp4', 'mov', 'avi', 'mkv', 'webm']);
  * @return string|array
  */
 function joindre_video_trouver_fichier() {
-	include_spip('inc/thematique_joindre');
+	include_spip('inc/ccn_joindre');
 
-	$files = thematique_joindre_trouver_fichiers();
+	$files = ccn_joindre_trouver_fichiers();
 	if (is_string($files)) {
 		return $files;
 	}
@@ -64,8 +64,8 @@ function formulaires_joindre_video_charger_dist($id_objet = 0, $objet = '') {
 function formulaires_joindre_video_verifier_dist($id_objet = 0, $objet = '') {
 	$erreurs = [];
 
-	include_spip('inc/thematique_joindre');
-	if ($erreur = thematique_joindre_verifier_autorisation($objet, $id_objet)) {
+	include_spip('inc/ccn_joindre');
+	if ($erreur = ccn_joindre_verifier_autorisation($objet, $id_objet)) {
 		$erreurs['message_erreur'] = $erreur;
 		return $erreurs;
 	}
@@ -102,8 +102,8 @@ function formulaires_joindre_video_traiter_dist($id_objet = 0, $objet = '') {
 		return ['editable' => true, 'message_erreur' => $files];
 	}
 
-	include_spip('inc/thematique_joindre');
-	$res = thematique_joindre_ajouter_documents($files, $objet, $id_objet);
+	include_spip('inc/ccn_joindre');
+	$res = ccn_joindre_ajouter_documents($files, $objet, $id_objet);
 
 	if (!empty($res['ids']) && ($mot_de_passe = _request('vimeo_password'))) {
 		foreach ($res['ids'] as $id_document) {

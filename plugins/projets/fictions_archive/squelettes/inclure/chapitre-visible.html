@@ -1,0 +1,55 @@
+<!--
+RUBRIQUE.HTML > CHAPITRE-VISIBLE.HTML
+(Cadavre n-1 visible)
+ -->
+<BOUCLE_article_verrouille(ARTICLES){id_article}>
+<div class="ecriture-chapitre">
+	<div class="ecriture-chapitre-picto">
+		<img src="#CHEMIN{img/ecriture/picto-oeil.png}" alt="Chapitre visible" width="50" height="50" />
+	</div>
+	<div class="ecriture-chapitre-texte">
+		<div class="ecriture-chapitre-surtitre rose">#SURTITRE</div>
+		<div class="ecriture-chapitre-titre">#TITRE</div>
+	</div>
+	<div class="ecriture-chapitre-auteur">
+		<BOUCLE_auteur_article(AUTEURS){id_article}{0,1}>
+			<div class="ecriture-chapitre-avatar">[(#LOGO_AUTEUR|image_reduire{42,42}|inserer_attribut{alt,#NOM})]</div>
+			<div class="ecriture-chapitre-nom">#NOM</div>
+			#SET{var_auteur_article, #NOM}
+		</BOUCLE_auteur_article>
+	</div>
+</div>
+
+<!-- TEXTE  -->
+<div class="texte_courant">
+	<span class="texte-masque">[(#DESCRIPTIF|textebrut|masquerTexteChapitre{400})]</span>
+	<span>[(#DESCRIPTIF|textebrut|recupererDernieresLignesChapitres{400})]</span>
+</div>
+<!-- SCRIPT  -->
+<div class="script-forum-fleche">
+	<img src="#CHEMIN{img/ecriture/fleche_script_ecrivain.png}" alt="" width="44" height="17" />
+</div>
+<div class="script-ecrivain">
+	<div class="script-open-close" id="open-script-ecrivain"></div>
+	<div class="script-open-close" id="close-script-ecrivain"></div>
+	<div class="script-titre">SCRIPT | #GET{var_auteur_article}</div>
+	<div class="script-texte #EDIT{texte}" id="slideup-script-ecrivain">
+		[(#TEXTE)]
+		<BOUCLE_doc(DOCUMENTS){id_article}{mode?}>
+		<div style="padding: 5px; width: 100px; float: left;">
+			<a href="#URL_DOCUMENT">[(#LOGO_DOCUMENT|image_reduire{80,60})]</a>
+			[(#AUTORISER{modifier,article,#ID_ARTICLE}|oui)[(#BOUTON_ACTION{'', #URL_ACTION_AUTEUR{supprimer_document,#ID_DOCUMENT,#SELF}, action_supprimer, "Etes vous sûr de vouloir supprimer ce document ?"})]]
+		</div>
+		</BOUCLE_doc>
+	</div>
+</div>
+<!-- FORUM -->
+<!-- NB DE MESSAGE -->
+<a href="#URL_PAGE{forum,id_article=#ID_ARTICLE}" class="mediabox boxIframe boxWidth-730px boxHeight-80pc">
+	<div class="forum_bt">
+		<div class="forum-titre">FORUM</div>
+		<div class="forum-nb-message"><BOUCLE_combien(FORUMS){id_article}{plat}> </BOUCLE_combien>[(#TOTAL_BOUCLE)]<//B_combien></div>
+	</div>
+</a>
+</BOUCLE_article_verrouille>
+<hr/>

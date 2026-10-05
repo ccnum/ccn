@@ -21,7 +21,7 @@
 			<div class="nettoyeur0"></div>
 			
 				<div class="bloc_texte bloc_texte_avec_modifier">
-					[<span class="spip">(#TEXTE|liens_ouvrants|image_reduire{500})</span>]
+					[<span class="spip">(#TEXTE|liens_ouvrants|image_reduire{500}|thematique_html_equilibre)</span>]
 				</div>
 			
 		</div>
@@ -81,7 +81,7 @@
 					#SET{id_reponse, #ID_ARTICLE}
 				</BOUCLE_reponse>
 				<button class="bouton-lisere rempli"
-						onclick="[(#GET{id_reponse}|>{0}|oui)callModifierArticle( #GET{id_reponse}, 'travail_en_cours' )][(#GET{id_reponse}|=={0}|oui)createReponse( #ENV{id_article}, #GET{id_rubrique_classe} )]"
+						onclick="[(#GET{id_reponse}|>{0}|oui)callModifierArticle( #GET{id_reponse}, 'travail_en_cours' )][(#GET{id_reponse}|=={0}|oui)createReponse( [(#ENV{id_article}|intval)], [(#GET{id_rubrique_classe}|intval)] )]"
 				>
 					<span class="icon icon-publier"
 						style="background-color: var(--color-default);

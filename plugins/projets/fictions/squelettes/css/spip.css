@@ -696,6 +696,14 @@ a.webmestre.last-small {
 	display: none;
 }
 
+.liste-tooltip-inner {
+	height: auto;
+	background-image: url(../img/global/tooltip-background.png);
+	border-radius: 5px;
+	width: 230px;
+	float: left;
+}
+
 .liste-tooltip-bulle {
 	width: 230px;
 	height: 8px;
@@ -703,6 +711,10 @@ a.webmestre.last-small {
 	background-image: url(../img/global/tooltip-bulle.png);
 	background-repeat: no-repeat;
 	background-position: center;
+}
+
+#liste-tooltip.en-bas .liste-tooltip-bulle {
+	transform: rotate(180deg);
 }
 
 .liste-tooltip-num-cadavre {
@@ -969,6 +981,75 @@ hr {
 
 .script-ecrivain-edit:hover {
 	background-color: #ff7a7a;
+}
+
+/* Documents + zone d'envoi bigup de la fiche script
+   (inclure/script-documents.html, ccn/formulaires/ccn_joindre_document.html) */
+.script-documents {
+	clear: both;
+	display: flex;
+	flex-wrap: wrap;
+	gap: 10px;
+	padding-top: 10px;
+}
+
+.script-document {
+	position: relative;
+}
+
+.script-document .supprimer_couleur {
+	position: absolute;
+	top: -8px;
+	right: -8px;
+}
+
+.script-joindre {
+	clear: both;
+	padding-top: 15px;
+}
+
+.formulaire_ccn_joindre_document .editer-groupe {
+	list-style: none;
+	margin: 0;
+	padding: 0;
+}
+
+.formulaire_ccn_joindre_document label {
+	display: block;
+	font-weight: bold;
+	margin-bottom: 8px;
+}
+
+.formulaire_ccn_joindre_document .dropfile {
+	border: 2px dashed rgba(255, 255, 255, 0.7);
+	background: rgba(255, 255, 255, 0.15);
+	color: #FFF;
+	padding: 25px 15px;
+	text-align: center;
+}
+
+.formulaire_ccn_joindre_document .dropfile.drag-over {
+	border-color: #FFF;
+	background: rgba(255, 255, 255, 0.3);
+}
+
+.formulaire_ccn_joindre_document .bigup-btn.btn {
+	background: #FFF;
+	color: #ff6b6b;
+	font-weight: bold;
+}
+
+.formulaire_ccn_joindre_document .bigup_fichiers {
+	color: #333;
+	margin-bottom: 10px;
+}
+
+.formulaire_ccn_joindre_document .reponse_formulaire {
+	margin-bottom: 10px;
+}
+
+.formulaire_ccn_joindre_document .boutons {
+	display: none;
 }
 
 .script-college {

@@ -1,10 +1,10 @@
 <paquet
 	prefix="fictions"
 	categorie="squelette"
-	version="1.0.2"
+	version="1.0.6"
 	etat="stable"
 	logo=""
-	schema=""
+	schema="1.0.3"
 	documentation="http://www.laclasse.com"
 	compatibilite="[4.3.2;4.*]"
 >
@@ -25,5 +25,11 @@
 
 	<utilise nom="cioidc" />
 
+	<pipeline nom="autoriser" inclure="fictions_autoriser.php" />
+
+	<menu nom="fictions_associations" titre="fictions:associations_titre" parent="menu_edition" icone="images/auteur-xx.svg" />
 	<pipeline nom="post_edition" inclure="fictions_pipelines.php" />
+	<pipeline nom="cioidc_userinfo" inclure="fictions_pipelines.php" />
+	<pipeline nom="calculer_rubriques" inclure="fictions_pipelines.php" />
+	<pipeline nom="taches_generales_cron" inclure="fictions_pipelines.php" />
 </paquet>

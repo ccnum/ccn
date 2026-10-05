@@ -18,18 +18,17 @@
 					<a href="#URL_DOCUMENT" title="<:bouton_telecharger:>" type="#MIME_TYPE">
 						[(#LOGO_DOCUMENT|left||image_reduire{80,60})]
 					</a>
-					<?php
-						//phpinfo();
-						include_spip('inc/securiser_action');
-						include_spip('inc/autoriser');
-						if ((isset($GLOBALS['auteur_session']['nom']))&&(autoriser('modifier', 'article', #ID_ARTICLE)))
-							{   $action="documenter";
-								$redirect="#SELF";
-								$arg="-#ID_ARTICLE/article/#ID_DOCUMENT";
-								$confirmation= attribut_html(_T('petitfablab:confirmation_suppression_document'));
-								echo "<a href='".securiser_action_auteur($action, $arg, $redirect, $mode=false, $att='')."' class='rouge droite ajax' onClick='return confirmation(\"$confirmation\")' title='supprimer ce document' ><div class='action_supprimer'></div></a>";
-							}
-					?>
+					[(#REM) Pas de PHP ici : l'ancien bloc interpolait l'URL de la requête dans du
+					code PHP évalué (audit 2026-10) et appelait une action "documenter" qui
+					n'existe pas. Même mécanisme natif que fictions/squelettes/lecture-script.html. ]
+					[(#AUTORISER{modifier,article,#ID_ARTICLE}|oui)
+						<a href="(#URL_ACTION_AUTEUR{dissocier_document,#ID_ARTICLE-article-#ID_DOCUMENT-suppr-safe,#SELF})"
+							class="rouge droite ajax"
+							onclick="return confirm('[(#VAL{petitfablab:confirmation_suppression_document}|_T|texte_script|attribut_html)]')"
+							title="<:petitfablab:supprimer_document_titre:>">
+							<div class="action_supprimer"></div>
+						</a>
+					]
 				</div>
 				</BOUCLE_doc>
 			</div>

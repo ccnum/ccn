@@ -140,6 +140,19 @@ function formulaires_forumv2_verifier_dist($id_article) {
 		}
 	}
 
+	// Réponse : le message parent doit appartenir au même article, sinon le
+	// commentaire se rattachait au fil d'un autre article (et en notifiait
+	// l'auteur).
+	$id_parent = intval(_request('id_parent'));
+	if ($id_parent && !sql_countsel('spip_forum', [
+		'id_forum=' . $id_parent,
+		"objet='article'",
+		'id_objet=' . intval($id_article),
+	])) {
+		$erreurs['message_erreur'] = _T('thematique:erreur_commentaire_422');
+		return $erreurs;
+	}
+
 	return $erreurs;
 }
 

@@ -3,7 +3,6 @@
 #SET{is_ressource,'non'}
 #SET{is_agora,'non'}
 #SET{sous_type,''}
-
 <BOUCLE_principale0(RUBRIQUES){id_rubrique}{titre_mot=ressources}{tout}>
 	#SET{is_ressource,'oui'}
 	#SET{sous_type,'ressources'}
@@ -128,7 +127,7 @@
 			[(#AUTORISER{modifier,rubrique,#ID_RUBRIQUE}|non)
 				<div class="sidebar_bubble">
 					<div class="bloc_texte">
-						[(#TEXTE|propre)]
+						[(#TEXTE)]
 					</div>
 				</div>
 			]

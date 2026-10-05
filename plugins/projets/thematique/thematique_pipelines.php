@@ -229,9 +229,11 @@ function thematique_notifications_destinataires($flux) {
 }
 
 function thematique_cioidc_userinfo($flux) {
-	spip_log('userinfo args=' . json_encode($flux['args']) . ' data=' . json_encode($flux['data']), 'cioidc');
+	// Pas de dump du profil ENT (identité, classes, groupes d'élèves) dans les logs :
+	// seulement l'uid et la liste des attributs reçus.
+	spip_log('userinfo uid=' . ($flux['args']['uid'] ?? '') . ' attributs=' . implode(',', array_keys((array) ($flux['data'] ?? []))), 'cioidc');
 
-	$email = $flux['data']['MailAdressePrincipal'] ?? '';
+	$email = trim((string) ($flux['data']['MailAdressePrincipal'] ?? ''));
 	$uid = $flux['args']['uid'] ?? '';
 	$auteur = thematique_cioidc_resoudre_auteur($uid, $email);
 	if (!$auteur) {

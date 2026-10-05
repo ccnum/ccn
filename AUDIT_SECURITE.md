@@ -1,34 +1,48 @@
-# Audit de sécurité — Plugin SPIP `thematique` (CCN)
+# Audit de sécurité — plugins maison CCN
 
-**Date** : 2026-06-25 · **Statut** : ✅ Toutes les vulnérabilités corrigées
+**Date** : 2026-10-05 · **Méthode** : skill `securite-spip` (chasse par plugin, puis un vérificateur
+indépendant par candidat qui tente de le réfuter) · **Preuve** : lecture du code uniquement, aucune
+requête exécutée.
 
-## Résolutions récentes
-
-### ✅ #286 — Durcissement des migrations PHP (2026-06-24)
-
-**Fichier** : `thematique_administrations.php`
-
-- `$maj['2.3.4']` et `$maj['3.0.7']` définis avant utilisation (supprime les avertissements sur clés indéfinies)
-- `sql_update` sans effet supprimés dans `$maj['2.3.5']`
-- `sql_alter` sur `spip_syndic` retiré (table optionnelle, plugin tiers)
-- `thematique_vider_tables()` complété : nettoie les groupes de mots et mots à la désinstallation
+**Périmètre** : `thematique`, `fictions` (ex-`fictionsv2`), `petitfablab` (ex-`petitfablabv2`),
+`ccn`, `cadavrexquis`. Hors périmètre : `*_archive` (jamais activés — ils contiennent encore le bloc PHP
+corrigé dans `petitfablab/squelettes/lecture-script.html`), plugins tiers (`plugins/spip/`), cœur.
 
 ---
 
-## Points en suspens
+## Bilan
 
-### ⚠️ M6 — Cookies applicatifs sans `HttpOnly`
+11 vulnérabilités confirmées (2 élevées : exécution de PHP dans des squelettes ; 6 moyennes ; 3
+faibles), toutes corrigées le 2026-10-05 avec les durcissements associés — détail dans l'historique
+git (`git log --grep="audit 2026-10"` et commits `fix`/`chore` du 2026-10-05).
 
-**Fichier** : `squelettes/js/controleurs.js`
+Aucun candidat confirmé dans `ccn` ni `cadavrexquis`. Aucune injection SQL : toutes les requêtes
+relevées passent par `intval`/`sql_quote`/`sql_in`.
 
-Les cookies (`laclasse_annee_scolaire`, etc.) sont définis depuis JavaScript pour stocker des préférences d'affichage. `HttpOnly` est incompatible avec des cookies gérés par JS. Ils ne contiennent pas de données de session. `SameSite=Strict` et `Secure` sont présents. Risque résiduel acceptable.
+À retenir : la traversée de chemin via `mode=../…` sur `page=ajax` est bloquée par `find_in_path`
+(`ecrire/inc/utils.php:1689`) ; la protection du dispatcher reste sa liste blanche exacte des `mode`.
 
 ---
 
-### ⚠️ F3 — Absence d'en-têtes de sécurité HTTP
+## Reste à faire (sans vulnérabilité établie)
 
-Hors périmètre du plugin — à configurer au niveau nginx/apache :
-- `Content-Security-Policy`
-- `X-Frame-Options`
-- `X-Content-Type-Options`
-- `Referrer-Policy`
+### thematique
+- `formulaires/forumv2.php:174` : `auteur` = `nom_auteur` libre (masqué à l'affichage par la jointure sur `id_auteur`).
+- `inc/thematique_cioidc.php` : le repli par email reste actif quand l'email (non vide) correspond à un autre compte — à retirer une fois les comptes historiques sans login SSO rapprochés.
+
+### petitfablab
+- `squelettes/sommaire.html:97-110` : `creer=<id>` affiche le titre de n'importe quelle rubrique à un connecté.
+- `#TEXTE`/`#SURTITRE`/`#PS` des élèves sans `safehtml` : acceptable si les comptes élèves sont rédacteurs de confiance, à réévaluer sinon.
+
+### Transverse
+- **Cookies applicatifs sans `HttpOnly`** (`thematique/squelettes/js/controleurs.js` `setCookie()`, `main.js` `visited`) : posés par JS, préférences d'affichage, `SameSite=Strict; Secure` — risque résiduel acceptable.
+- **`Content-Security-Policy` absente** (les autres en-têtes sont posés dans `Dockerfile`, `spip_headers.conf`) : une CSP stricte suppose de sortir les nombreux `<script>`/`onclick` inline des squelettes.
+
+---
+
+## Couverture
+
+- **ccn**, **cadavrexquis** : intégralité du PHP et des squelettes (`cadavrexquis` = `paquet.xml` seul).
+- **fictions** : actions, formulaires, autorisations, `inc/*`, pipelines, fonctions, options en entier ; rentrée/genie/administrations par recherche ciblée ; squelettes publics principaux en entier, les autres par recherche (`#ENV`, `#EDIT`, `#AUTORISER`, `#SESSION`). Non lus : JS, config crayons.
+- **petitfablab** : PHP et formulaires en entier ; `ecriture`, `sommaire`, `lecture-script` en entier ; autres squelettes par recherche. Non lus : `lecture.html`, `edition.html`, `auteur_editer.html`, JS.
+- **thematique** : `thematique_autoriser.php`, `thematique_pipelines.php`, `thematique_options.php`, `action/*`, `formulaires/*.php` en entier ; toutes les requêtes SQL de `thematique_fonctions.php` ; dispatchers `ajax`/`json` et fragments atteignables ; recherche `#ENV*`, `<?php`, `#ENV` en JS/attribut sur tout `squelettes/`. Non lus : `squelettes/js/*`, `json/*.html` en détail, `noisettes/sidebar/consigne_pour_*`/`reponse_pour_*` au-delà des chemins suivis, `base/`, `prive/`. Une première passe de chasse s'est interrompue (erreur API) ; la seconde a repris le périmètre sans s'appuyer sur sa couverture.

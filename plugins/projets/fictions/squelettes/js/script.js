@@ -15,6 +15,30 @@ $(document).ready(function() {
     });
 });
 
+// Tooltip de la grille des histoires (#526) : s'ouvre sous la case survolée,
+// ou au-dessus si elle déborderait du bas de la fenêtre ; la bulle (flèche)
+// est placée côté case.
+function afficher_tooltip_liste(el, decalage_gauche) {
+    var $el = $(el);
+    var $tooltip = $('#liste-tooltip');
+    $tooltip.removeClass('en-bas').show().html($el.find('.liste-tooltip-content').html());
+    var hauteur = $tooltip.find('.liste-tooltip-inner').outerHeight();
+    var hauteur_bulle = $tooltip.find('.liste-tooltip-bulle').outerHeight() || 0;
+    $tooltip.height(hauteur + hauteur_bulle);
+    var offset = $el.offset();
+    var rect = el.getBoundingClientRect();
+    var place_dessous = window.innerHeight - rect.bottom;
+    var en_haut = place_dessous < hauteur + hauteur_bulle + 5 && rect.top > place_dessous;
+    var top;
+    if (en_haut) {
+        top = offset.top - hauteur - hauteur_bulle - 5;
+    } else {
+        $tooltip.addClass('en-bas').find('.liste-tooltip-bulle').prependTo($tooltip);
+        top = offset.top + $el.outerHeight() + 5;
+    }
+    $tooltip.css({top: Math.round(top), left: Math.round(offset.left) + decalage_gauche});
+}
+
 function resize_global_content() {
     var h = $(window).height() - 61;
     $('.global-content').height(h);

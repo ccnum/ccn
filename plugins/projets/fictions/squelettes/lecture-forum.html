@@ -19,7 +19,7 @@ la premiere fois qu'un message est poste (cf. inc/invalideur). ]
 <div id="forum-lecture">
 <div id="forum-inner">
 	<div class="forum-inner-titre">
-		FORUM |
+		<:fictions:forum_titre_prefixe:>
 		<BOUCLE_titre_chapitre(ARTICLES){id_article}>
 		#TITRE
 		</BOUCLE_titre_chapitre>
@@ -59,7 +59,7 @@ la premiere fois qu'un message est poste (cf. inc/invalideur). ]
 <hr />
 </BOUCLE_forum>
 
-<div id="forum-no-message">Pas de message dans ce forum</div>
+<div id="forum-no-message"><:fictions:pas_de_message_dans_forum:></div>
 
 <//B_forum>
 
@@ -68,5 +68,5 @@ la premiere fois qu'un message est poste (cf. inc/invalideur). ]
 </div>
 </body>
 
-<script type="text/javascript" src="#CHEMIN{js/forum.js}"></script>
+	<INCLURE{fond=modeles/js, page=forum} />
 </html>

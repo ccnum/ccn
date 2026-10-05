@@ -6,10 +6,13 @@ Paramètres :
 - page : vue (page)
 ]
 
-[(#MODE|match{timeline|classe}|oui)
+[(#REM) Liste blanche exacte : l'ancien filtre match sur « timeline » ou « classe », non ancré,
+laissait inclure tout fragment dont le chemin contient « classe » (ex.
+sidebar/page_participant/*) avec l'environnement de l'URL (audit 2026-10, XSS). ]
+[(#MODE|in_array{#LISTE{timeline,menu_classes,classes_detail}}|oui)
 	<INCLURE{fond=noisettes/#MODE}{env}>
 ]
 
-[(#MODE|match{article-sauve-coordonnees|article-forum-detail}|oui)
-	<INCLURE{fond=noisettes/ajax/#MODE}{env}>
+[(#MODE|=={article-forum-detail}|oui)
+	<INCLURE{fond=noisettes/ajax/article-forum-detail}{env}>
 ]

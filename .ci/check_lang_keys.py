@@ -13,10 +13,8 @@ ce lint-là. C'est ce que check_lang_keys.py couvre.
 Deux familles de vérifications, par plugin :
 1. Clés référencées via <:module:cle:> ou _T('module:cle') / _T("module:cle") :
    doivent exister dans le fichier de langue du plugin (lang/<module>_fr.php
-   pour thematique, squelettes/lang/<module>_fr.php pour petitfablab — les
-   deux emplacements sont cherchés). fictions n'a pas de fichier de langue :
-   toute clé <:fictions:...:> y serait donc automatiquement signalée comme
-   manquante (aucune n'est utilisée actuellement).
+   pour thematique, fictions et ccn, squelettes/lang/<module>_fr.php pour
+   petitfablab — les deux emplacements sont cherchés).
 2. Clés référencées via CCN.lang.cle côté JS : doivent exister comme
    propriété de l'objet CCN.lang construit dans
    thematique/squelettes/noisettes/timeline.html — seul pont PHP -> JS de
@@ -32,7 +30,7 @@ import sys
 from pathlib import Path
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
-PLUGIN_NAMES = ("thematique", "fictions", "fictionsv2", "petitfablab", "petitfablabv2", "ccn")
+PLUGIN_NAMES = ("thematique", "fictions", "petitfablab", "ccn")
 
 CCN_LANG_USE_RE = re.compile(r"CCN\.lang\.([a-zA-Z0-9_]+)")
 CCN_LANG_PROP_RE = re.compile(r"^\s*([a-zA-Z0-9_]+)\s*:", re.MULTILINE)

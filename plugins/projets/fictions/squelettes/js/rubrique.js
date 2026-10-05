@@ -4,16 +4,7 @@ $(document).ready(function() {
 	resize_global_content();
 
 	// Tooltip liste
-	function showTooltipListeLinkSmall(el) {
-		var offset = $(el).offset();
-		var content_tooltip = $(el).find('.liste-tooltip-content').html();
-		$('#liste-tooltip').show().html(content_tooltip);
-		var hauteur_tooltip = $('#liste-tooltip .liste-tooltip-inner').height();
-		$('#liste-tooltip').height(hauteur_tooltip);
-		$('#liste-tooltip').css('top', Math.round(offset.top) - hauteur_tooltip - 5);
-		$('#liste-tooltip').css('left', Math.round(offset.left) - 108 + 2);
-	}
-	$('.liste-link-small').on('mouseover focus', function() { showTooltipListeLinkSmall(this); });
+	$('.liste-link-small').on('mouseover focus', function() { afficher_tooltip_liste(this, -106); });
 	$('.liste-link-small').on('mouseout blur', function() { $('#liste-tooltip').hide(); });
 
 	// Navigation par ancre

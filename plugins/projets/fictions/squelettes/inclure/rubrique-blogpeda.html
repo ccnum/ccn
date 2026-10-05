@@ -8,7 +8,7 @@
 			<div class="content">
 				<div class="content-left-small">
 					<div id="titre_site">
-						<a href="#URL_SITE_SPIP" title="Accueil"><strong>fictions</strong></a><a href="http://www.laclasse.com" title="http://www.laclasse.com">.laclasse.com</a>
+						<a href="#URL_SITE_SPIP" title="<:fictions:accueil:>"><strong>fictions</strong></a><a href="http://www.laclasse.com" title="http://www.laclasse.com">.laclasse.com</a>
 					</div>
 					<!-- LISTE CADAVRE SMALL-->
 					<div id="ecriture-liste">
@@ -16,7 +16,7 @@
 						<BOUCLE_art(ARTICLES){id_rubrique}>
 							<li><a href="[(#SELF|parametre_url{id_article,#ID_ARTICLE})]">#TITRE</a></li>
 						</BOUCLE_art>
-							<li><a href="[(#SELF|parametre_url{id_article,new})]">Nouvel article</a></li>
+							<li><a href="[(#SELF|parametre_url{id_article,new})]"><:fictions:nouvel_article:></a></li>
 						</ul>
 					</div>
 				</div>

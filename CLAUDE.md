@@ -13,7 +13,11 @@ explicite).
 Deux plugins "site" principaux, tous deux dépendant du plugin transverse **`ccn`** (rôle,
 année scolaire, options communes) :
 - **`thematique`** — plugin actif, le plus développé (voir ci-dessous)
-- **`fictions`** — variante sœur
+- **`fictions`** — variante sœur (avec **`petitfablab`**, socle commun `cadavrexquis`)
+
+`fictions` et `petitfablab` sont les anciennes `fictionsv2`/`petitfablabv2` renommées (2026-10) ;
+les anciennes versions sont gardées en `fictions_archive`/`petitfablab_archive`, jamais activées
+(ne pas y travailler). `SPIP_VERSION_SITE` est comparé par "contient" dans `docker-entrypoint.sh`.
 
 `thematique_edifice` dépend de `thematique` (variante pour la plateforme Edifice).
 
@@ -154,6 +158,27 @@ expr}` suffit toujours. Ce bug est passé dans un commit avant d'être repéré 
 (`?page=json&mode=projet` retournait du JSON invalide) — **toujours tester une page/endpoint
 réellement affecté après un `#SET{}` avec transformation de valeur**, pas seulement vérifier que
 le squelette compile sans erreur.
+
+## Piège SPIP : `<:module:cle:>` comme argument de balise
+
+Un item de langue `<:module:cle:>` n'est pas accepté comme argument d'un `#FORMULAIRE_XXX{...}`
+ni comme valeur d'un `#SET{...}`. Le compilateur s'arrête juste avant et recrache le texte traduit
+en brut dans la page, suivi d'une accolade orpheline — sans erreur PHP, et l'argument n'est
+jamais transmis (le formulaire retombe sur sa valeur par défaut).
+
+```
+# Faux — "Libellé}" s'affiche dans la page, le formulaire ne reçoit rien
+#FORMULAIRE_CCN_JOINDRE_DOCUMENT{#ID_ARTICLE,article,#GET{ext},<:thematique:label_xxx:>}
+#SET{label, <:thematique:label_xxx:>}
+
+# Correct — traduire via le filtre _T, puis passer par #GET
+#SET{label, #VAL{thematique:label_xxx}|_T}
+#FORMULAIRE_CCN_JOINDRE_DOCUMENT{#ID_ARTICLE,article,#GET{ext},#GET{label}}
+```
+
+`#CONST{...}` et `#GET{...}` passent sans problème comme arguments. Même consigne que pour le
+piège précédent : vérifier le rendu réel (texte parasite, libellé attendu), pas seulement que le
+squelette compile.
 
 ## Convention de commit
 

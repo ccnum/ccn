@@ -11,10 +11,10 @@
 	<div class="editer-groupe">
 		<div id="sidebar-etape-2-container">
 			<div class="sidebar-etape-2">
-				<h3 class="titre-col-gauche"><u><:thematique:ajouter_document:></u></h3>
-				<h4 class="sous-titre-col-gauche"><:thematique:publier_document_etape_1:></h4>
+				<div class="sous-titre-col-gauche"><:thematique:publier_document_etape_1:></div>
+				#SET{label_document_mission, #VAL{thematique:label_fichier_document_mission}|_T}
 				<div class="ajax">
-					#FORMULAIRE_JOINDRE_DOCUMENT_MISSION{#GET{id_objet_document},article}
+					#FORMULAIRE_CCN_JOINDRE_DOCUMENT{#GET{id_objet_document},article,#CONST{_THEMATIQUE_EXTENSIONS_DOCUMENT_MISSION},#GET{label_document_mission}}
 					<div class="publier-article-formats-autorises">
 						#SET{extensions_document_mission, #VAL{1}|thematique_extensions_document_mission_liste}
 						<div style="font-weight: 800;">
@@ -23,8 +23,8 @@
 						<div><:thematique:formats_autorises_document_texte_apres:></div>
 					</div>
 				</div>
-				<h4 class="sous-titre-col-gauche"><:thematique:publier_document_etape_2:></h4>
-				<div style="font-weight: 400"><:thematique:publier_document_etape_2_texte:></div>
+				<div class="sous-titre-col-gauche"><:thematique:publier_document_etape_2:></div>
+				<div class="etape-2-texte"><:thematique:publier_document_etape_2_texte:></div>
 			</div>
 			
 			<INCLURE{fond=noisettes/inc/publier_article_documents, id_objet=#GET{id_objet_document}, objet=article, ajax=documents} />
@@ -48,7 +48,7 @@
 				]
 				#SET{titre_creation, #ENV{type_article}|thematique_texte_publication{titre}}
 				#SET{intro_creation, #ENV{type_article}|thematique_texte_publication{intro}}
-				<h3>[(#GET{est_edition}|oui)<:thematique:modifier_publication:>][(#GET{est_edition}|non)#GET{titre_creation}]</h3>
+				<div class="sidebar-titre-droit">[(#GET{est_edition}|oui)<:thematique:modifier_publication:>][(#GET{est_edition}|non)#GET{titre_creation}]</div>
 				[(#GET{est_edition}|non)
 					[(#GET{intro_creation}|oui)
 					<p class="publier-article-intro">#GET{intro_creation}</p>

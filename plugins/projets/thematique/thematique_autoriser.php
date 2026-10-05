@@ -142,7 +142,14 @@ if (!function_exists('autoriser_article_modifier')) {
 			$exception_jalon =
 				(($opt['statut'] ?? null) === null || !in_array($opt['statut'], ['publie', 'refuse'], true))
 				&& thematique_donner_role($id_auteur_visiteur) === 'intervenant'
-				&& thematique_article_est_jalon($id);
+				&& thematique_article_est_jalon($id)
+				// Jalon de son projet : la rubrique du jalon (« Consignes » de l'année)
+				// est une ascendante de l'une de ses rubriques de projet — pas le jalon
+				// d'une autre année (audit 2026-10).
+				&& thematique_auteur_lie_sous_rubrique(
+					$id_auteur_visiteur,
+					intval(sql_getfetsel('id_rubrique', 'spip_articles', 'id_article=' . intval($id)))
+				);
 
 			// Reprise de l'ancienne option "auteur_mod_article" du plugin
 			// autorite (cf docstring ci-dessus) : l'auteur d'un article peut

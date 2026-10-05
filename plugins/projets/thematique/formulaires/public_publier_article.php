@@ -77,7 +77,10 @@ function formulaires_public_publier_article_charger_dist(
 		// arbitraire (pas une mission, ou pas encore publiée).
 		$reponse = thematique_trouver_reponse_a_une_consigne($id_consigne, $id_rubrique);
 
-		if ($reponse) {
+		// Préremplir seulement pour qui peut modifier cette réponse : sinon
+		// n'importe quel visiteur lisait titre et texte de la réponse d'une
+		// autre classe, même non publiée (audit 2026-10).
+		if ($reponse && autoriser('modifier', 'article', $reponse['id_article'])) {
 			$valeurs['id_article'] = $reponse['id_article'];
 			$valeurs['titre'] = $reponse['titre'];
 			$valeurs['texte'] = $reponse['texte'];
@@ -94,8 +97,10 @@ function formulaires_public_publier_article_charger_dist(
 	// formulaire (#464). On les supprime uniquement en création (pas
 	// d'id_article réel) : en édition, l'id_objet document est l'id_article
 	// réel, pas le temp, donc ce cleanup ne s'applique pas.
-	if (!$valeurs['id_article']) {
-		$id_temp = 0 - intval($GLOBALS['visiteur_session']['id_auteur'] ?? 0);
+	// Seulement pour un auteur connecté : pour un anonyme, $id_temp valait 0 et
+	// ce GET supprimait les liens des documents en attente (id_objet=0).
+	$id_temp = 0 - intval($GLOBALS['visiteur_session']['id_auteur'] ?? 0);
+	if (!$valeurs['id_article'] && $id_temp) {
 		$liens = sql_allfetsel('*', 'spip_documents_liens', "id_objet=$id_temp AND objet='article'");
 		foreach ($liens as $lien) {
 			sql_delete('spip_documents_liens', 'id_document=' . intval($lien['id_document']));
@@ -164,6 +169,11 @@ function formulaires_public_publier_article_verifier_dist(
 		&& !thematique_auteur_peut_creer_dans_rubrique(session_get('id_auteur'), $id_rubrique)
 	) {
 		return ['message_erreur' => _T('info_acces_interdit')];
+	}
+	if (!$id_article_poste && $type_article === 'consignes' && !$id_consigne
+		&& !thematique_rubrique_mission_valide($id_rubrique)
+	) {
+		return ['message_erreur' => _T('thematique:mission_rubrique_hors_annee')];
 	}
 
 	$erreurs = formulaires_editer_objet_verifier('article', $id_article_poste ?: 'new', ['titre', 'texte']);
@@ -235,6 +245,9 @@ function formulaires_public_publier_article_traiter_dist(
 	$id_article = intval(_request('id_article'));
 
 	$edition = (bool) $id_article;
+	// Statut avant modification : un article mis à la poubelle ou refusé par un
+	// admin ne doit pas être republié par une simple édition (cf plus bas).
+	$statut_avant = $edition ? sql_getfetsel('statut', 'spip_articles', 'id_article=' . intval($id_article)) : '';
 
 	if (!$id_article) {
 		// cf la même vérification dans _verifier_dist (issue #274) : revérifiée
@@ -242,13 +255,27 @@ function formulaires_public_publier_article_traiter_dist(
 		if ($type_article !== 'ressources' && !thematique_auteur_peut_creer_dans_rubrique($id_auteur, $id_rubrique)) {
 			return ['message_erreur' => _T('info_acces_interdit')];
 		}
+		if ($type_article === 'consignes' && !$id_consigne && !thematique_rubrique_mission_valide($id_rubrique)) {
+			return ['message_erreur' => _T('thematique:mission_rubrique_hors_annee')];
+		}
+		// Le core crée l'article dans _request('id_parent') (cf
+		// action_editer_article_dist), pas dans $id_rubrique : on aligne la
+		// rubrique réellement utilisée sur celle qui vient d'être vérifiée.
+		set_request('id_parent', $id_rubrique);
 		$id_article = 'new';
-	} elseif (!autoriser('modifier', 'article', $id_article, null, ['champ' => 'date'])) {
-		// Champ date non autorisé pour ce rôle sur cet article (#420) : même
-		// masqué côté squelette, on ne fait pas confiance à un POST forgé -
-		// on retire la valeur postée avant qu'action_editer_article ne
-		// l'applique telle quelle.
-		set_request('date');
+	} else {
+		// Édition : l'article reste dans sa rubrique. id_parent est un champ
+		// caché (cf charger) ; posté tel quel, le core déplaçait l'article dans
+		// n'importe quelle rubrique, publiée ensuite via l'exception publierdans
+		// ci-dessous (audit 2026-10). Les ressources restent forcées plus bas.
+		set_request('id_parent', sql_getfetsel('id_rubrique', 'spip_articles', 'id_article=' . intval($id_article)));
+		if (!autoriser('modifier', 'article', $id_article, null, ['champ' => 'date'])) {
+			// Champ date non autorisé pour ce rôle sur cet article (#420) : même
+			// masqué côté squelette, on ne fait pas confiance à un POST forgé -
+			// on retire la valeur postée avant qu'action_editer_article ne
+			// l'applique telle quelle.
+			set_request('date');
+		}
 	}
 	// Les ressources sont créées depuis la page "Ressources" (popup sans
 	// id_rubrique, cf callNouvelleRessource) : la rubrique cible est forcée
@@ -260,6 +287,11 @@ function formulaires_public_publier_article_traiter_dist(
 		if ($id_ressources) {
 			$id_rubrique = $id_ressources;
 			set_request('id_parent', $id_rubrique);
+		} elseif (!$edition) {
+			// Création sans rubrique « Ressources » : id_parent posté aurait décidé
+			// seul de la rubrique (contrôle #274 sauté pour ce type) — on refuse.
+			// En édition, id_parent est déjà figé à la rubrique de l'article.
+			return ['message_erreur' => _T('info_acces_interdit')];
 		}
 	}
 	$res = formulaires_editer_objet_traiter('article', $id_article, $id_rubrique);
@@ -310,20 +342,28 @@ function formulaires_public_publier_article_traiter_dist(
 		// la création étant elle-même contrôlée par 'creerarticledans' dans
 		// action_editer_article : on accorde donc l'autorisation
 		// exceptionnelle pour le hit courant.
+		//
+		// En édition, pas pour un article mis à la poubelle ou refusé (statuts
+		// posés par un admin). Un article 'prop' se republie : c'est l'état
+		// laissé par #FORMULAIRE_DEPUBLIER_ARTICLE, que l'auteur lui-même
+		// utilise (jalons) puis annule en rééditant.
+		$publier = !$edition || !in_array($statut_avant, ['poubelle', 'refuse'], true);
 		$id_rubrique_article = sql_getfetsel('id_rubrique', 'spip_articles', 'id_article=' . intval($id_article));
-		if ($id_rubrique_article) {
-			autoriser_exception('publierdans', 'rubrique', $id_rubrique_article, true);
+		if ($publier) {
+			if ($id_rubrique_article) {
+				autoriser_exception('publierdans', 'rubrique', $id_rubrique_article, true);
+			}
+			article_instituer($id_article, [
+				'statut' => 'publie',
+				'date' => _request('date'),
+			]);
 		}
-		article_instituer($id_article, [
-			'statut' => 'publie',
-			'date' => _request('date'),
-		]);
 
 		// article_instituer() refuse silencieusement (un simple spip_log en
 		// 'editer_article X refus ...') : vérifier le statut final pour que
 		// un refus ne laisse pas un article en 'prepa' sans explication.
 		$statut_final = sql_getfetsel('statut', 'spip_articles', 'id_article=' . intval($id_article));
-		if ($statut_final !== 'publie') {
+		if ($publier && $statut_final !== 'publie') {
 			spip_log(
 				"publication de l'article $id_article refusée (statut restant : " . var_export($statut_final, true) . ')',
 				'thematique' . _LOG_ERREUR

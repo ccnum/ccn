@@ -313,7 +313,8 @@ function thematique_donner_role($id_auteur) {
 	include_spip('base/abstract_sql');
 	include_spip('inc/session'); // pour session_get/session_set si besoin
 
-	$statut = sql_getfetsel('statut', 'spip_auteurs', 'id_auteur=' . intval($id_auteur));
+	$auteur = sql_fetsel('statut, webmestre', 'spip_auteurs', 'id_auteur=' . intval($id_auteur));
+	$statut = $auteur['statut'] ?? null;
 
 	// ELEVE : statut 6forum, vérifié avant les mots-clés de hiérarchie —
 	// thematique_cioidc_associer_rubriques() rattache l'élève à la MÊME
@@ -340,9 +341,14 @@ function thematique_donner_role($id_auteur) {
 	// ADMIN selon statut (webmestre non rattaché à une hiérarchie ci-dessus —
 	// un webmestre rattaché à "consignes" est volontairement classé
 	// "intervenant" par le test au-dessus, cf thematique_voir_mission()).
+	// Un admin restreint (lié à des rubriques, hors webmestre) n'est pas "admin" :
+	// ce rôle ouvre la publication dans toute rubrique et la suppression de tout
+	// commentaire (audit 2026-10). Il garde ses droits SPIP natifs dans /ecrire.
 	if ($statut === '0minirezo') {
-		$cache[$id_auteur] = 'admin';
-		return 'admin';
+		$restreint = ($auteur['webmestre'] ?? '') !== 'oui'
+			&& sql_countsel('spip_auteurs_liens', ['id_auteur=' . intval($id_auteur), "objet='rubrique'"]);
+		$cache[$id_auteur] = $restreint ? null : 'admin';
+		return $cache[$id_auteur];
 	}
 
 	$cache[$id_auteur] = null;
@@ -401,6 +407,24 @@ function thematique_auteur_a_mot_dans_hierarchie($id_auteur, $titre_mot) {
 	foreach ($rubriques as $r) {
 		// équivalent de ta BOUCLE_hie_rub{tout} + BOUCLE_mot_rub
 		if (thematique_hierarchie_a_mot($r['id_objet'], $titre_mot)) {
+			return true;
+		}
+	}
+	return false;
+}
+
+/**
+ * L'auteur est-il lié (spip_auteurs_liens) à $id_rubrique ou à l'une de ses
+ * sous-rubriques ? Ex : intervenant lié à son projet, sous « Consignes ».
+ */
+function thematique_auteur_lie_sous_rubrique($id_auteur, $id_rubrique) {
+	$id_rubrique = intval($id_rubrique);
+	if (!$id_auteur || !$id_rubrique) {
+		return false;
+	}
+	foreach (sql_allfetsel('id_objet', 'spip_auteurs_liens', 'id_auteur=' . intval($id_auteur) . " AND objet='rubrique'") as $r) {
+		$id_lie = intval($r['id_objet']);
+		if ($id_lie === $id_rubrique || in_array($id_rubrique, array_map('intval', thematique_ascendants_rubrique($id_lie)), true)) {
 			return true;
 		}
 	}
@@ -561,7 +585,7 @@ function thematique_texte_publication($type_article, $partie) {
 		'blogs' => 'evenement',
 		'evenements' => 'information',
 		'cap_sur_l_annee' => 'cap_sur_l_annee',
-		'la_rencontre' => 'la_rencontre'
+		'la_rencontre' => 'la_rencontre',
 	];
 
 	if (isset($slugs[$type_article])) {
@@ -768,9 +792,16 @@ function thematique_admin_scope($id_rubrique_choisie = null) {
 
 	$admin = 0;
 	$restreint1 = null;
+	$nb_rubriques_annee = 0;
 
+	// Issue #462 : la connexion SSO ajoute les liens de l'année sans retirer
+	// ceux des années passées — un intervenant lié à "2018/Travail des
+	// classes" et à son projet 2026 publiait ses missions en 2018. Seules les
+	// rubriques liées de l'année active peuvent servir de rubrique restreinte ;
+	// $admin compte toujours toutes les rubriques liées.
+	$id_annee_active = thematique_id_rubrique_annee_active();
 	$rubriques = sql_allfetsel(
-		'objets.id_rubrique',
+		'objets.id_rubrique, objets.id_secteur',
 		'spip_auteurs_liens AS liens INNER JOIN spip_rubriques AS objets ON liens.id_objet=objets.id_rubrique',
 		'liens.id_auteur=' . $id_auteur
 			. ' AND liens.objet=' . sql_quote('rubrique')
@@ -781,8 +812,11 @@ function thematique_admin_scope($id_rubrique_choisie = null) {
 	);
 	foreach ($rubriques as $rubrique) {
 		$id_rub = intval($rubrique['id_rubrique']);
-		if (thematique_type_objet_rubrique($id_rub) !== 'evenements') {
-			$restreint1 = $id_rub;
+		if ($id_annee_active && intval($rubrique['id_secteur']) === $id_annee_active) {
+			if (thematique_type_objet_rubrique($id_rub) !== 'evenements') {
+				$restreint1 = $id_rub;
+			}
+			$nb_rubriques_annee++;
 		}
 		$admin++;
 	}
@@ -794,7 +828,7 @@ function thematique_admin_scope($id_rubrique_choisie = null) {
 		$admin = -2;
 	}
 
-	$restreint = ($admin === 1 || $admin === 2) ? $restreint1 : null;
+	$restreint = ($admin > 0 && ($nb_rubriques_annee === 1 || $nb_rubriques_annee === 2)) ? $restreint1 : null;
 
 	// La rubrique choisie n'est retenue que si elle existe dans l'année active :
 	// les liens des mails de notification passaient rub=<titre du secteur>
@@ -804,7 +838,6 @@ function thematique_admin_scope($id_rubrique_choisie = null) {
 	// purge aussi une valeur invalide déjà mémorisée en session.
 	$cookie_rubrique = session_get('cookie_rubrique');
 	if (is_numeric($cookie_rubrique) && ($admin > 1 || $admin === 0)) {
-		$id_annee_active = thematique_id_rubrique_annee_active();
 		$id_secteur = (int) sql_getfetsel('id_secteur', 'spip_rubriques', 'id_rubrique=' . intval($cookie_rubrique));
 		if ($id_annee_active && $id_secteur === $id_annee_active) {
 			$restreint = intval($cookie_rubrique);
@@ -1654,6 +1687,25 @@ function thematique_id_rubrique_mission() {
 		: 0;
 
 	return $id_rubrique_mission;
+}
+
+/**
+ * Une nouvelle mission ne peut être créée que sous la rubrique "Consignes"
+ * de l'année active (issue #462 : une rubrique restreinte d'une année
+ * passée, ex. "2018/Travail des classes", faisait publier les missions
+ * d'un intervenant en 2018).
+ *
+ * @param int|string $id_rubrique
+ * @return bool
+ */
+function thematique_rubrique_mission_valide($id_rubrique) {
+	$id_rubrique = intval($id_rubrique);
+	$id_annee_active = thematique_id_rubrique_annee_active();
+	if (!$id_rubrique || !$id_annee_active) {
+		return false;
+	}
+	$id_secteur = (int) sql_getfetsel('id_secteur', 'spip_rubriques', 'id_rubrique=' . $id_rubrique);
+	return $id_secteur === $id_annee_active && thematique_hierarchie_a_mot($id_rubrique, 'consignes');
 }
 
 /**
@@ -2722,46 +2774,16 @@ function thematique_consigne_valide($id_consigne) {
 }
 
 /**
- * Extensions de fichier acceptées pour un document joint à une mission
- * (formulaires/joindre_document_mission.php). Définie ici (thematique_fonctions.php,
- * chargé pour toute compilation de squelette du plugin) et non dans
- * joindre_document_mission.php : les filtres ci-dessous
- * (thematique_extensions_document_mission_accept/_liste) sont utilisés
- * depuis d'autres formulaires (public_publier_article.html) dont le
- * fichier .php associé ne charge jamais joindre_document_mission.php — un
- * filtre inconnu au moment de la compilation de LEUR squelette est
- * silencieusement supprimé par le compilateur SPIP (aucune erreur, la
- * valeur "brute" passe telle quelle), cf issue #429.
+ * Extensions de fichier acceptées pour un document joint à une mission,
+ * passées au formulaire commun du plugin ccn
+ * (#FORMULAIRE_CCN_JOINDRE_DOCUMENT{id, article, #CONST{_THEMATIQUE_EXTENSIONS_DOCUMENT_MISSION}, label},
+ * cf formulaires/public_publier_article.html et
+ * noisettes/sidebar/bloc_ajout_document_onglets.html), qui en déduit
+ * l'attribut accept et refuse les autres formats côté serveur. Définie ici
+ * (thematique_fonctions.php, chargé pour toute compilation de squelette du
+ * plugin) pour être disponible partout, cf issue #429.
  */
 define('_THEMATIQUE_EXTENSIONS_DOCUMENT_MISSION', ['gif', 'jpg', 'jpeg', 'png', 'mp3', 'mp4', 'pdf']);
-
-/**
- * Valeur de l'attribut HTML accept d'un champ fichier de document de
- * mission (".gif,.jpg,..."), à partir de _THEMATIQUE_EXTENSIONS_DOCUMENT_MISSION.
- *
- * Ne peut pas être écrite en dur dans le squelette (`accept=.gif,.jpg,...`) :
- * le compilateur SPIP découpe les arguments d'un `#SAISIE_XXX{...}` sur
- * chaque virgule *avant* toute prise en compte des guillemets (ce n'est pas
- * le tokenizer standard des filtres), donc une valeur avec virgules littérales
- * y est systématiquement tronquée à son premier fragment (`.gif` seul,
- * cf issue #407) — y compris entre guillemets. Passer par une balise
- * calculée (`#GET{...}`) contourne le problème : elle ne contient aucune
- * virgule dans le squelette source, seulement à l'exécution.
- *
- * Appelée comme filtre : `#VAL{1}|thematique_extensions_document_mission_accept}`
- * (le premier paramètre n'est qu'un porteur, SPIP exige toujours une valeur pipée).
- *
- * @param mixed $valeur_ignoree Non utilisé, cf. remarque d'appel ci-dessus
- * @return string
- */
-function thematique_extensions_document_mission_accept($valeur_ignoree = null) {
-	static $accept = null;
-	if ($accept === null) {
-		$accept = implode(',', array_map(fn ($ext) => ".$ext", _THEMATIQUE_EXTENSIONS_DOCUMENT_MISSION));
-	}
-
-	return $accept;
-}
 
 /**
  * Liste lisible des extensions acceptées pour un document de mission
@@ -2769,8 +2791,7 @@ function thematique_extensions_document_mission_accept($valeur_ignoree = null) {
  * zone de dépôt (cf lang:formats_autorises_document,
  * noisettes/sidebar-etape-2-container dans formulaires/public_publier_article.html).
  *
- * Même contournement que thematique_extensions_document_mission_accept :
- * appelée comme filtre (#VAL{1}|thematique_extensions_document_mission_liste),
+ * Appelée comme filtre (#VAL{1}|thematique_extensions_document_mission_liste) :
  * SPIP exige toujours un premier paramètre pipé même si la valeur n'est pas
  * utilisée.
  *
@@ -2796,4 +2817,38 @@ function thematique_extensions_document_mission_liste($valeur_ignoree = null) {
 function thematique_classes_nettoyage($annee) {
 	include_spip('inc/thematique_classes_vides');
 	return thematique_classes_annee_avec_contenu($annee);
+}
+
+/**
+ * Referme les balises HTML mal équilibrées d'un texte saisi par un
+ * utilisateur, avant de l'afficher dans une structure qui en dépend (#479).
+ *
+ * SPIP (propre) laisse passer tel quel le HTML brut d'un texte d'article : un
+ * `</div>` en trop (copier-coller depuis Word ou une page web) referme alors
+ * les blocs du squelette qui l'entourent. Dans les onglets #mission-tabs
+ * (cf js/custom-tabs.js), la suite de la page se retrouve enfant direct du
+ * conteneur : un "Onglet 2" sans titre apparaît et les vrais onglets
+ * (Discussions, Suivi des réponses) disparaissent.
+ *
+ * On passe par l'algorithme d'analyse de fragment HTML5 (innerHTML d'un div,
+ * PHP 8.4) : c'est exactement ce que fera le navigateur, sauf que le
+ * fragment ne peut pas refermer son conteneur — les balises fermantes
+ * orphelines sont ignorées et les ouvrantes refermées en fin de texte. Rien
+ * n'est filtré (iframes, scripts d'intégration conservés), contrairement à
+ * |safehtml.
+ *
+ * @param string $html
+ * @return string
+ */
+function thematique_html_equilibre($html) {
+	$html = (string) $html;
+	if (strpos($html, '<') === false || !class_exists(\Dom\HTMLDocument::class)) {
+		return $html;
+	}
+
+	$document = \Dom\HTMLDocument::createFromString('<!doctype html><body><div></div>', LIBXML_NOERROR);
+	$conteneur = $document->body->firstElementChild;
+	$conteneur->innerHTML = $html;
+
+	return $conteneur->innerHTML;
 }

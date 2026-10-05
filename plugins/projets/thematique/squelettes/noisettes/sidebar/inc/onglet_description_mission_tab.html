@@ -8,7 +8,7 @@ Paramètres :
   noisettes/sidebar/onglet_description_autre)
 - id_article : id de l'article décrit (défaut ID_ARTICLE)
 ]
-#SET{id_article, #ENV{id_article}|sinon{#ID_ARTICLE}}
+#SET{id_article, #ENV{id_article}|sinon{#ID_ARTICLE}|intval}
 
 <div>
 	<div class="tabs-title">

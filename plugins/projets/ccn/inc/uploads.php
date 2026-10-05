@@ -36,42 +36,52 @@ function ccn_attribut_accept_documents() {
 
 function ccn_verifier_uploads() {
     $erreurs = [];
-
-    if (empty($_FILES['fichier_upload']['name'])) {
-        return $erreurs;
-    }
-
+    $taille_max = _CCN_UPLOAD_TAILLE_MAX_MO * 1024 * 1024;
     $extensions_autorisees = ccn_extensions_documents_acceptees();
 
-    $taille_max = _CCN_UPLOAD_TAILLE_MAX_MO * 1024 * 1024;
-
-    foreach ((array) $_FILES['fichier_upload']['name'] as $cle => $nom) {
-
-        $ext = strtolower(pathinfo($nom, PATHINFO_EXTENSION));
-
-        if ($extensions_autorisees && !in_array($ext, $extensions_autorisees)) {
-            $erreurs['message_erreur'] = _T(
-                'ccn:ccn_extension_non_autorisee',
-                [
-                    'ext' => $ext,
-                    'formats' => implode(', ', $extensions_autorisees),
-                ]
-            );
-            break;
+    // fichier_upload : formulaires classiques (extensions + taille).
+    // document : champ bigup de ccn_joindre_document, réinjecté dans $_FILES par
+    // bigup avant verifier — taille seulement, ses extensions étant filtrées par
+    // le formulaire (audit 2026-10 : il échappait jusqu'ici à la limite).
+    // Pas le champ « video » de joindre_video : envoi vers Vimeo, sans limite.
+    foreach (['fichier_upload' => true, 'document' => false] as $champ => $controler_extension) {
+        if (empty($_FILES[$champ]['name'])) {
+            continue;
         }
 
-        $taille = $_FILES['fichier_upload']['size'][$cle] ?? 0;
+        foreach ((array) $_FILES[$champ]['name'] as $cle => $nom) {
+            if (!is_string($nom) || $nom === '') {
+                continue;
+            }
 
-        // Pas de limite de taille pour les MP4 : ils sont poussés vers Vimeo après upload.
-        // Si le plugin api_vimeo est désactivé, la vidéo resterait en local :
-        // on lui applique alors la même limite qu'aux autres documents.
-        $mp4_sans_limite = $ext === 'mp4' && defined('_DIR_PLUGIN_API_VIMEO');
-        if (!$mp4_sans_limite && $taille > $taille_max) {
-            $erreurs['message_erreur'] = _T(
-                'ccn:ccn_fichier_trop_volumineux',
-                ['nom' => $nom, 'taille_max' => _CCN_UPLOAD_TAILLE_MAX_MO]
-            );
-            break;
+            $ext = strtolower(pathinfo($nom, PATHINFO_EXTENSION));
+
+            if ($controler_extension && $extensions_autorisees && !in_array($ext, $extensions_autorisees)) {
+                $erreurs['message_erreur'] = _T(
+                    'ccn:ccn_extension_non_autorisee',
+                    [
+                        'ext' => $ext,
+                        'formats' => implode(', ', $extensions_autorisees),
+                    ]
+                );
+                return $erreurs;
+            }
+
+            $taille = is_array($_FILES[$champ]['size'] ?? null)
+                ? ($_FILES[$champ]['size'][$cle] ?? 0)
+                : ($_FILES[$champ]['size'] ?? 0);
+
+            // Pas de limite de taille pour les MP4 : ils sont poussés vers Vimeo après upload.
+            // Si le plugin api_vimeo est désactivé, la vidéo resterait en local :
+            // on lui applique alors la même limite qu'aux autres documents.
+            $mp4_sans_limite = $ext === 'mp4' && defined('_DIR_PLUGIN_API_VIMEO');
+            if (!$mp4_sans_limite && $taille > $taille_max) {
+                $erreurs['message_erreur'] = _T(
+                    'ccn:ccn_fichier_trop_volumineux',
+                    ['nom' => $nom, 'taille_max' => _CCN_UPLOAD_TAILLE_MAX_MO]
+                );
+                return $erreurs;
+            }
         }
     }
 

@@ -497,6 +497,7 @@
 #sidebar_main_around {
 	width: var(--sidebar-width-large);
 	z-index: 1;
+	position: relative;
 	margin-top: 0;
 	transition: width 500ms ease-in-out;
 	max-height: 100%;
@@ -564,6 +565,7 @@
 #sidebar_lateral_around {
 	width: 0;
 	max-height: 100%;
+	position: relative;
 	transition: width 0.3s ease;
 }
 
@@ -579,11 +581,11 @@
 	width: 0 !important;
 }
 
-#loading_feedback {
+#loading_feedback,
+#loading_feedback_lateral {
 	position: absolute;
-	top: 14px;
-	right: 0;
-	margin-right: 17px;
+	top: 50%;
+	left: 50%;
 	width: 45px;
 	height: 45px;
 	background: url(#CHEMIN{img/sidebar_loading.gif}) no-repeat 7px 7px / 30px auto rgb(255, 255, 255);
@@ -597,11 +599,12 @@
 	border-radius: 50%;
 	box-shadow: 0 7px 15px rgba(0, 0, 0, 0.47);
 	transition: all 300ms ease;
-	transform: scale(0);
+	transform: translate(-50%, -50%) scale(0);
 }
 
-.loading #loading_feedback {
-	transform: scale(1)
+.loading-main-sidebar #loading_feedback,
+.loading-lateral-sidebar #loading_feedback_lateral {
+	transform: translate(-50%, -50%) scale(1)
 }
 
 .ressources_classes_around {
@@ -1800,7 +1803,7 @@ ailleurs, ex: le menu du bas). */
 
 .publier-article-container {
 	--marge-x: 34px;
-	--marge-y: 2rem;
+	--marge-y: 1.5rem;
 	--close-size: 30px;
 
 	display: flex;
@@ -1849,7 +1852,7 @@ ailleurs, ex: le menu du bas). */
 		gap: 0.5rem;
 		margin-bottom: 0.6rem;
 	}
-	#sidebar-close {
+	.publier-article-container #sidebar-close {
 		top: 1rem !important;
 	}
 }
@@ -1892,7 +1895,7 @@ ailleurs, ex: le menu du bas). */
 	display: flex;
 	align-items: center;
 	gap: 0.4em;
-	font-size: 0.85rem;
+	font-size: 0.75rem;
 }
 
 .publier-article-checklist li::before {
@@ -1970,34 +1973,42 @@ ailleurs, ex: le menu du bas). */
 }
 
 .ressource-menu{
+	--marge: 1.3rem;
+
 	height: 100%;
     display: flex;
     flex-direction: column;
 }
 
-.ressource-header {
+.ressource-header-container {
 	background-color: var(--color-bleu-fond);
-	padding: 1rem;
+	padding: calc(var(--marge) * 0.5) var(--marge);
 	flex-shrink: 0;
 }
 
-.ressource-header .etiquette-etape {
+.ressource-header {
+	display: flex;
+	align-items: center;
+	justify-content: end;
+}
+
+.ressource-header-container .etiquette-etape {
 	width: fit-content;
 }
 
-.ressource-header-icons {
+.ressource-header-container-icons {
 	display: flex;
 	justify-content: end;
 }
 
-.ressource-header-etiquette {
+.ressource-header-container-etiquette {
 	display: flex;
 	justify-content: center;
 	margin-top: -1rem;
 	margin-bottom: 0.4rem;
 }
 
-.ressource-header .logo-etiquette {
+.ressource-header-container .logo-etiquette {
 	display: none;
 }
 
@@ -2012,7 +2023,12 @@ ailleurs, ex: le menu du bas). */
 }
 
 .ressource-detail-container {
+	--marge: 1.3rem;
+
 	display: flex;
+	flex-direction: column;
+	opacity: 0;
+	transition: opacity linear 0.2s;
 	flex-direction: column;
 	height: 100%;
 	background-color: white;
@@ -2020,11 +2036,15 @@ ailleurs, ex: le menu du bas). */
 	font-family: Poppins;
 }
 
+.hasLateralSidebarExpanded .ressource-detail-container {
+	opacity: 1;
+}
+
 .ressource-detail {
 	flex: 1;
 	min-height: 0;
 	overflow-y: auto;
-	padding: 20px;
+	padding: var(--marge);
 }
 
 .ressource-detail-container button {
@@ -2126,8 +2146,8 @@ ailleurs, ex: le menu du bas). */
 
 /* --- Ressource detail2 (styles extraits du template inline) --- */
 
-/* Sélecteur scoped : le .ressource-header du detail2 est un enfant direct de .ressource-detail-container */
-.ressource-detail-container > .ressource-header {
+/* Sélecteur scoped : le .ressource-header-container du detail2 est un enfant direct de .ressource-detail-container */
+.ressource-detail-container > .ressource-header-container {
 	background-color: var(--color-bleu-fond);
 	display: flex;
 	justify-content: end;

@@ -5,6 +5,6 @@ Paramètres :
 - mode : page
 ]
 
-[(#MODE|match{article-sauve-coordonnees|article-forum-detail}|oui)
-	<INCLURE{fond=noisettes/ajax/#MODE}{env}>
+[(#MODE|=={article-forum-detail}|oui)
+	<INCLURE{fond=noisettes/ajax/article-forum-detail}{env}>
 ]

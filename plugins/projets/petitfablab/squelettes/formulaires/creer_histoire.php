@@ -36,15 +36,29 @@ function formulaires_creer_histoire_saisies_dist($rub_parent, $retour = '') {
 // Enregistrement des données
 function formulaires_creer_histoire_traiter_dist($rub_parent, $retour = '') {
 
+	// $rub_parent vient de l'URL (?creer=, cf sommaire.html) : sans ce contrôle,
+	// tout compte connecté créait des rubriques publiées sous n'importe quelle
+	// rubrique (audit 2026-10). Réservé aux administrateurs de la rubrique.
+	$rub_parent = intval($rub_parent);
+	if (!$rub_parent || !autoriser('creerrubriquedans', 'rubrique', $rub_parent)) {
+		return ['message_erreur' => _T('info_acces_interdit')];
+	}
+
 	$prologues = _request('prologue');
 	if (!is_array($prologues) || empty($prologues)) {
 		return ['message_erreur' => _T('petitfablab:creer_histoire_prologue')];
 	}
+	// Seuls les prologues proposés par saisies() (articles « Prologue » de la rubrique)
+	$prologues_valides = array_column(sql_allfetsel(
+		'id_article',
+		'spip_articles',
+		['id_rubrique=' . $rub_parent, 'titre=' . sql_quote('Prologue')]
+	), 'id_article');
 
 	$rub = [];
 	foreach ($prologues as $id_prologue) {
 		$id_prologue = intval($id_prologue);
-		if (!$id_prologue) {
+		if (!$id_prologue || !in_array($id_prologue, array_map('intval', $prologues_valides), true)) {
 			continue;
 		}
 

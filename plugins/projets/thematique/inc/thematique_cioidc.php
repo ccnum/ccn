@@ -17,8 +17,14 @@ if (!defined('_ECRIRE_INC_VERSION')) {
 function thematique_cioidc_resoudre_auteur($uid, $email) {
 	$champs = 'id_auteur,nom,nom_complet,statut,email,webmestre,avatar';
 	$auteur = $uid ? sql_fetsel($champs, 'spip_auteurs', 'login=' . sql_quote($uid)) : null;
-	if (!$auteur) {
-		$auteur = sql_fetsel($champs, 'spip_auteurs', 'email=' . sql_quote($email));
+	// Repli par email jamais sur un email vide (il désignait le premier compte sans
+	// email, ex. un compte que cioidc vient de créer, dont les droits étaient alors
+	// écrasés — audit 2026-10) ni sur un compte à la poubelle.
+	if (!$auteur && $email !== '') {
+		$auteur = sql_fetsel($champs, 'spip_auteurs', [
+			'email=' . sql_quote($email),
+			'statut<>' . sql_quote('5poubelle'),
+		]);
 	}
 	return $auteur;
 }

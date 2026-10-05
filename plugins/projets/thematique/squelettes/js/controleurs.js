@@ -46,7 +46,8 @@ $(document).on('keydown.sidebarFocusTrap', function (e) {
 		// Le plugin crayons gère déjà Échap pour fermer son propre formulaire
 		// d'édition, sans stopper la propagation : sans ce garde-fou, on fermait
 		// toute la sidebar en même temps, laissant l'affichage à moitié grisé.
-		if ($(e.target).closest('.crayon-html').length) {
+		// Idem pour l'édition du titre d'un document (#497, cf publier_article.js).
+		if ($(e.target).closest('.crayon-html, .titre-document-saisie').length) {
 			return;
 		}
 		closeSidebar();
@@ -151,7 +152,7 @@ $(function () {
 				"blogs": callArticleBlog,
 				"evenements": callArticleEvenement,
 				"travail_en_cours": callReponse,
-				"ressources": (id) => callRessourceArticle(id, "ressources"),
+				"ressources": callRessource,
 				"cap_sur_l_annee": (id) => callArticleJalon(id, true),
 				"la_rencontre": (id) => callArticleJalon(id, false),
 			}
@@ -853,37 +854,6 @@ function callArticleJalon(est_debut) {
 }
 
 /**
- * Appelle le chargement d'un article ressource dans la sidebar principale.
- *
- * @param {number} id_article
- * @param {string} type_objet
- *
- * @see loadContentInMainSidebar
- */
-
-function callRessourceArticle(id_article, type_objet) {
-	if (!Number.isInteger(Number(id_article))) return;
-	changeTimelineMode('consignes');
-	setLateralSidebarExpanded(true);
-	updateMenuIcon([type_objet], 'sidebarView');
-
-	const url = "./spip.php?page=article&id_article=" + id_article + "&type_objet=" + type_objet + "&mode=ajax-detail";
-	loadContentInMainSidebar(
-		url,
-		() => {
-			updateUrl(
-				{
-					'type_objet': type_objet,
-					'id_article': id_article,
-					'page': 'article'
-				}, "Ressources", "./spip.php?page=article&id_article=" + id_article + "&type_objet=" + type_objet + "&mode=complet"
-			);
-		},
-		"ressource"
-	);
-}
-
-/**
  * Appelle le chargement d'un article syndiqué (ressource externe)
  * dans la sidebar principale.
  *
@@ -1340,7 +1310,7 @@ function initMissionTabs() {
 
 /**
  * Charge une URL dans la sidebar principale, avec état de chargement
- * (classe <tt>loading</tt> sur <tt>body</tt>) et callback de fin.
+ * (classe <tt>loading-main-sidebar</tt> sur <tt>body</tt>) et callback de fin.
  *
  * @param {string} url - URL de la page à charger avec AJAX
  * @param {?function(string)} callback - Appelé avec la réponse une fois le contenu chargé
@@ -1349,7 +1319,7 @@ function initMissionTabs() {
  * @see loadContentInLateralSidebar
  */
 function loadContentInMainSidebar(url, callback, typeContenu) {
-	$('body').addClass('loading');
+	$('body').addClass('loading-main-sidebar');
 	const contenusQuiNeZoomentPas = [
 		'classe',
 		'publication_article',
@@ -1359,7 +1329,6 @@ function loadContentInMainSidebar(url, callback, typeContenu) {
 		zoomTimeline: !contenusQuiNeZoomentPas.includes(typeContenu)
 	});
 	emptyMainSidebar();
-
 	// $.get() plutôt que $(elem).load(url) : .load() coupe silencieusement
 	// l'url au premier espace et traite le reste comme un sélecteur jQuery à
 	// appliquer sur la réponse — une valeur imprévue (id, date...) contenant
@@ -1389,8 +1358,7 @@ function loadContentInMainSidebar(url, callback, typeContenu) {
 		if (!response || response.trim() === "") {
 			if (CCN.debug) { console.warn(CCN.lang.reponse_vide); }
 		}
-
-		$('body').removeClass('loading');
+		$('body').removeClass('loading-main-sidebar');
 		$('#sidebar_content').scrollTop(0);
 		updatePageTitleFromSidebarContent();
 		_sidebarFocusFirst();
@@ -1425,7 +1393,7 @@ function loadContentInMainSidebar(url, callback, typeContenu) {
 		antifloodHashChange = false;
 	}).fail(function (xhr, status) {
 		if (CCN.debug) { console.error("Erreur de chargement :", xhr.status, xhr.statusText); }
-		$('body').removeClass('loading');
+		$('body').removeClass('loading-main-sidebar');
 		antifloodHashChange = false;
 	});
 }
@@ -1465,7 +1433,7 @@ function emptyLateralSidebar() {
 
 function loadContentInLateralSidebar(url, callback) {
 
-	$('body').addClass('loading');
+	$('body').addClass('loading-lateral-sidebar');
 	emptyLateralSidebar();
 
 	// $.get() plutôt que $(elem).load(url) : .load() coupe silencieusement
@@ -1478,7 +1446,7 @@ function loadContentInLateralSidebar(url, callback) {
 		if (!response || response.trim() === "") {
 			if (CCN.debug) { console.warn(CCN.lang.reponse_vide); }
 		}
-		$('body').removeClass('loading');
+		$('body').removeClass('loading-lateral-sidebar');
 		$('#sidebar_content').scrollTop(0);
 		if (callback) {
 			callback(response);
@@ -1487,7 +1455,7 @@ function loadContentInLateralSidebar(url, callback) {
 		antifloodHashChange = false;
 	}).fail(function (xhr, status) {
 		if (CCN.debug) { console.error("Erreur de chargement :", xhr.status, xhr.statusText); }
-		$('body').removeClass('loading');
+		$('body').removeClass('loading-lateral-sidebar');
 		antifloodHashChange = false;
 	});
 }

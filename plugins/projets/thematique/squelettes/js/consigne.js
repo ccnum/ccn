@@ -175,7 +175,7 @@ function Consigne() {
 				const yy = (ui.offset.top - CCN.projet.timeline.offset().top) / CCN.projet.timeline.height();
 				if (CCN.admin == 0) {
 					$.post(
-						"spip.php?page=ajax&mode=article-sauve-coordonnees",
+						CCN.urlSauverCoordonnees,
 						{
 							id_objet: _thisId,
 							type_objet: "article",

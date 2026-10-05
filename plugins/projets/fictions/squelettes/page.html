@@ -4,7 +4,7 @@ PAGE-TYPE.HTML
  -->
 <INCLURE{fond=inclure/tete-html} />
 <body>
-<a href="#contenu-principal" class="skip-link">Aller au contenu principal</a>
+<a href="#contenu-principal" class="skip-link"><:fictions:skip_contenu_principal:></a>
 	<div id="liste-tooltip">
 	</div>
 
@@ -31,10 +31,10 @@ PAGE-TYPE.HTML
 		<div class="global-content">
 			<div class="content">
 			<BOUCLE_annee(RUBRIQUES){titre==#EVAL{_ANNEE_SCOLAIRE}}{tout}{0,1}>
-				<BOUCLE_art(ARTICLES){id_rubrique}{titre LIKE presentation}{tout}{0,1}>
+				<BOUCLE_art(ARTICLES){id_rubrique}{titre_mot=presentation}{tout}{0,1}>
 				<div class="content-left-small">
 					<div id="titre_site">
-						<a href="#URL_SITE_SPIP" title="Accueil"><strong>fictions</strong></a><a href="http://www.laclasse.com" title="http://www.laclasse.com">.laclasse.com</a>
+						<a href="#URL_SITE_SPIP" title="<:fictions:accueil:>"><strong>fictions</strong></a><a href="http://www.laclasse.com" title="http://www.laclasse.com">.laclasse.com</a>
 					</div>
 					<div id="image-presentation">[(#LOGO_ARTICLE||image_reduire{100})]</div>
 					<div id="texte-presentation" class="#EDIT{texte}">
@@ -58,8 +58,8 @@ PAGE-TYPE.HTML
 			</div>
 		</div>
 	</div>
-	<INCLURE{fond=footer} />
+	<INCLURE{fond=footer, annee_scolaire=#EVAL{_ANNEE_SCOLAIRE}} />
 </body>
 
-<script type="text/javascript" src="#CHEMIN{js/page.js}"></script>
+	<INCLURE{fond=modeles/js, page=page} />
 </html>

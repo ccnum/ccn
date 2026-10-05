@@ -63,6 +63,25 @@ function formulaires_editer_article_verifier_dist($id_article = 'new', $id_rubri
 	) {
 		$erreurs['id_parent'] = _T('info_creerdansrubrique_non_autorise');
 	}
+	// Création d'un chapitre : dans la rubrique de l'histoire passée au formulaire
+	// (argument signé), pas dans un id_parent posté, et 5 chapitres au plus — la
+	// limite n'était appliquée que par inclure/rubrique.html (audit 2026-10).
+	if (!intval($id_article) && intval($id_rubrique)) {
+		if (intval(_request('id_parent')) !== intval($id_rubrique)) {
+			$erreurs['id_parent'] = _T('info_creerdansrubrique_non_autorise');
+		} elseif (sql_countsel('spip_articles', ['id_rubrique=' . intval($id_rubrique), "statut<>'poubelle'"]) >= 5) {
+			$erreurs['message_erreur'] = _T('petitfablab:histoire_complete');
+		}
+	}
+	// Le champ « Email » (soustitre) reçoit en copie les mails de valider_chapitre() :
+	// on n'accepte qu'une adresse valide.
+	$email = trim((string) _request('soustitre'));
+	if ($email !== '') {
+		include_spip('inc/filtres');
+		if (!email_valide($email)) {
+			$erreurs['soustitre'] = _T('info_email_invalide');
+		}
+	}
 	return $erreurs;
 }
 
@@ -72,5 +91,18 @@ function formulaires_editer_article_traiter_dist($id_article = 'new', $id_rubriq
 	// car l'heuristique du choix de la langue est pris en charge par article_inserer
 	// en fonction de la config du site et de la rubrique choisie
 	set_request('changer_lang');
-	return formulaires_editer_objet_traiter('article', $id_article, $id_rubrique, $lier_trad, $retour, $config_fonc, $row, $hidden);
+	$res = formulaires_editer_objet_traiter('article', $id_article, $id_rubrique, $lier_trad, $retour, $config_fonc, $row, $hidden);
+	// La page ecriture publie le chapitre au retour (valider_chapitre) : on y passe
+	// un jeton lié à l'auteur et à l'article, sans lequel un simple lien GET
+	// suffisait à publier le brouillon d'un auteur connecté (CSRF, audit 2026-10).
+	if (!empty($res['redirect']) && !empty($res['id_article'])) {
+		include_spip('inc/securiser_action');
+		$res['redirect'] = parametre_url(
+			$res['redirect'],
+			'valider',
+			calculer_action_auteur('valider_chapitre-' . intval($res['id_article'])),
+			'&'
+		);
+	}
+	return $res;
 }

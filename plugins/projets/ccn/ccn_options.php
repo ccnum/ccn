@@ -30,7 +30,16 @@ if (isset($_GET['annee_scolaire'])) {
 	$_annee_get = intval($_GET['annee_scolaire']);
 	if ($_annee_get > 2011 && $_annee_get < 2100) {
 		$annee_scolaire = $_annee_get;
-		setcookie('laclasse_annee_scolaire', $annee_scolaire, ['expires' => time() + 3600 * 12, 'path' => '/']);
+		// SameSite + Secure (si la requête arrive en https, y compris derrière l'ingress),
+		// comme les cookies posés côté JS (cf thematique/squelettes/js/controleurs.js).
+		$https = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off')
+			|| strtolower($_SERVER['HTTP_X_FORWARDED_PROTO'] ?? '') === 'https';
+		setcookie('laclasse_annee_scolaire', $annee_scolaire, [
+			'expires' => time() + 3600 * 12,
+			'path' => '/',
+			'secure' => $https,
+			'samesite' => 'Lax',
+		]);
 	}
 	unset($_annee_get);
 }
@@ -45,7 +54,7 @@ if (isset($_GET['annee_scolaire'])) {
 // Repli sur la dernière rubrique d'année réellement existante (titre
 // numérique pur, ex. "2025"). Les années peuvent être à la racine
 // (thematique), enfants d'une rubrique tagée "rubrique-contenant-annees"
-// (fictionsv2) ou enfants d'une rubrique parente arbitraire (ex: 177 sur
+// (fictions) ou enfants d'une rubrique parente arbitraire (ex: 177 sur
 // certains sites) — on cherche le titre de l'année où qu'elle se trouve.
 //
 // Ce repli ne s'applique que si l'année vient du calcul calendaire pur
