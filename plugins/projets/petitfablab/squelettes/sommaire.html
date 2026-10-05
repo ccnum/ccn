@@ -108,7 +108,9 @@
 								</BOUCLE_prologue>
 								</ul>
 							</div>
+							[(#AUTORISER{creerrubriquedans,rubrique,#ENV{creer}}|oui)
 							<div class="ajax">#FORMULAIRE_CREER_HISTOIRE{#ENV{creer},#SELF|parametre_url{creer,ok}}</div>
+							]
 							]
 							[(#ENV{creer}|=={ok}|oui)
 							<BOUCLE_admin_retour(RUBRIQUES){id_rubrique IN #ENV{rub}}{tous}{'<br />'}>
