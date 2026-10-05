@@ -16,7 +16,9 @@
  * 2. sans aucune sauvegarde (premier démarrage, ou clé déjà perdue), on régénère
  *    secret_des_auth puis on réenregistre son mot de passe, ce qui crée la sauvegarde ;
  *    si un AUTRE webmestre a une sauvegarde, on ne régénère rien (sa clé est récupérable
- *    à sa prochaine connexion par mot de passe) ;
+ *    à sa prochaine connexion par mot de passe), sauf avec CCN_CLES_REGENERER=true, à
+ *    poser pour un seul démarrage quand cette sauvegarde n'est pas récupérable (webmestres
+ *    SSO sans mot de passe) : elle est alors abandonnée ;
  * 3. secret_du_site / secret_des_actions sont créés s'ils manquent encore (pas dans le cas
  *    où la sauvegarde est chez un autre webmestre).
  *
@@ -56,12 +58,22 @@ if (!$auteur && !$secret_present) {
 		'spip_auteurs',
 		"statut='0minirezo' AND webmestre='oui' AND backup_cles!='' AND login<>" . sql_quote($login)
 	);
-	if ($autres) {
+	// CCN_CLES_REGENERER=true (un seul démarrage) : la sauvegarde des autres webmestres
+	// n'est pas récupérable (comptes SSO sans mot de passe, mot de passe perdu) ; on
+	// régénère quand même, et on vide ces sauvegardes devenues inutiles.
+	$forcer = getenv('CCN_CLES_REGENERER') === 'true';
+	if ($autres && !$forcer) {
 		fwrite(STDERR, 'ccn_cles : secret_des_auth absent, sauvegarde détenue par le(s) webmestre(s) #'
 			. implode(', #', array_column($autres, 'id_auteur'))
-			. " : restaurée à leur prochaine connexion par mot de passe, rien n'est régénéré\n");
+			. " : restaurée à leur prochaine connexion par mot de passe, rien n'est régénéré"
+			. " (sinon CCN_CLES_REGENERER=true pour un démarrage)\n");
 	} elseif ($id_auteur = intval(sql_getfetsel('id_auteur', 'spip_auteurs', 'login=' . sql_quote($login)))) {
-		auth_spip_initialiser_secret();
+		if ($autres) {
+			sql_updateq('spip_auteurs', ['backup_cles' => ''], sql_in('id_auteur', array_column($autres, 'id_auteur')));
+			fwrite(STDERR, 'ccn_cles : CCN_CLES_REGENERER=true, sauvegardes des webmestres #'
+				. implode(', #', array_column($autres, 'id_auteur')) . " abandonnées\n");
+		}
+		auth_spip_initialiser_secret($forcer);
 		include_spip('action/editer_auteur');
 		include_spip('inc/autoriser');
 		autoriser_exception('modifier', 'auteur', $id_auteur);
