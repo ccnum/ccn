@@ -112,9 +112,34 @@ function fictions_cioidc_userinfo($flux) {
 		return $flux;
 	}
 	spip_log("fictions uid=$uid inscrit au projet $annee (participants et histoires : ecrire/?exec=fictions_associations)", 'cioidc');
-	// Compte SPIP déjà rattaché à cet uid (créé par cioidc à la première connexion) et
-	// classes gérées cette année (#519)
+
+	// Un prof inscrit doit être rédacteur (1comite) : cioidc crée les comptes en visiteur
+	// (_CIOIDC_CREER_AUTEUR = 6forum), qui ne peut ni être choisi comme compte d'un
+	// participant (formulaires/fictions_participant.php) ni écrire ses chapitres.
+	// Première connexion : le pipeline passe avant la création du compte par cioidc, on le
+	// crée donc ici avec les mêmes champs (cioidc le retrouve ensuite par son login).
+	// Un compte à la poubelle est réactivé : cioidc ignore les comptes 5poubelle et en
+	// créerait sinon un second pour le même prof. Jamais de rétrogradation d'un admin.
 	$auteur = sql_fetsel('id_auteur, nom, statut, webmestre', 'spip_auteurs', 'login=' . sql_quote($uid));
+	if (!$auteur) {
+		$id_auteur = (int) sql_insertq('spip_auteurs', [
+			'login' => $uid,
+			'nom' => (string) (($flux['data']['name'] ?? '') ?: $uid),
+			'email' => (string) ($flux['data']['MailAdressePrincipal'] ?? ''),
+			'statut' => '1comite',
+			'webmestre' => 'non',
+			'pass' => '',
+			'source' => 'oidc',
+		]);
+		spip_log("fictions uid=$uid compte créé en rédacteur (#$id_auteur)", 'cioidc');
+		$auteur = $id_auteur ? sql_fetsel('id_auteur, nom, statut, webmestre', 'spip_auteurs', 'id_auteur=' . $id_auteur) : null;
+	} elseif (in_array($auteur['statut'], ['6forum', '5poubelle'], true)) {
+		sql_updateq('spip_auteurs', ['statut' => '1comite'], 'id_auteur=' . intval($auteur['id_auteur']));
+		spip_log("fictions uid=$uid auteur #{$auteur['id_auteur']} passé de {$auteur['statut']} à rédacteur (1comite)", 'cioidc');
+		$auteur['statut'] = '1comite';
+	}
+
+	// Compte SPIP rattaché à cet uid et classes gérées cette année (#519)
 	if ($auteur) {
 		spip_log(
 			"fictions uid=$uid auteur #{$auteur['id_auteur']} statut={$auteur['statut']} webmestre={$auteur['webmestre']}"
