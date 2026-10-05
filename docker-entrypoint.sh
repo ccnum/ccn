@@ -291,6 +291,8 @@ define('_VIMEO_ACCESS_TOKEN', '${VIMEO_ACCESS_TOKEN:-}');
 // de l'année + articles jalons, cf
 // plugins/projets/thematique/genie/thematique_rentree_annee.php)
 define('_CCN_PROJET_ACTIVE', '${CCN_PROJET_ACTIVE:-true}' !== 'false');
+// JSON complet des attributs ENT dans cioidc.log (cf plugins/projets/ccn/inc/ccn_cioidc.php)
+define('_CCN_CIOIDC_LOG_COMPLET', '${CCN_CIOIDC_LOG_COMPLET:-true}' !== 'false');
 ?>
 MAINEOF
 chown www-data:www-data config/mes_options.php

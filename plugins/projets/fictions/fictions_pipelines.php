@@ -85,10 +85,11 @@ function fictions_post_edition($flux) {
 function fictions_cioidc_userinfo($flux) {
 	include_spip('inc/fictions_cioidc');
 
-	// Mêmes traces que thematique_cioidc_userinfo() : les attributs reçus (pas leurs
-	// valeurs : profil ENT d'élèves), puis chaque décision, pour diagnostiquer une
-	// inscription non reconnue.
-	spip_log('fictions userinfo attributs=' . implode(',', array_keys((array) ($flux['data'] ?? []))), 'cioidc');
+	// Mêmes traces que thematique_cioidc_userinfo() : ce que l'ENT a envoyé (JSON complet
+	// ou noms des attributs, cf _CCN_CIOIDC_LOG_COMPLET), puis chaque décision, pour
+	// diagnostiquer une inscription non reconnue.
+	include_spip('inc/ccn_cioidc');
+	ccn_cioidc_log_userinfo($flux, 'fictions');
 
 	$uid = (string) (reset($flux['args']) ?: '');
 	$profils = (string) ($flux['data']['ENTPersonProfils [ENS|TUT|ELV]'] ?? '');
@@ -111,6 +112,19 @@ function fictions_cioidc_userinfo($flux) {
 		return $flux;
 	}
 	spip_log("fictions uid=$uid inscrit au projet $annee (participants et histoires : ecrire/?exec=fictions_associations)", 'cioidc');
+	// Compte SPIP déjà rattaché à cet uid (créé par cioidc à la première connexion) et
+	// classes gérées cette année (#519)
+	$auteur = sql_fetsel('id_auteur, nom, statut, webmestre', 'spip_auteurs', 'login=' . sql_quote($uid));
+	if ($auteur) {
+		spip_log(
+			"fictions uid=$uid auteur #{$auteur['id_auteur']} statut={$auteur['statut']} webmestre={$auteur['webmestre']}"
+				. ' classes ' . $annee . ' : ' . (fictions_noms_classes_auteur($auteur['id_auteur'], $annee) ?: 'aucune'),
+			'cioidc'
+		);
+		ccn_cioidc_log_rubriques_auteur(intval($auteur['id_auteur']), 'fictions');
+	} else {
+		spip_log("fictions uid=$uid pas encore de compte SPIP (créé par cioidc à cette connexion)", 'cioidc');
+	}
 	return $flux;
 }
 

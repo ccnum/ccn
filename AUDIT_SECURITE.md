@@ -35,6 +35,7 @@ relevées passent par `intval`/`sql_quote`/`sql_in`.
 - `#TEXTE`/`#SURTITRE`/`#PS` des élèves sans `safehtml` : acceptable si les comptes élèves sont rédacteurs de confiance, à réévaluer sinon.
 
 ### Transverse
+- **Logs SSO complets** : le JSON complet des attributs ENT (identité, classes, groupes, élèves compris) est écrit dans `tmp/log/cioidc.log` à chaque connexion, pour le diagnostic (`plugins/projets/ccn/inc/ccn_cioidc.php`). Activé par défaut ; à couper quand il n'est plus utile via la variable Docker `CCN_CIOIDC_LOG_COMPLET=false`.
 - **Cookies applicatifs sans `HttpOnly`** (`thematique/squelettes/js/controleurs.js` `setCookie()`, `main.js` `visited`) : posés par JS, préférences d'affichage, `SameSite=Strict; Secure` — risque résiduel acceptable.
 - **`Content-Security-Policy` absente** (les autres en-têtes sont posés dans `Dockerfile`, `spip_headers.conf`) : une CSP stricte suppose de sortir les nombreux `<script>`/`onclick` inline des squelettes.
 

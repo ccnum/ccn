@@ -91,3 +91,10 @@ define('_DATE_FIN', ($annee_scolaire + 1) . '-09-01');
 // Utilisée par ccn_verifier_uploads() (inc/uploads.php) et affichable en
 // squelette via #CONST{_CCN_UPLOAD_TAILLE_MAX_MO}.
 define('_CCN_UPLOAD_TAILLE_MAX_MO', 100);
+
+// Connexion SSO : JSON complet des attributs ENT dans tmp/log/cioidc.log (cf
+// inc/ccn_cioidc.php). Contient des données personnelles, élèves compris : à couper
+// via la variable Docker CCN_CIOIDC_LOG_COMPLET=false (docker-entrypoint.sh).
+if (!defined('_CCN_CIOIDC_LOG_COMPLET')) {
+	define('_CCN_CIOIDC_LOG_COMPLET', true);
+}
