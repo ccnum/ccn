@@ -77,7 +77,10 @@ function formulaires_public_publier_article_charger_dist(
 		// arbitraire (pas une mission, ou pas encore publiée).
 		$reponse = thematique_trouver_reponse_a_une_consigne($id_consigne, $id_rubrique);
 
-		if ($reponse) {
+		// Préremplir seulement pour qui peut modifier cette réponse : sinon
+		// n'importe quel visiteur lisait titre et texte de la réponse d'une
+		// autre classe, même non publiée (audit 2026-10).
+		if ($reponse && autoriser('modifier', 'article', $reponse['id_article'])) {
 			$valeurs['id_article'] = $reponse['id_article'];
 			$valeurs['titre'] = $reponse['titre'];
 			$valeurs['texte'] = $reponse['texte'];
@@ -255,12 +258,19 @@ function formulaires_public_publier_article_traiter_dist(
 		// rubrique réellement utilisée sur celle qui vient d'être vérifiée.
 		set_request('id_parent', $id_rubrique);
 		$id_article = 'new';
-	} elseif (!autoriser('modifier', 'article', $id_article, null, ['champ' => 'date'])) {
-		// Champ date non autorisé pour ce rôle sur cet article (#420) : même
-		// masqué côté squelette, on ne fait pas confiance à un POST forgé -
-		// on retire la valeur postée avant qu'action_editer_article ne
-		// l'applique telle quelle.
-		set_request('date');
+	} else {
+		// Édition : l'article reste dans sa rubrique. id_parent est un champ
+		// caché (cf charger) ; posté tel quel, le core déplaçait l'article dans
+		// n'importe quelle rubrique, publiée ensuite via l'exception publierdans
+		// ci-dessous (audit 2026-10). Les ressources restent forcées plus bas.
+		set_request('id_parent', sql_getfetsel('id_rubrique', 'spip_articles', 'id_article=' . intval($id_article)));
+		if (!autoriser('modifier', 'article', $id_article, null, ['champ' => 'date'])) {
+			// Champ date non autorisé pour ce rôle sur cet article (#420) : même
+			// masqué côté squelette, on ne fait pas confiance à un POST forgé -
+			// on retire la valeur postée avant qu'action_editer_article ne
+			// l'applique telle quelle.
+			set_request('date');
+		}
 	}
 	// Les ressources sont créées depuis la page "Ressources" (popup sans
 	// id_rubrique, cf callNouvelleRessource) : la rubrique cible est forcée
