@@ -231,7 +231,7 @@ function thematique_notifications_destinataires($flux) {
 function thematique_cioidc_userinfo($flux) {
 	spip_log('userinfo args=' . json_encode($flux['args']) . ' data=' . json_encode($flux['data']), 'cioidc');
 
-	$email = $flux['data']['MailAdressePrincipal'] ?? '';
+	$email = trim((string) ($flux['data']['MailAdressePrincipal'] ?? ''));
 	$uid = $flux['args']['uid'] ?? '';
 	$auteur = thematique_cioidc_resoudre_auteur($uid, $email);
 	if (!$auteur) {
