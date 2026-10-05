@@ -27,17 +27,22 @@ relevées passent par `intval`/`sql_quote`/`sql_in`.
 ## Reste à faire (sans vulnérabilité établie)
 
 ### thematique
-- `formulaires/forumv2.php:174` : `auteur` = `nom_auteur` libre (masqué à l'affichage par la jointure sur `id_auteur`).
-- `inc/thematique_cioidc.php` : le repli par email reste actif quand l'email (non vide) correspond à un autre compte — à retirer une fois les comptes historiques sans login SSO rapprochés.
+- `inc/thematique_cioidc.php` : le repli par email reste actif quand l'email (non vide) correspond à un autre compte — à retirer une fois les comptes historiques sans login SSO rapprochés (mesure : requête ci-dessous).
 
-### petitfablab
-- `squelettes/sommaire.html:97-110` : `creer=<id>` affiche le titre de n'importe quelle rubrique à un connecté.
-- `#TEXTE`/`#SURTITRE`/`#PS` des élèves sans `safehtml` : acceptable si les comptes élèves sont rédacteurs de confiance, à réévaluer sinon.
+```sql
+-- Comptes qu'un repli par email pourrait encore viser : email partagé par plusieurs comptes,
+-- ou compte dont le login n'est pas un identifiant ENT (ex. VEB64876)
+SELECT id_auteur, login, email, statut FROM spip_auteurs
+WHERE statut <> '5poubelle' AND email <> ''
+  AND (email IN (SELECT email FROM spip_auteurs WHERE email <> '' GROUP BY email HAVING COUNT(*) > 1)
+       OR login NOT REGEXP '^[A-Z]{3}[0-9]{5}$');
+```
 
 ### Transverse
 - **Logs SSO complets** : le JSON complet des attributs ENT (identité, classes, groupes, élèves compris) est écrit dans `tmp/log/cioidc.log` à chaque connexion, pour le diagnostic (`plugins/projets/ccn/inc/ccn_cioidc.php`). Activé par défaut ; à couper quand il n'est plus utile via la variable Docker `CCN_CIOIDC_LOG_COMPLET=false`.
-- **Cookies applicatifs sans `HttpOnly`** (`thematique/squelettes/js/controleurs.js` `setCookie()`, `main.js` `visited`) : posés par JS, préférences d'affichage, `SameSite=Strict; Secure` — risque résiduel acceptable.
+- **Cookies applicatifs sans `HttpOnly`** (`thematique/squelettes/js/controleurs.js` `setCookie()`, `main.js` `visited`) : posés et lus par le JS, préférences d'affichage, `SameSite=Strict; Secure` — risque résiduel accepté.
 - **`Content-Security-Policy` absente** (les autres en-têtes sont posés dans `Dockerfile`, `spip_headers.conf`) : une CSP stricte suppose de sortir les nombreux `<script>`/`onclick` inline des squelettes.
+- **thematique et fictions** : le JavaScript des rédacteurs (profs) reste actif sur le site public (`filtrer_javascript` par défaut, 0). Passé à -1 pour petitfablab seulement ; à étendre si les profs ne collent jamais de code légitime (iframes, scripts d'intégration) dans leurs textes.
 
 ---
 

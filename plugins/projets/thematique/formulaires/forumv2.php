@@ -184,7 +184,9 @@ function formulaires_forumv2_traiter_dist($id_article) {
 					'objet' => 'article',
 					'id_objet' => $id_article,
 					'texte' => _request('texte'),
-					'auteur' => _request('nom_auteur'),
+					// Nom calculé côté serveur (même calcul que le formulaire) : le
+					// champ caché nom_auteur peut être forgé.
+					'auteur' => thematique_nom_auteur_commentaire($id_auteur),
 					'statut' => 'publie',
 					// Classe active de l'auteur à l'écriture : le commentaire la
 					// garde même si le prof change ensuite de classe active.

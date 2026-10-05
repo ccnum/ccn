@@ -93,6 +93,7 @@
 						]
 						[(#ENV{creer}|oui)
 							[(#ENV{creer}|=={ok}|non)
+							[(#AUTORISER{creerrubriquedans,rubrique,#ENV{creer}}|oui)
 							<div class="bord">
 								Actuellement dans la rubrique[ <b>(#INFO_TITRE{rubrique,#ENV{creer}})</b> ] on trouve les prologues suivant et leur utilisation :
 								<ul>
@@ -108,7 +109,6 @@
 								</BOUCLE_prologue>
 								</ul>
 							</div>
-							[(#AUTORISER{creerrubriquedans,rubrique,#ENV{creer}}|oui)
 							<div class="ajax">#FORMULAIRE_CREER_HISTOIRE{#ENV{creer},#SELF|parametre_url{creer,ok}}</div>
 							]
 							]

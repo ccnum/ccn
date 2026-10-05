@@ -7,7 +7,7 @@
             <INCLURE{fond=noisettes/sidebar/inc/bouton_modifier_article, id_article=#ID_ARTICLE, type_objet=#ENV{est_debut}|=={true}|?{cap_sur_l_annee,la_rencontre}} />
         </div>
         <div class="sidebar_bubble">
-            <span class="spip texte_jalon">[(#TEXTE|thematique_html_equilibre)]</span>
+            <span class="spip texte_jalon">[(#TEXTE|liens_ouvrants|image_reduire{250,0}|thematique_html_equilibre)]</span>
         </div>
         <div class="sidebar_bubble">
             <div class="bloc_documents">

@@ -28,3 +28,9 @@ if (!defined('_PETITFABLAB_MAIL_COPIE')) {
 if (!defined('_PETITFABLAB_URL_BLOG')) {
 	define('_PETITFABLAB_URL_BLOG', 'https://petit-fablab-ecriture.tumblr.com/');
 }
+
+// Contenu des participants (chapitres, sous-titre, PS) : JavaScript et HTML suspect
+// neutralisés aussi sur le site public, pas seulement dans l'espace privé (réglage
+// SPIP par défaut : 0). Remplace un safehtml sur chacun des affichages de #TEXTE,
+// #SURTITRE, #PS des squelettes.
+$GLOBALS['filtrer_javascript'] = -1;
