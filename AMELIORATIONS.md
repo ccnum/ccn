@@ -9,14 +9,6 @@ vérifié dans le code à cette date.
 
 ## Déploiement
 
-### `thematique` jamais désactivé sur les sites fictions/petitfablab
-
-**Fichier** : `docker-entrypoint.sh`
-
-Le `case` sur `SPIP_VERSION_SITE` active `fictions`/`petitfablab` et désactive les autres variantes, mais
-jamais `thematique`. Une base qui l'a eu actif un jour le garde, avec ses squelettes et ses
-vulnérabilités. Ajouter `thematique` à la liste désactivée dans la branche fictions/petitfablab.
-
 ### `.htaccess` jamais mis à jour sur un volume existant
 
 **Fichier** : `docker-entrypoint.sh`

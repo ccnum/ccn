@@ -37,29 +37,17 @@ blanche (T2/T3), pas l'accès hors `noisettes/`.
 
 ---
 
-## Durcissement (sans vulnérabilité établie)
+## Durcissement restant (sans vulnérabilité établie)
+
+Les durcissements mécaniques ont été appliqués le 2026-10-05 (commits `88791dbb` à `0efda68b`). Restent les points qui demandent une décision :
 
 ### thematique
-- `noisettes/timeline.html:5,34` : `#ENV{chemin}`/`#ENV{role}` dans des chaînes JS — `|json_encode`.
-- `noisettes/sidebar/page_participant/card_publication.html:10` : `callReponse(#ENV{id_reponse})` hors chaîne JS, non atteignable aujourd'hui — `|intval`.
 - `formulaires/public_publier_article.php` : l'exception `publierdans` permet à un auteur de republier un article dépublié par un admin (politique de modération à trancher).
-- `formulaires/public_publier_article.php:97-102` : un GET (même anonyme) déclenche un `sql_delete` dans `charger()`.
-- `formulaires/public_publier_article.php:270-276` : si la rubrique « Ressources » manque, `type_article=ressources` saute le contrôle #274.
 - `thematique_autoriser.php` (`autoriser_article_modifier`, #468) : l'exception jalon vaut pour tout intervenant sur tout jalon non publié, sans test d'appartenance au projet.
-- `formulaires/forumv2.php:165` : `id_parent` non vérifié comme appartenant au même article (rattachement à un autre fil, notification d'un tiers).
 - `formulaires/forumv2.php:174` : `auteur` = `nom_auteur` libre (masqué à l'affichage par la jointure sur `id_auteur`).
 - `inc/thematique_cioidc.php` (T4) : le repli par email reste actif quand l'email (non vide) correspond à un autre compte — à retirer une fois les comptes historiques sans login SSO rapprochés.
-- `thematique_pipelines.php:232` : `spip_log` du profil ENT complet (identité, classes, groupes) à chaque connexion — données personnelles d'élèves dans `tmp/log/cioidc.log`.
-
-### fictions
-- `formulaires/fictions_{participant,affectations,calendrier}.php` : `traiter()` ne rappelle pas `autoriser('fictionsassociations')` (seul `charger()` le fait).
-- `inc/fictions_participants.php` : `fictions_annee_config_ecrire` accepte n'importe quelle année — borner (2000-2100).
-- `fictions_pipelines.php` (`fictions_cioidc_userinfo`) : même journalisation du profil ENT complet que thematique.
-- `fictions_histoires_synchroniser` : `RELEASE_LOCK` non exécuté si une exception est levée.
-- `inc/fictions_autorisation.php` (`fictions_ecriture_droits`) : compte la position parmi les chapitres `publie`/`prop`, donc répond « oui » pour un chapitre `prepa` — neutralisé pour la modification par F1 (statut `prop` exigé), mais `#AUTORISER{ecrirechapitre}` reste faux dans ce cas côté squelettes.
 
 ### petitfablab
-- `petitfablab_fonctions.php` (`valider_chapitre`) : `soustitre` (email saisi par l'élève, seulement `filter_var` à l'envoi) alimente `bcc` — valider dans `verifier()`.
 - Adresses `cmonnet@erasme.org`, `petitfablab@gmail.com` et URL `http://petitfablab.laclasse.com/…` en dur — passer par la config, en https.
 - `squelettes/formulaires/editer_article.php` : limite de 5 chapitres et `maxlength` seulement côté interface ; `id_parent` choisi par le POST.
 - `squelettes/sommaire.html:97-110` : `creer=<id>` affiche le titre de n'importe quelle rubrique à un connecté.
@@ -67,12 +55,10 @@ blanche (T2/T3), pas l'accès hors `noisettes/`.
 
 ### ccn
 - `inc/uploads.php` : la limite de 100 Mo ne couvre pas les envois bigup (le contrôle d'extension reste fait).
-- `ccn_options.php` : cookie d'année scolaire sans `Secure`/`SameSite` (valeur bornée par `intval`, sans incidence).
 
 ### Transverse
 - **Cookies applicatifs sans `HttpOnly`** (`thematique/squelettes/js/controleurs.js` `setCookie()`, `main.js` `visited`) : posés par JS, préférences d'affichage, `SameSite=Strict; Secure` — risque résiduel acceptable.
 - **En-têtes HTTP absents** (`Content-Security-Policy`, `X-Frame-Options`, `X-Content-Type-Options`, `Referrer-Policy`) : à poser à l'ingress ou dans `htaccess.txt` — attention, `docker-entrypoint.sh` ne recopie `htaccess.txt` que si `.htaccess` n'existe pas (volumes déjà déployés non mis à jour). Une CSP stricte suppose de sortir les nombreux `<script>`/`onclick` inline.
-- `docker-entrypoint.sh` ne désactive jamais `thematique` sur un site fictions/petitfablab : si une base l'a eu actif, ses failles restantes y sont atteignables.
 
 ---
 
