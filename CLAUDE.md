@@ -124,6 +124,10 @@ active — c'est un problème de données plus souvent qu'un bug de squelette.
 connexion via l'ENT, résout/creé l'auteur SPIP, son statut (prof/élève/webmestre) et ses liens
 vers les rubriques de classe, à partir des attributs ENT (`ENTClassesGroupes`, `ENTPersonProfils`,
 `ENTGroupesLibres`, etc.). Activé conditionnellement (`SPIP_PLUGINS_CIOIDC`, voir `README.md`).
+Les rubriques de classe ne sont pas créées à la connexion (l'ENT envoie toutes les classes d'un
+prof sans dire lesquelles participent au projet) : l'équipe CCN les crée sous « Travail des
+classes », titrées du nom de la classe ENT (ex. « 4A », renommée ensuite avec l'établissement),
+et le prof y est rattaché à sa connexion suivante. Traces dans `tmp/log/cioidc.log`.
 
 ### i18n
 Tout texte visible doit passer par un item de langue : `<:thematique:cle:>` /
