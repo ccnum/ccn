@@ -36,7 +36,7 @@ function fictions_post_edition($flux) {
 	$blog = fictions_id_rubrique_a_mot('blog_pedagogique');
 	// #229 : la rubrique blog auteur suit la même mécanique de publication automatique
 	// que le blog pédagogique, une fois la rubrique créée et la constante surchargée.
-	$blogs_ids = array_filter([(int) $blog, _FICTIONSV2_ID_BLOG_AUTEUR]);
+	$blogs_ids = array_filter([(int) $blog, _FICTIONS_ID_BLOG_AUTEUR]);
 
 	if ($statut === 'prop') {
 		// Publier l'article que l'on vient de modifier
@@ -114,7 +114,7 @@ function fictions_cioidc_userinfo($flux) {
 }
 
 /**
- * À partir de _FICTIONSV2_ANNEE_CHAPITRE1_COMMUN, le chapitre 1 publié n'est plus dans
+ * À partir de _FICTIONS_ANNEE_CHAPITRE1_COMMUN, le chapitre 1 publié n'est plus dans
  * l'histoire (article "chapitre1" commun de l'année) : une histoire dont le chapitre 2
  * est encore en cours d'écriture (prop) n'a aucun article publié, et SPIP la dépublierait,
  * la retirant des boucles RUBRIQUES du site. On la garde publiée tant qu'elle a un
@@ -124,7 +124,7 @@ function fictions_calculer_rubriques($flux) {
 	$annees = sql_allfetsel(
 		'id_rubrique',
 		'spip_rubriques',
-		'titre REGEXP ' . sql_quote('^[0-9]{4}$') . ' AND titre>=' . sql_quote((string) _FICTIONSV2_ANNEE_CHAPITRE1_COMMUN)
+		'titre REGEXP ' . sql_quote('^[0-9]{4}$') . ' AND titre>=' . sql_quote((string) _FICTIONS_ANNEE_CHAPITRE1_COMMUN)
 	);
 	if (!$annees) {
 		return $flux;

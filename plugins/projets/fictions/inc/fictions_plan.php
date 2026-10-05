@@ -32,12 +32,12 @@ include_spip('inc/fictions_histoires');
 function fictions_rotation(array $ordre, array $histoires): array {
 	$ordre = array_values(array_filter($ordre, fn($id) => !empty($histoires[$id])));
 	$n = count($ordre);
-	if ($n < count(FICTIONSV2_CHAPITRES)) {
+	if ($n < count(FICTIONS_CHAPITRES)) {
 		return [];
 	}
 	$plan = [];
 	foreach ($ordre as $i => $id_proprietaire) {
-		foreach (FICTIONSV2_CHAPITRES as $j => $chapitre) {
+		foreach (FICTIONS_CHAPITRES as $j => $chapitre) {
 			// L'histoire i reçoit son j-ième chapitre de rotation du participant i - j.
 			$plan[(int) $histoires[$id_proprietaire]][$chapitre] = (int) $ordre[($i - $j + $n) % $n];
 		}
@@ -65,8 +65,8 @@ function fictions_plan_anomalies(int $annee, array $plan): array {
 	$etat = fictions_histoires_etat($annee);
 	$nom = fn($id) => $participants[$id]['nom'] ?? ('#' . $id);
 
-	if (count($participants) < count(FICTIONSV2_CHAPITRES)) {
-		$anomalies[] = ['code' => 'trop_peu_participants', 'params' => ['nb' => count($participants), 'min' => count(FICTIONSV2_CHAPITRES)]];
+	if (count($participants) < count(FICTIONS_CHAPITRES)) {
+		$anomalies[] = ['code' => 'trop_peu_participants', 'params' => ['nb' => count($participants), 'min' => count(FICTIONS_CHAPITRES)]];
 	}
 	$ecrivains = array_filter($participants, fn($p) => $p['type'] === 'ecrivain');
 	if (count($ecrivains) !== 1) {
@@ -88,7 +88,7 @@ function fictions_plan_anomalies(int $annee, array $plan): array {
 	foreach ($etat['attribuees'] as $id_rubrique) {
 		$chapitres_histoire = fictions_chapitres_histoire($id_rubrique);
 		$ecrivains_histoire = [];
-		foreach (FICTIONSV2_CHAPITRES as $chapitre) {
+		foreach (FICTIONS_CHAPITRES as $chapitre) {
 			$id = (int) ($plan[$id_rubrique][$chapitre] ?? 0);
 			if (!isset($chapitres_histoire[$chapitre])) {
 				$anomalies[] = ['code' => 'chapitre_absent', 'params' => ['id_rubrique' => $id_rubrique, 'chapitre' => $chapitre]];
@@ -110,8 +110,8 @@ function fictions_plan_anomalies(int $annee, array $plan): array {
 	}
 	if ($plan) {
 		foreach ($nb_chapitres as $id => $nb) {
-			if ($nb !== count(FICTIONSV2_CHAPITRES)) {
-				$anomalies[] = ['code' => 'charge_inegale', 'params' => ['participant' => $nom($id), 'nb' => $nb, 'attendu' => count(FICTIONSV2_CHAPITRES)]];
+			if ($nb !== count(FICTIONS_CHAPITRES)) {
+				$anomalies[] = ['code' => 'charge_inegale', 'params' => ['participant' => $nom($id), 'nb' => $nb, 'attendu' => count(FICTIONS_CHAPITRES)]];
 			}
 		}
 	}
@@ -130,12 +130,12 @@ function fictions_plan_echeances(int $annee): array {
 		return [];
 	}
 	$debut = strtotime($config['lancement']);
-	$duree = (strtotime($config['cloture']) - $debut) / count(FICTIONSV2_CHAPITRES);
+	$duree = (strtotime($config['cloture']) - $debut) / count(FICTIONS_CHAPITRES);
 	$echeances = [];
-	foreach (FICTIONSV2_CHAPITRES as $j => $chapitre) {
+	foreach (FICTIONS_CHAPITRES as $j => $chapitre) {
 		$echeances[$chapitre] = [
 			'debut' => date('Y-m-d', (int) round($debut + $j * $duree)),
-			'fin' => date('Y-m-d', (int) round($debut + ($j + 1) * $duree) - ($j + 1 < count(FICTIONSV2_CHAPITRES) ? 86400 : 0)),
+			'fin' => date('Y-m-d', (int) round($debut + ($j + 1) * $duree) - ($j + 1 < count(FICTIONS_CHAPITRES) ? 86400 : 0)),
 		];
 	}
 	return $echeances;
@@ -333,7 +333,7 @@ function fictions_associations_donnees(int $annee): array {
 	foreach ($config['plan'] as $id_rubrique => $affectations) {
 		$chapitres = fictions_chapitres_histoire((int) $id_rubrique);
 		$cellules = [];
-		foreach (FICTIONSV2_CHAPITRES as $chapitre) {
+		foreach (FICTIONS_CHAPITRES as $chapitre) {
 			$cellules[] = [
 				'chapitre' => $chapitre,
 				'id_participant' => (int) ($affectations[$chapitre] ?? 0),
@@ -371,7 +371,7 @@ function fictions_associations_donnees(int $annee): array {
 		'plan_statut' => $statut,
 		'plan_valide' => $config['plan_valide'],
 		'plan' => $lignes,
-		'chapitres' => FICTIONSV2_CHAPITRES,
+		'chapitres' => FICTIONS_CHAPITRES,
 		'echeances' => fictions_plan_echeances($annee),
 		'anomalies' => $anomalies,
 		'verrouille' => fictions_plan_verrouille($annee),

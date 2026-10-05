@@ -25,7 +25,7 @@ if (!defined('_ECRIRE_INC_VERSION')) {
 include_spip('fictions_fonctions');
 
 // Mots-clés des articles de config du footer, repris tels quels d'une année sur l'autre.
-const FICTIONSV2_MOTS_FOOTER = ['footer-blog-auteur', 'footer-espace-doc', 'footer-forum'];
+const FICTIONS_MOTS_FOOTER = ['footer-blog-auteur', 'footer-espace-doc', 'footer-forum'];
 
 /**
  * Crée (si absente) la rubrique de l'année et ses articles. Idempotent : chaque article
@@ -64,7 +64,7 @@ function fictions_assurer_structure_annee(int $annee): array {
 		$ok = fictions_marquer_annee_en_ecriture($id_annee) && $ok;
 	}
 
-	foreach (FICTIONSV2_MOTS_FOOTER as $titre_mot) {
+	foreach (FICTIONS_MOTS_FOOTER as $titre_mot) {
 		$id_source = $id_precedente ? fictions_id_article_a_mot($titre_mot, $id_precedente) : 0;
 		if (!$id_source) {
 			spip_log("fictions_rentree_annee $annee : pas d'article '$titre_mot' en " . ($annee - 1) . ', non copié', 'fictions');

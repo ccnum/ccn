@@ -22,7 +22,7 @@ include_spip('fictions_fonctions');
 include_spip('inc/fictions_participants');
 
 // Numéros des chapitres écrits par les participants (prologue et chapitre 1 commun à part)
-const FICTIONSV2_CHAPITRES = [2, 3, 4];
+const FICTIONS_CHAPITRES = [2, 3, 4];
 
 /**
  * Histoires de l'année : rubriques filles de la rubrique d'année dont le titre commence
@@ -51,7 +51,7 @@ function fictions_chapitres_histoire(int $id_rubrique): array {
 		sql_allfetsel('id_article', 'spip_articles', 'id_rubrique=' . $id_rubrique . " AND statut<>'poubelle'", '', 'id_article'),
 		'id_article'
 	));
-	return array_combine(array_slice(FICTIONSV2_CHAPITRES, 0, min(count($ids), count(FICTIONSV2_CHAPITRES))), array_slice($ids, 0, count(FICTIONSV2_CHAPITRES)));
+	return array_combine(array_slice(FICTIONS_CHAPITRES, 0, min(count($ids), count(FICTIONS_CHAPITRES))), array_slice($ids, 0, count(FICTIONS_CHAPITRES)));
 }
 
 /**
@@ -78,7 +78,7 @@ function fictions_histoire_creer(int $id_annee, int $numero): int {
 	if (!$id_rubrique) {
 		return 0;
 	}
-	foreach (FICTIONSV2_CHAPITRES as $i => $chapitre) {
+	foreach (FICTIONS_CHAPITRES as $i => $chapitre) {
 		objet_inserer('article', $id_rubrique, [
 			'titre' => $chapitre . '/ ' . _T('fictions:titre_chapitre_defaut'),
 			'statut' => $i === 0 ? 'prop' : 'prepa',

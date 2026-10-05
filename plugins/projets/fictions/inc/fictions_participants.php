@@ -23,7 +23,7 @@ if (!defined('_ECRIRE_INC_VERSION')) {
  * connexion des enseignants.
  */
 
-const FICTIONSV2_TYPES_PARTICIPANT = ['classe', 'ecrivain'];
+const FICTIONS_TYPES_PARTICIPANT = ['classe', 'ecrivain'];
 
 function fictions_annee_config_defaut(): array {
 	return [
@@ -139,7 +139,7 @@ function fictions_participant_nom_normalise(string $nom): string {
  * @return string '' si OK, sinon le code d'erreur
  */
 function fictions_participant_verifier(int $annee, string $type, string $nom, int $id_auteur, int $id_participant = 0): string {
-	if (!in_array($type, FICTIONSV2_TYPES_PARTICIPANT, true)) {
+	if (!in_array($type, FICTIONS_TYPES_PARTICIPANT, true)) {
 		return 'type_invalide';
 	}
 	if (trim($nom) === '') {

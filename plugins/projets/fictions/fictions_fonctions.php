@@ -176,7 +176,7 @@ function fictions_id_rubrique_annee($annee): int {
 /**
  * Retourne l'ID de l'article "chapitre 1" commun à toutes les histoires d'une année :
  * article de la rubrique de l'année portant le mot-clé "chapitre1". À partir de
- * _FICTIONSV2_ANNEE_CHAPITRE1_COMMUN, le premier chapitre n'est plus copié dans chaque
+ * _FICTIONS_ANNEE_CHAPITRE1_COMMUN, le premier chapitre n'est plus copié dans chaque
  * histoire mais affiché depuis cet article unique. 0 si aucun (années antérieures).
  * Utilisable comme filtre SPIP : [(#ANNEE_SCOLAIRE|fictions_id_chapitre1)]
  */
@@ -188,7 +188,7 @@ function fictions_id_chapitre1($annee): int {
 	}
 	$id_mot = fictions_id_mot('chapitre1');
 	$id_annee = fictions_id_rubrique_annee($annee);
-	if ($annee < _FICTIONSV2_ANNEE_CHAPITRE1_COMMUN || !$id_mot || !$id_annee) {
+	if ($annee < _FICTIONS_ANNEE_CHAPITRE1_COMMUN || !$id_mot || !$id_annee) {
 		return $cache[$annee] = 0;
 	}
 	return $cache[$annee] = (int) sql_getfetsel(

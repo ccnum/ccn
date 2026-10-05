@@ -43,7 +43,7 @@ pour modifier un participant). ]
 [(#REM) ----- Calendrier (#518) ----- ]
 <h2><:fictions:associations_calendrier:></h2>
 <p><:fictions:associations_phase:> <strong>[(#GET{cle_phase}|_T)]</strong></p>
-#FORMULAIRE_FICTIONSV2_CALENDRIER{#GET{annee}}
+#FORMULAIRE_FICTIONS_CALENDRIER{#GET{annee}}
 
 [(#REM) ----- Participants (#518, #519) ----- ]
 <h2><:fictions:associations_participants:></h2>
@@ -82,7 +82,7 @@ pour modifier un participant). ]
 <//B_participants>
 
 <div id="formulaire_fictions_participant">
-	#FORMULAIRE_FICTIONSV2_PARTICIPANT{#GET{annee}, #ENV{id_participant}}
+	#FORMULAIRE_FICTIONS_PARTICIPANT{#GET{annee}, #ENV{id_participant}}
 </div>
 
 [(#REM) ----- Histoires (#520) ----- ]
@@ -114,7 +114,7 @@ pour modifier un participant). ]
 	[(#BOUTON_ACTION{<:fictions:associations_generer:>, #URL_ACTION_AUTEUR{fictions_associations, #GET{arg_generer}}, btn_mini, <:fictions:associations_generer_confirmer:>})]
 ]
 
-#FORMULAIRE_FICTIONSV2_AFFECTATIONS{#GET{annee}}
+#FORMULAIRE_FICTIONS_AFFECTATIONS{#GET{annee}}
 
 [(#GET{statut_plan}|=={proposition}|oui)
 	[(#BOUTON_ACTION{<:fictions:associations_valider:>, #URL_ACTION_AUTEUR{fictions_associations, #GET{arg_valider}}, '', <:fictions:associations_valider_confirmer:>})]

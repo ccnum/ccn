@@ -31,7 +31,7 @@ commun) : le chapitre 1 est N-1 tant que l'histoire n'a que son chapitre 2. ]
 ]
 
 <!-- Boucle affichage des cadavres -->
-<BOUCLE_cadavres(ARTICLES){id_rubrique}{statut IN publie,prop}{id_rubrique != #GET{id_blog_pedagogique}}{id_rubrique != #EVAL{_FICTIONSV2_ID_BLOG_AUTEUR}}{par id_article}>
+<BOUCLE_cadavres(ARTICLES){id_rubrique}{statut IN publie,prop}{id_rubrique != #GET{id_blog_pedagogique}}{id_rubrique != #EVAL{_FICTIONS_ID_BLOG_AUTEUR}}{par id_article}>
 	[(#ID_ARTICLE|LECTURE_DROITS{montre}|oui)
 		[(#ID_ARTICLE|LECTURE_DROITS{mode}|=={'visible'}|oui)
 			<INCLURE{fond=inclure/chapitre-visible,id_article} />
