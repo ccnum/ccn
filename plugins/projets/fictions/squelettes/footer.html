@@ -23,11 +23,25 @@
 			]
 			[(#SESSION{id_auteur}|non)<a href="[(#PLUGIN{cioidc}|oui|?{'?url=spip.php%3Fpage%3Dsommaire&cioidc=oui','?page=login&url=.%2F'})]" class=""><:fictions:se_connecter:></a>&nbsp;&nbsp;|<a href="http://www.laclasse.com/pls/public/!page.laclasse?contexte=QUESTION&rubrique=0"><:fictions:mot_de_passe_oublie:></a>]
 
-			<BOUCLE_espace_doc(RUBRIQUES){titre==#ENV{annee_scolaire}}>
-				<!-- #ID_RUBRIQUE -->
-				<a href="[(#DESCRIPTIF|textebrut)]"><:fictions:espace_doc:></a>
-				[<a href="(#TEXTE|extraire_attribut{href})"><:fictions:blog_de_lauteur:></a>]
+			[(#REM) Liens Espace doc / Blog de l'auteur de l'année (#530) : saisie à la main
+			dans la rubrique de l'année (descriptif / premier lien du texte) en priorité,
+			sinon sous-titre de l'article footer-espace-doc / footer-blog-auteur de l'année,
+			recopié d'une année sur l'autre par la tâche de rentrée (inc/fictions_rentree.php).
+			Pas de lien si aucun des deux n'est renseigné. ]
+			#SET{lien_espace_doc, ''}
+			#SET{lien_blog_auteur, ''}
+			<BOUCLE_espace_doc(RUBRIQUES){titre==#ENV{annee_scolaire}}{tout}{0,1}>
+				#SET{lien_espace_doc, #DESCRIPTIF|textebrut|trim}
+				#SET{lien_blog_auteur, #TEXTE|extraire_attribut{href}}
+				<BOUCLE_footer_espace_doc(ARTICLES){id_rubrique}{titre_mot=footer-espace-doc}{0,1}>
+					#SET{lien_espace_doc, #GET{lien_espace_doc}|sinon{#SOUSTITRE}}
+				</BOUCLE_footer_espace_doc>
+				<BOUCLE_footer_blog_auteur(ARTICLES){id_rubrique}{titre_mot=footer-blog-auteur}{0,1}>
+					#SET{lien_blog_auteur, #GET{lien_blog_auteur}|sinon{#SOUSTITRE}}
+				</BOUCLE_footer_blog_auteur>
 			</BOUCLE_espace_doc>
+			[<a href="(#GET{lien_espace_doc}|textebrut|trim|attribut_url)"><:fictions:espace_doc:></a>]
+			[<a href="(#GET{lien_blog_auteur}|textebrut|trim|attribut_url)"><:fictions:blog_de_lauteur:></a>]
 			[(#SESSION{statut}|=={0minirezo}|oui)
 			<BOUCLE_blog(RUBRIQUES){titre_mot=blog_pedagogique}{tout}>
 				<a href="#URL_RUBRIQUE">#TITRE</a>
