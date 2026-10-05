@@ -13,8 +13,9 @@ vérifié dans le code à cette date.
 
 **Fichier** : `docker-entrypoint.sh`
 
-`htaccess.txt` n'est copié en `.htaccess` que s'il n'existe pas : une modification de `htaccess.txt`
-(ex. en-têtes de sécurité) n'atteint pas les instances déjà déployées.
+`htaccess.txt` n'est copié en `.htaccess` que s'il n'existe pas : une modification de
+`htaccess.txt` n'atteint pas les instances déjà déployées. (Les en-têtes de sécurité ont
+été posés dans la configuration Apache de l'image pour cette raison.)
 
 ---
 
@@ -33,9 +34,9 @@ sidebar), et prérequis à une CSP stricte.
 
 **Fichier** : `petitfablab/petitfablab_fonctions.php`
 
-Adresses `cmonnet@erasme.org` / `petitfablab@gmail.com`, URL `http://petitfablab.laclasse.com/…` dans
-les mails, et `balise_NOM_AUTEUR_dist` qui renvoie toujours « Violaine Schwartz ». À passer en
-configuration (et en https).
+Les adresses des mails sont en constantes `_PETITFABLAB_MAIL_*` (2026-10) ; reste
+`balise_NOM_AUTEUR_dist`, qui renvoie toujours « Violaine Schwartz », et le lien de blog
+tumblr en dur dans les mails.
 
 ### Documentation CI périmée
 

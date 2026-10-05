@@ -39,26 +39,19 @@ blanche (T2/T3), pas l'accès hors `noisettes/`.
 
 ## Durcissement restant (sans vulnérabilité établie)
 
-Les durcissements mécaniques ont été appliqués le 2026-10-05 (commits `88791dbb` à `0efda68b`). Restent les points qui demandent une décision :
+Durcissements appliqués le 2026-10-05 (commits `88791dbb` à `ec544073`, dont republication, jalons #468, en-têtes HTTP, taille bigup, limites et mails petitfablab). Restent :
 
 ### thematique
-- `formulaires/public_publier_article.php` : l'exception `publierdans` permet à un auteur de republier un article dépublié par un admin (politique de modération à trancher).
-- `thematique_autoriser.php` (`autoriser_article_modifier`, #468) : l'exception jalon vaut pour tout intervenant sur tout jalon non publié, sans test d'appartenance au projet.
 - `formulaires/forumv2.php:174` : `auteur` = `nom_auteur` libre (masqué à l'affichage par la jointure sur `id_auteur`).
 - `inc/thematique_cioidc.php` (T4) : le repli par email reste actif quand l'email (non vide) correspond à un autre compte — à retirer une fois les comptes historiques sans login SSO rapprochés.
 
 ### petitfablab
-- Adresses `cmonnet@erasme.org`, `petitfablab@gmail.com` et URL `http://petitfablab.laclasse.com/…` en dur — passer par la config, en https.
-- `squelettes/formulaires/editer_article.php` : limite de 5 chapitres et `maxlength` seulement côté interface ; `id_parent` choisi par le POST.
 - `squelettes/sommaire.html:97-110` : `creer=<id>` affiche le titre de n'importe quelle rubrique à un connecté.
 - `#TEXTE`/`#SURTITRE`/`#PS` des élèves sans `safehtml` : acceptable si les comptes élèves sont rédacteurs de confiance, à réévaluer sinon.
 
-### ccn
-- `inc/uploads.php` : la limite de 100 Mo ne couvre pas les envois bigup (le contrôle d'extension reste fait).
-
 ### Transverse
 - **Cookies applicatifs sans `HttpOnly`** (`thematique/squelettes/js/controleurs.js` `setCookie()`, `main.js` `visited`) : posés par JS, préférences d'affichage, `SameSite=Strict; Secure` — risque résiduel acceptable.
-- **En-têtes HTTP absents** (`Content-Security-Policy`, `X-Frame-Options`, `X-Content-Type-Options`, `Referrer-Policy`) : à poser à l'ingress ou dans `htaccess.txt` — attention, `docker-entrypoint.sh` ne recopie `htaccess.txt` que si `.htaccess` n'existe pas (volumes déjà déployés non mis à jour). Une CSP stricte suppose de sortir les nombreux `<script>`/`onclick` inline.
+- **`Content-Security-Policy` absente** : `X-Content-Type-Options`, `X-Frame-Options` et `Referrer-Policy` sont posés par la configuration Apache de l'image (`Dockerfile`, `ec544073` et précédents). Une CSP stricte suppose de sortir les nombreux `<script>`/`onclick` inline des squelettes.
 
 ---
 
