@@ -7,6 +7,9 @@
 	CCN.urlImgBlog = "#CHEMIN{img/bulle.svg}";
 	CCN.urlImgEvenement = "[(#CHEMIN{#ENV{chemin}/img/logo_evenement_#NOM_SITE_SPIP.png}|sinon{#ENV{chemin}/img/logo_evenement.png}|image_reduire{150,94}|extraire_attribut{src})]";
 
+	// Action signée pour l'auteur connecté (jeton CSRF), cf action/thematique_sauver_coordonnees.php
+	CCN.urlSauverCoordonnees = "[(#URL_ACTION_AUTEUR{thematique_sauver_coordonnees,coordonnees}|html_entity_decode)]";
+
 	CCN.admin = [(#ENV{admin}|intval)];
 	CCN.idRestreint = [(#ENV{restreint}|intval)];
 	CCN.typeRestreint = [(#ENV{type_restreint}|json_encode)];

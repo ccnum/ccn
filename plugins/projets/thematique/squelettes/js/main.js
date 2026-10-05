@@ -275,7 +275,7 @@ function initJalons(data) {
 			stop: function (event, ui) {
 				const yy = (ui.offset.top - CCN.projet.timeline.offset().top) / CCN.projet.timeline.height();
 				if (CCN.admin == 0) {
-					$.post("spip.php?page=ajax&mode=article-sauve-coordonnees", { id_objet: _thisId, type_objet: "article", X: 0, Y: yy });
+					$.post(CCN.urlSauverCoordonnees, { id_objet: _thisId, type_objet: "article", X: 0, Y: yy });
 				}
 				this.y = yy;
 				// Réécrit les deux coords en %
