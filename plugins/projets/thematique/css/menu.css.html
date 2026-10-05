@@ -414,6 +414,21 @@ différentes pour la même info, à masquer toutes les deux ici. */
 	color: gray
 }
 
+/* actu_commentaires : date et extrait sont des <span> dans le bouton (un <p> ou
+une <div> n'y sont pas permis) — affichés en bloc comme avant ; le menu bas les
+masque toujours (règle #menu_bas plus haut, plus spécifique). Les images,
+hors du bouton, ne reprennent pas le padding haut de l'extrait. */
+.actualites-actu button .actualites-actu-date,
+.actualites-actu button .actualites-texte {
+	display: block;
+}
+.actualites-actu button .actualites-actu-date {
+	margin: 1em 0; /* marges de l'ancien <p> */
+}
+.actualites-medias {
+	padding-top: 0;
+}
+
 #menu_bas .actualites-titre { font-weight: normal; font-size: 1em; }
 /* Logos */
 

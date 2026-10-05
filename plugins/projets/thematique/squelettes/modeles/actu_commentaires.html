@@ -5,12 +5,16 @@
 	</BOUCLE_getCouleur1>
 </BOUCLE_getCouleur>
 <BOUCLE_commentaires(FORUMS){id_forum}>
-	<div class="actualites-actu bgc_classe_[(#GET{IdCouleur}|classe_numero)] js-call-consigne" data-id-objet="#ID_OBJET" role="button" tabindex="0">
-		<span class="profil">[(#ID_RUBRIQUE|thematique_logo_carre{rubrique,17})]</span>
-		<span class="actualites-titre"><:thematique:commentaire_de_sur{auteur=#AUTEUR,titre=#TITRE}:></span>
-		[<p class="actualites-actu-date"> (#DATE|affdate)</p>]
-		<div class="actualites-texte">
-			[(#TEXTE|couper{80})]<br><br>
+	<div class="actualites-actu bgc_classe_[(#GET{IdCouleur}|classe_numero)]">
+		[(#REM) Seul l'en-tête et l'extrait sont cliquables : les images (liens
+		lightbox) restent hors du bouton, un lien ne pouvant pas être dans un button. ]
+		<button type="button" class="js-call-consigne btn-reset" data-id-objet="#ID_OBJET">
+			<span class="profil">[(#ID_RUBRIQUE|thematique_logo_carre{rubrique,17})]</span>
+			<span class="actualites-titre"><:thematique:commentaire_de_sur{auteur=#AUTEUR,titre=#TITRE}:></span>
+			[<span class="actualites-actu-date"> (#DATE|affdate)</span>]
+			<span class="actualites-texte">[(#TEXTE|couper{80})]</span>
+		</button>
+		<div class="actualites-texte actualites-medias">
 			<BOUCLE_images(DOCUMENTS){id_forum}>
 				[(#MEDIA|=={'image'}|oui)
 					<div class="img-container">
