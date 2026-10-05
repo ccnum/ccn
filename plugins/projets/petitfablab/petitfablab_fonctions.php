@@ -29,28 +29,13 @@ function valider_chapitre($id_article, $id_rubrique) {
 	objet_modifier('article', intval($id_article), ['statut' => 'publie']);
 	autoriser_exception('modifier', 'article', $id_article, false);
 
-	$envoyer_mail = charger_fonction('envoyer_mail', 'inc');
-	// mail
+	// mail à l'auteur du chapitre (soustitre = son email), seulement s'il est valide
 	$bcc = sql_getfetsel("soustitre", "spip_articles", "id_article = " . intval($id_article));
-	$sujet = _T('petitfablab:sujet_chapitre_publie');
-	$html = "Bonjour,";
-	$html .= _T('petitfablab:mail_merci_participation');
-	$html .= _T('petitfablab:mail_acceder_chapitre', ['url' => petitfablab_url_lecture($id_rubrique)]);
-	$html .= _T('petitfablab:mail_a_bientot');
-	$html .= _T('petitfablab:mail_description_dispositif');
-	if (_PETITFABLAB_URL_BLOG) {
-		$html .= _T('petitfablab:mail_suivez_blog', ['url' => _PETITFABLAB_URL_BLOG]);
-	}
-
-	$contenu_html = recuperer_fond('emails/texte', ['html' => $html]);
-	$corps = [
-		'html' => $contenu_html,
-		'from' => _PETITFABLAB_MAIL_FROM,
-		'nom_envoyeur' => _T('petitfablab:nom_envoyeur'),
-		'bcc' => array_values(array_filter([_PETITFABLAB_MAIL_COPIE, $bcc]))
-	];
-	if (isset($bcc) && ($bcc != "") && (filter_var($bcc, FILTER_VALIDATE_EMAIL))) {
-		$envoyer_mail(_PETITFABLAB_MAIL_DESTINATAIRE, $sujet, $corps);
+	if ($bcc && filter_var($bcc, FILTER_VALIDATE_EMAIL)) {
+		$html = "Bonjour,";
+		$html .= _T('petitfablab:mail_merci_participation');
+		$html .= _T('petitfablab:mail_acceder_chapitre', ['url' => petitfablab_url_lecture($id_rubrique)]);
+		petitfablab_envoyer_mail(_T('petitfablab:sujet_chapitre_publie'), $html, [$bcc]);
 	}
 
 	// Si 5ème chapitre
@@ -58,7 +43,7 @@ function valider_chapitre($id_article, $id_rubrique) {
 	if ($n == 5) {
 		$id_parent = sql_getfetsel("id_parent", "spip_rubriques", "id_rubrique=" . intval($id_rubrique));
 		$rub_hist = creer_histoire($id_parent);
-		$bcc = array_filter([_PETITFABLAB_MAIL_COPIE]);
+		$bcc = [];
 		if ($resultats = sql_allfetsel("soustitre", "spip_articles", "id_rubrique = " . intval($id_rubrique))) {
 			// boucler sur les resultats
 			foreach ($resultats as $res) {
@@ -68,30 +53,36 @@ function valider_chapitre($id_article, $id_rubrique) {
 			}
 		}
 
-		$sujet = _T('petitfablab:sujet_histoire_en_ligne');
 		$html = _T('petitfablab:mail_bonjour_tous');
 		$html .= _T('petitfablab:mail_felicitations');
 		$html .= _T('petitfablab:mail_discutez_edition', ['url' => petitfablab_url_lecture($id_rubrique)]);
-		$html .= _T('petitfablab:mail_a_bientot');
-		$html .= _T('petitfablab:mail_description_dispositif');
-		if (_PETITFABLAB_URL_BLOG) {
-			$html .= _T('petitfablab:mail_suivez_blog', ['url' => _PETITFABLAB_URL_BLOG]);
-		}
-
-		$contenu_html = recuperer_fond('emails/texte', ['html' => $html]);
-		$corps = [
-			'html' => $contenu_html,
-			'from' => _PETITFABLAB_MAIL_FROM,
-			'nom_envoyeur' => _T('petitfablab:nom_envoyeur'),
-			'bcc' => array_values($bcc)
-		];
-		$envoyer_mail(_PETITFABLAB_MAIL_DESTINATAIRE, $sujet, $corps);
+		petitfablab_envoyer_mail(_T('petitfablab:sujet_histoire_en_ligne'), $html, $bcc);
 	}
 
 	// return if last chapitre
 	if (isset($rub_hist)) {
 		return $rub_hist;
 	}
+}
+
+/**
+ * Envoie un mail du dispositif : $html (début du message) complété de la
+ * formule de fin commune, au destinataire du dispositif, $bcc en copie cachée
+ * (avec _PETITFABLAB_MAIL_COPIE).
+ */
+function petitfablab_envoyer_mail(string $sujet, string $html, array $bcc): void {
+	$html .= _T('petitfablab:mail_a_bientot');
+	$html .= _T('petitfablab:mail_description_dispositif');
+	if (_PETITFABLAB_URL_BLOG) {
+		$html .= _T('petitfablab:mail_suivez_blog', ['url' => _PETITFABLAB_URL_BLOG]);
+	}
+	$envoyer_mail = charger_fonction('envoyer_mail', 'inc');
+	$envoyer_mail(_PETITFABLAB_MAIL_DESTINATAIRE, $sujet, [
+		'html' => recuperer_fond('emails/texte', ['html' => $html]),
+		'from' => _PETITFABLAB_MAIL_FROM,
+		'nom_envoyeur' => _T('petitfablab:nom_envoyeur'),
+		'bcc' => array_values(array_unique(array_filter(array_merge([_PETITFABLAB_MAIL_COPIE], $bcc)))),
+	]);
 }
 
 /**
