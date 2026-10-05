@@ -223,6 +223,8 @@ COPY ./plugins /usr/src/spip/plugins/
 # .htaccess du dépôt (règles favicon, cache des JS thematique...) à la place de
 # celui de l'archive SPIP ; appliqué au volume par docker-entrypoint.sh.
 COPY ./htaccess.txt /usr/src/spip/htaccess.txt
+# Restauration / complétion des clés secrètes au démarrage (cf docker-entrypoint.sh)
+COPY ./docker/ccn_cles.php /usr/local/lib/ccn/ccn_cles.php
 COPY --chmod=0755 ./docker-entrypoint.sh /
 
 ENTRYPOINT ["/docker-entrypoint.sh"]
