@@ -1,35 +1,77 @@
-# Améliorations à faire — Plugin SPIP `thematique` (CCN)
+# Améliorations à faire — plugins maison CCN
 
-**Dernière mise à jour** : 2026-08-03
+**Dernière mise à jour** : 2026-10-05
+
+Points non liés à une vulnérabilité (voir `AUDIT_SECURITE.md` pour la sécurité). Chaque point a été
+vérifié dans le code à cette date.
+
+---
+
+## Déploiement
+
+### `thematique` jamais désactivé sur les sites fictions/petitfablab
+
+**Fichier** : `docker-entrypoint.sh`
+
+Le `case` sur `SPIP_VERSION_SITE` active `fictions`/`petitfablab` et désactive les autres variantes, mais
+jamais `thematique`. Une base qui l'a eu actif un jour le garde, avec ses squelettes et ses
+vulnérabilités. Ajouter `thematique` à la liste désactivée dans la branche fictions/petitfablab.
+
+### `.htaccess` jamais mis à jour sur un volume existant
+
+**Fichier** : `docker-entrypoint.sh`
+
+`htaccess.txt` n'est copié en `.htaccess` que s'il n'existe pas : une modification de `htaccess.txt`
+(ex. en-têtes de sécurité) n'atteint pas les instances déjà déployées.
+
+---
+
+## Code
+
+### Logique de `rubrique.html` (thematique)
+
+**Fichier** : `thematique/squelettes/noisettes/rubrique.html`
+
+Condition de rôle et classes CSS extraites en PHP (`thematique_afficher_rubrique_utilisateur_prof()`,
+`thematique_classe_bloc_rubrique_menu_externe/interne()`). Il reste 8 blocs `<script>` inline mêlant
+présentation et logique — refactor à faire avec accès navigateur (risque de régression sur la
+sidebar), et prérequis à une CSP stricte.
+
+### Valeurs en dur dans petitfablab
+
+**Fichier** : `petitfablab/petitfablab_fonctions.php`
+
+Adresses `cmonnet@erasme.org` / `petitfablab@gmail.com`, URL `http://petitfablab.laclasse.com/…` dans
+les mails, et `balise_NOM_AUTEUR_dist` qui renvoie toujours « Violaine Schwartz ». À passer en
+configuration (et en https).
+
+### Documentation CI périmée
+
+**Fichiers** : `.ci/README.md:102`, `.ci/check_lang_keys.py:17`
+
+Indiquent que `fictions` n'a pas de fichier de langue : faux depuis que `fictions` est l'ex-`fictionsv2`
+(`lang/fictions_fr.php`).
 
 ---
 
 ## CSS
 
-### Media queries mobile/tablette
+### Media queries mobile/tablette (thematique)
 
-**Fichier** : `css/responsive.css.html`
+**Fichier** : `thematique/css/responsive.css.html`
 
-Ajouté `max-width: 1024px` (sidebar/colonnes du menu bas en tailles fluides) et `max-width: 768px` (sidebar plein écran, menu bas empilé). Ajustements défensifs anti-débordement, pas une vraie refonte visuelle — **à vérifier dans un vrai navigateur**, non testé visuellement.
-
----
-
-## Architecture SPIP
-
-### Logique de `rubrique.html`
-
-**Fichier** : `squelettes/noisettes/rubrique.html`
-
-La condition de rôle (`thematique_afficher_rubrique_utilisateur_prof()`) et le calcul des classes CSS par type de rubrique (`thematique_classe_bloc_rubrique_menu_externe/interne()`) sont extraits en PHP, vérifiés via `recuperer_fond()` en CLI. Le reste du fichier (arbre de navigation, handlers JS inline) mélange encore présentation et logique — refactor plus large à faire avec accès navigateur (risque de régression visuelle sur la sidebar).
+Paliers `max-width: 1024px` (sidebar et menu bas fluides) et `768px` (sidebar plein écran, menu bas
+empilé) : ajustements défensifs anti-débordement, **jamais vérifiés dans un navigateur**. Le formulaire
+de publication a eu sa propre passe responsive (#429), indépendante.
 
 ---
 
 ## Accessibilité
 
-### Remplacer les `<div>` cliquables par des `<button>`
+### `<div role="button">` restants (thematique)
 
-Fait : toutes les div cliquables (consigne.js, reponse.js, article.js, modèles `actu_*`, `rubrique_detail.html`, `ressources_detail.html`, `classes_detail.html`, `reponse_binome_head.html`, icônes de sidebar, badges timeline) sont converties en `<button type="button" class="... btn-reset">`. `.btn-reset` (dans `tokens.css.html`, chargé avant les CSS de composants) fait un `all: unset` + `display: block` neutre, que les règles de composants (chargées après) re-spécialisent normalement (fond, bordure, `display: flex`, etc.) sans rien casser.
+**Fichiers** : `thematique/squelettes/modeles/actu_commentaires.html`, `actu_documents.html`
 
-Exception : `actu_commentaires.html` et `actu_documents.html` gardent une `<div role="button">` — ils contiennent un `<a>` cliquable imbriqué (lien image lightbox), invalide dans un `<button>` (contenu interactif imbriqué interdit en HTML5, risque de casser le clic sur l'image).
-
-Vérifié via `recuperer_fond()` en CLI sur plusieurs fonds (`sommaire`, `rubrique`, `ressources_detail`, `classes_detail`, `actus_timeline`, modèles `actu_*`) — rendu correct, balises bien fermées, aucune erreur. Non vérifié dans un vrai navigateur.
+Gardés en `<div role="button" tabindex="0">` (activés au clavier par `controleurs.js`) car ils
+contiennent un `<a>` (lien lightbox), interdit dans un `<button>`. Pour s'en passer, sortir le lien du
+bloc cliquable.
