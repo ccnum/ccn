@@ -63,6 +63,15 @@ function formulaires_editer_article_verifier_dist($id_article = 'new', $id_rubri
 	) {
 		$erreurs['id_parent'] = _T('info_creerdansrubrique_non_autorise');
 	}
+	// Le champ « Email » (soustitre) reçoit en copie les mails de valider_chapitre() :
+	// on n'accepte qu'une adresse valide.
+	$email = trim((string) _request('soustitre'));
+	if ($email !== '') {
+		include_spip('inc/filtres');
+		if (!email_valide($email)) {
+			$erreurs['soustitre'] = _T('info_email_invalide');
+		}
+	}
 	return $erreurs;
 }
 
