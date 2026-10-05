@@ -124,6 +124,7 @@ return [
 	'retour'                                => 'Retour',
 	'repondre_a_ce_message'                 => 'Répondre à ce message',
 	'retour_a_laccueil'                     => 'Retour à l’accueil',
+	'retour_au_forum'                       => 'Retour au forum',
 	'se_connecter'                          => 'Se connecter',
 	'se_connecter_minuscule'                => 'se connecter',
 	'seconde_fenetre'                       => ' (nouvelle fenêtre)',

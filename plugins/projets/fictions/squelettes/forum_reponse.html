@@ -4,6 +4,11 @@
 la premiere fois qu'un message est poste (cf. inc/invalideur). ]
 [(#PARAMETRES_FORUM|?{''})]
 
+[(#REM) Réponse à un message de premier niveau (id_forum) du forum de l'article
+(id_article) : le fil concerné, puis le formulaire ; une fois la réponse publiée,
+retour au forum complet. ]
+#SET{url_forum, #URL_PAGE{forum}|parametre_url{id_article,#ENV{id_article}}}
+
 <body>
 <div id="forum">
 	<div id="forum-inner">
@@ -13,46 +18,16 @@ la premiere fois qu'un message est poste (cf. inc/invalideur). ]
 			#TITRE
 			</BOUCLE_titre_chapitre>
 		</div>
+		<div class="forum-retour">
+			<a href="[(#GET{url_forum})]"><:fictions:retour_au_forum:></a>
+		</div>
 		<hr />
 
-		<!-- AFFICHAGE FORUM -->
-		<BOUCLE_forum(FORUMS){id_forum}{par date}>
-
-			<!-- IMAGE PROFIL -->
-			<div class="forum-img-profil">
-			[(#LOGO_AUTEUR||image_reduire{42,42}|inserer_attribut{alt,#NOM})]
-			</div>
-
-			<!-- MESSAGE FORUM -->
-			<div class="forum-texte">
-			<b>#NOM - [(#DATE|jour)] [(#DATE|nom_mois)]  [(#DATE|annee)]</b>
-			#TEXTE
-			</div>
-
-			<!-- REPONSES -->
-			<BOUCLE_reponse(FORUMS){id_parent}{par date}>
-			<div class="forum-reponse">
-				<div class="forum-reponse-img">
-				[(#LOGO_AUTEUR|image_reduire{42,42}|inserer_attribut{alt,#NOM})]
-				</div>
-				<div class="forum-reponse-texte">
-				<b>#NOM - [(#DATE|jour)] [(#DATE|nom_mois)]  [(#DATE|annee)]</b>
-				#TEXTE
-				</div>
-			</div>
-			</BOUCLE_reponse>
-
-			<div class="forum-repondre-link">
-			</div>
-
+		<INCLURE{fond=inclure/forum-message, id_forum} />
 		<hr />
-		</BOUCLE_forum>
-
 	</div>
-	[(#FORMULAIRE_FORUM{#SELF})]
+	[(#FORMULAIRE_FORUM{#GET{url_forum}})]
 </div>
+<INCLURE{fond=modeles/js, page=forum} />
 </body>
-
-	<INCLURE{fond=modeles/js, page=forum} />
-
 </html>

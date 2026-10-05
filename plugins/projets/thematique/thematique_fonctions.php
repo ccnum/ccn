@@ -422,9 +422,17 @@ function thematique_auteur_lie_sous_rubrique($id_auteur, $id_rubrique) {
 	if (!$id_auteur || !$id_rubrique) {
 		return false;
 	}
-	foreach (sql_allfetsel('id_objet', 'spip_auteurs_liens', 'id_auteur=' . intval($id_auteur) . " AND objet='rubrique'") as $r) {
+	foreach (sql_allfetsel(
+		'id_objet',
+		'spip_auteurs_liens',
+		'id_auteur=' . intval($id_auteur) . " AND objet='rubrique'"
+	) as $r) {
 		$id_lie = intval($r['id_objet']);
-		if ($id_lie === $id_rubrique || in_array($id_rubrique, array_map('intval', thematique_ascendants_rubrique($id_lie)), true)) {
+		if ($id_lie === $id_rubrique || in_array(
+			$id_rubrique,
+			array_map('intval', thematique_ascendants_rubrique($id_lie)),
+			true
+		)) {
 			return true;
 		}
 	}
@@ -1682,9 +1690,29 @@ function thematique_id_rubrique_mission() {
 	}
 
 	$id_consignes = thematique_id_rubrique_enfant_a_mot(thematique_id_rubrique_annee_active(), 'consignes');
-	$id_rubrique_mission = $id_consignes
-		? (int) sql_getfetsel('id_rubrique', 'spip_rubriques', 'id_parent=' . intval($id_consignes))
-		: 0;
+	if (!$id_consignes) {
+		return $id_rubrique_mission = 0;
+	}
+
+	// D'abord le projet de l'auteur connecté (rubrique sous « Consignes » à laquelle le
+	// SSO le lie) : sans rubrique restreinte (CCN.idRestreint vaut 0 dès qu'il est lié
+	// à plus de deux rubriques de l'année), un intervenant se voyait proposer le
+	// premier projet venu, celui d'un autre, et la publication était refusée (« Accès
+	// interdit », cf thematique_auteur_peut_creer_dans_rubrique).
+	include_spip('inc/session');
+	$id_auteur = intval(session_get('id_auteur'));
+	$id_projet = $id_auteur ? (int) sql_getfetsel(
+		'r.id_rubrique',
+		'spip_rubriques AS r JOIN spip_auteurs_liens AS l ON l.id_objet=r.id_rubrique AND l.objet=' . sql_quote('rubrique'),
+		['r.id_parent=' . intval($id_consignes), 'l.id_auteur=' . $id_auteur],
+		'',
+		'r.id_rubrique',
+		'1'
+	) : 0;
+
+	// Sinon (admin, webmestre : pas de projet à eux) la première sous-rubrique.
+	$id_rubrique_mission = $id_projet
+		?: (int) sql_getfetsel('id_rubrique', 'spip_rubriques', 'id_parent=' . intval($id_consignes), '', 'id_rubrique', '1');
 
 	return $id_rubrique_mission;
 }

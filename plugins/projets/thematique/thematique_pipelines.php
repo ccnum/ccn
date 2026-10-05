@@ -49,6 +49,9 @@ function thematique_preparer_fichier_session($flux) {
 	$id_auteur = intval($flux['data']['id_auteur'] ?? 0);
 	$role = thematique_donner_role($id_auteur);
 	$flux['data']['role'] = $role;
+	if ($id_auteur) {
+		spip_log("session auteur #$id_auteur : rôle=" . ($role ?? 'aucun'), 'cioidc');
+	}
 
 	// Classe active lue dans la session en cours d'écriture (pas via
 	// session_get() : ce pipeline peut aussi écrire la session d'un autre
@@ -229,9 +232,9 @@ function thematique_notifications_destinataires($flux) {
 }
 
 function thematique_cioidc_userinfo($flux) {
-	// Pas de dump du profil ENT (identité, classes, groupes d'élèves) dans les logs :
-	// seulement l'uid et la liste des attributs reçus.
-	spip_log('userinfo uid=' . ($flux['args']['uid'] ?? '') . ' attributs=' . implode(',', array_keys((array) ($flux['data'] ?? []))), 'cioidc');
+	// Ce que l'ENT a envoyé (JSON complet ou noms des attributs, cf _CCN_CIOIDC_LOG_COMPLET)
+	include_spip('inc/ccn_cioidc');
+	ccn_cioidc_log_userinfo($flux, 'thematique');
 
 	$email = trim((string) ($flux['data']['MailAdressePrincipal'] ?? ''));
 	$uid = $flux['args']['uid'] ?? '';
@@ -279,6 +282,16 @@ function thematique_cioidc_userinfo($flux) {
 			. ' nb ENTClassesGroupes=' . count($classes_groupes)
 			. ' nb ENTGroupesLibres=' . count($groupes_libres)
 			. ' nb pertinents=' . count($groupes_libres_pertinents),
+		'cioidc'
+	);
+	$noms = fn(array $groupes, string $champ) => json_encode(array_map(fn($g) => $g->$champ ?? '', $groupes), JSON_UNESCAPED_UNICODE);
+	spip_log(
+		'userinfo classes réelles=' . $noms($classes_reelles, 'group_name')
+			. ' groupes libres=' . $noms($groupes_libres, 'name')
+			. ' groupes pertinents=' . $noms($groupes_libres_pertinents, 'name')
+			. ' année=' . $annee_scolaire . ' id_travail_classes=' . $id_travail_classes . ' id_consignes=' . $id_consignes
+			. ' uai=' . implode(',', array_map('strval', $uai_liste)) . ' => webmestre:' . ($is_webmestre ? 'oui' : 'non')
+			. ' rôle ENT=' . $role_ent,
 		'cioidc'
 	);
 
@@ -329,6 +342,14 @@ function thematique_cioidc_userinfo($flux) {
 		$classes_a_lier,
 		$projets_a_lier
 	);
+
+	// Résultat de la connexion : statut final et rubriques effectivement liées
+	spip_log(
+		'userinfo fin auteur #' . $auteur['id_auteur'] . ' statut=' . ($auteur['statut'] ?? '')
+			. ' webmestre=' . ($auteur['webmestre'] ?? 'non') . ' nom=' . ($auteur['nom'] ?? ''),
+		'cioidc'
+	);
+	ccn_cioidc_log_rubriques_auteur(intval($auteur['id_auteur']), 'thematique');
 
 	return $flux;
 }

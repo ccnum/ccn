@@ -1,0 +1,8 @@
+[(#REM) Documents joints à un message de forum (paramètre : id_forum). Les images
+s'ouvrent en lightbox : test sur l'extension, TYPE_DOCUMENT valant « JPEG » et non « jpg ». ]
+<BOUCLE_documents(DOCUMENTS){id_forum}{tout}>
+	#SET{alt, #TITRE|couper{80}}
+	<div class="forum-document">
+		<a href="#URL_DOCUMENT" title="[(#TITRE|attribut_html)]"[(#EXTENSION|in_array{#LISTE{jpg,jpeg,png,gif,webp}}|oui) class="thickbox mediabox"] type="#MIME_TYPE">[(#LOGO_DOCUMENT|image_reduire{80}|inserer_attribut{alt,#GET{alt}})]</a>
+	</div>
+</BOUCLE_documents>

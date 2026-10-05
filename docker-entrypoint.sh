@@ -134,6 +134,16 @@ if [[ ! -e config/connect.php && "${SPIP_AUTO_INSTALL}" = 1 ]]; then
 	fi
 fi
 
+# Clés secrètes (config/cles.php) : config/ n'est pas persistant, le fichier repart vide à
+# chaque démarrage et SPIP ne le restaure qu'à la connexion PAR MOT DE PASSE d'un webmestre
+# (jamais avec le SSO). docker/ccn_cles.php rejoue cette connexion pour le compte admin
+# (SPIP_ADMIN_LOGIN / SPIP_ADMIN_PASS) : restauration depuis sa sauvegarde chiffrée en base,
+# ou création au premier démarrage. Avant les commandes ci-dessous, qui pourraient sinon
+# générer de nouvelles clés à la place des anciennes.
+if ! run_as "php /usr/local/lib/ccn/ccn_cles.php"; then
+	echo >&2 "WARNING: vérification des clés secrètes (config/cles.php) en échec"
+fi
+
 spip plugins:activer cextras -y
 spip plugins:activer crayons -y
 spip plugins:activer corbeille -y
@@ -281,6 +291,8 @@ define('_VIMEO_ACCESS_TOKEN', '${VIMEO_ACCESS_TOKEN:-}');
 // de l'année + articles jalons, cf
 // plugins/projets/thematique/genie/thematique_rentree_annee.php)
 define('_CCN_PROJET_ACTIVE', '${CCN_PROJET_ACTIVE:-true}' !== 'false');
+// JSON complet des attributs ENT dans cioidc.log (cf plugins/projets/ccn/inc/ccn_cioidc.php)
+define('_CCN_CIOIDC_LOG_COMPLET', '${CCN_CIOIDC_LOG_COMPLET:-true}' !== 'false');
 ?>
 MAINEOF
 chown www-data:www-data config/mes_options.php
@@ -308,6 +320,12 @@ define('_CIOIDC_TOKEN_ENDPOINT_AUTH_METHODS_SUPPORTED', '["client_secret_post"]'
 ?>
 MAINEOF
 	chown www-data:www-data config/_config_cioidc.php
+fi
+
+# Les commandes spip lancées en root plus haut peuvent avoir réécrit config/cles.php :
+# il doit rester modifiable par Apache (www-data), qui y ajoute les clés manquantes.
+if [ -e config/cles.php ]; then
+	chown www-data:www-data config/cles.php
 fi
 
 exec "$@"

@@ -1,8 +1,14 @@
 #CACHE{300}
-#SET{id_art,0}
+[(#REM) Forum de l'année (#530) : celui de l'article footer-forum de l'année, créé
+chaque année par la tâche de rentrée (inc/fictions_rentree.php). Les années qui ont
+encore un article « agora » (jusqu'en 2021) gardent son forum et ses échanges. ]
+#SET{id_forum_annee, 0}
 <BOUCLE_annee(RUBRIQUES){titre==#ENV{annee_scolaire}}{tout}{0,1}>
+	<BOUCLE_footer_forum(ARTICLES){id_rubrique}{titre_mot=footer-forum}{0,1}>
+		#SET{id_forum_annee, #ID_ARTICLE}
+	</BOUCLE_footer_forum>
 	<BOUCLE_id_forum(ARTICLES){titre_mot==agora}{id_rubrique}{0,1}>
-		#SET{id_art,#ID_ARTICLE}
+		#SET{id_forum_annee, #ID_ARTICLE}
 	</BOUCLE_id_forum>
 </BOUCLE_annee>
 
@@ -17,20 +23,34 @@
 			<:fictions:bonjour:> <b><a class="mediabox boxIframe boxWidth-730px boxHeight-550px" href="#URL_PAGE{auteur_editer, id_auteur=#SESSION{id_auteur}}">#SESSION{nom}</a></b>
 			[(#REM) #519 : classes gérées par l'enseignant connecté cette année ]
 			[&nbsp;&nbsp;<:fictions:vos_classes:> (#SESSION{id_auteur}|fictions_noms_classes_auteur{#ENV{annee_scolaire}})]
-			[(#GET{id_art}|=={0}|non)[(#SESSION{statut}|=={0minirezo}|oui)&nbsp;&nbsp;|&nbsp;&nbsp;<a href="#URL_SITE_SPIP/?page=forum&id_article=#GET{id_art}" class="mediabox boxIframe boxWidth-730px boxHeight-97pc"><:fictions:acceder_au_forum:><img src="[(#CHEMIN{img/lecture/bt_forum.png})]"
+			[(#GET{id_forum_annee}|oui)[(#SESSION{statut}|=={0minirezo}|oui)&nbsp;&nbsp;|&nbsp;&nbsp;<a href="[(#URL_PAGE{forum, id_article=#GET{id_forum_annee}})]" class="mediabox boxIframe boxWidth-730px boxHeight-97pc"><:fictions:acceder_au_forum:><img src="[(#CHEMIN{img/lecture/bt_forum.png})]"
 					class="btn-rollover" data-src-hover="#CHEMIN{img/lecture/bt_forum_hover.png}"
 					width="20" height="20" title="<:fictions:forum:>" style="height: 20px; line-height: 20px; vertical-align: middle; padding-left: 5px; display: none;"/></a>]]
 			]
-			[(#SESSION{id_auteur}|non)<a href="[(#PLUGIN{cioidc}|oui|?{'?url=spip.php%3Fpage%3Dsommaire&cioidc=oui','?page=login&url=.%2F'})]" class=""><:fictions:se_connecter:></a>&nbsp;&nbsp;|<a href="http://www.laclasse.com/pls/public/!page.laclasse?contexte=QUESTION&rubrique=0"><:fictions:mot_de_passe_oublie:></a>]
+			[(#SESSION{id_auteur}|non)<a href="[(#PLUGIN{cioidc}|oui|?{'?url=spip.php%3Fpage%3Dsommaire&cioidc=oui','?page=login&url=.%2F'})]" class=""><:fictions:se_connecter:></a>&nbsp;&nbsp;|&nbsp;&nbsp;<a href="http://www.laclasse.com/pls/public/!page.laclasse?contexte=QUESTION&rubrique=0"><:fictions:mot_de_passe_oublie:></a>]
 
-			<BOUCLE_espace_doc(RUBRIQUES){titre==#ENV{annee_scolaire}}>
-				<!-- #ID_RUBRIQUE -->
-				<a href="[(#DESCRIPTIF|textebrut)]"><:fictions:espace_doc:></a>
-				[<a href="(#TEXTE|extraire_attribut{href})"><:fictions:blog_de_lauteur:></a>]
+			[(#REM) Liens Espace doc / Blog de l'auteur de l'année (#530) : saisie à la main
+			dans la rubrique de l'année (descriptif / premier lien du texte) en priorité,
+			sinon sous-titre de l'article footer-espace-doc / footer-blog-auteur de l'année,
+			recopié d'une année sur l'autre par la tâche de rentrée (inc/fictions_rentree.php).
+			Pas de lien si aucun des deux n'est renseigné. ]
+			#SET{lien_espace_doc, ''}
+			#SET{lien_blog_auteur, ''}
+			<BOUCLE_espace_doc(RUBRIQUES){titre==#ENV{annee_scolaire}}{tout}{0,1}>
+				#SET{lien_espace_doc, #DESCRIPTIF|textebrut|trim}
+				#SET{lien_blog_auteur, #TEXTE|extraire_attribut{href}}
+				<BOUCLE_footer_espace_doc(ARTICLES){id_rubrique}{titre_mot=footer-espace-doc}{0,1}>
+					#SET{lien_espace_doc, #GET{lien_espace_doc}|sinon{#SOUSTITRE}}
+				</BOUCLE_footer_espace_doc>
+				<BOUCLE_footer_blog_auteur(ARTICLES){id_rubrique}{titre_mot=footer-blog-auteur}{0,1}>
+					#SET{lien_blog_auteur, #GET{lien_blog_auteur}|sinon{#SOUSTITRE}}
+				</BOUCLE_footer_blog_auteur>
 			</BOUCLE_espace_doc>
+			[&nbsp;&nbsp;|&nbsp;&nbsp;<a href="(#GET{lien_espace_doc}|textebrut|trim|attribut_url)"><:fictions:espace_doc:></a>]
+			[&nbsp;&nbsp;|&nbsp;&nbsp;<a href="(#GET{lien_blog_auteur}|textebrut|trim|attribut_url)"><:fictions:blog_de_lauteur:></a>]
 			[(#SESSION{statut}|=={0minirezo}|oui)
 			<BOUCLE_blog(RUBRIQUES){titre_mot=blog_pedagogique}{tout}>
-				<a href="#URL_RUBRIQUE">#TITRE</a>
+				&nbsp;&nbsp;|&nbsp;&nbsp;<a href="#URL_RUBRIQUE">#TITRE</a>
 			</BOUCLE_blog>
 			]
 		</div>
