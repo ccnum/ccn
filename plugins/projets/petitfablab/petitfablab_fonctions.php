@@ -38,7 +38,9 @@ function valider_chapitre($id_article, $id_rubrique) {
 	$html .= _T('petitfablab:mail_acceder_chapitre', ['url' => petitfablab_url_lecture($id_rubrique)]);
 	$html .= _T('petitfablab:mail_a_bientot');
 	$html .= _T('petitfablab:mail_description_dispositif');
-	$html .= "<br />Suivez nos actualités sur le blog https://petit-fablab-ecriture.tumblr.com/";
+	if (_PETITFABLAB_URL_BLOG) {
+		$html .= _T('petitfablab:mail_suivez_blog', ['url' => _PETITFABLAB_URL_BLOG]);
+	}
 
 	$contenu_html = recuperer_fond('emails/texte', ['html' => $html]);
 	$corps = [
@@ -72,7 +74,9 @@ function valider_chapitre($id_article, $id_rubrique) {
 		$html .= _T('petitfablab:mail_discutez_edition', ['url' => petitfablab_url_lecture($id_rubrique)]);
 		$html .= _T('petitfablab:mail_a_bientot');
 		$html .= _T('petitfablab:mail_description_dispositif');
-		$html .= "<br />Suivez nos actualités sur le blog https://petit-fablab-ecriture.tumblr.com/";
+		if (_PETITFABLAB_URL_BLOG) {
+			$html .= _T('petitfablab:mail_suivez_blog', ['url' => _PETITFABLAB_URL_BLOG]);
+		}
 
 		$contenu_html = recuperer_fond('emails/texte', ['html' => $html]);
 		$corps = [
@@ -100,12 +104,6 @@ function petitfablab_url_lecture($id_rubrique) {
 
 // annee_rub, balise_ANNEE_SCOLAIRE_dist, balise_ANNEE_ACTUELLE_dist, afficher_options_date
 // sont définis par le plugin ccn (ccn_fonctions.php)
-
-function balise_NOM_AUTEUR_dist($p) {
-	$p->code = "'Violaine Schwartz'";
-	return $p;
-}
-
 // Si balise_FIN_dist = false -> affichage de la grille sur la page d'accueil
 // Si balise_FIN_dist = true -> affichage des couvertures et liens pdf sur la page d'accueil
 
@@ -132,4 +130,3 @@ function filtre_cleanCut($string, $length = 380, $cutString = '(...)') {
 	$str = substr($string, strlen($string) - $length - 7, strlen($string));
 	return $cutString . substr($str, stripos($str, ' '));
 }
-

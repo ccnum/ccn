@@ -24,3 +24,7 @@ if (!defined('_PETITFABLAB_MAIL_DESTINATAIRE')) {
 if (!defined('_PETITFABLAB_MAIL_COPIE')) {
 	define('_PETITFABLAB_MAIL_COPIE', 'cmonnet@erasme.org');
 }
+// Blog du dispositif, cité en fin de mail ('' pour ne pas le citer)
+if (!defined('_PETITFABLAB_URL_BLOG')) {
+	define('_PETITFABLAB_URL_BLOG', 'https://petit-fablab-ecriture.tumblr.com/');
+}

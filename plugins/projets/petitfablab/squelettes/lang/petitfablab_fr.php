@@ -35,6 +35,7 @@ return [
 	'mail_discutez_edition'             => '<br />Discutez de l’édition de votre histoire avec vos co-auteurs par retour de mail : @url@',
 	'mail_felicitations'                => '<br />Félicitations votre histoire est en ligne.',
 	'mail_merci_participation'          => '<br />Merci d’avoir participé au petit fablab d’écriture !',
+	'mail_suivez_blog'                  => '<br />Suivez nos actualités sur le blog @url@',
 	'mot_de_passe_oublie'               => 'Mot de passe oublié ?',
 
 	// N
