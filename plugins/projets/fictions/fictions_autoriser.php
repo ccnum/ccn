@@ -53,6 +53,35 @@ function autoriser_article_ecrirechapitre_dist($faire, $type, $id, $qui, $opt) {
 }
 
 /**
+ * Modifier un chapitre d'histoire : en plus du droit natif (rédacteur lié à
+ * l'article non publié), un participant ne modifie que le chapitre en cours
+ * d'écriture (statut prop) et seulement pendant la période d'écriture
+ * (ecrirechapitre). Sans ça, ces règles n'étaient appliquées que par les
+ * squelettes : crayons ou /ecrire permettaient de pré-écrire un chapitre prepa
+ * ou de modifier le sien après la clôture (audit 2026-10). Admins complets et
+ * webmestres inchangés ; autres articles inchangés.
+ *
+ * Déclarée seulement si aucun autre plugin ne surcharge déjà cette autorisation
+ * (thematique le fait ; les deux ne sont pas censés être actifs ensemble).
+ */
+if (!function_exists('autoriser_article_modifier')) {
+	function autoriser_article_modifier($faire, $type, $id, $qui, $opt) {
+		$admin_complet = ($qui['webmestre'] ?? '') === 'oui'
+			|| (($qui['statut'] ?? '') === '0minirezo' && empty($qui['restreint']));
+		if (!$admin_complet) {
+			include_spip('inc/fictions_autorisation');
+			if (fictions_article_est_chapitre(intval($id))) {
+				$statut = sql_getfetsel('statut', 'spip_articles', 'id_article=' . intval($id));
+				if ($statut !== 'prop' || fictions_ecriture_droits(intval($id), $qui) !== 'oui') {
+					return false;
+				}
+			}
+		}
+		return autoriser_article_modifier_dist($faire, $type, $id, $qui, $opt);
+	}
+}
+
+/**
  * #AUTORISER{estauteur,article,#ID_ARTICLE} : l'auteur connecté est-il lié au
  * chapitre.
  */

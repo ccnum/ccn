@@ -38,6 +38,21 @@ function fictions_ecriture_ouverte(int $id_rubrique): bool {
 }
 
 /**
+ * L'article est-il un chapitre d'histoire : dans une rubrique "NN. Histoire NN"
+ * fille d'une rubrique d'année ("2026"), cf fictions_histoires_annee().
+ */
+function fictions_article_est_chapitre(int $id_article): bool {
+	$rubrique = sql_fetsel(
+		'r.titre, p.titre AS titre_parent',
+		'spip_articles AS a JOIN spip_rubriques AS r ON r.id_rubrique=a.id_rubrique JOIN spip_rubriques AS p ON p.id_rubrique=r.id_parent',
+		'a.id_article=' . $id_article
+	);
+	return $rubrique
+		&& preg_match('/^\d+\./', $rubrique['titre'])
+		&& preg_match('/^\d{4}$/', trim($rubrique['titre_parent']));
+}
+
+/**
  * Auteur évalué : $qui (tableau auteur passé par autoriser()) ou, à défaut,
  * l'auteur connecté.
  *
