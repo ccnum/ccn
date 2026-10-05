@@ -97,11 +97,8 @@ en dur, mais pas la validité des clés utilisées. Une clé mal orthographiée
 référencée doit exister :
 - `<:module:cle:>` et `_T('module:cle')` (module = nom du plugin) →
   doivent exister dans son fichier de langue, cherché à la fois en
-  `lang/<module>_fr.php` (thematique, ccn) et
-  `squelettes/lang/<module>_fr.php` (petitfablab — autre emplacement).
-  `fictions` n'a pas de fichier de langue du tout : la moindre clé
-  `<:fictions:...:>` y ferait donc immédiatement échouer le check
-  (aucune actuellement) ;
+  `lang/<module>_fr.php` (thematique, fictions, ccn) et
+  `squelettes/lang/<module>_fr.php` (petitfablab — autre emplacement) ;
 - `CCN.lang.cle` côté JS → doit exister comme propriété de l'objet
   `CCN.lang` construit dans `plugins/projets/thematique/squelettes/noisettes/timeline.html`.
   Vérifié uniquement pour thematique : c'est le seul plugin à avoir ce
