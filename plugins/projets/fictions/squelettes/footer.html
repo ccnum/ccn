@@ -27,7 +27,7 @@ encore un article « agora » (jusqu'en 2021) gardent son forum et ses échanges
 					class="btn-rollover" data-src-hover="#CHEMIN{img/lecture/bt_forum_hover.png}"
 					width="20" height="20" title="<:fictions:forum:>" style="height: 20px; line-height: 20px; vertical-align: middle; padding-left: 5px; display: none;"/></a>]]
 			]
-			[(#SESSION{id_auteur}|non)<a href="[(#PLUGIN{cioidc}|oui|?{'?url=spip.php%3Fpage%3Dsommaire&cioidc=oui','?page=login&url=.%2F'})]" class=""><:fictions:se_connecter:></a>&nbsp;&nbsp;|<a href="http://www.laclasse.com/pls/public/!page.laclasse?contexte=QUESTION&rubrique=0"><:fictions:mot_de_passe_oublie:></a>]
+			[(#SESSION{id_auteur}|non)<a href="[(#PLUGIN{cioidc}|oui|?{'?url=spip.php%3Fpage%3Dsommaire&cioidc=oui','?page=login&url=.%2F'})]" class=""><:fictions:se_connecter:></a>&nbsp;&nbsp;|&nbsp;&nbsp;<a href="http://www.laclasse.com/pls/public/!page.laclasse?contexte=QUESTION&rubrique=0"><:fictions:mot_de_passe_oublie:></a>]
 
 			[(#REM) Liens Espace doc / Blog de l'auteur de l'année (#530) : saisie à la main
 			dans la rubrique de l'année (descriptif / premier lien du texte) en priorité,
@@ -46,11 +46,11 @@ encore un article « agora » (jusqu'en 2021) gardent son forum et ses échanges
 					#SET{lien_blog_auteur, #GET{lien_blog_auteur}|sinon{#SOUSTITRE}}
 				</BOUCLE_footer_blog_auteur>
 			</BOUCLE_espace_doc>
-			[<a href="(#GET{lien_espace_doc}|textebrut|trim|attribut_url)"><:fictions:espace_doc:></a>]
-			[<a href="(#GET{lien_blog_auteur}|textebrut|trim|attribut_url)"><:fictions:blog_de_lauteur:></a>]
+			[&nbsp;&nbsp;|&nbsp;&nbsp;<a href="(#GET{lien_espace_doc}|textebrut|trim|attribut_url)"><:fictions:espace_doc:></a>]
+			[&nbsp;&nbsp;|&nbsp;&nbsp;<a href="(#GET{lien_blog_auteur}|textebrut|trim|attribut_url)"><:fictions:blog_de_lauteur:></a>]
 			[(#SESSION{statut}|=={0minirezo}|oui)
 			<BOUCLE_blog(RUBRIQUES){titre_mot=blog_pedagogique}{tout}>
-				<a href="#URL_RUBRIQUE">#TITRE</a>
+				&nbsp;&nbsp;|&nbsp;&nbsp;<a href="#URL_RUBRIQUE">#TITRE</a>
 			</BOUCLE_blog>
 			]
 		</div>
