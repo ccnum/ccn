@@ -245,6 +245,9 @@ function formulaires_public_publier_article_traiter_dist(
 	$id_article = intval(_request('id_article'));
 
 	$edition = (bool) $id_article;
+	// Statut avant modification : un article mis à la poubelle ou refusé par un
+	// admin ne doit pas être republié par une simple édition (cf plus bas).
+	$statut_avant = $edition ? sql_getfetsel('statut', 'spip_articles', 'id_article=' . intval($id_article)) : '';
 
 	if (!$id_article) {
 		// cf la même vérification dans _verifier_dist (issue #274) : revérifiée
@@ -339,20 +342,28 @@ function formulaires_public_publier_article_traiter_dist(
 		// la création étant elle-même contrôlée par 'creerarticledans' dans
 		// action_editer_article : on accorde donc l'autorisation
 		// exceptionnelle pour le hit courant.
+		//
+		// En édition, pas pour un article mis à la poubelle ou refusé (statuts
+		// posés par un admin). Un article 'prop' se republie : c'est l'état
+		// laissé par #FORMULAIRE_DEPUBLIER_ARTICLE, que l'auteur lui-même
+		// utilise (jalons) puis annule en rééditant.
+		$publier = !$edition || !in_array($statut_avant, ['poubelle', 'refuse'], true);
 		$id_rubrique_article = sql_getfetsel('id_rubrique', 'spip_articles', 'id_article=' . intval($id_article));
-		if ($id_rubrique_article) {
-			autoriser_exception('publierdans', 'rubrique', $id_rubrique_article, true);
+		if ($publier) {
+			if ($id_rubrique_article) {
+				autoriser_exception('publierdans', 'rubrique', $id_rubrique_article, true);
+			}
+			article_instituer($id_article, [
+				'statut' => 'publie',
+				'date' => _request('date'),
+			]);
 		}
-		article_instituer($id_article, [
-			'statut' => 'publie',
-			'date' => _request('date'),
-		]);
 
 		// article_instituer() refuse silencieusement (un simple spip_log en
 		// 'editer_article X refus ...') : vérifier le statut final pour que
 		// un refus ne laisse pas un article en 'prepa' sans explication.
 		$statut_final = sql_getfetsel('statut', 'spip_articles', 'id_article=' . intval($id_article));
-		if ($statut_final !== 'publie') {
+		if ($publier && $statut_final !== 'publie') {
 			spip_log(
 				"publication de l'article $id_article refusée (statut restant : " . var_export($statut_final, true) . ')',
 				'thematique' . _LOG_ERREUR
