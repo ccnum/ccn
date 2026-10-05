@@ -313,7 +313,8 @@ function thematique_donner_role($id_auteur) {
 	include_spip('base/abstract_sql');
 	include_spip('inc/session'); // pour session_get/session_set si besoin
 
-	$statut = sql_getfetsel('statut', 'spip_auteurs', 'id_auteur=' . intval($id_auteur));
+	$auteur = sql_fetsel('statut, webmestre', 'spip_auteurs', 'id_auteur=' . intval($id_auteur));
+	$statut = $auteur['statut'] ?? null;
 
 	// ELEVE : statut 6forum, vérifié avant les mots-clés de hiérarchie —
 	// thematique_cioidc_associer_rubriques() rattache l'élève à la MÊME
@@ -340,9 +341,14 @@ function thematique_donner_role($id_auteur) {
 	// ADMIN selon statut (webmestre non rattaché à une hiérarchie ci-dessus —
 	// un webmestre rattaché à "consignes" est volontairement classé
 	// "intervenant" par le test au-dessus, cf thematique_voir_mission()).
+	// Un admin restreint (lié à des rubriques, hors webmestre) n'est pas "admin" :
+	// ce rôle ouvre la publication dans toute rubrique et la suppression de tout
+	// commentaire (audit 2026-10). Il garde ses droits SPIP natifs dans /ecrire.
 	if ($statut === '0minirezo') {
-		$cache[$id_auteur] = 'admin';
-		return 'admin';
+		$restreint = ($auteur['webmestre'] ?? '') !== 'oui'
+			&& sql_countsel('spip_auteurs_liens', ['id_auteur=' . intval($id_auteur), "objet='rubrique'"]);
+		$cache[$id_auteur] = $restreint ? null : 'admin';
+		return $cache[$id_auteur];
 	}
 
 	$cache[$id_auteur] = null;
