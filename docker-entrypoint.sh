@@ -91,6 +91,20 @@ if version_greater "$image_version" "$installed_version"; then
 	fi
 fi
 
+# .htaccess : celui de l'image (htaccess.txt du dépôt) fait référence et est
+# réappliqué à chaque démarrage — la copie ci-dessus n'a lieu qu'à l'installation
+# ou à une montée de version de SPIP, un volume existant gardait sinon un
+# .htaccess périmé. Une version modifiée à la main est sauvegardée à côté.
+if [ -f /usr/src/spip/htaccess.txt ] && ! cmp -s /usr/src/spip/htaccess.txt .htaccess; then
+	if [ -e .htaccess ]; then
+		sauvegarde=".htaccess.avant-$(date +%Y%m%d%H%M%S)"
+		cp -p .htaccess "${sauvegarde}"
+		echo >&2 ".htaccess différent de celui de l'image : remplacé (ancien sauvegardé dans ${sauvegarde})"
+	fi
+	cp /usr/src/spip/htaccess.txt .htaccess
+	chown www-data:www-data .htaccess
+fi
+
 # Install SPIP
 if [ "${SPIP_DB_SERVER}" = "mysql" ]; then
 	wait_for_db
