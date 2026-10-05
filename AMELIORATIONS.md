@@ -3,63 +3,29 @@
 **Dernière mise à jour** : 2026-10-05
 
 Points non liés à une vulnérabilité (voir `AUDIT_SECURITE.md` pour la sécurité). Chaque point a été
-vérifié dans le code à cette date.
-
----
-
-## Déploiement
-
-### `.htaccess` jamais mis à jour sur un volume existant
-
-**Fichier** : `docker-entrypoint.sh`
-
-`htaccess.txt` n'est copié en `.htaccess` que s'il n'existe pas : une modification de
-`htaccess.txt` n'atteint pas les instances déjà déployées.
+vérifié dans le code ou dans un navigateur (Chromium, instances ddev) à cette date.
 
 ---
 
 ## Code
 
-### Logique de `rubrique.html` (thematique)
+### `noisettes/rubrique.html` (thematique) : code mort
 
-**Fichier** : `thematique/squelettes/noisettes/rubrique.html`
+**Fichiers** : `thematique/squelettes/noisettes/rubrique.html`, branches `mode=ajax` / `mode=detail`
+de `thematique/squelettes/rubrique.html` et `livrables.html`
 
-8 blocs `<script>` inline mêlent présentation et logique — refactor à faire avec accès navigateur (risque de régression sur la
-sidebar), et prérequis à une CSP stricte.
-
-### Valeurs en dur dans petitfablab
-
-**Fichier** : `petitfablab/petitfablab_fonctions.php`
-
-`balise_NOM_AUTEUR_dist` renvoie toujours « Violaine Schwartz », et le lien du blog tumblr est
-en dur dans les mails.
-
-### Documentation CI périmée
-
-**Fichiers** : `.ci/README.md:102`, `.ci/check_lang_keys.py:17`
-
-Indiquent que `fictions` n'a pas de fichier de langue : faux depuis que `fictions` est l'ex-`fictionsv2`
-(`lang/fictions_fr.php`).
+La sidebar `#listmenu` (et ses 8 blocs `<script>` inline) n'est produite que par
+`page=rubrique&mode=ajax|detail`, qu'aucun code n'appelle : le front n'utilise que `ajax-detail` et
+`complet` (`squelettes/js/controleurs.js`). `url_popup_livrables` (`json/projet.html`, mode=detail)
+est lu par `projet.js` mais jamais utilisé. À supprimer plutôt qu'à refactorer.
 
 ---
 
 ## CSS
 
-### Media queries mobile/tablette (thematique)
+### Pas de mise en page mobile (thematique)
 
 **Fichier** : `thematique/css/responsive.css.html`
 
-Paliers `max-width: 1024px` (sidebar et menu bas fluides) et `768px` (sidebar plein écran, menu bas
-empilé) : ajustements défensifs anti-débordement, **jamais vérifiés dans un navigateur**.
-
----
-
-## Accessibilité
-
-### `<div role="button">` restants (thematique)
-
-**Fichiers** : `thematique/squelettes/modeles/actu_commentaires.html`, `actu_documents.html`
-
-Gardés en `<div role="button" tabindex="0">` (activés au clavier par `controleurs.js`) car ils
-contiennent un `<a>` (lien lightbox), interdit dans un `<button>`. Pour s'en passer, sortir le lien du
-bloc cliquable.
+Vérifié dans Chromium : aucun débordement à 1024 et 768 px (paliers existants), mais à 390 px la page
+déborde de 368 px en largeur (menu haut trop large, pas de palier sous 768 px).
