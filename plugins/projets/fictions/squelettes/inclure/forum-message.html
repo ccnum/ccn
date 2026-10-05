@@ -1,0 +1,27 @@
+[(#REM) Un message de premier niveau du forum d'un article, ses documents joints et ses
+réponses (un seul niveau : on ne répond qu'à un message de premier niveau, cf
+forum_reponse.html). Commun à forum.html et forum_reponse.html.
+Paramètre : id_forum. Les réponses sont dans l'ordre chronologique. ]
+<BOUCLE_message(FORUMS){id_forum}>
+	<div class="forum-img-profil">
+		[(#LOGO_AUTEUR|image_reduire{42,42}|inserer_attribut{alt,#NOM})]
+	</div>
+	<div class="forum-texte">
+		<strong>#NOM - [(#DATE|affdate)]</strong>
+		#TEXTE
+		<INCLURE{fond=inclure/forum-documents, id_forum} />
+	</div>
+
+	<BOUCLE_reponse(FORUMS){id_parent}{par date}>
+	<div class="forum-reponse">
+		<div class="forum-reponse-img">
+			[(#LOGO_AUTEUR|image_reduire{42,42}|inserer_attribut{alt,#NOM})]
+		</div>
+		<div class="forum-reponse-texte">
+			<strong>#NOM - [(#DATE|affdate)]</strong>
+			#TEXTE
+			<INCLURE{fond=inclure/forum-documents, id_forum} />
+		</div>
+	</div>
+	</BOUCLE_reponse>
+</BOUCLE_message>

@@ -1,16 +1,13 @@
 10L | plugins/projets/fictions/squelettes/page.html:24 <-> plugins/projets/fictions/squelettes/sommaire.html:15
 11L | plugins/projets/fictions/squelettes/inclure/head.html:15 <-> plugins/projets/petitfablab/squelettes/inclure/head.html:16
 11L | plugins/projets/petitfablab/squelettes/inclure/layout_end.html:14 <-> plugins/projets/petitfablab/squelettes/inclure/rubrique.html:131
-13L | plugins/projets/fictions/squelettes/forum_reponse.html:24 <-> plugins/projets/fictions/squelettes/lecture-forum.html:35
 13L | plugins/projets/petitfablab/squelettes/lecture.html:62 <-> plugins/projets/petitfablab/squelettes/lecture.html:86
 14L | plugins/projets/fictions/squelettes/lecture-forum.html:1 <-> plugins/projets/petitfablab/squelettes/lecture-script.html:1
 14L | plugins/projets/petitfablab/squelettes/inclure/chapitre-verrouille.html:15 <-> plugins/projets/petitfablab/squelettes/inclure/chapitre-visible.html:15
-15L | plugins/projets/fictions/squelettes/forum_reponse.html:37 <-> plugins/projets/fictions/squelettes/lecture-forum.html:48
 15L | plugins/projets/fictions/squelettes/inclure/head.html:1 <-> plugins/projets/petitfablab/squelettes/inclure/head.html:1
 15L | plugins/projets/fictions/squelettes/inclure/rubrique-blogpeda.html:1 <-> plugins/projets/fictions/squelettes/inclure/rubrique.html:20
 16L | plugins/projets/petitfablab/squelettes/inclure/layout_end.html:28 <-> plugins/projets/petitfablab/squelettes/lecture.html:154
 18L | plugins/projets/fictions/squelettes/page.html:9 <-> plugins/projets/fictions/squelettes/rubrique.html:4
-19L | plugins/projets/fictions/squelettes/forum.html:1 <-> plugins/projets/fictions/squelettes/forum_reponse.html:1
 6L | plugins/projets/fictions/squelettes/inclure/lecture-corps.html:34 <-> plugins/projets/fictions/squelettes/sommaire.html:17
 6L | plugins/projets/fictions/squelettes/inclure/tete-html.html:9 <-> plugins/projets/petitfablab/squelettes/inclure/layout_init.html:3
 7L | plugins/projets/fictions/squelettes/inclure/lecture-corps.html:12 <-> plugins/projets/petitfablab/squelettes/inclure/layout_init.html:40
