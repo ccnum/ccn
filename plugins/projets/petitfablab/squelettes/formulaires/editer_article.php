@@ -72,5 +72,18 @@ function formulaires_editer_article_traiter_dist($id_article = 'new', $id_rubriq
 	// car l'heuristique du choix de la langue est pris en charge par article_inserer
 	// en fonction de la config du site et de la rubrique choisie
 	set_request('changer_lang');
-	return formulaires_editer_objet_traiter('article', $id_article, $id_rubrique, $lier_trad, $retour, $config_fonc, $row, $hidden);
+	$res = formulaires_editer_objet_traiter('article', $id_article, $id_rubrique, $lier_trad, $retour, $config_fonc, $row, $hidden);
+	// La page ecriture publie le chapitre au retour (valider_chapitre) : on y passe
+	// un jeton lié à l'auteur et à l'article, sans lequel un simple lien GET
+	// suffisait à publier le brouillon d'un auteur connecté (CSRF, audit 2026-10).
+	if (!empty($res['redirect']) && !empty($res['id_article'])) {
+		include_spip('inc/securiser_action');
+		$res['redirect'] = parametre_url(
+			$res['redirect'],
+			'valider',
+			calculer_action_auteur('valider_chapitre-' . intval($res['id_article'])),
+			'&'
+		);
+	}
+	return $res;
 }

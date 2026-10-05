@@ -17,6 +17,12 @@ function valider_chapitre($id_article, $id_rubrique) {
 	) {
 		return '';
 	}
+	// Jeton posé par formulaires/editer_article.php au retour du formulaire : la
+	// publication suit un GET, il faut prouver qu'il vient bien de ce formulaire.
+	include_spip('inc/securiser_action');
+	if (!verifier_action_auteur('valider_chapitre-' . intval($id_article), (string) _request('valider'))) {
+		return '';
+	}
 
 	// Publication
 	autoriser_exception('modifier', 'article', $id_article);
