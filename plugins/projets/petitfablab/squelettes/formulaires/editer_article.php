@@ -63,6 +63,16 @@ function formulaires_editer_article_verifier_dist($id_article = 'new', $id_rubri
 	) {
 		$erreurs['id_parent'] = _T('info_creerdansrubrique_non_autorise');
 	}
+	// Création d'un chapitre : dans la rubrique de l'histoire passée au formulaire
+	// (argument signé), pas dans un id_parent posté, et 5 chapitres au plus — la
+	// limite n'était appliquée que par inclure/rubrique.html (audit 2026-10).
+	if (!intval($id_article) && intval($id_rubrique)) {
+		if (intval(_request('id_parent')) !== intval($id_rubrique)) {
+			$erreurs['id_parent'] = _T('info_creerdansrubrique_non_autorise');
+		} elseif (sql_countsel('spip_articles', ['id_rubrique=' . intval($id_rubrique), "statut<>'poubelle'"]) >= 5) {
+			$erreurs['message_erreur'] = _T('petitfablab:histoire_complete');
+		}
+	}
 	// Le champ « Email » (soustitre) reçoit en copie les mails de valider_chapitre() :
 	// on n'accepte qu'une adresse valide.
 	$email = trim((string) _request('soustitre'));

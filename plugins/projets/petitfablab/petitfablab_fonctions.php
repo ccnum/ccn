@@ -35,7 +35,7 @@ function valider_chapitre($id_article, $id_rubrique) {
 	$sujet = _T('petitfablab:sujet_chapitre_publie');
 	$html = "Bonjour,";
 	$html .= _T('petitfablab:mail_merci_participation');
-	$html .= "<br />Accédez dès maintenant à votre chapitre en ligne : http://petitfablab.laclasse.com/spip.php?page=lecture&id_rubrique=" . $id_rubrique . ". Un deuxième message vous préviendra lorsque votre histoire sera disponible.";
+	$html .= _T('petitfablab:mail_acceder_chapitre', ['url' => petitfablab_url_lecture($id_rubrique)]);
 	$html .= _T('petitfablab:mail_a_bientot');
 	$html .= _T('petitfablab:mail_description_dispositif');
 	$html .= "<br />Suivez nos actualités sur le blog https://petit-fablab-ecriture.tumblr.com/";
@@ -43,12 +43,12 @@ function valider_chapitre($id_article, $id_rubrique) {
 	$contenu_html = recuperer_fond('emails/texte', ['html' => $html]);
 	$corps = [
 		'html' => $contenu_html,
-		'from' => 'noreply@petitfablab.laclasse.com',
+		'from' => _PETITFABLAB_MAIL_FROM,
 		'nom_envoyeur' => _T('petitfablab:nom_envoyeur'),
-		'bcc' => ['cmonnet@erasme.org', $bcc]
+		'bcc' => array_values(array_filter([_PETITFABLAB_MAIL_COPIE, $bcc]))
 	];
 	if (isset($bcc) && ($bcc != "") && (filter_var($bcc, FILTER_VALIDATE_EMAIL))) {
-		$envoyer_mail("petitfablab@gmail.com", $sujet, $corps);
+		$envoyer_mail(_PETITFABLAB_MAIL_DESTINATAIRE, $sujet, $corps);
 	}
 
 	// Si 5ème chapitre
@@ -56,7 +56,7 @@ function valider_chapitre($id_article, $id_rubrique) {
 	if ($n == 5) {
 		$id_parent = sql_getfetsel("id_parent", "spip_rubriques", "id_rubrique=" . intval($id_rubrique));
 		$rub_hist = creer_histoire($id_parent);
-		$bcc = ['cmonnet@erasme.org'];
+		$bcc = array_filter([_PETITFABLAB_MAIL_COPIE]);
 		if ($resultats = sql_allfetsel("soustitre", "spip_articles", "id_rubrique = " . intval($id_rubrique))) {
 			// boucler sur les resultats
 			foreach ($resultats as $res) {
@@ -69,7 +69,7 @@ function valider_chapitre($id_article, $id_rubrique) {
 		$sujet = _T('petitfablab:sujet_histoire_en_ligne');
 		$html = _T('petitfablab:mail_bonjour_tous');
 		$html .= _T('petitfablab:mail_felicitations');
-		$html .= "<br />Discutez de l'édition de votre histoire avec vos co-auteurs par retour de mail : http://petitfablab.laclasse.com/spip.php?page=lecture&id_rubrique=" . $id_rubrique;
+		$html .= _T('petitfablab:mail_discutez_edition', ['url' => petitfablab_url_lecture($id_rubrique)]);
 		$html .= _T('petitfablab:mail_a_bientot');
 		$html .= _T('petitfablab:mail_description_dispositif');
 		$html .= "<br />Suivez nos actualités sur le blog https://petit-fablab-ecriture.tumblr.com/";
@@ -77,17 +77,25 @@ function valider_chapitre($id_article, $id_rubrique) {
 		$contenu_html = recuperer_fond('emails/texte', ['html' => $html]);
 		$corps = [
 			'html' => $contenu_html,
-			'from' => 'noreply@petitfablab.laclasse.com',
+			'from' => _PETITFABLAB_MAIL_FROM,
 			'nom_envoyeur' => _T('petitfablab:nom_envoyeur'),
-			'bcc' => $bcc
+			'bcc' => array_values($bcc)
 		];
-		$envoyer_mail("petitfablab@gmail.com", $sujet, $corps);
+		$envoyer_mail(_PETITFABLAB_MAIL_DESTINATAIRE, $sujet, $corps);
 	}
 
 	// return if last chapitre
 	if (isset($rub_hist)) {
 		return $rub_hist;
 	}
+}
+
+/**
+ * URL absolue de la page de lecture d'une histoire, sur le site courant (et donc
+ * en https s'il l'est) plutôt qu'un http://petitfablab.laclasse.com en dur.
+ */
+function petitfablab_url_lecture($id_rubrique) {
+	return url_absolue(generer_url_public('lecture', 'id_rubrique=' . intval($id_rubrique), true));
 }
 
 // annee_rub, balise_ANNEE_SCOLAIRE_dist, balise_ANNEE_ACTUELLE_dist, afficher_options_date
