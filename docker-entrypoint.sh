@@ -184,11 +184,18 @@ if [ -n "${plugin_site}" ]; then
 		fi
 	done
 	spip plugins:activer cadavrexquis vider_rubrique "${plugin_site}" -y
+	# thematique (et sa variante de projet) n'a rien à faire sur un site
+	# fictions/petitfablab : resté actif d'une configuration antérieure, il y
+	# laissait ses squelettes et pages accessibles.
+	if [ "${PROJET}" != "laclasse" ]; then
+		spip plugins:desactiver "thematique_${PROJET}" -y
+	fi
+	spip plugins:desactiver thematique -y
 else
 	spip plugins:desactiver fictions petitfablab fictions_archive petitfablab_archive fictionsv2 petitfablabv2 cadavrexquis -y
 	spip plugins:activer "${SPIP_VERSION_SITE}" -y
 fi
-if [ "${PROJET}" != "laclasse" ]; then
+if [ -z "${plugin_site}" ] && [ "${PROJET}" != "laclasse" ]; then
 	spip plugins:activer "thematique_${PROJET}" -y
 fi
 spip plugins:maj:bdd
