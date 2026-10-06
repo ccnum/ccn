@@ -1117,6 +1117,12 @@ les styles de composants). */
 	display: flex;
 	width: 100%;
 	background: #eee;
+	/* image de fond posée en JS (projet.js, data.image_fond) et réduite à
+	   1600px de large (json/projet.html) : sans cover elle se répète en
+	   mosaïque sur les écrans plus larges */
+	background-size: cover;
+	background-position: center;
+	background-repeat: no-repeat;
 	height: calc(100vh - var(--header-height) - var(--footer-height));
 	box-sizing: border-box;
 }
