@@ -10,6 +10,79 @@ if (!defined('_ECRIRE_INC_VERSION')) {
  * possible (classe qui change d'enseignant).
  */
 
+/**
+ * Champs du formulaire (plugin saisies). Saisies contrôle aussi, avant verifier(), les
+ * champs obligatoires et que type et compte font partie des choix proposés : un POST
+ * forgé ne peut pas associer un visiteur (6forum), qui ne pourrait pas écrire.
+ */
+function formulaires_fictions_participant_saisies_dist($annee, $id_participant = 0) {
+	include_spip('inc/fictions_participants');
+	$annee = intval($annee);
+
+	// Comptes proposés : d'abord les profs inscrits au projet de l'année (notés à leur
+	// connexion SSO, cf fictions_cioidc_userinfo), puis tous les autres comptes
+	// rédacteurs et admins (comptes créés à la main, écrivains).
+	$inscrits = fictions_annee_config($annee)['inscrits'];
+	$comptes_inscrits = $comptes = [];
+	// Libellé = nom, suivi de l'email quand il est connu : beaucoup de comptes portent
+	// un nom de classe, la recherche (filtre du formulaire) porte aussi sur l'email.
+	foreach (sql_allfetsel('id_auteur, nom, email', 'spip_auteurs', sql_in('statut', ['0minirezo', '1comite']), '', 'nom') as $row) {
+		$libelle = $row['nom'] . ($row['email'] ? ' — ' . $row['email'] : '');
+		if (isset($inscrits[(int) $row['id_auteur']])) {
+			$comptes_inscrits[(int) $row['id_auteur']] = $libelle;
+		} else {
+			$comptes[(int) $row['id_auteur']] = $libelle;
+		}
+	}
+	// Groupes d'options : la clé sert de libellé à l'optgroup
+	$data_comptes = [];
+	if ($comptes_inscrits) {
+		$data_comptes[_T('fictions:associations_comptes_inscrits', ['annee' => $annee])] = $comptes_inscrits;
+	}
+	$data_comptes[_T('fictions:associations_comptes_autres')] = $comptes;
+
+	// Mêmes valeurs que FICTIONS_TYPES_PARTICIPANT
+	$types = [
+		'classe' => _T('fictions:participant_type_classe'),
+		'ecrivain' => _T('fictions:participant_type_ecrivain'),
+	];
+
+	return [
+		[
+			'saisie' => 'input',
+			'options' => [
+				'nom' => 'nom',
+				'label' => _T('fictions:associations_nom'),
+				'obligatoire' => 'oui',
+			],
+		],
+		[
+			'saisie' => 'selection',
+			'options' => [
+				'nom' => 'type',
+				'label' => _T('fictions:associations_type'),
+				'obligatoire' => 'oui',
+				'cacher_option_intro' => 'oui',
+				'data' => $types,
+				'defaut' => 'classe',
+			],
+		],
+		[
+			'saisie' => 'selection',
+			'options' => [
+				'nom' => 'id_auteur',
+				'label' => _T('fictions:associations_compte'),
+				'explication' => _T('fictions:associations_compte_explication'),
+				'obligatoire' => 'oui',
+				'data' => $data_comptes,
+			],
+		],
+		'options' => [
+			'verifier_valeurs_acceptables' => true,
+		],
+	];
+}
+
 function formulaires_fictions_participant_charger_dist($annee, $id_participant = 0) {
 	if (!autoriser('fictionsassociations')) {
 		return false;
@@ -22,16 +95,11 @@ function formulaires_fictions_participant_charger_dist($annee, $id_participant =
 		return false;
 	}
 
-	$comptes = [];
-	foreach (sql_allfetsel('id_auteur, nom', 'spip_auteurs', sql_in('statut', ['0minirezo', '1comite']), '', 'nom') as $row) {
-		$comptes[(int) $row['id_auteur']] = $row['nom'];
-	}
-
 	$valeurs = [
 		'nom' => $participant['nom'] ?? '',
 		'type' => $participant['type'] ?? 'classe',
 		'id_auteur' => $participant['id_auteur'] ?? '',
-		'_comptes' => $comptes,
+		'annee' => $annee,
 		'_modification' => (bool) $participant,
 	];
 	if (!$participant && fictions_plan_verrouille($annee)) {

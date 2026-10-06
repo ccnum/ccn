@@ -20,6 +20,7 @@
 	<necessite nom="notation" />
 	<necessite nom="notifications" />
 	<necessite nom="socialtags" />
+	<necessite nom="saisies" />
 	<necessite nom="spip_bonux" />
 	<necessite nom="vider_rubrique" />
 

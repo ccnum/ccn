@@ -20,12 +20,11 @@
 					<tr class="[(#COMPTEUR_BOUCLE|alterner{row_odd,row_even})]">
 						<th scope="row"><a href="[(#URL_ECRIRE{rubrique, id_rubrique=#VALEUR{id_rubrique}})]">#VALEUR{titre}</a>[<br /><small>(#VALEUR{proprietaire})</small>]</th>
 						<BOUCLE_cellules(DATA){source table, #VALEUR{cellules}}>
-						<td>
-							<select name="affectation\[#_plan:VALEUR{id_rubrique}\]\[#VALEUR{chapitre}\]" class="select"[(#VALEUR{ecrit}|oui) disabled="disabled"] aria-label="<:fictions:associations_chapitre{chapitre=#VALEUR{chapitre}}:>">
-								<BOUCLE_choix(DATA){source table, #ENV{_participants}}>
-								<option value="#VALEUR{id}"[(#VALEUR{id}|=={#_cellules:VALEUR{id_participant}}|oui) selected="selected"]>#VALEUR{nom}</option>
-								</BOUCLE_choix>
-							</select>
+						<td[ class="(#ENV**{erreurs}|table_valeur{#VALEUR{nom}}|oui)erreur"]>
+							<label for="#VALEUR{id}" class="offscreen">#VALEUR{label}</label>
+							[<span class="erreur_message">(#ENV**{erreurs}|table_valeur{#VALEUR{nom}})</span>]
+							<INCLURE{fond=saisies/selection, nom=#VALEUR{nom}, id=#VALEUR{id}, data=#ENV{_participants},
+								valeur=#VALEUR{id_participant}, cacher_option_intro=oui, class=select, disable=#VALEUR{ecrit}|?{oui,''}} />
 							[(#VALEUR{ecrit}|oui)<br /><small><:fictions:associations_chapitre_ecrit:></small>]
 						</td>
 						</BOUCLE_cellules>

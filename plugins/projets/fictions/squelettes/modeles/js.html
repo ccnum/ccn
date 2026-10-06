@@ -1,1 +1,4 @@
-<script type="text/javascript" src="#CHEMIN{js/(#ENV{page}).js}"></script>
+[(#REM) |timestamp : l'URL change à chaque modification du fichier, sinon le navigateur garde
+	un ancien js/<page>.js en cache après un déploiement (var_mode=recalcul ne le recharge pas). ]
+#SET{js, #VAL{js/}|concat{#ENV{page},.js}|find_in_path}
+<script type="text/javascript" src="[(#GET{js}|timestamp)]"></script>

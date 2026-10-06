@@ -57,8 +57,11 @@ python3 .ci/check_lang_hardcoded.py    # texte FR en dur hors lang/ (baseline: .
 python3 .ci/check_lang_keys.py         # clés <:thematique:xxx:> / CCN.lang.xxx invalides
 python3 .ci/check_hardcoded_paths.py   # chemins img/css/js/pdf ou spip.php?page= en dur (baseline: .ci/hardcoded-paths-baseline.txt)
 python3 .ci/check_rem.py               # syntaxe de squelette (#BALISE, <BOUCLE, <:x:>, crochets) dans un [(#REM) ...]
+python3 .ci/check_docker_entrypoint.py # cohérence de docker-entrypoint.sh
+node .ci/check_html_duplication.js     # HTML/squelette copié-collé (jscpd, `npm ci` requis ; baseline: .ci/html-duplication-baseline.txt)
+node .ci/check_php_duplication.js      # idem pour le PHP (baseline: .ci/php-duplication-baseline.txt)
 ```
-`--write-baseline` sur les deux premiers pour accepter une exception légitime (vérifier le diff
+`--write-baseline` (deux premiers et scripts de duplication) pour accepter une exception légitime (vérifier le diff
 de la baseline ne contient QUE le cas attendu). Détail des règles/exceptions : `.ci/README.md`.
 
 ### Tests
