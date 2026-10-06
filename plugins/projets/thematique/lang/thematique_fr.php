@@ -120,7 +120,7 @@ return [
 	'info_laisser_vide_mot_de_passe'             => 'Laisser vide pour conserver le mot de passe actuel.',
 	'info_nb_auteurs_importer'                   => 'Vous allez importer @nb@ auteurs',
 	'information_salle_des_profs'                => 'Une information dans la salle des profs',
-	'inserer'                                    => 'Insérer',
+	'cliquez_pour_inserer'                       => 'Cliquez pour insérer',
 	'inserer_raccourci_document'                 => 'Insérer ce document dans le texte de l’article',
 	'intervenant_annee'                          => 'Intervenant :',
 	'jalon_texte_a_completer'                    => 'Vous n’avez pas encore rédigé et publié de contenu. Cette page n’est donc pas visible pour les autres utilisateurs. Cliquez sur le bouton “Compléter” pour rédiger votre contenu et le faire ainsi apparaître pour les autres utilisateurs.',
