@@ -22,16 +22,29 @@ function formulaires_fictions_participant_charger_dist($annee, $id_participant =
 		return false;
 	}
 
-	$comptes = [];
-	foreach (sql_allfetsel('id_auteur, nom', 'spip_auteurs', sql_in('statut', ['0minirezo', '1comite']), '', 'nom') as $row) {
-		$comptes[(int) $row['id_auteur']] = $row['nom'];
+	// Comptes proposés : d'abord les profs inscrits au projet de l'année (notés à leur
+	// connexion SSO, cf fictions_cioidc_userinfo), puis tous les autres comptes
+	// rédacteurs et admins (comptes créés à la main, écrivains).
+	$inscrits = fictions_annee_config($annee)['inscrits'];
+	$comptes_inscrits = $comptes = [];
+	// Libellé = nom, suivi de l'email quand il est connu : beaucoup de comptes portent
+	// un nom de classe, la recherche (filtre du formulaire) porte aussi sur l'email.
+	foreach (sql_allfetsel('id_auteur, nom, email', 'spip_auteurs', sql_in('statut', ['0minirezo', '1comite']), '', 'nom') as $row) {
+		$libelle = $row['nom'] . ($row['email'] ? ' — ' . $row['email'] : '');
+		if (isset($inscrits[(int) $row['id_auteur']])) {
+			$comptes_inscrits[(int) $row['id_auteur']] = $libelle;
+		} else {
+			$comptes[(int) $row['id_auteur']] = $libelle;
+		}
 	}
 
 	$valeurs = [
 		'nom' => $participant['nom'] ?? '',
 		'type' => $participant['type'] ?? 'classe',
 		'id_auteur' => $participant['id_auteur'] ?? '',
+		'_comptes_inscrits' => $comptes_inscrits,
 		'_comptes' => $comptes,
+		'annee' => $annee,
 		'_modification' => (bool) $participant,
 	];
 	if (!$participant && fictions_plan_verrouille($annee)) {

@@ -24,12 +24,61 @@
 					<label for="fictions_participant_compte"><:fictions:associations_compte:></label>
 					<p class="explication"><:fictions:associations_compte_explication:></p>
 					[<span class="erreur_message">(#ENV**{erreurs}|table_valeur{id_auteur})</span>]
+					<input type="search" class="text" id="fictions_participant_compte_filtre" autocomplete="off"
+						placeholder="<:fictions:associations_compte_rechercher:>" aria-controls="fictions_participant_compte" />
 					<select name="id_auteur" id="fictions_participant_compte" class="select" required="required">
 						<option value=""></option>
+						<B_comptes_inscrits>
+						<optgroup label="[(#VAL{fictions:associations_comptes_inscrits}|_T{#ARRAY{annee,#ENV{annee}}}|attribut_html)]">
+						<BOUCLE_comptes_inscrits(DATA){source table, #ENV{_comptes_inscrits}}>
+						<option value="#CLE"[(#CLE|=={#ENV{id_auteur}}|oui) selected="selected"]>#VALEUR</option>
+						</BOUCLE_comptes_inscrits>
+						</optgroup>
+						</B_comptes_inscrits>
+						<optgroup label="<:fictions:associations_comptes_autres:>">
 						<BOUCLE_comptes(DATA){source table, #ENV{_comptes}}>
 						<option value="#CLE"[(#CLE|=={#ENV{id_auteur}}|oui) selected="selected"]>#VALEUR</option>
 						</BOUCLE_comptes>
+						</optgroup>
 					</select>
+					[(#REM) Recherche dans la liste des comptes (plusieurs centaines) : filtre les
+					options au fil de la frappe, sans tenir compte des accents ni des majuscules, et
+					sélectionne le compte quand il n'en reste qu'un. Sans JavaScript, la liste reste
+					utilisable telle quelle. ]
+					<script>
+					(function () {
+						var filtre = document.getElementById('fictions_participant_compte_filtre'),
+							liste = document.getElementById('fictions_participant_compte');
+						if (!filtre || !liste) {
+							return;
+						}
+						var norme = function (t) {
+							return t.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
+						};
+						filtre.addEventListener('input', function () {
+							var q = norme(filtre.value.trim()), visibles = [];
+							liste.querySelectorAll('option').forEach(function (o) {
+								if (!o.value) {
+									return;
+								}
+								var ok = !q || norme(o.textContent).indexOf(q) !== -1;
+								o.hidden = !ok;
+								o.disabled = !ok;
+								if (ok) {
+									visibles.push(o);
+								}
+							});
+							liste.querySelectorAll('optgroup').forEach(function (g) {
+								g.hidden = !g.querySelector('option:not([hidden])');
+							});
+							if (q && visibles.length === 1) {
+								liste.value = visibles[0].value;
+							} else if (liste.selectedOptions.length && liste.selectedOptions[0].hidden) {
+								liste.value = '';
+							}
+						});
+					})();
+					</script>
 				</div>
 			</div>
 			<p class="boutons">

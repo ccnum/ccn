@@ -35,6 +35,9 @@ function fictions_annee_config_defaut(): array {
 		'histoires' => [],
 		'plan' => [],
 		'plan_valide' => '',
+		// Profs inscrits au projet de l'année (groupe ENT « Fictions <année> »), notés à
+		// leur connexion SSO : [id_auteur => date de dernière connexion]
+		'inscrits' => [],
 	];
 }
 

@@ -139,6 +139,26 @@ function fictions_cioidc_userinfo($flux) {
 		$auteur['statut'] = '1comite';
 	}
 
+	// Email de l'ENT recopié dans le compte (cioidc ne le renseigne pas en mode login),
+	// comme le fait thematique : il sert à retrouver le prof sur la page des associations.
+	$email = trim((string) ($flux['data']['MailAdressePrincipal'] ?? ''));
+	if ($auteur && $email !== '') {
+		$email_actuel = (string) sql_getfetsel('email', 'spip_auteurs', 'id_auteur=' . intval($auteur['id_auteur']));
+		if ($email_actuel !== $email) {
+			sql_updateq('spip_auteurs', ['email' => $email], 'id_auteur=' . intval($auteur['id_auteur']));
+			spip_log("fictions uid=$uid auteur #{$auteur['id_auteur']} email « $email_actuel » => « $email »", 'cioidc');
+		}
+	}
+
+	// Inscription notée dans la configuration de l'année : la page des associations
+	// propose ces comptes en premier pour créer les participants.
+	if ($auteur) {
+		include_spip('inc/fictions_participants');
+		$config = fictions_annee_config($annee);
+		$config['inscrits'][intval($auteur['id_auteur'])] = date('Y-m-d H:i:s');
+		fictions_annee_config_ecrire($annee, $config);
+	}
+
 	// Compte SPIP rattaché à cet uid et classes gérées cette année (#519)
 	if ($auteur) {
 		spip_log(
