@@ -966,6 +966,9 @@ li a, li a:hover {
 		}
 		> .spip_document_meta {
 			flex: 0 0 100%;
+			/* sans min-width:0, l'élément flex garde la largeur du nom entier
+			   (min-width:auto) et pousse taille/Télécharger hors du cadre */
+			min-width: 0;
 		}
 	}
 }
@@ -987,9 +990,10 @@ li a, li a:hover {
 .spip_document_nom {
 	flex: 1 1 auto;
 	min-width: 0;
-	overflow: hidden;
-	text-overflow: ellipsis;
-	white-space: nowrap;
+	/* nom complet sur plusieurs lignes plutôt qu'une ellipse : les noms de
+	   fichiers longs sans espaces (_podcast_xxx_ep_5_...) restaient illisibles,
+	   le title n'aidant pas sans survol (tablette) */
+	overflow-wrap: anywhere;
 	text-align: left;
 }
 
