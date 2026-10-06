@@ -8,6 +8,32 @@ if (!defined('_ECRIRE_INC_VERSION')) {
  * Calendrier d'une année d'écriture : lancement, clôture, finalisation (#518, #525).
  */
 
+/**
+ * Champs du formulaire (plugin saisies). Saisie date : valeur postée au format AAAA-MM-JJ,
+ * celui attendu par fictions_annee_dates_verifier(). fictions_calendrier.html est vide
+ * exprès : saisies affiche alors son gabarit générique (formulaires/inc-saisies-cvt.html).
+ */
+function formulaires_fictions_calendrier_saisies_dist($annee) {
+	$champs = [
+		'lancement' => [_T('fictions:associations_lancement'), _T('fictions:associations_lancement_explication')],
+		'cloture' => [_T('fictions:associations_cloture'), _T('fictions:associations_cloture_explication')],
+		'finalisation' => [_T('fictions:associations_finalisation'), _T('fictions:associations_finalisation_explication')],
+	];
+	$saisies = [];
+	foreach ($champs as $nom => [$label, $explication]) {
+		$saisies[] = [
+			'saisie' => 'date',
+			'options' => [
+				'nom' => $nom,
+				'label' => $label,
+				'explication' => $explication,
+			],
+		];
+	}
+	$saisies['options'] = ['texte_submit' => _T('fictions:associations_enregistrer')];
+	return $saisies;
+}
+
 function formulaires_fictions_calendrier_charger_dist($annee) {
 	if (!autoriser('fictionsassociations')) {
 		return false;

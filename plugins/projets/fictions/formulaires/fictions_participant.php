@@ -10,17 +10,14 @@ if (!defined('_ECRIRE_INC_VERSION')) {
  * possible (classe qui change d'enseignant).
  */
 
-function formulaires_fictions_participant_charger_dist($annee, $id_participant = 0) {
-	if (!autoriser('fictionsassociations')) {
-		return false;
-	}
+/**
+ * Champs du formulaire (plugin saisies). Saisies contrôle aussi, avant verifier(), les
+ * champs obligatoires et que type et compte font partie des choix proposés : un POST
+ * forgé ne peut pas associer un visiteur (6forum), qui ne pourrait pas écrire.
+ */
+function formulaires_fictions_participant_saisies_dist($annee, $id_participant = 0) {
 	include_spip('inc/fictions_participants');
 	$annee = intval($annee);
-	$id_participant = intval($id_participant);
-	$participant = $id_participant ? (fictions_participants($annee, false)[$id_participant] ?? null) : null;
-	if ($id_participant && !$participant) {
-		return false;
-	}
 
 	// Comptes proposés : d'abord les profs inscrits au projet de l'année (notés à leur
 	// connexion SSO, cf fictions_cioidc_userinfo), puis tous les autres comptes
@@ -37,13 +34,71 @@ function formulaires_fictions_participant_charger_dist($annee, $id_participant =
 			$comptes[(int) $row['id_auteur']] = $libelle;
 		}
 	}
+	// Groupes d'options : la clé sert de libellé à l'optgroup
+	$data_comptes = [];
+	if ($comptes_inscrits) {
+		$data_comptes[_T('fictions:associations_comptes_inscrits', ['annee' => $annee])] = $comptes_inscrits;
+	}
+	$data_comptes[_T('fictions:associations_comptes_autres')] = $comptes;
+
+	// Mêmes valeurs que FICTIONS_TYPES_PARTICIPANT
+	$types = [
+		'classe' => _T('fictions:participant_type_classe'),
+		'ecrivain' => _T('fictions:participant_type_ecrivain'),
+	];
+
+	return [
+		[
+			'saisie' => 'input',
+			'options' => [
+				'nom' => 'nom',
+				'label' => _T('fictions:associations_nom'),
+				'obligatoire' => 'oui',
+			],
+		],
+		[
+			'saisie' => 'selection',
+			'options' => [
+				'nom' => 'type',
+				'label' => _T('fictions:associations_type'),
+				'obligatoire' => 'oui',
+				'cacher_option_intro' => 'oui',
+				'data' => $types,
+				'defaut' => 'classe',
+			],
+		],
+		[
+			'saisie' => 'selection',
+			'options' => [
+				'nom' => 'id_auteur',
+				'label' => _T('fictions:associations_compte'),
+				'explication' => _T('fictions:associations_compte_explication'),
+				'obligatoire' => 'oui',
+				'data' => $data_comptes,
+			],
+		],
+		'options' => [
+			'verifier_valeurs_acceptables' => true,
+		],
+	];
+}
+
+function formulaires_fictions_participant_charger_dist($annee, $id_participant = 0) {
+	if (!autoriser('fictionsassociations')) {
+		return false;
+	}
+	include_spip('inc/fictions_participants');
+	$annee = intval($annee);
+	$id_participant = intval($id_participant);
+	$participant = $id_participant ? (fictions_participants($annee, false)[$id_participant] ?? null) : null;
+	if ($id_participant && !$participant) {
+		return false;
+	}
 
 	$valeurs = [
 		'nom' => $participant['nom'] ?? '',
 		'type' => $participant['type'] ?? 'classe',
 		'id_auteur' => $participant['id_auteur'] ?? '',
-		'_comptes_inscrits' => $comptes_inscrits,
-		'_comptes' => $comptes,
 		'annee' => $annee,
 		'_modification' => (bool) $participant,
 	];

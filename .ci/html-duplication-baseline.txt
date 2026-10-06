@@ -13,9 +13,8 @@
 7L | plugins/projets/fictions/squelettes/inclure/lecture-corps.html:12 <-> plugins/projets/petitfablab/squelettes/inclure/layout_init.html:40
 7L | plugins/projets/fictions/squelettes/inclure/liste-cadavres-auteur-small.html:25 <-> plugins/projets/fictions/squelettes/inclure/liste-cadavres-auteur.html:22
 7L | plugins/projets/fictions/squelettes/inclure/tete-html.html:8 <-> plugins/projets/petitfablab/squelettes/lecture-script.html:2
-8L | plugins/projets/fictions/formulaires/fictions_affectations.html:1 <-> plugins/projets/fictions/formulaires/fictions_calendrier.html:1
+8L | plugins/projets/fictions/formulaires/fictions_affectations.html:1 <-> plugins/projets/fictions/formulaires/fictions_participant.html:2
 8L | plugins/projets/fictions/squelettes/inclure/rubrique.html:23 <-> plugins/projets/fictions/squelettes/sommaire.html:18
 8L | plugins/projets/petitfablab/squelettes/edition.html:4 <-> plugins/projets/petitfablab/squelettes/lecture-script.html:1
-9L | plugins/projets/fictions/formulaires/fictions_calendrier.html:1 <-> plugins/projets/fictions/formulaires/fictions_participant.html:2
 9L | plugins/projets/fictions/squelettes/inclure/liste-cadavres-auteur-small.html:32 <-> plugins/projets/fictions/squelettes/inclure/liste-cadavres-auteur.html:32
 9L | plugins/projets/petitfablab/squelettes/inclure/rubrique.html:133 <-> plugins/projets/petitfablab/squelettes/lecture.html:142
