@@ -30,15 +30,12 @@ $(document).ready(function() {
 		scrollToEl($scrollTarget, 0, 300, 0);
 	});
 
-	// Script écrivain : open/close
-	$('#slideup-script-ecrivain, #close-script-ecrivain').hide();
-	$('#open-script-ecrivain').click(function() {
-		$('#slideup-script-ecrivain').toggle("slow");
-		$('#open-script-ecrivain, #close-script-ecrivain').toggle();
-	});
-	$('#close-script-ecrivain').click(function() {
-		$('#slideup-script-ecrivain').toggle("slow");
-		$('#open-script-ecrivain, #close-script-ecrivain').toggle();
+	// Script écrivain : open/close, un bloc par chapitre visible
+	$('.slideup-script-ecrivain, .close-script-ecrivain').hide();
+	$('.open-script-ecrivain, .close-script-ecrivain').click(function() {
+		var $script = $(this).closest('.script-ecrivain');
+		$script.find('.slideup-script-ecrivain').toggle("slow");
+		$script.find('.open-script-ecrivain, .close-script-ecrivain').toggle();
 	});
 
 	// Script collège : open/close

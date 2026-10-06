@@ -30,13 +30,13 @@ RUBRIQUE.HTML > CHAPITRE-VISIBLE.HTML
 	<img src="#CHEMIN{img/ecriture/fleche_script_ecrivain.png}" alt="" width="44" height="17" />
 </div>
 <div class="script-ecrivain">
-	<div class="script-open-close" id="open-script-ecrivain"></div>
-	<div class="script-open-close" id="close-script-ecrivain"></div>
+	<div class="script-open-close open-script-ecrivain"></div>
+	<div class="script-open-close close-script-ecrivain"></div>
 	<div class="script-titre"><:fictions:script_titre_prefixe:>#GET{var_auteur_article}</div>
 	[(#REM) Documents et envoi hors du crayon : à l'enregistrement, crayons
 	remplace le contenu de .script-texte, la liste disparaîtrait. Même bloc
 	que la fiche script en écriture (inclure/chapitre-ecriture-script.html). ]
-	<div id="slideup-script-ecrivain">
+	<div class="slideup-script-ecrivain">
 		<div class="script-texte #EDIT{texte}">[(#TEXTE)]</div>
 		<INCLURE{fond=inclure/script-documents, id_article, ajax=documents} />
 		[(#AUTORISER{joindredocument,article,#ID_ARTICLE}|oui)
