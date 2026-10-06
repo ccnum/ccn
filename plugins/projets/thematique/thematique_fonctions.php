@@ -1682,7 +1682,14 @@ function thematique_voir_mission() {
 	// (statut 0minirezo) peut donc se retrouver avec $role='intervenant'
 	// s'il est aussi rattaché à une hiérarchie "consignes". On vérifie le
 	// statut directement pour ne pas le priver du bouton.
-	if ($statut === '0minirezo' || in_array($role, ['admin', 'intervenant'], true)) {
+	if (in_array($role, ['admin', 'intervenant'], true)) {
+		return 'oui';
+	}
+	// Mais pas pour un prof : hors SSO, un compte prof créé à la main est
+	// typiquement admin restreint de sa rubrique de classe (0minirezo) et
+	// voyait "Une nouvelle mission" alors que son rôle est "prof". Seul un
+	// vrai webmestre rattaché à une classe garde le bouton.
+	if ($statut === '0minirezo' && ($role !== 'prof' || session_get('webmestre') === 'oui')) {
 		return 'oui';
 	}
 	return 'non';
