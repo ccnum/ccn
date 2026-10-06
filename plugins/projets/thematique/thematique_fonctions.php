@@ -1369,55 +1369,12 @@ function thematique_id_rubrique_enfant_a_mot($id_parent, $titre_mot, $orderby = 
 }
 
 /**
- * Ids des rubriques racine (id_parent=0) portant un mot-clé donné.
- *
- * Remplace un chaînage BOUCLE(RUBRIQUES){racine}{titre_mot=xxx} par un
- * tableau résolu en PHP, pour aplatir les boucles imbriquées des flux
- * d'activité (cf noisettes/inc/actus_timeline.html).
- *
- * @param string $titre_mot
- * @return int[]
- */
-function thematique_ids_rubriques_racine_a_mot($titre_mot) {
-	$id_mot = thematique_id_mot($titre_mot);
-	if (!$id_mot) {
-		return [];
-	}
-
-	$rows = sql_allfetsel(
-		'r.id_rubrique',
-		['spip_rubriques AS r', 'spip_mots_liens AS ml'],
-		[
-			'ml.id_objet=r.id_rubrique',
-			'ml.objet=' . sql_quote('rubrique'),
-			'ml.id_mot=' . intval($id_mot),
-			'r.id_parent=0',
-		]
-	);
-	return array_map('intval', array_column($rows, 'id_rubrique'));
-}
-
-/**
- * Rubrique racine (id_parent=0) portant un mot-clé donné (la première si
- * plusieurs) — variante singulière de thematique_ids_rubriques_racine_a_mot(),
- * pour les mots-clés supposés uniques (ex: "ressources").
- *
- * @param string $titre_mot
- * @return int 0 si non trouvée
- */
-function thematique_id_rubrique_racine_a_mot($titre_mot) {
-	$ids = thematique_ids_rubriques_racine_a_mot($titre_mot);
-	return $ids ? $ids[0] : 0;
-}
-
-/**
  * Première rubrique (au sens id_rubrique croissant, toutes profondeurs)
  * portant un mot-clé donné, mise en cache mémoire par requête.
  *
  * Remplace squelettes/modeles/rub_mot_clef.html (BOUCLE RUBRIQUES non
  * cachée, relancée à chaque #MODELE{rub_mot_clef}{titre_mot}) : même
- * requête (pas de restriction id_parent=0, contrairement à
- * thematique_id_rubrique_racine_a_mot, qui vise un usage différent).
+ * requête (pas de restriction id_parent=0).
  *
  * @param string $titre_mot
  * @return int 0 si non trouvée
@@ -1583,70 +1540,6 @@ function thematique_article_a_mot($titre_mot) {
 	);
 
 	return $cache[$titre_mot] = $article ? ($article['id_article'] . '|' . $article['statut']) : '0|';
-}
-
-/**
- * Ids des rubriques enfants directes d'une rubrique, triées par date
- * décroissante et limitées — remplace une BOUCLE(RUBRIQUES){id_parent}
- * {!par date}{0,N} imbriquée par un tableau résolu en PHP (cf
- * noisettes/inc/actus_timeline.html).
- *
- * @param int $id_parent
- * @param int $limite 0 = pas de limite
- * @return int[]
- */
-function thematique_ids_rubriques_enfants($id_parent, $limite = 0) {
-	if (!$id_parent) {
-		return [];
-	}
-	$rows = sql_allfetsel(
-		'id_rubrique',
-		'spip_rubriques',
-		'id_parent=' . intval($id_parent),
-		'',
-		'date DESC',
-		$limite ? '0,' . intval($limite) : ''
-	);
-	return array_map('intval', array_column($rows, 'id_rubrique'));
-}
-
-/**
- * Ids des rubriques petites-enfants (id_parent -> enfants -> enfants) de
- * $id_grandparent portant un mot-clé donné, triées par date décroissante et
- * limitées — même principe que thematique_ids_rubriques_enfants() mais un
- * niveau plus profond (ex: chaque classe a une sous-rubrique "consignes",
- * cf noisettes/inc/actus_timeline.html).
- *
- * @param int $id_grandparent
- * @param string $titre_mot
- * @param int $limite 0 = pas de limite
- * @return int[]
- */
-function thematique_ids_rubriques_petits_enfants_a_mot($id_grandparent, $titre_mot, $limite = 0) {
-	if (!$id_grandparent) {
-		return [];
-	}
-	$id_mot = thematique_id_mot($titre_mot);
-	if (!$id_mot) {
-		return [];
-	}
-
-	// Alias (r/parent/ml) obligatoires, cf thematique_id_rubrique_enfant_a_mot().
-	$rows = sql_allfetsel(
-		'r.id_rubrique',
-		['spip_rubriques AS r', 'spip_rubriques AS parent', 'spip_mots_liens AS ml'],
-		[
-			'parent.id_rubrique=r.id_parent',
-			'parent.id_parent=' . intval($id_grandparent),
-			'ml.id_objet=r.id_rubrique',
-			'ml.objet=' . sql_quote('rubrique'),
-			'ml.id_mot=' . intval($id_mot),
-		],
-		'',
-		'r.date DESC',
-		$limite ? '0,' . intval($limite) : ''
-	);
-	return array_map('intval', array_column($rows, 'id_rubrique'));
 }
 
 /**
@@ -2474,8 +2367,7 @@ function thematique_id_rubrique_classe_auteur($id_auteur) {
  * de l'auteur (logo SPIP puis avatar ENT), sinon logo de la rubrique/du
  * mot, sinon picto du site — mis en cache mémoire par requête. Remplace
  * squelettes/modeles/logo_carre.html (jusqu'à 7 boucles SPIP non cachées
- * relancées à chaque affichage : timeline, sidebar, forum, listes
- * d'actus...).
+ * relancées à chaque affichage : timeline, sidebar, forum...).
  *
  * Appelée comme filtre, avec le type d'objet en 2ᵉ paramètre (uniforme quel
  * que soit l'objet, plutôt qu'une position dédiée par type) :
