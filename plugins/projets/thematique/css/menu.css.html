@@ -575,9 +575,19 @@ hors du bouton, ne reprennent pas le padding haut de l'extrait. */
 	}
 	#menu_bas.zone-menu li.logo a.logo_menu-#VALEUR.selected::before,
 	#menu_bas.zone-menu li.logo a.logo_menu-#VALEUR:hover::before {
-		background-image: url(#ENV{chemin}/img/logo_[(#VALEUR)_white].png);
+		filter: brightness(0) invert(1);
 	}
 </BOUCLE_logos>
+
+/* Picto blanc par filtre plutôt qu'une 2e image logo_xxx_white.png, chargée
+   seulement au 1er passage en sélection et qui pouvait manquer (#508).
+   Agenda/Salle des profs : le fond bleu suit aussi le mode de la timeline
+   (.show_blogs/.show_evenements, cf BOUCLE_vue), le picto doit suivre pareil
+   sinon il reste bleu foncé sur fond bleu si .selected a sauté. */
+.show_blogs #menu_bas.zone-menu li.logo a.menu_logo_blogs::before,
+.show_evenements #menu_bas.zone-menu li.logo a.menu_logo_evenements::before {
+	filter: brightness(0) invert(1);
+}
 
 <BOUCLE_vue(DATA){liste tout,timeline,classe,consigne,ressources,evenements,blogs,classes,article_evt,texte,image,son,video,autre,date,notation,descendant,ascendant,forum,ressource_classes,reponse}>
 	#SET{file,#CHEMIN{img/logo_#NOM_SITE_SPIP_#VALEUR.png}|sinon{#CHEMIN{img/logo_#VALEUR.png}}|sinon{#CHEMIN{prive/vignettes/#VALEUR.png}}|sinon{#CHEMIN{img/logo_voir.png}}}
