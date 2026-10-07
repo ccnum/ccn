@@ -12,7 +12,7 @@ RUBRIQUE.HTML > CHAPITRE-ECRITURE-SCRIPT.HTML
 </div>
 <BOUCLE_article_verrouille_script(ARTICLES){id_article}{statut=prop}>
 	<div class="script-ecrivain script-ecrivain-edit">
-	    <div class="script-titre"><:fictions:script_titre_prefixe:>#GET{var_auteur_article}</div>
+	    <div class="script-titre"><:fictions:script_titre_prefixe:>[ (#GET{var_auteur_article})]</div>
 	    <div class="script-texte #EDIT{texte}">#TEXTE</div>
 	    <br /><hr />
 		<INCLURE{fond=inclure/script-documents, id_article, ajax=documents} />

@@ -16,7 +16,7 @@
 				<BOUCLE_doc(DOCUMENTS){id_article}{mode?}>
 				<div style="clear: both; padding: 5px;">
 					<a href="#URL_DOCUMENT" title="<:bouton_telecharger:>" type="#MIME_TYPE">
-						[(#LOGO_DOCUMENT|left||image_reduire{80,60})]
+						[(#LOGO_DOCUMENT{left}|image_reduire{80,60})]
 					</a>
 					[(#REM) Pas de PHP ici : l'ancien bloc interpolait l'URL de la requête dans du
 					code PHP évalué (audit 2026-10) et appelait une action "documenter" qui

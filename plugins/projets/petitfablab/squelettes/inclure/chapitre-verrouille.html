@@ -12,7 +12,7 @@
 
 	<div class="ecriture-chapitre-auteur">
 		<BOUCLE_auteur_article(AUTEURS){id_auteur IN 1,2,60,71,80,28,70,73}{par hasard}{0,1}{tout}>
-			<div class="ecriture-chapitre-avatar">[(#LOGO_AUTEUR||image_reduire{42,42})]</div>
+			<div class="ecriture-chapitre-avatar">[(#LOGO_AUTEUR|image_reduire{42,42})]</div>
 		</BOUCLE_auteur_article>
 		<div class="ecriture-chapitre-nom">[(#SURTITRE|sinon{Auteur Anonyme})]</div>
 

@@ -1,0 +1,27 @@
+[(#REM)
+LISTE-CADAVRES-AUTEUR.HTML > LISTE-CADAVRES-INFOBULLE.HTML
+Infobulle d'un chapitre dans la grille des cadavres : numéro de l'histoire,
+titre du chapitre, participant et, sauf dans la petite grille (small), fin
+du texte.
+
+Paramètres : id_article, numero (de l'histoire), small (non vide = petite grille)
+]
+<BOUCLE_chapitre(ARTICLES){id_article}{statut IN publie,prop}>
+<div class="liste-tooltip-content">
+	<div class="liste-tooltip-inner">
+		<div class="liste-tooltip-num-cadavre"><:fictions:histoire:>#ENV{numero}</div>
+		<div class="liste-tooltip-titre-chapitre">#TITRE</div>
+		<BOUCLE_auteur(AUTEURS){id_article}{0,1}>
+			<div class="liste-tooltip-photo">[(#LOGO_AUTEUR|image_reduire{42,42})]</div>
+			<div class="liste-tooltip-auteur">[(#ID_ARTICLE|fictions_nom_participant_chapitre|sinon{#NOM})]</div>
+			[(#ENV{small}|non)
+			<div class="liste-tooltip-extrait">
+				[(#DESCRIPTIF|textebrut|recupererDernieresLignesChapitres{380})]<br />
+			</div>
+			]
+		</BOUCLE_auteur>
+	</div>
+	<div class="liste-tooltip-bulle">
+	</div>
+</div>
+</BOUCLE_chapitre>

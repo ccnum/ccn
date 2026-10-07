@@ -1444,6 +1444,11 @@ function thematique_nom_auteur_commentaire($id_auteur) {
 	if ($nom === '') {
 		return $cache[$id_auteur] = $nom_complet;
 	}
+	// Un intervenant a déjà son prénom+nom en tête de nom (cf
+	// thematique_cioidc_nom_affiche) : pas de doublon.
+	if (str_starts_with($nom, $nom_complet)) {
+		return $cache[$id_auteur] = $nom;
+	}
 
 	return $cache[$id_auteur] = $nom_complet . ' - ' . $nom;
 }

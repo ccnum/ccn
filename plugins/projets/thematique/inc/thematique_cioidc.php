@@ -191,8 +191,14 @@ function thematique_cioidc_nom_complet(array $data) {
 // prénom/nom de la personne : décidé finalement sur l'issue #44, seuls le rôle, la
 // classe et le collège identifient l'auteur. Le group_name reçu de l'ENT est
 // préfixé par "CCN - " : préfixe redondant qu'on retire.
-function thematique_cioidc_nom_affiche(array $classes_reelles, ?string $role_ent, array $uai_liste = []) {
+// Exception : un intervenant n'a ni classe ni établissement (UAI 00000CCN non résolu)
+// et ressortait "Intervenant" tout court, indistinguable d'un autre : $nom_personne
+// (prénom+nom, cf thematique_cioidc_nom_complet()) est alors placé en tête.
+function thematique_cioidc_nom_affiche(array $classes_reelles, ?string $role_ent, array $uai_liste = [], string $nom_personne = '') {
 	$parties = [];
+	if ($nom_personne !== '') {
+		$parties[] = $nom_personne;
+	}
 	if ($role_ent) {
 		$parties[] = $role_ent;
 	}
