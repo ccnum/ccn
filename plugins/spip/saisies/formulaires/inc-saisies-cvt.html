@@ -57,7 +57,7 @@
 
 					[(#REM) ajouter les saisies supplementaires : extra et autre, a cet endroit ]
 					<!--extra-->
-					<INCLURE{fond=#ENV**{_saisies/options/squelette_boutons,formulaires/inc-saisies-cvt-boutons},env} />
+					<INCLURE{fond=formulaires/inc-saisies-cvt-boutons-#ENV{_saisies/options/boutons_presentation,defaut},env} />
 				</div></form>
 			]
 

@@ -94,8 +94,6 @@ function formulaires_construire_formulaire_charger($identifiant, $formulaire_ini
 	$saisies_groupes_disponibles = saisies_groupes_lister_disponibles('saisies/groupes');
 	$contexte['_saisies_groupes_disponibles'] = $saisies_groupes_disponibles;
 
-	$contexte['fond_generer'] = 'formulaires/inc-generer_saisies_configurables';
-
 	if (_request('configurer_saisie')) {
 		$contexte['_configurer_saisie'] = 'configurer_saisie';
 	}
@@ -690,7 +688,6 @@ function construire_formulaire_generer_saisie_configurable(array $saisie, array 
 			$env2["saisie_modifiee_$nom"]['verifier'] = $verif_format_constructeur;
 		}
 
-		$env2['fond_generer'] = 'inclure/generer_saisies';
 		$saisie = saisies_inserer_html(
 			$saisie,
 			'<div class="formulaire_configurer"><div class="editer-groupe formulaire_configurer-contenus">'

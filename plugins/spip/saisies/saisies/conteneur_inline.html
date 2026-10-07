@@ -5,7 +5,9 @@
 	[(#ENV{constructeur}|oui)
 		<div class="#GET{subdiv_class}">
 	]
-			#INCLURE{fond=#ENV{fond_generer,"inclure/generer_saisies"}, env, saisies=#ENV{saisies}, from_conteneur_inline='on'}
+
+			[(#ENV{constructeur}|?{#SET{fond,formulaires/inc-generer_saisies_configurables},#SET{fond,inclure/generer_saisies}})]
+			#INCLURE{fond=#GET{fond}, env, saisies=#ENV{saisies}, from_conteneur_inline='on'}
 	[(#ENV{constructeur}|oui)
 		</div>
 	]
