@@ -5,7 +5,12 @@ SOMMAIRE.HTML > LISTE-CADAVRE-AUTEUR.HTML
 Les règles d'autorisation pour déterminer si un chapitre appartient
 à l'utilisateur connecté sont centralisées dans
 inc/fictions_autorisation.php (#441).
+
+CACHE{0} : la grille dépend de l'auteur connecté (EST_AUTEUR_DROITS lit la
+session), comme liste-cadavres-auteur-small.html — sans ça, la grille calculée
+pour le premier visiteur était servie à tous.
 ]
+#CACHE{0}
 
 
 #SET{i,0}
