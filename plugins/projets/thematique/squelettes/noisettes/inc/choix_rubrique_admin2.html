@@ -11,6 +11,9 @@
 #SET{id_rubrique_mission, #VAL{1}|thematique_id_rubrique_mission}
 
 #SET{voir_mission, #VAL{1}|thematique_voir_mission}
+[(#REM) Salle des profs (mot evenements) et agenda (mot blogs, inversion #412) :
+entrées affichées seulement si l'auteur peut y publier, même règle qu'à l'envoi
+du formulaire (thematique_peut_publier_dans_mot). ]
 
 [(#SESSION{role}|thematique_role_publie|oui|et{#CONST{_ANNEE_SCOLAIRE}|=={#ANNEE_SCOLAIRE_REELLE}}|oui)
 <div id="menu_haut_rubrique" class="bloc_titre">
@@ -29,24 +32,28 @@
 					<:thematique:nouvelle_mission:>
 				</li>
 			]
+			[(#SESSION{id_auteur}|thematique_peut_publier_dans_mot{evenements}|oui)
 			<li onClick='callInformationCreer();'
 				class="select-option"
 				data-value="#ID_RUBRIQUE"
 			>
 				<:thematique:information_salle_des_profs:>
 			</li>
+			]
 			<li onClick='callNouvelleRessource();'
 				class="select-option"
 				data-value="#ID_RUBRIQUE"
 			>
 				<:thematique:nouvelle_ressource:>
 			</li>
+			[(#SESSION{id_auteur}|thematique_peut_publier_dans_mot{blogs}|oui)
 			<li onClick='callEvenementCreer();'
 				class="select-option"
 				data-value="#ID_RUBRIQUE"
 			>
 				<:thematique:nouvel_evenement_agenda:>
 			</li>
+			]
 		</ul>
 	</div>
 </div>
