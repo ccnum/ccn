@@ -7,17 +7,17 @@ if (!defined('_ECRIRE_INC_VERSION')) {
 // un controleur php + html
 // html == avec un modele, controleurs/traduction.html)
 function controleurs_traduction_dist($regs) {
-	[, $crayon, $type, $champ, $id, $classes] = $regs;
+	[, $crayon_nom, $crayon_type, $champ, $id, $classes] = $regs;
 
-	$valeur = valeur_colonne_table($type, $id, $champ);
-	$n = new Crayon(
+	$valeur = valeur_colonne_table($crayon_type, $id, $champ);
+	$crayon = new Crayon(
 		'traduction-' . $id . '-' . $champ,
 		$valeur,
 		['motif_langue' => $id, 'controleur' => 'controleurs/traduction']
 	);
 
 	$contexte = ['motif_langue' => $id, 'value' => $valeur[$id]];
-	spip_log("$valeur = valeur_colonne_table($type, $id, $champ);", _LOG_INFO_IMPORTANTE);
+	spip_log("controleurs_traduction_dist: $valeur = valeur_colonne_table($crayon_type, $id, $champ);", 'crayons' . _LOG_INFO_IMPORTANTE);
 
 	include_spip('inc/traduire_texte');
 	if ($contexte['value'] == '' && function_exists('traduire')) {
@@ -28,8 +28,8 @@ function controleurs_traduction_dist($regs) {
 		$traduction = textebrut(traduire($valeur_lang_site, $lang, $GLOBALS['meta']['langue_site']));
 		$contexte['traduction'] = $traduction;
 	}
-	$html = $n->formulaire($contexte);
+	$html = $crayon->formulaire($contexte);
 	$status = null;
 
-	return [$html, $status];
+	return [$html, $status, $crayon];
 }

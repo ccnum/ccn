@@ -6,31 +6,35 @@ if (!defined('_ECRIRE_INC_VERSION')) {
 
 // un controleur qui n'utilise que php et les inputs défauts
 function controleurs_article_intro3_dist($regs) {
-	[, $crayon, $type, $champ, $id] = $regs;
-	$valeur = valeur_colonne_table($type, ['descriptif', 'chapo', 'texte'], $id);
+	[, $crayon_nom, $crayon_type, $champ, $id] = $regs;
+	$valeur = valeur_colonne_table($crayon_type, ['descriptif', 'chapo', 'texte'], $id);
 	if ($valeur === false) {
-		return ["$type $id $champ: " . _U('crayons:pas_de_valeur'), 6];
+		return ["$crayon_type $id $champ: " . _U('crayons:pas_de_valeur'), 6];
 	}
 
-	$n = new Crayon('article-intro3-' . $id, $valeur, ['hauteurMini' => 234]);
+	$crayon = new Crayon('article-intro3-' . $id, $valeur, ['hauteurMini' => 234]);
 
-	return [
-		// html
-		$n->formulaire(
-			// champs et attributs propres
-			[
-			'descriptif' => ['type' => 'texte', 'attrs' => [
-				'style' => 'height:' . ceil($n->hauteur * 2 / 13) . 'px;' .
-							'width:' . $n->largeur . 'px;']],
-			'chapo' =>  ['type' => 'texte', 'attrs' => [
-				'style' => 'height:' . ceil($n->hauteur * 4 / 13) . 'px;' .
-							'width:' . $n->largeur . 'px;']],
-			'texte' =>  ['type' => 'texte', 'attrs' => [
-				'style' => 'height:' . ceil($n->hauteur * 4 / 13) . 'px;' .
-							'width:' . $n->largeur . 'px;']]] //,
-			// attributs communs :( marche pas pour style , pas 2 fois ?
-			// array('style' => 'width:' . $n->largeur . 'px;')
-		),
-		// status
-		null];
+	$contexte = [
+			'descriptif' => [
+				'type' => 'texte',
+				'attrs' => [
+					'style' => 'height:' . ceil($crayon->hauteur * 2 / 13) . 'px;' . 'width:' . $crayon->largeur . 'px;'
+				]
+			],
+			'chapo' =>  [
+				'type' => 'texte',
+				'attrs' => [
+					'style' => 'height:' . ceil($crayon->hauteur * 4 / 13) . 'px;' . 'width:' . $crayon->largeur . 'px;'
+				]
+			],
+			'texte' =>  [
+				'type' => 'texte',
+				'attrs' => [
+					'style' => 'height:' . ceil($crayon->hauteur * 4 / 13) . 'px;' . 'width:' . $crayon->largeur . 'px;'
+				]
+			]
+	];
+	$html = $crayon->formulaire($contexte);
+	$status = null;
+	return [$html, $status, $crayon];
 }

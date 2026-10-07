@@ -14,6 +14,70 @@ if (function_exists('include_fichiers_fonctions')) {
 	include_fichiers_fonctions();
 }
 
+
+/**
+ * Point d'entrée de l'action
+ */
+function action_crayons_store_dist() {
+	// ne pas se fatiguer si le visiteur n'a aucun droit
+	if (!(function_exists('analyse_droits_rapide') ? analyse_droits_rapide() : analyse_droits_rapide_dist())) {
+		action_crayons_store_return(['$erreur' => 'acces interdit']);
+	}
+	action_crayons_store_args();
+}
+
+/**
+ * permettre de passer une autre fonction de stockage des informations
+ * @param string $store
+ */
+function action_crayons_store_args($store = 'crayons_store') {
+	header('Content-Type: text/plain; charset=' . $GLOBALS['meta']['charset']);
+
+	include_spip ('inc/session');
+	$lang = session_get('lang');
+	if (!is_null($lang)) {
+		lang_select($lang);
+	}
+
+	/** @uses crayons_store()  $r */
+	$r = $store();
+
+	// Si on a ete appeles par jQuery, on renvoie tout, c'est le client
+	// crayons.js qui va traiter l'affichage du resultat et status
+	# Attention le test $_SERVER["HTTP_X_REQUESTED_WITH"] === "XMLHttpRequest"
+	# n'est pas bon car le cas d'un fichier uploade via iframe n'est pas detecte
+
+	action_crayons_store_return($r);
+}
+
+function action_crayons_store_return($r) {
+	// S'il y a une adresse de redirection, on renvoie vers elle
+	// En cas d'erreur il faudrait ajouter &err=... dans l'url ?
+	if (_request('redirect')) {
+		if (!$r['$erreur'] || $r['$annuler']) {
+			include_spip('inc/headers');
+			redirige_par_entete(_request('redirect'));
+		} else {
+			echo "<h4 class='status'>" . $r['$erreur'] . "</h4>\n";
+
+			foreach ($r as $wid => $v) {
+				if ($wid !== '$erreur') {
+					echo "<div id='$wid'>$v</div><hr />\n";
+				}
+			}
+			echo "<a href='" . quote_amp(_request('redirect')) . "'>"
+				. quote_amp(_request('redirect'))
+				. "</a>\n";
+		}
+	} else {
+		// Cas normal : JSON
+		echo crayons_json_encode($r);
+	}
+
+	exit;
+
+}
+
 /**
  * Verifier le hash de securite
  * @param $w
@@ -117,17 +181,25 @@ function crayons_store($options = []) {
 				$content = $postee[1];
 
 				if ($content && preg_match(_PREG_CRAYON, 'crayon ' . $name, $regs)) {
-					[, $crayon, $type, $modele, $id] = $regs;
+					[, $crayon, $crayon_type, $modele, $id] = $regs;
 					$wid = $postee[3];
+					$table_sql = '';
 
-					spip_log("autoriser('crayonner', $type, $id, null, array('modele' => $modele)", 'crayons_distant');
-					if (!autoriser('crayonner', $type, $id, null, ['modele' => $modele])) {
+					$champs = array_keys($content);
+					$champs_str_log = implode(',', $champs);
+					[$distant, $table, $type] = distant_table($crayon_type);
+					/** @uses autoriser_crayonner_dist() */
+					if (!crayons_get_table($crayon_type, $table_sql)
+					  || !autoriser('crayonner', $type, $id, null, ['crayon_type' => $crayon_type, 'type' => $type, 'distant' => $distant, 'modele' => $modele, 'champ' => $champs])) {
+						spip_log("autoriser('crayonner', $type, $id, null, ['crayon_type' => $crayon_type, 'type' => $type, 'distant' => $distant, 'modele' => $modele, 'champ' => [$champs_str_log]]) : NIET", 'crayons' . _LOG_ERREUR);
 						$return['$erreur'] =
-							"$type $id: " . _U('crayons:non_autorise');
+							"$crayon_type $id: " . _U('crayons:non_autorise');
 					} else {
+						spip_log("autoriser('crayonner', $type, $id, null, ['crayon_type' => $crayon_type, 'type' => $type, 'distant' => $distant, 'modele' => $modele, 'champ' => [$champs_str_log]]) : OK", 'crayons' . _LOG_DEBUG);
 						// recuperer l'existant pour calculer son md5 et verifier
 						// qu'il n'a pas ete modifie entre-temps
 						$get_valeur = $options['f_get_valeur'];
+						/** @uses crayons_store_get_valeur() */
 						$data = $get_valeur($content, $regs);
 
 						$md5 = md5(serialize($data));
@@ -137,7 +209,7 @@ function crayons_store($options = []) {
 						// a la nouvelle valeur ? dans ce cas on procede
 						// comme si "pas de modification", sinon erreur
 						if ($md5 != $postee[2] && $md5 !== md5(serialize($content))) {
-							$return['$erreur'] = "$type $id $modele: " . _U('crayons:modifie_par_ailleurs');
+							$return['$erreur'] = "$crayon_type $id $modele: " . _U('crayons:modifie_par_ailleurs');
 						}
 
 						// Vérifications, en retournant presque comme le pipeline formulaire_verifier
@@ -146,7 +218,7 @@ function crayons_store($options = []) {
 							'crayons_verifier',
 							[
 								'args' => [
-									'type' => $type,
+									'type' => $crayon_type,
 									'modele' => $modele,
 									'id' => $id,
 									'content' => $content,
@@ -169,14 +241,14 @@ function crayons_store($options = []) {
 							}
 						}
 
-						$modifs[] = [$type, $modele, $id, $content, $wid];
+						$modifs[] = [$crayon_type, $modele, $id, $content, $wid];
 
 						// Anciennes méthodes de vérifications.
 						// Aiguillage pour verification de la saisie
 						// Pour traitement ulterieur les fonctions de verifications doivent renvoyer $invalides :
 						// $invalides[wid_champ]['msg'] -> message de saisie invalide
 						// $invalides[wid_champ]['retour'] -> caracteres invalides
-						$f = 'verifier_' . $type . '_' . $modele;
+						$f = 'verifier_' . $crayon_type . '_' . $modele;
 						if (function_exists($f)) {
 							$_invalides = $f($modifs);
 							if ($_invalides && is_array($invalides)) {
@@ -208,6 +280,7 @@ function crayons_store($options = []) {
 	// on traite toutes les modifications
 	// en appelant la fonction adequate de traitement
 	$set_modifs = $options['f_set_modifs'];
+	/** @uses crayons_store_set_modifs() */
 	$return = $set_modifs($modifs, $return);
 
 	// une quelconque erreur ... ou rien ==> on ne fait rien !
@@ -218,17 +291,18 @@ function crayons_store($options = []) {
 	// et maintenant refaire l'affichage des crayons modifies
 	include_spip('inc/texte');
 	foreach ($modifs as $m) {
-		[$type, $modele, $id, $content, $wid] = $m;
+		[$crayon_type, $modele, $id, $content, $wid] = $m;
 		if (
 			!(
-				($f = charger_fonction($type . '_' . $modele, 'vues', true))
+				($f = charger_fonction($crayon_type . '_' . $modele, 'vues', true))
 				|| ($f = charger_fonction($modele, 'vues', true))
-				|| ($f = charger_fonction($type, 'vues', true))
+				|| ($f = charger_fonction($crayon_type, 'vues', true))
 			)
 		) {
 			$f = 'vues_dist';
 		}
-		$return[$wid] = $f($type, $modele, $id, $content, $wid);
+		/** @see  vues_dist() */
+		$return[$wid] = $f($crayon_type, $modele, $id, $content, $wid);
 	}
 	return $return;
 }
@@ -242,8 +316,8 @@ function crayons_store($options = []) {
  * @return array
  */
 function crayons_store_get_valeur($content, $regs) {
-	[, $crayon, $type, $modele, $id] = $regs;
-	return valeur_colonne_table($type, array_keys($content), $id);
+	[, $crayon, $crayon_type, $modele, $id] = $regs;
+	return valeur_colonne_table($crayon_type, array_keys($content), $id);
 }
 
 /**
@@ -260,36 +334,34 @@ function crayons_store_set_modifs($modifs, $return) {
 	// verifier qu'on a tout ce qu'il faut pour mettre a jour la base
 	// et regrouper les mises a jour par type/id
 	foreach ($modifs as $modif) {
-		[$type, $modele, $id, $content, $wid] = $modif;
+		[$crayon_type, $modele, $id, $content, $wid] = $modif;
+		[$distant, $table, $type] = distant_table($crayon_type);
 
 		$fun = '';
 		// si le crayon est un MODELE avec une fonction xxx_revision associee
 		// cas ou une fonction xxx_revision existe
 		if (
-			function_exists($f = $type . '_' . $modele . '_revision')
+			function_exists($f = $crayon_type . '_' . $modele . '_revision')
 			|| function_exists($f = $modele . '_revision')
-			|| function_exists($f = $type . '_revision')
+			|| function_exists($f = $crayon_type . '_revision')
 		) {
 			$fun = $f;
 		}
 
-		if (!$fun) {
-			if (is_null($tables_objet)) {
-				include_spip('base/objets');
-				$tables_objet = lister_tables_objets_sql();
-			}
-			if (isset($tables_objet[table_objet_sql($type)])) {
-				// si on edite un objet editorial bien declare
-				// passer par l'API objet_modifier
-				$fun = 'crayons_objet_modifier';
-			}
+		if (!$fun
+			&& !$distant
+			&& is_numeric($id)
+			&& crayons_is_table_interne(table_objet_sql($table), true)) {
+			// si on edite un objet editorial bien declare
+			// passer par l'API objet_modifier
+			$fun = 'crayons_objet_modifier';
 		}
 
 		// c'est pas un objet editorial connu, mais on a peut etre une fonction revision_xxx specifique
 		if (!$fun) {
 			include_spip('inc/modifier');
-			if (function_exists('revision_' . $type)) {
-				$fun = 'revision_' . $type;
+			if (function_exists('revision_' . $crayon_type)) {
+				$fun = 'revision_' . $crayon_type;
 			}
 		}
 
@@ -300,16 +372,16 @@ function crayons_store_set_modifs($modifs, $return) {
 			// break;
 		}
 
-		if (!isset($updates[$type][$fun])) {
-			$updates[$type][$fun] = [];
+		if (!isset($updates[$crayon_type][$fun])) {
+			$updates[$crayon_type][$fun] = [];
 		}
-		if (!isset($updates[$type][$fun][$id])) {
-			$updates[$type][$fun][$id] = ['wdg' => [], 'chval' => []];
+		if (!isset($updates[$crayon_type][$fun][$id])) {
+			$updates[$crayon_type][$fun][$id] = ['wdg' => [], 'chval' => []];
 		}
 		// pour reaffecter le retour d'erreur sql au cas ou
-		$updates[$type][$fun][$id]['wdg'][] = $wid;
+		$updates[$crayon_type][$fun][$id]['wdg'][] = $wid;
 		foreach ($content as $champtable => $val) {
-			$updates[$type][$fun][$id]['chval'][$champtable] = $val;
+			$updates[$crayon_type][$fun][$id]['chval'][$champtable] = $val;
 		}
 	}
 
@@ -319,25 +391,32 @@ function crayons_store_set_modifs($modifs, $return) {
 	}
 
 	// hop ! mises a jour table par table et id par id
-	foreach ($updates as $type => $idschamps) {
+	foreach ($updates as $crayon_type => $idschamps) {
 		foreach ($idschamps as $fun => $ids) {
 			foreach ($ids as $id => $champsvaleurs) {
 				/* cas particulier du logo dans un crayon complexe :
 				   ce n'est pas un champ de la table */
+
 				if (isset($champsvaleurs['chval']['logo'])) {
-					spip_log('revision logo', 'crayons');
-					logo_revision($id, $champsvaleurs['chval'], $type, $champsvaleurs['wdg']);
+					spip_log("crayons_store_set_modifs: logo_revision($id, , $crayon_type)" , 'crayons' . _LOG_DEBUG);
+					logo_revision($id, $champsvaleurs['chval'], $crayon_type, $champsvaleurs['wdg']);
 					unset($champsvaleurs['chval']['logo']);
 				}
 				if ($champsvaleurs['chval'] !== []) {
 					// -- revisions_articles($id_article, $c) --
-					spip_log("$fun($id ...)", 'crayons');
-					$updok = $fun($id, $champsvaleurs['chval'], $type, $champsvaleurs['wdg']);
+					spip_log("crayons_store_set_modifs: $fun($id, , $crayon_type)" , 'crayons' . _LOG_DEBUG);
+					/** @see crayons_objet_modifier() */
+					/** @see document_fichier_revision() */
+					/** @see vignette_revision() */
+					/** @see revision_meta() */
+					/** @see revision_traduction() */
+					/** @see crayons_update() */
+					$updok = $fun($id, $champsvaleurs['chval'], $crayon_type, $champsvaleurs['wdg']);
 					// Renvoyer erreur si update base distante echoue,
 					// on ne regarde pas les updates base local car ils ne renvoient rien
-					[$distant, $table] = distant_table($type);
+					[$distant, $table, $type] = distant_table($crayon_type);
 					if ($distant && !$updok) {
-						$return['$erreur'] = "$type: " . _U('crayons:update_impossible');
+						$return['$erreur'] = "$crayon_type: " . _U('crayons:update_impossible');
 					}
 				}
 			}
@@ -349,20 +428,20 @@ function crayons_store_set_modifs($modifs, $return) {
 /**
  * VUE
  *
- * @param $type
+ * @param $crayon_type
  * @param $modele
  * @param $id
  * @param $content
  * @param $wid
  * @return array|mixed|string
  */
-function vues_dist($type, $modele, $id, $content, $wid) {
+function vues_dist($crayon_type, $modele, $id, $content, $wid) {
 	// pour ce qui a une {lang_select} par defaut dans la boucle,
 	// la regler histoire d'avoir la bonne typo dans le propre()
 	// NB: ceci n'a d'impact que sur le "par defaut" en bas
-	[$distant, $table] = distant_table($type);
-	if (colonne_table($type, 'lang')) {
-		$b = valeur_colonne_table($type, 'lang', $id);
+	[$distant, $table, $type] = distant_table($crayon_type);
+	if (colonne_table($crayon_type, 'lang')) {
+		$b = valeur_colonne_table($crayon_type, 'lang', $id);
 		lang_select($a = array_pop($b));
 	} else {
 		lang_select($a = $GLOBALS['meta']['langue_site']);
@@ -371,7 +450,7 @@ function vues_dist($type, $modele, $id, $content, $wid) {
 	// chercher vues/article_toto.html
 	// sinon vues/toto.html
 	$vues = [];
-	if ($type === 'meta') {
+	if ($crayon_type === 'meta') {
 		$config = explode('__', $id);
 		$vues = [];
 		while (!empty($config)) {
@@ -389,12 +468,13 @@ function vues_dist($type, $modele, $id, $content, $wid) {
 	spip_log("vues_dist: cherche " . implode(', ', $vues), 'crayons' . _LOG_DEBUG);
 
 	foreach ($vues as $fond) {
-		spip_log("vues_dist: trouvé $fond", 'crayons' . _LOG_DEBUG);
 		if (find_in_path($fond . '.html')) {
-			$primary = (function_exists('id_table_objet') ? id_table_objet($table) : 'id_' . $table);
+			spip_log("vues_dist: trouvé $fond", 'crayons' . _LOG_DEBUG);
+			$primary = id_table_objet($table);
 			$contexte = [
 				$primary => $id,
-				'crayon_type' => $type,
+				'crayon_type' => $crayon_type,
+				'type' => $type,
 				'crayon_modele' => $modele,
 				'champ' => $modele,
 				'class' => _request('class_' . $wid),
@@ -412,7 +492,7 @@ function vues_dist($type, $modele, $id, $content, $wid) {
 	// dans la base de donnees (meme si a priori la valeur est
 	// ce qu'on vient d'envoyer, il y a nettoyage des caracteres et
 	// eventuellement d'autres filtres de saisie...)
-	$bdd = valeur_colonne_table($type, $modele, $id);
+	$bdd = valeur_colonne_table($crayon_type, $modele, $id);
 	if ($bdd !== []) {
 		$valeur = array_pop($bdd);
 	} else {
@@ -439,7 +519,7 @@ function vues_dist($type, $modele, $id, $content, $wid) {
 		}
 		$valeur = pipeline('crayons_vue_affichage_final', [
 			'args' => [
-				'type'   => $type,
+				'type'   => $crayon_type,
 				'modele' => $modele,
 				'id'     => $id
 			],
@@ -455,16 +535,20 @@ function vues_dist($type, $modele, $id, $content, $wid) {
  * Fonction de mise a jour par API editer_objet
  * @param $id
  * @param $data
- * @param $type
+ * @param $crayon_type
  * @param $ref
  * @return bool|mixed|string
  */
-function crayons_objet_modifier($id, $data, $type, $ref) {
+function crayons_objet_modifier($id, $data, $crayon_type, $ref) {
+	[$distant, $table, $type] = distant_table($crayon_type);
+	// on ne sait pas faire distant ici
+	if ($distant) {
+		return false;
+	}
 	include_spip('action/editer_objet');
-	$type = objet_type($type);
 
 	// objet_modifier attend id_parent pour le parent et pas id_rubrique
-	if (isset($data['id_rubrique']) && !isset($data['id_parent']) && $type !== 'rubrique') {
+	if (isset($data['id_rubrique']) && !isset($data['id_parent']) && $crayon_type !== 'rubrique') {
 		$data['id_parent'] = $data['id_rubrique'];
 	}
 	return objet_modifier($type, $id, $data);
@@ -476,47 +560,50 @@ function crayons_objet_modifier($id, $data, $type, $ref) {
  *
  * @param $id
  * @param array $colval
- * @param string $type
+ * @param string $crayon_type
  * @return bool|string
  */
-function crayons_update($id, $colval = [], $type = '') {
+function crayons_update($id, $colval = [], $crayon_type = '') {
 	if (!$colval || $colval === []) {
 		return false;
 	}
-	[$distant, $table] = distant_table($type);
+	include_spip('base/abstract_sql');
+	[$distant, $table, $type] = distant_table($crayon_type);
+
+	[$nom_table, $where] = table_where($crayon_type, $id, true);
+	#spip_log("crayons_update:" . $nom_table . " " . json_encode($where), 'crayons' . _LOG_DEBUG);
+	if (!$nom_table || !$where || !is_array($where)) {
+		return false;
+	}
+
+	// sanitizer les noms de champs dans tous les cas
+	$set = [];
+	foreach ($colval as $k => $v) {
+		$set[crayons_sanitize_sql_field_name($k)] = $v;
+	}
 
 	if ($distant) {
-		[$nom_table, $where] = table_where($type, $id);
-		if (!$nom_table) {
-			return false;
-		}
-
-		$update = $sep = '';
-		foreach ($colval as $col => $val) {
-			$update .= $sep . '`' . $col . '`=' . _q($val);
-			$sep = ', ';
-		}
-
 		// Sur une bdd externe on utilise sql_updateq de preference ;
 		// l'api sql sait gerer les prefixes contrairement a spip_query.
-		$a = sql_updateq($nom_table, $colval, $where, '', $distant);
+		$a = sql_updateq($nom_table, $set, $where, '', $distant);
 
 		include_spip('inc/invalideur');
 
 		// Pour une base externe doit on prefixer le type avec le nom du connecteur?
 		// ex: nomconnect_objet
-		suivre_invalideur($type, $modif = true);
+		suivre_invalideur($crayon_type, $modif = true);
 	} else {
-		// cle primaire composee : 3-4-rubrique
-		// calculer un where approprie
-		// et modifier sans passer par la fonction destinee aux tables principales
-		[$nom_table, $where] = table_where($type, $id, true); // where sous forme de tableau
-		if (is_scalar($id) && (is_countable($where) ? count($where) : 0) >= 1) {
-			$a = sql_updateq($nom_table, $colval, $where);
+		// si id n'est pas scalaire ou numerique
+		// ou si la cle primaire est composee : 3-4-rubrique et produit un where multiple
+		// on passe par sql_updateq
+		if (!is_scalar($id) || !is_numeric($id) || count($where) > 1) {
+			#spip_log("crayons_update: sql_updateq $nom_table, " . json_encode($set) . ", " . json_encode($where), 'crayons' . _LOG_DEBUG);
+			$a = sql_updateq($nom_table, $set, $where);
 		} else {
-			// modification d'une table principale
+			// modification d'une table standard via objet_modifier_champs()
 			include_spip('inc/modifier');
-			$res = objet_modifier_champs($type, $id, [], $colval);
+			#spip_log("crayons_update: objet_modifier_champs $nom_table, " . ((int)$id) . ", " . json_encode($set), 'crayons' . _LOG_DEBUG);
+			$res = objet_modifier_champs($crayon_type, (int)$id, [], $set);
 			$a = ($res === '');
 		}
 	}
@@ -543,15 +630,9 @@ function revision_meta($a, $c = false) {
 	if (isset($c['valeur'])) {
 		// Certaines cles de configuration sont echapées ici (cf #EDIT_CONFIG{demo/truc})
 		$a = str_replace('__', '/', $a);
-		spip_log("meta '$a' = '$c[valeur]'", 'crayons');
-		// eviter de planter les vieux SPIP
-		if (false === strpos($a, '/')) {
-			ecrire_meta($a, $c['valeur']);
-		// SPIP 3 ou Bonux 2 ou CFG
-		} else {
-			include_spip('inc/config');
-			ecrire_config($a, $c['valeur']);
-		}
+		spip_log("revision_meta: meta '$a' = '$c[valeur]'", 'crayons' . _LOG_DEBUG);
+		include_spip('inc/config');
+		ecrire_config($a, $c['valeur']);
 		include_spip('inc/invalideur');
 		suivre_invalideur('meta');
 	}
@@ -572,32 +653,42 @@ function revision_traduction($a, $c = false) {
 	$module = substr($a, 0, -3);
 	$lang = substr($a, -2);
 	$i18n = 'i18n_' . $module . '_' . $lang;
-	if ($module == 'public' && ! test_espace_prive()) { $module = 'local';
+	if ($module == 'public' && ! test_espace_prive()) {
+		$module = 'local';
 	}
 	foreach (chercher_module_lang($module, $lang) as $fichier_lang) {
 		$action = 'maj';
 		$motif = array_keys($c)[0];
 		$valeur = array_values($c)[0];
 		$contenu_original = file_get_contents($fichier_lang);
-		if ($lang != $GLOBALS['meta']['langue_site'] && strpos($contenu_original, "'$motif'") === false) { // motif absent du fichier et langue différente de la langue du site : ajout
-			spip_log("revision_traduction(): '$motif' absent de $fichier_lang", _LOG_INFO_IMPORTANTE);
+		$quoted_motif = "'" . str_replace("'", "\'", $motif) . "'";
+		if (
+			$lang !== $GLOBALS['meta']['langue_site']
+			&& strpos($contenu_original, $quoted_motif) === false) {
+			// motif absent du fichier et langue différente de la langue du site : ajout
+			spip_log("revision_traduction: $quoted_motif absent de $fichier_lang", 'crayons' . _LOG_INFO_IMPORTANTE);
 			$action = 'ajout';
 			$contenu_lang_defaut = file_get_contents(str_replace("_$lang.php", '_' . $GLOBALS['meta']['langue_site'] . '.php', $fichier_lang));
-			if (strpos($contenu_lang_defaut, "'$motif'") === false) {
+			// mais il faut que la chaine de langue soit présente dans le fichier de langue de la langue par défaut
+			if (strpos($contenu_lang_defaut, $quoted_motif) === false) {
 			  continue; // fichier suivant
 			}
 		}
+
 		$GLOBALS[$i18n][$motif] = $valeur;
-		spip_log("revision_traduction(): $action du motif '$motif' dans $fichier_lang", _LOG_INFO_IMPORTANTE);
+		spip_log("revision_traduction: $action du motif '$motif' dans $fichier_lang", 'crayons' . _LOG_INFO_IMPORTANTE);
 		$contenu_modifie = '<?php
 if (!defined(\'_ECRIRE_INC_VERSION\')) return;
-$GLOBALS[$GLOBALS[\'idx_lang\']] = array(';
+return [';
 		foreach ($GLOBALS[$i18n] as $key => $value) {
-			if (strpos($contenu_original, "'$key'") !== false || $motif == $key) { // MAJ ou insertion du motif
-				$contenu_modifie .= "'" . $key . "' => '" . str_replace("'", "\'", $value) . "',\n";
+			$quoted_key = "'" . str_replace("'", "\'", $key) . "'";
+			$quoted_value = "'" . str_replace("'", "\'", $value) . "'";
+			// MAJ ou insertion du motif
+			if (strpos($contenu_original, "'$key'") !== false || $motif == $key) {
+				$contenu_modifie .= "\t" . $quoted_key . ' => ' . $quoted_value . ",\n";
 			}
 		}
-		$contenu_modifie .= ');';
+		$contenu_modifie .= '];';
 		if (strpos($contenu_modifie, "' => '") !== false) {
 			include_spip('inc/flock');
 			ecrire_fichier($fichier_lang, $contenu_modifie);
@@ -612,57 +703,4 @@ $GLOBALS[$GLOBALS[\'idx_lang\']] = array(';
 function modeles_tags($id, $c) {
 	var_dump($id); #id_article
 	var_dump($c); # perturbant : ici on a array('id_article'=>'valeur envoyee')
-}
-
-/**
- * fonction generique surchargeable
- */
-function action_crayons_store_dist() {
-	action_crayons_store_args();
-}
-
-/**
- * permettre de passer une autre fonction de stockage des informations
- * @param string $store
- */
-function action_crayons_store_args($store = 'crayons_store') {
-	header('Content-Type: text/plain; charset=' . $GLOBALS['meta']['charset']);
-
-	include_spip ('inc/session');
-	$lang = session_get('lang');
-	if (!is_null($lang)) {
-		lang_select($lang);
-	}
-
-	$r = $store();
-
-	// Si on a ete appeles par jQuery, on renvoie tout, c'est le client
-	// crayons.js qui va traiter l'affichage du resultat et status
-	# Attention le test $_SERVER["HTTP_X_REQUESTED_WITH"] === "XMLHttpRequest"
-	# n'est pas bon car le cas d'un fichier uploade via iframe n'est pas detecte
-
-	// S'il y a une adresse de redirection, on renvoie vers elle
-	// En cas d'erreur il faudrait ajouter &err=... dans l'url ?
-	if (_request('redirect')) {
-		if (!$r['$erreur'] || $r['$annuler']) {
-			include_spip('inc/headers');
-			redirige_par_entete(_request('redirect'));
-		} else {
-			echo "<h4 class='status'>" . $r['$erreur'] . "</h4>\n";
-
-			foreach ($r as $wid => $v) {
-				if ($wid !== '$erreur') {
-					echo "<div id='$wid'>$v</div><hr />\n";
-				}
-			}
-			echo "<a href='" . quote_amp(_request('redirect')) . "'>"
-				. quote_amp(_request('redirect'))
-				. "</a>\n";
-		}
-	} else {
-		// Cas normal : JSON
-		echo crayons_json_encode($r);
-	}
-
-	exit;
 }

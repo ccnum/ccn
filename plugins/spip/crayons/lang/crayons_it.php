@@ -33,7 +33,7 @@ return [
 
 	// L
 	'label_activer_barre_typo' => 'Attivare la barra tipografica per i pennarelli?',
-	'label_activer_crayons_prive' => 'Attivare i pennarelli per la parte redazionale.', # MODIF
+	'label_activer_crayons_prive' => 'Attivare le matite nell’area privata',
 	'label_barre_typo' => 'Barra tipografica',
 	'label_clickhide' => 'Un click fuori nasconde i pennarelli',
 	'label_effets' => 'Scelta degli effetti',
@@ -54,7 +54,7 @@ return [
 	'legend_controleur_vignette' => 'Scegli una miniatura:',
 	'legend_controleur_vignette_remplacer' => 'Sostituisci questa miniatura',
 	'legend_documents' => 'Upload di documenti',
-	'legend_editer_prive' => 'Modifica lo spazio redazionale (sperimentale)', # MODIF
+	'legend_editer_prive' => 'Area riservata',
 	'legend_introduction_article' => 'Testo introduttivo dell’articolo',
 	'legend_introduction_rubrique' => 'Testo introduttivo della rubrica',
 

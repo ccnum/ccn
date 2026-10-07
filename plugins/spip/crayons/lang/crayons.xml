@@ -43,8 +43,9 @@
 		<traducteur nom="RealET" lien="https://trad.spip.net/auteur/realet" />
 	</langue>
 	<langue code="gl" url="https://trad.spip.net/tradlang_module/crayons?lang_cible=gl" total="52" traduits="15" relire="0" modifs="0" nouveaux="37" pourcent="28.85" />
-	<langue code="it" url="https://trad.spip.net/tradlang_module/crayons?lang_cible=it" total="52" traduits="50" relire="0" modifs="2" nouveaux="0" pourcent="96.15">
+	<langue code="it" url="https://trad.spip.net/tradlang_module/crayons?lang_cible=it" total="52" traduits="52" relire="0" modifs="0" nouveaux="0" pourcent="100.00">
 		<traducteur nom="Alberto" lien="https://trad.spip.net/auteur/alberto" />
+		<traducteur nom="asro" lien="https://trad.spip.net/auteur/asro" />
 		<traducteur nom="cedric" lien="https://trad.spip.net/auteur/fil" />
 	</langue>
 	<langue code="it_fem" url="https://trad.spip.net/tradlang_module/crayons?lang_cible=it_fem" total="52" traduits="14" relire="0" modifs="0" nouveaux="38" pourcent="26.92" />
