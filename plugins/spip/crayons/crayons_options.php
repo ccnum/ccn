@@ -134,15 +134,15 @@ function Crayons_affichage_final($page) {
 	$droits_accordes = 0;
 	foreach ($regs as $reg) {
 		[, $crayon, $type, $champ, $id] = $reg;
-		if (_DEBUG_CRAYONS) {
-			spip_log("autoriser('modifier', $type, $id, NULL, array('champ'=>$champ))", 'crayons_distant');
-		}
 		if (autoriser('modifier', $type, $id, null, ['champ' => $champ])) {
+			spip_log("Crayons_affichage_final: autoriser('modifier', $type, $id, NULL, ['champ'=>$champ]) :  OK", 'crayons' . _LOG_DEBUG);
 			if (!isset($droits['.' . $crayon])) {
 				$droits['.' . $crayon] = 0;
 			}
 			$droits['.' . $crayon]++;
 			$droits_accordes++;
+		} else {
+			spip_log("Crayons_affichage_final: autoriser('modifier', $type, $id, NULL, ['champ'=>$champ]) :  NIET", 'crayons' . _LOG_ERREUR);
 		}
 	}
 
@@ -309,6 +309,7 @@ function creer_le_crayon($class) {
 **/
 function balise_CRAYON($p) {
 	$p = balise_EDIT($p);
+	/** @uses creer_le_crayon() */
 	$p->code = 'creer_le_crayon(' . $p->code . ')';
 	return $p;
 }
@@ -348,7 +349,7 @@ function classe_boucle_crayon($type, $champ, $id) {
 
 	// test rapide pour verifier que l'id est valide (a-zA-Z0-9)
 	if (false !== strpos($id, ' ')) {
-		spip_log("L'identifiant ($id) ne pourra être géré ($type | $champ)", 'crayons');
+		spip_log("classe_boucle_crayon: L'identifiant ($id) ne pourra être géré ($type | $champ)", 'crayons' . _LOG_ERREUR);
 		return 'crayon_id_ingerable';
 	}
 

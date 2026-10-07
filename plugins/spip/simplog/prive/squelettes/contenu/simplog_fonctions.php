@@ -110,11 +110,19 @@ function simplelog_contruire_texte(string $fichier, string $ligne, string $fonct
 	$label_fichier = _T('simplog:label_fichier');
 	$label_ligne = _T('simplog:label_ligne');
 	$label_fonction = _T('simplog:label_fonction');
-	$texte = ''
-		 . ($fichier ? "-*<em>{$label_fichier}</em> : {$fichier}" : '')
-		 . ($ligne ? "\n-*<em>{$label_ligne}</em> : {$ligne}" : '')
-		 . ($fonction ? "\n-*<em>{$label_fonction}</em> : {$fonction}" : '')
-		 . ($message ? "<br /><code>\n\r{$message}" : '');
+
+	$pre = [
+		$fichier ? "<kbd>$fichier</kbd>" : '',
+		$ligne ? "<kbd>L{$ligne}</kbd>" : '',
+		$fonction ? "<kbd>{$fonction}</kbd>" : ''
+	];
+	$pre = array_filter($pre);
+	if (!empty($pre)) {
+		$texte = implode(" | ", $pre) . "<br />\n";
+	}
+	if ($message) {
+		$texte .= "<code>\n\r{$message}";
+	}
 
 	return $texte;
 }

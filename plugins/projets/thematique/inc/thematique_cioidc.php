@@ -29,6 +29,25 @@ function thematique_cioidc_resoudre_auteur($uid, $email) {
 	return $auteur;
 }
 
+// Première connexion : cioidc appelle le pipeline cioidc_userinfo AVANT de créer le
+// compte (cioidc_auth.php puis cioidc_session()), le pipeline ne trouvait donc rien et
+// le compte n'avait ses nom/statut/rubriques qu'à la connexion suivante. On le crée ici
+// avec les mêmes champs que cioidc (qui le retrouve ensuite par son login), comme le
+// fait déjà fictions_cioidc_userinfo().
+function thematique_cioidc_creer_auteur(string $uid, string $email, array $data) {
+	$id_auteur = (int) sql_insertq('spip_auteurs', [
+		'login' => $uid,
+		'nom' => (string) (($data['name'] ?? '') ?: $uid),
+		'email' => $email,
+		'statut' => defined('_CIOIDC_CREER_AUTEUR') && _CIOIDC_CREER_AUTEUR ? _CIOIDC_CREER_AUTEUR : '6forum',
+		'webmestre' => 'non',
+		'pass' => '',
+		'source' => 'oidc',
+	]);
+	spip_log('userinfo compte créé pour uid=' . $uid . ' (#' . $id_auteur . ')', 'cioidc');
+	return $id_auteur ? thematique_cioidc_resoudre_auteur($uid, '') : null;
+}
+
 // Si $valeur diffère du champ actuel de l'auteur, met à jour spip_auteurs et logue le
 // changement. Factorise le motif commun aux mises à jour d'email/nom/statut ci-dessous.
 function thematique_cioidc_maj_champ(array $auteur, string $champ, $valeur, string $libelle_log) {

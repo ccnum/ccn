@@ -7,7 +7,7 @@ if (!defined('_ECRIRE_INC_VERSION')) {
 // un controleur php (TODO -- NE FONCTIONNE PAS DU TOUT)
 
 function controleurs_portfolio_dist($regs) {
-	[, $crayon, $type, $champ, $id] = $regs;
+	[, $crayon_nom, $type, $champ, $id] = $regs;
 
 	include_spip('inc/minipres'); # pour aide()
 	include_spip('inc/presentation'); # pour debut_cadre()

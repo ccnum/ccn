@@ -25,8 +25,6 @@ function saisies_verifier($formulaire, $saisies_masquees_empty_string = true, $e
 
 	$verif_fonction = charger_fonction('verifier', 'inc', true);
 
-	// Supprimer les saisies depubliéee
-	$formulaire = saisies_supprimer_depublie($formulaire);
 
 
 	// Lister les saisies par étapes, si besoin
@@ -43,6 +41,9 @@ function saisies_verifier($formulaire, $saisies_masquees_empty_string = true, $e
 	} else {
 		$saisies_par_etapes_apres_verification_afficher_si = $saisies_par_etapes;
 	}
+
+	// On ne vérifie pas les saisies dépubliés, puisque normalement elle ne sont plus repostée
+	$saisies_par_etapes_apres_verification_afficher_si = saisies_supprimer_depublie($saisies_par_etapes_apres_verification_afficher_si);
 
 	// Trouver les saisies de l'étape courante
 	if (is_numeric($etape)) {

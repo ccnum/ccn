@@ -15,17 +15,21 @@ if (!defined('_ECRIRE_INC_VERSION')) {
 function action_supprimer_log_dist() : void {
 	// Securisation: le nom du fichier est attendu en argument
 	$securiser_action = charger_fonction('securiser_action', 'inc');
-	$fichier = $securiser_action();
-	if (!@is_readable($fichier)) {
+	$nom_log = $securiser_action();
+
+	include_fichiers_fonctions();
+	$fichier = simplog_fichier_log_de($nom_log);
+	if (!$fichier || !@is_readable($fichier)) {
 		// On loge l'erreur dans le log par défaut de SPIP
-		spip_log("Suppression impossible du fichier log, {$fichier}: pas accessible en lecture", _LOG_ERREUR);
+		spip_log("Suppression impossible du fichier log, $nom_log | $fichier : pas accessible en lecture", 'simplog' . _LOG_ERREUR);
 		return;
 	}
 
 	include_spip('inc/autoriser');
-	if (autoriser('voir', 'simplog')) {
-		spip_unlink($fichier);
-		// On redirige vers la page d'accueil de simplog, le fichier affiché n'existant plus.
-		redirige_url_ecrire('simplog');
+	if (!autoriser('supprimer', 'simplog', $nom_log)) {
+		spip_log("Suppression impossible du fichier log, $nom_log | $fichier : accès interdit", 'simplog' . _LOG_ERREUR);
+		return;
 	}
+
+	spip_unlink($fichier);
 }

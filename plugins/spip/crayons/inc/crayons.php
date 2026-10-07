@@ -26,87 +26,6 @@ include_spip('inc/autoriser');
 
 include_spip('inc/crayons-json');
 
-if (!function_exists('autoriser_meta_modifier_dist')) {
-/**
- * Autorisation d'éditer les configurations dans spip_meta
- *
- * Les admins complets OK pour certains champs,
- * Sinon, il faut être webmestre
- *
- * @note
- *  Attention sur les SPIP < 11515 (avant 04/2008) inc/autoriser
- *  passe seulement intval($id) alors qu'ici la cle est une chaine...
- *
- * @param  string $faire Action demandée
- * @param  string $type  Type d'objet sur lequel appliquer l'action
- * @param  int    $id    Identifiant de l'objet
- * @param  array  $qui   Description de l'auteur demandant l'autorisation
- * @param  array  $opt   Options de cette autorisation
- * @return bool          true s'il a le droit, false sinon
-**/
-function autoriser_meta_modifier_dist($faire, $type, $id, $qui, $opt) {
-	// Certaines cles de configuration sont echapées ici (cf #EDIT_CONFIG{demo/truc})
-	// $id = str_replace('__', '/', $id);
-	if (in_array($id, ['nom_site', 'slogan_site', 'descriptif_site', 'email_webmaster'])) {
-		return autoriser('configurer', null, null, $qui);
-	} else {
-		return autoriser('webmestre', null, null, $qui);
-	}
-}
-}
-
-// table spip_messages, la c'est tout simplement non (peut mieux faire,
-// mais c'est a voir dans le core/organiseur ou dans autorite)
-if (defined('_DIR_PLUGIN_ORGANISEUR')) {
-	include_spip('organiseur_autoriser');
-}
-
-if (!function_exists('autoriser_message_modifier_dist')) {
-	function autoriser_message_modifier_dist($faire, $type, $id, $qui, $opt) {
-		return false;
-	}
-}
-
-// Autoriser l'usage des crayons ?
-function autoriser_crayonner_dist($faire, $type, $id, $qui, $opt) {
-	// Le type pouvant etre une table, verifier les autoriser('modifier')
-	// correspondant ; ils demandent le nom de l'objet: spip_articles => article
-	// ex: spip_articles => 'article'
-	$type = preg_replace(',^spip_(.*?)s?$,', '\1', $type);
-	if (strlen($GLOBALS['table_prefix'])) {
-		$type = preg_replace(',^' . $GLOBALS['table_prefix'] . '_(.*?)s?$,', '\1', $type);
-	}
-
-	// Tables non SPIP ? Si elles sont interdites il faut regarder
-	// quelle table on appelle, et verifier si elle est "interne"
-	if (!_CRAYONS_TABLES_EXTERNES) {
-		include_spip('base/objets');
-		lister_tables_objets_sql();
-		include_spip('public/parametrer');
-		if (
-			!isset($GLOBALS['tables_principales']['spip_' . table_objet($type)])
-			&& !isset($GLOBALS['tables_auxiliaires']['spip_' . table_objet($type)])
-		) {
-			return false;
-		}
-	}
-
-	// Traduire le modele en liste de champs
-	if (isset($opt['modele'])) {
-		$opt['champ'] = $opt['modele'];
-	}
-
-	// Pour un auteur, si le champ est statut ou email, signaler l'option
-	// ad hoc (cf. inc/autoriser)
-	if ($type == 'auteur' && in_array($opt['champ'], ['statut', 'email'])) {
-		$opt[$opt['champ']] = true;
-	}
-
-	return (
-		 autoriser('modifier', $type, $id, $qui, $opt)
-	);
-}
-
 // Si un logo est demande, on renvoie la date dudit logo (permettra de gerer
 // un "modifie par ailleurs" si la date a change, rien de plus)
 function valeur_champ_logo($table, $id, $champ) {
@@ -135,11 +54,18 @@ function logo_revision($id, $file, $type, $ref) {
 	$chercher_logo = charger_fonction('chercher_logo', 'inc');
 	$_id_objet = id_table_objet($type);
 
-	// Chargement d'un nouveau logo ?
-	if ($file['logo']) {
-		define('FILE_UPLOAD', true); // message pour crayons_json_export :(
+	// s'assurer que $type référence bien un type d'objet connu de SPIP
+	$table_sql = '';
+	if (!crayons_get_table($type, $table_sql)) {
+		return false;
+	}
 
+	// Chargement d'un nouveau logo ? vérifier l'extension
+	if ($file['logo']) {
 		include_spip('action/editer_logo');
+		if (!crayons_verifier_format_image_upload(is_array($file['logo']) ? $file['logo']['name'] : $file['logo'], $type, $id)) {
+			return false;
+		}
 		logo_modifier($type, $id, 'on', $file['logo']);
 	} else {
 		// Suppression du logo ?
@@ -174,7 +100,7 @@ function logo_revision($id, $file, $type, $ref) {
 
 
 // cette fonction de revision recoit le fichier upload a passer en document
-function document_fichier_revision($id, $data, $type, $ref) {
+function document_fichier_revision($id, $data, $crayon_type, $ref) {
 
 	if (!$t = sql_fetsel('*', 'spip_documents', 'id_document=' . (int) $id)) {
 		return false;
@@ -198,10 +124,6 @@ function document_fichier_revision($id, $data, $type, $ref) {
 	// Chargement d'un nouveau doc ?
 	if ($data['document']) {
 		$arg = $data['document'];
-		/**
-		 * Méthode >= SPIP 3.0
-		 * ou SPIP 2.x + Mediathèque
-		 */
 		$ajouter_documents = charger_fonction('ajouter_documents', 'action');
 		$actifs = $ajouter_documents($id, [$arg], '', 0, $t['mode']);
 		$x = reset($actifs);
@@ -215,7 +137,7 @@ function document_fichier_revision($id, $data, $type, $ref) {
 
 // cette fonction de revision soit supprime la vignette d'un document,
 // soit recoit le fichier upload a passer ou remplacer la vignette du document
-function vignette_revision($id, $data, $type, $ref) {
+function vignette_revision($id, $data, $crayon_type, $ref) {
 	$id_vignette = null;
 	if (!$s = sql_fetsel('id_document,id_vignette', 'spip_documents', 'id_document = ' . (int) $id)) {
 		return false;
@@ -226,13 +148,15 @@ function vignette_revision($id, $data, $type, $ref) {
 	include_spip('action/editer_document');//pour revision_document
 	// Chargement d'un nouveau doc ?
 	if ($data['vignette']) {
-		define('FILE_UPLOAD', true);
+		if (!crayons_verifier_format_image_upload($data['vignette']['name'], $crayon_type, $id)) {
+			return false;
+		}
 		if (is_numeric($s['id_vignette']) && $s['id_vignette'] > 0) {
-			spip_log('suppression de la vignette', 'crayons');
+			spip_log("vignette_revision: doc #$id suppression de la vignette #" . $s['id_vignette'], 'crayons' . _LOG_DEBUG);
 			// Suppression du document
 			$vignette = sql_getfetsel('fichier', 'spip_documents', 'id_document=' . (int) $s['id_vignette']);
 			if (@file_exists($f = get_spip_doc($vignette))) {
-				spip_log("efface $f", 'crayons');
+				spip_log("vignette_revision: doc #$id suppression fichier vignette $f", 'crayons' . _LOG_DEBUG);
 				supprimer_fichier($f);
 			}
 			sql_delete('spip_documents', 'id_document=' . (int) $s['id_vignette']);
@@ -255,6 +179,7 @@ function vignette_revision($id, $data, $type, $ref) {
 		$arg = $data['vignette'];
 		check_upload_error($arg['error']);
 
+		spip_log("vignette_revision: doc #$id ajout vignette fichier " . json_encode($arg), 'crayons' . _LOG_DEBUG);
 		// Ajout du document comme vignette
 		$ajouter_documents = charger_fonction('ajouter_documents', 'action');
 		$x = $ajouter_documents(null, [$arg], '', 0, 'vignette');
@@ -272,7 +197,7 @@ function vignette_revision($id, $data, $type, $ref) {
 			// Suppression du document
 			$vignette = sql_getfetsel('fichier', 'spip_documents', 'id_document=' . (int) $s['id_vignette']);
 			if (@file_exists($f = get_spip_doc($vignette))) {
-				spip_log("efface $f", 'crayons');
+				spip_log("vignette_revision: doc #$id suppression fichier vignette $f", 'crayons' . _LOG_DEBUG);
 				supprimer_fichier($f);
 			}
 			sql_delete('spip_documents', 'id_document=' . (int) $s['id_vignette']);
@@ -297,12 +222,33 @@ function vignette_revision($id, $data, $type, $ref) {
 	return true;
 }
 
+function crayons_verifier_format_image_upload($fichier, $type, $id) {
+	include_spip('inc/filtres_images_lib_mini');
+	$extensions_possibles =
+		function_exists('_image_extensions_logos') ?
+			_image_extensions_logos(['objet' => $type, 'id_objet' => $id])
+			:
+			($GLOBALS['formats_logos'] ?? ['jpg', 'png', 'svg', 'gif', 'webp']);
+	if (in_array('jpg', $extensions_possibles)) {
+		$extensions_possibles[] = 'jpeg';
+	}
+	if (
+		in_array(
+			strtolower(pathinfo($fichier, PATHINFO_EXTENSION)),
+			$extensions_possibles
+		)
+	) {
+		return true;
+	}
 
-function colonne_table($type, $col) {
-	[$distant, $table] = distant_table($type);
+	return false;
+}
+
+function colonne_table($crayon_type, $col) {
+	[$distant, $table, $type] = distant_table($crayon_type);
 	$nom_table = '';
 	if (
-		!(($tabref = &crayons_get_table($table, $nom_table))
+		!(($tabref = &crayons_get_table($crayon_type, $nom_table))
 		&& isset($tabref['field'][$col])
 		&& ($brut = $tabref['field'][$col]))
 	) {
@@ -374,7 +320,7 @@ function colonne_table($type, $col) {
 /**
  * Obtient le nom de la table ainsi que sa ou ses clés primaires
  *
- * @param string $type
+ * @param string $crayon_type
  *     Table sur laquelle s'applique le crayon.
  *     Ce type peut contenir le nom d'un connecteur distant tel que `{connect}__{table}`
  *
@@ -384,26 +330,26 @@ function colonne_table($type, $col) {
  *     - - nom de la table sql
  *     - - tableau des noms de clés primaires
 **/
-function crayons_get_table_name_and_primary($type) {
+function crayons_get_table_name_and_primary($crayon_type) {
 	static $types = [];
-	if (isset($types[$type])) {
-		return $types[$type];
+	if (isset($types[$crayon_type])) {
+		return $types[$crayon_type];
 	}
 
 	$nom_table = '';
 	if (
-		($tabref = &crayons_get_table($type, $nom_table))
+		($tabref = &crayons_get_table($crayon_type, $nom_table))
 		&& ($tabid = explode(',', $tabref['key']['PRIMARY KEY']))
 	) {
-		return $types[$type] = [$nom_table, $tabid];
+		return $types[$crayon_type] = [$nom_table, $tabid];
 	}
-	spip_log('crayons: table ' . $type . ' inconnue ou sans cle primaire', 'crayons');
-	return $types[$type] = false;
+	spip_log('crayons: table ' . $crayon_type . ' inconnue ou sans cle primaire', 'crayons' . _LOG_ERREUR);
+	return $types[$crayon_type] = false;
 }
 
 
-function table_where($type, $id, $where_en_tableau = false) {
-	if (!$infos = crayons_get_table_name_and_primary($type)) {
+function table_where($crayon_type, $id, $where_en_tableau = false) {
+	if (!$infos = crayons_get_table_name_and_primary($crayon_type)) {
 		return [false, false];
 	}
 
@@ -412,29 +358,31 @@ function table_where($type, $id, $where_en_tableau = false) {
 	if (is_scalar($id)) {
 		$id = explode('-', $id);
 	}
-	// sortie tableau pour sql_updateq
-	if ($where_en_tableau) {
-		$where = [];
-		foreach ($id as $idcol => $idval) {
-			$where[] = '`' . (is_int($idcol) ? trim($tabid[$idcol]) : $idcol) . '`=' . sql_quote($idval);
-		}
-	// sinon sortie texte pour sql_query
-	} else {
-		$where = $and = '';
-		foreach ($id as $idcol => $idval) {
-			$where .= $and . '`' . (is_int($idcol) ? trim($tabid[$idcol]) : $idcol) . '`=' . _q($idval);
-			$and = ' AND ';
-		}
+	$where = [];
+	foreach ($id as $idcol => $idval) {
+		$col_name = is_int($idcol) ? trim($tabid[$idcol]) : $idcol;
+		$where[] = '`' . crayons_sanitize_sql_field_name($col_name) . '`=' . sql_quote($idval);
 	}
+
+	// sortie tableau pour sql_updateq
+	if (!$where_en_tableau) {
+		$where = "(" . implode(' AND ', $where) . ")";
+	}
+
 	return [$nom_table, $where];
 }
-//	var_dump(colonne_table('forum', 'id_syndic')); die();
 
-function valeur_colonne_table_dist($type, $col, $id) {
+/**
+ * @param string $crayon_type
+ * @param array $cols
+ * @param $id
+ * @return array|false
+ */
+function valeur_colonne_table_dist($crayon_type, $cols, $id) {
 
 	#spip_log("valeur_colonne_table_dist $type $id cols: ".json_encode($col), 'crayons');
 	// Table introuvable ou sans clé primaire
-	if (!$infos = crayons_get_table_name_and_primary($type)) {
+	if (!$infos = crayons_get_table_name_and_primary($crayon_type)) {
 		#spip_log("valeur_colonne_table_dist $type $id infos:".json_encode($infos), 'crayons');
 		return false;
 	}
@@ -444,39 +392,34 @@ function valeur_colonne_table_dist($type, $col, $id) {
 	$r = [];
 
 	// valeurs non SQL
-	foreach ($col as $champ) {
+	foreach ($cols as $champ) {
 		if (
-			function_exists($f = 'valeur_champ_' . $table . '_' . $champ)
-			|| function_exists($f = 'valeur_champ_' . $champ)
+			$champ === crayons_sanitize_sql_field_name($champ)
+			&& (
+				function_exists($f = 'valeur_champ_' . $table . '_' . $champ)
+				|| function_exists($f = 'valeur_champ_' . $champ)
+			)
 		) {
+			/** @see valeur_champ_document() */
+			/** @see valeur_champ_logo() */
+			/** @see valeur_champ_vignette() */
 			$r[$champ] = $f($table, $id, $champ);
-			$col = array_diff($col, [$champ]);
+			$cols = array_diff($cols, [$champ]);
 		}
 	}
 
 	// valeurs SQL
-	if (is_countable($col) ? count($col) : 0) {
-		[$distant, $table]   = distant_table($type);
-		[$nom_table, $where] = table_where($type, $id);
-
-		$row = false;
-		if (include_spip('base/abstract_sql') && function_exists('sql_fetsel')) {
-			$row = sql_fetsel('`' . implode('`, `', $col) . '`', $nom_table, $where, '', '', '', '', $distant);
-		}
-		else {
-			// legacy code
-			if (
-				$s = spip_query(
-					'SELECT `' . implode('`, `', $col) .
-					'` FROM ' . $nom_table . ' WHERE ' . $where,
-					$distant
-				)
-			) {
-				$row = sql_fetch($s);
+	if (is_countable($cols) ? count($cols) : 0) {
+		include_spip('base/abstract_sql');
+		[$distant, $table, $type] = distant_table($crayon_type);
+		[$nom_table, $where] = table_where($crayon_type, $id, true);
+		if ($nom_table && $where) {
+			$select = array_map( 'crayons_sanitize_sql_field_name', $cols);
+			$select = '`' . implode('`, `', $select) . '`';
+			$row = sql_fetsel($select, $nom_table, $where, '', '', '', '', $distant);
+			if (!empty($row) && is_array($row)) {
+				$r = array_merge($r, $row);
 			}
-		}
-		if ($row) {
-			$r = array_merge($r, $row);
 		}
 	}
 
@@ -484,28 +427,43 @@ function valeur_colonne_table_dist($type, $col, $id) {
 }
 
 /**
+ * Sanitizer un nom de champ SQL
+ * @param string $field
+ * @return string
+ */
+function crayons_sanitize_sql_field_name(string $field) {
+	if (strlen($field) > 256) {
+		$field = substr($field, 0, 256);
+	}
+	return preg_replace('/\W+/i', '_', trim($field)) ?? '';
+}
+
+/**
  * Extrait la valeur d'une ou plusieurs colonnes d'une table
  *
- * @param string $table
- *   Type d'objet de la table (article)
- * @param string|array $col
+ * @param string $crayon_type
+ *   Type étendu d'objet de la table (article ou serveur__article pour un article distant)
+ * @param string|array $cols
  *   Nom de la ou des colonnes (ps)
  * @param string $id
  *   Identifiant de l'objet
  * @return array
  *   Couples Nom de la colonne => Contenu de la colonne
 **/
-function valeur_colonne_table($table, $col, $id) {
-	if (!is_array($col)) {
-		$col = [$col];
+function valeur_colonne_table($crayon_type, $cols, $id) {
+	if (!is_array($cols)) {
+		$cols = [$cols];
 	}
 
 	if (
-		function_exists($f = $table . '_valeur_colonne_table')
+		function_exists($f = $crayon_type . '_valeur_colonne_table')
 		|| function_exists($f .= '_dist')
 		|| ($f = 'valeur_colonne_table_dist')
 	) {
-		return $f($table, $col, $id);
+		/** @see  valeur_colonne_table_dist() */
+		/** @see  meta_valeur_colonne_table_dist() */
+		/** @see  traduction_valeur_colonne_table_dist() */
+		return $f($crayon_type, $cols, $id);
 	}
 }
 
@@ -519,8 +477,8 @@ function valeur_colonne_table($table, $col, $id) {
  * On ne retourne alors ici dans 'valeur' que la sous-partie demandée si
  * c'est le cas.
  *
- * @param string $table
- *   Nom de la table (meta)
+ * @param string $crayon_type
+ *   type d'objet etendu
  * @param array $col
  *   Nom des colonnes (valeur)
  * @param string $id
@@ -528,7 +486,7 @@ function valeur_colonne_table($table, $col, $id) {
  * @return array
  *   Couple valeur => Contenu de la configuration
 **/
-function meta_valeur_colonne_table_dist($table, $col, $id) {
+function meta_valeur_colonne_table_dist($crayon_type, $col, $id) {
 	// Certaines clés de configuration sont echapées ici (cf #EDIT_CONFIG{demo/truc})
 	$id = str_replace('__', '/', $id);
 
@@ -541,8 +499,8 @@ function meta_valeur_colonne_table_dist($table, $col, $id) {
 /**
  * Extrait la valeur d'une chaine de langue
  *
- * @param string $table
- *   Nom de la """table""" (traduction)
+ * @param string $crayon_type
+ *   type d'objet etendu
  * @param array $motifs
  *   Motifs a traduire
  * @param string $module
@@ -550,7 +508,7 @@ function meta_valeur_colonne_table_dist($table, $col, $id) {
  * @return array
  *   Couple motif_chaine_de_langue => valeur traduite
 **/
-function traduction_valeur_colonne_table_dist($table, $motifs, $module) {
+function traduction_valeur_colonne_table_dist($crayon_type, $motifs, $module) {
 	$lang = substr($module, -2);
 	$mod = substr($module, 0, -3);
 	$valeur = _T("$mod:$motifs[0]", ['spip_lang' => $lang], ['force' => false]);
@@ -599,39 +557,42 @@ function wdgcfg() {
 	return $wdgcfg;
 }
 
-function &crayons_get_table($type, &$nom_table) {
-	[$distant, $table] = distant_table($type);
+function &crayons_get_table($crayon_type, &$nom_table) {
+	[$distant, $table, $type] = distant_table($crayon_type);
 	static $return = [];
 	static $noms = [];
 	if (!isset($return[$table])) {
-		$trouver_table = charger_fonction('trouver_table', 'base', true);
+		$return[$table] = null;
 
-		$try = [table_objet_sql($table), 'spip_' . table_objet($table), 'spip_' . $table . 's', $table . 's', 'spip_' . $table, $table];
+		$trouver_table = charger_fonction('trouver_table', 'base');
+		$try = [table_objet_sql($table), 'spip_' . table_objet($table), 'spip_' . $type . 's', $type . 's', 'spip_' . $table, $table];
 		foreach ($try as $nom) {
-			if ($trouver_table) {
-				if ($q = $trouver_table($nom, $distant, !$distant)) {
-					$noms[$table] = $q['table_sql'];
-					$return[$table] = $q;
-				}
-			}
-			else {
-				// legacy code
-				if ($q = sql_showtable($nom, !$distant, $distant)) {
-					$noms[$table] = $nom;
-					$return[$table] = $q;
-					break;
-				}
+			if ($q = $trouver_table($nom, $distant, !$distant)) {
+				$noms[$table] = $q['table_sql'];
+				$return[$table] = $q;
+				break;
 			}
 		}
 	}
 
-	$nom_table = $noms[$table];
+	$nom_table = $noms[$table] ?? '';
 	return $return[$table];
 }
 
-function distant_table($type) {
+function distant_table($crayon_type) {
 	//separation $type en $distant $table
 	//separateur double underscore "__"
-	strstr($type, '__') ? [$distant, $table] = explode('__', $type) : [$distant, $table] = [false, $type];
-	return [$distant,$table];
+	if (strstr($crayon_type, '__')) {
+		[$distant, $type] = explode('__', $crayon_type, 2);
+		// distant ne peut pas être n'importe quoi
+		$distant = preg_replace('/\W+/i', '_', $distant);
+	} else {
+		$distant = '';
+		$type = $crayon_type;
+	}
+
+	// normaliser type et table via les fonctions internes SPIP
+	$type = objet_type($type, $distant);
+	$table = table_objet($type, $distant);
+	return [$distant, $table, $type];
 }

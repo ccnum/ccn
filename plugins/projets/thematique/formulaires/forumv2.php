@@ -191,6 +191,13 @@ function formulaires_forumv2_traiter_dist($id_article) {
 					// Classe active de l'auteur à l'écriture : le commentaire la
 					// garde même si le prof change ensuite de classe active.
 					'id_classe' => thematique_id_rubrique_classe($id_auteur),
+					// Valeurs par défaut du plugin notifications, explicites : sur
+					// une base où ces colonnes sont NULL sans défaut, elles
+					// restaient NULL et la notification forumposte plantait sur
+					// extraire_balises(null) (TypeError, SPIP 4.4.27) — "Erreur"
+					// côté ajax alors que le commentaire était bien enregistré.
+					'notification' => 1,
+					'notification_email' => '',
 				]
 			);
 			session_set('forum_commentaire_succes', $id_forum);

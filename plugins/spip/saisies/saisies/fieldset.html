@@ -27,7 +27,8 @@
 	[<em class='attention'>(#ENV*{attention})</em>]
 	[(#ENV{saisies}|is_array|oui)
 		<div class="editer-groupe">
-			#INCLURE{fond=#ENV{fond_generer,"inclure/generer_saisies"}, env, saisies=#ENV{saisies}, from_fieldset='on'}
+			[(#ENV{constructeur}|?{#SET{fond,formulaires/inc-generer_saisies_configurables},#SET{fond,inclure/generer_saisies}})]
+			#INCLURE{fond=#GET{fond}, env, saisies=#ENV{saisies}, from_fieldset='on'}
 		</div>
 	]
 
