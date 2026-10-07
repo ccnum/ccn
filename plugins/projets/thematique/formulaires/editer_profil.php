@@ -5,7 +5,7 @@ if (!defined('_ECRIRE_INC_VERSION')) {
 }
 
 /**
- * Modification de son propre profil (nom, email, mot de passe) par un compte
+ * Modification de son propre profil (nom, login, email, mot de passe) par un compte
  * créé dans SPIP, depuis le menu sous le nom (cf noisettes/auteur_editer.html).
  *
  * Plutôt que #FORMULAIRE_EDITER_AUTEUR : celui-ci affiche aussi bio, clé PGP,
@@ -14,7 +14,7 @@ if (!defined('_ECRIRE_INC_VERSION')) {
  * SPIP ni nom à modifier (resynchronisé depuis l'ENT à chaque connexion) : le
  * formulaire ne s'affiche pas pour lui.
  *
- * Le mot de passe actuel est demandé pour changer d'email ou de mot de passe :
+ * Le mot de passe actuel est demandé pour changer de login, d'email ou de mot de passe :
  * une session volée ne doit pas suffire à prendre la main sur le compte.
  *
  * @package SPIP\Thematique\Formulaires
@@ -38,6 +38,7 @@ function formulaires_editer_profil_charger_dist() {
 
 	return [
 		'nom' => $auteur['nom'],
+		'login' => $auteur['login'],
 		'email' => $auteur['email'],
 		'pass_actuel' => '',
 		'new_pass' => '',
@@ -53,6 +54,7 @@ function formulaires_editer_profil_verifier_dist() {
 
 	$erreurs = [];
 	$nom = trim((string) _request('nom'));
+	$login = trim((string) _request('login'));
 	$email = trim((string) _request('email'));
 	$new_pass = (string) _request('new_pass');
 
@@ -62,8 +64,18 @@ function formulaires_editer_profil_verifier_dist() {
 		$erreurs['nom'] = _T('thematique:titre_trop_long', ['max' => 255]);
 	}
 
+	include_spip('inc/auth');
+	if ($login === '') {
+		$erreurs['login'] = _T('info_obligatoire');
+	} elseif ($erreur = auth_verifier_login('spip', $login, $auteur['id_auteur'])) {
+		$erreurs['login'] = $erreur;
+	}
+
+	// Obligatoire : seul moyen de récupérer un mot de passe oublié
 	include_spip('inc/filtres');
-	if ($email !== '' && !email_valide($email)) {
+	if ($email === '') {
+		$erreurs['email'] = _T('info_obligatoire');
+	} elseif (!email_valide($email)) {
 		$erreurs['email'] = _T('form_email_non_valide');
 	}
 
@@ -71,7 +83,6 @@ function formulaires_editer_profil_verifier_dist() {
 		if ($new_pass !== (string) _request('new_pass2')) {
 			$erreurs['new_pass'] = _T('ecrire:info_passes_identiques');
 		} else {
-			include_spip('inc/auth');
 			if ($erreur = auth_verifier_pass('spip', $auteur['login'], $new_pass, $auteur['id_auteur'])) {
 				$erreurs['new_pass'] = $erreur;
 			}
@@ -80,7 +91,7 @@ function formulaires_editer_profil_verifier_dist() {
 
 	// Mot de passe actuel, sauf pour un compte qui n'en a pas encore (connecté
 	// par le lien "mot de passe oublié", par exemple).
-	$change_sensible = $new_pass !== '' || $email !== $auteur['email'];
+	$change_sensible = $new_pass !== '' || $email !== $auteur['email'] || $login !== $auteur['login'];
 	if ($change_sensible && $auteur['pass'] !== '') {
 		$auth_spip = charger_fonction('spip', 'auth');
 		$verifie = $auth_spip($auteur['login'], (string) _request('pass_actuel'));
@@ -111,10 +122,15 @@ function formulaires_editer_profil_traiter_dist() {
 		return ['message_erreur' => $erreur];
 	}
 
+	include_spip('inc/auth');
+	$login = trim((string) _request('login'));
+	if ($login !== $auteur['login'] && !auth_modifier_login('spip', $login, $auteur['id_auteur'])) {
+		return ['message_erreur' => _T('thematique:profil_erreurs')];
+	}
+
 	$new_pass = (string) _request('new_pass');
 	if ($new_pass !== '') {
-		include_spip('inc/auth');
-		if (!auth_modifier_pass('spip', $auteur['login'], $new_pass, $auteur['id_auteur'])) {
+		if (!auth_modifier_pass('spip', $login, $new_pass, $auteur['id_auteur'])) {
 			return ['message_erreur' => _T('thematique:profil_erreurs')];
 		}
 	}

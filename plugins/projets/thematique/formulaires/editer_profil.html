@@ -10,10 +10,15 @@
 				[<span class="erreur_message">(#ENV**{erreurs}|table_valeur{nom})</span>]
 				<input type="text" class="text" name="nom" id="profil_nom" value="[(#ENV{nom})]" required="required" autocomplete="name" />
 			</div>
-			<div class="editer editer_email[ (#ENV**{erreurs}|table_valeur{email}|oui)erreur]">
+			<div class="editer editer_login obligatoire[ (#ENV**{erreurs}|table_valeur{login}|oui)erreur]">
+				<label for="profil_login"><:thematique:profil_login:></label>
+				[<span class="erreur_message">(#ENV**{erreurs}|table_valeur{login})</span>]
+				<input type="text" class="text" name="login" id="profil_login" value="[(#ENV{login})]" required="required" autocomplete="username" />
+			</div>
+			<div class="editer editer_email obligatoire[ (#ENV**{erreurs}|table_valeur{email}|oui)erreur]">
 				<label for="profil_email"><:thematique:profil_email:></label>
 				[<span class="erreur_message">(#ENV**{erreurs}|table_valeur{email})</span>]
-				<input type="email" class="text" name="email" id="profil_email" value="[(#ENV{email})]" autocomplete="email" />
+				<input type="email" class="text" name="email" id="profil_email" value="[(#ENV{email})]" required="required" autocomplete="email" />
 			</div>
 		</div>
 		<fieldset>
