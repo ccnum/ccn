@@ -144,7 +144,13 @@ function thematique_insert_head($flux) {
 		// déploiement, ce qui permet d'activer un cache long en aval (cf
 		// .htaccess) sans risquer de servir du JS périmé après une mise à jour.
 		$version = $chemin ? @filemtime($chemin) : null;
-		$flux .= "<script src='" . $chemin . ($version ? '?' . $version : '') . "' defer></script>\n";
+		// Pas de defer : les scripts inline des squelettes (CCN.role = ...,
+		// noisettes/timeline.html, thematiqueApplyDeferredCount(...)) utilisent
+		// CCN et ces fonctions dès le parsing. Avec defer, ils s'exécutaient
+		// avant globales.js ("CCN is not defined") dès que la compression JS
+		// de SPIP (auto_compress_js, qui fusionne tout en un script non defer)
+		// est désactivée.
+		$flux .= "<script src='" . $chemin . ($version ? '?' . $version : '') . "'></script>\n";
 	}
 
 	return $flux;
@@ -284,7 +290,10 @@ function thematique_cioidc_userinfo($flux) {
 			. ' nb pertinents=' . count($groupes_libres_pertinents),
 		'cioidc'
 	);
-	$noms = fn(array $groupes, string $champ) => json_encode(array_map(fn($g) => $g->$champ ?? '', $groupes), JSON_UNESCAPED_UNICODE);
+	$noms = fn (array $groupes, string $champ) => json_encode(
+		array_map(fn ($g) => $g->{$champ} ?? '', $groupes),
+		JSON_UNESCAPED_UNICODE
+	);
 	spip_log(
 		'userinfo classes réelles=' . $noms($classes_reelles, 'group_name')
 			. ' groupes libres=' . $noms($groupes_libres, 'name')
