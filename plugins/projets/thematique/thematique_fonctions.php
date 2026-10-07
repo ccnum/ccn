@@ -1016,6 +1016,45 @@ function thematique_classes_auteur($id_auteur) {
 }
 
 /**
+ * Classes ENT qu'un prof doit encore cocher dans la pop-up de choix (issue
+ * #541, cf formulaires/choisir_classes_ent.php) : celles mémorisées à sa
+ * connexion SSO pour l'année scolaire en cours
+ * (thematique_cioidc_memoriser_classes_ent()), tant qu'il n'a pas validé son
+ * choix pour cette année (champ classes_ent_choisies).
+ *
+ * @param int $id_auteur
+ * @return array liste de ['group_name', 'group_structure_id', 'titre'], vide
+ *   si rien à choisir
+ */
+function thematique_classes_ent_a_choisir($id_auteur) {
+	static $cache = [];
+	$id_auteur = intval($id_auteur);
+	if (!$id_auteur) {
+		return [];
+	}
+	if (isset($cache[$id_auteur])) {
+		return $cache[$id_auteur];
+	}
+
+	include_spip('base/abstract_sql');
+	$auteur = sql_fetsel('classes_ent, classes_ent_choisies', 'spip_auteurs', 'id_auteur=' . $id_auteur);
+	$annee = (string) thematique_annee_scolaire();
+	$classes_ent = json_decode((string) ($auteur['classes_ent'] ?? ''), true);
+	if (
+		!is_array($classes_ent)
+		|| (string) ($classes_ent['annee'] ?? '') !== $annee
+		|| (string) $auteur['classes_ent_choisies'] === $annee
+	) {
+		return $cache[$id_auteur] = [];
+	}
+
+	return $cache[$id_auteur] = array_values(array_filter(
+		(array) ($classes_ent['classes'] ?? []),
+		fn ($classe) => is_array($classe) && !empty($classe['group_name']) && !empty($classe['titre'])
+	));
+}
+
+/**
  * Id de la rubrique-classe d'un auteur (prof ou élève) : celle dont dérive
  * son emoji d'avatar, et celle dans laquelle un prof rédige (réponse à une
  * mission, cf filtre_auteur_vers_classe()).

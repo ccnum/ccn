@@ -61,6 +61,22 @@ function thematique_declarer_champs_extras($champs = []) {
 		"varchar(255) NOT NULL DEFAULT ''",
 		'webmestre'
 	);
+	// Issue #541 : classes ENT d'un prof inscrit au projet, mémorisées à la connexion
+	// SSO (JSON {annee, classes}) pour la pop-up où il coche celles inscrites au CCN,
+	// et année scolaire de ce choix (vide = pop-up à afficher). Vider l'année fait
+	// réapparaître la pop-up à ce prof.
+	$champs['spip_auteurs']['classes_ent'] = thematique_champ_extra_simple(
+		'classes_ent',
+		'thematique:champ_extra_classes_ent',
+		'text',
+		'webmestre'
+	);
+	$champs['spip_auteurs']['classes_ent_choisies'] = thematique_champ_extra_simple(
+		'classes_ent_choisies',
+		'thematique:champ_extra_classes_ent_choisies',
+		"varchar(10) NOT NULL DEFAULT ''",
+		'webmestre'
+	);
 
 	$champs['spip_rubriques']['url_id_doc'] = thematique_champ_extra_simple(
 		'url_id_doc',

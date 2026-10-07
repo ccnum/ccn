@@ -328,6 +328,12 @@ function thematique_cioidc_userinfo($flux) {
 		objet_dissocier(['id_auteur' => $auteur['id_auteur']], ['rubrique' => '*']);
 	}
 
+	thematique_cioidc_memoriser_classes_ent(
+		$auteur,
+		($is_enseignant && !$is_webmestre && $a_un_groupe_pertinent) ? $classes_reelles : [],
+		(string) $annee_scolaire
+	);
+
 	[$classes_a_lier, $projets_a_lier] = thematique_cioidc_resoudre_liens_rubriques(
 		$is_enseignant,
 		$is_webmestre,

@@ -332,13 +332,41 @@ function thematique_cioidc_rubrique_classe_prof($groupe, $id_travail_classes) {
 	return thematique_trouver_ou_creer_rubrique($titre, $id_travail_classes);
 }
 
+// Issue #541 : classes ENT proposées au prof dans la pop-up de choix (cf
+// formulaires/choisir_classes_ent.php), avec l'année scolaire de la connexion pour ne
+// pas proposer à la rentrée la liste de l'année précédente. Vidé pour un compte qui
+// n'a rien à choisir (élève, webmestre, prof non inscrit au projet cette année).
+function thematique_cioidc_memoriser_classes_ent(array $auteur, array $classes_reelles, string $annee_scolaire): void {
+	$valeur = '';
+	if ($classes_reelles) {
+		$valeur = json_encode([
+			'annee' => $annee_scolaire,
+			'classes' => array_map(fn ($groupe) => [
+				'group_name' => (string) $groupe->group_name,
+				'group_structure_id' => (string) ($groupe->group_structure_id ?? ''),
+				'titre' => thematique_cioidc_titre_rubrique_classe($groupe),
+			], $classes_reelles),
+		], JSON_UNESCAPED_UNICODE);
+	}
+	// Lu à part (pas dans thematique_cioidc_resoudre_auteur()) : tant que la mise à
+	// jour de schéma 3.4.5 n'est pas passée, la colonne manque et seul ce choix de
+	// classes échoue, pas toute la connexion.
+	$id_auteur = intval($auteur['id_auteur']);
+	if ($valeur !== (string) sql_getfetsel('classes_ent', 'spip_auteurs', 'id_auteur=' . $id_auteur)) {
+		spip_log('userinfo classes ENT mémorisées : ' . ($valeur ?: '(aucune)'), 'cioidc');
+		sql_updateq('spip_auteurs', ['classes_ent' => $valeur], 'id_auteur=' . $id_auteur);
+	}
+}
+
 // Rubriques de classe/projet à lier à l'auteur.
-// Seul un prof inscrit au projet de CE site pour l'année (groupe libre pertinent, cf
-// thematique_cioidc_groupes_libres_pertinents()) fait créer ses classes ENT sous
-// "Travail des classes" : sinon n'importe quel prof/élève laclasse.com passant sur le
-// site y ajoutait sa classe comme "participant" (cf noisettes/menu_classes.html).
-// Un élève est seulement rattaché à sa classe si elle existe déjà (créée par son prof
-// ou un admin), ex: affichage de l'emoji de classe hors du contexte d'une rubrique.
+// Un prof inscrit au projet de CE site pour l'année (groupe libre pertinent, cf
+// thematique_cioidc_groupes_libres_pertinents()) n'est lié ici qu'à ses projets : ses
+// classes ENT (y compris d'anciennes années, ENTClassesGroupes n'a pas d'année) sont
+// seulement mémorisées (thematique_cioidc_memoriser_classes_ent()), il coche dans une
+// pop-up celles inscrites au CCN, qui sont alors créées sous "Travail des classes"
+// (issue #541, cf formulaires/choisir_classes_ent.php).
+// Un élève est seulement rattaché à sa classe si elle existe déjà (cochée par son prof
+// ou créée par un admin), ex: affichage de l'emoji de classe hors du contexte d'une rubrique.
 function thematique_cioidc_resoudre_liens_rubriques(
 	bool $is_enseignant,
 	bool $is_webmestre,
@@ -352,11 +380,6 @@ function thematique_cioidc_resoudre_liens_rubriques(
 	$projets_a_lier = [];
 
 	if ($is_enseignant && !$is_webmestre && $groupes_libres_pertinents) {
-		foreach ($classes_reelles as $groupe) {
-			if ($id_classe = thematique_cioidc_rubrique_classe_prof($groupe, $id_travail_classes)) {
-				$classes_a_lier[] = $id_classe;
-			}
-		}
 		foreach ($groupes_libres_pertinents as $groupe) {
 			if ($id_projet = thematique_trouver_ou_creer_rubrique($groupe->name ?? '', $id_consignes)) {
 				$projets_a_lier[] = $id_projet;
