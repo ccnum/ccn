@@ -272,8 +272,10 @@ function thematique_cioidc_userinfo($flux) {
 	$is_enseignant = (strpos($profils, 'ENS') !== false);
 	spip_log('userinfo ENTPersonProfils=' . $profils . ' => enseignant:' . ($is_enseignant ? 'oui' : 'non'), 'cioidc');
 
+	$groupes_libres = thematique_cioidc_normaliser_liste($flux['data']['ENTGroupesLibres'] ?? []);
+	$is_intervenant_ccn = thematique_cioidc_est_intervenant_ccn($groupes_libres, (string) $uid);
 	$uai_liste = thematique_cioidc_normaliser_liste($flux['data']['ENTAllUai'] ?? []);
-	$is_webmestre = thematique_cioidc_est_webmestre($uai_liste, $is_enseignant);
+	$is_webmestre = thematique_cioidc_est_webmestre($uai_liste, $is_enseignant, $is_intervenant_ccn);
 	$is_eleve = (strpos($profils, 'ELV') !== false);
 	$role_ent = thematique_cioidc_role_affiche($profils, $is_webmestre, count($classes_reelles) > 0);
 
@@ -283,7 +285,6 @@ function thematique_cioidc_userinfo($flux) {
 	$annee_scolaire = thematique_annee_scolaire();
 	[, $id_travail_classes, $id_consignes] = thematique_cioidc_rubriques_annee($annee_scolaire);
 
-	$groupes_libres = thematique_cioidc_normaliser_liste($flux['data']['ENTGroupesLibres'] ?? []);
 	$nom_site = $GLOBALS['meta']['nom_site'] ?? '';
 	$groupes_libres_pertinents = thematique_cioidc_groupes_libres_pertinents($groupes_libres, $nom_site, $annee_scolaire);
 	spip_log(
@@ -318,6 +319,13 @@ function thematique_cioidc_userinfo($flux) {
 		spip_log('userinfo passage webmestre', 'cioidc');
 		sql_updateq('spip_auteurs', ['webmestre' => 'oui'], 'id_auteur=' . intval($auteur['id_auteur']));
 		$auteur['webmestre'] = 'oui';
+	} elseif ($is_intervenant_ccn && ($auteur['webmestre'] ?? 'non') === 'oui') {
+		// Intervenant promu à tort par l'ancienne règle (UAI seul) : on retire le
+		// webmestre. Limité aux intervenants pour ne pas toucher un webmestre
+		// nommé à la main dans SPIP.
+		spip_log('userinfo retrait webmestre (intervenant CCN)', 'cioidc');
+		sql_updateq('spip_auteurs', ['webmestre' => 'non'], 'id_auteur=' . intval($auteur['id_auteur']));
+		$auteur['webmestre'] = 'non';
 	}
 
 	thematique_cioidc_bloquer_si_archive($auteur);

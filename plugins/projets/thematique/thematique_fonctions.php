@@ -1040,7 +1040,10 @@ function thematique_id_rubrique_classe($id_auteur, $classe_active = null) {
 		return 0;
 	}
 
-	if (!_THEMATIQUE_CHOIX_CLASSE) {
+	// defined() : appelée aussi par thematique_preparer_fichier_session(), qui peut
+	// s'exécuter avant le chargement de thematique_options.php (session réécrite
+	// tôt dans la requête, ex. changement d'IP, cf #450) : erreur fatale sinon.
+	if (!defined('_THEMATIQUE_CHOIX_CLASSE') || !_THEMATIQUE_CHOIX_CLASSE) {
 		return $classes[0];
 	}
 	if ($classe_active === null) {
@@ -2667,6 +2670,21 @@ function thematique_auteur_peut_creer_dans_rubrique($id_auteur, $id_rubrique) {
 		'spip_auteurs_liens',
 		'id_auteur=' . $id_auteur . " AND objet='rubrique' AND id_objet IN (" . implode(',', $ascendants) . ')'
 	);
+}
+
+/**
+ * L'auteur peut-il publier dans la rubrique portant ce mot-clé (agenda
+ * "blogs", salle des profs "evenements") ? Même règle qu'à l'envoi du
+ * formulaire (thematique_auteur_peut_creer_dans_rubrique()), pour n'afficher
+ * dans le menu "Publier" que ce qui aboutira : un prof hors SSO, sans lien
+ * vers l'agenda, y voyait l'entrée puis obtenait "Accès interdit".
+ *
+ * @param int $id_auteur
+ * @param string $titre_mot
+ * @return bool
+ */
+function thematique_peut_publier_dans_mot($id_auteur, $titre_mot) {
+	return thematique_auteur_peut_creer_dans_rubrique($id_auteur, thematique_id_rubrique_a_mot($titre_mot));
 }
 
 /**

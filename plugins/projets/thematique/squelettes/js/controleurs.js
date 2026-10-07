@@ -763,6 +763,19 @@ async function callEvenementCreer() {
 }
 
 /**
+ * Ouvre dans la sidebar le profil de l'auteur connecté (nom, email, mot de
+ * passe), depuis le menu sous le nom : compte créé dans SPIP seulement, cf
+ * noisettes/auteur_editer.html.
+ *
+ * @param {string} url
+ */
+function callProfilEditer(url) {
+	expandSidebar();
+	setLateralSidebarExpanded(false);
+	loadContentInMainSidebar(url, null, "publication_article");
+}
+
+/**
  * Charge le formulaire de création d'une information de la Salle des profs
  * (menu "Publier > Information en salle des profs", #461) : jusqu'ici un
  * simple stub (alert("chantier_ccn")) dans choix_rubrique_admin2.html,

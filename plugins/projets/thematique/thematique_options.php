@@ -24,6 +24,17 @@ define('_FORUM_LONGUEUR_MAXI', 10000);
 //define('_THEMATIQUE_RNE_WEBMESTRES', '0000001A');
 define('_THEMATIQUE_RNE_WEBMESTRES', '00000CCN');
 
+// Groupe libre ENT des intervenants : rattachés à la même structure que l'équipe
+// projet (00000CCN) avec le profil ENS, ils seraient sinon promus webmestres.
+if (!defined('_THEMATIQUE_GROUPE_INTERVENANTS')) {
+	define('_THEMATIQUE_GROUPE_INTERVENANTS', 'CCN Intervenants');
+}
+// uid ENT (ex: VBZ63652) qui restent webmestres même membres de ce groupe (équipe
+// projet inscrite aussi comme intervenant), séparés par des virgules.
+if (!defined('_THEMATIQUE_UID_WEBMESTRES')) {
+	define('_THEMATIQUE_UID_WEBMESTRES', '');
+}
+
 // Choix de la classe active d'un prof rattaché à plusieurs classes (menu haut,
 // action thematique_choisir_classe). Désactivé : l'ENT renvoie aussi les
 // anciennes classes d'un prof (ENTClassesGroupes n'a pas d'année), le menu en

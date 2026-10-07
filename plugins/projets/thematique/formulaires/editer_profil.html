@@ -1,0 +1,52 @@
+<div class="formulaire_spip formulaire_#FORM formulaire-editer-profil">
+	[<p class="reponse_formulaire reponse_formulaire_ok" role="status">(#ENV*{message_ok})</p>]
+	[<p class="reponse_formulaire reponse_formulaire_erreur" role="alert">(#ENV*{message_erreur})</p>]
+	[(#ENV{editable})
+	<form method="post" action="#ENV{action}">
+		#ACTION_FORMULAIRE
+		<div class="editer-groupe">
+			<div class="editer editer_nom obligatoire[ (#ENV**{erreurs}|table_valeur{nom}|oui)erreur]">
+				<label for="profil_nom"><:thematique:profil_nom:></label>
+				[<span class="erreur_message">(#ENV**{erreurs}|table_valeur{nom})</span>]
+				<input type="text" class="text" name="nom" id="profil_nom" value="[(#ENV{nom})]" required="required" autocomplete="name" />
+			</div>
+			<div class="editer editer_login obligatoire[ (#ENV**{erreurs}|table_valeur{login}|oui)erreur]">
+				<label for="profil_login"><:thematique:profil_login:></label>
+				[<span class="erreur_message">(#ENV**{erreurs}|table_valeur{login})</span>]
+				<input type="text" class="text" name="login" id="profil_login" value="[(#ENV{login})]" required="required" autocomplete="username" />
+			</div>
+			<div class="editer editer_email obligatoire[ (#ENV**{erreurs}|table_valeur{email}|oui)erreur]">
+				<label for="profil_email"><:thematique:profil_email:></label>
+				[<span class="erreur_message">(#ENV**{erreurs}|table_valeur{email})</span>]
+				<input type="email" class="text" name="email" id="profil_email" value="[(#ENV{email})]" required="required" autocomplete="email" />
+			</div>
+		</div>
+		<fieldset>
+			<legend><:thematique:profil_changer_pass:></legend>
+			<p class="explication"><:thematique:profil_changer_pass_explication:></p>
+			<div class="editer-groupe">
+				<div class="editer editer_new_pass[ (#ENV**{erreurs}|table_valeur{new_pass}|oui)erreur]">
+					<label for="profil_new_pass"><:thematique:profil_new_pass:></label>
+					[<span class="erreur_message">(#ENV**{erreurs}|table_valeur{new_pass})</span>]
+					<input type="password" class="text" name="new_pass" id="profil_new_pass" value="" autocomplete="new-password" />
+				</div>
+				<div class="editer editer_new_pass2">
+					<label for="profil_new_pass2"><:thematique:profil_new_pass2:></label>
+					<input type="password" class="text" name="new_pass2" id="profil_new_pass2" value="" autocomplete="new-password" />
+				</div>
+			</div>
+		</fieldset>
+		<div class="editer-groupe">
+			<div class="editer editer_pass_actuel[ (#ENV**{erreurs}|table_valeur{pass_actuel}|oui)erreur]">
+				<label for="profil_pass_actuel"><:thematique:profil_pass_actuel:></label>
+				<p class="explication"><:thematique:profil_pass_actuel_explication:></p>
+				[<span class="erreur_message">(#ENV**{erreurs}|table_valeur{pass_actuel})</span>]
+				<input type="password" class="text" name="pass_actuel" id="profil_pass_actuel" value="" autocomplete="current-password" />
+			</div>
+		</div>
+		<p class="boutons">
+			<button type="submit" class="bouton-lisere"><:thematique:profil_enregistrer:></button>
+		</p>
+	</form>
+	]
+</div>
