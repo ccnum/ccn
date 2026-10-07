@@ -1622,10 +1622,15 @@ coller juste après le texte. */
     overflow: hidden;
 
     box-sizing: border-box;
-    padding: 10px;              /* marge blanche autour du SVG */
     display: flex;
     align-items: center;
     justify-content: center;
+}
+
+/* Marge blanche autour du picto SVG du site (inliné en <svg>) uniquement :
+   photos et avatars (<img>) remplissent tout le cercle. */
+#header-col-left .photo:has(> svg) {
+    padding: 10px;
 }
 
 #header-col-left .photo > img {
