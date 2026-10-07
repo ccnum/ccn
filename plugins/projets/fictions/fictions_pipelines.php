@@ -150,6 +150,15 @@ function fictions_cioidc_userinfo($flux) {
 		}
 	}
 
+	// Nom de l'ENT resynchronisé à chaque connexion (il n'était écrit qu'à la création
+	// du compte : un nom changé côté ENT, ou un compte préexistant, gardait l'ancien).
+	$nom = trim((string) ($flux['data']['name'] ?? ''));
+	if ($auteur && $nom !== '' && $nom !== $auteur['nom']) {
+		sql_updateq('spip_auteurs', ['nom' => $nom], 'id_auteur=' . intval($auteur['id_auteur']));
+		spip_log("fictions uid=$uid auteur #{$auteur['id_auteur']} nom « {$auteur['nom']} » => « $nom »", 'cioidc');
+		$auteur['nom'] = $nom;
+	}
+
 	// Inscription notée dans la configuration de l'année : la page des associations
 	// propose ces comptes en premier pour créer les participants.
 	if ($auteur) {
