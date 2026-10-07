@@ -83,15 +83,36 @@ function thematique_cioidc_classes_reelles(array $classes_groupes) {
 // (ex: établissement pilote de l'équipe projet) restent administrateurs complets
 // plutôt que rédacteurs, sans restriction de rubrique. ENTAllUai liste tous les UAI
 // de rattachement (pas seulement le principal).
-function thematique_cioidc_est_webmestre($uai_liste, bool $is_enseignant) {
+// Les intervenants sont rattachés à cette même structure avec le même profil ENS :
+// un membre du groupe libre _THEMATIQUE_GROUPE_INTERVENANTS n'est jamais webmestre
+// (sinon "Admin", sans lien vers son projet sous "Consignes").
+function thematique_cioidc_est_webmestre($uai_liste, bool $is_enseignant, bool $is_intervenant_ccn = false) {
 	$uai_liste = array_map('strval', (array) thematique_cioidc_normaliser_liste($uai_liste));
 	$rne_webmestres = array_filter(array_map('trim', explode(',', _THEMATIQUE_RNE_WEBMESTRES)));
-	$is_webmestre = $is_enseignant && (bool) array_intersect($uai_liste, $rne_webmestres);
+	$is_webmestre = $is_enseignant && !$is_intervenant_ccn && (bool) array_intersect($uai_liste, $rne_webmestres);
 	spip_log(
-		'userinfo ENTAllUai=' . implode(',', $uai_liste) . ' => webmestre:' . ($is_webmestre ? 'oui' : 'non'),
+		'userinfo ENTAllUai=' . implode(',', $uai_liste)
+			. ' intervenant_ccn:' . ($is_intervenant_ccn ? 'oui' : 'non')
+			. ' => webmestre:' . ($is_webmestre ? 'oui' : 'non'),
 		'cioidc'
 	);
 	return $is_webmestre;
+}
+
+// Membre du groupe libre ENT des intervenants CCN (cf _THEMATIQUE_GROUPE_INTERVENANTS),
+// sauf uid listé dans _THEMATIQUE_UID_WEBMESTRES (admin aussi inscrit dans ce groupe).
+function thematique_cioidc_est_intervenant_ccn(array $groupes_libres, string $uid = '') {
+	$uid_webmestres = array_filter(array_map('trim', explode(',', _THEMATIQUE_UID_WEBMESTRES)));
+	if ($uid !== '' && in_array($uid, $uid_webmestres, true)) {
+		return false;
+	}
+	$nom_groupe = thematique_cioidc_normaliser_nom(_THEMATIQUE_GROUPE_INTERVENANTS);
+	foreach ($groupes_libres as $groupe) {
+		if ($nom_groupe !== '' && thematique_cioidc_normaliser_nom($groupe->name ?? '') === $nom_groupe) {
+			return true;
+		}
+	}
+	return false;
 }
 
 // Nom d'un établissement depuis son UAI (ex: "0440001A", cf ENTAllUai/
