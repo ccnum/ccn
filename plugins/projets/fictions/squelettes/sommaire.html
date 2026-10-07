@@ -6,11 +6,7 @@
 	<div id="liste-tooltip">
 	</div>
 
-	<!-- BOUTON CONNEXION -->
-	<INCLURE{fond=inclure/authentification} />
-
-	<!-- ELEMENTS GRAPHIQUES-->
-	<INCLURE{fond=inclure/book-graphiques, suffixe=-ecriture} />
+	<INCLURE{fond=inclure/entete-ecriture, retour=non} />
 	<BOUCLE_annee(RUBRIQUES){titre==#EVAL{_ANNEE_SCOLAIRE}}{tout}{0,1}>#SET{id_rubrique,#ID_RUBRIQUE}
 		<BOUCLE_article(ARTICLES){id_rubrique}{titre LIKE presentation}{tout}{0,1}>
 		<!-- BOOK -->
@@ -20,10 +16,7 @@
 			<div class="global-content">
 				<div class="content">
 					<div class="content-left-small">
-						<div id="titre_site">
-							<a href="#URL_SITE_SPIP" title="<:fictions:accueil:>"><strong>fictions</strong></a>
-							<a href="https://www.laclasse.com" title="https://www.laclasse.com">.laclasse.com</a>
-						</div>
+						<INCLURE{fond=inclure/titre-site} />
 						<div id="image-presentation">[(#LOGO_ARTICLE|image_reduire{100})]</div>
 						<div id="texte-presentation" class="#EDIT{texte}">
 							[(#TEXTE)]

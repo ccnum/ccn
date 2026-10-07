@@ -2,19 +2,7 @@
 <INCLURE{fond=inclure/tete-html} />
 <body>
 <a href="#contenu-principal" class="skip-link"><:fictions:skip_contenu_principal:></a>
-	<!-- BOUTON CONNEXION -->
-	<INCLURE{fond=inclure/authentification} />
-	<!-- ELEMENTS GRAPHIQUES-->
-	<INCLURE{fond=inclure/book-graphiques, suffixe=-ecriture} />
-
-	<!-- RETOUR INDEX -->
-	<div id="bouton-retour">
-		<a href="#URL_SITE_SPIP">
-			<img src="#CHEMIN{img/global/bt-retour.png}" alt="<:fictions:retour_a_laccueil:>"
-				class="btn-rollover" data-src-hover="#CHEMIN{img/global/bt-retour-hover.png}"
-				width="54" height="54" />
-		</a>
-	</div>
+	<INCLURE{fond=inclure/entete-ecriture} />
 	[(#REM) Initialisé à 0 : sans le mot, la boucle ne s'exécute pas et le test == 0
 	ci-dessous échouait, le contenu de l'histoire n'était jamais inclus (page vide). ]
 	#SET{is_blog_pedagogique,0}
