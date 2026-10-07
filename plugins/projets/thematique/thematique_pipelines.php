@@ -279,7 +279,10 @@ function thematique_cioidc_userinfo($flux) {
 	$is_eleve = (strpos($profils, 'ELV') !== false);
 	$role_ent = thematique_cioidc_role_affiche($profils, $is_webmestre, count($classes_reelles) > 0);
 
-	$nom = thematique_cioidc_nom_affiche($classes_reelles, $role_ent, $uai_liste);
+	// Intervenant (ENS sans classe réelle, non webmestre) : identifié par son nom,
+	// faute de classe/collège à afficher.
+	$is_intervenant = $is_enseignant && !$is_webmestre && !$classes_reelles;
+	$nom = thematique_cioidc_nom_affiche($classes_reelles, $role_ent, $uai_liste, $is_intervenant ? $nom_complet : '');
 	$auteur = thematique_cioidc_maj_champ($auteur, 'nom', $nom, 'du nom');
 
 	$annee_scolaire = thematique_annee_scolaire();
