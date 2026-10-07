@@ -21,7 +21,7 @@ PAGE-TYPE.HTML
 				<BOUCLE_art(ARTICLES){id_rubrique}{titre_mot=presentation}{tout}{0,1}>
 				<div class="content-left-small">
 					<INCLURE{fond=inclure/titre-site} />
-					<div id="image-presentation">[(#LOGO_ARTICLE||image_reduire{100})]</div>
+					<div id="image-presentation">[(#LOGO_ARTICLE|image_reduire{100})]</div>
 					<div id="texte-presentation" class="#EDIT{texte}">
 						[(#TEXTE)]
 					</div>
