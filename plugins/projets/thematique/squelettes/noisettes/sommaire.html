@@ -82,11 +82,6 @@ et/ou
 
 		<INCLURE{fond=noisettes/menu_ressources, restreint=#ENV{restreint}, ajax} />
 
-		[(#REM) Actualités : bloc (titre inclus) entièrement masqué si vide, cf actus_timeline.html]
-		[(#CONST{_PROJET}|!={laclasse}|oui)
-			<INCLURE{fond=noisettes/inc/actus_timeline, nb_actus=5, ajax} />
-		]
-
 		<div id="menu-classe" [(#VUE|=={classe}|non) style="display:none;"]>
 			[(#REM) Médias]
 			<div id="menu-medias" class="bloc_view col">

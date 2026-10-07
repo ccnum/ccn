@@ -143,91 +143,6 @@
 	font-size: var(--font-size1-bas);
 }
 
-#menu_bas.zone-menu ul.actualites-ul {
-	width: 27px;
-	margin-right: 3px;
-}
-
-/* Liste des actus dans le menu bas : contexte compact, une ligne tronquée
-par actu (titre + icône), date/vignette réservées à la popup "toutes les
-actualités" (.popup .actualites-actu, cf plus bas). Avant, .actualites-inner
-faisait une hauteur fixe de 27px avec overflow:hidden alors que chaque
-.actualites-actu (jusqu'à 5) faisait elle-même 27px de haut : seule la
-première actu était visible, les autres étaient invisibles sans scroll ni
-indication. */
-#menu_bas .actualites-inner {
-	display: block;
-	max-height: 160px;
-	overflow-y: auto;
-}
-
-#menu_bas .actualites-actu {
-	cursor: pointer;
-	display: block;
-	font-size: 12px;
-	line-height: 30px;
-	height: 30px;
-	white-space: nowrap;
-	overflow: hidden;
-	text-overflow: ellipsis;
-	background: var(--color-gris-3);
-	padding: 0 10px;
-	box-sizing: border-box;
-	margin-bottom: 4px;
-	border-radius: var(--border-radius-sm);
-	color: var(--color-default);
-}
-
-#menu_bas .actualites-actu:last-child {
-	margin-bottom: 0;
-}
-
-#menu_bas .actualites-actu:hover,
-#menu_bas .actualites-actu:focus-visible {
-	filter: brightness(0.94);
-}
-
-#menu_bas .actualites-actu .profil {
-	display: inline-block;
-	vertical-align: middle;
-	margin-right: 6px;
-}
-
-/* Date/vignette : la ligne de 30px n'a pas la place pour ça, réservé à la
-popup ; .date (actu_documents/actu_livrables) et .actualites-actu-date
-(actu_commentaires/actu_travail_en_cours/actu_consignes) sont deux classes
-différentes pour la même info, à masquer toutes les deux ici. */
-#menu_bas .actualites-actu .date,
-#menu_bas .actualites-actu-date,
-#menu_bas .actualites-texte,
-#menu_bas .actualites-actu img,
-#menu_bas .actualites-actu a.mediabox,
-#menu_bas .actualites-actu .img-container,
-#menu_bas .actualites-actu br {
-	display: none;
-}
-
-.popup .actualites-actu {
-	background: rgb(224, 224, 224);
-	margin: 7px;
-	border-radius: 2px;
-	padding: 12px 20px;
-	font-size: 14px;
-	line-height: 18px;
-	/* Required for text-overflow to do anything */
-}
-
-.actualites-titre {
-	font-size: 1.2em;
-	font-weight: bold;
-}
-.actualites-texte {
-	text-overflow: ellipsis;
-	max-height: 200px;
-	overflow: hidden;
-	padding: 10px 10px 20px 10px;
-}
-
 /* ================================================================ */
 /* ----------------------- SELECTBOX STYLING ---------------------- */
 /* ================================================================ */
@@ -408,28 +323,6 @@ différentes pour la même info, à masquer toutes les deux ici. */
 /* ----------------------- END SELECTBOX STYLING ------------------- */
 /* ================================================================ */
 
-.actualites-actu-date {
-	/*text-transform: uppercase;*/
-	font-size: 11px;
-	color: gray
-}
-
-/* actu_commentaires : date et extrait sont des <span> dans le bouton (un <p> ou
-une <div> n'y sont pas permis) — affichés en bloc comme avant ; le menu bas les
-masque toujours (règle #menu_bas plus haut, plus spécifique). Les images,
-hors du bouton, ne reprennent pas le padding haut de l'extrait. */
-.actualites-actu button .actualites-actu-date,
-.actualites-actu button .actualites-texte {
-	display: block;
-}
-.actualites-actu button .actualites-actu-date {
-	margin: 1em 0; /* marges de l'ancien <p> */
-}
-.actualites-medias {
-	padding-top: 0;
-}
-
-#menu_bas .actualites-titre { font-weight: normal; font-size: 1em; }
 /* Logos */
 
 #menu_haut.zone-menu span.logo {
@@ -575,9 +468,19 @@ hors du bouton, ne reprennent pas le padding haut de l'extrait. */
 	}
 	#menu_bas.zone-menu li.logo a.logo_menu-#VALEUR.selected::before,
 	#menu_bas.zone-menu li.logo a.logo_menu-#VALEUR:hover::before {
-		background-image: url(#ENV{chemin}/img/logo_[(#VALEUR)_white].png);
+		filter: brightness(0) invert(1);
 	}
 </BOUCLE_logos>
+
+/* Picto blanc par filtre plutôt qu'une 2e image logo_xxx_white.png, chargée
+   seulement au 1er passage en sélection et qui pouvait manquer (#508).
+   Agenda/Salle des profs : le fond bleu suit aussi le mode de la timeline
+   (.show_blogs/.show_evenements, cf BOUCLE_vue), le picto doit suivre pareil
+   sinon il reste bleu foncé sur fond bleu si .selected a sauté. */
+.show_blogs #menu_bas.zone-menu li.logo a.menu_logo_blogs::before,
+.show_evenements #menu_bas.zone-menu li.logo a.menu_logo_evenements::before {
+	filter: brightness(0) invert(1);
+}
 
 <BOUCLE_vue(DATA){liste tout,timeline,classe,consigne,ressources,evenements,blogs,classes,article_evt,texte,image,son,video,autre,date,notation,descendant,ascendant,forum,ressource_classes,reponse}>
 	#SET{file,#CHEMIN{img/logo_#NOM_SITE_SPIP_#VALEUR.png}|sinon{#CHEMIN{img/logo_#VALEUR.png}}|sinon{#CHEMIN{prive/vignettes/#VALEUR.png}}|sinon{#CHEMIN{img/logo_voir.png}}}

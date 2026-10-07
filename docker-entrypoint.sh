@@ -91,6 +91,40 @@ if version_greater "$image_version" "$installed_version"; then
 	fi
 fi
 
+# Plugins de l'image (plugins/projets, plugins/spip) : resynchronisés à chaque
+# démarrage. La copie ci-dessus n'a lieu qu'à l'installation ou à une montée de
+# version du cœur SPIP, et /var/www/html est un volume (VOLUME du Dockerfile)
+# que `docker compose up` conserve en recréant le conteneur : une nouvelle image
+# avec seulement des plugins modifiés continuait sinon de servir l'ancien code
+# (constaté en preprod, correctif d3c9773c présent dans l'image mais pas servi).
+# plugins/auto (installés depuis l'espace privé) n'est pas touché ; un plugin
+# absent de l'image (ancien emplacement, plugin retiré) est supprimé, sinon SPIP
+# pourrait charger deux versions d'un même préfixe.
+if [ -d /usr/src/spip/plugins ]; then
+	mkdir -p plugins
+	if ! diff -rq /usr/src/spip/plugins plugins --exclude=auto >/dev/null 2>&1; then
+		echo >&2 "Plugins différents de ceux de l'image : resynchronisation"
+		for entree in plugins/*; do
+			nom=$(basename "${entree}")
+			if [ "${nom}" != "auto" ] && [ ! -e "/usr/src/spip/plugins/${nom}" ]; then
+				echo >&2 "  suppression de plugins/${nom} (absent de l'image)"
+				rm -rf "${entree}"
+			fi
+		done
+		for entree in /usr/src/spip/plugins/*; do
+			nom=$(basename "${entree}")
+			[ "${nom}" = "auto" ] && continue
+			rm -rf "plugins/${nom}"
+			cp -a "${entree}" "plugins/${nom}"
+		done
+		if [ "$(id -u)" = 0 ]; then
+			chown -R www-data:www-data plugins
+		fi
+		# Squelettes/CSS mis en cache (ex. thematique.css, #CACHE{86400}) avec l'ancien code
+		rm -rf tmp/cache/*
+	fi
+fi
+
 # .htaccess : celui de l'image (htaccess.txt du dépôt) fait référence et est
 # réappliqué à chaque démarrage — la copie ci-dessus n'a lieu qu'à l'installation
 # ou à une montée de version de SPIP, un volume existant gardait sinon un
