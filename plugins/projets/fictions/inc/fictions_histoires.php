@@ -78,12 +78,18 @@ function fictions_histoire_creer(int $id_annee, int $numero): int {
 	if (!$id_rubrique) {
 		return 0;
 	}
+	// id_auteur vide : sinon objet_inserer() lie l'auteur connecté (l'admin qui crée
+	// l'histoire) à chaque chapitre, qui en devient auteur et le reste tant que le plan
+	// n'est pas appliqué. Seul le plan validé pose les liens (fictions_plan_appliquer()).
+	$id_auteur_request = _request('id_auteur');
+	set_request('id_auteur', '');
 	foreach (FICTIONS_CHAPITRES as $i => $chapitre) {
 		objet_inserer('article', $id_rubrique, [
 			'titre' => $chapitre . '/ ' . _T('fictions:titre_chapitre_defaut'),
 			'statut' => $i === 0 ? 'prop' : 'prepa',
 		]);
 	}
+	set_request('id_auteur', $id_auteur_request);
 	// Publiée d'emblée (aucun article publié avant l'écriture du chapitre 2), statut
 	// maintenu ensuite par fictions_calculer_rubriques().
 	sql_updateq('spip_rubriques', ['statut' => 'publie', 'date' => date('Y-m-d H:i:s')], 'id_rubrique=' . $id_rubrique);

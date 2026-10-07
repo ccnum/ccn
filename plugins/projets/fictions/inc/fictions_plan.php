@@ -189,6 +189,7 @@ function fictions_plan_generer(int $annee): string {
 	$config['plan_valide'] = '';
 	fictions_annee_config_ecrire($annee, $config);
 	spip_log("fictions associations $annee : proposition de plan générée (" . count($plan) . ' histoires)', 'fictions');
+	fictions_plan_appliquer($annee);
 	return '';
 }
 
@@ -253,25 +254,27 @@ function fictions_plan_valider(int $annee): string {
  * garde ses auteurs (historique). Prologue et chapitre 1 commun, hors rotation, ne sont
  * pas touchés.
  *
+ * Plan non validé (proposition) : aucun compte n'est lié, et tout lien sur un chapitre
+ * non écrit est retiré — notamment le compte qui a créé l'histoire, qu'objet_inserer()
+ * liait comme auteur de chaque chapitre (cf fictions_histoire_creer()).
+ *
  * @return array{lies: int, retires: int}
  */
 function fictions_plan_appliquer(int $annee): array {
 	include_spip('action/editer_liens');
 	$resultat = ['lies' => 0, 'retires' => 0];
 	$config = fictions_annee_config($annee);
-	if ($config['plan_valide'] === '') {
-		return $resultat;
-	}
+	$valide = $config['plan_valide'] !== '';
 	$participants = fictions_participants($annee);
 	foreach ($config['plan'] as $id_rubrique => $affectations) {
 		$chapitres = fictions_chapitres_histoire((int) $id_rubrique);
 		foreach ($affectations as $chapitre => $id_participant) {
 			$id_article = (int) ($chapitres[$chapitre] ?? 0);
-			$id_auteur = (int) ($participants[$id_participant]['id_auteur'] ?? 0);
-			if (!$id_article || !$id_auteur) {
+			$id_auteur = $valide ? (int) ($participants[$id_participant]['id_auteur'] ?? 0) : 0;
+			if (!$id_article || ($valide && !$id_auteur)) {
 				continue;
 			}
-			if (!sql_countsel('spip_auteurs_liens', "objet='article' AND id_objet=$id_article AND id_auteur=$id_auteur")) {
+			if ($id_auteur && !sql_countsel('spip_auteurs_liens', "objet='article' AND id_objet=$id_article AND id_auteur=$id_auteur")) {
 				objet_associer(['auteur' => $id_auteur], ['article' => $id_article]);
 				$resultat['lies']++;
 			}
