@@ -64,6 +64,15 @@
 			]
 			</BOUCLE_choix_classe>
 			</B_choix_classe>
+			[(#REM) Compte créé dans SPIP (hors SSO) : modifier son nom, son email
+			et son mot de passe, cf formulaires/editer_profil.php. ]
+			[(#SESSION{source}|=={spip}|oui)
+			<li class="select-option editer-profil">
+				<a href="[(#URL_PAGE{auteur_editer}|parametre_url{mode,ajax-detail})]" rel="nofollow">
+					<:thematique:editer_votre_profil:>
+				</a>
+			</li>
+			]
 			<li class="select-option me-deconnecter">
 				<a href="[(#URL_LOGOUT)]" title="<:thematique:me_deconnecter:>" style="display: flex; align-items: center;" class="nowrap">
 					<:thematique:me_deconnecter:>

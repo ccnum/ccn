@@ -98,6 +98,15 @@
 						return;
 					}
 
+					// Éditer son profil (compte SPIP hors SSO, cf
+					// authentification.html) : ouvert dans la sidebar.
+					if ($li.hasClass('editer-profil')) {
+						e.preventDefault();
+						$sel.removeClass('open');
+						callProfilEditer($li.find('a').attr('href'));
+						return;
+					}
+
 					if (rememberChoice && $li.hasClass("actif")) {
 						return;
 					}
