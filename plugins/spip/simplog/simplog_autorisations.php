@@ -28,7 +28,15 @@ function simplog_autoriser() {
  * @return bool `true`si l'auteur est autorisée à exécuter l'action, `false` sinon.
  */
 function autoriser_simplog_voir_dist($faire, $type, $id, $qui, $options) {
-	return ($qui['statut'] === '0minirezo');
+	return autoriser('webmestre');
+}
+
+function autoriser_simplog_telecharger_dist($faire, $type, $id, $qui, $options) {
+	return autoriser('webmestre');
+}
+
+function autoriser_simplog_supprimer_dist($faire, $type, $id, $qui, $options) {
+	return autoriser('webmestre');
 }
 
 /**

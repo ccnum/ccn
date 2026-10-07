@@ -1,6 +1,6 @@
 <paquet
 	prefix="simplog"
-	version="2.2.0"
+	version="2.3.0"
 	etat="stable"
 	compatibilite="[4.1.0;4.*]"
 	logo="simplog.svg"
