@@ -1633,6 +1633,23 @@ function thematique_rubrique_mission_valide($id_rubrique) {
 }
 
 /**
+ * Rubrique cible du bouton "Une nouvelle mission" : la rubrique restreinte
+ * si une mission peut y être créée, sinon le projet de l'auteur sous
+ * "Consignes" (thematique_id_rubrique_mission()). La rubrique restreinte
+ * d'un admin est la dernière choisie via ?rub= (cf thematique_admin_scope) :
+ * souvent une classe, refusée à l'envoi par thematique_rubrique_mission_valide()
+ * avec un message d'année trompeur.
+ *
+ * @param int|string|null $id_restreint
+ * @return int
+ */
+function thematique_rubrique_mission_cible($id_restreint) {
+	return thematique_rubrique_mission_valide($id_restreint)
+		? intval($id_restreint)
+		: thematique_id_rubrique_mission();
+}
+
+/**
  * Indique si au moins une mission (article) existe dans la rubrique
  * "Consignes" de l'année active (cf thematique_id_rubrique_mission()).
  * Aucun repli sur une année antérieure — même principe que
