@@ -26,12 +26,10 @@
 		<div class="global-content">
 			<div class="content">
 				<div class="content-left-small">
-					<div id="titre_site">
-						<a href="#URL_SITE_SPIP" title="<:fictions:accueil:>"><strong>fictions</strong></a><a href="http://www.laclasse.com" title="http://www.laclasse.com">.laclasse.com</a>
-					</div>
+					<INCLURE{fond=inclure/titre-site} />
 					<!-- LISTE CADAVRE SMALL-->
 					<div id="ecriture-liste">
-						[(#SESSION{id_auteur}|oui)<INCLURE{fond=inclure/liste-cadavres-auteur-small} />]
+						[(#SESSION{id_auteur}|oui)<INCLURE{fond=inclure/liste-cadavres-auteur, taille=small} />]
 					</div>
 				</div>
 				<div class="content-right-large">

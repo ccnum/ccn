@@ -1,0 +1,20 @@
+[(#REM)
+PAGE.HTML, RUBRIQUE.HTML, SOMMAIRE.HTML > ENTETE-ECRITURE.HTML
+Haut des pages au format livre "écriture" : bouton de connexion, éléments
+graphiques et, sauf retour=non (sommaire), bouton de retour à l'accueil.
+]
+	<!-- BOUTON CONNEXION -->
+	<INCLURE{fond=inclure/authentification} />
+
+	<!-- ELEMENTS GRAPHIQUES-->
+	<INCLURE{fond=inclure/book-graphiques, suffixe=-ecriture} />
+[(#ENV{retour}|!={non}|oui)
+	<!-- RETOUR INDEX -->
+	<div id="bouton-retour">
+		<a href="#URL_SITE_SPIP">
+			<img src="#CHEMIN{img/global/bt-retour.png}" alt="<:fictions:retour_a_laccueil:>"
+				class="btn-rollover" data-src-hover="#CHEMIN{img/global/bt-retour-hover.png}"
+				width="54" height="54" />
+		</a>
+	</div>
+]
