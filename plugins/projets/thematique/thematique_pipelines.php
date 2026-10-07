@@ -245,6 +245,9 @@ function thematique_cioidc_userinfo($flux) {
 	$email = trim((string) ($flux['data']['MailAdressePrincipal'] ?? ''));
 	$uid = $flux['args']['uid'] ?? '';
 	$auteur = thematique_cioidc_resoudre_auteur($uid, $email);
+	if (!$auteur && $uid !== '') {
+		$auteur = thematique_cioidc_creer_auteur($uid, $email, $flux['data']);
+	}
 	if (!$auteur) {
 		spip_log('userinfo aucun auteur trouvé pour email=' . $email, 'cioidc');
 		return $flux;
