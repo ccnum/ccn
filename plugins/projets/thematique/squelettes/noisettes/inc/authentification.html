@@ -32,8 +32,7 @@
 					]
 				]
 			</span>
-			[(#SESSION{nom_complet}|oui)#SESSION{nom_complet}]
-			[(#SESSION{nom_complet}|non)#SESSION{nom}]
+			<span class="menu_haut_libelle">[(#SESSION{nom_complet}|oui)#SESSION{nom_complet}][(#SESSION{nom_complet}|non)#SESSION{nom}]</span>
 			<span class="icon icon-down"></span>
 		</button>
 		<ul class="select-options">
@@ -86,7 +85,7 @@
 <div id="menu_haut_user" class="bloc_titre">
 	<div id="choix_connexion" name="connexion" class="selectbox" data-select-name="connexion">
 		<button type="button" class="select-toggle first_label">
-			<span class="icon icon-connecter"></span><:thematique:me_connecter:>
+			<span class="icon icon-connecter"></span><span class="menu_haut_libelle"><:thematique:me_connecter:></span>
 			<span class="icon icon-down"></span>
 		</button>
 		<ul class="select-options">

@@ -13,5 +13,8 @@ vérifié dans le code ou dans un navigateur (Chromium, instances ddev) à cette
 
 **Fichier** : `thematique/css/responsive.css.html`
 
-Vérifié dans Chromium : aucun débordement à 1024 et 768 px (paliers existants), mais à 390 px la page
-déborde de 368 px en largeur (menu haut trop large, pas de palier sous 768 px).
+Menu haut corrigé (palier ≤ 480 px dans `responsive.css.html`) : icônes seules, plus de débordement
+à 390/320 px en visiteur anonyme (vérifié dans Chromium). Reste :
+- vérifier un compte connecté (avatar seul) et un admin (bloc `#menu_haut_rubrique` en plus) ;
+- garder la ligne de temps : si elle dépasse, la faire défiler horizontalement dans son propre
+  conteneur (`#timeline_responsive`) plutôt que de la compresser.
