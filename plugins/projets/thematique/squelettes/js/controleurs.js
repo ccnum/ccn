@@ -349,6 +349,10 @@ function setContentFromState(state, title, url) {
 			callArticleEvenement(state.id_objet);
 		}
 
+		if (state.type_objet === "article_introuvable") {
+			callArticleIntrouvable(state.id_article || state.id_objet);
+		}
+
 		if(state.type_objet === "cap-sur-l-annee") {
 			callArticleJalon(true)
 		}
@@ -963,6 +967,17 @@ function callArticleEvenement(id_objet) {
 	);
 
 }
+
+function callArticleIntrouvable(id_article) {
+	if (!Number.isInteger(Number(id_article))) return;
+	setLateralSidebarExpanded(false);
+	loadContentInMainSidebar(
+		`./spip.php?page=article&id_article=${id_article}&mode=ajax-detail`,
+		null,
+		"article_introuvable"
+	);
+}
+
 /**
  * Charge le formulaire de publication d'une réponse à une consigne
  * dans la sidebar principale.
@@ -1582,9 +1597,38 @@ function deflouterToutesLesBullesEtLosanges() {
 
 function flouterLesBullesEtLosangesNonSelectionnes(idSelectionnee) {
 	const article_blog = document.querySelector(`#article_blogarticle_${idSelectionnee}, #article_evenementarticle_${idSelectionnee}`)
+	if (!article_blog) return;
 	const elementSelectionnee = article_blog.closest(".timeline_item")
+	if (!elementSelectionnee) return;
 	document.querySelectorAll('.article_blog_container, .article_evenement_container').forEach(bulleOuLosange => {
 		bulleOuLosange.classList.add('flou');
 	})
 	elementSelectionnee.classList.remove('flou');
+}
+
+const RECHARGEMENTS_APRES_SUPPRESSION = {
+	blogs: initBlogs,
+	evenements: initEvenements,
+};
+
+async function supprimerArticle(e) {
+	const btn = e.currentTarget;
+	if (!btn || btn.disabled) return;
+	if (!window.confirm(btn.dataset.confirm)) return;
+
+	btn.disabled = true;
+	try {
+		const res = await fetch(btn.dataset.url, { credentials: 'same-origin' });
+		if (!res.ok) throw new Error('HTTP ' + res.status);
+
+		clicSurTimeline(); // Cacher la sidebar
+		const recharger = RECHARGEMENTS_APRES_SUPPRESSION[btn.dataset.typeObjet];
+		if (typeof recharger === 'function') {
+			await recharger();
+		}
+	} catch (err) {
+		console.error(err);
+		alert(CCN.lang.echec_de_la_supression);
+		btn.disabled = false;
+	}
 }

@@ -270,3 +270,21 @@ function autoriser_forumsupprimer_dist($faire, $type, $id, $qui, $opt) {
 	return $id_rubrique_classe_eleve
 		&& in_array($id_rubrique_classe_eleve, thematique_classes_auteur($id_auteur_visiteur), true);
 }
+
+function autoriser_article_supprimer($faire, $type, $id, $qui, $opt) {
+	$id = intval($id);
+	if (!$id || empty($qui['id_auteur'])) {
+		return false;
+	}
+	// Admins : tout
+	if ($qui['statut'] === '0minirezo') {
+		return true;
+	}
+	// Les autres : uniquement leurs propres publications
+	return (bool) sql_countsel(
+		'spip_auteurs_liens',
+		'objet=' . sql_quote('article')
+		. ' AND id_objet=' . $id
+		. ' AND id_auteur=' . intval($qui['id_auteur'])
+	);
+}

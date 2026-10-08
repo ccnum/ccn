@@ -289,11 +289,18 @@ function initJalons(data) {
 }
 
 async function initBlogs() {
+	viderLayer(CCN.timelineLayerBlogs)
 	await loadArticles(CCN.urlJson + "articles&type=blogs", 'blogs', CCN.articlesBlog, CCN.projet.liste_y_blogs);
 }
 
 async function initEvenements() {
+	viderLayer(CCN.timelineLayerEvenements)
 	await loadArticles(CCN.urlJson + "articles&type=evenements", 'evenements', CCN.articlesEvenement, CCN.projet.liste_y_evenements);
+}
+
+// On garde le timeline_trigger, mais on retire le reste
+function viderLayer($layer) {
+    $layer.children(':not(.timeline_trigger)').remove();
 }
 
 /**
@@ -306,10 +313,11 @@ async function initEvenements() {
  */
 
 async function loadArticles(fichier, type, ccnArray, listeY) {
-	const jsonData = await fetch(fichier).then(r => r.json());
+	ccnArray.length = 0; // évite les doublons au rechargement
+	const jsonData = await fetch(fichier, { cache: 'no-store' }).then(r => r.json());
 	const jsonArticles = jsonData.articles;
 	let indexY = 0;
-
+	
 	for (let i = 0; i < jsonArticles.length; i++) {
 		const data = { ...jsonArticles[i] };
 
@@ -398,13 +406,7 @@ function initTimeline() {
 
 	$('.mois, .timeline_trigger, #timeline_cache').on(
 		'click', function () {
-			if($('body').hasClass("hasSidebarOpen")) {
-				CCN.projet.showWholeTimeline();
-			} else {
-				if($('body').hasClass("show_consignes"))
-					return
-				changeTimelineMode('consignes');
-			}
+			clicSurTimeline()
 		}
 	);
 
@@ -468,6 +470,16 @@ function initTimeline() {
 	$('.profil').mediabox({ width: '80%', height: '80%' });
 
 	window.addEventListener("resize", () => updateAllConnecteurs());
+}
+
+function clicSurTimeline() {
+	if($('body').hasClass("hasSidebarOpen")) {
+		CCN.projet.showWholeTimeline();
+	} else {
+		if($('body').hasClass("show_consignes"))
+			return
+		changeTimelineMode('consignes');
+	}
 }
 
 $(function () {

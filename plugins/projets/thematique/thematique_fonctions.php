@@ -11,46 +11,6 @@ function filtre_nb2col($nb) {
 }
 
 /**
- * Classes CSS du conteneur externe d'un bloc "rubrique/classe" du menu de
- * navigation (cf noisettes/rubrique.html), selon que la rubrique est de
- * type travail_en_cours ou non. Le calcul du booléen ($est_travail_en_cours)
- * reste dans le squelette (=={xxx} ou match{xxx} selon l'appel d'origine),
- * seule la construction de la chaîne de classes est mutualisée ici.
- *
- * @param bool $est_travail_en_cours
- * @return string
- */
-function thematique_classe_bloc_rubrique_menu_externe($est_travail_en_cours) {
-	return 'sidebar_bubble ressources_classes_around '
-		. ($est_travail_en_cours ? 'ressources_travail_en_cours' : 'ressources_no_color');
-}
-
-/**
- * Classes CSS du conteneur interne d'un bloc "rubrique/classe" du menu de
- * navigation — voir thematique_classe_bloc_rubrique_menu_externe().
- *
- * @param bool $est_travail_en_cours
- * @param int $id_rubrique
- * @return string
- */
-function thematique_classe_bloc_rubrique_menu_interne($est_travail_en_cours, $id_rubrique) {
-	return ($est_travail_en_cours ? 'bgc_classe_' . filtre_nb2col($id_rubrique) . ' ' : '') . 'ressources_classes';
-}
-
-/**
- * Faut-il mettre en avant la rubrique de l'utilisateur en premier dans le
- * menu de navigation de la sidebar (cf noisettes/rubrique.html) : seulement
- * pour un prof, et pas sur la rubrique "evenements" (blog pédagogique).
- *
- * @param string $motcle Mot-clé de la rubrique de l'utilisateur (#SESSION{idRubriqueUser})
- * @param string $role
- * @return bool
- */
-function thematique_afficher_rubrique_utilisateur_prof($motcle, $role) {
-	return $role === 'prof' && $motcle !== 'evenements';
-}
-
-/**
  * Année scolaire courante (cookie/GET, cf plugins/projets/ccn/ccn_options.php).
  *
  * Doit rester dans ce fichier _fonctions.php (auto-inclus à chaque appel),

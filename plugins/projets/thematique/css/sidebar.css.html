@@ -1175,6 +1175,7 @@ les styles de composants). */
 	bottom: 0;
 	left: 0;
 	right: 0;
+	z-index: 1;
 }
 
 #timeline_cache {
@@ -1236,6 +1237,7 @@ les styles de composants). */
 	height: calc(100vh - var(--header-height) - var(--footer-height) - 2*var(--sidebar-y-margins));
 	transform: translateX(calc(100% + var(--sidebar-margin-right)));
 	transition: transform 500ms ease-in-out, width 500ms ease;
+	outline: none;  /* On ne veut pas de bordures au focus */
 }
 
 #sidebar_content {
@@ -2273,5 +2275,18 @@ ailleurs, ex: le menu du bas). */
 	justify-content: flex-end;
 }
 
+.popup_article_introuvable,
+.popup_article_introuvable .sidebar_bubble {
+	height: 100%;
+	width: 100%;
+	border: none;
+}
 
-
+.article_introuvable_message {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	height: 100%;
+	width: 100%;
+	font-size: 1rem;
+}

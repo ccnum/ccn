@@ -61,4 +61,6 @@ jobs:
         with:
           push: true
           context: .
+          secrets: |
+            github_token=${{ secrets.GITHUB_TOKEN }}
           tags: erasme/spip-ccn:latest , erasme/spip-ccn:${{ steps.version.outputs.new_tag }}

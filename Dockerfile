@@ -4,10 +4,10 @@ LABEL org.opencontainers.image.title="SPIP"
 LABEL org.opencontainers.image.description="SPIP 4.4 CMS on PHP 8.4 / Apache"
 LABEL org.opencontainers.image.source="https://github.com/ccnum/ccn"
 LABEL org.opencontainers.image.licenses="GPL-3.0-only"
-LABEL org.opencontainers.image.version="4.4.27"
+LABEL org.opencontainers.image.version="4.4.28"
 ENV SPIP_VERSION=4.4
-ENV SPIP_PACKAGE=4.4.27
-ENV SPIP_PACKAGE_SHA256=7b2124401528a6c91a64e2b8d4bc728c2c670eb996340d4fba461b4731795582
+ENV SPIP_PACKAGE=4.4.28
+ENV SPIP_PACKAGE_SHA256=15016e75d097f322e307ec3aa718fc14a5aa2c2e8c7fcc8c4184aeaef84e6706
 
 RUN set -eux; \
 	apt-get update; \
@@ -17,7 +17,18 @@ RUN set -eux; \
 	; \
 	rm -rf /var/lib/apt/lists/*;
 
-RUN set -eux; \
+# PIE (PHP Installer for Extensions), remplaçant de PECL (déprécié, et
+# pecl.php.net renvoyait des 504 au build) : installe imagick/apcu depuis
+# Packagist/GitHub.
+COPY --from=ghcr.io/php/pie:1.5.1-bin /pie /usr/bin/pie
+
+# Secret optionnel github_token : PIE télécharge les sources via l'API GitHub,
+# limitée à 60 requêtes/h par IP sans authentification (IP partagées des
+# runners GitHub Actions).
+RUN --mount=type=secret,id=github_token \
+	set -eux; \
+	\
+	if [ -s /run/secrets/github_token ]; then export GITHUB_TOKEN="$(cat /run/secrets/github_token)"; fi; \
 	\
 	savedAptMark="$(apt-mark showmanual)"; \
 	\
@@ -59,17 +70,9 @@ RUN set -eux; \
 	docker-php-ext-configure ldap --with-libdir=lib/x86_64-linux-gnu/ && \
 	docker-php-ext-install ldap; \
 	\
-	curl -fL -o imagick.tgz 'https://pecl.php.net/get/imagick-3.8.1.tgz'; \
-	echo '3a3587c0a524c17d0dad9673a160b90cd776e836838474e173b549ed864352ee *imagick.tgz' | sha256sum -c -; \
-	pecl install ./imagick.tgz && \
-	rm imagick.tgz && \
-	docker-php-ext-enable imagick; \
-	\
-	curl -fL -o apcu.tgz 'https://pecl.php.net/get/apcu-5.1.28.tgz'; \
-	echo 'ca9c1820810a168786f8048a4c3f8c9e3fd941407ad1553259fb2e30b5f057bf *apcu.tgz' | sha256sum -c -; \
-	pecl install ./apcu.tgz && \
-	rm apcu.tgz && \
-	docker-php-ext-enable apcu; \
+	pie install imagick/imagick:3.8.1; \
+	pie install apcu/apcu:5.1.28; \
+	rm -rf /root/.pie; \
 	out="$(php -r 'exit(0);')"; \
 	[ -z "$out" ]; \
 	err="$(php -r 'exit(0);' 3>&1 1>&2 2>&3)"; \

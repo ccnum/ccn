@@ -1,5 +1,5 @@
 #CACHE{0}
-<BOUCLE_principale_article(ARTICLES){id_article}{tous}>
+<BOUCLE_principale_article(ARTICLES){id_article}{statut!=poubelle}{tous}>
 	[(#REM) Type objet: consignes, travail_en_cours, blogs, evenements, ressources]
 	[(#ENV{type_objet}|oui)
 		#SET{type_objet,#TYPE_OBJET}
@@ -11,7 +11,6 @@
 
 	[(#REM) Mode d'ouverture]
 	#SET{mode,#ENV{mode, complet}}
-
 	[(#REM) Page]
 	#SET{page,article}
 	[(#GET{type_objet}|in_array{#LISTE{ressources,classes}}|oui)#SET{page,rubrique}]
@@ -50,7 +49,7 @@
 	]
 
 	[(#GET{mode}|=={complet}|oui)
-		<INCLURE{fond=layout, page=sommaire, id_rubrique, env, type_objet=#GET{type_objet}, id_objet=#ID_ARTICLE, ajax} />
+		<INCLURE{fond=layout, page=sommaire, id_rubrique, env, type_objet=#GET{type_objet}, id_objet=#ID_ARTICLE} />
 	]
 
 	[(#GET{mode}|=={ajax}|oui)
@@ -61,5 +60,17 @@
 	]
 
 </BOUCLE_principale_article>
-	<INCLURE{fond=chargement}{type_objet=#TYPE_OBJET}>
+	[(#ENV{id_article}|oui)
+		[(#ENV{mode,complet}|=={complet}|oui)
+			<INCLURE{fond=layout, page=sommaire, env, id_objet=#ENV{id_article}} />
+		]
+		[(#ENV{mode,complet}|!={complet}|oui)
+			<BOUCLE_article_poubelle(ARTICLES){id_article}{statut=poubelle}{tous}>
+				<INCLURE{fond=noisettes/article_introuvable, env, supprime=oui} />
+			</BOUCLE_article_poubelle>
+				<INCLURE{fond=noisettes/article_introuvable, env} />
+			<//B_article_poubelle>
+		]
+	]
+	[(#ENV{id_article}|non)<INCLURE{fond=chargement}{type_objet=#TYPE_OBJET}>]
 <//B_principale_article>
