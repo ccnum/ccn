@@ -78,6 +78,7 @@ return [
 	'confirmation_supprimer_commentaire'         => 'Êtes-vous sûr de vouloir supprimer ce commentaire ?',
 	'confirmation_supprimer_document'            => 'Êtes-vous sûr de vouloir supprimer ce document ?',
 	'confirmation_supprimer_message'             => 'Êtes-vous sûr de vouloir supprimer ce message ?',
+	'confirmer_suppression'                      => 'Supprimer définitivement cette publication ?',
 	'consigne'                                   => 'consigne',
 	'consigne_a_publie_ressource'                => '<b>@auteur@</b> a publié <b>@titre@</b> sur <b>l’espace Ressources</b>',
 	'consigne_attend_livrable'                   => 'Cette consigne attend un livrable.',

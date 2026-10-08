@@ -1588,3 +1588,30 @@ function flouterLesBullesEtLosangesNonSelectionnes(idSelectionnee) {
 	})
 	elementSelectionnee.classList.remove('flou');
 }
+
+const RECHARGEMENTS_APRES_SUPPRESSION = {
+	blogs: initBlogs,
+	evenements: initEvenements,
+};
+
+async function supprimerArticle(e) {
+	const btn = e.currentTarget;
+	if (!btn || btn.disabled) return;
+	if (!window.confirm(btn.dataset.confirm)) return;
+
+	btn.disabled = true;
+	try {
+		const res = await fetch(btn.dataset.url, { credentials: 'same-origin' });
+		if (!res.ok) throw new Error('HTTP ' + res.status);
+
+		clicSurTimeline(); // Cacher la sidebar
+		const recharger = RECHARGEMENTS_APRES_SUPPRESSION[btn.dataset.typeObjet];
+		if (typeof recharger === 'function') {
+			await recharger();
+		}
+	} catch (err) {
+		console.error(err);
+		alert(CCN.lang.echec_de_la_supression);
+		btn.disabled = false;
+	}
+}
