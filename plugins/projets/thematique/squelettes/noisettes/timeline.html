@@ -52,12 +52,13 @@
 	retombait sur la timeline entière malgré un id_article correct dans
 	l'URL. thematique_type_objet_article() donne le même type que celui
 	posé par callConsigne()/callReponse() ('consignes'/'travail_en_cours'),
-	à partir du seul id_article. ]
+	à partir du seul id_article. Sans type (article inexistant) :
+	popup article_introuvable (#515). ]
 	#SET{type_objet_init, #SELF|parametre_url{type_objet}}
 	#SET{id_objet_init, #SELF|parametre_url{id_objet}}
 	#SET{id_article_init, #SELF|parametre_url{id_article}}
 	[(#GET{type_objet_init}|non)[(#GET{id_article_init}|oui)
-		#SET{type_objet_init, #GET{id_article_init}|thematique_type_objet_article}
+		#SET{type_objet_init, #GET{id_article_init}|thematique_type_objet_article|sinon{article_introuvable}}
 		#SET{id_objet_init, #GET{id_article_init}}
 	]]
 

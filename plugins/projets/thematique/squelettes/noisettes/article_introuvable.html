@@ -1,0 +1,10 @@
+#CACHE{0}
+[(#REM) Popup d'un article à la poubelle (supprime=oui) ou inexistant, cf article.html (#515) ]
+<div class="popup popup_article_introuvable">
+	<div class="sidebar_bubble" role="status" aria-live="polite">
+		<div class="article_introuvable_message">
+			[(#ENV{supprime}|=={oui}|oui)<:thematique:article_supprime:>]
+			[(#ENV{supprime}|=={oui}|non)<:thematique:article_inexistant:>]
+		</div>
+	</div>
+</div>
