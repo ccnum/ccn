@@ -1,0 +1,15 @@
+#CACHE{0}
+<div class="popup popup_article_introuvable">
+	<div class="sidebar_bubble" role="status" aria-live="polite">
+        <div style="display: flex;
+                    justify-content: center;
+                    align-items: center;
+                    height: 100%;
+                    width: 100%;
+                    font-size: 1rem;"
+        >
+		    [(#ENV{supprime}|=={oui}|oui)<:thematique:article_supprime:>]
+		    [(#ENV{supprime}|!={oui}|oui)<:thematique:article_inexistant:>]
+        </div>
+	</div>
+</div>

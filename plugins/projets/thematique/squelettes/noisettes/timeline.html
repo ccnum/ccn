@@ -60,6 +60,9 @@
 		#SET{type_objet_init, #GET{id_article_init}|thematique_type_objet_article}
 		#SET{id_objet_init, #GET{id_article_init}}
 	]]
+	[(#GET{type_objet_init}|non)[(#GET{id_article_init}|oui)
+		#SET{type_objet_init, article_introuvable}
+	]]
 
 	CCN.dateToShowAtInit = [(#ENV{vue_date,0}|json_encode)];
 	CCN.typePopupToShowAtInit = [(#GET{type_objet_init}|sinon{0}|json_encode)];

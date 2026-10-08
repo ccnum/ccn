@@ -1,4 +1,4 @@
-<BOUCLE_principale(ARTICLES){id_article}{tous}>
+<BOUCLE_principale(ARTICLES){id_article}{statut!=poubelle}{tous}>
 	#SET{admin_scope, #ENV{rub}|thematique_admin_scope}
 	[(#ENV{type_objet}|=={jalon}|oui)
 		<INCLURE{fond=noisettes/sidebar/inc/entete_commun, env} />
@@ -46,3 +46,5 @@
 		<INCLURE{fond=noisettes/sidebar/BlogOuEvenement, env, ajax} />
 	]
 </BOUCLE_principale>
+	[(#ENV{id_article}|oui)<INCLURE{fond=noisettes/article_introuvable, env} />]
+<//B_principale>
