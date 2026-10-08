@@ -59,13 +59,13 @@ RUN set -eux; \
 	docker-php-ext-configure ldap --with-libdir=lib/x86_64-linux-gnu/ && \
 	docker-php-ext-install ldap; \
 	\
-	curl -fL -o imagick.tgz 'https://pecl.php.net/get/imagick-3.8.1.tgz'; \
+	curl -fL --retry 5 --retry-delay 10 -o imagick.tgz 'https://pecl.php.net/get/imagick-3.8.1.tgz'; \
 	echo '3a3587c0a524c17d0dad9673a160b90cd776e836838474e173b549ed864352ee *imagick.tgz' | sha256sum -c -; \
 	pecl install ./imagick.tgz && \
 	rm imagick.tgz && \
 	docker-php-ext-enable imagick; \
 	\
-	curl -fL -o apcu.tgz 'https://pecl.php.net/get/apcu-5.1.28.tgz'; \
+	curl -fL --retry 5 --retry-delay 10 -o apcu.tgz 'https://pecl.php.net/get/apcu-5.1.28.tgz'; \
 	echo 'ca9c1820810a168786f8048a4c3f8c9e3fd941407ad1553259fb2e30b5f057bf *apcu.tgz' | sha256sum -c -; \
 	pecl install ./apcu.tgz && \
 	rm apcu.tgz && \
