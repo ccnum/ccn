@@ -1618,7 +1618,7 @@ async function supprimerArticle(e) {
         }
     } catch (err) {
         console.error('Suppression impossible', err);
-        alert('La suppression a échoué.');
+        alert(CCN.lang.echec_de_la_supression);
         btn.disabled = false;
     }
 }
