@@ -7,20 +7,6 @@ vérifié dans le code ou dans un navigateur (Chromium, instances ddev) à cette
 
 ---
 
-## Code
-
-### `noisettes/rubrique.html` (thematique) : code mort
-
-**Fichiers** : `thematique/squelettes/noisettes/rubrique.html`, branches `mode=ajax` / `mode=detail`
-de `thematique/squelettes/rubrique.html` et `livrables.html`
-
-La sidebar `#listmenu` (et ses 8 blocs `<script>` inline) n'est produite que par
-`page=rubrique&mode=ajax|detail`, qu'aucun code n'appelle : le front n'utilise que `ajax-detail` et
-`complet` (`squelettes/js/controleurs.js`). `url_popup_livrables` (`json/projet.html`, mode=detail)
-est lu par `projet.js` mais jamais utilisé. À supprimer plutôt qu'à refactorer.
-
----
-
 ## CSS
 
 ### Pas de mise en page mobile (thematique)

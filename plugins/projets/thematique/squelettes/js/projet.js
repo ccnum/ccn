@@ -55,7 +55,6 @@ function Projet() {
 		this.url_popup_missionajout = data.url_popup_missionajout;
 		this.url_popup_modifier_article = data.url_popup_modifier_article;
 		this.url_popup_blog = data.url_popup_blog;
-		this.url_popup_livrables = data.url_popup_livrables;
 		this.url_popup_evenement = data.url_popup_evenement;
 		this.url_popup_evenement_creer = data.url_popup_evenement_creer;
 		this.url_popup_information_creer = data.url_popup_information_creer;

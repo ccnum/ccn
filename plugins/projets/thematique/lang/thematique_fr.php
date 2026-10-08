@@ -142,7 +142,6 @@ return [
 	'lien_ouverture_directe'                     => 'Lien d’ouverture directe',
 	'lire_la_suite'                              => 'Lire la suite',
 	'lire_la_suite_commentaire'                  => 'Lire la suite du commentaire',
-	'livrables_attendus'                         => 'Livrables attendus',
 	'ma_reponse'                                 => 'Ma réponse',
 	'masquer_reponses'                           => 'Masquer les réponses',
 	'me_connecter'                               => 'Me connecter',
