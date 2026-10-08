@@ -14,7 +14,7 @@ messages de forum en une seule requête groupée (thematique_comptes_forums),
 plutôt qu'une requête FORUMS par article dans la boucle d'affichage ci-dessous. ]
 #SET{ids_articles,#ARRAY}
 <BOUCLE_rubrique_ids(RUBRIQUES){titre_mot=#ENV{type}}{tout}>
-	<BOUCLE_article_ids(ARTICLES){branche}{date>=#CONST{_DATE_DEBUT}}{date<=#CONST{_DATE_FIN}}{tout}>
+	<BOUCLE_article_ids(ARTICLES){branche}{date>=#CONST{_DATE_DEBUT}}{date<=#CONST{_DATE_FIN}}>
 		[(#GET{afficher}|=={oui}|oui)#SET_PUSH{ids_articles,#ID_ARTICLE}]
 	</BOUCLE_article_ids>
 </BOUCLE_rubrique_ids>
@@ -24,13 +24,13 @@ plutôt qu'une requête FORUMS par article dans la boucle d'affichage ci-dessous
 {
 "articles": [
 <BOUCLE_rubrique(RUBRIQUES){titre_mot=#ENV{type}}{tout}>
-	<BOUCLE_article(ARTICLES){branche}{par date}{date>=#CONST{_DATE_DEBUT}}{date<=#CONST{_DATE_FIN}}{tout}>
+	<BOUCLE_article(ARTICLES){branche}{par date}{date>=#CONST{_DATE_DEBUT}}{date<=#CONST{_DATE_FIN}}>
 		[(#GET{afficher}|=={oui}|oui)
 		[(#GET{n}|>{0}|oui),]{"id":"article_#ID_ARTICLE","id_objet":#ID_ARTICLE,"type_objet":"article","titre":[(#TITRE|json_encode)],"date":"[(#DATE|affdate{'Y-m-d'})]","y":[(#Y|sinon{0})],"commentaires":[(#GET{comptes_forum}|table_valeur{#ID_ARTICLE,0})]}
 		[(#SET{n,#GET{n}|plus{1}})]
 		]
 	</BOUCLE_article>
-	<BOUCLE_syndic(SYNDIC_ARTICLES){branche}{par date}{date>=#CONST{_DATE_DEBUT}}{date<=#CONST{_DATE_FIN}}{tout}>
+	<BOUCLE_syndic(SYNDIC_ARTICLES){branche}{par date}{date>=#CONST{_DATE_DEBUT}}{date<=#CONST{_DATE_FIN}}>
 		[(#REM)Pour exclure les doublons ou articles qui bouclent depuis le WP]
 		<BOUCLE_exclusion(ARTICLES){titre=#_syndic:TITRE}>
 		</BOUCLE_exclusion>

@@ -1,0 +1,20 @@
+[(#REM)
+Bouton "Supprimer" d'un article (mission/réponse/billet), sur le modèle de
+modifier_article. Paramètres attendus : id_article, type_objet.
+]
+#CACHE{0}
+#SET{peut_supprimer, #AUTORISER{supprimer,article,#ENV{id_article}}}
+#SET{annee_active, #ENV{id_article}|thematique_annee_article|thematique_annee_est_passee|non}
+[(#GET{peut_supprimer}|et{#GET{annee_active}})
+<button type="button"
+        class="bouton-supprimer-article btn-reset "
+        data-id-article="#ENV{id_article}"
+        data-type-objet="#ENV{type_objet}"
+        data-url="#URL_ACTION_AUTEUR{thematique_supprimer_article,#ENV{id_article}}"
+        data-confirm="<:thematique:confirmer_suppression|attribut_html:>"
+        onclick="supprimerArticle(event)"
+>
+    <span class="icon icon-supprimer"></span>
+    <div><:thematique:supprimer:></div>
+</button>
+]

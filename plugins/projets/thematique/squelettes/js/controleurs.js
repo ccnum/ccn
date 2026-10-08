@@ -1588,3 +1588,37 @@ function flouterLesBullesEtLosangesNonSelectionnes(idSelectionnee) {
 	})
 	elementSelectionnee.classList.remove('flou');
 }
+
+const RECHARGEMENTS_APRES_SUPPRESSION = {
+    blogs: initBlogs,
+    evenements: initEvenements,
+};
+
+async function supprimerArticle(e) {
+	const btn = e.currentTarget
+	if (!btn || btn.disabled) return;
+
+    const message = btn.dataset.confirm || 'Supprimer cette publication ?';
+    if (!window.confirm(message)) return;
+
+    btn.disabled = true;
+    try {
+        const res = await fetch(btn.dataset.url, { credentials: 'same-origin' });
+        if (!res.ok) throw new Error('HTTP ' + res.status);
+
+        const detail = {
+            idArticle: btn.dataset.idArticle,
+            typeObjet: btn.dataset.typeObjet,
+        };
+
+		clicSurTimeline() // Cacher la sidebar
+		const recharger = RECHARGEMENTS_APRES_SUPPRESSION[detail.typeObjet];
+		if (typeof recharger === 'function') {
+            await recharger();
+        }
+    } catch (err) {
+        console.error('Suppression impossible', err);
+        alert('La suppression a échoué.');
+        btn.disabled = false;
+    }
+}

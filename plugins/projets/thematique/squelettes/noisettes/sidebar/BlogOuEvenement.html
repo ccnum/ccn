@@ -26,6 +26,7 @@ juste description + discussion), cf noisettes/article.html ]
 						<BOUCLE_contenu_message(ARTICLES){id_article}>
 							<div class="bouton-modifier-container">
 								<INCLURE{fond=noisettes/sidebar/inc/bouton_modifier_article, id_article=#ID_ARTICLE, type_objet=#ENV{type_objet}} />
+								<INCLURE{fond=noisettes/sidebar/inc/supprimer_article, id_article=#ID_ARTICLE, type_objet=#ENV{type_objet}}>
 							</div>
 							[(#TEXTE|liens_ouvrants|image_reduire{250,0}|thematique_html_equilibre)]
 						</BOUCLE_contenu_message>
