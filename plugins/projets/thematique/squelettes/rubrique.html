@@ -18,7 +18,7 @@
 ]
 <!-- l18 rubrique #GET{mode} -->
 [(#GET{mode}|=={complet}|oui)
-	<INCLURE{fond=layout, id_rubrique, type_objet=#GET{type_objet}, page=sommaire, id_objet=#ID_ARTICLE, env, ajax} />
+	<INCLURE{fond=layout, id_rubrique, type_objet=#GET{type_objet}, page=sommaire, id_objet=#ID_ARTICLE, env} />
 ]
 
 [(#GET{mode}|match{ajax}|oui)

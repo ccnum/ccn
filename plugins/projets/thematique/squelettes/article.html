@@ -50,7 +50,7 @@
 	]
 
 	[(#GET{mode}|=={complet}|oui)
-		<INCLURE{fond=layout, page=sommaire, id_rubrique, env, type_objet=#GET{type_objet}, id_objet=#ID_ARTICLE, ajax} />
+		<INCLURE{fond=layout, page=sommaire, id_rubrique, env, type_objet=#GET{type_objet}, id_objet=#ID_ARTICLE} />
 	]
 
 	[(#GET{mode}|=={ajax}|oui)
