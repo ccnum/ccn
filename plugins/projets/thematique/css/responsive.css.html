@@ -110,6 +110,49 @@ refaire toute la mise en page. */
 	}
 }
 
+/* Petit mobile : le menu haut (logo + année + utilisateur + aide, ~760px)
+débordait de la page. On garde une seule ligne (hauteur --header-height dont
+dépend le reste de la mise en page) en ne gardant que les icônes : les
+libellés (.menu_haut_libelle) restent dans le DOM pour les lecteurs d'écran. */
+@media screen and (max-width: 480px) {
+	#menu_haut .menu_haut_libelle {
+		position: absolute;
+		width: 1px;
+		height: 1px;
+		overflow: hidden;
+		clip-path: inset(50%);
+		white-space: nowrap;
+	}
+
+	#menu_haut_ccn {
+		padding: 0 .25rem;
+		flex-shrink: 1;
+		min-width: 0;
+	}
+
+	#menu_haut_ccn a img {
+		max-width: 100%;
+		height: auto;
+	}
+
+	#menu_haut_user .first_label {
+		min-width: 0;
+		gap: .25rem;
+	}
+
+	#menu_haut_user .icon-connecter {
+		margin-right: 0;
+	}
+
+	#menu_haut .icon-down {
+		width: 24px;
+	}
+
+	#bouton_aide .icon-aide {
+		margin-right: 0;
+	}
+}
+
 #header-col_left {
 	flex: 1;
 }
