@@ -334,10 +334,14 @@ function thematique_cioidc_titre_rubrique_classe($groupe) {
 	return str_replace('/', '-', $titre);
 }
 
-// Rubrique d'une classe ENT pour un prof : trouvée ou créée sous son titre avec
-// établissement. Une rubrique créée avant l'ajout de l'établissement (titre = nom de
-// classe seul, exactement) est renommée plutôt que dupliquée, pour ne pas perdre son
-// contenu ni ses liens auteurs.
+// Rubrique d'une classe ENT pour un prof : trouvée sous son titre avec établissement,
+// ou sous le nom de classe seul (exactement), alors renommée avec l'établissement.
+// Elle n'est plus créée ici : l'ENT envoie TOUTES les classes du prof, sans dire
+// lesquelles participent au projet (le groupe libre « <thématique> <année> » dit
+// seulement qu'il participe) ; une connexion créait une rubrique par classe. Les
+// rubriques des classes inscrites sont créées par l'équipe CCN sous « Travail des
+// classes » (titre = nom de la classe ENT, ex. « 4A ») ; le prof y est rattaché à sa
+// connexion suivante, les autres classes sont ignorées (titre attendu dans cioidc.log).
 function thematique_cioidc_rubrique_classe_prof($groupe, $id_travail_classes) {
 	if (!$id_travail_classes) {
 		return null;
@@ -356,14 +360,21 @@ function thematique_cioidc_rubrique_classe_prof($groupe, $id_travail_classes) {
 		spip_log("userinfo rubrique classe #$id_ancienne renommée {$groupe->group_name} => $titre", 'cioidc');
 		return $id_ancienne;
 	}
-	return thematique_trouver_ou_creer_rubrique($titre, $id_travail_classes);
+	$titres = array_unique([$titre, (string) $groupe->group_name]);
+	spip_log(
+		"userinfo classe {$groupe->group_name} ignorée : pas de rubrique « " . implode(' » ni « ', $titres) . ' »'
+			. " sous #$id_travail_classes (à créer par l'équipe CCN si la classe participe)",
+		'cioidc'
+	);
+	return null;
 }
 
 // Rubriques de classe/projet à lier à l'auteur.
 // Seul un prof inscrit au projet de CE site pour l'année (groupe libre pertinent, cf
-// thematique_cioidc_groupes_libres_pertinents()) fait créer ses classes ENT sous
-// "Travail des classes" : sinon n'importe quel prof/élève laclasse.com passant sur le
-// site y ajoutait sa classe comme "participant" (cf noisettes/menu_classes.html).
+// thematique_cioidc_groupes_libres_pertinents()) est rattaché à ses classes ENT déjà
+// présentes sous "Travail des classes" (créées par l'équipe CCN, cf
+// thematique_cioidc_rubrique_classe_prof()) : sinon n'importe quel prof/élève
+// laclasse.com passant sur le site y ajoutait sa classe comme "participant".
 // Un élève est seulement rattaché à sa classe si elle existe déjà (créée par son prof
 // ou un admin), ex: affichage de l'emoji de classe hors du contexte d'une rubrique.
 function thematique_cioidc_resoudre_liens_rubriques(
