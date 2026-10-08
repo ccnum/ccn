@@ -1598,7 +1598,7 @@ async function supprimerArticle(e) {
 	const btn = e.currentTarget
 	if (!btn || btn.disabled) return;
 
-    const message = btn.dataset.confirm || 'Supprimer cette publication ?';
+    const message = btn.dataset.confirm || CCN.lang.supprimer_publication;
     if (!window.confirm(message)) return;
 
     btn.disabled = true;
@@ -1617,7 +1617,7 @@ async function supprimerArticle(e) {
             await recharger();
         }
     } catch (err) {
-        console.error('Suppression impossible', err);
+        console.error(CCN.lang.supression_impossible, err);
         alert(CCN.lang.echec_de_la_supression);
         btn.disabled = false;
     }
