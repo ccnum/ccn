@@ -1957,8 +1957,9 @@ function thematique_avatar_notification_auteur($id_auteur) {
 
 /**
  * Numéro d'affichage (1-based) d'une mission (consigne) : son rang parmi
- * les consignes de sa rubrique triées par date — même règle que
- * menu_consignes.html (#GET{num}) et header_sidebar.html (#ENV{rang}).
+ * les consignes publiées de sa rubrique triées par date, jalons exclus —
+ * même règle que json/consignes.html, d'où vient le #ENV{rang} de
+ * header_sidebar.html.
  * Utilisé pour la carte du mail de notification de commentaire forumv2
  * (issue #217, cf notifications/forum_poste.html).
  *
@@ -1993,16 +1994,30 @@ function thematique_numero_mission($id_article) {
 
 	$rang = 0;
 	if ($consigne) {
+		// Issue #551 : seules les missions publiées comptent (la consigne
+		// elle-même est gardée quel que soit son statut, la notification
+		// pouvant partir avant que le statut soit relu), et les jalons
+		// (cap-sur-l-annee/la-rencontre) sont exclus comme dans
+		// json/consignes.html — sinon un "Cap sur l'année" publié dans la
+		// rubrique décalait toutes les missions d'un cran dans les mails.
 		$missions = sql_allfetsel(
 			'id_article',
 			'spip_articles',
-			'id_rubrique=' . intval($consigne['id_rubrique']) . ' AND id_consigne=0',
+			'id_rubrique=' . intval($consigne['id_rubrique'])
+				. ' AND id_consigne=0'
+				. ' AND (statut=' . sql_quote('publie') . ' OR id_article=' . $id_consigne . ')',
 			'',
 			'date'
 		);
-		foreach ($missions as $i => $mission) {
-			if (intval($mission['id_article']) === $id_consigne) {
-				$rang = $i + 1;
+		$numero = 0;
+		foreach ($missions as $mission) {
+			$id_mission = intval($mission['id_article']);
+			if ($id_mission !== $id_consigne && thematique_article_est_jalon($id_mission)) {
+				continue;
+			}
+			$numero++;
+			if ($id_mission === $id_consigne) {
+				$rang = $numero;
 				break;
 			}
 		}
