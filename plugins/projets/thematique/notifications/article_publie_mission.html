@@ -8,7 +8,7 @@
 ]
 <BOUCLE_art(ARTICLES){id_article}{statut?}{tout}>
 #SET{numero_mission,#ID_ARTICLE|thematique_numero_mission}
-#SET{nom_intervenant,#LESAUTEURS|textebrut|sinon{#NOM_SITE_SPIP}}
+#SET{nom_intervenant,#ID_ARTICLE|thematique_noms_publics_auteurs_article|sinon{#NOM_SITE_SPIP}}
 #SET{titre_mission,#TITRE|trim}
 #SET{avatar,#ID_ARTICLE|thematique_avatar_notification_article}
 #SET{avatar_type,#GET{avatar}|table_valeur{type}}

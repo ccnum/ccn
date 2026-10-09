@@ -36,7 +36,7 @@
 					la liste montrait toutes les ressources de toutes les années. ]
 					<BOUCLE_articles(ARTICLES){id_secteur}{!par date}>
 						<BOUCLE_auteur(AUTEURS){id_article}>
-							#SET{nom_auteur, #NOM}
+							#SET{nom_auteur, #ID_AUTEUR|thematique_nom_public_auteur}
 						</BOUCLE_auteur>
 						<INCLURE{
 							fond=noisettes/sidebar/ressource/ressource_card,

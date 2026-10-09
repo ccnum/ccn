@@ -13,7 +13,7 @@
 		[(#ENV{id_article}|>{0}|oui)
 			<BOUCLE_articles(ARTICLES){id_article}{tout}>
 				<BOUCLE_auteur(AUTEURS){id_article}>
-					#SET{nom_auteur, #NOM}
+					#SET{nom_auteur, #ID_AUTEUR|thematique_nom_public_auteur}
 				</BOUCLE_auteur>
 				<div class="ressource-detail-title">
 					<div class="ressource-detail-title-text">#TITRE</div>

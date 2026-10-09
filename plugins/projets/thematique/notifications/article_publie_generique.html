@@ -17,7 +17,7 @@
 
 ]
 <BOUCLE_art(ARTICLES){id_article}{statut?}{tout}>
-#SET{auteurs,#LESAUTEURS|textebrut}
+#SET{auteurs,#ID_ARTICLE|thematique_noms_publics_auteurs_article}
 #SET{type_objet,#ID_ARTICLE|thematique_type_objet_article}
 #SET{type_libelle,#GET{type_objet}|thematique_rendre_type_article_affichable|sinon{#NOM_SITE_SPIP}}
 #SET{avatar,#ID_ARTICLE|thematique_avatar_notification_article}

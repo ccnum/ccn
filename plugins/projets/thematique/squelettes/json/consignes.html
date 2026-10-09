@@ -34,7 +34,7 @@ réponses — cf main.js:dataForConsigne.nombre_commentaires). ]
 		#SET{intervenant_nom,''}
 		#SET{id_auteur_consigne,0}
 		<BOUCLE_auteur_consigne(AUTEURS){id_article}{0,1}>
-			#SET{intervenant_nom,#NOM}
+			#SET{intervenant_nom,#ID_AUTEUR|thematique_nom_public_auteur}
 			#SET{id_auteur_consigne,#ID_AUTEUR}
 		</BOUCLE_auteur_consigne>
 		[(#REM) Photo de la consigne : émoji animal (prof/élève, #446), avatar

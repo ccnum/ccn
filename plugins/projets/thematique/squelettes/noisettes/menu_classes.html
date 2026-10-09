@@ -27,7 +27,7 @@ du cache de la page. ]
 		<BOUCLE_intervenant_annee(AUTEURS){id_auteur=#GET{id_intervenant_annee}}{0,1}>
 			<li class="intervenant-annee">
 				<span class="intervenant-annee-label"><:thematique:intervenant_annee:></span>
-				<span class="intervenant-annee-nom">#NOM</span>
+				<span class="intervenant-annee-nom">[(#ID_AUTEUR|thematique_nom_public_auteur)]</span>
 			</li>
 		</BOUCLE_intervenant_annee>
 
