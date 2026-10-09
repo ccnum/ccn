@@ -221,10 +221,19 @@ function thematique_notifications_destinataires($flux) {
 		$id_rubriques = sql_allfetsel('id_rubrique', 'spip_rubriques', 'id_secteur=' . $id_secteur_ref);
 		$id_rubriques = array_map('intval', array_column($id_rubriques, 'id_rubrique'));
 		if ($id_rubriques) {
+			// 1comite en plus des admins restreints : les profs et intervenants
+			// connectés via l'ENT sont rédacteurs (cf
+			// thematique_cioidc_calculer_statut()), ils n'étaient donc jamais
+			// notifiés des publications (issue #217). Les élèves (6forum)
+			// restent exclus.
 			$auteurs_restreint = sql_select(
 				'auteurs.id_auteur, auteurs.email',
 				'spip_auteurs AS auteurs JOIN spip_auteurs_liens AS lien ON auteurs.id_auteur=lien.id_auteur',
-				["lien.objet='rubrique'", sql_in('lien.id_objet', $id_rubriques), "auteurs.statut='0minirezo'"]
+				[
+					"lien.objet='rubrique'",
+					sql_in('lien.id_objet', $id_rubriques),
+					sql_in('auteurs.statut', ['0minirezo', '1comite']),
+				]
 			);
 			foreach ($auteurs_restreint as $ar) {
 				spip_log('auteur id=' . intval($ar['id_auteur']), 'thematique');
