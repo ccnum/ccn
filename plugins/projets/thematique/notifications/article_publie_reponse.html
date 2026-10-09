@@ -17,7 +17,7 @@
 #SET{nom_intervenant,#VAL{''}}
 <BOUCLE_consigne(ARTICLES){id_article=#ID_CONSIGNE}{tout}>
 	#SET{titre_mission,#TITRE}
-	#SET{nom_intervenant,#LESAUTEURS|textebrut}
+	#SET{nom_intervenant,#ID_ARTICLE|thematique_noms_publics_auteurs_article}
 </BOUCLE_consigne>
 #SET{url_article,#URL_ARTICLE|url_absolue|parametre_url{mode,complet}}
 #SET{carte_sous_titre,#VAL{''}}

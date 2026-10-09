@@ -7,7 +7,7 @@
 
 ]
 <BOUCLE_art(ARTICLES){id_article}{statut?}{tout}>
-#SET{auteurs,#LESAUTEURS|textebrut}
+#SET{auteurs,#ID_ARTICLE|thematique_noms_publics_auteurs_article}
 #SET{avatar,#ID_ARTICLE|thematique_avatar_notification_article}
 #SET{avatar_type,#GET{avatar}|table_valeur{type}}
 #SET{avatar_valeur,#GET{avatar}|table_valeur{valeur}}

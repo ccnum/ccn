@@ -9,7 +9,7 @@ Paramètre attendu : id_article.
 	<div class="photo">[(#ID_ARTICLE|thematique_logo_carre{article})]</div>
 	<div class="auteur">
 		<BOUCLE_auteur_consigne(AUTEURS){id_article}{tout}>
-			#NOM
+			[(#ID_AUTEUR|thematique_nom_public_auteur)]
 		</BOUCLE_auteur_consigne>
 	</div>
 	<div class="#EDIT{date} date">

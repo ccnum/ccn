@@ -8,18 +8,17 @@
 ]
 <BOUCLE_art(ARTICLES){id_article}{statut?}{tout}>
 #SET{numero_mission,#ID_ARTICLE|thematique_numero_mission}
-#SET{nom_intervenant,#LESAUTEURS|textebrut|sinon{#NOM_SITE_SPIP}}
+#SET{nom_intervenant,#ID_ARTICLE|thematique_noms_publics_auteurs_article|sinon{#NOM_SITE_SPIP}}
 #SET{titre_mission,#TITRE|trim}
 #SET{avatar,#ID_ARTICLE|thematique_avatar_notification_article}
 #SET{avatar_type,#GET{avatar}|table_valeur{type}}
 #SET{avatar_valeur,#GET{avatar}|table_valeur{valeur}}
 #SET{avatar_couleur,#GET{avatar}|table_valeur{couleur_fond}}
 #SET{url_article,#URL_ARTICLE|url_absolue|parametre_url{mode,complet}}
-#SET{carte_sous_titre,#VAL{''}}
-[(#GET{numero_mission}|oui)
-	#SET{carte_sous_titre,#VAL{thematique:notif_mission_num_court}|_T{#ARRAY{numero,#GET{numero_mission}}}}
-]
-#SET{carte_titre,#TITRE|trim|thematique_carte_titre_notification{#GET{carte_sous_titre}}}
+[(#REM) Pas de sous-titre "Mission n°X" sur la carte (issue #551) : les
+intervenants numérotent déjà leurs missions dans le titre ("MISSION 1 :
+..."), le sous-titre faisait doublon, voire contradiction. ]
+#SET{carte_titre,#TITRE|trim}
 #SET{carte_date,#DATE|affdate}
 #SET{carte_extrait,#INTRODUCTION|sinon{#CHAPO}|sinon{#TEXTE}|textebrut|thematique_couper_extrait{220}}
 [(#GET{numero_mission}|oui)

@@ -1396,21 +1396,96 @@ function thematique_nom_auteur_commentaire($id_auteur) {
 		return $cache[$id_auteur] = '';
 	}
 
-	$nom = trim($auteur['nom'] ?? '');
-	$nom_complet = trim($auteur['nom_complet'] ?? '');
+	return $cache[$id_auteur] = thematique_formater_nom_commentaire($auteur['nom'] ?? '', $auteur['nom_complet'] ?? '');
+}
+
+/**
+ * Format du nom d'auteur d'un commentaire à partir des champs nom et
+ * nom_complet de spip_auteurs — partagé par
+ * thematique_nom_auteur_commentaire() et l'arbre des commentaires forumv2
+ * (une seule requête jointe, sans passer par la fonction ci-dessus).
+ *
+ * @param string $nom
+ * @param string $nom_complet
+ * @return string
+ */
+function thematique_formater_nom_commentaire($nom, $nom_complet) {
+	$nom = trim((string) $nom);
+	$nom_complet = trim((string) $nom_complet);
 	if ($nom_complet === '') {
-		return $cache[$id_auteur] = $nom;
+		return $nom;
 	}
 	if ($nom === '') {
-		return $cache[$id_auteur] = $nom_complet;
+		return $nom_complet;
 	}
 	// Un intervenant a déjà son prénom+nom en tête de nom (cf
-	// thematique_cioidc_nom_affiche) : pas de doublon.
+	// thematique_cioidc_nom_affiche) : prénom+nom seul, sans le suffixe
+	// " - Intervenant" (issue #550).
 	if (str_starts_with($nom, $nom_complet)) {
-		return $cache[$id_auteur] = $nom;
+		return $nom_complet;
 	}
 
-	return $cache[$id_auteur] = $nom_complet . ' - ' . $nom;
+	return $nom_complet . ' - ' . $nom;
+}
+
+/**
+ * Nom public d'un auteur (front et mails) : spip_auteurs.nom, sauf pour un
+ * intervenant dont le nom vaut "Prénom NOM - Intervenant" (cf
+ * thematique_cioidc_nom_affiche) — on n'affiche alors que "Prénom NOM"
+ * (issue #550). Le champ nom n'est pas modifié : il est réécrit à chaque
+ * connexion SSO et sert à distinguer les comptes dans le back-office.
+ * Les profs gardent "rôle - classe - collège" (issue #44).
+ *
+ * @param int $id_auteur
+ * @return string
+ */
+function thematique_nom_public_auteur($id_auteur) {
+	static $cache = [];
+
+	$id_auteur = intval($id_auteur);
+	if (!$id_auteur) {
+		return '';
+	}
+	if (array_key_exists($id_auteur, $cache)) {
+		return $cache[$id_auteur];
+	}
+
+	$auteur = sql_fetsel('nom, nom_complet', 'spip_auteurs', 'id_auteur=' . $id_auteur);
+	if (!$auteur) {
+		return $cache[$id_auteur] = '';
+	}
+
+	$nom = trim($auteur['nom'] ?? '');
+	$nom_complet = trim($auteur['nom_complet'] ?? '');
+	if ($nom_complet !== '' && str_starts_with($nom, $nom_complet)) {
+		return $cache[$id_auteur] = $nom_complet;
+	}
+
+	return $cache[$id_auteur] = $nom;
+}
+
+/**
+ * Noms publics (cf thematique_nom_public_auteur) des auteurs d'un article,
+ * séparés par une virgule — remplace #LESAUTEURS|textebrut dans les mails
+ * de notification.
+ *
+ * @param int $id_article
+ * @return string
+ */
+function thematique_noms_publics_auteurs_article($id_article) {
+	$id_article = intval($id_article);
+	if (!$id_article) {
+		return '';
+	}
+
+	$ids = sql_allfetsel(
+		'id_auteur',
+		'spip_auteurs_liens',
+		'objet=' . sql_quote('article') . ' AND id_objet=' . $id_article
+	);
+	$noms = array_filter(array_map(fn ($ligne) => thematique_nom_public_auteur($ligne['id_auteur']), $ids));
+
+	return implode(', ', $noms);
 }
 
 /**
@@ -1718,21 +1793,13 @@ function filtre_afficher_forum_arbre($id_article) {
 	// Index des commentaires par parent
 	$parents = [];
 	foreach ($forums as $forum) {
-		// Reproduit exactement le format de thematique_nom_auteur_commentaire()
-		$nom = trim($forum['auteur_nom'] ?? '');
-		$nom_complet = trim($forum['auteur_nom_complet'] ?? '');
-
+		// Même format que thematique_nom_auteur_commentaire().
 		// id_auteur=0 (ou auteur SPIP supprimé depuis) : la jointure ne
 		// renvoie rien, on garde le nom saisi à la publication (f.auteur,
 		// déjà présent via 'f.*') plutôt que de l'écraser par une chaîne vide.
-		if ($nom_complet === '' && $nom === '') {
-			// rien à faire, $forum['auteur'] reste celui de spip_forum
-		} elseif ($nom_complet === '') {
-			$forum['auteur'] = $nom;
-		} elseif ($nom === '') {
-			$forum['auteur'] = $nom_complet;
-		} else {
-			$forum['auteur'] = $nom_complet . ' - ' . $nom;
+		$nom_formate = thematique_formater_nom_commentaire($forum['auteur_nom'] ?? '', $forum['auteur_nom_complet'] ?? '');
+		if ($nom_formate !== '') {
+			$forum['auteur'] = $nom_formate;
 		}
 
 		$parents[$forum['id_parent']][] = $forum;
@@ -1957,8 +2024,9 @@ function thematique_avatar_notification_auteur($id_auteur) {
 
 /**
  * Numéro d'affichage (1-based) d'une mission (consigne) : son rang parmi
- * les consignes de sa rubrique triées par date — même règle que
- * menu_consignes.html (#GET{num}) et header_sidebar.html (#ENV{rang}).
+ * les consignes publiées de sa rubrique triées par date, jalons exclus —
+ * même règle que json/consignes.html, d'où vient le #ENV{rang} de
+ * header_sidebar.html.
  * Utilisé pour la carte du mail de notification de commentaire forumv2
  * (issue #217, cf notifications/forum_poste.html).
  *
@@ -1993,16 +2061,30 @@ function thematique_numero_mission($id_article) {
 
 	$rang = 0;
 	if ($consigne) {
+		// Issue #551 : seules les missions publiées comptent (la consigne
+		// elle-même est gardée quel que soit son statut, la notification
+		// pouvant partir avant que le statut soit relu), et les jalons
+		// (cap-sur-l-annee/la-rencontre) sont exclus comme dans
+		// json/consignes.html — sinon un "Cap sur l'année" publié dans la
+		// rubrique décalait toutes les missions d'un cran dans les mails.
 		$missions = sql_allfetsel(
 			'id_article',
 			'spip_articles',
-			'id_rubrique=' . intval($consigne['id_rubrique']) . ' AND id_consigne=0',
+			'id_rubrique=' . intval($consigne['id_rubrique'])
+				. ' AND id_consigne=0'
+				. ' AND (statut=' . sql_quote('publie') . ' OR id_article=' . $id_consigne . ')',
 			'',
 			'date'
 		);
-		foreach ($missions as $i => $mission) {
-			if (intval($mission['id_article']) === $id_consigne) {
-				$rang = $i + 1;
+		$numero = 0;
+		foreach ($missions as $mission) {
+			$id_mission = intval($mission['id_article']);
+			if ($id_mission !== $id_consigne && thematique_article_est_jalon($id_mission)) {
+				continue;
+			}
+			$numero++;
+			if ($id_mission === $id_consigne) {
+				$rang = $numero;
 				break;
 			}
 		}
