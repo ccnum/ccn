@@ -6,7 +6,7 @@ if (!defined('_ECRIRE_INC_VERSION')) {
 
 /**
  * Édition en ligne du titre d'un document, depuis sa carte dans la liste
- * des pièces jointes du formulaire "Publier un article" (#497, cf
+ * des pièces jointes du formulaire "Publier un article" (cf
  * noisettes/inc/publier_article_documents.html et editerTitreDocument()
  * dans js/publier_article.js).
  *

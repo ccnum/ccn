@@ -19,7 +19,7 @@ if (!defined('_ECRIRE_INC_VERSION')) {
  * fictions_post_edition_rubrique_annee()).
  *
  * Les histoires ("01. Histoire 01"...) ne sont pas créées ici mais depuis la liste
- * des participants de l'année (#520, cf inc/fictions_histoires.php).
+ * des participants de l'année (cf inc/fictions_histoires.php).
  **/
 
 include_spip('fictions_fonctions');

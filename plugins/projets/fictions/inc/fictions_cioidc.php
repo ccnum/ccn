@@ -9,8 +9,8 @@ if (!defined('_ECRIRE_INC_VERSION')) {
  * projet de l'année (groupe libre ENT "Fictions <année>"), appelée depuis
  * fictions_cioidc_userinfo() dans fictions_pipelines.php.
  *
- * Les histoires ne sont plus créées ici (#520) : une par compte enseignant ne
- * correspondait pas aux participants (classes, #519). Elles se créent depuis la liste
+ * Les histoires ne sont plus créées ici : une par compte enseignant ne
+ * correspondait pas aux participants (classes). Elles se créent depuis la liste
  * des participants de l'année (inc/fictions_histoires.php).
  **/
 

@@ -22,7 +22,7 @@ if (!defined('_ECRIRE_INC_VERSION')) {
 function fictions_upgrade($nom_meta_base_version, $version_cible) {
 	$maj = [];
 
-	// Issue #456 : migration des identifiants/titres codés en dur vers mots-clés
+	// Migration des identifiants/titres codés en dur vers mots-clés
 	$maj['create'] = [
 		['fictions_reprendre_metas_fictionsv2'],
 		['fictions_ajouter_mots_clef'],
@@ -35,7 +35,7 @@ function fictions_upgrade($nom_meta_base_version, $version_cible) {
 		['fictions_ajouter_mots_clef'],
 	];
 
-	// Issue #453 : rubrique-contenant-annees (sélecteur d'années du footer, rentrée) et
+	// rubrique-contenant-annees (sélecteur d'années du footer, rentrée) et
 	// mots des articles de config du footer, jusqu'ici créés à la main
 	$maj['1.0.2'] = [
 		['fictions_ajouter_mots_clef'],

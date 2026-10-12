@@ -1,6 +1,6 @@
 [(#REM)
 
-  Personnalisation CCN (issue #217) : mise en page dédiée pour la
+  Personnalisation CCN : mise en page dédiée pour la
   publication d'une nouvelle mission (type_objet=consignes), maquette
   "Une nouvelle mission vous attend !" — cf notifications/article_publie.html,
   qui délègue ici au lieu de article_publie_generique.html pour ce cas précis.
@@ -15,7 +15,7 @@
 #SET{avatar_valeur,#GET{avatar}|table_valeur{valeur}}
 #SET{avatar_couleur,#GET{avatar}|table_valeur{couleur_fond}}
 #SET{url_article,#URL_ARTICLE|url_absolue|parametre_url{mode,complet}}
-[(#REM) Pas de sous-titre "Mission n°X" sur la carte (issue #551) : les
+[(#REM) Pas de sous-titre "Mission n°X" sur la carte : les
 intervenants numérotent déjà leurs missions dans le titre ("MISSION 1 :
 ..."), le sous-titre faisait doublon, voire contradiction. ]
 #SET{carte_titre,#TITRE|trim}

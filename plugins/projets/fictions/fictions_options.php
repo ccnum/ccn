@@ -6,7 +6,7 @@ if (!defined('_ECRIRE_INC_VERSION')) {
 
 // _ANNEE_SCOLAIRE, _DATE_DEBUT, _DATE_FIN sont définis par le plugin ccn (ccn_options.php)
 
-// Rubrique "blog auteur" (#229) : à surcharger dans mes_options.php du site une fois la
+// Rubrique "blog auteur" : à surcharger dans mes_options.php du site une fois la
 // rubrique créée (format à valider avec @cmonnet). 0 = aucun effet tant que non défini.
 if (!defined('_FICTIONS_ID_BLOG_AUTEUR')) {
 	define('_FICTIONS_ID_BLOG_AUTEUR', 0);

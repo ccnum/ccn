@@ -5,8 +5,8 @@ if (!defined('_ECRIRE_INC_VERSION')) {
 }
 
 /**
- * Ajout (id_participant vide) ou modification d'un participant d'une année (#518,
- * #519, #525). L'ajout est refusé une fois le plan verrouillé ; la modification reste
+ * Ajout (id_participant vide) ou modification d'un participant d'une année.
+ * L'ajout est refusé une fois le plan verrouillé ; la modification reste
  * possible (classe qui change d'enseignant).
  */
 

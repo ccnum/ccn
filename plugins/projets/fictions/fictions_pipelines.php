@@ -17,7 +17,7 @@ function fictions_post_edition($flux) {
 
 	$id_objet   = intval($flux['args']['id_objet'] ?? 0);
 	$statut     = $flux['args']['champs_anciens']['statut'] ?? '';
-	// #219 : $flux['data'] porte les valeurs tout juste enregistrées (post_edition),
+	// $flux['data'] porte les valeurs tout juste enregistrées (post_edition),
 	// contrairement à champs_anciens qui est l'état AVANT cette modification. Sur le
 	// tout premier enregistrement d'un chapitre, champs_anciens['descriptif'] est
 	// encore vide : lire uniquement l'ancienne valeur faisait sortir cette fonction
@@ -34,14 +34,14 @@ function fictions_post_edition($flux) {
 	include_spip('fictions/fictions_fonctions');
 
 	$blog = fictions_id_rubrique_a_mot('blog_pedagogique');
-	// #229 : la rubrique blog auteur suit la même mécanique de publication automatique
+	// La rubrique blog auteur suit la même mécanique de publication automatique
 	// que le blog pédagogique, une fois la rubrique créée et la constante surchargée.
 	$blogs_ids = array_filter([(int) $blog, _FICTIONS_ID_BLOG_AUTEUR]);
 
 	if ($statut === 'prop') {
 		// Publier l'article que l'on vient de modifier
 		objet_modifier('article', $id_objet, ['statut' => 'publie']);
-		// Masquer le chapitre précédent en tronquant son descriptif (#219)
+		// Masquer le chapitre précédent en tronquant son descriptif
 		$prev_id = sql_getfetsel('id_article', 'spip_articles', [
 			'id_rubrique=' . intval($id_rubrique),
 			'statut=' . sql_quote('publie'),
@@ -60,7 +60,7 @@ function fictions_post_edition($flux) {
 
 	if (in_array($id_rubrique, $blogs_ids, true) && $statut === 'prepa') {
 		objet_modifier('article', $id_objet, ['statut' => 'publie']);
-		// Masquer le chapitre précédent en tronquant son descriptif (#219)
+		// Masquer le chapitre précédent en tronquant son descriptif
 		$prev_id = sql_getfetsel('id_article', 'spip_articles', [
 			'id_rubrique=' . intval($id_rubrique),
 			'statut=' . sql_quote('publie'),
@@ -77,8 +77,8 @@ function fictions_post_edition($flux) {
 
 /**
  * Connexion SSO : trace l'inscription d'un prof au projet de l'année (groupe libre ENT
- * "Fictions <année>"). Ne crée plus d'histoire (#520) : une histoire par compte faussait
- * le compte (un enseignant peut gérer plusieurs classes, #519) ; les histoires se créent
+ * "Fictions <année>"). Ne crée plus d'histoire : une histoire par compte faussait
+ * le compte (un enseignant peut gérer plusieurs classes) ; les histoires se créent
  * depuis la liste des participants (ecrire/?exec=fictions_associations).
  * Année calendaire réelle, pas _ANNEE_SCOLAIRE qui suit le cookie du sélecteur d'année.
  */
@@ -168,7 +168,7 @@ function fictions_cioidc_userinfo($flux) {
 		fictions_annee_config_ecrire($annee, $config);
 	}
 
-	// Compte SPIP rattaché à cet uid et classes gérées cette année (#519)
+	// Compte SPIP rattaché à cet uid et classes gérées cette année
 	if ($auteur) {
 		spip_log(
 			"fictions uid=$uid auteur #{$auteur['id_auteur']} statut={$auteur['statut']} webmestre={$auteur['webmestre']}"

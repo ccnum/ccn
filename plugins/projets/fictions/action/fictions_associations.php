@@ -5,7 +5,7 @@ if (!defined('_ECRIRE_INC_VERSION')) {
 }
 
 /**
- * Opérations ponctuelles de la page ecrire/?exec=fictions_associations (#525),
+ * Opérations ponctuelles de la page ecrire/?exec=fictions_associations,
  * déclenchées par BOUTON_ACTION : retrait d'un participant, synchronisation des
  * histoires, génération et validation du plan. Les saisies (calendrier, participant,
  * affectations) passent par les formulaires CVT formulaires/fictions_*.

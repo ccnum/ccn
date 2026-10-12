@@ -23,7 +23,7 @@ jusqu'à expiration du cache de la page. ]
 	<ul class="filter clearfix option-set" data-filter-group="consigne">
 		#SET{num,0}
 		#SET{id_rubrique_missions, #VAL{0}|thematique_id_rubrique_mission}
-		[(#REM) Issue #465 : {tous} comptait aussi les missions en poubelle/prop
+		[(#REM) Le critère tous comptait aussi les missions en poubelle/prop
 		dans le footer, en désaccord avec le compte réel du back-office
 		(articles publiés uniquement). ]
 		<BOUCLE_consignes(ARTICLES){id_rubrique=#GET{id_rubrique_missions}}{statut=publie}{par date}>

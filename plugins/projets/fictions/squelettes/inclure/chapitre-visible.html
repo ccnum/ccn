@@ -52,7 +52,8 @@ RUBRIQUE.HTML > CHAPITRE-VISIBLE.HTML
 <a href="#URL_PAGE{forum,id_article=#ID_ARTICLE}" class="mediabox boxIframe boxWidth-730px boxHeight-80pc">
 	<div class="forum_bt">
 		<div class="forum-titre"><:fictions:forum_label:></div>
-		<div class="forum-nb-message"><BOUCLE_combien(FORUMS){id_article}{plat}> </BOUCLE_combien>[(#TOTAL_BOUCLE)]<//B_combien></div>
+		#SET{nb_messages, #ID_ARTICLE|fictions_nb_messages_forum}
+		<div class="forum-nb-message">#GET{nb_messages}</div>
 	</div>
 </a>
 </BOUCLE_article_verrouille>

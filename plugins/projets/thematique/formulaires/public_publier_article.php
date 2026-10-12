@@ -29,13 +29,13 @@ function formulaires_public_publier_article_charger_dist(
 		'titre' => '',
 		'texte' => '',
 		'date' => date('Y-m-d'),
-		// Bornes min/max pour le sélecteur date HTML5 : #440.
+		// Bornes min/max pour le sélecteur date HTML5.
 		'annee_scolaire' => thematique_annee_scolaire_reelle(),
 		'min_date_school_year' => constant('_DATE_DEBUT') ?: date('Y-09-01'),
 		'max_date_school_year' => constant('_DATE_FIN') ?: date('Y-09-01'),
 	];
 
-	// Édition directe d'un article déjà publié (issue #429 : réutilise la
+	// Édition directe d'un article déjà publié (réutilise la
 	// modale de publication pour l'édition, cf le bouton "Modifier" de
 	// header_sidebar.html/header_blog.html) : #ID_ARTICLE prévaut sur
 	// #ID_CONSIGNE, non pertinent dans ce cas (on n'édite pas une réponse à
@@ -72,7 +72,7 @@ function formulaires_public_publier_article_charger_dist(
 		// Sinon, si on répond à une consigne, chercher une éventuelle
 		// réponse existante (édition de sa propre réponse).
 		//
-		// thematique_consigne_valide() (issue #274) : id_consigne posté en
+		// thematique_consigne_valide() : id_consigne posté en
 		// HTTP, on ne fait pas confiance à un id pointant vers un article
 		// arbitraire (pas une mission, ou pas encore publiée).
 		$reponse = thematique_trouver_reponse_a_une_consigne($id_consigne, $id_rubrique);
@@ -94,7 +94,7 @@ function formulaires_public_publier_article_charger_dist(
 	// Nettoyage des documents orphelins du temp ID -id_auteur : les docs
 	// uploadés lors d'une session précédente et non soumis restent liés à
 	// ce pseudo-id (négatif) et réapparaissent à l'ouverture suivante du
-	// formulaire (#464). On les supprime uniquement en création (pas
+	// formulaire. On les supprime uniquement en création (pas
 	// d'id_article réel) : en édition, l'id_objet document est l'id_article
 	// réel, pas le temp, donc ce cleanup ne s'applique pas.
 	// Seulement pour un auteur connecté : pour un anonyme, $id_temp valait 0 et
@@ -107,7 +107,7 @@ function formulaires_public_publier_article_charger_dist(
 		}
 	}
 
-	// Champ date affiché/verrouillé selon le rôle (#420) : toujours éditable
+	// Champ date affiché/verrouillé selon le rôle : toujours éditable
 	// à la création (pas encore d'id_article), sinon soumis aux mêmes règles
 	// que le crayon #EDIT{date} (cf thematique_autoriser.php).
 	$valeurs['peut_modifier_date'] = !$valeurs['id_article']
@@ -128,7 +128,7 @@ function formulaires_public_publier_article_verifier_dist(
 	include_spip('prive/formulaires/editer_article');
 	include_spip('thematique_fonctions');
 
-	// Issue #274 : ce formulaire n'était protégé par aucun contrôle de rôle
+	// Ce formulaire n'était protégé par aucun contrôle de rôle
 	// côté serveur — seul le menu "Publier" est masqué aux élèves/visiteurs
 	// côté squelette (thematique_role_publie), un accès direct à l'URL (ou
 	// un POST forgé) atteignait ce traitement sans distinction de rôle. Un
@@ -147,8 +147,8 @@ function formulaires_public_publier_article_verifier_dist(
 		return ['message_erreur' => _T('info_acces_interdit')];
 	}
 
-	// id_consigne posté sans référencer une mission publiée existante (issue
-	// #274, cf thematique_consigne_valide) : on ne laisse pas passer une
+	// id_consigne posté sans référencer une mission publiée existante (cf
+	// thematique_consigne_valide) : on ne laisse pas passer une
 	// valeur qui serait de toute façon ignorée en traitement, plutôt que de
 	// créer silencieusement un article avec un id_consigne qu'on n'aura pas
 	// écrit.
@@ -157,7 +157,7 @@ function formulaires_public_publier_article_verifier_dist(
 		return ['message_erreur' => _T('info_acces_interdit')];
 	}
 
-	// Issue #274 : à la création (pas une édition, cf $id_article_poste
+	// À la création (pas une édition, cf $id_article_poste
 	// ci-dessus), id_rubrique doit être une rubrique où l'auteur connecté a
 	// effectivement le droit de créer (thematique_auteur_peut_creer_dans_-
 	// rubrique) — sans ce contrôle, n'importe quel id_rubrique posté en HTTP
@@ -183,7 +183,7 @@ function formulaires_public_publier_article_verifier_dist(
 	}
 
 	// Validation date hors année scolaire : uniquement à la création,
-	// l'édition d'un article existant conserve sa date historique (#440).
+	// l'édition d'un article existant conserve sa date historique.
 	if (!$id_article_poste && $role_visiteur !== 'eleve' && autoriser(
 		'modifier',
 		'article',
@@ -220,7 +220,7 @@ function formulaires_public_publier_article_traiter_dist(
 	$texte = _request('texte');
 	$id_auteur = session_get('id_auteur'); // auteur connecté, vient de la session SPIP
 
-	// cf la même vérification dans _verifier_dist (issue #274) : revérifiée
+	// cf la même vérification dans _verifier_dist : revérifiée
 	// ici, _traiter_dist pouvant être invoqué indépendamment.
 	$role_visiteur = thematique_donner_role(intval($id_auteur ?? 0));
 	if (!$role_visiteur || $role_visiteur === 'eleve') {
@@ -250,7 +250,7 @@ function formulaires_public_publier_article_traiter_dist(
 	$statut_avant = $edition ? sql_getfetsel('statut', 'spip_articles', 'id_article=' . intval($id_article)) : '';
 
 	if (!$id_article) {
-		// cf la même vérification dans _verifier_dist (issue #274) : revérifiée
+		// cf la même vérification dans _verifier_dist : revérifiée
 		// ici, _traiter_dist pouvant être invoqué indépendamment.
 		if ($type_article !== 'ressources' && !thematique_auteur_peut_creer_dans_rubrique($id_auteur, $id_rubrique)) {
 			return ['message_erreur' => _T('info_acces_interdit')];
@@ -270,7 +270,7 @@ function formulaires_public_publier_article_traiter_dist(
 		// ci-dessous (audit 2026-10). Les ressources restent forcées plus bas.
 		set_request('id_parent', sql_getfetsel('id_rubrique', 'spip_articles', 'id_article=' . intval($id_article)));
 		if (!autoriser('modifier', 'article', $id_article, null, ['champ' => 'date'])) {
-			// Champ date non autorisé pour ce rôle sur cet article (#420) : même
+			// Champ date non autorisé pour ce rôle sur cet article : même
 			// masqué côté squelette, on ne fait pas confiance à un POST forgé -
 			// on retire la valeur postée avant qu'action_editer_article ne
 			// l'applique telle quelle.
@@ -289,7 +289,7 @@ function formulaires_public_publier_article_traiter_dist(
 			set_request('id_parent', $id_rubrique);
 		} elseif (!$edition) {
 			// Création sans rubrique « Ressources » : id_parent posté aurait décidé
-			// seul de la rubrique (contrôle #274 sauté pour ce type) — on refuse.
+			// seul de la rubrique (contrôle de rôle sauté pour ce type) — on refuse.
 			// En édition, id_parent est déjà figé à la rubrique de l'article.
 			return ['message_erreur' => _T('info_acces_interdit')];
 		}
@@ -316,8 +316,8 @@ function formulaires_public_publier_article_traiter_dist(
 			objet_associer(['auteur' => $id_auteur], ['article' => $id_article]);
 		}
 		// Si c'est une réponse à une consigne, associer l'article à la
-		// consigne — déjà validée en _verifier_dist (thematique_consigne_valide,
-		// issue #274), mais on revérifie ici : _traiter_dist peut être invoqué
+		// consigne — déjà validée en _verifier_dist (thematique_consigne_valide),
+		// mais on revérifie ici : _traiter_dist peut être invoqué
 		// indépendamment d'un appel préalable à _verifier_dist (cf l'API des
 		// formulaires CVT), on ne fait donc confiance à aucun état supposé
 		// acquis d'une autre étape pour une écriture en base.

@@ -180,7 +180,7 @@ function thematique_notifications_destinataires($flux) {
 		// Réponse à un commentaire existant : prévenir en plus l'auteur de ce
 		// commentaire parent (mise en page dédiée "On vient de répondre à
 		// votre message !", cf notifications/forum_poste_article.html) —
-		// sauf si c'est un élève (issue #217) : prof/intervenant/admin et
+		// sauf si c'est un élève : prof/intervenant/admin et
 		// commentateur anonyme restent notifiés normalement.
 		$id_parent = intval($flux['args']['options']['forum']['id_parent'] ?? 0);
 		if (
@@ -224,7 +224,7 @@ function thematique_notifications_destinataires($flux) {
 			// 1comite en plus des admins restreints : les profs et intervenants
 			// connectés via l'ENT sont rédacteurs (cf
 			// thematique_cioidc_calculer_statut()), ils n'étaient donc jamais
-			// notifiés des publications (issue #217). Les élèves (6forum)
+			// notifiés des publications. Les élèves (6forum)
 			// restent exclus.
 			$auteurs_restreint = sql_select(
 				'auteurs.id_auteur, auteurs.email',
@@ -267,7 +267,7 @@ function thematique_cioidc_userinfo($flux) {
 	// icon-avatar-masculin/feminin utilisés en repli quand l'ENT n'en fournit pas).
 	$avatar = $flux['data']['avatar'] ?? '';
 	$auteur = thematique_cioidc_maj_champ($auteur, 'avatar', $avatar, 'du champ avatar');
-	// Prénom + nom réels, distincts du champ 'nom' (rôle/classe/collège, cf #44) —
+	// Prénom + nom réels, distincts du champ 'nom' (rôle/classe/collège) —
 	// exposés en session pour l'affichage dans le menu haut (#SESSION{nom_complet}).
 	$nom_complet = thematique_cioidc_nom_complet($flux['data']);
 	$auteur = thematique_cioidc_maj_champ($auteur, 'nom_complet', $nom_complet, 'du nom complet');
@@ -346,6 +346,19 @@ function thematique_cioidc_userinfo($flux) {
 		// Un webmestre n'est restreint à aucune rubrique : on retire d'éventuels
 		// liens d'admin restreint hérités d'un statut précédent.
 		objet_dissocier(['id_auteur' => $auteur['id_auteur']], ['rubrique' => '*']);
+	}
+
+	thematique_cioidc_memoriser_classes_ent(
+		$auteur,
+		($is_enseignant && !$is_webmestre && $a_un_groupe_pertinent) ? $classes_reelles : [],
+		(string) $annee_scolaire
+	);
+	// Une seule classe ENT : rien à choisir, elle est retenue d'office et la pop-up
+	// ne s'affiche pas. Seulement tant que le choix de l'année n'est pas
+	// fait : thematique_classes_ent_a_choisir() est alors vide.
+	if (count($classes_ent = thematique_classes_ent_a_choisir($auteur['id_auteur'])) === 1) {
+		spip_log('userinfo une seule classe ENT : choix validé d\'office', 'cioidc');
+		thematique_cioidc_valider_classes_ent(intval($auteur['id_auteur']), $classes_ent, (string) $annee_scolaire);
 	}
 
 	[$classes_a_lier, $projets_a_lier] = thematique_cioidc_resoudre_liens_rubriques(

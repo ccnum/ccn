@@ -6,8 +6,8 @@ if (!defined('_ECRIRE_INC_VERSION')) {
 
 /**
  * Grille du plan d'associations : participant de chaque chapitre de rotation de chaque
- * histoire (#521, #523, #525). Seuls les chapitres non écrits sont modifiables ; sur un
- * plan validé, les liens auteur ↔ chapitre suivent (#524).
+ * histoire. Seuls les chapitres non écrits sont modifiables ; sur un
+ * plan validé, les liens auteur ↔ chapitre suivent.
  */
 
 /**

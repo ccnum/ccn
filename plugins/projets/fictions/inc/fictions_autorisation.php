@@ -3,10 +3,10 @@
  * Fonctions de calcul des droits d'accès aux chapitres (fictions).
  *
  * Centralise la logique d'autorisation des squelettes inclure/rubrique-cadavres.html
- * et inclure/liste-cadavres-auteur*.html (#441).
+ * et inclure/liste-cadavres-auteur*.html.
  *
  * Autonomes : l'auteur connecté et son statut webmestre sont lus dans sa session,
- * le nombre de chapitres de l'histoire est compté ici. Le refactor #441 faisait
+ * le nombre de chapitres de l'histoire est compté ici. Un refactor précédent faisait
  * transiter ce contexte par #SET{x,valeur|session_set{x}}, qui inverse les
  * arguments de session_set($nom, $valeur) : le contexte restait vide et aucun
  * chapitre n'était affiché ni rédigeable.
@@ -29,7 +29,7 @@ include_spip('fictions_fonctions');
 include_spip('inc/fictions_participants');
 
 /**
- * La période d'écriture de l'année de l'histoire est-elle ouverte (#518) : entre
+ * La période d'écriture de l'année de l'histoire est-elle ouverte : entre
  * date de lancement et date de clôture. Année non configurée : pas de restriction.
  */
 function fictions_ecriture_ouverte(int $id_rubrique): bool {
@@ -67,7 +67,7 @@ function fictions_droits_qui(?array $qui = null): array {
 
 /**
  * L'auteur est-il affecté à ce chapitre : lié (spip_auteurs_liens) à l'article du
- * chapitre (#524). C'est ce lien que pose le plan d'associations annuel (#521, #523) ;
+ * chapitre. C'est ce lien que pose le plan d'associations annuel ;
  * en attendant, il s'ajoute à la main dans /ecrire (auteur de l'article). Les
  * participants passent d'une histoire à l'autre : un lien à la rubrique de
  * l'histoire (règle de fictions v1) ne convient pas.
@@ -88,7 +88,7 @@ function fictions_auteur_affecte_chapitre(int $id_auteur, int $id_article): bool
  * Règles :
  *   webmestre : tout visible, 'ecriture' sur le dernier chapitre
  *   N-1       : toujours visible en mode 'visible'
- *   N (dernier), auteur affecté au chapitre, période d'écriture ouverte : 'ecriture' (#518, #524)
+ *   N (dernier), auteur affecté au chapitre, période d'écriture ouverte : 'ecriture'
  *   N (dernier), autre auteur : 'verrouille'
  *   autres    : masqué
  *
@@ -114,12 +114,12 @@ function fictions_lecture_droits(int $id_article, ?array $qui = null): array {
 
 	$est_dernier       = ($pos == $max_cadavres);
 	$est_avant_dernier = ($pos == $max_cadavres - 1);
-	// Hors période d'écriture (#518), le participant affecté ne peut plus écrire
+	// Hors période d'écriture, le participant affecté ne peut plus écrire
 	$est_affecte       = fictions_auteur_affecte_chapitre($id_auteur, $id_article)
 		&& fictions_ecriture_ouverte($id_rubrique);
 
 	// Webmestre : tout visible, et il peut écrire le dernier chapitre (règle d'origine,
-	// le refactor #441 l'avait laissé en simple lecture)
+	// un refactor précédent l'avait laissé en simple lecture)
 	if ($webmestre) {
 		return ['montre' => true, 'mode' => $est_dernier ? 'ecriture' : 'visible'];
 	}
@@ -148,7 +148,7 @@ function fictions_lecture_droits(int $id_article, ?array $qui = null): array {
  *
  * Règles :
  *   webmestre + dernier : peut écrire
- *   auteur affecté au chapitre + dernier + période ouverte : peut écrire (#518, #524)
+ *   auteur affecté au chapitre + dernier + période ouverte : peut écrire
  *
  * @param int $id_article ID de l'article concerné
  * @return string 'oui' | ''

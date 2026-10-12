@@ -7,7 +7,7 @@ include_spip('base/abstract_sql');
 // Filtres LECTURE_DROITS / ECRITURE_DROITS / EST_AUTEUR_DROITS des squelettes
 // (liste-cadavres-auteur*.html, rubrique-cadavres.html) : SPIP ne charge que
 // <prefixe>_fonctions.php, pas un fichier au nom libre — sans cette inclusion,
-// "Filtre EST_AUTEUR_DROITS non défini" (#441).
+// "Filtre EST_AUTEUR_DROITS non défini".
 include_spip('lecturedroits');
 
 /**
@@ -233,8 +233,24 @@ function fictions_nb_chapitres_histoire($id_rubrique): int {
 }
 
 /**
+ * Nombre de messages publiés (réponses comprises) du forum d'un chapitre.
+ * Filtre : [(#ID_ARTICLE|fictions_nb_messages_forum)]. Remplace un
+ * #TOTAL_BOUCLE placé après </BOUCLE_x>, vide quand la boucle FORUMS est
+ * imbriquée dans une autre boucle.
+ */
+function fictions_nb_messages_forum($id_article): int {
+	static $cache = [];
+	$id_article = intval($id_article);
+	return $cache[$id_article] ??= (int) sql_countsel('spip_forum', [
+		"objet='article'",
+		'id_objet=' . $id_article,
+		"statut='publie'",
+	]);
+}
+
+/**
  * Noms des classes (participants) gérées par un compte pour une année, séparés par des
- * virgules (#519), '' si aucune. Filtre :
+ * virgules, '' si aucune. Filtre :
  * [(#SESSION{id_auteur}|fictions_noms_classes_auteur{#ENV{annee_scolaire}})]
  */
 function fictions_noms_classes_auteur($id_auteur, $annee): string {
@@ -248,7 +264,7 @@ function fictions_noms_classes_auteur($id_auteur, $annee): string {
 
 /**
  * Nom du participant (classe ou écrivain) affecté à un chapitre, '' si aucun : c'est
- * lui, et non le compte SPIP, qui apparaît sur le site (#518, #524). Filtre :
+ * lui, et non le compte SPIP, qui apparaît sur le site. Filtre :
  * [(#ID_ARTICLE|fictions_nom_participant_chapitre|sinon{#NOM})]
  */
 function fictions_nom_participant_chapitre($id_article): string {
@@ -263,7 +279,7 @@ function fictions_nom_participant_chapitre($id_article): string {
 }
 
 /**
- * Données de la page des associations (#525). Filtre :
+ * Données de la page des associations. Filtre :
  * #SET{donnees, #GET{annee}|fictions_associations_donnees}
  */
 function fictions_associations_donnees_filtre($annee): array {

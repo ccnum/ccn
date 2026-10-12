@@ -112,7 +112,7 @@ function Article() {
 				// mais jQuery UI réécrit quand même `left` en px à chaque frame
 				// (cf. Draggable._mouseDrag) : sans ça, la carte perd son `left`
 				// en % et ne suit plus le zoom horizontal de la timeline une
-				// fois draguée (#366).
+				// fois draguée.
 				ui.position.left = CCN.projet.timeline.width() * leftPercent / 100;
 				dragWithCollision(this, ui, {
 					timeline: CCN.timelineLayerConsignes,

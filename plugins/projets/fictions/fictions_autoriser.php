@@ -11,7 +11,7 @@ function fictions_autoriser() {
 }
 
 /**
- * Association de mots-clés réservée aux admins complets (issue #274).
+ * Association de mots-clés réservée aux admins complets.
  *
  * Tous les mots de fictions sont techniques (rubrique-contenant-annees,
  * blog_pedagogique, presentation, prologue, chapitre1, footer-*...) et pilotent
@@ -35,7 +35,7 @@ function autoriser_associermots($faire, $type, $id, $qui, $opt) {
  *
  * Auparavant dans autoriser.php, que rien ne chargeait (seul ce fichier est
  * déclaré au pipeline autoriser), et nommées autoriser_<faire>_<type> alors que
- * SPIP cherche autoriser_<type>_<faire> : ces autorisations n'existaient pas (#524).
+ * SPIP cherche autoriser_<type>_<faire> : ces autorisations n'existaient pas.
  */
 function autoriser_article_lirechapitre_dist($faire, $type, $id, $qui, $opt) {
 	include_spip('inc/fictions_autorisation');
@@ -45,7 +45,7 @@ function autoriser_article_lirechapitre_dist($faire, $type, $id, $qui, $opt) {
 /**
  * #AUTORISER{ecrirechapitre,article,#ID_ARTICLE} : l'auteur connecté peut-il
  * écrire ce chapitre : webmestre, ou participant affecté au chapitre (lien
- * auteur ↔ article posé par le plan d'associations), chapitre en cours (#524).
+ * auteur ↔ article posé par le plan d'associations), chapitre en cours.
  */
 function autoriser_article_ecrirechapitre_dist($faire, $type, $id, $qui, $opt) {
 	include_spip('inc/fictions_autorisation');
@@ -91,7 +91,7 @@ function autoriser_article_estauteur_dist($faire, $type, $id, $qui, $opt) {
 }
 
 /**
- * Page des associations (#525, ecrire/?exec=fictions_associations) et ses opérations :
+ * Page des associations (ecrire/?exec=fictions_associations) et ses opérations :
  * administrateurs complets et webmestres.
  */
 function autoriser_fictionsassociations_dist($faire, $type, $id, $qui, $opt) {

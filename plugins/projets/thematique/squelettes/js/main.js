@@ -143,7 +143,7 @@ function initConsignes(data) {
 		dataForConsigne.reponses = [];
 
 		const liste_jours_max = [];
-		// Commentaires sur l'article de la mission elle-même (#399), pas la
+		// Commentaires sur l'article de la mission elle-même, pas la
 		// somme de ceux de ses réponses (chacune affiche déjà les siens, cf
 		// dataForReponse.nombre_commentaires plus bas).
 		dataForConsigne.nombre_commentaires = jsonConsigne.commentaires || 0;
@@ -226,7 +226,7 @@ function initConsignes(data) {
 			if (has_current_classe_already_answered) {
 				nouvelleConsigne.showMyReponseButtonInTimeline(reponse_courante_id);
 			} else if (!CCN.anneeEstPassee) {
-				// Issue #437 : sur une année archivée, on ne propose pas de créer
+				// Sur une année archivée, on ne propose pas de créer
 				// une nouvelle réponse ; consulter une réponse existante reste ok.
 				nouvelleConsigne.showNewReponseButtonInTimeline();
 			}
@@ -378,7 +378,7 @@ function initTimeline() {
 	CCN.projet.initTimelineMonths();
 	// pushUrl=false : ce premier appel ne doit pas écraser l'URL courante
 	// (id_article, onglet...) avant que l'état réel ne soit restauré plus
-	// bas dans cette même fonction (cf #422 et le commentaire sur
+	// bas dans cette même fonction (cf le commentaire sur
 	// Projet#showWholeTimeline dans projet.js).
 	CCN.projet.showWholeTimeline(false);
 	changeTimelineMode('consignes');

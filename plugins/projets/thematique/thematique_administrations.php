@@ -69,7 +69,7 @@ function thematique_upgrade($nom_meta_base_version, $version_cible) {
 	$maj['3.4.1'] = [];
 	cextras_api_upgrade(thematique_declarer_champs_extras(), $maj['3.4.1']);
 
-	// Issue #369 : id_consigne (spip_articles) et id_rubrique_lien
+	// id_consigne (spip_articles) et id_rubrique_lien
 	// (spip_rubriques) étaient déclarés avec un type différent ici
 	// (bigint(21), via thematique_install.php) et côté champs extras
 	// (int(5)/text, via thematique_cextras.php) — mismatch qui casse l'ADD
@@ -81,7 +81,7 @@ function thematique_upgrade($nom_meta_base_version, $version_cible) {
 	// cette entrée de version n'a donc d'effet que sur une (ré)installation
 	// complète du plugin (table recréée/champs recréés depuis $maj['create']).
 	// Un site déjà touché par le bug doit corriger sa colonne manuellement
-	// (cf le correctif posté par le rapporteur sur l'issue #369).
+	// (ALTER TABLE vers le type déclaré dans cextras).
 	$maj['3.4.2'] = [['maj_tables', ['spip_articles', 'spip_rubriques']]];
 	cextras_api_upgrade(thematique_declarer_champs_extras(), $maj['3.4.2']);
 
@@ -91,12 +91,17 @@ function thematique_upgrade($nom_meta_base_version, $version_cible) {
 	// est écrit (prof rattaché à plusieurs classes).
 	$maj['3.4.4'] = [['maj_tables', ['spip_forum']]];
 
+	// spip_auteurs.classes_ent/classes_ent_choisies : choix par le prof de ses
+	// classes inscrites au CCN.
+	$maj['3.4.5'] = [];
+	cextras_api_upgrade(thematique_declarer_champs_extras(), $maj['3.4.5']);
+
 	include_spip('base/upgrade');
 	maj_plugin($nom_meta_base_version, $version_cible, $maj);
 }
 
 /**
- * Réorganise l'arborescence "Ressources" (issue #299, décision du 18/09) :
+ * Réorganise l'arborescence "Ressources" (décision du 18/09/2026) :
  *
  * 1. trouve la rubrique racine (id_parent = 0) portant le mot-clé
  *    "ressources" (celle créée par thematique_configurer_rubriques(),

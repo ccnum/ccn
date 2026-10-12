@@ -113,7 +113,7 @@ function Projet() {
 	 * @see Projet#showRangeOfTimeline
 	 * @see Projet#setTimelineZoom
 	 */
-	// pushUrl=false (cf initTimeline() dans main.js, #422) : au tout premier
+	// pushUrl=false (cf initTimeline() dans main.js) : au tout premier
 	// appel du bootstrap, avant de savoir s'il faut rouvrir un objet précis
 	// depuis l'URL (id_article, onglet...), écraser l'URL avec "./" ici la
 	// détruit avant même que ce second état ne soit appliqué — la mission

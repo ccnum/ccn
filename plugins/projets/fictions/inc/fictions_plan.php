@@ -7,9 +7,9 @@ if (!defined('_ECRIRE_INC_VERSION')) {
 /**
  * Plan d'associations d'une année : qui écrit quel chapitre de quelle histoire.
  *
- * Rotation circulaire simple (#521), plus facile à vérifier par un humain qu'un tirage
+ * Rotation circulaire simple, plus facile à vérifier par un humain qu'un tirage
  * aléatoire : les participants actifs sont pris dans l'ordre de saisie, le participant
- * d'indice i possède l'histoire i (cf #520) et écrit le 1er chapitre de rotation
+ * d'indice i possède l'histoire i et écrit le 1er chapitre de rotation
  * (chapitre 2) de son histoire, le 2e (chapitre 3) de l'histoire i+1, le 3e (chapitre 4)
  * de l'histoire i+2, modulo le nombre d'histoires. Chaque histoire reçoit ainsi ses
  * chapitres de trois participants différents, à condition qu'il y en ait au moins trois.
@@ -120,7 +120,7 @@ function fictions_plan_anomalies(int $annee, array $plan): array {
 
 /**
  * Échéances indicatives de chaque chapitre de rotation : la période lancement → clôture
- * découpée en parts égales (#521, plan calculé pour l'année entière).
+ * découpée en parts égales (plan calculé pour l'année entière).
  *
  * @return array<int, array{debut: string, fin: string}> vide si les dates ne sont pas fixées
  */
@@ -142,7 +142,7 @@ function fictions_plan_echeances(int $annee): array {
 }
 
 /**
- * Plan enregistré de l'année (#523) : lu tel quel, jamais recalculé à l'affichage.
+ * Plan enregistré de l'année : lu tel quel, jamais recalculé à l'affichage.
  */
 function fictions_plan(int $annee): array {
 	return fictions_annee_config($annee)['plan'];
@@ -162,8 +162,8 @@ function fictions_plan_contributions_commencees(int $annee): bool {
 }
 
 /**
- * (Re)génère la proposition de plan : synchronise les histoires (#520) puis calcule la
- * rotation (#521). Le plan repasse à l'état de proposition (non validé). Refusé une
+ * (Re)génère la proposition de plan : synchronise les histoires puis calcule la
+ * rotation. Le plan repasse à l'état de proposition (non validé). Refusé une
  * fois l'écriture lancée sur un plan validé, ou dès qu'une contribution existe : une
  * régénération réattribuerait des chapitres déjà écrits.
  *
@@ -202,7 +202,7 @@ function fictions_chapitre_ecrit(int $id_article): bool {
 }
 
 /**
- * Change le participant d'un chapitre (correction manuelle d'un admin, #523/#525).
+ * Change le participant d'un chapitre (correction manuelle d'un admin).
  * Possible même sur un plan validé, tant que le chapitre n'est pas écrit.
  *
  * @return string '' si OK, sinon le code d'erreur
@@ -219,7 +219,7 @@ function fictions_plan_modifier_affectation(int $annee, int $id_rubrique, int $c
 	$config['plan'][$id_rubrique][$chapitre] = $id_participant;
 	fictions_annee_config_ecrire($annee, $config);
 	spip_log("fictions associations $annee : histoire #$id_rubrique chapitre $chapitre affecté au participant #$id_participant", 'fictions');
-	// Plan déjà validé : les liens suivent immédiatement (#524)
+	// Plan déjà validé : les liens suivent immédiatement
 	fictions_plan_appliquer($annee);
 	return '';
 }
@@ -247,7 +247,7 @@ function fictions_plan_valider(int $annee): string {
 }
 
 /**
- * Applique le plan validé aux liens SPIP (#524) : chaque chapitre de rotation est lié
+ * Applique le plan validé aux liens SPIP : chaque chapitre de rotation est lié
  * (spip_auteurs_liens) au compte du participant affecté, que les droits d'écriture
  * reconnaissent (fictions_auteur_affecte_chapitre(), #AUTORISER{ecrirechapitre}) ;
  * les autres comptes sont retirés des chapitres non encore écrits. Un chapitre écrit
@@ -307,7 +307,7 @@ function fictions_participant_chapitre(int $id_article): int {
 }
 
 /**
- * Toutes les données de la page des associations (#525), prêtes pour des boucles DATA.
+ * Toutes les données de la page des associations, prêtes pour des boucles DATA.
  */
 function fictions_associations_donnees(int $annee): array {
 	$config = fictions_annee_config($annee);

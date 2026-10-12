@@ -1,0 +1,48 @@
+[(#REM) Pop-up de choix des classes d'un prof inscrit au CCN, cf
+formulaires/choisir_classes_ent.php. Ouverte au chargement de la page, sans
+bouton de fermeture : le prof valide ses classes ou, s'il ne trouve pas la sienne,
+écrit au support. ]
+<dialog id="choisir_classes_ent" class="choisir-classes-ent" aria-labelledby="choisir_classes_ent_titre">
+<div class="formulaire_spip formulaire_#FORM">
+	<h2 id="choisir_classes_ent_titre"><:thematique:choisir_classes_ent_titre:></h2>
+	<p><:thematique:choisir_classes_ent_explication:></p>
+	[<p class="reponse_formulaire reponse_formulaire_erreur" role="alert">(#ENV*{message_erreur})</p>]
+	<form method="post" action="#ENV{action}">
+		#ACTION_FORMULAIRE
+		<fieldset>
+			<legend class="sr-only"><:thematique:choisir_classes_ent_legende:></legend>
+			[<p class="erreur_message" role="alert">(#ENV**{erreurs}|table_valeur{classes})</p>]
+			<BOUCLE_classes(DATA){source tableau, #ENV{_classes}}>
+			<label class="choisir-classes-ent-choix">
+				<input type="checkbox" name="classes[]" value="#CLE"[(#CLE|in_array{#ENV{classes, #ARRAY}}|oui) checked="checked"] />
+				[(#VALEUR|entites_html)]
+			</label>
+			</BOUCLE_classes>
+		</fieldset>
+		<p class="boutons">
+			<a class="choisir-classes-ent-introuvable" href="mailto:info@laclasse.com"><:thematique:choisir_classes_ent_introuvable{email=info@laclasse.com}:></a>
+			<button type="submit" class="bouton-lisere"><:thematique:choisir_classes_ent_valider:></button>
+		</p>
+	</form>
+</div>
+</dialog>
+<script>
+(function () {
+	var dialog = document.getElementById('choisir_classes_ent');
+	if (!dialog || typeof dialog.showModal !== 'function') {
+		return;
+	}
+	// Pas de fermeture par Échap : le prof doit valider ou écrire au support.
+	// Chrome ignore preventDefault() sur un second Échap sans interaction entre
+	// les deux (close watcher) : on rouvre alors la pop-up.
+	dialog.addEventListener('cancel', function (e) {
+		e.preventDefault();
+	});
+	dialog.addEventListener('close', function () {
+		dialog.showModal();
+	});
+	if (!dialog.open) {
+		dialog.showModal();
+	}
+})();
+</script>

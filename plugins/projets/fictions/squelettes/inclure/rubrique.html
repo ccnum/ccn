@@ -1,6 +1,6 @@
 <BOUCLE_principale(RUBRIQUES){id_rubrique}>
 	[(#REM) CACHE{300} : la partie qui change à chaque publication de
-	chapitre (verrouillage du jeu, cf #459) est extraite dans
+	chapitre (verrouillage du jeu) est extraite dans
 	inclure/rubrique-cadavres.html, qui reste CACHE{0}. Le reste (titre,
 	navigation, prologue) ne dépend que de l'année scolaire, portée
 	explicitement par ENV{annee_scolaire} (passé par le squelette
@@ -67,8 +67,7 @@
 						<hr />
 
 						<!-- END PROLOGUE -->
-						[(#REM) Droits d'accès aux chapitres : calculés par inc/fictions_autorisation.php
-						(#441). id_auteur passé pour la clé de cache de l'inclusion. ]
+						[(#REM) Droits d'accès aux chapitres : calculés par inc/fictions_autorisation.php. id_auteur passé pour la clé de cache de l'inclusion. ]
 						<INCLURE{fond=inclure/rubrique-cadavres,
 							id_rubrique,
 							id_auteur=#SESSION{id_auteur}} />

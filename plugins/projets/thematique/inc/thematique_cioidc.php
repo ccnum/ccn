@@ -117,7 +117,7 @@ function thematique_cioidc_est_intervenant_ccn(array $groupes_libres, string $ui
 
 // Nom d'un établissement depuis son UAI (ex: "0440001A", cf ENTAllUai/
 // _THEMATIQUE_RNE_WEBMESTRES), via l'API publique "Annuaire de l'éducation"
-// (data.education.gouv.fr, sans clé — cf issue #44). Passe par
+// (data.education.gouv.fr, sans clé). Passe par
 // recuperer_url_cache() (cache fichier SPIP, cf ecrire/inc/distant.php)
 // plutôt qu'un appel direct à chaque connexion SSO : un nom d'établissement
 // change quasiment jamais, un aller-retour réseau au login serait une
@@ -174,7 +174,7 @@ function thematique_cioidc_role_affiche(string $profils, bool $is_webmestre, boo
 
 // Prénom + nom réels de la personne (ex: "Intervenant CCN"), tels que fournis par
 // l'ENT — à distinguer de thematique_cioidc_nom_affiche() qui construit le libellé
-// rôle/classe/collège (cf #44). Utilisé là où on veut identifier la personne plutôt
+// rôle/classe/collège. Utilisé là où on veut identifier la personne plutôt
 // que sa fonction (menu haut). 'name' est déjà le prénom+nom concaténés côté ENT ;
 // repli sur LaclassePrenom/LaclasseNom si jamais absent.
 function thematique_cioidc_nom_complet(array $data) {
@@ -185,16 +185,21 @@ function thematique_cioidc_nom_complet(array $data) {
 }
 
 // Nom affiché : rôle ENT, suivi de la classe (première classe réelle du prof) pour
-// distinguer dans la liste des auteurs un même prof intervenant sur plusieurs CCN
-// (cf issue #44), et enfin du nom de son établissement (résolu depuis le premier
+// distinguer dans la liste des auteurs un même prof intervenant sur plusieurs CCN,
+// et enfin du nom de son établissement (résolu depuis le premier
 // UAI de $uai_liste — cf thematique_cioidc_nom_etablissement()). Plus de
-// prénom/nom de la personne : décidé finalement sur l'issue #44, seuls le rôle, la
+// prénom/nom de la personne : seuls le rôle, la
 // classe et le collège identifient l'auteur. Le group_name reçu de l'ENT est
 // préfixé par "CCN - " : préfixe redondant qu'on retire.
 // Exception : un intervenant n'a ni classe ni établissement (UAI 00000CCN non résolu)
 // et ressortait "Intervenant" tout court, indistinguable d'un autre : $nom_personne
 // (prénom+nom, cf thematique_cioidc_nom_complet()) est alors placé en tête.
-function thematique_cioidc_nom_affiche(array $classes_reelles, ?string $role_ent, array $uai_liste = [], string $nom_personne = '') {
+function thematique_cioidc_nom_affiche(
+	array $classes_reelles,
+	?string $role_ent,
+	array $uai_liste = [],
+	string $nom_personne = ''
+) {
 	$parties = [];
 	if ($nom_personne !== '') {
 		$parties[] = $nom_personne;
@@ -257,7 +262,7 @@ function thematique_cioidc_groupes_libres_pertinents(array $groupes_libres, stri
 		return [];
 	}
 
-	// Issue #274 : un "groupe libre" ENT est nommé librement par un
+	// Un "groupe libre" ENT est nommé librement par un
 	// enseignant (pas administré par l'établissement). Ce rattachement donne
 	// un vrai droit de création d'article dans la rubrique-projet
 	// correspondante (cf autoriser_rubrique_creerarticledans,
@@ -359,13 +364,88 @@ function thematique_cioidc_rubrique_classe_prof($groupe, $id_travail_classes) {
 	return thematique_trouver_ou_creer_rubrique($titre, $id_travail_classes);
 }
 
+// Classes ENT proposées au prof dans la pop-up de choix (cf
+// formulaires/choisir_classes_ent.php), avec l'année scolaire de la connexion pour ne
+// pas proposer à la rentrée la liste de l'année précédente. Vidé pour un compte qui
+// n'a rien à choisir (élève, webmestre, prof non inscrit au projet cette année).
+function thematique_cioidc_memoriser_classes_ent(array $auteur, array $classes_reelles, string $annee_scolaire): void {
+	$valeur = '';
+	if ($classes_reelles) {
+		$valeur = json_encode([
+			'annee' => $annee_scolaire,
+			'classes' => array_map(fn ($groupe) => [
+				'group_name' => (string) $groupe->group_name,
+				'group_structure_id' => (string) ($groupe->group_structure_id ?? ''),
+				'titre' => thematique_cioidc_titre_rubrique_classe($groupe),
+			], $classes_reelles),
+		], JSON_UNESCAPED_UNICODE);
+	}
+	// Lu à part (pas dans thematique_cioidc_resoudre_auteur()) : tant que la mise à
+	// jour de schéma 3.4.5 n'est pas passée, la colonne manque et seul ce choix de
+	// classes échoue, pas toute la connexion.
+	$id_auteur = intval($auteur['id_auteur']);
+	if ($valeur !== (string) sql_getfetsel('classes_ent', 'spip_auteurs', 'id_auteur=' . $id_auteur)) {
+		spip_log('userinfo classes ENT mémorisées : ' . ($valeur ?: '(aucune)'), 'cioidc');
+		sql_updateq('spip_auteurs', ['classes_ent' => $valeur], 'id_auteur=' . $id_auteur);
+	}
+}
+
+// Rattache le prof aux classes ENT retenues (cochées dans la pop-up, ou
+// d'office quand il n'en a qu'une, cf thematique_cioidc_userinfo()) et note l'année
+// du choix, ce qui masque la pop-up. $classes : entrées de
+// thematique_classes_ent_a_choisir(). Renvoie les rubriques de classe liées, [] si
+// aucune n'a pu l'être (rubrique "Travail des classes" de l'année introuvable).
+function thematique_cioidc_valider_classes_ent(int $id_auteur, array $classes, string $annee): array {
+	include_spip('thematique_fonctions');
+	include_spip('action/editer_liens');
+
+	[, $id_travail_classes] = thematique_cioidc_rubriques_annee($annee);
+	if (!$id_travail_classes) {
+		return [];
+	}
+
+	// Même rubrique que celle que créait la connexion SSO avant la pop-up de choix des classes (titre avec
+	// établissement, renommage d'une rubrique au titre ancien) : on retrouve celle
+	// d'un collègue de la même classe plutôt que d'en créer une seconde.
+	$choisies = [];
+	foreach ($classes as $classe) {
+		$groupe = (object) [
+			'group_name' => $classe['group_name'],
+			'group_structure_id' => $classe['group_structure_id'] ?? '',
+		];
+		if ($id_classe = thematique_cioidc_rubrique_classe_prof($groupe, $id_travail_classes)) {
+			$choisies[] = intval($id_classe);
+		}
+	}
+	if (!$choisies) {
+		return [];
+	}
+
+	// Classes de l'année non retenues : liées automatiquement à la connexion avant la pop-up de choix
+	// (dont d'anciennes classes du prof), retirées pour ne garder que son choix.
+	foreach (thematique_classes_auteur($id_auteur) as $id_classe) {
+		if (!in_array($id_classe, $choisies, true)) {
+			objet_dissocier(['id_auteur' => $id_auteur], ['rubrique' => $id_classe]);
+		}
+	}
+	foreach ($choisies as $id_classe) {
+		objet_associer(['id_auteur' => $id_auteur], ['rubrique' => $id_classe]);
+	}
+	sql_updateq('spip_auteurs', ['classes_ent_choisies' => $annee], 'id_auteur=' . $id_auteur);
+	spip_log("choix des classes auteur #$id_auteur année $annee : " . implode(',', $choisies), 'cioidc');
+
+	return $choisies;
+}
+
 // Rubriques de classe/projet à lier à l'auteur.
-// Seul un prof inscrit au projet de CE site pour l'année (groupe libre pertinent, cf
-// thematique_cioidc_groupes_libres_pertinents()) fait créer ses classes ENT sous
-// "Travail des classes" : sinon n'importe quel prof/élève laclasse.com passant sur le
-// site y ajoutait sa classe comme "participant" (cf noisettes/menu_classes.html).
-// Un élève est seulement rattaché à sa classe si elle existe déjà (créée par son prof
-// ou un admin), ex: affichage de l'emoji de classe hors du contexte d'une rubrique.
+// Un prof inscrit au projet de CE site pour l'année (groupe libre pertinent, cf
+// thematique_cioidc_groupes_libres_pertinents()) n'est lié ici qu'à ses projets : ses
+// classes ENT (y compris d'anciennes années, ENTClassesGroupes n'a pas d'année) sont
+// seulement mémorisées (thematique_cioidc_memoriser_classes_ent()), il coche dans une
+// pop-up celles inscrites au CCN, qui sont alors créées sous "Travail des classes"
+// (cf formulaires/choisir_classes_ent.php).
+// Un élève est seulement rattaché à sa classe si elle existe déjà (cochée par son prof
+// ou créée par un admin), ex: affichage de l'emoji de classe hors du contexte d'une rubrique.
 function thematique_cioidc_resoudre_liens_rubriques(
 	bool $is_enseignant,
 	bool $is_webmestre,
@@ -379,11 +459,6 @@ function thematique_cioidc_resoudre_liens_rubriques(
 	$projets_a_lier = [];
 
 	if ($is_enseignant && !$is_webmestre && $groupes_libres_pertinents) {
-		foreach ($classes_reelles as $groupe) {
-			if ($id_classe = thematique_cioidc_rubrique_classe_prof($groupe, $id_travail_classes)) {
-				$classes_a_lier[] = $id_classe;
-			}
-		}
 		foreach ($groupes_libres_pertinents as $groupe) {
 			if ($id_projet = thematique_trouver_ou_creer_rubrique($groupe->name ?? '', $id_consignes)) {
 				$projets_a_lier[] = $id_projet;

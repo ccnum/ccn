@@ -5,10 +5,10 @@ if (!defined('_ECRIRE_INC_VERSION')) {
 }
 
 /**
- * Histoires d'une année : autant que de participants (#520).
+ * Histoires d'une année : autant que de participants.
  *
  * Une histoire est une rubrique "NN. Histoire NN" sous la rubrique de l'année, avec
- * ses chapitres 2 à 4 (3 chapitres en plus du prologue et du chapitre 1 commun, #521).
+ * ses chapitres 2 à 4 (3 chapitres en plus du prologue et du chapitre 1 commun).
  * Chaque participant actif a son histoire attitrée (meta de l'année, clé histoires,
  * cf inc/fictions_participants.php), point de départ de la rotation.
  *

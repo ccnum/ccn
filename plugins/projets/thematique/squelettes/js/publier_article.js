@@ -96,7 +96,7 @@ function insererRaccourciDocument(element) {
 
 /**
  * Passe le titre d'un document de la liste des pièces jointes en mode
- * édition (#497, cf formulaires/titrer_document.html) : clic sur le crayon
+ * édition (cf formulaires/titrer_document.html) : clic sur le crayon
  * de la carte. Entrée ou sortie du champ avec un titre changé enregistre
  * (envoi ajax du formulaire, qui se recharge en mode affichage), Échap ou
  * sortie sans changement annule.
@@ -140,7 +140,7 @@ jQuery(document)
 /**
  * Grise dans la liste des documents joints (cf
  * noisettes/inc/publier_article_documents.html) ceux dont le raccourci est
- * déjà présent dans le champ "texte" (#498) : ces documents s'affichent dans
+ * déjà présent dans le champ "texte" : ces documents s'affichent dans
  * le corps de l'article, les autres en bas de l'article (critère {vu=non},
  * cf noisettes/inc/ajouter_document.html).
  *

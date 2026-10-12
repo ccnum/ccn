@@ -115,7 +115,7 @@
 
 /* Icône de classe (emoji) : [role="img"] ne sert qu'à ça dans ce plugin
    (consigne.js, reponse.js, rubrique_detail.html, logo_menu_classe.html).
-   Le décalage horizontal observé (issue #374) venait d'espaces blancs
+   Le décalage horizontal observé venait d'espaces blancs
    parasites dans le HTML généré (retour à la ligne autour de l'emoji dans
    le template) — corrigé côté squelette/JS, pas ici.
    line-height:1.3 (et non 1) : les puces emoji dans un cercle
@@ -1025,4 +1025,48 @@ position: relative;
 .formulaire-editer-profil .explication {
 	padding: 0 var(--spacing-sm);
 	color: var(--color-gris-2);
+}
+
+/* Pop-up de choix des classes d'un prof (formulaires/choisir_classes_ent.html) */
+.choisir-classes-ent {
+	/* margin: auto (centrage natif d'un <dialog> modal) annulé par la remise à zéro globale des marges */
+	margin: auto;
+	max-width: min(32rem, calc(100vw - 2rem));
+	padding: var(--spacing-md);
+	border: 2px solid var(--color-tonic);
+	border-radius: var(--border-radius-md);
+	color: var(--color-default);
+	font-family: 'Poppins';
+}
+.choisir-classes-ent::backdrop {
+	background-color: rgba(30, 32, 85, .5);
+}
+.choisir-classes-ent h2 {
+	margin-top: 0;
+}
+.choisir-classes-ent fieldset {
+	border: 0;
+	margin: var(--spacing-sm) 0;
+	padding: 0;
+}
+.choisir-classes-ent-choix {
+	display: flex;
+	align-items: center;
+	gap: var(--spacing-sm);
+	padding: 0.4rem 0;
+	cursor: pointer;
+}
+.choisir-classes-ent .erreur_message {
+	color: #c00;
+}
+.choisir-classes-ent .boutons {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	gap: var(--spacing-sm);
+	margin-bottom: 0;
+}
+.choisir-classes-ent-introuvable {
+	color: inherit;
+	text-decoration: underline;
 }

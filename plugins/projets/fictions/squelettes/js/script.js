@@ -15,7 +15,7 @@ $(document).ready(function() {
     });
 });
 
-// Tooltip de la grille des histoires (#526) : s'ouvre sous la case survolée,
+// Tooltip de la grille des histoires : s'ouvre sous la case survolée,
 // ou au-dessus si elle déborderait du bas de la fenêtre ; la bulle (flèche)
 // est placée côté case.
 function afficher_tooltip_liste(el, decalage_gauche) {

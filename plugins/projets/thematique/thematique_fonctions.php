@@ -22,7 +22,7 @@ function filtre_nb2col($nb) {
 function thematique_annee_scolaire() {
 	static $annee_scolaire = null;
 	if ($annee_scolaire === null) {
-		// #450 : repli calendaire si _ANNEE_SCOLAIRE (définie dans
+		// Repli calendaire si _ANNEE_SCOLAIRE (définie dans
 		// ccn_options.php, requête SQL incluse) n'est pas encore disponible à
 		// ce point du bootstrap - ex. preparer_fichier_session déclenché avant
 		// que les options du plugin ccn n'aient fini de se charger pour cette
@@ -109,8 +109,7 @@ function balise_ANNEE_SCOLAIRE_REELLE_dist($p) {
 }
 
 /**
- * Une année scolaire est-elle une année passée (archivée), au sens de
- * l'issue #437 : dès que la structure de la nouvelle année existe
+ * Une année scolaire est-elle une année passée (archivée) ? Dès que la structure de la nouvelle année existe
  * (thematique_rentree_annee(), déclenché en août), toute année strictement
  * antérieure à thematique_annee_scolaire_reelle() devient non éditable —
  * y compris pour un admin, y compris si l'année sélectionnée via le cookie/
@@ -517,7 +516,7 @@ function thematique_rendre_type_article_affichable($type_article) {
 	}
 
 	// autres types portés par la rubrique (cf thematique_type_objet_rubrique) :
-	// utilisés notamment dans les mails de notification (issue #217).
+	// utilisés notamment dans les mails de notification.
 	$autres = [
 		'blogs' => 'agenda',
 		'evenements' => 'salle_des_profs',
@@ -534,7 +533,7 @@ function thematique_rendre_type_article_affichable($type_article) {
  * du champ texte, libellé du bouton), propres à chacun des 5 types de
  * contenu publiables via ce popup (cf commentaire en tête de
  * squelettes/publier.html) — remplace le texte générique unique utilisé
- * avant l'issue #429 (maquettes proposées par JulMonaco, 09/2026).
+ * auparavant (maquettes de 09/2026).
  *
  * Appelée comme filtre : `#ENV{type_article}|thematique_texte_publication{titre}`
  *
@@ -762,7 +761,7 @@ function thematique_admin_scope($id_rubrique_choisie = null) {
 	$restreint1 = null;
 	$nb_rubriques_annee = 0;
 
-	// Issue #462 : la connexion SSO ajoute les liens de l'année sans retirer
+	// La connexion SSO ajoute les liens de l'année sans retirer
 	// ceux des années passées — un intervenant lié à "2018/Travail des
 	// classes" et à son projet 2026 publiait ses missions en 2018. Seules les
 	// rubriques liées de l'année active peuvent servir de rubrique restreinte ;
@@ -976,6 +975,45 @@ function thematique_classes_auteur($id_auteur) {
 }
 
 /**
+ * Classes ENT qu'un prof doit encore cocher dans la pop-up de choix (cf
+ * formulaires/choisir_classes_ent.php) : celles mémorisées à sa
+ * connexion SSO pour l'année scolaire en cours
+ * (thematique_cioidc_memoriser_classes_ent()), tant qu'il n'a pas validé son
+ * choix pour cette année (champ classes_ent_choisies).
+ *
+ * @param int $id_auteur
+ * @return array liste de ['group_name', 'group_structure_id', 'titre'], vide
+ *   si rien à choisir
+ */
+function thematique_classes_ent_a_choisir($id_auteur) {
+	static $cache = [];
+	$id_auteur = intval($id_auteur);
+	if (!$id_auteur) {
+		return [];
+	}
+	if (isset($cache[$id_auteur])) {
+		return $cache[$id_auteur];
+	}
+
+	include_spip('base/abstract_sql');
+	$auteur = sql_fetsel('classes_ent, classes_ent_choisies', 'spip_auteurs', 'id_auteur=' . $id_auteur);
+	$annee = (string) thematique_annee_scolaire();
+	$classes_ent = json_decode((string) ($auteur['classes_ent'] ?? ''), true);
+	if (
+		!is_array($classes_ent)
+		|| (string) ($classes_ent['annee'] ?? '') !== $annee
+		|| (string) $auteur['classes_ent_choisies'] === $annee
+	) {
+		return $cache[$id_auteur] = [];
+	}
+
+	return $cache[$id_auteur] = array_values(array_filter(
+		(array) ($classes_ent['classes'] ?? []),
+		fn ($classe) => is_array($classe) && !empty($classe['group_name']) && !empty($classe['titre'])
+	));
+}
+
+/**
  * Id de la rubrique-classe d'un auteur (prof ou élève) : celle dont dérive
  * son emoji d'avatar, et celle dans laquelle un prof rédige (réponse à une
  * mission, cf filtre_auteur_vers_classe()).
@@ -1002,7 +1040,7 @@ function thematique_id_rubrique_classe($id_auteur, $classe_active = null) {
 
 	// defined() : appelée aussi par thematique_preparer_fichier_session(), qui peut
 	// s'exécuter avant le chargement de thematique_options.php (session réécrite
-	// tôt dans la requête, ex. changement d'IP, cf #450) : erreur fatale sinon.
+	// tôt dans la requête, ex. changement d'IP) : erreur fatale sinon.
 	if (!defined('_THEMATIQUE_CHOIX_CLASSE') || !_THEMATIQUE_CHOIX_CLASSE) {
 		return $classes[0];
 	}
@@ -1035,7 +1073,7 @@ function thematique_avatar_animal($id_auteur, $classe_active = null) {
  * priorité que #SESSION{avatar} (cf thematique_preparer_fichier_session()),
  * émoji de la classe pour un prof/élève, sinon photo ENT, sinon ''.
  *
- * Issue #489 : #SESSION{avatar} n'est recalculé qu'à l'écriture du fichier de
+ * #SESSION{avatar} n'est recalculé qu'à l'écriture du fichier de
  * session, sans mise à jour de la session déjà chargée pour la requête en
  * cours — au changement d'année, le menu affichait l'animal de l'année
  * précédente à côté de la couleur (calculée à l'affichage) de la nouvelle,
@@ -1069,7 +1107,7 @@ function thematique_avatar_menu($id_auteur) {
  * Couleur de fond (pastel, hex) associée au numéro de classe d'une
  * rubrique — même palette que --color-classe-light-N dans
  * css/tokens.css.html, dupliquée ici car les mails de notification
- * (issue #217) sont rendus hors contexte CSS du site (pas de variables
+ * sont rendus hors contexte CSS du site (pas de variables
  * disponibles pour un client mail).
  *
  * @param int $id_rubrique
@@ -1371,7 +1409,7 @@ function thematique_id_rubrique_a_mot($titre_mot) {
  * suivi du rôle/classe/collège (spip_auteurs.nom, cf
  * thematique_cioidc_nom_affiche) — pour identifier l'individu qui commente,
  * contrairement aux missions/publications qui n'affichent que classe et
- * collège (#NOM seul, sans nom_complet) (issue #44, spec finale : "on
+ * collège (#NOM seul, sans nom_complet) (spec finale : "on
  * commente en tant qu'individu, on publie en tant que classe").
  *
  * nom_complet est vide pour un compte non passé par le SSO CIOIDC (ex.
@@ -1420,7 +1458,7 @@ function thematique_formater_nom_commentaire($nom, $nom_complet) {
 	}
 	// Un intervenant a déjà son prénom+nom en tête de nom (cf
 	// thematique_cioidc_nom_affiche) : prénom+nom seul, sans le suffixe
-	// " - Intervenant" (issue #550).
+	// " - Intervenant".
 	if (str_starts_with($nom, $nom_complet)) {
 		return $nom_complet;
 	}
@@ -1431,10 +1469,9 @@ function thematique_formater_nom_commentaire($nom, $nom_complet) {
 /**
  * Nom public d'un auteur (front et mails) : spip_auteurs.nom, sauf pour un
  * intervenant dont le nom vaut "Prénom NOM - Intervenant" (cf
- * thematique_cioidc_nom_affiche) — on n'affiche alors que "Prénom NOM"
- * (issue #550). Le champ nom n'est pas modifié : il est réécrit à chaque
+ * thematique_cioidc_nom_affiche) — on n'affiche alors que "Prénom NOM". Le champ nom n'est pas modifié : il est réécrit à chaque
  * connexion SSO et sert à distinguer les comptes dans le back-office.
- * Les profs gardent "rôle - classe - collège" (issue #44).
+ * Les profs gardent "rôle - classe - collège".
  *
  * @param int $id_auteur
  * @return string
@@ -1492,8 +1529,7 @@ function thematique_noms_publics_auteurs_article($id_article) {
  * Un article est-il un jalon du projet (cap-sur-l-annee / la-rencontre,
  * cf genie/thematique_rentree_annee.php) — mêmes mots-clés que
  * header_sidebar.html (BOUCLE_test_jalon_header), mis en cache mémoire par
- * requête. Sert notamment à ouvrir l'édition des jalons à tout intervenant
- * (issue #468), pas seulement à l'unique auteur assigné à la création par
+ * requête. Sert notamment à ouvrir l'édition des jalons à tout intervenant, pas seulement à l'unique auteur assigné à la création par
  * le cron ou aux admins.
  *
  * @param int $id_article
@@ -1655,7 +1691,7 @@ function thematique_id_rubrique_mission() {
 
 /**
  * Une nouvelle mission ne peut être créée que sous la rubrique "Consignes"
- * de l'année active (issue #462 : une rubrique restreinte d'une année
+ * de l'année active (une rubrique restreinte d'une année
  * passée, ex. "2018/Travail des classes", faisait publier les missions
  * d'un intervenant en 2018).
  *
@@ -1710,7 +1746,7 @@ function thematique_a_missions_annee() {
 		return $a_missions = false;
 	}
 
-	// Issue #465 : ne compter que les missions publiées, cohérent avec le
+	// Ne compter que les missions publiées, cohérent avec le
 	// {statut=publie} de la BOUCLE_consignes de menu_consignes.html — sinon
 	// le bloc "Missions" pouvait s'afficher (titre + 0 icône) pour une
 	// rubrique ne contenant que des articles en poubelle/prop.
@@ -1723,7 +1759,7 @@ function thematique_a_missions_annee() {
 
 /**
  * Est-ce que le menu "Publier > Une nouvelle mission" doit être proposé à
- * l'utilisateur connecté : admin, ou intervenant (issue #404 — dépendre en
+ * l'utilisateur connecté : admin, ou intervenant (dépendre en
  * plus de #SESSION{admin}>0, càd d'une rubrique en admin restreint dans
  * spip_auteurs_liens, privait de ce bouton les intervenants sans un tel
  * lien, alors que le rôle seul suffit à déterminer la rubrique cible : cf
@@ -1932,7 +1968,7 @@ function thematique_photo_auteur($id_auteur) {
 
 /**
  * Avatar "photo ou icône de classe" de l'auteur d'un article, pour la carte
- * du mail de notification (issue #217) — reprend la même information que
+ * du mail de notification — reprend la même information que
  * #SESSION{avatar} affichée dans le menu haut (cf
  * thematique_preparer_fichier_session() et noisettes/inc/authentification.html),
  * mais généralisée à l'auteur de n'importe quel article plutôt qu'au seul
@@ -1977,7 +2013,7 @@ function thematique_avatar_notification_article($id_article) {
 
 /**
  * Avatar "photo ou icône de classe" d'un auteur quelconque, pour la carte
- * du mail de notification (issue #217) — cœur de
+ * du mail de notification — cœur de
  * thematique_avatar_notification_article(), extrait pour être réutilisable
  * quand on part directement d'un id_auteur plutôt que d'un article (ex:
  * auteur d'un commentaire forumv2, cf notifications/forum_poste.html).
@@ -2028,7 +2064,7 @@ function thematique_avatar_notification_auteur($id_auteur) {
  * même règle que json/consignes.html, d'où vient le #ENV{rang} de
  * header_sidebar.html.
  * Utilisé pour la carte du mail de notification de commentaire forumv2
- * (issue #217, cf notifications/forum_poste.html).
+ * (cf notifications/forum_poste.html).
  *
  * Ne dépend pas de l'année scolaire active en session (contrairement à
  * thematique_id_rubrique_mission()) : un mail de notification n'a pas de
@@ -2061,7 +2097,7 @@ function thematique_numero_mission($id_article) {
 
 	$rang = 0;
 	if ($consigne) {
-		// Issue #551 : seules les missions publiées comptent (la consigne
+		// Seules les missions publiées comptent (la consigne
 		// elle-même est gardée quel que soit son statut, la notification
 		// pouvant partir avant que le statut soit relu), et les jalons
 		// (cap-sur-l-annee/la-rencontre) sont exclus comme dans
@@ -2096,7 +2132,7 @@ function thematique_numero_mission($id_article) {
 /**
  * Email de l'auteur d'un commentaire (spip_forum), pour savoir à qui un
  * commentaire répond — utilisé pour notifier l'auteur d'un commentaire
- * parent quand quelqu'un lui répond (issue #217, cf
+ * parent quand quelqu'un lui répond (cf
  * thematique_notifications_destinataires() et
  * notifications/forum_poste_article.html).
  *
@@ -2137,7 +2173,7 @@ function thematique_email_auteur_forum($id_forum) {
  * Mis en cache mémoire par requête.
  *
  * Sert à thematique_notifications_destinataires() pour ne pas notifier un
- * élève qu'on a répondu à son propre commentaire (issue #217).
+ * élève qu'on a répondu à son propre commentaire.
  *
  * @param int $id_forum
  * @return int
@@ -2192,8 +2228,7 @@ function thematique_filtrer_emails_poubelle($emails) {
 }
 
 /**
- * Tronque un extrait de texte pour une carte de mail de notification
- * (issue #217), avec le suffixe "[…]" utilisé dans les maquettes.
+ * Tronque un extrait de texte pour une carte de mail de notification, avec le suffixe "[…]" utilisé dans les maquettes.
  *
  * Existe uniquement pour éviter d'écrire `couper{220,'[…]'}` dans un
  * squelette : le compilateur de crochets conditionnels de SPIP casse dès
@@ -2212,8 +2247,7 @@ function thematique_couper_extrait($texte, $taille = 220) {
 }
 
 /**
- * Titre de la cellule "titre" d'une carte de mail de notification
- * (issue #217) : le titre de l'article, suivi d'un sous-titre optionnel en
+ * Titre de la cellule "titre" d'une carte de mail de notification : le titre de l'article, suivi d'un sous-titre optionnel en
  * italique ("Titre - Type").
  *
  * Existe uniquement pour éviter d'écrire `#SET{x, #GET{y}|filtre{z}}` (un
@@ -2241,7 +2275,7 @@ function thematique_carte_titre_notification($titre, $sous_titre = '') {
  * — pour choisir, dans la carte du mail de notification, entre le libellé
  * "On vient de répondre à votre message !" (le destinataire courant est
  * l'auteur du commentaire auquel on répond) et le libellé générique de la
- * mission (cf notifications/forum_poste_article.html, issue #217).
+ * mission (cf notifications/forum_poste_article.html).
  *
  * @param int $id_parent 0 si le commentaire notifié n'est pas une réponse
  * @param string $email Email du destinataire courant du mail (#ENV{notification_email})
@@ -2261,7 +2295,7 @@ function thematique_est_reponse_a_email($id_parent, $email) {
  * avatar de l'auteur de l'article, sinon logo de sa rubrique (classe/
  * intervenant) en repli, mis en cache mémoire par requête.
  *
- * Priorité : émoji animal (prof/élève, #446 - même repli que #SESSION{avatar},
+ * Priorité : émoji animal (prof/élève, même repli que #SESSION{avatar},
  * cf thematique_preparer_fichier_session()), puis logo SPIP uploadé par
  * l'auteur, puis son avatar ENT, puis le logo de la rubrique — jamais le
  * logo de l'article lui-même. Repli final identique à
@@ -2292,7 +2326,7 @@ function thematique_image_auteur_ou_classe($id_auteur, $id_rubrique) {
 		return $cache[$cle];
 	}
 
-	// #446 : pour un prof/élève, l'émoji animal de sa classe prime sur sa
+	// Pour un prof/élève, l'émoji animal de sa classe prime sur sa
 	// photo ENT éventuelle - même priorité que #SESSION{avatar} (cf
 	// thematique_preparer_fichier_session()). Seul cas où cette fonction
 	// renvoie autre chose qu'une URL : les deux appelants (consigne.js via
@@ -2347,7 +2381,7 @@ function thematique_image_auteur_ou_classe($id_auteur, $id_rubrique) {
  * authentification.html), pas sur l'URL exacte de
  * _THEMATIQUE_AVATAR_GENERIQUE_MASCULIN : l'ENT lui-même renvoie souvent ce
  * même type de pictogramme générique comme "avatar" d'un compte sans photo
- * (colonne spip_auteurs.avatar, dont "neutre" - #446), donc $image peut
+ * (colonne spip_auteurs.avatar, dont "neutre"), donc $image peut
  * arriver ici par ce chemin-là plutôt que par notre repli interne — dans
  * tous les cas c'est le même picto blanc sans fond, à envelopper pareil.
  *
@@ -2361,7 +2395,7 @@ function thematique_image_est_avatar_generique($image) {
 /**
  * Indique si une valeur renvoyée par thematique_image_auteur_ou_classe()
  * est une URL/chemin (à afficher en `<img src>`) plutôt qu'un émoji animal
- * de classe (#446, à afficher tel quel, texte brut dans un `<span>`).
+ * de classe (à afficher tel quel, texte brut dans un `<span>`).
  *
  * Test sur la présence d'un "/" plutôt qu'un préfixe http(s):// : les
  * chemins renvoyés par thematique_chemin_logo()/thematique_picto_site()
@@ -2455,7 +2489,7 @@ function thematique_id_rubrique_classe_auteur($id_auteur) {
  *   (cf docstring ci-dessus) est le premier auteur lié à l'article — absent
  *   jusqu'ici, ce qui cassait la priorité "avatar de l'auteur d'abord"
  *   pourtant documentée, en particulier pour les articles jalons
- *   ("Cap sur l'année"/"La Rencontre", cf #359) : rattachés à
+ *   ("Cap sur l'année"/"La Rencontre") : rattachés à
  *   "Consignes", une rubrique sans logo propre, ils retombaient
  *   directement sur le picto générique du site sans jamais essayer la
  *   photo de leur auteur (intervenant/admin) pourtant déjà affichée en
@@ -2664,7 +2698,7 @@ function thematique_trouver_reponse_a_une_consigne($id_consigne, $id_rubrique_cl
 
 /**
  * L'auteur $id_auteur a-t-il le droit de créer un article dans la rubrique
- * $id_rubrique (issue #274) ?
+ * $id_rubrique ?
  *
  * Un admin a accès à tout. Sinon, la rubrique globale "Ressources" est
  * ouverte à tout rédacteur (cf le hack côté serveur qui y force id_rubrique
@@ -2721,7 +2755,7 @@ function thematique_auteur_peut_creer_dans_rubrique($id_auteur, $id_rubrique) {
 	// sont déposées). C'est le parcours attendu pour un intervenant qui répond
 	// à une mission : il est lié à ses projets/consignes (SSO) mais PAS aux
 	// rubriques de classe cibles, donc le check d'ancêtre ci-dessous
-	// échouerait systématiquement. Cf issue #469.
+	// échouerait systématiquement.
 	if (thematique_auteur_a_mot_dans_hierarchie($id_auteur, 'consignes')) {
 		foreach ($ascendants as $asc) {
 			if (thematique_hierarchie_a_mot($asc, 'travail_en_cours')) {
@@ -2753,7 +2787,7 @@ function thematique_peut_publier_dans_mot($id_auteur, $titre_mot) {
 
 /**
  * Un `id_consigne` référence-t-il bien une mission ("consigne") réelle et
- * publiée (issue #274) ? `id_consigne` est un champ extra bigint posté tel
+ * publiée ? `id_consigne` est un champ extra bigint posté tel
  * quel par le formulaire public de publication
  * (formulaires/public_publier_article.php) : sans ce contrôle, un
  * id_consigne arbitraire (pointant vers n'importe quel autre article, publié
@@ -2790,7 +2824,7 @@ function thematique_consigne_valide($id_consigne) {
  * noisettes/sidebar/bloc_ajout_document_onglets.html), qui en déduit
  * l'attribut accept et refuse les autres formats côté serveur. Définie ici
  * (thematique_fonctions.php, chargé pour toute compilation de squelette du
- * plugin) pour être disponible partout, cf issue #429.
+ * plugin) pour être disponible partout.
  */
 define('_THEMATIQUE_EXTENSIONS_DOCUMENT_MISSION', ['gif', 'jpg', 'jpeg', 'png', 'mp3', 'mp4', 'pdf']);
 
@@ -2830,7 +2864,7 @@ function thematique_classes_nettoyage($annee) {
 
 /**
  * Referme les balises HTML mal équilibrées d'un texte saisi par un
- * utilisateur, avant de l'afficher dans une structure qui en dépend (#479).
+ * utilisateur, avant de l'afficher dans une structure qui en dépend.
  *
  * SPIP (propre) laisse passer tel quel le HTML brut d'un texte d'article : un
  * `</div>` en trop (copier-coller depuis Word ou une page web) referme alors
