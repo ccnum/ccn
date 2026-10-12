@@ -233,6 +233,22 @@ function fictions_nb_chapitres_histoire($id_rubrique): int {
 }
 
 /**
+ * Nombre de messages publiés (réponses comprises) du forum d'un chapitre (#553).
+ * Filtre : [(#ID_ARTICLE|fictions_nb_messages_forum)]. Remplace un
+ * #TOTAL_BOUCLE placé après </BOUCLE_x>, vide quand la boucle FORUMS est
+ * imbriquée dans une autre boucle.
+ */
+function fictions_nb_messages_forum($id_article): int {
+	static $cache = [];
+	$id_article = intval($id_article);
+	return $cache[$id_article] ??= (int) sql_countsel('spip_forum', [
+		"objet='article'",
+		'id_objet=' . $id_article,
+		"statut='publie'",
+	]);
+}
+
+/**
  * Noms des classes (participants) gérées par un compte pour une année, séparés par des
  * virgules (#519), '' si aucune. Filtre :
  * [(#SESSION{id_auteur}|fictions_noms_classes_auteur{#ENV{annee_scolaire}})]
