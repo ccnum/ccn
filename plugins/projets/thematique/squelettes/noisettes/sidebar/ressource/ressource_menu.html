@@ -30,10 +30,10 @@
 					]
 				</div>
 				<div class="liste-ressources">
-					[(#REM) #561 : ressources permanentes d'une année sur l'autre. Le critère tout
+					[(#REM) Ressources permanentes d'une année sur l'autre. Le critère tout
 					désactive le filtre par année scolaire de thematique_pre_boucle(), mais aussi
 					le filtre de statut : statut=publie le rétablit, sinon les ressources en
-					rédaction, proposées ou à la poubelle seraient listées (#516). ]
+					rédaction, proposées ou à la poubelle seraient listées. ]
 					<BOUCLE_articles(ARTICLES){id_secteur}{!par date}{tout}{statut=publie}>
 						<BOUCLE_auteur(AUTEURS){id_article}>
 							#SET{nom_auteur, #ID_AUTEUR|thematique_nom_public_auteur}

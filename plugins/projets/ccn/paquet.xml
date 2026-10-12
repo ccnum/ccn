@@ -9,7 +9,7 @@
 	<nom>CCN</nom>
 	<auteur>Erasme</auteur>
 	<licence>GNU/GPL</licence>
-	<!-- chargé après medias pour que modeles/video.html le surcharge (#560) -->
+	<!-- chargé après medias pour que modeles/video.html le surcharge -->
 	<utilise nom="medias" />
 	<pipeline nom="boite_infos" inclure="ccn_pipelines.php" />
 	<pipeline nom="post_edition" inclure="ccn_pipelines.php" />
