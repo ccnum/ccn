@@ -14,7 +14,7 @@ define('_THEMATIQUE_MAJ_NOM_AUTEURS_FORUM_TAILLE_LOT', 500);
  * spip_forum.auteur est figé au moment de la publication du commentaire
  * (cf formulaires/forumv2.php : 'auteur' => _request('nom_auteur')) : les
  * commentaires postés avant l'introduction de thematique_nom_auteur_commentaire()
- * (issue #44 — nom réel + rôle/classe/collège, au lieu de rôle/classe/collège
+ * (nom réel + rôle/classe/collège, au lieu de rôle/classe/collège
  * seul) restent affichés avec l'ancien format tant qu'on ne les retraite pas
  * explicitement. Cette tâche recalcule une bonne fois pour toutes le champ
  * 'auteur' de tous les commentaires existants à partir de leur id_auteur.

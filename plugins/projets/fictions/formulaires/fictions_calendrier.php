@@ -5,7 +5,7 @@ if (!defined('_ECRIRE_INC_VERSION')) {
 }
 
 /**
- * Calendrier d'une année d'écriture : lancement, clôture, finalisation (#518, #525).
+ * Calendrier d'une année d'écriture : lancement, clôture, finalisation.
  */
 
 /**

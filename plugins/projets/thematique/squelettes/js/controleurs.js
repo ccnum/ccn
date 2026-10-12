@@ -46,7 +46,7 @@ $(document).on('keydown.sidebarFocusTrap', function (e) {
 		// Le plugin crayons gère déjà Échap pour fermer son propre formulaire
 		// d'édition, sans stopper la propagation : sans ce garde-fou, on fermait
 		// toute la sidebar en même temps, laissant l'affichage à moitié grisé.
-		// Idem pour l'édition du titre d'un document (#497, cf publier_article.js).
+		// Idem pour l'édition du titre d'un document (cf publier_article.js).
 		if ($(e.target).closest('.crayon-html, .titre-document-saisie').length) {
 			return;
 		}
@@ -158,7 +158,7 @@ $(function () {
 			}
 			// Type sans action de réaffichage : on ferme simplement plutôt que
 			// de planter sur un appel undefined, qui laissait la croix inopérante
-			// (issue #507, édition d'une ressource).
+			// (édition d'une ressource).
 			if (!typeToAction[type_article]) return CCN.projet.showWholeTimeline();
 			typeToAction[type_article](id_article);
 			collapseSidebar();
@@ -729,7 +729,7 @@ function loadArticleInLateralSidebar(id_article) {
 
 /**
  * Charge le formulaire de création d'un évènement d'agenda dans la sidebar
- * principale (#412 : le menu "Publier > Un évènement dans l'agenda" ne
+ * principale (le menu "Publier > Un évènement dans l'agenda" ne
  * faisait qu'un changeTimelineMode sans jamais ouvrir de formulaire).
  *
  * page=rubrique (cf callRessource) est une page de NAVIGATION dans une
@@ -743,7 +743,7 @@ function loadArticleInLateralSidebar(id_article) {
  * pros, réservée aux profs (cf noisettes/inc/logo_salle_profs.html,
  * thematique_role_voit_salle_profs), alors que "blogs" est l'Agenda public
  * (menu_logo_blogs dans noisettes/sommaire.html). Les deux avaient été
- * intervertis dans un premier temps (#412).
+ * intervertis dans un premier temps.
  *
  * changeTimelineMode() est asynchrone : la première fois qu'on bascule vers
  * un mode pas encore actif, elle attend le chargement JSON des articles
@@ -752,7 +752,7 @@ function loadArticleInLateralSidebar(id_article) {
  * juste après que loadContentInMainSidebar ait ouvert le formulaire — d'où
  * un formulaire qui s'affichait puis se refermait aussitôt tout seul
  * (invisible au premier clic, correct au second une fois le mode déjà
- * actif, donc changeTimelineMode devenue un no-op) (#412 bis).
+ * actif, donc changeTimelineMode devenue un no-op).
  *
  * @see loadContentInMainSidebar
  * @see createReponse
@@ -781,12 +781,12 @@ function callProfilEditer(url) {
 
 /**
  * Charge le formulaire de création d'une information de la Salle des profs
- * (menu "Publier > Information en salle des profs", #461) : jusqu'ici un
+ * (menu "Publier > Information en salle des profs") : jusqu'ici un
  * simple stub (alert("chantier_ccn")) dans choix_rubrique_admin2.html,
  * jamais câblé à un formulaire — un intervenant n'avait donc aucun moyen
  * d'y publier malgré l'autorisation backend (thematique_role_publie).
  * type_objet=evenements (cf commentaire de callEvenementCreer sur
- * l'inversion blogs/evenements, #412).
+ * l'inversion blogs/evenements).
  *
  * @see callEvenementCreer
  */
@@ -1007,7 +1007,7 @@ function createReponse(id_consigne, id_rubrique_auteur, numero) {
 }
 
 /**
- * Ouvre la modale de publication (#429, noisettes/sidebar/publier_article/)
+ * Ouvre la modale de publication (noisettes/sidebar/publier_article/)
  * en mode édition pour un article déjà publié, plutôt qu'un formulaire
  * d'édition dédié - clic sur le bouton "Modifier" du header d'une mission/
  * réponse/évènement (cf header_sidebar.html, header_reponse_sidebar.html).

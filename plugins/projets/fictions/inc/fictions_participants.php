@@ -5,18 +5,18 @@ if (!defined('_ECRIRE_INC_VERSION')) {
 }
 
 /**
- * Participants et calendrier d'une année d'écriture fictions (#518).
+ * Participants et calendrier d'une année d'écriture fictions.
  *
  * Un participant est une classe ou l'écrivain : c'est lui, et non le compte SPIP, qui
  * écrit les chapitres et qui apparaît sur le site. Plusieurs classes peuvent partager
- * le même compte enseignant (#519) : chacune reste un participant distinct.
+ * le même compte enseignant : chacune reste un participant distinct.
  *
  * Stockage : une meta par année, fictions_annee_<annee>, tableau sérialisé :
  *   lancement, cloture, finalisation : dates Y-m-d (vides = non fixées)
  *   participants : [id_participant => [type, nom, id_auteur, actif]]
  *   prochain_id  : compteur des identifiants de participants (jamais réutilisés)
- *   histoires    : [id_participant => id_rubrique de son histoire] (#520)
- *   plan, plan_valide : plan d'associations (#521, #523)
+ *   histoires    : [id_participant => id_rubrique de son histoire]
+ *   plan, plan_valide : plan d'associations
  *
  * La liste des participants est explicite (saisie par un admin, cf
  * ecrire/?exec=fictions_associations), indépendante de l'ordre ou du moment de
@@ -167,7 +167,7 @@ function fictions_participant_verifier(int $annee, string $type, string $nom, in
 }
 
 /**
- * Ajoute un participant. Refusé une fois le plan d'associations verrouillé (#523) :
+ * Ajoute un participant. Refusé une fois le plan d'associations verrouillé :
  * pas de modification silencieuse d'une année déjà démarrée.
  *
  * @return array{0: int, 1: string} [id_participant (0 si refus), code d'erreur]
@@ -191,8 +191,8 @@ function fictions_participant_ajouter(int $annee, string $type, string $nom, int
 
 /**
  * Modifie le nom, le type ou le compte d'un participant. Le changement de compte
- * (classe qui change d'enseignant, #519) reste possible une fois l'année démarrée :
- * les liens de ses chapitres suivent à la prochaine application du plan (#524).
+ * (classe qui change d'enseignant) reste possible une fois l'année démarrée :
+ * les liens de ses chapitres suivent à la prochaine application du plan.
  *
  * @return string '' si OK, sinon le code d'erreur
  */
@@ -211,8 +211,8 @@ function fictions_participant_modifier(int $annee, int $id_participant, string $
 	);
 	fictions_annee_config_ecrire($annee, $config);
 	spip_log("fictions associations $annee : participant #$id_participant modifié ($type, " . trim($nom) . ", auteur #$id_auteur)", 'fictions');
-	// Classe qui change d'enseignant (#519) : ses chapitres non écrits passent au
-	// nouveau compte si le plan est validé (#524)
+	// Classe qui change d'enseignant : ses chapitres non écrits passent au
+	// nouveau compte si le plan est validé
 	include_spip('inc/fictions_plan');
 	fictions_plan_appliquer($annee);
 	return '';
@@ -239,7 +239,7 @@ function fictions_participant_retirer(int $annee, int $id_participant): string {
 }
 
 /**
- * Participants actifs gérés par un compte SPIP (#519) : un enseignant peut gérer
+ * Participants actifs gérés par un compte SPIP : un enseignant peut gérer
  * plusieurs classes, chacune reste un participant à part entière (sa propre histoire,
  * ses propres affectations de chapitres).
  *
@@ -253,7 +253,7 @@ function fictions_participants_auteur(int $annee, int $id_auteur): array {
 }
 
 /**
- * Plan verrouillé : validé et écriture démarrée (#523). Défini ici pour que les
+ * Plan verrouillé : validé et écriture démarrée. Défini ici pour que les
  * contrôles des participants n'aient pas à charger tout le plan.
  */
 function fictions_plan_verrouille(int $annee): bool {

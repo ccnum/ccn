@@ -5,7 +5,7 @@ if (!defined('_ECRIRE_INC_VERSION')) {
 }
 
 /**
- * Pop-up de choix des classes d'un prof inscrit au CCN (issue #541), incluse
+ * Pop-up de choix des classes d'un prof inscrit au CCN, incluse
  * dans squelettes/layout.html.
  *
  * L'ENT renvoie toutes les classes d'un prof, y compris d'anciennes années

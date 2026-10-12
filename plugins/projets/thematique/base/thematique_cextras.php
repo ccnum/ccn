@@ -53,7 +53,7 @@ function thematique_declarer_champs_extras($champs = []) {
 		"varchar(255) NOT NULL DEFAULT ''"
 	);
 	// Prénom + nom réels (ex: "Intervenant CCN"), alimenté depuis l'ENT (attribut
-	// 'name') — distinct du champ 'nom' qui affiche rôle/classe/collège (cf #44) :
+	// 'name') — distinct du champ 'nom' qui affiche rôle/classe/collège :
 	// utilisé là où on veut identifier la personne plutôt que sa fonction (menu haut).
 	$champs['spip_auteurs']['nom_complet'] = thematique_champ_extra_simple(
 		'nom_complet',
@@ -61,7 +61,7 @@ function thematique_declarer_champs_extras($champs = []) {
 		"varchar(255) NOT NULL DEFAULT ''",
 		'webmestre'
 	);
-	// Issue #541 : classes ENT d'un prof inscrit au projet, mémorisées à la connexion
+	// Classes ENT d'un prof inscrit au projet, mémorisées à la connexion
 	// SSO (JSON {annee, classes}) pour la pop-up où il coche celles inscrites au CCN,
 	// et année scolaire de ce choix (vide = pop-up à afficher). Vider l'année fait
 	// réapparaître la pop-up à ce prof.
@@ -85,7 +85,7 @@ function thematique_declarer_champs_extras($champs = []) {
 	);
 	// bigint(21), identique à la déclaration de la vraie colonne dans
 	// thematique_install.php (thematique_declarer_tables_principales) : les
-	// deux DOIVENT rester synchronisés, cf le commentaire là-bas (issue #369).
+	// deux DOIVENT rester synchronisés, cf le commentaire là-bas.
 	$champs['spip_rubriques']['id_rubrique_lien'] = thematique_champ_extra_simple(
 		'id_rubrique_lien',
 		'thematique:champ_extra_id_rubrique_lien',

@@ -35,7 +35,7 @@
 	CCN.idRubriqueClasseAuteur = "#GET{id_rubrique_classe}";
 	
 	CCN.role = [(#ENV*{role}|sinon{''}|json_encode)];
-	// Issue #437 : l'année affichée par la timeline (#ENV{annee_scolaire}) est
+	// L'année affichée par la timeline (#ENV{annee_scolaire}) est
 	// l'année sélectionnée, pas forcément l'année réelle en cours — sert à
 	// masquer le bouton "répondre à la mission" sur une année archivée.
 	CCN.anneeEstPassee = [(#ENV{annee_scolaire}|thematique_annee_est_passee|json_encode)];
@@ -53,7 +53,7 @@
 	l'URL. thematique_type_objet_article() donne le même type que celui
 	posé par callConsigne()/callReponse() ('consignes'/'travail_en_cours'),
 	à partir du seul id_article. Sans type (article inexistant) :
-	popup article_introuvable (#515). ]
+	popup article_introuvable. ]
 	#SET{type_objet_init, #SELF|parametre_url{type_objet}}
 	#SET{id_objet_init, #SELF|parametre_url{id_objet}}
 	#SET{id_article_init, #SELF|parametre_url{id_article}}

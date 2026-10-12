@@ -5,7 +5,7 @@ if (!defined('_ECRIRE_INC_VERSION')) {
 }
 
 /**
- * Met un article à la poubelle (bouton « Supprimer » d'un billet/évènement, #515).
+ * Met un article à la poubelle (bouton « Supprimer » d'un billet/évènement).
  * Réponse HTTP seule (appel fetch() de supprimerArticle() dans controleurs.js) :
  * 200 si l'article est bien passé à la poubelle, 403 sinon.
  */

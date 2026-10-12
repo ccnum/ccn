@@ -1,6 +1,5 @@
-[(#REM) Associations d'une année d'écriture (#525) : calendrier et participants (#518,
-#519), histoires (#520), plan d'associations (#521, #523) et son application aux
-chapitres (#524). Saisies par formulaires CVT (formulaires/fictions_*), opérations
+[(#REM) Associations d'une année d'écriture : calendrier et participants, histoires, plan d'associations et son application aux
+chapitres. Saisies par formulaires CVT (formulaires/fictions_*), opérations
 ponctuelles (retrait, synchronisation, génération, validation) par
 action/fictions_associations.php via BOUTON_ACTION.
 Accès : ecrire/?exec=fictions_associations (options annee=2026, id_participant=N
@@ -40,12 +39,12 @@ pour modifier un participant). ]
 	<p class="boutons"><button type="submit" class="btn btn_mini"><:fictions:associations_afficher:></button></p>
 </form>
 
-[(#REM) ----- Calendrier (#518) ----- ]
+[(#REM) ----- Calendrier ----- ]
 <h2><:fictions:associations_calendrier:></h2>
 <p><:fictions:associations_phase:> <strong>[(#GET{cle_phase}|_T)]</strong></p>
 #FORMULAIRE_FICTIONS_CALENDRIER{#GET{annee}}
 
-[(#REM) ----- Participants (#518, #519) ----- ]
+[(#REM) ----- Participants ----- ]
 <h2><:fictions:associations_participants:></h2>
 <B_participants>
 <table class="spip liste">
@@ -85,7 +84,7 @@ pour modifier un participant). ]
 	#FORMULAIRE_FICTIONS_PARTICIPANT{#GET{annee}, #ENV{id_participant}}
 </div>
 
-[(#REM) ----- Histoires (#520) ----- ]
+[(#REM) ----- Histoires ----- ]
 <h2><:fictions:associations_histoires:></h2>
 #SET{nb_attendu, #GET{d}|table_valeur{histoires_attendu}}
 #SET{nb_reel, #GET{d}|table_valeur{histoires_reel}}
@@ -95,7 +94,7 @@ pour modifier un participant). ]
 	[(#BOUTON_ACTION{<:fictions:associations_synchroniser:>, #URL_ACTION_AUTEUR{fictions_associations, #GET{arg_synchroniser}}, btn_mini})]
 ]
 
-[(#REM) ----- Plan d'associations (#521, #523, #524) ----- ]
+[(#REM) ----- Plan d'associations ----- ]
 <h2><:fictions:associations_plan:></h2>
 <p><:fictions:associations_plan_statut:> <strong>[(#GET{cle_statut}|_T)]</strong>[ — (#GET{d}|table_valeur{plan_valide}|affdate_heure)]</p>
 
@@ -120,7 +119,7 @@ pour modifier un participant). ]
 	[(#BOUTON_ACTION{<:fictions:associations_valider:>, #URL_ACTION_AUTEUR{fictions_associations, #GET{arg_valider}}, '', <:fictions:associations_valider_confirmer:>})]
 ]
 
-[(#REM) ----- Anomalies (#525) ----- ]
+[(#REM) ----- Anomalies ----- ]
 <h2><:fictions:associations_anomalies:></h2>
 <B_anomalies>
 <ul class="notice error">

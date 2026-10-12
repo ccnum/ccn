@@ -102,7 +102,7 @@ function formulaires_forumv2_verifier_dist($id_article) {
 		$erreurs['texte'] = 'Le texte est obligatoire.';
 	}
 
-	// Issue #437 : plus aucune publication/édition de commentaire (admin
+	// Plus aucune publication/édition de commentaire (admin
 	// compris) sur un article d'une année scolaire passée, une fois la
 	// nouvelle année créée.
 	include_spip('thematique_fonctions');
@@ -206,7 +206,7 @@ function formulaires_forumv2_traiter_dist($id_article) {
 			// forum_insert_base() (chemin de l'ancien formulaire public forum.php),
 			// elle ne déclenche pas la notification. Sans cet appel explicite, les
 			// destinataires calculés par thematique_notifications_destinataires
-			// (issue #217) ne sont jamais notifiés pour un commentaire forumv2.
+			// ne sont jamais notifiés pour un commentaire forumv2.
 			if ($id_forum && ($notifications = charger_fonction('notifications', 'inc'))) {
 				$notifications('forumposte', $id_forum);
 			}

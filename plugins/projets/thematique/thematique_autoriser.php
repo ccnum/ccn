@@ -27,7 +27,7 @@ function autoriser_thematiqueclassesvides_menu_dist($faire, $type, $id, $qui, $o
 }
 
 /**
- * Restreint la création d'article dans une rubrique (issue #274) : le cœur
+ * Restreint la création d'article dans une rubrique : le cœur
  * SPIP (autoriser_rubrique_creerarticledans_dist) se contente de vérifier
  * que la rubrique est "visible" — sans plugin de restriction par branche
  * installé, autoriser('voir','rubrique',...) est vrai pour tout le monde
@@ -61,7 +61,7 @@ function autoriser_thematiqueclassesvides_menu_dist($faire, $type, $id, $qui, $o
  * fatalait (Cannot redeclare) sans ce garde (500 sur tout le site, cf le
  * crash constaté sur ccn-ontourne après le déploiement initial de ce
  * correctif). Sur un tel site, cette fonction-ci est inactive : la
- * restriction #274 est donc appliquée directement dans
+ * restriction de création est donc appliquée directement dans
  * formulaires/public_publier_article.php (thematique_auteur_peut_creer_-
  * dans_rubrique), qui ne dépend pas du hook autoriser() et s'applique
  * quelle que soit la config d'autorite. Cette fonction reste utile sur les
@@ -79,13 +79,13 @@ if (!function_exists('autoriser_rubrique_creerarticledans')) {
 	}
 } else {
 	spip_log(
-		'thematique_autoriser : autoriser_rubrique_creerarticledans() déjà déclarée (probablement par le plugin autorite, option "Auteur modifie article") — restriction #274 appliquée uniquement dans public_publier_article.php',
+		'thematique_autoriser : autoriser_rubrique_creerarticledans() déjà déclarée (probablement par le plugin autorite, option "Auteur modifie article") — restriction de création appliquée uniquement dans public_publier_article.php',
 		'thematique' . _LOG_ERREUR
 	);
 }
 
 /**
- * Restriction sur le champ 'date' d'un article (issue #420, règle actée par
+ * Restriction sur le champ 'date' d'un article (règle actée par
  * ChristoErasme le 09/09) : au-delà de l'autorisation standard de modifier
  * l'article (autoriser_article_modifier_dist()), la date n'est éditable que
  * par :
@@ -95,19 +95,18 @@ if (!function_exists('autoriser_rubrique_creerarticledans')) {
  *   salle des profs (blogs) — pas sur une mission (consignes) ni une
  *   ressource.
  * "Formateur canopé" n'a volontairement pas de traitement distinct : rôle
- * fusionné avec "intervenant" (thematique_donner_role() ne le distingue pas
- * — cf discussion #420), mêmes droits que lui pour cette autorisation.
+ * fusionné avec "intervenant" (thematique_donner_role() ne le distingue pas), mêmes droits que lui pour cette autorisation.
  *
  * Le crayon #EDIT{date} passe systématiquement `champ => 'date'` en option
  * (cf classe_boucle_crayon() et autoriser_crayonner_dist() dans le plugin
  * crayons) : toute autre demande de modification d'article retombe sur le
  * comportement standard, inchangé.
  *
- * Fait suite au commit 3d1639a6 (#420) qui laissait cette restriction "à
+ * Fait suite au commit 3d1639a6 qui laissait cette restriction "à
  * traiter séparément".
  *
  * Historique du garde `function_exists` : le plugin contrib `autorite`
- * (plugins/spip/autorite, pas maison, désinstallé — issue #274) déclarait
+ * (plugins/spip/autorite, pas maison, désinstallé) déclarait
  * lui aussi `autoriser_article_modifier()` en dur (pas de suffixe `_dist`)
  * dans inc/autoriser.php, conditionnellement à sa config stockée en meta
  * (option "auteur peut modifier son article" — `auteur_mod_article`,
@@ -117,13 +116,13 @@ if (!function_exists('autoriser_rubrique_creerarticledans')) {
  * empêchait la déclaration de CETTE fonction (sans le garde
  * `function_exists`, Fatal error "Cannot redeclare" → 500 sur tout le
  * site) — et de toute façon SHADOWAIT silencieusement les restrictions
- * #420/#468/#437 ci-dessous plutôt que de les compléter, tant qu'il gagnait
+ * ci-dessous (date, jalons, année archivée) plutôt que de les compléter, tant qu'il gagnait
  * la déclaration. D'où la désinstallation du plugin plutôt que la
  * désactivation de la seule option : la logique qu'il fournissait
  * ("l'auteur peut modifier son propre article même publié", nécessaire aux
  * crayons de ré-édition d'une mission/ressource/évènement déjà publiée) est
- * reprise explicitement ci-dessous, sous les mêmes garde-fous (#437, champ
- * date) que le reste de cette fonction — au lieu de shadower le tout comme
+ * reprise explicitement ci-dessous, sous les mêmes garde-fous (année
+ * archivée, champ date) que le reste de cette fonction — au lieu de shadower le tout comme
  * le faisait autorite.
  */
 if (!function_exists('autoriser_article_modifier')) {
@@ -133,7 +132,7 @@ if (!function_exists('autoriser_article_modifier')) {
 		if (!autoriser_article_modifier_dist($faire, $type, $id, $qui, $opt)) {
 			$id_auteur_visiteur = intval($qui['id_auteur'] ?? 0);
 
-			// Issue #468 : les jalons du projet (Cap sur l'année / La Rencontre,
+			// Les jalons du projet (Cap sur l'année / La Rencontre,
 			// cf genie/thematique_rentree_annee.php) sont créés en statut 'prop'
 			// et liés au seul "premier intervenant" trouvé sur le projet — la
 			// règle SPIP standard (auteurs_objet()) ne laisse alors QUE lui (ou
@@ -173,7 +172,7 @@ if (!function_exists('autoriser_article_modifier')) {
 			// on continue, sous les mêmes garde-fous (année passée, champ date) que le cas normal
 		}
 
-		// Issue #437 : une fois la nouvelle année scolaire créée, plus
+		// Une fois la nouvelle année scolaire créée, plus
 		// personne (admin compris) ne peut modifier un contenu (mission,
 		// réponse, événement, billet, ressource) d'une année passée.
 		if (thematique_annee_est_passee(thematique_annee_article($id))) {
@@ -196,13 +195,13 @@ if (!function_exists('autoriser_article_modifier')) {
 	}
 } else {
 	spip_log(
-		'thematique_autoriser : autoriser_article_modifier() déjà déclarée (probablement par le plugin autorite) — restriction #420 sur le champ date non appliquée',
+		'thematique_autoriser : autoriser_article_modifier() déjà déclarée (probablement par le plugin autorite) — restriction sur le champ date non appliquée',
 		'thematique' . _LOG_ERREUR
 	);
 }
 
 /**
- * Suppression d'un commentaire de forum (issue #356), règle actée par
+ * Suppression d'un commentaire de forum, règle actée par
  * ChristoErasme le 24/08 :
  * - un élève ne peut jamais supprimer, même son propre message ;
  * - un intervenant ne peut supprimer que ses propres messages ;
@@ -230,7 +229,7 @@ function autoriser_forumsupprimer_dist($faire, $type, $id, $qui, $opt) {
 		return false;
 	}
 
-	// Issue #437 : plus aucune suppression de commentaire (admin compris)
+	// Plus aucune suppression de commentaire (admin compris)
 	// sur un article d'une année scolaire passée, une fois la nouvelle
 	// année créée.
 	if (thematique_annee_est_passee(thematique_annee_article(intval($forum['id_objet'])))) {

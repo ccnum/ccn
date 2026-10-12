@@ -219,7 +219,7 @@ accepter une nouvelle duplication.
 ## Duplications déjà traitées (2026-08)
 
 - `base/th_cextras.php` et `base/th_install.php` : reliquats morts de
-  l'ancien préfixe `th_` (renommé en `thematique_` dans #289), plus jamais
+  l'ancien préfixe `th_` (renommé en `thematique_`), plus jamais
   chargés par SPIP (seul `base/<prefix>_*.php` avec le préfixe déclaré dans
   `paquet.xml`, ici `thematique`, est auto-inclus) — supprimés.
 - `formulaires/joindre_document_mission.php` et `formulaires/joindre_video.php` :

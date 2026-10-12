@@ -198,14 +198,14 @@ spip plugins:activer ccn -y
 
 spip plugins:desactiver imports_utilisateurs -y
 spip plugins:desactiver cicas -y
-# Plugin contrib désactivé (issue #274) : son option "auteur_mod_article"
+# Plugin contrib désactivé : son option "auteur_mod_article"
 # (cf les spip config:ecrire supprimés plus bas) déclare une version très
 # permissive de autoriser_article_modifier()/autoriser_rubrique_-
 # creerarticledans() (plugins/spip/autorite/inc/autoriser.php), sans garde
 # function_exists côté autorite — elle prenait systématiquement le pas sur
-# la logique métier de thematique_autoriser.php (restrictions #420 et
-# #274), la rendant inopérante, et son activation combinée au correctif
-# #274 a provoqué un Fatal error "Cannot redeclare" sur ccn-ontourne.
+# la logique métier de thematique_autoriser.php (restrictions sur
+# la date et la création d'article), la rendant inopérante, et son activation
+# combinée au correctif de cette dernière a provoqué un Fatal error "Cannot redeclare" sur ccn-ontourne.
 spip plugins:desactiver autorite -y
 
 if [ "${SPIP_PLUGINS_CIOIDC:-false}" = true ]; then

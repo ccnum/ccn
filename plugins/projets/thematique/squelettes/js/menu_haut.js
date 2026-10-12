@@ -123,7 +123,7 @@
 					var name = $sel.attr('data-select-name') || $sel.attr('name');
 					if (name == 'annee_scolaire') {
 						// ccn_options.php lit ?annee_scolaire= et pose le cookie côté serveur.
-						// #436 : repartir de l'URL courante (avec id_article, mode=complet...)
+						// Repartir de l'URL courante (avec id_article, mode=complet...)
 						// gardait une mission ouverte d'une autre année sélectionnée, dont le
 						// rechargement retombait silencieusement sur l'année en cours (la
 						// mission n'existe pas dans la nouvelle année). On repart donc toujours

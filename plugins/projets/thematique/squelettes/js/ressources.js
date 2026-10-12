@@ -8,7 +8,7 @@ function voirLaRessource(e) {
  * Filtre les cartes de la liste des ressources par sous-rubrique.
  * "Tout" (data-id-rubrique="") réaffiche tout le contenu de l'arbre
  * "Ressources", y compris les ressources publiées à la racine (donc sans
- * sous-rubrique) - cf #299.
+ * sous-rubrique).
  *
  * @param {HTMLElement} bouton - Le bouton de filtre cliqué (.filtre-ressources)
  */

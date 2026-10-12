@@ -12,7 +12,7 @@ function thematique_declarer_tables_principales($tables_principales) {
 	// champs extras) : les deux mécanismes créent/maintiennent la même
 	// colonne réelle. Un mismatch (ex: bigint ici, text ou int(5) côté
 	// cextras) casse l'ADD INDEX ci-dessous, MySQL interdisant un préfixe de
-	// longueur sur une colonne numérique (issue #369, provoqué par un
+	// longueur sur une colonne numérique (provoqué par un
 	// correctif précédent — cf 6f4bcaf0 — qui masquait ce mismatch avec un
 	// préfixe de longueur "id_consigne(20)" au lieu de le supprimer).
 	$tables_principales['spip_articles']['field']['id_consigne'] = 'bigint(21) NOT NULL DEFAULT 0';
