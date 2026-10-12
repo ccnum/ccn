@@ -1026,3 +1026,46 @@ position: relative;
 	padding: 0 var(--spacing-sm);
 	color: var(--color-gris-2);
 }
+
+/* Pop-up de choix des classes d'un prof (issue #541, formulaires/choisir_classes_ent.html) */
+.choisir-classes-ent {
+	/* margin: auto (centrage natif d'un <dialog> modal) annulé par la remise à zéro globale des marges */
+	margin: auto;
+	max-width: min(32rem, calc(100vw - 2rem));
+	padding: var(--spacing-md);
+	border: 2px solid var(--color-tonic);
+	border-radius: var(--border-radius-md);
+	color: var(--color-default);
+	font-family: 'Poppins';
+}
+.choisir-classes-ent::backdrop {
+	background-color: rgba(30, 32, 85, .5);
+}
+.choisir-classes-ent h2 {
+	margin-top: 0;
+}
+.choisir-classes-ent fieldset {
+	border: 0;
+	margin: var(--spacing-sm) 0;
+	padding: 0;
+}
+.choisir-classes-ent-choix {
+	display: flex;
+	align-items: center;
+	gap: var(--spacing-sm);
+	padding: 0.4rem 0;
+	cursor: pointer;
+}
+.choisir-classes-ent .erreur_message {
+	color: #c00;
+}
+.choisir-classes-ent .boutons {
+	display: flex;
+	justify-content: flex-end;
+	gap: var(--spacing-sm);
+	margin-bottom: 0;
+}
+.choisir-classes-ent-plus-tard {
+	text-decoration: underline;
+	cursor: pointer;
+}

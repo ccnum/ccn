@@ -1,0 +1,41 @@
+[(#REM) Pop-up de choix des classes d'un prof inscrit au CCN (issue #541), cf
+formulaires/choisir_classes_ent.php. Ouverte au chargement de la page ; "Plus
+tard" la ferme jusqu'au prochain chargement. ]
+<dialog id="choisir_classes_ent" class="choisir-classes-ent" aria-labelledby="choisir_classes_ent_titre">
+<div class="formulaire_spip formulaire_#FORM">
+	<h2 id="choisir_classes_ent_titre"><:thematique:choisir_classes_ent_titre:></h2>
+	<p><:thematique:choisir_classes_ent_explication:></p>
+	[<p class="reponse_formulaire reponse_formulaire_erreur" role="alert">(#ENV*{message_erreur})</p>]
+	<form method="post" action="#ENV{action}">
+		#ACTION_FORMULAIRE
+		<fieldset>
+			<legend class="sr-only"><:thematique:choisir_classes_ent_legende:></legend>
+			[<p class="erreur_message" role="alert">(#ENV**{erreurs}|table_valeur{classes})</p>]
+			<BOUCLE_classes(DATA){source tableau, #ENV{_classes}}>
+			<label class="choisir-classes-ent-choix">
+				<input type="checkbox" name="classes[]" value="#CLE"[(#CLE|in_array{#ENV{classes, #ARRAY}}|oui) checked="checked"] />
+				[(#VALEUR|entites_html)]
+			</label>
+			</BOUCLE_classes>
+		</fieldset>
+		<p class="boutons">
+			<button type="button" class="btn-reset choisir-classes-ent-plus-tard"><:thematique:choisir_classes_ent_plus_tard:></button>
+			<button type="submit" class="bouton-lisere"><:thematique:choisir_classes_ent_valider:></button>
+		</p>
+	</form>
+</div>
+</dialog>
+<script>
+(function () {
+	var dialog = document.getElementById('choisir_classes_ent');
+	if (!dialog || typeof dialog.showModal !== 'function') {
+		return;
+	}
+	dialog.querySelector('.choisir-classes-ent-plus-tard').addEventListener('click', function () {
+		dialog.close();
+	});
+	if (!dialog.open) {
+		dialog.showModal();
+	}
+})();
+</script>

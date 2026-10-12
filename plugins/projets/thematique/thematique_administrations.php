@@ -91,6 +91,11 @@ function thematique_upgrade($nom_meta_base_version, $version_cible) {
 	// est écrit (prof rattaché à plusieurs classes).
 	$maj['3.4.4'] = [['maj_tables', ['spip_forum']]];
 
+	// spip_auteurs.classes_ent/classes_ent_choisies : choix par le prof de ses
+	// classes inscrites au CCN (issue #541).
+	$maj['3.4.5'] = [];
+	cextras_api_upgrade(thematique_declarer_champs_extras(), $maj['3.4.5']);
+
 	include_spip('base/upgrade');
 	maj_plugin($nom_meta_base_version, $version_cible, $maj);
 }
