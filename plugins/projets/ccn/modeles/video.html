@@ -1,0 +1,57 @@
+[(#REM)
+	Surcharge du modele video du plugin medias (plugins-dist/medias/modeles/video.html),
+	identique hormis le style du wrapper (#560). Le dist fixe la hauteur par un
+	padding-bottom en pourcentage, calcule sur la largeur du parent et non du
+	wrapper : une video verticale (telephone) prenait alors 1,8 fois la largeur
+	de la popup en hauteur. Ici aspect-ratio garde les proportions et la largeur
+	est plafonnee pour que la hauteur ne depasse pas 70vh.
+]<BOUCLE_video(DOCUMENTS types_documents) {media=video} {id_document=#ENV{id,#ENV{id_document}}} {inclus=embed} {tout}>[
+(#REM) on trouvera plusieurs variable de hauteur/largeur
+- les balises #HAUTEUR et #LARGEUR
+- #ENV{hauteur} et {largeur} correspondant <emb|hauteur=xx...>
+- #GET{hauteur} et #GET{largeur} correspondent prioritairement a #ENV,
+  puis #LARGEUR/HAUTEUR sauf si il y a un controleur
+]
+[(#SET{legende,#INCLURE{fond=modeles/document_legende, env}|trim})]
+#SET{largeur,#ENV{largeur, #LARGEUR|?{#LARGEUR,480}}|max{120}}
+#SET{hauteur,#ENV{hauteur, #HAUTEUR|?{#HAUTEUR,300}}|max{75}}
+#SET{duree,#ENV{duree,#DUREE}}[(#SET{duree,[(#GET{duree}|intval|?{[(#GET{duree}|intval)],''})]})]
+<div
+  class="[(#ID_DOCUMENT|medias_modele_document_standard_classes{video})]"[
+  (#ID_DOCUMENT|medias_modele_document_standard_attributs{video})
+]>
+<figure class="spip_doc_inner">
+<div class="video-intrinsic-wrapper" style='width:min(#GET{largeur}px, calc(70vh * [(#GET{largeur}|div{#GET{hauteur}}|round{4})]));max-width:100%;aspect-ratio:#GET{largeur} / #GET{hauteur};position:relative;'>
+	<div class="video-wrapper" style="position: absolute;top:0;left:0;width:100%;height:100%;">
+		<video class="mejs mejs-#ID_DOCUMENT[ mejs-(#ENV{skin})]"
+				data-id="[(#VAL{mejs-#ID_DOCUMENT}|concat{#ENV{skin}}|md5)]"
+				data-mejsoptions='{["iconSprite": "(#CHEMIN{lib/mejs/mejs-controls.svg})",]"alwaysShowControls": true,"pluginPath":"[(#CHEMIN{lib/mejs/mediaelement.js}|dirname)/]"[,"loop":(#ENV{loop}|?{true,false})],"videoWidth":"100%","videoHeight":"100%"[,"startVolume":"(#ENV{volume})"][,"duration":(#GET{duree})]}'
+				width="100%"
+				height="100%"[
+				poster="(#LOGO_DOCUMENT{vignette}|image_reduire{#GET{largeur},0}|extraire_attribut{src})"]
+				controls="controls"
+				preload="none"[
+				autoplay="autoplay"(#ENV{autoplay}|oui)]
+			>
+			<source type="#MIME_TYPE" src="[(#URL_DOCUMENT_FICHIER|attribut_url)]" />
+			[(#REM)
+
+				Flash fallback for non-HTML5 browsers without JavaScript
+
+			][(#REM)
+
+					Image as a last resort
+
+			][(#LOGO_DOCUMENT|image_reduire{#GET{largeur},0}|vider_attribut{class}|inserer_attribut{alt,'Impossible de lire la video'})]
+		</video>
+	</div>
+</div>
+[(#GET{legende})
+][<script> var mejspath='[(#CHEMIN{lib/mejs/mediaelement-and-player.min.js}|timestamp)]',mejscss='[(#CHEMIN{lib/mejs/mediaelementplayer.min.css}|timestamp)]';
+(#INCLURE{javascript/mejs-init.min.js})</script>]
+[(#ENV{skin}|oui)[<style>(#INCLURE{#CHEMIN{css/mejs-skin-#ENV{skin}.css}|url_absolue_css})</style>]]
+</figure>
+</div>
+</BOUCLE_video>
+<INCLURE{fond=modeles/file,env} />
+<//B_video>
