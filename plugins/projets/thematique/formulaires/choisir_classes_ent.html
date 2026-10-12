@@ -32,6 +32,15 @@ bouton de fermeture : le prof valide ses classes ou, s'il ne trouve pas la sienn
 	if (!dialog || typeof dialog.showModal !== 'function') {
 		return;
 	}
+	// Pas de fermeture par Échap : le prof doit valider ou écrire au support.
+	// Chrome ignore preventDefault() sur un second Échap sans interaction entre
+	// les deux (close watcher) : on rouvre alors la pop-up.
+	dialog.addEventListener('cancel', function (e) {
+		e.preventDefault();
+	});
+	dialog.addEventListener('close', function () {
+		dialog.showModal();
+	});
 	if (!dialog.open) {
 		dialog.showModal();
 	}
