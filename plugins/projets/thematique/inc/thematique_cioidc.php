@@ -194,7 +194,12 @@ function thematique_cioidc_nom_complet(array $data) {
 // Exception : un intervenant n'a ni classe ni établissement (UAI 00000CCN non résolu)
 // et ressortait "Intervenant" tout court, indistinguable d'un autre : $nom_personne
 // (prénom+nom, cf thematique_cioidc_nom_complet()) est alors placé en tête.
-function thematique_cioidc_nom_affiche(array $classes_reelles, ?string $role_ent, array $uai_liste = [], string $nom_personne = '') {
+function thematique_cioidc_nom_affiche(
+	array $classes_reelles,
+	?string $role_ent,
+	array $uai_liste = [],
+	string $nom_personne = ''
+) {
 	$parties = [];
 	if ($nom_personne !== '') {
 		$parties[] = $nom_personne;
@@ -383,6 +388,53 @@ function thematique_cioidc_memoriser_classes_ent(array $auteur, array $classes_r
 		spip_log('userinfo classes ENT mémorisées : ' . ($valeur ?: '(aucune)'), 'cioidc');
 		sql_updateq('spip_auteurs', ['classes_ent' => $valeur], 'id_auteur=' . $id_auteur);
 	}
+}
+
+// Issue #541 : rattache le prof aux classes ENT retenues (cochées dans la pop-up, ou
+// d'office quand il n'en a qu'une, cf thematique_cioidc_userinfo()) et note l'année
+// du choix, ce qui masque la pop-up. $classes : entrées de
+// thematique_classes_ent_a_choisir(). Renvoie les rubriques de classe liées, [] si
+// aucune n'a pu l'être (rubrique "Travail des classes" de l'année introuvable).
+function thematique_cioidc_valider_classes_ent(int $id_auteur, array $classes, string $annee): array {
+	include_spip('thematique_fonctions');
+	include_spip('action/editer_liens');
+
+	[, $id_travail_classes] = thematique_cioidc_rubriques_annee($annee);
+	if (!$id_travail_classes) {
+		return [];
+	}
+
+	// Même rubrique que celle que créait la connexion SSO avant #541 (titre avec
+	// établissement, renommage d'une rubrique au titre ancien) : on retrouve celle
+	// d'un collègue de la même classe plutôt que d'en créer une seconde.
+	$choisies = [];
+	foreach ($classes as $classe) {
+		$groupe = (object) [
+			'group_name' => $classe['group_name'],
+			'group_structure_id' => $classe['group_structure_id'] ?? '',
+		];
+		if ($id_classe = thematique_cioidc_rubrique_classe_prof($groupe, $id_travail_classes)) {
+			$choisies[] = intval($id_classe);
+		}
+	}
+	if (!$choisies) {
+		return [];
+	}
+
+	// Classes de l'année non retenues : liées automatiquement à la connexion avant #541
+	// (dont d'anciennes classes du prof), retirées pour ne garder que son choix.
+	foreach (thematique_classes_auteur($id_auteur) as $id_classe) {
+		if (!in_array($id_classe, $choisies, true)) {
+			objet_dissocier(['id_auteur' => $id_auteur], ['rubrique' => $id_classe]);
+		}
+	}
+	foreach ($choisies as $id_classe) {
+		objet_associer(['id_auteur' => $id_auteur], ['rubrique' => $id_classe]);
+	}
+	sql_updateq('spip_auteurs', ['classes_ent_choisies' => $annee], 'id_auteur=' . $id_auteur);
+	spip_log("choix des classes auteur #$id_auteur année $annee : " . implode(',', $choisies), 'cioidc');
+
+	return $choisies;
 }
 
 // Rubriques de classe/projet à lier à l'auteur.

@@ -14,7 +14,9 @@ if (!defined('_ECRIRE_INC_VERSION')) {
  * (thematique_cioidc_memoriser_classes_ent()) et le prof coche ici celles
  * inscrites au CCN. Tant qu'il n'a pas validé pour l'année scolaire en cours,
  * la pop-up réapparaît à chaque chargement de page, y compris pour un prof
- * rattaché à ses classes automatiquement avant cette pop-up.
+ * rattaché à ses classes automatiquement avant cette pop-up. Un prof qui n'a
+ * qu'une classe ENT ne la voit pas : elle est retenue d'office à la connexion
+ * (thematique_cioidc_valider_classes_ent(), partagé avec traiter ci-dessous).
  *
  * @package SPIP\Thematique\Formulaires
  */
@@ -68,49 +70,19 @@ function formulaires_choisir_classes_ent_verifier_dist() {
 function formulaires_choisir_classes_ent_traiter_dist() {
 	include_spip('inc/session');
 	include_spip('inc/thematique_cioidc');
-	include_spip('action/editer_liens');
 	$id_auteur = intval(session_get('id_auteur'));
-	$classes = thematique_classes_ent_a_choisir($id_auteur);
-	$annee = (string) thematique_annee_scolaire();
+	$cochees = array_intersect_key(
+		thematique_classes_ent_a_choisir($id_auteur),
+		array_flip(formulaires_choisir_classes_ent_cochees())
+	);
 
-	[, $id_travail_classes] = thematique_cioidc_rubriques_annee($annee);
-	if (!$id_travail_classes) {
+	if (!thematique_cioidc_valider_classes_ent($id_auteur, $cochees, (string) thematique_annee_scolaire())) {
 		return ['message_erreur' => _T('thematique:choisir_classes_ent_erreur_annee')];
 	}
-
-	// Même rubrique que celle que créait la connexion SSO avant #541 (titre avec
-	// établissement, renommage d'une rubrique au titre ancien) : on retrouve celle
-	// d'un collègue de la même classe plutôt que d'en créer une seconde.
-	$choisies = [];
-	foreach (formulaires_choisir_classes_ent_cochees() as $indice) {
-		$groupe = (object) [
-			'group_name' => $classes[$indice]['group_name'],
-			'group_structure_id' => $classes[$indice]['group_structure_id'] ?? '',
-		];
-		if ($id_classe = thematique_cioidc_rubrique_classe_prof($groupe, $id_travail_classes)) {
-			$choisies[] = intval($id_classe);
-		}
-	}
-	if (!$choisies) {
-		return ['message_erreur' => _T('thematique:choisir_classes_ent_erreur_annee')];
-	}
-
-	// Classes de l'année non cochées : liées automatiquement à la connexion avant #541
-	// (dont d'anciennes classes du prof), retirées pour ne garder que son choix.
-	foreach (thematique_classes_auteur($id_auteur) as $id_classe) {
-		if (!in_array($id_classe, $choisies, true)) {
-			objet_dissocier(['id_auteur' => $id_auteur], ['rubrique' => $id_classe]);
-		}
-	}
-	foreach ($choisies as $id_classe) {
-		objet_associer(['id_auteur' => $id_auteur], ['rubrique' => $id_classe]);
-	}
-	sql_updateq('spip_auteurs', ['classes_ent_choisies' => $annee], 'id_auteur=' . $id_auteur);
-	spip_log("choix des classes auteur #$id_auteur année $annee : " . implode(',', $choisies), 'cioidc');
 
 	// Réécrit le fichier de session : rôle (prof, rattaché à une classe) et avatar
 	// (emoji de la classe) recalculés par thematique_preparer_fichier_session().
-	session_set('classes_ent_choisies', $annee);
+	session_set('classes_ent_choisies', (string) thematique_annee_scolaire());
 
 	return ['redirect' => self()];
 }
