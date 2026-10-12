@@ -60,7 +60,9 @@
 					<BOUCLE_rubrique(RUBRIQUES){id_parent=#ID_RUBRIQUE}{par num titre, titre}{tout}{0,50}>
 						<div class="ressources_rubrique">
 							<button type="button" class="ressource_rubrique_titre btn-reset" id="ajax_go_to_ressources_rubrique_#ID_RUBRIQUE" onclick="callRessourceRubrique('#ID_RUBRIQUE','#GET{sous_type}')"><h3>#TITRE</h3></button>
-							<BOUCLE_article(ARTICLES){id_rubrique}{par date}{tous}>
+							[(#REM) #561 : toutes les années mais seulement les ressources publiées
+							(cf ressource_menu.html). ]
+							<BOUCLE_article(ARTICLES){id_rubrique}{par date}{tout}{statut=publie}>
 								<button type="button" class="ressource_article btn-reset" id="ajax_go_to_ressources_article_#ID_ARTICLE" onclick="callRessourceArticle('#ID_ARTICLE','#GET{sous_type}')">#TITRE</button>
 							</BOUCLE_article>
 						</div>
@@ -80,7 +82,7 @@
 
 					<B_article2>
 						<div class="ressources_rubrique">
-							<BOUCLE_article2(ARTICLES){id_rubrique}{par date}{tous}>
+							<BOUCLE_article2(ARTICLES){id_rubrique}{par date}{tout}{statut=publie}>
 								<button type="button" class="ressource_article btn-reset" id="ajax_go_to_ressources_article_#ID_ARTICLE" onclick="callRessourceArticle('#ID_ARTICLE','#GET{sous_type}')">#TITRE</button>
 							</BOUCLE_article2>
 						</div>
