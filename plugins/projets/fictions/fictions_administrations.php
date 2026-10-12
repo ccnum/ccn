@@ -51,6 +51,15 @@ function fictions_upgrade($nom_meta_base_version, $version_cible) {
 		['fictions_migrer_annee_en_ecriture'],
 	];
 
+	// Mot footer-page posé sur les pages Mode d'emploi / Le projet (rubrique Page) :
+	// le pied de page les cherchait sous le mot blog_pedagogique, qui n'est posé
+	// que sur une rubrique, et n'affichait aucun des deux liens.
+	$maj['1.0.4'] = [
+		['fictions_ajouter_mots_clef'],
+		['fictions_associer_mot_par_titre', 'footer-page', 'article', 'Mode d%emploi'],
+		['fictions_associer_mot_par_titre', 'footer-page', 'article', 'Le projet'],
+	];
+
 	include_spip('base/upgrade');
 	maj_plugin($nom_meta_base_version, $version_cible, $maj);
 }
@@ -111,6 +120,8 @@ function fictions_ajouter_mots_clef() {
 	fictions_ajouter_mot('footer-blog-auteur', $id_groupe);
 	fictions_ajouter_mot('footer-espace-doc', $id_groupe);
 	fictions_ajouter_mot('footer-forum', $id_groupe);
+	// "footer-page" — pages liées dans la colonne de droite du footer (Mode d'emploi, Le projet)
+	fictions_ajouter_mot('footer-page', $id_groupe);
 }
 
 /**
