@@ -56,7 +56,7 @@ return [
 	'chargement_de'                              => 'Chargement de',
 	'choisir_classes_ent_erreur_aucune'          => 'Cochez au moins une classe.',
 	'choisir_classes_ent_erreur_annee'           => 'La rubrique « Travail des classes » de l’année est introuvable. Contactez un administrateur.',
-	'choisir_classes_ent_explication'            => 'Cochez la ou les classes inscrites à ce projet CCN cette année.',
+	'choisir_classes_ent_explication'            => 'Cochez la ou les classes inscrites à la CCN.',
 	'choisir_classes_ent_introuvable'            => 'Je ne trouve pas ma classe : @email@',
 	'choisir_classes_ent_legende'                => 'Vos classes',
 	'choisir_classes_ent_titre'                  => 'Choisissez vos classes',
