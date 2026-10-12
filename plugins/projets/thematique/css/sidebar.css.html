@@ -929,7 +929,10 @@ li a, li a:hover {
 			text-align: center;
 			height: auto;
 			padding-bottom: 15px;
-			&:hover {
+			/* Pas de survol sur une vidéo oEmbed (#559) : ce n'est pas un lien,
+			et sa légende (liens titre/auteur, couleur propre) devenait
+			illisible sur le fond bleu. */
+			&:not(.oembed):hover {
 				background-color: var(--background-color-hover);
 				color: var(--color-hover);
 			}
