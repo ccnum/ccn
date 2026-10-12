@@ -17,17 +17,13 @@ PAGE-TYPE.HTML
 		</div>
 		<div class="global-content">
 			<div class="content">
-			<BOUCLE_annee(RUBRIQUES){titre==#EVAL{_ANNEE_SCOLAIRE}}{tout}{0,1}>
-				<BOUCLE_art(ARTICLES){id_rubrique}{titre_mot=presentation}{tout}{0,1}>
-				<div class="content-left-small">
-					<INCLURE{fond=inclure/titre-site} />
-					<div id="image-presentation">[(#LOGO_ARTICLE|image_reduire{100})]</div>
-					<div id="texte-presentation" class="#EDIT{texte}">
-						[(#TEXTE)]
-					</div>
-				</div>
-				</BOUCLE_art>
-			</BOUCLE_annee>
+			[(#REM) Pages du pied de page (Mode d'emploi, Le projet) : plus de présentation
+			de l'auteur à gauche, elle était prise sur _ANNEE_SCOLAIRE et non sur l'année
+			sélectionnée, et changeait d'année à l'ouverture de la page. Seul le titre du
+			site reste, pour garder la mise en page en deux colonnes. ]
+			<div class="content-left-small">
+				<INCLURE{fond=inclure/titre-site} />
+			</div>
 			<div class="content-right-large">
 				<BOUCLE_page_article(ARTICLES){id_article}>
 					<!-- TEXTE PAGE -->
