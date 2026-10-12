@@ -1,6 +1,7 @@
 [(#REM) Pop-up de choix des classes d'un prof inscrit au CCN (issue #541), cf
-formulaires/choisir_classes_ent.php. Ouverte au chargement de la page ; "Plus
-tard" la ferme jusqu'au prochain chargement. ]
+formulaires/choisir_classes_ent.php. Ouverte au chargement de la page, sans
+bouton de fermeture : le prof valide ses classes ou, s'il ne trouve pas la sienne,
+écrit au support. ]
 <dialog id="choisir_classes_ent" class="choisir-classes-ent" aria-labelledby="choisir_classes_ent_titre">
 <div class="formulaire_spip formulaire_#FORM">
 	<h2 id="choisir_classes_ent_titre"><:thematique:choisir_classes_ent_titre:></h2>
@@ -19,7 +20,7 @@ tard" la ferme jusqu'au prochain chargement. ]
 			</BOUCLE_classes>
 		</fieldset>
 		<p class="boutons">
-			<button type="button" class="btn-reset choisir-classes-ent-plus-tard"><:thematique:choisir_classes_ent_plus_tard:></button>
+			<a class="choisir-classes-ent-introuvable" href="mailto:info@laclasse.com"><:thematique:choisir_classes_ent_introuvable{email=info@laclasse.com}:></a>
 			<button type="submit" class="bouton-lisere"><:thematique:choisir_classes_ent_valider:></button>
 		</p>
 	</form>
@@ -31,9 +32,6 @@ tard" la ferme jusqu'au prochain chargement. ]
 	if (!dialog || typeof dialog.showModal !== 'function') {
 		return;
 	}
-	dialog.querySelector('.choisir-classes-ent-plus-tard').addEventListener('click', function () {
-		dialog.close();
-	});
 	if (!dialog.open) {
 		dialog.showModal();
 	}
