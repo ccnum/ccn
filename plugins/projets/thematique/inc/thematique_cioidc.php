@@ -431,10 +431,56 @@ function thematique_cioidc_valider_classes_ent(int $id_auteur, array $classes, s
 	foreach ($choisies as $id_classe) {
 		objet_associer(['id_auteur' => $id_auteur], ['rubrique' => $id_classe]);
 	}
+	thematique_cioidc_supprimer_classes_non_choisies($id_auteur, $id_travail_classes, $choisies);
 	sql_updateq('spip_auteurs', ['classes_ent_choisies' => $annee], 'id_auteur=' . $id_auteur);
 	spip_log("choix des classes auteur #$id_auteur année $annee : " . implode(',', $choisies), 'cioidc');
 
 	return $choisies;
+}
+
+// Supprime les rubriques des classes ENT de ce prof qu'il n'a pas retenues : créées
+// sous "Travail des classes" par la connexion SSO avant la pop-up de choix, elles
+// s'affichaient comme classes participantes. Seules les classes de SA liste ENT
+// (thematique_classes_ent_a_choisir(), lue avant que le choix de l'année soit noté)
+// sont candidates, retrouvées par titre exact (avec établissement, ou ancien titre
+// sans), et une rubrique n'est supprimée que si :
+// - aucun autre auteur que des élèves n'y est lié (un collègue l'a cochée, ou y a été
+//   rattaché à la connexion et ne l'a pas encore choisie) ;
+// - elle est vide (cf thematique_classe_compter_contenu()) : on ne perd jamais de contenu.
+function thematique_cioidc_supprimer_classes_non_choisies(int $id_auteur, $id_travail_classes, array $choisies): void {
+	include_spip('inc/thematique_classes_vides');
+
+	$nb = 0;
+	foreach (thematique_classes_ent_a_choisir($id_auteur) as $classe) {
+		$titres = array_unique([$classe['titre'], $classe['group_name']]);
+		$rubriques = sql_allfetsel('id_rubrique, titre', 'spip_rubriques', [
+			sql_in('titre', $titres),
+			'id_parent=' . intval($id_travail_classes),
+		]);
+		foreach ($rubriques as $rubrique) {
+			$id_rubrique = intval($rubrique['id_rubrique']);
+			if (in_array($id_rubrique, $choisies, true)) {
+				continue;
+			}
+			$autres_auteurs = sql_countsel(
+				'spip_auteurs_liens AS L JOIN spip_auteurs AS A ON A.id_auteur=L.id_auteur',
+				["L.objet='rubrique'", 'L.id_objet=' . $id_rubrique, 'L.id_auteur<>' . $id_auteur, "A.statut<>'6forum'"]
+			);
+			if ($autres_auteurs || array_filter(thematique_classe_compter_contenu($id_rubrique))) {
+				spip_log(
+					"choix des classes auteur #$id_auteur : classe #$id_rubrique non retenue conservée (collègue ou contenu)",
+					'cioidc'
+				);
+				continue;
+			}
+			thematique_supprimer_rubrique_classe($id_rubrique, $rubrique['titre']);
+			$nb++;
+		}
+	}
+
+	if ($nb) {
+		thematique_classes_apres_suppression();
+	}
 }
 
 // Rubriques de classe/projet à lier à l'auteur.
