@@ -14,9 +14,8 @@ if (!defined('_ECRIRE_INC_VERSION')) {
  * (thematique_cioidc_memoriser_classes_ent()) et le prof coche ici celles
  * inscrites au CCN. Tant qu'il n'a pas validé pour l'année scolaire en cours,
  * la pop-up réapparaît à chaque chargement de page, y compris pour un prof
- * rattaché à ses classes automatiquement avant cette pop-up. Un prof qui n'a
- * qu'une classe ENT ne la voit pas : elle est retenue d'office à la connexion
- * (thematique_cioidc_valider_classes_ent(), partagé avec traiter ci-dessous).
+ * rattaché à ses classes automatiquement avant cette pop-up, et même s'il n'a
+ * qu'une classe ENT : il doit voir ce qui sera retenu pour pouvoir le corriger.
  *
  * @package SPIP\Thematique\Formulaires
  */

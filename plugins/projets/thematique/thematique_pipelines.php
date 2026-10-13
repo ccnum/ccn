@@ -353,13 +353,6 @@ function thematique_cioidc_userinfo($flux) {
 		($is_enseignant && !$is_webmestre && $a_un_groupe_pertinent) ? $classes_reelles : [],
 		(string) $annee_scolaire
 	);
-	// Une seule classe ENT : rien à choisir, elle est retenue d'office et la pop-up
-	// ne s'affiche pas. Seulement tant que le choix de l'année n'est pas
-	// fait : thematique_classes_ent_a_choisir() est alors vide.
-	if (count($classes_ent = thematique_classes_ent_a_choisir($auteur['id_auteur'])) === 1) {
-		spip_log('userinfo une seule classe ENT : choix validé d\'office', 'cioidc');
-		thematique_cioidc_valider_classes_ent(intval($auteur['id_auteur']), $classes_ent, (string) $annee_scolaire);
-	}
 
 	[$classes_a_lier, $projets_a_lier] = thematique_cioidc_resoudre_liens_rubriques(
 		$is_enseignant,
