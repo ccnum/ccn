@@ -122,20 +122,21 @@ function affiche_controleur($class, $c = null) {
 	return $return;
 }
 
-function crayons_trouver_controleur(string $type, $id, string $champ): ?string {
+function crayons_trouver_controleur(string $crayon_type, $id, string $champ): ?string {
+	[$distant, $table, $type] = distant_table($crayon_type);
 	if ($type === 'meta') {
 		$config = explode('__', $id);
 		$controleurs = [];
 		while (!empty($config)) {
-			$controleurs[] = 'controleurs/' . $type . '_' . implode('_', $config);
+			$controleurs[] = 'controleurs/' . $crayon_type . '_' . implode('_', $config);
 			array_pop($config);
 		}
-		$controleurs[] = 'controleurs/' . $type;
+		$controleurs[] = 'controleurs/' . $crayon_type;
 	} else {
 		$controleurs = [
-			'controleurs/' . $type . '_' . $champ,
+			'controleurs/' . $crayon_type . '_' . $champ,
 			'controleurs/' . $champ,
-			'controleurs/' . $type,
+			'controleurs/' . $crayon_type,
 		];
 	}
 	spip_log("crayons_trouver_controleur: cherche " . implode(', ', $controleurs), 'crayons' . _LOG_DEBUG);
@@ -186,7 +187,7 @@ function controleur_dist($regs, $c = null) {
 	];
 	[$distant, $table, $type] = distant_table($crayon_type);
 
-	$controleur = crayons_trouver_controleur($type, $id, $modele);
+	$controleur = crayons_trouver_controleur($crayon_type, $id, $modele);
 	// Si le controleur est un squelette html, on va chercher
 	// les champs qu'il lui faut dans la table demandee
 	// Attention, un controleur multi-tables ne fonctionnera
@@ -195,7 +196,7 @@ function controleur_dist($regs, $c = null) {
 	$champ = crayons_controleur_lister_champs($controleur) ?? $modele;
 	spip_log("controleur_dist: trouve '$controleur' | champ " . json_encode($champ), 'crayons' . _LOG_DEBUG);
 
-	$valeur = valeur_colonne_table($type, $champ, $id);
+	$valeur = valeur_colonne_table($crayon_type, $champ, $id);
 
 	#spip_log(json_encode($valeur) ." = valeur_colonne_table($type, $champ, $id);", 'crayons' . _LOG_DEBUG);
 
@@ -442,7 +443,7 @@ class Crayon {
  */
 	function fond($contexte = []) {
 		include_spip('inc/filtres');
-		$contexte['id_' . $this->crayon_type] = $this->id;
+		$contexte['id_' . $this->type] = $this->id;
 		$contexte['id_' . $this->table] = $this->id;
 		$contexte['crayon_type'] = $this->crayon_type;
 		$contexte['crayon_modele'] = $this->modele;

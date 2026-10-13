@@ -70,7 +70,9 @@ function action_crayons_store_return($r) {
 				. "</a>\n";
 		}
 	} else {
-		// Cas normal : JSON
+		// Cas normal : JSON.
+		// Le refus rapide (aucun droit) sort avant le include de inc/crayons.
+		include_spip('inc/crayons-json');
 		echo crayons_json_encode($r);
 	}
 
@@ -551,6 +553,7 @@ function crayons_objet_modifier($id, $data, $crayon_type, $ref) {
 	if (isset($data['id_rubrique']) && !isset($data['id_parent']) && $crayon_type !== 'rubrique') {
 		$data['id_parent'] = $data['id_rubrique'];
 	}
+
 	return objet_modifier($type, $id, $data);
 }
 
