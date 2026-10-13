@@ -390,9 +390,8 @@ function thematique_cioidc_memoriser_classes_ent(array $auteur, array $classes_r
 	}
 }
 
-// Rattache le prof aux classes ENT retenues (cochées dans la pop-up, ou
-// d'office quand il n'en a qu'une, cf thematique_cioidc_userinfo()) et note l'année
-// du choix, ce qui masque la pop-up. $classes : entrées de
+// Rattache le prof aux classes ENT cochées dans la pop-up et note l'année du
+// choix, ce qui masque la pop-up. $classes : entrées de
 // thematique_classes_ent_a_choisir(). Renvoie les rubriques de classe liées, [] si
 // aucune n'a pu l'être (rubrique "Travail des classes" de l'année introuvable).
 function thematique_cioidc_valider_classes_ent(int $id_auteur, array $classes, string $annee): array {
