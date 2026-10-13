@@ -147,6 +147,13 @@ $(function () {
 		if (id_article > 0) {
 			const type_article = $container.find('input[name="type_article"]').val()
 			if(!type_article) return CCN.projet.showWholeTimeline();
+			if (type_article === 'intervenant') {
+				const id_rubrique = parseInt($container.find('input[name="id_parent"]').val(), 10);
+				if (!id_rubrique) return CCN.projet.showWholeTimeline();
+				callIntervenant(id_rubrique);
+				collapseSidebar();
+				return;
+			}
 			const typeToAction = {
 				"consignes": callConsigne,
 				"blogs": callArticleBlog,
@@ -337,6 +344,11 @@ function setContentFromState(state, title, url) {
 					break;
 				}
 			}
+		}
+
+		// Fiche intervenant
+		if (state.type_objet == "intervenant") {
+			callIntervenant(state.id_rubrique || state.id_objet);
 		}
 
 		// Article de blog

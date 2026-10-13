@@ -14,6 +14,8 @@ if (!defined('_ECRIRE_INC_VERSION')) {
  *    l'année" (cap-sur-l-annee) et "La Rencontre" (la-rencontre), en
  *    statut prop, assignés au premier intervenant trouvé sur le projet.
  *    C'est ensuite à lui de les compléter et de les publier.
+ * 3. crée (si absente) une fiche d'intervenant dans chaque rubrique de
+ *    projet sous "Consignes", identifiée par le mot-clé intervenant.
  *
  * Enregistrée via le pipeline taches_generales_cron (thematique_pipelines.php)
  * plutôt que la balise <genie> de paquet.xml : la balise <genie> fait la
@@ -99,72 +101,60 @@ function genie_thematique_rentree_annee_dist($last) {
 	include_spip('action/editer_article');
 	include_spip('action/editer_liens');
 
-	// Passe à false dès qu'un jalon n'a pas pu être créé (mot-clé manquant,
-	// échec d'insertion) : dans ce cas on ne marque pas l'année comme
+	// Passe à false dès qu'un article attendu n'a pas pu être créé (mot-clé
+	// manquant, auteur ou insertion) : on ne marque alors pas l'année comme
 	// "traitée" plus bas, pour que le job retente automatiquement au
 	// prochain passage du cron (dans les 24h, tant qu'on est en août) au
 	// lieu de rester bloqué jusqu'à la rentrée suivante.
-	$tous_jalons_ok = true;
-
+	$tous_articles_ok = true;
 	foreach ($jalons as $titre_mot => $infos) {
-		$id_mot = sql_getfetsel('id_mot', 'spip_mots', 'titre=' . sql_quote($titre_mot));
-		if (!$id_mot) {
-			spip_log("thematique_rentree_annee : mot-clé '$titre_mot' introuvable, ignoré", 'thematique' . _LOG_ERREUR);
-			$tous_jalons_ok = false;
-			continue;
+		if (!thematique_creer_article_mot_cle_si_absent($id_rubrique, $titre_mot, $infos, $id_intervenant)) {
+			$tous_articles_ok = false;
 		}
-
-		// déjà créé (idempotent, au cas où le job repasserait dans le mois)
-		$id_article_existant = sql_getfetsel(
-			'spip_articles.id_article',
-			['spip_articles', 'spip_mots_liens'],
-			[
-				'spip_mots_liens.id_objet=spip_articles.id_article',
-				"spip_mots_liens.objet='article'",
-				'spip_mots_liens.id_mot=' . intval($id_mot),
-				'spip_articles.id_rubrique=' . intval($id_rubrique),
-			]
-		);
-		if ($id_article_existant) {
-			spip_log(
-				"thematique_rentree_annee $annee : article '$titre_mot' déjà existant (#$id_article_existant), on ne recrée pas",
-				'thematique'
-			);
-			continue;
-		}
-
-		// titre/date/statut passés directement à l'insertion (plutôt que via
-		// objet_instituer() après coup) : article_instituer() ne gère que
-		// statut/date/id_parent (cf son docstring SPIP), la clé 'titre' y est
-		// silencieusement ignorée — l'article restait sans titre. Ce chemin
-		// évite aussi la dépendance à autoriser('publierdans', ...), non
-		// significative dans le contexte cron (pas de vrai visiteur_session).
-		$id_article = article_inserer($id_rubrique, [
-			'titre' => $infos['titre'],
-			'texte' => $infos['texte'],
-			'date' => $infos['date'],
-			'statut' => 'prop',
-		]);
-		if (!$id_article) {
-			spip_log("thematique_rentree_annee : échec de création de l'article '$titre_mot'", 'thematique' . _LOG_ERREUR);
-			$tous_jalons_ok = false;
-			continue;
-		}
-
-		objet_associer(['mots' => intval($id_mot)], ['articles' => $id_article]);
-		if ($id_intervenant) {
-			objet_associer(['auteurs' => intval($id_intervenant)], ['articles' => $id_article]);
-		}
-
-		spip_log(
-			"thematique_rentree_annee $annee : article #$id_article ('$titre_mot') créé en statut prop",
-			'thematique'
-		);
 	}
 
-	if (!$tous_jalons_ok) {
+	$infos_fiche_intervenant = [
+		'titre' => _T('thematique:fiche_intervenant_titre'),
+		'texte' => _T('thematique:fiche_intervenant_texte_a_completer'),
+		'date' => $annee . '-09-01 00:00:00',
+	];
+	$rubriques_intervenants = sql_allfetsel(
+		'id_rubrique',
+		'spip_rubriques',
+		'id_parent=' . intval($id_rubrique),
+		'',
+		'id_rubrique'
+	);
+	foreach ($rubriques_intervenants as $rubrique_intervenant) {
+		$id_rubrique_intervenant = intval($rubrique_intervenant['id_rubrique']);
+		$id_auteur_intervenant = intval(sql_getfetsel(
+			'id_auteur',
+			'spip_auteurs_liens',
+			"objet='rubrique' AND id_objet=" . $id_rubrique_intervenant,
+			'',
+			'id_auteur',
+			'0,1'
+		));
+		if (!$id_auteur_intervenant) {
+			spip_log(
+				"thematique_rentree_annee $annee : aucun auteur lié à la rubrique intervenant #$id_rubrique_intervenant",
+				'thematique' . _LOG_ERREUR
+			);
+			$tous_articles_ok = false;
+		}
+		if (!thematique_creer_article_mot_cle_si_absent(
+			$id_rubrique_intervenant,
+			'intervenant',
+			$infos_fiche_intervenant,
+			$id_auteur_intervenant
+		)) {
+			$tous_articles_ok = false;
+		}
+	}
+
+	if (!$tous_articles_ok) {
 		spip_log(
-			"thematique_rentree_annee $annee : au moins un jalon n'a pas pu être créé, meta non mise à jour (nouvelle tentative au prochain passage du cron)",
+			"thematique_rentree_annee $annee : au moins un jalon ou une fiche intervenant n'a pas pu être créé, meta non mise à jour (nouvelle tentative au prochain passage du cron)",
 			'thematique' . _LOG_ERREUR
 		);
 		return 1;

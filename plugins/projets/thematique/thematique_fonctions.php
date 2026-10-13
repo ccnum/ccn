@@ -437,6 +437,64 @@ function thematique_id_mot($titre_mot) {
 	return $cache[$titre_mot];
 }
 
+/**
+ * Crée un article lié à un mot-clé dans une rubrique s'il n'existe pas déjà.
+ * Si l'article existe et qu'un auteur est fourni, complète aussi son lien.
+ *
+ * @param int $id_rubrique
+ * @param string $titre_mot
+ * @param array $infos titre, texte et date de l'article
+ * @param int $id_auteur
+ * @return bool
+ */
+function thematique_creer_article_mot_cle_si_absent($id_rubrique, $titre_mot, $infos, $id_auteur = 0) {
+	$id_rubrique = intval($id_rubrique);
+	$id_mot = thematique_id_mot($titre_mot);
+	if (!$id_rubrique || !$id_mot) {
+		spip_log("thematique_creer_article_mot_cle_si_absent : rubrique ou mot-clé '$titre_mot' manquant", 'thematique' . _LOG_ERREUR);
+		return false;
+	}
+
+	$id_article = (int) sql_getfetsel(
+		'a.id_article',
+		['spip_articles AS a', 'spip_mots_liens AS ml'],
+		[
+			'ml.id_objet=a.id_article',
+			'ml.objet=' . sql_quote('article'),
+			'ml.id_mot=' . intval($id_mot),
+			'a.id_rubrique=' . $id_rubrique,
+		],
+		'',
+		'a.id_article',
+		'0,1'
+	);
+	if ($id_article) {
+		if ($id_auteur && !sql_countsel(
+			'spip_auteurs_liens',
+			"objet='article' AND id_objet=$id_article AND id_auteur=" . intval($id_auteur)
+		)) {
+			objet_associer(['auteurs' => intval($id_auteur)], ['articles' => $id_article]);
+		}
+		return true;
+	}
+
+	$id_article = article_inserer($id_rubrique, [
+		'titre' => $infos['titre'],
+		'texte' => $infos['texte'],
+		'date' => $infos['date'],
+		'statut' => 'prop',
+	]);
+	if (!$id_article) {
+		return false;
+	}
+
+	objet_associer(['mots' => intval($id_mot)], ['articles' => $id_article]);
+	if ($id_auteur) {
+		objet_associer(['auteurs' => intval($id_auteur)], ['articles' => $id_article]);
+	}
+	return true;
+}
+
 function thematique_hierarchie_a_mot($id_rubrique, $titre_mot) {
 	$ascendants = thematique_ascendants_rubrique($id_rubrique);
 	if (!$ascendants) {
@@ -530,15 +588,15 @@ function thematique_rendre_type_article_affichable($type_article) {
 
 /**
  * Textes du popup de publication (titre de section, phrase d'intro, libellé
- * du champ texte, libellé du bouton), propres à chacun des 5 types de
- * contenu publiables via ce popup (cf commentaire en tête de
+ * du champ texte, libellé du bouton), propres aux types de contenu
+ * publiables ou éditables via ce popup (cf commentaire en tête de
  * squelettes/publier.html) — remplace le texte générique unique utilisé
  * auparavant (maquettes de 09/2026).
  *
  * Appelée comme filtre : `#ENV{type_article}|thematique_texte_publication{titre}`
  *
  * @param string $type_article
- *   consignes, travail_en_cours, ressources, blogs ou evenements
+ *   consignes, travail_en_cours, ressources, blogs, evenements ou intervenant
  * @param string $partie
  *   bandeau, titre, intro, champ_texte ou bouton
  * @return string
@@ -553,6 +611,7 @@ function thematique_texte_publication($type_article, $partie) {
 		'evenements' => 'information',
 		'cap_sur_l_annee' => 'cap_sur_l_annee',
 		'la_rencontre' => 'la_rencontre',
+		'intervenant' => 'fiche_intervenant',
 	];
 
 	if (isset($slugs[$type_article])) {

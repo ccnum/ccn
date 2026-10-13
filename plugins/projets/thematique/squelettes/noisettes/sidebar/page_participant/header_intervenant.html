@@ -1,7 +1,8 @@
 
-<BOUCLE_description(RUBRIQUES){id_rubrique}{tout}>
-    #SET{description, #TEXTE}
-</BOUCLE_description>
+#SET{titre_fiche, ''}
+<BOUCLE_fiche_intervenant(ARTICLES){id_rubrique=#ENV{id_rubrique}}{titre_mot=intervenant}{tous}{0,1}>
+	#SET{titre_fiche, #TITRE}
+</BOUCLE_fiche_intervenant>
 
 <div class="sidebar_bubble header-reponse">
 	<div id="row_header">
@@ -16,8 +17,8 @@
                 <INCLURE{fond=noisettes/sidebar/normal_header_icons} />
             </div>
             <div id="header-row-2">
-                [(#GET{description}|oui) #GET{description}]
-                [(#GET{description}|non) <:thematique:pas_de_description:>]
+                [(#GET{titre_fiche}|oui) #GET{titre_fiche}]
+                [(#GET{titre_fiche}|non) <:thematique:pas_de_description:>]
             </div>
         </div>
 	</div>

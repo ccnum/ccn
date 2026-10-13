@@ -376,7 +376,12 @@ function formulaires_public_publier_article_traiter_dist(
 			? _T('thematique:article_modifie_succes')
 			: _T('thematique:article_publie_succes');
 
-		$res['redirect'] = generer_url_public('article', 'id_article=' . $id_article . '&mode=complet');
+		$res['redirect'] = $type_article === 'intervenant'
+			? generer_url_public(
+				'rubrique',
+				'id_objet=' . intval($id_rubrique_article) . '&mode=complet&type_objet=intervenant'
+			)
+			: generer_url_public('article', 'id_article=' . $id_article . '&mode=complet');
 	}
 
 	return $res;
