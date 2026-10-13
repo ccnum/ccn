@@ -74,36 +74,6 @@ function champs_extras_autorisation($faire, $quoi='', $saisies=array(), $args=ar
 }
 
 /**
- * Ajoute pour chaque saisie de type SQL un drapeau (input hidden)
- * permettant de retrouver les saisies editées.
- *
- * Particulièrement utile pour les checkbox qui ne renvoient
- * rien si on les décoche.
- *
- * @param array $saisies
- *     Liste de saisies
- * @return array $saisies
- *     Saisies complétées des drapeaux d'édition
-**/
-function champs_extras_ajouter_drapeau_edition($saisies) {
-	$saisies_sql = champs_extras_saisies_lister_avec_sql($saisies);
-	foreach ($saisies_sql as $saisie) {
-		$nom = $saisie['options']['nom'];
-		$saisies[] = array(
-			'saisie' => 'hidden',
-			'options' => array(
-				'nom' => "cextra_$nom",
-				'defaut' => 1
-			)
-		);
-	}
-	return $saisies;
-}
-
-// ---------- pipelines -----------
-
-
-/**
  * Ajouter les champs extras sur les formulaires CVT editer_xx
  *
  * Liste les champs extras de l'objet, et s'il y en a les ajoute
@@ -122,9 +92,6 @@ function cextras_editer_contenu_objet($flux){
 	if ($saisies = champs_extras_objet(table_objet_sql($objet))) {
 		// filtrer simplement les saisies que la personne en cours peut voir
 		$saisies = champs_extras_autorisation('modifier', $objet, $saisies, $flux['args']);
-		// pour chaque saisie presente, de type champs extras (hors fieldset et autres)
-		// ajouter un flag d'edition
-		$saisies = champs_extras_ajouter_drapeau_edition($saisies);
 
 		//  Si l'objet déclare déjà ses champs en saisies, les champs extras ont déjà été ajoutées au fond via `cextras_formulaire_saisies()` (pipeline `formulaire_saisie`) (cas du plugin coordonnées)
 		//  Pour le savoir, on se contente de compter le nombre de saisies deja déclarés : si supérieures au nombre de saisies en champ extra, c'est que c'est le cas
@@ -177,11 +144,9 @@ function cextras_pre_edition($flux){
 
 		foreach ($saisies as $saisie) {
 			$nom = $saisie['options']['nom'];
-			if (_request('cextra_' .  $nom)) {
-				$extra = _request($nom) ?? '';
-				$extra = champs_extras_serialiser($extra, $saisie);
-				$flux['data'][$nom] = corriger_caracteres($extra);
-			}
+			$extra = _request($nom) ?? '';
+			$extra = champs_extras_serialiser($extra, $saisie);
+			$flux['data'][$nom] = corriger_caracteres($extra);
 		}
 	}
 
