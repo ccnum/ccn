@@ -254,11 +254,18 @@ function colonne_table($crayon_type, $col) {
 	) {
 			return false;
 	}
-	$ana = explode(' ', $brut);
+
+	$ana = array_filter(explode(' ', $brut), 'trim');
 	$sta = 0;
 	$sep = '';
-	$ret = ['brut' => $brut,
-		'type' => '', 'notnull' => false, 'long' => 0, 'def' => ''];
+	$ret = [
+		'brut' => $brut,
+		'type' => '', 
+		'notnull' => false, 
+		'long' => 0, 
+		'def' => ''
+	];
+
 	foreach ($ana as $mot) {
 		switch ($sta) {
 			case 0:
@@ -313,6 +320,7 @@ function colonne_table($crayon_type, $col) {
 				break;
 		}
 	}
+
 	return $ret;
 }
 

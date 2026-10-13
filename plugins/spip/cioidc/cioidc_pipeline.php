@@ -500,6 +500,23 @@ function cioidc_formulaire_verifier($flux) {
 					}
 				}
 			}
+
+                        // Solution de contournement temporaire
+                        // https://git.spip.net/giseh/cioidc/-/work_items/10
+                        // 
+                        // Depuis SPIP 4.4, un admin doit saisir son propre mot de passe dans le formulaire editer_auteur
+                        // pour certaines modifications sensibles (promouvoir un admin ou webmestre, changer l'email ou le mot de passe d'un admin...).
+                        // Un admin connecté par cioidc n'a pas de mot de passe SPIP : il ne peut donc jamais valider ces modifications.
+                        //
+                        // Retirer l'erreur current_password si la session vient de cioidc (cioidc_id_token en session)
+                        // et que la connexion OIDC est récente (ex. 15 min)
+                        if (
+                            isset($flux['data']['current_password'])
+                            && isset($GLOBALS['visiteur_session']['cioidc_id_token']) 
+                            && $GLOBALS['visiteur_session']['date_session'] >= (time() - (15 * 60))
+                        ) {
+                            unset($flux['data']['current_password']);
+                        }
 		}
 	}
 

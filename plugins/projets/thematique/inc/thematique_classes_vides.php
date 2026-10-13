@@ -111,21 +111,41 @@ function thematique_supprimer_classes_vides($annee) {
 		if (!$classe['vide']) {
 			continue;
 		}
-		$id_rubrique = $classe['id_rubrique'];
-		sql_delete('spip_auteurs_liens', "objet='rubrique' AND id_objet=" . $id_rubrique);
-		sql_delete('spip_mots_liens', "objet='rubrique' AND id_objet=" . $id_rubrique);
-		sql_delete('spip_documents_liens', "objet='rubrique' AND id_objet=" . $id_rubrique);
-		sql_delete('spip_rubriques', 'id_rubrique=' . $id_rubrique);
-		spip_log('classe vide supprimée id_rubrique=' . $id_rubrique . ' titre=' . $classe['titre'], 'thematique');
+		thematique_supprimer_rubrique_classe($classe['id_rubrique'], $classe['titre']);
 		$nb++;
 	}
 
 	if ($nb) {
-		effacer_meta('date_calcul_rubriques');
-		include_spip('inc/rubriques');
-		calculer_rubriques();
-		include_spip('inc/invalideur');
-		suivre_invalideur('1');
+		thematique_classes_apres_suppression();
 	}
 	return $nb;
+}
+
+/**
+ * Supprime une rubrique de classe et ses liens (auteurs, mots, documents), sans
+ * vérifier qu'elle est vide : à l'appelant de l'avoir fait
+ * (thematique_classe_compter_contenu()). Appeler ensuite
+ * thematique_classes_apres_suppression().
+ *
+ * @param int $id_rubrique
+ * @param string $titre pour le log
+ */
+function thematique_supprimer_rubrique_classe($id_rubrique, $titre) {
+	$id_rubrique = (int) $id_rubrique;
+	sql_delete('spip_auteurs_liens', "objet='rubrique' AND id_objet=" . $id_rubrique);
+	sql_delete('spip_mots_liens', "objet='rubrique' AND id_objet=" . $id_rubrique);
+	sql_delete('spip_documents_liens', "objet='rubrique' AND id_objet=" . $id_rubrique);
+	sql_delete('spip_rubriques', 'id_rubrique=' . $id_rubrique);
+	spip_log('classe vide supprimée id_rubrique=' . $id_rubrique . ' titre=' . $titre, 'thematique');
+}
+
+/**
+ * Recalcul des rubriques et invalidation du cache après suppression de classes.
+ */
+function thematique_classes_apres_suppression() {
+	effacer_meta('date_calcul_rubriques');
+	include_spip('inc/rubriques');
+	calculer_rubriques();
+	include_spip('inc/invalideur');
+	suivre_invalideur('1');
 }

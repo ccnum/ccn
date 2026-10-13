@@ -523,8 +523,6 @@ function cextras_obtenir_saisies_champs_extras($objet, $id_objet = null, $option
 		$saisies = champs_extras_autorisation($options['autoriser'], $objet, $saisies, array('id_objet' => $id_objet));
 
 		if ($saisies) {
-			// pour chaque saisie presente, de type champs extras (hors fieldset et autres) ajouter un flag d'edition
-			$saisies = champs_extras_ajouter_drapeau_edition($saisies);
 			$valeurs['_saisies'] = $saisies;
 		}
 

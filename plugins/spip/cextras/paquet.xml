@@ -1,7 +1,7 @@
 <paquet
 	prefix="cextras"
 	categorie="outil"
-	version="4.3.3"
+	version="4.3.4"
 	etat="stable"
 	compatibilite="[4.1.0;4.*]"
 	logo="cextras.svg"
@@ -29,6 +29,6 @@
 	<necessite nom="saisies" compatibilite="[4.2.0;]" />
 	<necessite nom="yaml" compatibilite="[3.0.0;]" />
 	<utilise nom="verifier" compatibilite="[1.16.2;]" />
-	<utilise nom="crayons" compatibilite="[2.3.0;]" />
+	<utilise nom="crayons" compatibilite="[3.5.0;]" />
 
 </paquet>
