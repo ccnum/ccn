@@ -63,9 +63,10 @@
 			]
 			</BOUCLE_choix_classe>
 			</B_choix_classe>
-			[(#REM) Compte créé dans SPIP (hors SSO) : modifier son nom, son email
-			et son mot de passe, cf formulaires/editer_profil.php. ]
-			[(#SESSION{source}|=={spip}|oui)
+			[(#REM) Compte créé dans SPIP, connecté hors SSO (cioidc pose
+			cioidc_id_token en session) : modifier son nom, son email et son mot
+			de passe, cf formulaires/editer_profil.php. ]
+			[(#SESSION{source}|=={spip}|et{#SESSION{cioidc_id_token}|non}|oui)
 			<li class="select-option editer-profil">
 				<a href="[(#URL_PAGE{auteur_editer}|parametre_url{mode,ajax-detail})]" rel="nofollow">
 					<:thematique:editer_votre_profil:>

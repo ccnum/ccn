@@ -12,7 +12,9 @@ if (!defined('_ECRIRE_INC_VERSION')) {
  * site web et les champs extras, inutiles ici. Toujours l'auteur connecté (pas
  * d'id_auteur en argument). Un compte SSO (source oidc) n'a ni mot de passe
  * SPIP ni nom à modifier (resynchronisé depuis l'ENT à chaque connexion) : le
- * formulaire ne s'affiche pas pour lui.
+ * formulaire ne s'affiche pas pour lui. Pas non plus pour un ancien compte SPIP
+ * (source spip) retrouvé par le SSO à la connexion : la session vient alors de
+ * cioidc, qui y pose cioidc_id_token.
  *
  * Le mot de passe actuel est demandé pour changer de login, d'email ou de mot de passe :
  * une session volée ne doit pas suffire à prendre la main sur le compte.
@@ -23,7 +25,7 @@ if (!defined('_ECRIRE_INC_VERSION')) {
 function formulaires_editer_profil_auteur() {
 	include_spip('inc/session');
 	$id_auteur = intval(session_get('id_auteur'));
-	if (!$id_auteur) {
+	if (!$id_auteur || session_get('cioidc_id_token')) {
 		return null;
 	}
 	$auteur = sql_fetsel('id_auteur, nom, email, login, source, pass', 'spip_auteurs', 'id_auteur=' . $id_auteur);

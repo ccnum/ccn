@@ -524,7 +524,10 @@ function thematique_cioidc_resoudre_liens_rubriques(
 }
 
 // Associe effectivement l'auteur aux rubriques résolues ci-dessus (+ le blog
-// pédagogique commun à tous les profs).
+// pédagogique et l'agenda communs à tous les profs). L'agenda est la rubrique
+// portant le mot "blogs" (inversé avec "evenements" = blog pédagogique / salle
+// des profs) : sans ce lien, thematique_peut_publier_dans_mot('blogs') masque
+// "Nouvel événement agenda" du menu Publier et l'envoi est refusé.
 function thematique_cioidc_associer_rubriques(
 	array $auteur,
 	bool $is_enseignant,
@@ -541,6 +544,9 @@ function thematique_cioidc_associer_rubriques(
 		);
 		if ($blog) {
 			objet_associer(['id_auteur' => $auteur['id_auteur']], ['rubrique' => $blog]);
+		}
+		if ($agenda = thematique_id_rubrique_a_mot('blogs')) {
+			objet_associer(['id_auteur' => $auteur['id_auteur']], ['rubrique' => $agenda]);
 		}
 		foreach ($projets_a_lier as $id_projet) {
 			objet_associer(['id_auteur' => $auteur['id_auteur']], ['rubrique' => $id_projet]);
