@@ -311,8 +311,10 @@ function formulaires_public_publier_article_traiter_dist(
 
 		include_spip('action/editer_liens');
 
-		// Lier l'auteur connecté à l'article (source = auteur, car auteur est associable)
-		if ($id_auteur) {
+		// Lier l'auteur connecté à l'article (source = auteur, car auteur est associable),
+		// à la création seulement : en édition, celui qui modifie (prof, admin) ne
+		// devient pas auteur de l'article d'un autre.
+		if ($id_auteur && !$edition) {
 			objet_associer(['auteur' => $id_auteur], ['article' => $id_article]);
 		}
 		// Si c'est une réponse à une consigne, associer l'article à la
