@@ -2524,12 +2524,16 @@ function thematique_logo_carre($id_objet = 0, $objet = 'rubrique', $taille = 50)
 
 	if ($objet === 'article') {
 		$id_rubrique = intval(sql_getfetsel('id_rubrique', 'spip_articles', 'id_article=' . $id_objet));
+		// Auteurs à la poubelle écartés, comme dans les boucles AUTEURS qui
+		// affichent le nom à côté (header_gauche_photo_auteur.html) et la photo
+		// de la carte de la frise (json/consignes.html) : sinon la photo d'un
+		// auteur supprimé s'affichait à côté du nom d'un autre.
 		$id_auteur = intval(sql_getfetsel(
-			'id_auteur',
-			'spip_auteurs_liens',
-			"objet='article' AND id_objet=" . $id_objet,
+			'L.id_auteur',
+			'spip_auteurs_liens AS L JOIN spip_auteurs AS A ON A.id_auteur=L.id_auteur',
+			["L.objet='article'", 'L.id_objet=' . $id_objet, "A.statut<>'5poubelle'"],
 			'',
-			'id_auteur'
+			'L.id_auteur'
 		));
 	} elseif ($objet === 'auteur') {
 		$id_rubrique = thematique_id_rubrique_classe_auteur($id_auteur);

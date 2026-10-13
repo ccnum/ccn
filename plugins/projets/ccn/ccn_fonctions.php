@@ -71,3 +71,19 @@ function afficher_options_date($annee, $mois, $annee_scolaire, $annee_max = null
 	}
 	return $texte;
 }
+
+/**
+ * URL du lecteur Vimeo (iframe) pour un document dont le fichier a été remplacé
+ * par sa page Vimeo après envoi (cf plugin api_vimeo) : cette page n'est pas un
+ * fichier vidéo, une balise <video> ne peut pas la lire.
+ * Gère le lien privé vimeo.com/<id>/<hash> (vidéo non répertoriée).
+ *
+ * @param string $fichier Champ fichier du document
+ * @return string URL player.vimeo.com, '' si ce n'est pas une URL Vimeo
+ */
+function ccn_url_lecteur_vimeo($fichier) {
+	if (!preg_match('#^https?://(?:www\.)?vimeo\.com/(\d+)(?:/([0-9a-f]+))?/?(?:[?\#].*)?$#i', trim((string) $fichier), $m)) {
+		return '';
+	}
+	return 'https://player.vimeo.com/video/' . $m[1] . (empty($m[2]) ? '' : '?h=' . $m[2]);
+}
