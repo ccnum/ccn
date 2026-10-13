@@ -1278,24 +1278,32 @@ function thematique_assurer_structure_annee() {
  * @return int 0 si aucun intervenant trouvé
  */
 function thematique_premier_intervenant($id_rubrique) {
+	spip_log("thematique_premier_intervenant", "debug");
 	$id_mot_consignes = thematique_id_mot('consignes');
 	if (!$id_mot_consignes) {
 		return 0;
 	}
 
-	$id_secteur = sql_getfetsel('id_secteur', 'spip_rubriques', 'id_rubrique=' . intval($id_rubrique));
-	if (!$id_secteur) {
+	$ascendants = thematique_ascendants_rubrique($id_rubrique);
+	$id_racine = $ascendants ? end($ascendants) : 0;
+	if (!$id_racine) {
 		return 0;
 	}
-
+	spip_log("ici, rubrique = " . $id_rubrique . ' racine = ' . $id_racine, "debug");
 	return intval(sql_getfetsel(
 		'lien.id_auteur',
-		['spip_auteurs_liens AS lien', 'spip_rubriques AS rub', 'spip_mots_liens AS ml'],
+		[
+			'spip_auteurs_liens AS lien',
+			'spip_rubriques AS rub',
+			'spip_rubriques AS consignes',
+			'spip_mots_liens AS ml',
+		],
 		[
 			'lien.id_objet=rub.id_rubrique',
 			"lien.objet='rubrique'",
-			'rub.id_secteur=' . intval($id_secteur),
-			'ml.id_objet=rub.id_rubrique',
+			'consignes.id_rubrique=rub.id_parent',
+			'consignes.id_parent=' . intval($id_racine),
+			'ml.id_objet=consignes.id_rubrique',
 			"ml.objet='rubrique'",
 			'ml.id_mot=' . intval($id_mot_consignes),
 		],
@@ -1315,7 +1323,7 @@ function thematique_premier_intervenant($id_rubrique) {
  *
  * @return int 0 si aucun intervenant trouvé
  */
-function thematique_intervenant_annee() {
+function thematique_intervenant_annee($_ = null) {
 	static $cache = null;
 	if ($cache !== null) {
 		return $cache;
@@ -1328,12 +1336,14 @@ function thematique_intervenant_annee() {
 	);
 
 	if ($id_rubrique_annee) {
-		return $cache = thematique_premier_intervenant(intval($id_rubrique_annee));
+		return $cache = (int) thematique_premier_intervenant((int) $id_rubrique_annee);
 	}
 
-	$id_rubrique_travail = thematique_id_rubrique_a_mot('travail_en_cours');
+	$id_rubrique_travail = (int) thematique_id_rubrique_a_mot('travail_en_cours');
 
-	return $cache = $id_rubrique_travail ? thematique_premier_intervenant($id_rubrique_travail) : 0;
+	return $cache = $id_rubrique_travail
+		? (int) thematique_premier_intervenant($id_rubrique_travail)
+		: 0;
 }
 
 /**

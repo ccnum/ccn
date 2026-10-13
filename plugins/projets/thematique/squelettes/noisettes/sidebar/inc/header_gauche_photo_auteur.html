@@ -1,8 +1,9 @@
 [(#REM)
 Colonne gauche (photo/auteur/date) commune aux en-têtes de sidebar
-noisettes/sidebar/header_blog.html et header_sidebar.html.
+noisettes/sidebar/header_blog.html, header_sidebar.html et
+page_participant/header_intervenant.html.
 
-Paramètre attendu : id_article.
+Paramètre attendu : id_article ou id_rubrique.
 ]
 <BOUCLE_article_sidebar(ARTICLES){id_article}{tout}>
 <div id="header-col-left">
@@ -17,3 +18,19 @@ Paramètre attendu : id_article.
 	</div>
 </div>
 </BOUCLE_article_sidebar>
+<BOUCLE_rubrique_sidebar(RUBRIQUES){id_rubrique}{tout}>
+<div id="header-col-left">
+	<BOUCLE_auteur_rubrique(AUTEURS){id_rubrique=#ID_RUBRIQUE}{tout}{0,1}>
+		#SET{nom_auteur, #ID_AUTEUR|thematique_nom_public_auteur}
+		#SET{image, #ID_AUTEUR|thematique_image_auteur_ou_classe{#ID_RUBRIQUE}}
+		<div class="photo">
+			
+			<img src="#GET{image}" alt="#GET{nom_auteur}" />
+			
+		</div>
+	</BOUCLE_auteur_rubrique>
+		<div class="photo">[(#ID_RUBRIQUE|thematique_logo_carre{rubrique})]</div>
+	<//B_auteur_rubrique>
+	<div>#TITRE</div>
+</div>
+</BOUCLE_rubrique_sidebar>

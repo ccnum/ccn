@@ -373,6 +373,47 @@
     pointer-events: none;
 }
 
+#menu_bas li.logo.cercle {
+	position: relative;
+	overflow: visible;
+	display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#menu_bas li.logo.cercle img {
+	width: 100%;
+	height: 100%;
+	border-radius: 50%;
+    object-fit: cover;
+}
+
+/* Tooltip de l'intervenant */
+#menu_bas li.logo.cercle.tooltip::after {
+    content: attr(data-tip);
+    position: absolute;
+    left: 0;
+    bottom: 100%;
+    transform: translate(0, 0) scale(0);
+    transform-origin: bottom left;
+    padding: 0 10px;
+    background: #3C3C4A;
+    color: white;
+    border-radius: 8px;
+    font-size: 12px;
+	font-weight: 700;
+    white-space: nowrap;
+    z-index: 9999;
+    opacity: 0;
+    pointer-events: none;
+    transition: transform 0.2s ease, opacity 0.2s ease;
+}
+
+#menu_bas li.logo.cercle.tooltip:hover::after {
+    transform: translate(0, 0) scale(1);
+    opacity: 1;
+}
+
 .zone-menu li.logo a.selected {
 	cursor: default;
 	border: 0px solid white;
@@ -384,6 +425,8 @@
 	color: var(--color-hover) !important;
 	background-color: var(--background-color-hover);
 }
+
+
 
 .tooltip::after,
 .tooltip_bottom::after,

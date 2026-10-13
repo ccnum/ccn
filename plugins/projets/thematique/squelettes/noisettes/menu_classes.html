@@ -1,4 +1,4 @@
-#CACHE{0}
+#CACHE{3600}
 [(#REM) Classes
 
 CACHE{0} : liste live des classes participantes (rubriques), donc ne doit
@@ -8,7 +8,7 @@ du cache de la page. ]
 #SET{a_classes_annee, #VAL{''}|thematique_a_classes_annee}
 [(#GET{a_classes_annee}|oui)
 <div id="menu-classes" class="bloc_view col">
-	#SET{id_intervenant_annee, ''|thematique_intervenant_annee}
+	#SET{id_intervenant_annee, #VAL|thematique_intervenant_annee}
 	[(#REM) =============== ]
 	[(#REM) AFFICHAGE TOTAL ]
 	[(#REM) =============== ]
@@ -25,10 +25,15 @@ du cache de la page. ]
 	<ul class="filter clearfix option-set" data-filter-group="classe">
 		[(#REM) ======== INTERVENANT DE L'ANNÉE (affiché en tête de liste) ======== ]
 		<BOUCLE_intervenant_annee(AUTEURS){id_auteur=#GET{id_intervenant_annee}}{0,1}>
-			<li class="intervenant-annee">
-				<span class="intervenant-annee-label"><:thematique:intervenant_annee:></span>
-				<span class="intervenant-annee-nom">[(#ID_AUTEUR|thematique_nom_public_auteur)]</span>
+			#SET{image,#ID_AUTEUR|thematique_image_auteur_ou_classe{''}}
+			#SET{nom_auteur, #ID_AUTEUR|thematique_nom_public_auteur}
+			<li class="logo cercle tooltip" data-tip="#GET{nom_auteur}">
+				<img src="#GET{image}" 
+					 alt="#GET{nom_auteur}"
+					 onclick="callIntervenant( #GET{id_intervenant_annee} )"
+					  />
 			</li>
+			
 		</BOUCLE_intervenant_annee>
 
 		#SET{nb_classes, 0}

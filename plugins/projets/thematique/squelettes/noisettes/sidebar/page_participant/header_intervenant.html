@@ -1,0 +1,25 @@
+
+<BOUCLE_description(RUBRIQUES){id_rubrique}{tout}>
+    #SET{description, #TEXTE}
+</BOUCLE_description>
+
+<div class="sidebar_bubble header-reponse">
+	<div id="row_header">
+        <INCLURE{fond=noisettes/sidebar/inc/header_gauche_photo_auteur, id_rubrique} />
+        <div id="header-col-right">
+            <div id="header-row-1">
+                <div class="etiquette-etape">
+                    <span class="texte-etiquette">
+                        <:thematique:intervenant:>
+                    </span>
+                </div>
+                <INCLURE{fond=noisettes/sidebar/normal_header_icons} />
+            </div>
+            <div id="header-row-2">
+                [(#GET{description}|oui) #GET{description}]
+                [(#GET{description}|non) <:thematique:pas_de_description:>]
+            </div>
+        </div>
+	</div>
+</div>
+

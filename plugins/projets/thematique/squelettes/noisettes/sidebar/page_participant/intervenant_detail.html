@@ -1,0 +1,27 @@
+<div class="bloc_article">
+	<div>
+		<INCLURE{
+			fond=noisettes/sidebar/page_participant/header_intervenant,
+			id_rubrique=#ENV{id_rubrique},
+			ajax,
+			env
+		} />
+	</div>
+	<div class="container-tabs">
+		<div id="mission-tabs">
+			<div>
+				<div class="tabs-title">
+					<:thematique:presentation:>
+				</div>
+				<div class="tabs-content">
+					<INCLURE{fond=noisettes/sidebar/page_participant/onglet_description_intervenant, 
+                             id_rubrique=#ENV{id_rubrique}
+                    } />
+				</div>
+			</div>
+			<INCLURE{fond=noisettes/sidebar/inc/onglet_commentaires_tab, env} />
+		</div>
+	</div>
+</div>
+
+
