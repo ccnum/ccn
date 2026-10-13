@@ -170,10 +170,18 @@
 	display: -webkit-box;
 	-webkit-box-orient: vertical;
 	-webkit-line-clamp: 5;
+	/* line-clamp seul ne réduit pas la hauteur de la boîte quand le texte
+	est dans un <p> (sa marge basse reste comptée) : la 6e ligne apparaît
+	à moitié sous les points de suspension. 5 lignes × line-height. */
+	max-height: calc(5 * 18px);
 	transition: all 0.3s ease;
 	font-weight: 400;
 	font-size: 12px;
 	line-height: 18px;
+}
+
+.forum-card .contenu-texte.redimmensionne p {
+	line-height: inherit;
 }
 
 .forum-card .actions-left {
@@ -193,6 +201,7 @@
 
 .forum-card .content.ouvert .contenu-texte{
 	display: block;
+	max-height: none;
 }
 
 .forum-commentaire-racine {
