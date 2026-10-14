@@ -15,18 +15,31 @@ function initCommentaires() {
 }
 
 function initForum() {
-    document.querySelector(".forum-liste").querySelectorAll('.forum-card').forEach(card => {
-        const contenu = card.querySelector('.contenu-texte');
-        contenu.classList.remove('redimmensionne');
-        const hauteurComplete = contenu.scrollHeight;
-        contenu.classList.add('redimmensionne');
-        const hauteurVisible = contenu.clientHeight;
-        const bouton = card.querySelector('.lire-la-suite');
-        // Vérifie si le texte dépasse la limite
-        if (hauteurComplete > hauteurVisible) {
-            bouton.removeAttribute("hidden")
-        }
-    });
+    document.querySelector(".forum-liste").querySelectorAll('.forum-card').forEach(mesurerLireLaSuite);
+}
+
+/**
+ * Affiche "Lire la suite" si le texte du commentaire dépasse les 5 lignes
+ * du mode replié. Mesuré dans ce même style (classe mesure-hauteur, cf
+ * forum.css.html) plutôt qu'en retirant redimmensionne, qui change la
+ * taille de police et les marges des paragraphes. Une carte masquée (réponses
+ * repliées) mesure 0 : elle est mesurée à l'ouverture de ses réponses
+ * (cf callbackCliqueSurVoirLesReponses).
+ */
+function mesurerLireLaSuite(card) {
+    const contenu = card.querySelector('.contenu-texte');
+    const bouton = card.querySelector('.lire-la-suite');
+    if (!contenu || !bouton || !contenu.getClientRects().length) {
+        return;
+    }
+    contenu.classList.add('mesure-hauteur');
+    const hauteurComplete = contenu.scrollHeight;
+    contenu.classList.remove('mesure-hauteur');
+    const hauteurVisible = contenu.clientHeight;
+    // Vérifie si le texte dépasse la limite
+    if (hauteurComplete > hauteurVisible) {
+        bouton.removeAttribute("hidden")
+    }
 }
 
 function callbackCliqueSurVoirLesReponses(e) {
@@ -36,7 +49,9 @@ function callbackCliqueSurVoirLesReponses(e) {
         return;
     }
     const commentaire = bouton.closest('.forum-commentaire');
-    commentaire.classList.toggle("is-opened")
+    if (commentaire.classList.toggle("is-opened")) {
+        commentaire.querySelectorAll('.reponse-list .forum-card').forEach(mesurerLireLaSuite);
+    }
 }
 
 /**
