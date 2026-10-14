@@ -325,6 +325,7 @@ return [
 	'publier_intro_reponse_mission'              => 'Choisissez un titre et rédigez votre réponse pour cette mission. Vous pourrez la modifier à postériori. Elle sera visible par tous les participants et les visiteurs !',
 	'publier_intro_ressource'                    => 'Choisissez un titre à votre ressource et détaillez son contenu aux autres participants. Elle sera visible dans l’espace Ressources par tous les participants et les visiteurs.',
 	'publier_nouvel_article'                     => 'Publier un nouvel article',
+	'publier_placeholder_texte'                  => 'Écrivez votre texte ici…',
 	'publier_titre_cap_sur_l_annee'              => 'Rédigez le contenu de votre message de début d’année.',
 	'publier_titre_evenement'                    => 'Décrivez votre événement',
 	'publier_titre_fiche_intervenant'            => 'Rédigez votre fiche d’intervenant.',
