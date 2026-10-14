@@ -1,5 +1,7 @@
 <?php
 
+use Spip\Afficher\Minipage\Admin as MinipageAdmin;
+
 if (!defined('_ECRIRE_INC_VERSION')) {
 	return;
 }
@@ -20,8 +22,8 @@ function action_fictions_associations_dist() {
 	$arg = (string) $securiser_action();
 
 	if (!preg_match('/^(\d{4})-([a-z_]+)(?:-(\d+))?$/', $arg, $m) || !autoriser('fictionsassociations')) {
-		include_spip('inc/minipres');
-		echo minipres();
+		$minipage = new MinipageAdmin();
+		echo $minipage->page();
 		exit;
 	}
 	$annee = (int) $m[1];

@@ -1,4 +1,7 @@
 <?php
+
+use Spip\Afficher\Minipage\Admin as MinipageAdmin;
+
 /**
  * Déclaration de la page exec configurer_reactions
  *
@@ -17,8 +20,8 @@ if (!defined('_ECRIRE_INC_VERSION')) {
 function exec_configurer_reactions_dist() {
 	include_spip('inc/autoriser');
 	if (!autoriser('reactionconfigurer')) {
-		include_spip('inc/minipres');
-		echo minipres();
+		$minipage = new MinipageAdmin();
+		echo $minipage->page();
 		return;
 	}
 
