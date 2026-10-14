@@ -17,6 +17,9 @@ function forumv2_texte_est_valide() {
  * Modes :
  * - publication : création d'un nouveau commentaire
  * - edition : modification d'un commentaire existant
+ *
+ * @param int|string $id_article Article concerné
+ * @return array Valeurs du formulaire
  */
 function formulaires_forumv2_charger_dist($id_article) {
 	$publication_forum_action = _request('publication_forum_action');
@@ -87,6 +90,9 @@ function formulaires_forumv2_charger_dist($id_article) {
 
 /**
  * Vérification du formulaire.
+ *
+ * @param int|string $id_article Article concerné
+ * @return array Erreurs, vide si aucune
  */
 function formulaires_forumv2_verifier_dist($id_article) {
 	$erreurs = [];
@@ -158,6 +164,9 @@ function formulaires_forumv2_verifier_dist($id_article) {
 
 /**
  * Traitement du formulaire.
+ *
+ * @param int|string $id_article Article concerné
+ * @return array Retour du traitement (message_ok, message_erreur, redirect…)
  */
 function formulaires_forumv2_traiter_dist($id_article) {
 	include_spip('action/editer_forum');

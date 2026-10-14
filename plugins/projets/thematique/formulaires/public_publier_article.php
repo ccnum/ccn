@@ -14,6 +14,15 @@ if (!defined('_ECRIRE_INC_VERSION')) {
 	return;
 }
 
+/**
+ * Charge le formulaire public de publication ou de modification d'un article.
+ *
+ * @param int|string $id_rubrique Rubrique de publication
+ * @param string $type_article Type de contenu (consignes, travail_en_cours, ressources, blogs, evenements, intervenant…)
+ * @param int|string $id_consigne Mission à laquelle répond l'article (0 sinon)
+ * @param int|string $id_article Article modifié (0 = création)
+ * @return array Valeurs du formulaire
+ */
 function formulaires_public_publier_article_charger_dist(
 	$id_rubrique,
 	$type_article,
@@ -116,6 +125,15 @@ function formulaires_public_publier_article_charger_dist(
 	return $valeurs;
 }
 
+/**
+ * Vérifie les droits, la rubrique et les champs du formulaire de publication.
+ *
+ * @param int|string $id_rubrique Rubrique de publication
+ * @param string $type_article Type de contenu (consignes, travail_en_cours, ressources, blogs, evenements, intervenant…)
+ * @param int|string $id_consigne Mission à laquelle répond l'article (0 sinon)
+ * @param int|string $id_article Article modifié (0 = création)
+ * @return array Erreurs, vide si aucune
+ */
 function formulaires_public_publier_article_verifier_dist(
 	$id_rubrique,
 	$type_article,
@@ -206,6 +224,15 @@ function formulaires_public_publier_article_verifier_dist(
 	return $erreurs;
 }
 
+/**
+ * Crée ou modifie l'article, puis le publie.
+ *
+ * @param int|string $id_rubrique Rubrique de publication
+ * @param string $type_article Type de contenu (consignes, travail_en_cours, ressources, blogs, evenements, intervenant…)
+ * @param int|string $id_consigne Mission à laquelle répond l'article (0 sinon)
+ * @param int|string $id_article Article modifié (0 = création)
+ * @return array Retour du traitement (message_ok, message_erreur, redirect…)
+ */
 function formulaires_public_publier_article_traiter_dist(
 	$id_rubrique,
 	$type_article,

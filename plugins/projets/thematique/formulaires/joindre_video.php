@@ -52,6 +52,13 @@ function joindre_video_trouver_fichier() {
 	return $files;
 }
 
+/**
+ * Charge le formulaire d'ajout d'une vidéo.
+ *
+ * @param int|string $id_objet Objet auquel joindre la vidéo
+ * @param string $objet Type de l'objet (article…)
+ * @return array Valeurs du formulaire
+ */
 function formulaires_joindre_video_charger_dist($id_objet = 0, $objet = '') {
 	return [
 		'id_objet' => $id_objet,
@@ -61,6 +68,13 @@ function formulaires_joindre_video_charger_dist($id_objet = 0, $objet = '') {
 	];
 }
 
+/**
+ * Vérifie les droits, le fichier vidéo et le mot de passe.
+ *
+ * @param int|string $id_objet Objet auquel joindre la vidéo
+ * @param string $objet Type de l'objet (article…)
+ * @return array Erreurs, vide si aucune
+ */
 function formulaires_joindre_video_verifier_dist($id_objet = 0, $objet = '') {
 	$erreurs = [];
 
@@ -96,6 +110,13 @@ function formulaires_joindre_video_verifier_dist($id_objet = 0, $objet = '') {
 	return $erreurs;
 }
 
+/**
+ * Joint la vidéo à l'objet.
+ *
+ * @param int|string $id_objet Objet auquel joindre la vidéo
+ * @param string $objet Type de l'objet (article…)
+ * @return array Retour du traitement (message_ok, message_erreur, redirect…)
+ */
 function formulaires_joindre_video_traiter_dist($id_objet = 0, $objet = '') {
 	$files = joindre_video_trouver_fichier();
 	if (is_string($files)) {

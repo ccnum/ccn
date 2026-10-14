@@ -4,6 +4,12 @@ if (!defined('_ECRIRE_INC_VERSION')) {
 	return;
 }
 
+/**
+ * Charge le formulaire de dépublication d'un article (réservé à qui peut le modifier).
+ *
+ * @param int|string $id_article Article concerné
+ * @return array|false Valeurs du formulaire, false si non éditable
+ */
 function formulaires_depublier_article_charger_dist($id_article) {
 	// Même autorisation que verifier() : sans elle, le bouton s'affichait
 	// aussi aux visiteurs non connectés (l'action était refusée, mais seulement
@@ -18,6 +24,12 @@ function formulaires_depublier_article_charger_dist($id_article) {
 	];
 }
 
+/**
+ * Vérifie que le visiteur peut toujours modifier l'article.
+ *
+ * @param int|string $id_article Article concerné
+ * @return array Erreurs, vide si aucune
+ */
 function formulaires_depublier_article_verifier_dist($id_article) {
 	$erreurs = [];
 
@@ -29,6 +41,12 @@ function formulaires_depublier_article_verifier_dist($id_article) {
 	return $erreurs;
 }
 
+/**
+ * Repasse l'article en statut prop.
+ *
+ * @param int|string $id_article Article concerné
+ * @return array Retour du traitement (message_ok, message_erreur, redirect…)
+ */
 function formulaires_depublier_article_traiter_dist($id_article) {
 	include_spip('action/editer_article');
 

@@ -16,6 +16,9 @@ if (!defined('_ECRIRE_INC_VERSION')) {
  * document se recharge seul, sans dépendre de cette amorce.
  *
  * @package SPIP\Thematique\Formulaires
+ *
+ * @param int|string $id_document Document dont on modifie le titre
+ * @return array|false Valeurs du formulaire, false si non éditable
  */
 
 function formulaires_titrer_document_charger_dist($id_document) {
@@ -36,6 +39,12 @@ function formulaires_titrer_document_charger_dist($id_document) {
 	];
 }
 
+/**
+ * Vérifie les droits de modification du document.
+ *
+ * @param int|string $id_document Document dont on modifie le titre
+ * @return array Erreurs, vide si aucune
+ */
 function formulaires_titrer_document_verifier_dist($id_document) {
 	$erreurs = [];
 
@@ -50,6 +59,12 @@ function formulaires_titrer_document_verifier_dist($id_document) {
 	return $erreurs;
 }
 
+/**
+ * Enregistre le nouveau titre du document.
+ *
+ * @param int|string $id_document Document dont on modifie le titre
+ * @return array Retour du traitement (message_ok, message_erreur, redirect…)
+ */
 function formulaires_titrer_document_traiter_dist($id_document) {
 	include_spip('action/editer_document');
 
