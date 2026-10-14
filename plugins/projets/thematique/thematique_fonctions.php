@@ -1434,6 +1434,32 @@ function thematique_id_rubrique_projet($_ = null) {
 }
 
 /**
+ * URL d'une popup chargée en ajax (mode=ajax-detail), encodée en JSON pour
+ * json/projet.html — remplace la répétition de
+ * `#URL_PAGE{page, ...}|html_entity_decode|json_encode` pour chaque popup.
+ *
+ * Appelée comme filtre :
+ * `[(#VAL{rubrique}|thematique_url_popup{ressources, #GET{id_rubrique}})]`
+ *
+ * @param string $page squelette de la popup (article, rubrique, publier)
+ * @param string $type_objet type_objet passé à la popup ('' = aucun)
+ * @param int|string|null $id_rubrique rubrique ciblée (null = aucune)
+ * @return string URL relative, encodée en JSON
+ */
+function thematique_url_popup($page, $type_objet = '', $id_rubrique = null) {
+	$args = [];
+	if ($id_rubrique !== null) {
+		$args['id_rubrique'] = intval($id_rubrique);
+	}
+	$args['mode'] = 'ajax-detail';
+	if ($type_objet !== '') {
+		$args['type_objet'] = $type_objet;
+	}
+
+	return json_encode(generer_url_public($page, $args, true));
+}
+
+/**
  * Fiche de l'intervenant (article au mot-clé intervenant) d'une rubrique
  * projet, si le visiteur peut la voir : publiée, ou non publiée pour un admin
  * ou un intervenant (même règle que les badges des jalons, cf
