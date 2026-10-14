@@ -670,7 +670,6 @@ function callIntervenant(id_rubrique) {
 	if (id_rubrique !== '' && !Number.isInteger(Number(id_rubrique))) return;
 	CCN.projet.showWholeTimeline();
 	setLateralSidebarExpanded(false);
-	//updateMenuIcon(['classes', 'classes-' + id_classe], 'sidebarView');
 	let url = CCN.projet.url_popup_intervenant;
 	if (id_rubrique != '') {
 		url = CCN.projet.url_popup_intervenant + '&id_objet=' + id_rubrique + '&type_objet=intervenant';
@@ -1430,8 +1429,6 @@ function loadContentInMainSidebar(url, callback, typeContenu) {
 		$('#sidebar_content').scrollTop(0);
 		updatePageTitleFromSidebarContent();
 		_sidebarFocusFirst();
-		console.log(typeContenu);
-		
 		if(["consigne", "reponse", "blog", "evenement", "classe", "intervenant"].includes(typeContenu)) {
 			initMissionTabs();
 			initCommentaires();
