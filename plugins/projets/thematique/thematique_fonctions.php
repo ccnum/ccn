@@ -1761,9 +1761,11 @@ function thematique_formater_nom_commentaire($nom, $nom_complet) {
 
 /**
  * Nom public d'un auteur (front et mails) : spip_auteurs.nom, sauf pour un
- * intervenant dont le nom vaut "Prénom NOM - Intervenant" (cf
- * thematique_cioidc_nom_affiche) — on n'affiche alors que "Prénom NOM". Le champ nom n'est pas modifié : il est réécrit à chaque
- * connexion SSO et sert à distinguer les comptes dans le back-office.
+ * intervenant, dont on n'affiche que "Prénom NOM" (nom_complet) — que son nom
+ * vaille "Prénom NOM - Intervenant" (cf thematique_cioidc_nom_affiche) ou
+ * encore l'ancien "Intervenant" seul, d'avant l'ajout du prénom+nom. Le champ
+ * nom n'est pas modifié : il est réécrit à chaque connexion SSO et sert à
+ * distinguer les comptes dans le back-office.
  * Les profs gardent "rôle - classe - collège".
  *
  * @param int $id_auteur
@@ -1787,7 +1789,9 @@ function thematique_nom_public_auteur($id_auteur) {
 
 	$nom = trim($auteur['nom'] ?? '');
 	$nom_complet = trim($auteur['nom_complet'] ?? '');
-	if ($nom_complet !== '' && str_starts_with($nom, $nom_complet)) {
+	if ($nom_complet !== '' && (str_starts_with($nom, $nom_complet) || thematique_donner_role(
+		$id_auteur
+	) === 'intervenant')) {
 		return $cache[$id_auteur] = $nom_complet;
 	}
 
