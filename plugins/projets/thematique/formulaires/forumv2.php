@@ -31,7 +31,7 @@ function formulaires_forumv2_charger_dist($id_article) {
 	 * on charge le texte actuel du commentaire.
 	 */
 	if ($id_forum && !$texte) {
-		$forum = sql_fetsel('id_forum, id_article, id_parent, texte', 'spip_forum', 'id_forum=' . intval($id_forum));
+		$forum = sql_fetsel('id_forum, objet, id_objet, id_parent, texte', 'spip_forum', 'id_forum=' . intval($id_forum));
 
 		if (!$forum) {
 			return [
@@ -49,7 +49,7 @@ function formulaires_forumv2_charger_dist($id_article) {
 		 * Vérification que le commentaire appartient bien
 		 * à l'article affiché.
 		 */
-		if (intval($forum['id_article']) !== intval($id_article)) {
+		if ($forum['objet'] !== 'article' || intval($forum['id_objet']) !== intval($id_article)) {
 			return [
 				'id_article' => $id_article,
 				'id_forum' => $id_forum,
