@@ -20,18 +20,19 @@ Paramètre attendu : id_article ou id_rubrique.
 </BOUCLE_article_sidebar>
 <BOUCLE_rubrique_sidebar(RUBRIQUES){id_rubrique}{tout}>
 <div id="header-col-left">
+	[(#REM) Rubrique projet : photo et nom de l'intervenant qui y est lié,
+	logo et titre de la rubrique à défaut. ]
 	<BOUCLE_auteur_rubrique(AUTEURS){id_rubrique=#ID_RUBRIQUE}{tout}{0,1}>
 		#SET{nom_auteur, #ID_AUTEUR|thematique_nom_public_auteur}
 		#SET{image, #ID_AUTEUR|thematique_image_auteur_ou_classe{#ID_RUBRIQUE}}
 		<div class="photo">
-			
-			<img src="#GET{image}" alt="#GET{nom_auteur}" />
-			
+			<img src="#GET{image}" alt="[(#GET{nom_auteur}|attribut_html)]" />
 		</div>
+		<div class="auteur">#GET{nom_auteur}</div>
 	</BOUCLE_auteur_rubrique>
 		<div class="photo">[(#ID_RUBRIQUE|thematique_logo_carre{rubrique})]</div>
+		<div>#TITRE</div>
 	<//B_auteur_rubrique>
-	<div>#TITRE</div>
 </div>
 </BOUCLE_rubrique_sidebar>
 <//B_article_sidebar>
