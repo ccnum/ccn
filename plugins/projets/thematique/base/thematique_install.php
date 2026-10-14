@@ -4,6 +4,12 @@ if (!defined('_ECRIRE_INC_VERSION')) {
 	return;
 }
 
+/**
+ * Pipeline declarer_tables_principales : champs ajoutés aux tables SPIP.
+ *
+ * @param array $tables_principales Description des tables principales
+ * @return array
+ */
 function thematique_declarer_tables_principales($tables_principales) {
 
 	//-- Ajout des champs extras ----------------------------------
@@ -48,6 +54,12 @@ function thematique_declarer_tables_principales($tables_principales) {
 	return $tables_principales;
 }
 
+/**
+ * Pipeline declarer_tables_interfaces.
+ *
+ * @param array $interface Interfaces des tables
+ * @return array
+ */
 function thematique_declarer_tables_interfaces($interface) {
 
 	return $interface;

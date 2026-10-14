@@ -8,9 +8,11 @@ if (!defined('_ECRIRE_INC_VERSION')) {
  * Met un article à la poubelle (bouton « Supprimer » d'un billet/évènement).
  * Réponse HTTP seule (appel fetch() de supprimerArticle() dans controleurs.js) :
  * 200 si l'article est bien passé à la poubelle, 403 sinon.
+ *
+ * @param int|string|null $arg Article à supprimer, lu depuis l'action sécurisée si null
  */
 function action_thematique_supprimer_article_dist($arg = null) {
-	if (is_null($arg)) {
+	if ($arg === null) {
 		$securiser_action = charger_fonction('securiser_action', 'inc');
 		$arg = $securiser_action();
 	}

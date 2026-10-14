@@ -33,6 +33,12 @@ function thematique_champ_extra_simple($nom, $cle_lang, $sql, $modifier = ['webm
 	];
 }
 
+/**
+ * Pipeline declarer_champs_extras : champs extras des auteurs et articles.
+ *
+ * @param array $champs Champs extras déjà déclarés, par table
+ * @return array
+ */
 function thematique_declarer_champs_extras($champs = []) {
 	// 'disable' => 'disable', volontairement désactivé (cf historique)
 	$champs['spip_auteurs']['ent'] = thematique_champ_extra_simple(
