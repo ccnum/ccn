@@ -17,8 +17,8 @@ if (!defined('_THEMATIQUE_RENTREE_MOIS')) {
  * 2. crée (si absents) les deux articles jalons du projet : "Cap sur
  *    l'année" (cap-sur-l-annee) et "La Rencontre" (la-rencontre), en
  *    statut prop, assignés au premier intervenant trouvé sur le projet ;
- * 3. crée (si absente) une fiche d'intervenant dans chaque rubrique de
- *    projet sous "Consignes", identifiée par le mot-clé intervenant.
+ * 3. crée (si absente) la fiche de l'intervenant de l'année (mot-clé
+ *    intervenant, cf thematique_creer_fiche_intervenant()).
  *
  * Enregistrée via le pipeline taches_generales_cron (thematique_pipelines.php)
  * plutôt que la balise <genie> de paquet.xml, car le pipeline est réévalué à
@@ -42,7 +42,9 @@ function genie_thematique_rentree_annee_dist($last) {
 
 	if ((int) date('n') !== _THEMATIQUE_RENTREE_MOIS) {
 		spip_log(
-			'thematique_rentree_annee : hors fenêtre (mois=' . date('n') . ', attendu=' . _THEMATIQUE_RENTREE_MOIS . '), on ne fait rien',
+			'thematique_rentree_annee : hors fenêtre (mois=' . date(
+				'n'
+			) . ', attendu=' . _THEMATIQUE_RENTREE_MOIS . '), on ne fait rien',
 			'thematique'
 		);
 		return 1;
@@ -78,13 +80,13 @@ function genie_thematique_rentree_annee_dist($last) {
 	spip_log("thematique_rentree_annee $annee : rubrique de l'année #$id_rubrique OK", 'thematique');
 
 	// Les deux étapes sont toujours exécutées, même si la première échoue,
-	// pour qu'une erreur sur les jalons ne bloque pas les fiches intervenants.
+	// pour qu'une erreur sur les jalons ne bloque pas la fiche intervenant.
 	$jalons_ok = thematique_rentree_creer_jalons($id_rubrique, $annee);
-	$fiches_ok = thematique_rentree_creer_fiches_intervenants($id_rubrique, $annee);
+	$fiche_ok = thematique_creer_fiche_intervenant();
 
-	if (!$jalons_ok || !$fiches_ok) {
+	if (!$jalons_ok || !$fiche_ok) {
 		spip_log(
-			"thematique_rentree_annee $annee : au moins un jalon ou une fiche intervenant n'a pas pu être créé, "
+			"thematique_rentree_annee $annee : au moins un jalon ou la fiche intervenant n'a pas pu être créé, "
 			. 'meta non mise à jour (nouvelle tentative au prochain passage du cron)',
 			'thematique' . _LOG_ERREUR
 		);
@@ -138,57 +140,4 @@ function thematique_rentree_creer_jalons(int $id_rubrique, int $annee): bool {
 	}
 
 	return $ok;
-}
-
-/**
- * Crée une fiche intervenant (mot-clé "intervenant") dans chaque rubrique
- * intervenant de l'année, si elle est absente.
- *
- * @param int $id_parent Rubrique parente des rubriques intervenants
- * @param int $annee     Année de la rentrée
- * @return bool true si toutes les fiches existent à la fin
- */
-function thematique_rentree_creer_fiches_intervenants(int $id_parent, int $annee): bool {
-	$infos = [
-		'titre' => _T('thematique:fiche_intervenant_titre'),
-		'texte' => _T('thematique:fiche_intervenant_texte_a_completer'),
-		'date' => $annee . '-09-01 00:00:00',
-	];
-
-	$rubriques = sql_allfetsel('id_rubrique', 'spip_rubriques', 'id_parent=' . $id_parent, '', 'id_rubrique');
-
-	$ok = true;
-	foreach ($rubriques as $rubrique) {
-		$id_rubrique_intervenant = (int) $rubrique['id_rubrique'];
-
-		$id_auteur = thematique_rentree_auteur_de_rubrique($id_rubrique_intervenant);
-		if (!$id_auteur) {
-			spip_log(
-				"thematique_rentree_annee $annee : aucun auteur lié à la rubrique intervenant #$id_rubrique_intervenant",
-				'thematique' . _LOG_ERREUR
-			);
-			$ok = false;
-			continue;
-		}
-
-		if (!thematique_creer_article_mot_cle_si_absent($id_rubrique_intervenant, 'intervenant', $infos, $id_auteur)) {
-			$ok = false;
-		}
-	}
-
-	return $ok;
-}
-
-/**
- * Premier auteur lié à une rubrique (0 si aucun).
- */
-function thematique_rentree_auteur_de_rubrique(int $id_rubrique): int {
-	return (int) sql_getfetsel(
-		'id_auteur',
-		'spip_auteurs_liens',
-		"objet='rubrique' AND id_objet=" . $id_rubrique,
-		'',
-		'id_auteur',
-		'0,1'
-	);
 }

@@ -96,11 +96,12 @@ function thematique_upgrade($nom_meta_base_version, $version_cible) {
 	$maj['3.4.5'] = [];
 	cextras_api_upgrade(thematique_declarer_champs_extras(), $maj['3.4.5']);
 
-	$maj['3.4.6'] = [['thematique_ajouter_mots_clef']];
-	// Migration de données, hors cron de rentrée : les sites déjà en 2026
-	// doivent recevoir la fiche même si septembre est passé.
-	$maj['3.4.7'] = [['thematique_creer_fiche_intervenant_2026']];
+	// Mot-clé intervenant + fiche de l'intervenant de l'année active, hors
+	// cron de rentrée : les sites déjà dans l'année doivent la recevoir même
+	// si septembre est passé.
+	$maj['3.4.7'] = [['thematique_ajouter_mots_clef'], ['thematique_creer_fiche_intervenant']];
 
+	include_spip('thematique_fonctions');
 	include_spip('base/upgrade');
 	maj_plugin($nom_meta_base_version, $version_cible, $maj);
 }
@@ -404,66 +405,6 @@ function thematique_ajouter_mots_clef() {
 
 	// Groupe Sites
 	thematique_ajouter_groupe_mots('site', '');
-}
-
-function thematique_creer_fiche_intervenant_2026() {
-	include_spip('base/abstract_sql');
-	include_spip('action/editer_article');
-	include_spip('action/editer_liens');
-	include_spip('thematique_fonctions');
-	thematique_ajouter_mots_clef();
-
-	$id_rubrique_annee = sql_getfetsel(
-		'id_rubrique',
-		'spip_rubriques',
-		'id_parent=0 AND titre=' . sql_quote('2026'),
-		'',
-		'id_rubrique',
-		'0,1'
-	);
-	$id_rubrique_consignes = $id_rubrique_annee ? sql_getfetsel(
-		'id_rubrique',
-		'spip_rubriques',
-		'id_parent=' . intval($id_rubrique_annee) . ' AND titre=' . sql_quote('Consignes'),
-		'',
-		'id_rubrique',
-		'0,1'
-	) : 0;
-	$id_rubrique_intervenant = $id_rubrique_consignes ? sql_getfetsel(
-		'id_rubrique',
-		'spip_rubriques',
-		'id_parent=' . intval($id_rubrique_consignes),
-		'',
-		'id_rubrique',
-		'0,1'
-	) : 0;
-	if (!$id_rubrique_intervenant) {
-		spip_log(
-			'thematique_creer_fiche_intervenant_2026 : rubrique 2026/Consignes/intervenant introuvable',
-			'thematique' . _LOG_ERREUR
-		);
-		return;
-	}
-
-	$id_auteur = (int) sql_getfetsel(
-		'id_auteur',
-		'spip_auteurs_liens',
-		"objet='rubrique' AND id_objet=" . intval($id_rubrique_intervenant),
-		'',
-		'id_auteur',
-		'0,1'
-	);
-	$infos = [
-		'titre' => _T('thematique:fiche_intervenant_titre'),
-		'texte' => _T('thematique:fiche_intervenant_texte_a_completer'),
-		'date' => '2026-09-01 00:00:00',
-	];
-	if (!thematique_creer_article_mot_cle_si_absent($id_rubrique_intervenant, 'intervenant', $infos, $id_auteur)) {
-		spip_log(
-			'thematique_creer_fiche_intervenant_2026 : échec de création de la fiche',
-			'thematique' . _LOG_ERREUR
-		);
-	}
 }
 
 function thematique_configurer_rubriques() {

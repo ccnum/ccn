@@ -451,7 +451,10 @@ function thematique_creer_article_mot_cle_si_absent($id_rubrique, $titre_mot, $i
 	$id_rubrique = intval($id_rubrique);
 	$id_mot = thematique_id_mot($titre_mot);
 	if (!$id_rubrique || !$id_mot) {
-		spip_log("thematique_creer_article_mot_cle_si_absent : rubrique ou mot-clé '$titre_mot' manquant", 'thematique' . _LOG_ERREUR);
+		spip_log(
+			"thematique_creer_article_mot_cle_si_absent : rubrique ou mot-clé '$titre_mot' manquant",
+			'thematique' . _LOG_ERREUR
+		);
 		return false;
 	}
 
@@ -478,20 +481,24 @@ function thematique_creer_article_mot_cle_si_absent($id_rubrique, $titre_mot, $i
 		return true;
 	}
 
+	// article_inserer() lie _request('id_auteur') s'il est défini, sinon
+	// l'auteur en session : lancé depuis la migration, la fiche était
+	// attribuée au webmestre qui passait sur /ecrire. On force donc l'auteur
+	// voulu (0 = aucun), puis on restaure la valeur de la requête.
+	$id_auteur_request = _request('id_auteur');
+	set_request('id_auteur', intval($id_auteur));
 	$id_article = article_inserer($id_rubrique, [
 		'titre' => $infos['titre'],
 		'texte' => $infos['texte'],
 		'date' => $infos['date'],
 		'statut' => 'prop',
 	]);
+	set_request('id_auteur', $id_auteur_request);
 	if (!$id_article) {
 		return false;
 	}
 
 	objet_associer(['mots' => intval($id_mot)], ['articles' => $id_article]);
-	if ($id_auteur) {
-		objet_associer(['auteurs' => intval($id_auteur)], ['articles' => $id_article]);
-	}
 	return true;
 }
 
@@ -1337,7 +1344,6 @@ function thematique_assurer_structure_annee() {
  * @return int 0 si aucun intervenant trouvé
  */
 function thematique_premier_intervenant($id_rubrique) {
-	spip_log("thematique_premier_intervenant", "debug");
 	$id_mot_consignes = thematique_id_mot('consignes');
 	if (!$id_mot_consignes) {
 		return 0;
@@ -1348,15 +1354,9 @@ function thematique_premier_intervenant($id_rubrique) {
 	if (!$id_racine) {
 		return 0;
 	}
-	spip_log("ici, rubrique = " . $id_rubrique . ' racine = ' . $id_racine, "debug");
 	return intval(sql_getfetsel(
 		'lien.id_auteur',
-		[
-			'spip_auteurs_liens AS lien',
-			'spip_rubriques AS rub',
-			'spip_rubriques AS consignes',
-			'spip_mots_liens AS ml',
-		],
+		['spip_auteurs_liens AS lien', 'spip_rubriques AS rub', 'spip_rubriques AS consignes', 'spip_mots_liens AS ml'],
 		[
 			'lien.id_objet=rub.id_rubrique',
 			"lien.objet='rubrique'",
@@ -1370,6 +1370,38 @@ function thematique_premier_intervenant($id_rubrique) {
 		'',
 		'1'
 	));
+}
+
+/**
+ * Crée (si absente) la fiche de l'intervenant de l'année scolaire active
+ * (article au mot-clé intervenant), dans la rubrique du projet sous
+ * « Consignes » — une seule par site et par année. Appelée par le cron de
+ * rentrée (genie/thematique_rentree_annee.php) et par la migration 3.4.7.
+ *
+ * Si aucun intervenant n'est encore lié au projet, la fiche est créée sans
+ * auteur : thematique_creer_article_mot_cle_si_absent() complète le lien
+ * au passage suivant.
+ *
+ * @return bool true si la fiche existe à la fin
+ */
+function thematique_creer_fiche_intervenant() {
+	include_spip('action/editer_article');
+	include_spip('action/editer_liens');
+
+	$id_consignes = thematique_assurer_structure_annee();
+	$id_projet = $id_consignes
+		? (int) sql_getfetsel('id_rubrique', 'spip_rubriques', 'id_parent=' . intval($id_consignes), '', 'id_rubrique', '0,1')
+		: 0;
+	if (!$id_projet) {
+		spip_log('thematique_creer_fiche_intervenant : aucune rubrique projet sous Consignes', 'thematique' . _LOG_ERREUR);
+		return false;
+	}
+
+	return thematique_creer_article_mot_cle_si_absent($id_projet, 'intervenant', [
+		'titre' => _T('thematique:fiche_intervenant_titre'),
+		'texte' => _T('thematique:fiche_intervenant_texte_a_completer'),
+		'date' => thematique_annee_scolaire() . '-09-01 00:00:00',
+	], thematique_premier_intervenant($id_consignes));
 }
 
 /**
