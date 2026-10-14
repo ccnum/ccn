@@ -1,14 +1,17 @@
 #CACHE{0}
 <BOUCLE_desc(ARTICLES){id_article=#ENV{id_article}}{tous}>
 	<div class="fond-bleu-contenu">
-		[(#TEXTE|oui)
-			#SET{type_objet_courant, #ID_ARTICLE|thematique_type_objet_article}
-			<div class="bouton-modifier-container">
-				<INCLURE{fond=noisettes/sidebar/inc/bouton_modifier_article, id_article=#ID_ARTICLE, type_objet=#GET{type_objet_courant}} />
+		[(#REM) Modifier et réactions sur une même ligne (cf .barre-actions-article). ]
+		<div class="barre-actions-article">
+			[(#TEXTE|oui)
+				#SET{type_objet_courant, #ID_ARTICLE|thematique_type_objet_article}
+				<div class="bouton-modifier-container">
+					<INCLURE{fond=noisettes/sidebar/inc/bouton_modifier_article, id_article=#ID_ARTICLE, type_objet=#GET{type_objet_courant}} />
+				</div>
+			]
+			<div class="sidebar-reaction-container">
+				[(#INCLURE{fond=inclure/favoris_ccn, objet=article, id_objet=#ID_ARTICLE, ajax})]
 			</div>
-		]
-		<div class="sidebar-reaction-container">
-			[(#INCLURE{fond=inclure/favoris_ccn, objet=article, id_objet=#ID_ARTICLE, ajax})]
 		</div>
 		[(#AUTORISER{modifier, article, #ID_ARTICLE}|oui|et{#TEXTE|non|et{#GET{nb_doc}|=={0}|oui}}|et{#ADMIN|=={-1}|non}|et{#CONST{_ANNEE_SCOLAIRE}|=={#ANNEE_SCOLAIRE_REELLE}}|oui)
 			<div class="sidebar_bubble">

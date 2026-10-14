@@ -14,6 +14,15 @@ if (!defined('_ECRIRE_INC_VERSION')) {
 	return;
 }
 
+/**
+ * Charge le formulaire public de publication ou de modification d'un article.
+ *
+ * @param int|string $id_rubrique Rubrique de publication
+ * @param string $type_article Type de contenu (consignes, travail_en_cours, ressources, blogs, evenements, intervenant…)
+ * @param int|string $id_consigne Mission à laquelle répond l'article (0 sinon)
+ * @param int|string $id_article Article modifié (0 = création)
+ * @return array Valeurs du formulaire
+ */
 function formulaires_public_publier_article_charger_dist(
 	$id_rubrique,
 	$type_article,
@@ -63,7 +72,14 @@ function formulaires_public_publier_article_charger_dist(
 		if ($article) {
 			$valeurs['id_article'] = $article['id_article'];
 			$valeurs['titre'] = $article['titre'];
-			$valeurs['texte'] = $article['texte'];
+			// Texte par défaut posé à la création (jalons, fiche intervenant, cf
+			// genie/thematique_rentree_annee.php) : champ vide pour afficher le
+			// placeholder plutôt qu'un texte à effacer avant d'écrire.
+			$textes_par_defaut = [
+				_T('thematique:jalon_texte_a_completer'),
+				_T('thematique:fiche_intervenant_texte_a_completer'),
+			];
+			$valeurs['texte'] = in_array(trim($article['texte']), $textes_par_defaut, true) ? '' : $article['texte'];
 			$valeurs['id_rubrique'] = $article['id_rubrique'];
 			$valeurs['id_parent'] = $article['id_rubrique'];
 			$valeurs['date'] = $article['date'];
@@ -116,6 +132,15 @@ function formulaires_public_publier_article_charger_dist(
 	return $valeurs;
 }
 
+/**
+ * Vérifie les droits, la rubrique et les champs du formulaire de publication.
+ *
+ * @param int|string $id_rubrique Rubrique de publication
+ * @param string $type_article Type de contenu (consignes, travail_en_cours, ressources, blogs, evenements, intervenant…)
+ * @param int|string $id_consigne Mission à laquelle répond l'article (0 sinon)
+ * @param int|string $id_article Article modifié (0 = création)
+ * @return array Erreurs, vide si aucune
+ */
 function formulaires_public_publier_article_verifier_dist(
 	$id_rubrique,
 	$type_article,
@@ -206,6 +231,15 @@ function formulaires_public_publier_article_verifier_dist(
 	return $erreurs;
 }
 
+/**
+ * Crée ou modifie l'article, puis le publie.
+ *
+ * @param int|string $id_rubrique Rubrique de publication
+ * @param string $type_article Type de contenu (consignes, travail_en_cours, ressources, blogs, evenements, intervenant…)
+ * @param int|string $id_consigne Mission à laquelle répond l'article (0 sinon)
+ * @param int|string $id_article Article modifié (0 = création)
+ * @return array Retour du traitement (message_ok, message_erreur, redirect…)
+ */
 function formulaires_public_publier_article_traiter_dist(
 	$id_rubrique,
 	$type_article,
@@ -317,6 +351,18 @@ function formulaires_public_publier_article_traiter_dist(
 		if ($id_auteur && !$edition) {
 			objet_associer(['auteur' => $id_auteur], ['article' => $id_article]);
 		}
+		// Exception : la fiche intervenant, créée sans auteur si l'intervenant
+		// n'était pas encore lié au projet (cf thematique_creer_fiche_intervenant()).
+		// Le premier intervenant qui la complète en devient l'auteur — pas un
+		// admin, qui ne fait que corriger.
+		elseif (
+			$id_auteur
+			&& $role_visiteur === 'intervenant'
+			&& thematique_article_est_fiche_intervenant($id_article)
+			&& !sql_countsel('spip_auteurs_liens', "objet='article' AND id_objet=" . intval($id_article))
+		) {
+			objet_associer(['auteur' => $id_auteur], ['article' => $id_article]);
+		}
 		// Si c'est une réponse à une consigne, associer l'article à la
 		// consigne — déjà validée en _verifier_dist (thematique_consigne_valide),
 		// mais on revérifie ici : _traiter_dist peut être invoqué
@@ -376,7 +422,12 @@ function formulaires_public_publier_article_traiter_dist(
 			? _T('thematique:article_modifie_succes')
 			: _T('thematique:article_publie_succes');
 
-		$res['redirect'] = generer_url_public('article', 'id_article=' . $id_article . '&mode=complet');
+		$res['redirect'] = $type_article === 'intervenant'
+			? generer_url_public(
+				'rubrique',
+				'id_objet=' . intval($id_rubrique_article) . '&mode=complet&type_objet=intervenant'
+			)
+			: generer_url_public('article', 'id_article=' . $id_article . '&mode=complet');
 	}
 
 	return $res;

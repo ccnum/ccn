@@ -9,10 +9,30 @@ function thematique_autoriser() {
 
 // declarations d'autorisations
 // Uniquement des fonctions courtes ici théoriquement
+/**
+ * Création d'un onglet du plugin : mêmes droits que sa configuration.
+ *
+ * @param string $faire Action demandée
+ * @param string $type Type d'objet
+ * @param int|string $id Identifiant de l'objet
+ * @param array $qui Auteur concerné (visiteur en session si vide)
+ * @param array $opt Options
+ * @return bool
+ */
 function autoriser_thematique_creer_onglet_dist($faire, $type, $id, $qui, $opt) {
 	return autoriser('configurer', 'thematique', $id, $qui, $opt);
 }
 
+/**
+ * Configuration du plugin, réservée aux webmestres.
+ *
+ * @param string $faire Action demandée
+ * @param string $type Type d'objet
+ * @param int|string $id Identifiant de l'objet
+ * @param array $qui Auteur concerné (visiteur en session si vide)
+ * @param array $opt Options
+ * @return bool
+ */
 function autoriser_thematique_configurer_dist($faire, $type, $id, $qui, $opt) {
 	return autoriser('webmestre', $type, $id, $qui, $opt);
 }
@@ -21,54 +41,68 @@ function autoriser_thematique_configurer_dist($faire, $type, $id, $qui, $opt) {
  * Entrée "Classes vides" du menu Maintenance du BO (cf <menu> de paquet.xml),
  * réservée aux webmestres comme la page elle-même
  * (prive/squelettes/contenu/thematique_classes_vides.html).
+ *
+ * @param string $faire Action demandée
+ * @param string $type Type d'objet
+ * @param int|string $id Identifiant de l'objet
+ * @param array $qui Auteur concerné (visiteur en session si vide)
+ * @param array $opt Options
+ * @return bool
  */
 function autoriser_thematiqueclassesvides_menu_dist($faire, $type, $id, $qui, $opt) {
 	return autoriser('webmestre', $type, $id, $qui, $opt);
 }
 
-/**
- * Restreint la création d'article dans une rubrique : le cœur
- * SPIP (autoriser_rubrique_creerarticledans_dist) se contente de vérifier
- * que la rubrique est "visible" — sans plugin de restriction par branche
- * installé, autoriser('voir','rubrique',...) est vrai pour tout le monde
- * (cf autoriser_voir_dist) : n'importe quel compte 1comite (prof,
- * intervenant) pouvait donc créer un article dans N'IMPORTE QUELLE
- * rubrique du site, pas seulement la sienne — le formulaire public de
- * publication (formulaires/public_publier_article.php) transmet un
- * id_rubrique posté en HTTP, contraint seulement visuellement côté
- * squelette (choix des boutons affichés), jamais revérifié côté serveur.
- *
- * Un admin garde un accès complet (comportement inchangé). Pour les autres
- * rôles, la rubrique ciblée doit être une rubrique à laquelle l'auteur est
- * effectivement lié (spip_auteurs_liens) : sa/ses classe(s), son(ses)
- * projet(s) d'intervenant, le blog pédagogique — même mécanisme que
- * thematique_id_rubrique_classe/_auteur. Exception : la rubrique globale
- * "Ressources", ouverte à tout rédacteur (cf le hack côté serveur qui y
- * force id_rubrique dans public_publier_article.php, indépendamment de la
- * valeur postée).
- *
- * Corollaire : le rattachement d'un auteur à une rubrique via l'ENT
- * (thematique_cioidc_associer_rubriques) donne désormais un vrai droit de
- * création dans cette rubrique — d'où le resserrement du filtrage des
- * "groupes libres" pertinents dans inc/thematique_cioidc.php (même issue).
- *
- * Garde `function_exists` : comme pour `autoriser_article_modifier`
- * ci-dessous, le plugin contrib `autorite` (plugins/spip/autorite, pas
- * maison) déclare conditionnellement (dès que l'option "Auteur modifie
- * article" de sa page de configuration est cochée, meta
- * `$GLOBALS['autorite']['auteur_mod_article']`) sa propre
- * `autoriser_rubrique_creerarticledans()` dans inc/autoriser.php — PHP
- * fatalait (Cannot redeclare) sans ce garde (500 sur tout le site, cf le
- * crash constaté sur ccn-ontourne après le déploiement initial de ce
- * correctif). Sur un tel site, cette fonction-ci est inactive : la
- * restriction de création est donc appliquée directement dans
- * formulaires/public_publier_article.php (thematique_auteur_peut_creer_-
- * dans_rubrique), qui ne dépend pas du hook autoriser() et s'applique
- * quelle que soit la config d'autorite. Cette fonction reste utile sur les
- * environnements où l'option autorite n'est pas activée (couverture plus
- * large que le seul formulaire de publication).
- */
 if (!function_exists('autoriser_rubrique_creerarticledans')) {
+	/**
+	 * Restreint la création d'article dans une rubrique : le cœur
+	 * SPIP (autoriser_rubrique_creerarticledans_dist) se contente de vérifier
+	 * que la rubrique est "visible" — sans plugin de restriction par branche
+	 * installé, autoriser('voir','rubrique',...) est vrai pour tout le monde
+	 * (cf autoriser_voir_dist) : n'importe quel compte 1comite (prof,
+	 * intervenant) pouvait donc créer un article dans N'IMPORTE QUELLE
+	 * rubrique du site, pas seulement la sienne — le formulaire public de
+	 * publication (formulaires/public_publier_article.php) transmet un
+	 * id_rubrique posté en HTTP, contraint seulement visuellement côté
+	 * squelette (choix des boutons affichés), jamais revérifié côté serveur.
+	 *
+	 * Un admin garde un accès complet (comportement inchangé). Pour les autres
+	 * rôles, la rubrique ciblée doit être une rubrique à laquelle l'auteur est
+	 * effectivement lié (spip_auteurs_liens) : sa/ses classe(s), son(ses)
+	 * projet(s) d'intervenant, le blog pédagogique — même mécanisme que
+	 * thematique_id_rubrique_classe/_auteur. Exception : la rubrique globale
+	 * "Ressources", ouverte à tout rédacteur (cf le hack côté serveur qui y
+	 * force id_rubrique dans public_publier_article.php, indépendamment de la
+	 * valeur postée).
+	 *
+	 * Corollaire : le rattachement d'un auteur à une rubrique via l'ENT
+	 * (thematique_cioidc_associer_rubriques) donne désormais un vrai droit de
+	 * création dans cette rubrique — d'où le resserrement du filtrage des
+	 * "groupes libres" pertinents dans inc/thematique_cioidc.php (même issue).
+	 *
+	 * Garde `function_exists` : comme pour `autoriser_article_modifier`
+	 * ci-dessous, le plugin contrib `autorite` (plugins/spip/autorite, pas
+	 * maison) déclare conditionnellement (dès que l'option "Auteur modifie
+	 * article" de sa page de configuration est cochée, meta
+	 * `$GLOBALS['autorite']['auteur_mod_article']`) sa propre
+	 * `autoriser_rubrique_creerarticledans()` dans inc/autoriser.php — PHP
+	 * fatalait (Cannot redeclare) sans ce garde (500 sur tout le site, cf le
+	 * crash constaté sur ccn-ontourne après le déploiement initial de ce
+	 * correctif). Sur un tel site, cette fonction-ci est inactive : la
+	 * restriction de création est donc appliquée directement dans
+	 * formulaires/public_publier_article.php (thematique_auteur_peut_creer_-
+	 * dans_rubrique), qui ne dépend pas du hook autoriser() et s'applique
+	 * quelle que soit la config d'autorite. Cette fonction reste utile sur les
+	 * environnements où l'option autorite n'est pas activée (couverture plus
+	 * large que le seul formulaire de publication).
+	 *
+	 * @param string $faire Action demandée
+	 * @param string $type Type d'objet
+	 * @param int|string $id Identifiant de l'objet
+	 * @param array $qui Auteur concerné (visiteur en session si vide)
+	 * @param array $opt Options
+	 * @return bool
+	 */
 	function autoriser_rubrique_creerarticledans($faire, $type, $id, $qui, $opt) {
 		if (!autoriser_rubrique_creerarticledans_dist($faire, $type, $id, $qui, $opt)) {
 			return false;
@@ -84,48 +118,55 @@ if (!function_exists('autoriser_rubrique_creerarticledans')) {
 	);
 }
 
-/**
- * Restriction sur le champ 'date' d'un article (règle actée par
- * ChristoErasme le 09/09) : au-delà de l'autorisation standard de modifier
- * l'article (autoriser_article_modifier_dist()), la date n'est éditable que
- * par :
- * - un admin, sur n'importe quel type de contenu (mission, agenda, salle
- *   des profs, ressource) ;
- * - un intervenant, uniquement sur un évènement (agenda) ou un billet de
- *   salle des profs (blogs) — pas sur une mission (consignes) ni une
- *   ressource.
- * "Formateur canopé" n'a volontairement pas de traitement distinct : rôle
- * fusionné avec "intervenant" (thematique_donner_role() ne le distingue pas), mêmes droits que lui pour cette autorisation.
- *
- * Le crayon #EDIT{date} passe systématiquement `champ => 'date'` en option
- * (cf classe_boucle_crayon() et autoriser_crayonner_dist() dans le plugin
- * crayons) : toute autre demande de modification d'article retombe sur le
- * comportement standard, inchangé.
- *
- * Fait suite au commit 3d1639a6 qui laissait cette restriction "à
- * traiter séparément".
- *
- * Historique du garde `function_exists` : le plugin contrib `autorite`
- * (plugins/spip/autorite, pas maison, désinstallé) déclarait
- * lui aussi `autoriser_article_modifier()` en dur (pas de suffixe `_dist`)
- * dans inc/autoriser.php, conditionnellement à sa config stockée en meta
- * (option "auteur peut modifier son article" — `auteur_mod_article`,
- * activée en prod sur ccn-ontourne via docker-entrypoint.sh). PHP ne
- * permettant pas de redéclarer une fonction, cette config activait un
- * `autoriser_article_modifier()` concurrent qui, chargé avant celui-ci,
- * empêchait la déclaration de CETTE fonction (sans le garde
- * `function_exists`, Fatal error "Cannot redeclare" → 500 sur tout le
- * site) — et de toute façon SHADOWAIT silencieusement les restrictions
- * ci-dessous (date, jalons, année archivée) plutôt que de les compléter, tant qu'il gagnait
- * la déclaration. D'où la désinstallation du plugin plutôt que la
- * désactivation de la seule option : la logique qu'il fournissait
- * ("l'auteur peut modifier son propre article même publié", nécessaire aux
- * crayons de ré-édition d'une mission/ressource/évènement déjà publiée) est
- * reprise explicitement ci-dessous, sous les mêmes garde-fous (année
- * archivée, champ date) que le reste de cette fonction — au lieu de shadower le tout comme
- * le faisait autorite.
- */
 if (!function_exists('autoriser_article_modifier')) {
+	/**
+	 * Restriction sur le champ 'date' d'un article (règle actée par
+	 * ChristoErasme le 09/09) : au-delà de l'autorisation standard de modifier
+	 * l'article (autoriser_article_modifier_dist()), la date n'est éditable que
+	 * par :
+	 * - un admin, sur n'importe quel type de contenu (mission, agenda, salle
+	 *   des profs, ressource) ;
+	 * - un intervenant, uniquement sur un évènement (agenda) ou un billet de
+	 *   salle des profs (blogs) — pas sur une mission (consignes) ni une
+	 *   ressource.
+	 * "Formateur canopé" n'a volontairement pas de traitement distinct : rôle
+	 * fusionné avec "intervenant" (thematique_donner_role() ne le distingue pas), mêmes droits que lui pour cette autorisation.
+	 *
+	 * Le crayon #EDIT{date} passe systématiquement `champ => 'date'` en option
+	 * (cf classe_boucle_crayon() et autoriser_crayonner_dist() dans le plugin
+	 * crayons) : toute autre demande de modification d'article retombe sur le
+	 * comportement standard, inchangé.
+	 *
+	 * Fait suite au commit 3d1639a6 qui laissait cette restriction "à
+	 * traiter séparément".
+	 *
+	 * Historique du garde `function_exists` : le plugin contrib `autorite`
+	 * (plugins/spip/autorite, pas maison, désinstallé) déclarait
+	 * lui aussi `autoriser_article_modifier()` en dur (pas de suffixe `_dist`)
+	 * dans inc/autoriser.php, conditionnellement à sa config stockée en meta
+	 * (option "auteur peut modifier son article" — `auteur_mod_article`,
+	 * activée en prod sur ccn-ontourne via docker-entrypoint.sh). PHP ne
+	 * permettant pas de redéclarer une fonction, cette config activait un
+	 * `autoriser_article_modifier()` concurrent qui, chargé avant celui-ci,
+	 * empêchait la déclaration de CETTE fonction (sans le garde
+	 * `function_exists`, Fatal error "Cannot redeclare" → 500 sur tout le
+	 * site) — et de toute façon SHADOWAIT silencieusement les restrictions
+	 * ci-dessous (date, jalons, année archivée) plutôt que de les compléter, tant qu'il gagnait
+	 * la déclaration. D'où la désinstallation du plugin plutôt que la
+	 * désactivation de la seule option : la logique qu'il fournissait
+	 * ("l'auteur peut modifier son propre article même publié", nécessaire aux
+	 * crayons de ré-édition d'une mission/ressource/évènement déjà publiée) est
+	 * reprise explicitement ci-dessous, sous les mêmes garde-fous (année
+	 * archivée, champ date) que le reste de cette fonction — au lieu de shadower le tout comme
+	 * le faisait autorite.
+	 *
+	 * @param string $faire Action demandée
+	 * @param string $type Type d'objet
+	 * @param int|string $id Identifiant de l'objet
+	 * @param array $qui Auteur concerné (visiteur en session si vide)
+	 * @param array $opt Options
+	 * @return bool
+	 */
 	function autoriser_article_modifier($faire, $type, $id, $qui, $opt) {
 		include_spip('thematique_fonctions');
 
@@ -166,7 +207,21 @@ if (!function_exists('autoriser_article_modifier')) {
 					"objet='article' AND id_objet=" . intval($id) . ' AND id_auteur=' . $id_auteur_visiteur
 				);
 
-			if (!$exception_jalon && !$exception_auteur_propre_article) {
+			// Fiche intervenant (cf thematique_creer_fiche_intervenant()) : créée
+			// sans auteur si l'intervenant n'était pas encore lié au projet. Il
+			// doit pouvoir la compléter quand même — il en devient alors l'auteur
+			// (cf formulaires/public_publier_article.php) — quel que soit son
+			// statut (une fiche publiée par un admin reste modifiable par lui).
+			$exception_fiche_intervenant = !$exception_jalon
+				&& $statut_article !== 'refuse'
+				&& thematique_donner_role($id_auteur_visiteur) === 'intervenant'
+				&& thematique_article_est_fiche_intervenant($id)
+				&& thematique_auteur_lie_sous_rubrique(
+					$id_auteur_visiteur,
+					intval(sql_getfetsel('id_rubrique', 'spip_articles', 'id_article=' . intval($id)))
+				);
+
+			if (!$exception_jalon && !$exception_auteur_propre_article && !$exception_fiche_intervenant) {
 				return false;
 			}
 			// on continue, sous les mêmes garde-fous (année passée, champ date) que le cas normal
@@ -215,6 +270,13 @@ if (!function_exists('autoriser_article_modifier')) {
  * #AUTORISER{forumsupprimer,...} directement, la même permission que
  * l'action instituer_forum vérifie réellement — plus de double check
  * incohérent entre affichage et action.
+ *
+ * @param string $faire Action demandée
+ * @param string $type Type d'objet
+ * @param int|string $id Identifiant de l'objet
+ * @param array $qui Auteur concerné (visiteur en session si vide)
+ * @param array $opt Options
+ * @return bool
  */
 function autoriser_forumsupprimer_dist($faire, $type, $id, $qui, $opt) {
 	$id_auteur_visiteur = intval($qui['id_auteur'] ?? 0);
@@ -270,6 +332,17 @@ function autoriser_forumsupprimer_dist($faire, $type, $id, $qui, $opt) {
 		&& in_array($id_rubrique_classe_eleve, thematique_classes_auteur($id_auteur_visiteur), true);
 }
 
+/**
+ * Suppression d'un article : un admin peut tout supprimer, les autres
+ * uniquement les articles dont ils sont auteurs.
+ *
+ * @param string $faire Action demandée
+ * @param string $type Type d'objet
+ * @param int|string $id Identifiant de l'objet
+ * @param array $qui Auteur concerné (visiteur en session si vide)
+ * @param array $opt Options
+ * @return bool
+ */
 function autoriser_article_supprimer($faire, $type, $id, $qui, $opt) {
 	$id = intval($id);
 	if (!$id || empty($qui['id_auteur'])) {

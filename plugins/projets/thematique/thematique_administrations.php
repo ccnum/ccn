@@ -7,6 +7,12 @@ if (!defined('_ECRIRE_INC_VERSION')) {
 include_spip('inc/cextras');
 include_spip('base/thematique_cextras');
 
+/**
+ * Installation et mises à jour du schéma du plugin (cf paquet.xml).
+ *
+ * @param string $nom_meta_base_version Nom de la meta de version du schéma
+ * @param string $version_cible Version de schéma visée
+ */
 function thematique_upgrade($nom_meta_base_version, $version_cible) {
 
 	$maj = [];
@@ -96,6 +102,12 @@ function thematique_upgrade($nom_meta_base_version, $version_cible) {
 	$maj['3.4.5'] = [];
 	cextras_api_upgrade(thematique_declarer_champs_extras(), $maj['3.4.5']);
 
+	// Mot-clé intervenant + fiche de l'intervenant de l'année active, hors
+	// cron de rentrée : les sites déjà dans l'année doivent la recevoir même
+	// si septembre est passé.
+	$maj['3.4.7'] = [['thematique_ajouter_mots_clef'], ['thematique_creer_fiche_intervenant']];
+
+	include_spip('thematique_fonctions');
 	include_spip('base/upgrade');
 	maj_plugin($nom_meta_base_version, $version_cible, $maj);
 }
@@ -263,6 +275,11 @@ function thematique_migrer_bibliotheques() {
 	);
 }
 
+/**
+ * Désinstallation : supprime les groupes de mots-clés du plugin, leurs mots et la meta de version.
+ *
+ * @param string $nom_meta_base_version Nom de la meta de version du schéma
+ */
 function thematique_vider_tables($nom_meta_base_version) {
 	foreach (['Contenus', 'Presentation', 'site'] as $titre) {
 		$groupes = sql_allfetsel('id_groupe', 'spip_groupes_mots', 'titre=' . sql_quote($titre));
@@ -349,12 +366,26 @@ function thematique_configurer_site() {
 	ecrire_config('nom_site', $nom_site_spip);
 }
 
+/**
+ * Crée un mot-clé dans un groupe s'il n'existe pas déjà.
+ *
+ * @param string $titre Titre du mot-clé
+ * @param int|string $id_groupe Groupe de mots-clés
+ */
 function thematique_ajouter_mot($titre, $id_groupe) {
 	if (!sql_getfetsel('id_mot', 'spip_mots', 'titre=' . sql_quote($titre) . ' AND id_groupe=' . intval($id_groupe))) {
 		sql_insertq('spip_mots', ['titre' => $titre, 'id_groupe' => $id_groupe]);
 	}
 }
 
+/**
+ * Retourne le groupe de mots-clés de ce titre, créé s'il n'existe pas.
+ *
+ * @param string $titre Titre du groupe
+ * @param string $tables_liees Tables liées (ex: 'articles')
+ * @param string $condition_extra Condition SQL supplémentaire pour retrouver un groupe existant
+ * @return int|string Identifiant du groupe
+ */
 function thematique_ajouter_groupe_mots($titre, $tables_liees, $condition_extra = '') {
 	$condition = 'titre=' . sql_quote($titre);
 	if ($condition_extra) {
@@ -393,7 +424,7 @@ function thematique_ajouter_mots_clef() {
 	// (cf genie/thematique_rentree_annee.php), pas des articles "présentation"
 	// au sens strict, mais rattachés à ce groupe existant plutôt qu'un
 	// groupe dédié pour 2 mots-clés seulement.
-	foreach (['laclasse.com', 'sommaire_edito', 'cap-sur-l-annee', 'la-rencontre'] as $mot) {
+	foreach (['laclasse.com', 'sommaire_edito', 'cap-sur-l-annee', 'la-rencontre', 'intervenant'] as $mot) {
 		thematique_ajouter_mot($mot, $id_groupe);
 	}
 

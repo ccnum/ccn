@@ -184,6 +184,27 @@
 	line-height: inherit;
 }
 
+/* Marges des <p> (1em, règle globale p) comptées dans le max-height
+ci-dessus : la marge haute du premier paragraphe et celles entre
+paragraphes y laissaient moins de 5 lignes, la dernière coupée à moitié.
+Retirées seulement tant que le commentaire est replié. */
+.forum-card .content:not(.ouvert) .contenu-texte.redimmensionne p {
+	margin: 0;
+}
+
+/* Mesure de la hauteur complète du texte dans le style replié, sans la
+limite de 5 lignes (cf forum.js:mesurerLireLaSuite). */
+.forum-card .contenu-texte.redimmensionne.mesure-hauteur {
+	display: block;
+	-webkit-line-clamp: none;
+	max-height: none;
+}
+
+/* Pas de saut du texte vers le bas à l'ouverture (Lire la suite). */
+.forum-card .contenu-texte > p:first-child {
+	margin-top: 0;
+}
+
 .forum-card .actions-left {
 	height: 35px;
 	display: flex;

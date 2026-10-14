@@ -63,8 +63,13 @@ function thematique_preparer_fichier_session($flux) {
 	return $flux;
 }
 
-// Pre_boucles
-// Retourne les articles et articles syndiqués en lien avec l'année scolaire
+/**
+ * Pipeline pre_boucle : restreint les boucles ARTICLES et SYNDIC_ARTICLES à
+ * la période de l'année scolaire active (sauf critère {tout} ou /ecrire).
+ *
+ * @param \Spip\Compilateur\Noeud\Boucle $boucle Boucle en cours de compilation
+ * @return \Spip\Compilateur\Noeud\Boucle
+ */
 function thematique_pre_boucle($boucle) {
 	if (($boucle->type_requete != 'articles') && ($boucle->type_requete != 'syndic_articles')) {
 		return $boucle;
@@ -86,6 +91,12 @@ function thematique_pre_boucle($boucle) {
 	return $boucle;
 }
 
+/**
+ * Pipeline jqueryui_plugins : modules jQuery UI utilisés par le plugin.
+ *
+ * @param array $scripts Plugins jQuery UI à charger
+ * @return array
+ */
 function thematique_jqueryui_plugins($scripts) {
 	$scripts[] = 'jquery.ui.draggable';
 	$scripts[] = 'jquery.ui.tooltip';
@@ -99,6 +110,12 @@ function thematique_jqueryui_plugins($scripts) {
 	return $scripts;
 }
 
+/**
+ * Pipeline insert_head : scripts JS du plugin.
+ *
+ * @param string $flux En-tête HTML
+ * @return string
+ */
 function thematique_insert_head($flux) {
 
 	// Ne pas ré-insérer les balises script lors d'un rechargement ajax
@@ -156,6 +173,13 @@ function thematique_insert_head($flux) {
 	return $flux;
 }
 
+/**
+ * Pipeline notifications_destinataires : destinataires des notifications de
+ * forum et de publication.
+ *
+ * @param array $flux Flux du pipeline (args, data : emails destinataires)
+ * @return array
+ */
 function thematique_notifications_destinataires($flux) {
 	$id_article = null;
 
@@ -246,6 +270,14 @@ function thematique_notifications_destinataires($flux) {
 	return $flux;
 }
 
+/**
+ * Pipeline cioidc_userinfo : à la connexion par l'ENT, résout ou crée l'auteur
+ * SPIP, son statut et ses liens vers les rubriques de classe/projet
+ * (cf inc/thematique_cioidc.php).
+ *
+ * @param array $flux Flux du pipeline (data : attributs ENT de l'utilisateur)
+ * @return array
+ */
 function thematique_cioidc_userinfo($flux) {
 	// Ce que l'ENT a envoyé (JSON complet ou noms des attributs, cf _CCN_CIOIDC_LOG_COMPLET)
 	include_spip('inc/ccn_cioidc');
@@ -353,6 +385,16 @@ function thematique_cioidc_userinfo($flux) {
 		($is_enseignant && !$is_webmestre && $a_un_groupe_pertinent) ? $classes_reelles : [],
 		(string) $annee_scolaire
 	);
+
+	// Rubriques de classe du prof encore sous un ancien titre ("4 2 - …" avant
+	// "4ème 2 - …", cf thematique_cioidc_nom_classe()) : renommées à sa connexion,
+	// la pop-up de choix des classes (seul autre endroit qui le fait) ne
+	// s'affichant qu'une fois par an.
+	if ($is_enseignant && !$is_webmestre && $id_travail_classes) {
+		foreach ($classes_reelles as $groupe) {
+			thematique_cioidc_renommer_ancienne_classe($groupe, $id_travail_classes);
+		}
+	}
 
 	[$classes_a_lier, $projets_a_lier] = thematique_cioidc_resoudre_liens_rubriques(
 		$is_enseignant,

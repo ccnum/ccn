@@ -10,10 +10,16 @@ if (!defined('_ECRIRE_INC_VERSION')) {
  * dans thematique_pipelines.php.
  **/
 
-// cioidc_session() résout le compte qui recevra réellement la session par login=uid
-// (uid_champ_spip='login', cf. cioidc_verifier_identifiant()) : on doit chercher avec
-// le même critère en priorité, sinon on met à jour un autre compte (ex: un doublon
-// historique retrouvé par email) que celui qui sera effectivement connecté.
+/**
+ * cioidc_session() résout le compte qui recevra réellement la session par login=uid
+ * (uid_champ_spip='login', cf. cioidc_verifier_identifiant()) : on doit chercher avec
+ * le même critère en priorité, sinon on met à jour un autre compte (ex: un doublon
+ * historique retrouvé par email) que celui qui sera effectivement connecté.
+ *
+ * @param string $uid Identifiant ENT (login SPIP)
+ * @param string $email Email de l'utilisateur ('' = pas de repli par email)
+ * @return array|false|null Auteur (id_auteur, nom, statut…), false ou null si introuvable
+ */
 function thematique_cioidc_resoudre_auteur($uid, $email) {
 	$champs = 'id_auteur,nom,nom_complet,statut,email,webmestre,avatar';
 	$auteur = $uid ? sql_fetsel($champs, 'spip_auteurs', 'login=' . sql_quote($uid)) : null;
@@ -48,8 +54,16 @@ function thematique_cioidc_creer_auteur(string $uid, string $email, array $data)
 	return $id_auteur ? thematique_cioidc_resoudre_auteur($uid, '') : null;
 }
 
-// Si $valeur diffère du champ actuel de l'auteur, met à jour spip_auteurs et logue le
-// changement. Factorise le motif commun aux mises à jour d'email/nom/statut ci-dessous.
+/**
+ * Si $valeur diffère du champ actuel de l'auteur, met à jour spip_auteurs et logue le
+ * changement. Factorise le motif commun aux mises à jour d'email/nom/statut ci-dessous.
+ *
+ * @param array $auteur Auteur tel que lu en base
+ * @param string $champ Colonne de spip_auteurs
+ * @param mixed $valeur Nouvelle valeur (ignorée si vide)
+ * @param string $libelle_log Libellé pour le log
+ * @return array Auteur à jour
+ */
 function thematique_cioidc_maj_champ(array $auteur, string $champ, $valeur, string $libelle_log) {
 	if ($valeur && $valeur !== $auteur[$champ]) {
 		spip_log('userinfo mise à jour ' . $libelle_log . ' : ' . $auteur[$champ] . ' => ' . $valeur, 'cioidc');
@@ -59,8 +73,13 @@ function thematique_cioidc_maj_champ(array $auteur, string $champ, $valeur, stri
 	return $auteur;
 }
 
-// Normalise un attribut CAS multivalué : arrive en objet unique (pas en tableau)
-// quand il n'y a qu'une seule valeur.
+/**
+ * Normalise un attribut CAS multivalué : arrive en objet unique (pas en tableau)
+ * quand il n'y a qu'une seule valeur.
+ *
+ * @param mixed $valeur Attribut ENT (tableau, objet unique ou vide)
+ * @return array
+ */
 function thematique_cioidc_normaliser_liste($valeur) {
 	if (is_object($valeur)) {
 		return [$valeur];
@@ -79,13 +98,20 @@ function thematique_cioidc_classes_reelles(array $classes_groupes) {
 	));
 }
 
-// Les comptes ENS rattachés à un établissement listé dans _THEMATIQUE_RNE_WEBMESTRES
-// (ex: établissement pilote de l'équipe projet) restent administrateurs complets
-// plutôt que rédacteurs, sans restriction de rubrique. ENTAllUai liste tous les UAI
-// de rattachement (pas seulement le principal).
-// Les intervenants sont rattachés à cette même structure avec le même profil ENS :
-// un membre du groupe libre _THEMATIQUE_GROUPE_INTERVENANTS n'est jamais webmestre
-// (sinon "Admin", sans lien vers son projet sous "Consignes").
+/**
+ * Les comptes ENS rattachés à un établissement listé dans _THEMATIQUE_RNE_WEBMESTRES
+ * (ex: établissement pilote de l'équipe projet) restent administrateurs complets
+ * plutôt que rédacteurs, sans restriction de rubrique. ENTAllUai liste tous les UAI
+ * de rattachement (pas seulement le principal).
+ * Les intervenants sont rattachés à cette même structure avec le même profil ENS :
+ * un membre du groupe libre _THEMATIQUE_GROUPE_INTERVENANTS n'est jamais webmestre
+ * (sinon "Admin", sans lien vers son projet sous "Consignes").
+ *
+ * @param mixed $uai_liste UAI de rattachement (ENTAllUai, liste ou valeur unique)
+ * @param bool $is_enseignant Profil enseignant
+ * @param bool $is_intervenant_ccn Membre du groupe des intervenants
+ * @return bool
+ */
 function thematique_cioidc_est_webmestre($uai_liste, bool $is_enseignant, bool $is_intervenant_ccn = false) {
 	$uai_liste = array_map('strval', (array) thematique_cioidc_normaliser_liste($uai_liste));
 	$rne_webmestres = array_filter(array_map('trim', explode(',', _THEMATIQUE_RNE_WEBMESTRES)));
@@ -115,16 +141,21 @@ function thematique_cioidc_est_intervenant_ccn(array $groupes_libres, string $ui
 	return false;
 }
 
-// Nom d'un établissement depuis son UAI (ex: "0440001A", cf ENTAllUai/
-// _THEMATIQUE_RNE_WEBMESTRES), via l'API publique "Annuaire de l'éducation"
-// (data.education.gouv.fr, sans clé). Passe par
-// recuperer_url_cache() (cache fichier SPIP, cf ecrire/inc/distant.php)
-// plutôt qu'un appel direct à chaque connexion SSO : un nom d'établissement
-// change quasiment jamais, un aller-retour réseau au login serait une
-// dépendance externe synchrone inutile — et recuperer_url_cache() réutilise
-// le dernier résultat en cache si l'API est temporairement indisponible,
-// plutôt que de faire échouer la résolution (et donc perdre l'info) le temps
-// d'un incident réseau.
+/**
+ * Nom d'un établissement depuis son UAI (ex: "0440001A", cf ENTAllUai/
+ * _THEMATIQUE_RNE_WEBMESTRES), via l'API publique "Annuaire de l'éducation"
+ * (data.education.gouv.fr, sans clé). Passe par
+ * recuperer_url_cache() (cache fichier SPIP, cf ecrire/inc/distant.php)
+ * plutôt qu'un appel direct à chaque connexion SSO : un nom d'établissement
+ * change quasiment jamais, un aller-retour réseau au login serait une
+ * dépendance externe synchrone inutile — et recuperer_url_cache() réutilise
+ * le dernier résultat en cache si l'API est temporairement indisponible,
+ * plutôt que de faire échouer la résolution (et donc perdre l'info) le temps
+ * d'un incident réseau.
+ *
+ * @param string $uai UAI de l'établissement
+ * @return string Nom de l'établissement, '' si inconnu
+ */
 function thematique_cioidc_nom_etablissement($uai) {
 	$uai = trim((string) $uai);
 	if (!preg_match('/^[0-9]{7}[A-Za-z]$/', $uai)) {
@@ -211,7 +242,7 @@ function thematique_cioidc_nom_affiche(
 		if (stripos($groupe_classe, 'CCN - ') === 0) {
 			$groupe_classe = substr($groupe_classe, strlen('CCN - '));
 		}
-		$parties[] = $groupe_classe;
+		$parties[] = thematique_cioidc_nom_classe($groupe_classe);
 	}
 	if (($uai = (string) ($uai_liste[0] ?? ''))
 		&& ($nom_etablissement = thematique_cioidc_nom_etablissement($uai))) {
@@ -324,25 +355,98 @@ function thematique_cioidc_bloquer_si_archive(array $auteur) {
 	}
 }
 
-// Titre de la rubrique d'une classe ENT sous "Travail des classes" : nom de la classe
-// suivi de son établissement (ex: "5EME1 - Collège Jean Jaurès"), pour distinguer deux
-// classes homonymes de collèges différents inscrits au même CCN — sans quoi elles
-// partageaient la même rubrique. L'établissement vient du group_structure_id de la
-// classe (et non du premier UAI du compte : un prof peut enseigner dans plusieurs
-// établissements). Le "/" est remplacé car creer_rubrique_nommee() y voit un
-// séparateur d'arborescence.
-function thematique_cioidc_titre_rubrique_classe($groupe) {
-	$titre = (string) $groupe->group_name;
+/**
+ * Nom d'une classe ENT tel qu'affiché sur le site : niveau de collège suivi d'un
+ * espace écrit en toutes lettres ("4 2" => "4ème 2", format dans l'item de langue
+ * nom_classe_niveau). Les autres formats ("5EME1", "3E1HI-GE"…) sont gardés tels
+ * quels.
+ *
+ * @param string $group_name Nom de la classe dans l'ENT
+ * @return string
+ */
+function thematique_cioidc_nom_classe($group_name) {
+	$group_name = trim((string) $group_name);
+	if (preg_match('/^([3-6])\s+(\S.*)$/u', $group_name, $m)) {
+		return _T('thematique:nom_classe_niveau', ['niveau' => $m[1], 'classe' => $m[2]]);
+	}
+	return $group_name;
+}
+
+/**
+ * Titre de la rubrique d'une classe ENT sous "Travail des classes" : nom de la classe
+ * (cf thematique_cioidc_nom_classe()) suivi de son établissement (ex: "4ème 2 - Collège
+ * Jean Jaurès"), pour distinguer deux classes homonymes de collèges différents
+ * inscrits au même CCN — sans quoi elles partageaient la même rubrique.
+ * L'établissement vient du group_structure_id de la classe (et non du premier UAI du
+ * compte : un prof peut enseigner dans plusieurs établissements). Le "/" est remplacé
+ * car creer_rubrique_nommee() y voit un séparateur d'arborescence.
+ *
+ * @param object $groupe Groupe ENT de la classe (group_name, group_structure_id)
+ * @param bool $nom_brut Nom ENT brut ("4 2") au lieu du nom formaté (titres anciens)
+ * @return string
+ */
+function thematique_cioidc_titre_rubrique_classe($groupe, $nom_brut = false) {
+	$titre = $nom_brut ? (string) $groupe->group_name : thematique_cioidc_nom_classe($groupe->group_name);
 	if ($nom_etablissement = thematique_cioidc_nom_etablissement($groupe->group_structure_id ?? '')) {
 		$titre .= ' - ' . $nom_etablissement;
 	}
 	return str_replace('/', '-', $titre);
 }
 
-// Rubrique d'une classe ENT pour un prof : trouvée ou créée sous son titre avec
-// établissement. Une rubrique créée avant l'ajout de l'établissement (titre = nom de
-// classe seul, exactement) est renommée plutôt que dupliquée, pour ne pas perdre son
-// contenu ni ses liens auteurs.
+/**
+ * Anciens titres possibles de la rubrique d'une classe ENT, différents du titre
+ * actuel : nom ENT brut avec établissement ("4 2 - Collège…", avant le formatage du
+ * nom), puis nom ENT brut seul (avant l'ajout de l'établissement).
+ *
+ * @param object $groupe Groupe ENT de la classe
+ * @return string[]
+ */
+function thematique_cioidc_anciens_titres_classe($groupe) {
+	return array_values(array_diff(
+		array_unique([thematique_cioidc_titre_rubrique_classe($groupe, true), (string) $groupe->group_name]),
+		[thematique_cioidc_titre_rubrique_classe($groupe)]
+	));
+}
+
+/**
+ * Rubrique d'une classe ENT encore sous un ancien titre (cf
+ * thematique_cioidc_anciens_titres_classe()), renommée au titre actuel plutôt que
+ * dupliquée, pour ne pas perdre son contenu ni ses liens auteurs.
+ *
+ * @param object $groupe Groupe ENT de la classe
+ * @param int|string $id_travail_classes Rubrique « Travail des classes » de l'année
+ * @return int 0 si aucune
+ */
+function thematique_cioidc_renommer_ancienne_classe($groupe, $id_travail_classes) {
+	$titre = thematique_cioidc_titre_rubrique_classe($groupe);
+	// Une rubrique porte déjà le titre actuel : ne pas en créer une homonyme.
+	if (sql_countsel('spip_rubriques', 'titre = ' . sql_quote($titre) . ' AND id_parent=' . intval($id_travail_classes))) {
+		return 0;
+	}
+	foreach (thematique_cioidc_anciens_titres_classe($groupe) as $ancien) {
+		$id_ancienne = (int) sql_getfetsel(
+			'id_rubrique',
+			'spip_rubriques',
+			'titre = ' . sql_quote($ancien) . ' AND id_parent=' . intval($id_travail_classes)
+		);
+		if ($id_ancienne) {
+			sql_updateq('spip_rubriques', ['titre' => $titre], 'id_rubrique=' . $id_ancienne);
+			spip_log("userinfo rubrique classe #$id_ancienne renommée $ancien => $titre", 'cioidc');
+			return $id_ancienne;
+		}
+	}
+	return 0;
+}
+
+/**
+ * Rubrique d'une classe ENT pour un prof : trouvée ou créée sous son titre avec
+ * établissement. Une rubrique encore sous un ancien titre est renommée plutôt que
+ * dupliquée (cf thematique_cioidc_renommer_ancienne_classe()).
+ *
+ * @param object $groupe Groupe ENT de la classe
+ * @param int|string $id_travail_classes Rubrique « Travail des classes » de l'année
+ * @return int|string|null Rubrique de la classe, null sans rubrique parente
+ */
 function thematique_cioidc_rubrique_classe_prof($groupe, $id_travail_classes) {
 	if (!$id_travail_classes) {
 		return null;
@@ -351,14 +455,7 @@ function thematique_cioidc_rubrique_classe_prof($groupe, $id_travail_classes) {
 	if ($id_classe = thematique_trouver_rubrique($titre, $id_travail_classes)) {
 		return $id_classe;
 	}
-	$id_ancienne = sql_getfetsel(
-		'id_rubrique',
-		'spip_rubriques',
-		'titre = ' . sql_quote($groupe->group_name) . ' AND id_parent=' . intval($id_travail_classes)
-	);
-	if ($id_ancienne && $titre !== $groupe->group_name) {
-		sql_updateq('spip_rubriques', ['titre' => $titre], 'id_rubrique=' . intval($id_ancienne));
-		spip_log("userinfo rubrique classe #$id_ancienne renommée {$groupe->group_name} => $titre", 'cioidc');
+	if ($id_ancienne = thematique_cioidc_renommer_ancienne_classe($groupe, $id_travail_classes)) {
 		return $id_ancienne;
 	}
 	return thematique_trouver_ou_creer_rubrique($titre, $id_travail_classes);
@@ -437,21 +534,34 @@ function thematique_cioidc_valider_classes_ent(int $id_auteur, array $classes, s
 	return $choisies;
 }
 
-// Supprime les rubriques des classes ENT de ce prof qu'il n'a pas retenues : créées
-// sous "Travail des classes" par la connexion SSO avant la pop-up de choix, elles
-// s'affichaient comme classes participantes. Seules les classes de SA liste ENT
-// (thematique_classes_ent_a_choisir(), lue avant que le choix de l'année soit noté)
-// sont candidates, retrouvées par titre exact (avec établissement, ou ancien titre
-// sans), et une rubrique n'est supprimée que si :
-// - aucun autre auteur que des élèves n'y est lié (un collègue l'a cochée, ou y a été
-//   rattaché à la connexion et ne l'a pas encore choisie) ;
-// - elle est vide (cf thematique_classe_compter_contenu()) : on ne perd jamais de contenu.
+/**
+ * Supprime les rubriques des classes ENT de ce prof qu'il n'a pas retenues : créées
+ * sous "Travail des classes" par la connexion SSO avant la pop-up de choix, elles
+ * s'affichaient comme classes participantes. Seules les classes de SA liste ENT
+ * (thematique_classes_ent_a_choisir(), lue avant que le choix de l'année soit noté)
+ * sont candidates, retrouvées par titre exact (avec établissement, ou ancien titre
+ * sans), et une rubrique n'est supprimée que si :
+ * - aucun autre auteur que des élèves n'y est lié (un collègue l'a cochée, ou y a été
+ *   rattaché à la connexion et ne l'a pas encore choisie) ;
+ * - elle est vide (cf thematique_classe_compter_contenu()) : on ne perd jamais de contenu.
+ *
+ * @param int $id_auteur Prof concerné
+ * @param int|string $id_travail_classes Rubrique « Travail des classes » de l'année
+ * @param array $choisies Rubriques de classe cochées
+ */
 function thematique_cioidc_supprimer_classes_non_choisies(int $id_auteur, $id_travail_classes, array $choisies): void {
 	include_spip('inc/thematique_classes_vides');
 
 	$nb = 0;
 	foreach (thematique_classes_ent_a_choisir($id_auteur) as $classe) {
-		$titres = array_unique([$classe['titre'], $classe['group_name']]);
+		$groupe = (object) [
+			'group_name' => $classe['group_name'],
+			'group_structure_id' => $classe['group_structure_id'] ?? '',
+		];
+		$titres = array_unique(array_merge(
+			[$classe['titre'], thematique_cioidc_titre_rubrique_classe($groupe)],
+			thematique_cioidc_anciens_titres_classe($groupe)
+		));
 		$rubriques = sql_allfetsel('id_rubrique, titre', 'spip_rubriques', [
 			sql_in('titre', $titres),
 			'id_parent=' . intval($id_travail_classes),
@@ -482,15 +592,23 @@ function thematique_cioidc_supprimer_classes_non_choisies(int $id_auteur, $id_tr
 	}
 }
 
-// Rubriques de classe/projet à lier à l'auteur.
-// Un prof inscrit au projet de CE site pour l'année (groupe libre pertinent, cf
-// thematique_cioidc_groupes_libres_pertinents()) n'est lié ici qu'à ses projets : ses
-// classes ENT (y compris d'anciennes années, ENTClassesGroupes n'a pas d'année) sont
-// seulement mémorisées (thematique_cioidc_memoriser_classes_ent()), il coche dans une
-// pop-up celles inscrites au CCN, qui sont alors créées sous "Travail des classes"
-// (cf formulaires/choisir_classes_ent.php).
-// Un élève est seulement rattaché à sa classe si elle existe déjà (cochée par son prof
-// ou créée par un admin), ex: affichage de l'emoji de classe hors du contexte d'une rubrique.
+/**
+ * Rubriques de classe/projet à lier à l'auteur.
+ * Un prof inscrit au projet de CE site pour l'année (groupe libre pertinent, cf
+ * thematique_cioidc_groupes_libres_pertinents()) n'est lié ici qu'à ses projets : ses
+ * classes ENT (y compris d'anciennes années, ENTClassesGroupes n'a pas d'année) sont
+ * seulement mémorisées (thematique_cioidc_memoriser_classes_ent()), il coche dans une
+ * pop-up celles inscrites au CCN, qui sont alors créées sous "Travail des classes"
+ * (cf formulaires/choisir_classes_ent.php).
+ * Un élève est seulement rattaché à sa classe si elle existe déjà (cochée par son prof
+ * ou créée par un admin), ex: affichage de l'emoji de classe hors du contexte d'une rubrique.
+ *
+ * @param array $classes_reelles Classes ENT (groupes CLS)
+ * @param array $groupes_libres_pertinents Groupes libres du projet de ce site
+ * @param int|string $id_travail_classes Rubrique « Travail des classes » de l'année
+ * @param int|string $id_consignes Rubrique « Consignes » de l'année
+ * @return array [rubriques de classe, rubriques de projet] à lier
+ */
 function thematique_cioidc_resoudre_liens_rubriques(
 	bool $is_enseignant,
 	bool $is_webmestre,
@@ -511,10 +629,9 @@ function thematique_cioidc_resoudre_liens_rubriques(
 		}
 	} elseif ($is_eleve) {
 		foreach ($classes_reelles as $groupe) {
-			if ($id_classe = thematique_trouver_rubrique(
-				thematique_cioidc_titre_rubrique_classe($groupe),
-				$id_travail_classes
-			)) {
+			$id_classe = thematique_trouver_rubrique(thematique_cioidc_titre_rubrique_classe($groupe), $id_travail_classes)
+				?: thematique_cioidc_renommer_ancienne_classe($groupe, $id_travail_classes);
+			if ($id_classe) {
 				$classes_a_lier[] = $id_classe;
 			}
 		}

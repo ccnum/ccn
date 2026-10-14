@@ -1,5 +1,7 @@
 <?php
 
+use Spip\Afficher\Minipage\Admin as MinipageAdmin;
+
 if (!defined('_ECRIRE_INC_VERSION')) {
 	return;
 }
@@ -14,8 +16,8 @@ function action_thematique_supprimer_classes_vides_dist() {
 	$annee = (string) $securiser_action();
 
 	if (!preg_match('/^\d{4}$/', $annee) || !autoriser('webmestre')) {
-		include_spip('inc/minipres');
-		echo minipres();
+		$minipage = new MinipageAdmin();
+		echo $minipage->page();
 		exit;
 	}
 

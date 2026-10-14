@@ -12,6 +12,9 @@ if (!defined('_ECRIRE_INC_VERSION')) {
  * générique d'édition de document.
  *
  * @package SPIP\Thematique\Formulaires
+ *
+ * @param int|string $id_document Document vidéo concerné
+ * @return array Valeurs du formulaire
  */
 
 function formulaires_modifier_video_password_charger_dist($id_document = 0) {
@@ -25,6 +28,12 @@ function formulaires_modifier_video_password_charger_dist($id_document = 0) {
 	];
 }
 
+/**
+ * Vérifie les droits de modification du document.
+ *
+ * @param int|string $id_document Document vidéo concerné
+ * @return array Erreurs, vide si aucune
+ */
 function formulaires_modifier_video_password_verifier_dist($id_document = 0) {
 	$erreurs = [];
 
@@ -36,6 +45,12 @@ function formulaires_modifier_video_password_verifier_dist($id_document = 0) {
 	return $erreurs;
 }
 
+/**
+ * Enregistre le mot de passe et le répercute sur Vimeo.
+ *
+ * @param int|string $id_document Document vidéo concerné
+ * @return array Retour du traitement (message_ok, message_erreur, redirect…)
+ */
 function formulaires_modifier_video_password_traiter_dist($id_document = 0) {
 	$res = ['editable' => true];
 
