@@ -1479,6 +1479,26 @@ function thematique_id_fiche_intervenant($id_rubrique = 0) {
 }
 
 /**
+ * Un article est-il une fiche intervenant (mot-clé intervenant) ? Mis en
+ * cache mémoire par requête.
+ *
+ * @param int $id_article
+ * @return bool
+ */
+function thematique_article_est_fiche_intervenant($id_article) {
+	static $cache = [];
+	$id_article = intval($id_article);
+	if (!isset($cache[$id_article])) {
+		$id_mot = thematique_id_mot('intervenant');
+		$cache[$id_article] = $id_article && $id_mot && sql_countsel(
+			'spip_mots_liens',
+			'objet=' . sql_quote('article') . ' AND id_objet=' . $id_article . ' AND id_mot=' . intval($id_mot)
+		);
+	}
+	return $cache[$id_article];
+}
+
+/**
  * Intervenant "de l'année" : premier intervenant trouvé (au sens
  * thematique_premier_intervenant) sur la rubrique racine nommée par
  * l'année scolaire active. Repli sur la première rubrique taguée
@@ -2275,8 +2295,8 @@ function thematique_numero_mission($id_article) {
 		// Seules les missions publiées comptent (la consigne
 		// elle-même est gardée quel que soit son statut, la notification
 		// pouvant partir avant que le statut soit relu), et les jalons
-		// (cap-sur-l-annee/la-rencontre) sont exclus comme dans
-		// json/consignes.html — sinon un "Cap sur l'année" publié dans la
+		// (cap-sur-l-annee/la-rencontre) et la fiche intervenant sont exclus
+		// comme dans json/consignes.html — sinon un "Cap sur l'année" publié dans la
 		// rubrique décalait toutes les missions d'un cran dans les mails.
 		$missions = sql_allfetsel(
 			'id_article',
@@ -2290,7 +2310,9 @@ function thematique_numero_mission($id_article) {
 		$numero = 0;
 		foreach ($missions as $mission) {
 			$id_mission = intval($mission['id_article']);
-			if ($id_mission !== $id_consigne && thematique_article_est_jalon($id_mission)) {
+			if ($id_mission !== $id_consigne
+				&& (thematique_article_est_jalon($id_mission) || thematique_article_est_fiche_intervenant($id_mission))
+			) {
 				continue;
 			}
 			$numero++;
