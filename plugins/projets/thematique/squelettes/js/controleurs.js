@@ -670,6 +670,7 @@ function callIntervenant(id_rubrique) {
 	if (id_rubrique !== '' && !Number.isInteger(Number(id_rubrique))) return;
 	CCN.projet.showWholeTimeline();
 	setLateralSidebarExpanded(false);
+	updateMenuIcon(['intervenant'], 'sidebarView');
 	let url = CCN.projet.url_popup_intervenant;
 	if (id_rubrique != '') {
 		url = CCN.projet.url_popup_intervenant + '&id_objet=' + id_rubrique + '&type_objet=intervenant';
@@ -1390,7 +1391,8 @@ function loadContentInMainSidebar(url, callback, typeContenu) {
 	const contenusQuiNeZoomentPas = [
 		'classe',
 		'publication_article',
-		'ressource'
+		'ressource',
+		'intervenant'
 	]
 	showSidebar({
 		zoomTimeline: !contenusQuiNeZoomentPas.includes(typeContenu)
@@ -1471,6 +1473,7 @@ function loadContentInMainSidebar(url, callback, typeContenu) {
 function updateMenuIcon(ids, mode) {
 	if (mode === 'timelineMode' || mode === 'mainView') {
 		$('#menu_bas .logo a').removeClass('selected');
+		$('#menu_bas .logo.menu_logo_intervenant').removeClass('selected');
 		for (const id of ids) {
 			$('.menu_logo_' + id).addClass('selected');
 		}
@@ -1479,6 +1482,7 @@ function updateMenuIcon(ids, mode) {
 	if (mode === 'sidebarView') {
 		$('#menu_bas .logo a.menu_logo_type_sidebarView').removeClass('selected');
 		$('#menu_bas .logo a.logo_menu_classe').removeClass('selected');
+		$('#menu_bas .logo.menu_logo_intervenant').removeClass('selected');
 		for (const id of ids) {
 			$('.menu_logo_' + id).addClass('selected');
 		}
