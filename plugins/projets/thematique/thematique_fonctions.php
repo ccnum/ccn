@@ -6,6 +6,14 @@ if (!defined('_ECRIRE_INC_VERSION')) {
 /**
  * FONCTIONS
  **/
+
+/**
+ * Filtre |nb2col : dernier chiffre d'un nombre (ex: numéro de couleur d'une
+ * classe, de 0 à 9).
+ *
+ * @param int|string $nb
+ * @return string
+ */
 function filtre_nb2col($nb) {
 	return substr($nb, spip_strlen((int) $nb) - 1, 1);
 }
@@ -103,6 +111,13 @@ function thematique_annee_scolaire_reelle() {
 	return intval(date('Y')) - 1;
 }
 
+/**
+ * Balise #ANNEE_SCOLAIRE_REELLE : année scolaire calendaire en cours,
+ * indépendante de l'année sélectionnée (cf thematique_annee_scolaire_reelle()).
+ *
+ * @param \Spip\Compilateur\Noeud\Champ $p Pile de la balise
+ * @return \Spip\Compilateur\Noeud\Champ
+ */
 function balise_ANNEE_SCOLAIRE_REELLE_dist($p) {
 	$p->code = 'thematique_annee_scolaire_reelle()';
 	return $p;
@@ -191,6 +206,9 @@ function thematique_est_requete_ajax() {
  * Retourne 'non' pour une vraie navigation (lien direct, rafraîchissement)
  * même en mode=ajax-detail, afin que le layout complet (et donc les scripts,
  * ex. controleurs.js) soit chargé.
+ *
+ * @param \Spip\Compilateur\Noeud\Champ $p Pile de la balise
+ * @return \Spip\Compilateur\Noeud\Champ
  */
 function balise_EST_MODE_NOISETTE_dist($p) {
 	$p->code = "(_request('mode') === 'ajax' || (_request('mode') === 'ajax-detail' && thematique_est_requete_ajax()) ? 'oui' : 'non')";
@@ -258,6 +276,13 @@ function filtre_sidebar_profil_dist() {
 	return sidebar_profil();
 }
 
+/**
+ * Rôle d'un auteur sur le site, mis en cache mémoire par requête. Exposé
+ * en session via #SESSION{role} (cf thematique_preparer_fichier_session()).
+ *
+ * @param int|string $id_auteur Auteur concerné (0 = visiteur non connecté)
+ * @return string|null prof, intervenant, admin, eleve, visiteur ; null si aucun rôle
+ */
 function thematique_donner_role($id_auteur) {
 	if (!$id_auteur) {
 		return 'visiteur';
@@ -317,6 +342,9 @@ function thematique_donner_role($id_auteur) {
 /**
  * Est-ce que le rôle donné voit les contenus réservés aux adultes
  * (blog pédagogique / "salle des profs") : prof, intervenant, admin.
+ *
+ * @param string|null $role Rôle (prof, intervenant, admin, eleve, visiteur ou null)
+ * @return bool
  */
 function thematique_role_voit_salle_profs($role) {
 	return in_array($role, ['prof', 'intervenant', 'admin']);
@@ -326,6 +354,9 @@ function thematique_role_voit_salle_profs($role) {
  * Est-ce que le rôle donné peut publier (menu "Publier" du header : mission,
  * ressource, évènement) : prof, intervenant, admin. Un élève n'a accès qu'au
  * forum, pas à ce menu.
+ *
+ * @param string|null $role Rôle (prof, intervenant, admin, eleve, visiteur ou null)
+ * @return bool
  */
 function thematique_role_publie($role) {
 	return in_array($role, ['prof', 'intervenant', 'admin']);
@@ -335,6 +366,9 @@ function thematique_role_publie($role) {
  * Fond sidebar à inclure pour une consigne (mission), selon le rôle de session.
  * Par défaut (visiteur non connecté, admin, eleve) : vue "autre",
  * pas de différence apparente entre "autre" et "eleve".
+ *
+ * @param string|null $role Rôle (prof, intervenant, admin, eleve, visiteur ou null)
+ * @return string Nom du fond (consigne_pour_classe, _intervenant ou _autre)
  */
 function fond_consigne_pour_role($role) {
 	if ($role === 'prof') {
@@ -349,6 +383,9 @@ function fond_consigne_pour_role($role) {
 /**
  * Fond sidebar à inclure pour une réponse à une consigne, selon le rôle de session.
  * Par défaut (visiteur non connecté, prof, eleve) : vue classe.
+ *
+ * @param string|null $role Rôle (prof, intervenant, admin, eleve, visiteur ou null)
+ * @return string Nom du fond (reponse_pour_intervenant ou _classe)
  */
 function fond_reponse_pour_role($role) {
 	if ($role === 'intervenant' || $role === 'admin') {
@@ -357,6 +394,13 @@ function fond_reponse_pour_role($role) {
 	return 'reponse_pour_classe';
 }
 
+/**
+ * L'auteur est-il lié à une rubrique dont la hiérarchie porte ce mot-clé ?
+ *
+ * @param int|string $id_auteur Auteur concerné
+ * @param string $titre_mot Titre du mot-clé
+ * @return bool
+ */
 function thematique_auteur_a_mot_dans_hierarchie($id_auteur, $titre_mot) {
 	$rubriques = sql_allfetsel(
 		'id_objet',
@@ -375,6 +419,10 @@ function thematique_auteur_a_mot_dans_hierarchie($id_auteur, $titre_mot) {
 /**
  * L'auteur est-il lié (spip_auteurs_liens) à $id_rubrique ou à l'une de ses
  * sous-rubriques ? Ex : intervenant lié à son projet, sous « Consignes ».
+ *
+ * @param int|string $id_auteur Auteur concerné
+ * @param int|string $id_rubrique Rubrique
+ * @return bool
  */
 function thematique_auteur_lie_sous_rubrique($id_auteur, $id_rubrique) {
 	$id_rubrique = intval($id_rubrique);
@@ -398,6 +446,13 @@ function thematique_auteur_lie_sous_rubrique($id_auteur, $id_rubrique) {
 	return false;
 }
 
+/**
+ * Rubrique et ses ascendants, du plus proche à la racine, mis en cache
+ * mémoire par requête.
+ *
+ * @param int|string $id_rubrique Rubrique de départ
+ * @return int[] La rubrique puis ses parents jusqu'à la racine (vide si 0)
+ */
 function thematique_ascendants_rubrique($id_rubrique) {
 	static $cache = [];
 	$id_rubrique = intval($id_rubrique);
@@ -502,6 +557,13 @@ function thematique_creer_article_mot_cle_si_absent($id_rubrique, $titre_mot, $i
 	return true;
 }
 
+/**
+ * La rubrique ou l'un de ses ascendants porte-t-il ce mot-clé ?
+ *
+ * @param int|string $id_rubrique Rubrique de départ
+ * @param string $titre_mot Titre du mot-clé
+ * @return bool
+ */
 function thematique_hierarchie_a_mot($id_rubrique, $titre_mot) {
 	$ascendants = thematique_ascendants_rubrique($id_rubrique);
 	if (!$ascendants) {
@@ -566,6 +628,12 @@ function thematique_type_objet_rubrique($id_rubrique) {
 	return $cache[$id_rubrique] = null;
 }
 
+/**
+ * Libellé affichable d'un type de contenu.
+ *
+ * @param string $type_article Type de contenu (consignes, travail_en_cours, cap-sur-l-annee…)
+ * @return string|null Libellé traduit, null si type inconnu
+ */
 function thematique_rendre_type_article_affichable($type_article) {
 	if ($type_article == 'consignes') {
 		return _T('thematique:consigne');
@@ -1413,6 +1481,7 @@ function thematique_creer_fiche_intervenant() {
  *
  * Appelée comme filtre : `#VAL|thematique_id_rubrique_projet`
  *
+ * @param mixed $_ Valeur ignorée (permet l'appel comme filtre)
  * @return int 0 si absente
  */
 function thematique_id_rubrique_projet($_ = null) {
@@ -1534,6 +1603,7 @@ function thematique_article_est_fiche_intervenant($id_article) {
  * (mêmes rubriques que celles utilisées par noisettes/menu_classes.html
  * pour lister les classes). Mis en cache mémoire par requête.
  *
+ * @param mixed $_ Valeur ignorée (permet l'appel comme filtre)
  * @return int 0 si aucun intervenant trouvé
  */
 function thematique_intervenant_annee($_ = null) {
@@ -2022,12 +2092,22 @@ function thematique_voir_mission() {
  * à #TEXTE ne joue donc pas. Il doit être appelé ici, en PHP, sur la sortie de
  * propre() : un |safehtml posé dans le squelette ne verrait pas les <script>,
  * que propre() met de côté et ne rétablit qu'en fin de chaîne de filtres.
+ *
+ * @param string|null $texte Texte brut du commentaire
+ * @return string HTML sécurisé
  */
 function thematique_texte_forum($texte) {
 	include_spip('inc/texte');
 	return safehtml(propre((string) $texte));
 }
 
+/**
+ * Filtre |afficher_forum_arbre : commentaires (forumv2) d'un article en arbre
+ * parent/réponses, avec nom formaté de leur auteur.
+ *
+ * @param int|string $id_article Article dont on affiche les commentaires
+ * @return string HTML de l'arbre des commentaires publiés
+ */
 function filtre_afficher_forum_arbre($id_article) {
 	include_spip('inc/session');
 	$forums = sql_allfetsel(
@@ -2848,6 +2928,14 @@ function thematique_picto_site($valeur_ignoree = null, $avec_timestamp = 'oui') 
 	return $chemin;
 }
 
+/**
+ * Construit récursivement l'arbre des messages sous un parent.
+ *
+ * @param int|string $id_parent Message parent (0 = racine)
+ * @param array $parents Messages indexés par id_parent
+ * @param int|null $id_forum_recent Message à marquer comme récent
+ * @return array Messages de ce niveau, avec leurs réponses (clé reponses)
+ */
 function forum_construire_arbre($id_parent, &$parents, $id_forum_recent = null) {
 	if (!isset($parents[$id_parent])) {
 		return [];
@@ -2862,6 +2950,12 @@ function forum_construire_arbre($id_parent, &$parents, $id_forum_recent = null) 
 	return $res;
 }
 
+/**
+ * HTML d'un niveau de l'arbre des commentaires (chaque message et ses réponses).
+ *
+ * @param array $forums Messages d'un niveau de l'arbre
+ * @return string HTML
+ */
 function forum_rendre_branche($forums) {
 	$html = '';
 	foreach ($forums as $forum) {
@@ -2872,6 +2966,12 @@ function forum_rendre_branche($forums) {
 	return $html;
 }
 
+/**
+ * Filtre |titre_consigne : titre d'une mission.
+ *
+ * @param int|string $id_consigne Mission (article consigne)
+ * @return string Titre, '' si aucun
+ */
 function filtre_titre_consigne($id_consigne) {
 	if (!$id_consigne) {
 		return '';
@@ -2879,6 +2979,13 @@ function filtre_titre_consigne($id_consigne) {
 	return sql_getfetsel('titre', 'spip_articles', 'id_article=' . intval($id_consigne));
 }
 
+/**
+ * Filtre |rang_consigne : rang d'une mission dans l'année, parmi les missions
+ * qui ont des réponses.
+ *
+ * @param int|string $id_consigne Mission (article consigne)
+ * @return int|string Rang de la mission, '' si introuvable
+ */
 function filtre_rang_consigne($id_consigne) {
 	if (!$id_consigne) {
 		return '';
@@ -2904,6 +3011,9 @@ function filtre_rang_consigne($id_consigne) {
 
 /**
  * Transforme un id_auteur de prof ou élève en id_rubrique de classe.
+ *
+ * @param int|string $id_auteur Prof ou élève
+ * @return string Rubrique de la classe, '' si aucune
  */
 function filtre_auteur_vers_classe($id_auteur) {
 	if (!$id_auteur) {
@@ -2913,6 +3023,13 @@ function filtre_auteur_vers_classe($id_auteur) {
 	return (string) thematique_id_rubrique_classe($id_auteur);
 }
 
+/**
+ * Réponse d'une classe à une mission.
+ *
+ * @param int|string $id_consigne Mission
+ * @param int|string $id_rubrique_classe Rubrique de la classe
+ * @return array|false Article réponse, false si aucun
+ */
 function thematique_trouver_reponse_a_une_consigne($id_consigne, $id_rubrique_classe) {
 	if (!$id_consigne || !$id_rubrique_classe) {
 		return false;
