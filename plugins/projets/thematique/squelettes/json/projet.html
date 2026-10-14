@@ -38,7 +38,7 @@ annee_scolaire ignorait l'image titrée de l'année et sortait des dates vides. 
 #SET{id_rubrique_travail_en_cours, #VAL{travail_en_cours}|thematique_id_rubrique_a_mot}
 #SET{id_rubrique_blogs, #VAL{blogs}|thematique_id_rubrique_a_mot}
 #SET{id_rubrique_evenements, #VAL{evenements}|thematique_id_rubrique_a_mot}
-#SET{id_rubrique_intervenant, #VAL{0}|thematique_id_rubrique_mission}
+#SET{id_rubrique_intervenant, #VAL|thematique_id_rubrique_projet}
 {
 	"date_debut": "[(#GET{annee})]-09-01",
 	"date_fin": "[(#GET{annee}|plus{1})]-09-01",
@@ -64,7 +64,7 @@ annee_scolaire ignorait l'image titrée de l'année et sortait des dates vides. 
 	"url_popup_ressources": [(#URL_PAGE{rubrique, id_rubrique=#GET{id_rubrique_ressources}&mode=ajax-detail&type_objet=ressources}|html_entity_decode|json_encode)],
 	"url_popup_ressources_detail": [(#URL_PAGE{rubrique, id_rubrique=#GET{id_rubrique_ressources}&mode=ajax-detail&type_objet=ressource_detail}|html_entity_decode|json_encode)],
 	"url_popup_ressources_ajout": [(#URL_PAGE{publier, mode=ajax-detail&type_objet=ressources}|html_entity_decode|json_encode)],
-	"url_popup_classes": [(#URL_PAGE{rubrique,     id_rubrique=#GET{id_rubrique_travail_en_cours}&mode=ajax-detail&type_objet=travail_en_cours}|html_entity_decode|json_encode)],
+	"url_popup_classes": [(#URL_PAGE{rubrique, id_rubrique=#GET{id_rubrique_travail_en_cours}&mode=ajax-detail&type_objet=travail_en_cours}|html_entity_decode|json_encode)],
 	"url_popup_intervenant": [(#URL_PAGE{rubrique, id_rubrique=#GET{id_rubrique_intervenant}&mode=ajax-detail&type_objet=intervenant}|html_entity_decode|json_encode)],
 	"url_popup_evenement_creer": [(#URL_PAGE{publier, id_rubrique=#GET{id_rubrique_blogs}&mode=ajax-detail&type_objet=blogs}|html_entity_decode|json_encode)],
 	"url_popup_information_creer": [(#URL_PAGE{publier, id_rubrique=#GET{id_rubrique_evenements}&mode=ajax-detail&type_objet=evenements}|html_entity_decode|json_encode)],

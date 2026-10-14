@@ -1,3 +1,9 @@
+#CACHE{0}
+[(#REM) Fiche de l'intervenant d'une rubrique projet (popup type_objet=intervenant,
+cf rubrique.html). CACHE{0} : visibilité selon le rôle en session — une fiche
+non publiée n'est visible que d'un admin/intervenant, comme les jalons (cf
+thematique_id_fiche_intervenant). ]
+#SET{id_fiche, #ENV{id_rubrique}|thematique_id_fiche_intervenant}
 <div class="bloc_article">
 	<div>
 		<INCLURE{
@@ -8,7 +14,7 @@
 		} />
 	</div>
 	#SET{libelle_discussions, #VAL{thematique:titre_onglet_commentaires}|_T}
-	<BOUCLE_fiche_intervenant(ARTICLES){id_rubrique=#ENV{id_rubrique}}{titre_mot=intervenant}{tous}{0,1}>
+	<BOUCLE_fiche_intervenant(ARTICLES){id_article=#GET{id_fiche}}{tous}>
         <div class="container-tabs">
             <div id="mission-tabs">
                 <div>
@@ -27,5 +33,3 @@
         </div>
 	</BOUCLE_fiche_intervenant>
 </div>
-
-

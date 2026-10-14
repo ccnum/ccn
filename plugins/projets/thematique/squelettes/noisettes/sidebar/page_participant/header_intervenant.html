@@ -1,6 +1,9 @@
-
+#CACHE{0}
+[(#REM) En-tête de la fiche intervenant (cf intervenant_detail.html), même
+règle de visibilité. ]
 #SET{titre_fiche, ''}
-<BOUCLE_fiche_intervenant(ARTICLES){id_rubrique=#ENV{id_rubrique}}{titre_mot=intervenant}{tous}{0,1}>
+#SET{id_fiche, #ENV{id_rubrique}|thematique_id_fiche_intervenant}
+<BOUCLE_fiche_intervenant(ARTICLES){id_article=#GET{id_fiche}}{tous}>
 	#SET{titre_fiche, #TITRE}
 </BOUCLE_fiche_intervenant>
 
@@ -23,4 +26,3 @@
         </div>
 	</div>
 </div>
-

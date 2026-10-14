@@ -1405,6 +1405,80 @@ function thematique_creer_fiche_intervenant() {
 }
 
 /**
+ * Rubrique du projet de l'année active (unique sous-rubrique de « Consignes »,
+ * celle de l'intervenant de l'année), sans dépendre de l'auteur connecté
+ * contrairement à thematique_id_rubrique_mission().
+ *
+ * Appelée comme filtre : `#VAL|thematique_id_rubrique_projet`
+ *
+ * @return int 0 si absente
+ */
+function thematique_id_rubrique_projet($_ = null) {
+	static $id_projet = null;
+	if ($id_projet === null) {
+		$id_consignes = thematique_id_rubrique_enfant_a_mot(thematique_id_rubrique_annee_active(), 'consignes');
+		$id_projet = $id_consignes
+			? (int) sql_getfetsel(
+				'id_rubrique',
+				'spip_rubriques',
+				'id_parent=' . intval($id_consignes),
+				'',
+				'id_rubrique',
+				'0,1'
+			)
+			: 0;
+	}
+	return $id_projet;
+}
+
+/**
+ * Fiche de l'intervenant (article au mot-clé intervenant) d'une rubrique
+ * projet, si le visiteur peut la voir : publiée, ou non publiée pour un admin
+ * ou un intervenant (même règle que les badges des jalons, cf
+ * main.js:updateBadgeJalon). Mise en cache mémoire par requête.
+ *
+ * Appelée comme filtre : `#ENV{id_rubrique}|thematique_id_fiche_intervenant`
+ *
+ * @param int $id_rubrique rubrique projet ; 0 = celle de l'année active
+ * @return int 0 si pas de fiche ou fiche non visible
+ */
+function thematique_id_fiche_intervenant($id_rubrique = 0) {
+	static $cache = [];
+	$id_rubrique = intval($id_rubrique);
+	if (!$id_rubrique) {
+		$id_rubrique = thematique_id_rubrique_projet();
+	}
+	if (isset($cache[$id_rubrique])) {
+		return $cache[$id_rubrique];
+	}
+
+	$id_mot = thematique_id_mot('intervenant');
+	if (!$id_rubrique || !$id_mot) {
+		return $cache[$id_rubrique] = 0;
+	}
+
+	include_spip('inc/session');
+	$statuts = in_array(session_get('role'), ['admin', 'intervenant'], true)
+		? ['publie', 'prop', 'prepa']
+		: ['publie'];
+
+	return $cache[$id_rubrique] = (int) sql_getfetsel(
+		'a.id_article',
+		['spip_articles AS a', 'spip_mots_liens AS ml'],
+		[
+			'ml.id_objet=a.id_article',
+			'ml.objet=' . sql_quote('article'),
+			'ml.id_mot=' . intval($id_mot),
+			'a.id_rubrique=' . $id_rubrique,
+			sql_in('a.statut', $statuts),
+		],
+		'',
+		'a.id_article',
+		'0,1'
+	);
+}
+
+/**
  * Intervenant "de l'année" : premier intervenant trouvé (au sens
  * thematique_premier_intervenant) sur la rubrique racine nommée par
  * l'année scolaire active. Repli sur la première rubrique taguée
