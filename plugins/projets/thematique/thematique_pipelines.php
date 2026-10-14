@@ -423,9 +423,20 @@ function thematique_cioidc_userinfo($flux) {
 		$projets_a_lier
 	);
 
-	// Intervenant tout juste lié au projet : sa fiche (existante ou vierge)
-	// prend l'année active sans attendre le prochain passage du cron.
-	if ($is_intervenant && $projets_a_lier) {
+	// Intervenant tout juste lié au projet : jalons et fiche (existante ou
+	// vierge) de l'année créés ou liés sans attendre le cron de rentrée, qui
+	// ne passe qu'en septembre. Seulement sur l'année réelle : une année
+	// d'archive choisie par cookie ne doit rien recevoir. Mêmes conditions
+	// que le cron pour un projet désactivé (_CCN_PROJET_ACTIVE).
+	if (
+		$is_intervenant && $projets_a_lier
+		&& thematique_annee_scolaire() === thematique_annee_scolaire_reelle()
+		&& (!defined('_CCN_PROJET_ACTIVE') || _CCN_PROJET_ACTIVE)
+	) {
+		$id_consignes = thematique_assurer_structure_annee();
+		if ($id_consignes) {
+			thematique_creer_jalons($id_consignes, thematique_annee_scolaire());
+		}
 		thematique_creer_fiche_intervenant();
 	}
 

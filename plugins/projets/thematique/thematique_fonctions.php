@@ -1655,6 +1655,43 @@ function thematique_creer_fiche_intervenant() {
 }
 
 /**
+ * Crée les articles jalons "Cap sur l'année" et "La Rencontre" s'ils sont
+ * absents, assignés au premier intervenant du projet (lien complété s'ils
+ * existent déjà sans lui). Appelée par le cron de rentrée
+ * (genie/thematique_rentree_annee.php) et à la connexion SSO d'un
+ * intervenant.
+ *
+ * @param int $id_rubrique Rubrique « Consignes » de l'année
+ * @param int $annee       Année de la rentrée
+ * @return bool true si tous les jalons existent à la fin
+ */
+function thematique_creer_jalons(int $id_rubrique, int $annee): bool {
+	$id_intervenant = thematique_premier_intervenant($id_rubrique);
+
+	$jalons = [
+		'cap-sur-l-annee' => [
+			'titre' => _T('thematique:cap_sur_annee'),
+			'texte' => _T('thematique:jalon_texte_a_completer'),
+			'date' => $annee . '-09-15 00:00:00',
+		],
+		'la-rencontre' => [
+			'titre' => _T('thematique:la_rencontre'),
+			'texte' => _T('thematique:jalon_texte_a_completer'),
+			'date' => ($annee + 1) . '-06-15 00:00:00',
+		],
+	];
+
+	$ok = true;
+	foreach ($jalons as $mot => $infos) {
+		if (!thematique_creer_article_mot_cle_si_absent($id_rubrique, $mot, $infos, $id_intervenant)) {
+			$ok = false;
+		}
+	}
+
+	return $ok;
+}
+
+/**
  * Migration 3.4.8 : les fiches intervenant (une par année, dans la rubrique
  * projet de chaque année) passent dans la rubrique « Intervenants », une par
  * intervenant, avec ses années en surtitre. Pour un intervenant qui en a
