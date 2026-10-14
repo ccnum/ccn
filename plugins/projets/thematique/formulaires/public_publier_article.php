@@ -82,6 +82,13 @@ function formulaires_public_publier_article_charger_dist(
 			$valeurs['texte'] = in_array(trim($article['texte']), $textes_par_defaut, true) ? '' : $article['texte'];
 			$valeurs['id_rubrique'] = $article['id_rubrique'];
 			$valeurs['id_parent'] = $article['id_rubrique'];
+			// Fiche intervenant (rubrique « Intervenants ») : id_parent sert
+			// seulement au retour JS sur la fiche (cf controleurs.js), qui
+			// l'affiche depuis la rubrique projet de l'année. En édition,
+			// _traiter_dist relit la rubrique de l'article en base.
+			if (thematique_article_est_fiche_intervenant($id_article)) {
+				$valeurs['id_parent'] = thematique_id_rubrique_projet();
+			}
 			$valeurs['date'] = $article['date'];
 		}
 	} elseif ($id_consigne && thematique_consigne_valide($id_consigne)) {
@@ -425,7 +432,7 @@ function formulaires_public_publier_article_traiter_dist(
 		$res['redirect'] = $type_article === 'intervenant'
 			? generer_url_public(
 				'rubrique',
-				'id_objet=' . intval($id_rubrique_article) . '&mode=complet&type_objet=intervenant'
+				'id_objet=' . intval(thematique_id_rubrique_projet()) . '&mode=complet&type_objet=intervenant'
 			)
 			: generer_url_public('article', 'id_article=' . $id_article . '&mode=complet');
 	}

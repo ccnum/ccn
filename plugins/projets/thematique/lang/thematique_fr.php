@@ -374,6 +374,7 @@ return [
 	'rss_dernieres_maj'                          => 'Dernières mises à jour',
 	'rss_dernieres_publications'                 => 'Dernières publications',
 	'rss_derniers_commentaires'                  => 'Derniers commentaires dans le forum',
+	'rubrique_intervenants_titre'                => 'Intervenants',
 	'salle_des_profs'                            => 'Salle des profs',
 	'se_connecter'                               => 'Se connecter',
 	'se_connecter_ent'                           => 'Se connecter à l’ENT',

@@ -423,6 +423,12 @@ function thematique_cioidc_userinfo($flux) {
 		$projets_a_lier
 	);
 
+	// Intervenant tout juste lié au projet : sa fiche (existante ou vierge)
+	// prend l'année active sans attendre le prochain passage du cron.
+	if ($is_intervenant && $projets_a_lier) {
+		thematique_creer_fiche_intervenant();
+	}
+
 	// Résultat de la connexion : statut final et rubriques effectivement liées
 	spip_log(
 		'userinfo fin auteur #' . $auteur['id_auteur'] . ' statut=' . ($auteur['statut'] ?? '')

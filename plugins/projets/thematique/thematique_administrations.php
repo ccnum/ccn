@@ -107,6 +107,10 @@ function thematique_upgrade($nom_meta_base_version, $version_cible) {
 	// si septembre est passé.
 	$maj['3.4.7'] = [['thematique_ajouter_mots_clef'], ['thematique_creer_fiche_intervenant']];
 
+	// Fiches intervenant regroupées dans la rubrique racine « Intervenants »,
+	// une par intervenant, années en surtitre.
+	$maj['3.4.8'] = [['thematique_migrer_fiches_intervenant'], ['thematique_creer_fiche_intervenant']];
+
 	include_spip('thematique_fonctions');
 	include_spip('base/upgrade');
 	maj_plugin($nom_meta_base_version, $version_cible, $maj);

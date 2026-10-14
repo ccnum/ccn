@@ -17,8 +17,9 @@ if (!defined('_THEMATIQUE_RENTREE_MOIS')) {
  * 2. crée (si absents) les deux articles jalons du projet : "Cap sur
  *    l'année" (cap-sur-l-annee) et "La Rencontre" (la-rencontre), en
  *    statut prop, assignés au premier intervenant trouvé sur le projet ;
- * 3. crée (si absente) la fiche de l'intervenant de l'année (mot-clé
- *    intervenant, cf thematique_creer_fiche_intervenant()).
+ * 3. crée ou réutilise la fiche de l'intervenant de l'année, dans la
+ *    rubrique racine « Intervenants » (année ajoutée à son surtitre, cf
+ *    thematique_creer_fiche_intervenant()).
  *
  * Enregistrée via le pipeline taches_generales_cron (thematique_pipelines.php)
  * plutôt que la balise <genie> de paquet.xml, car le pipeline est réévalué à

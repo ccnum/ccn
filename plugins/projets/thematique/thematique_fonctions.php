@@ -1441,16 +1441,152 @@ function thematique_premier_intervenant($id_rubrique) {
 }
 
 /**
- * Crée (si absente) la fiche de l'intervenant de l'année scolaire active
- * (article au mot-clé intervenant), dans la rubrique du projet sous
- * « Consignes » — une seule par site et par année. Appelée par le cron de
- * rentrée (genie/thematique_rentree_annee.php) et par la migration 3.4.7.
+ * Rubrique racine « Intervenants » : une fiche (article au mot-clé
+ * intervenant) par intervenant, réutilisée d'une année sur l'autre — son
+ * surtitre liste les années scolaires où il intervient (cf
+ * thematique_annees_surtitre()). Hors des rubriques années : sa fiche n'est
+ * ni réécrite à chaque rentrée, ni figée une fois l'année passée (cf
+ * thematique_annee_article(), 0 pour cette rubrique).
  *
- * Si aucun intervenant n'est encore lié au projet, la fiche est créée sans
- * auteur : le premier intervenant qui la complète en devient l'auteur (cf
- * formulaires/public_publier_article.php), sinon
- * thematique_creer_article_mot_cle_si_absent() complète le lien au passage
- * suivant.
+ * Retrouvée par son id mémorisé en meta, sinon par son titre à la racine.
+ *
+ * @param bool $creer la créer (publiée) si absente
+ * @return int 0 si absente et non créée
+ */
+function thematique_id_rubrique_intervenants($creer = false) {
+	static $id_rubrique = 0;
+	if ($id_rubrique) {
+		return $id_rubrique;
+	}
+
+	include_spip('inc/meta');
+	$id = intval($GLOBALS['meta']['thematique_id_rubrique_intervenants'] ?? 0);
+	if ($id && !sql_countsel('spip_rubriques', 'id_parent=0 AND id_rubrique=' . $id)) {
+		$id = 0;
+	}
+
+	$titre = _T('thematique:rubrique_intervenants_titre');
+	if (!$id) {
+		$id = (int) sql_getfetsel(
+			'id_rubrique',
+			'spip_rubriques',
+			'id_parent=0 AND titre=' . sql_quote($titre),
+			'',
+			'id_rubrique',
+			'0,1'
+		);
+	}
+	if (!$id && $creer) {
+		include_spip('action/editer_rubrique');
+		$id = (int) rubrique_inserer(0);
+		if ($id) {
+			rubrique_modifier($id, ['titre' => $titre]);
+			sql_updateq('spip_rubriques', ['statut' => 'publie'], 'id_rubrique=' . $id);
+			spip_log("thematique_id_rubrique_intervenants : rubrique racine créée (#$id)", 'thematique');
+		}
+	}
+	if ($id && intval($GLOBALS['meta']['thematique_id_rubrique_intervenants'] ?? 0) !== $id) {
+		ecrire_meta('thematique_id_rubrique_intervenants', $id);
+	}
+
+	return $id_rubrique = $id;
+}
+
+/**
+ * Années scolaires listées dans le surtitre d'une fiche intervenant :
+ * « 2024, 2026 », séparateur libre. Une année écrite « 2024-2025 » ou
+ * « 2024/2025 » compte pour 2024 seulement (année de rentrée, comme les
+ * rubriques années).
+ *
+ * @param string $surtitre
+ * @return int[]
+ */
+function thematique_annees_surtitre($surtitre) {
+	preg_match_all('/(\d{4})(?:\s*[-\/]\s*\d{4})?/', (string) $surtitre, $m);
+	return array_values(array_unique(array_map('intval', $m[1])));
+}
+
+/**
+ * Fiches intervenant de la rubrique « Intervenants », les plus récentes
+ * d'abord.
+ *
+ * @param string[] $statuts
+ * @param int $id_auteur restreindre aux fiches de cet auteur (0 = toutes)
+ * @return array lignes id_article, surtitre, texte
+ */
+function thematique_fiches_intervenant($statuts = ['publie', 'prop', 'prepa'], $id_auteur = 0) {
+	$id_rubrique = thematique_id_rubrique_intervenants();
+	$id_mot = thematique_id_mot('intervenant');
+	if (!$id_rubrique || !$id_mot) {
+		return [];
+	}
+
+	$from = ['spip_articles AS a', 'spip_mots_liens AS ml'];
+	$where = [
+		'ml.id_objet=a.id_article',
+		'ml.objet=' . sql_quote('article'),
+		'ml.id_mot=' . intval($id_mot),
+		'a.id_rubrique=' . intval($id_rubrique),
+		sql_in('a.statut', $statuts),
+	];
+	if ($id_auteur) {
+		$from[] = 'spip_auteurs_liens AS al';
+		$where[] = 'al.id_objet=a.id_article';
+		$where[] = 'al.objet=' . sql_quote('article');
+		$where[] = 'al.id_auteur=' . intval($id_auteur);
+	}
+
+	return sql_allfetsel('a.id_article, a.surtitre, a.texte', $from, $where, '', 'a.id_article DESC');
+}
+
+/**
+ * Fiche intervenant d'une année scolaire : celle dont le surtitre contient
+ * cette année (la plus récente si plusieurs).
+ *
+ * @param int $annee
+ * @param string[] $statuts
+ * @return int 0 si aucune
+ */
+function thematique_id_fiche_intervenant_annee($annee, $statuts = ['publie', 'prop', 'prepa']) {
+	foreach (thematique_fiches_intervenant($statuts) as $fiche) {
+		if (in_array(intval($annee), thematique_annees_surtitre($fiche['surtitre']), true)) {
+			return intval($fiche['id_article']);
+		}
+	}
+	return 0;
+}
+
+/**
+ * Ajoute une année au surtitre d'une fiche intervenant (sans doublon).
+ *
+ * @param int $id_article
+ * @param int $annee
+ */
+function thematique_fiche_intervenant_ajouter_annee($id_article, $annee) {
+	$surtitre = (string) sql_getfetsel('surtitre', 'spip_articles', 'id_article=' . intval($id_article));
+	$annees = thematique_annees_surtitre($surtitre);
+	if (in_array(intval($annee), $annees, true)) {
+		return;
+	}
+	$annees[] = intval($annee);
+	sort($annees);
+	sql_updateq('spip_articles', ['surtitre' => implode(', ', $annees)], 'id_article=' . intval($id_article));
+}
+
+/**
+ * Crée ou réutilise la fiche de l'intervenant de l'année scolaire active
+ * dans la rubrique « Intervenants » (cf thematique_id_rubrique_intervenants()).
+ * Appelée par le cron de rentrée (genie/thematique_rentree_annee.php), à la
+ * connexion SSO d'un intervenant et par les migrations.
+ *
+ * - une fiche porte déjà l'année dans son surtitre : rien à faire, sauf la
+ *   lier à l'intervenant si elle est sans auteur — ou, si elle est encore
+ *   vierge et que l'intervenant a déjà une fiche d'une autre année, la mettre
+ *   à la poubelle au profit de la sienne ;
+ * - l'intervenant de l'année a déjà une fiche : on y ajoute l'année ;
+ * - sinon on crée une fiche vierge pour l'année, sans auteur si aucun
+ *   intervenant n'est encore lié au projet (le premier qui la complète en
+ *   devient l'auteur, cf formulaires/public_publier_article.php).
  *
  * @return bool true si la fiche existe à la fin
  */
@@ -1459,19 +1595,125 @@ function thematique_creer_fiche_intervenant() {
 	include_spip('action/editer_liens');
 
 	$id_consignes = thematique_assurer_structure_annee();
-	$id_projet = $id_consignes
-		? (int) sql_getfetsel('id_rubrique', 'spip_rubriques', 'id_parent=' . intval($id_consignes), '', 'id_rubrique', '0,1')
-		: 0;
-	if (!$id_projet) {
-		spip_log('thematique_creer_fiche_intervenant : aucune rubrique projet sous Consignes', 'thematique' . _LOG_ERREUR);
+	$id_rubrique = thematique_id_rubrique_intervenants(true);
+	$id_mot = thematique_id_mot('intervenant');
+	if (!$id_rubrique || !$id_mot) {
+		spip_log(
+			'thematique_creer_fiche_intervenant : rubrique Intervenants ou mot-clé intervenant manquant',
+			'thematique' . _LOG_ERREUR
+		);
 		return false;
 	}
 
-	return thematique_creer_article_mot_cle_si_absent($id_projet, 'intervenant', [
+	$annee = thematique_annee_scolaire();
+	$id_auteur = $id_consignes ? (int) thematique_premier_intervenant($id_consignes) : 0;
+	$fiches_auteur = $id_auteur ? thematique_fiches_intervenant(['publie', 'prop', 'prepa'], $id_auteur) : [];
+
+	$id_fiche = thematique_id_fiche_intervenant_annee($annee);
+	if ($id_fiche) {
+		if (!$id_auteur || sql_countsel('spip_auteurs_liens', "objet='article' AND id_objet=$id_fiche")) {
+			return true;
+		}
+		$fiche_vierge = trim((string) sql_getfetsel('texte', 'spip_articles', 'id_article=' . $id_fiche))
+			=== _T('thematique:fiche_intervenant_texte_a_completer');
+		if (!$fiches_auteur || !$fiche_vierge) {
+			objet_associer(['auteurs' => $id_auteur], ['articles' => $id_fiche]);
+			return true;
+		}
+		// Fiche vierge créée avant que l'intervenant ne soit lié au projet :
+		// il réutilise la sienne.
+		sql_updateq('spip_articles', ['statut' => 'poubelle'], 'id_article=' . $id_fiche);
+		spip_log(
+			"thematique_creer_fiche_intervenant : fiche vierge #$id_fiche remplacée par celle de l'auteur #$id_auteur",
+			'thematique'
+		);
+	}
+
+	if ($fiches_auteur) {
+		thematique_fiche_intervenant_ajouter_annee(intval($fiches_auteur[0]['id_article']), $annee);
+		return true;
+	}
+
+	// article_inserer() lie _request('id_auteur') s'il est défini, sinon
+	// l'auteur en session (cf thematique_creer_article_mot_cle_si_absent()).
+	$id_auteur_request = _request('id_auteur');
+	set_request('id_auteur', $id_auteur);
+	$id_article = article_inserer($id_rubrique, [
 		'titre' => _T('thematique:fiche_intervenant_titre'),
+		'surtitre' => (string) $annee,
 		'texte' => _T('thematique:fiche_intervenant_texte_a_completer'),
-		'date' => thematique_annee_scolaire() . '-09-01 00:00:00',
-	], thematique_premier_intervenant($id_consignes));
+		'date' => $annee . '-09-01 00:00:00',
+		'statut' => 'prop',
+	]);
+	set_request('id_auteur', $id_auteur_request);
+	if (!$id_article) {
+		return false;
+	}
+
+	objet_associer(['mots' => intval($id_mot)], ['articles' => $id_article]);
+	return true;
+}
+
+/**
+ * Migration 3.4.8 : les fiches intervenant (une par année, dans la rubrique
+ * projet de chaque année) passent dans la rubrique « Intervenants », une par
+ * intervenant, avec ses années en surtitre. Pour un intervenant qui en a
+ * plusieurs, on garde la plus récente (les autres vont à la poubelle) ; les
+ * fiches sans auteur sont déplacées telles quelles.
+ */
+function thematique_migrer_fiches_intervenant() {
+	include_spip('action/editer_liens');
+
+	$id_rubrique = thematique_id_rubrique_intervenants(true);
+	$id_mot = thematique_id_mot('intervenant');
+	if (!$id_rubrique || !$id_mot) {
+		return;
+	}
+
+	$fiches = sql_allfetsel(
+		'a.id_article, a.id_rubrique',
+		['spip_articles AS a', 'spip_mots_liens AS ml'],
+		[
+			'ml.id_objet=a.id_article',
+			'ml.objet=' . sql_quote('article'),
+			'ml.id_mot=' . intval($id_mot),
+			'a.id_rubrique!=' . intval($id_rubrique),
+			sql_in('a.statut', ['publie', 'prop', 'prepa']),
+		]
+	);
+
+	// Regroupement par auteur, fiche de l'année la plus récente en tête
+	$par_auteur = [];
+	foreach ($fiches as $fiche) {
+		$annee = thematique_annee_rubrique(intval($fiche['id_rubrique']));
+		$id_auteur = (int) sql_getfetsel(
+			'id_auteur',
+			'spip_auteurs_liens',
+			"objet='article' AND id_objet=" . intval($fiche['id_article'])
+		);
+		$cle = $id_auteur ?: 'sans_auteur_' . $fiche['id_article'];
+		$par_auteur[$cle][$annee] = intval($fiche['id_article']);
+	}
+
+	foreach ($par_auteur as $annees) {
+		krsort($annees);
+		$id_garde = reset($annees);
+		$liste = array_filter(array_keys($annees));
+		sort($liste);
+		sql_updateq(
+			'spip_articles',
+			['id_rubrique' => $id_rubrique, 'surtitre' => implode(', ', $liste)],
+			'id_article=' . $id_garde
+		);
+		foreach ($annees as $id_article) {
+			if ($id_article !== $id_garde) {
+				sql_updateq('spip_articles', ['statut' => 'poubelle'], 'id_article=' . $id_article);
+			}
+		}
+	}
+
+	include_spip('inc/rubriques');
+	calculer_rubriques();
 }
 
 /**
@@ -1529,29 +1771,25 @@ function thematique_url_popup($page, $type_objet = '', $id_rubrique = null) {
 }
 
 /**
- * Fiche de l'intervenant (article au mot-clé intervenant) d'une rubrique
- * projet, si le visiteur peut la voir : publiée, ou non publiée pour un admin
- * ou un intervenant (même règle que les badges des jalons, cf
- * main.js:updateBadgeJalon). Mise en cache mémoire par requête.
+ * Fiche de l'intervenant (cf thematique_id_fiche_intervenant_annee()) de
+ * l'année d'une rubrique projet, si le visiteur peut la voir : publiée, ou
+ * non publiée pour un admin ou un intervenant (même règle que les badges des
+ * jalons, cf main.js:updateBadgeJalon). Mise en cache mémoire par requête.
  *
  * Appelée comme filtre : `#ENV{id_rubrique}|thematique_id_fiche_intervenant`
  *
- * @param int $id_rubrique rubrique projet ; 0 = celle de l'année active
+ * @param int $id_rubrique rubrique projet ; 0 ou rubrique hors année (ex:
+ *   « Intervenants », après publication de la fiche) = année active
  * @return int 0 si pas de fiche ou fiche non visible
  */
 function thematique_id_fiche_intervenant($id_rubrique = 0) {
 	static $cache = [];
-	$id_rubrique = intval($id_rubrique);
-	if (!$id_rubrique) {
-		$id_rubrique = thematique_id_rubrique_projet();
+	$annee = intval($id_rubrique) ? thematique_annee_rubrique(intval($id_rubrique)) : 0;
+	if (!$annee) {
+		$annee = thematique_annee_scolaire();
 	}
-	if (isset($cache[$id_rubrique])) {
-		return $cache[$id_rubrique];
-	}
-
-	$id_mot = thematique_id_mot('intervenant');
-	if (!$id_rubrique || !$id_mot) {
-		return $cache[$id_rubrique] = 0;
+	if (isset($cache[$annee])) {
+		return $cache[$annee];
 	}
 
 	include_spip('inc/session');
@@ -1559,20 +1797,7 @@ function thematique_id_fiche_intervenant($id_rubrique = 0) {
 		? ['publie', 'prop', 'prepa']
 		: ['publie'];
 
-	return $cache[$id_rubrique] = (int) sql_getfetsel(
-		'a.id_article',
-		['spip_articles AS a', 'spip_mots_liens AS ml'],
-		[
-			'ml.id_objet=a.id_article',
-			'ml.objet=' . sql_quote('article'),
-			'ml.id_mot=' . intval($id_mot),
-			'a.id_rubrique=' . $id_rubrique,
-			sql_in('a.statut', $statuts),
-		],
-		'',
-		'a.id_article',
-		'0,1'
-	);
+	return $cache[$annee] = thematique_id_fiche_intervenant_annee($annee, $statuts);
 }
 
 /**
@@ -1596,7 +1821,9 @@ function thematique_article_est_fiche_intervenant($id_article) {
 }
 
 /**
- * Intervenant "de l'année" : premier intervenant trouvé (au sens
+ * Intervenant "de l'année" : auteur de la fiche intervenant dont le surtitre
+ * contient l'année scolaire active (cf thematique_id_fiche_intervenant_annee()).
+ * À défaut, premier intervenant trouvé (au sens
  * thematique_premier_intervenant) sur la rubrique racine nommée par
  * l'année scolaire active. Repli sur la première rubrique taguée
  * travail_en_cours si aucune rubrique racine n'est nommée par l'année
@@ -1610,6 +1837,21 @@ function thematique_intervenant_annee($_ = null) {
 	static $cache = null;
 	if ($cache !== null) {
 		return $cache;
+	}
+
+	$id_fiche = thematique_id_fiche_intervenant_annee(thematique_annee_scolaire());
+	$id_auteur_fiche = $id_fiche
+		? (int) sql_getfetsel(
+			'id_auteur',
+			'spip_auteurs_liens',
+			"objet='article' AND id_objet=" . $id_fiche,
+			'',
+			'id_auteur',
+			'0,1'
+		)
+		: 0;
+	if ($id_auteur_fiche) {
+		return $cache = $id_auteur_fiche;
 	}
 
 	$id_rubrique_annee = sql_getfetsel(
