@@ -358,15 +358,16 @@ function thematique_cioidc_bloquer_si_archive(array $auteur) {
 /**
  * Nom d'une classe ENT tel qu'affiché sur le site : niveau de collège suivi d'un
  * espace écrit en toutes lettres ("4 2" => "4ème 2", format dans l'item de langue
- * nom_classe_niveau). Les autres formats ("5EME1", "3E1HI-GE"…) sont gardés tels
- * quels.
+ * nom_classe_niveau), ou collé à une lettre ou un numéro court ("3A" => "3ème A").
+ * Les autres formats ("5EME1", "3E1HI-GE"…) sont gardés tels quels.
  *
  * @param string $group_name Nom de la classe dans l'ENT
  * @return string
  */
 function thematique_cioidc_nom_classe($group_name) {
 	$group_name = trim((string) $group_name);
-	if (preg_match('/^([3-6])\s+(\S.*)$/u', $group_name, $m)) {
+	if (preg_match('/^([3-6])(?:\s+(\S.*)|([A-Za-z]|\d{1,2}))$/u', $group_name, $m)) {
+		$m[2] = ($m[2] ?? '') !== '' ? $m[2] : $m[3];
 		return _T('thematique:nom_classe_niveau', ['niveau' => $m[1], 'classe' => $m[2]]);
 	}
 	return $group_name;
