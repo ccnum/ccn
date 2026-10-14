@@ -25,8 +25,10 @@ du cache de la page. ]
 	<ul class="filter clearfix option-set" data-filter-group="classe">
 		[(#REM) ======== INTERVENANT DE L'ANNÉE (affiché en tête de liste) ========
 		Seulement si sa fiche est visible : publiée, ou non publiée pour un
-		admin/intervenant (cf thematique_id_fiche_intervenant). ]
+		admin/intervenant (cf thematique_id_fiche_intervenant). Réservé pour
+		l'instant aux webmestres. ]
 		[(#VAL|thematique_id_fiche_intervenant|non) #SET{id_intervenant_annee, 0}]
+		[(#SESSION{webmestre}|=={oui}|non) #SET{id_intervenant_annee, 0}]
 		<BOUCLE_intervenant_annee(AUTEURS){id_auteur=#GET{id_intervenant_annee}}{0,1}>
 			#SET{image, #ID_AUTEUR|thematique_image_auteur_ou_classe{''}}
 			#SET{nom_auteur, #ID_AUTEUR|thematique_nom_public_auteur}
