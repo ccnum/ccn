@@ -317,6 +317,18 @@ function formulaires_public_publier_article_traiter_dist(
 		if ($id_auteur && !$edition) {
 			objet_associer(['auteur' => $id_auteur], ['article' => $id_article]);
 		}
+		// Exception : la fiche intervenant, créée sans auteur si l'intervenant
+		// n'était pas encore lié au projet (cf thematique_creer_fiche_intervenant()).
+		// Le premier intervenant qui la complète en devient l'auteur — pas un
+		// admin, qui ne fait que corriger.
+		elseif (
+			$id_auteur
+			&& $role_visiteur === 'intervenant'
+			&& thematique_article_est_fiche_intervenant($id_article)
+			&& !sql_countsel('spip_auteurs_liens', "objet='article' AND id_objet=" . intval($id_article))
+		) {
+			objet_associer(['auteur' => $id_auteur], ['article' => $id_article]);
+		}
 		// Si c'est une réponse à une consigne, associer l'article à la
 		// consigne — déjà validée en _verifier_dist (thematique_consigne_valide),
 		// mais on revérifie ici : _traiter_dist peut être invoqué

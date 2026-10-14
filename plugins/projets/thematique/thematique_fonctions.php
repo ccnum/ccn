@@ -1379,8 +1379,10 @@ function thematique_premier_intervenant($id_rubrique) {
  * rentrée (genie/thematique_rentree_annee.php) et par la migration 3.4.7.
  *
  * Si aucun intervenant n'est encore lié au projet, la fiche est créée sans
- * auteur : thematique_creer_article_mot_cle_si_absent() complète le lien
- * au passage suivant.
+ * auteur : le premier intervenant qui la complète en devient l'auteur (cf
+ * formulaires/public_publier_article.php), sinon
+ * thematique_creer_article_mot_cle_si_absent() complète le lien au passage
+ * suivant.
  *
  * @return bool true si la fiche existe à la fin
  */

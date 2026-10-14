@@ -166,7 +166,21 @@ if (!function_exists('autoriser_article_modifier')) {
 					"objet='article' AND id_objet=" . intval($id) . ' AND id_auteur=' . $id_auteur_visiteur
 				);
 
-			if (!$exception_jalon && !$exception_auteur_propre_article) {
+			// Fiche intervenant (cf thematique_creer_fiche_intervenant()) : créée
+			// sans auteur si l'intervenant n'était pas encore lié au projet. Il
+			// doit pouvoir la compléter quand même — il en devient alors l'auteur
+			// (cf formulaires/public_publier_article.php) — quel que soit son
+			// statut (une fiche publiée par un admin reste modifiable par lui).
+			$exception_fiche_intervenant = !$exception_jalon
+				&& $statut_article !== 'refuse'
+				&& thematique_donner_role($id_auteur_visiteur) === 'intervenant'
+				&& thematique_article_est_fiche_intervenant($id)
+				&& thematique_auteur_lie_sous_rubrique(
+					$id_auteur_visiteur,
+					intval(sql_getfetsel('id_rubrique', 'spip_articles', 'id_article=' . intval($id)))
+				);
+
+			if (!$exception_jalon && !$exception_auteur_propre_article && !$exception_fiche_intervenant) {
 				return false;
 			}
 			// on continue, sous les mêmes garde-fous (année passée, champ date) que le cas normal
