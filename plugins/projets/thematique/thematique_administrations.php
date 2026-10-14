@@ -96,6 +96,12 @@ function thematique_upgrade($nom_meta_base_version, $version_cible) {
 	$maj['3.4.5'] = [];
 	cextras_api_upgrade(thematique_declarer_champs_extras(), $maj['3.4.5']);
 
+	// Mot-clé intervenant + fiche de l'intervenant de l'année active, hors
+	// cron de rentrée : les sites déjà dans l'année doivent la recevoir même
+	// si septembre est passé.
+	$maj['3.4.7'] = [['thematique_ajouter_mots_clef'], ['thematique_creer_fiche_intervenant']];
+
+	include_spip('thematique_fonctions');
 	include_spip('base/upgrade');
 	maj_plugin($nom_meta_base_version, $version_cible, $maj);
 }
@@ -393,7 +399,7 @@ function thematique_ajouter_mots_clef() {
 	// (cf genie/thematique_rentree_annee.php), pas des articles "présentation"
 	// au sens strict, mais rattachés à ce groupe existant plutôt qu'un
 	// groupe dédié pour 2 mots-clés seulement.
-	foreach (['laclasse.com', 'sommaire_edito', 'cap-sur-l-annee', 'la-rencontre'] as $mot) {
+	foreach (['laclasse.com', 'sommaire_edito', 'cap-sur-l-annee', 'la-rencontre', 'intervenant'] as $mot) {
 		thematique_ajouter_mot($mot, $id_groupe);
 	}
 

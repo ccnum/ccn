@@ -437,6 +437,71 @@ function thematique_id_mot($titre_mot) {
 	return $cache[$titre_mot];
 }
 
+/**
+ * Crée un article lié à un mot-clé dans une rubrique s'il n'existe pas déjà.
+ * Si l'article existe et qu'un auteur est fourni, complète aussi son lien.
+ *
+ * @param int $id_rubrique
+ * @param string $titre_mot
+ * @param array $infos titre, texte et date de l'article
+ * @param int $id_auteur
+ * @return bool
+ */
+function thematique_creer_article_mot_cle_si_absent($id_rubrique, $titre_mot, $infos, $id_auteur = 0) {
+	$id_rubrique = intval($id_rubrique);
+	$id_mot = thematique_id_mot($titre_mot);
+	if (!$id_rubrique || !$id_mot) {
+		spip_log(
+			"thematique_creer_article_mot_cle_si_absent : rubrique ou mot-clé '$titre_mot' manquant",
+			'thematique' . _LOG_ERREUR
+		);
+		return false;
+	}
+
+	$id_article = (int) sql_getfetsel(
+		'a.id_article',
+		['spip_articles AS a', 'spip_mots_liens AS ml'],
+		[
+			'ml.id_objet=a.id_article',
+			'ml.objet=' . sql_quote('article'),
+			'ml.id_mot=' . intval($id_mot),
+			'a.id_rubrique=' . $id_rubrique,
+		],
+		'',
+		'a.id_article',
+		'0,1'
+	);
+	if ($id_article) {
+		if ($id_auteur && !sql_countsel(
+			'spip_auteurs_liens',
+			"objet='article' AND id_objet=$id_article AND id_auteur=" . intval($id_auteur)
+		)) {
+			objet_associer(['auteurs' => intval($id_auteur)], ['articles' => $id_article]);
+		}
+		return true;
+	}
+
+	// article_inserer() lie _request('id_auteur') s'il est défini, sinon
+	// l'auteur en session : lancé depuis la migration, la fiche était
+	// attribuée au webmestre qui passait sur /ecrire. On force donc l'auteur
+	// voulu (0 = aucun), puis on restaure la valeur de la requête.
+	$id_auteur_request = _request('id_auteur');
+	set_request('id_auteur', intval($id_auteur));
+	$id_article = article_inserer($id_rubrique, [
+		'titre' => $infos['titre'],
+		'texte' => $infos['texte'],
+		'date' => $infos['date'],
+		'statut' => 'prop',
+	]);
+	set_request('id_auteur', $id_auteur_request);
+	if (!$id_article) {
+		return false;
+	}
+
+	objet_associer(['mots' => intval($id_mot)], ['articles' => $id_article]);
+	return true;
+}
+
 function thematique_hierarchie_a_mot($id_rubrique, $titre_mot) {
 	$ascendants = thematique_ascendants_rubrique($id_rubrique);
 	if (!$ascendants) {
@@ -530,15 +595,15 @@ function thematique_rendre_type_article_affichable($type_article) {
 
 /**
  * Textes du popup de publication (titre de section, phrase d'intro, libellé
- * du champ texte, libellé du bouton), propres à chacun des 5 types de
- * contenu publiables via ce popup (cf commentaire en tête de
+ * du champ texte, libellé du bouton), propres aux types de contenu
+ * publiables ou éditables via ce popup (cf commentaire en tête de
  * squelettes/publier.html) — remplace le texte générique unique utilisé
  * auparavant (maquettes de 09/2026).
  *
  * Appelée comme filtre : `#ENV{type_article}|thematique_texte_publication{titre}`
  *
  * @param string $type_article
- *   consignes, travail_en_cours, ressources, blogs ou evenements
+ *   consignes, travail_en_cours, ressources, blogs, evenements ou intervenant
  * @param string $partie
  *   bandeau, titre, intro, champ_texte ou bouton
  * @return string
@@ -553,6 +618,7 @@ function thematique_texte_publication($type_article, $partie) {
 		'evenements' => 'information',
 		'cap_sur_l_annee' => 'cap_sur_l_annee',
 		'la_rencontre' => 'la_rencontre',
+		'intervenant' => 'fiche_intervenant',
 	];
 
 	if (isset($slugs[$type_article])) {
@@ -1283,19 +1349,20 @@ function thematique_premier_intervenant($id_rubrique) {
 		return 0;
 	}
 
-	$id_secteur = sql_getfetsel('id_secteur', 'spip_rubriques', 'id_rubrique=' . intval($id_rubrique));
-	if (!$id_secteur) {
+	$ascendants = thematique_ascendants_rubrique($id_rubrique);
+	$id_racine = $ascendants ? end($ascendants) : 0;
+	if (!$id_racine) {
 		return 0;
 	}
-
 	return intval(sql_getfetsel(
 		'lien.id_auteur',
-		['spip_auteurs_liens AS lien', 'spip_rubriques AS rub', 'spip_mots_liens AS ml'],
+		['spip_auteurs_liens AS lien', 'spip_rubriques AS rub', 'spip_rubriques AS consignes', 'spip_mots_liens AS ml'],
 		[
 			'lien.id_objet=rub.id_rubrique',
 			"lien.objet='rubrique'",
-			'rub.id_secteur=' . intval($id_secteur),
-			'ml.id_objet=rub.id_rubrique',
+			'consignes.id_rubrique=rub.id_parent',
+			'consignes.id_parent=' . intval($id_racine),
+			'ml.id_objet=consignes.id_rubrique',
 			"ml.objet='rubrique'",
 			'ml.id_mot=' . intval($id_mot_consignes),
 		],
@@ -1303,6 +1370,134 @@ function thematique_premier_intervenant($id_rubrique) {
 		'',
 		'1'
 	));
+}
+
+/**
+ * Crée (si absente) la fiche de l'intervenant de l'année scolaire active
+ * (article au mot-clé intervenant), dans la rubrique du projet sous
+ * « Consignes » — une seule par site et par année. Appelée par le cron de
+ * rentrée (genie/thematique_rentree_annee.php) et par la migration 3.4.7.
+ *
+ * Si aucun intervenant n'est encore lié au projet, la fiche est créée sans
+ * auteur : le premier intervenant qui la complète en devient l'auteur (cf
+ * formulaires/public_publier_article.php), sinon
+ * thematique_creer_article_mot_cle_si_absent() complète le lien au passage
+ * suivant.
+ *
+ * @return bool true si la fiche existe à la fin
+ */
+function thematique_creer_fiche_intervenant() {
+	include_spip('action/editer_article');
+	include_spip('action/editer_liens');
+
+	$id_consignes = thematique_assurer_structure_annee();
+	$id_projet = $id_consignes
+		? (int) sql_getfetsel('id_rubrique', 'spip_rubriques', 'id_parent=' . intval($id_consignes), '', 'id_rubrique', '0,1')
+		: 0;
+	if (!$id_projet) {
+		spip_log('thematique_creer_fiche_intervenant : aucune rubrique projet sous Consignes', 'thematique' . _LOG_ERREUR);
+		return false;
+	}
+
+	return thematique_creer_article_mot_cle_si_absent($id_projet, 'intervenant', [
+		'titre' => _T('thematique:fiche_intervenant_titre'),
+		'texte' => _T('thematique:fiche_intervenant_texte_a_completer'),
+		'date' => thematique_annee_scolaire() . '-09-01 00:00:00',
+	], thematique_premier_intervenant($id_consignes));
+}
+
+/**
+ * Rubrique du projet de l'année active (unique sous-rubrique de « Consignes »,
+ * celle de l'intervenant de l'année), sans dépendre de l'auteur connecté
+ * contrairement à thematique_id_rubrique_mission().
+ *
+ * Appelée comme filtre : `#VAL|thematique_id_rubrique_projet`
+ *
+ * @return int 0 si absente
+ */
+function thematique_id_rubrique_projet($_ = null) {
+	static $id_projet = null;
+	if ($id_projet === null) {
+		$id_consignes = thematique_id_rubrique_enfant_a_mot(thematique_id_rubrique_annee_active(), 'consignes');
+		$id_projet = $id_consignes
+			? (int) sql_getfetsel(
+				'id_rubrique',
+				'spip_rubriques',
+				'id_parent=' . intval($id_consignes),
+				'',
+				'id_rubrique',
+				'0,1'
+			)
+			: 0;
+	}
+	return $id_projet;
+}
+
+/**
+ * Fiche de l'intervenant (article au mot-clé intervenant) d'une rubrique
+ * projet, si le visiteur peut la voir : publiée, ou non publiée pour un admin
+ * ou un intervenant (même règle que les badges des jalons, cf
+ * main.js:updateBadgeJalon). Mise en cache mémoire par requête.
+ *
+ * Appelée comme filtre : `#ENV{id_rubrique}|thematique_id_fiche_intervenant`
+ *
+ * @param int $id_rubrique rubrique projet ; 0 = celle de l'année active
+ * @return int 0 si pas de fiche ou fiche non visible
+ */
+function thematique_id_fiche_intervenant($id_rubrique = 0) {
+	static $cache = [];
+	$id_rubrique = intval($id_rubrique);
+	if (!$id_rubrique) {
+		$id_rubrique = thematique_id_rubrique_projet();
+	}
+	if (isset($cache[$id_rubrique])) {
+		return $cache[$id_rubrique];
+	}
+
+	$id_mot = thematique_id_mot('intervenant');
+	if (!$id_rubrique || !$id_mot) {
+		return $cache[$id_rubrique] = 0;
+	}
+
+	include_spip('inc/session');
+	$statuts = in_array(session_get('role'), ['admin', 'intervenant'], true)
+		? ['publie', 'prop', 'prepa']
+		: ['publie'];
+
+	return $cache[$id_rubrique] = (int) sql_getfetsel(
+		'a.id_article',
+		['spip_articles AS a', 'spip_mots_liens AS ml'],
+		[
+			'ml.id_objet=a.id_article',
+			'ml.objet=' . sql_quote('article'),
+			'ml.id_mot=' . intval($id_mot),
+			'a.id_rubrique=' . $id_rubrique,
+			sql_in('a.statut', $statuts),
+		],
+		'',
+		'a.id_article',
+		'0,1'
+	);
+}
+
+/**
+ * Un article est-il une fiche intervenant (mot-clé intervenant) ? Mis en
+ * cache mémoire par requête.
+ *
+ * @param int $id_article
+ * @return bool
+ */
+function thematique_article_est_fiche_intervenant($id_article) {
+	static $cache = [];
+	$id_article = intval($id_article);
+	if (!isset($cache[$id_article])) {
+		$id_mot = thematique_id_mot('intervenant');
+		$cache[$id_article] = $id_article && $id_mot && sql_countsel(
+			'spip_mots_liens',
+			'objet=' . sql_quote('article') . ' AND id_objet=' . $id_article . ' AND id_mot=' . intval($id_mot)
+		);
+	}
+	return $cache[$id_article];
 }
 
 /**
@@ -1315,7 +1510,7 @@ function thematique_premier_intervenant($id_rubrique) {
  *
  * @return int 0 si aucun intervenant trouvé
  */
-function thematique_intervenant_annee() {
+function thematique_intervenant_annee($_ = null) {
 	static $cache = null;
 	if ($cache !== null) {
 		return $cache;
@@ -1328,12 +1523,14 @@ function thematique_intervenant_annee() {
 	);
 
 	if ($id_rubrique_annee) {
-		return $cache = thematique_premier_intervenant(intval($id_rubrique_annee));
+		return $cache = (int) thematique_premier_intervenant((int) $id_rubrique_annee);
 	}
 
-	$id_rubrique_travail = thematique_id_rubrique_a_mot('travail_en_cours');
+	$id_rubrique_travail = (int) thematique_id_rubrique_a_mot('travail_en_cours');
 
-	return $cache = $id_rubrique_travail ? thematique_premier_intervenant($id_rubrique_travail) : 0;
+	return $cache = $id_rubrique_travail
+		? (int) thematique_premier_intervenant($id_rubrique_travail)
+		: 0;
 }
 
 /**
@@ -2100,8 +2297,8 @@ function thematique_numero_mission($id_article) {
 		// Seules les missions publiées comptent (la consigne
 		// elle-même est gardée quel que soit son statut, la notification
 		// pouvant partir avant que le statut soit relu), et les jalons
-		// (cap-sur-l-annee/la-rencontre) sont exclus comme dans
-		// json/consignes.html — sinon un "Cap sur l'année" publié dans la
+		// (cap-sur-l-annee/la-rencontre) et la fiche intervenant sont exclus
+		// comme dans json/consignes.html — sinon un "Cap sur l'année" publié dans la
 		// rubrique décalait toutes les missions d'un cran dans les mails.
 		$missions = sql_allfetsel(
 			'id_article',
@@ -2115,7 +2312,9 @@ function thematique_numero_mission($id_article) {
 		$numero = 0;
 		foreach ($missions as $mission) {
 			$id_mission = intval($mission['id_article']);
-			if ($id_mission !== $id_consigne && thematique_article_est_jalon($id_mission)) {
+			if ($id_mission !== $id_consigne
+				&& (thematique_article_est_jalon($id_mission) || thematique_article_est_fiche_intervenant($id_mission))
+			) {
 				continue;
 			}
 			$numero++;

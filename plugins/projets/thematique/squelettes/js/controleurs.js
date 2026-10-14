@@ -147,6 +147,13 @@ $(function () {
 		if (id_article > 0) {
 			const type_article = $container.find('input[name="type_article"]').val()
 			if(!type_article) return CCN.projet.showWholeTimeline();
+			if (type_article === 'intervenant') {
+				const id_rubrique = parseInt($container.find('input[name="id_parent"]').val(), 10);
+				if (!id_rubrique) return CCN.projet.showWholeTimeline();
+				callIntervenant(id_rubrique);
+				collapseSidebar();
+				return;
+			}
 			const typeToAction = {
 				"consignes": callConsigne,
 				"blogs": callArticleBlog,
@@ -337,6 +344,11 @@ function setContentFromState(state, title, url) {
 					break;
 				}
 			}
+		}
+
+		// Fiche intervenant
+		if (state.type_objet == "intervenant") {
+			callIntervenant(state.id_rubrique || state.id_objet);
 		}
 
 		// Article de blog
@@ -649,6 +661,33 @@ function callClasses() {
 	updateMenuIcon(['classes'], 'sidebarView');
 
 	blankMainSidebar('travail_en_cours');
+}
+
+/*
+	Afficher la fiche d'un intervenant.
+*/
+function callIntervenant(id_rubrique) {
+	if (id_rubrique !== '' && !Number.isInteger(Number(id_rubrique))) return;
+	CCN.projet.showWholeTimeline();
+	setLateralSidebarExpanded(false);
+	let url = CCN.projet.url_popup_intervenant;
+	if (id_rubrique != '') {
+		url = CCN.projet.url_popup_intervenant + '&id_objet=' + id_rubrique + '&type_objet=intervenant';
+	}
+	loadContentInMainSidebar(
+		url,
+		() => {
+			updateUrl(
+				{
+					'type_objet': 'intervenant',
+					'id_objet': id_rubrique,
+					'id_rubrique': id_rubrique,
+					'page': 'rubrique'
+				}, "Intervenant", "./spip.php?page=rubrique&id_objet=" + id_rubrique + "&mode=complet&type_objet=intervenant"
+			);
+		},
+		"intervenant"
+	);
 }
 
 /**
@@ -1390,7 +1429,7 @@ function loadContentInMainSidebar(url, callback, typeContenu) {
 		$('#sidebar_content').scrollTop(0);
 		updatePageTitleFromSidebarContent();
 		_sidebarFocusFirst();
-		if(["consigne", "reponse", "blog", "evenement", "classe"].includes(typeContenu)) {
+		if(["consigne", "reponse", "blog", "evenement", "classe", "intervenant"].includes(typeContenu)) {
 			initMissionTabs();
 			initCommentaires();
 		}
