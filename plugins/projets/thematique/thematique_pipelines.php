@@ -386,6 +386,16 @@ function thematique_cioidc_userinfo($flux) {
 		(string) $annee_scolaire
 	);
 
+	// Rubriques de classe du prof encore sous un ancien titre ("4 2 - …" avant
+	// "4ème 2 - …", cf thematique_cioidc_nom_classe()) : renommées à sa connexion,
+	// la pop-up de choix des classes (seul autre endroit qui le fait) ne
+	// s'affichant qu'une fois par an.
+	if ($is_enseignant && !$is_webmestre && $id_travail_classes) {
+		foreach ($classes_reelles as $groupe) {
+			thematique_cioidc_renommer_ancienne_classe($groupe, $id_travail_classes);
+		}
+	}
+
 	[$classes_a_lier, $projets_a_lier] = thematique_cioidc_resoudre_liens_rubriques(
 		$is_enseignant,
 		$is_webmestre,

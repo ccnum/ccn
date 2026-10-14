@@ -213,6 +213,7 @@ return [
 	'ne_pas_afficher_webnapperon'                => 'Ne pas afficher cet article sur le Webnapperon',
 	'necessaire_connexion_commenter'             => 'Il est nécessaire de vous connecter afin de poster un commentaire',
 	'nhesitez_pas'                               => 'N’hésitez pas à poster un message dans l’onglet "Discussions".',
+	'nom_classe_niveau'                          => '@niveau@ème @classe@',
 	'nombre_reponses_pluriel'                    => '@nombre@&nbsp;réponses',
 	'nombre_reponses_singulier'                  => '1&nbsp;réponse',
 	'notif_agenda_detail'                        => '<strong>@auteur@</strong> a publié un nouvel élément dans l’espace <strong><em>Agenda</em></strong>.',

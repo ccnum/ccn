@@ -242,7 +242,7 @@ function thematique_cioidc_nom_affiche(
 		if (stripos($groupe_classe, 'CCN - ') === 0) {
 			$groupe_classe = substr($groupe_classe, strlen('CCN - '));
 		}
-		$parties[] = $groupe_classe;
+		$parties[] = thematique_cioidc_nom_classe($groupe_classe);
 	}
 	if (($uai = (string) ($uai_liste[0] ?? ''))
 		&& ($nom_etablissement = thematique_cioidc_nom_etablissement($uai))) {
@@ -356,19 +356,37 @@ function thematique_cioidc_bloquer_si_archive(array $auteur) {
 }
 
 /**
- * Titre de la rubrique d'une classe ENT sous "Travail des classes" : nom de la classe
- * suivi de son établissement (ex: "5EME1 - Collège Jean Jaurès"), pour distinguer deux
- * classes homonymes de collèges différents inscrits au même CCN — sans quoi elles
- * partageaient la même rubrique. L'établissement vient du group_structure_id de la
- * classe (et non du premier UAI du compte : un prof peut enseigner dans plusieurs
- * établissements). Le "/" est remplacé car creer_rubrique_nommee() y voit un
- * séparateur d'arborescence.
+ * Nom d'une classe ENT tel qu'affiché sur le site : niveau de collège suivi d'un
+ * espace écrit en toutes lettres ("4 2" => "4ème 2", format dans l'item de langue
+ * nom_classe_niveau). Les autres formats ("5EME1", "3E1HI-GE"…) sont gardés tels
+ * quels.
  *
- * @param object $groupe Groupe ENT de la classe (group_name, group_structure_id)
+ * @param string $group_name Nom de la classe dans l'ENT
  * @return string
  */
-function thematique_cioidc_titre_rubrique_classe($groupe) {
-	$titre = (string) $groupe->group_name;
+function thematique_cioidc_nom_classe($group_name) {
+	$group_name = trim((string) $group_name);
+	if (preg_match('/^([3-6])\s+(\S.*)$/u', $group_name, $m)) {
+		return _T('thematique:nom_classe_niveau', ['niveau' => $m[1], 'classe' => $m[2]]);
+	}
+	return $group_name;
+}
+
+/**
+ * Titre de la rubrique d'une classe ENT sous "Travail des classes" : nom de la classe
+ * (cf thematique_cioidc_nom_classe()) suivi de son établissement (ex: "4ème 2 - Collège
+ * Jean Jaurès"), pour distinguer deux classes homonymes de collèges différents
+ * inscrits au même CCN — sans quoi elles partageaient la même rubrique.
+ * L'établissement vient du group_structure_id de la classe (et non du premier UAI du
+ * compte : un prof peut enseigner dans plusieurs établissements). Le "/" est remplacé
+ * car creer_rubrique_nommee() y voit un séparateur d'arborescence.
+ *
+ * @param object $groupe Groupe ENT de la classe (group_name, group_structure_id)
+ * @param bool $nom_brut Nom ENT brut ("4 2") au lieu du nom formaté (titres anciens)
+ * @return string
+ */
+function thematique_cioidc_titre_rubrique_classe($groupe, $nom_brut = false) {
+	$titre = $nom_brut ? (string) $groupe->group_name : thematique_cioidc_nom_classe($groupe->group_name);
 	if ($nom_etablissement = thematique_cioidc_nom_etablissement($groupe->group_structure_id ?? '')) {
 		$titre .= ' - ' . $nom_etablissement;
 	}
@@ -376,10 +394,54 @@ function thematique_cioidc_titre_rubrique_classe($groupe) {
 }
 
 /**
+ * Anciens titres possibles de la rubrique d'une classe ENT, différents du titre
+ * actuel : nom ENT brut avec établissement ("4 2 - Collège…", avant le formatage du
+ * nom), puis nom ENT brut seul (avant l'ajout de l'établissement).
+ *
+ * @param object $groupe Groupe ENT de la classe
+ * @return string[]
+ */
+function thematique_cioidc_anciens_titres_classe($groupe) {
+	return array_values(array_diff(
+		array_unique([thematique_cioidc_titre_rubrique_classe($groupe, true), (string) $groupe->group_name]),
+		[thematique_cioidc_titre_rubrique_classe($groupe)]
+	));
+}
+
+/**
+ * Rubrique d'une classe ENT encore sous un ancien titre (cf
+ * thematique_cioidc_anciens_titres_classe()), renommée au titre actuel plutôt que
+ * dupliquée, pour ne pas perdre son contenu ni ses liens auteurs.
+ *
+ * @param object $groupe Groupe ENT de la classe
+ * @param int|string $id_travail_classes Rubrique « Travail des classes » de l'année
+ * @return int 0 si aucune
+ */
+function thematique_cioidc_renommer_ancienne_classe($groupe, $id_travail_classes) {
+	$titre = thematique_cioidc_titre_rubrique_classe($groupe);
+	// Une rubrique porte déjà le titre actuel : ne pas en créer une homonyme.
+	if (sql_countsel('spip_rubriques', 'titre = ' . sql_quote($titre) . ' AND id_parent=' . intval($id_travail_classes))) {
+		return 0;
+	}
+	foreach (thematique_cioidc_anciens_titres_classe($groupe) as $ancien) {
+		$id_ancienne = (int) sql_getfetsel(
+			'id_rubrique',
+			'spip_rubriques',
+			'titre = ' . sql_quote($ancien) . ' AND id_parent=' . intval($id_travail_classes)
+		);
+		if ($id_ancienne) {
+			sql_updateq('spip_rubriques', ['titre' => $titre], 'id_rubrique=' . $id_ancienne);
+			spip_log("userinfo rubrique classe #$id_ancienne renommée $ancien => $titre", 'cioidc');
+			return $id_ancienne;
+		}
+	}
+	return 0;
+}
+
+/**
  * Rubrique d'une classe ENT pour un prof : trouvée ou créée sous son titre avec
- * établissement. Une rubrique créée avant l'ajout de l'établissement (titre = nom de
- * classe seul, exactement) est renommée plutôt que dupliquée, pour ne pas perdre son
- * contenu ni ses liens auteurs.
+ * établissement. Une rubrique encore sous un ancien titre est renommée plutôt que
+ * dupliquée (cf thematique_cioidc_renommer_ancienne_classe()).
  *
  * @param object $groupe Groupe ENT de la classe
  * @param int|string $id_travail_classes Rubrique « Travail des classes » de l'année
@@ -393,14 +455,7 @@ function thematique_cioidc_rubrique_classe_prof($groupe, $id_travail_classes) {
 	if ($id_classe = thematique_trouver_rubrique($titre, $id_travail_classes)) {
 		return $id_classe;
 	}
-	$id_ancienne = sql_getfetsel(
-		'id_rubrique',
-		'spip_rubriques',
-		'titre = ' . sql_quote($groupe->group_name) . ' AND id_parent=' . intval($id_travail_classes)
-	);
-	if ($id_ancienne && $titre !== $groupe->group_name) {
-		sql_updateq('spip_rubriques', ['titre' => $titre], 'id_rubrique=' . intval($id_ancienne));
-		spip_log("userinfo rubrique classe #$id_ancienne renommée {$groupe->group_name} => $titre", 'cioidc');
+	if ($id_ancienne = thematique_cioidc_renommer_ancienne_classe($groupe, $id_travail_classes)) {
 		return $id_ancienne;
 	}
 	return thematique_trouver_ou_creer_rubrique($titre, $id_travail_classes);
@@ -499,7 +554,14 @@ function thematique_cioidc_supprimer_classes_non_choisies(int $id_auteur, $id_tr
 
 	$nb = 0;
 	foreach (thematique_classes_ent_a_choisir($id_auteur) as $classe) {
-		$titres = array_unique([$classe['titre'], $classe['group_name']]);
+		$groupe = (object) [
+			'group_name' => $classe['group_name'],
+			'group_structure_id' => $classe['group_structure_id'] ?? '',
+		];
+		$titres = array_unique(array_merge(
+			[$classe['titre'], thematique_cioidc_titre_rubrique_classe($groupe)],
+			thematique_cioidc_anciens_titres_classe($groupe)
+		));
 		$rubriques = sql_allfetsel('id_rubrique, titre', 'spip_rubriques', [
 			sql_in('titre', $titres),
 			'id_parent=' . intval($id_travail_classes),
@@ -567,10 +629,9 @@ function thematique_cioidc_resoudre_liens_rubriques(
 		}
 	} elseif ($is_eleve) {
 		foreach ($classes_reelles as $groupe) {
-			if ($id_classe = thematique_trouver_rubrique(
-				thematique_cioidc_titre_rubrique_classe($groupe),
-				$id_travail_classes
-			)) {
+			$id_classe = thematique_trouver_rubrique(thematique_cioidc_titre_rubrique_classe($groupe), $id_travail_classes)
+				?: thematique_cioidc_renommer_ancienne_classe($groupe, $id_travail_classes);
+			if ($id_classe) {
 				$classes_a_lier[] = $id_classe;
 			}
 		}
