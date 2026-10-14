@@ -1,10 +1,13 @@
-<div class="sidebar-reaction-container">
-	[(#INCLURE{fond=inclure/favoris_ccn, objet=article, id_objet=#ID_ARTICLE, ajax})]
+[(#REM) Modifier et réactions sur une même ligne (cf .barre-actions-article). ]
+<div class="barre-actions-article">
+	<div class="bouton-modifier-container">
+		<INCLURE{fond=noisettes/sidebar/inc/bouton_modifier_article, id_article=#ENV{id_article}, type_objet=travail_en_cours} />
+	</div>
+	<div class="sidebar-reaction-container">
+		[(#INCLURE{fond=inclure/favoris_ccn, objet=article, id_objet=#ID_ARTICLE, ajax})]
+	</div>
 </div>
 <BOUCLE_desc(ARTICLES){id_article=#ENV{id_article}}{tous}>
-	<div class="bouton-modifier-container">
-		<INCLURE{fond=noisettes/sidebar/inc/bouton_modifier_article, id_article=#ID_ARTICLE, type_objet=travail_en_cours} />
-	</div>
 	[(#TEXTE|liens_ouvrants|image_reduire{250,0}|thematique_html_equilibre)]
 						
 	[(#REM) Documents joints non insérés dans le texte (critère vu=non, cf
