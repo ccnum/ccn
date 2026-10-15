@@ -310,29 +310,40 @@ function thematique_donner_role($id_auteur) {
 		return 'eleve';
 	}
 
-	// PROF : rattaché (via rubriques) à une hiérarchie contenant le mot "travail_en_cours"
-	if (thematique_auteur_a_mot_dans_hierarchie($id_auteur, 'travail_en_cours')) {
-		$cache[$id_auteur] = 'prof';
-		return 'prof';
-	}
-
-	// INTERVENANT : idem avec le mot "consignes"
-	if (thematique_auteur_a_mot_dans_hierarchie($id_auteur, 'consignes')) {
-		$cache[$id_auteur] = 'intervenant';
-		return 'intervenant';
-	}
-
-	// ADMIN selon statut (webmestre non rattaché à une hiérarchie ci-dessus —
-	// un webmestre rattaché à "consignes" est volontairement classé
-	// "intervenant" par le test au-dessus, cf thematique_voir_mission()).
-	// Un admin restreint (lié à des rubriques, hors webmestre) n'est pas "admin" :
-	// ce rôle ouvre la publication dans toute rubrique et la suppression de tout
-	// commentaire (audit 2026-10). Il garde ses droits SPIP natifs dans /ecrire.
+	// ADMIN selon statut, avant les hiérarchies : un webmestre rattaché à une
+	// classe ou à "consignes" reste admin. Un admin restreint (lié à des
+	// rubriques, hors webmestre) n'est pas "admin" : ce rôle ouvre la publication
+	// dans toute rubrique et la suppression de tout commentaire (audit 2026-10).
+	// Il garde ses droits SPIP natifs dans /ecrire, et son rôle public dépend de
+	// ses rubriques ci-dessous.
 	if ($statut === '0minirezo') {
 		$restreint = ($auteur['webmestre'] ?? '') !== 'oui'
 			&& sql_countsel('spip_auteurs_liens', ['id_auteur=' . intval($id_auteur), "objet='rubrique'"]);
-		$cache[$id_auteur] = $restreint ? null : 'admin';
-		return $cache[$id_auteur];
+		if (!$restreint) {
+			return $cache[$id_auteur] = 'admin';
+		}
+	}
+
+	// Seuls les liens de l'année scolaire active comptent : la connexion SSO ne
+	// retire jamais les rubriques des années passées, et une ancienne classe
+	// ferait d'un intervenant de cette année un "prof".
+	$id_secteur = thematique_id_rubrique_annee_active();
+
+	// PROF : rattaché à une hiérarchie "travail_en_cours" de l'année, ou classes
+	// ENT encore à cocher dans la pop-up (cf formulaires/choisir_classes_ent.php) :
+	// sans ça, un prof de retour d'une année sur l'autre, lié à son seul projet
+	// sous "consignes" tant qu'il n'a pas validé, passerait "intervenant".
+	if (
+		thematique_auteur_a_mot_dans_hierarchie($id_auteur, 'travail_en_cours', $id_secteur)
+		|| thematique_classes_ent_a_choisir($id_auteur)
+	) {
+		return $cache[$id_auteur] = 'prof';
+	}
+
+	// INTERVENANT : idem avec le mot "consignes" (un prof y est aussi lié, à son
+	// projet : d'où le test prof d'abord)
+	if (thematique_auteur_a_mot_dans_hierarchie($id_auteur, 'consignes', $id_secteur)) {
+		return $cache[$id_auteur] = 'intervenant';
 	}
 
 	$cache[$id_auteur] = null;
@@ -399,13 +410,19 @@ function fond_reponse_pour_role($role) {
  *
  * @param int|string $id_auteur Auteur concerné
  * @param string $titre_mot Titre du mot-clé
+ * @param int $id_secteur Si non nul, seules les rubriques liées de ce secteur comptent
  * @return bool
  */
-function thematique_auteur_a_mot_dans_hierarchie($id_auteur, $titre_mot) {
+function thematique_auteur_a_mot_dans_hierarchie($id_auteur, $titre_mot, $id_secteur = 0) {
+	// Alias obligatoires dans le WHERE, cf thematique_classes_rangs()
+	$where = ['L.id_auteur=' . intval($id_auteur), "L.objet='rubrique'"];
+	if ($id_secteur) {
+		$where[] = 'R.id_secteur=' . intval($id_secteur);
+	}
 	$rubriques = sql_allfetsel(
-		'id_objet',
-		'spip_auteurs_liens',
-		'id_auteur=' . intval($id_auteur) . " AND objet='rubrique'"
+		'L.id_objet',
+		'spip_auteurs_liens AS L JOIN spip_rubriques AS R ON R.id_rubrique=L.id_objet',
+		$where
 	);
 	foreach ($rubriques as $r) {
 		// équivalent de ta BOUCLE_hie_rub{tout} + BOUCLE_mot_rub
@@ -2349,11 +2366,6 @@ function thematique_voir_mission() {
 	$role = session_get('role');
 	$statut = session_get('statut');
 
-	// thematique_donner_role() priorise les mots-clés de hiérarchie
-	// (travail_en_cours/consignes) sur le statut SPIP : un vrai webmestre
-	// (statut 0minirezo) peut donc se retrouver avec $role='intervenant'
-	// s'il est aussi rattaché à une hiérarchie "consignes". On vérifie le
-	// statut directement pour ne pas le priver du bouton.
 	if (in_array($role, ['admin', 'intervenant'], true)) {
 		return 'oui';
 	}
