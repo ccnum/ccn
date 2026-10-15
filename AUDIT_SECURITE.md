@@ -42,7 +42,7 @@ WHERE statut <> '5poubelle' AND email <> ''
 - **Logs SSO complets** : le JSON complet des attributs ENT (identité, classes, groupes, élèves compris) est écrit dans `tmp/log/cioidc.log` à chaque connexion, pour le diagnostic (`plugins/projets/ccn/inc/ccn_cioidc.php`). Activé par défaut ; à couper quand il n'est plus utile via la variable Docker `CCN_CIOIDC_LOG_COMPLET=false`.
 - **Cookies applicatifs sans `HttpOnly`** (`thematique/squelettes/js/controleurs.js` `setCookie()`, `main.js` `visited`) : posés et lus par le JS, préférences d'affichage, `SameSite=Strict; Secure` — risque résiduel accepté.
 - **`Content-Security-Policy` absente** (les autres en-têtes sont posés dans `Dockerfile`, `spip_headers.conf`) : une CSP stricte suppose de sortir les nombreux `<script>`/`onclick` inline des squelettes.
-- **thematique et fictions** : le JavaScript des rédacteurs (profs) reste actif sur le site public (`filtrer_javascript` par défaut, 0). Passé à -1 pour petitfablab seulement ; à étendre si les profs ne collent jamais de code légitime (iframes, scripts d'intégration) dans leurs textes.
+- **thematique et fictions** : le JavaScript des rédacteurs (profs) reste actif sur le site public (`filtrer_javascript` par défaut, 0) — risque accepté (2026-10-15). À -1, le `safehtml` public supprime aussi toutes les iframes : le dump d'août 2024 en compte ~280 dans les articles publiés (YouTube, Vimeo, Google Docs…), et ses 34 `<script>` sont tous des lecteurs (Vimeo, Issuu). Passé à -1 pour petitfablab seulement — ses 13 articles publiés avec iframe perdent probablement leur vidéo sur le site public (non vérifié dans un navigateur).
 
 ---
 
