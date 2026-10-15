@@ -110,6 +110,7 @@ return [
 	'erreur_chargement_de'                       => 'Erreur lors du chargement de',
 	'erreur_commentaire_404'                     => 'Ce commentaire n’existe pas.',
 	'erreur_commentaire_422'                     => 'Ce commentaire n’appartient pas à cet article.',
+	'erreur_commentaire_texte_obligatoire'       => 'Le texte est obligatoire.',
 	'erreur_maj_mot_de_passe_video'              => 'Impossible de mettre à jour le mot de passe sur Vimeo.',
 	'etape1_creer_article'                       => 'Etape 1 : Pour créer votre article, choisir un titre et le valider ci-dessous',
 	'etape1_repondre_consigne'                   => 'Etape 1 : Pour répondre à la consigne, choisir un titre et le valider ci-dessous',
