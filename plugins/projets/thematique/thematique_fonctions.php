@@ -3151,6 +3151,11 @@ function thematique_logo_carre($id_objet = 0, $objet = 'rubrique', $taille = 50)
 		$a_un_auteur = $photo['a_un_auteur'];
 		if ($photo['logo']) {
 			$html = image_reduire($photo['logo'], $taille, 0);
+		} elseif ($photo['avatar'] && thematique_image_est_avatar_generique($photo['avatar'])) {
+			// Avatar ENT générique (picto blanc sans fond) : invisible inliné
+			// tel quel sur la bulle blanche, même habillage que le repli
+			// générique ci-dessous.
+			$html = '<span class="icon-avatar-masculin"><img src="' . attribut_url($photo['avatar']) . '" alt=""></span>';
 		} elseif ($photo['avatar']) {
 			// balise_img_svg : URL externe mais pas un .svg, donc route en
 			// interne vers balise_img (construction de balise, pas de fetch

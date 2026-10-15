@@ -23,7 +23,7 @@ juste description + discussion), cf noisettes/article.html ]
 						#GET{titre_description}
 					</div>
 					<div class="tabs-content">
-						<BOUCLE_contenu_message(ARTICLES){id_article}>
+						<BOUCLE_contenu_message(ARTICLES){id_article}{tout}>
 							<div class="bouton-modifier-container">
 								<INCLURE{fond=noisettes/sidebar/inc/bouton_modifier_article, id_article=#ID_ARTICLE, type_objet=#ENV{type_objet}} />
 								<INCLURE{fond=noisettes/sidebar/inc/supprimer_article, id_article=#ID_ARTICLE, type_objet=#ENV{type_objet}}>
