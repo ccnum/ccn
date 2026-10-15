@@ -108,6 +108,21 @@ refaire toute la mise en page. */
 	#menu_bas_logos {
 		display: none;
 	}
+
+	/* La ligne de temps est positionnée en % de #timeline_responsive (mois,
+	missions, zoom de projet.js) : sous ~96px par mois, libellés et pastilles
+	se chevauchent. On lui garde une largeur minimale et on fait défiler
+	#timeline horizontalement ; overflow hidden pour que le zoom (largeur >
+	100%, left négatif) n'agrandisse pas la zone de défilement. */
+	#timeline {
+		overflow-x: auto;
+		overflow-y: hidden;
+	}
+
+	#timeline_responsive, .hasSidebarOpen #timeline_responsive {
+		min-width: 960px;
+		overflow: hidden;
+	}
 }
 
 /* Petit mobile : le menu haut (logo + année + utilisateur + aide, ~760px)
@@ -144,12 +159,29 @@ libellés (.menu_haut_libelle) restent dans le DOM pour les lecteurs d'écran. *
 		margin-right: 0;
 	}
 
+	#menu_haut .select-toggle {
+		padding: 0 6px;
+	}
+
 	#menu_haut .icon-down {
 		width: 24px;
+		margin-right: -6px;
+	}
+
+	#bouton_aide {
+		padding: 0 6px;
 	}
 
 	#bouton_aide .icon-aide {
 		margin-right: 0;
+	}
+
+	#menu_haut_rubrique .icon {
+		margin-right: 0;
+	}
+
+	#menu_haut_rubrique .icon-down {
+		width: 24px;
 	}
 }
 

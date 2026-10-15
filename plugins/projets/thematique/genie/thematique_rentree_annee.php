@@ -17,8 +17,9 @@ if (!defined('_THEMATIQUE_RENTREE_MOIS')) {
  * 2. crée (si absents) les deux articles jalons du projet : "Cap sur
  *    l'année" (cap-sur-l-annee) et "La Rencontre" (la-rencontre), en
  *    statut prop, assignés au premier intervenant trouvé sur le projet ;
- * 3. crée (si absente) la fiche de l'intervenant de l'année (mot-clé
- *    intervenant, cf thematique_creer_fiche_intervenant()).
+ * 3. crée ou réutilise la fiche de l'intervenant de l'année, dans la
+ *    rubrique racine « Intervenants » (année ajoutée à son surtitre, cf
+ *    thematique_creer_fiche_intervenant()).
  *
  * Enregistrée via le pipeline taches_generales_cron (thematique_pipelines.php)
  * plutôt que la balise <genie> de paquet.xml, car le pipeline est réévalué à
@@ -81,7 +82,7 @@ function genie_thematique_rentree_annee_dist($last) {
 
 	// Les deux étapes sont toujours exécutées, même si la première échoue,
 	// pour qu'une erreur sur les jalons ne bloque pas la fiche intervenant.
-	$jalons_ok = thematique_rentree_creer_jalons($id_rubrique, $annee);
+	$jalons_ok = thematique_creer_jalons($id_rubrique, $annee);
 	$fiche_ok = thematique_creer_fiche_intervenant();
 
 	if (!$jalons_ok || !$fiche_ok) {
@@ -107,37 +108,4 @@ function genie_thematique_rentree_annee_dist($last) {
  */
 function thematique_rentree_projet_actif(): bool {
 	return !defined('_CCN_PROJET_ACTIVE') || (bool) _CCN_PROJET_ACTIVE;
-}
-
-/**
- * Crée les articles jalons "Cap sur l'année" et "La Rencontre" s'ils sont absents.
- *
- * @param int $id_rubrique Rubrique racine de l'année
- * @param int $annee       Année de la rentrée
- * @return bool true si tous les jalons existent à la fin
- */
-function thematique_rentree_creer_jalons(int $id_rubrique, int $annee): bool {
-	$id_intervenant = thematique_premier_intervenant($id_rubrique);
-
-	$jalons = [
-		'cap-sur-l-annee' => [
-			'titre' => _T('thematique:cap_sur_annee'),
-			'texte' => _T('thematique:jalon_texte_a_completer'),
-			'date' => $annee . '-09-15 00:00:00',
-		],
-		'la-rencontre' => [
-			'titre' => _T('thematique:la_rencontre'),
-			'texte' => _T('thematique:jalon_texte_a_completer'),
-			'date' => ($annee + 1) . '-06-15 00:00:00',
-		],
-	];
-
-	$ok = true;
-	foreach ($jalons as $mot => $infos) {
-		if (!thematique_creer_article_mot_cle_si_absent($id_rubrique, $mot, $infos, $id_intervenant)) {
-			$ok = false;
-		}
-	}
-
-	return $ok;
 }

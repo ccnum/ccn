@@ -9,7 +9,7 @@
 		]
 		[(#SESSION{id_auteur}|non)
 			[(#PLUGIN{cioidc}|oui)
-				<a class="bouton_encadre" href="[(#URL_PAGE{login}|parametre_url{url,#SELF}|parametre_url{cioidc,oui})]"><:thematique:se_connecter_ent_commenter:></a>
+				<a class="bouton_encadre js-login-ent" href="[(#URL_PAGE{login}|parametre_url{url,#SELF}|parametre_url{cioidc,oui})]"><:thematique:se_connecter_ent_commenter:></a>
 			]
 			[(#REM) CIOIDC absent/désactivé : repli sur le formulaire de login SPIP
 			natif, comme noisettes/inc/authentification.html (menu haut) — la

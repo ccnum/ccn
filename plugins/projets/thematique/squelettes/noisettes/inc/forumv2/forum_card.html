@@ -141,7 +141,7 @@ doivent jamais être figés dans le cache. ]
 						</button>
 					]
 					[(#GET{peut_voir_le_bouton_se_connecter}|oui)
-						<a href="[(#URL_PAGE{login}|parametre_url{url,#SELF}|parametre_url{cioidc,oui})]">
+						<a class="js-login-ent" href="[(#URL_PAGE{login}|parametre_url{url,#SELF}|parametre_url{cioidc,oui})]">
 							<:thematique:se_connecter_repondre:>
 						</a>
 					]

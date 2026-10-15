@@ -105,7 +105,10 @@ function formulaires_forumv2_verifier_dist($id_article) {
 	}
 
 	if (!forumv2_texte_est_valide()) {
-		$erreurs['texte'] = 'Le texte est obligatoire.';
+		$erreurs['texte'] = _T('thematique:erreur_commentaire_texte_obligatoire');
+		// Défini (vide) : sinon SPIP ajoute « Il y a 1 erreur dans votre saisie… »
+		// au-dessus, redondant avec le message sous le titre.
+		$erreurs['message_erreur'] = '';
 	}
 
 	// Plus aucune publication/édition de commentaire (admin

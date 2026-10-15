@@ -26,11 +26,19 @@ function thematique_cioidc_resoudre_auteur($uid, $email) {
 	// Repli par email jamais sur un email vide (il désignait le premier compte sans
 	// email, ex. un compte que cioidc vient de créer, dont les droits étaient alors
 	// écrasés — audit 2026-10) ni sur un compte à la poubelle.
+	// Réservé aux comptes historiques (login absent ou pas au format ENT ABC12345) :
+	// un compte déjà rattaché à un identifiant ENT appartient à quelqu'un d'autre,
+	// puisque la recherche par login n'a rien donné. Et seulement si l'email désigne
+	// un seul compte : sinon rien ne dit lequel est le bon. Dans les deux cas,
+	// l'appelant crée un nouveau compte plutôt que d'en reprendre un.
 	if (!$auteur && $email !== '') {
-		$auteur = sql_fetsel($champs, 'spip_auteurs', [
+		$candidats = sql_allfetsel($champs . ',login', 'spip_auteurs', [
 			'email=' . sql_quote($email),
 			'statut<>' . sql_quote('5poubelle'),
-		]);
+		], '', '', '0,2');
+		$auteur = (count($candidats) === 1 && !preg_match('/^[A-Z]{3}\d{5}$/i', (string) $candidats[0]['login']))
+			? $candidats[0]
+			: null;
 	}
 	return $auteur;
 }
@@ -358,15 +366,16 @@ function thematique_cioidc_bloquer_si_archive(array $auteur) {
 /**
  * Nom d'une classe ENT tel qu'affiché sur le site : niveau de collège suivi d'un
  * espace écrit en toutes lettres ("4 2" => "4ème 2", format dans l'item de langue
- * nom_classe_niveau). Les autres formats ("5EME1", "3E1HI-GE"…) sont gardés tels
- * quels.
+ * nom_classe_niveau), ou collé à une lettre ou un numéro court ("3A" => "3ème A").
+ * Les autres formats ("5EME1", "3E1HI-GE"…) sont gardés tels quels.
  *
  * @param string $group_name Nom de la classe dans l'ENT
  * @return string
  */
 function thematique_cioidc_nom_classe($group_name) {
 	$group_name = trim((string) $group_name);
-	if (preg_match('/^([3-6])\s+(\S.*)$/u', $group_name, $m)) {
+	if (preg_match('/^([3-6])(?:\s+(\S.*)|([A-Za-z]|\d{1,2}))$/u', $group_name, $m)) {
+		$m[2] = ($m[2] ?? '') !== '' ? $m[2] : $m[3];
 		return _T('thematique:nom_classe_niveau', ['niveau' => $m[1], 'classe' => $m[2]]);
 	}
 	return $group_name;
