@@ -113,6 +113,20 @@ $(function () {
 		$('#login_modal').addClass('open');
 	});
 
+	// Connexion ENT : retour sur l'URL affichée plutôt que sur #SELF, qui vaut
+	// dans une popup l'URL du fragment ajax (mode=ajax-detail, page cassée une
+	// fois connecté), et dans le menu haut la page chargée avant les
+	// pushState. En capture : menu_haut.js stoppe la propagation.
+	document.addEventListener('click', function (e) {
+		const lien = e.target.closest && e.target.closest('a.js-login-ent');
+		if (!lien) {
+			return;
+		}
+		const url = new URL(lien.href, window.location.href);
+		url.searchParams.set('url', window.location.href);
+		lien.href = url.toString();
+	}, true);
+
 	$('#timeline_fixed').on(
 		'click', function (event) {
 			event.stopPropagation();
