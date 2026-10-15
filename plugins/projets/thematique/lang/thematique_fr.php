@@ -137,7 +137,7 @@ return [
 	'inserer_raccourci_document'                 => 'Insérer ce document dans le texte de l’article',
 	'intervenant'                                => 'intervenant',
 	'intervenant_annee'                          => 'Intervenant :',
-	'jalon_texte_a_completer'                    => 'Vous n’avez pas encore rédigé et publié de contenu. Cette page n’est donc pas visible pour les autres utilisateurs. Cliquez sur le bouton “Compléter” pour rédiger votre contenu et le faire ainsi apparaître pour les autres utilisateurs.',
+	'jalon_texte_a_completer'                    => 'Veuillez cliquer sur "modifier" pour remplir cette partie',
 	'la_rencontre'                               => 'La Rencontre',
 	'label_fichier_document_mission'             => 'Fichier (formats acceptés : gif jpg png mp3 mp4 pdf)',
 	'label_fichier_video'                        => 'Fichier vidéo (formats acceptés : mp4 mov avi mkv webm)',

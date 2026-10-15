@@ -10,7 +10,12 @@
 <BOUCLE_jalon_texte(ARTICLES){id_article=#ID_ARTICLE}{tout}>
     <div class="fond-bleu-contenu">
         <div class="sidebar_bubble">
-            <span class="spip texte_jalon">[(#TEXTE|liens_ouvrants|image_reduire{250,0}|thematique_html_equilibre)]</span>
+            [(#TEXTE|oui)
+                <span class="spip texte_jalon">[(#TEXTE|liens_ouvrants|image_reduire{250,0}|thematique_html_equilibre)]</span>
+            ]
+            [(#TEXTE|non)
+                <span class="texte_jalon"><:thematique:jalon_texte_a_completer:></span>
+            ]
         </div>
         <div class="sidebar_bubble">
             <div class="bloc_documents">
@@ -25,9 +30,11 @@
                     </div>
                 ]
                 [(#STATUT|=={publie}|non)
+                    [(#TEXTE|oui)
                     <div class="ajax">
                         #FORMULAIRE_PUBLIER_ARTICLE{#ID_ARTICLE}
                     </div>
+                    ]
                 ]
             </div>
         </div>

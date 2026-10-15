@@ -72,11 +72,10 @@ function formulaires_public_publier_article_charger_dist(
 		if ($article) {
 			$valeurs['id_article'] = $article['id_article'];
 			$valeurs['titre'] = $article['titre'];
-			// Texte par défaut posé à la création (jalons, fiche intervenant, cf
+			// Texte par défaut posé à la création (fiche intervenant, cf
 			// genie/thematique_rentree_annee.php) : champ vide pour afficher le
 			// placeholder plutôt qu'un texte à effacer avant d'écrire.
 			$textes_par_defaut = [
-				_T('thematique:jalon_texte_a_completer'),
 				_T('thematique:fiche_intervenant_texte_a_completer'),
 			];
 			$valeurs['texte'] = in_array(trim($article['texte']), $textes_par_defaut, true) ? '' : $article['texte'];

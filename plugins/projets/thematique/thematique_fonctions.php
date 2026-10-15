@@ -1688,12 +1688,12 @@ function thematique_creer_jalons(int $id_rubrique, int $annee): bool {
 	$jalons = [
 		'cap-sur-l-annee' => [
 			'titre' => _T('thematique:cap_sur_annee'),
-			'texte' => _T('thematique:jalon_texte_a_completer'),
+			'texte' => '',
 			'date' => $annee . '-09-15 00:00:00',
 		],
 		'la-rencontre' => [
 			'titre' => _T('thematique:la_rencontre'),
-			'texte' => _T('thematique:jalon_texte_a_completer'),
+			'texte' => '',
 			'date' => ($annee + 1) . '-06-15 00:00:00',
 		],
 	];
