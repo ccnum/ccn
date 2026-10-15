@@ -3423,7 +3423,23 @@ function thematique_auteur_peut_creer_dans_rubrique($id_auteur, $id_rubrique) {
  * @return bool
  */
 function thematique_peut_publier_dans_mot($id_auteur, $titre_mot) {
-	return thematique_auteur_peut_creer_dans_rubrique($id_auteur, thematique_id_rubrique_a_mot($titre_mot));
+	$id_rubrique = thematique_id_rubrique_a_mot($titre_mot);
+	$peut = thematique_auteur_peut_creer_dans_rubrique($id_auteur, $id_rubrique);
+
+	// TEMP : diagnostic de l'entrée agenda absente du menu Publier
+	$liens = $id_auteur ? array_column(sql_allfetsel(
+		'id_objet',
+		'spip_auteurs_liens',
+		'id_auteur=' . intval($id_auteur) . " AND objet='rubrique'"
+	), 'id_objet') : [];
+	spip_log(
+		"peut_publier_dans_mot auteur #$id_auteur mot=$titre_mot id_mot=" . thematique_id_mot($titre_mot)
+			. " id_rubrique=$id_rubrique rôle=" . (thematique_donner_role($id_auteur) ?? 'aucun')
+			. ' liens=' . implode(',', $liens) . ' => ' . ($peut ? 'oui' : 'non'),
+		'cioidc'
+	);
+
+	return $peut;
 }
 
 /**
