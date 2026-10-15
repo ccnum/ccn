@@ -26,11 +26,19 @@ function thematique_cioidc_resoudre_auteur($uid, $email) {
 	// Repli par email jamais sur un email vide (il désignait le premier compte sans
 	// email, ex. un compte que cioidc vient de créer, dont les droits étaient alors
 	// écrasés — audit 2026-10) ni sur un compte à la poubelle.
+	// Réservé aux comptes historiques (login absent ou pas au format ENT ABC12345) :
+	// un compte déjà rattaché à un identifiant ENT appartient à quelqu'un d'autre,
+	// puisque la recherche par login n'a rien donné. Et seulement si l'email désigne
+	// un seul compte : sinon rien ne dit lequel est le bon. Dans les deux cas,
+	// l'appelant crée un nouveau compte plutôt que d'en reprendre un.
 	if (!$auteur && $email !== '') {
-		$auteur = sql_fetsel($champs, 'spip_auteurs', [
+		$candidats = sql_allfetsel($champs . ',login', 'spip_auteurs', [
 			'email=' . sql_quote($email),
 			'statut<>' . sql_quote('5poubelle'),
-		]);
+		], '', '', '0,2');
+		$auteur = (count($candidats) === 1 && !preg_match('/^[A-Z]{3}\d{5}$/i', (string) $candidats[0]['login']))
+			? $candidats[0]
+			: null;
 	}
 	return $auteur;
 }

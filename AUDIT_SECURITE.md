@@ -27,7 +27,7 @@ relevées passent par `intval`/`sql_quote`/`sql_in`.
 ## Reste à faire (sans vulnérabilité établie)
 
 ### thematique
-- `inc/thematique_cioidc.php` : le repli par email reste actif quand l'email (non vide) correspond à un autre compte — à retirer une fois les comptes historiques sans login SSO rapprochés (mesure : requête ci-dessous).
+- `inc/thematique_cioidc.php` : le repli par email reste actif, restreint depuis le 2026-10-15 aux comptes historiques (login absent ou pas au format ENT) dont l'email désigne un seul compte actif ; sinon un nouveau compte est créé. À retirer une fois ces comptes rapprochés (mesure, sur la base de prod : requête ci-dessous ; le dump local d'août 2024 n'est pas représentatif, presque tous les logins y sont antérieurs à l'ENT).
 
 ```sql
 -- Comptes qu'un repli par email pourrait encore viser : email partagé par plusieurs comptes,
