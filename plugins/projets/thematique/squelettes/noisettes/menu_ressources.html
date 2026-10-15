@@ -26,7 +26,7 @@ l'appelant) et de la liste live des rubriques racine, donc ne doit jamais
 		commence par 2 ou 0" — tant que la rubrique de l'année active
 		n'existe pas (ou n'a pas ce format), elle retombait sur celle de
 		l'année précédente et affichait son lien. ]
-		<BOUCLE_espace_doc(RUBRIQUES){tous}{racine}{titre LIKE %(#CONST{_ANNEE_SCOLAIRE})%}{0,1}>
+		<BOUCLE_espace_doc(RUBRIQUES){tout}{racine}{titre LIKE %(#CONST{_ANNEE_SCOLAIRE})%}{0,1}>
 		[<li class="logo">
 			<a class="logo_menu-doc menu_logo_type_sidebarView tooltip" href="(#DESCRIPTIF|textebrut|trim)" aria-label="<:thematique:cartable_ligne:>" data-tip="<:thematique:cartable_ligne:>" target="_blank" rel="noopener noreferrer"></a>
 		</li>

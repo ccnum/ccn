@@ -1,5 +1,5 @@
 #CACHE{0}
-<BOUCLE_principale_article(ARTICLES){id_article}{statut!=poubelle}{tous}>
+<BOUCLE_principale_article(ARTICLES){id_article}{statut!=poubelle}{tout}>
 	[(#REM) Type objet: consignes, travail_en_cours, blogs, evenements, ressources]
 	[(#ENV{type_objet}|oui)
 		#SET{type_objet,#TYPE_OBJET}
@@ -65,7 +65,7 @@
 			<INCLURE{fond=layout, page=sommaire, env, id_objet=#ENV{id_article}} />
 		]
 		[(#ENV{mode,complet}|!={complet}|oui)
-			<BOUCLE_article_poubelle(ARTICLES){id_article}{statut=poubelle}{tous}>
+			<BOUCLE_article_poubelle(ARTICLES){id_article}{statut=poubelle}{tout}>
 				<INCLURE{fond=noisettes/article_introuvable, env, supprime=oui} />
 			</BOUCLE_article_poubelle>
 				<INCLURE{fond=noisettes/article_introuvable, env} />

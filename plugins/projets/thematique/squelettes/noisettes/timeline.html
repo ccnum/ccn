@@ -26,7 +26,7 @@
 		<BOUCLE_FiltreAnnee(RUBRIQUES){racine}{titre LIKE %(#CONST{_ANNEE_SCOLAIRE})%}>
 			#SET{hasYearRub,true}
 			<BOUCLE_rubMot(RUBRIQUES){id_parent}{titre_mot=travail_en_cours}>
-				<BOUCLE_rubLoop(RUBRIQUES){id_parent}{tous}{par id_rubrique}{0,1}>
+				<BOUCLE_rubLoop(RUBRIQUES){id_parent}{tout}{par id_rubrique}{0,1}>
 					#SET{id_rubrique_classe, #ID_RUBRIQUE}
 				</BOUCLE_rubLoop>
 			</BOUCLE_rubMot>

@@ -7,7 +7,7 @@
 		[(#INCLURE{fond=inclure/favoris_ccn, objet=article, id_objet=#ID_ARTICLE, ajax})]
 	</div>
 </div>
-<BOUCLE_desc(ARTICLES){id_article=#ENV{id_article}}{tous}>
+<BOUCLE_desc(ARTICLES){id_article=#ENV{id_article}}{tout}>
 	[(#TEXTE|liens_ouvrants|image_reduire{250,0}|thematique_html_equilibre)]
 						
 	[(#REM) Documents joints non insérés dans le texte (critère vu=non, cf

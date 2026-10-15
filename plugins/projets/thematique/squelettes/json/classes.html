@@ -10,10 +10,10 @@ visiteurs/sessions pendant 60s après un changement d'année. ]
 #SET{buf_classes,''}
 #SET{travail_en_cours_id,0}
 
-<BOUCLE_archives_annee(RUBRIQUES){titre==^#CONST{_ANNEE_SCOLAIRE}}{tous}{0,1}>
+<BOUCLE_archives_annee(RUBRIQUES){titre==^#CONST{_ANNEE_SCOLAIRE}}{tout}{0,1}>
 	#SET{dans_archives,oui}
-	<BOUCLE_archives_annee_intervenants(RUBRIQUES){id_parent=#ID_RUBRIQUE}{tous}>
-		<BOUCLE_archives_annee_intervenants_in(RUBRIQUES){id_parent=#ID_RUBRIQUE}{titre_mot==consignes}{tous}>
+	<BOUCLE_archives_annee_intervenants(RUBRIQUES){id_parent=#ID_RUBRIQUE}{tout}>
+		<BOUCLE_archives_annee_intervenants_in(RUBRIQUES){id_parent=#ID_RUBRIQUE}{titre_mot==consignes}{tout}>
 			[(#SET{buf_intervenants,[(#GET{buf_intervenants})][(#GET{n_intervenants}|>{0}|oui),]{"id":#ID_RUBRIQUE,"nom":[(#TITRE|json_encode)]}})]
 			[(#SET{n_intervenants,#GET{n_intervenants}|plus{1}})]
 		</BOUCLE_archives_annee_intervenants_in>
@@ -21,23 +21,23 @@ visiteurs/sessions pendant 60s après un changement d'année. ]
 		[(#SET{buf_intervenants,[(#GET{buf_intervenants})][(#GET{n_intervenants}|>{0}|oui),]{"id":0,"nom":"nom"}})]
 		[(#SET{n_intervenants,#GET{n_intervenants}|plus{1}})]
 	<//B_archives_annee_intervenants>
-	<BOUCLE_archives_annee_classes(RUBRIQUES){id_parent=#ID_RUBRIQUE}{titre_mot==travail_en_cours}{tous}>
+	<BOUCLE_archives_annee_classes(RUBRIQUES){id_parent=#ID_RUBRIQUE}{titre_mot==travail_en_cours}{tout}>
 		[(#GET{travail_en_cours_id}|=={0}|oui)[(#SET{travail_en_cours_id,#ID_RUBRIQUE})]]
-		<BOUCLE_archives_annee_classes_in(RUBRIQUES){id_parent=#ID_RUBRIQUE}{tous}>
+		<BOUCLE_archives_annee_classes_in(RUBRIQUES){id_parent=#ID_RUBRIQUE}{tout}>
 			[(#SET{buf_classes,[(#GET{buf_classes})][(#GET{n_classes}|>{0}|oui),]{"id":#ID_RUBRIQUE,"nom":[(#TITRE|json_encode)]}})]
 			[(#SET{n_classes,#GET{n_classes}|plus{1}})]
 		</BOUCLE_archives_annee_classes_in>
 	</BOUCLE_archives_annee_classes>
 </BOUCLE_archives_annee>
-<BOUCLE_intervenants(RUBRIQUES){racine}{titre==Consignes$}{tous}{si #GET{dans_archives}|=={non}|oui}>
-	<BOUCLE_intervenants_in(RUBRIQUES){id_parent=#ID_RUBRIQUE}{tous}>
+<BOUCLE_intervenants(RUBRIQUES){racine}{titre==Consignes$}{tout}{si #GET{dans_archives}|=={non}|oui}>
+	<BOUCLE_intervenants_in(RUBRIQUES){id_parent=#ID_RUBRIQUE}{tout}>
 		[(#SET{buf_intervenants,[(#GET{buf_intervenants})][(#GET{n_intervenants}|>{0}|oui),]{"id":#ID_RUBRIQUE,"nom":[(#TITRE|json_encode)]}})]
 		[(#SET{n_intervenants,#GET{n_intervenants}|plus{1}})]
 	</BOUCLE_intervenants_in>
 </BOUCLE_intervenants>
-<BOUCLE_classes(RUBRIQUES){racine}{titre_mot==travail_en_cours}{tous}{si #GET{dans_archives}|=={non}|oui}>
+<BOUCLE_classes(RUBRIQUES){racine}{titre_mot==travail_en_cours}{tout}{si #GET{dans_archives}|=={non}|oui}>
 	[(#GET{travail_en_cours_id}|=={0}|oui)[(#SET{travail_en_cours_id,#ID_RUBRIQUE})]]
-	<BOUCLE_classes_in(RUBRIQUES){id_parent=#ID_RUBRIQUE}{tous}>
+	<BOUCLE_classes_in(RUBRIQUES){id_parent=#ID_RUBRIQUE}{tout}>
 		[(#SET{buf_classes,[(#GET{buf_classes})][(#GET{n_classes}|>{0}|oui),]{"id":#ID_RUBRIQUE,"nom":[(#TITRE|json_encode)]}})]
 		[(#SET{n_classes,#GET{n_classes}|plus{1}})]
 	</BOUCLE_classes_in>

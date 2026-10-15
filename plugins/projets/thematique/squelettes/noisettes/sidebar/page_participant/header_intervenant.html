@@ -3,7 +3,7 @@
 règle de visibilité. ]
 #SET{titre_fiche, ''}
 #SET{id_fiche, #ENV{id_rubrique}|thematique_id_fiche_intervenant}
-<BOUCLE_fiche_intervenant(ARTICLES){id_article=#GET{id_fiche}}{tous}>
+<BOUCLE_fiche_intervenant(ARTICLES){id_article=#GET{id_fiche}}{tout}>
 	#SET{titre_fiche, #TITRE}
 </BOUCLE_fiche_intervenant>
 
