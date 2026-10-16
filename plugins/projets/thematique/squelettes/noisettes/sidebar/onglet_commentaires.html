@@ -22,18 +22,22 @@
 	</div>
 	]
 	[(#SESSION{id_auteur}|oui)
-		<div class="forum-commentaire-racine ajax" hidden>
-			#FORMULAIRE_FORUMV2{#ENV{id_article}, 0}
+		<div class="forum-commentaire-racine" hidden>
+			<div class="ajax">
+				#FORMULAIRE_FORUMV2{#ENV{id_article}, 0}
+			</div>
 		</div>
 	]
-	<!-- Arbre des commentaires -->
+
 	<div class="forum-liste">
 		[(#ENV{id_article}|afficher_forum_arbre)]
 	</div>
+
 	[(#SESSION{id_auteur}|oui)
-		<!-- Formulaire de réponse unique, il ne s'affiche que lorsque l'on clique sur "Répondre" à un commentaire, ou "Modifier" -->
-		<div id="forum-formulaire-reponse" class="forum-formulaire-reponse ajax" hidden>
-			#FORMULAIRE_FORUMV2{#ENV{id_article}, 0}
+		<div id="forum-formulaire-reponse" class="forum-formulaire-reponse" hidden>
+			<div class="ajax">
+				#FORMULAIRE_FORUMV2{#ENV{id_article}, 0}
+			</div>
 		</div>
 	]
 </div>

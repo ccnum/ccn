@@ -182,6 +182,13 @@ function formulaires_forumv2_traiter_dist($id_article) {
 		];
 	}
 
+	if (_request('publication_forum_action') === 'rediger') {
+		return [
+			'affichage' => 'redaction',
+			'texte' => _request('texte'),
+		];
+	}
+
 	if (_request('publication_forum_action') === 'publier') {
 		$id_forum = intval(_request('id_forum'));
 		if ($id_forum) {
