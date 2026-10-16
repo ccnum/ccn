@@ -41,10 +41,13 @@ if [ "${APACHE_PORT}" != "80" ]; then
 fi
 
 # Le code (cœur SPIP, plugins, .htaccess) est dans l'image, sous /var/www/html :
-# rien à copier ici. Seuls IMG/ et config/ sont persistés (bind mounts), tmp/ et
-# local/ repartent de ceux de l'image à chaque recréation du conteneur.
+# rien à copier ici. Seuls IMG/, config/ et tmp/log/ sont persistés (bind mounts),
+# le reste de tmp/ et local/ repart de ceux de l'image à chaque recréation du
+# conteneur. Volontairement pour tmp/session/ : chacun doit se reconnecter après
+# un déploiement, ce qui recalcule #SESSION{role} (preparer_fichier_session) avec
+# le nouveau code — ne pas persister tmp/ entier.
 if mountpoint -q /var/www/html; then
-	echo >&2 "WARNING: /var/www/html est monté (volume) : il masque le code de l'image, qui ne sera pas servi. Ne monter que IMG/ et config/."
+	echo >&2 "WARNING: /var/www/html est monté (volume) : il masque le code de l'image, qui ne sera pas servi. Ne monter que IMG/, config/ et tmp/log/."
 fi
 mkdir -p tmp/dump tmp/log tmp/upload local IMG config
 # Fichiers de config/ fournis par l'archive SPIP (ecran_securite.php, config/spip/
@@ -57,7 +60,7 @@ if [ "$(id -u)" = 0 ]; then
 fi
 
 # Squelettes/CSS mis en cache (ex. thematique.css, #CACHE{86400}) avec les
-# plugins d'une image précédente, si tmp/ est persisté par le déploiement.
+# plugins d'une image précédente, si tmp/ est quand même persisté par un déploiement.
 if [ -f /usr/local/lib/ccn/empreinte-plugins ] && ! cmp -s /usr/local/lib/ccn/empreinte-plugins tmp/empreinte-plugins; then
 	rm -rf tmp/cache/*
 	cp /usr/local/lib/ccn/empreinte-plugins tmp/empreinte-plugins

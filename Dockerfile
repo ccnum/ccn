@@ -183,9 +183,11 @@ RUN set -eux; \
 	# Le code est installé directement dans /var/www/html, dans une couche de
 	# l'image partagée par tous les conteneurs (pas de VOLUME : chaque conteneur
 	# en recevait sinon une copie complète dans un volume anonyme, ~20 000
-	# fichiers par site, jusqu'à épuiser les inodes du serveur). Seuls IMG/ et
-	# config/ sont à persister (bind mounts côté déploiement) ; tmp/ et local/
-	# (cache, sessions, vignettes) se régénèrent.
+	# fichiers par site, jusqu'à épuiser les inodes du serveur). Seuls IMG/,
+	# config/ et tmp/log/ sont à persister (bind mounts côté déploiement) ; le
+	# reste de tmp/ et local/ (cache, sessions, vignettes) se régénère. Ne pas
+	# persister tmp/ entier : perdre les sessions au déploiement force chacun à se
+	# reconnecter, donc à recalculer son rôle avec le nouveau code.
 	unzip -q /tmp/spip.zip -d /var/www/html; \
 	rm /tmp/spip.zip; \
 	cd /var/www/html; \

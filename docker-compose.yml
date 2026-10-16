@@ -33,11 +33,13 @@ services:
       - SPIP_ADMIN_PASS=ChangeMeAdminPassword!
       - SPIP_SITE_ADDRESS=http://localhost:8880
     # Le code est dans l'image : ne monter que les données à conserver, jamais
-    # /var/www/html (il masquerait le code). Pas tmp/ : perdre les sessions force
-    # la reconnexion, et donc le recalcul du rôle, après une mise à jour de l'image.
+    # /var/www/html (il masquerait le code). Pas tmp/ entier, seulement tmp/log :
+    # perdre les sessions force la reconnexion, et donc le recalcul du rôle,
+    # après une mise à jour de l'image.
     volumes:
       - spip_img:/var/www/html/IMG
       - spip_config:/var/www/html/config
+      - spip_log:/var/www/html/tmp/log
     ports:
       - 8880:80
 
@@ -45,3 +47,4 @@ volumes:
   db_data:
   spip_img:
   spip_config:
+  spip_log:
