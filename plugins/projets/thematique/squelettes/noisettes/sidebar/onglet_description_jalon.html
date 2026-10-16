@@ -13,6 +13,7 @@
             [(#TEXTE|oui)
                 <span class="spip texte_jalon">[(#TEXTE|liens_ouvrants|image_reduire{250,0}|thematique_html_equilibre)]</span>
             ]
+            [(#REM) Jalon créé vide (thematique_creer_jalons) : message de repli. ]
             [(#TEXTE|non)
                 <span class="texte_jalon"><:thematique:jalon_texte_a_completer:></span>
             ]
@@ -31,9 +32,9 @@
                 ]
                 [(#STATUT|=={publie}|non)
                     [(#TEXTE|oui)
-                    <div class="ajax">
-                        #FORMULAIRE_PUBLIER_ARTICLE{#ID_ARTICLE}
-                    </div>
+                        <div class="ajax">
+                            #FORMULAIRE_PUBLIER_ARTICLE{#ID_ARTICLE}
+                        </div>
                     ]
                 ]
             </div>

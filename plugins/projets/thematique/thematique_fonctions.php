@@ -1709,6 +1709,21 @@ function thematique_creer_jalons(int $id_rubrique, int $annee): bool {
 }
 
 /**
+ * Migration 3.4.9 : les jalons étaient créés avec un texte par défaut, ils le
+ * sont désormais vides (message de repli affiché par
+ * noisettes/sidebar/onglet_description_jalon.html). On vide ceux encore
+ * porteurs de l'ancien texte, sinon il resterait affiché à la place du
+ * message de repli et le bouton Publier apparaîtrait sur un jalon vide.
+ */
+function thematique_vider_texte_jalons_par_defaut() {
+	sql_updateq(
+		'spip_articles',
+		['texte' => ''],
+		'texte=' . sql_quote(_T('thematique:jalon_texte_a_completer_ancien'))
+	);
+}
+
+/**
  * Migration 3.4.8 : les fiches intervenant (une par année, dans la rubrique
  * projet de chaque année) passent dans la rubrique « Intervenants », une par
  * intervenant, avec ses années en surtitre. Pour un intervenant qui en a

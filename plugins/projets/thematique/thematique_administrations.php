@@ -111,6 +111,9 @@ function thematique_upgrade($nom_meta_base_version, $version_cible) {
 	// une par intervenant, années en surtitre.
 	$maj['3.4.8'] = [['thematique_migrer_fiches_intervenant'], ['thematique_creer_fiche_intervenant']];
 
+	// Jalons créés vides : on retire l'ancien texte par défaut des existants.
+	$maj['3.4.9'] = [['thematique_vider_texte_jalons_par_defaut']];
+
 	include_spip('thematique_fonctions');
 	include_spip('base/upgrade');
 	maj_plugin($nom_meta_base_version, $version_cible, $maj);
