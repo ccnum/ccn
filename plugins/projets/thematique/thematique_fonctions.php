@@ -1688,12 +1688,12 @@ function thematique_creer_jalons(int $id_rubrique, int $annee): bool {
 	$jalons = [
 		'cap-sur-l-annee' => [
 			'titre' => _T('thematique:cap_sur_annee'),
-			'texte' => _T('thematique:jalon_texte_a_completer'),
+			'texte' => '',
 			'date' => $annee . '-09-15 00:00:00',
 		],
 		'la-rencontre' => [
 			'titre' => _T('thematique:la_rencontre'),
-			'texte' => _T('thematique:jalon_texte_a_completer'),
+			'texte' => '',
 			'date' => ($annee + 1) . '-06-15 00:00:00',
 		],
 	];
@@ -1706,6 +1706,21 @@ function thematique_creer_jalons(int $id_rubrique, int $annee): bool {
 	}
 
 	return $ok;
+}
+
+/**
+ * Migration 3.4.9 : les jalons étaient créés avec un texte par défaut, ils le
+ * sont désormais vides (message de repli affiché par
+ * noisettes/sidebar/onglet_description_jalon.html). On vide ceux encore
+ * porteurs de l'ancien texte, sinon il resterait affiché à la place du
+ * message de repli et le bouton Publier apparaîtrait sur un jalon vide.
+ */
+function thematique_vider_texte_jalons_par_defaut() {
+	sql_updateq(
+		'spip_articles',
+		['texte' => ''],
+		'texte=' . sql_quote(_T('thematique:jalon_texte_a_completer_ancien'))
+	);
 }
 
 /**
@@ -3151,6 +3166,11 @@ function thematique_logo_carre($id_objet = 0, $objet = 'rubrique', $taille = 50)
 		$a_un_auteur = $photo['a_un_auteur'];
 		if ($photo['logo']) {
 			$html = image_reduire($photo['logo'], $taille, 0);
+		} elseif ($photo['avatar'] && thematique_image_est_avatar_generique($photo['avatar'])) {
+			// Avatar ENT générique (picto blanc sans fond) : invisible inliné
+			// tel quel sur la bulle blanche, même habillage que le repli
+			// générique ci-dessous.
+			$html = '<span class="icon-avatar-masculin"><img src="' . attribut_url($photo['avatar']) . '" alt=""></span>';
 		} elseif ($photo['avatar']) {
 			// balise_img_svg : URL externe mais pas un .svg, donc route en
 			// interne vers balise_img (construction de balise, pas de fetch

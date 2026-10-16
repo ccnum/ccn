@@ -53,7 +53,7 @@ du cache de la page. ]
 		toutes les années. id_travail est non nul ici, garanti par
 		thematique_a_classes_annee() plus haut. ]
 		#SET{id_travail, #VAL{''}|thematique_id_rubrique_annee_active|thematique_id_rubrique_enfant_a_mot{travail_en_cours}}
-		<BOUCLE_classes(RUBRIQUES){id_parent=#GET{id_travail}}{tous}{par id_rubrique}>
+		<BOUCLE_classes(RUBRIQUES){id_parent=#GET{id_travail}}{tout}{par id_rubrique}>
 			<INCLURE{fond=modeles/classe_icone,id_rubrique,titre} />
 			#SET{nb_classes, #GET{nb_classes}|plus{1}}
 		</BOUCLE_classes>

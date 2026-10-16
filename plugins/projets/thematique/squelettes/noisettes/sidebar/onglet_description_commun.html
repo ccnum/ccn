@@ -1,5 +1,5 @@
 #CACHE{0}
-<BOUCLE_desc(ARTICLES){id_article=#ENV{id_article}}{tous}>
+<BOUCLE_desc(ARTICLES){id_article=#ENV{id_article}}{tout}>
 	<div class="fond-bleu-contenu">
 		[(#REM) Modifier et réactions sur une même ligne (cf .barre-actions-article). ]
 		<div class="barre-actions-article">
@@ -73,7 +73,7 @@
 					<BOUCLE_FiltreAnnee(RUBRIQUES){racine}{titre LIKE %(#CONST{_ANNEE_SCOLAIRE})%}>
 						#SET{hasYearRub,true}
 						<BOUCLE_rubMot(RUBRIQUES){id_parent}{titre_mot=travail_en_cours}>
-							<BOUCLE_rubLoop(RUBRIQUES){id_parent}{tous}{par id_rubrique}{0,1}>
+							<BOUCLE_rubLoop(RUBRIQUES){id_parent}{tout}{par id_rubrique}{0,1}>
 								#SET{id_rubrique_classe, #ID_RUBRIQUE}
 							</BOUCLE_rubLoop>
 						</BOUCLE_rubMot>

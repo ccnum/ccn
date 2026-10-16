@@ -14,7 +14,7 @@ thematique_id_fiche_intervenant). ]
 		} />
 	</div>
 	#SET{libelle_discussions, #VAL{thematique:titre_onglet_commentaires}|_T}
-	<BOUCLE_fiche_intervenant(ARTICLES){id_article=#GET{id_fiche}}{tous}>
+	<BOUCLE_fiche_intervenant(ARTICLES){id_article=#GET{id_fiche}}{tout}>
         <div class="container-tabs">
             <div id="mission-tabs">
                 <div>

@@ -11,7 +11,7 @@ choisir un autre format de soumission pour ce type de champ natif.
 @see vues/article_date.html pour le ré-affichage après enregistrement.
 ]
 #CACHE{0}
-<BOUCLE_a(ARTICLES){id_article}{tous}>
+<BOUCLE_a(ARTICLES){id_article}{tout}>
 <input type="hidden" class="crayon-active" name="#ENV{name_date}" value="[(#DATE)]" />
 <input type="datetime-local" step="1" style="#ENV{style}"
 	value="[(#DATE|replace{' ','T'})]"
