@@ -16,7 +16,7 @@ services:
       retries: 12
 
   app:
-    image: erasme/spip-ccn:dev
+    image: erasme/spip-ccn:custom-port
     build:
       context: .
     restart: always
