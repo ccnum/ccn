@@ -175,13 +175,8 @@ function formulaires_forumv2_traiter_dist($id_article) {
 	include_spip('action/editer_forum');
 	include_spip('inc/session');
 
-	if (_request('publication_forum_action') === 'previsualiser') {
-		return [
-			'affichage' => 'previsualisation',
-			'texte' => _request('texte'),
-		];
-	}
-
+	// previsualiser / rediger : rien à traiter, l'affichage est calculé par charger()
+	// (SPIP ignore les autres clés que message_ok/message_erreur/editable/redirect).
 	if (_request('publication_forum_action') === 'publier') {
 		$id_forum = intval(_request('id_forum'));
 		if ($id_forum) {
