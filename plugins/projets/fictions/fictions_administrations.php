@@ -60,6 +60,12 @@ function fictions_upgrade($nom_meta_base_version, $version_cible) {
 		['fictions_associer_mot_par_titre', 'footer-page', 'article', 'Le projet'],
 	];
 
+	// Mot blog_pedagogique abandonné (rubrique de blog pédagogique jamais
+	// publiée) : supprimé avec ses liens.
+	$maj['1.0.5'] = [
+		['fictions_supprimer_mot', 'blog_pedagogique'],
+	];
+
 	include_spip('base/upgrade');
 	maj_plugin($nom_meta_base_version, $version_cible, $maj);
 }
@@ -101,8 +107,6 @@ function fictions_vider_tables($nom_meta_base_version) {
 function fictions_ajouter_mots_clef() {
 	$id_groupe = fictions_ajouter_groupe_mots('Fictions v2', 'rubriques,articles');
 
-	// Rubriques : "blog_pedagogique" identifie la rubrique du blog pédagogique
-	fictions_ajouter_mot('blog_pedagogique', $id_groupe);
 	// "rubrique-contenant-annees" — parent des rubriques d'années ("2025", "2026"...)
 	fictions_ajouter_mot('rubrique-contenant-annees', $id_groupe);
 	// "année_en_ecriture" — année en cours d'écriture (vue "fabrication" de l'accueil)
@@ -129,8 +133,6 @@ function fictions_ajouter_mots_clef() {
  * jusqu'ici identifiés par leurs titres codés en dur.
  */
 function fictions_migrer_rubriques_articles() {
-	// Rubrique "Blog pédagogique" → mot "blog_pedagogique"
-	fictions_associer_mot_par_titre('blog_pedagogique', 'rubrique', '%Blog Pédagogique%');
 	// Articles "presentation…" → mot "presentation"
 	fictions_associer_mot_par_titre('presentation', 'article', 'presentation%');
 	// Articles "prologue…" → mot "prologue"
@@ -189,6 +191,18 @@ function fictions_associer_mot_par_titre($titre_mot, $objet, $motif) {
 	foreach ($rows as $row) {
 		objet_associer(['mot' => $id_mot], [$objet => intval($row[$id_table])]);
 	}
+}
+
+/**
+ * Supprime un mot-clé (par titre) et ses liens. Sans effet s'il n'existe pas.
+ */
+function fictions_supprimer_mot($titre) {
+	$id_mot = intval(sql_getfetsel('id_mot', 'spip_mots', 'titre=' . sql_quote($titre)));
+	if (!$id_mot) {
+		return;
+	}
+	sql_delete('spip_mots_liens', 'id_mot=' . $id_mot);
+	sql_delete('spip_mots', 'id_mot=' . $id_mot);
 }
 
 /**

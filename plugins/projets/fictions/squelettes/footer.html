@@ -53,11 +53,6 @@ encore un article « agora » (jusqu'en 2021) gardent son forum et ses échanges
 			</BOUCLE_espace_doc>
 			[&nbsp;|&nbsp;<a href="(#GET{lien_espace_doc}|textebrut|trim|attribut_url)"><:fictions:espace_doc:></a>]
 			[&nbsp;|&nbsp;<a href="(#GET{lien_blog_auteur}|textebrut|trim|attribut_url)"><:fictions:blog_de_lauteur:></a>]
-			[(#SESSION{statut}|=={0minirezo}|oui)
-			<BOUCLE_blog(RUBRIQUES){titre_mot=blog_pedagogique}{tout}>
-				&nbsp;|&nbsp;<a href="#URL_RUBRIQUE">#TITRE</a>
-			</BOUCLE_blog>
-			]
 		</div>
 
 		<div id="footer-nav">

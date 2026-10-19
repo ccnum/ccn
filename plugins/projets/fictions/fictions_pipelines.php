@@ -33,24 +33,8 @@ function fictions_post_edition($flux) {
 	include_spip('action/editer_objet');
 	include_spip('fictions/fictions_fonctions');
 
-	$blog = fictions_id_rubrique_a_mot('blog_pedagogique');
-	// La rubrique blog auteur suit la même mécanique de publication automatique
-	// que le blog pédagogique, une fois la rubrique créée et la constante surchargée.
-	$blogs_ids = array_filter([(int) $blog, _FICTIONS_ID_BLOG_AUTEUR]);
-
 	if ($statut === 'prop') {
-		// Publier l'article que l'on vient de modifier
-		objet_modifier('article', $id_objet, ['statut' => 'publie']);
-		// Masquer le chapitre précédent en tronquant son descriptif
-		$prev_id = sql_getfetsel('id_article', 'spip_articles', [
-			'id_rubrique=' . intval($id_rubrique),
-			'statut=' . sql_quote('publie'),
-			'id_article<>' . intval($id_objet),
-		], '', 'id_article', '1', 'id_article DESC');
-		if ($prev_id) {
-			$prev_desc = sql_getfetsel('descriptif', 'spip_articles', 'id_article=' . intval($prev_id));
-			objet_modifier('article', intval($prev_id), ['descriptif' => masquerTexteChapitre($prev_desc)]);
-		}
+		fictions_publier_masquer_precedent($id_objet, $id_rubrique);
 		// Passer de prépa à prop le suivant
 		$id_article = sql_getfetsel('id_article', 'spip_articles', ['id_rubrique=' . $id_rubrique, 'statut=' . sql_quote('prepa')], '', 'id_article', '0,1');
 		if ($id_article) {
@@ -58,21 +42,30 @@ function fictions_post_edition($flux) {
 		}
 	}
 
-	if (in_array($id_rubrique, $blogs_ids, true) && $statut === 'prepa') {
-		objet_modifier('article', $id_objet, ['statut' => 'publie']);
-		// Masquer le chapitre précédent en tronquant son descriptif
-		$prev_id = sql_getfetsel('id_article', 'spip_articles', [
-			'id_rubrique=' . intval($id_rubrique),
-			'statut=' . sql_quote('publie'),
-			'id_article<>' . intval($id_objet),
-		], '', 'id_article', '1', 'id_article DESC');
-		if ($prev_id) {
-			$prev_desc = sql_getfetsel('descriptif', 'spip_articles', 'id_article=' . intval($prev_id));
-			objet_modifier('article', intval($prev_id), ['descriptif' => masquerTexteChapitre($prev_desc)]);
-		}
+	// Rubrique blog auteur (une fois créée et la constante surchargée) :
+	// publication automatique de l'article, chapitre précédent masqué.
+	if ($id_rubrique === (int) _FICTIONS_ID_BLOG_AUTEUR && $statut === 'prepa') {
+		fictions_publier_masquer_precedent($id_objet, $id_rubrique);
 	}
 
 	return $flux;
+}
+
+/**
+ * Publie l'article que l'on vient de modifier et masque le chapitre précédent
+ * de la rubrique en tronquant son descriptif.
+ */
+function fictions_publier_masquer_precedent(int $id_objet, int $id_rubrique): void {
+	objet_modifier('article', $id_objet, ['statut' => 'publie']);
+	$prev_id = sql_getfetsel('id_article', 'spip_articles', [
+		'id_rubrique=' . $id_rubrique,
+		'statut=' . sql_quote('publie'),
+		'id_article<>' . $id_objet,
+	], '', 'id_article', '1', 'id_article DESC');
+	if ($prev_id) {
+		$prev_desc = sql_getfetsel('descriptif', 'spip_articles', 'id_article=' . intval($prev_id));
+		objet_modifier('article', intval($prev_id), ['descriptif' => masquerTexteChapitre($prev_desc)]);
+	}
 }
 
 /**
