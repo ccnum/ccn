@@ -58,44 +58,49 @@ function callbackCliqueSurVoirLesReponses(e) {
  * Déplace le formulaire caché en dessous du message auquel on veut répondre.
  */
 function callbackCliqueSurRepondreAuCommentaire(e) {
-	const bouton = e.target;
-	if (!bouton) return;
+    const bouton = e.currentTarget
+    const formulaireMobile = trouverFormulaireMobile()
+    const zone = bouton
+        .closest('.forum-commentaire')
+        ?.querySelector(':scope > .forum-formulaire-reponse-zone')
+    if (!formulaireMobile || !zone) return
 
-	const idForum = bouton.dataset.idForum;
-	const formulaireMobile = document.querySelector('#forum-formulaire-reponse');
+    formulaireMobile.querySelector('.js-forum-id-parent').value = bouton.dataset.idForum
+    formulaireMobile.querySelector('.id-forum').value = 0
+    remplirTexte(formulaireMobile, '')
 
-	formulaireMobile.querySelector('.js-forum-id-parent').value = idForum;
-	formulaireMobile.querySelector('.id-forum').value = 0;
-	formulaireMobile.querySelector('.forum-redaction__textarea').value = ''; // on repart d'un textarea vide
+    zone.appendChild(formulaireMobile)
+    formulaireMobile.hidden = false
 
-	const formulaireDePublication = bouton.closest('.forum-commentaire');
-	formulaireDePublication
-		.querySelector(':scope > .forum-formulaire-reponse-zone')
-		.appendChild(formulaireMobile);
-	formulaireMobile.removeAttribute("hidden");
-    const rootForum = document.querySelector(".forum-liste")
-    rootForum.querySelectorAll(".forum-commentaire-container").forEach(cardRoot=>{
-        cardRoot.removeAttribute("hidden");
-    })
+    document.querySelectorAll('.forum-liste .forum-commentaire-container')
+        .forEach(carte => { carte.hidden = false })
+}
+
+function trouverFormulaireMobile() {
+    return document.getElementById('forum-formulaire-reponse')
+}
+
+// Pas de textarea quand le formulaire est en mode prévisualisation.
+function remplirTexte(conteneur, texte) {
+    const textarea = conteneur.querySelector('textarea')
+    if (textarea) textarea.value = texte
 }
 
 function callbackCliqueSurModifierMonCommentaire(e) {
-	const bouton = e.target;
-	if (!bouton) return;
+    const bouton = e.currentTarget
+    const formulaireContainer = bouton.closest('.forum-commentaire-container')
+    const formulaireMobile = trouverFormulaireMobile()
+    if (!formulaireContainer || !formulaireMobile) return
 
-	const idForum = bouton.dataset.idForum;
-	const texteBrut = bouton.dataset.texteBrut ?? '';
-	const formulaireMobile = document.querySelector('#forum-formulaire-reponse');
+    const { idForum, texteBrut = '' } = bouton.dataset
 
-	formulaireMobile.querySelector('.js-forum-id-parent').value = '';
-	formulaireMobile.querySelector('.id-forum').value = idForum;
-	formulaireMobile.querySelector('.forum-redaction__textarea').value = texteBrut; // <- le fix
+    formulaireMobile.querySelector('.js-forum-id-parent').value = ''
+    formulaireMobile.querySelector('.id-forum').value = idForum
+    remplirTexte(formulaireMobile, texteBrut)
 
-    const formulaireContainer = bouton.closest(".forum-commentaire-container")
-    formulaireContainer.hidden = true;
-
-    formulaireContainer.parentNode.insertBefore(formulaireMobile, formulaireContainer)
-	formulaireMobile.removeAttribute("hidden");
+    formulaireContainer.hidden = true
+    formulaireContainer.before(formulaireMobile)
+    formulaireMobile.hidden = false
 }
 
 function callbackCliqueSurCommenter(e) {
@@ -107,35 +112,24 @@ function callbackCliqueSurCommenter(e) {
 }
 
 function callbackCliqueSurAnnuler(e) {
-    const formulaireRacine = e.currentTarget.closest(".forum-commentaire-racine")
-    if (formulaireRacine) { // Cas formulaire de publication racine
-        const racinePage = e.currentTarget.closest(".forum-article")
-        const encadre = racinePage.querySelector(".encadre-message")
-        encadre.removeAttribute("hidden");
+    const bouton = e.currentTarget
+    const formulaireRacine = bouton.closest(".forum-commentaire-racine")
+    if (formulaireRacine) {
+        const encadre = bouton.closest(".forum-article")?.querySelector(".encadre-message")
+        if (encadre) encadre.hidden = false
         formulaireRacine.hidden = true
-        const textarea = formulaireRacine.querySelector("textarea#texte")
-        if (textarea) {
-            textarea.value = ""
-        }
+        remplirTexte(formulaireRacine, "")
         return
     }
 
-    // Formulaire mobile partagé (#forum-formulaire-reponse), utilisé aussi
-    // bien pour répondre à un commentaire que pour modifier le sien : on ne
-    // peut pas distinguer les deux cas via la position dans le DOM (une
-    // réponse imbriquée déplace ce formulaire à l'intérieur d'un ancêtre
-    // .forum-commentaire, comme le ferait aussi une modification), donc on
-    // se base sur le champ id-forum du formulaire lui-même.
-    const formulaireMobile = document.getElementById("forum-formulaire-reponse")
-    const champIdForum = formulaireMobile.querySelector(".id-forum")
-    const cestUneModification = !!champIdForum && champIdForum.value != 0
-    const textarea = formulaireMobile.querySelector("textarea#texte")
-    if (textarea) {
-        textarea.value = ""
-    }
-    if (cestUneModification) {
-        const cardToDisplay = formulaireMobile.nextElementSibling
-        cardToDisplay.removeAttribute("hidden");
+    // Formulaire partagé « Répondre » / « Modifier » : id-forum > 0 = modification,
+    // la carte masquée est juste après lui (cf callbackCliqueSurModifierMonCommentaire).
+    const formulaireMobile = trouverFormulaireMobile()
+    if (!formulaireMobile) return
+    remplirTexte(formulaireMobile, "")
+    if (Number(formulaireMobile.querySelector(".id-forum")?.value) > 0) {
+        const carte = formulaireMobile.nextElementSibling
+        if (carte?.matches(".forum-commentaire-container")) carte.hidden = false
     }
     formulaireMobile.hidden = true
 }

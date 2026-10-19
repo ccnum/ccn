@@ -73,3 +73,6 @@ spec:
             - mountPath: /var/www/html/IMG
               name: {{ .Release.Name }}-{{ .Values.pvc.name }}
               subPath: spip-3
+            - mountPath: /var/www/html/tmp/log
+              name: {{ .Release.Name }}-{{ .Values.pvc.name }}
+              subPath: spip-log

@@ -180,15 +180,27 @@ RUN set -eux; \
 	# Archive SPIP (URL en https + retry, vérifiée par sha256, téléchargée dans un fichier dédié)
 	curl -fSL --retry 3 -o /tmp/spip.zip "https://files.spip.net/spip/archives/spip-v${SPIP_PACKAGE}.zip"; \
 	echo "${SPIP_PACKAGE_SHA256} */tmp/spip.zip" | sha256sum -c -; \
-	unzip -q /tmp/spip.zip -d /usr/src/spip; \
+	# Le code est installé directement dans /var/www/html, dans une couche de
+	# l'image partagée par tous les conteneurs (pas de VOLUME : chaque conteneur
+	# en recevait sinon une copie complète dans un volume anonyme, ~20 000
+	# fichiers par site, jusqu'à épuiser les inodes du serveur). Seuls IMG/,
+	# config/ et tmp/log/ sont à persister (bind mounts côté déploiement) ; le
+	# reste de tmp/ et local/ (cache, sessions, vignettes) se régénère. Ne pas
+	# persister tmp/ entier : perdre les sessions au déploiement force chacun à se
+	# reconnecter, donc à recalculer son rôle avec le nouveau code.
+	unzip -q /tmp/spip.zip -d /var/www/html; \
 	rm /tmp/spip.zip; \
-	chown -R www-data:www-data /usr/src/spip; \
+	cd /var/www/html; \
+	mkdir -p plugins/auto lib squelettes tmp/dump tmp/log tmp/upload local IMG config; \
+	chown -R www-data:www-data /var/www/html; \
+	# config/ de l'archive (ecran_securite.php, config/spip/ du noyau) : masqué
+	# par le bind mount de config/, recopié dedans par docker-entrypoint.sh.
+	mkdir -p /usr/local/lib/ccn; \
+	cp -a config /usr/local/lib/ccn/config-dist; \
 	\
 	apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false $fetchDeps; \
 	rm -rf /tmp/*; \
 	rm -rf /var/lib/apt/lists/*
-
-VOLUME /var/www/html
 
 # SPIP
 ENV SPIP_AUTO_INSTALL=0
@@ -222,10 +234,12 @@ ENV APACHE_PORT=80
 
 EXPOSE ${APACHE_PORT}
 
-COPY ./plugins /usr/src/spip/plugins/
-# .htaccess du dépôt (règles favicon, cache des JS thematique...) à la place de
-# celui de l'archive SPIP ; appliqué au volume par docker-entrypoint.sh.
-COPY ./htaccess.txt /usr/src/spip/htaccess.txt
+COPY --chown=www-data:www-data ./plugins /var/www/html/plugins/
+# .htaccess du dépôt (règles favicon, cache des JS thematique...)
+COPY --chown=www-data:www-data ./htaccess.txt /var/www/html/.htaccess
+# Empreinte des plugins de l'image : docker-entrypoint.sh vide tmp/cache quand
+# elle change, au cas où tmp/ serait persisté d'une image à l'autre.
+RUN cd /var/www/html/plugins && find . -type f -print0 | sort -z | xargs -0 sha256sum | sha256sum | cut -d ' ' -f 1 > /usr/local/lib/ccn/empreinte-plugins
 # Restauration / complétion des clés secrètes au démarrage (cf docker-entrypoint.sh)
 COPY ./docker/ccn_cles.php /usr/local/lib/ccn/ccn_cles.php
 COPY --chmod=0755 ./docker-entrypoint.sh /

@@ -9,11 +9,6 @@ run_as() {
 	fi
 }
 
-# version_greater A B returns whether A > B
-version_greater() {
-    [ "$(printf '%s\n' "$@" | sort -t '.' -n -k1,1 -k2,2 -k3,3 | head -n 1)" != "$1" ]
-}
-
 wait_for_db() {
 	local tries=0
 	until nc -z -w5 "${SPIP_DB_HOST}" "${SPIP_DB_PORT:-3306}"; do
@@ -26,21 +21,6 @@ wait_for_db() {
 		sleep 5
 	done
 }
-
-installed_version="0.0.0"
-image_version="0.0.1"
-
-if [ -f "/var/www/html/ecrire/inc_version.php" ]; then
-	installed_version=$(grep -i /var/www/html/ecrire/inc_version.php  -e '\$spip_version_branche =' | cut -d '=' -f 2 | cut -d ';' -f 1 | cut -d "'" -f 2 | cut -d '"' -f 2)
-	image_version=$(grep -i /usr/src/spip/ecrire/inc_version.php  -e '\$spip_version_branche =' | cut -d '=' -f 2 | cut -d ';' -f 1 | cut -d "'" -f 2 | cut -d '"' -f 2)
-fi
-
-echo "SPIP version in volume: ${installed_version} - SPIP version shipped in image: ${image_version}"
-
-if version_greater "$installed_version" "$image_version"; then
-	echo "Can't start SPIP because the version of the data ($installed_version) is higher than the docker image version ($image_version) and downgrading is not supported. Are you sure you have pulled the newest image version?"
-	exit 1
-fi
 
 # Reconfigure php.ini
 # set PHP.ini settings for SPIP
@@ -60,83 +40,30 @@ if [ "${APACHE_PORT}" != "80" ]; then
 	sed -i "s/:80>/:${APACHE_PORT}>/g" /etc/apache2/sites-available/000-default.conf
 fi
 
-if version_greater "$image_version" "$installed_version"; then
-	echo >&2 "SPIP upgrade in $PWD - copying now..."
-	if [ "$(ls -A)" ]; then
-		echo >&2 "WARNING: $PWD is not empty"
-	fi
-	tar cf - --one-file-system -C /usr/src/spip . | tar xf -
-	echo >&2 "Complete! SPIP has been successfully copied to $PWD"
-
-	echo >&2 "Create plugins, libraries and template directories"
-	mkdir -p plugins/auto
-	mkdir -p lib
-	mkdir -p squelettes
-	mkdir -p tmp/{dump,log,upload}
-	chown -R www-data:www-data plugins lib squelettes tmp
-
-	if [ ! -e .htaccess ]; then
-		cp -p htaccess.txt .htaccess
-		chown www-data:www-data .htaccess
-	fi
-
-	if [ "${SPIP_DB_SERVER}" = "mysql" ]; then
-		wait_for_db
-	fi
-
-	# Upgrade SPIP
-	if [ -f config/connect.php ]; then
-		run_as "spip core:maj:bdd"
-		run_as "spip plugins:maj:bdd"
-	fi
+# Le code (cœur SPIP, plugins, .htaccess) est dans l'image, sous /var/www/html :
+# rien à copier ici. Seuls IMG/, config/ et tmp/log/ sont persistés (bind mounts),
+# le reste de tmp/ et local/ repart de ceux de l'image à chaque recréation du
+# conteneur. Volontairement pour tmp/session/ : chacun doit se reconnecter après
+# un déploiement, ce qui recalcule #SESSION{role} (preparer_fichier_session) avec
+# le nouveau code — ne pas persister tmp/ entier.
+if mountpoint -q /var/www/html; then
+	echo >&2 "WARNING: /var/www/html est monté (volume) : il masque le code de l'image, qui ne sera pas servi. Ne monter que IMG/, config/ et tmp/log/."
+fi
+mkdir -p tmp/dump tmp/log tmp/upload local IMG config
+# Fichiers de config/ fournis par l'archive SPIP (ecran_securite.php, config/spip/
+# du noyau, sans lesquels SPIP ne démarre pas) : le bind mount de config/ les
+# masque, ils y sont (re)copiés depuis l'image à chaque démarrage pour suivre
+# les montées de version.
+cp -a /usr/local/lib/ccn/config-dist/. config/
+if [ "$(id -u)" = 0 ]; then
+	chown www-data:www-data tmp tmp/dump tmp/log tmp/upload local
 fi
 
-# Plugins de l'image (plugins/projets, plugins/spip) : resynchronisés à chaque
-# démarrage. La copie ci-dessus n'a lieu qu'à l'installation ou à une montée de
-# version du cœur SPIP, et /var/www/html est un volume (VOLUME du Dockerfile)
-# que `docker compose up` conserve en recréant le conteneur : une nouvelle image
-# avec seulement des plugins modifiés continuait sinon de servir l'ancien code
-# (constaté en preprod, correctif d3c9773c présent dans l'image mais pas servi).
-# plugins/auto (installés depuis l'espace privé) n'est pas touché ; un plugin
-# absent de l'image (ancien emplacement, plugin retiré) est supprimé, sinon SPIP
-# pourrait charger deux versions d'un même préfixe.
-if [ -d /usr/src/spip/plugins ]; then
-	mkdir -p plugins
-	if ! diff -rq /usr/src/spip/plugins plugins --exclude=auto >/dev/null 2>&1; then
-		echo >&2 "Plugins différents de ceux de l'image : resynchronisation"
-		for entree in plugins/*; do
-			nom=$(basename "${entree}")
-			if [ "${nom}" != "auto" ] && [ ! -e "/usr/src/spip/plugins/${nom}" ]; then
-				echo >&2 "  suppression de plugins/${nom} (absent de l'image)"
-				rm -rf "${entree}"
-			fi
-		done
-		for entree in /usr/src/spip/plugins/*; do
-			nom=$(basename "${entree}")
-			[ "${nom}" = "auto" ] && continue
-			rm -rf "plugins/${nom}"
-			cp -a "${entree}" "plugins/${nom}"
-		done
-		if [ "$(id -u)" = 0 ]; then
-			chown -R www-data:www-data plugins
-		fi
-		# Squelettes/CSS mis en cache (ex. thematique.css, #CACHE{86400}) avec l'ancien code
-		rm -rf tmp/cache/*
-	fi
-fi
-
-# .htaccess : celui de l'image (htaccess.txt du dépôt) fait référence et est
-# réappliqué à chaque démarrage — la copie ci-dessus n'a lieu qu'à l'installation
-# ou à une montée de version de SPIP, un volume existant gardait sinon un
-# .htaccess périmé. Une version modifiée à la main est sauvegardée à côté.
-if [ -f /usr/src/spip/htaccess.txt ] && ! cmp -s /usr/src/spip/htaccess.txt .htaccess; then
-	if [ -e .htaccess ]; then
-		sauvegarde=".htaccess.avant-$(date +%Y%m%d%H%M%S)"
-		cp -p .htaccess "${sauvegarde}"
-		echo >&2 ".htaccess différent de celui de l'image : remplacé (ancien sauvegardé dans ${sauvegarde})"
-	fi
-	cp /usr/src/spip/htaccess.txt .htaccess
-	chown www-data:www-data .htaccess
+# Squelettes/CSS mis en cache (ex. thematique.css, #CACHE{86400}) avec les
+# plugins d'une image précédente, si tmp/ est quand même persisté par un déploiement.
+if [ -f /usr/local/lib/ccn/empreinte-plugins ] && ! cmp -s /usr/local/lib/ccn/empreinte-plugins tmp/empreinte-plugins; then
+	rm -rf tmp/cache/*
+	cp /usr/local/lib/ccn/empreinte-plugins tmp/empreinte-plugins
 fi
 
 # Install SPIP
@@ -166,6 +93,12 @@ if [[ ! -e config/connect.php && "${SPIP_AUTO_INSTALL}" = 1 ]]; then
 		--admin-pass ${SPIP_ADMIN_PASS}"; then
 		echo >&2 "WARNING: SPIP auto-install failed - complete the installation via the web interface (/ecrire/)"
 	fi
+fi
+
+# Mise à jour de la base après une montée de version du cœur (sans effet si
+# elle est déjà à jour) ; celle des plugins est faite plus bas.
+if [ -f config/connect.php ]; then
+	run_as "spip core:maj:bdd"
 fi
 
 # Clés secrètes (config/cles.php) : config/ n'est pas persistant, le fichier repart vide à

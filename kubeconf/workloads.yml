@@ -74,3 +74,6 @@ spec:
             - mountPath: /var/www/html/IMG
               name: ccn-vol
               subPath: spip-3
+            - mountPath: /var/www/html/tmp/log
+              name: ccn-vol
+              subPath: spip-log
