@@ -1845,22 +1845,25 @@ h1.prologue {
 
 #footer-inner {
 	width: 980px;
+	height: 100%;
 	margin-left: auto;
 	margin-right: auto;
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 10px;
+	white-space: nowrap;
 }
 
 #footer-nav {
-	float: right;
 	font-size: 11px;
 	color: #FFF;
-	padding: 11px 0px 0px 0px;
 }
 
 #footer-nav a {
 	font-size: 11px;
 	text-decoration: underline;
 	color: #FFF;
-	margin: 0px 5px 0px 5px;
 }
 
 #footer-nav a:hover {
@@ -1868,17 +1871,14 @@ h1.prologue {
 }
 
 #footer-nav-left {
-	float: left;
 	font-size: 11px;
 	color: #FFF;
-	padding: 11px 0px 0px 0px;
 }
 
 #footer-nav-left a {
 	font-size: 11px;
 	text-decoration: underline;
 	color: #FFF;
-	margin: 0px 5px 0px 5px;
 }
 
 #footer-nav-left a:hover {
@@ -1887,7 +1887,7 @@ h1.prologue {
 }
 
 #footer select {
-	width: 150px;
+	width: auto;
 }
 
 #footer option,
