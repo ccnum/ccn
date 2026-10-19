@@ -2,16 +2,26 @@ function confirmation(txt) {
     return window.confirm(txt);
 }
 
-// Rollover générique : lit data-src-hover sur l'img pour le state hover
+// Rollover générique : lit data-src-hover sur l'img pour le state hover,
+// déclenché au survol comme au focus clavier du lien/bouton qui la contient
 $(document).ready(function() {
-    $('.btn-rollover').on('mouseenter', function() {
-        var hover = $(this).data('src-hover');
-        if (hover) {
-            $(this).data('src-normal', $(this).attr('src')).attr('src', hover);
-        }
-    }).on('mouseleave', function() {
-        var normal = $(this).data('src-normal');
-        if (normal) $(this).attr('src', normal);
+    $('.btn-rollover').each(function() {
+        var $img = $(this);
+        var $cible = $img.closest('a, button');
+        ($cible.length ? $cible : $img).on('mouseenter focusin', function() {
+            var hover = $img.data('src-hover');
+            if (hover && !$img.data('src-normal')) {
+                $img.data('src-normal', $img.attr('src')).attr('src', hover);
+            }
+        }).on('mouseleave focusout', function() {
+            var normal = $img.data('src-normal');
+            if (normal) $img.attr('src', normal).removeData('src-normal');
+        });
+    });
+
+    // Échap ferme l'infobulle de la grille des histoires
+    $(document).on('keydown', function(event) {
+        if (event.key === 'Escape') $('#liste-tooltip').hide();
     });
 });
 

@@ -4,14 +4,24 @@ $(document).ready(function() {
 	resize_global_content();
 
 	// Tooltip liste
-	$('.liste-link-small').on('mouseover focus', function() { afficher_tooltip_liste(this, -106); });
-	$('.liste-link-small').on('mouseout blur', function() { $('#liste-tooltip').hide(); });
+	$('.liste-link-small').on('mouseover focusin', function() { afficher_tooltip_liste(this, -106); });
+	$('.liste-link-small').on('mouseout focusout', function() { $('#liste-tooltip').hide(); });
 
-	// Navigation par ancre
+	// Navigation par ancre : défile jusqu'à la cible et y place le focus
+	// clavier, pour que la tabulation reparte de là
 	var $scrollTarget = $('.global-content');
 	function scrollToEl($container, selector, duration, offsetTop) {
-		var top = selector === 0 ? 0 : $container.find(selector).position().top + $container.scrollTop() + (offsetTop || 0);
+		var $cible = selector === 0 ? $() : $container.find(selector).first();
+		if (selector !== 0 && !$cible.length) {
+			return;
+		}
+		var top = selector === 0 ? 0 : $cible.position().top + $container.scrollTop() + (offsetTop || 0);
 		$container.stop(true).animate({scrollTop: top}, duration);
+		if ($cible.length) {
+			// cible dans un lien (bouton forum) : c'est le lien qui prend le focus
+			var el = $cible.closest('a')[0] || $cible.attr('tabindex', -1)[0];
+			el.focus({preventScroll: true});
+		}
 	}
 	$('#nav-script').click(function(event) {
 		event.preventDefault();
@@ -30,32 +40,27 @@ $(document).ready(function() {
 		scrollToEl($scrollTarget, 0, 300, 0);
 	});
 
-	// Script écrivain : open/close, un bloc par chapitre visible
-	$('.slideup-script-ecrivain, .close-script-ecrivain').hide();
-	$('.open-script-ecrivain, .close-script-ecrivain').click(function() {
-		var $script = $(this).closest('.script-ecrivain');
-		$script.find('.slideup-script-ecrivain').toggle("slow");
-		$script.find('.open-script-ecrivain, .close-script-ecrivain').toggle();
+	// Script écrivain (un bloc par chapitre visible) et script collège :
+	// bouton open/close, état porté par aria-expanded
+	$('.slideup-script-ecrivain').hide();
+	$('.open-script-ecrivain, #open-script-college').click(function() {
+		var ouvert = $(this).attr('aria-expanded') !== 'true';
+		$('#' + $(this).attr('aria-controls')).toggle(ouvert ? 'slow' : 'fast');
+		$(this).attr('aria-expanded', ouvert).toggleClass('is-open', ouvert);
 	});
 
-	// Script collège : open/close
-	$('#open-script-college').click(function() {
-		$('#slideup-script-college').toggle('fast');
-		$(this).toggleClass('is-open');
-	});
-
-	// Prologue : open/close
+	// Prologue : open/close, le focus passe au bouton qui remplace celui cliqué
 	$('#texte_prologue, #close_prologue').hide();
 	$('#open_prologue').click(function() {
 		$('#texte_prologue').show('normal');
-		$('#close_prologue').show();
 		$(this).hide();
+		$('#close_prologue').show().focus();
 		resize_global_content();
 	});
 	$('#close_prologue').click(function() {
 		$('#texte_prologue').hide('normal');
-		$('#open_prologue').show();
 		$(this).hide();
+		$('#open_prologue').show().focus();
 	});
 
 	// Titre, texte et script du chapitre : le crayon s'édite sur place,
