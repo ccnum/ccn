@@ -89,22 +89,30 @@ function thematique_declarer_champs_extras($champs = []) {
 		'thematique:champ_extra_url_id_doc',
 		'text'
 	);
-	// bigint(21), identique à la déclaration de la vraie colonne dans
-	// thematique_install.php (thematique_declarer_tables_principales) : les
-	// deux DOIVENT rester synchronisés, cf le commentaire là-bas.
+	// Colonnes aussi déclarées dans thematique_install.php : même type SQL,
+	// cf thematique_champs_sql().
+	include_spip('base/thematique_install');
+	$sql = thematique_champs_sql();
 	$champs['spip_rubriques']['id_rubrique_lien'] = thematique_champ_extra_simple(
 		'id_rubrique_lien',
 		'thematique:champ_extra_id_rubrique_lien',
-		"bigint(21) NOT NULL DEFAULT '0'"
+		$sql['spip_rubriques']['id_rubrique_lien']
 	);
 
-	$champs['spip_articles']['x'] = thematique_champ_extra_simple('x', 'thematique:champ_extra_position_x', 'float');
-	$champs['spip_articles']['y'] = thematique_champ_extra_simple('y', 'thematique:champ_extra_position_y', 'float');
-	// bigint(21) : idem, cf commentaire ci-dessus sur id_rubrique_lien.
+	$champs['spip_articles']['x'] = thematique_champ_extra_simple(
+		'x',
+		'thematique:champ_extra_position_x',
+		$sql['spip_articles']['X']
+	);
+	$champs['spip_articles']['y'] = thematique_champ_extra_simple(
+		'y',
+		'thematique:champ_extra_position_y',
+		$sql['spip_articles']['Y']
+	);
 	$champs['spip_articles']['id_consigne'] = thematique_champ_extra_simple(
 		'id_consigne',
 		'thematique:champ_extra_id_consigne',
-		"bigint(21) NOT NULL DEFAULT '0'"
+		$sql['spip_articles']['id_consigne']
 	);
 
 	return $champs;

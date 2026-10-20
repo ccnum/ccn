@@ -75,19 +75,8 @@ function thematique_upgrade($nom_meta_base_version, $version_cible) {
 	$maj['3.4.1'] = [];
 	cextras_api_upgrade(thematique_declarer_champs_extras(), $maj['3.4.1']);
 
-	// id_consigne (spip_articles) et id_rubrique_lien
-	// (spip_rubriques) étaient déclarés avec un type différent ici
-	// (bigint(21), via thematique_install.php) et côté champs extras
-	// (int(5)/text, via thematique_cextras.php) — mismatch qui casse l'ADD
-	// INDEX sur une (dés)installation/activation du plugin (MySQL interdit
-	// un préfixe de longueur d'index sur une colonne numérique). Les deux
-	// déclarations sont maintenant alignées sur bigint(21).
-	// maj_tables()/cextras_api_upgrade() n'ALTERent jamais le type d'une
-	// colonne déjà existante (seulement les colonnes/clés manquantes) :
-	// cette entrée de version n'a donc d'effet que sur une (ré)installation
-	// complète du plugin (table recréée/champs recréés depuis $maj['create']).
-	// Un site déjà touché par le bug doit corriger sa colonne manuellement
-	// (ALTER TABLE vers le type déclaré dans cextras).
+	// Types de id_consigne/id_rubrique_lien alignés entre tables principales
+	// et champs extras (sans effet sur une colonne existante, cf 3.4.10).
 	$maj['3.4.2'] = [['maj_tables', ['spip_articles', 'spip_rubriques']]];
 	cextras_api_upgrade(thematique_declarer_champs_extras(), $maj['3.4.2']);
 
@@ -114,9 +103,37 @@ function thematique_upgrade($nom_meta_base_version, $version_cible) {
 	// Jalons créés vides : on retire l'ancien texte par défaut des existants.
 	$maj['3.4.9'] = [['thematique_vider_texte_jalons_par_defaut']];
 
+	// Colonnes partagées créées avant l'ajout de leur DEFAULT 0 : maj_tables()
+	// n'altère jamais une colonne existante, on les remet au type déclaré.
+	$maj['3.4.10'] = [['thematique_aligner_champs_sql']];
+
 	include_spip('thematique_fonctions');
 	include_spip('base/upgrade');
 	maj_plugin($nom_meta_base_version, $version_cible, $maj);
+}
+
+/**
+ * Remet les colonnes de thematique_champs_sql() à leur type déclaré
+ * (notamment DEFAULT 0, absent des colonnes créées avant). Idempotente.
+ *
+ * Le nom réel de la colonne est relu en base (X ou x selon les sites) pour
+ * que le MODIFY ne change pas sa casse.
+ */
+function thematique_aligner_champs_sql() {
+	include_spip('base/thematique_install');
+	foreach (thematique_champs_sql() as $table => $champs) {
+		$desc = sql_showtable($table, true);
+		if (!$desc) {
+			continue;
+		}
+		$colonnes = array_change_key_case(array_combine(array_keys($desc['field']), array_keys($desc['field'])));
+		foreach ($champs as $champ => $sql) {
+			$nom = $colonnes[strtolower($champ)] ?? '';
+			if ($nom) {
+				sql_alter("TABLE $table MODIFY $nom $sql");
+			}
+		}
+	}
 }
 
 /**
