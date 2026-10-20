@@ -11,6 +11,8 @@
 	<licence>GNU/GPL</licence>
 	<!-- chargé après medias pour que modeles/video.html le surcharge -->
 	<utilise nom="medias" />
+	<!-- chargé après facteur pour que emails/texte.html (gabarit des mails) le surcharge -->
+	<utilise nom="facteur" />
 	<pipeline nom="boite_infos" inclure="ccn_pipelines.php" />
 	<pipeline nom="post_edition" inclure="ccn_pipelines.php" />
 	<pipeline nom="formulaire_verifier" inclure="ccn_pipelines.php" />

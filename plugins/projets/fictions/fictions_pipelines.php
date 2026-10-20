@@ -39,6 +39,7 @@ function fictions_post_edition($flux) {
 		$id_article = sql_getfetsel('id_article', 'spip_articles', ['id_rubrique=' . $id_rubrique, 'statut=' . sql_quote('prepa')], '', 'id_article', '0,1');
 		if ($id_article) {
 			objet_modifier('article', intval($id_article), ['statut' => 'prop']);
+			fictions_notifier_chapitre_a_ecrire($id_objet, intval($id_article));
 		}
 	}
 
@@ -66,6 +67,28 @@ function fictions_publier_masquer_precedent(int $id_objet, int $id_rubrique): vo
 		$prev_desc = sql_getfetsel('descriptif', 'spip_articles', 'id_article=' . intval($prev_id));
 		objet_modifier('article', intval($prev_id), ['descriptif' => masquerTexteChapitre($prev_desc)]);
 	}
+}
+
+/**
+ * Prévient par mail le participant du chapitre suivant que le chapitre précédent vient
+ * d'être publié : c'est à lui d'écrire la suite. Destinataires : les comptes liés au
+ * chapitre suivant, c'est-à-dire ceux du participant affecté par le plan validé
+ * (cf fictions_plan_appliquer()).
+ */
+function fictions_notifier_chapitre_a_ecrire(int $id_publie, int $id_suivant): void {
+	$destinataires = sql_allfetsel(
+		'A.id_auteur, A.email',
+		'spip_auteurs_liens AS L JOIN spip_auteurs AS A ON A.id_auteur=L.id_auteur',
+		["L.objet='article'", 'L.id_objet=' . $id_suivant, "A.statut<>'5poubelle'", "A.email<>''"]
+	);
+	if (!$destinataires) {
+		spip_log("fictions chapitre #$id_publie publié : aucun compte avec email sur le chapitre suivant #$id_suivant, pas de notification", 'fictions');
+		return;
+	}
+	include_spip('inc/notifications');
+	$texte = recuperer_fond('notifications/fictions_chapitre_a_ecrire', ['id_article' => $id_publie]);
+	notifications_envoyer_mails(array_column($destinataires, 'email'), $texte);
+	spip_log("fictions chapitre #$id_publie publié : chapitre suivant #$id_suivant notifié aux auteurs #" . implode(', #', array_column($destinataires, 'id_auteur')), 'fictions');
 }
 
 /**

@@ -1,0 +1,42 @@
+[(#REM)
+
+  Mail envoyé au participant du chapitre suivant quand un chapitre vient d'être
+  publié : "C'est à vous d'écrire un chapitre !" (cf
+  fictions_notifier_chapitre_a_ecrire()). Mise en page commune aux CCN
+  (plugins/projets/ccn/notifications/inc_corps.html, emails/texte.html).
+
+  Paramètre : id_article, le chapitre tout juste publié.
+
+  La carte reprend les dernières lignes du chapitre, celles qui restent visibles
+  pour le participant suivant une fois son propre chapitre publié
+  (cf masquerTexteChapitre()). Avatar : logo du compte qui a écrit le chapitre,
+  sinon un picto (les participants n'ont pas d'icône propre comme dans thematique).
+
+]
+<BOUCLE_chapitre(ARTICLES){id_article}{tout}>
+#SET{nom_auteur,#VAL{''}}
+#SET{avatar_type,#VAL{''}}
+#SET{avatar_valeur,#VAL{''}}
+<BOUCLE_auteur(AUTEURS){id_article}{tout}{0,1}>
+	#SET{nom_auteur,#NOM}
+	[(#LOGO_AUTEUR|oui)
+		#SET{avatar_type,logo}
+		#SET{avatar_valeur,#LOGO_AUTEUR|extraire_attribut{src}}
+	]
+</BOUCLE_auteur>
+#SET{auteur_affiche,#ID_ARTICLE|fictions_nom_participant_chapitre|sinon{#GET{nom_auteur}}|sinon{#NOM_SITE_SPIP}}
+#SET{histoire,#INFO_TITRE{rubrique,#ID_RUBRIQUE}|supprimer_numero}
+#SET{url_histoire,#ID_RUBRIQUE|generer_url_entite{rubrique}|url_absolue}
+#SET{carte_titre,#TITRE|concat{' - <em>',#GET{histoire},'</em>'}}
+#SET{carte_date,#DATE|affdate}
+#SET{carte_extrait,#DESCRIPTIF|textebrut|recupererDernieresLignesChapitres{220}}
+#SET{mail_titre,#VAL{fictions:notif_chapitre_titre}|_T}
+#SET{mail_detail,#VAL{fictions:notif_chapitre_detail}|_T{#ARRAY{auteur,#GET{auteur_affiche}}}}
+#SET{mail_bouton,#VAL{fictions:notif_bouton_consulter}|_T}
+<title>[(#VAL{fictions:notif_chapitre_sujet}|_T{#ARRAY{histoire,#GET{histoire}}}|nettoyer_titre_email)]</title>
+
+<body>
+<INCLURE{fond=notifications/inc_corps, titre=#GET{mail_titre}, detail=#GET{mail_detail}, url=#GET{url_histoire}, bouton=#GET{mail_bouton}, avatar_type=#GET{avatar_type}, avatar_valeur=#GET{avatar_valeur}, avatar_secours_emoji=✍️, avatar_secours_fond=#DEE0FF, avatar_secours_couleur=#1E2055, carte_titre=#GET{carte_titre}, date_carte=#GET{carte_date}, extrait=#GET{carte_extrait}} />
+</body>
+</BOUCLE_chapitre>
+#FILTRE{facteur_email_wrap_to_html}
