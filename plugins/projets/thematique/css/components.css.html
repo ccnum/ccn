@@ -6,9 +6,11 @@
 	display: none !important;
 }
 
-/* Message d'erreur d'un formulaire (accès interdit, identifiants invalides...) :
-   par défaut sans style, texte noir perdu parmi le reste du formulaire. */
-.reponse_formulaire_erreur {
+/* Message d'erreur ou de confirmation d'un formulaire (accès interdit, profil
+   enregistré...) : par défaut sans style, texte noir perdu parmi le reste du
+   formulaire. */
+.reponse_formulaire_erreur,
+.reponse_formulaire_ok {
 	background-color: #fce4e4;
 	color: #b30000;
 	border: 1px solid #f5aca6;
@@ -16,6 +18,17 @@
 	padding: 8px 10px;
 	margin-bottom: 12px;
 	font-size: 13px;
+}
+.reponse_formulaire_ok {
+	background-color: #e3f4e6;
+	color: #1e6b2e;
+	border-color: #a7d8b1;
+}
+/* Message toujours présent dans le HTML, même vide (ex. joindre_video.html) :
+   sans ça, un encadré vide s'affiche. */
+.reponse_formulaire_erreur:empty,
+.reponse_formulaire_ok:empty {
+	display: none;
 }
 
 .consigne {
@@ -1050,6 +1063,12 @@ position: relative;
 .publier-article-form-wrapper:has(.formulaire-editer-profil) {
 	overflow-y: auto;
 	padding-bottom: var(--spacing-md);
+}
+/* Message de confirmation / d'erreur : décollé des bords de la sidebar,
+   aligné sur le bouton Enregistrer. */
+.formulaire-editer-profil .reponse_formulaire {
+	margin: var(--spacing-sm) 1rem;
+	padding: var(--spacing-sm) var(--spacing-md);
 }
 .formulaire-editer-profil .boutons {
 	text-align: right;
