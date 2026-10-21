@@ -191,6 +191,10 @@ function formulaires_public_publier_article_verifier_dist(
 
 	$id_article_poste = intval(_request('id_article'));
 
+	if (!$id_article_poste && $type_article === 'ressources' && !thematique_peut_publier_ressource($role_visiteur)) {
+		return ['message_erreur' => _T('thematique:publier_erreur_ressource_interdite')];
+	}
+
 	// cf la même vérification dans le charger : un id_article posté sans
 	// autorisation de modification ne doit rien pouvoir écrire.
 	if ($id_article_poste && !autoriser('modifier', 'article', $id_article_poste)) {
@@ -311,6 +315,9 @@ function formulaires_public_publier_article_traiter_dist(
 	if (!$id_article) {
 		// cf la même vérification dans _verifier_dist : revérifiée
 		// ici, _traiter_dist pouvant être invoqué indépendamment.
+		if ($type_article === 'ressources' && !thematique_peut_publier_ressource($role_visiteur)) {
+			return ['message_erreur' => _T('thematique:publier_erreur_ressource_interdite')];
+		}
 		if ($type_article !== 'ressources' && !thematique_auteur_peut_creer_dans_rubrique($id_auteur, $id_rubrique)) {
 			return ['message_erreur' => _T('thematique:publier_erreur_rubrique_interdite')];
 		}

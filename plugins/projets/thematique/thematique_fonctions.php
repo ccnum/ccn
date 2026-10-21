@@ -374,6 +374,21 @@ function thematique_role_publie($role) {
 }
 
 /**
+ * Le rôle peut-il créer une ressource (page « Ressources », menu Publier) ?
+ * Même règle que thematique_role_publie(), sauf pour un prof sur un site qui
+ * déclare _THEMATIQUE_RESSOURCE_SANS_PROF (cf thematique_edifice_options.php).
+ *
+ * @param string|null $role Rôle de session (prof, intervenant, admin, eleve…)
+ * @return bool
+ */
+function thematique_peut_publier_ressource($role) {
+	if ($role === 'prof' && defined('_THEMATIQUE_RESSOURCE_SANS_PROF') && _THEMATIQUE_RESSOURCE_SANS_PROF) {
+		return false;
+	}
+	return thematique_role_publie($role);
+}
+
+/**
  * Fond sidebar à inclure pour une consigne (mission), selon le rôle de session.
  * Par défaut (visiteur non connecté, admin, eleve) : vue "autre",
  * pas de différence apparente entre "autre" et "eleve".

@@ -321,6 +321,7 @@ return [
 	'publier_erreur_mission_invalide'            => 'Publication impossible : la mission à laquelle vous répondez n’existe plus ou n’est plus publiée.',
 	'publier_erreur_modifier_interdit'           => 'Modification impossible : votre compte n’a pas le droit de modifier cet article.',
 	'publier_erreur_non_connecte'                => 'Publication impossible : vous n’êtes plus connecté (session expirée). Reconnectez-vous puis publiez à nouveau ; pensez à copier votre texte avant.',
+	'publier_erreur_ressource_interdite'         => 'Publication impossible : sur ce site, les ressources sont publiées par les intervenants et les administrateurs.',
 	'publier_erreur_ressources_introuvable'      => 'Publication impossible : la rubrique « Ressources » est introuvable. Contactez un administrateur.',
 	'publier_erreur_rubrique_interdite'          => 'Publication impossible : votre compte n’est pas rattaché à la classe ou au projet de cette rubrique. Contactez un administrateur si c’est une erreur.',
 	'publier_erreur_sans_role'                   => 'Publication impossible : votre compte n’a pas de rôle enseignant, intervenant ou administrateur. Déconnectez-vous puis reconnectez-vous ; si le problème persiste, contactez un administrateur.',
