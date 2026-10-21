@@ -112,8 +112,11 @@
 			<!-- cible différente de self() : formulaires_login_traiter_dist() ne renvoie
 			'redirect' que si $cible != self(), sinon aucune redirection n'a lieu après
 			une connexion réussie et le div.ajax se recharge seul, sans rafraîchir le
-			menu utilisateur qui reste affiché "déconnecté". -->
-			<div class="ajax">#FORMULAIRE_LOGIN{#SELF|parametre_url{connecte,oui}}</div>
+			menu utilisateur qui reste affiché "déconnecté". Valeur alternée (oui/1) :
+			sur une page déjà en connecte=oui (connexion puis déconnexion, session
+			expirée), la cible valait self() et la fenêtre restait blanche. -->
+			#SET{connecte, #SELF|parametre_url{connecte}|=={oui}|?{1,oui}}
+			<div class="ajax">#FORMULAIRE_LOGIN{#SELF|parametre_url{connecte,#GET{connecte}}}</div>
 		</div>
 	</div>
 	]
