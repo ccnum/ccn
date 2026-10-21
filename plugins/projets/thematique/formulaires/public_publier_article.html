@@ -1,6 +1,6 @@
 <div class="formulaire_spip formulaire_public_publier_article">
 	[<p class="reponse_formulaire reponse_formulaire_ok">(#ENV*{message_ok})</p>]
-	[<p class="reponse_formulaire reponse_formulaire_erreur">(#ENV*{message_erreur})</p>]
+	[<p class="reponse_formulaire reponse_formulaire_erreur" role="alert">(#ENV*{message_erreur})</p>]
 
 	#SET{id_objet_document, #ENV{id_article}|thematique_id_objet_document_temp}
 	[(#REM) Édition d'un article déjà publié (cf callModifierArticle() /
