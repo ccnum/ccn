@@ -15,4 +15,8 @@ return [
 	// J
 	'joindre_document_envoyer' => 'Envoyer le document',
 	'joindre_document_label' => 'Ajouter une image ou un document',
+
+	// N
+	'notif_aide_contact' => 'Si vous rencontrez des difficultés pour accéder à la page en question ou que vous avez des questions relatives à ce mail, contactez le service support : @email@.',
+	'notif_projet' => 'Projet “@nom_site_spip@”',
 ];

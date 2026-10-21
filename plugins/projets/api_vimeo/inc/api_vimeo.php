@@ -139,6 +139,9 @@ function api_vimeo_maj_statut(int $id_document, string $statut, ?int $progressio
 
 /**
  * Crée une session d'upload sur Vimeo (approche TUS).
+ * La vidéo est créée non répertoriée : le lien renvoyé contient alors le hash
+ * sans lequel le lecteur intégré refuse de la lire (le réglage après coup
+ * laisserait un lien sans hash).
  *
  * @return array{upload_link: string, link: string}|false
  */
@@ -148,7 +151,8 @@ function api_vimeo_creer_upload(string $titre, int $file_size): array|false {
 			'approach' => 'tus',
 			'size'     => $file_size,
 		],
-		'name' => $titre,
+		'name'    => $titre,
+		'privacy' => ['view' => 'unlisted'],
 	]);
 
 	$ch = curl_init('https://api.vimeo.com/me/videos');
@@ -364,7 +368,7 @@ function api_vimeo_supprimer(string $vimeo_url): bool {
 
 /**
  * Met à jour la privacy d'une vidéo Vimeo.
- * Si $password est vide, la vidéo devient publique.
+ * Si $password est vide, la vidéo redevient non répertoriée.
  *
  * @param string $vimeo_url  URL complète de la vidéo (https://vimeo.com/123456789)
  * @param string $password
@@ -385,7 +389,7 @@ function api_vimeo_set_password(string $vimeo_url, string $password): bool {
 	// "privacy" : Vimeo répond 400 "Please enter a password for this video"
 	// si on l'y met quand même, même avec un mot de passe non vide.
 	$payload = [
-		'privacy' => ['view' => $password ? 'password' : 'anybody'],
+		'privacy' => ['view' => $password ? 'password' : 'unlisted'],
 	];
 	if ($password) {
 		$payload['password'] = $password;
@@ -413,7 +417,15 @@ function api_vimeo_set_password(string $vimeo_url, string $password): bool {
 		return false;
 	}
 
-	$action = $password ? "protégée par mot de passe" : "rendue publique";
+	// Une vidéo envoyée publique (avant le passage en non répertoriée par
+	// défaut) a un lien stocké sans hash : en non répertoriée, le lecteur
+	// intégré refuserait de la lire. On reprend le lien renvoyé par Vimeo.
+	$data = json_decode($response, true);
+	if (!empty($data['link']) && $data['link'] !== $vimeo_url) {
+		sql_updateq('spip_documents', ['fichier' => $data['link']], 'fichier=' . sql_quote($vimeo_url));
+	}
+
+	$action = $password ? "protégée par mot de passe" : "rendue non répertoriée";
 	spip_log("Vidéo $video_id $action", 'api_vimeo' . _LOG_INFO_IMPORTANTE);
 	return true;
 }

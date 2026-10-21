@@ -14,9 +14,9 @@ function fictions_autoriser() {
  * Association de mots-clés réservée aux admins complets.
  *
  * Tous les mots de fictions sont techniques (rubrique-contenant-annees,
- * blog_pedagogique, presentation, prologue, chapitre1, footer-*...) et pilotent
- * la structure du site pour tout le monde : un article tagué blog_pedagogique
- * apparaît dans le footer de toutes les pages, une rubrique taguée
+ * presentation, prologue, chapitre1, footer-*...) et pilotent la structure du
+ * site pour tout le monde : un article tagué footer-page apparaît dans le
+ * footer de toutes les pages, une rubrique taguée
  * rubrique-contenant-annees fausse le sélecteur d'années. La règle native
  * (autoriser_associermots_dist) laisse un admin restreint (prof, lié à ses
  * rubriques de classe) poser n'importe lequel de ces mots depuis /ecrire sur

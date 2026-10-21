@@ -125,6 +125,9 @@ RUN { \
 	echo 'html_errors = Off'; \
 	} > /usr/local/etc/php/conf.d/error-logging.ini
 
+# mesure préventive (CVE-2026-109618 / CVE-2026-109619) : fonctionnalité non utilisée par SPIP
+RUN echo 'session.upload_progress.enabled = Off' > /usr/local/etc/php/conf.d/security.ini
+
 RUN set -eux; \
 	a2enmod rewrite expires headers; \
 	{ \

@@ -154,11 +154,11 @@ function Projet() {
 
 		// affiche tous les articles de blog
 		for (let i = 0; i < CCN.articlesBlog.length; i++) {
-			$(CCN.articlesBlog[i].div_base).fadeIn(3000);
+			$(CCN.articlesBlog[i].div_base).fadeIn(500);
 		}
 		// affiche tous les articles d'événement
 		for (let i = 0; i < CCN.articlesEvenement.length; i++) {
-			$(CCN.articlesEvenement[i].div_base).fadeIn(3000);
+			$(CCN.articlesEvenement[i].div_base).fadeIn(500);
 		}
 		deflouterToutesLesBullesEtLosanges();
 		this.setTimelineZoom();

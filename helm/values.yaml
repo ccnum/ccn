@@ -14,6 +14,7 @@ mariadb:
 
 spip:
   image: "erasme/spip-ccn:dev"
+  imagePullPolicy: Always  # tag mobile (dev/latest) : forcer le pull à chaque démarrage du pod
   env:
     SPIP_AUTO_INSTALL: 1
     SPIP_DB_SERVER: "mysql"

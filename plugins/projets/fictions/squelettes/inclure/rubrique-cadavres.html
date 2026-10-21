@@ -13,8 +13,6 @@ et compte les chapitres de l'histoire.
 ]
 #CACHE{0}
 
-#SET{id_blog_pedagogique, (#VAL{blog_pedagogique}|fictions_id_rubrique_a_mot)}
-
 [(#REM) Chapitre 1 commun (article "chapitre1" de l'année, cf fictions_id_chapitre1()) :
 hors de la rubrique de l'histoire, donc absent de la boucle ci-dessous et du rang calculé
 par fictions_lecture_droits(). Même règle que pour un chapitre N-1 : visible tant que
@@ -31,7 +29,7 @@ commun) : le chapitre 1 est N-1 tant que l'histoire n'a que son chapitre 2. ]
 ]
 
 <!-- Boucle affichage des cadavres -->
-<BOUCLE_cadavres(ARTICLES){id_rubrique}{statut IN publie,prop}{id_rubrique != #GET{id_blog_pedagogique}}{id_rubrique != #EVAL{_FICTIONS_ID_BLOG_AUTEUR}}{par id_article}>
+<BOUCLE_cadavres(ARTICLES){id_rubrique}{statut IN publie,prop}{id_rubrique != #EVAL{_FICTIONS_ID_BLOG_AUTEUR}}{par id_article}>
 	[(#ID_ARTICLE|LECTURE_DROITS{montre}|oui)
 		[(#ID_ARTICLE|LECTURE_DROITS{mode}|=={'visible'}|oui)
 			<INCLURE{fond=inclure/chapitre-visible,id_article} />

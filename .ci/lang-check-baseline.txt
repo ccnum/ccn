@@ -1,11 +1,10 @@
 plugins/projets/ccn/ccn_pipelines.php:52: Compression vidéo document #
-plugins/projets/fictions/fictions_administrations.php:106: %Blog Pédagogique%
-plugins/projets/fictions/fictions_administrations.php:85: année_en_ecriture
+plugins/projets/fictions/fictions_administrations.php:89: année_en_ecriture
 plugins/projets/fictions/inc/fictions_rentree.php:75: année_en_ecriture
-plugins/projets/thematique/thematique_administrations.php:142: Pédagogie
-plugins/projets/thematique/thematique_administrations.php:163: Méthodologie
-plugins/projets/thematique/thematique_administrations.php:163: Pédagogie
-plugins/projets/thematique/thematique_administrations.php:163: Thématique
-plugins/projets/thematique/thematique_administrations.php:172: Pédagogie
-plugins/projets/thematique/thematique_administrations.php:382: Blog pédagogique
-plugins/projets/thematique/thematique_administrations.php:383: Contenu éditorial
+plugins/projets/thematique/thematique_administrations.php:153: Pédagogie
+plugins/projets/thematique/thematique_administrations.php:174: Méthodologie
+plugins/projets/thematique/thematique_administrations.php:174: Pédagogie
+plugins/projets/thematique/thematique_administrations.php:174: Thématique
+plugins/projets/thematique/thematique_administrations.php:183: Pédagogie
+plugins/projets/thematique/thematique_administrations.php:393: Blog pédagogique
+plugins/projets/thematique/thematique_administrations.php:394: Contenu éditorial

@@ -30,9 +30,7 @@ session) — sans ça, la grille calculée pour le premier visiteur était servi
 </BOUCLE_annee>
 
 #SET{i,0}
-
-#SET{id_blog_pedagogique, (#VAL{blog_pedagogique}|fictions_id_rubrique_a_mot)}
-<BOUCLE_rubriques_toutes(RUBRIQUES){id_parent=#GET{id_annee}}{id_rubrique != #GET{id_blog_pedagogique}}{id_rubrique != #EVAL{_FICTIONS_ID_BLOG_AUTEUR}}{par titre}>
+<BOUCLE_rubriques_toutes(RUBRIQUES){id_parent=#GET{id_annee}}{id_rubrique != #EVAL{_FICTIONS_ID_BLOG_AUTEUR}}{par titre}>
 	#SET{i,#GET{i}|plus{1}}
 	<div class="liste-colonnes#GET{suffixe}">
 		<div class="liste-title#GET{suffixe}">#GET{i}</div>
@@ -42,14 +40,14 @@ session) — sans ça, la grille calculée pour le premier visiteur était servi
 		<BOUCLE_chapitre1(ARTICLES){id_article=#GET{id_chapitre1}}>
 			<div class="liste-link#GET{suffixe}">
 				<INCLURE{fond=inclure/liste-cadavres-infobulle, id_article, numero=#GET{i}, small=#GET{small}} />
-				<a href="#_rubriques_toutes:URL_RUBRIQUE" class="liste-link-single verrouille"></a>
+				<a href="#_rubriques_toutes:URL_RUBRIQUE" class="liste-link-single verrouille"><span class="visuellement-cache"><:fictions:histoire:> #GET{i} : #TITRE</span></a>
 			</div>
 			<div class="#GET{spacer}"></div>
 		</BOUCLE_chapitre1>
 		<BOUCLE_articles_tous(ARTICLES){id_rubrique}{statut IN publie,prop}{par id_article}>
 			<div class="liste-link#GET{suffixe}">
 				<INCLURE{fond=inclure/liste-cadavres-infobulle, id_article, numero=#GET{i}, small=#GET{small}} />
-				<a href="#_articles_tous:URL_RUBRIQUE" class="liste-link-single [(#ID_ARTICLE|EST_AUTEUR_DROITS|?{'auteur','verrouille'})] [(#_articles_tous:COMPTEUR_BOUCLE|=={#_articles_tous:TOTAL_BOUCLE}|?{#GET{last},''})]"></a>
+				<a href="#_articles_tous:URL_RUBRIQUE" class="liste-link-single [(#ID_ARTICLE|EST_AUTEUR_DROITS|?{'auteur','verrouille'})] [(#_articles_tous:COMPTEUR_BOUCLE|=={#_articles_tous:TOTAL_BOUCLE}|?{#GET{last},''})]"><span class="visuellement-cache"><:fictions:histoire:> #GET{i} : #TITRE</span></a>
 			</div>
 			<div class="#GET{spacer}"></div>
 		</BOUCLE_articles_tous>

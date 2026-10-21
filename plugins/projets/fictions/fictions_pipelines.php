@@ -33,46 +33,62 @@ function fictions_post_edition($flux) {
 	include_spip('action/editer_objet');
 	include_spip('fictions/fictions_fonctions');
 
-	$blog = fictions_id_rubrique_a_mot('blog_pedagogique');
-	// La rubrique blog auteur suit la même mécanique de publication automatique
-	// que le blog pédagogique, une fois la rubrique créée et la constante surchargée.
-	$blogs_ids = array_filter([(int) $blog, _FICTIONS_ID_BLOG_AUTEUR]);
-
 	if ($statut === 'prop') {
-		// Publier l'article que l'on vient de modifier
-		objet_modifier('article', $id_objet, ['statut' => 'publie']);
-		// Masquer le chapitre précédent en tronquant son descriptif
-		$prev_id = sql_getfetsel('id_article', 'spip_articles', [
-			'id_rubrique=' . intval($id_rubrique),
-			'statut=' . sql_quote('publie'),
-			'id_article<>' . intval($id_objet),
-		], '', 'id_article', '1', 'id_article DESC');
-		if ($prev_id) {
-			$prev_desc = sql_getfetsel('descriptif', 'spip_articles', 'id_article=' . intval($prev_id));
-			objet_modifier('article', intval($prev_id), ['descriptif' => masquerTexteChapitre($prev_desc)]);
-		}
+		fictions_publier_masquer_precedent($id_objet, $id_rubrique);
 		// Passer de prépa à prop le suivant
 		$id_article = sql_getfetsel('id_article', 'spip_articles', ['id_rubrique=' . $id_rubrique, 'statut=' . sql_quote('prepa')], '', 'id_article', '0,1');
 		if ($id_article) {
 			objet_modifier('article', intval($id_article), ['statut' => 'prop']);
+			fictions_notifier_chapitre_a_ecrire($id_objet, intval($id_article));
 		}
 	}
 
-	if (in_array($id_rubrique, $blogs_ids, true) && $statut === 'prepa') {
-		objet_modifier('article', $id_objet, ['statut' => 'publie']);
-		// Masquer le chapitre précédent en tronquant son descriptif
-		$prev_id = sql_getfetsel('id_article', 'spip_articles', [
-			'id_rubrique=' . intval($id_rubrique),
-			'statut=' . sql_quote('publie'),
-			'id_article<>' . intval($id_objet),
-		], '', 'id_article', '1', 'id_article DESC');
-		if ($prev_id) {
-			$prev_desc = sql_getfetsel('descriptif', 'spip_articles', 'id_article=' . intval($prev_id));
-			objet_modifier('article', intval($prev_id), ['descriptif' => masquerTexteChapitre($prev_desc)]);
-		}
+	// Rubrique blog auteur (une fois créée et la constante surchargée) :
+	// publication automatique de l'article, chapitre précédent masqué.
+	if ($id_rubrique === (int) _FICTIONS_ID_BLOG_AUTEUR && $statut === 'prepa') {
+		fictions_publier_masquer_precedent($id_objet, $id_rubrique);
 	}
 
 	return $flux;
+}
+
+/**
+ * Publie l'article que l'on vient de modifier et masque le chapitre précédent
+ * de la rubrique en tronquant son descriptif.
+ */
+function fictions_publier_masquer_precedent(int $id_objet, int $id_rubrique): void {
+	objet_modifier('article', $id_objet, ['statut' => 'publie']);
+	$prev_id = sql_getfetsel('id_article', 'spip_articles', [
+		'id_rubrique=' . $id_rubrique,
+		'statut=' . sql_quote('publie'),
+		'id_article<>' . $id_objet,
+	], '', 'id_article', '1', 'id_article DESC');
+	if ($prev_id) {
+		$prev_desc = sql_getfetsel('descriptif', 'spip_articles', 'id_article=' . intval($prev_id));
+		objet_modifier('article', intval($prev_id), ['descriptif' => masquerTexteChapitre($prev_desc)]);
+	}
+}
+
+/**
+ * Prévient par mail le participant du chapitre suivant que le chapitre précédent vient
+ * d'être publié : c'est à lui d'écrire la suite. Destinataires : les comptes liés au
+ * chapitre suivant, c'est-à-dire ceux du participant affecté par le plan validé
+ * (cf fictions_plan_appliquer()).
+ */
+function fictions_notifier_chapitre_a_ecrire(int $id_publie, int $id_suivant): void {
+	$destinataires = sql_allfetsel(
+		'A.id_auteur, A.email',
+		'spip_auteurs_liens AS L JOIN spip_auteurs AS A ON A.id_auteur=L.id_auteur',
+		["L.objet='article'", 'L.id_objet=' . $id_suivant, "A.statut<>'5poubelle'", "A.email<>''"]
+	);
+	if (!$destinataires) {
+		spip_log("fictions chapitre #$id_publie publié : aucun compte avec email sur le chapitre suivant #$id_suivant, pas de notification", 'fictions');
+		return;
+	}
+	include_spip('inc/notifications');
+	$texte = recuperer_fond('notifications/fictions_chapitre_a_ecrire', ['id_article' => $id_publie]);
+	notifications_envoyer_mails(array_column($destinataires, 'email'), $texte);
+	spip_log("fictions chapitre #$id_publie publié : chapitre suivant #$id_suivant notifié aux auteurs #" . implode(', #', array_column($destinataires, 'id_auteur')), 'fictions');
 }
 
 /**
