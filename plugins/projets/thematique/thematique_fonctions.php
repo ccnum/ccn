@@ -2298,6 +2298,53 @@ function thematique_id_rubrique_mission() {
 }
 
 /**
+ * Crée le projet d'un intervenant lié directement à la rubrique « Consignes » de
+ * l'année, sans projet en dessous : cas d'un compte hors SSO, rattaché à la main
+ * dans /ecrire. Le SSO crée ce projet à la connexion (cf
+ * thematique_cioidc_resoudre_liens_rubriques) ; sans lui, ses missions
+ * partaient dans le projet d'un autre intervenant (cf thematique_id_rubrique_mission).
+ * Sous-rubrique au nom de l'auteur, publiée, et lien de l'auteur vers elle.
+ *
+ * @param int $id_auteur
+ * @return int id du projet créé ou retrouvé, 0 si rien à faire
+ */
+function thematique_assurer_projet_intervenant($id_auteur) {
+	$id_auteur = intval($id_auteur);
+	$id_consignes = thematique_id_rubrique_enfant_a_mot(thematique_id_rubrique_annee_active(), 'consignes');
+	if (!$id_auteur || !$id_consignes) {
+		return 0;
+	}
+	$liens = array_map('intval', array_column(sql_allfetsel(
+		'id_objet',
+		'spip_auteurs_liens',
+		['id_auteur=' . $id_auteur, "objet='rubrique'"]
+	), 'id_objet'));
+	if (!in_array($id_consignes, $liens, true)
+		|| ($liens && sql_countsel('spip_rubriques', ['id_parent=' . $id_consignes, sql_in('id_rubrique', $liens)]))
+	) {
+		return 0;
+	}
+
+	// « / » retiré : creer_rubrique_nommee() y voit une arborescence.
+	$nom = trim(str_replace('/', ' ', (string) sql_getfetsel('nom', 'spip_auteurs', 'id_auteur=' . $id_auteur)));
+	if ($nom === '') {
+		return 0;
+	}
+	include_spip('inc/rubriques');
+	include_spip('action/editer_liens');
+	$id_projet = intval(creer_rubrique_nommee($nom, $id_consignes));
+	if ($id_projet) {
+		sql_updateq('spip_rubriques', ['statut' => 'publie'], 'id_rubrique=' . $id_projet);
+		objet_associer(['id_auteur' => $id_auteur], ['rubrique' => $id_projet]);
+		spip_log(
+			"projet intervenant auteur #$id_auteur : rubrique #$id_projet « $nom » sous Consignes #$id_consignes",
+			'thematique'
+		);
+	}
+	return $id_projet;
+}
+
+/**
  * Une nouvelle mission ne peut être créée que sous la rubrique "Consignes"
  * de l'année active (une rubrique restreinte d'une année
  * passée, ex. "2018/Travail des classes", faisait publier les missions

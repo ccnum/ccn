@@ -137,10 +137,7 @@ function formulaires_editer_profil_traiter_dist() {
 		}
 	}
 
-	// Champs mot de passe vidés au réaffichage
-	set_request('pass_actuel', '');
-	set_request('new_pass', '');
-	set_request('new_pass2', '');
-
-	return ['message_ok' => _T('thematique:profil_enregistre'), 'editable' => true];
+	// Formulaire non réaffiché : seul le message de confirmation reste, le
+	// temps que la sidebar se ferme (cf editer_profil.html).
+	return ['message_ok' => _T('thematique:profil_enregistre'), 'editable' => false];
 }

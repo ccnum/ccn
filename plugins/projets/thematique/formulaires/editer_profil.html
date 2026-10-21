@@ -1,5 +1,14 @@
 <div class="formulaire_spip formulaire_#FORM formulaire-editer-profil">
-	[<p class="reponse_formulaire reponse_formulaire_ok" role="status">(#ENV*{message_ok})</p>]
+	[(#ENV*{message_ok}|oui)
+	<p class="reponse_formulaire reponse_formulaire_ok" role="status">#ENV*{message_ok}</p>
+	[(#REM) Profil enregistré : la sidebar se ferme seule, après un court délai
+	pour laisser lire la confirmation (même effet que la croix de fermeture). ]
+	<script>
+		setTimeout(function () {
+			$('#sidebar_main_around #sidebar-close').trigger('click');
+		}, 1500);
+	</script>
+	]
 	[<p class="reponse_formulaire reponse_formulaire_erreur" role="alert">(#ENV*{message_erreur})</p>]
 	[(#ENV{editable})
 	<form method="post" action="#ENV{action}">

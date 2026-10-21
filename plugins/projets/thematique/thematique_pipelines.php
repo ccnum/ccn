@@ -52,6 +52,11 @@ function thematique_preparer_fichier_session($flux) {
 	if ($id_auteur) {
 		spip_log("session auteur #$id_auteur : rôle=" . ($role ?? 'aucun'), 'cioidc');
 	}
+	// Intervenant hors SSO lié à « Consignes » seulement : son projet est créé
+	// ici, comme le fait le SSO à la connexion.
+	if ($role === 'intervenant') {
+		thematique_assurer_projet_intervenant($id_auteur);
+	}
 
 	// Classe active lue dans la session en cours d'écriture (pas via
 	// session_get() : ce pipeline peut aussi écrire la session d'un autre

@@ -1,0 +1,69 @@
+#SET{statuts_auteurs,#CONST{_STATUT_AUTEUR_RUBRIQUE}|explode{','}}
+<label for="statut"><:info_statut_auteur:></label>
+<select name="statut"
+				id="statut"
+				onchange="update_saisie_statut_auteur(this,this.options[this.selectedIndex].value);"
+				>
+<BOUCLE_statuts(DATA){source table, #VAL{tous}|auteurs_lister_statuts{0}}{valeur!=nouveau}>
+	<option value="#VALEUR"[(#ENV{statut}|=={#VALEUR}|oui)selected="selected"]>[&gt;(#VALEUR|=={5poubelle}|oui)][(#VALEUR|traduire_statut_auteur)]</option>
+</BOUCLE_statuts>
+	[(#ENV{statut}|=={nouveau})
+	<option value="#ENV{statut}" selected="selected">[(#ENV{statut}|traduire_statut_auteur)]</option>
+	]
+</select>
+[(#AUTORISER{modifier,auteur,#ID_AUTEUR,'',#ARRAY{webmestre,'?'}}|oui)
+	<div class="choix choix-webmestre[(#ENV{statut}|=={0minirezo}|non)none-js]">
+		<input type='hidden' name='webmestre' value='0'>
+		<input type="checkbox" name="webmestre" id="webmestre" value="oui"[(#ENV{webmestre}|=={oui}|oui)checked="checked"]/>
+		<label for="webmestre"><:info_admin_statuer_webmestre:></label>
+		<input type='hidden' name='saisie_webmestre' value='1'>
+	</div>
+]
+<div class="rubriques_restreintes[(#ENV{statut}|in_array{#GET{statuts_auteurs}}|non)none-js]">
+	[(#SET{label,<:info_restreindre_rubrique:>})]
+	#SET{selected,#LISTE}
+	<B_restreint>
+			<BOUCLE_restreint(RUBRIQUES){id_auteur}{statut==.*}{si #ENV{statut}|in_array{#GET{statuts_auteurs}}}>
+			#SET{selected,#GET{selected}|push{rubrique|#ID_RUBRIQUE}}
+			</BOUCLE_restreint>
+			<input type='hidden' name='restreintes[]' value='rubrique|0'>
+			[(#SET{label,<:info_ajouter_rubrique:>})]
+	</B_restreint>
+	[(#REM) Surcharge ccn du gabarit du cœur SPIP 4.4 (prive/formulaires), seul
+	ajout : ce bloc. Formulaire réaffiché après une erreur d'enregistrement (ex.
+	mot de passe de confirmation manquant) : la boucle ci-dessus ne relit que la
+	base, les rubriques cochées entre-temps étaient perdues (toutes pour un
+	nouvel auteur, les ajouts pour un auteur existant). On reprend celles
+	envoyées par le formulaire, y compris une sélection vidée. ]
+	[(#VAL{restreintes}|_request|is_array|oui)
+		#SET{selected, #VAL{restreintes}|_request|ccn_restreintes_postees}
+	]
+	[<p>(#GET{selected}|count|non|et{#ENV{statut}|=={0minirezo}}|?{<:info_auteur_gere_toutes_rubriques:>})</p>]
+	<div class="instituer_auteur choix clearfix">
+		[<p>(#GET{selected}|count|?{<:info_auteur_gere_rubriques:>}|sinon{#GET{label}})</p>
+		<div class="nettoyeur"></div> ]
+		[(#AUTORISER{modifier,auteur,#ID_AUTEUR,'',#ARRAY{restreintes,1}}|oui)
+			<INCLURE{fond=formulaires/selecteur/rubriques,selected=#GET{selected},select='',name=restreintes} />
+		]
+	</div>
+</div>
+
+
+[(#REM)
+Masquer/afficher le selecteur de rubriques restreintes, ou le choix webmestre
+]
+<script>
+function update_saisie_statut_auteur(node,value){
+	var statut_auteur_rubrique="[(#GET{statuts_auteurs}|implode{|})]";
+	var reg = new RegExp("^("+statut_auteur_rubrique+")$");
+	if (value.match(reg))
+		jQuery(node).siblings('.rubriques_restreintes:hidden').slideDown();
+	else
+		jQuery(node).siblings('.rubriques_restreintes:visible').slideUp();
+
+	if (value=='0minirezo')
+		jQuery(node).next('.choix-webmestre:hidden').slideDown();
+	else
+		jQuery(node).next('.choix-webmestre:visible').slideUp();
+}
+</script>

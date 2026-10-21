@@ -40,6 +40,21 @@ if [ "${APACHE_PORT}" != "80" ]; then
 	sed -i "s/:80>/:${APACHE_PORT}>/g" /etc/apache2/sites-available/000-default.conf
 fi
 
+# Faille PHP dans l'analyse des requêtes multipart/form-data (CVE-2026-109618,
+# CVE-2026-109619) : CCN_UPLOADS_SUSPENDUS=true fait refuser par Apache toute
+# requête multipart, avant que PHP ne la lise, en attendant l'image corrigée.
+# Les formulaires d'envoi de fichiers sont alors remplacés par un message côté
+# SPIP (cf _CCN_UPLOADS_SUSPENDUS plus bas et ccn_formulaire_fond).
+if [ "${CCN_UPLOADS_SUSPENDUS:-false}" = true ]; then
+	cat > /etc/apache2/conf-enabled/ccn_uploads_suspendus.conf << 'EOF'
+<If "req('Content-Type') =~ m#^\s*multipart/#i">
+	Require all denied
+</If>
+EOF
+else
+	rm -f /etc/apache2/conf-enabled/ccn_uploads_suspendus.conf
+fi
+
 # Le code (cœur SPIP, plugins, .htaccess) est dans l'image, sous /var/www/html :
 # rien à copier ici. Seuls IMG/, config/ et tmp/log/ sont persistés (bind mounts),
 # le reste de tmp/ et local/ repart de ceux de l'image à chaque recréation du
@@ -260,6 +275,8 @@ define('_VIMEO_ACCESS_TOKEN', '${VIMEO_ACCESS_TOKEN:-}');
 define('_CCN_PROJET_ACTIVE', '${CCN_PROJET_ACTIVE:-true}' !== 'false');
 // JSON complet des attributs ENT dans cioidc.log (cf plugins/projets/ccn/inc/ccn_cioidc.php)
 define('_CCN_CIOIDC_LOG_COMPLET', '${CCN_CIOIDC_LOG_COMPLET:-true}' !== 'false');
+// formulaires d'envoi de fichiers remplacés par un message (cf plugins/projets/ccn/ccn_pipelines.php)
+define('_CCN_UPLOADS_SUSPENDUS', '${CCN_UPLOADS_SUSPENDUS:-false}' === 'true');
 ?>
 MAINEOF
 chown www-data:www-data config/mes_options.php

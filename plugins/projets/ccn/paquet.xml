@@ -17,4 +17,5 @@
 	<pipeline nom="post_edition" inclure="ccn_pipelines.php" />
 	<pipeline nom="formulaire_verifier" inclure="ccn_pipelines.php" />
 	<pipeline nom="formulaire_charger" inclure="ccn_pipelines.php" />
+	<pipeline nom="formulaire_fond" inclure="ccn_pipelines.php" />
 </paquet>

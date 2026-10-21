@@ -19,4 +19,7 @@ return [
 	// N
 	'notif_aide_contact' => 'Si vous rencontrez des difficultés pour accéder à la page en question ou que vous avez des questions relatives à ce mail, contactez le service support : @email@.',
 	'notif_projet' => 'Projet “@nom_site_spip@”',
+
+	// U
+	'uploads_suspendus' => 'L’envoi de fichiers est momentanément suspendu, le temps d’appliquer une mise à jour de sécurité. Il sera rétabli au plus vite.',
 ];

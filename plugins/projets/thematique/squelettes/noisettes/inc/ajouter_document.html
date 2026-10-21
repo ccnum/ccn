@@ -36,8 +36,11 @@
 			[(#DISTANT|=={oui}|non)
 			[(#VIMEO_STATUT|in_array{#LISTE{en_attente,envoi,transcodage}}|non)
 			[(#MIME_TYPE|match{image}|oui)
+			[(#REM) Réduite à 1600 px (et non une vignette) : l'image occupe toute la
+			largeur du cadre via le CSS max-width:100%, popup agrandie comprise, sans
+			charger l'original en pleine taille (photos de téléphone). ]
 			<a href="#URL_DOCUMENT" title="[(#TITRE)]" class="mediabox" type="image/jpeg" data-box-min-height="90pc">
-				[(#FICHIER|image_reduire{300}|inserer_attribut{alt,#TITRE})]
+				[(#FICHIER|image_reduire{1600}|inserer_attribut{alt,#TITRE})]
 			</a>
 			]
 			[(#MIME_TYPE|match{image}|non)
