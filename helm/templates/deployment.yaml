@@ -40,6 +40,7 @@ spec:
 
         - name: spip
           image: {{ .Values.spip.image }}
+          imagePullPolicy: {{ .Values.spip.imagePullPolicy | default "Always" }}
           ports:                            # Add a ports section to expose the container ports
             - containerPort: 80               # The spip container listens on port 80
               name: http                      # Port name (optional but useful)
