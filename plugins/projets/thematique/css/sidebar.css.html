@@ -946,7 +946,7 @@ li a, li a:hover {
 				des onglets de la sidebar (fenêtre moins ~400 px de menu haut,
 				en-tête, onglets et pied de page, sur ordinateur), largeur auto
 				pour garder les proportions */
-				max-height: max(200px, 100vh - 430px);
+				max-height: max(200px, 100vh - 400px);
 				width: auto;
 				height: auto !important;
 				display: block;
@@ -956,6 +956,27 @@ li a, li a:hover {
 					background-color: var(--background-color-hover);
 					color: var(--color-hover);
 				}
+			}
+		}
+		/* Photo (type posé par ajouter_document.html) : collée au cadre, sans
+		la bande de 15 px au-dessus et en dessous, et contour bleu au survol
+		plutôt qu'un fond, qui ne se voyait que sur ces bandes. Les icônes
+		(PDF, autres formats) gardent le fond bleu. */
+		> a[type^="image/"] {
+			padding-bottom: 0;
+			&:hover {
+				background-color: transparent;
+			}
+			> img {
+				padding: 0;
+				&:hover {
+					background-color: transparent;
+				}
+			}
+			&:hover > img,
+			&:focus-visible > img {
+				outline: 3px solid var(--background-color-hover);
+				outline-offset: -3px;
 			}
 		}
 		&:has(> .action_supprimer) {
