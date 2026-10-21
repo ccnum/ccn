@@ -30,7 +30,7 @@
 			<INCLURE{fond=noisettes/inc/publier_article_documents, id_objet=#GET{id_objet_document}, objet=article, ajax=documents} />
 		</div>
 
-		<form method="post" action="#ENV{action}" enctype="multipart/form-data" id="formulaire_publier_article" >
+		<form method="post" action="#ENV{action}" id="formulaire_publier_article" >
 			<div>
 				#ACTION_FORMULAIRE{#ENV{action}}
 				<input type="hidden" name="id_article" value="#ENV{id_article}" />

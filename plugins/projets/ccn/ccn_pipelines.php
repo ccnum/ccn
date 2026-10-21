@@ -101,6 +101,16 @@ function ccn_formulaire_charger($flux) {
 }
 
 function ccn_formulaire_fond($flux) {
+	// Envoi de fichiers suspendu (cf _CCN_UPLOADS_SUSPENDUS) : Apache refuse alors
+	// toute requête multipart, on remplace donc chaque formulaire qui en envoie
+	// (cœur, plugins, site public) par un message plutôt que de le laisser échouer.
+	if (_CCN_UPLOADS_SUSPENDUS && preg_match('/<form\b[^>]*enctype\s*=\s*["\']multipart\/form-data/i', $flux['data'])) {
+		$flux['data'] = '<div class="formulaire_spip formulaire_' . $flux['args']['form'] . '">'
+			. '<p class="reponse_formulaire reponse_formulaire_erreur" role="alert">' . _T('ccn:uploads_suspendus') . '</p>'
+			. '</div>';
+		return $flux;
+	}
+
 	// cf ccn_formulaire_charger : le cœur ne déplie le champ de confirmation qu'à la
 	// saisie d'un nouveau mot de passe, pas au choix du statut admin ou webmestre.
 	if (($flux['args']['form'] ?? '') === 'editer_auteur') {

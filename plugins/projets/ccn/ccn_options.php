@@ -98,3 +98,10 @@ define('_CCN_UPLOAD_TAILLE_MAX_MO', 100);
 if (!defined('_CCN_CIOIDC_LOG_COMPLET')) {
 	define('_CCN_CIOIDC_LOG_COMPLET', true);
 }
+
+// Envoi de fichiers suspendu (faille PHP sur les requêtes multipart) : via la
+// variable Docker CCN_UPLOADS_SUSPENDUS=true (docker-entrypoint.sh), qui fait
+// aussi refuser ces requêtes par Apache.
+if (!defined('_CCN_UPLOADS_SUSPENDUS')) {
+	define('_CCN_UPLOADS_SUSPENDUS', false);
+}
