@@ -1025,6 +1025,28 @@ position: relative;
 	padding: 0 var(--spacing-sm);
 	color: var(--color-gris-2);
 }
+/* editor.css met `border: none; outline: none` (!important) sur
+   .formulaire_spip input.text : sur le fond blanc de la sidebar, le gris très
+   clair du champ seul ne suffit pas à le repérer (contraste < 3:1). */
+.formulaire-editer-profil input.text {
+	border: 1px solid var(--color-gris-2) !important;
+	border-radius: 3px;
+}
+/* Le popup .publier-article-container est en overflow:hidden (sidebar.css),
+   le défilement étant d'habitude porté par les colonnes du formulaire de
+   publication : ce formulaire-ci n'en a pas, il faut un ascenseur propre. */
+.publier-article-form-wrapper:has(.formulaire-editer-profil) {
+	overflow-y: auto;
+	padding-bottom: var(--spacing-md);
+}
+.formulaire-editer-profil .boutons {
+	text-align: right;
+	padding: 0 1rem;
+}
+.formulaire-editer-profil input.text:focus-visible {
+	outline: solid 2px var(--color-tonic) !important;
+	outline-offset: 1px;
+}
 
 /* Pop-up de choix des classes d'un prof (formulaires/choisir_classes_ent.html) */
 .choisir-classes-ent {
