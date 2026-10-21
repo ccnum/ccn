@@ -1,26 +1,61 @@
 name: Rebuild Docker Images
 
-# Reconstruit chaque nuit les images dev et latest à partir du code déjà publié,
-# pour reprendre les correctifs de sécurité de l'image de base (PHP, Debian).
+# Reconstruit les images dev et latest quand une nouvelle version de PHP est publiée :
+# toutes les heures, compare la variable PHP_VERSION de l'image de base (FROM du
+# Dockerfile de la branche) à celle de notre image publiée (héritée de la base).
 # Pas de lint ni de nouveau tag de version : le code n'a pas changé.
+# Un déclenchement manuel reconstruit les deux images sans comparer.
 # Un pod ne prend la nouvelle image qu'à son redémarrage (imagePullPolicy: Always).
 
 on:
   schedule:
-    - cron: '0 20 * * *' # 22h en heure d'été, 21h en heure d'hiver
+    - cron: '17 * * * *'
   workflow_dispatch:
 
 jobs:
+  check:
+    runs-on: ubuntu-latest
+    outputs:
+      matrix: ${{ steps.compare.outputs.matrix }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+
+      - name: Compare PHP versions
+        id: compare
+        env:
+          CREDS: ${{ secrets.DOCKER_USERNAME }}:${{ secrets.DOCKER_PASSWORD }}
+          FORCE: ${{ github.event_name == 'workflow_dispatch' }}
+        run: |
+          set -euo pipefail
+          php_version() {
+            skopeo inspect --retry-times 3 --config --creds "$CREDS" "docker://docker.io/$1" \
+              | jq -r '.config.Env[] | select(startswith("PHP_VERSION=")) | sub("PHP_VERSION="; "")'
+          }
+          matrix='[]'
+          for pair in dev:dev main:latest; do
+            branch=${pair%%:*}
+            tag=${pair#*:}
+            base=$(git show "origin/$branch:Dockerfile" | awk '/^FROM/ { print $2; exit }')
+            base_version=$(php_version "$base")
+            current_version=$(php_version "erasme/spip-ccn:$tag" || true)
+            echo "$tag : PHP ${current_version:-inconnue}, $base : PHP $base_version"
+            if [ "$FORCE" = true ] || [ "$current_version" != "$base_version" ]; then
+              matrix=$(jq -c --arg branch "$branch" --arg tag "$tag" '. + [{branch: $branch, tag: $tag}]' <<< "$matrix")
+            fi
+          done
+          echo "matrix=$matrix" >> "$GITHUB_OUTPUT"
+
   spip:
+    needs: check
+    if: needs.check.outputs.matrix != '[]'
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
       matrix:
-        include:
-          - branch: dev
-            tag: dev
-          - branch: main
-            tag: latest
+        include: ${{ fromJSON(needs.check.outputs.matrix) }}
     steps:
       - name: Checkout
         uses: actions/checkout@v7
