@@ -75,9 +75,7 @@ function formulaires_public_publier_article_charger_dist(
 			// Texte par défaut posé à la création (fiche intervenant, cf
 			// genie/thematique_rentree_annee.php) : champ vide pour afficher le
 			// placeholder plutôt qu'un texte à effacer avant d'écrire.
-			$textes_par_defaut = [
-				_T('thematique:fiche_intervenant_texte_a_completer'),
-			];
+			$textes_par_defaut = [_T('thematique:fiche_intervenant_texte_a_completer')];
 			$valeurs['texte'] = in_array(trim($article['texte']), $textes_par_defaut, true) ? '' : $article['texte'];
 			$valeurs['id_rubrique'] = $article['id_rubrique'];
 			$valeurs['id_parent'] = $article['id_rubrique'];
@@ -139,6 +137,27 @@ function formulaires_public_publier_article_charger_dist(
 }
 
 /**
+ * Message d'erreur si l'auteur connecté n'a pas un rôle qui permet de publier
+ * (prof, intervenant, admin), vide sinon.
+ *
+ * @param int $id_auteur Auteur connecté (0 si session expirée)
+ * @param string|null $role Rôle de l'auteur (cf thematique_donner_role)
+ * @return string
+ */
+function public_publier_article_erreur_role($id_auteur, $role) {
+	if (!$id_auteur) {
+		return _T('thematique:publier_erreur_non_connecte');
+	}
+	if ($role === 'eleve') {
+		return _T('thematique:publier_erreur_eleve');
+	}
+	if (!$role) {
+		return _T('thematique:publier_erreur_sans_role');
+	}
+	return '';
+}
+
+/**
  * Vérifie les droits, la rubrique et les champs du formulaire de publication.
  *
  * @param int|string $id_rubrique Rubrique de publication
@@ -166,8 +185,8 @@ function formulaires_public_publier_article_verifier_dist(
 	// élève/visiteur n'a légitimement aucun cas d'usage ici (ni création, ni
 	// édition, ni réponse à une consigne).
 	$role_visiteur = thematique_donner_role(intval(session_get('id_auteur') ?? 0));
-	if (!$role_visiteur || $role_visiteur === 'eleve') {
-		return ['message_erreur' => _T('info_acces_interdit')];
+	if ($erreur_role = public_publier_article_erreur_role(intval(session_get('id_auteur') ?? 0), $role_visiteur)) {
+		return ['message_erreur' => $erreur_role];
 	}
 
 	$id_article_poste = intval(_request('id_article'));
@@ -175,7 +194,7 @@ function formulaires_public_publier_article_verifier_dist(
 	// cf la même vérification dans le charger : un id_article posté sans
 	// autorisation de modification ne doit rien pouvoir écrire.
 	if ($id_article_poste && !autoriser('modifier', 'article', $id_article_poste)) {
-		return ['message_erreur' => _T('info_acces_interdit')];
+		return ['message_erreur' => _T('thematique:publier_erreur_modifier_interdit')];
 	}
 
 	// id_consigne posté sans référencer une mission publiée existante (cf
@@ -185,7 +204,7 @@ function formulaires_public_publier_article_verifier_dist(
 	// écrit.
 	include_spip('thematique_fonctions');
 	if ($id_consigne && !thematique_consigne_valide($id_consigne)) {
-		return ['message_erreur' => _T('info_acces_interdit')];
+		return ['message_erreur' => _T('thematique:publier_erreur_mission_invalide')];
 	}
 
 	// À la création (pas une édition, cf $id_article_poste
@@ -199,7 +218,7 @@ function formulaires_public_publier_article_verifier_dist(
 	if (!$id_article_poste && $type_article !== 'ressources'
 		&& !thematique_auteur_peut_creer_dans_rubrique(session_get('id_auteur'), $id_rubrique)
 	) {
-		return ['message_erreur' => _T('info_acces_interdit')];
+		return ['message_erreur' => _T('thematique:publier_erreur_rubrique_interdite')];
 	}
 	if (!$id_article_poste && $type_article === 'consignes' && !$id_consigne
 		&& !thematique_rubrique_mission_valide($id_rubrique)
@@ -263,8 +282,8 @@ function formulaires_public_publier_article_traiter_dist(
 	// cf la même vérification dans _verifier_dist : revérifiée
 	// ici, _traiter_dist pouvant être invoqué indépendamment.
 	$role_visiteur = thematique_donner_role(intval($id_auteur ?? 0));
-	if (!$role_visiteur || $role_visiteur === 'eleve') {
-		return ['message_erreur' => _T('info_acces_interdit')];
+	if ($erreur_role = public_publier_article_erreur_role(intval($id_auteur ?? 0), $role_visiteur)) {
+		return ['message_erreur' => $erreur_role];
 	}
 
 	// Ceci est un système anti-spam : si on appuie plusieurs fois très vite sur "enregistrer un article",
@@ -293,7 +312,7 @@ function formulaires_public_publier_article_traiter_dist(
 		// cf la même vérification dans _verifier_dist : revérifiée
 		// ici, _traiter_dist pouvant être invoqué indépendamment.
 		if ($type_article !== 'ressources' && !thematique_auteur_peut_creer_dans_rubrique($id_auteur, $id_rubrique)) {
-			return ['message_erreur' => _T('info_acces_interdit')];
+			return ['message_erreur' => _T('thematique:publier_erreur_rubrique_interdite')];
 		}
 		if ($type_article === 'consignes' && !$id_consigne && !thematique_rubrique_mission_valide($id_rubrique)) {
 			return ['message_erreur' => _T('thematique:mission_rubrique_hors_annee')];
@@ -331,7 +350,7 @@ function formulaires_public_publier_article_traiter_dist(
 			// Création sans rubrique « Ressources » : id_parent posté aurait décidé
 			// seul de la rubrique (contrôle de rôle sauté pour ce type) — on refuse.
 			// En édition, id_parent est déjà figé à la rubrique de l'article.
-			return ['message_erreur' => _T('info_acces_interdit')];
+			return ['message_erreur' => _T('thematique:publier_erreur_ressources_introuvable')];
 		}
 	}
 	$res = formulaires_editer_objet_traiter('article', $id_article, $id_rubrique);
