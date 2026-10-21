@@ -40,12 +40,14 @@ du formulaire (thematique_peut_publier_dans_mot). ]
 				<:thematique:information_salle_des_profs:>
 			</li>
 			]
+			[(#SESSION{role}|thematique_peut_publier_ressource|oui)
 			<li onClick='callNouvelleRessource();'
 				class="select-option"
 				data-value="#ID_RUBRIQUE"
 			>
 				<:thematique:nouvelle_ressource:>
 			</li>
+			]
 			[(#SESSION{id_auteur}|thematique_peut_publier_dans_mot{blogs}|oui)
 			<li onClick='callEvenementCreer();'
 				class="select-option"

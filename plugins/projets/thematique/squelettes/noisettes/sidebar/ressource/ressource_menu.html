@@ -21,7 +21,7 @@
 						<:thematique:message_encadre_ressource:>
 					</div>
 					[(#CONST{_ANNEE_SCOLAIRE}|=={#ANNEE_SCOLAIRE_REELLE}|oui)
-					[(#SESSION{role}|thematique_role_publie|oui)
+					[(#SESSION{role}|thematique_peut_publier_ressource|oui)
 					<button onclick="callNouvelleRessource()"
 							class="bouton-lisere">
 						<:thematique:publier_bandeau_ressource:>

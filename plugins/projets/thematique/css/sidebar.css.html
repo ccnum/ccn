@@ -926,6 +926,8 @@ li a, li a:hover {
 		> a,
 		> .spip_document_ {
 			flex: 0 0 100%;
+			/* sinon l'élément flex garde la largeur de l'image (min-width:auto) */
+			min-width: 0;
 			text-align: center;
 			height: auto;
 			padding-bottom: 15px;
@@ -937,6 +939,15 @@ li a, li a:hover {
 				color: var(--color-hover);
 			}
 			> img {
+				/* image réduite à 1600 px (ajouter_document.html) : la règle
+				.popup .spip_documents img ne s'applique pas dans la sidebar */
+				max-width: 100%;
+				/* toute la largeur du cadre ; seule une image en hauteur (portrait)
+				est bornée, pour rester presque entière à l'écran. Largeur auto
+				pour garder les proportions. Borner à la zone des onglets
+				rétrécissait aussi les images en largeur. */
+				max-height: 80vh;
+				width: auto;
 				height: auto !important;
 				display: block;
 				padding: 15px 0;
@@ -945,6 +956,27 @@ li a, li a:hover {
 					background-color: var(--background-color-hover);
 					color: var(--color-hover);
 				}
+			}
+		}
+		/* Photo (type posé par ajouter_document.html) : collée au cadre, sans
+		la bande de 15 px au-dessus et en dessous, et contour bleu au survol
+		plutôt qu'un fond, qui ne se voyait que sur ces bandes. Les icônes
+		(PDF, autres formats) gardent le fond bleu. */
+		> a[type^="image/"] {
+			padding-bottom: 0;
+			&:hover {
+				background-color: transparent;
+			}
+			> img {
+				padding: 0;
+				&:hover {
+					background-color: transparent;
+				}
+			}
+			&:hover > img,
+			&:focus-visible > img {
+				outline: 3px solid var(--background-color-hover);
+				outline-offset: -3px;
 			}
 		}
 		&:has(> .action_supprimer) {
