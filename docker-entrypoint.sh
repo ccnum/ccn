@@ -41,11 +41,12 @@ if [ "${APACHE_PORT}" != "80" ]; then
 fi
 
 # Faille PHP dans l'analyse des requêtes multipart/form-data (CVE-2026-109618,
-# CVE-2026-109619) : CCN_UPLOADS_SUSPENDUS=true fait refuser par Apache toute
-# requête multipart, avant que PHP ne la lise, en attendant l'image corrigée.
-# Les formulaires d'envoi de fichiers sont alors remplacés par un message côté
-# SPIP (cf _CCN_UPLOADS_SUSPENDUS plus bas et ccn_formulaire_fond).
-if [ "${CCN_UPLOADS_SUSPENDUS:-false}" = true ]; then
+# CVE-2026-109619) : Apache refuse toute requête multipart, avant que PHP ne la
+# lise, en attendant l'image corrigée. Actif par défaut (CCN_UPLOADS_SUSPENDUS=false
+# pour rétablir les envois). Les formulaires d'envoi de fichiers sont alors
+# remplacés par un message côté SPIP (cf _CCN_UPLOADS_SUSPENDUS plus bas et
+# ccn_formulaire_fond).
+if [ "${CCN_UPLOADS_SUSPENDUS:-true}" != false ]; then
 	cat > /etc/apache2/conf-enabled/ccn_uploads_suspendus.conf << 'EOF'
 <If "req('Content-Type') =~ m#^\s*multipart/#i">
 	Require all denied
@@ -276,7 +277,7 @@ define('_CCN_PROJET_ACTIVE', '${CCN_PROJET_ACTIVE:-true}' !== 'false');
 // JSON complet des attributs ENT dans cioidc.log (cf plugins/projets/ccn/inc/ccn_cioidc.php)
 define('_CCN_CIOIDC_LOG_COMPLET', '${CCN_CIOIDC_LOG_COMPLET:-true}' !== 'false');
 // formulaires d'envoi de fichiers remplacés par un message (cf plugins/projets/ccn/ccn_pipelines.php)
-define('_CCN_UPLOADS_SUSPENDUS', '${CCN_UPLOADS_SUSPENDUS:-false}' === 'true');
+define('_CCN_UPLOADS_SUSPENDUS', '${CCN_UPLOADS_SUSPENDUS:-true}' !== 'false');
 ?>
 MAINEOF
 chown www-data:www-data config/mes_options.php

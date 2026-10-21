@@ -27,7 +27,7 @@ spip:
     SPIP_ADMIN_EMAIL: "admin@example.com"
     DUMP_MEDIA: ""
     DUMP_DB: ""
-    CCN_UPLOADS_SUSPENDUS: "false"  # "true" : envoi de fichiers suspendu (faille PHP multipart)
+    CCN_UPLOADS_SUSPENDUS: "true"  # "false" pour rétablir l'envoi de fichiers (suspendu : faille PHP multipart)
     #SPIP_VERSION_SITE: "fictions" # is not enabled will used thematique plugin
 
 ingress:
