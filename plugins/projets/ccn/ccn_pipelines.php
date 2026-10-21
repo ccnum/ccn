@@ -81,5 +81,36 @@ function ccn_formulaire_verifier($flux) {
 }
 
 function ccn_formulaire_charger($flux) {
-    return $flux;
+	// Édition d'un auteur dans /ecrire : le cœur
+	// SPIP ne génère le champ « votre mot de passe » (confirmation exigée pour créer
+	// ou promouvoir un admin) que si l'auteur est déjà admin. À la création, ou pour
+	// passer un rédacteur admin, l'enregistrement échouait toujours une première
+	// fois. Il est désormais généré, masqué, et déplié par le JS du formulaire (cf
+	// ccn_formulaire_fond) au choix du statut admin ou à la saisie d'un mot de passe.
+	if (($flux['args']['form'] ?? '') === 'editer_auteur'
+		&& isset($flux['data']['config'])
+		&& is_array($flux['data']['config'])
+	) {
+		$id_auteur = intval($flux['args']['args'][0] ?? 0);
+		include_spip('inc/autoriser');
+		if (!$id_auteur || autoriser('modifier', 'auteur', $id_auteur, null, ['statut' => '0minirezo'])) {
+			$flux['data']['config']['maybe_confirm_pass'] = ' ';
+		}
+	}
+	return $flux;
+}
+
+function ccn_formulaire_fond($flux) {
+	// cf ccn_formulaire_charger : le cœur ne déplie le champ de confirmation qu'à la
+	// saisie d'un nouveau mot de passe, pas au choix du statut admin ou webmestre.
+	if (($flux['args']['form'] ?? '') === 'editer_auteur') {
+		$flux['data'] .= "<script>
+	jQuery('select#statut, input#webmestre').on('change', function() {
+		if (jQuery('select#statut').val() === '0minirezo' || jQuery('input#webmestre').is(':checked')) {
+			jQuery('.confirm-current-password:hidden').show('fast');
+		}
+	});
+</script>";
+	}
+	return $flux;
 }

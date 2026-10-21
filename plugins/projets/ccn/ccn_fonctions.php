@@ -87,3 +87,22 @@ function ccn_url_lecteur_vimeo($fichier) {
 	}
 	return 'https://player.vimeo.com/video/' . $m[1] . (empty($m[2]) ? '' : '?h=' . $m[2]);
 }
+
+/**
+ * Rubriques restreintes postées par le formulaire d'auteur (restreintes[] :
+ * « rubrique|12 » ou « 12 »), au format attendu par le sélecteur de rubriques
+ * (« rubrique|12 »), cf formulaires/inc-instituer_auteur.html.
+ *
+ * @param mixed $restreintes Valeur postée
+ * @return array
+ */
+function ccn_restreintes_postees($restreintes) {
+	$selected = [];
+	foreach ((array) $restreintes as $valeur) {
+		$id_rubrique = intval(str_starts_with((string) $valeur, 'rubrique|') ? substr((string) $valeur, 9) : $valeur);
+		if ($id_rubrique > 0) {
+			$selected[] = 'rubrique|' . $id_rubrique;
+		}
+	}
+	return array_values(array_unique($selected));
+}
