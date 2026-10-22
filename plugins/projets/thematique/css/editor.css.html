@@ -717,6 +717,7 @@ li.editer p.explication, .editer_pgp, .editer_bio, .editer_liens_sites, .saisie_
 
 .barre-actions-article .bouton-modifier-container {
 	padding: 0;
+	gap: 0.6rem;
 }
 
 .barre-actions-article .sidebar-reaction-container {
@@ -746,6 +747,17 @@ li.editer p.explication, .editer_pgp, .editer_bio, .editer_liens_sites, .saisie_
     width: 1rem;
     margin-right: 0.2rem;
     background-color: var(--color-tonic);
+}
+
+/* Variante avec le style des boutons Publier/Dépublier (bouton-lisere),
+   ex. en tête d'un jalon. */
+.bouton-modifier-article.bouton-lisere {
+	height: auto;
+	color: inherit;
+	font-size: 0.85rem;
+}
+.bouton-modifier-article.bouton-lisere .icon {
+	background-color: currentColor;
 }
 
 /* Idem, mais sur le texte de la consigne : le texte (qui peut

@@ -1,0 +1,19 @@
+[(#REM)
+Bouton Publier ou Dépublier d'un jalon, affiché en tête (à côté de Modifier)
+et en bas de onglet_description_jalon.html. Publier n'apparaît que si le
+jalon a un texte. Paramètre attendu : id_article.
+]
+<BOUCLE_jalon_publication(ARTICLES){id_article}{tout}>
+[(#STATUT|=={publie}|oui)
+	<div class="ajax">
+		#FORMULAIRE_DEPUBLIER_ARTICLE{#ID_ARTICLE}
+	</div>
+]
+[(#STATUT|=={publie}|non)
+	[(#TEXTE|oui)
+		<div class="ajax">
+			#FORMULAIRE_PUBLIER_ARTICLE{#ID_ARTICLE}
+		</div>
+	]
+]
+</BOUCLE_jalon_publication>

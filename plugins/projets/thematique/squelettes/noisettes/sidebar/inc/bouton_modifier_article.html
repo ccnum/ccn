@@ -1,7 +1,8 @@
 [(#REM)
 Bouton "Modifier" du titre d'un article (mission/réponse/billet), factorisé
 depuis header_sidebar.html/header_reponse_sidebar.html/header_blog.html.
-Paramètres attendus : id_article, type_objet.
+Paramètres attendus : id_article, type_objet ; classe (optionnel) ajoutée
+au bouton, ex. bouton-lisere pour le style des boutons Publier/Dépublier.
 Le clic est géré en JS par délégation (classe js-call-modifier-article,
 cf controleurs.js) plutôt qu'un onclick inline : sur ce SPIP, une balise
 entre parenthèses littérales dans le texte affiché par un bloc
@@ -15,7 +16,7 @@ compilation de ce bloc REM lui-même.
 #SET{annee_active, #ENV{id_article}|thematique_annee_article|thematique_annee_est_passee|non}
 [(#GET{peut_modifier}|et{#GET{annee_active}})
 <button type="button" 
-        class="bouton-modifier-article btn-reset js-call-modifier-article" 
+        class="bouton-modifier-article btn-reset js-call-modifier-article[ (#ENV{classe})]" 
         data-id-article="#ENV{id_article}" 
         data-type-objet="#ENV{type_objet}"
 >

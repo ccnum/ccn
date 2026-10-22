@@ -1,7 +1,8 @@
-[(#REM) Modifier et réactions sur une même ligne (cf .barre-actions-article). ]
+[(#REM) Modifier, Publier/Dépublier et réactions sur une même ligne (cf .barre-actions-article). ]
 <div class="barre-actions-article">
     <div class="bouton-modifier-container">
-        <INCLURE{fond=noisettes/sidebar/inc/bouton_modifier_article, id_article=#ID_ARTICLE, type_objet=#ENV{est_debut}|=={true}|?{cap_sur_l_annee,la_rencontre}} />
+        <INCLURE{fond=noisettes/sidebar/inc/bouton_modifier_article, id_article=#ID_ARTICLE, type_objet=#ENV{est_debut}|=={true}|?{cap_sur_l_annee,la_rencontre}, classe=bouton-lisere} />
+        <INCLURE{fond=noisettes/sidebar/inc/boutons_publication_jalon, id_article=#ID_ARTICLE} />
     </div>
     <div class="sidebar-reaction-container">
         [(#INCLURE{fond=inclure/favoris_ccn, objet=article, id_objet=#ID_ARTICLE, ajax})]
@@ -25,18 +26,7 @@
         </div>
         <div style="display: flex; justify-content: end;">
             <div style="width: fit-content;">
-                [(#STATUT|=={publie}|oui)
-                    <div class="ajax">
-                        #FORMULAIRE_DEPUBLIER_ARTICLE{#ID_ARTICLE}
-                    </div>
-                ]
-                [(#STATUT|=={publie}|non)
-                    [(#TEXTE|oui)
-                        <div class="ajax">
-                            #FORMULAIRE_PUBLIER_ARTICLE{#ID_ARTICLE}
-                        </div>
-                    ]
-                ]
+                <INCLURE{fond=noisettes/sidebar/inc/boutons_publication_jalon, id_article=#ID_ARTICLE} />
             </div>
         </div>
     </div>
