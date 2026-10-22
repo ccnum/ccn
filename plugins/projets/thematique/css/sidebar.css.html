@@ -1790,6 +1790,11 @@ coller juste après le texte. */
 	background-color: inherit !important;
 }
 
+/* Le nom de la classe est déjà écrit sous l'icône : pas de tooltip au survol. */
+.image-classe-dans-reponse > .logo > .logo_menu_classe::after {
+	content: none;
+}
+
 /* _sidebarFocusFirst() (controleurs.js) donne automatiquement le focus au
 premier élément interactif du panneau à l'ouverture d'une réponse, qui se
 trouve être cette icône de classe (role="button" réutilisé depuis le menu
