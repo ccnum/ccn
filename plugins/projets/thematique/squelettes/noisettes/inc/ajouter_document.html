@@ -19,7 +19,7 @@
 			]
 			[(#DISTANT|=={oui}|oui)
 				[(#VIMEO_STATUT|=={disponible}|oui)
-					#SET{embed_video, #FICHIER|oembed}
+					#SET{embed_video, #FICHIER|oembed{380,380}}
 					[(#GET{embed_video}|match{iframe}|non)
 						[(#REM) Le statut Vimeo est "disponible" mais l'API oEmbed de Vimeo
 						n'a pas encore le lecteur prêt (léger décalage juste après la fin
