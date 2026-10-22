@@ -1607,7 +1607,14 @@ function showSidebar({zoomTimeline = true} = {}) {
 	updateAllConnecteurs();
 }
 
+function fermerPopupDEditionDeTexte() {
+	if (window.cQuery && typeof window.cQuery.fn.cancelcrayon === 'function') {
+		window.cQuery('#sidebar .crayon-has').cancelcrayon();
+	}
+}
+
 function closeSidebar() {
+	fermerPopupDEditionDeTexte()
 	$('body').removeClass('hasSidebarOpen hasSidebarExpanded hasLateralSidebarExpanded sidebarNoTimelineZoom');
 	$('#sidebar').removeClass('show').attr('aria-hidden', 'true');
 	$('#menu_bas .logo a').not('#menu-timeline .logo a').removeClass('selected');
