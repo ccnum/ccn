@@ -99,10 +99,9 @@ if (!defined('_CCN_CIOIDC_LOG_COMPLET')) {
 	define('_CCN_CIOIDC_LOG_COMPLET', true);
 }
 
-// Envoi de fichiers suspendu (faille PHP sur les requêtes multipart) : actif par
-// défaut dans l'image Docker, CCN_UPLOADS_SUSPENDUS=false pour rétablir les envois
-// (docker-entrypoint.sh, qui fait aussi refuser ces requêtes par Apache). Hors
-// Docker (ddev), sans effet.
+// Envoi de fichiers suspendu (faille PHP sur les requêtes multipart) :
+// CCN_UPLOADS_SUSPENDUS=true dans l'image Docker (docker-entrypoint.sh, qui fait
+// aussi refuser ces requêtes par Apache). Hors Docker (ddev), sans effet.
 if (!defined('_CCN_UPLOADS_SUSPENDUS')) {
 	define('_CCN_UPLOADS_SUSPENDUS', false);
 }
