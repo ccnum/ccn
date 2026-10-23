@@ -3,8 +3,8 @@
 	identique hormis le style du wrapper et le cas Vimeo (cf plus bas). Le dist fixe la hauteur par un
 	padding-bottom en pourcentage, calcule sur la largeur du parent et non du
 	wrapper : une video verticale (telephone) prenait alors 1,8 fois la largeur
-	de la popup en hauteur. Ici aspect-ratio garde les proportions et la largeur
-	est plafonnee pour que la hauteur ne depasse pas 70vh.
+	de la popup en hauteur. Ici aspect-ratio garde les proportions et les deux
+	dimensions sont bornees a 380px (et a 70vh en hauteur).
 ]<BOUCLE_video(DOCUMENTS types_documents) {media=video} {id_document=#ENV{id,#ENV{id_document}}} {inclus=embed} {tout}>[
 (#REM) on trouvera plusieurs variable de hauteur/largeur
 - les balises #HAUTEUR et #LARGEUR
@@ -24,7 +24,7 @@ de passe), repli sur le lecteur Vimeo direct dans le wrapper ci-dessous. ]
 #SET{lecteur_vimeo,#FICHIER|ccn_url_lecteur_vimeo}
 #SET{oembed_vimeo,''}
 <BOUCLE_vimeo(CONDITION){si #GET{lecteur_vimeo}}>
-#SET{oembed_vimeo,#INCLURE{fond=modeles/oembed,url=#FICHIER,id_document=#ID_DOCUMENT,maxwidth=800,maxheight=600}|trim}
+#SET{oembed_vimeo,#INCLURE{fond=modeles/oembed,url=#FICHIER,id_document=#ID_DOCUMENT,maxwidth=380,maxheight=380}|trim}
 </BOUCLE_vimeo>
 [(#GET{oembed_vimeo})]
 <BOUCLE_pas_oembed(CONDITION){si #GET{oembed_vimeo}|non}>
@@ -33,7 +33,8 @@ de passe), repli sur le lecteur Vimeo direct dans le wrapper ci-dessous. ]
   (#ID_DOCUMENT|medias_modele_document_standard_attributs{video})
 ]>
 <figure class="spip_doc_inner">
-<div class="video-intrinsic-wrapper" style='width:min(#GET{largeur}px, calc(70vh * [(#GET{largeur}|div{#GET{hauteur}}|round{4})]));max-width:100%;aspect-ratio:#GET{largeur} / #GET{hauteur};position:relative;'>
+#SET{ratio,#GET{largeur}|div{#GET{hauteur}}|round{4}}
+<div class="video-intrinsic-wrapper" style='width:min(#GET{largeur}px, 380px, calc(min(380px, 70vh) * #GET{ratio}));max-width:100%;aspect-ratio:#GET{largeur} / #GET{hauteur};position:relative;'>
 	<div class="video-wrapper" style="position: absolute;top:0;left:0;width:100%;height:100%;">
 		[<iframe src="(#GET{lecteur_vimeo}|attribut_url)" style="width:100%;height:100%;border:0;" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen[ title="(#TITRE|textebrut|attribut_html)"]></iframe>]
 		<BOUCLE_pas_vimeo(CONDITION){si #GET{lecteur_vimeo}|non}>

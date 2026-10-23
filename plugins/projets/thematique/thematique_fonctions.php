@@ -2057,7 +2057,7 @@ function thematique_nom_auteur_commentaire($id_auteur) {
 }
 
 /**
- * Format du nom d'auteur d'un commentaire à partir des champs nom et
+ * Format du nom d'auteur d'un commentaire (sans le rôle Enseignant/Élève) à partir des champs nom et
  * nom_complet de spip_auteurs — partagé par
  * thematique_nom_auteur_commentaire() et l'arbre des commentaires forumv2
  * (une seule requête jointe, sans passer par la fonction ci-dessus).
@@ -2069,6 +2069,18 @@ function thematique_nom_auteur_commentaire($id_auteur) {
 function thematique_formater_nom_commentaire($nom, $nom_complet) {
 	$nom = trim((string) $nom);
 	$nom_complet = trim((string) $nom_complet);
+	// Rôle Enseignant/Élève (cf thematique_cioidc_role_affiche) non affiché
+	// dans un commentaire : seuls la classe et le collège suivent le nom.
+	foreach (['Enseignant', _T('thematique:cioidc_role_eleve'), 'Eleve'] as $role) {
+		if ($nom === $role) {
+			$nom = '';
+			break;
+		}
+		if (str_starts_with($nom, $role . ' - ')) {
+			$nom = substr($nom, strlen($role . ' - '));
+			break;
+		}
+	}
 	if ($nom_complet === '') {
 		return $nom;
 	}

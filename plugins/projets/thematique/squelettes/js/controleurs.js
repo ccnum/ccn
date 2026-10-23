@@ -1608,6 +1608,10 @@ function showSidebar({zoomTimeline = true} = {}) {
 }
 
 function closeSidebar() {
+	// annule un crayon resté ouvert, qui sinon reste affiché par-dessus la page
+	if (window.cQuery && typeof window.cQuery.fn.cancelcrayon === 'function') {
+		window.cQuery('#sidebar .crayon-has').cancelcrayon();
+	}
 	$('body').removeClass('hasSidebarOpen hasSidebarExpanded hasLateralSidebarExpanded sidebarNoTimelineZoom');
 	$('#sidebar').removeClass('show').attr('aria-hidden', 'true');
 	$('#menu_bas .logo a').not('#menu-timeline .logo a').removeClass('selected');

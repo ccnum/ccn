@@ -939,14 +939,11 @@ li a, li a:hover {
 				color: var(--color-hover);
 			}
 			> img {
-				/* image réduite à 1600 px (ajouter_document.html) : la règle
-				.popup .spip_documents img ne s'applique pas dans la sidebar */
-				max-width: 100%;
-				/* toute la largeur du cadre ; seule une image en hauteur (portrait)
-				est bornée, pour rester presque entière à l'écran. Largeur auto
-				pour garder les proportions. Borner à la zone des onglets
-				rétrécissait aussi les images en largeur. */
-				max-height: 80vh;
+				/* aperçu borné à 380 x 380 px sans déformation (image réduite à
+				760 px pour les écrans haute densité, ajouter_document.html) : la
+				règle .popup .spip_documents img ne s'applique pas dans la sidebar */
+				max-width: min(100%, 380px);
+				max-height: 380px;
 				width: auto;
 				height: auto !important;
 				display: block;
@@ -1788,6 +1785,11 @@ coller juste après le texte. */
 
 .image-classe-dans-reponse > .logo > .logo_menu_classe {
 	background-color: inherit !important;
+}
+
+/* Le nom de la classe est déjà écrit sous l'icône : pas de tooltip au survol. */
+.image-classe-dans-reponse > .logo > .logo_menu_classe::after {
+	content: none;
 }
 
 /* _sidebarFocusFirst() (controleurs.js) donne automatiquement le focus au
