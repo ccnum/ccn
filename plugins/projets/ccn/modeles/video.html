@@ -33,7 +33,8 @@ de passe), repli sur le lecteur Vimeo direct dans le wrapper ci-dessous. ]
   (#ID_DOCUMENT|medias_modele_document_standard_attributs{video})
 ]>
 <figure class="spip_doc_inner">
-<div class="video-intrinsic-wrapper" style='width:min(#GET{largeur}px, 380px, calc(380px * [(#GET{largeur}|div{#GET{hauteur}}|round{4})]), calc(70vh * [(#GET{largeur}|div{#GET{hauteur}}|round{4})]));max-width:100%;aspect-ratio:#GET{largeur} / #GET{hauteur};position:relative;'>
+#SET{ratio,#GET{largeur}|div{#GET{hauteur}}|round{4}}
+<div class="video-intrinsic-wrapper" style='width:min(#GET{largeur}px, 380px, calc(min(380px, 70vh) * #GET{ratio}));max-width:100%;aspect-ratio:#GET{largeur} / #GET{hauteur};position:relative;'>
 	<div class="video-wrapper" style="position: absolute;top:0;left:0;width:100%;height:100%;">
 		[<iframe src="(#GET{lecteur_vimeo}|attribut_url)" style="width:100%;height:100%;border:0;" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen[ title="(#TITRE|textebrut|attribut_html)"]></iframe>]
 		<BOUCLE_pas_vimeo(CONDITION){si #GET{lecteur_vimeo}|non}>
