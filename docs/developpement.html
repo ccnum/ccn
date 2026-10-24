@@ -120,7 +120,7 @@ vendor/bin/phpstan analyse <span class="c"># analyse statique (niveau dans phpst
 				<thead><tr><th>Symptôme</th><th>Piste</th></tr></thead>
 				<tbody>
 					<tr><td>Une modification de squelette n’a pas d’effet.</td><td>Vider <code>sites/&lt;site&gt;/tmp/cache/</code>. Vérifier aussi que le fichier modifié est bien celui qui est exécuté (par exemple, forumv2 et non l’ancien forum).</td></tr>
-					<tr><td>Classes, consignes ou pictos absents.</td><td>Vérifier la rubrique racine de l’année active, son titre et ses sous-rubriques avec leurs mots-clés (<a href="contenus.html#structure">structure par année</a>).</td></tr>
+					<tr><td>Classes, consignes ou pictos absents.</td><td>Vérifier la rubrique racine de l’année active, son titre et ses sous-rubriques avec leurs mots-clés (<a href="contenus.html#structure">structure des rubriques</a>).</td></tr>
 					<tr><td>Un utilisateur n’a pas le bon rôle.</td><td>Vérifier ses liens vers les rubriques <code>travail_en_cours</code> ou <code>consignes</code> de l’année active (<a href="contenus.html#roles">rôles</a>). Le rôle est recalculé à la connexion : se déconnecter puis se reconnecter.</td></tr>
 					<tr><td>La page d’accueil reste vide, erreur JSON dans la console.</td><td>Ouvrir <code>spip.php?page=json&amp;mode=demarrage</code> et chercher la sortie parasite, souvent un <code>#SET{x, [(...)]}</code>.</td></tr>
 					<tr><td>Un libellé suivi de <code>}</code> apparaît dans la page.</td><td>Item de langue passé en argument de balise : utiliser <code>#VAL{module:cle}|_T</code>.</td></tr>

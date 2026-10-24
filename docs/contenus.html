@@ -18,7 +18,7 @@
 				<li><a href="contenus.html" aria-current="page">Contenus et rôles</a>
 					<ul class="sub">
 						<li><a href="#glossaire">Glossaire</a></li>
-						<li><a href="#structure">Structure par année</a></li>
+						<li><a href="#structure">Structure des rubriques</a></li>
 						<li><a href="#types">Types de contenus</a></li>
 						<li><a href="#roles">Rôles</a></li>
 						<li><a href="#rentree">Cycle de rentrée</a></li>
@@ -52,23 +52,31 @@
 			</table>
 		</div>
 
-		<h2 id="structure">Structure par année</h2>
-		<p>Chaque année scolaire a sa rubrique racine, titrée par l’année de rentrée (<code>2026</code>, pas <code>2026-2027</code>). L’année active est donnée par <code>_ANNEE_SCOLAIRE</code> (voir <a href="architecture.html#annee">Architecture</a>).</p>
-<pre class="tree"><code>2026                          rubrique racine de l’année
+		<h2 id="structure">Structure des rubriques</h2>
+		<p>Deux familles de rubriques racines coexistent : celles d’une <strong>année scolaire</strong>, recréées à chaque rentrée, et des rubriques <strong>permanentes</strong>, créées une fois pour toutes à l’installation du plugin (<code>thematique_configurer_rubriques()</code>).</p>
+<pre class="tree"><code><span class="c"># Une racine par année, titrée par l’année de rentrée</span>
+2026
 ├── Consignes                 mot-clé consignes
 │   ├── Cap sur l’année       jalon (15 septembre)
 │   ├── La Rencontre          jalon (15 juin suivant)
-│   └── …consignes des intervenants
-├── Travail des classes       mot-clé travail_en_cours
-│   ├── Classe A              réponses de la classe
-│   └── Classe B
-├── Ressources                mot-clé ressources
-├── Agenda                    mot-clé blogs
-└── Salle des profs           mot-clé evenements
+│   └── On tourne 2026        projet (nom du groupe ENT) : consignes de l’intervenant
+└── Travail des classes       mot-clé travail_en_cours
+    ├── 4ème 2 - Collège …    réponses de la classe
+    └── …
 
-Intervenants                  rubrique racine, hors années
-└── …fiches des intervenants</code></pre>
-		<p>Les rubriques « Consignes » et « Travail des classes » sont créées automatiquement à la rentrée. Les autres se créent dans l’espace privé selon les besoins du projet.</p>
+<span class="c"># Rubriques permanentes, hors années</span>
+Ressources                    mot-clé ressources
+├── Méthodologie
+├── Pédagogie
+└── Thématique
+Agenda                        mot-clé blogs
+Blog pédagogique              mot-clé evenements (affiché « Salle des profs »)
+Contenu éditorial             mot-clé images_background
+Intervenants                  fiches des intervenants</code></pre>
+		<p>La racine d’une année est titrée <code>2026</code>, pas <code>2026-2027</code>. Ses rubriques « Consignes » et « Travail des classes » sont créées automatiquement à la rentrée (voir <a href="#rentree">Cycle de rentrée</a>), les projets et les classes à la connexion ENT (voir <a href="sso.html">Connexion ENT</a>).</p>
+		<div class="callout">
+			<p>Les rubriques permanentes ne sont pas découpées par année : c’est la <strong>date des articles</strong> qui les range. Le pipeline <code>pre_boucle</code> limite les boucles <code>ARTICLES</code> à la période de l’année scolaire active (voir <a href="architecture.html#annee">Année scolaire</a>).</p>
+		</div>
 
 		<h2 id="types">Types de contenus</h2>
 		<p>Le type d’un contenu ne dépend pas de son titre mais du <strong>mot-clé porté par sa rubrique</strong>, ou par la plus proche rubrique parente qui en a un. C’est ce que résout <code>thematique_type_objet_rubrique()</code>.</p>
