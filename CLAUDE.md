@@ -4,8 +4,8 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project overview
 
-Monorepo SPIP (CMS PHP) hébergeant plusieurs sites multisite pour le Conseil de la Culture à
-Nantes (CCN) / laclasse.com. C'est un **cœur SPIP** (`ecrire/`, `prive/`, `squelettes-dist/`,
+Monorepo SPIP (CMS PHP) hébergeant plusieurs sites multisite pour les Classes Culturelles
+Numériques (CCN) de l'ENT laclasse.com, projet d'Erasme (Métropole de Lyon). C'est un **cœur SPIP** (`ecrire/`, `prive/`, `squelettes-dist/`,
 `plugins-dist/`) + un jeu de **plugins maison** dans `plugins/` (le code sur lequel on travaille
 réellement — les autres répertoires sont le framework SPIP, ne pas les modifier sauf besoin
 explicite).
