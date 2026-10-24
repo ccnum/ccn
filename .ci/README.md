@@ -175,13 +175,12 @@ fausses sans que rien ne le signale.
 
 Pour chaque `<code>` en ligne des pages (les blocs `<pre>`, exemples et
 arborescences, sont ignorés) :
-- un chemin (contient `/` ou finit par une extension connue) doit exister,
-  à la racine du dépôt ou relatif à un plugin de `plugins/projets/` (ou à
+- un chemin (contient `/` ou finit par une extension connue) doit être
+  versionné, à la racine du dépôt ou relatif à un plugin de `plugins/projets/` (ou à
   son `squelettes/`) ; `*` est traité comme un glob ;
 - un identifiant `snake_case` (fonction, pipeline, mot-clé, champ, plugin)
   ou une `CONSTANTE` doit apparaître comme mot dans le code (plugins maison,
-  `ecrire/`, `docker-entrypoint.sh`, `.env.example`, `helm/`, `.ci/`,
-  `.github/`) ; suivi de `()`, il doit être défini par `function nom(`.
+  `docker-entrypoint.sh`, `.env.example`, `helm/`, `.ci/`, `.github/`) ; suivi de `()`, il doit être défini par `function nom(`.
 
 Il vérifie aussi que chaque variable de `.env.example` est documentée dans
 `docs/deploiement.html`.
@@ -195,10 +194,17 @@ Usage local :
 python3 .ci/check_docs.py
 ```
 
+Seuls les fichiers versionnés (`git ls-files`) comptent, pour qu'un run local
+donne le même résultat que la CI : le cœur SPIP (`ecrire/`, `prive/`,
+`plugins-dist/`…) est installé par le Dockerfile, ignoré par git et donc
+absent du checkout de la CI, même s'il est présent dans une copie locale.
+
 Pas de baseline : une référence introuvable est toujours une page à corriger,
-dans le même commit que la modif de code. Seule exception, un fichier généré
-au démarrage du conteneur (ex. `config/_config_cioidc.php`) : l'ajouter à
-`GENERES` dans le script.
+dans le même commit que la modif de code. Seules exceptions, ce qui vient du
+cœur SPIP ou n'est pas versionné (fichier généré au démarrage du conteneur
+comme `config/_config_cioidc.php`, `IMG/`, `.ddev/config.yaml`, l'URL
+`/ecrire`, la fonction `_T()`) : l'ajouter à `HORS_DEPOT` ou `FONCTIONS_SPIP`
+dans le script.
 
 # check_html_duplication.js
 
