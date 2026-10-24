@@ -7,6 +7,8 @@ This monorepo contains all the plugins for SPIP CMS :
 - Thematique
 - Fictions
 
+📖 **Documentation technique : [ccnum.github.io/ccn](https://ccnum.github.io/ccn/)** (sources dans [`docs/`](docs/))
+
 
 ## 🚀 Quickstart
 

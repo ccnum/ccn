@@ -15,6 +15,8 @@
 		<nav>
 			<ul>
 				<li><a href="index.html">Présentation</a></li>
+				<li><a href="contenus.html">Contenus et rôles</a></li>
+				<li><a href="sso.html">Connexion ENT</a></li>
 				<li><a href="architecture.html">Architecture</a></li>
 				<li><a href="developpement.html">Développement</a></li>
 				<li><a href="deploiement.html" aria-current="page">Déploiement</a>
@@ -59,7 +61,7 @@ docker-compose up</code></pre>
 					<tr><td><code>PROJET</code></td><td><code>laclasse</code> par défaut, ou <code>edifice</code>.</td></tr>
 					<tr><td><code>APACHE_PORT</code></td><td>Port d’écoute d’Apache dans le conteneur.</td></tr>
 					<tr><td><code>VIMEO_ACCESS_TOKEN</code></td><td>Jeton d’accès à l’API Vimeo.</td></tr>
-					<tr><td><code>CCN_PROJET_ACTIVE</code></td><td><code>false</code> si le projet ne repart pas d’une année sur l’autre : désactive la création automatique de la structure de rentrée.</td></tr>
+					<tr><td><code>CCN_PROJET_ACTIVE</code></td><td><code>false</code> pour un projet archivé, qui ne repart pas d’une année sur l’autre : plus de création automatique de la structure de rentrée, et seuls les webmestres peuvent se connecter via l’ENT.</td></tr>
 				</tbody>
 			</table>
 		</div>

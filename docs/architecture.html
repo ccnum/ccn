@@ -15,10 +15,13 @@
 		<nav>
 			<ul>
 				<li><a href="index.html">Présentation</a></li>
+				<li><a href="contenus.html">Contenus et rôles</a></li>
+				<li><a href="sso.html">Connexion ENT</a></li>
 				<li><a href="architecture.html" aria-current="page">Architecture</a>
 					<ul class="sub">
 						<li><a href="#arborescence">Arborescence</a></li>
 						<li><a href="#squelettes">Squelettes et popups</a></li>
+						<li><a href="#json">Données JSON</a></li>
 						<li><a href="#cache-php">Résolutions en PHP</a></li>
 						<li><a href="#role">Rôle de session</a></li>
 						<li><a href="#annee">Année scolaire</a></li>
@@ -71,6 +74,25 @@
 			<p><strong>Deux forums coexistent.</strong> L’ancien (<code>noisettes/ajax/article-forum-detail.html</code>, <code>noisettes/inc/forum.html</code>) et <strong>forumv2</strong> (<code>noisettes/inc/forumv2/*</code>, câblé depuis <code>noisettes/sidebar/onglet_commentaires.html</code>). C’est forumv2 qui est en service sur les pages article : vérifiez quel chemin est exécuté avant de modifier l’un des deux.</p>
 		</div>
 
+		<h2 id="json">Données JSON de la page d’accueil</h2>
+		<p>La frise (timeline) et les menus de la page d’accueil sont construits en JavaScript à partir de squelettes qui produisent du JSON, appelés par <code>spip.php?page=json&amp;mode=…</code>. Le paramètre <code>mode</code> choisit le fond inclus dans <code>squelettes/json/</code> :</p>
+		<div class="table-wrap">
+			<table>
+				<thead><tr><th>mode</th><th>Données</th></tr></thead>
+				<tbody>
+					<tr><td><code>demarrage</code></td><td>Assemble les autres fonds en une seule réponse pour le chargement initial.</td></tr>
+					<tr><td><code>projet</code></td><td>Informations du projet.</td></tr>
+					<tr><td><code>consignes</code></td><td>Consignes de l’année et leurs réponses.</td></tr>
+					<tr><td><code>classes</code></td><td>Classes de l’année (numéro, couleur, icône).</td></tr>
+					<tr><td><code>articles</code></td><td>Articles d’agenda ou de salle des profs (<code>&amp;type=blogs</code> ou <code>evenements</code>).</td></tr>
+					<tr><td><code>ajax</code></td><td>Accès direct aux blocs ajax.</td></tr>
+				</tbody>
+			</table>
+		</div>
+		<div class="callout">
+			<p>Ces fonds sont en <code>#CACHE{0}</code> : ils dépendent de l’année scolaire choisie par cookie, et SPIP ne différencie pas son cache selon les cookies. Un cache, même court, servirait la mauvaise année à d’autres visiteurs.</p>
+		</div>
+
 		<h2 id="cache-php">Résolutions en PHP plutôt qu’en boucles non cachées</h2>
 		<p>Les résolutions répétées (type de contenu d’une rubrique, d’un article ou d’un auteur, couleur et numéro de classe, rôle en session, rubrique par mot-clé) sont des fonctions de <code>thematique_fonctions.php</code> avec un cache mémoire statique par requête, appelées comme filtres SPIP :</p>
 <pre><code>function thematique_xxx($id) {
@@ -108,6 +130,7 @@
 
 		<h2 id="sso">Connexion SSO (ENT laclasse.com)</h2>
 		<p><code>inc/thematique_cioidc.php</code> et <code>thematique_cioidc_userinfo()</code> (dans <code>thematique_pipelines.php</code>) gèrent la connexion OpenID Connect via l’ENT : à partir des attributs ENT (<code>ENTClassesGroupes</code>, <code>ENTPersonProfils</code>, <code>ENTGroupesLibres</code>…), ils retrouvent ou créent l’auteur SPIP, fixent son statut (prof, élève, webmestre) et le lient à ses rubriques de classe.</p>
+		<p>Le détail (attributs, tableau de décision, choix des classes, diagnostic) est sur la page <a href="sso.html">Connexion ENT et rôles</a>.</p>
 		<p>Le plugin CIOIDC n’est activé que si <code>SPIP_PLUGINS_CIOIDC=true</code> (voir <a href="deploiement.html#variables">variables d’environnement</a>).</p>
 
 		<h2 id="i18n">Traductions</h2>
