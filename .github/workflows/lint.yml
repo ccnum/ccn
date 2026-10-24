@@ -9,7 +9,7 @@ on:
 
 jobs:
   lang:
-    name: Texte en dur, clés de langue, liens en dur
+    name: Texte en dur, clés de langue, liens en dur, documentation
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -31,6 +31,9 @@ jobs:
 
       - name: Vérifier l'absence de syntaxe de squelette dans les (#REM)
         run: python3 .ci/check_rem.py
+
+      - name: Vérifier que la documentation (docs/) ne cite rien d'absent du code
+        run: python3 .ci/check_docs.py
 
   duplication:
     name: Duplication HTML/PHP

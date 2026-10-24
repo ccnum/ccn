@@ -17,6 +17,7 @@
 				<li><a href="index.html">Présentation</a></li>
 				<li><a href="contenus.html">Contenus et rôles</a></li>
 				<li><a href="sso.html">Connexion ENT</a></li>
+				<li><a href="fictions.html">Fictions et Petit fablab</a></li>
 				<li><a href="architecture.html">Architecture</a></li>
 				<li><a href="developpement.html" aria-current="page">Développement</a>
 					<ul class="sub">
@@ -66,7 +67,7 @@ composer rector            <span class="c"># applique les migrations Rector</spa
 vendor/bin/phpstan analyse <span class="c"># analyse statique (niveau dans phpstan.neon.dist)</span></code></pre>
 
 		<h2 id="lint">Lints CI</h2>
-		<p>Le workflow <code>.github/workflows/lint.yml</code> s’exécute avant chaque build Docker (<code>dev</code> et <code>main</code>) et <strong>bloque la publication de l’image</strong> en cas d’échec. Ils couvrent les plugins <code>thematique</code>, <code>fictions</code>, <code>petitfablab</code> et <code>ccn</code>.</p>
+		<p>Le workflow <code>.github/workflows/lint.yml</code> s’exécute avant chaque build Docker (<code>dev</code> et <code>main</code>) et <strong>bloque la publication de l’image</strong> en cas d’échec. Ils couvrent les plugins <code>thematique</code>, <code>fictions</code>, <code>petitfablab</code> et <code>ccn</code>, ainsi que cette documentation.</p>
 		<div class="table-wrap">
 			<table>
 				<thead><tr><th>Commande</th><th>Vérifie</th><th>Baseline</th></tr></thead>
@@ -76,6 +77,7 @@ vendor/bin/phpstan analyse <span class="c"># analyse statique (niveau dans phpst
 					<tr><td><code>python3 .ci/check_hardcoded_paths.py</code></td><td>Chemins <code>img/</code>, <code>css/</code>, <code>js/</code>, <code>pdf/</code> sans <code>#CHEMIN{}</code>, liens <code>spip.php?page=</code> sans <code>#URL_PAGE{}</code>.</td><td>oui</td></tr>
 					<tr><td><code>python3 .ci/check_rem.py</code></td><td>Syntaxe de squelette (balise, boucle, item de langue, crochet) dans un commentaire <code>(#REM)</code>.</td><td>non</td></tr>
 					<tr><td><code>python3 .ci/check_docker_entrypoint.py</code></td><td>Cohérence de <code>docker-entrypoint.sh</code>.</td><td>non</td></tr>
+					<tr><td><code>python3 .ci/check_docs.py</code></td><td>Fonction, constante, mot-clé ou fichier cité dans <code>docs/</code> mais absent du code ; variable de <code>.env.example</code> non documentée.</td><td>non</td></tr>
 					<tr><td><code>node .ci/check_html_duplication.js</code></td><td>HTML et squelettes copiés-collés (jscpd).</td><td>oui</td></tr>
 					<tr><td><code>node .ci/check_php_duplication.js</code></td><td>PHP copié-collé (jscpd).</td><td>oui</td></tr>
 				</tbody>
@@ -135,7 +137,7 @@ vendor/bin/phpstan analyse <span class="c"># analyse statique (niveau dans phpst
 fix(thematique): fermeture automatique du menu d'édition
 perf(thematique): images jointes réduites à 760 px
 refactor(ccn): ratio de la vidéo calculé une seule fois</code></pre>
-		<p>Types utilisés : <code>feat</code>, <code>fix</code>, <code>perf</code>, <code>refactor</code>, <code>chore</code>. Le développement se fait sur <code>dev</code>, puis une pull request <code>dev → main</code> déclenche la publication (voir <a href="deploiement.html#versions">Déploiement</a>).</p>
+		<p>Types utilisés : <code>feat</code>, <code>fix</code>, <code>perf</code>, <code>refactor</code>, <code>chore</code>. Une modification de code qui change un comportement décrit ici met à jour la page concernée dans le même commit. Le développement se fait sur <code>dev</code>, puis une pull request <code>dev → main</code> déclenche la publication (voir <a href="deploiement.html#versions">Déploiement</a>).</p>
 
 		<footer class="page-footer">Documentation générée à partir du dépôt <a href="https://github.com/ccnum/ccn">ccnum/ccn</a>.</footer>
 	</main>

@@ -58,6 +58,7 @@ python3 .ci/check_lang_keys.py         # clés <:thematique:xxx:> / CCN.lang.xxx
 python3 .ci/check_hardcoded_paths.py   # chemins img/css/js/pdf ou spip.php?page= en dur (baseline: .ci/hardcoded-paths-baseline.txt)
 python3 .ci/check_rem.py               # syntaxe de squelette (#BALISE, <BOUCLE, <:x:>, crochets) dans un [(#REM) ...]
 python3 .ci/check_docker_entrypoint.py # cohérence de docker-entrypoint.sh
+python3 .ci/check_docs.py              # docs/ ne cite pas de fonction/constante/fichier absent du code, toutes les variables de .env.example documentées
 node .ci/check_html_duplication.js     # HTML/squelette copié-collé (jscpd, `npm ci` requis ; baseline: .ci/html-duplication-baseline.txt)
 node .ci/check_php_duplication.js      # idem pour le PHP (baseline: .ci/php-duplication-baseline.txt)
 ```
@@ -182,6 +183,27 @@ jamais transmis (le formulaire retombe sur sa valeur par défaut).
 `#CONST{...}` et `#GET{...}` passent sans problème comme arguments. Même consigne que pour le
 piège précédent : vérifier le rendu réel (texte parasite, libellé attendu), pas seulement que le
 squelette compile.
+
+## Documentation (`docs/`)
+
+Documentation technique en HTML statique dans `docs/`, publiée sur GitHub Pages
+(https://ccnum.github.io/ccn/) et écrite à la main, aux couleurs du plugin `thematique`
+(`docs/assets/style.css`). **Toute modif de code qui change un comportement documenté met à
+jour la page concernée dans le même commit** :
+
+| Modif dans le code | Page à mettre à jour |
+| --- | --- |
+| Rôles (`thematique_donner_role`), droits, structure des rubriques, mots-clés de type, tâches de rentrée | `docs/contenus.html` |
+| Connexion SSO (`thematique_cioidc_userinfo`, `inc/thematique_cioidc.php`, constantes `_THEMATIQUE_*WEBMESTRES`/`_GROUPE_INTERVENANTS`), choix des classes | `docs/sso.html` |
+| `fictions` (structure d'année, participants, plan d'associations, droits de lecture/écriture, SSO), `petitfablab`, `cadavrexquis` | `docs/fictions.html` |
+| Squelettes/popups, endpoints `page=json`, année scolaire, i18n, pipelines | `docs/architecture.html` |
+| Lint CI, commandes de dev, nouveau piège SPIP | `docs/developpement.html` (et cette page) |
+| Variable d'environnement, workflow de build, Helm | `docs/deploiement.html` |
+| Nouveau plugin | `docs/index.html` |
+
+`check_docs.py` ne détecte que les références devenues invalides (renommage, suppression,
+variable non documentée), pas une explication devenue fausse : relire la page concernée reste
+nécessaire. Une nouvelle page reprend la barre latérale des autres et y est ajoutée partout.
 
 ## Convention de commit
 

@@ -17,6 +17,7 @@
 				<li><a href="index.html">Présentation</a></li>
 				<li><a href="contenus.html">Contenus et rôles</a></li>
 				<li><a href="sso.html">Connexion ENT</a></li>
+				<li><a href="fictions.html">Fictions et Petit fablab</a></li>
 				<li><a href="architecture.html" aria-current="page">Architecture</a>
 					<ul class="sub">
 						<li><a href="#arborescence">Arborescence</a></li>
@@ -65,7 +66,7 @@
 └── thematique_edifice/</code></pre>
 
 		<h2 id="squelettes">Squelettes : un fonctionnement en popups ajax</h2>
-		<p>Le site n’enchaîne pas des pages classiques. <code>squelettes/layout.html</code> (canevas, <code>#CACHE{0}</code>) charge une page « sommaire », puis le contenu (article, rubrique, formulaire) s’ouvre dans une <strong>popup chargée en ajax</strong> (<code>mode=ajax-detail</code>) par les contrôleurs JS (<code>squelettes/js/controleurs.js</code>, <code>main.js</code>).</p>
+		<p>Le site n’enchaîne pas des pages classiques. <code>squelettes/layout.html</code> (canevas, <code>#CACHE{0}</code>) charge une page « sommaire », puis le contenu (article, rubrique, formulaire) s’ouvre dans une <strong>popup chargée en ajax</strong> (<code>mode=ajax-detail</code>) par les contrôleurs JS (<code>squelettes/js/controleurs.js</code>, <code>squelettes/js/main.js</code>).</p>
 		<ul>
 			<li><code>squelettes/noisettes/</code> : blocs inclus, souvent en <code>#CACHE{0}</code> parce qu’ils dépendent de la session ou d’un cookie (c’est indiqué en tête de chaque fichier concerné).</li>
 			<li><code>squelettes/modeles/</code> : mini-squelettes appelés par <code>#MODELE{}</code>, par exemple pour résoudre un logo ou une icône.</li>
