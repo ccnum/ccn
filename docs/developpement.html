@@ -1,0 +1,126 @@
+<!doctype html>
+<html lang="fr">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Développement CCN</title>
+	<meta name="description" content="Développer sur les plugins CCN : environnement ddev, qualité de code, lints CI, pièges SPIP et conventions de commit.">
+	<link rel="icon" href="assets/logo.png">
+	<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+<div class="layout">
+	<aside class="sidebar">
+		<a class="brand" href="index.html"><img src="assets/logo.png" alt=""><span>CCN<small>Documentation technique</small></span></a>
+		<nav>
+			<ul>
+				<li><a href="index.html">Présentation</a></li>
+				<li><a href="architecture.html">Architecture</a></li>
+				<li><a href="developpement.html" aria-current="page">Développement</a>
+					<ul class="sub">
+						<li><a href="#local">Environnement local</a></li>
+						<li><a href="#qualite">Qualité de code</a></li>
+						<li><a href="#lint">Lints CI</a></li>
+						<li><a href="#tests">Tests</a></li>
+						<li><a href="#pieges">Pièges SPIP</a></li>
+						<li><a href="#commits">Commits</a></li>
+					</ul>
+				</li>
+				<li><a href="deploiement.html">Déploiement</a></li>
+			</ul>
+		</nav>
+		<div class="repo"><a href="https://github.com/ccnum/ccn">github.com/ccnum/ccn</a></div>
+	</aside>
+
+	<main>
+		<h1>Développement</h1>
+		<p class="lead">Environnement local, outils de qualité, vérifications automatiques et pièges connus de SPIP.</p>
+
+		<h2 id="local">Environnement local (ddev)</h2>
+<pre><code>ddev start     <span class="c"># démarre web, db, phpmyadmin</span>
+ddev launch    <span class="c"># ouvre https://ccn.ddev.site</span></code></pre>
+		<p>Chaque instance a son nom d’hôte, déclaré dans <code>.ddev/config.yaml</code> :</p>
+		<div class="table-wrap">
+			<table>
+				<thead><tr><th>Instance</th><th>URL</th></tr></thead>
+				<tbody>
+					<tr><td>Fictions</td><td><code>https://ccn-fictions.ddev.site</code></td></tr>
+					<tr><td>On tourne (thematique)</td><td><code>https://ccn-ontourne.ddev.site</code></td></tr>
+					<tr><td>Petit fablab</td><td><code>https://ccn-petitfablab.ddev.site</code></td></tr>
+					<tr><td>Digitalycéen (Edifice)</td><td><code>https://edifice-digitalyceen.ddev.site</code></td></tr>
+				</tbody>
+			</table>
+		</div>
+		<p>Après une modification de squelette, si le comportement semble périmé, videz le cache SPIP du site concerné :</p>
+<pre><code>rm -rf sites/&lt;site&gt;.ddev.site/tmp/cache/*</code></pre>
+
+		<h2 id="qualite">Qualité de code</h2>
+		<p>À lancer depuis le dossier d’un plugin, par exemple <code>plugins/projets/thematique/</code> :</p>
+<pre><code>composer check-cs          <span class="c"># Easy Coding Standard : vérifie le style</span>
+composer fix-cs            <span class="c"># corrige le style automatiquement</span>
+composer rector-dry-run    <span class="c"># simule les migrations Rector</span>
+composer rector            <span class="c"># applique les migrations Rector</span>
+vendor/bin/phpstan analyse <span class="c"># analyse statique (niveau dans phpstan.neon.dist)</span></code></pre>
+
+		<h2 id="lint">Lints CI</h2>
+		<p>Le workflow <code>.github/workflows/lint.yml</code> s’exécute avant chaque build Docker (<code>dev</code> et <code>main</code>) et <strong>bloque la publication de l’image</strong> en cas d’échec. Ils couvrent les plugins <code>thematique</code>, <code>fictions</code>, <code>petitfablab</code> et <code>ccn</code>.</p>
+		<div class="table-wrap">
+			<table>
+				<thead><tr><th>Commande</th><th>Vérifie</th><th>Baseline</th></tr></thead>
+				<tbody>
+					<tr><td><code>python3 .ci/check_lang_hardcoded.py</code></td><td>Texte français en dur hors des fichiers de langue.</td><td>oui</td></tr>
+					<tr><td><code>python3 .ci/check_lang_keys.py</code></td><td>Clés <code>&lt;:module:cle:&gt;</code>, <code>_T()</code> et <code>CCN.lang.cle</code> inexistantes.</td><td>non</td></tr>
+					<tr><td><code>python3 .ci/check_hardcoded_paths.py</code></td><td>Chemins <code>img/</code>, <code>css/</code>, <code>js/</code>, <code>pdf/</code> sans <code>#CHEMIN{}</code>, liens <code>spip.php?page=</code> sans <code>#URL_PAGE{}</code>.</td><td>oui</td></tr>
+					<tr><td><code>python3 .ci/check_rem.py</code></td><td>Syntaxe de squelette (balise, boucle, item de langue, crochet) dans un commentaire <code>(#REM)</code>.</td><td>non</td></tr>
+					<tr><td><code>python3 .ci/check_docker_entrypoint.py</code></td><td>Cohérence de <code>docker-entrypoint.sh</code>.</td><td>non</td></tr>
+					<tr><td><code>node .ci/check_html_duplication.js</code></td><td>HTML et squelettes copiés-collés (jscpd).</td><td>oui</td></tr>
+					<tr><td><code>node .ci/check_php_duplication.js</code></td><td>PHP copié-collé (jscpd).</td><td>oui</td></tr>
+				</tbody>
+			</table>
+		</div>
+		<p>Les scripts Node nécessitent <code>npm ci</code> au préalable. Pour accepter une exception légitime, relancez le script avec <code>--write-baseline</code>, puis vérifiez que le diff de la baseline ne contient <strong>que</strong> le cas attendu. Le détail des règles et des exceptions est dans <a href="https://github.com/ccnum/ccn/blob/main/.ci/README.md"><code>.ci/README.md</code></a>.</p>
+
+		<h2 id="tests">Tests</h2>
+		<p>Il n’y a pas de suite de tests automatisés. La vérification repose sur les lints ci-dessus et sur un <strong>test manuel sur une instance ddev réelle</strong> : plusieurs erreurs de squelette compilent sans erreur mais cassent le rendu (voir ci-dessous).</p>
+
+		<h2 id="pieges">Pièges SPIP</h2>
+
+		<h3><code>#SET{var, [(...)]}</code> casse la sortie</h3>
+		<p><code>[( )]</code> est la syntaxe du bloc <strong>conditionnel</strong>, pas un simple emballage de valeur. Utilisé comme valeur d’un <code>#SET</code>, il n’affecte rien : le résultat est recraché dans la page avec une accolade en trop, sans erreur PHP, ce qui peut corrompre du JSON ou du HTML.</p>
+<pre><code><span class="c"># Faux : casse la sortie</span>
+#SET{id_rubrique, [(#VAL{ressources}|thematique_id_rubrique_a_mot)]}
+
+<span class="c"># Correct : #SET sans crochets</span>
+#SET{id_rubrique, #VAL{ressources}|thematique_id_rubrique_a_mot}</code></pre>
+		<p>Les crochets ne servent que pour un test ou un texte conditionnel : <code>[(#GET{x}|=={y}|oui) texte]</code>.</p>
+
+		<h3>Item de langue comme argument de balise</h3>
+		<p><code>&lt;:module:cle:&gt;</code> n’est accepté ni comme argument d’un <code>#FORMULAIRE_XXX{...}</code>, ni comme valeur d’un <code>#SET{...}</code> : le texte traduit s’affiche suivi d’une accolade orpheline, et l’argument n’est jamais transmis.</p>
+<pre><code><span class="c"># Faux : « Libellé} » s’affiche, le formulaire ne reçoit rien</span>
+#SET{label, &lt;:thematique:label_xxx:&gt;}
+
+<span class="c"># Correct : traduire avec le filtre _T, puis passer par #GET</span>
+#SET{label, #VAL{thematique:label_xxx}|_T}
+#FORMULAIRE_CCN_JOINDRE_DOCUMENT{#ID_ARTICLE,article,#GET{ext},#GET{label}}</code></pre>
+		<p><code>#CONST{...}</code> et <code>#GET{...}</code> passent sans problème comme arguments.</p>
+
+		<div class="callout danger">
+			<p>Dans les deux cas, le squelette compile sans erreur. <strong>Testez toujours le rendu réel</strong> de la page ou de l’endpoint concerné (par exemple <code>?page=json&amp;mode=projet</code>), pas seulement la compilation.</p>
+		</div>
+
+		<h3>Commentaires <code>(#REM)</code></h3>
+		<p>Le texte d’un <code>[(#REM) ...]</code> est compilé comme du squelette : un <code>]</code> le ferme trop tôt, une balise mal formée casse tout le squelette. Citez les balises sans <code>#</code> (<code>CACHE{0}</code>), les boucles sans <code>&lt;</code> (<code>BOUCLE_x</code>), les items de langue sans <code>&lt;: :&gt;</code>. Le code désactivé se supprime : il reste dans l’historique git.</p>
+
+		<h2 id="commits">Conventions de commit</h2>
+		<p>Format <code>type(scope): message</code>, en français. Le scope est le nom du plugin concerné.</p>
+<pre><code>feat(thematique): limitation des images à 380x380
+fix(thematique): fermeture automatique du menu d'édition
+perf(thematique): images jointes réduites à 760 px
+refactor(ccn): ratio de la vidéo calculé une seule fois</code></pre>
+		<p>Types utilisés : <code>feat</code>, <code>fix</code>, <code>perf</code>, <code>refactor</code>, <code>chore</code>. Le développement se fait sur <code>dev</code>, puis une pull request <code>dev → main</code> déclenche la publication (voir <a href="deploiement.html#versions">Déploiement</a>).</p>
+
+		<footer class="page-footer">Documentation générée à partir du dépôt <a href="https://github.com/ccnum/ccn">ccnum/ccn</a>.</footer>
+	</main>
+</div>
+</body>
+</html>
