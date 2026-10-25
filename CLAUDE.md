@@ -81,12 +81,10 @@ Le site n'est pas un enchaînement de pages classiques : `squelettes/layout.html
 documenté en tête de chaque fichier concerné) et `squelettes/modeles/` (mini-squelettes appelés
 via `#MODELE{}`, ex. résolution d'un logo/icône).
 
-Deux implémentations de forum coexistent : l'ancienne (`noisettes/ajax/article-forum-detail.html`,
-`noisettes/inc/forum.html`) et la nouvelle **forumv2** (`noisettes/inc/forumv2/*`, câblée depuis
-`noisettes/sidebar/onglet_commentaires.html`, elle-même incluse par les fonds
-`consigne_pour_*`/`reponse_pour_*`/`blog.html`) — c'est forumv2 qui est réellement live sur les
-pages article. Vérifier laquelle est exercée avant de supposer qu'une modif de l'ancien chemin a
-un effet visible.
+Les commentaires passent uniquement par **forumv2** (`formulaires/forumv2.php`,
+`noisettes/inc/forumv2/*`, câblé depuis `noisettes/sidebar/onglet_commentaires.html`, elle-même
+incluse par les fonds `consigne_pour_*`/`reponse_pour_*`/`blog.html`). L'ancien forum (formulaire
+de forum natif SPIP, page `forum`, `article-forum-detail`) a été supprimé avec son CSS.
 
 ### Convention : PHP caché plutôt que boucles SPIP non cachées
 Beaucoup de résolutions (type de contenu d'une rubrique/article/auteur, couleur/numéro de classe,

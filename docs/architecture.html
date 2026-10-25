@@ -109,9 +109,7 @@
 			<li><code>squelettes/noisettes/</code> : blocs inclus, souvent en <code>#CACHE{0}</code> parce qu’ils dépendent de la session ou d’un cookie (c’est indiqué en tête de chaque fichier concerné).</li>
 			<li><code>squelettes/modeles/</code> : mini-squelettes appelés par <code>#MODELE{}</code>, par exemple pour résoudre un logo ou une icône.</li>
 		</ul>
-		<div class="callout">
-			<p><strong>Deux forums coexistent.</strong> L’ancien (<code>noisettes/ajax/article-forum-detail.html</code>, <code>noisettes/inc/forum.html</code>) et <strong>forumv2</strong> (<code>noisettes/inc/forumv2/*</code>, câblé depuis <code>noisettes/sidebar/onglet_commentaires.html</code>). C’est forumv2 qui est en service sur les pages article : vérifiez quel chemin est exécuté avant de modifier l’un des deux.</p>
-		</div>
+		<p><strong>Commentaires</strong> : un seul forum, forumv2 (formulaire <code>formulaires/forumv2.php</code>, fragments <code>noisettes/inc/forumv2/*</code>), câblé depuis <code>noisettes/sidebar/onglet_commentaires.html</code>. Il n’utilise pas le formulaire de forum natif de SPIP ni la page <code>forum</code>.</p>
 
 		<h3 id="json">Données JSON de la page d’accueil</h3>
 		<p>La frise (timeline) et les menus de la page d’accueil sont construits en JavaScript à partir de squelettes qui produisent du JSON, appelés par <code>spip.php?page=json&amp;mode=…</code>. Le paramètre <code>mode</code> choisit le fond inclus dans <code>squelettes/json/</code> :</p>
@@ -124,7 +122,6 @@
 					<tr><td><code>consignes</code></td><td>Consignes de l’année et leurs réponses.</td></tr>
 					<tr><td><code>classes</code></td><td>Classes de l’année (numéro, couleur, icône).</td></tr>
 					<tr><td><code>articles</code></td><td>Articles d’agenda ou de salle des profs (<code>&amp;type=blogs</code> ou <code>evenements</code>).</td></tr>
-					<tr><td><code>ajax</code></td><td>Accès direct aux blocs ajax.</td></tr>
 				</tbody>
 			</table>
 		</div>
