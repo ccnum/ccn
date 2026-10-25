@@ -198,7 +198,7 @@ jour la page concernée dans le même commit** :
 | `thematique` côté usage : publication, droits de modification/suppression, forumv2, notifications, documents/Vimeo, maintenance, `thematique_edifice` | `docs/thematique.html` |
 | `fictions` (structure d'année, participants, gestion des histoires, plan d'associations, droits de lecture/écriture, fin d'année, SSO), `cadavrexquis` | `docs/fictions.html` |
 | `petitfablab` (ateliers, création des histoires, écriture, lecture, e-mails) | `docs/petitfablab.html` |
-| Squelettes/popups, endpoints `page=json`, année scolaire, i18n, pipelines | `docs/architecture.html` |
+| Squelettes/popups, endpoints `page=json`, année scolaire, i18n, pipelines, socle `ccn` (uploads, e-mails), organisation des squelettes et pipelines de `fictions`/`petitfablab`, plugins utilitaires | `docs/architecture.html` |
 | Lint CI, commandes de dev, nouveau piège SPIP | `docs/developpement.html` (et cette page) |
 | Variable d'environnement, workflow de build, Helm | `docs/deploiement.html` |
 | Nouveau plugin | `docs/index.html` |

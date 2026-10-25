@@ -4,7 +4,7 @@
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<title>Architecture CCN</title>
-	<meta name="description" content="Architecture du plugin thematique : squelettes en popups ajax, cache PHP, rôles, année scolaire, SSO, i18n.">
+	<meta name="description" content="Architecture des plugins CCN : socle ccn (année scolaire, envois de fichiers, e-mails), thematique en popups ajax, fictions et petitfablab en pages classiques, plugins utilitaires.">
 	<link rel="icon" href="assets/logo.png">
 	<link rel="stylesheet" href="assets/style.css">
 </head>
@@ -23,14 +23,11 @@
 				<li><a href="architecture.html" aria-current="page">Architecture</a>
 					<ul class="sub">
 						<li><a href="#arborescence">Arborescence</a></li>
-						<li><a href="#squelettes">Squelettes et popups</a></li>
-						<li><a href="#json">Données JSON</a></li>
-						<li><a href="#cache-php">Résolutions en PHP</a></li>
-						<li><a href="#role">Rôle de session</a></li>
-						<li><a href="#annee">Année scolaire</a></li>
-						<li><a href="#sso">SSO laclasse.com</a></li>
-						<li><a href="#i18n">Traductions</a></li>
-						<li><a href="#genie">Tâches de fond</a></li>
+						<li><a href="#ccn">Socle ccn</a></li>
+						<li><a href="#thematique">Thematique</a></li>
+						<li><a href="#fictions">Fictions</a></li>
+						<li><a href="#petitfablab">Petit fablab</a></li>
+						<li><a href="#utilitaires">Plugins utilitaires</a></li>
 					</ul>
 				</li>
 				<li><a href="developpement.html">Développement</a></li>
@@ -42,7 +39,7 @@
 
 	<main>
 		<h1>Architecture</h1>
-		<p class="lead">Comment est construit le plugin <code>thematique</code>, le plus développé du dépôt. Les autres plugins « site » suivent les mêmes principes.</p>
+		<p class="lead">Comment sont construits les plugins maison : un socle commun, <code>ccn</code>, et trois plugins « site » aux architectures différentes. <code>thematique</code> fonctionne en popups ajax ; <code>fictions</code> et <code>petitfablab</code> sont des sites à pages classiques.</p>
 
 		<h2 id="arborescence">Arborescence</h2>
 <pre class="tree"><code>plugins/projets/
@@ -64,10 +61,49 @@
 │       ├── js/             contrôleurs JS (controleurs.js, main.js)
 │       ├── noisettes/      fragments inclus
 │       └── modeles/        mini-squelettes appelés par #MODELE{}
-├── fictions/  petitfablab/  cadavrexquis/
-└── thematique_edifice/</code></pre>
+├── thematique_edifice/     variante Edifice (options seulement)
+├── fictions/
+│   ├── fictions_pipelines.php      publication des chapitres, SSO, cron
+│   ├── fictions_autoriser.php      autorisations lirechapitre, ecrirechapitre…
+│   ├── lecturedroits.php           filtres de droits pour les squelettes
+│   ├── inc/                participants, histoires, plan, droits, rentrée, SSO
+│   ├── action/  formulaires/  prive/   page Associations de l’espace privé
+│   ├── notifications/      e-mail « chapitre à écrire »
+│   └── squelettes/         sommaire, rubrique, lecture, forum…
+├── petitfablab/
+│   ├── petitfablab_fonctions.php   validation des chapitres, e-mails
+│   └── squelettes/         sommaire, ecriture, lecture, formulaires/, lang/
+├── cadavrexquis/           images communes à fictions et petitfablab
+└── api_vimeo/  mesfavoris_ccn/  imports_utilisateurs/  reactions/</code></pre>
 
-		<h2 id="squelettes">Squelettes : un fonctionnement en popups ajax</h2>
+		<h2 id="ccn">Socle commun : ccn</h2>
+		<p>Requis par tous les plugins « site ». Il ne crée aucune page : il fournit l’année scolaire, le contrôle des envois de fichiers et le gabarit des e-mails.</p>
+		<h3 id="ccn-annee">Année scolaire</h3>
+		<p><code>ccn_options.php</code> calcule à chaque requête <code>_ANNEE_SCOLAIRE</code>, l’année de rentrée affichée :</p>
+		<ol>
+			<li>le paramètre <code>annee_scolaire</code> de l’URL, mémorisé 12 h dans le cookie <code>laclasse_annee_scolaire</code> (<code>_COOKIE_ANNEE_SCOLAIRE</code>) ;</li>
+			<li>sinon ce cookie ;</li>
+			<li>sinon l’année calendaire (bascule en septembre), ramenée à la dernière rubrique d’année qui existe vraiment sur le site, pour ne pas afficher une année encore vide juste après la rentrée.</li>
+		</ol>
+		<p><code>_ANNEE_ACTUELLE_CALCULEE</code> est l’année calendaire seule, sans cookie : c’est elle qu’utilisent la tâche de rentrée et l’inscription ENT de fictions (thematique a son équivalent, <code>thematique_annee_scolaire_reelle()</code>). <code>_DATE_DEBUT</code> et <code>_DATE_FIN</code> bornent l’année affichée (1er septembre au 1er septembre suivant). Côté squelettes : balises <code>#ANNEE_SCOLAIRE</code> et <code>#ANNEE_ACTUELLE</code>, filtres <code>annee_rub</code> et <code>afficher_options_date</code>.</p>
+		<h3 id="ccn-uploads">Envois de fichiers</h3>
+		<ul>
+			<li><code>ccn_verifier_uploads()</code>, branché sur le pipeline <code>formulaire_verifier</code>, contrôle tout formulaire qui envoie un fichier : type autorisé et taille maximale (<code>_CCN_UPLOAD_TAILLE_MAX_MO</code>, 100 Mo ; sans limite pour les MP4 quand <code>api_vimeo</code> est actif, puisqu’ils partent sur Vimeo).</li>
+			<li>Après l’ajout d’un document (<code>post_edition</code>), les images sont recompressées sur place, et les vidéos compressées par ffmpeg en tâche de fond (<code>ccn_compresser_video_job</code>) pour ne pas bloquer la requête d’envoi.</li>
+			<li><code>_CCN_UPLOADS_SUSPENDUS</code> : le pipeline <code>formulaire_fond</code> remplace tout formulaire multipart par un message.</li>
+			<li>Formulaire commun <code>ccn_joindre_document</code> (<code>inc/ccn_joindre.php</code>), avec envoi par morceaux (<code>action/bigup.php</code>), et modèle <code>modeles/video.html</code>, qui affiche une vidéo Vimeo dans son lecteur.</li>
+		</ul>
+		<h3 id="ccn-divers">E-mails, SSO, espace privé</h3>
+		<ul>
+			<li><strong>E-mails</strong> : <code>emails/texte.html</code> remplace le gabarit du plugin facteur ; <code>notifications/inc_*.html</code> sont les blocs communs (avatar, carte, corps) des notifications de thematique.</li>
+			<li><strong>Traces SSO</strong> : <code>inc/ccn_cioidc.php</code> écrit dans <code>cioidc.log</code> ce que l’ENT a envoyé, pour thematique comme pour fictions (JSON complet si <code>_CCN_CIOIDC_LOG_COMPLET</code>).</li>
+			<li><strong>Espace privé</strong> : la fiche d’un auteur indique sa source d’authentification (<code>boite_infos</code>) ; le formulaire <code>editer_auteur</code> affiche d’emblée la confirmation de mot de passe exigée pour créer un admin, qui sinon faisait échouer le premier enregistrement.</li>
+		</ul>
+
+		<h2 id="thematique">Thematique</h2>
+		<p>Le plugin le plus développé. Ce qu’il permet de faire est décrit sur la page <a href="thematique.html">Thematique</a> ; cette section décrit comment il est construit.</p>
+
+		<h3 id="squelettes">Squelettes : un fonctionnement en popups ajax</h3>
 		<p>Le site n’enchaîne pas des pages classiques. <code>squelettes/layout.html</code> (canevas, <code>#CACHE{0}</code>) charge une page « sommaire », puis le contenu (article, rubrique, formulaire) s’ouvre dans une <strong>popup chargée en ajax</strong> (<code>mode=ajax-detail</code>) par les contrôleurs JS (<code>squelettes/js/controleurs.js</code>, <code>squelettes/js/main.js</code>).</p>
 		<ul>
 			<li><code>squelettes/noisettes/</code> : blocs inclus, souvent en <code>#CACHE{0}</code> parce qu’ils dépendent de la session ou d’un cookie (c’est indiqué en tête de chaque fichier concerné).</li>
@@ -77,7 +113,7 @@
 			<p><strong>Deux forums coexistent.</strong> L’ancien (<code>noisettes/ajax/article-forum-detail.html</code>, <code>noisettes/inc/forum.html</code>) et <strong>forumv2</strong> (<code>noisettes/inc/forumv2/*</code>, câblé depuis <code>noisettes/sidebar/onglet_commentaires.html</code>). C’est forumv2 qui est en service sur les pages article : vérifiez quel chemin est exécuté avant de modifier l’un des deux.</p>
 		</div>
 
-		<h2 id="json">Données JSON de la page d’accueil</h2>
+		<h3 id="json">Données JSON de la page d’accueil</h3>
 		<p>La frise (timeline) et les menus de la page d’accueil sont construits en JavaScript à partir de squelettes qui produisent du JSON, appelés par <code>spip.php?page=json&amp;mode=…</code>. Le paramètre <code>mode</code> choisit le fond inclus dans <code>squelettes/json/</code> :</p>
 		<div class="table-wrap">
 			<table>
@@ -96,7 +132,7 @@
 			<p>Ces fonds sont en <code>#CACHE{0}</code> : ils dépendent de l’année scolaire choisie par cookie, et SPIP ne différencie pas son cache selon les cookies. Un cache, même court, servirait la mauvaise année à d’autres visiteurs.</p>
 		</div>
 
-		<h2 id="cache-php">Résolutions en PHP plutôt qu’en boucles non cachées</h2>
+		<h3 id="cache-php">Résolutions en PHP plutôt qu’en boucles non cachées</h3>
 		<p>Les résolutions répétées (type de contenu d’une rubrique, d’un article ou d’un auteur, couleur et numéro de classe, rôle en session, rubrique par mot-clé) sont des fonctions de <code>thematique_fonctions.php</code> avec un cache mémoire statique par requête, appelées comme filtres SPIP :</p>
 <pre><code>function thematique_xxx($id) {
 	static $cache = [];
@@ -109,15 +145,15 @@
 <pre><code>[(#ID_RUBRIQUE|thematique_type_objet_rubrique)]</code></pre>
 		<p>Exemples : <code>thematique_type_objet_rubrique</code>, <code>_article</code>, <code>_auteur</code>, <code>classe_numero</code>, <code>classe_icone</code>, <code>classe_id_rubrique_forum</code>, <code>thematique_donner_role</code>, <code>thematique_id_rubrique_a_mot</code>. Une résolution répétée dans un <code>#MODELE{}</code> ou une boucle imbriquée non cachée gagne à passer sur ce modèle.</p>
 
-		<h2 id="role">Rôle de session</h2>
+		<h3 id="role">Rôle de session</h3>
 		<p><code>thematique_donner_role($id_auteur)</code> renvoie <code>prof</code>, <code>intervenant</code>, <code>admin</code>, <code>eleve</code> ou <code>null</code>. Il est calculé dans le pipeline <code>preparer_fichier_session</code> (<code>thematique_preparer_fichier_session</code>), déclenché à chaque écriture du fichier de session, et exposé par <code>#SESSION{role}</code>.</p>
 		<div class="callout">
 			<p>Ce n’est pas fait dans <code>preparer_visiteur_session</code> : ce pipeline ne s’exécute que pour <code>/ecrire</code> ou le formulaire de connexion natif, jamais pour la connexion SSO qu’utilisent presque tous les comptes. Ne recalculez pas le rôle ailleurs.</p>
 		</div>
 		<p><code>fond_consigne_pour_role()</code> et <code>fond_reponse_pour_role()</code> choisissent le fond de la sidebar selon ce rôle.</p>
 
-		<h2 id="annee">Année scolaire</h2>
-		<p>La constante <code>_ANNEE_SCOLAIRE</code> (définie dans <code>plugins/projets/ccn/ccn_options.php</code>) structure presque tout le contenu : les rubriques racines sont organisées par année, et <code>thematique_pre_boucle()</code> (pipeline <code>pre_boucle</code>) filtre automatiquement les boucles <code>ARTICLES</code> et <code>SYNDIC_ARTICLES</code> sur la période de l’année active, sauf avec le critère <code>{tout}</code> ou depuis <code>/ecrire</code>.</p>
+		<h3 id="annee">Année scolaire</h3>
+		<p>L’année affichée, <code>_ANNEE_SCOLAIRE</code>, vient du socle (voir <a href="#ccn-annee">ci-dessus</a>). Elle structure presque tout le contenu de thematique : les rubriques racines sont organisées par année, et <code>thematique_pre_boucle()</code> (pipeline <code>pre_boucle</code>) filtre automatiquement les boucles <code>ARTICLES</code> et <code>SYNDIC_ARTICLES</code> sur la période de l’année active, sauf avec le critère <code>{tout}</code> ou depuis <code>/ecrire</code>.</p>
 		<div class="table-wrap">
 			<table>
 				<thead><tr><th>Fonction</th><th>Valeur</th></tr></thead>
@@ -131,12 +167,12 @@
 			<p>Des classes, missions ou pictos absents sur un environnement ? Vérifiez d’abord la présence et le titre de la rubrique racine de l’année active : c’est plus souvent un problème de données qu’un bug de squelette.</p>
 		</div>
 
-		<h2 id="sso">Connexion SSO (ENT laclasse.com)</h2>
+		<h3 id="sso">Connexion SSO (ENT laclasse.com)</h3>
 		<p><code>inc/thematique_cioidc.php</code> et <code>thematique_cioidc_userinfo()</code> (dans <code>thematique_pipelines.php</code>) gèrent la connexion OpenID Connect via l’ENT : à partir des attributs ENT (<code>ENTClassesGroupes</code>, <code>ENTPersonProfils</code>, <code>ENTGroupesLibres</code>…), ils retrouvent ou créent l’auteur SPIP, fixent son statut (prof, élève, webmestre) et le lient à ses rubriques de classe.</p>
 		<p>Le détail (attributs, tableau de décision, choix des classes, diagnostic) est sur la page <a href="sso.html">Connexion et comptes</a>.</p>
 		<p>Le plugin CIOIDC n’est activé que si <code>SPIP_PLUGINS_CIOIDC=true</code> (voir <a href="deploiement.html#variables">variables d’environnement</a>).</p>
 
-		<h2 id="i18n">Traductions</h2>
+		<h3 id="i18n">Traductions</h3>
 		<p>Tout texte visible passe par un item de langue déclaré dans <code>lang/thematique_fr.php</code> :</p>
 		<ul>
 			<li>squelettes : <code>&lt;:thematique:cle:&gt;</code> ;</li>
@@ -145,12 +181,77 @@
 		</ul>
 		<p>Cette règle est vérifiée par les <a href="developpement.html#lint">lints CI</a>.</p>
 
-		<h2 id="genie">Tâches de fond</h2>
+		<h3 id="genie">Tâches de fond</h3>
 		<p>Enregistrées toutes les 24 h via le pipeline <code>taches_generales_cron</code> :</p>
 		<ul>
 			<li><code>genie/thematique_rentree_annee.php</code> : crée la structure de la nouvelle année scolaire ;</li>
 			<li><code>genie/thematique_rentree_poubelle.php</code> : à la rentrée, passe les comptes non-webmestres à la poubelle pour forcer leur recréation via l’ENT avec les données de la nouvelle année.</li>
 		</ul>
+
+		<h2 id="fictions">Fictions</h2>
+		<p>Pas de popups ni de JSON : un site à <strong>pages SPIP classiques</strong>. Ce qu’il fait est décrit sur la page <a href="fictions.html">Fictions</a>.</p>
+		<h3 id="fictions-pages">Pages</h3>
+		<div class="table-wrap">
+			<table>
+				<thead><tr><th>Squelette</th><th>Rôle</th></tr></thead>
+				<tbody>
+					<tr><td><code>sommaire.html</code></td><td>Accueil de l’année : grille des histoires (fabrication) ou couvertures (visualisation), selon le mot-clé <code>année_en_ecriture</code>.</td></tr>
+					<tr><td><code>rubrique.html</code></td><td>Une histoire : prologue, chapitres verrouillés ou visibles, formulaire d’écriture. <code>article.html</code> renvoie vers la rubrique de l’article.</td></tr>
+					<tr><td><code>lecture.html</code>, <code>lecture-texte.html</code></td><td>Lecture d’une histoire comme un livre.</td></tr>
+					<tr><td><code>page.html</code></td><td>Pages de contenu (présentation, pied de page).</td></tr>
+					<tr><td><code>forum.html</code>, <code>forum_reponse.html</code></td><td>Forum de l’année, porté par l’article <code>footer-forum</code>.</td></tr>
+				</tbody>
+			</table>
+		</div>
+		<p>Chaque page charge son propre script, <code>squelettes/js/&lt;page&gt;.js</code>, par le modèle <code>modeles/js.html</code> (correspondance page → script : <code>fictions_js_page()</code>). Les squelettes sont des blocs inclus depuis <code>squelettes/inclure/</code>.</p>
+		<h3 id="fictions-donnees">Données et droits</h3>
+		<ul>
+			<li>La configuration d’une année (calendrier, participants, histoires attribuées, plan) n’est pas dans des rubriques mais dans une <strong>meta</strong> par année, <code>fictions_annee_&lt;année&gt;</code> (<code>inc/fictions_participants.php</code>).</li>
+			<li>La page Associations de l’espace privé (<code>prive/squelettes/contenu/fictions_associations.html</code>) combine trois formulaires CVT (<code>formulaires/fictions_*.php</code> : calendrier, participant, affectations) et une action sécurisée (<code>action/fictions_associations.php</code>) pour les opérations ponctuelles.</li>
+			<li>Toutes les règles de lecture et d’écriture sont dans <code>inc/fictions_autorisation.php</code>, exposées deux fois : en autorisations SPIP (<code>lirechapitre</code>, <code>ecrirechapitre</code>, dans <code>fictions_autoriser.php</code>) et en filtres de squelette (<code>lecturedroits.php</code>). Une seule source pour l’affichage et le contrôle serveur.</li>
+		</ul>
+		<h3 id="fictions-pipelines">Pipelines</h3>
+		<div class="table-wrap">
+			<table>
+				<thead><tr><th>Pipeline</th><th>Rôle</th></tr></thead>
+				<tbody>
+					<tr><td><code>post_edition</code></td><td>Enchaînement à l’enregistrement d’un chapitre (publication, masquage du précédent, chapitre suivant ouvert, e-mail) ; structure immédiate d’une rubrique titrée par une année.</td></tr>
+					<tr><td><code>calculer_rubriques</code></td><td>Garde publiée une histoire dont aucun chapitre n’est encore publié (chapitre 1 commun hors de l’histoire), sinon SPIP la dépublierait.</td></tr>
+					<tr><td><code>cioidc_userinfo</code></td><td>Inscription des enseignants à la connexion ENT (voir <a href="fictions.html#fictions-sso">Fictions</a>).</td></tr>
+					<tr><td><code>taches_generales_cron</code></td><td>Structure de l’année à la rentrée (<code>genie/fictions_rentree_annee.php</code>), toutes les 24 h.</td></tr>
+					<tr><td><code>autoriser</code></td><td>Charge <code>fictions_autoriser.php</code>.</td></tr>
+				</tbody>
+			</table>
+		</div>
+		<p>Items de langue : <code>lang/fictions_fr.php</code> (<code>&lt;:fictions:cle:&gt;</code>), vérifiés par les mêmes lints que thematique.</p>
+
+		<h2 id="petitfablab">Petit fablab</h2>
+		<p>Le plus simple des trois : aucun pipeline, aucune tâche de fond, aucune page dans l’espace privé. Tout tient dans des squelettes et <code>petitfablab_fonctions.php</code>. Fonctionnement : page <a href="petitfablab.html">Petit fablab</a>.</p>
+		<div class="table-wrap">
+			<table>
+				<thead><tr><th>Squelette</th><th>Rôle</th></tr></thead>
+				<tbody>
+					<tr><td><code>sommaire.html</code></td><td>Accueil de l’atelier (histoires en cours et terminées) ; avec <code>liste=oui</code>, création et lancement des histoires par l’animateur.</td></tr>
+					<tr><td><code>ecriture.html</code></td><td>Page d’écriture laissée ouverte sur le poste ; valide le chapitre au retour du formulaire (<code>valider_chapitre()</code>).</td></tr>
+					<tr><td><code>lecture.html</code></td><td>Lecture d’une histoire comme un livre.</td></tr>
+					<tr><td><code>edition.html</code></td><td>Une histoire en entier, modifiable en place (crayons), pour la relecture.</td></tr>
+				</tbody>
+			</table>
+		</div>
+		<p>Les formulaires sont dans <code>squelettes/formulaires/</code> : <code>creer_histoire</code> et une surcharge d’<code>editer_article</code> (rubrique imposée, cinq chapitres au plus, jeton de validation). Les items de langue sont dans <code>squelettes/lang/petitfablab_fr.php</code>.</p>
+
+		<h2 id="utilitaires">Plugins utilitaires</h2>
+		<div class="table-wrap">
+			<table>
+				<thead><tr><th>Plugin</th><th>Rôle</th><th>Activation</th></tr></thead>
+				<tbody>
+					<tr><td><code>api_vimeo</code></td><td>Envoi des MP4 sur Vimeo, mot de passe de la vidéo.</td><td>Si <code>VIMEO_ACCESS_TOKEN</code> est renseigné.</td></tr>
+					<tr><td><code>mesfavoris_ccn</code></td><td>Réactions (feu, cœur, pouce) sur les contenus, bâties sur le plugin mesfavoris.</td><td>Toujours.</td></tr>
+					<tr><td><code>imports_utilisateurs</code></td><td>Import de comptes par CSV (voir <a href="sso.html#import">Import de comptes</a>).</td><td>Si <code>SPIP_PLUGINS_IMPORTS_UTILISATEURS=true</code>.</td></tr>
+					<tr><td><code>reactions</code></td><td>Autre système de réactions, avec sa propre table.</td><td>Pas activé par <code>docker-entrypoint.sh</code>.</td></tr>
+				</tbody>
+			</table>
+		</div>
 
 		<footer class="page-footer">Documentation générée à partir du dépôt <a href="https://github.com/ccnum/ccn">ccnum/ccn</a>.</footer>
 	</main>
