@@ -194,8 +194,10 @@ jour la page concernée dans le même commit** :
 | Modif dans le code | Page à mettre à jour |
 | --- | --- |
 | Rôles (`thematique_donner_role`), droits, structure des rubriques, mots-clés de type, tâches de rentrée | `docs/contenus.html` |
-| Connexion SSO (`thematique_cioidc_userinfo`, `inc/thematique_cioidc.php`, constantes `_THEMATIQUE_*WEBMESTRES`/`_GROUPE_INTERVENANTS`), choix des classes | `docs/sso.html` |
-| `fictions` (structure d'année, participants, plan d'associations, droits de lecture/écriture, SSO), `petitfablab`, `cadavrexquis` | `docs/fictions.html` |
+| Connexion SSO (`thematique_cioidc_userinfo`, `inc/thematique_cioidc.php`, constantes `_THEMATIQUE_*WEBMESTRES`/`_GROUPE_INTERVENANTS`), choix des classes, mode sans ENT, `imports_utilisateurs` | `docs/sso.html` |
+| `thematique` côté usage : publication, droits de modification/suppression, forumv2, notifications, documents/Vimeo, maintenance, `thematique_edifice` | `docs/thematique.html` |
+| `fictions` (structure d'année, participants, gestion des histoires, plan d'associations, droits de lecture/écriture, fin d'année, SSO), `cadavrexquis` | `docs/fictions.html` |
+| `petitfablab` (ateliers, création des histoires, écriture, lecture, e-mails) | `docs/petitfablab.html` |
 | Squelettes/popups, endpoints `page=json`, année scolaire, i18n, pipelines | `docs/architecture.html` |
 | Lint CI, commandes de dev, nouveau piège SPIP | `docs/developpement.html` (et cette page) |
 | Variable d'environnement, workflow de build, Helm | `docs/deploiement.html` |

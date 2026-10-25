@@ -16,8 +16,10 @@
 			<ul>
 				<li><a href="index.html">Présentation</a></li>
 				<li><a href="contenus.html">Contenus et rôles</a></li>
-				<li><a href="sso.html">Connexion ENT</a></li>
-				<li><a href="fictions.html">Fictions et Petit fablab</a></li>
+				<li><a href="sso.html">Connexion et comptes</a></li>
+				<li><a href="thematique.html">Thematique</a></li>
+				<li><a href="fictions.html">Fictions</a></li>
+				<li><a href="petitfablab.html">Petit fablab</a></li>
 				<li><a href="architecture.html" aria-current="page">Architecture</a>
 					<ul class="sub">
 						<li><a href="#arborescence">Arborescence</a></li>
@@ -131,7 +133,7 @@
 
 		<h2 id="sso">Connexion SSO (ENT laclasse.com)</h2>
 		<p><code>inc/thematique_cioidc.php</code> et <code>thematique_cioidc_userinfo()</code> (dans <code>thematique_pipelines.php</code>) gèrent la connexion OpenID Connect via l’ENT : à partir des attributs ENT (<code>ENTClassesGroupes</code>, <code>ENTPersonProfils</code>, <code>ENTGroupesLibres</code>…), ils retrouvent ou créent l’auteur SPIP, fixent son statut (prof, élève, webmestre) et le lient à ses rubriques de classe.</p>
-		<p>Le détail (attributs, tableau de décision, choix des classes, diagnostic) est sur la page <a href="sso.html">Connexion ENT et rôles</a>.</p>
+		<p>Le détail (attributs, tableau de décision, choix des classes, diagnostic) est sur la page <a href="sso.html">Connexion et comptes</a>.</p>
 		<p>Le plugin CIOIDC n’est activé que si <code>SPIP_PLUGINS_CIOIDC=true</code> (voir <a href="deploiement.html#variables">variables d’environnement</a>).</p>
 
 		<h2 id="i18n">Traductions</h2>

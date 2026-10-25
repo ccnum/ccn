@@ -1,0 +1,126 @@
+<!doctype html>
+<html lang="fr">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Thematique CCN</title>
+	<meta name="description" content="Le plugin thematique au quotidien : publication des consignes, réponses, ressources et événements, modification et suppression, commentaires, notifications, documents et vidéos, maintenance, variante Edifice.">
+	<link rel="icon" href="assets/logo.png">
+	<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+<div class="layout">
+	<aside class="sidebar">
+		<a class="brand" href="index.html"><img src="assets/logo.png" alt=""><span>CCN<small>Documentation technique</small></span></a>
+		<nav>
+			<ul>
+				<li><a href="index.html">Présentation</a></li>
+				<li><a href="contenus.html">Contenus et rôles</a></li>
+				<li><a href="sso.html">Connexion et comptes</a></li>
+				<li><a href="thematique.html" aria-current="page">Thematique</a>
+					<ul class="sub">
+						<li><a href="#publier">Publier</a></li>
+						<li><a href="#modifier">Modifier, supprimer</a></li>
+						<li><a href="#commentaires">Commentaires</a></li>
+						<li><a href="#notifications">Notifications</a></li>
+						<li><a href="#documents">Documents et vidéos</a></li>
+						<li><a href="#maintenance">Maintenance</a></li>
+						<li><a href="#edifice">Variante Edifice</a></li>
+					</ul>
+				</li>
+				<li><a href="fictions.html">Fictions</a></li>
+				<li><a href="petitfablab.html">Petit fablab</a></li>
+				<li><a href="architecture.html">Architecture</a></li>
+				<li><a href="developpement.html">Développement</a></li>
+				<li><a href="deploiement.html">Déploiement</a></li>
+			</ul>
+		</nav>
+		<div class="repo"><a href="https://github.com/ccnum/ccn">github.com/ccnum/ccn</a></div>
+	</aside>
+
+	<main>
+		<h1>Thematique</h1>
+		<p class="lead">Le plugin des sites « projet » (On tourne, etc.) : des intervenants publient des consignes, les classes y répondent, tout le monde commente. Cette page décrit ce que chacun peut faire sur le site public ; l’organisation des rubriques et le calcul des rôles sont sur <a href="contenus.html">Contenus et rôles</a>.</p>
+
+		<h2 id="publier">Publier</h2>
+		<p>Le menu « Publier » du haut de page n’est proposé qu’aux rôles <span class="tag">prof</span>, <span class="tag">intervenant</span> et <span class="tag">admin</span> (<code>thematique_role_publie()</code>). Il ouvre en popup le formulaire <code>public_publier_article</code>, qui sert aussi à modifier un contenu existant.</p>
+		<div class="table-wrap">
+			<table>
+				<thead><tr><th>Contenu</th><th>Publié par</th><th>Rubrique</th></tr></thead>
+				<tbody>
+					<tr><td>Consigne (mission)</td><td>intervenant, admin</td><td>Son projet sous « Consignes » de l’année.</td></tr>
+					<tr><td>Réponse à une consigne</td><td>prof, admin</td><td>Sa classe sous « Travail des classes », liée à la consigne (<code>id_consigne</code>).</td></tr>
+					<tr><td>Ressource</td><td>prof (sauf Edifice), intervenant, admin</td><td>Toujours la rubrique « Ressources », quelle que soit la rubrique envoyée.</td></tr>
+					<tr><td>Événement (agenda), billet de salle des profs</td><td>prof, intervenant, admin</td><td>Agenda, Blog pédagogique.</td></tr>
+					<tr><td>Fiche intervenant</td><td>intervenant</td><td>Fiche de l’année dans « Intervenants ». Si elle a été créée sans auteur, le premier intervenant qui la complète en devient l’auteur.</td></tr>
+				</tbody>
+			</table>
+		</div>
+		<ul>
+			<li>Un contenu est <strong>publié dès l’enregistrement</strong>, sans validation. L’auteur connecté est lié à l’article à sa création seulement : un prof ou un admin qui corrige l’article d’un autre n’en devient pas auteur.</li>
+			<li>La rubrique est revérifiée côté serveur (<code>thematique_auteur_peut_creer_dans_rubrique()</code>) : hors admin, on ne crée que dans une rubrique à laquelle on est lié. Le choix proposé dans la popup ne suffit pas à le garantir.</li>
+			<li>Un double envoi du même formulaire à moins de trois secondes d’intervalle (double clic) ne crée qu’un article.</li>
+		</ul>
+
+		<h2 id="modifier">Modifier, dépublier, supprimer</h2>
+		<p>Les règles sont dans <code>thematique_autoriser.php</code>. Elles s’appliquent aussi bien à la popup qu’aux crayons (édition en place) et à <code>/ecrire</code>.</p>
+		<div class="table-wrap">
+			<table>
+				<thead><tr><th>Action</th><th>Qui</th></tr></thead>
+				<tbody>
+					<tr><td>Modifier</td><td>L’auteur de l’article, même publié ; un admin. Les jalons (« Cap sur l’année », « La Rencontre ») sont modifiables par tout intervenant du projet, pas seulement celui à qui ils ont été attribués.</td></tr>
+					<tr><td>Changer la date</td><td>Un admin sur tout contenu ; un intervenant sur un événement ou un billet de salle des profs seulement.</td></tr>
+					<tr><td>Dépublier</td><td>Quiconque peut modifier l’article (formulaire <code>depublier_article</code>). L’article repasse « proposé » ; le rééditer le republie.</td></tr>
+					<tr><td>Supprimer</td><td>Un admin ; sinon l’auteur, pour ses propres articles.</td></tr>
+				</tbody>
+			</table>
+		</div>
+		<div class="callout">
+			<p><strong>Années passées figées</strong> : dès que la racine de la nouvelle année existe, plus personne, admin compris, ne modifie un contenu ni ne supprime un commentaire d’une année précédente.</p>
+		</div>
+
+		<h2 id="commentaires">Commentaires</h2>
+		<p>Les commentaires des articles passent par <strong>forumv2</strong> (<code>formulaires/forumv2.php</code>, onglet « Commentaires » de la sidebar). Tout compte connecté, élève compris, peut commenter et répondre ; le message est publié immédiatement, avec prévisualisation possible, dans la limite de <code>_FORUM_LONGUEUR_MAXI</code> caractères.</p>
+		<div class="table-wrap">
+			<table>
+				<thead><tr><th>Rôle</th><th>Peut supprimer</th></tr></thead>
+				<tbody>
+					<tr><td><span class="tag">eleve</span></td><td>Rien, pas même ses propres messages.</td></tr>
+					<tr><td><span class="tag">intervenant</span></td><td>Ses propres messages.</td></tr>
+					<tr><td><span class="tag">prof</span></td><td>Ses messages et ceux des élèves de sa classe.</td></tr>
+					<tr><td><span class="tag">admin</span></td><td>Tout.</td></tr>
+				</tbody>
+			</table>
+		</div>
+		<p>Une seule autorisation, <code>forumsupprimer</code>, décide à la fois de l’affichage du bouton et de l’action.</p>
+
+		<h2 id="notifications">Notifications</h2>
+		<p>Le pipeline <code>notifications_destinataires</code> (<code>thematique_notifications_destinataires()</code>) envoie un e-mail :</p>
+		<ul>
+			<li>à la <strong>publication d’un article</strong> et à chaque <strong>nouveau commentaire</strong> : à l’adresse d’envoi du site et aux adultes (<code>0minirezo</code>, <code>1comite</code>) liés à une rubrique de l’année concernée. Les élèves ne sont pas prévenus ;</li>
+			<li>à une <strong>réponse à un commentaire</strong> : en plus, à l’auteur du commentaire d’origine, sauf s’il est élève.</li>
+		</ul>
+		<p>Les comptes à la poubelle sont retirés des destinataires. La mise en page dépend du type de contenu (<code>notifications/article_publie_*.html</code>, <code>notifications/forum_poste_*.html</code>).</p>
+
+		<h2 id="documents">Documents et vidéos</h2>
+		<ul>
+			<li>Les fichiers se joignent par le formulaire commun <code>ccn_joindre_document</code> (plugin <code>ccn</code>), avec envoi par morceaux (bigup). La limite réelle, 100 Mo, est appliquée côté serveur par <code>ccn_verifier_uploads()</code>.</li>
+			<li>Avec <code>VIMEO_ACCESS_TOKEN</code>, le plugin <code>api_vimeo</code> est activé : un MP4 joint est envoyé sur Vimeo (sans limite de taille locale), et un champ « mot de passe Vimeo » apparaît sur le document (<code>formulaires/modifier_video_password.php</code>).</li>
+			<li><code>CCN_UPLOADS_SUSPENDUS=true</code> coupe tout envoi de fichier : Apache refuse les requêtes, les formulaires affichent un message.</li>
+			<li>Le plugin <code>mesfavoris_ccn</code> ajoute aux contenus des réactions (feu, cœur, pouce), comptées par article.</li>
+		</ul>
+
+		<h2 id="maintenance">Maintenance</h2>
+		<ul>
+			<li><strong>Classes vides</strong> (<code>ecrire/?exec=thematique_classes_vides</code>, menu Configuration, webmestres) : liste les rubriques de classe d’une année et supprime celles restées vides, par exemple créées à la connexion de comptes ENT hors projet.</li>
+			<li><strong>Classe active</strong> : un prof lié à plusieurs classes publie dans la première (par numéro de rubrique). Le menu de choix de la classe active existe mais est masqué (<code>_THEMATIQUE_CHOIX_CLASSE</code> à <code>false</code>), l’ENT renvoyant aussi les classes des années passées.</li>
+		</ul>
+
+		<h2 id="edifice">Variante Edifice</h2>
+		<p><code>thematique_edifice</code> reprend tout <code>thematique</code> pour la plateforme Edifice. Sa seule différence de comportement : <code>_THEMATIQUE_RESSOURCE_SANS_PROF</code>, qui réserve les ressources aux intervenants et aux admins. Il est activé quand <code>PROJET</code> vaut <code>edifice</code> (voir <a href="deploiement.html#variables">Déploiement</a>).</p>
+
+		<footer class="page-footer">Documentation générée à partir du dépôt <a href="https://github.com/ccnum/ccn">ccnum/ccn</a>.</footer>
+	</main>
+</div>
+</body>
+</html>

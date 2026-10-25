@@ -3,8 +3,8 @@
 <head>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<title>Fictions et Petit fablab</title>
-	<meta name="description" content="Les plugins d'écriture collaborative en cadavre exquis : fictions (classes et écrivain, rotation des chapitres) et petitfablab (ateliers), sur le socle cadavrexquis.">
+	<title>Fictions CCN</title>
+	<meta name="description" content="Le plugin fictions : écriture collaborative en cadavre exquis par des classes de collège et un écrivain, gestion des histoires, plan de rotation des chapitres, lecture et fin d'année.">
 	<link rel="icon" href="assets/logo.png">
 	<link rel="stylesheet" href="assets/style.css">
 </head>
@@ -16,18 +16,20 @@
 			<ul>
 				<li><a href="index.html">Présentation</a></li>
 				<li><a href="contenus.html">Contenus et rôles</a></li>
-				<li><a href="sso.html">Connexion ENT</a></li>
-				<li><a href="fictions.html" aria-current="page">Fictions et Petit fablab</a>
+				<li><a href="sso.html">Connexion et comptes</a></li>
+				<li><a href="thematique.html">Thematique</a></li>
+				<li><a href="fictions.html" aria-current="page">Fictions</a>
 					<ul class="sub">
 						<li><a href="#principe">Le cadavre exquis</a></li>
-						<li><a href="#fictions">Fictions</a></li>
 						<li><a href="#fictions-structure">Structure</a></li>
 						<li><a href="#fictions-annee">Organiser une année</a></li>
+						<li><a href="#fictions-histoires">Gestion des histoires</a></li>
 						<li><a href="#fictions-ecriture">Écriture et lecture</a></li>
+						<li><a href="#fictions-fin">Fin d’année</a></li>
 						<li><a href="#fictions-sso">Connexion ENT</a></li>
-						<li><a href="#petitfablab">Petit fablab</a></li>
 					</ul>
 				</li>
+				<li><a href="petitfablab.html">Petit fablab</a></li>
 				<li><a href="architecture.html">Architecture</a></li>
 				<li><a href="developpement.html">Développement</a></li>
 				<li><a href="deploiement.html">Déploiement</a></li>
@@ -37,8 +39,8 @@
 	</aside>
 
 	<main>
-		<h1>Fictions et Petit fablab</h1>
-		<p class="lead">Deux sites d’écriture collaborative, sans rapport avec le fonctionnement de <code>thematique</code> : on y écrit des histoires à plusieurs mains, chapitre par chapitre.</p>
+		<h1>Fictions</h1>
+		<p class="lead">Un site d’écriture collaborative, sans rapport avec le fonctionnement de <code>thematique</code> : des classes de collège et un écrivain écrivent des histoires à plusieurs mains, chapitre par chapitre.</p>
 
 		<h2 id="principe">Le principe du cadavre exquis</h2>
 		<p>Chaque histoire part d’un prologue. Chaque chapitre est écrit par un auteur différent, qui ne voit que <strong>la fin du chapitre précédent</strong> : le reste de l’histoire lui est caché jusqu’à ce qu’elle soit terminée.</p>
@@ -48,13 +50,13 @@
 				<tbody>
 					<tr><td><code>cadavrexquis</code></td><td>—</td><td>Socle commun : images et éléments graphiques du livre partagés par les deux sites. Aucun code propre.</td></tr>
 					<tr><td><code>fictions</code></td><td>Collèges : classes et un écrivain</td><td>Participants inscrits par un admin, chapitres attribués par rotation, calendrier d’écriture.</td></tr>
-					<tr><td><code>petitfablab</code></td><td>Ateliers (médiathèques)</td><td>Écriture libre dans une histoire en cours, cinq chapitres par histoire.</td></tr>
+					<tr><td><code>petitfablab</code></td><td>Ateliers (médiathèques)</td><td>Écriture libre dans une histoire en cours, cinq chapitres par histoire (voir <a href="petitfablab.html">Petit fablab</a>).</td></tr>
 				</tbody>
 			</table>
 		</div>
 		<p>Les deux dépendent de <code>ccn</code> pour l’année scolaire. Le plugin activé sur une instance dépend de <code>SPIP_VERSION_SITE</code> (voir <a href="deploiement.html#variables">Déploiement</a>).</p>
 
-		<h2 id="fictions">Fictions</h2>
+		<h2 id="fictions">Fictions en bref</h2>
 		<p>Des classes de collège et un écrivain écrivent ensemble autant d’histoires qu’il y a de participants. Chaque histoire a un prologue et un chapitre 1 communs, puis trois chapitres écrits par trois participants différents.</p>
 
 		<h3 id="fictions-structure">Structure</h3>
@@ -71,7 +73,7 @@
     └── 02. Histoire 02 …</code></pre>
 		<ul>
 			<li>La rubrique de l’année et ses articles sont créés par la tâche de fond <code>genie/fictions_rentree_annee.php</code>, ou dès qu’une rubrique est titrée par une année à la main sous la rubrique des années (<code>fictions_assurer_structure_annee()</code>).</li>
-			<li>Les histoires ne sont pas créées à la rentrée, mais depuis la liste des participants : une par participant actif (<code>inc/fictions_histoires.php</code>). Aucune histoire n’est supprimée automatiquement, celles en trop sont seulement signalées.</li>
+			<li>Les histoires ne sont pas créées à la rentrée, mais depuis la liste des participants : une par participant actif (voir <a href="#fictions-histoires">Gestion des histoires</a>).</li>
 			<li>Depuis 2026 (<code>_FICTIONS_ANNEE_CHAPITRE1_COMMUN</code>), le chapitre 1 est un article unique de l’année, et non plus une copie dans chaque histoire.</li>
 			<li>Les mots-clés de structure sont réservés aux administrateurs complets (<code>fictions_autoriser.php</code>) : poser l’un d’eux au mauvais endroit modifie le site pour tout le monde.</li>
 		</ul>
@@ -81,10 +83,50 @@
 		<ol>
 			<li><strong>Calendrier</strong> : date de lancement, de clôture et de finalisation (génération des histoires en PDF). Avant le lancement, personne n’écrit ; après la clôture, les participants sont désactivés. Une date vide ne pose pas de limite.</li>
 			<li><strong>Participants</strong> : chaque classe ou l’écrivain, rattaché à un compte SPIP. Plusieurs classes peuvent partager le compte d’un même enseignant : ce sont des participants distincts. Les comptes inscrits via l’ENT sont proposés en premier.</li>
-			<li><strong>Histoires</strong> : synchronisées avec les participants actifs, chaque participant a son histoire attitrée.</li>
+			<li><strong>Histoires</strong> : synchronisées avec les participants actifs, chaque participant a son histoire attitrée (voir <a href="#fictions-histoires">ci-dessous</a>).</li>
 			<li><strong>Plan d’associations</strong> : qui écrit quel chapitre de quelle histoire (<code>inc/fictions_plan.php</code>). La rotation est circulaire : le participant <em>i</em> écrit le chapitre 2 de l’histoire <em>i</em>, le chapitre 3 de l’histoire <em>i+1</em> et le chapitre 4 de l’histoire <em>i+2</em>. Il faut au moins trois participants. Le plan peut être retouché à la main, puis validé s’il ne présente pas d’anomalie.</li>
 			<li><strong>Application</strong> : le plan validé lie chaque chapitre au compte du participant affecté (<code>spip_auteurs_liens</code>). C’est ce lien qui donne le droit d’écrire. Une fois l’écriture lancée, le plan validé est verrouillé.</li>
 		</ol>
+
+		<h3 id="fictions-histoires">Gestion des histoires</h3>
+		<p>Une histoire est une rubrique « NN. Histoire NN » sous la rubrique de l’année (<code>inc/fictions_histoires.php</code>). Seules les rubriques dont le titre commence par un numéro sont des histoires : le blog pédagogique et les autres rubriques de l’année sont ignorés.</p>
+		<h4>Une histoire par participant</h4>
+		<p>Le bloc <strong>Histoires</strong> de la page Associations compare le nombre d’histoires attendues (une par participant actif) aux histoires existantes. Le bouton <strong>Synchroniser les histoires</strong> (<code>fictions_histoires_synchroniser()</code>), aussi lancé par « Générer une proposition de répartition », donne une histoire à chaque participant actif qui n’en a pas :</p>
+		<ol>
+			<li>une histoire existante attribuée à personne, par numéro croissant, s’il en reste ;</li>
+			<li>sinon une histoire neuve, numérotée à la suite de la plus grande (<code>fictions_histoire_creer()</code>).</li>
+		</ol>
+		<p>La synchronisation peut être relancée sans risque : elle ne crée pas de doublon, ne réattribue pas une histoire déjà attribuée et ne supprime rien. Un verrou MySQL empêche deux synchronisations simultanées de prendre le même numéro. L’attribution est gardée dans la meta de l’année (clé <code>histoires</code>).</p>
+		<h4>Contenu d’une histoire neuve</h4>
+<pre class="tree"><code>07. Histoire 07          publiée dès sa création
+├── 2/ Chapitre          prop : à écrire
+├── 3/ Chapitre          prepa : en attente
+└── 4/ Chapitre          prepa : en attente</code></pre>
+		<ul>
+			<li>Les chapitres sont créés <strong>sans auteur</strong> : seul le plan validé lie un compte à un chapitre. Sinon l’admin qui synchronise deviendrait auteur, donc rédacteur, de tous les chapitres.</li>
+			<li>Le numéro d’un chapitre est son <strong>ordre de création</strong> dans l’histoire, pas son titre, qui reste modifiable. Mettre un chapitre à la poubelle décale donc la numérotation des suivants.</li>
+			<li>Le prologue et le chapitre 1, communs à toute l’année, ne sont pas dans les histoires.</li>
+		</ul>
+		<h4>Histoires en trop, participant retiré</h4>
+		<ul>
+			<li><strong>Retirer un participant</strong> retire aussi l’attribution de son histoire, mais la rubrique reste en place. Refusé une fois le plan verrouillé (validé et écriture lancée).</li>
+			<li>Une histoire attribuée à personne est signalée en anomalie (« Histoire #… attribuée à aucun participant ») et bloque la validation du plan. Elle sera reprise par le prochain participant ajouté ; sinon, un admin la supprime à la main dans <code>/ecrire</code>, après avoir vérifié qu’elle ne contient rien d’écrit.</li>
+			<li>Le plan ne peut plus être régénéré une fois verrouillé, ni dès qu’un chapitre de rotation est écrit (publié ou texte non vide) : il réattribuerait des chapitres déjà écrits. Une affectation se corrige encore à la main, chapitre par chapitre, tant que ce chapitre n’est pas écrit.</li>
+		</ul>
+		<h4>Anomalies vérifiées avant validation</h4>
+		<p><code>fictions_plan_anomalies()</code> refuse de valider un plan qui présente l’un de ces cas :</p>
+		<div class="table-wrap">
+			<table>
+				<tbody>
+					<tr><td>Moins de trois participants actifs, ou un nombre d’écrivains différent de un.</td></tr>
+					<tr><td>Un participant sans histoire, ou une histoire sans participant.</td></tr>
+					<tr><td>Un participant dont le compte SPIP n’existe plus ou est à la poubelle.</td></tr>
+					<tr><td>Un chapitre 2, 3 ou 4 absent d’une histoire, ou sans participant affecté.</td></tr>
+					<tr><td>Un participant affecté qui n’est plus actif, ou qui écrit deux chapitres de la même histoire.</td></tr>
+					<tr><td>Un participant qui n’écrit pas exactement trois chapitres au total.</td></tr>
+				</tbody>
+			</table>
+		</div>
 
 		<h3 id="fictions-ecriture">Écriture et lecture</h3>
 		<p>Quand un participant enregistre son chapitre, le pipeline <code>post_edition</code> (<code>fictions_post_edition()</code>) enchaîne :</p>
@@ -107,6 +149,22 @@
 		</div>
 		<p>Un webmestre voit tout et peut écrire le chapitre en cours. La modification d’un chapitre est aussi contrôlée côté serveur : un participant ne modifie que le chapitre en cours, pendant la période d’écriture, y compris via les crayons ou <code>/ecrire</code>.</p>
 
+		<h3 id="fictions-fin">Fin d’année</h3>
+		<p>L’accueil (<code>sommaire.html</code>) a deux affichages, choisis par le mot-clé <code>année_en_ecriture</code> sur la rubrique de l’année :</p>
+		<div class="table-wrap">
+			<table>
+				<thead><tr><th>Mot-clé</th><th>Affichage</th></tr></thead>
+				<tbody>
+					<tr><td>Présent</td><td><strong>Fabrication</strong> : la grille des histoires et de leurs chapitres, avec leur état.</td></tr>
+					<tr><td>Absent</td><td><strong>Visualisation</strong> : une couverture par histoire (logo de sa rubrique), qui ouvre la lecture, et un lien vers chaque document joint à la rubrique (le PDF de l’histoire).</td></tr>
+				</tbody>
+			</table>
+		</div>
+		<p>Le mot-clé est posé une seule fois, à la création de l’année. En fin d’année, un admin le retire pour passer en visualisation ; la tâche quotidienne ne le remet pas. Les anciennes années, qui ne l’ont jamais eu, s’affichent en visualisation.</p>
+		<div class="callout">
+			<p>La date de <strong>finalisation</strong> du calendrier est indicative : aucun traitement ne génère les PDF. Couverture et PDF sont ajoutés à la main à chaque rubrique d’histoire, avant de retirer <code>année_en_ecriture</code> : sinon l’accueil affiche des cadres vides.</p>
+		</div>
+
 		<h3 id="fictions-sso">Connexion ENT</h3>
 		<p><code>fictions_cioidc_userinfo()</code> est bien plus simple que celui de thematique : il n’y a ni rôle ni classe à résoudre.</p>
 		<ul>
@@ -116,23 +174,8 @@
 			<li>Les participants et les droits d’écriture ne viennent pas de l’ENT : c’est l’admin qui les attribue dans la page Associations.</li>
 		</ul>
 
-		<h2 id="petitfablab">Petit fablab</h2>
-		<p>Un dispositif d’écriture en atelier : les participants rejoignent l’histoire en cours et écrivent le chapitre suivant.</p>
-<pre class="tree"><code>jeu                               rubrique racine, titrée « jeu »
-└── &lt;session en cours&gt;           la plus récente des sous-rubriques est ouverte
-    ├── Prologue                  articles : un ou plusieurs prologues proposés
-    ├── Histoire 12               cinq chapitres au plus
-    └── Histoire 13</code></pre>
-		<ul>
-			<li><strong>Créer une histoire</strong> : formulaire <code>creer_histoire</code>, réservé aux administrateurs de la rubrique. Il crée une rubrique « Histoire N » par prologue choisi.</li>
-			<li><strong>Écrire</strong> : formulaire <code>editer_article</code>, limité à <strong>cinq chapitres</strong> par histoire (contrôle côté serveur). Le champ « Email » (sous-titre de l’article) reçoit la confirmation.</li>
-			<li><strong>Valider</strong> : <code>valider_chapitre()</code> publie le chapitre, uniquement pour son auteur et avec un jeton signé par le formulaire, puis envoie un e-mail de remerciement. Au cinquième chapitre, tous les auteurs de l’histoire sont prévenus qu’elle est en ligne. L’histoire suivante n’est pas créée automatiquement : un administrateur la crée avec le formulaire <code>creer_histoire</code>.</li>
-			<li><strong>E-mails</strong> : expéditeur, destinataire, copie cachée et blog cité se règlent par <code>_PETITFABLAB_MAIL_FROM</code>, <code>_PETITFABLAB_MAIL_DESTINATAIRE</code>, <code>_PETITFABLAB_MAIL_COPIE</code> et <code>_PETITFABLAB_URL_BLOG</code>, surchargeables dans <code>config/mes_options.php</code>.</li>
-			<li><strong>Sécurité</strong> : le contenu des participants est filtré (JavaScript et HTML suspect neutralisés) aussi sur le site public (<code>filtrer_javascript</code> à -1).</li>
-		</ul>
-
 		<h2>Anciennes versions</h2>
-		<p><code>fictions_archive</code> et <code>petitfablab_archive</code> sont les versions précédentes, conservées mais jamais activées. Les plugins actuels s’appelaient <code>fictionsv2</code> et <code>petitfablabv2</code> : <code>fictions_administrations.php</code> reprend à l’activation les metas écrites sous l’ancien nom.</p>
+		<p><code>fictions_archive</code> est la version précédente, conservée mais jamais activée. Le plugin actuel s’appelait <code>fictionsv2</code> : <code>fictions_administrations.php</code> reprend à l’activation les metas écrites sous l’ancien nom.</p>
 
 		<footer class="page-footer">Documentation générée à partir du dépôt <a href="https://github.com/ccnum/ccn">ccnum/ccn</a>.</footer>
 	</main>

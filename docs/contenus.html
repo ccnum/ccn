@@ -24,8 +24,10 @@
 						<li><a href="#rentree">Cycle de rentrée</a></li>
 					</ul>
 				</li>
-				<li><a href="sso.html">Connexion ENT</a></li>
-				<li><a href="fictions.html">Fictions et Petit fablab</a></li>
+				<li><a href="sso.html">Connexion et comptes</a></li>
+				<li><a href="thematique.html">Thematique</a></li>
+				<li><a href="fictions.html">Fictions</a></li>
+				<li><a href="petitfablab.html">Petit fablab</a></li>
 				<li><a href="architecture.html">Architecture</a></li>
 				<li><a href="developpement.html">Développement</a></li>
 				<li><a href="deploiement.html">Déploiement</a></li>
@@ -74,7 +76,7 @@ Agenda                        mot-clé blogs
 Blog pédagogique              mot-clé evenements (affiché « Salle des profs »)
 Contenu éditorial             mot-clé images_background
 Intervenants                  fiches des intervenants</code></pre>
-		<p>La racine d’une année est titrée <code>2026</code>, pas <code>2026-2027</code>. Ses rubriques « Consignes » et « Travail des classes » sont créées automatiquement à la rentrée (voir <a href="#rentree">Cycle de rentrée</a>), les projets et les classes à la connexion ENT (voir <a href="sso.html">Connexion ENT</a>).</p>
+		<p>La racine d’une année est titrée <code>2026</code>, pas <code>2026-2027</code>. Ses rubriques « Consignes » et « Travail des classes » sont créées automatiquement à la rentrée (voir <a href="#rentree">Cycle de rentrée</a>), les projets et les classes à la connexion ENT (voir <a href="sso.html">Connexion et comptes</a>).</p>
 		<div class="callout">
 			<p>Les rubriques permanentes ne sont pas découpées par année : c’est la <strong>date des articles</strong> qui les range. Le pipeline <code>pre_boucle</code> limite les boucles <code>ARTICLES</code> à la période de l’année scolaire active (voir <a href="architecture.html#annee">Année scolaire</a>).</p>
 		</div>
@@ -97,7 +99,7 @@ Intervenants                  fiches des intervenants</code></pre>
 		<p>Les jalons sont identifiés par un mot-clé d’article : <code>cap-sur-l-annee</code> et <code>la-rencontre</code>.</p>
 
 		<h2 id="roles">Rôles</h2>
-		<p>Le rôle public d’un utilisateur est calculé par <code>thematique_donner_role()</code> et exposé en session par <code>#SESSION{role}</code>. Les règles sont testées dans cet ordre. Le statut et les rubriques sur lesquels elles s’appuient sont fixés à la connexion ENT : voir <a href="sso.html">Connexion ENT et rôles</a>.</p>
+		<p>Le rôle public d’un utilisateur est calculé par <code>thematique_donner_role()</code> et exposé en session par <code>#SESSION{role}</code>. Les règles sont testées dans cet ordre. Le statut et les rubriques sur lesquels elles s’appuient sont fixés à la connexion ENT : voir <a href="sso.html">Connexion et comptes</a>.</p>
 		<div class="table-wrap">
 			<table>
 				<thead><tr><th>Rôle</th><th>Condition</th><th>Peut</th></tr></thead>

@@ -16,8 +16,10 @@
 			<ul>
 				<li><a href="index.html" aria-current="page">Présentation</a></li>
 				<li><a href="contenus.html">Contenus et rôles</a></li>
-				<li><a href="sso.html">Connexion ENT</a></li>
-				<li><a href="fictions.html">Fictions et Petit fablab</a></li>
+				<li><a href="sso.html">Connexion et comptes</a></li>
+				<li><a href="thematique.html">Thematique</a></li>
+				<li><a href="fictions.html">Fictions</a></li>
+				<li><a href="petitfablab.html">Petit fablab</a></li>
 				<li><a href="architecture.html">Architecture</a></li>
 				<li><a href="developpement.html">Développement</a></li>
 				<li><a href="deploiement.html">Déploiement</a></li>
@@ -39,8 +41,10 @@
 
 		<div class="cards">
 			<a class="card" href="contenus.html"><h3>Contenus et rôles</h3><p>Rubriques par année, types de contenus, rôles, cycle de rentrée.</p></a>
-			<a class="card" href="sso.html"><h3>Connexion ENT</h3><p>Comment le SSO laclasse.com fait d’un compte un admin, un prof, un intervenant ou un élève.</p></a>
-			<a class="card" href="fictions.html"><h3>Fictions et Petit fablab</h3><p>Écriture collaborative en cadavre exquis : participants, rotation des chapitres, ateliers.</p></a>
+			<a class="card" href="sso.html"><h3>Connexion et comptes</h3><p>Connexion par l’ENT laclasse.com ou sans, import de comptes par CSV, rôles.</p></a>
+			<a class="card" href="thematique.html"><h3>Thematique</h3><p>Publication, modification, commentaires, notifications, documents et vidéos.</p></a>
+			<a class="card" href="fictions.html"><h3>Fictions</h3><p>Cadavre exquis en classe : participants, gestion des histoires, rotation des chapitres, fin d’année.</p></a>
+			<a class="card" href="petitfablab.html"><h3>Petit fablab</h3><p>Cadavre exquis en atelier : prologues, histoires de cinq chapitres, poste partagé.</p></a>
 			<a class="card" href="architecture.html"><h3>Architecture</h3><p>Plugins, squelettes en popups ajax, année scolaire, rôles et SSO.</p></a>
 			<a class="card" href="developpement.html"><h3>Développement</h3><p>Environnement ddev, qualité de code, lints CI, pièges SPIP.</p></a>
 			<a class="card" href="deploiement.html"><h3>Déploiement</h3><p>Image Docker, variables d’environnement, versions, Helm.</p></a>
@@ -52,12 +56,12 @@
 				<thead><tr><th>Plugin</th><th>Rôle</th></tr></thead>
 				<tbody>
 					<tr><td><code>ccn</code></td><td>Socle transverse : année scolaire (<code>_ANNEE_SCOLAIRE</code>), options et modèles communs. Requis par les plugins « site ».</td></tr>
-					<tr><td><code>thematique</code> <span class="tag">principal</span></td><td>Plugin « site » le plus développé : classes, consignes, travaux, blogs, ressources, forum.</td></tr>
+					<tr><td><code>thematique</code> <span class="tag">principal</span></td><td>Plugin « site » le plus développé : classes, consignes, travaux, blogs, ressources, forum (<a href="thematique.html">détail</a>).</td></tr>
 					<tr><td><code>thematique_edifice</code></td><td>Variante de <code>thematique</code> pour la plateforme Edifice.</td></tr>
-					<tr><td><code>fictions</code></td><td>Écriture collaborative en cadavre exquis pour des classes de collège et un écrivain (<a href="fictions.html#fictions">détail</a>).</td></tr>
-					<tr><td><code>petitfablab</code></td><td>Écriture collaborative en cadavre exquis en atelier (<a href="fictions.html#petitfablab">détail</a>).</td></tr>
+					<tr><td><code>fictions</code></td><td>Écriture collaborative en cadavre exquis pour des classes de collège et un écrivain (<a href="fictions.html">détail</a>).</td></tr>
+					<tr><td><code>petitfablab</code></td><td>Écriture collaborative en cadavre exquis en atelier (<a href="petitfablab.html">détail</a>).</td></tr>
 					<tr><td><code>cadavrexquis</code></td><td>Socle graphique commun à fictions et petitfablab.</td></tr>
-					<tr><td><code>reactions</code>, <code>mesfavoris_ccn</code>, <code>api_vimeo</code>, <code>imports_utilisateurs</code></td><td>Plugins utilitaires : réactions, favoris, vidéos Vimeo, import d’utilisateurs.</td></tr>
+					<tr><td><code>reactions</code>, <code>mesfavoris_ccn</code>, <code>api_vimeo</code>, <code>imports_utilisateurs</code></td><td>Plugins utilitaires : réactions, favoris, vidéos Vimeo, import d’utilisateurs (<a href="sso.html#import">détail</a>).</td></tr>
 					<tr><td><code>fictions_archive</code>, <code>petitfablab_archive</code> <span class="tag muted">archive</span></td><td>Anciennes versions, conservées mais jamais activées.</td></tr>
 				</tbody>
 			</table>
