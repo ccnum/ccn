@@ -16,8 +16,10 @@
 			<ul>
 				<li><a href="index.html">Présentation</a></li>
 				<li><a href="contenus.html">Contenus et rôles</a></li>
-				<li><a href="sso.html">Connexion ENT</a></li>
-				<li><a href="fictions.html">Fictions et Petit fablab</a></li>
+				<li><a href="sso.html">Connexion et comptes</a></li>
+				<li><a href="thematique.html">Thematique</a></li>
+				<li><a href="fictions.html">Fictions</a></li>
+				<li><a href="petitfablab.html">Petit fablab</a></li>
 				<li><a href="architecture.html">Architecture</a></li>
 				<li><a href="developpement.html">Développement</a></li>
 				<li><a href="deploiement.html" aria-current="page">Déploiement</a>
@@ -59,6 +61,7 @@ docker-compose up</code></pre>
 					<tr><td><code>SPIP_VERSION_SITE</code></td><td><code>thematique</code> par défaut ; une valeur contenant <code>fictions</code> active le plugin fictions, idem pour <code>petitfablab</code>.</td></tr>
 					<tr><td><code>SPIP_PLUGINS_CIOIDC</code></td><td><code>true</code> pour activer la connexion SSO laclasse.com.</td></tr>
 					<tr><td><code>SPIP_CIOIDC_CLIENT_NOM</code>, <code>SPIP_CIOIDC_CLIENT_SECRET</code></td><td>Client OpenID Connect enregistré sur le serveur laclasse.com (requis si le SSO est activé).</td></tr>
+					<tr><td><code>SPIP_PLUGINS_IMPORTS_UTILISATEURS</code></td><td><code>true</code> pour activer la page d’import de comptes par CSV (voir <a href="sso.html#import">Import de comptes</a>). Désactivée par défaut.</td></tr>
 					<tr><td><code>PROJET</code></td><td><code>laclasse</code> par défaut, ou <code>edifice</code>.</td></tr>
 					<tr><td><code>APACHE_PORT</code></td><td>Port d’écoute d’Apache dans le conteneur.</td></tr>
 					<tr><td><code>VIMEO_ACCESS_TOKEN</code></td><td>Jeton d’accès à l’API Vimeo.</td></tr>
