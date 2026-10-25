@@ -68,9 +68,11 @@ Si la pull request est fermée avec le label `#major`, la version sera incrémen
 Il faut dans le BO des sites configuré le SMTP
 
 ### ❤️ Humans.txt
-- pierretux
-- pipazoul
-- Anthony Angelot
+- [pierretux](https://github.com/pierretux)
+- [pipazoul](https://github.com/Pipazoul)
+- [Anthony Angelot](https://github.com/aangelot)
+- [antoineDerooGrandLyon](https://github.com/antoineDerooGrandLyon)
+- [Jérémy Nguyen](https://github.com/njbom)
 - Christophe Monnet
 - Juliette Monaco
 - Patrick Vincent
