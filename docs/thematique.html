@@ -19,6 +19,7 @@
 				<li><a href="sso.html">Connexion et comptes</a></li>
 				<li><a href="thematique.html" aria-current="page">Thematique</a>
 					<ul class="sub">
+						<li><a href="#noms">Noms et classes</a></li>
 						<li><a href="#publier">Publier</a></li>
 						<li><a href="#modifier">Modifier, supprimer</a></li>
 						<li><a href="#commentaires">Commentaires</a></li>
@@ -41,6 +42,41 @@
 	<main>
 		<h1>Thematique</h1>
 		<p class="lead">Le plugin des sites « projet » (On tourne, etc.) : des intervenants publient des consignes, les classes y répondent, tout le monde commente. Cette page décrit ce que chacun peut faire sur le site public ; l’organisation des rubriques et le calcul des rôles sont sur <a href="contenus.html">Contenus et rôles</a>.</p>
+
+		<h2 id="noms">Noms des comptes et des classes</h2>
+		<p>Règle de départ : <strong>on publie en tant que classe, on commente en tant qu’individu</strong>. Un compte porte donc deux noms, tous deux réécrits à chaque connexion ENT (<code>thematique_cioidc_userinfo()</code>) :</p>
+		<div class="table-wrap">
+			<table>
+				<thead><tr><th>Champ</th><th>Contenu</th><th>Exemple</th></tr></thead>
+				<tbody>
+					<tr><td><code>nom</code></td><td>La fonction : rôle, première classe réelle, établissement (<code>thematique_cioidc_nom_affiche()</code>). Un intervenant, qui n’a ni classe ni établissement, a son prénom et son nom en tête.</td><td>« Enseignant - 4ème 2 - Collège Jean Jaurès », « Élève - 4ème 2 - Collège Jean Jaurès », « Claire Martin - Intervenant », « Admin »</td></tr>
+					<tr><td><code>nom_complet</code></td><td>La personne : prénom et nom envoyés par l’ENT (<code>thematique_cioidc_nom_complet()</code>).</td><td>« Claire Martin »</td></tr>
+				</tbody>
+			</table>
+		</div>
+		<h3>Où chaque nom apparaît</h3>
+		<div class="table-wrap">
+			<table>
+				<thead><tr><th>Contexte</th><th>Nom affiché</th><th>Fonction</th></tr></thead>
+				<tbody>
+					<tr><td>Consignes, réponses, ressources, liste des participants, e-mails de notification</td><td>Prof et élève : <code>nom</code>. Intervenant : <code>nom_complet</code> seul.</td><td><code>thematique_nom_public_auteur()</code></td></tr>
+					<tr><td>Commentaires</td><td><code>nom_complet</code> suivi de la classe et de l’établissement, sans le rôle : « Claire Martin - 4ème 2 - Collège Jean Jaurès ». Intervenant : <code>nom_complet</code> seul.</td><td><code>thematique_nom_auteur_commentaire()</code></td></tr>
+					<tr><td>Menu du haut (compte connecté)</td><td><code>nom_complet</code>, sinon <code>nom</code>.</td><td><code>#SESSION{nom_complet}</code></td></tr>
+					<tr><td>Espace privé (<code>/ecrire</code>)</td><td><code>nom</code>, qui distingue les comptes d’un même prof sur plusieurs CCN.</td><td>—</td></tr>
+				</tbody>
+			</table>
+		</div>
+		<p>Un compte qui n’est jamais passé par l’ENT (créé à la main ou importé) a un <code>nom_complet</code> vide : partout, c’est alors son <code>nom</code> qui s’affiche.</p>
+		<h3>Nom d’une classe</h3>
+		<ul>
+			<li>Le nom de classe ENT est mis en forme par <code>thematique_cioidc_nom_classe()</code> : « 4 2 » ou « 42 » donnent « 4ème 2 » ; les autres formats (« 5EME1 », « 3E1HI-GE ») restent tels quels. Le préfixe « CCN - » des groupes ENT est retiré.</li>
+			<li>La rubrique de la classe, sous « Travail des classes », est titrée « classe - établissement » (<code>thematique_cioidc_titre_rubrique_classe()</code>), pour que deux « 4ème 2 » de collèges différents ne partagent pas la même rubrique. L’établissement est celui de la classe (<code>group_structure_id</code>), pas le premier du compte : un prof peut enseigner dans plusieurs établissements.</li>
+			<li>Une rubrique créée sous un ancien format de titre (nom brut, sans établissement) est renommée au format actuel à la connexion suivante, plutôt que dupliquée : son contenu et ses liens sont gardés.</li>
+		</ul>
+		<h3>Nom de l’établissement</h3>
+		<p>L’ENT n’envoie que l’UAI (<code>ENTAllUai</code>, ou <code>group_structure_id</code> pour une classe). Le nom est demandé à l’annuaire de l’Éducation nationale (API data.education.gouv.fr) par <code>thematique_cioidc_nom_etablissement()</code>, avec un cache de 30 jours. Si l’API ne répond pas ou que l’UAI est inconnu (cas de <code>00000CCN</code>), l’établissement est simplement omis du nom.</p>
+		<h3>Numéro, couleur et animal d’une classe</h3>
+		<p>Chaque classe de l’année reçoit un rang selon son ordre d’affichage sur l’accueil (<code>thematique_classes_rangs()</code>). Ce rang, modulo 10, donne son numéro (<code>classe_numero()</code>), donc sa couleur (<code>thematique_couleur_classe()</code>, aussi utilisée dans les e-mails) et son animal (<code>classe_icone()</code> : 🐝 🦩 🦉 🦔 🐟 🐙 🐜 🦁 🦋 🦊). L’animal sert d’avatar aux profs et aux élèves dans le menu du haut, à la place de la photo ENT. Une classe ajoutée en cours d’année peut décaler le rang, donc la couleur, des suivantes.</p>
 
 		<h2 id="publier">Publier</h2>
 		<p>Le menu « Publier » du haut de page n’est proposé qu’aux rôles <span class="tag">prof</span>, <span class="tag">intervenant</span> et <span class="tag">admin</span> (<code>thematique_role_publie()</code>). Il ouvre en popup le formulaire <code>public_publier_article</code>, qui sert aussi à modifier un contenu existant.</p>
