@@ -57,6 +57,7 @@ return [
 	'choisir_classes_ent_explication'            => 'Cochez la ou les classes inscrites à la CCN.',
 	'choisir_classes_ent_introuvable'            => 'Je ne trouve pas ma classe : @email@',
 	'choisir_classes_ent_legende'                => 'Vos classes',
+	'choisir_classes_ent_modifier'               => 'Modifier mes classes',
 	'choisir_classes_ent_titre'                  => 'Choisissez vos classes',
 	'choisir_classes_ent_valider'                => 'Valider',
 	'choisir_rubrique_ressource'                 => 'Choisir une rubrique',

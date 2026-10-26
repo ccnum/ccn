@@ -31,8 +31,15 @@ function formulaires_choisir_classes_ent_charger_dist() {
 		return false;
 	}
 
+	// Classes déjà rattachées (choix rouvert en cours d'année, cf action
+	// thematique_modifier_classes_ent, ou rattachement automatique) pré-cochées.
+	$titres_lies = [];
+	if ($ids = thematique_classes_auteur(session_get('id_auteur'))) {
+		$titres_lies = array_column(sql_allfetsel('titre', 'spip_rubriques', sql_in('id_rubrique', $ids)), 'titre');
+	}
+
 	return [
-		'classes' => [],
+		'classes' => array_keys(array_filter($classes, fn ($classe) => in_array($classe['titre'], $titres_lies, true))),
 		'_classes' => array_column($classes, 'titre'),
 	];
 }

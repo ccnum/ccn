@@ -1148,21 +1148,20 @@ function thematique_classes_auteur($id_auteur) {
 }
 
 /**
- * Classes ENT qu'un prof doit encore cocher dans la pop-up de choix (cf
- * formulaires/choisir_classes_ent.php) : celles mémorisées à sa
- * connexion SSO pour l'année scolaire en cours
- * (thematique_cioidc_memoriser_classes_ent()), tant qu'il n'a pas validé son
- * choix pour cette année (champ classes_ent_choisies).
+ * Classes ENT mémorisées à la connexion SSO d'un prof pour l'année scolaire en
+ * cours (thematique_cioidc_memoriser_classes_ent()), et si son choix pour
+ * cette année est déjà validé (champ classes_ent_choisies). Mis en cache
+ * mémoire par requête.
  *
  * @param int $id_auteur
- * @return array liste de ['group_name', 'group_structure_id', 'titre'], vide
- *   si rien à choisir
+ * @return array ['classes' => liste de ['group_name', 'group_structure_id',
+ *   'titre'], 'choisies' => bool] ; classes vide si aucune pour l'année
  */
-function thematique_classes_ent_a_choisir($id_auteur) {
+function thematique_classes_ent_auteur($id_auteur) {
 	static $cache = [];
 	$id_auteur = intval($id_auteur);
 	if (!$id_auteur) {
-		return [];
+		return ['classes' => [], 'choisies' => false];
 	}
 	if (isset($cache[$id_auteur])) {
 		return $cache[$id_auteur];
@@ -1172,18 +1171,44 @@ function thematique_classes_ent_a_choisir($id_auteur) {
 	$auteur = sql_fetsel('classes_ent, classes_ent_choisies', 'spip_auteurs', 'id_auteur=' . $id_auteur);
 	$annee = (string) thematique_annee_scolaire();
 	$classes_ent = json_decode((string) ($auteur['classes_ent'] ?? ''), true);
-	if (
-		!is_array($classes_ent)
-		|| (string) ($classes_ent['annee'] ?? '') !== $annee
-		|| (string) $auteur['classes_ent_choisies'] === $annee
-	) {
-		return $cache[$id_auteur] = [];
+	if (!is_array($classes_ent) || (string) ($classes_ent['annee'] ?? '') !== $annee) {
+		return $cache[$id_auteur] = ['classes' => [], 'choisies' => false];
 	}
 
-	return $cache[$id_auteur] = array_values(array_filter(
-		(array) ($classes_ent['classes'] ?? []),
-		fn ($classe) => is_array($classe) && !empty($classe['group_name']) && !empty($classe['titre'])
-	));
+	return $cache[$id_auteur] = [
+		'classes' => array_values(array_filter(
+			(array) ($classes_ent['classes'] ?? []),
+			fn ($classe) => is_array($classe) && !empty($classe['group_name']) && !empty($classe['titre'])
+		)),
+		'choisies' => (string) ($auteur['classes_ent_choisies'] ?? '') === $annee,
+	];
+}
+
+/**
+ * Classes ENT qu'un prof doit encore cocher dans la pop-up de choix (cf
+ * formulaires/choisir_classes_ent.php), tant qu'il n'a pas validé son choix
+ * pour cette année (cf thematique_classes_ent_auteur()).
+ *
+ * @param int $id_auteur
+ * @return array liste de ['group_name', 'group_structure_id', 'titre'], vide
+ *   si rien à choisir
+ */
+function thematique_classes_ent_a_choisir($id_auteur) {
+	$classes_ent = thematique_classes_ent_auteur($id_auteur);
+	return $classes_ent['choisies'] ? [] : $classes_ent['classes'];
+}
+
+/**
+ * Le prof peut-il rouvrir la pop-up de choix de ses classes (lien « Modifier
+ * mes classes » du menu haut, action thematique_modifier_classes_ent) : choix
+ * déjà validé pour l'année en cours, parmi des classes ENT mémorisées.
+ *
+ * @param int $id_auteur
+ * @return bool
+ */
+function thematique_classes_ent_modifiables($id_auteur) {
+	$classes_ent = thematique_classes_ent_auteur($id_auteur);
+	return $classes_ent['choisies'] && $classes_ent['classes'];
 }
 
 /**

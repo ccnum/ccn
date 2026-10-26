@@ -538,6 +538,8 @@ function thematique_cioidc_valider_classes_ent(int $id_auteur, array $classes, s
 		return [];
 	}
 
+	thematique_cioidc_renommer_classe_echangee($id_auteur, $classes, $id_travail_classes);
+
 	// Même rubrique que celle que créait la connexion SSO avant la pop-up de choix des classes (titre avec
 	// établissement, renommage d'une rubrique au titre ancien) : on retrouve celle
 	// d'un collègue de la même classe plutôt que d'en créer une seconde.
@@ -570,6 +572,96 @@ function thematique_cioidc_valider_classes_ent(int $id_auteur, array $classes, s
 	spip_log("choix des classes auteur #$id_auteur année $annee : " . implode(',', $choisies), 'cioidc');
 
 	return $choisies;
+}
+
+/**
+ * Prof qui corrige son choix en cours d'année (classe cochée trop vite, cf action
+ * thematique_modifier_classes_ent) : s'il échange une seule classe A contre une
+ * seule classe B pas encore créée, la rubrique de A est renommée en B plutôt que de
+ * créer B vide, pour garder les réponses et documents déjà publiés et son lien.
+ * Seulement si A fait partie de ses classes ENT et qu'aucun autre adulte n'y est
+ * lié (un collègue y travaille vraiment). Les élèves de A en sont détachés : ce
+ * n'est plus leur classe, ceux de B s'y rattachent à leur prochaine connexion (par
+ * le titre, cf thematique_cioidc_resoudre_liens_rubriques()).
+ * Dans tous les autres cas (plusieurs classes changées, B existe déjà…), rien
+ * n'est renommé : A est gardée si elle a du contenu (cf
+ * thematique_cioidc_supprimer_classes_non_choisies()).
+ *
+ * @param int $id_auteur Prof concerné
+ * @param array $classes Classes cochées (entrées de thematique_classes_ent_a_choisir())
+ * @param int|string $id_travail_classes Rubrique « Travail des classes » de l'année
+ */
+function thematique_cioidc_renommer_classe_echangee(int $id_auteur, array $classes, $id_travail_classes): void {
+	// Titres possibles (actuel et anciens) d'une classe ENT
+	$titres = function (array $classe) {
+		$groupe = (object) [
+			'group_name' => $classe['group_name'],
+			'group_structure_id' => $classe['group_structure_id'] ?? '',
+		];
+		return array_values(array_unique(array_merge(
+			[$classe['titre'], thematique_cioidc_titre_rubrique_classe($groupe)],
+			thematique_cioidc_anciens_titres_classe($groupe)
+		)));
+	};
+	$rubrique_existante = fn (array $titres_classe) => (int) sql_getfetsel(
+		'id_rubrique',
+		'spip_rubriques',
+		[sql_in('titre', $titres_classe), 'id_parent=' . intval($id_travail_classes)]
+	);
+
+	// Classes cochées : celles qui existent déjà, et celles à créer
+	$existantes = [];
+	$a_creer = [];
+	foreach ($classes as $classe) {
+		if ($id = $rubrique_existante($titres($classe))) {
+			$existantes[] = $id;
+		} else {
+			$a_creer[] = $classe;
+		}
+	}
+
+	// Classes actuelles du prof non recochées, parmi ses classes ENT
+	$titres_ent = [];
+	foreach (thematique_classes_ent_auteur($id_auteur)['classes'] as $classe) {
+		$titres_ent = array_merge($titres_ent, $titres($classe));
+	}
+	$retirees = [];
+	foreach (thematique_classes_auteur($id_auteur) as $id_classe) {
+		$titre = (string) sql_getfetsel('titre', 'spip_rubriques', 'id_rubrique=' . intval($id_classe));
+		if (!in_array($id_classe, $existantes, true) && in_array($titre, $titres_ent, true)) {
+			$retirees[] = $id_classe;
+		}
+	}
+
+	if (count($retirees) !== 1 || count($a_creer) !== 1) {
+		return;
+	}
+	$id_ancienne = intval($retirees[0]);
+	$autres_adultes = sql_countsel(
+		'spip_auteurs_liens AS L JOIN spip_auteurs AS A ON A.id_auteur=L.id_auteur',
+		["L.objet='rubrique'", 'L.id_objet=' . $id_ancienne, 'L.id_auteur<>' . $id_auteur, "A.statut<>'6forum'"]
+	);
+	if ($autres_adultes) {
+		return;
+	}
+
+	$titre = $a_creer[0]['titre'];
+	sql_updateq('spip_rubriques', ['titre' => $titre], 'id_rubrique=' . $id_ancienne);
+	$eleves = array_column(sql_allfetsel(
+		'L.id_auteur',
+		'spip_auteurs_liens AS L JOIN spip_auteurs AS A ON A.id_auteur=L.id_auteur',
+		["L.objet='rubrique'", 'L.id_objet=' . $id_ancienne, "A.statut='6forum'"]
+	), 'id_auteur');
+	foreach ($eleves as $id_eleve) {
+		objet_dissocier(['id_auteur' => intval($id_eleve)], ['rubrique' => $id_ancienne]);
+	}
+	include_spip('inc/invalideur');
+	suivre_invalideur('1');
+	spip_log(
+		"choix des classes auteur #$id_auteur : classe #$id_ancienne renommée en « $titre » (échange de classe), "
+			. count($eleves) . ' élève(s) détaché(s)',
+		'cioidc'
+	);
 }
 
 /**

@@ -164,6 +164,8 @@
 			<li>Les classes non cochées créées auparavant sont supprimées, seulement si elles sont vides et qu’aucun autre adulte n’y est lié.</li>
 		</ol>
 		<p>Les élèves sont rattachés à leur classe à leur prochaine connexion, une fois que le prof l’a créée.</p>
+		<p><strong>Changer de classes en cours d’année</strong> : une fois son choix validé, le prof a un lien « Modifier mes classes » dans le menu de son compte (<code>thematique_classes_ent_modifiables()</code>). L’action <code>thematique_modifier_classes_ent</code> vide <code>classes_ent_choisies</code>, ce qui rouvre la pop-up avec ses classes actuelles pré-cochées ; la validation suit le même chemin que ci-dessus. La liste proposée est celle reçue de l’ENT à sa dernière connexion.</p>
+		<p><strong>Classe cochée trop vite</strong> : si le prof échange une seule classe contre une seule classe pas encore créée, et qu’aucun autre adulte n’est lié à l’ancienne, sa rubrique est renommée au lieu d’en créer une vide (<code>thematique_cioidc_renommer_classe_echangee()</code>) : réponses, documents et lien du prof sont gardés, les élèves de l’ancienne classe en sont détachés. Dans tous les autres cas, rien n’est renommé et l’ancienne classe reste en place si elle a du contenu.</p>
 
 		<h2 id="reglages">Réglages</h2>
 		<div class="table-wrap">

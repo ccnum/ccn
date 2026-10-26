@@ -63,6 +63,16 @@
 			]
 			</BOUCLE_choix_classe>
 			</B_choix_classe>
+			[(#REM) Prof qui a déjà validé ses classes ENT cette année : rouvre la
+			pop-up de choix pour en changer en cours d'année, cf action
+			thematique_modifier_classes_ent. ]
+			[(#SESSION{id_auteur}|thematique_classes_ent_modifiables|oui)
+			<li class="select-option modifier-classes">
+				<a href="[(#URL_ACTION_AUTEUR{thematique_modifier_classes_ent, #SESSION{id_auteur}, #VAL{./}})]" rel="nofollow">
+					<:thematique:choisir_classes_ent_modifier:>
+				</a>
+			</li>
+			]
 			[(#REM) Compte créé dans SPIP, connecté hors SSO (cioidc pose
 			cioidc_id_token en session) : modifier son nom, son email et son mot
 			de passe, cf formulaires/editer_profil.php. ]
