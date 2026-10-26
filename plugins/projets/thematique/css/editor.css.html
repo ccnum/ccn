@@ -24,9 +24,19 @@
 
 .editer_titre input.text:focus-visible,
 .editer_vimeo_password input.text:focus-visible,
-.editer_date input.text:focus-visible {
+.editer_date input.text:focus-visible,
+.editer_id_rubrique_ressource select:focus-visible {
 	outline: solid 2px var(--color-tonic) !important;
 	outline-offset: 1px;
+}
+
+.editer_id_rubrique_ressource select {
+	width: 100%;
+	color: #222;
+	background-color: var(--color-gris-4);
+	padding: 10px 9px;
+	border: solid 1px #ccc;
+	box-sizing: border-box;
 }
 .markItUp {
 	margin: 0;
@@ -573,114 +583,6 @@ p.boutons:has(input[type="submit"]) {
 	display: flex;
 	align-items: center;
 }
-
-.bloc_previsu {
-	background: white;
-	padding-top: 20px;
-	border-radius: 4px;
-}
-
-#formulaire_forum .bloc_previsu ul.forum {
-	margin-top: 0;
-}
-
-.bloc_previsu .comment-titre {
-	font-size: 18px;
-	line-height: 22px;
-	display: block;
-}
-
-.bloc_previsu .comment-auteur { display: none; }
-
-.bloc_previsu .comment-content {
-	font-size: 13px;
-	line-height: 17px;
-	margin-top: 5px;
-}
-
-.intervention_new_answer:has(.login-forum-bloc) {
-	background-color: #f5f5f5;
-    margin: 0px;
-    padding: 0px 16px;
-	.login-forum-bloc {
-		margin-right: -10px;
-        margin-bottom: -10px;
-		padding-left: 0;
-		padding-right: 0;
-	}
-}
-
-.login-forum-bloc {
-	padding: 1rem;
-    border-radius: 5px;
-	background-color: #f5f5f5;
-	.icon-connecter {
-		width: 20px;
-		height: 20px;
-		margin-right: 0.5rem;
-	}
-	.icon-s-enregistrer {
-		width: 24px;
-		height: 20px;
-		margin-right: 0.5rem;
-		mask-size: 24px 20px;
-		-webkit-mask-size: 24px 20px;
-	}
-	.login-message {
-		font-size: 13px;
-		text-align: center;
-	}
-	.login-forum-buttons {
-		display: flex;
-		gap: 0.5rem;
-		padding-top: 0.5rem;
-		a {
-			text-align: center;
-			font-size: 13px;
-			height: 18px;
-			line-height: 18px;
-			padding: 10px 0;
-			border-radius: 5px;
-			text-transform: uppercase;
-			background-color: var(--color-tonic);
-			color: white;
-            font-weight: bold;
-			flex: 1;
-			&:hover {
-				background-color: var(--background-color-hover);
-			}
-		}
-	}
-	.login-forum-password {
-		padding-top: 0.5rem;
-		display: flex;
-		justify-content: flex-end;
-		a {
-			padding: 0 !important;
-			text-align: right;
-			font-size: 13px;
-			color: var(--color-tonic);
-			.icon-motdepasse {
-				width: 20px;
-				height: 20px;
-				margin-right: 0.2rem;
-				background-color: var(--color-tonic);
-			}
-			&:hover {
-				color: var(--color-hover);
-				.icon-motdepasse {
-					background-color: var(--background-color-hover);
-				}
-			}
-		}
-	}
-}
-
-/* Dans le cas ou l'utilisateur est un invité ne pas afficher */
-.forum_commenter #formulaire_forum .explication, .forum_commenter #formulaire_forum .retour{
-	display: none;
-}
-
 
 /*Formulaire_joindre_document*/
 .formulaire_joindre_document .titrem,

@@ -7,6 +7,8 @@ This monorepo contains all the plugins for SPIP CMS :
 - Thematique
 - Fictions
 
+📖 **Documentation technique : [ccnum.github.io/ccn](https://ccnum.github.io/ccn/)** (sources dans [`docs/`](docs/))
+
 
 ## 🚀 Quickstart
 
@@ -31,6 +33,7 @@ This monorepo contains all the plugins for SPIP CMS :
 | SPIP_PLUGINS_CIOIDC | Mettre true si il faut le plugin CIOIDC (connexion SSO LaClasse) |
 | SPIP_CIOIDC_CLIENT_NOM | Identifiant client OpenID Connect enregistré sur le serveur LaClasse (requis si SPIP_PLUGINS_CIOIDC=true) |
 | SPIP_CIOIDC_CLIENT_SECRET | Secret client OpenID Connect enregistré sur le serveur LaClasse (requis si SPIP_PLUGINS_CIOIDC=true) |
+| SPIP_PLUGINS_IMPORTS_UTILISATEURS | Mettre true pour la page d'import de comptes par CSV (sites sans SSO), désactivée par défaut |
 | PROJET             | Default laclasse, possibilite : edifice                        |
 
 > ℹ️ `config/_config_cioidc.php` est régénéré à chaque démarrage du conteneur à partir des variables `SPIP_CIOIDC_*` : toute modification prend effet au redémarrage suivant.
@@ -65,9 +68,11 @@ Si la pull request est fermée avec le label `#major`, la version sera incrémen
 Il faut dans le BO des sites configuré le SMTP
 
 ### ❤️ Humans.txt
-- pierretux
-- pipazoul
-- Anthony Angelot
+- [pierretux](https://github.com/pierretux)
+- [pipazoul](https://github.com/Pipazoul)
+- [Anthony Angelot](https://github.com/aangelot)
+- [antoineDerooGrandLyon](https://github.com/antoineDerooGrandLyon)
+- [Jérémy Nguyen](https://github.com/njbom)
 - Christophe Monnet
 - Juliette Monaco
 - Patrick Vincent

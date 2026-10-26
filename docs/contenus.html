@@ -1,0 +1,136 @@
+<!doctype html>
+<html lang="fr">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Contenus et rôles CCN</title>
+	<meta name="description" content="Structure éditoriale d'un site CCN : rubriques par année, types de contenus portés par mots-clés, rôles des utilisateurs et cycle de rentrée.">
+	<link rel="icon" href="assets/logo.png">
+	<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+<div class="layout">
+	<aside class="sidebar">
+		<a class="brand" href="index.html"><img src="assets/logo.png" alt=""><span>CCN<small>Documentation technique</small></span></a>
+		<nav>
+			<ul>
+				<li><a href="index.html">Présentation</a></li>
+				<li><a href="contenus.html" aria-current="page">Contenus et rôles</a>
+					<ul class="sub">
+						<li><a href="#glossaire">Glossaire</a></li>
+						<li><a href="#structure">Structure des rubriques</a></li>
+						<li><a href="#types">Types de contenus</a></li>
+						<li><a href="#roles">Rôles</a></li>
+						<li><a href="#rentree">Cycle de rentrée</a></li>
+					</ul>
+				</li>
+				<li><a href="sso.html">Connexion et comptes</a></li>
+				<li><a href="thematique.html">Thematique</a></li>
+				<li><a href="fictions.html">Fictions</a></li>
+				<li><a href="petitfablab.html">Petit fablab</a></li>
+				<li><a href="architecture.html">Architecture</a></li>
+				<li><a href="developpement.html">Développement</a></li>
+				<li><a href="deploiement.html">Déploiement</a></li>
+			</ul>
+		</nav>
+		<div class="repo"><a href="https://github.com/ccnum/ccn">github.com/ccnum/ccn</a></div>
+	</aside>
+
+	<main>
+		<h1>Contenus et rôles</h1>
+		<p class="lead">Comment un site CCN organise ses contenus dans SPIP, et qui peut y faire quoi. Cette page décrit le plugin <code>thematique</code>.</p>
+
+		<h2 id="glossaire">Glossaire</h2>
+		<div class="table-wrap">
+			<table>
+				<tbody>
+					<tr><th>Projet</th><td>Un site CCN : un thème culturel suivi par plusieurs classes pendant une année scolaire.</td></tr>
+					<tr><th>Intervenant</th><td>Professionnel de la culture qui anime le projet et publie les consignes.</td></tr>
+					<tr><th>Consigne (mission)</th><td>Article publié par un intervenant, auquel les classes répondent.</td></tr>
+					<tr><th>Réponse</th><td>Article publié par une classe en réponse à une consigne (rubrique « Travail des classes »).</td></tr>
+					<tr><th>Classe</th><td>Rubrique d’une classe de l’ENT, avec son numéro, sa couleur et son icône.</td></tr>
+					<tr><th>Fiche intervenant</th><td>Article de présentation de l’intervenant, dans la rubrique racine « Intervenants », réutilisé d’une année sur l’autre (années dans le surtitre).</td></tr>
+					<tr><th>Jalon</th><td>Article repère créé à chaque rentrée : « Cap sur l’année » (mi-septembre) et « La Rencontre » (mi-juin).</td></tr>
+				</tbody>
+			</table>
+		</div>
+
+		<h2 id="structure">Structure des rubriques</h2>
+		<p>Deux familles de rubriques racines coexistent : celles d’une <strong>année scolaire</strong>, recréées à chaque rentrée, et des rubriques <strong>permanentes</strong>, créées une fois pour toutes à l’installation du plugin (<code>thematique_configurer_rubriques()</code>).</p>
+<pre class="tree"><code><span class="c"># Une racine par année, titrée par l’année de rentrée</span>
+2026
+├── Consignes                 mot-clé consignes
+│   ├── Cap sur l’année       jalon (15 septembre)
+│   ├── La Rencontre          jalon (15 juin suivant)
+│   └── On tourne 2026        projet (nom du groupe ENT) : consignes de l’intervenant
+└── Travail des classes       mot-clé travail_en_cours
+    ├── 4ème 2 - Collège …    réponses de la classe
+    └── …
+
+<span class="c"># Rubriques permanentes, hors années</span>
+Ressources                    mot-clé ressources
+├── Méthodologie              onglets de la page Ressources,
+├── Pédagogie                 titres et ordre du back-office
+└── Thématique
+Agenda                        mot-clé blogs
+Blog pédagogique              mot-clé evenements (affiché « Salle des profs »)
+Contenu éditorial             mot-clé images_background
+Intervenants                  fiches des intervenants</code></pre>
+		<p>La racine d’une année est titrée <code>2026</code>, pas <code>2026-2027</code>. Ses rubriques « Consignes » et « Travail des classes » sont créées automatiquement à la rentrée (voir <a href="#rentree">Cycle de rentrée</a>), les projets et les classes à la connexion ENT (voir <a href="sso.html">Connexion et comptes</a>).</p>
+		<div class="callout">
+			<p>Les rubriques permanentes ne sont pas découpées par année : c’est la <strong>date des articles</strong> qui les range. Le pipeline <code>pre_boucle</code> limite les boucles <code>ARTICLES</code> à la période de l’année scolaire active (voir <a href="architecture.html#annee">Année scolaire</a>).</p>
+		</div>
+
+		<h2 id="types">Types de contenus</h2>
+		<p>Le type d’un contenu ne dépend pas de son titre mais du <strong>mot-clé porté par sa rubrique</strong>, ou par la plus proche rubrique parente qui en a un. C’est ce que résout <code>thematique_type_objet_rubrique()</code>.</p>
+		<div class="table-wrap">
+			<table>
+				<thead><tr><th>Mot-clé de rubrique</th><th>Libellé affiché</th><th>Contenu</th></tr></thead>
+				<tbody>
+					<tr><td><code>consignes</code></td><td>Consigne</td><td>Consignes des intervenants et jalons.</td></tr>
+					<tr><td><code>travail_en_cours</code></td><td>Réponse</td><td>Travaux des classes, une sous-rubrique par classe.</td></tr>
+					<tr><td><code>ressources</code></td><td>Ressources</td><td>Bibliothèque de ressources.</td></tr>
+					<tr><td><code>blogs</code></td><td>Agenda</td><td>Blog public.</td></tr>
+					<tr><td><code>evenements</code></td><td>Salle des profs</td><td>Blog privé, réservé aux adultes.</td></tr>
+					<tr><td><code>agora</code></td><td>Agora</td><td>Espace d’échange.</td></tr>
+				</tbody>
+			</table>
+		</div>
+		<p>Les jalons sont identifiés par un mot-clé d’article : <code>cap-sur-l-annee</code> et <code>la-rencontre</code>.</p>
+
+		<h2 id="roles">Rôles</h2>
+		<p>Le rôle public d’un utilisateur est calculé par <code>thematique_donner_role()</code> et exposé en session par <code>#SESSION{role}</code>. Les règles sont testées dans cet ordre. Le statut et les rubriques sur lesquels elles s’appuient sont fixés à la connexion ENT : voir <a href="sso.html">Connexion et comptes</a>.</p>
+		<div class="table-wrap">
+			<table>
+				<thead><tr><th>Rôle</th><th>Condition</th><th>Peut</th></tr></thead>
+				<tbody>
+					<tr><td><span class="tag">eleve</span></td><td>Statut SPIP <code>6forum</code>.</td><td>Lire, commenter (forum).</td></tr>
+					<tr><td><span class="tag">admin</span></td><td>Statut <code>0minirezo</code> non restreint, ou webmestre.</td><td>Tout : publier partout, modérer tous les commentaires.</td></tr>
+					<tr><td><span class="tag">prof</span></td><td>Lié à une rubrique <code>travail_en_cours</code> de l’année active, ou classes ENT encore à choisir.</td><td>Publier des réponses, des ressources, des événements ; voir la salle des profs.</td></tr>
+					<tr><td><span class="tag">intervenant</span></td><td>Lié à une rubrique <code>consignes</code> de l’année active.</td><td>Publier des consignes, des ressources, des événements ; voir la salle des profs.</td></tr>
+					<tr><td><span class="tag muted">visiteur</span></td><td>Non connecté.</td><td>Lire les contenus publics.</td></tr>
+				</tbody>
+			</table>
+		</div>
+		<div class="callout">
+			<p>Seuls les liens vers les rubriques de <strong>l’année active</strong> comptent : un intervenant qui était prof l’an dernier n’est pas considéré comme prof cette année. Un administrateur restreint (lié à des rubriques) n’a pas le rôle <code>admin</code> côté public : son rôle dépend de ses rubriques.</p>
+		</div>
+		<p>Sur la plateforme Edifice, la constante <code>_THEMATIQUE_RESSOURCE_SANS_PROF</code> retire aux profs le droit de créer des ressources.</p>
+
+		<h2 id="rentree">Cycle de rentrée</h2>
+		<p>Deux tâches de fond quotidiennes préparent la nouvelle année :</p>
+		<ol>
+			<li><strong>Structure de l’année</strong> (<code>genie/thematique_rentree_annee.php</code>) : crée la rubrique racine de l’année, ses rubriques « Consignes » et « Travail des classes » avec leurs mots-clés, les deux jalons (en statut « proposé », attribués au premier intervenant du projet) et la fiche de l’intervenant de l’année.</li>
+			<li><strong>Remise à zéro des comptes</strong> (<code>genie/thematique_rentree_poubelle.php</code>) : en septembre, passe les comptes non-webmestres à la poubelle. Chacun est réactivé à sa prochaine connexion ENT, avec ses classes de la nouvelle année.</li>
+		</ol>
+		<p>Quand un intervenant est lié au projet en cours d’année, la structure, les jalons et sa fiche sont créés dès sa connexion, sans attendre le cron de septembre.</p>
+		<div class="callout">
+			<p><strong>Projet archivé</strong> (<code>CCN_PROJET_ACTIVE=false</code>) : la structure de rentrée n’est plus créée, et seuls les webmestres peuvent se connecter via l’ENT.</p>
+		</div>
+		<p>À la connexion suivante, un prof choisit ses classes de l’année dans une pop-up (<code>formulaires/choisir_classes_ent.php</code>), alimentée par les groupes de l’ENT.</p>
+
+		<footer class="page-footer">Documentation générée à partir du dépôt <a href="https://github.com/ccnum/ccn">ccnum/ccn</a>.</footer>
+	</main>
+</div>
+</body>
+</html>

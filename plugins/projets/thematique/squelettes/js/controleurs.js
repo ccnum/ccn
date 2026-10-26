@@ -1328,14 +1328,6 @@ function updateUrl(object, title, url) {
 				if (/^[\w-]+$/.test(CCN.hash)) {
 					const anchor = $("#" + CCN.hash);
 					if (anchor.length > 0) {
-						// Ce bloc est appelé au moins deux fois : on utilise .show() plutôt
-						// qu'un trigger('click') sur .triggertoggleshow, qui ferait un
-						// slideToggle et refermerait l'item au second appel.
-
-						// Forum : ouvre les items
-						anchor.find('.toggleshow').show();
-						anchor.closest('.intervention_item_around').find('.toggleshow').show();
-
 						$('#sidebar_content, #sidebar_main_inner, #sidebar_lateral_inner').animate({ scrollTop: anchor.offset().top - 60 }, 'slow');
 					}
 				}

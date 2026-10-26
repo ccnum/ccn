@@ -7,6 +7,6 @@ réponse JSON à toutes les années scolaires sélectionnées, quel que soit le
 visiteur — d'où des mismatchs classe/mission après un changement d'année. ]
 #CACHE{0}
 #HTTP_HEADER{Content-Type: application/json; charset=#CHARSET}
-[(#ENV{mode}|in_array{#LISTE{consignes,classes,projet,articles,ajax,demarrage}}|oui)
+[(#ENV{mode}|in_array{#LISTE{consignes,classes,projet,articles,demarrage}}|oui)
 <INCLURE{fond=json/#ENV{mode}}{env}>
 ]

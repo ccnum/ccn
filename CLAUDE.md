@@ -4,8 +4,8 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project overview
 
-Monorepo SPIP (CMS PHP) hébergeant plusieurs sites multisite pour le Conseil de la Culture à
-Nantes (CCN) / laclasse.com. C'est un **cœur SPIP** (`ecrire/`, `prive/`, `squelettes-dist/`,
+Monorepo SPIP (CMS PHP) hébergeant plusieurs sites multisite pour les Classes Culturelles
+Numériques (CCN) de l'ENT laclasse.com, projet d'Erasme (Métropole de Lyon). C'est un **cœur SPIP** (`ecrire/`, `prive/`, `squelettes-dist/`,
 `plugins-dist/`) + un jeu de **plugins maison** dans `plugins/` (le code sur lequel on travaille
 réellement — les autres répertoires sont le framework SPIP, ne pas les modifier sauf besoin
 explicite).
@@ -58,6 +58,7 @@ python3 .ci/check_lang_keys.py         # clés <:thematique:xxx:> / CCN.lang.xxx
 python3 .ci/check_hardcoded_paths.py   # chemins img/css/js/pdf ou spip.php?page= en dur (baseline: .ci/hardcoded-paths-baseline.txt)
 python3 .ci/check_rem.py               # syntaxe de squelette (#BALISE, <BOUCLE, <:x:>, crochets) dans un [(#REM) ...]
 python3 .ci/check_docker_entrypoint.py # cohérence de docker-entrypoint.sh
+python3 .ci/check_docs.py              # docs/ ne cite pas de fonction/constante/fichier absent du code, toutes les variables de .env.example documentées
 node .ci/check_html_duplication.js     # HTML/squelette copié-collé (jscpd, `npm ci` requis ; baseline: .ci/html-duplication-baseline.txt)
 node .ci/check_php_duplication.js      # idem pour le PHP (baseline: .ci/php-duplication-baseline.txt)
 ```
@@ -80,12 +81,10 @@ Le site n'est pas un enchaînement de pages classiques : `squelettes/layout.html
 documenté en tête de chaque fichier concerné) et `squelettes/modeles/` (mini-squelettes appelés
 via `#MODELE{}`, ex. résolution d'un logo/icône).
 
-Deux implémentations de forum coexistent : l'ancienne (`noisettes/ajax/article-forum-detail.html`,
-`noisettes/inc/forum.html`) et la nouvelle **forumv2** (`noisettes/inc/forumv2/*`, câblée depuis
-`noisettes/sidebar/onglet_commentaires.html`, elle-même incluse par les fonds
-`consigne_pour_*`/`reponse_pour_*`/`blog.html`) — c'est forumv2 qui est réellement live sur les
-pages article. Vérifier laquelle est exercée avant de supposer qu'une modif de l'ancien chemin a
-un effet visible.
+Les commentaires passent uniquement par **forumv2** (`formulaires/forumv2.php`,
+`noisettes/inc/forumv2/*`, câblé depuis `noisettes/sidebar/onglet_commentaires.html`, elle-même
+incluse par les fonds `consigne_pour_*`/`reponse_pour_*`/`blog.html`). L'ancien forum (formulaire
+de forum natif SPIP, page `forum`, `article-forum-detail`) a été supprimé avec son CSS.
 
 ### Convention : PHP caché plutôt que boucles SPIP non cachées
 Beaucoup de résolutions (type de contenu d'une rubrique/article/auteur, couleur/numéro de classe,
@@ -182,6 +181,29 @@ jamais transmis (le formulaire retombe sur sa valeur par défaut).
 `#CONST{...}` et `#GET{...}` passent sans problème comme arguments. Même consigne que pour le
 piège précédent : vérifier le rendu réel (texte parasite, libellé attendu), pas seulement que le
 squelette compile.
+
+## Documentation (`docs/`)
+
+Documentation technique en HTML statique dans `docs/`, publiée sur GitHub Pages
+(https://ccnum.github.io/ccn/) et écrite à la main, aux couleurs du plugin `thematique`
+(`docs/assets/style.css`). **Toute modif de code qui change un comportement documenté met à
+jour la page concernée dans le même commit** :
+
+| Modif dans le code | Page à mettre à jour |
+| --- | --- |
+| Rôles (`thematique_donner_role`), droits, structure des rubriques, mots-clés de type, tâches de rentrée | `docs/contenus.html` |
+| Connexion SSO (`thematique_cioidc_userinfo`, `inc/thematique_cioidc.php`, constantes `_THEMATIQUE_*WEBMESTRES`/`_GROUPE_INTERVENANTS`), choix des classes, mode sans ENT, `imports_utilisateurs` | `docs/sso.html` |
+| `thematique` côté usage : publication, droits de modification/suppression, forumv2, notifications, documents/Vimeo, maintenance, `thematique_edifice` | `docs/thematique.html` |
+| `fictions` (structure d'année, participants, gestion des histoires, plan d'associations, droits de lecture/écriture, fin d'année, SSO), `cadavrexquis` | `docs/fictions.html` |
+| `petitfablab` (ateliers, création des histoires, écriture, lecture, e-mails) | `docs/petitfablab.html` |
+| Squelettes/popups, endpoints `page=json`, année scolaire, i18n, pipelines, socle `ccn` (uploads, e-mails), organisation des squelettes et pipelines de `fictions`/`petitfablab`, plugins utilitaires | `docs/architecture.html` |
+| Lint CI, commandes de dev, nouveau piège SPIP | `docs/developpement.html` (et cette page) |
+| Variable d'environnement, workflow de build, Helm | `docs/deploiement.html` |
+| Nouveau plugin | `docs/index.html` |
+
+`check_docs.py` ne détecte que les références devenues invalides (renommage, suppression,
+variable non documentée), pas une explication devenue fausse : relire la page concernée reste
+nécessaire. Une nouvelle page reprend la barre latérale des autres et y est ajoutée partout.
 
 ## Convention de commit
 

@@ -1,17 +1,18 @@
 name: Rebuild Docker Images
 
 # Reconstruit les images dev et latest quand une nouvelle version de PHP est publiée :
-# toutes les heures, compare la variable PHP_VERSION de l'image de base (FROM du
-# Dockerfile de la branche) à celle de notre image publiée (héritée de la base).
+# chaque nuit (2h17 UTC, soit 3h17 ou 4h17 à Paris), compare la variable PHP_VERSION de
+# l'image de base (FROM du Dockerfile de la branche) à celle de notre image publiée
+# (héritée de la base).
 # Pas de lint ni de nouveau tag de version : le code n'a pas changé.
 # L'image de prod (latest) n'est reconstruite qu'entre 18h et 8h (heure de Paris) :
-# son redéploiement redémarre les sites. dev l'est dès la sortie de la version.
+# son redéploiement redémarre les sites ; l'heure du cron tombe toujours dans cette plage.
 # Un déclenchement manuel reconstruit les deux images sans comparer, à toute heure.
 # Un pod ne prend la nouvelle image qu'à son redémarrage (imagePullPolicy: Always).
 
 on:
   schedule:
-    - cron: '17 * * * *'
+    - cron: '17 2 * * *'
   workflow_dispatch:
 
 jobs:

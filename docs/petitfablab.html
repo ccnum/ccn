@@ -1,0 +1,116 @@
+<!doctype html>
+<html lang="fr">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Petit fablab CCN</title>
+	<meta name="description" content="Le plugin petitfablab : écriture en cadavre exquis lors d'ateliers, sur un poste partagé. Ateliers, prologues, création des histoires, écriture des cinq chapitres, lecture et e-mails.">
+	<link rel="icon" href="assets/logo.png">
+	<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+<div class="layout">
+	<aside class="sidebar">
+		<a class="brand" href="index.html"><img src="assets/logo.png" alt=""><span>CCN<small>Documentation technique</small></span></a>
+		<nav>
+			<ul>
+				<li><a href="index.html">Présentation</a></li>
+				<li><a href="contenus.html">Contenus et rôles</a></li>
+				<li><a href="sso.html">Connexion et comptes</a></li>
+				<li><a href="thematique.html">Thematique</a></li>
+				<li><a href="fictions.html">Fictions</a></li>
+				<li><a href="petitfablab.html" aria-current="page">Petit fablab</a>
+					<ul class="sub">
+						<li><a href="#structure">Structure</a></li>
+						<li><a href="#comptes">Comptes</a></li>
+						<li><a href="#atelier">Déroulé d’un atelier</a></li>
+						<li><a href="#lecture">Lecture</a></li>
+						<li><a href="#emails">E-mails</a></li>
+						<li><a href="#securite">Sécurité</a></li>
+					</ul>
+				</li>
+				<li><a href="architecture.html">Architecture</a></li>
+				<li><a href="developpement.html">Développement</a></li>
+				<li><a href="deploiement.html">Déploiement</a></li>
+			</ul>
+		</nav>
+		<div class="repo"><a href="https://github.com/ccnum/ccn">github.com/ccnum/ccn</a></div>
+	</aside>
+
+	<main>
+		<h1>Petit fablab</h1>
+		<p class="lead">Un dispositif d’écriture en atelier, en médiathèque : sur un poste partagé, chaque participant écrit à son tour le chapitre suivant d’une histoire en cadavre exquis (voir <a href="fictions.html#principe">le principe</a>). Une histoire compte cinq chapitres.</p>
+		<p>Comme <code>fictions</code>, le plugin dépend de <code>ccn</code> et du socle graphique <code>cadavrexquis</code>. Il n’a ni rôles, ni plan, ni calendrier : tout repose sur les rubriques et sur le compte de l’animateur.</p>
+
+		<h2 id="structure">Structure</h2>
+<pre class="tree"><code>jeu                               rubrique racine, titrée « jeu »
+└── Atelier …                     une rubrique par atelier (lieu, session)
+    ├── Prologue                  articles titrés « Prologue » : points de départ proposés
+    ├── Histoire 212              une rubrique par histoire, cinq chapitres au plus
+    │   ├── chapitre 1            articles, dans l’ordre de date
+    │   └── …
+    └── Histoire 213</code></pre>
+		<ul>
+			<li>L’accueil affiche par défaut l’atelier <strong>le plus récent</strong> (la sous-rubrique de « jeu » au plus grand numéro), ou celui passé en <code>rub_jeu</code>.</li>
+			<li>Une histoire est titrée « Histoire » suivi de son numéro de rubrique. Son descriptif contient le numéro de l’article prologue dont elle part.</li>
+			<li>Une histoire est <strong>terminée</strong> quand elle a cinq chapitres. L’accueil sépare les histoires en cours (grille) des histoires terminées (couvertures).</li>
+		</ul>
+
+		<h2 id="comptes">Comptes</h2>
+		<p>Le seul compte qui compte est celui de l’<strong>animateur</strong> : un administrateur restreint à la rubrique de son atelier. Ce lien lui permet de créer des histoires dans l’atelier (autorisation <code>creerrubriquedans</code>) et d’y écrire.</p>
+		<ul>
+			<li>Les participants n’ont pas de compte : ils écrivent sur le poste où l’animateur est connecté. Le chapitre est donc enregistré au nom de l’animateur ; le participant se signe par le champ « Pseudo » (surtitre de l’article, « Auteur Anonyme » s’il est vide) et peut laisser son e-mail (sous-titre).</li>
+			<li>Le lien « Se connecter » propose l’ENT (<code>cioidc</code>, s’il est activé) ou le formulaire SPIP. Contrairement à <code>thematique</code> et <code>fictions</code>, le plugin ne traite pas les attributs ENT : un compte créé par l’ENT reste visiteur tant qu’un admin ne l’a pas rattaché à un atelier. Les comptes d’animateurs se créent à la main ou par <a href="sso.html#import">import CSV</a>.</li>
+		</ul>
+
+		<h2 id="atelier">Déroulé d’un atelier</h2>
+		<ol>
+			<li><strong>Préparer les prologues</strong> : dans <code>/ecrire</code>, créer dans la rubrique de l’atelier un ou plusieurs articles titrés exactement « Prologue ».</li>
+			<li><strong>Créer les histoires</strong> : connecté, sur l’accueil en mode liste (<code>?liste=oui</code>), choisir l’atelier (« Dans quelle rubrique ? »), puis cocher des prologues dans le formulaire <code>creer_histoire</code>. Chaque prologue coché donne une rubrique « Histoire N », publiée. Le formulaire est réservé aux administrateurs de l’atelier, et n’accepte que des prologues de cet atelier.</li>
+			<li><strong>Lancer une histoire sur le poste</strong> : toujours en mode liste, « Reprendre une histoire en cours » liste les histoires des ateliers de l’animateur. Un clic ouvre la page d’écriture (<code>?page=ecriture&amp;rub_jeu=…</code>) dans un nouvel onglet, laissé ouvert pour les participants.</li>
+			<li><strong>Écrire</strong> : la page montre le prologue, puis les chapitres précédents <strong>verrouillés</strong> : leur texte est masqué (lettres remplacées par des x), sauf leurs dernières lignes (filtre <code>cleanCut</code>). Le participant remplit le formulaire <code>editer_article</code> : titre, texte (1 000 caractères au plus), pseudo, e-mail, et des champs facultatifs (téléphone, indices).</li>
+			<li><strong>Valider</strong> : au retour du formulaire, <code>valider_chapitre()</code> publie le chapitre et envoie un e-mail de remerciement à l’adresse saisie. Au cinquième chapitre, l’histoire est terminée et tous ses participants sont prévenus. Le formulaire disparaît alors de la page.</li>
+			<li><strong>Histoire suivante</strong> : elle n’est jamais créée automatiquement ; l’animateur en crée une nouvelle (étape 2) ou lance une autre histoire en cours (étape 3).</li>
+		</ol>
+		<div class="callout">
+			<p>La limite de cinq chapitres est vérifiée côté serveur : un sixième chapitre est refusé même si le formulaire est encore affiché sur un autre poste. Le chapitre est créé dans la rubrique de l’histoire passée au formulaire, jamais dans une rubrique envoyée par le navigateur.</p>
+		</div>
+
+		<h2 id="lecture">Lecture</h2>
+		<p>La page <code>lecture</code> (<code>?page=lecture&amp;id_rubrique=…</code>) affiche une histoire comme un livre, page par page. Les textes y sont en clair si l’une de ces conditions est remplie, et masqués sinon :</p>
+		<ul>
+			<li>l’histoire a ses cinq chapitres ;</li>
+			<li>le visiteur est connecté ;</li>
+			<li>la rubrique de l’histoire porte le mot-clé <code>visible</code>.</li>
+		</ul>
+		<p>Sur l’accueil, une histoire terminée apparaît avec sa couverture (logo de sa rubrique, à ajouter à la main, modifiable en place une fois connecté) et les documents joints à l’atelier.</p>
+
+		<h2 id="emails">E-mails</h2>
+		<p>Les messages partent par <code>petitfablab_envoyer_mail()</code>, au destinataire du dispositif, les participants étant en copie cachée. Les réglages sont dans <code>petitfablab_options.php</code>, surchargeables dans <code>config/mes_options.php</code> :</p>
+		<div class="table-wrap">
+			<table>
+				<thead><tr><th>Constante</th><th>Rôle</th></tr></thead>
+				<tbody>
+					<tr><td><code>_PETITFABLAB_MAIL_FROM</code></td><td>Expéditeur.</td></tr>
+					<tr><td><code>_PETITFABLAB_MAIL_DESTINATAIRE</code></td><td>Destinataire principal de chaque message.</td></tr>
+					<tr><td><code>_PETITFABLAB_MAIL_COPIE</code></td><td>Copie cachée ajoutée à chaque message.</td></tr>
+					<tr><td><code>_PETITFABLAB_URL_BLOG</code></td><td>Blog cité en fin de message (vide : pas de mention).</td></tr>
+				</tbody>
+			</table>
+		</div>
+		<p>Une adresse saisie par un participant n’est utilisée que si elle est valide ; elle est vérifiée dès l’enregistrement du chapitre. Les liens des e-mails pointent vers la page de lecture du site courant (<code>petitfablab_url_lecture()</code>).</p>
+
+		<h2 id="securite">Sécurité</h2>
+		<ul>
+			<li>La publication d’un chapitre suit un simple lien : <code>valider_chapitre()</code> exige que le visiteur soit auteur de l’article et un jeton signé, posé par le formulaire au retour. Un lien forgé ne publie donc pas le brouillon d’un autre.</li>
+			<li>Le contenu des participants est filtré (JavaScript et HTML suspect neutralisés) aussi sur le site public (<code>filtrer_javascript</code> à -1).</li>
+		</ul>
+
+		<h2>Ancienne version</h2>
+		<p><code>petitfablab_archive</code> est la version précédente, conservée mais jamais activée. Le plugin actuel s’appelait <code>petitfablabv2</code>.</p>
+
+		<footer class="page-footer">Documentation générée à partir du dépôt <a href="https://github.com/ccnum/ccn">ccnum/ccn</a>.</footer>
+	</main>
+</div>
+</body>
+</html>

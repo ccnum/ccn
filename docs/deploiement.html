@@ -1,0 +1,115 @@
+<!doctype html>
+<html lang="fr">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Déploiement CCN</title>
+	<meta name="description" content="Déployer les sites CCN : image Docker erasme/spip-ccn, variables d'environnement, gestion des versions et chart Helm.">
+	<link rel="icon" href="assets/logo.png">
+	<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+<div class="layout">
+	<aside class="sidebar">
+		<a class="brand" href="index.html"><img src="assets/logo.png" alt=""><span>CCN<small>Documentation technique</small></span></a>
+		<nav>
+			<ul>
+				<li><a href="index.html">Présentation</a></li>
+				<li><a href="contenus.html">Contenus et rôles</a></li>
+				<li><a href="sso.html">Connexion et comptes</a></li>
+				<li><a href="thematique.html">Thematique</a></li>
+				<li><a href="fictions.html">Fictions</a></li>
+				<li><a href="petitfablab.html">Petit fablab</a></li>
+				<li><a href="architecture.html">Architecture</a></li>
+				<li><a href="developpement.html">Développement</a></li>
+				<li><a href="deploiement.html" aria-current="page">Déploiement</a>
+					<ul class="sub">
+						<li><a href="#docker">Docker</a></li>
+						<li><a href="#variables">Variables</a></li>
+						<li><a href="#images">Images publiées</a></li>
+						<li><a href="#versions">Versions</a></li>
+						<li><a href="#helm">Helm</a></li>
+					</ul>
+				</li>
+			</ul>
+		</nav>
+		<div class="repo"><a href="https://github.com/ccnum/ccn">github.com/ccnum/ccn</a></div>
+	</aside>
+
+	<main>
+		<h1>Déploiement</h1>
+		<p class="lead">Le projet est distribué sous forme d’image Docker <code>erasme/spip-ccn</code>, configurée par variables d’environnement.</p>
+
+		<h2 id="docker">Docker</h2>
+<pre><code>cp .env.example .env   <span class="c"># remplacer toutes les valeurs</span>
+docker-compose up</code></pre>
+		<p><code>docker-compose.yml</code> lance une base MariaDB et le conteneur SPIP, avec des volumes pour les données de la base, <code>IMG/</code>, la configuration et les logs.</p>
+		<div class="callout danger">
+			<p>Ne commitez jamais un <code>.env</code> contenant de vrais identifiants. En production, les variables passent par <code>docker-compose.yml</code> ou le gestionnaire de secrets du cluster.</p>
+		</div>
+
+		<h2 id="variables">Variables d’environnement</h2>
+		<div class="table-wrap">
+			<table>
+				<thead><tr><th>Variable</th><th>Description</th></tr></thead>
+				<tbody>
+					<tr><td><code>SPIP_AUTO_INSTALL</code></td><td>Installe SPIP automatiquement s’il ne l’est pas.</td></tr>
+					<tr><td><code>SPIP_DB_SERVER</code></td><td>Type de serveur de base de données utilisé par SPIP.</td></tr>
+					<tr><td><code>SPIP_DB_LOGIN</code>, <code>SPIP_DB_PASS</code>, <code>SPIP_DB_NAME</code></td><td>Identifiants et nom de la base.</td></tr>
+					<tr><td><code>SPIP_SITE_ADDRESS</code></td><td>URL du site.</td></tr>
+					<tr><td><code>SPIP_ADMIN_EMAIL</code>, <code>SPIP_ADMIN_PASS</code></td><td>Compte administrateur créé à l’installation.</td></tr>
+					<tr><td><code>SPIP_VERSION_SITE</code></td><td><code>thematique</code> par défaut ; une valeur contenant <code>fictions</code> active le plugin fictions, idem pour <code>petitfablab</code>.</td></tr>
+					<tr><td><code>SPIP_PLUGINS_CIOIDC</code></td><td><code>true</code> pour activer la connexion SSO laclasse.com.</td></tr>
+					<tr><td><code>SPIP_CIOIDC_CLIENT_NOM</code>, <code>SPIP_CIOIDC_CLIENT_SECRET</code></td><td>Client OpenID Connect enregistré sur le serveur laclasse.com (requis si le SSO est activé).</td></tr>
+					<tr><td><code>SPIP_PLUGINS_IMPORTS_UTILISATEURS</code></td><td><code>true</code> pour activer la page d’import de comptes par CSV (voir <a href="sso.html#import">Import de comptes</a>). Désactivée par défaut.</td></tr>
+					<tr><td><code>PROJET</code></td><td><code>laclasse</code> par défaut, ou <code>edifice</code>.</td></tr>
+					<tr><td><code>APACHE_PORT</code></td><td>Port d’écoute d’Apache dans le conteneur.</td></tr>
+					<tr><td><code>VIMEO_ACCESS_TOKEN</code></td><td>Jeton d’accès à l’API Vimeo.</td></tr>
+					<tr><td><code>CCN_PROJET_ACTIVE</code></td><td><code>false</code> pour un projet archivé, qui ne repart pas d’une année sur l’autre : plus de création automatique de la structure de rentrée, et seuls les webmestres peuvent se connecter via l’ENT.</td></tr>
+				</tbody>
+			</table>
+		</div>
+		<p><code>config/_config_cioidc.php</code> est régénéré à chaque démarrage du conteneur à partir des variables <code>SPIP_CIOIDC_*</code> : une modification prend effet au redémarrage suivant.</p>
+
+		<h2 id="images">Images publiées</h2>
+		<div class="table-wrap">
+			<table>
+				<thead><tr><th>Déclencheur</th><th>Image</th></tr></thead>
+				<tbody>
+					<tr><td>Push sur <code>dev</code></td><td><code>erasme/spip-ccn:dev</code></td></tr>
+					<tr><td>PR fusionnée dans <code>main</code></td><td><code>erasme/spip-ccn:latest</code> et <code>erasme/spip-ccn:X.Y.Z</code></td></tr>
+					<tr><td>Nouvelle version de PHP dans l’image de base (vérifié chaque nuit, vers 3 h ou 4 h à Paris)</td><td>Reconstruction de <code>dev</code> et <code>latest</code> la nuit suivant la sortie : le redéploiement de <code>latest</code> redémarre les sites, il n’est fait qu’entre 18 h et 8 h (heure de Paris).</td></tr>
+				</tbody>
+			</table>
+		</div>
+		<p>Chaque build est précédé des <a href="developpement.html#lint">lints CI</a> : un lint en échec bloque la publication. Un pod ne prend la nouvelle image qu’à son redémarrage (<code>imagePullPolicy: Always</code>).</p>
+
+		<h2 id="versions">Gestion des versions</h2>
+		<p>Les versions suivent le format <code>X.Y.Z</code>. À chaque pull request fusionnée dans <code>main</code>, un tag est créé sur GitHub et l’image correspondante est publiée sur Docker Hub.</p>
+		<div class="table-wrap">
+			<table>
+				<thead><tr><th>Pull request</th><th>Exemple</th><th>Incrément</th></tr></thead>
+				<tbody>
+					<tr><td>Sans label</td><td><code>Maj de code / rajout de fonction</code></td><td>patch : <code>1.0.0 → 1.0.1</code></td></tr>
+					<tr><td>Label <code>#minor</code></td><td><code>#minor - MAJ de version Y de SPIP</code></td><td>mineure : <code>1.0.0 → 1.1.0</code></td></tr>
+					<tr><td>Label <code>#major</code></td><td><code>#major - MAJ de version X de SPIP</code></td><td>majeure : <code>1.0.0 → 2.0.0</code></td></tr>
+				</tbody>
+			</table>
+		</div>
+
+		<h2 id="helm">Helm (Kubernetes)</h2>
+		<p>Le chart du dossier <code>helm/</code> déploie une instance (MariaDB, SPIP et un volume persistant). Une release par site, avec un fichier de valeurs dédié :</p>
+<pre><code>helm install fictions ./helm --namespace ccn -f custom.yaml
+helm upgrade fictions ./helm --namespace ccn -f custom.yaml
+helm uninstall fictions --namespace ccn</code></pre>
+		<p>Les variables d’environnement ci-dessus se passent dans <code>spip.env</code> du fichier de valeurs.</p>
+
+		<div class="callout">
+			<p><strong>Nouvelle CCN :</strong> pensez à configurer le SMTP dans l’espace privé du site.</p>
+		</div>
+
+		<footer class="page-footer">Documentation générée à partir du dépôt <a href="https://github.com/ccnum/ccn">ccnum/ccn</a>.</footer>
+	</main>
+</div>
+</body>
+</html>

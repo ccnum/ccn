@@ -145,7 +145,13 @@ spip plugins:activer mesfavoris -y
 spip plugins:activer mesfavoris_ccn -y
 spip plugins:activer ccn -y
 
-spip plugins:desactiver imports_utilisateurs -y
+# Import de comptes par CSV (sites sans SSO ENT) : désactivé par défaut, une page
+# d'import en masse n'a rien à faire sur un site qui ne s'en sert pas.
+if [ "${SPIP_PLUGINS_IMPORTS_UTILISATEURS:-false}" = true ]; then
+	spip plugins:activer imports_utilisateurs -y
+else
+	spip plugins:desactiver imports_utilisateurs -y
+fi
 spip plugins:desactiver cicas -y
 # Plugin contrib désactivé : son option "auteur_mod_article"
 # (cf les spip config:ecrire supprimés plus bas) déclare une version très

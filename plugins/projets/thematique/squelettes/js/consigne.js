@@ -1,4 +1,17 @@
 /**
+ * Position verticale CSS d'une consigne dans la timeline : jamais plus haut
+ * que la place de son étiquette « Mission N° » (--decalage-etiquette, cf
+ * sidebar.css), qui passerait sinon sous le menu du haut. Cas d'une consigne
+ * jamais déplacée, dont y vaut 0 (cf json/consignes.html).
+ *
+ * @param {Number} y - Position entre 0 et 1
+ * @returns {String}
+ */
+function topConsigne(y) {
+	return `max(${y * 100}%, var(--decalage-etiquette))`;
+}
+
+/**
  * Génère une consigne.
  *
  * @constructor
@@ -76,7 +89,7 @@ function Consigne() {
 		this.div_base = $(`
 			<div id="consigne_haute${this.id}"
 				 class="timeline_item consigne_haute"
-				 style="top:${this.y * 100}%; left:${this.x / CCN.projet.nombre_jours_total * 100}%;"
+				 style="top:${topConsigne(this.y)}; left:${this.x / CCN.projet.nombre_jours_total * 100}%;"
 			>
 				<button type="button" id="consigne${this.id}"
 					class="consigne couleur_texte_consignes couleur_consignes${coul} btn-reset"
@@ -186,7 +199,7 @@ function Consigne() {
 				}
 				this.y = yy;
 				$(this).css({
-					top: (yy * 100) + '%',
+					top: topConsigne(yy),
 					left: leftPercent + '%'
 				});
 				$(this).removeClass('no_event');

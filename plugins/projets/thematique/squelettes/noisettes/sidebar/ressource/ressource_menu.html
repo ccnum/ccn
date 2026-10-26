@@ -15,6 +15,30 @@
 	</div>
 	<div class="ressource-content">
 		<BOUCLE_rubrique(RUBRIQUES){titre_mot=ressources}{racine}{0,1}>
+			[(#REM) Un onglet par sous-rubrique ayant au moins une ressource publiée,
+			titres et ordre du back-office, aucun s'il y en a moins de deux (cf
+			thematique_onglets_ressources). ]
+			#SET{onglets, #VAL{1}|thematique_onglets_ressources}
+			<B_onglets>
+			<div class="filter-buttons">
+				<button type="button"
+						class="filtre-ressources actif"
+						data-id-rubrique=""
+						onclick="filtrerRessources(this)"
+				>
+					<:thematique:filtre_ressources_tout:>
+				</button>
+				<BOUCLE_onglets(DATA){source tableau, #GET{onglets}}>
+				<button type="button"
+						class="filtre-ressources"
+						data-id-rubrique="#CLE"
+						onclick="filtrerRessources(this)"
+				>
+					[(#VALEUR|entites_html)]
+				</button>
+				</BOUCLE_onglets>
+			</div>
+			</B_onglets>
 			<div class="ressource-liste-container">
 				<div class="encadre-message"[(#CONST{_ANNEE_SCOLAIRE}|=={#ANNEE_SCOLAIRE_REELLE}|non)style="display:none;"]>
 					<div>

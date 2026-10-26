@@ -38,11 +38,11 @@ function valider_chapitre($id_article, $id_rubrique) {
 		petitfablab_envoyer_mail(_T('petitfablab:sujet_chapitre_publie'), $html, [$bcc]);
 	}
 
-	// Si 5ème chapitre
+	// 5e chapitre : histoire terminée, tous ses auteurs prévenus. La suivante se crée
+	// depuis le formulaire creer_histoire (l'ancien creer_histoire() qui ajoutait ici une
+	// rubrique vide n'existe plus depuis 2024 : l'appel arrêtait la page en erreur).
 	$n = sql_countsel("titre", "spip_articles", ["statut=" . sql_quote('publie'), "id_rubrique=" . intval($id_rubrique)]);
 	if ($n == 5) {
-		$id_parent = sql_getfetsel("id_parent", "spip_rubriques", "id_rubrique=" . intval($id_rubrique));
-		$rub_hist = creer_histoire($id_parent);
 		$bcc = [];
 		if ($resultats = sql_allfetsel("soustitre", "spip_articles", "id_rubrique = " . intval($id_rubrique))) {
 			// boucler sur les resultats
@@ -59,10 +59,7 @@ function valider_chapitre($id_article, $id_rubrique) {
 		petitfablab_envoyer_mail(_T('petitfablab:sujet_histoire_en_ligne'), $html, $bcc);
 	}
 
-	// return if last chapitre
-	if (isset($rub_hist)) {
-		return $rub_hist;
-	}
+	return '';
 }
 
 /**

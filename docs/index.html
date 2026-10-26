@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="fr">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Documentation CCN</title>
+	<meta name="description" content="Documentation technique des Classes Culturelles Numériques (CCN) : plugins SPIP thematique, fictions, petitfablab.">
+	<link rel="icon" href="assets/logo.png">
+	<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+<div class="layout">
+	<aside class="sidebar">
+		<a class="brand" href="index.html"><img src="assets/logo.png" alt=""><span>CCN<small>Documentation technique</small></span></a>
+		<nav>
+			<ul>
+				<li><a href="index.html" aria-current="page">Présentation</a></li>
+				<li><a href="contenus.html">Contenus et rôles</a></li>
+				<li><a href="sso.html">Connexion et comptes</a></li>
+				<li><a href="thematique.html">Thematique</a></li>
+				<li><a href="fictions.html">Fictions</a></li>
+				<li><a href="petitfablab.html">Petit fablab</a></li>
+				<li><a href="architecture.html">Architecture</a></li>
+				<li><a href="developpement.html">Développement</a></li>
+				<li><a href="deploiement.html">Déploiement</a></li>
+			</ul>
+		</nav>
+		<div class="repo"><a href="https://github.com/ccnum/ccn">github.com/ccnum/ccn</a></div>
+	</aside>
+
+	<main>
+		<section class="hero">
+			<img src="assets/logo.png" alt="Logo CCN">
+			<div>
+				<h1>Classes Culturelles Numériques</h1>
+				<p>Monorepo SPIP qui fait tourner les sites CCN de l’ENT laclasse.com : des classes, des intervenants culturels et un projet commun sur une année scolaire.</p>
+			</div>
+		</section>
+
+		<p>Une installation comprend un <strong>cœur SPIP</strong> (<code>ecrire/</code>, <code>prive/</code>, <code>squelettes-dist/</code>, <code>plugins-dist/</code>), installé par le Dockerfile et non versionné, et des <strong>plugins maison</strong> dans <code>plugins/projets/</code>. C’est dans ces plugins que se fait le développement ; le reste est le framework SPIP, à ne modifier qu’en cas de besoin explicite.</p>
+
+		<div class="cards">
+			<a class="card" href="contenus.html"><h3>Contenus et rôles</h3><p>Rubriques par année, types de contenus, rôles, cycle de rentrée.</p></a>
+			<a class="card" href="sso.html"><h3>Connexion et comptes</h3><p>Connexion par l’ENT laclasse.com ou sans, import de comptes par CSV, rôles.</p></a>
+			<a class="card" href="thematique.html"><h3>Thematique</h3><p>Publication, modification, commentaires, notifications, documents et vidéos.</p></a>
+			<a class="card" href="fictions.html"><h3>Fictions</h3><p>Cadavre exquis en classe : participants, gestion des histoires, rotation des chapitres, fin d’année.</p></a>
+			<a class="card" href="petitfablab.html"><h3>Petit fablab</h3><p>Cadavre exquis en atelier : prologues, histoires de cinq chapitres, poste partagé.</p></a>
+			<a class="card" href="architecture.html"><h3>Architecture</h3><p>Socle ccn, thematique en popups ajax, fictions et petitfablab en pages classiques, plugins utilitaires.</p></a>
+			<a class="card" href="developpement.html"><h3>Développement</h3><p>Environnement ddev, qualité de code, lints CI, pièges SPIP.</p></a>
+			<a class="card" href="deploiement.html"><h3>Déploiement</h3><p>Image Docker, variables d’environnement, versions, Helm.</p></a>
+		</div>
+
+		<h2>Les plugins</h2>
+		<div class="table-wrap">
+			<table>
+				<thead><tr><th>Plugin</th><th>Rôle</th></tr></thead>
+				<tbody>
+					<tr><td><code>ccn</code></td><td>Socle transverse : année scolaire (<code>_ANNEE_SCOLAIRE</code>), options et modèles communs. Requis par les plugins « site ».</td></tr>
+					<tr><td><code>thematique</code> <span class="tag">principal</span></td><td>Plugin « site » le plus développé : classes, consignes, travaux, blogs, ressources, forum (<a href="thematique.html">détail</a>).</td></tr>
+					<tr><td><code>thematique_edifice</code></td><td>Variante de <code>thematique</code> pour la plateforme Edifice.</td></tr>
+					<tr><td><code>fictions</code></td><td>Écriture collaborative en cadavre exquis pour des classes de collège et un écrivain (<a href="fictions.html">détail</a>).</td></tr>
+					<tr><td><code>petitfablab</code></td><td>Écriture collaborative en cadavre exquis en atelier (<a href="petitfablab.html">détail</a>).</td></tr>
+					<tr><td><code>cadavrexquis</code></td><td>Socle graphique commun à fictions et petitfablab.</td></tr>
+					<tr><td><code>reactions</code>, <code>mesfavoris_ccn</code>, <code>api_vimeo</code>, <code>imports_utilisateurs</code></td><td>Plugins utilitaires : réactions, favoris, vidéos Vimeo, import d’utilisateurs (<a href="sso.html#import">détail</a>).</td></tr>
+					<tr><td><code>fictions_archive</code>, <code>petitfablab_archive</code> <span class="tag muted">archive</span></td><td>Anciennes versions, conservées mais jamais activées.</td></tr>
+				</tbody>
+			</table>
+		</div>
+
+		<h2>Un code, plusieurs sites</h2>
+		<p>Le site est <strong>multisite</strong> : chaque instance (<code>sites/&lt;nom&gt;/</code>) partage le même code mais a sa propre base de données et sa propre configuration. Le plugin activé dépend de la variable <code>SPIP_VERSION_SITE</code> (voir <a href="deploiement.html#variables">Déploiement</a>).</p>
+
+		<h2>Démarrage rapide</h2>
+		<h3>Avec ddev (développement local)</h3>
+<pre><code>ddev start     <span class="c"># web, db, phpmyadmin</span>
+ddev launch    <span class="c"># ouvre https://ccn.ddev.site</span></code></pre>
+		<p>Les instances locales sont exposées par nom d’hôte : <code>ccn-fictions</code>, <code>ccn-ontourne</code>, <code>ccn-petitfablab</code>, <code>edifice-digitalyceen</code> (suffixe <code>.ddev.site</code>).</p>
+
+		<h3>Avec Docker</h3>
+<pre><code>cp .env.example .env   <span class="c"># puis renseigner les valeurs</span>
+docker-compose up</code></pre>
+
+		<h2>Licence et crédits</h2>
+		<p>Logiciel libre sous licence AGPL. Concept et production : Erasme, laboratoire d’expérimentation numérique de la Métropole de Lyon.</p>
+		<p>Contributeurs : <a href="https://github.com/pierretux">pierretux</a>, <a href="https://github.com/Pipazoul">pipazoul</a>, <a href="https://github.com/aangelot">Anthony Angelot</a>, <a href="https://github.com/antoineDerooGrandLyon">antoineDerooGrandLyon</a>, <a href="https://github.com/njbom">Jérémy Nguyen</a>, Christophe Monnet, Juliette Monaco, Patrick Vincent, Thomas Graveleine, Thomas Neveu.</p>
+
+		<footer class="page-footer">Documentation générée à partir du dépôt <a href="https://github.com/ccnum/ccn">ccnum/ccn</a>.</footer>
+	</main>
+</div>
+</body>
+</html>

@@ -1,0 +1,243 @@
+<!doctype html>
+<html lang="fr">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Connexion et comptes CCN</title>
+	<meta name="description" content="Connexion aux sites CCN avec l'ENT laclasse.com (OpenID Connect) ou sans, et import de comptes par fichier CSV : statut SPIP, rubriques liées et rôle d'un utilisateur.">
+	<link rel="icon" href="assets/logo.png">
+	<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+<div class="layout">
+	<aside class="sidebar">
+		<a class="brand" href="index.html"><img src="assets/logo.png" alt=""><span>CCN<small>Documentation technique</small></span></a>
+		<nav>
+			<ul>
+				<li><a href="index.html">Présentation</a></li>
+				<li><a href="contenus.html">Contenus et rôles</a></li>
+				<li><a href="sso.html" aria-current="page">Connexion et comptes</a>
+					<ul class="sub">
+						<li><a href="#modes">Avec ou sans ENT</a></li>
+						<li><a href="#principe">ENT : principe</a></li>
+						<li><a href="#attributs">Attributs ENT</a></li>
+						<li><a href="#etapes">Étapes</a></li>
+						<li><a href="#tableau">Tableau de décision</a></li>
+						<li><a href="#choix-classes">Choix des classes</a></li>
+						<li><a href="#reglages">Réglages</a></li>
+						<li><a href="#diagnostic">Diagnostic</a></li>
+						<li><a href="#sans-ent">Sans ENT</a></li>
+						<li><a href="#import">Import de comptes</a></li>
+					</ul>
+				</li>
+				<li><a href="thematique.html">Thematique</a></li>
+				<li><a href="fictions.html">Fictions</a></li>
+				<li><a href="petitfablab.html">Petit fablab</a></li>
+				<li><a href="architecture.html">Architecture</a></li>
+				<li><a href="developpement.html">Développement</a></li>
+				<li><a href="deploiement.html">Déploiement</a></li>
+			</ul>
+		</nav>
+		<div class="repo"><a href="https://github.com/ccnum/ccn">github.com/ccnum/ccn</a></div>
+	</aside>
+
+	<main>
+		<h1>Connexion et comptes</h1>
+		<p class="lead">Comment les comptes arrivent sur un site CCN, par l’ENT laclasse.com ou sans lui, et comment une connexion en fait un admin, un prof, un intervenant ou un élève.</p>
+
+		<h2 id="modes">Avec ou sans ENT</h2>
+		<p>La connexion par l’ENT passe par le plugin tiers <code>cioidc</code> (client OpenID Connect). Il est activé ou désactivé à chaque démarrage du conteneur selon <code>SPIP_PLUGINS_CIOIDC</code> (voir <a href="deploiement.html#variables">variables</a>).</p>
+		<div class="table-wrap">
+			<table>
+				<thead><tr><th></th><th>Avec l’ENT (OIDC)</th><th>Sans ENT</th></tr></thead>
+				<tbody>
+					<tr><th>Réglage</th><td><code>SPIP_PLUGINS_CIOIDC=true</code>, avec <code>SPIP_CIOIDC_CLIENT_NOM</code> et <code>SPIP_CIOIDC_CLIENT_SECRET</code></td><td><code>SPIP_PLUGINS_CIOIDC=false</code> (par défaut)</td></tr>
+					<tr><th>Formulaire de connexion</th><td>Mode <code>hybride</code> (<code>_CIOIDC_MODE_AUTH</code>) : bouton « LaClasse.com » et formulaire SPIP (identifiant et mot de passe) restent tous deux proposés.</td><td>Formulaire SPIP seul.</td></tr>
+					<tr><th>Création des comptes</th><td>À la première connexion, statut <code>6forum</code> (<code>_CIOIDC_CREER_AUTEUR</code>). Le compte est retrouvé ensuite par son <code>login</code>, égal à l’uid ENT (<code>_CIOIDC_UID_CHAMP_SPIP</code>).</td><td>À la main dans <code>/ecrire</code>, ou par <a href="#import">import CSV</a>.</td></tr>
+					<tr><th>Statut et rubriques liées</th><td>Recalculés à chaque connexion à partir des attributs ENT (sections suivantes).</td><td>Posés par un administrateur, jamais recalculés.</td></tr>
+					<tr><th>Rôle public</th><td colspan="2">Le même calcul dans les deux cas : <code>thematique_donner_role()</code> lit le statut et les rubriques liées à l’écriture de la session (voir <a href="contenus.html#roles">Rôles</a>).</td></tr>
+				</tbody>
+			</table>
+		</div>
+		<p><code>config/_config_cioidc.php</code> est réécrit à chaque démarrage à partir de ces variables : une modification prend effet au redémarrage suivant. Le compte admin d’installation (<code>SPIP_ADMIN_LOGIN</code>, <code>SPIP_ADMIN_PASS</code>) se connecte toujours par mot de passe, avec ou sans ENT.</p>
+
+		<h2 id="principe">Avec l’ENT : deux temps</h2>
+		<ol>
+			<li><strong>À la connexion</strong>, le pipeline <code>cioidc_userinfo</code> (<code>thematique_cioidc_userinfo()</code> dans <code>thematique_pipelines.php</code>, avec <code>inc/thematique_cioidc.php</code>) lit les attributs envoyés par l’ENT. Il fixe le <strong>statut SPIP</strong> du compte et le <strong>lie à des rubriques</strong>.</li>
+			<li><strong>À l’écriture de la session</strong>, <code>thematique_donner_role()</code> déduit le <strong>rôle public</strong> de ce statut et de ces rubriques (voir <a href="contenus.html#roles">Rôles</a>). Il est exposé par <code>#SESSION{role}</code>.</li>
+		</ol>
+		<div class="callout">
+			<p>L’ENT n’a <strong>pas de profil « intervenant »</strong> : un intervenant arrive avec le même profil <code>ENS</code> qu’un enseignant. Ce qui les distingue, c’est la présence d’une classe réelle dans <code>ENTClassesGroupes</code>.</p>
+		</div>
+
+		<h2 id="attributs">Attributs ENT utilisés</h2>
+		<div class="table-wrap">
+			<table>
+				<thead><tr><th>Attribut</th><th>Contenu</th><th>Sert à</th></tr></thead>
+				<tbody>
+					<tr><td><code>ENTPersonProfils</code></td><td><code>ENS</code> (enseignant), <code>ELV</code> (élève), <code>TUT</code> (tuteur)</td><td>Statut SPIP.</td></tr>
+					<tr><td><code>ENTClassesGroupes</code></td><td>Groupes de la personne ; ceux de type <code>CLS</code> sont ses classes réelles.</td><td>Distinguer prof et intervenant, classes à proposer, classe d’un élève.</td></tr>
+					<tr><td><code>ENTGroupesLibres</code></td><td>Groupes libres, dont le groupe projet (ex. « On tourne 2026 ») et le groupe « CCN Intervenants ».</td><td>Inscription au projet de ce site, repérage des intervenants.</td></tr>
+					<tr><td><code>ENTAllUai</code></td><td>Établissements de rattachement (UAI).</td><td>Repérage des webmestres, nom de l’établissement.</td></tr>
+					<tr><td><code>MailAdressePrincipal</code>, <code>name</code>, <code>avatar</code></td><td>Identité.</td><td>Retrouver ou créer le compte, nom et avatar.</td></tr>
+				</tbody>
+			</table>
+		</div>
+
+		<h2 id="etapes">Étapes de la connexion</h2>
+		<ol>
+			<li><strong>Compte</strong> : retrouvé par son login (= uid ENT). À défaut, un compte historique est repris par e-mail, seulement s’il est le seul à porter cet e-mail. Sinon, un compte est créé (statut <code>6forum</code>). Un compte passé à la poubelle à la rentrée retrouve ainsi son statut.</li>
+			<li><strong>Intervenant CCN ?</strong> Membre du groupe libre <code>_THEMATIQUE_GROUPE_INTERVENANTS</code> (« CCN Intervenants »), sauf si son uid figure dans <code>_THEMATIQUE_UID_WEBMESTRES</code>.</li>
+			<li><strong>Webmestre ?</strong> Profil <code>ENS</code>, rattaché à un établissement listé dans <code>_THEMATIQUE_RNE_WEBMESTRES</code> (<code>00000CCN</code>), et pas intervenant CCN. Les intervenants sont rattachés à cette même structure : sans cette exclusion, ils deviendraient tous webmestres.</li>
+			<li><strong>Groupe projet pertinent ?</strong> Un groupe libre dont le nom normalisé <strong>commence par</strong> « &lt;site&gt; &lt;année&gt; ». Le site est le premier segment de <code>nom_site</code>, et la comparaison ignore casse, accents, espaces et ponctuation : « On tourne 2026 » correspond au site <code>ontourne</code> en 2026, mais pas « CCN - On tourne 2026 » ni « Fictions 2026 ».</li>
+			<li><strong>Statut SPIP</strong> : webmestre → <code>0minirezo</code> ; <code>ELV</code> → <code>6forum</code> ; <code>ENS</code> → <code>1comite</code> s’il a un groupe projet pertinent, sinon <code>6forum</code>.</li>
+			<li><strong>Projet archivé</strong> (<code>CCN_PROJET_ACTIVE=false</code>) : la connexion est refusée à tout non-webmestre.</li>
+			<li><strong>Rubriques liées</strong> (voir le tableau ci-dessous). Un webmestre est délié de toute rubrique.</li>
+			<li><strong>Intervenant nouvellement lié</strong> : structure de l’année, jalons et fiche intervenant créés sans attendre le cron de rentrée (année réelle et projet actif seulement).</li>
+		</ol>
+
+		<h2 id="tableau">Tableau de décision</h2>
+		<div class="table-wrap">
+			<table>
+				<thead><tr><th>Profil ENT</th><th>Statut SPIP</th><th>Rubriques liées</th><th>Rôle public</th></tr></thead>
+				<tbody>
+					<tr>
+						<td><code>ENS</code> + UAI webmestre, hors groupe intervenants</td>
+						<td><code>0minirezo</code> + webmestre</td>
+						<td>Aucune (accès à tout)</td>
+						<td><span class="tag">admin</span></td>
+					</tr>
+					<tr>
+						<td><code>ENS</code> + groupe projet + classe(s) <code>CLS</code></td>
+						<td><code>1comite</code></td>
+						<td>Son projet sous « Consignes », blog pédagogique, agenda. Puis les classes cochées dans la pop-up, sous « Travail des classes ».</td>
+						<td><span class="tag">prof</span></td>
+					</tr>
+					<tr>
+						<td><code>ENS</code> + groupe projet, sans classe <code>CLS</code></td>
+						<td><code>1comite</code></td>
+						<td>Son projet sous « Consignes », blog pédagogique, agenda.</td>
+						<td><span class="tag">intervenant</span></td>
+					</tr>
+					<tr>
+						<td><code>ENS</code> sans groupe projet pour ce site et cette année</td>
+						<td><code>6forum</code></td>
+						<td>Aucune</td>
+						<td><span class="tag">eleve</span> (lecture et forum)</td>
+					</tr>
+					<tr>
+						<td><code>ELV</code></td>
+						<td><code>6forum</code></td>
+						<td>Sa classe, si elle existe déjà (créée par son prof ou un admin). Jamais créée par l’élève.</td>
+						<td><span class="tag">eleve</span></td>
+					</tr>
+					<tr>
+						<td><code>TUT</code></td>
+						<td>Inchangé (<code>6forum</code> à la création)</td>
+						<td>Aucune</td>
+						<td><span class="tag">eleve</span></td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+		<p>Le projet sous « Consignes » est la rubrique qui porte le nom du groupe projet. Elle est créée si elle n’existe pas encore.</p>
+		<div class="callout">
+			<p><strong>Prof et intervenant sont tous deux liés à leur projet sous « Consignes ».</strong> Le prof est donc testé en premier dans <code>thematique_donner_role()</code> : il est prof dès qu’il a des classes à choisir, ou qu’il est lié à une classe de l’année. Seuls les liens vers les rubriques de l’année active comptent : la connexion ne retire jamais les liens des années passées.</p>
+		</div>
+
+		<h3>Nom affiché</h3>
+		<p>Le champ <code>nom</code> de l’auteur décrit sa fonction plutôt que la personne : rôle ENT, première classe, établissement (ex. « Enseignant 4ème 2 - Collège … »). Un intervenant, qui n’a ni classe ni établissement, est affiché avec son prénom et son nom devant. Le prénom et nom réels sont aussi gardés dans <code>nom_complet</code> (<code>#SESSION{nom_complet}</code>, menu du haut). Quel nom s’affiche où : voir <a href="thematique.html#noms">Noms des comptes et des classes</a>.</p>
+
+		<h2 id="choix-classes">Choix des classes par le prof</h2>
+		<p><code>ENTClassesGroupes</code> n’a pas d’année : il contient aussi les classes des années passées. Les classes d’un prof ne sont donc pas créées automatiquement :</p>
+		<ol>
+			<li>À la connexion, ses classes ENT sont <strong>mémorisées</strong> dans <code>spip_auteurs.classes_ent</code>, avec l’année.</li>
+			<li>Une pop-up (<code>formulaires/choisir_classes_ent.php</code>) lui demande lesquelles participent au CCN cette année.</li>
+			<li>Les classes cochées sont créées sous « Travail des classes » (ou retrouvées si un collègue l’a déjà fait) et liées au prof. L’année du choix est notée dans <code>classes_ent_choisies</code>, ce qui masque la pop-up jusqu’à l’année suivante.</li>
+			<li>Les classes non cochées créées auparavant sont supprimées, seulement si elles sont vides et qu’aucun autre adulte n’y est lié.</li>
+		</ol>
+		<p>Les élèves sont rattachés à leur classe à leur prochaine connexion, une fois que le prof l’a créée.</p>
+
+		<h2 id="reglages">Réglages</h2>
+		<div class="table-wrap">
+			<table>
+				<thead><tr><th>Constante (<code>thematique_options.php</code>)</th><th>Rôle</th></tr></thead>
+				<tbody>
+					<tr><td><code>_THEMATIQUE_RNE_WEBMESTRES</code></td><td>UAI dont les comptes <code>ENS</code> deviennent webmestres, séparés par des virgules. Par défaut <code>00000CCN</code>, la structure de l’équipe projet.</td></tr>
+					<tr><td><code>_THEMATIQUE_GROUPE_INTERVENANTS</code></td><td>Nom du groupe libre ENT des intervenants (« CCN Intervenants »). Ses membres ne sont jamais webmestres.</td></tr>
+					<tr><td><code>_THEMATIQUE_UID_WEBMESTRES</code></td><td>uid ENT qui restent webmestres même membres du groupe intervenants (membres de l’équipe projet inscrits aussi comme intervenants).</td></tr>
+				</tbody>
+			</table>
+		</div>
+		<p>Côté déploiement, le SSO est activé par <code>SPIP_PLUGINS_CIOIDC=true</code> et les identifiants client OpenID Connect (voir <a href="deploiement.html#variables">variables</a>).</p>
+
+		<h2 id="diagnostic">Diagnostic</h2>
+		<p>Chaque connexion est tracée dans le log <code>cioidc</code> (<code>sites/&lt;site&gt;/tmp/log/cioidc.log</code>) : profils ENT, classes réelles, groupes libres et groupes pertinents, UAI, décision webmestre, statut calculé, puis le statut final et les rubriques effectivement liées.</p>
+		<div class="table-wrap">
+			<table>
+				<thead><tr><th>Symptôme</th><th>Cause probable</th></tr></thead>
+				<tbody>
+					<tr><td>Un prof ou un intervenant ne peut rien publier (rôle <code>eleve</code>).</td><td>Aucun groupe projet pertinent : le groupe ENT n’existe pas, ou son nom ne commence pas par « &lt;site&gt; &lt;année&gt; ».</td></tr>
+					<tr><td>Un intervenant est vu comme prof.</td><td>Il a une classe <code>CLS</code> dans l’ENT, ou il est encore lié à une classe de l’année.</td></tr>
+					<tr><td>Un intervenant est admin.</td><td>Il n’est pas dans le groupe « CCN Intervenants » alors qu’il est rattaché à <code>00000CCN</code>.</td></tr>
+					<tr><td>Un élève n’est rattaché à aucune classe.</td><td>Son prof n’a pas encore coché la classe dans la pop-up.</td></tr>
+					<tr><td>Le rôle ne change pas après une correction dans l’ENT.</td><td>Le rôle est recalculé à la connexion : se déconnecter puis se reconnecter.</td></tr>
+				</tbody>
+			</table>
+		</div>
+
+		<h2 id="sans-ent">Sans ENT</h2>
+		<p>Sans le plugin <code>cioidc</code>, rien n’attribue automatiquement statut ni rubriques : c’est l’administrateur qui donne à chaque compte ce que la connexion ENT aurait calculé.</p>
+		<div class="table-wrap">
+			<table>
+				<thead><tr><th>Rôle visé (thematique)</th><th>Statut SPIP</th><th>Rubriques à lier au compte</th></tr></thead>
+				<tbody>
+					<tr><td><span class="tag">admin</span></td><td><code>0minirezo</code>, non restreint</td><td>Aucune.</td></tr>
+					<tr><td><span class="tag">prof</span></td><td><code>1comite</code></td><td>Sa classe sous « Travail des classes » de l’année, en plus de son projet sous « Consignes » s’il doit y être lié.</td></tr>
+					<tr><td><span class="tag">intervenant</span></td><td><code>1comite</code></td><td>Son projet sous « Consignes » de l’année, et aucune classe.</td></tr>
+					<tr><td><span class="tag">eleve</span></td><td><code>6forum</code></td><td>Sa classe, facultative (lecture et forum restent possibles sans).</td></tr>
+				</tbody>
+			</table>
+		</div>
+		<ul>
+			<li>Les rubriques de projet et de classe ne sont pas créées automatiquement : l’admin les crée sous « Consignes » et « Travail des classes » de l’année. La structure de l’année elle-même est bien créée par la tâche de rentrée (voir <a href="contenus.html#rentree">Cycle de rentrée</a>).</li>
+			<li>La pop-up de choix des classes n’apparaît pas : elle ne propose que des classes reçues de l’ENT.</li>
+			<li><strong>À la rentrée</strong>, <code>genie/thematique_rentree_poubelle.php</code> passe tous les comptes non-webmestres à la poubelle. C’est voulu : seuls les comptes qui se reconnectent dans la nouvelle année redeviennent actifs. Avec l’ENT, la connexion réactive le compte et recalcule ses classes. Sans ENT, SPIP refuse la connexion par mot de passe d’un compte à la poubelle : c’est l’admin qui réactive ceux qui reviennent, à la main ou en les réimportant (l’import remet le statut <code>1comite</code>).</li>
+			<li>Sur <code>fictions</code>, les participants se rattachent à n’importe quel compte SPIP : sans ENT, la liste des comptes « inscrits » proposés en premier est simplement vide (voir <a href="fictions.html#fictions-sso">Fictions</a>).</li>
+		</ul>
+
+		<h2 id="import">Import de comptes (CSV)</h2>
+		<p>Le plugin <code>imports_utilisateurs</code> ajoute une page <strong>Import des utilisateurs</strong> (menu Activité, <code>ecrire/?exec=configurer_imports_utilisateurs</code>), réservée aux administrateurs. Il sert à créer en une fois les comptes d’un site sans ENT, ou à préparer des comptes avant leur première connexion.</p>
+		<div class="callout">
+			<p>Le plugin n’est activé que si <code>SPIP_PLUGINS_IMPORTS_UTILISATEURS=true</code> (voir <a href="deploiement.html#variables">variables</a>) : sinon <code>docker-entrypoint.sh</code> le désactive à chaque démarrage, même activé à la main dans <code>/ecrire</code>.</p>
+		</div>
+		<h3>Format du fichier</h3>
+		<p>CSV séparé par des points-virgules, avec une ligne d’en-tête (modèle : <code>exemple_import.csv</code>, lien sur la page d’import) :</p>
+<pre><code>nom;prenom;login;emails;admin des rubriques;auteur des articles
+Martin;Claire;cmartin;claire.martin@exemple.fr;158,159;560</code></pre>
+		<div class="table-wrap">
+			<table>
+				<thead><tr><th>Colonne</th><th>Effet</th></tr></thead>
+				<tbody>
+					<tr><td><code>nom</code>, <code>prenom</code></td><td>Nom affiché : « prénom nom ».</td></tr>
+					<tr><td><code>login</code></td><td>Clé du compte : un login existant est mis à jour, sinon le compte est créé. Avec l’ENT, mettre l’uid ENT pour que la connexion SSO retrouve ce compte.</td></tr>
+					<tr><td><code>emails</code></td><td>Adresse e-mail (seule la partie avant un éventuel <code>:</code> est gardée).</td></tr>
+					<tr><td><code>admin des rubriques</code></td><td>Numéros de rubriques, séparés par <code>,</code> ou <code>;</code>, auxquelles lier le compte (classe, projet…). C’est ce lien qui détermine le rôle.</td></tr>
+					<tr><td><code>auteur des articles</code></td><td>Numéros d’articles dont le compte devient auteur.</td></tr>
+				</tbody>
+			</table>
+		</div>
+		<h3>Déroulé</h3>
+		<ol>
+			<li><strong>Prévisualiser</strong> : le fichier est lu et ses 200 premières lignes affichées, sans rien écrire.</li>
+			<li><strong>Importer</strong> : chaque ligne crée ou met à jour un compte, puis le lie aux rubriques et articles listés. Un numéro que l’admin ne peut pas voir (rubrique) ou modifier (article) est ignoré sans message.</li>
+		</ol>
+		<div class="callout">
+			<p>Tout compte importé reçoit le statut <code>1comite</code>, <strong>sans mot de passe</strong>, et n’est jamais webmestre. Sans ENT, l’utilisateur définit son mot de passe par « mot de passe oublié » (d’où l’e-mail obligatoire en pratique). Un compte existant est lui aussi repassé en <code>1comite</code> : ne pas réimporter un administrateur. Les élèves (<code>6forum</code>) ne s’importent pas : changer leur statut à la main après l’import.</p>
+		</div>
+
+		<footer class="page-footer">Documentation générée à partir du dépôt <a href="https://github.com/ccnum/ccn">ccnum/ccn</a>.</footer>
+	</main>
+</div>
+</body>
+</html>

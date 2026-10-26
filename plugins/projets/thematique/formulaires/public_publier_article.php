@@ -133,6 +133,21 @@ function formulaires_public_publier_article_charger_dist(
 	$valeurs['peut_modifier_date'] = !$valeurs['id_article']
 		|| autoriser('modifier', 'article', $valeurs['id_article'], null, ['champ' => 'date']);
 
+	// Ressource : sous-rubrique de "Ressources" à choisir (onglet de la page
+	// Ressources) : celle de l'article en édition, sinon « Pédagogie » (rubrique
+	// où thematique_migrer_bibliotheques a regroupé les ressources existantes)
+	// si elle existe sous ce titre.
+	$valeurs['sous_rubriques_ressources'] = [];
+	$valeurs['id_rubrique_ressource'] = '';
+	if (public_publier_article_est_ressource($type_article, $valeurs['id_article'])) {
+		$valeurs['sous_rubriques_ressources'] = thematique_sous_rubriques_ressources();
+		if (isset($valeurs['sous_rubriques_ressources'][intval($valeurs['id_rubrique'])])) {
+			$valeurs['id_rubrique_ressource'] = intval($valeurs['id_rubrique']);
+		} else {
+			$valeurs['id_rubrique_ressource'] = array_search('Pédagogie', $valeurs['sous_rubriques_ressources'], true) ?: '';
+		}
+	}
+
 	return $valeurs;
 }
 
@@ -155,6 +170,41 @@ function public_publier_article_erreur_role($id_auteur, $role) {
 		return _T('thematique:publier_erreur_sans_role');
 	}
 	return '';
+}
+
+/**
+ * Le formulaire publie-t-il une ressource ? En édition, d'après la rubrique
+ * de l'article en base et non le type posté : un type « ressources » forgé
+ * déplacerait sinon n'importe quel article modifiable dans les ressources.
+ *
+ * @param string $type_article Type de contenu posté
+ * @param int|string $id_article Article modifié (0 = création)
+ * @return bool
+ */
+function public_publier_article_est_ressource($type_article, $id_article) {
+	include_spip('thematique_fonctions');
+	if (!intval($id_article)) {
+		return $type_article === 'ressources';
+	}
+	$id_ressources = thematique_id_rubrique_ressources();
+	$id_rubrique = sql_getfetsel('id_rubrique', 'spip_articles', 'id_article=' . intval($id_article));
+	return $id_ressources && in_array($id_ressources, thematique_ascendants_rubrique($id_rubrique));
+}
+
+/**
+ * Rubrique où ranger une ressource : la sous-rubrique de "Ressources"
+ * postée, la racine "Ressources" s'il n'y en a aucune, 0 si la valeur postée
+ * n'est pas l'une d'elles ou si "Ressources" est introuvable.
+ *
+ * @return int
+ */
+function public_publier_article_rubrique_ressource() {
+	$sous_rubriques = thematique_sous_rubriques_ressources();
+	if (!$sous_rubriques) {
+		return thematique_id_rubrique_ressources();
+	}
+	$id_rubrique = intval(_request('id_rubrique_ressource'));
+	return isset($sous_rubriques[$id_rubrique]) ? $id_rubrique : 0;
 }
 
 /**
@@ -231,6 +281,12 @@ function formulaires_public_publier_article_verifier_dist(
 	}
 
 	$erreurs = formulaires_editer_objet_verifier('article', $id_article_poste ?: 'new', ['titre', 'texte']);
+	if (public_publier_article_est_ressource($type_article, $id_article_poste)
+		&& thematique_id_rubrique_ressources()
+		&& !public_publier_article_rubrique_ressource()
+	) {
+		$erreurs['id_rubrique_ressource'] = _T('thematique:publier_erreur_rubrique_ressource');
+	}
 	$max_caracteres = 50;
 	if (empty($erreurs['titre']) && strlen(_request('titre')) > $max_caracteres) {
 		$erreurs['titre'] = _T('thematique:titre_trop_long', ['max' => $max_caracteres]);
@@ -344,19 +400,21 @@ function formulaires_public_publier_article_traiter_dist(
 		}
 	}
 	// Les ressources sont créées depuis la page "Ressources" (popup sans
-	// id_rubrique, cf callNouvelleRessource) : la rubrique cible est forcée
-	// côté serveur. Le core la relit depuis la requête HTTP (cf
-	// action_editer_article_dist : _request('id_parent')), le 3e argument de
-	// formulaires_editer_objet_traiter() étant ignoré — d'où le set_request.
-	if ($type_article == 'ressources') {
-		$id_ressources = sql_getfetsel('id_rubrique', 'spip_rubriques', 'titre=' . sql_quote('Ressources'));
-		if ($id_ressources) {
-			$id_rubrique = $id_ressources;
+	// id_rubrique, cf callNouvelleRessource) : la rubrique cible est la
+	// sous-rubrique choisie dans le formulaire, contrôlée côté serveur (cf
+	// public_publier_article_rubrique_ressource). Le core la relit depuis la
+	// requête HTTP (cf action_editer_article_dist : _request('id_parent')), le
+	// 3e argument de formulaires_editer_objet_traiter() étant ignoré — d'où le
+	// set_request.
+	if (public_publier_article_est_ressource($type_article, $edition ? $id_article : 0)) {
+		$id_rubrique_ressource = public_publier_article_rubrique_ressource();
+		if ($id_rubrique_ressource) {
+			$id_rubrique = $id_rubrique_ressource;
 			set_request('id_parent', $id_rubrique);
 		} elseif (!$edition) {
-			// Création sans rubrique « Ressources » : id_parent posté aurait décidé
-			// seul de la rubrique (contrôle de rôle sauté pour ce type) — on refuse.
-			// En édition, id_parent est déjà figé à la rubrique de l'article.
+			// Création sans rubrique « Ressources » valide : id_parent posté aurait
+			// décidé seul de la rubrique (contrôle de rôle sauté pour ce type) — on
+			// refuse. En édition, id_parent est déjà figé à la rubrique de l'article.
 			return ['message_erreur' => _T('thematique:publier_erreur_ressources_introuvable')];
 		}
 	}
