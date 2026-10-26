@@ -89,8 +89,12 @@ doivent jamais être figés dans le cache. ]
 			}
 			<div class="footer forum-actions">
 				<div class="actions-left">
-					<BOUCLE_jaime_forum(FORUMS){id_forum=#ENV{id_forum}}>
-						#FORMULAIRE_JAIME
+					[(#REM) Boucle DATA plutôt que FORUMS{id_forum} : la balise du plugin
+					notation doit être dans une boucle pour compiler sans warning, mais
+					objet/id_objet sont passés explicitement, donc aucune requête SQL
+					n'est nécessaire pour ce contexte. ]
+					<BOUCLE_jaime_forum(DATA){source tableau, #LISTE{#ENV{id_forum}}}>
+						#FORMULAIRE_JAIME{forum,#VALEUR}
 					</BOUCLE_jaime_forum>
 				</div>
 				<div class="action-middle">

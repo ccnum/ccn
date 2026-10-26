@@ -594,14 +594,20 @@ function thematique_creer_article_mot_cle_si_absent($id_rubrique, $titre_mot, $i
  * @return bool
  */
 function thematique_hierarchie_a_mot($id_rubrique, $titre_mot) {
+	static $cache = [];
+	$cle = intval($id_rubrique) . '|' . $titre_mot;
+	if (array_key_exists($cle, $cache)) {
+		return $cache[$cle];
+	}
+
 	$ascendants = thematique_ascendants_rubrique($id_rubrique);
 	if (!$ascendants) {
-		return false;
+		return $cache[$cle] = false;
 	}
 
 	$id_mot = thematique_id_mot($titre_mot);
 	if (!$id_mot) {
-		return false; // le mot-clé n'existe même pas
+		return $cache[$cle] = false; // le mot-clé n'existe même pas
 	}
 
 	$id_objet = sql_getfetsel(
@@ -612,7 +618,7 @@ function thematique_hierarchie_a_mot($id_rubrique, $titre_mot) {
 			. ' AND id_objet IN (' . implode(',', $ascendants) . ')'
 	);
 
-	return !empty($id_objet);
+	return $cache[$cle] = !empty($id_objet);
 }
 
 /**
