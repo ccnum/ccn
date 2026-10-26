@@ -21,7 +21,7 @@ if (!defined('_ECRIRE_INC_VERSION')) {
  * @return array|false|null Auteur (id_auteur, nom, statut…), false ou null si introuvable
  */
 function thematique_cioidc_resoudre_auteur($uid, $email) {
-	$champs = 'id_auteur,nom,nom_complet,statut,email,webmestre,avatar';
+	$champs = 'id_auteur,nom,nom_complet,statut,email,webmestre,avatar,ent_statut';
 	$auteur = $uid ? sql_fetsel($champs, 'spip_auteurs', 'login=' . sql_quote($uid)) : null;
 	// Repli par email jamais sur un email vide (il désignait le premier compte sans
 	// email, ex. un compte que cioidc vient de créer, dont les droits étaient alors
@@ -191,16 +191,16 @@ function thematique_cioidc_nom_etablissement($uai) {
 // Rôle ENT affiché (Enseignant/Intervenant/Tuteur/Élève), remplacé par "Admin" pour un
 // webmestre : affiché ci-dessous à la suite du nom plutôt que le rôle ENT d'origine.
 // L'ENT laclasse.com n'a pas de profil dédié "intervenant" : un intervenant est envoyé
-// avec le même profil ENS qu'un vrai prof (cf issue signalée en session — un intervenant
-// ressortait "Enseignant"). Seule la présence d'une classe réelle (ENTClassesGroupes,
-// cf thematique_cioidc_classes_reelles()) distingue les deux : un ENS sans classe réelle
-// (seulement un groupe projet ENTGroupesLibres) est un intervenant.
-function thematique_cioidc_role_affiche(string $profils, bool $is_webmestre, bool $a_une_classe_reelle) {
+// avec le même profil ENS qu'un vrai prof. Il se distingue par son appartenance au
+// groupe libre _THEMATIQUE_GROUPE_INTERVENANTS, sans classe réelle (cf
+// thematique_cioidc_est_intervenant()) : un enseignant sans classe dans l'ENT mais
+// hors de ce groupe (ex: classe absente de l'ENT) reste "Enseignant".
+function thematique_cioidc_role_affiche(string $profils, bool $is_webmestre, bool $is_intervenant) {
 	if ($is_webmestre) {
 		return 'Admin';
 	}
 	if (strpos($profils, 'ENS') !== false) {
-		return $a_une_classe_reelle ? 'Enseignant' : _T('thematique:cioidc_role_intervenant');
+		return $is_intervenant ? _T('thematique:cioidc_role_intervenant') : 'Enseignant';
 	}
 	if (strpos($profils, 'TUT') !== false) {
 		return 'Tuteur';
@@ -209,6 +209,35 @@ function thematique_cioidc_role_affiche(string $profils, bool $is_webmestre, boo
 		return _T('thematique:cioidc_role_eleve');
 	}
 	return null;
+}
+
+// Intervenant : profil ENS, membre du groupe des intervenants CCN (cf
+// thematique_cioidc_est_intervenant_ccn()), sans classe réelle ; un membre du groupe
+// qui a une classe CLS dans l'ENT reste enseignant.
+function thematique_cioidc_est_intervenant(
+	bool $is_enseignant,
+	bool $is_webmestre,
+	bool $is_intervenant_ccn,
+	array $classes_reelles
+) {
+	return $is_enseignant && !$is_webmestre && $is_intervenant_ccn && !$classes_reelles;
+}
+
+// Profil ENT résolu à la connexion, mémorisé dans spip_auteurs.ent_statut : seul
+// moyen pour thematique_donner_role() de distinguer, hors connexion, un enseignant
+// d'un intervenant tous deux liés à un projet sous "Consignes" (cf
+// thematique_donner_role()). Vide pour un tuteur ou un profil inconnu.
+function thematique_cioidc_profil_ent(string $profils, bool $is_webmestre, bool $is_intervenant) {
+	if ($is_webmestre) {
+		return 'admin';
+	}
+	if (strpos($profils, 'ENS') !== false) {
+		return $is_intervenant ? 'intervenant' : 'enseignant';
+	}
+	if (strpos($profils, 'ELV') !== false) {
+		return 'eleve';
+	}
+	return '';
 }
 
 // Prénom + nom réels de la personne (ex: "Intervenant CCN"), tels que fournis par

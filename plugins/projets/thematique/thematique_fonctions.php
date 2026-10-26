@@ -294,7 +294,7 @@ function thematique_donner_role($id_auteur) {
 	include_spip('base/abstract_sql');
 	include_spip('inc/session'); // pour session_get/session_set si besoin
 
-	$auteur = sql_fetsel('statut, webmestre', 'spip_auteurs', 'id_auteur=' . intval($id_auteur));
+	$auteur = sql_fetsel('statut, webmestre, ent_statut', 'spip_auteurs', 'id_auteur=' . intval($id_auteur));
 	$statut = $auteur['statut'] ?? null;
 
 	// ELEVE : statut 6forum, vérifié avant les mots-clés de hiérarchie —
@@ -338,9 +338,13 @@ function thematique_donner_role($id_auteur) {
 	}
 
 	// INTERVENANT : idem avec le mot "consignes" (un prof y est aussi lié, à son
-	// projet : d'où le test prof d'abord)
+	// projet : d'où le test prof d'abord). Un enseignant sans classe dans l'ENT,
+	// hors du groupe des intervenants CCN (ent_statut 'enseignant', mémorisé à la
+	// connexion SSO, cf thematique_cioidc_profil_ent()), reste prof. Les comptes
+	// hors ENT ou pas reconnectés depuis (ent_statut vide ou ancienne valeur)
+	// gardent la règle d'origine.
 	if (thematique_auteur_a_mot_dans_hierarchie($id_auteur, 'consignes', $id_secteur)) {
-		return $cache[$id_auteur] = 'intervenant';
+		return $cache[$id_auteur] = ($auteur['ent_statut'] ?? '') === 'enseignant' ? 'prof' : 'intervenant';
 	}
 
 	$cache[$id_auteur] = null;
@@ -1443,6 +1447,11 @@ function thematique_assurer_structure_annee() {
  * Premier intervenant (au sens thematique_donner_role) trouvé sur la
  * branche "consignes" du projet dont fait partie $id_rubrique.
  *
+ * Les profs sont eux aussi liés à leur projet sous « Consignes » : un compte
+ * que l'ENT a identifié comme enseignant (spip_auteurs.ent_statut, cf
+ * thematique_cioidc_profil_ent()) est écarté, sinon il recevait les jalons et
+ * la fiche de l'intervenant.
+ *
  * @param int $id_rubrique
  * @return int 0 si aucun intervenant trouvé
  */
@@ -1459,8 +1468,16 @@ function thematique_premier_intervenant($id_rubrique) {
 	}
 	return intval(sql_getfetsel(
 		'lien.id_auteur',
-		['spip_auteurs_liens AS lien', 'spip_rubriques AS rub', 'spip_rubriques AS consignes', 'spip_mots_liens AS ml'],
 		[
+			'spip_auteurs_liens AS lien',
+			'spip_auteurs AS aut',
+			'spip_rubriques AS rub',
+			'spip_rubriques AS consignes',
+			'spip_mots_liens AS ml',
+		],
+		[
+			'aut.id_auteur=lien.id_auteur',
+			'aut.ent_statut<>' . sql_quote('enseignant'),
 			'lien.id_objet=rub.id_rubrique',
 			"lien.objet='rubrique'",
 			'consignes.id_rubrique=rub.id_parent',

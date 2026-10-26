@@ -323,13 +323,25 @@ function thematique_cioidc_userinfo($flux) {
 	$uai_liste = thematique_cioidc_normaliser_liste($flux['data']['ENTAllUai'] ?? []);
 	$is_webmestre = thematique_cioidc_est_webmestre($uai_liste, $is_enseignant, $is_intervenant_ccn);
 	$is_eleve = (strpos($profils, 'ELV') !== false);
-	$role_ent = thematique_cioidc_role_affiche($profils, $is_webmestre, count($classes_reelles) > 0);
-
-	// Intervenant (ENS sans classe réelle, non webmestre) : identifié par son nom,
-	// faute de classe/collège à afficher.
-	$is_intervenant = $is_enseignant && !$is_webmestre && !$classes_reelles;
-	$nom = thematique_cioidc_nom_affiche($classes_reelles, $role_ent, $uai_liste, $is_intervenant ? $nom_complet : '');
+	// Intervenant : groupe des intervenants CCN, sans classe réelle.
+	$is_intervenant = thematique_cioidc_est_intervenant(
+		$is_enseignant,
+		$is_webmestre,
+		$is_intervenant_ccn,
+		$classes_reelles
+	);
+	$role_ent = thematique_cioidc_role_affiche($profils, $is_webmestre, $is_intervenant);
+	// ENS sans classe réelle (intervenant ou enseignant hors groupe) : identifié par
+	// son nom, faute de classe à afficher.
+	$sans_classe = $is_enseignant && !$is_webmestre && !$classes_reelles;
+	$nom = thematique_cioidc_nom_affiche($classes_reelles, $role_ent, $uai_liste, $sans_classe ? $nom_complet : '');
 	$auteur = thematique_cioidc_maj_champ($auteur, 'nom', $nom, 'du nom');
+	$auteur = thematique_cioidc_maj_champ(
+		$auteur,
+		'ent_statut',
+		thematique_cioidc_profil_ent($profils, $is_webmestre, $is_intervenant),
+		'du profil ENT'
+	);
 
 	$annee_scolaire = thematique_annee_scolaire();
 	[, $id_travail_classes, $id_consignes] = thematique_cioidc_rubriques_annee($annee_scolaire);

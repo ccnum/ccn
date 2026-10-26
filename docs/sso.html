@@ -67,7 +67,7 @@
 			<li><strong>À l’écriture de la session</strong>, <code>thematique_donner_role()</code> déduit le <strong>rôle public</strong> de ce statut et de ces rubriques (voir <a href="contenus.html#roles">Rôles</a>). Il est exposé par <code>#SESSION{role}</code>.</li>
 		</ol>
 		<div class="callout">
-			<p>L’ENT n’a <strong>pas de profil « intervenant »</strong> : un intervenant arrive avec le même profil <code>ENS</code> qu’un enseignant. Ce qui les distingue, c’est la présence d’une classe réelle dans <code>ENTClassesGroupes</code>.</p>
+			<p>L’ENT n’a <strong>pas de profil « intervenant »</strong> : un intervenant arrive avec le même profil <code>ENS</code> qu’un enseignant. Ce qui les distingue, c’est l’appartenance au groupe libre « CCN Intervenants », sans classe réelle dans <code>ENTClassesGroupes</code>. Un enseignant sans classe dans l’ENT, mais hors de ce groupe, reste un enseignant.</p>
 		</div>
 
 		<h2 id="attributs">Attributs ENT utilisés</h2>
@@ -76,8 +76,8 @@
 				<thead><tr><th>Attribut</th><th>Contenu</th><th>Sert à</th></tr></thead>
 				<tbody>
 					<tr><td><code>ENTPersonProfils</code></td><td><code>ENS</code> (enseignant), <code>ELV</code> (élève), <code>TUT</code> (tuteur)</td><td>Statut SPIP.</td></tr>
-					<tr><td><code>ENTClassesGroupes</code></td><td>Groupes de la personne ; ceux de type <code>CLS</code> sont ses classes réelles.</td><td>Distinguer prof et intervenant, classes à proposer, classe d’un élève.</td></tr>
-					<tr><td><code>ENTGroupesLibres</code></td><td>Groupes libres, dont le groupe projet (ex. « On tourne 2026 ») et le groupe « CCN Intervenants ».</td><td>Inscription au projet de ce site, repérage des intervenants.</td></tr>
+					<tr><td><code>ENTClassesGroupes</code></td><td>Groupes de la personne ; ceux de type <code>CLS</code> sont ses classes réelles.</td><td>Classes à proposer, classe d’un élève, nom affiché ; un membre du groupe intervenants qui a une classe reste prof.</td></tr>
+					<tr><td><code>ENTGroupesLibres</code></td><td>Groupes libres, dont le groupe projet (ex. « On tourne 2026 ») et le groupe « CCN Intervenants ».</td><td>Inscription au projet de ce site, distinction prof / intervenant.</td></tr>
 					<tr><td><code>ENTAllUai</code></td><td>Établissements de rattachement (UAI).</td><td>Repérage des webmestres, nom de l’établissement.</td></tr>
 					<tr><td><code>MailAdressePrincipal</code>, <code>name</code>, <code>avatar</code></td><td>Identité.</td><td>Retrouver ou créer le compte, nom et avatar.</td></tr>
 				</tbody>
@@ -93,6 +93,7 @@
 			<li><strong>Statut SPIP</strong> : webmestre → <code>0minirezo</code> ; <code>ELV</code> → <code>6forum</code> ; <code>ENS</code> → <code>1comite</code> s’il a un groupe projet pertinent, sinon <code>6forum</code>.</li>
 			<li><strong>Projet archivé</strong> (<code>CCN_PROJET_ACTIVE=false</code>) : la connexion est refusée à tout non-webmestre.</li>
 			<li><strong>Rubriques liées</strong> (voir le tableau ci-dessous). Un webmestre est délié de toute rubrique.</li>
+			<li><strong>Profil ENT</strong> mémorisé dans <code>spip_auteurs.ent_statut</code> (<code>admin</code>, <code>intervenant</code>, <code>enseignant</code> ou <code>eleve</code>, cf <code>thematique_cioidc_profil_ent()</code>), pour que <code>thematique_donner_role()</code> distingue un enseignant d’un intervenant hors connexion.</li>
 			<li><strong>Intervenant nouvellement lié</strong> : structure de l’année, jalons et fiche intervenant créés sans attendre le cron de rentrée (année réelle et projet actif seulement).</li>
 		</ol>
 
@@ -114,10 +115,16 @@
 						<td><span class="tag">prof</span></td>
 					</tr>
 					<tr>
-						<td><code>ENS</code> + groupe projet, sans classe <code>CLS</code></td>
+						<td><code>ENS</code> + groupe projet + groupe « CCN Intervenants », sans classe <code>CLS</code></td>
 						<td><code>1comite</code></td>
 						<td>Son projet sous « Consignes », blog pédagogique, agenda.</td>
 						<td><span class="tag">intervenant</span></td>
+					</tr>
+					<tr>
+						<td><code>ENS</code> + groupe projet, sans classe <code>CLS</code>, hors groupe « CCN Intervenants »</td>
+						<td><code>1comite</code></td>
+						<td>Son projet sous « Consignes », blog pédagogique, agenda.</td>
+						<td><span class="tag">prof</span></td>
 					</tr>
 					<tr>
 						<td><code>ENS</code> sans groupe projet pour ce site et cette année</td>
@@ -142,11 +149,11 @@
 		</div>
 		<p>Le projet sous « Consignes » est la rubrique qui porte le nom du groupe projet. Elle est créée si elle n’existe pas encore.</p>
 		<div class="callout">
-			<p><strong>Prof et intervenant sont tous deux liés à leur projet sous « Consignes ».</strong> Le prof est donc testé en premier dans <code>thematique_donner_role()</code> : il est prof dès qu’il a des classes à choisir, ou qu’il est lié à une classe de l’année. Seuls les liens vers les rubriques de l’année active comptent : la connexion ne retire jamais les liens des années passées.</p>
+			<p><strong>Prof et intervenant sont tous deux liés à leur projet sous « Consignes ».</strong> Le prof est donc testé en premier dans <code>thematique_donner_role()</code> : il est prof dès qu’il a des classes à choisir, qu’il est lié à une classe de l’année, ou que sa dernière connexion ENT l’a identifié comme enseignant (<code>ent_statut</code> = <code>enseignant</code> : sans classe, hors groupe intervenants). Un compte hors ENT ou pas reconnecté depuis garde l’ancienne règle (lié à un projet, sans classe : intervenant). Pour la même raison, <code>thematique_premier_intervenant()</code>, qui choisit à qui rattacher jalons et fiche intervenant, écarte les comptes <code>enseignant</code>. Seuls les liens vers les rubriques de l’année active comptent : la connexion ne retire jamais les liens des années passées.</p>
 		</div>
 
 		<h3>Nom affiché</h3>
-		<p>Le champ <code>nom</code> de l’auteur décrit sa fonction plutôt que la personne : rôle ENT, première classe, établissement (ex. « Enseignant 4ème 2 - Collège … »). Un intervenant, qui n’a ni classe ni établissement, est affiché avec son prénom et son nom devant. Le prénom et nom réels sont aussi gardés dans <code>nom_complet</code> (<code>#SESSION{nom_complet}</code>, menu du haut). Quel nom s’affiche où : voir <a href="thematique.html#noms">Noms des comptes et des classes</a>.</p>
+		<p>Le champ <code>nom</code> de l’auteur décrit sa fonction plutôt que la personne : rôle ENT, première classe, établissement (ex. « Enseignant 4ème 2 - Collège … »). Un compte <code>ENS</code> sans classe (intervenant, ou enseignant dont la classe n’est pas dans l’ENT) est affiché avec son prénom et son nom devant. Le prénom et nom réels sont aussi gardés dans <code>nom_complet</code> (<code>#SESSION{nom_complet}</code>, menu du haut). Quel nom s’affiche où : voir <a href="thematique.html#noms">Noms des comptes et des classes</a>.</p>
 
 		<h2 id="choix-classes">Choix des classes par le prof</h2>
 		<p><code>ENTClassesGroupes</code> n’a pas d’année : il contient aussi les classes des années passées. Les classes d’un prof ne sont donc pas créées automatiquement :</p>
@@ -178,7 +185,8 @@
 				<thead><tr><th>Symptôme</th><th>Cause probable</th></tr></thead>
 				<tbody>
 					<tr><td>Un prof ou un intervenant ne peut rien publier (rôle <code>eleve</code>).</td><td>Aucun groupe projet pertinent : le groupe ENT n’existe pas, ou son nom ne commence pas par « &lt;site&gt; &lt;année&gt; ».</td></tr>
-					<tr><td>Un intervenant est vu comme prof.</td><td>Il a une classe <code>CLS</code> dans l’ENT, ou il est encore lié à une classe de l’année.</td></tr>
+					<tr><td>Un intervenant est vu comme prof.</td><td>Il n’est pas dans le groupe « CCN Intervenants », il a une classe <code>CLS</code> dans l’ENT, ou il est encore lié à une classe de l’année.</td></tr>
+					<tr><td>Un enseignant sans classe est vu comme intervenant.</td><td>Il ne s’est pas reconnecté par l’ENT depuis la mise à jour (<code>ent_statut</code> pas encore à <code>enseignant</code>), ou il est dans le groupe « CCN Intervenants ».</td></tr>
 					<tr><td>Un intervenant est admin.</td><td>Il n’est pas dans le groupe « CCN Intervenants » alors qu’il est rattaché à <code>00000CCN</code>.</td></tr>
 					<tr><td>Un élève n’est rattaché à aucune classe.</td><td>Son prof n’a pas encore coché la classe dans la pop-up.</td></tr>
 					<tr><td>Le rôle ne change pas après une correction dans l’ENT.</td><td>Le rôle est recalculé à la connexion : se déconnecter puis se reconnecter.</td></tr>
@@ -194,7 +202,7 @@
 				<tbody>
 					<tr><td><span class="tag">admin</span></td><td><code>0minirezo</code>, non restreint</td><td>Aucune.</td></tr>
 					<tr><td><span class="tag">prof</span></td><td><code>1comite</code></td><td>Sa classe sous « Travail des classes » de l’année, en plus de son projet sous « Consignes » s’il doit y être lié.</td></tr>
-					<tr><td><span class="tag">intervenant</span></td><td><code>1comite</code></td><td>Son projet sous « Consignes » de l’année, et aucune classe.</td></tr>
+					<tr><td><span class="tag">intervenant</span></td><td><code>1comite</code></td><td>Son projet sous « Consignes » de l’année, et aucune classe (un compte ENT identifié comme enseignant reste prof, cf plus haut).</td></tr>
 					<tr><td><span class="tag">eleve</span></td><td><code>6forum</code></td><td>Sa classe, facultative (lecture et forum restent possibles sans).</td></tr>
 				</tbody>
 			</table>
