@@ -78,7 +78,7 @@ docker-compose up</code></pre>
 				<tbody>
 					<tr><td>Push sur <code>dev</code></td><td><code>erasme/spip-ccn:dev</code></td></tr>
 					<tr><td>PR fusionnée dans <code>main</code></td><td><code>erasme/spip-ccn:latest</code> et <code>erasme/spip-ccn:X.Y.Z</code></td></tr>
-					<tr><td>Nouvelle version de PHP dans l’image de base (vérifié toutes les heures)</td><td>Reconstruction de <code>dev</code> dès la sortie ; <code>latest</code> seulement entre 18 h et 8 h (heure de Paris), car son redéploiement redémarre les sites.</td></tr>
+					<tr><td>Nouvelle version de PHP dans l’image de base (vérifié chaque nuit, vers 3 h ou 4 h à Paris)</td><td>Reconstruction de <code>dev</code> et <code>latest</code> la nuit suivant la sortie : le redéploiement de <code>latest</code> redémarre les sites, il n’est fait qu’entre 18 h et 8 h (heure de Paris).</td></tr>
 				</tbody>
 			</table>
 		</div>
