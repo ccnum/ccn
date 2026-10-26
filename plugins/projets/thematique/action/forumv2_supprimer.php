@@ -1,7 +1,5 @@
 <?php
 
-use Spip\Afficher\Minipage\Admin as MinipageAdmin;
-
 if (!defined('_ECRIRE_INC_VERSION')) {
 	return;
 }
@@ -12,16 +10,15 @@ if (!defined('_ECRIRE_INC_VERSION')) {
  * Délègue à instituer_un_forum() du plugin forum dist, qui gère déjà
  * la descente récursive sur l'arborescence du message, l'invalidation
  * du cache et le pipeline post_edition.
+ *
+ * Réponse HTTP seule (appel fetch() de callbackCliqueSurSupprimerMonCommentaire()
+ * dans forum.js) : 200 si le commentaire est bien à la poubelle, 403 sinon.
  */
 function action_forumv2_supprimer_dist() {
-	include_spip('inc/actions');
 	$securiser_action = charger_fonction('securiser_action', 'inc');
-	$arg = $securiser_action();
-
-	$id_forum = intval($arg);
-	if (!autoriser('forumsupprimer', 'forum', $id_forum)) {
-		$minipage = new MinipageAdmin();
-		echo $minipage->page();
+	$id_forum = intval($securiser_action());
+	if (!$id_forum || !autoriser('forumsupprimer', 'forum', $id_forum)) {
+		http_response_code(403);
 		exit;
 	}
 
@@ -30,15 +27,8 @@ function action_forumv2_supprimer_dist() {
 		include_spip('action/instituer_forum');
 		instituer_un_forum('poubelle', $row);
 	}
+	$statut = sql_getfetsel('statut', 'spip_forum', 'id_forum=' . $id_forum);
 
-	if ($redirect = _request('redirect')) {
-		include_spip('inc/headers');
-		// Bloquer les redirections vers un domaine externe (utilise la fonction du core)
-		$redirect = securiser_redirect_action($redirect);
-		if ($redirect) {
-			redirige_par_entete($redirect);
-		} else {
-			redirige_par_entete('spip.php?page=sommaire');
-		}
-	}
+	http_response_code($statut === 'poubelle' ? 200 : 403);
+	exit;
 }
