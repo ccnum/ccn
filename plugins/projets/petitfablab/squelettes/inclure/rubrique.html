@@ -93,8 +93,8 @@
 		<!-- END PROLOGUE -->
 		<!-- Boucle affichage des cadavres -->
 		<BOUCLE_cadavres(ARTICLES){id_rubrique}{par date}{tous}>
-		[(#COMPTEUR_BOUCLE|!={5}|oui)<INCLURE{fond=inclure/chapitre-verrouille,id_article,fin=non}>]
-		[(#COMPTEUR_BOUCLE|=={5}|oui)<INCLURE{fond=inclure/chapitre-visible,id_article}>]
+		[(#COMPTEUR_BOUCLE|!={5}|oui)<INCLURE{fond=inclure/chapitre,id_article,verrouille=oui}>]
+		[(#COMPTEUR_BOUCLE|=={5}|oui)<INCLURE{fond=inclure/chapitre,id_article}>]
 		</BOUCLE_cadavres>
 			#SET{total_boucle,#TOTAL_BOUCLE}
 		</B_cadavres>
@@ -128,23 +128,7 @@
 	<script type="text/javascript">
 	$(document).ready(function() {
 		// TOOLTIP
-		$('.liste-link-small').mouseover(function() {
-			var offset = $(this).offset();
-			var content_tooltip = $(this).find('.liste-tooltip-content').html();
-			$('#liste-tooltip').show();
-			$('#liste-tooltip').html(content_tooltip);
-			var hauteur_tooltip = $('#liste-tooltip-content').height();
-			$('#liste-tooltip').height(hauteur_tooltip);
-			var toptooltip = Math.round(offset.top);
-			toptooltip = toptooltip - hauteur_tooltip;
-			var lefttooltip = Math.round(offset.left);
-			lefttooltip -= 108;
-			$('#liste-tooltip').css('top', toptooltip -5);
-			$('#liste-tooltip').css('left', lefttooltip + 2);
-		});
-		$('.liste-link-small').mouseout(function() {
-			$('#liste-tooltip').hide();
-		});
+		tooltip_liste('.liste-link-small', 108);
 
 		// SCRIPT OPEN CLOSE
 		$('.script-texte-hide').hide();

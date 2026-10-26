@@ -2,7 +2,7 @@
 
 /**
  * Détecte le PHP dupliqué (copier-coller) dans les plugins maison
- * (plugins/thematique, plugins/fictions, plugins/petitfablab, plugins/ccn),
+ * (plugins/thematique, plugins/fictions, plugins/petitfablab, plugins/cadavrexquis, plugins/ccn),
  * via jscpd (node_modules/.bin/jscpd, installé en dépendance dev npm).
  *
  * Fonctionnement identique à check_html_duplication.js (voir ce fichier
@@ -27,7 +27,7 @@ const os = require('node:os');
 const path = require('node:path');
 
 const repoRoot = path.dirname(__dirname);
-const scanRoots = ['plugins/projets/thematique', 'plugins/projets/fictions', 'plugins/projets/petitfablab', 'plugins/projets/ccn'].map((p) => path.join(repoRoot, p));
+const scanRoots = ['plugins/projets/thematique', 'plugins/projets/fictions', 'plugins/projets/petitfablab', 'plugins/projets/cadavrexquis', 'plugins/projets/ccn'].map((p) => path.join(repoRoot, p));
 const jscpdBin = path.join(repoRoot, 'node_modules', '.bin', 'jscpd');
 
 const args = process.argv.slice(2);
