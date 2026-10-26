@@ -27,4 +27,22 @@ $GLOBALS[$GLOBALS['idx_lang']] = [
 	'config_enregistrer'        => 'Enregistrer',
 	'config_enregistree'        => 'Configuration enregistrée.',
 	'erreur_minimum_un_type'    => 'Choisissez au moins un smiley.',
+
+	// Boutons de réaction
+	'reagir_avec_un'            => 'Réagir avec @label@, @nb@ réaction',
+	'reagir_avec_plusieurs'     => 'Réagir avec @label@, @nb@ réactions',
+	'connectez_vous_pour_reagir' => 'Connectez-vous pour réagir',
+
+	// Libellés des réactions (aria-label)
+	'label_coeur'               => 'Cœur',
+	'label_amour'               => 'Amour',
+	'label_pouce'               => 'Pouce en l’air',
+	'label_pouce_bas'           => 'Pouce en bas',
+	'label_feu'                 => 'Feu',
+	'label_rire'                => 'Rire',
+	'label_triste'              => 'Triste',
+	'label_etonne'              => 'Étonné',
+	'label_colere'              => 'Colère',
+	'label_clap'                => 'Applaudissements',
+	'label_fete'                => 'Fête',
 ];

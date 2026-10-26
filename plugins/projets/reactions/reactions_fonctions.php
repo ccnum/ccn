@@ -333,26 +333,14 @@ function reaction_compteur($type, $compteurs) {
  * Utilisation dans le squelette : [(#VALEUR|reactions_recuperer_smiley{html_encoding})]
  */
 /**
- * Filtre SPIP : retourne le label français d'une réaction pour aria-label.
+ * Filtre SPIP : retourne le libellé d'une réaction (item de langue label_xxx) pour aria-label.
  *
  * @param string $cle
  * @return string
  */
 function reaction_label_fr($cle) {
-    $labels = [
-        'coeur'     => 'Cœur',
-        'amour'     => 'Amour',
-        'pouce'     => 'Pouce en l\'air',
-        'pouce_bas' => 'Pouce en bas',
-        'feu'       => 'Feu',
-        'rire'      => 'Rire',
-        'triste'    => 'Triste',
-        'etonne'    => 'Étonné',
-        'colere'    => 'Colère',
-        'clap'      => 'Applaudissements',
-        'fete'      => 'Fête',
-    ];
-    return $labels[$cle] ?? $cle;
+    $label = _T('reactions:label_' . $cle, [], ['force' => false]);
+    return $label !== '' ? $label : $cle;
 }
 
 /**
