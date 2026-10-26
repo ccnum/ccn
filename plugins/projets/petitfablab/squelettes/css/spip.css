@@ -633,6 +633,14 @@ div.texte-presentation {
 	margin: 60px;
 }
 
+/* Contient les colonnes flottantes de la grille des histoires (.liste-colonnes) :
+   sans ça, le bloc suivant ("Et les histoires terminées") remontait à côté de la grille */
+div.texte-presentation::after {
+	content: "";
+	display: table;
+	clear: both;
+}
+
 .texte-presentation div.bord {
 	border-left: 5px #ff6b6b solid;
 	padding: 10px;
