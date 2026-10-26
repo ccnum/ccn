@@ -2,18 +2,27 @@
 Bouton Publier ou Dépublier d'un jalon, affiché en tête (à côté de Modifier)
 et en bas de onglet_description_jalon.html. Publier n'apparaît que si le
 jalon a un texte. Paramètre attendu : id_article.
+Appelle l'action thematique_statut_article (cf changerStatutArticle dans
+controleurs.js), réservée à qui peut modifier l'article.
 ]
 <BOUCLE_jalon_publication(ARTICLES){id_article}{tout}>
-[(#STATUT|=={publie}|oui)
-	<div class="ajax">
-		#FORMULAIRE_DEPUBLIER_ARTICLE{#ID_ARTICLE}
-	</div>
-]
-[(#STATUT|=={publie}|non)
-	[(#TEXTE|oui)
-		<div class="ajax">
-			#FORMULAIRE_PUBLIER_ARTICLE{#ID_ARTICLE}
-		</div>
+[(#AUTORISER{modifier,article,#ID_ARTICLE}|oui)
+	[(#STATUT|=={publie}|oui)
+		#SET{statut_vise, prop}
+		#SET{libelle, #VAL{thematique:bouton_depublier_article}|_T}
+	]
+	[(#STATUT|=={publie}|non)
+		[(#TEXTE|oui)
+			#SET{statut_vise, publie}
+			#SET{libelle, #VAL{thematique:bouton_publier_article}|_T}
+		]
+	]
+	[(#GET{statut_vise}|oui)
+		<button type="button"
+			class="bouton-lisere"
+			data-url="[(#URL_ACTION_AUTEUR{thematique_statut_article,#ID_ARTICLE-#GET{statut_vise}})]"
+			onclick="changerStatutArticle(event)"
+		>#GET{libelle}</button>
 	]
 ]
 </BOUCLE_jalon_publication>

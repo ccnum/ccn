@@ -1685,3 +1685,24 @@ async function supprimerArticle(e) {
 		btn.disabled = false;
 	}
 }
+
+/**
+ * Bouton Publier/Dépublier d'un jalon (noisettes/sidebar/inc/boutons_publication_jalon.html) :
+ * appelle l'action thematique_statut_article puis recharge la page, le
+ * statut étant affiché à plusieurs endroits (sidebar, timeline).
+ */
+async function changerStatutArticle(e) {
+	const btn = e.currentTarget;
+	if (!btn || btn.disabled) return;
+
+	btn.disabled = true;
+	try {
+		const res = await fetch(btn.dataset.url, { credentials: 'same-origin' });
+		if (!res.ok) throw new Error('HTTP ' + res.status);
+		window.location.reload();
+	} catch (err) {
+		console.error(err);
+		alert(CCN.lang.echec_changement_statut);
+		btn.disabled = false;
+	}
+}

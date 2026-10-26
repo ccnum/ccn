@@ -483,7 +483,7 @@ function formulaires_public_publier_article_traiter_dist(
 		//
 		// En édition, pas pour un article mis à la poubelle ou refusé (statuts
 		// posés par un admin). Un article 'prop' se republie : c'est l'état
-		// laissé par #FORMULAIRE_DEPUBLIER_ARTICLE, que l'auteur lui-même
+		// laissé par le bouton Dépublier (action thematique_statut_article), que l'auteur lui-même
 		// utilise (jalons) puis annule en rééditant.
 		$publier = !$edition || !in_array($statut_avant, ['poubelle', 'refuse'], true);
 		$id_rubrique_article = sql_getfetsel('id_rubrique', 'spip_articles', 'id_article=' . intval($id_article));
