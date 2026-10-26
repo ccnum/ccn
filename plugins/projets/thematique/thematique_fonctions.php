@@ -3432,12 +3432,87 @@ function thematique_trouver_reponse_a_une_consigne($id_consigne, $id_rubrique_cl
 }
 
 /**
+ * Rubrique racine "Ressources", commune à toutes les années (0 si absente).
+ *
+ * @return int
+ */
+function thematique_id_rubrique_ressources() {
+	static $id_ressources = null;
+	if ($id_ressources === null) {
+		$id_ressources = (int) sql_getfetsel('id_rubrique', 'spip_rubriques', 'titre=' . sql_quote('Ressources'));
+	}
+	return $id_ressources;
+}
+
+/**
+ * Sous-rubriques directes de "Ressources" (les onglets de la page
+ * Ressources), publiées ou non, dans l'ordre du back-office.
+ *
+ * @return array id_rubrique => titre (sans numéro)
+ */
+function thematique_sous_rubriques_ressources() {
+	static $sous_rubriques = null;
+	if ($sous_rubriques !== null) {
+		return $sous_rubriques;
+	}
+
+	$sous_rubriques = [];
+	$id_ressources = thematique_id_rubrique_ressources();
+	if (!$id_ressources) {
+		return $sous_rubriques;
+	}
+
+	include_spip('inc/filtres');
+	$rubriques = sql_allfetsel(
+		'id_rubrique, titre, 0+titre AS num',
+		'spip_rubriques',
+		'id_parent=' . intval($id_ressources),
+		'',
+		'num, titre'
+	);
+	foreach ($rubriques as $rubrique) {
+		$sous_rubriques[(int) $rubrique['id_rubrique']] = supprimer_numero($rubrique['titre']);
+	}
+	return $sous_rubriques;
+}
+
+/**
+ * Onglets de la page Ressources : sous-rubriques de "Ressources" contenant
+ * au moins une ressource publiée (toutes années), vide s'il y en a moins de
+ * deux — un seul onglet listerait la même chose que "Voir tout".
+ *
+ * @return array id_rubrique => titre (sans numéro)
+ */
+function thematique_onglets_ressources() {
+	static $onglets = null;
+	if ($onglets !== null) {
+		return $onglets;
+	}
+
+	$sous_rubriques = thematique_sous_rubriques_ressources();
+	$avec_contenu = [];
+	if ($sous_rubriques) {
+		$avec_contenu = array_column(sql_allfetsel(
+			'DISTINCT id_rubrique',
+			'spip_articles',
+			[sql_in('id_rubrique', array_keys($sous_rubriques)), 'statut=' . sql_quote('publie')]
+		), 'id_rubrique');
+	}
+	$onglets = array_intersect_key($sous_rubriques, array_flip(array_map('intval', $avec_contenu)));
+	if (count($onglets) < 2) {
+		$onglets = [];
+	}
+	return $onglets;
+}
+
+/**
  * L'auteur $id_auteur a-t-il le droit de créer un article dans la rubrique
  * $id_rubrique ?
  *
- * Un admin a accès à tout. Sinon, la rubrique globale "Ressources" est
- * ouverte à tout rédacteur (cf le hack côté serveur qui y force id_rubrique
- * dans public_publier_article.php, indépendamment de la valeur postée).
+ * Un admin a accès à tout. Sinon, la rubrique globale "Ressources" et ses
+ * sous-rubriques sont ouvertes à tout rédacteur (cf
+ * public_publier_article.php, qui n'accepte pour une ressource que l'une de
+ * ces rubriques, indépendamment de la valeur postée).
  * Pour toute autre rubrique, l'auteur doit y être effectivement lié
  * (spip_auteurs_liens) : sa/ses classe(s), son(ses) projet(s)
  * d'intervenant, le blog pédagogique — même mécanisme que
@@ -3467,14 +3542,6 @@ function thematique_auteur_peut_creer_dans_rubrique($id_auteur, $id_rubrique) {
 		return true;
 	}
 
-	static $id_ressources = null;
-	if ($id_ressources === null) {
-		$id_ressources = (int) sql_getfetsel('id_rubrique', 'spip_rubriques', 'titre=' . sql_quote('Ressources'));
-	}
-	if ($id_ressources && $id_rubrique === $id_ressources) {
-		return true;
-	}
-
 	// cf thematique_hierarchie_a_mot : même logique de remontée des
 	// ascendants (thematique_ascendants_rubrique inclut $id_rubrique
 	// lui-même), pour couvrir le cas d'un auteur lié à une rubrique parente
@@ -3483,6 +3550,11 @@ function thematique_auteur_peut_creer_dans_rubrique($id_auteur, $id_rubrique) {
 	$ascendants = thematique_ascendants_rubrique($id_rubrique);
 	if (!$ascendants) {
 		return false;
+	}
+
+	$id_ressources = thematique_id_rubrique_ressources();
+	if ($id_ressources && in_array($id_ressources, $ascendants)) {
+		return true;
 	}
 
 	// Intervenant lié à une hiérarchie "consignes" : autorisé à créer dans

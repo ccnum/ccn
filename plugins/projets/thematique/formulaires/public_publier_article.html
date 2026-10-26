@@ -89,6 +89,21 @@
 					]
 				</div>
 
+				[(#REM) Ressource : sous-rubrique de Ressources obligatoire, liste vide
+				(donc champ absent) si Ressources n'a pas de sous-rubrique. ]
+				<B_sous_rubriques_ressources>
+				<div class="editer editer_id_rubrique_ressource obligatoire[ (#ENV**{erreurs}|table_valeur{id_rubrique_ressource}|oui)erreur]">
+					<label for="id_rubrique_ressource"><:thematique:label_rubrique_ressource:></label>
+					[<span class="erreur_message">(#ENV**{erreurs}|table_valeur{id_rubrique_ressource})</span>]
+					<select name="id_rubrique_ressource" id="id_rubrique_ressource" required>
+						<option value=""><:thematique:choisir_rubrique_ressource:></option>
+						<BOUCLE_sous_rubriques_ressources(DATA){source tableau, #ENV{sous_rubriques_ressources}}>
+						<option value="#CLE"[(#CLE|=={#ENV{id_rubrique_ressource}}|oui) selected="selected"]>[(#VALEUR|entites_html)]</option>
+						</BOUCLE_sous_rubriques_ressources>
+					</select>
+				</div>
+				</B_sous_rubriques_ressources>
+
 				#SET{champ_texte_publication, #ENV{type_article}|thematique_texte_publication{champ_texte}}
 				<div class="editer editer_texte obligatoire[ (#ENV**{erreurs}|table_valeur{texte}|oui)erreur]">
 					<label for="texte">#GET{champ_texte_publication}</label>

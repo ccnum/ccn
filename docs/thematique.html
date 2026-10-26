@@ -86,7 +86,7 @@
 				<tbody>
 					<tr><td>Consigne (mission)</td><td>intervenant, admin</td><td>Son projet sous « Consignes » de l’année.</td></tr>
 					<tr><td>Réponse à une consigne</td><td>prof, admin</td><td>Sa classe sous « Travail des classes », liée à la consigne (<code>id_consigne</code>).</td></tr>
-					<tr><td>Ressource</td><td>prof (sauf Edifice), intervenant, admin</td><td>Toujours la rubrique « Ressources », quelle que soit la rubrique envoyée.</td></tr>
+					<tr><td>Ressource</td><td>prof (sauf Edifice), intervenant, admin</td><td>Une sous-rubrique de « Ressources », obligatoire, choisie dans le formulaire (à la création comme à la modification, « Pédagogie » présélectionnée par défaut si elle existe sous ce titre) et vérifiée côté serveur (<code>thematique_sous_rubriques_ressources()</code>). La racine « Ressources » seulement si elle n’a aucune sous-rubrique.</td></tr>
 					<tr><td>Événement (agenda), billet de salle des profs</td><td>prof, intervenant, admin</td><td>Agenda, Blog pédagogique.</td></tr>
 					<tr><td>Fiche intervenant</td><td>intervenant</td><td>Fiche de l’année dans « Intervenants ». Si elle a été créée sans auteur, le premier intervenant qui la complète en devient l’auteur.</td></tr>
 				</tbody>
@@ -94,7 +94,8 @@
 		</div>
 		<ul>
 			<li>Un contenu est <strong>publié dès l’enregistrement</strong>, sans validation. L’auteur connecté est lié à l’article à sa création seulement : un prof ou un admin qui corrige l’article d’un autre n’en devient pas auteur.</li>
-			<li>La rubrique est revérifiée côté serveur (<code>thematique_auteur_peut_creer_dans_rubrique()</code>) : hors admin, on ne crée que dans une rubrique à laquelle on est lié. Le choix proposé dans la popup ne suffit pas à le garantir.</li>
+			<li>La rubrique est revérifiée côté serveur (<code>thematique_auteur_peut_creer_dans_rubrique()</code>) : hors admin, on ne crée que dans une rubrique à laquelle on est lié. Le choix proposé dans la popup ne suffit pas à le garantir. « Ressources » et ses sous-rubriques sont ouvertes à tout rôle qui publie.</li>
+			<li>La page Ressources affiche un onglet « Voir tout », puis un onglet par sous-rubrique de « Ressources » contenant au moins une ressource publiée, avec le titre et l’ordre du back-office (chaque CCN renomme les siens). Aucun onglet n’est affiché si moins de deux sous-rubriques ont du contenu (<code>thematique_onglets_ressources()</code>) ; le formulaire propose, lui, toutes les sous-rubriques, même vides. Un clic sur un onglet filtre la liste côté navigateur (<code>squelettes/js/ressources.js</code>).</li>
 			<li>Un double envoi du même formulaire à moins de trois secondes d’intervalle (double clic) ne crée qu’un article.</li>
 		</ul>
 
