@@ -92,10 +92,7 @@ function thematique_annee_article($id_article) {
 		return 0;
 	}
 
-	include_spip('base/abstract_sql');
-	$id_rubrique = intval(sql_getfetsel('id_rubrique', 'spip_articles', 'id_article=' . $id_article));
-
-	return thematique_annee_rubrique($id_rubrique);
+	return thematique_annee_rubrique(thematique_id_rubrique_article($id_article));
 }
 
 /**
@@ -3356,6 +3353,51 @@ function forum_rendre_branche($forums) {
 }
 
 /**
+ * Missions (articles consigne) qui ont au moins une réponse, avec leur titre
+ * et leur rang dans l'année, mises en cache mémoire par requête.
+ *
+ * Le rang d'une mission est le nombre de missions à réponses datées entre
+ * _DATE_DEBUT et sa propre date (incluse) : 0 pour une mission antérieure à
+ * l'année. Calculé en une seule requête pour toutes les missions plutôt
+ * qu'un COUNT (avec sous-requête) par carte de l'onglet Publications de la
+ * fiche participant.
+ *
+ * @return array [id_article => ['titre' => string, 'rang' => int]]
+ */
+function thematique_missions_avec_reponses() {
+	static $missions = null;
+	if ($missions !== null) {
+		return $missions;
+	}
+
+	$rows = sql_allfetsel(
+		'id_article, titre, date',
+		'spip_articles',
+		'id_consigne = 0 AND id_article IN (SELECT DISTINCT id_consigne FROM spip_articles WHERE id_consigne > 0)',
+		'',
+		'date'
+	);
+	$missions = [];
+	$rang = 0;
+	$nb = count($rows);
+	for ($i = 0; $i < $nb; $i = $j) {
+		// Missions de même date : même rang, qui les compte toutes
+		$j = $i + 1;
+		while ($j < $nb && $rows[$j]['date'] === $rows[$i]['date']) {
+			$j++;
+		}
+		if ($rows[$i]['date'] >= _DATE_DEBUT) {
+			$rang += $j - $i;
+		}
+		for ($k = $i; $k < $j; $k++) {
+			$missions[(int) $rows[$k]['id_article']] = ['titre' => $rows[$k]['titre'], 'rang' => $rang];
+		}
+	}
+
+	return $missions;
+}
+
+/**
  * Filtre |titre_consigne : titre d'une mission.
  *
  * @param int|string $id_consigne Mission (article consigne)
@@ -3365,37 +3407,22 @@ function filtre_titre_consigne($id_consigne) {
 	if (!$id_consigne) {
 		return '';
 	}
+	$missions = thematique_missions_avec_reponses();
+	if (isset($missions[intval($id_consigne)])) {
+		return $missions[intval($id_consigne)]['titre'];
+	}
 	return sql_getfetsel('titre', 'spip_articles', 'id_article=' . intval($id_consigne));
 }
 
 /**
  * Filtre |rang_consigne : rang d'une mission dans l'année, parmi les missions
- * qui ont des réponses.
+ * qui ont des réponses (cf thematique_missions_avec_reponses()).
  *
  * @param int|string $id_consigne Mission (article consigne)
  * @return int|string Rang de la mission, '' si introuvable
  */
 function filtre_rang_consigne($id_consigne) {
-	if (!$id_consigne) {
-		return '';
-	}
-
-	$date_consigne = sql_getfetsel(
-		'date',
-		'spip_articles',
-		'id_article=' . intval($id_consigne) . ' AND id_consigne=0'
-	);
-	if (!$date_consigne) {
-		return '';
-	}
-
-	return sql_countsel(
-		'spip_articles',
-		'id_consigne = 0'
-		. ' AND date >= ' . sql_quote(_DATE_DEBUT)
-		. ' AND date <= ' . sql_quote($date_consigne)
-		. ' AND id_article IN (SELECT DISTINCT id_consigne FROM spip_articles WHERE id_consigne > 0)'
-	);
+	return thematique_missions_avec_reponses()[intval($id_consigne)]['rang'] ?? '';
 }
 
 /**
