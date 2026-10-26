@@ -56,7 +56,25 @@ function formulaires_publier_article_traiter_dist($id_article) {
 	include_spip('action/editer_article');
 	include_spip('action/editer_liens');
 
+	// article_instituer() exige 'publierdans' sur la rubrique de l'article
+	// (cf ecrire/action/editer_article.php), que n'a pas un intervenant
+	// (1comite) : sans exception, la publication d'un jalon était refusée
+	// silencieusement et le bouton semblait inactif. Le droit de modifier
+	// l'article, vérifié dans verifier(), suffit ici.
+	$id_rubrique = sql_getfetsel('id_rubrique', 'spip_articles', 'id_article=' . intval($id_article));
+	if ($id_rubrique) {
+		autoriser_exception('publierdans', 'rubrique', $id_rubrique, true);
+	}
 	article_instituer($id_article, ['statut' => 'publie']);
+	if ($id_rubrique) {
+		autoriser_exception('publierdans', 'rubrique', $id_rubrique, false);
+	}
+
+	if (sql_getfetsel('statut', 'spip_articles', 'id_article=' . intval($id_article)) !== 'publie') {
+		spip_log("publication de l'article $id_article refusée", 'thematique' . _LOG_ERREUR);
+
+		return ['message_erreur' => _T('info_acces_interdit')];
+	}
 
 	if ($id_auteur = $GLOBALS['visiteur_session']['id_auteur'] ?? false) {
 		objet_associer(['auteurs' => intval($id_auteur)], ['articles' => intval($id_article)]);
