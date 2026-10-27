@@ -2640,6 +2640,13 @@ function thematique_chemin_logo($infos) {
 	return $infos['chemin'] . ($infos['timestamp'] ? '?' . $infos['timestamp'] : '');
 }
 
+// Lien du logo CCN du menu haut (noisettes/menu_haut.html). Défini ici et non
+// dans thematique_options.php : les options de thematique_edifice, qui le
+// surchargent, se chargent après celles de thematique (plugin dont il dépend).
+if (!defined('_THEMATIQUE_URL_LOGO_CCN')) {
+	define('_THEMATIQUE_URL_LOGO_CCN', 'https://erasme.org/projets/classes_culturelles_numeriques_ccn');
+}
+
 /**
  * Avatar générique (pictogramme blanc plein, sans fond) utilisé quand un
  * auteur existe mais n'a ni logo SPIP ni avatar ENT — cf
