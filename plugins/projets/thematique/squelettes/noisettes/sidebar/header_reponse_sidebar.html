@@ -10,7 +10,7 @@ Arguments :
 #CACHE{0}
 <BOUCLE_article_sidebar(ARTICLES){id_article}{tout}>
 <div class="sidebar_bubble header-reponse">
-	<div id="row_header" style="background-color: var(--color-classe-light-[(#ENV{id_rubrique}|classe_numero)]);">
+	<div id="row_header" class="header-reponse-grid" style="background-color: var(--color-classe-light-[(#ENV{id_rubrique}|classe_numero)]);">
 		<div id="header-col-left">
 			<div class="image-classe-dans-reponse">
 				<INCLURE{fond=modeles/classe_icone, id_rubrique=#ID_RUBRIQUE, titre=#ENV{titre_parent}} />
@@ -21,10 +21,11 @@ Arguments :
 				</BOUCLE_nom_ecole>
 			</div>
 			<div class="#EDIT{date} date">
-				<:thematique:publie_le:> [(#DATE|affdate)]
+				<span><:thematique:publie_le:></span>
+				<span>[(#DATE|affdate)]</span>
 			</div>
 		</div>
-		<div id="header-col-right" style="border-bottom: 2px solid var(--color-classe-light-[(#ENV{id_rubrique}|classe_numero)])">
+		<div id="header-col-right">
 			<div id="header-row-1">
 				#SET{numero_mission, #ENV{rang}|sinon{0}|plus{1}}
 				<div class="etiquette-etape">
@@ -32,7 +33,7 @@ Arguments :
 				</div>
 				<INCLURE{fond=noisettes/sidebar/normal_header_icons} />
 			</div>
-			<div id="header-row-2"  class="#EDIT{titre}">
+			<div id="header-row-2" class="#EDIT{titre}" style="border-bottom: 2px solid var(--color-classe-light-[(#ENV{id_rubrique}|classe_numero)])">
 				#TITRE
 			</div>
 		</div>

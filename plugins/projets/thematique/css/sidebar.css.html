@@ -1239,7 +1239,6 @@ les styles de composants). */
 	clear: both;
 	background-clip: padding-box;
 	position: relative;
-	border: 1px solid rgba(0,0,0,0);
 }
 
 .popup .sidebar_bubble:not(:first-child) {
@@ -1420,13 +1419,11 @@ coller juste après le texte. */
 /* -------- Header sidebar (retour, actions) ----------*/
 
 #row_header {
-	display: flex;
-	justify-content: space-between;
+	display: grid;
+	grid-template-columns: min-content minmax(0, 1fr);
+	column-gap: var(--sidebar-header-column-gap);
+	padding: var(--sidebar-header-padding-block) var(--spacing-md);
 	background-color: var(--color-bleu-fond);
-}
-
-#row_header > * {
-	padding: 11px;
 }
 #header-col-left {
 	display: flex;
@@ -1437,9 +1434,7 @@ coller juste après le texte. */
 	border-bottom: 3px solid var(--color-bleu-fond);
 }
 #header-col-right {
-	flex: 1;
-	padding: 12px;
-	min-width: 72%;
+	min-width: 0;
 }
 #header-row-1 {
     display: flex;
@@ -1453,6 +1448,82 @@ coller juste après le texte. */
     align-items: center;
 	font-weight: 800;
 }
+
+#row_header:is(.header-reponse-grid, .header-sidebar-grid) {
+	grid-template-rows: auto auto auto;
+}
+
+#row_header:is(.header-reponse-grid, .header-sidebar-grid) > #header-col-left,
+#row_header:is(.header-reponse-grid, .header-sidebar-grid) > #header-col-right {
+	display: contents;
+}
+
+#row_header.header-reponse-grid .image-classe-dans-reponse {
+	grid-column: 1;
+	grid-row: 1;
+	justify-self: center;
+}
+
+#row_header.header-reponse-grid #header-col-left .titre {
+	grid-column: 1;
+	grid-row: 2;
+}
+
+#row_header.header-reponse-grid #header-col-left .date {
+	grid-column: 1;
+	grid-row: 3;
+}
+
+#row_header.header-reponse-grid #header-col-left .titre,
+#row_header.header-reponse-grid #header-col-left .date {
+	line-height: 1.2;
+}
+
+/* Colonne en min-content (largeur de la date) : un nom d'école long est
+limité à 2 lignes, avec points de suspension. */
+#row_header.header-reponse-grid #header-col-left .titre {
+	display: -webkit-box;
+	-webkit-box-orient: vertical;
+	-webkit-line-clamp: 2;
+	line-clamp: 2;
+	overflow: hidden;
+}
+
+#row_header:is(.header-reponse-grid, .header-sidebar-grid) #header-row-2 {
+	grid-column: 2;
+	grid-row: 2 / span 2;
+	align-items: flex-start;
+}
+
+#row_header.header-sidebar-grid #header-col-left .photo {
+	grid-column: 1;
+	grid-row: 1;
+	justify-self: center;
+}
+
+#row_header.header-sidebar-grid #header-col-left > :not(.photo):not(.date) {
+	grid-column: 1;
+	grid-row: 2;
+}
+
+#row_header.header-sidebar-grid #header-col-left .date {
+	grid-column: 1;
+	grid-row: 3;
+}
+
+#row_header.header-blog-grid > #header-col-left {
+	align-items: flex-start;
+}
+
+#row_header.header-blog-grid > #header-col-left .photo {
+	align-self: center;
+}
+
+#row_header:is(.header-reponse-grid, .header-sidebar-grid) #header-row-1 {
+	grid-column: 2;
+	grid-row: 1;
+}
+
 #header-reactions {
 	display: flex;
 	align-items: center;
@@ -1500,6 +1571,11 @@ coller juste après le texte. */
 	font-size: 12.8049px;
 }
 
+#header-col-left .date > span {
+	display: block;
+	white-space: nowrap;
+}
+
 #sidebar-top-right-corner {
 	display: flex;
 	gap: 8px;
@@ -1534,7 +1610,7 @@ coller juste après le texte. */
 	min-height: 0; /* IMPORTANT : sans ça, le scroll ne marche pas dans certains navigateurs */
 	display: flex;
 	flex-direction: column;
-	padding: 20px;
+	padding: var(--spacing-md);
 }
 
 #sidebar-header-container {
