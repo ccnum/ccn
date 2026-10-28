@@ -25,18 +25,12 @@ du cache de la page. ]
 	<ul class="filter clearfix option-set" data-filter-group="classe">
 		[(#REM) ======== INTERVENANT DE L'ANNÉE (affiché en tête de liste) ========
 		Seulement si sa fiche est visible : publiée, ou non publiée pour un
-		admin/intervenant (cf thematique_id_fiche_intervenant). Réservé pour
-		l'instant aux webmestres. ]
+		admin/intervenant (cf thematique_id_fiche_intervenant). ]
 		[(#VAL|thematique_id_fiche_intervenant|non) #SET{id_intervenant_annee, 0}]
-		[(#SESSION{webmestre}|=={oui}|non) #SET{id_intervenant_annee, 0}]
 		<BOUCLE_intervenant_annee(AUTEURS){id_auteur=#GET{id_intervenant_annee}}{0,1}>
 			#SET{image, #ID_AUTEUR|thematique_image_auteur_ou_classe{''}}
 			#SET{nom_auteur, #ID_AUTEUR|thematique_nom_public_auteur}
-			<li class="logo cercle tooltip menu_logo_intervenant" 
-				data-tip="[(#GET{nom_auteur}|attribut_html)]"
-				style="display: none;
-					   margin-right: 0.5rem;"
-			>
+			<li class="logo cercle tooltip menu_logo_intervenant" data-tip="[(#GET{nom_auteur}|attribut_html)]">
 				<img src="#GET{image}"
 					alt="[(#GET{nom_auteur}|attribut_html)]"
 					onclick="callIntervenant([(#VAL|thematique_id_rubrique_projet)])"
