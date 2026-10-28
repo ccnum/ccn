@@ -1,7 +1,10 @@
 <div class="publications-list">
 	<BOUCLE_reponses(ARTICLES){id_rubrique}{id_consigne>0}{!par date}>
-		[(#SET{titre_c, #ID_CONSIGNE|filtre_titre_consigne})]
-		[(#SET{rang_c, #ID_CONSIGNE|filtre_rang_consigne})]
+		[(#REM) Titre vide : mission supprimée ou dépubliée, réponse masquée
+		comme sur la timeline (cf filtre_titre_consigne). ]
+		#SET{titre_c, #ID_CONSIGNE|filtre_titre_consigne}
+		#SET{rang_c, #ID_CONSIGNE|thematique_numero_mission}
+		[(#GET{titre_c}|oui)
 		<INCLURE{fond=noisettes/sidebar/page_participant/card_publication,
 			date=#DATE,
 			titre_consigne=#GET{titre_c},
@@ -9,5 +12,6 @@
 			id_reponse=#ID_ARTICLE,
 			ajax
 		} />
+		]
 	</BOUCLE_reponses>
 </div>

@@ -2803,7 +2803,8 @@ function thematique_avatar_notification_auteur($id_auteur) {
  * même règle que json/consignes.html, d'où vient le #ENV{rang} de
  * header_sidebar.html.
  * Utilisé pour la carte du mail de notification de commentaire forumv2
- * (cf notifications/forum_poste.html).
+ * (cf notifications/forum_poste.html) et l'onglet Publications de la fiche
+ * participant (cf noisettes/sidebar/page_participant/onglet_publications.html).
  *
  * Ne dépend pas de l'année scolaire active en session (contrairement à
  * thematique_id_rubrique_mission()) : un mail de notification n'a pas de
@@ -3408,16 +3409,11 @@ function forum_rendre_branche($forums) {
 }
 
 /**
- * Missions (articles consigne) qui ont au moins une réponse, avec leur titre
- * et leur rang dans l'année, mises en cache mémoire par requête.
+ * Missions (articles consigne) publiées qui ont au moins une réponse, avec
+ * leur titre, mises en cache mémoire par requête : une seule requête pour
+ * toutes les cartes de l'onglet Publications de la fiche participant.
  *
- * Le rang d'une mission est le nombre de missions à réponses datées entre
- * _DATE_DEBUT et sa propre date (incluse) : 0 pour une mission antérieure à
- * l'année. Calculé en une seule requête pour toutes les missions plutôt
- * qu'un COUNT (avec sous-requête) par carte de l'onglet Publications de la
- * fiche participant.
- *
- * @return array [id_article => ['titre' => string, 'rang' => int]]
+ * @return array [id_article => titre]
  */
 function thematique_missions_avec_reponses() {
 	static $missions = null;
@@ -3426,58 +3422,27 @@ function thematique_missions_avec_reponses() {
 	}
 
 	$rows = sql_allfetsel(
-		'id_article, titre, date',
+		'id_article, titre',
 		'spip_articles',
-		'id_consigne = 0 AND id_article IN (SELECT DISTINCT id_consigne FROM spip_articles WHERE id_consigne > 0)',
-		'',
-		'date'
+		'id_consigne = 0 AND statut = ' . sql_quote('publie')
+			. ' AND id_article IN (SELECT DISTINCT id_consigne FROM spip_articles WHERE id_consigne > 0)'
 	);
-	$missions = [];
-	$rang = 0;
-	$nb = count($rows);
-	for ($i = 0; $i < $nb; $i = $j) {
-		// Missions de même date : même rang, qui les compte toutes
-		$j = $i + 1;
-		while ($j < $nb && $rows[$j]['date'] === $rows[$i]['date']) {
-			$j++;
-		}
-		if ($rows[$i]['date'] >= _DATE_DEBUT) {
-			$rang += $j - $i;
-		}
-		for ($k = $i; $k < $j; $k++) {
-			$missions[(int) $rows[$k]['id_article']] = ['titre' => $rows[$k]['titre'], 'rang' => $rang];
-		}
-	}
+	$missions = array_column($rows, 'titre', 'id_article');
 
 	return $missions;
 }
 
 /**
- * Filtre |titre_consigne : titre d'une mission.
+ * Filtre |titre_consigne : titre d'une mission publiée. Une réponse dont la
+ * mission a été supprimée ou dépubliée n'est plus sur la timeline
+ * (json/consignes.html ne parcourt que les missions publiées) : le titre vide
+ * permet de la masquer aussi dans l'onglet Publications.
  *
  * @param int|string $id_consigne Mission (article consigne)
- * @return string Titre, '' si aucun
+ * @return string Titre, '' si la mission n'est pas publiée
  */
 function filtre_titre_consigne($id_consigne) {
-	if (!$id_consigne) {
-		return '';
-	}
-	$missions = thematique_missions_avec_reponses();
-	if (isset($missions[intval($id_consigne)])) {
-		return $missions[intval($id_consigne)]['titre'];
-	}
-	return sql_getfetsel('titre', 'spip_articles', 'id_article=' . intval($id_consigne));
-}
-
-/**
- * Filtre |rang_consigne : rang d'une mission dans l'année, parmi les missions
- * qui ont des réponses (cf thematique_missions_avec_reponses()).
- *
- * @param int|string $id_consigne Mission (article consigne)
- * @return int|string Rang de la mission, '' si introuvable
- */
-function filtre_rang_consigne($id_consigne) {
-	return thematique_missions_avec_reponses()[intval($id_consigne)]['rang'] ?? '';
+	return thematique_missions_avec_reponses()[intval($id_consigne)] ?? '';
 }
 
 /**
