@@ -239,6 +239,35 @@ spip config:ecrire -p notifications forum_article:0
 spip config:ecrire -p notifications thread_forum:0
 spip config:ecrire formats_documents_forum:".pdf,.jpg,.jpeg,.png,.gif,.mp4"
 
+# Envoi des e-mails (facteur) : chaque réglage n'est écrit que si sa variable est
+# renseignée, sinon la valeur saisie dans /ecrire (méta "facteur" de la base) est
+# conservée - un site sans ces variables garde sa configuration SMTP manuelle.
+if [ -n "${SPIP_FACTEUR_SMTP_HOST:-}" ]; then
+	spip config:ecrire -p facteur mailer:smtp
+	spip config:ecrire -p facteur smtp_host:"${SPIP_FACTEUR_SMTP_HOST}"
+fi
+if [ -n "${SPIP_FACTEUR_SMTP_PORT:-}" ]; then
+	spip config:ecrire -p facteur smtp_port:"${SPIP_FACTEUR_SMTP_PORT}"
+fi
+# non, tls ou ssl
+if [ -n "${SPIP_FACTEUR_SMTP_SECURE:-}" ]; then
+	spip config:ecrire -p facteur smtp_secure:"${SPIP_FACTEUR_SMTP_SECURE}"
+fi
+if [ -n "${SPIP_FACTEUR_SMTP_USERNAME:-}" ]; then
+	spip config:ecrire -p facteur smtp_auth:oui
+	spip config:ecrire -p facteur smtp_username:"${SPIP_FACTEUR_SMTP_USERNAME}"
+fi
+if [ -n "${SPIP_FACTEUR_SMTP_PASSWORD:-}" ]; then
+	spip config:ecrire -p facteur smtp_password:"${SPIP_FACTEUR_SMTP_PASSWORD}"
+fi
+if [ -n "${SPIP_FACTEUR_FROM_EMAIL:-}" ]; then
+	spip config:ecrire -p facteur adresse_envoi:oui
+	spip config:ecrire -p facteur adresse_envoi_email:"${SPIP_FACTEUR_FROM_EMAIL}"
+fi
+if [ -n "${SPIP_FACTEUR_FROM_NOM:-}" ]; then
+	spip config:ecrire -p facteur adresse_envoi_nom:"${SPIP_FACTEUR_FROM_NOM}"
+fi
+
 # Default mes_options
 # display_errors : uniquement en dev (SPIP_DEBUG=true), jamais par défaut -
 # afficher les erreurs PHP aux visiteurs fuiterait des infos (chemins,
