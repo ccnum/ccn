@@ -262,7 +262,6 @@ return [
 	'par_notation'                               => 'Par notation',
 	'parametres_generaux'                        => 'Paramètres généraux',
 	'pas_article_syndique'                       => 'Pas d’article syndiqué',
-	'pas_de_description'                         => 'Pas de description',
 	'permalien'                                  => 'Permalien',
 	'personne_na_commente'                       => 'Personne n’a encore commenté.',
 	'poster_commentaire'                         => 'Poster mon commentaire',

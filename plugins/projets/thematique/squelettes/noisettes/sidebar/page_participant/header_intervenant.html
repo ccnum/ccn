@@ -1,12 +1,5 @@
 #CACHE{0}
-[(#REM) En-tête de la fiche intervenant (cf intervenant_detail.html), même
-règle de visibilité. ]
-#SET{titre_fiche, ''}
-#SET{id_fiche, #ENV{id_rubrique}|thematique_id_fiche_intervenant}
-<BOUCLE_fiche_intervenant(ARTICLES){id_article=#GET{id_fiche}}{tout}>
-	#SET{titre_fiche, #TITRE}
-</BOUCLE_fiche_intervenant>
-
+[(#REM) En-tête de la fiche intervenant (cf intervenant_detail.html). ]
 <div class="sidebar_bubble header-reponse">
 	<div id="row_header">
         <INCLURE{fond=noisettes/sidebar/inc/header_gauche_photo_auteur, id_rubrique} />
@@ -18,10 +11,6 @@ règle de visibilité. ]
                     </span>
                 </div>
                 <INCLURE{fond=noisettes/sidebar/normal_header_icons} />
-            </div>
-            <div id="header-row-2">
-                [(#GET{titre_fiche}|oui) #GET{titre_fiche}]
-                [(#GET{titre_fiche}|non) <:thematique:pas_de_description:>]
             </div>
         </div>
 	</div>
