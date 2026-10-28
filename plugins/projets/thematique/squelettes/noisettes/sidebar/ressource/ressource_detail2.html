@@ -17,7 +17,10 @@
 				</BOUCLE_auteur>
 				<div class="ressource-detail-title">
 					<div class="ressource-detail-title-text">#TITRE</div>
-					<INCLURE{fond=noisettes/sidebar/inc/bouton_modifier_article, id_article, type_objet=ressources} />
+					<div class="ressource-detail-actions">
+						<INCLURE{fond=noisettes/sidebar/inc/bouton_modifier_article, id_article, type_objet=ressources} />
+						<INCLURE{fond=noisettes/sidebar/inc/supprimer_article, id_article, type_objet=ressources} />
+					</div>
 				</div>
 				<div class="ressource-detail-date">[(#DATE|affdate)]</div>
 				<div class="ressource-detail-author">

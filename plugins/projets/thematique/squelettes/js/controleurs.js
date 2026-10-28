@@ -1662,6 +1662,8 @@ function flouterLesBullesEtLosangesNonSelectionnes(idSelectionnee) {
 const RECHARGEMENTS_APRES_SUPPRESSION = {
 	blogs: initBlogs,
 	evenements: initEvenements,
+	// liste des ressources rouverte sans la ressource supprimée
+	ressources: () => callRessource(),
 };
 
 /**
