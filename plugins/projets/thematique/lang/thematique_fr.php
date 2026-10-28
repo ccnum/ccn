@@ -400,7 +400,6 @@ return [
 	'sidebar_travail_en_cours_titre'             => 'Travail en cours',
 	'suivant'                                    => 'Suivant',
 	'supprimer'                                  => 'Supprimer',
-	'supprimer_document'                         => 'Supprimer ce document',
 	'supprimer_flux_rss'                         => 'Supprimer le flux rss',
 	'supprimer_la_carte'                         => 'Supprimer la carte',
 	'supprimer_larticle'                         => 'Supprimer l’article',

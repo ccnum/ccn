@@ -143,6 +143,7 @@
 		<ul>
 			<li>Les fichiers se joignent par le formulaire commun <code>ccn_joindre_document</code> (plugin <code>ccn</code>), avec envoi par morceaux (bigup). La limite réelle, 100 Mo, est appliquée côté serveur par <code>ccn_verifier_uploads()</code>.</li>
 			<li>Avec <code>VIMEO_ACCESS_TOKEN</code>, le plugin <code>api_vimeo</code> est activé : un MP4 joint est envoyé sur Vimeo (sans limite de taille locale), et un champ « mot de passe Vimeo » apparaît sur le document (<code>formulaires/modifier_video_password.php</code>).</li>
+			<li>Un document joint (photo, PDF, vidéo) se supprime depuis la modale ouverte par « Modifier », comme le reste de la publication : la fiche n’affiche pas de croix de suppression. La modale retire aussi le raccourci du document du texte.</li>
 			<li><code>CCN_UPLOADS_SUSPENDUS=true</code> coupe tout envoi de fichier : Apache refuse les requêtes, les formulaires affichent un message.</li>
 			<li>Le plugin <code>mesfavoris_ccn</code> ajoute aux contenus des réactions (feu, cœur, pouce), comptées par article.</li>
 		</ul>
