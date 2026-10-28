@@ -167,6 +167,7 @@ return [
 	'medias'                                     => 'Médias',
 	'menu_publications'                          => 'Publications',
 	'menu_publier'                               => 'Publier',
+	'message_aucune_publication'                 => 'Cette classe n’a pas encore publié de réponses à une mission pour le moment.',
 	'message_avant_supression_commentaire'       => 'Supprimer ce commentaire entraînera aussi la suppression de toutes les éventuelles réponses à ce commentaire. Continuer ?',
 	'message_encadre_ressource'                  => 'Vous souhaitez partager une ressource qui peut être utile au bon déroulement du projet ? Publiez-la ici.',
 	'message_jalon_pas_publie'                   => 'Publier ce contenu le rendra visible pour tous les utilisateurs dont les classes et élèves.',
