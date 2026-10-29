@@ -1,0 +1,16 @@
+[(#REM)
+	<!DOCTYPE>+<head> commun à tous les squelettes de page de fictions et
+	petitfablab, suivi de inclure/head.html propre à chaque plugin.
+	Paramètres optionnels :
+	- largeur : largeur fixe de la page en pixels (petitfablab) ; responsive sinon ;
+	- overflow : "oui" pour autoriser le défilement de la page (petitfablab).
+]<!DOCTYPE html>
+<html lang="fr" xml:lang="fr" xmlns="http://www.w3.org/1999/xhtml"[ (#ENV{overflow}|oui)style="overflow: auto;"]>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+	<title>[(#NOM_SITE_SPIP|textebrut)]</title>
+	[<meta name="description" content="(#DESCRIPTIF_SITE_SPIP|couper{150}|textebrut)" />]
+	<INCLURE{fond=inclure/head} />
+	[(#ENV{largeur}|oui)<meta name="viewport" content="width=#ENV{largeur}, user-scalable=no" />]
+	[(#ENV{largeur}|non)<meta name="viewport" content="width=device-width, initial-scale=1" />]
+</head>

@@ -31,24 +31,39 @@ include_spip('inc/fictions_participants');
 /**
  * La période d'écriture de l'année de l'histoire est-elle ouverte : entre
  * date de lancement et date de clôture. Année non configurée : pas de restriction.
+ * Année indéterminable (rubrique d'année renommée, cf fictions_annee_histoire()) :
+ * fermée, plutôt que de lever les dates de clôture.
  */
 function fictions_ecriture_ouverte(int $id_rubrique): bool {
 	$annee = fictions_annee_histoire($id_rubrique);
-	return !$annee || !fictions_annee_configuree($annee) || fictions_phase_ecriture($annee) === 'ouverte';
+	return $annee && (!fictions_annee_configuree($annee) || fictions_phase_ecriture($annee) === 'ouverte');
 }
 
 /**
- * L'article est-il un chapitre d'histoire : dans une rubrique "NN. Histoire NN"
- * fille d'une rubrique d'année ("2026"), cf fictions_histoires_annee().
+ * L'article est-il un chapitre d'histoire : dans une sous-rubrique d'une rubrique
+ * d'année, elle-même fille de la rubrique à mot rubrique-contenant-annees, hors
+ * rubrique blog auteur.
+ *
+ * Reconnu par la position dans l'arborescence et non par les titres ("NN. Histoire NN"
+ * sous "2026") : une histoire ou une année renommée (ou une histoire d'une ancienne
+ * année titrée "histoire 3") n'était plus un chapitre, et le participant retrouvait
+ * le droit natif de modifier son article hors période d'écriture. Règle par titres
+ * gardée en repli si le mot rubrique-contenant-annees n'est posé nulle part.
  */
 function fictions_article_est_chapitre(int $id_article): bool {
 	$rubrique = sql_fetsel(
-		'r.titre, p.titre AS titre_parent',
+		'r.id_rubrique, r.titre, p.titre AS titre_parent, p.id_parent AS id_grand_parent',
 		'spip_articles AS a JOIN spip_rubriques AS r ON r.id_rubrique=a.id_rubrique JOIN spip_rubriques AS p ON p.id_rubrique=r.id_parent',
 		'a.id_article=' . $id_article
 	);
-	return $rubrique
-		&& preg_match('/^\d+\./', $rubrique['titre'])
+	if (!$rubrique || (int) $rubrique['id_rubrique'] === (int) _FICTIONS_ID_BLOG_AUTEUR) {
+		return false;
+	}
+	$id_conteneur = fictions_id_rubrique_a_mot('rubrique-contenant-annees');
+	if ($id_conteneur) {
+		return (int) $rubrique['id_grand_parent'] === $id_conteneur;
+	}
+	return preg_match('/^\d+\./', $rubrique['titre'])
 		&& preg_match('/^\d{4}$/', trim($rubrique['titre_parent']));
 }
 

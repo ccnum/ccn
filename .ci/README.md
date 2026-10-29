@@ -1,7 +1,7 @@
 # check_lang_hardcoded.py
 
 Détecte le texte français codé en dur dans `plugins/projets/thematique`,
-`plugins/projets/fictions`, `plugins/projets/petitfablab` et `plugins/projets/ccn` (hors `lang/`,
+`plugins/projets/fictions`, `plugins/projets/petitfablab`, `plugins/projets/cadavrexquis` et `plugins/projets/ccn` (hors `lang/`,
 `squelettes/lang/` et `vendor/` de chacun), pour forcer le passage par
 un item de langue (`<:module:cle:>`/`_T('module:cle')`, `CCN.lang` côté
 JS — ce dernier pont n'existe que pour thematique, cf `check_lang_keys.py`
@@ -93,7 +93,7 @@ en dur, mais pas la validité des clés utilisées. Une clé mal orthographiée
 échouer le lint anti-texte-en-dur.
 
 `check_lang_keys.py` couvre `plugins/projets/thematique`, `plugins/projets/fictions`,
-`plugins/projets/petitfablab` et `plugins/projets/ccn` : pour chacun, toute clé
+`plugins/projets/petitfablab`, `plugins/projets/cadavrexquis` et `plugins/projets/ccn` : pour chacun, toute clé
 référencée doit exister :
 - `<:module:cle:>` et `_T('module:cle')` (module = nom du plugin) →
   doivent exister dans son fichier de langue, cherché à la fois en
@@ -117,7 +117,7 @@ sans exception tolérée.
 # check_hardcoded_paths.py
 
 Détecte deux types de liens en dur dans les squelettes `.html` de
-`plugins/projets/thematique`, `plugins/projets/fictions`, `plugins/projets/petitfablab` et `plugins/projets/ccn` :
+`plugins/projets/thematique`, `plugins/projets/fictions`, `plugins/projets/petitfablab`, `plugins/projets/cadavrexquis` et `plugins/projets/ccn` :
 
 1. Ressources du plugin (`img/`, `css/`, `js/`, `pdf/`) qui n'utilisent pas
    `#CHEMIN{...}` (ou `#ENV{chemin}`/`#DOSSIER_SQUELETTE`). Un chemin
@@ -210,7 +210,7 @@ dans le script.
 
 Détecte le HTML/squelette SPIP dupliqué (copier-coller) dans les plugins
 maison (`plugins/projets/petitfablab`, `plugins/projets/fictions`, `plugins/projets/thematique`,
-`plugins/projets/ccn`), via [jscpd](https://github.com/kucherenko/jscpd)
+`plugins/projets/cadavrexquis`, `plugins/projets/ccn`), via [jscpd](https://github.com/kucherenko/jscpd)
 (`node_modules/.bin/jscpd`, dépendance dev npm — seul script `.ci/` en
 Node, les autres sont en PHP/Python).
 
@@ -235,7 +235,7 @@ présent (8 clones pour thematique seul lors de la mise en place, 2026-08 ;
 # check_php_duplication.js
 
 Même principe que `check_html_duplication.js` (jscpd), appliqué au PHP de
-`plugins/projets/thematique`, `plugins/projets/fictions`, `plugins/projets/petitfablab` et `plugins/projets/ccn`
+`plugins/projets/thematique`, `plugins/projets/fictions`, `plugins/projets/petitfablab`, `plugins/projets/cadavrexquis` et `plugins/projets/ccn`
 (pattern `**/*.php` au lieu de `**/*.html`).
 
 Usage local (nécessite `npm ci` au préalable) :

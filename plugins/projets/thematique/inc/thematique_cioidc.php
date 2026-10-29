@@ -21,7 +21,7 @@ if (!defined('_ECRIRE_INC_VERSION')) {
  * @return array|false|null Auteur (id_auteur, nom, statut…), false ou null si introuvable
  */
 function thematique_cioidc_resoudre_auteur($uid, $email) {
-	$champs = 'id_auteur,nom,nom_complet,statut,email,webmestre,avatar';
+	$champs = 'id_auteur,nom,nom_complet,statut,email,webmestre,avatar,ent_statut';
 	$auteur = $uid ? sql_fetsel($champs, 'spip_auteurs', 'login=' . sql_quote($uid)) : null;
 	// Repli par email jamais sur un email vide (il désignait le premier compte sans
 	// email, ex. un compte que cioidc vient de créer, dont les droits étaient alors
@@ -191,16 +191,16 @@ function thematique_cioidc_nom_etablissement($uai) {
 // Rôle ENT affiché (Enseignant/Intervenant/Tuteur/Élève), remplacé par "Admin" pour un
 // webmestre : affiché ci-dessous à la suite du nom plutôt que le rôle ENT d'origine.
 // L'ENT laclasse.com n'a pas de profil dédié "intervenant" : un intervenant est envoyé
-// avec le même profil ENS qu'un vrai prof (cf issue signalée en session — un intervenant
-// ressortait "Enseignant"). Seule la présence d'une classe réelle (ENTClassesGroupes,
-// cf thematique_cioidc_classes_reelles()) distingue les deux : un ENS sans classe réelle
-// (seulement un groupe projet ENTGroupesLibres) est un intervenant.
-function thematique_cioidc_role_affiche(string $profils, bool $is_webmestre, bool $a_une_classe_reelle) {
+// avec le même profil ENS qu'un vrai prof. Il se distingue par son appartenance au
+// groupe libre _THEMATIQUE_GROUPE_INTERVENANTS, sans classe réelle (cf
+// thematique_cioidc_est_intervenant()) : un enseignant sans classe dans l'ENT mais
+// hors de ce groupe (ex: classe absente de l'ENT) reste "Enseignant".
+function thematique_cioidc_role_affiche(string $profils, bool $is_webmestre, bool $is_intervenant) {
 	if ($is_webmestre) {
 		return 'Admin';
 	}
 	if (strpos($profils, 'ENS') !== false) {
-		return $a_une_classe_reelle ? 'Enseignant' : _T('thematique:cioidc_role_intervenant');
+		return $is_intervenant ? _T('thematique:cioidc_role_intervenant') : 'Enseignant';
 	}
 	if (strpos($profils, 'TUT') !== false) {
 		return 'Tuteur';
@@ -209,6 +209,35 @@ function thematique_cioidc_role_affiche(string $profils, bool $is_webmestre, boo
 		return _T('thematique:cioidc_role_eleve');
 	}
 	return null;
+}
+
+// Intervenant : profil ENS, membre du groupe des intervenants CCN (cf
+// thematique_cioidc_est_intervenant_ccn()), sans classe réelle ; un membre du groupe
+// qui a une classe CLS dans l'ENT reste enseignant.
+function thematique_cioidc_est_intervenant(
+	bool $is_enseignant,
+	bool $is_webmestre,
+	bool $is_intervenant_ccn,
+	array $classes_reelles
+) {
+	return $is_enseignant && !$is_webmestre && $is_intervenant_ccn && !$classes_reelles;
+}
+
+// Profil ENT résolu à la connexion, mémorisé dans spip_auteurs.ent_statut : seul
+// moyen pour thematique_donner_role() de distinguer, hors connexion, un enseignant
+// d'un intervenant tous deux liés à un projet sous "Consignes" (cf
+// thematique_donner_role()). Vide pour un tuteur ou un profil inconnu.
+function thematique_cioidc_profil_ent(string $profils, bool $is_webmestre, bool $is_intervenant) {
+	if ($is_webmestre) {
+		return 'admin';
+	}
+	if (strpos($profils, 'ENS') !== false) {
+		return $is_intervenant ? 'intervenant' : 'enseignant';
+	}
+	if (strpos($profils, 'ELV') !== false) {
+		return 'eleve';
+	}
+	return '';
 }
 
 // Prénom + nom réels de la personne (ex: "Intervenant CCN"), tels que fournis par
@@ -509,6 +538,8 @@ function thematique_cioidc_valider_classes_ent(int $id_auteur, array $classes, s
 		return [];
 	}
 
+	thematique_cioidc_renommer_classe_echangee($id_auteur, $classes, $id_travail_classes);
+
 	// Même rubrique que celle que créait la connexion SSO avant la pop-up de choix des classes (titre avec
 	// établissement, renommage d'une rubrique au titre ancien) : on retrouve celle
 	// d'un collègue de la même classe plutôt que d'en créer une seconde.
@@ -541,6 +572,96 @@ function thematique_cioidc_valider_classes_ent(int $id_auteur, array $classes, s
 	spip_log("choix des classes auteur #$id_auteur année $annee : " . implode(',', $choisies), 'cioidc');
 
 	return $choisies;
+}
+
+/**
+ * Prof qui corrige son choix en cours d'année (classe cochée trop vite, cf action
+ * thematique_modifier_classes_ent) : s'il échange une seule classe A contre une
+ * seule classe B pas encore créée, la rubrique de A est renommée en B plutôt que de
+ * créer B vide, pour garder les réponses et documents déjà publiés et son lien.
+ * Seulement si A fait partie de ses classes ENT et qu'aucun autre adulte n'y est
+ * lié (un collègue y travaille vraiment). Les élèves de A en sont détachés : ce
+ * n'est plus leur classe, ceux de B s'y rattachent à leur prochaine connexion (par
+ * le titre, cf thematique_cioidc_resoudre_liens_rubriques()).
+ * Dans tous les autres cas (plusieurs classes changées, B existe déjà…), rien
+ * n'est renommé : A est gardée si elle a du contenu (cf
+ * thematique_cioidc_supprimer_classes_non_choisies()).
+ *
+ * @param int $id_auteur Prof concerné
+ * @param array $classes Classes cochées (entrées de thematique_classes_ent_a_choisir())
+ * @param int|string $id_travail_classes Rubrique « Travail des classes » de l'année
+ */
+function thematique_cioidc_renommer_classe_echangee(int $id_auteur, array $classes, $id_travail_classes): void {
+	// Titres possibles (actuel et anciens) d'une classe ENT
+	$titres = function (array $classe) {
+		$groupe = (object) [
+			'group_name' => $classe['group_name'],
+			'group_structure_id' => $classe['group_structure_id'] ?? '',
+		];
+		return array_values(array_unique(array_merge(
+			[$classe['titre'], thematique_cioidc_titre_rubrique_classe($groupe)],
+			thematique_cioidc_anciens_titres_classe($groupe)
+		)));
+	};
+	$rubrique_existante = fn (array $titres_classe) => (int) sql_getfetsel(
+		'id_rubrique',
+		'spip_rubriques',
+		[sql_in('titre', $titres_classe), 'id_parent=' . intval($id_travail_classes)]
+	);
+
+	// Classes cochées : celles qui existent déjà, et celles à créer
+	$existantes = [];
+	$a_creer = [];
+	foreach ($classes as $classe) {
+		if ($id = $rubrique_existante($titres($classe))) {
+			$existantes[] = $id;
+		} else {
+			$a_creer[] = $classe;
+		}
+	}
+
+	// Classes actuelles du prof non recochées, parmi ses classes ENT
+	$titres_ent = [];
+	foreach (thematique_classes_ent_auteur($id_auteur)['classes'] as $classe) {
+		$titres_ent = array_merge($titres_ent, $titres($classe));
+	}
+	$retirees = [];
+	foreach (thematique_classes_auteur($id_auteur) as $id_classe) {
+		$titre = (string) sql_getfetsel('titre', 'spip_rubriques', 'id_rubrique=' . intval($id_classe));
+		if (!in_array($id_classe, $existantes, true) && in_array($titre, $titres_ent, true)) {
+			$retirees[] = $id_classe;
+		}
+	}
+
+	if (count($retirees) !== 1 || count($a_creer) !== 1) {
+		return;
+	}
+	$id_ancienne = intval($retirees[0]);
+	$autres_adultes = sql_countsel(
+		'spip_auteurs_liens AS L JOIN spip_auteurs AS A ON A.id_auteur=L.id_auteur',
+		["L.objet='rubrique'", 'L.id_objet=' . $id_ancienne, 'L.id_auteur<>' . $id_auteur, "A.statut<>'6forum'"]
+	);
+	if ($autres_adultes) {
+		return;
+	}
+
+	$titre = $a_creer[0]['titre'];
+	sql_updateq('spip_rubriques', ['titre' => $titre], 'id_rubrique=' . $id_ancienne);
+	$eleves = array_column(sql_allfetsel(
+		'L.id_auteur',
+		'spip_auteurs_liens AS L JOIN spip_auteurs AS A ON A.id_auteur=L.id_auteur',
+		["L.objet='rubrique'", 'L.id_objet=' . $id_ancienne, "A.statut='6forum'"]
+	), 'id_auteur');
+	foreach ($eleves as $id_eleve) {
+		objet_dissocier(['id_auteur' => intval($id_eleve)], ['rubrique' => $id_ancienne]);
+	}
+	include_spip('inc/invalideur');
+	suivre_invalideur('1');
+	spip_log(
+		"choix des classes auteur #$id_auteur : classe #$id_ancienne renommée en « $titre » (échange de classe), "
+			. count($eleves) . ' élève(s) détaché(s)',
+		'cioidc'
+	);
 }
 
 /**

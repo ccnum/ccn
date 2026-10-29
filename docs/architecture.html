@@ -73,7 +73,7 @@
 ├── petitfablab/
 │   ├── petitfablab_fonctions.php   validation des chapitres, e-mails
 │   └── squelettes/         sommaire, ecriture, lecture, formulaires/, lang/
-├── cadavrexquis/           images communes à fictions et petitfablab
+├── cadavrexquis/           images et en-tête HTML (tete-html, head-commun) communs à fictions et petitfablab
 └── api_vimeo/  mesfavoris_ccn/  imports_utilisateurs/  reactions/</code></pre>
 
 		<h2 id="ccn">Socle commun : ccn</h2>
@@ -200,7 +200,7 @@
 				</tbody>
 			</table>
 		</div>
-		<p>Chaque page charge son propre script, <code>squelettes/js/&lt;page&gt;.js</code>, par le modèle <code>modeles/js.html</code> (correspondance page → script : <code>fictions_js_page()</code>). Les squelettes sont des blocs inclus depuis <code>squelettes/inclure/</code>.</p>
+		<p>Chaque page charge son propre script, <code>squelettes/js/&lt;page&gt;.js</code>, par le modèle <code>modeles/js.html</code> (correspondance page → script : <code>fictions_js_page()</code>). Les squelettes sont des blocs inclus depuis <code>squelettes/inclure/</code>. Le <code>&lt;!DOCTYPE&gt;</code> et le <code>&lt;head&gt;</code> viennent de <code>cadavrexquis</code>, partagés avec petitfablab : <code>inclure/tete-html.html</code> (titre, description, viewport) inclut le <code>inclure/head.html</code> du plugin, qui ajoute ses éléments propres à <code>inclure/head-commun.html</code>.</p>
 		<h3 id="fictions-donnees">Données et droits</h3>
 		<ul>
 			<li>La configuration d’une année (calendrier, participants, histoires attribuées, plan) n’est pas dans des rubriques mais dans une <strong>meta</strong> par année, <code>fictions_annee_&lt;année&gt;</code> (<code>inc/fictions_participants.php</code>).</li>

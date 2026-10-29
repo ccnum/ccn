@@ -1,22 +1,25 @@
 <div class="reactions_liste">
     [(#SET{mes_reactions, #ENV*{_mes_reactions}})]
-    [(#SET{compteurs, #ENV{objet}|reactions_compter{#ENV{id_objet}}})]
-    [(#SET{types_actifs, #URL_SITE_SPIP|reactions_types_actifs})]
+    [(#SET{compteurs, #ENV*{_compteurs}})]
     [(#SET{connecte, #SESSION{id_auteur}|oui})]
 
     <BOUCLE_types(DATA){source tableau, #ENV*{_types_actifs}}>
         [(#SET{label_fr, #VALEUR|reaction_label_fr})]
         [(#SET{nb_reactions, #VALEUR|reaction_compteur{#GET{compteurs}}})]
+        #SET{cle_aria, #GET{nb_reactions}|>{1}|?{reactions:reagir_avec_plusieurs,reactions:reagir_avec_un}}
+        #SET{aria_label, #GET{cle_aria}|_T{#ARRAY{label,#GET{label_fr},nb,#GET{nb_reactions}}}}
         <button type="button"
-                class="reaction_bouton[(#VALEUR|reaction_classe_active{#GET{mes_reactions}})][ (#GET{connecte}|=={non}|oui)reaction_lecture_seule(/oui)]"
-                aria-label="Réagir avec [(#GET{label_fr})], [(#GET{nb_reactions})] réaction[(#GET{nb_reactions}|>{1}|oui)s(/oui)]"
+                class="reaction_bouton[(#VALEUR|reaction_classe_active{#GET{mes_reactions}})][ (#GET{connecte}|non)reaction_lecture_seule]"
+                aria-label="[(#GET{aria_label}|attribut_html)]"
                 aria-pressed="[(#VALEUR|reaction_aria_pressed{#GET{mes_reactions}})]"
                 [(#GET{connecte}|oui)
                     data-action="#URL_ACTION_AUTEUR{poser_reaction, #ENV{objet}-#ENV{id_objet}-#VALEUR}"
                 ]
                 data-type="#VALEUR"
-                data-label="[(#GET{label_fr})]"
-                [(#GET{connecte}|=={non}|oui)disabled="disabled" title="Connectez-vous pour réagir"(/oui)]
+                data-label="[(#GET{label_fr}|attribut_html)]"
+                data-aria-un="[(#VAL{reactions:reagir_avec_un}|_T|attribut_html)]"
+                data-aria-plusieurs="[(#VAL{reactions:reagir_avec_plusieurs}|_T|attribut_html)]"
+                [(#GET{connecte}|non)disabled="disabled" title="<:reactions:connectez_vous_pour_reagir|attribut_html:>"]
         >
             <span class="reaction_smiley" aria-hidden="true">
                 [(#VALEUR|reactions_recuperer_smiley{html_encoding})]
@@ -48,8 +51,8 @@ $(function() {
                         $compteur.text(total);
                         var $bouton = $compteur.closest('.reaction_bouton');
                         var label = $bouton.data('label') || cle;
-                        var pluriel = total > 1 ? 's' : '';
-                        $bouton.attr('aria-label', 'Réagir avec ' + label + ', ' + total + ' réaction' + pluriel);
+                        var modele = $bouton.data(total > 1 ? 'aria-plusieurs' : 'aria-un') || '';
+                        $bouton.attr('aria-label', modele.replace('@label@', label).replace('@nb@', total));
                     });
                     if (data.action === 'pose') {
                         $btn.addClass('reaction_active').attr('aria-pressed', 'true');

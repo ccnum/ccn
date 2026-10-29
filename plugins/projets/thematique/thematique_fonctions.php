@@ -92,10 +92,7 @@ function thematique_annee_article($id_article) {
 		return 0;
 	}
 
-	include_spip('base/abstract_sql');
-	$id_rubrique = intval(sql_getfetsel('id_rubrique', 'spip_articles', 'id_article=' . $id_article));
-
-	return thematique_annee_rubrique($id_rubrique);
+	return thematique_annee_rubrique(thematique_id_rubrique_article($id_article));
 }
 
 /**
@@ -297,7 +294,7 @@ function thematique_donner_role($id_auteur) {
 	include_spip('base/abstract_sql');
 	include_spip('inc/session'); // pour session_get/session_set si besoin
 
-	$auteur = sql_fetsel('statut, webmestre', 'spip_auteurs', 'id_auteur=' . intval($id_auteur));
+	$auteur = sql_fetsel('statut, webmestre, ent_statut', 'spip_auteurs', 'id_auteur=' . intval($id_auteur));
 	$statut = $auteur['statut'] ?? null;
 
 	// ELEVE : statut 6forum, vérifié avant les mots-clés de hiérarchie —
@@ -341,9 +338,13 @@ function thematique_donner_role($id_auteur) {
 	}
 
 	// INTERVENANT : idem avec le mot "consignes" (un prof y est aussi lié, à son
-	// projet : d'où le test prof d'abord)
+	// projet : d'où le test prof d'abord). Un enseignant sans classe dans l'ENT,
+	// hors du groupe des intervenants CCN (ent_statut 'enseignant', mémorisé à la
+	// connexion SSO, cf thematique_cioidc_profil_ent()), reste prof. Les comptes
+	// hors ENT ou pas reconnectés depuis (ent_statut vide ou ancienne valeur)
+	// gardent la règle d'origine.
 	if (thematique_auteur_a_mot_dans_hierarchie($id_auteur, 'consignes', $id_secteur)) {
-		return $cache[$id_auteur] = 'intervenant';
+		return $cache[$id_auteur] = ($auteur['ent_statut'] ?? '') === 'enseignant' ? 'prof' : 'intervenant';
 	}
 
 	$cache[$id_auteur] = null;
@@ -597,14 +598,20 @@ function thematique_creer_article_mot_cle_si_absent($id_rubrique, $titre_mot, $i
  * @return bool
  */
 function thematique_hierarchie_a_mot($id_rubrique, $titre_mot) {
+	static $cache = [];
+	$cle = intval($id_rubrique) . '|' . $titre_mot;
+	if (array_key_exists($cle, $cache)) {
+		return $cache[$cle];
+	}
+
 	$ascendants = thematique_ascendants_rubrique($id_rubrique);
 	if (!$ascendants) {
-		return false;
+		return $cache[$cle] = false;
 	}
 
 	$id_mot = thematique_id_mot($titre_mot);
 	if (!$id_mot) {
-		return false; // le mot-clé n'existe même pas
+		return $cache[$cle] = false; // le mot-clé n'existe même pas
 	}
 
 	$id_objet = sql_getfetsel(
@@ -615,7 +622,7 @@ function thematique_hierarchie_a_mot($id_rubrique, $titre_mot) {
 			. ' AND id_objet IN (' . implode(',', $ascendants) . ')'
 	);
 
-	return !empty($id_objet);
+	return $cache[$cle] = !empty($id_objet);
 }
 
 /**
@@ -1141,21 +1148,20 @@ function thematique_classes_auteur($id_auteur) {
 }
 
 /**
- * Classes ENT qu'un prof doit encore cocher dans la pop-up de choix (cf
- * formulaires/choisir_classes_ent.php) : celles mémorisées à sa
- * connexion SSO pour l'année scolaire en cours
- * (thematique_cioidc_memoriser_classes_ent()), tant qu'il n'a pas validé son
- * choix pour cette année (champ classes_ent_choisies).
+ * Classes ENT mémorisées à la connexion SSO d'un prof pour l'année scolaire en
+ * cours (thematique_cioidc_memoriser_classes_ent()), et si son choix pour
+ * cette année est déjà validé (champ classes_ent_choisies). Mis en cache
+ * mémoire par requête.
  *
  * @param int $id_auteur
- * @return array liste de ['group_name', 'group_structure_id', 'titre'], vide
- *   si rien à choisir
+ * @return array ['classes' => liste de ['group_name', 'group_structure_id',
+ *   'titre'], 'choisies' => bool] ; classes vide si aucune pour l'année
  */
-function thematique_classes_ent_a_choisir($id_auteur) {
+function thematique_classes_ent_auteur($id_auteur) {
 	static $cache = [];
 	$id_auteur = intval($id_auteur);
 	if (!$id_auteur) {
-		return [];
+		return ['classes' => [], 'choisies' => false];
 	}
 	if (isset($cache[$id_auteur])) {
 		return $cache[$id_auteur];
@@ -1165,18 +1171,44 @@ function thematique_classes_ent_a_choisir($id_auteur) {
 	$auteur = sql_fetsel('classes_ent, classes_ent_choisies', 'spip_auteurs', 'id_auteur=' . $id_auteur);
 	$annee = (string) thematique_annee_scolaire();
 	$classes_ent = json_decode((string) ($auteur['classes_ent'] ?? ''), true);
-	if (
-		!is_array($classes_ent)
-		|| (string) ($classes_ent['annee'] ?? '') !== $annee
-		|| (string) $auteur['classes_ent_choisies'] === $annee
-	) {
-		return $cache[$id_auteur] = [];
+	if (!is_array($classes_ent) || (string) ($classes_ent['annee'] ?? '') !== $annee) {
+		return $cache[$id_auteur] = ['classes' => [], 'choisies' => false];
 	}
 
-	return $cache[$id_auteur] = array_values(array_filter(
-		(array) ($classes_ent['classes'] ?? []),
-		fn ($classe) => is_array($classe) && !empty($classe['group_name']) && !empty($classe['titre'])
-	));
+	return $cache[$id_auteur] = [
+		'classes' => array_values(array_filter(
+			(array) ($classes_ent['classes'] ?? []),
+			fn ($classe) => is_array($classe) && !empty($classe['group_name']) && !empty($classe['titre'])
+		)),
+		'choisies' => (string) ($auteur['classes_ent_choisies'] ?? '') === $annee,
+	];
+}
+
+/**
+ * Classes ENT qu'un prof doit encore cocher dans la pop-up de choix (cf
+ * formulaires/choisir_classes_ent.php), tant qu'il n'a pas validé son choix
+ * pour cette année (cf thematique_classes_ent_auteur()).
+ *
+ * @param int $id_auteur
+ * @return array liste de ['group_name', 'group_structure_id', 'titre'], vide
+ *   si rien à choisir
+ */
+function thematique_classes_ent_a_choisir($id_auteur) {
+	$classes_ent = thematique_classes_ent_auteur($id_auteur);
+	return $classes_ent['choisies'] ? [] : $classes_ent['classes'];
+}
+
+/**
+ * Le prof peut-il rouvrir la pop-up de choix de ses classes (lien « Modifier
+ * mes classes » du menu haut, action thematique_modifier_classes_ent) : choix
+ * déjà validé pour l'année en cours, parmi des classes ENT mémorisées.
+ *
+ * @param int $id_auteur
+ * @return bool
+ */
+function thematique_classes_ent_modifiables($id_auteur) {
+	$classes_ent = thematique_classes_ent_auteur($id_auteur);
+	return $classes_ent['choisies'] && $classes_ent['classes'];
 }
 
 /**
@@ -1440,6 +1472,11 @@ function thematique_assurer_structure_annee() {
  * Premier intervenant (au sens thematique_donner_role) trouvé sur la
  * branche "consignes" du projet dont fait partie $id_rubrique.
  *
+ * Les profs sont eux aussi liés à leur projet sous « Consignes » : un compte
+ * que l'ENT a identifié comme enseignant (spip_auteurs.ent_statut, cf
+ * thematique_cioidc_profil_ent()) est écarté, sinon il recevait les jalons et
+ * la fiche de l'intervenant.
+ *
  * @param int $id_rubrique
  * @return int 0 si aucun intervenant trouvé
  */
@@ -1456,8 +1493,16 @@ function thematique_premier_intervenant($id_rubrique) {
 	}
 	return intval(sql_getfetsel(
 		'lien.id_auteur',
-		['spip_auteurs_liens AS lien', 'spip_rubriques AS rub', 'spip_rubriques AS consignes', 'spip_mots_liens AS ml'],
 		[
+			'spip_auteurs_liens AS lien',
+			'spip_auteurs AS aut',
+			'spip_rubriques AS rub',
+			'spip_rubriques AS consignes',
+			'spip_mots_liens AS ml',
+		],
+		[
+			'aut.id_auteur=lien.id_auteur',
+			'aut.ent_statut<>' . sql_quote('enseignant'),
 			'lien.id_objet=rub.id_rubrique',
 			"lien.objet='rubrique'",
 			'consignes.id_rubrique=rub.id_parent',
@@ -2595,6 +2640,13 @@ function thematique_chemin_logo($infos) {
 	return $infos['chemin'] . ($infos['timestamp'] ? '?' . $infos['timestamp'] : '');
 }
 
+// Lien du logo CCN du menu haut (noisettes/menu_haut.html). Défini ici et non
+// dans thematique_options.php : les options de thematique_edifice, qui le
+// surchargent, se chargent après celles de thematique (plugin dont il dépend).
+if (!defined('_THEMATIQUE_URL_LOGO_CCN')) {
+	define('_THEMATIQUE_URL_LOGO_CCN', 'https://erasme.org/projets/classes_culturelles_numeriques_ccn');
+}
+
 /**
  * Avatar générique (pictogramme blanc plein, sans fond) utilisé quand un
  * auteur existe mais n'a ni logo SPIP ni avatar ENT — cf
@@ -2751,7 +2803,8 @@ function thematique_avatar_notification_auteur($id_auteur) {
  * même règle que json/consignes.html, d'où vient le #ENV{rang} de
  * header_sidebar.html.
  * Utilisé pour la carte du mail de notification de commentaire forumv2
- * (cf notifications/forum_poste.html).
+ * (cf notifications/forum_poste.html) et l'onglet Publications de la fiche
+ * participant (cf noisettes/sidebar/page_participant/onglet_publications.html).
  *
  * Ne dépend pas de l'année scolaire active en session (contrairement à
  * thematique_id_rubrique_mission()) : un mail de notification n'a pas de
@@ -3356,46 +3409,40 @@ function forum_rendre_branche($forums) {
 }
 
 /**
- * Filtre |titre_consigne : titre d'une mission.
+ * Missions (articles consigne) publiées qui ont au moins une réponse, avec
+ * leur titre, mises en cache mémoire par requête : une seule requête pour
+ * toutes les cartes de l'onglet Publications de la fiche participant.
  *
- * @param int|string $id_consigne Mission (article consigne)
- * @return string Titre, '' si aucun
+ * @return array [id_article => titre]
  */
-function filtre_titre_consigne($id_consigne) {
-	if (!$id_consigne) {
-		return '';
+function thematique_missions_avec_reponses() {
+	static $missions = null;
+	if ($missions !== null) {
+		return $missions;
 	}
-	return sql_getfetsel('titre', 'spip_articles', 'id_article=' . intval($id_consigne));
+
+	$rows = sql_allfetsel(
+		'id_article, titre',
+		'spip_articles',
+		'id_consigne = 0 AND statut = ' . sql_quote('publie')
+			. ' AND id_article IN (SELECT DISTINCT id_consigne FROM spip_articles WHERE id_consigne > 0)'
+	);
+	$missions = array_column($rows, 'titre', 'id_article');
+
+	return $missions;
 }
 
 /**
- * Filtre |rang_consigne : rang d'une mission dans l'année, parmi les missions
- * qui ont des réponses.
+ * Filtre |titre_consigne : titre d'une mission publiée. Une réponse dont la
+ * mission a été supprimée ou dépubliée n'est plus sur la timeline
+ * (json/consignes.html ne parcourt que les missions publiées) : le titre vide
+ * permet de la masquer aussi dans l'onglet Publications.
  *
  * @param int|string $id_consigne Mission (article consigne)
- * @return int|string Rang de la mission, '' si introuvable
+ * @return string Titre, '' si la mission n'est pas publiée
  */
-function filtre_rang_consigne($id_consigne) {
-	if (!$id_consigne) {
-		return '';
-	}
-
-	$date_consigne = sql_getfetsel(
-		'date',
-		'spip_articles',
-		'id_article=' . intval($id_consigne) . ' AND id_consigne=0'
-	);
-	if (!$date_consigne) {
-		return '';
-	}
-
-	return sql_countsel(
-		'spip_articles',
-		'id_consigne = 0'
-		. ' AND date >= ' . sql_quote(_DATE_DEBUT)
-		. ' AND date <= ' . sql_quote($date_consigne)
-		. ' AND id_article IN (SELECT DISTINCT id_consigne FROM spip_articles WHERE id_consigne > 0)'
-	);
+function filtre_titre_consigne($id_consigne) {
+	return thematique_missions_avec_reponses()[intval($id_consigne)] ?? '';
 }
 
 /**

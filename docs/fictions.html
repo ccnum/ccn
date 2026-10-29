@@ -48,7 +48,7 @@
 			<table>
 				<thead><tr><th>Plugin</th><th>Public</th><th>Particularité</th></tr></thead>
 				<tbody>
-					<tr><td><code>cadavrexquis</code></td><td>—</td><td>Socle commun : images et éléments graphiques du livre partagés par les deux sites. Aucun code propre.</td></tr>
+					<tr><td><code>cadavrexquis</code></td><td>—</td><td>Socle commun : images et éléments graphiques du livre partagés par les deux sites, et en-tête des pages (<code>inclure/tete-html.html</code>, <code>inclure/head-commun.html</code>). Aucun PHP.</td></tr>
 					<tr><td><code>fictions</code></td><td>Collèges : classes et un écrivain</td><td>Participants inscrits par un admin, chapitres attribués par rotation, calendrier d’écriture.</td></tr>
 					<tr><td><code>petitfablab</code></td><td>Ateliers (médiathèques)</td><td>Écriture libre dans une histoire en cours, cinq chapitres par histoire (voir <a href="petitfablab.html">Petit fablab</a>).</td></tr>
 				</tbody>
@@ -147,7 +147,7 @@
 				</tbody>
 			</table>
 		</div>
-		<p>Un webmestre voit tout et peut écrire le chapitre en cours. La modification d’un chapitre est aussi contrôlée côté serveur : un participant ne modifie que le chapitre en cours, pendant la période d’écriture, y compris via les crayons ou <code>/ecrire</code>.</p>
+		<p>Un webmestre voit tout et peut écrire le chapitre en cours. La modification d’un chapitre est aussi contrôlée côté serveur : un participant ne modifie que le chapitre en cours, pendant la période d’écriture, y compris via les crayons ou <code>/ecrire</code>. Un chapitre est reconnu à sa place dans l’arborescence (sous-rubrique d’une année, sous la rubrique à mot <code>rubrique-contenant-annees</code>, rubrique blog auteur exclue), pas aux titres : renommer une histoire ou une année ne lève pas la restriction (<code>fictions_article_est_chapitre()</code>). Si l’année d’une histoire n’est plus lisible (rubrique d’année renommée), la période d’écriture est considérée comme fermée.</p>
 
 		<h3 id="fictions-fin">Fin d’année</h3>
 		<p>L’accueil (<code>sommaire.html</code>) a deux affichages, choisis par le mot-clé <code>année_en_ecriture</code> sur la rubrique de l’année :</p>

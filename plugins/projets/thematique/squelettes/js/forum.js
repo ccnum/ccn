@@ -144,23 +144,13 @@ function callback_clique_sur_lire_la_suite_du_commentaire(e) {
 }
 
 async function callbackCliqueSurSupprimerMonCommentaire(e) {
-	const bouton = e.target;
-	if (!bouton) return;
-
-	if (!window.confirm(CCN.lang.message_avant_supression_commentaire)) {
-		return;
-	}
-
-	const url = bouton.dataset.url;
-	const conteneurCommentaire = bouton.closest('.forum-commentaire');
-
-	try {
-		const reponse = await fetch(url, { method: 'GET', credentials: 'same-origin' });
-		if (!reponse.ok) {
-			throw new Error(CCN.lang.echec_de_la_supression);
-		}
-		conteneurCommentaire.remove();
-	} catch (erreur) {
-		window.alert(CCN.lang.echec_de_la_supression);
+	const bouton = e.currentTarget;
+	// cf appelerActionBouton() dans controleurs.js
+	const ok = await appelerActionBouton(bouton, {
+		confirmation: CCN.lang.message_avant_supression_commentaire,
+		echec: CCN.lang.echec_de_la_supression,
+	});
+	if (ok) {
+		bouton.closest('.forum-commentaire')?.remove();
 	}
 }

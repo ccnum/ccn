@@ -1,12 +1,4 @@
-<!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml">
-<head>
-	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-	<title>[(#NOM_SITE_SPIP|textebrut)]</title>
-	[<meta name="description" content="(#DESCRIPTIF_SITE_SPIP|couper{150}|textebrut)" />]
-	<INCLURE{fond=inclure/head} />
-	<title>[(#NOM_SITE_SPIP|textebrut)]</title>
-</head>
+<INCLURE{fond=inclure/tete-html}{largeur=980} />
 <body>
 	<div id="lecture-script">
 		<BOUCLE_lecture_script(ARTICLES){id_article}>

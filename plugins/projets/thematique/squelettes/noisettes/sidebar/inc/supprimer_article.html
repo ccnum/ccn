@@ -1,5 +1,5 @@
 [(#REM)
-Bouton "Supprimer" d'un article (mission/réponse/billet), sur le modèle de
+Bouton "Supprimer" d'un article (billet, évènement, ressource), sur le modèle de
 modifier_article. Paramètres attendus : id_article, type_objet.
 ]
 #CACHE{0}
@@ -10,7 +10,7 @@ modifier_article. Paramètres attendus : id_article, type_objet.
         class="bouton-supprimer-article btn-reset"
         data-id-article="#ENV{id_article}"
         data-type-objet="#ENV{type_objet}"
-        data-url="#URL_ACTION_AUTEUR{thematique_supprimer_article,#ENV{id_article}}"
+        data-url="#URL_ACTION_AUTEUR{thematique_statut_article,#ENV{id_article}-poubelle}"
         data-confirm="<:thematique:confirmer_suppression|attribut_html:>"
         onclick="supprimerArticle(event)"
 >

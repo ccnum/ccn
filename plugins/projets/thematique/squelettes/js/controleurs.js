@@ -1662,26 +1662,59 @@ function flouterLesBullesEtLosangesNonSelectionnes(idSelectionnee) {
 const RECHARGEMENTS_APRES_SUPPRESSION = {
 	blogs: initBlogs,
 	evenements: initEvenements,
+	// liste des ressources rouverte sans la ressource supprimée
+	ressources: () => callRessource(),
 };
 
-async function supprimerArticle(e) {
-	const btn = e.currentTarget;
-	if (!btn || btn.disabled) return;
-	if (!window.confirm(btn.dataset.confirm)) return;
+/**
+ * Appelle l'action sécurisée d'un bouton (data-url, cf #URL_ACTION_AUTEUR),
+ * qui répond 200 si l'opération a réussi, 403 sinon (cf
+ * action/thematique_statut_article.php, action/forumv2_supprimer.php).
+ * Demande d'abord confirmation si `confirmation` est fourni et désactive le
+ * bouton pendant l'appel (double clic). En cas d'échec, affiche `echec` et
+ * réactive le bouton.
+ *
+ * @returns {Promise<boolean>} true si l'action a réussi
+ */
+async function appelerActionBouton(btn, { confirmation, echec }) {
+	if (!btn || btn.disabled) return false;
+	if (confirmation && !window.confirm(confirmation)) return false;
 
 	btn.disabled = true;
 	try {
 		const res = await fetch(btn.dataset.url, { credentials: 'same-origin' });
 		if (!res.ok) throw new Error('HTTP ' + res.status);
-
-		clicSurTimeline(); // Cacher la sidebar
-		const recharger = RECHARGEMENTS_APRES_SUPPRESSION[btn.dataset.typeObjet];
-		if (typeof recharger === 'function') {
-			await recharger();
-		}
+		return true;
 	} catch (err) {
 		console.error(err);
-		alert(CCN.lang.echec_de_la_supression);
+		alert(echec);
 		btn.disabled = false;
+		return false;
+	}
+}
+
+async function supprimerArticle(e) {
+	const btn = e.currentTarget;
+	const ok = await appelerActionBouton(btn, {
+		confirmation: btn?.dataset.confirm,
+		echec: CCN.lang.echec_de_la_supression,
+	});
+	if (!ok) return;
+
+	clicSurTimeline(); // Cacher la sidebar
+	const recharger = RECHARGEMENTS_APRES_SUPPRESSION[btn.dataset.typeObjet];
+	if (typeof recharger === 'function') {
+		await recharger();
+	}
+}
+
+/**
+ * Bouton Publier/Dépublier d'un jalon (noisettes/sidebar/inc/boutons_publication_jalon.html) :
+ * appelle l'action thematique_statut_article puis recharge la page, le
+ * statut étant affiché à plusieurs endroits (sidebar, timeline).
+ */
+async function changerStatutArticle(e) {
+	if (await appelerActionBouton(e.currentTarget, { echec: CCN.lang.echec_changement_statut })) {
+		window.location.reload();
 	}
 }
