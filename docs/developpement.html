@@ -29,7 +29,6 @@
 				<li><a href="developpement.html" aria-current="page">Développement</a>
 					<ul class="sub">
 						<li><a href="#local">Environnement local</a></li>
-						<li><a href="#qualite">Qualité de code</a></li>
 						<li><a href="#lint">Lints CI</a></li>
 						<li><a href="#tests">Tests</a></li>
 						<li><a href="#pieges">Pièges SPIP</a></li>
@@ -65,14 +64,6 @@ ddev launch    <span class="c"># ouvre https://ccn.ddev.site</span></code></pre>
 		</div>
 		<p>Après une modification de squelette, si le comportement semble périmé, videz le cache SPIP du site concerné :</p>
 <pre><code>rm -rf sites/&lt;site&gt;.ddev.site/tmp/cache/*</code></pre>
-
-		<h2 id="qualite">Qualité de code</h2>
-		<p>À lancer depuis le dossier d’un plugin, par exemple <code>plugins/projets/thematique/</code> :</p>
-<pre><code>composer check-cs          <span class="c"># Easy Coding Standard : vérifie le style</span>
-composer fix-cs            <span class="c"># corrige le style automatiquement</span>
-composer rector-dry-run    <span class="c"># simule les migrations Rector</span>
-composer rector            <span class="c"># applique les migrations Rector</span>
-vendor/bin/phpstan analyse <span class="c"># analyse statique (niveau dans phpstan.neon.dist)</span></code></pre>
 
 		<h2 id="lint">Lints CI</h2>
 		<p>Le workflow <code>.github/workflows/lint.yml</code> s’exécute avant chaque build Docker (<code>dev</code> et <code>main</code>) et <strong>bloque la publication de l’image</strong> en cas d’échec. Ils couvrent les plugins <code>thematique</code>, <code>fictions</code>, <code>petitfablab</code>, <code>cadavrexquis</code> et <code>ccn</code>, ainsi que cette documentation.</p>

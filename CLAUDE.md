@@ -39,18 +39,6 @@ comportement semble périmé :
 rm -rf sites/<site>.ddev.site/tmp/cache/*
 ```
 
-### Qualité de code (par plugin, ex. `plugins/projets/thematique/`)
-```
-composer check-cs             # vendor/bin/ecs check --ansi (Easy Coding Standard, style)
-composer fix-cs               # ecs --fix : corrige automatiquement le style
-composer rector                # vendor/bin/rector process (migrations/refactors auto)
-composer rector-dry-run        # rector en mode simulation
-vendor/bin/phpstan analyse     # analyse statique (niveau défini dans phpstan.neon.dist)
-```
-Un run automatisé de `ecs`/`rector` peut modifier des fichiers en tâche de fond pendant une
-session (corrections triviales : style, compat PHP8) — vérifier `git status`/`git diff` avant de
-committer, ces changements peuvent se mélanger aux tiens.
-
 ### Lint CI (`.github/workflows/lint.yml`, exécuté uniquement avant chaque build Docker `dev`/`main`, qu'il bloque en cas d'échec)
 ```
 python3 .ci/check_lang_hardcoded.py    # texte FR en dur hors lang/ (baseline: .ci/lang-check-baseline.txt)
