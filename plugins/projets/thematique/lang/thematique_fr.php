@@ -274,7 +274,7 @@ return [
 	'production_transversale'                    => 'Production transversale',
 	'prof_sans_classe_aide'                      => 'Besoin d’aide : @email@',
 	'prof_sans_classe_explication'               => 'Vous êtes inscrit au projet, mais aucune classe ne vous est associée dans laclasse.com : vos élèves ne peuvent donc pas encore vous rejoindre. Demandez à votre directeur d’école (ou à l’administrateur ENT de votre établissement) de vous associer à votre classe, puis reconnectez-vous.',
-	'prof_sans_classe_titre'                     => 'Aucune classe associée',
+	'prof_sans_classe_titre'                     => 'Votre classe n’apparaît pas dans les participants ?',
 	'prof_sans_classe_tuto'                      => 'Tutoriel : associer un enseignant à sa classe',
 	'profil_changer_pass'                        => 'Changer de mot de passe',
 	'profil_changer_pass_explication'            => 'Laissez vide pour garder votre mot de passe actuel.',
