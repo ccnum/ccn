@@ -7,11 +7,16 @@
 	<meta name="description" content="Documentation technique des Classes Culturelles Numériques (CCN) : plugins SPIP thematique, fictions, petitfablab.">
 	<link rel="icon" href="assets/logo.png">
 	<link rel="stylesheet" href="assets/style.css">
+	<script src="assets/search.js" defer></script>
 </head>
 <body>
 <div class="layout">
 	<aside class="sidebar">
 		<a class="brand" href="index.html"><img src="assets/logo.png" alt=""><span>CCN<small>Documentation technique</small></span></a>
+		<div class="search" role="search">
+			<input type="search" id="search-input" placeholder="Rechercher…" aria-label="Rechercher dans la documentation" autocomplete="off" spellcheck="false">
+			<div id="search-results" class="search-results" hidden></div>
+		</div>
 		<nav>
 			<ul>
 				<li><a href="index.html" aria-current="page">Présentation</a></li>
@@ -40,17 +45,17 @@
 		<p>Une installation comprend un <strong>cœur SPIP</strong> (<code>ecrire/</code>, <code>prive/</code>, <code>squelettes-dist/</code>, <code>plugins-dist/</code>), installé par le Dockerfile et non versionné, et des <strong>plugins maison</strong> dans <code>plugins/projets/</code>. C’est dans ces plugins que se fait le développement ; le reste est le framework SPIP, à ne modifier qu’en cas de besoin explicite.</p>
 
 		<div class="cards">
-			<a class="card" href="contenus.html"><h3>Contenus et rôles</h3><p>Rubriques par année, types de contenus, rôles, cycle de rentrée.</p></a>
-			<a class="card" href="sso.html"><h3>Connexion et comptes</h3><p>Connexion par l’ENT laclasse.com ou sans, import de comptes par CSV, rôles.</p></a>
-			<a class="card" href="thematique.html"><h3>Thematique</h3><p>Publication, modification, commentaires, notifications, documents et vidéos.</p></a>
-			<a class="card" href="fictions.html"><h3>Fictions</h3><p>Cadavre exquis en classe : participants, gestion des histoires, rotation des chapitres, fin d’année.</p></a>
-			<a class="card" href="petitfablab.html"><h3>Petit fablab</h3><p>Cadavre exquis en atelier : prologues, histoires de cinq chapitres, poste partagé.</p></a>
-			<a class="card" href="architecture.html"><h3>Architecture</h3><p>Socle ccn, thematique en popups ajax, fictions et petitfablab en pages classiques, plugins utilitaires.</p></a>
-			<a class="card" href="developpement.html"><h3>Développement</h3><p>Environnement ddev, qualité de code, lints CI, pièges SPIP.</p></a>
-			<a class="card" href="deploiement.html"><h3>Déploiement</h3><p>Image Docker, variables d’environnement, versions, Helm.</p></a>
+			<a class="card" href="contenus.html"><h3 id="contenus-et-roles">Contenus et rôles</h3><p>Rubriques par année, types de contenus, rôles, cycle de rentrée.</p></a>
+			<a class="card" href="sso.html"><h3 id="connexion-et-comptes">Connexion et comptes</h3><p>Connexion par l’ENT laclasse.com ou sans, import de comptes par CSV, rôles.</p></a>
+			<a class="card" href="thematique.html"><h3 id="thematique">Thematique</h3><p>Publication, modification, commentaires, notifications, documents et vidéos.</p></a>
+			<a class="card" href="fictions.html"><h3 id="fictions">Fictions</h3><p>Cadavre exquis en classe : participants, gestion des histoires, rotation des chapitres, fin d’année.</p></a>
+			<a class="card" href="petitfablab.html"><h3 id="petit-fablab">Petit fablab</h3><p>Cadavre exquis en atelier : prologues, histoires de cinq chapitres, poste partagé.</p></a>
+			<a class="card" href="architecture.html"><h3 id="architecture">Architecture</h3><p>Socle ccn, thematique en popups ajax, fictions et petitfablab en pages classiques, plugins utilitaires.</p></a>
+			<a class="card" href="developpement.html"><h3 id="developpement">Développement</h3><p>Environnement ddev, qualité de code, lints CI, pièges SPIP.</p></a>
+			<a class="card" href="deploiement.html"><h3 id="deploiement">Déploiement</h3><p>Image Docker, variables d’environnement, versions, Helm.</p></a>
 		</div>
 
-		<h2>Les plugins</h2>
+		<h2 id="les-plugins">Les plugins</h2>
 		<div class="table-wrap">
 			<table>
 				<thead><tr><th>Plugin</th><th>Rôle</th></tr></thead>
@@ -67,20 +72,20 @@
 			</table>
 		</div>
 
-		<h2>Un code, plusieurs sites</h2>
+		<h2 id="un-code-plusieurs-sites">Un code, plusieurs sites</h2>
 		<p>Le site est <strong>multisite</strong> : chaque instance (<code>sites/&lt;nom&gt;/</code>) partage le même code mais a sa propre base de données et sa propre configuration. Le plugin activé dépend de la variable <code>SPIP_VERSION_SITE</code> (voir <a href="deploiement.html#variables">Déploiement</a>).</p>
 
-		<h2>Démarrage rapide</h2>
-		<h3>Avec ddev (développement local)</h3>
+		<h2 id="demarrage-rapide">Démarrage rapide</h2>
+		<h3 id="avec-ddev-developpement-local">Avec ddev (développement local)</h3>
 <pre><code>ddev start     <span class="c"># web, db, phpmyadmin</span>
 ddev launch    <span class="c"># ouvre https://ccn.ddev.site</span></code></pre>
 		<p>Les instances locales sont exposées par nom d’hôte : <code>ccn-fictions</code>, <code>ccn-ontourne</code>, <code>ccn-petitfablab</code>, <code>edifice-digitalyceen</code> (suffixe <code>.ddev.site</code>).</p>
 
-		<h3>Avec Docker</h3>
+		<h3 id="avec-docker">Avec Docker</h3>
 <pre><code>cp .env.example .env   <span class="c"># puis renseigner les valeurs</span>
 docker-compose up</code></pre>
 
-		<h2>Licence et crédits</h2>
+		<h2 id="licence-et-credits">Licence et crédits</h2>
 		<p>Logiciel libre sous licence AGPL. Concept et production : Erasme, laboratoire d’expérimentation numérique de la Métropole de Lyon.</p>
 		<p>Contributeurs : <a href="https://github.com/pierretux">pierretux</a>, <a href="https://github.com/Pipazoul">pipazoul</a>, <a href="https://github.com/aangelot">Anthony Angelot</a>, <a href="https://github.com/antoineDerooGrandLyon">antoineDerooGrandLyon</a>, <a href="https://github.com/njbom">Jérémy Nguyen</a>, Christophe Monnet, Juliette Monaco, Patrick Vincent, Thomas Graveleine, Thomas Neveu.</p>
 

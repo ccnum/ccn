@@ -7,11 +7,16 @@
 	<meta name="description" content="Le plugin thematique au quotidien : publication des consignes, réponses, ressources et événements, modification et suppression, commentaires, notifications, documents et vidéos, maintenance, variante Edifice.">
 	<link rel="icon" href="assets/logo.png">
 	<link rel="stylesheet" href="assets/style.css">
+	<script src="assets/search.js" defer></script>
 </head>
 <body>
 <div class="layout">
 	<aside class="sidebar">
 		<a class="brand" href="index.html"><img src="assets/logo.png" alt=""><span>CCN<small>Documentation technique</small></span></a>
+		<div class="search" role="search">
+			<input type="search" id="search-input" placeholder="Rechercher…" aria-label="Rechercher dans la documentation" autocomplete="off" spellcheck="false">
+			<div id="search-results" class="search-results" hidden></div>
+		</div>
 		<nav>
 			<ul>
 				<li><a href="index.html">Présentation</a></li>
@@ -54,7 +59,7 @@
 				</tbody>
 			</table>
 		</div>
-		<h3>Où chaque nom apparaît</h3>
+		<h3 id="ou-chaque-nom-apparait">Où chaque nom apparaît</h3>
 		<div class="table-wrap">
 			<table>
 				<thead><tr><th>Contexte</th><th>Nom affiché</th><th>Fonction</th></tr></thead>
@@ -67,15 +72,15 @@
 			</table>
 		</div>
 		<p>Un compte qui n’est jamais passé par l’ENT (créé à la main ou importé) a un <code>nom_complet</code> vide : partout, c’est alors son <code>nom</code> qui s’affiche.</p>
-		<h3>Nom d’une classe</h3>
+		<h3 id="nom-dune-classe">Nom d’une classe</h3>
 		<ul>
 			<li>Le nom de classe ENT est mis en forme par <code>thematique_cioidc_nom_classe()</code> : « 4 2 » ou « 42 » donnent « 4ème 2 » ; les autres formats (« 5EME1 », « 3E1HI-GE ») restent tels quels. Le préfixe « CCN - » des groupes ENT est retiré.</li>
 			<li>La rubrique de la classe, sous « Travail des classes », est titrée « classe - établissement » (<code>thematique_cioidc_titre_rubrique_classe()</code>), pour que deux « 4ème 2 » de collèges différents ne partagent pas la même rubrique. L’établissement est celui de la classe (<code>group_structure_id</code>), pas le premier du compte : un prof peut enseigner dans plusieurs établissements.</li>
 			<li>Une rubrique créée sous un ancien format de titre (nom brut, sans établissement) est renommée au format actuel à la connexion suivante, plutôt que dupliquée : son contenu et ses liens sont gardés.</li>
 		</ul>
-		<h3>Nom de l’établissement</h3>
+		<h3 id="nom-de-letablissement">Nom de l’établissement</h3>
 		<p>L’ENT n’envoie que l’UAI (<code>ENTAllUai</code>, ou <code>group_structure_id</code> pour une classe). Le nom est demandé à l’annuaire de l’Éducation nationale (API data.education.gouv.fr) par <code>thematique_cioidc_nom_etablissement()</code>, avec un cache de 30 jours. Si l’API ne répond pas ou que l’UAI est inconnu (cas de <code>00000CCN</code>), l’établissement est simplement omis du nom.</p>
-		<h3>Numéro, couleur et animal d’une classe</h3>
+		<h3 id="numero-couleur-et-animal-dune-classe">Numéro, couleur et animal d’une classe</h3>
 		<p>Chaque classe de l’année reçoit un rang selon son ordre d’affichage sur l’accueil (<code>thematique_classes_rangs()</code>). Ce rang, modulo 10, donne son numéro (<code>classe_numero()</code>), donc sa couleur (<code>thematique_couleur_classe()</code>, aussi utilisée dans les e-mails) et son animal (<code>classe_icone()</code> : 🐝 🦩 🦉 🦔 🐟 🐙 🐜 🦁 🦋 🦊). L’animal sert d’avatar aux profs et aux élèves dans le menu du haut, à la place de la photo ENT. Une classe ajoutée en cours d’année peut décaler le rang, donc la couleur, des suivantes.</p>
 
 		<h2 id="publier">Publier</h2>
@@ -134,13 +139,13 @@
 		<h2 id="notifications">Notifications</h2>
 		<p>Les e-mails partent par le plugin <code>notifications</code> (envoi via facteur). <code>thematique</code> en choisit les destinataires dans le pipeline <code>notifications_destinataires</code> (<code>thematique_notifications_destinataires()</code>) et en surcharge la mise en page.</p>
 
-		<h3>Quand un e-mail part</h3>
+		<h3 id="quand-un-e-mail-part">Quand un e-mail part</h3>
 		<ul>
 			<li><strong>Publication d’un article</strong> : au passage d’un autre statut à « publié » (événement <code>instituerarticle</code>). Modifier un article déjà publié n’envoie rien ; le republier après une dépublication renvoie un e-mail.</li>
 			<li><strong>Nouveau commentaire forumv2</strong> : forumv2 enregistre le message déjà publié, ce qui ne déclenche pas la notification à lui seul. <code>formulaires/forumv2.php</code> appelle donc <code>forumposte</code> explicitement, qui enchaîne sur <code>forumvalide</code>. C’est à cette étape que <code>thematique</code> ajoute ses destinataires.</li>
 		</ul>
 
-		<h3>Qui le reçoit</h3>
+		<h3 id="qui-le-recoit">Qui le reçoit</h3>
 		<ul>
 			<li>L’<strong>adresse d’envoi du site</strong> (<code>email_envoi</code>), toujours.</li>
 			<li><strong>Tous les adultes de l’année</strong> : les comptes <code>0minirezo</code> et <code>1comite</code> liés à une rubrique quelconque du secteur de l’année, donc l’ensemble des profs, intervenants et admins du projet, pas seulement ceux de la classe concernée. Les profs et intervenants connectés par l’ENT sont <code>1comite</code> (voir <a href="sso.html">Connexion et comptes</a>), d’où leur inclusion explicite. L’année retenue :
@@ -161,7 +166,7 @@
 			<li>les doublons.</li>
 		</ul>
 
-		<h3>Mise en page</h3>
+		<h3 id="mise-en-page">Mise en page</h3>
 		<p><code>notifications/article_publie.html</code> et <code>notifications/forum_poste.html</code> surchargent ceux du plugin <code>notifications</code> et choisissent un fond selon le type de contenu (<code>thematique_type_objet_article()</code>) :</p>
 		<div class="table-wrap">
 			<table>

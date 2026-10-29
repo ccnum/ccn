@@ -7,11 +7,16 @@
 	<meta name="description" content="Architecture des plugins CCN : socle ccn (année scolaire, envois de fichiers, e-mails), thematique en popups ajax, fictions et petitfablab en pages classiques, plugins utilitaires.">
 	<link rel="icon" href="assets/logo.png">
 	<link rel="stylesheet" href="assets/style.css">
+	<script src="assets/search.js" defer></script>
 </head>
 <body>
 <div class="layout">
 	<aside class="sidebar">
 		<a class="brand" href="index.html"><img src="assets/logo.png" alt=""><span>CCN<small>Documentation technique</small></span></a>
+		<div class="search" role="search">
+			<input type="search" id="search-input" placeholder="Rechercher…" aria-label="Rechercher dans la documentation" autocomplete="off" spellcheck="false">
+			<div id="search-results" class="search-results" hidden></div>
+		</div>
 		<nav>
 			<ul>
 				<li><a href="index.html">Présentation</a></li>

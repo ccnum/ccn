@@ -7,11 +7,16 @@
 	<meta name="description" content="Le plugin fictions : écriture collaborative en cadavre exquis par des classes de collège et un écrivain, gestion des histoires, plan de rotation des chapitres, lecture et fin d'année.">
 	<link rel="icon" href="assets/logo.png">
 	<link rel="stylesheet" href="assets/style.css">
+	<script src="assets/search.js" defer></script>
 </head>
 <body>
 <div class="layout">
 	<aside class="sidebar">
 		<a class="brand" href="index.html"><img src="assets/logo.png" alt=""><span>CCN<small>Documentation technique</small></span></a>
+		<div class="search" role="search">
+			<input type="search" id="search-input" placeholder="Rechercher…" aria-label="Rechercher dans la documentation" autocomplete="off" spellcheck="false">
+			<div id="search-results" class="search-results" hidden></div>
+		</div>
 		<nav>
 			<ul>
 				<li><a href="index.html">Présentation</a></li>
@@ -174,7 +179,7 @@
 			<li>Les participants et les droits d’écriture ne viennent pas de l’ENT : c’est l’admin qui les attribue dans la page Associations.</li>
 		</ul>
 
-		<h2>Anciennes versions</h2>
+		<h2 id="anciennes-versions">Anciennes versions</h2>
 		<p><code>fictions_archive</code> est la version précédente, conservée mais jamais activée. Le plugin actuel s’appelait <code>fictionsv2</code> : <code>fictions_administrations.php</code> reprend à l’activation les metas écrites sous l’ancien nom.</p>
 
 		<footer class="page-footer">Documentation générée à partir du dépôt <a href="https://github.com/ccnum/ccn">ccnum/ccn</a>.</footer>

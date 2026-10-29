@@ -7,11 +7,16 @@
 	<meta name="description" content="Connexion aux sites CCN avec l'ENT laclasse.com (OpenID Connect) ou sans, et import de comptes par fichier CSV : statut SPIP, rubriques liées et rôle d'un utilisateur.">
 	<link rel="icon" href="assets/logo.png">
 	<link rel="stylesheet" href="assets/style.css">
+	<script src="assets/search.js" defer></script>
 </head>
 <body>
 <div class="layout">
 	<aside class="sidebar">
 		<a class="brand" href="index.html"><img src="assets/logo.png" alt=""><span>CCN<small>Documentation technique</small></span></a>
+		<div class="search" role="search">
+			<input type="search" id="search-input" placeholder="Rechercher…" aria-label="Rechercher dans la documentation" autocomplete="off" spellcheck="false">
+			<div id="search-results" class="search-results" hidden></div>
+		</div>
 		<nav>
 			<ul>
 				<li><a href="index.html">Présentation</a></li>
@@ -152,7 +157,7 @@
 			<p><strong>Prof et intervenant sont tous deux liés à leur projet sous « Consignes ».</strong> Le prof est donc testé en premier dans <code>thematique_donner_role()</code> : il est prof dès qu’il a des classes à choisir, qu’il est lié à une classe de l’année, ou que sa dernière connexion ENT l’a identifié comme enseignant (<code>ent_statut</code> = <code>enseignant</code> : sans classe, hors groupe intervenants). Un compte hors ENT ou pas reconnecté depuis garde l’ancienne règle (lié à un projet, sans classe : intervenant). Pour la même raison, <code>thematique_premier_intervenant()</code>, qui choisit à qui rattacher jalons et fiche intervenant, écarte les comptes <code>enseignant</code>. Seuls les liens vers les rubriques de l’année active comptent : la connexion ne retire jamais les liens des années passées.</p>
 		</div>
 
-		<h3>Nom affiché</h3>
+		<h3 id="nom-affiche">Nom affiché</h3>
 		<p>Le champ <code>nom</code> de l’auteur décrit sa fonction plutôt que la personne : rôle ENT, première classe, établissement (ex. « Enseignant 4ème 2 - Collège … »). Un compte <code>ENS</code> sans classe (intervenant, ou enseignant dont la classe n’est pas dans l’ENT) est affiché avec son prénom et son nom devant. Le prénom et nom réels sont aussi gardés dans <code>nom_complet</code> (<code>#SESSION{nom_complet}</code>, menu du haut). Quel nom s’affiche où : voir <a href="thematique.html#noms">Noms des comptes et des classes</a>.</p>
 
 		<h2 id="choix-classes">Choix des classes par le prof</h2>
@@ -221,7 +226,7 @@
 		<div class="callout">
 			<p>Le plugin n’est activé que si <code>SPIP_PLUGINS_IMPORTS_UTILISATEURS=true</code> (voir <a href="deploiement.html#variables">variables</a>) : sinon <code>docker-entrypoint.sh</code> le désactive à chaque démarrage, même activé à la main dans <code>/ecrire</code>.</p>
 		</div>
-		<h3>Format du fichier</h3>
+		<h3 id="format-du-fichier">Format du fichier</h3>
 		<p>CSV séparé par des points-virgules, avec une ligne d’en-tête (modèle : <code>exemple_import.csv</code>, lien sur la page d’import) :</p>
 <pre><code>nom;prenom;login;emails;admin des rubriques;auteur des articles
 Martin;Claire;cmartin;claire.martin@exemple.fr;158,159;560</code></pre>
@@ -237,7 +242,7 @@ Martin;Claire;cmartin;claire.martin@exemple.fr;158,159;560</code></pre>
 				</tbody>
 			</table>
 		</div>
-		<h3>Déroulé</h3>
+		<h3 id="deroule">Déroulé</h3>
 		<ol>
 			<li><strong>Prévisualiser</strong> : le fichier est lu et ses 200 premières lignes affichées, sans rien écrire.</li>
 			<li><strong>Importer</strong> : chaque ligne crée ou met à jour un compte, puis le lie aux rubriques et articles listés. Un numéro que l’admin ne peut pas voir (rubrique) ou modifier (article) est ignoré sans message.</li>
