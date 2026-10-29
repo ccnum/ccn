@@ -447,6 +447,45 @@ function thematique_cioidc_anciens_titres_classe($groupe) {
 }
 
 /**
+ * Titre de la rubrique « école » sous "Travail des classes" : le nom de
+ * l'établissement seul (ex: "Ecole élémentaire Combe Blanche"). Elle remplace la
+ * classe d'un prof inscrit au projet que l'ENT n'associe à aucune classe (cas
+ * fréquent dans le premier degré, où l'affectation des enseignants aux classes ne
+ * remonte pas des annuaires académiques) ; ses élèves, eux, ont bien leur classe
+ * dans l'ENT et la rejoignent faute de rubrique pour cette classe. Deux profs sans
+ * classe de la même école la partagent.
+ *
+ * @param string $uai UAI de l'établissement
+ * @return string '' si l'établissement est inconnu
+ */
+function thematique_cioidc_titre_rubrique_ecole($uai) {
+	return str_replace('/', '-', thematique_cioidc_nom_etablissement($uai));
+}
+
+/**
+ * Rubrique école existante d'un élève (cf thematique_cioidc_titre_rubrique_ecole()),
+ * d'après l'établissement de ses classes puis ses UAI de rattachement.
+ *
+ * @param array $classes_reelles Classes ENT de l'élève
+ * @param array $uai_liste UAI de rattachement (ENTAllUai)
+ * @param int|string $id_travail_classes Rubrique « Travail des classes » de l'année
+ * @return int 0 si aucune
+ */
+function thematique_cioidc_rubrique_ecole_eleve(array $classes_reelles, array $uai_liste, $id_travail_classes) {
+	$uais = array_merge(
+		array_map(fn ($groupe) => (string) ($groupe->group_structure_id ?? ''), $classes_reelles),
+		array_map('strval', $uai_liste)
+	);
+	foreach (array_unique(array_filter($uais)) as $uai) {
+		$titre = thematique_cioidc_titre_rubrique_ecole($uai);
+		if ($titre !== '' && ($id_ecole = thematique_trouver_rubrique($titre, $id_travail_classes, true))) {
+			return intval($id_ecole);
+		}
+	}
+	return 0;
+}
+
+/**
  * Rubrique d'une classe ENT encore sous un ancien titre (cf
  * thematique_cioidc_anciens_titres_classe()), renommée au titre actuel plutôt que
  * dupliquée, pour ne pas perdre son contenu ni ses liens auteurs.
@@ -580,7 +619,10 @@ function thematique_cioidc_valider_classes_ent(int $id_auteur, array $classes, s
  * seule classe B pas encore créée, la rubrique de A est renommée en B plutôt que de
  * créer B vide, pour garder les réponses et documents déjà publiés et son lien.
  * Seulement si A fait partie de ses classes ENT et qu'aucun autre adulte n'y est
- * lié (un collègue y travaille vraiment). Les élèves de A en sont détachés : ce
+ * lié (un collègue y travaille vraiment).
+ * Même chose pour un prof qui travaillait dans la rubrique de son école faute de
+ * classe dans l'ENT (cf thematique_cioidc_titre_rubrique_ecole()) : quand sa classe
+ * y est enfin créée, l'école est renommée en cette classe. Les élèves de A en sont détachés : ce
  * n'est plus leur classe, ceux de B s'y rattachent à leur prochaine connexion (par
  * le titre, cf thematique_cioidc_resoudre_liens_rubriques()).
  * Dans tous les autres cas (plusieurs classes changées, B existe déjà…), rien
@@ -620,10 +662,14 @@ function thematique_cioidc_renommer_classe_echangee(int $id_auteur, array $class
 		}
 	}
 
-	// Classes actuelles du prof non recochées, parmi ses classes ENT
+	// Classes actuelles du prof non recochées, parmi ses classes ENT et leurs écoles
 	$titres_ent = [];
 	foreach (thematique_classes_ent_auteur($id_auteur)['classes'] as $classe) {
-		$titres_ent = array_merge($titres_ent, $titres($classe));
+		$titres_ent = array_merge(
+			$titres_ent,
+			$titres($classe),
+			array_filter([thematique_cioidc_titre_rubrique_ecole($classe['group_structure_id'] ?? '')])
+		);
 	}
 	$retirees = [];
 	foreach (thematique_classes_auteur($id_auteur) as $id_classe) {
@@ -730,31 +776,45 @@ function thematique_cioidc_supprimer_classes_non_choisies(int $id_auteur, $id_tr
  * seulement mémorisées (thematique_cioidc_memoriser_classes_ent()), il coche dans une
  * pop-up celles inscrites au CCN, qui sont alors créées sous "Travail des classes"
  * (cf formulaires/choisir_classes_ent.php).
+ * Un prof inscrit sans aucune classe dans l'ENT (hors intervenant) est lié à la
+ * rubrique de son école, créée au besoin (cf thematique_cioidc_titre_rubrique_ecole()).
  * Un élève est seulement rattaché à sa classe si elle existe déjà (cochée par son prof
- * ou créée par un admin), ex: affichage de l'emoji de classe hors du contexte d'une rubrique.
+ * ou créée par un admin), ex: affichage de l'emoji de classe hors du contexte d'une
+ * rubrique ; à défaut, à la rubrique de son école si elle existe. Une fois sa classe
+ * trouvée, il est détaché de cette école.
  *
  * @param array $classes_reelles Classes ENT (groupes CLS)
  * @param array $groupes_libres_pertinents Groupes libres du projet de ce site
  * @param int|string $id_travail_classes Rubrique « Travail des classes » de l'année
  * @param int|string $id_consignes Rubrique « Consignes » de l'année
- * @return array [rubriques de classe, rubriques de projet] à lier
+ * @param array $uai_liste UAI de rattachement (ENTAllUai)
+ * @return array [rubriques de classe à lier, rubriques de projet à lier, rubriques de classe à détacher]
  */
 function thematique_cioidc_resoudre_liens_rubriques(
 	bool $is_enseignant,
 	bool $is_webmestre,
 	bool $is_eleve,
+	bool $is_intervenant,
 	array $classes_reelles,
 	array $groupes_libres_pertinents,
 	$id_travail_classes,
-	$id_consignes
+	$id_consignes,
+	array $uai_liste
 ) {
 	$classes_a_lier = [];
 	$projets_a_lier = [];
+	$classes_a_detacher = [];
 
 	if ($is_enseignant && !$is_webmestre && $groupes_libres_pertinents) {
 		foreach ($groupes_libres_pertinents as $groupe) {
 			if ($id_projet = thematique_trouver_ou_creer_rubrique($groupe->name ?? '', $id_consignes)) {
 				$projets_a_lier[] = $id_projet;
+			}
+		}
+		if (!$classes_reelles && !$is_intervenant) {
+			$titre_ecole = thematique_cioidc_titre_rubrique_ecole((string) ($uai_liste[0] ?? ''));
+			if ($titre_ecole !== '' && ($id_ecole = thematique_trouver_ou_creer_rubrique($titre_ecole, $id_travail_classes, true))) {
+				$classes_a_lier[] = $id_ecole;
 			}
 		}
 	} elseif ($is_eleve) {
@@ -765,9 +825,16 @@ function thematique_cioidc_resoudre_liens_rubriques(
 				$classes_a_lier[] = $id_classe;
 			}
 		}
+		if ($id_ecole = thematique_cioidc_rubrique_ecole_eleve($classes_reelles, $uai_liste, $id_travail_classes)) {
+			if ($classes_a_lier) {
+				$classes_a_detacher[] = $id_ecole;
+			} else {
+				$classes_a_lier[] = $id_ecole;
+			}
+		}
 	}
 
-	return [$classes_a_lier, $projets_a_lier];
+	return [$classes_a_lier, $projets_a_lier, $classes_a_detacher];
 }
 
 // Associe effectivement l'auteur aux rubriques résolues ci-dessus (+ le blog
@@ -775,14 +842,20 @@ function thematique_cioidc_resoudre_liens_rubriques(
 // portant le mot "blogs" (inversé avec "evenements" = blog pédagogique / salle
 // des profs) : sans ce lien, thematique_peut_publier_dans_mot('blogs') masque
 // "Nouvel événement agenda" du menu Publier et l'envoi est refusé.
+// Détache d'abord les rubriques de $classes_a_detacher (école d'un élève qui a
+// retrouvé sa classe).
 function thematique_cioidc_associer_rubriques(
 	array $auteur,
 	bool $is_enseignant,
 	bool $is_webmestre,
 	bool $is_eleve,
 	array $classes_a_lier,
-	array $projets_a_lier
+	array $projets_a_lier,
+	array $classes_a_detacher = []
 ) {
+	foreach ($classes_a_detacher as $id_classe) {
+		objet_dissocier(['id_auteur' => $auteur['id_auteur']], ['rubrique' => $id_classe]);
+	}
 	if ($is_enseignant && !$is_webmestre) {
 		$blog = sql_getfetsel(
 			'id_rubrique',

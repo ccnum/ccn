@@ -413,21 +413,24 @@ function thematique_cioidc_userinfo($flux) {
 		}
 	}
 
-	[$classes_a_lier, $projets_a_lier] = thematique_cioidc_resoudre_liens_rubriques(
+	[$classes_a_lier, $projets_a_lier, $classes_a_detacher] = thematique_cioidc_resoudre_liens_rubriques(
 		$is_enseignant,
 		$is_webmestre,
 		$is_eleve,
+		$is_intervenant,
 		$classes_reelles,
 		$groupes_libres_pertinents,
 		$id_travail_classes,
-		$id_consignes
+		$id_consignes,
+		$uai_liste
 	);
 
 	spip_log(
 		$auteur['id_auteur'] . ' / ' . $auteur['nom'] . ' => enseignant:' . ($is_enseignant ? 'oui' : 'non')
 			. ' eleve:' . ($is_eleve ? 'oui' : 'non')
 			. ' classes:' . implode(',', $classes_a_lier)
-			. ' projets:' . implode(',', $projets_a_lier),
+			. ' projets:' . implode(',', $projets_a_lier)
+			. ' détachées:' . implode(',', $classes_a_detacher),
 		'cioidc'
 	);
 
@@ -437,7 +440,8 @@ function thematique_cioidc_userinfo($flux) {
 		$is_webmestre,
 		$is_eleve,
 		$classes_a_lier,
-		$projets_a_lier
+		$projets_a_lier,
+		$classes_a_detacher
 	);
 
 	// Intervenant tout juste lié au projet : jalons et fiche (existante ou

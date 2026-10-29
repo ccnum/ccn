@@ -137,19 +137,24 @@ function thematique_annee_est_passee($annee) {
 
 /**
  * Cherche une rubrique par titre sous un parent, sans jamais la créer.
+ * Par défaut, tout titre qui contient $nom convient ; $exact exige le titre
+ * exact (ex: rubrique école, dont le nom est contenu dans celui de chacune de
+ * ses classes).
  *
  * @param string $nom
  * @param int $id_parent
+ * @param bool $exact
  * @return int|null
  */
-function thematique_trouver_rubrique($nom, $id_parent) {
+function thematique_trouver_rubrique($nom, $id_parent, $exact = false) {
 	if (!$id_parent || empty($nom)) {
 		return null;
 	}
 	$id_rubrique = sql_getfetsel(
 		'id_rubrique',
 		'spip_rubriques',
-		'titre LIKE ' . sql_quote('%' . $nom . '%') . ' AND id_parent=' . intval($id_parent)
+		'titre ' . ($exact ? '= ' . sql_quote($nom) : 'LIKE ' . sql_quote('%' . $nom . '%'))
+			. ' AND id_parent=' . intval($id_parent)
 	);
 	spip_log(
 		'userinfo recherche rubrique name=' . $nom . ' id_parent=' . $id_parent . ' => id_rubrique=' . $id_rubrique,
@@ -163,13 +168,14 @@ function thematique_trouver_rubrique($nom, $id_parent) {
  *
  * @param string $nom
  * @param int $id_parent
+ * @param bool $exact Titre exact, cf thematique_trouver_rubrique()
  * @return int|null
  */
-function thematique_trouver_ou_creer_rubrique($nom, $id_parent) {
+function thematique_trouver_ou_creer_rubrique($nom, $id_parent, $exact = false) {
 	if (!$id_parent || empty($nom)) {
 		return null;
 	}
-	$id_rubrique = thematique_trouver_rubrique($nom, $id_parent);
+	$id_rubrique = thematique_trouver_rubrique($nom, $id_parent, $exact);
 	if (!$id_rubrique) {
 		include_spip('inc/rubriques');
 		$id_rubrique = creer_rubrique_nommee($nom, $id_parent);
@@ -1218,19 +1224,27 @@ function thematique_classes_ent_modifiables($id_auteur) {
  * classe dans l'ENT (panneau noisettes/inc/prof_sans_classe.html). Limité aux
  * comptes ENT (ent_statut 'enseignant') : hors ENT, c'est l'admin qui lie la
  * classe.
+ * En attendant, la connexion SSO le lie à la rubrique de son école (cf
+ * thematique_cioidc_resoudre_liens_rubriques()) : le panneau est alors
+ * fermable. Il reste bloquant s'il n'est lié à aucune classe (école non
+ * résolue), puisqu'il ne peut pas répondre aux missions.
  *
  * @param int $id_auteur
- * @return bool
+ * @return string 'fermable', 'bloquant', '' si le panneau n'a pas lieu d'être
  */
 function thematique_prof_sans_classe($id_auteur) {
 	$id_auteur = intval($id_auteur);
 	if (!$id_auteur || thematique_donner_role($id_auteur) !== 'prof') {
-		return false;
+		return '';
 	}
 	include_spip('base/abstract_sql');
-	return sql_getfetsel('ent_statut', 'spip_auteurs', 'id_auteur=' . $id_auteur) === 'enseignant'
-		&& !thematique_classes_auteur($id_auteur)
-		&& !thematique_classes_ent_a_choisir($id_auteur);
+	if (
+		sql_getfetsel('ent_statut', 'spip_auteurs', 'id_auteur=' . $id_auteur) !== 'enseignant'
+		|| thematique_classes_ent_auteur($id_auteur)['classes']
+	) {
+		return '';
+	}
+	return thematique_classes_auteur($id_auteur) ? 'fermable' : 'bloquant';
 }
 
 /**
