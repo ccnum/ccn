@@ -31,6 +31,7 @@ REQUIRED_MARKERS = [
     ("_IMG_MAX_WIDTH", "limite de résolution image dans mes_options.php"),
     ("_VIMEO_ACCESS_TOKEN", "config api_vimeo dans mes_options.php"),
     ("_CCN_PROJET_ACTIVE", "flag rentrée automatique dans mes_options.php"),
+    ("_TEST_EMAIL_DEST", "redirection des e-mails en période de test dans mes_options.php"),
     ("config/_config_cioidc.php", "génération de config/_config_cioidc.php"),
     ("_CIOIDC_CLIENT_SECRET", "secret client SSO dans _config_cioidc.php"),
 ]
