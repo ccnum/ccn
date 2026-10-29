@@ -1212,6 +1212,28 @@ function thematique_classes_ent_modifiables($id_auteur) {
 }
 
 /**
+ * Prof connecté par l'ENT, inscrit au projet, mais rattaché à aucune classe
+ * dans laclasse.com (ENTClassesGroupes vide) : rien à cocher dans la pop-up de
+ * choix des classes, il doit voir avec son directeur pour être associé à sa
+ * classe dans l'ENT (panneau noisettes/inc/prof_sans_classe.html). Limité aux
+ * comptes ENT (ent_statut 'enseignant') : hors ENT, c'est l'admin qui lie la
+ * classe.
+ *
+ * @param int $id_auteur
+ * @return bool
+ */
+function thematique_prof_sans_classe($id_auteur) {
+	$id_auteur = intval($id_auteur);
+	if (!$id_auteur || thematique_donner_role($id_auteur) !== 'prof') {
+		return false;
+	}
+	include_spip('base/abstract_sql');
+	return sql_getfetsel('ent_statut', 'spip_auteurs', 'id_auteur=' . $id_auteur) === 'enseignant'
+		&& !thematique_classes_auteur($id_auteur)
+		&& !thematique_classes_ent_a_choisir($id_auteur);
+}
+
+/**
  * Id de la rubrique-classe d'un auteur (prof ou élève) : celle dont dérive
  * son emoji d'avatar, et celle dans laquelle un prof rédige (réponse à une
  * mission, cf filtre_auteur_vers_classe()).

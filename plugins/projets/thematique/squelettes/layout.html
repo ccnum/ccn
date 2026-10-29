@@ -51,8 +51,12 @@ Id de la rubrique restreinte sélectionnée : calculés en un seul appel]
 	<div id="a11y_announcer" class="sr-only" role="status" aria-live="polite"></div>
 	<div id="tooltip-sidebarCache" class="tooltip-sidebarCache"></div>
 	<div id="sidebarCache"></div>
-	[(#REM) Prof inscrit au CCN qui n'a pas encore coché ses classes de l'année : rien n'est affiché sinon. ]
-	#FORMULAIRE_CHOISIR_CLASSES_ENT
+		[(#REM) Prof inscrit au CCN qui n'a pas encore coché ses classes de l'année : rien n'est affiché sinon. ]
+		#FORMULAIRE_CHOISIR_CLASSES_ENT
+		[(#REM) Prof inscrit au CCN mais sans classe dans l'ENT : doit voir avec son directeur. ]
+		[(#SESSION{id_auteur}|thematique_prof_sans_classe|oui)
+			<INCLURE{fond=noisettes/inc/prof_sans_classe}>
+		]
 		[(#TYPE_OBJET|=={evenements}|oui|et{#GET{admin}|<{0}|oui}|non)
 			[(#ENV{page}|in_array{#LISTE{sommaire,article,rubrique,classe_detail,forum,ressources_detail,timeline,isotope,livrables,auteur_editer,publier_article,syndic_article,menu_haut,call_sidebar}}|non)#SET{page,sommaire}]
 			<INCLURE{fond=noisettes/#ENV{page}}

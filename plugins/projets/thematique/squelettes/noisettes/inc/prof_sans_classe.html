@@ -1,0 +1,13 @@
+[(#REM) Panneau pour un prof inscrit au CCN sans classe dans l'ENT, cf
+thematique_prof_sans_classe(). Inclus par squelettes/layout.html, sans bouton
+de fermeture : sans classe, le prof ne peut pas répondre aux missions, il doit
+se faire associer à sa classe dans l'ENT puis se reconnecter. ]
+<dialog id="prof_sans_classe" class="choisir-classes-ent" aria-labelledby="prof_sans_classe_titre">
+	<h2 id="prof_sans_classe_titre"><:thematique:prof_sans_classe_titre:></h2>
+	<p><:thematique:prof_sans_classe_explication:></p>
+	<p><a class="choisir-classes-ent-introuvable" href="https://usages.blogs.laclasse.com/tutoriels/administrateur-ent/groupes-dutilisateurs/ecole-1d-associer-un-enseignant-a-sa-classe/" target="_blank" rel="noopener"><:thematique:prof_sans_classe_tuto:></a></p>
+	<p class="boutons">
+		<a class="choisir-classes-ent-introuvable" href="mailto:info@laclasse.com"><:thematique:prof_sans_classe_aide{email=info@laclasse.com}:></a>
+	</p>
+</dialog>
+<INCLURE{fond=noisettes/inc/dialog_bloquant, id=prof_sans_classe}>
