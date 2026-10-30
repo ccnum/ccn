@@ -1,0 +1,22 @@
+[(#REM) Ouvre au chargement la pop-up dialog d'id passé en paramètre et empêche de la fermer
+(Échap compris). Inclus par formulaires/choisir_classes_ent.html et
+noisettes/inc/prof_sans_classe.html. ]
+<script>
+(function () {
+	var dialog = document.getElementById([(#ENV{id}|json_encode)]);
+	if (!dialog || typeof dialog.showModal !== 'function') {
+		return;
+	}
+	// Chrome ignore preventDefault() sur un second Échap sans interaction entre
+	// les deux (close watcher) : on rouvre alors la pop-up.
+	dialog.addEventListener('cancel', function (e) {
+		e.preventDefault();
+	});
+	dialog.addEventListener('close', function () {
+		dialog.showModal();
+	});
+	if (!dialog.open) {
+		dialog.showModal();
+	}
+})();
+</script>

@@ -1,0 +1,45 @@
+[(#REM) Panneau pour un prof inscrit au CCN sans classe dans l'ENT, cf
+thematique_prof_sans_classe(). Inclus par squelettes/layout.html, avec
+mode=bloquant ou mode=fermable :
+- bloquant (aucune classe liée, école non résolue) : sans bouton de fermeture,
+  le prof ne peut pas répondre aux missions, il doit se faire associer à sa
+  classe dans l'ENT puis se reconnecter ;
+- fermable (lié à la rubrique de son école en attendant) : bouton Fermer, et
+  plus rouvert au chargement des pages suivantes de la session du navigateur. ]
+<dialog id="prof_sans_classe" class="choisir-classes-ent" aria-labelledby="prof_sans_classe_titre">
+	<h2 id="prof_sans_classe_titre"><:thematique:prof_sans_classe_titre:></h2>
+	[(#ENV{mode}|=={fermable}|oui)<p><:thematique:prof_sans_classe_explication_ecole:></p>]
+	[(#ENV{mode}|=={fermable}|non)<p><:thematique:prof_sans_classe_explication:></p>]
+	<p><a class="choisir-classes-ent-introuvable" href="https://usages.blogs.laclasse.com/tutoriels/administrateur-ent/groupes-dutilisateurs/ecole-1d-associer-un-enseignant-a-sa-classe/" target="_blank" rel="noopener"><:thematique:prof_sans_classe_tuto:></a></p>
+	<form method="dialog" class="boutons">
+		<a class="choisir-classes-ent-introuvable" href="mailto:info@laclasse.com"><:thematique:prof_sans_classe_aide{email=info@laclasse.com}:></a>
+		[(#ENV{mode}|=={fermable}|oui)<button type="submit" class="bouton-lisere"><:thematique:fermer:></button>]
+	</form>
+</dialog>
+[(#ENV{mode}|=={fermable}|non)
+<INCLURE{fond=noisettes/inc/dialog_bloquant, id=prof_sans_classe}>
+]
+[(#ENV{mode}|=={fermable}|oui)
+<script>
+(function () {
+	var dialog = document.getElementById('prof_sans_classe');
+	if (!dialog || typeof dialog.showModal !== 'function') {
+		return;
+	}
+	// sessionStorage peut être indisponible (navigation privée, stockage bloqué) :
+	// la pop-up est alors simplement rouverte à chaque page.
+	var cle = 'prof_sans_classe_ferme';
+	try {
+		if (sessionStorage.getItem(cle)) {
+			return;
+		}
+	} catch (e) {}
+	dialog.addEventListener('close', function () {
+		try {
+			sessionStorage.setItem(cle, '1');
+		} catch (e) {}
+	});
+	dialog.showModal();
+})();
+</script>
+]

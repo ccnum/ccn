@@ -86,13 +86,30 @@ refaire toute la mise en page. */
 		--font-size2: 14px;
 	}
 
-	#sidebar {
+	/* Plein écran sous le menu haut : la hauteur de bureau (100vh moins menu
+	haut, menu bas et marges) ne laissait que quelques lignes en paysage.
+	dvh : hauteur réellement visible, barre d'adresse mobile déduite. */
+	#sidebar, .hasSidebarExpanded #sidebar {
 		width: 100vw;
 		right: 0;
+		top: var(--header-height);
+		height: calc(100vh - var(--header-height));
+		height: calc(100dvh - var(--header-height));
 	}
 
-	.hasSidebarExpanded #sidebar {
-		width: 100vw;
+	.bloc_article {
+		height: calc(100vh - var(--header-height));
+		height: calc(100dvh - var(--header-height));
+	}
+
+	/* Pas de colonne latérale en plein écran : l'écart qui l'en sépare
+	laissait une bande de fond à droite. */
+	#sidebar_content {
+		gap: 0;
+	}
+
+	#sidebar_main_around, .hasSidebarExpanded #sidebar_main_around {
+		width: 100%;
 	}
 
 	#menu_bas {
@@ -125,11 +142,11 @@ refaire toute la mise en page. */
 	}
 }
 
-/* Petit mobile : le menu haut (logo + année + utilisateur + aide, ~760px)
-débordait de la page. On garde une seule ligne (hauteur --header-height dont
+/* Mobile : le menu haut (logo + année + utilisateur + aide, ~760px)
+déborde de la page. On garde une seule ligne (hauteur --header-height dont
 dépend le reste de la mise en page) en ne gardant que les icônes : les
 libellés (.menu_haut_libelle) restent dans le DOM pour les lecteurs d'écran. */
-@media screen and (max-width: 480px) {
+@media screen and (max-width: 768px) {
 	#menu_haut .menu_haut_libelle {
 		position: absolute;
 		width: 1px;

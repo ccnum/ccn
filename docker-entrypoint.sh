@@ -278,6 +278,16 @@ DISPLAY_ERRORS="Off"
 if [ "${SPIP_DEBUG:-false}" = true ]; then
 	DISPLAY_ERRORS="On"
 fi
+# Période de test : tous les e-mails (facteur) partent vers SPIP_TEST_EMAIL_DEST
+# au lieu de leurs destinataires. Rien n'est écrit si la variable est vide : une
+# constante _TEST_EMAIL_DEST vide bloquerait tous les envois, ce qu'une ligne
+# vide recopiée de .env.example ne doit pas déclencher. Apostrophes et
+# antislashs retirés, la valeur étant écrite dans une chaîne PHP.
+TEST_EMAIL_DEST_DEFINE=""
+if [ -n "${SPIP_TEST_EMAIL_DEST:-}" ]; then
+	TEST_EMAIL_DEST=$(printf '%s' "${SPIP_TEST_EMAIL_DEST}" | tr -d "'\\\\")
+	TEST_EMAIL_DEST_DEFINE="define('_TEST_EMAIL_DEST', '${TEST_EMAIL_DEST}');"
+fi
 rm -rf config/mes_options.php
 /bin/cat << MAINEOF > config/mes_options.php
 <?php
@@ -313,6 +323,8 @@ define('_CCN_PROJET_ACTIVE', '${CCN_PROJET_ACTIVE:-true}' !== 'false');
 define('_CCN_CIOIDC_LOG_COMPLET', '${CCN_CIOIDC_LOG_COMPLET:-true}' !== 'false');
 // formulaires d'envoi de fichiers remplacés par un message (cf plugins/projets/ccn/ccn_pipelines.php)
 define('_CCN_UPLOADS_SUSPENDUS', '${CCN_UPLOADS_SUSPENDUS:-false}' === 'true');
+// période de test : e-mails redirigés vers SPIP_TEST_EMAIL_DEST (plugin facteur)
+${TEST_EMAIL_DEST_DEFINE}
 ?>
 MAINEOF
 chown www-data:www-data config/mes_options.php

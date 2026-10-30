@@ -7,11 +7,16 @@
 	<meta name="description" content="Déployer les sites CCN : image Docker erasme/spip-ccn, variables d'environnement, gestion des versions et chart Helm.">
 	<link rel="icon" href="assets/logo.png">
 	<link rel="stylesheet" href="assets/style.css">
+	<script src="assets/search.js" defer></script>
 </head>
 <body>
 <div class="layout">
 	<aside class="sidebar">
 		<a class="brand" href="index.html"><img src="assets/logo.png" alt=""><span>CCN<small>Documentation technique</small></span></a>
+		<div class="search" role="search">
+			<input type="search" id="search-input" placeholder="Rechercher…" aria-label="Rechercher dans la documentation" autocomplete="off" spellcheck="false">
+			<div id="search-results" class="search-results" hidden></div>
+		</div>
 		<nav>
 			<ul>
 				<li><a href="index.html">Présentation</a></li>
@@ -68,6 +73,7 @@ docker-compose up</code></pre>
 					<tr><td><code>SPIP_FACTEUR_SMTP_HOST</code>, <code>SPIP_FACTEUR_SMTP_PORT</code>, <code>SPIP_FACTEUR_SMTP_SECURE</code></td><td>Serveur SMTP d’envoi des e-mails (plugin facteur) ; <code>SPIP_FACTEUR_SMTP_HOST</code> bascule l’envoi en SMTP, <code>SPIP_FACTEUR_SMTP_SECURE</code> vaut <code>non</code>, <code>tls</code> ou <code>ssl</code>.</td></tr>
 					<tr><td><code>SPIP_FACTEUR_SMTP_USERNAME</code>, <code>SPIP_FACTEUR_SMTP_PASSWORD</code></td><td>Identifiants SMTP ; un identifiant renseigné active l’authentification. Le mot de passe passe par le gestionnaire de secrets en production.</td></tr>
 					<tr><td><code>SPIP_FACTEUR_FROM_EMAIL</code>, <code>SPIP_FACTEUR_FROM_NOM</code></td><td>Adresse et nom de l’expéditeur des e-mails.</td></tr>
+					<tr><td><code>SPIP_TEST_EMAIL_DEST</code></td><td>Période de test : tous les e-mails partent vers cette adresse (ou ces adresses, séparées par des virgules) au lieu de leurs destinataires, copies comprises. Écrite dans <code>config/mes_options.php</code> comme constante <code>_TEST_EMAIL_DEST</code> du plugin facteur, seulement si elle est renseignée : vide, les envois sont normaux. À vider avant l’ouverture aux classes.</td></tr>
 					<tr><td><code>CCN_PROJET_ACTIVE</code></td><td><code>false</code> pour un projet archivé, qui ne repart pas d’une année sur l’autre : plus de création automatique de la structure de rentrée, et seuls les webmestres peuvent se connecter via l’ENT.</td></tr>
 				</tbody>
 			</table>

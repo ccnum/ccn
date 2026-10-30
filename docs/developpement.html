@@ -7,11 +7,16 @@
 	<meta name="description" content="Développer sur les plugins CCN : environnement ddev, qualité de code, lints CI, pièges SPIP et conventions de commit.">
 	<link rel="icon" href="assets/logo.png">
 	<link rel="stylesheet" href="assets/style.css">
+	<script src="assets/search.js" defer></script>
 </head>
 <body>
 <div class="layout">
 	<aside class="sidebar">
 		<a class="brand" href="index.html"><img src="assets/logo.png" alt=""><span>CCN<small>Documentation technique</small></span></a>
+		<div class="search" role="search">
+			<input type="search" id="search-input" placeholder="Rechercher…" aria-label="Rechercher dans la documentation" autocomplete="off" spellcheck="false">
+			<div id="search-results" class="search-results" hidden></div>
+		</div>
 		<nav>
 			<ul>
 				<li><a href="index.html">Présentation</a></li>
@@ -24,11 +29,11 @@
 				<li><a href="developpement.html" aria-current="page">Développement</a>
 					<ul class="sub">
 						<li><a href="#local">Environnement local</a></li>
-						<li><a href="#qualite">Qualité de code</a></li>
 						<li><a href="#lint">Lints CI</a></li>
 						<li><a href="#tests">Tests</a></li>
 						<li><a href="#pieges">Pièges SPIP</a></li>
 						<li><a href="#depannage">Dépannage</a></li>
+						<li><a href="#documentation">Documentation</a></li>
 						<li><a href="#commits">Commits</a></li>
 					</ul>
 				</li>
@@ -60,14 +65,6 @@ ddev launch    <span class="c"># ouvre https://ccn.ddev.site</span></code></pre>
 		<p>Après une modification de squelette, si le comportement semble périmé, videz le cache SPIP du site concerné :</p>
 <pre><code>rm -rf sites/&lt;site&gt;.ddev.site/tmp/cache/*</code></pre>
 
-		<h2 id="qualite">Qualité de code</h2>
-		<p>À lancer depuis le dossier d’un plugin, par exemple <code>plugins/projets/thematique/</code> :</p>
-<pre><code>composer check-cs          <span class="c"># Easy Coding Standard : vérifie le style</span>
-composer fix-cs            <span class="c"># corrige le style automatiquement</span>
-composer rector-dry-run    <span class="c"># simule les migrations Rector</span>
-composer rector            <span class="c"># applique les migrations Rector</span>
-vendor/bin/phpstan analyse <span class="c"># analyse statique (niveau dans phpstan.neon.dist)</span></code></pre>
-
 		<h2 id="lint">Lints CI</h2>
 		<p>Le workflow <code>.github/workflows/lint.yml</code> s’exécute avant chaque build Docker (<code>dev</code> et <code>main</code>) et <strong>bloque la publication de l’image</strong> en cas d’échec. Ils couvrent les plugins <code>thematique</code>, <code>fictions</code>, <code>petitfablab</code>, <code>cadavrexquis</code> et <code>ccn</code>, ainsi que cette documentation.</p>
 		<div class="table-wrap">
@@ -92,7 +89,7 @@ vendor/bin/phpstan analyse <span class="c"># analyse statique (niveau dans phpst
 
 		<h2 id="pieges">Pièges SPIP</h2>
 
-		<h3><code>#SET{var, [(...)]}</code> casse la sortie</h3>
+		<h3 id="set-var-casse-la-sortie"><code>#SET{var, [(...)]}</code> casse la sortie</h3>
 		<p><code>[( )]</code> est la syntaxe du bloc <strong>conditionnel</strong>, pas un simple emballage de valeur. Utilisé comme valeur d’un <code>#SET</code>, il n’affecte rien : le résultat est recraché dans la page avec une accolade en trop, sans erreur PHP, ce qui peut corrompre du JSON ou du HTML.</p>
 <pre><code><span class="c"># Faux : casse la sortie</span>
 #SET{id_rubrique, [(#VAL{ressources}|thematique_id_rubrique_a_mot)]}
@@ -101,7 +98,7 @@ vendor/bin/phpstan analyse <span class="c"># analyse statique (niveau dans phpst
 #SET{id_rubrique, #VAL{ressources}|thematique_id_rubrique_a_mot}</code></pre>
 		<p>Les crochets ne servent que pour un test ou un texte conditionnel : <code>[(#GET{x}|=={y}|oui) texte]</code>.</p>
 
-		<h3>Item de langue comme argument de balise</h3>
+		<h3 id="item-de-langue-comme-argument-de-balise">Item de langue comme argument de balise</h3>
 		<p><code>&lt;:module:cle:&gt;</code> n’est accepté ni comme argument d’un <code>#FORMULAIRE_XXX{...}</code>, ni comme valeur d’un <code>#SET{...}</code> : le texte traduit s’affiche suivi d’une accolade orpheline, et l’argument n’est jamais transmis.</p>
 <pre><code><span class="c"># Faux : « Libellé} » s’affiche, le formulaire ne reçoit rien</span>
 #SET{label, &lt;:thematique:label_xxx:&gt;}
@@ -115,7 +112,7 @@ vendor/bin/phpstan analyse <span class="c"># analyse statique (niveau dans phpst
 			<p>Dans les deux cas, le squelette compile sans erreur. <strong>Testez toujours le rendu réel</strong> de la page ou de l’endpoint concerné (par exemple <code>?page=json&amp;mode=projet</code>), pas seulement la compilation.</p>
 		</div>
 
-		<h3>Commentaires <code>(#REM)</code></h3>
+		<h3 id="commentaires-rem">Commentaires <code>(#REM)</code></h3>
 		<p>Le texte d’un <code>[(#REM) ...]</code> est compilé comme du squelette : un <code>]</code> le ferme trop tôt, une balise mal formée casse tout le squelette. Citez les balises sans <code>#</code> (<code>CACHE{0}</code>), les boucles sans <code>&lt;</code> (<code>BOUCLE_x</code>), les items de langue sans <code>&lt;: :&gt;</code>. Le code désactivé se supprime : il reste dans l’historique git.</p>
 
 		<h2 id="depannage">Dépannage</h2>
@@ -132,6 +129,10 @@ vendor/bin/phpstan analyse <span class="c"># analyse statique (niveau dans phpst
 				</tbody>
 			</table>
 		</div>
+
+		<h2 id="documentation">Documentation</h2>
+		<p>Ces pages sont du HTML statique écrit à la main dans <code>docs/</code>, publié tel quel sur GitHub Pages, sans étape de build. Une modification de code qui change un comportement documenté met à jour la page concernée dans le même commit. Une nouvelle page reprend la barre latérale des autres et y est ajoutée partout.</p>
+		<p>La recherche (<code>docs/assets/search.js</code>) n’utilise pas d’index : au premier clic dans le champ, elle télécharge les pages listées dans la barre latérale et les découpe en sections, une par titre <code>h2</code> ou <code>h3</code>. Une nouvelle page ou section est donc cherchable dès sa publication, à condition que chaque titre ait un <code>id</code> : c’est l’ancre du lien vers le résultat. Accents et majuscules sont ignorés, tous les mots saisis doivent être présents ; <kbd>/</kbd> place le curseur dans le champ. Elle ne marche pas en ouvrant un fichier depuis le disque : servir le dossier, par exemple avec <code>python3 -m http.server -d docs</code>.</p>
 
 		<h2 id="commits">Conventions de commit</h2>
 		<p>Format <code>type(scope): message</code>, en français. Le scope est le nom du plugin concerné.</p>

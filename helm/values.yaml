@@ -28,6 +28,7 @@ spip:
     DUMP_MEDIA: ""
     DUMP_DB: ""
     CCN_UPLOADS_SUSPENDUS: "false"  # "true" : envoi de fichiers suspendu (faille PHP multipart)
+    SPIP_TEST_EMAIL_DEST: ""  # période de test : tous les e-mails partent vers cette adresse
     #SPIP_VERSION_SITE: "fictions" # is not enabled will used thematique plugin
 
 ingress:

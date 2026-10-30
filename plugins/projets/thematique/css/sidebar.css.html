@@ -747,6 +747,9 @@ li a, li a:hover {
 .popup .editer_fichier_upload label {display: none;}
 
 .portfolio {
+	display: flex;
+	flex-direction: column;
+	gap: 11px;
 	text-align: left;
 	padding: 0;
 	font-size: 12px;
@@ -760,6 +763,11 @@ li a, li a:hover {
 
 .portfolio:hover {
 	background: #DEDEDE
+}
+
+#documents_portfolio,
+#documents_portfolio:hover {
+	background: transparent;
 }
 
 .portfolio_logo_around {
@@ -790,8 +798,26 @@ li a, li a:hover {
 		display: flex;
 		flex-wrap: wrap;
 		align-items: stretch;
+		background: #fff;
+		border: 1px solid #ccc;
+		border-radius: 4px;
+		&:hover {
+			background-color: var(--background-color-hover);
+			color: var(--color-hover);
+			> .spip_document_meta {
+				color: var(--color-hover);
+			}
+		}
 		> .bloc_modifier_mdp_video {
 			flex: 0 0 100%;
+			display: flex;
+			justify-content: center;
+			padding: 0 10px 12px;
+			box-sizing: border-box;
+			> a {
+				font-weight: bold;
+				text-decoration: underline;
+			}
 		}
 		> a,
 		> .spip_document_ {
@@ -864,7 +890,7 @@ li a, li a:hover {
 	/* border-box : sinon le padding s'ajoute au flex-basis 100% (cf .portfolio
 	   ci-dessus) et pousse "Télécharger" hors du cadre à droite. */
 	box-sizing: border-box;
-	padding: 0 10px 12px;
+	padding: 12px 10px 12px;
 	font-size: 12px;
 	color: var(--color-default);
 }
@@ -879,19 +905,26 @@ li a, li a:hover {
 	text-align: left;
 }
 
+.spip_document_nom img {
+	width: 2em;
+	height: 1.4em;
+	margin-right: 5px;
+	vertical-align: middle;
+}
+
 .spip_document_taille {
 	flex: 0 0 auto;
-	opacity: .7;
+	color: #666;
 }
 
 .spip_document_telecharger {
 	flex: 0 0 auto;
-	color: var(--color-default);
+	color: #666;
 	text-decoration: underline;
 	font-weight: bold;
 }
 .spip_document_telecharger:hover {
-	color: var(--color-tonic);
+	color: #666;
 }
 
 ul#forum {
@@ -1645,6 +1678,12 @@ limité à 2 lignes, avec points de suspension. */
 
 .popup_consignes  .ctabs-content {
 	background-color: transparent;
+}
+
+.popup_consignes #mission-tabs .ctabs-panel > .fond-bleu-contenu {
+	margin: -20px -20px 0;
+	padding: 20px;
+	background-color: var(--color-background-tabs);
 }
 
 .footer-description {
