@@ -2,6 +2,10 @@
 <div id="documents_portfolio" class="portfolio">
 	<BOUCLE_documents_joints(DOCUMENTS){vu=non}{id_article}>
 		<div class="spip_documents">
+			[(#REM) Un SET survit d'un tour de boucle à l'autre : sans remise à zéro,
+			l'iframe d'une vidéo Vimeo affichait "modifier le mot de passe" sur tous
+			les documents suivants. ]
+			#SET{embed_video, ''}
 			[(#VIMEO_STATUT|in_array{#LISTE{en_attente,envoi,transcodage}}|oui)
 				#SET{vimeo_en_cours, oui}
 			]
