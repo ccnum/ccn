@@ -1,7 +1,8 @@
 [(#REM)
-Bouton Publier ou Dépublier d'un jalon, affiché en tête (à côté de Modifier)
-et en bas de onglet_description_jalon.html. Publier n'apparaît que si le
-jalon a un texte. Paramètre attendu : id_article.
+Bouton Publier ou Dépublier d'un jalon, à gauche des réactions en tête de
+onglet_description_jalon.html, même style que le bouton Modifier (oeil ou
+oeil barré à la place du crayon). Publier n'apparaît que si le jalon a un
+texte. Paramètre attendu : id_article.
 Appelle l'action thematique_statut_article (cf changerStatutArticle dans
 controleurs.js), réservée à qui peut modifier l'article.
 ]
@@ -9,20 +10,30 @@ controleurs.js), réservée à qui peut modifier l'article.
 [(#AUTORISER{modifier,article,#ID_ARTICLE}|oui)
 	[(#STATUT|=={publie}|oui)
 		#SET{statut_vise, prop}
+		#SET{icone, oeil-barre}
 		#SET{libelle, #VAL{thematique:bouton_depublier_article}|_T}
 	]
 	[(#STATUT|=={publie}|non)
 		[(#TEXTE|oui)
 			#SET{statut_vise, publie}
+			#SET{icone, oeil}
 			#SET{libelle, #VAL{thematique:bouton_publier_article}|_T}
 		]
 	]
+	[(#REM) URL calculée par SET nu : passée dans les blocs conditionnels
+	imbriqués, la balise de l'id article dans l'argument sortait en clair
+	(arg non numérique, action refusée en 403). ]
+	#SET{arg_action, #ID_ARTICLE|concat{-,#GET{statut_vise}}}
+	#SET{url_action, #URL_ACTION_AUTEUR{thematique_statut_article,#GET{arg_action}}}
 	[(#GET{statut_vise}|oui)
 		<button type="button"
-			class="bouton-lisere"
-			data-url="[(#URL_ACTION_AUTEUR{thematique_statut_article,#ID_ARTICLE-#GET{statut_vise}})]"
+			class="bouton-publication-jalon btn-reset"
+			data-url="#GET{url_action}"
 			onclick="changerStatutArticle(event)"
-		>#GET{libelle}</button>
+		>
+			<span class="icon icon-#GET{icone}"></span>
+			<div>#GET{libelle}</div>
+		</button>
 	]
 ]
 </BOUCLE_jalon_publication>

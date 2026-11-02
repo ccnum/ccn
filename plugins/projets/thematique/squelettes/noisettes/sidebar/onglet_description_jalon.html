@@ -1,14 +1,31 @@
-[(#REM) Modifier, Publier/Dépublier et réactions sur une même ligne (cf .barre-actions-article). ]
-<div class="barre-actions-article">
-    <div class="bouton-modifier-container">
-        <INCLURE{fond=noisettes/sidebar/inc/bouton_modifier_article, id_article=#ID_ARTICLE, type_objet=#ENV{est_debut}|=={true}|?{cap_sur_l_annee,la_rencontre}, classe=bouton-lisere} />
-        <INCLURE{fond=noisettes/sidebar/inc/boutons_publication_jalon, id_article=#ID_ARTICLE} />
-    </div>
-    <div class="sidebar-reaction-container">
-        [(#INCLURE{fond=inclure/favoris_ccn, objet=article, id_objet=#ID_ARTICLE, ajax})]
-    </div>
-</div>
 <BOUCLE_jalon_texte(ARTICLES){id_article=#ID_ARTICLE}{tout}>
+    #SET{type_objet_jalon, #ENV{est_debut}|=={true}|?{cap_sur_l_annee,la_rencontre}}
+    #SET{libelle_rediger, #VAL{thematique:rediger}|_T}
+    [(#REM) Texte rempli : Modifier à gauche, Publier ou Dépublier puis
+    réactions à droite. ]
+    [(#TEXTE|oui)
+        <div class="barre-actions-article">
+            <div class="bouton-modifier-container">
+                <INCLURE{fond=noisettes/sidebar/inc/bouton_modifier_article, id_article=#ID_ARTICLE, type_objet=#GET{type_objet_jalon}} />
+            </div>
+            <div class="barre-actions-jalon-droite">
+                <INCLURE{fond=noisettes/sidebar/inc/boutons_publication_jalon, id_article=#ID_ARTICLE} />
+                <div class="sidebar-reaction-container">
+                    [(#INCLURE{fond=inclure/favoris_ccn, objet=article, id_objet=#ID_ARTICLE, ajax})]
+                </div>
+            </div>
+        </div>
+    ]
+    [(#TEXTE|non)
+        <div class="barre-actions-article">
+            <div class="barre-actions-jalon-droite">
+                <INCLURE{fond=noisettes/sidebar/inc/bouton_modifier_article, id_article=#ID_ARTICLE, type_objet=#GET{type_objet_jalon}, classe=bouton-lisere, libelle=#GET{libelle_rediger}} />
+                <div class="sidebar-reaction-container">
+                    [(#INCLURE{fond=inclure/favoris_ccn, objet=article, id_objet=#ID_ARTICLE, ajax})]
+                </div>
+            </div>
+        </div>
+    ]
     <div class="fond-bleu-contenu">
         <div class="sidebar_bubble">
             [(#TEXTE|oui)
@@ -24,11 +41,5 @@
                 <INCLURE{fond=noisettes/inc/bloc_documents, id_article} />
             </div>
         </div>
-        <div style="display: flex; justify-content: end;">
-            <div style="width: fit-content;">
-                <INCLURE{fond=noisettes/sidebar/inc/boutons_publication_jalon, id_article=#ID_ARTICLE} />
-            </div>
-        </div>
     </div>
-    
 </BOUCLE_jalon_texte>
