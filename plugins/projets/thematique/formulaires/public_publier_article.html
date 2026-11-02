@@ -1,3 +1,11 @@
+[(#REM)
+Racine div.ajax propre au formulaire : il contient le div.ajax de l'envoi de
+document, et la réponse ajax de SPIP (ajaxCallback.js, formulaire_dyn_ajax)
+attend alors un div.ajax en tête pour remplacer le formulaire. Sans lui, une
+erreur de saisie emportait le div.ajax parent (publier_article.html) : le
+renvoi suivant partait hors ajax et affichait la page brute.
+]
+<div class="ajax formulaire-publier-article-ajax">
 <div class="formulaire_spip formulaire_public_publier_article">
 	[<p class="reponse_formulaire reponse_formulaire_ok">(#ENV*{message_ok})</p>]
 	[<p class="reponse_formulaire reponse_formulaire_erreur" role="alert">(#ENV*{message_erreur})</p>]
@@ -142,4 +150,5 @@
 			</div>
 		</form>
 	</div>
-	
+</div>
+</div>

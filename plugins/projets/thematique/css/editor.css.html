@@ -315,7 +315,15 @@ p.boutons:has(input[type="submit"]) {
 	min-height: 0;
 }
 
-.ajax.publier-article-form-wrapper {
+.publier-article-form-wrapper {
+	height: 100%;
+}
+
+/* Racine div.ajax du formulaire et conteneur que SPIP pose autour
+   (formulaire_setContainer) : même hauteur que .page-inner, pour que les
+   deux colonnes gardent leur ascenseur propre. */
+.page-inner > .ajax-form-container,
+.formulaire-publier-article-ajax {
 	height: 100%;
 }
 
