@@ -111,11 +111,12 @@
 						return;
 					}
 					var val = $li.data('value');
-					var text = $li.html();
-					// update visible label — first non-icon span
-					$toggle.find('span').not('.icon').first().html(text);
-					$options.find('.select-option').removeClass('actif');
-					if(rememberChoice) {
+					// Seul un ".save-choice" (année scolaire) affiche le choix fait
+					// dans son bouton ; les menus d'action (« Publier »...) gardent
+					// leur libellé fixe.
+					if (rememberChoice) {
+						$toggle.find('span').not('.icon').first().html($li.html());
+						$options.find('.select-option').removeClass('actif');
 						$li.addClass('actif');
 					}
 					$sel.removeClass('open');
