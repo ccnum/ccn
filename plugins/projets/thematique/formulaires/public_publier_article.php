@@ -307,6 +307,14 @@ function formulaires_public_publier_article_verifier_dist(
 	}
 
 	$erreurs = formulaires_editer_objet_verifier('article', $id_article_poste ?: 'new', ['titre', 'texte']);
+	// formulaires_editer_objet_verifier() n'écarte que la chaîne vide : un
+	// titre ou un texte fait seulement d'espaces, retours à la ligne,
+	// tabulations, espaces insécables ou de largeur nulle est aussi refusé.
+	foreach (['titre', 'texte'] as $champ) {
+		if (empty($erreurs[$champ]) && preg_replace('/[\s\p{Z}\x{200B}\x{FEFF}]+/u', '', (string) _request($champ)) === '') {
+			$erreurs[$champ] = _T('info_obligatoire');
+		}
+	}
 	if (public_publier_article_est_ressource($type_article, $id_article_poste)
 		&& thematique_id_rubrique_ressources()
 		&& !public_publier_article_rubrique_ressource()

@@ -35,6 +35,24 @@ function initCompteurCaracteres() {
 }
 
 /**
+ * Titre ou texte fait seulement d'espaces, retours à la ligne, tabulations… :
+ * vidé au clic sur "Enregistrer", avant la validation du navigateur, pour
+ * que l'attribut required affiche sa bulle native ("Veuillez renseigner ce
+ * champ") comme pour un champ vide. Le clic précède la validation, y compris
+ * pour Entrée dans le titre (clic simulé sur le bouton). Même règle côté
+ * serveur dans formulaires_public_publier_article_verifier_dist().
+ */
+jQuery(document).on("click", "#bouton-enregistrer-article", function () {
+    ["titre", "texte"].forEach(id => {
+        const champ = this.form && this.form.elements[id]
+        if (champ && champ.value !== "" && /^[\s​﻿]*$/.test(champ.value)) {
+            champ.value = ""
+            champ.dispatchEvent(new Event("input", { bubbles: true }))
+        }
+    })
+})
+
+/**
  * Désactive le bouton "Publier" dès l'envoi du formulaire
  * "#formulaire_publier_article", pour qu'un double clic ne crée pas deux
  * articles : le formulaire ajax SPIP (ajaxForm, cf
