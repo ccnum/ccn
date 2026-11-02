@@ -65,6 +65,20 @@
 					]
 				]
 
+				[(#REM) Prof de plusieurs classes qui répond à une mission : classe
+				pour laquelle il répond, cf classes_choix dans le charger. Pas de
+				name : rouvre la fenêtre sur la réponse de la classe choisie. ]
+				<B_classes_choix>
+				<div class="editer editer_classe_reponse">
+					<label for="classe_reponse"><:thematique:repondre_pour_la_classe:></label>
+					<select id="classe_reponse" onchange="createReponse([(#ENV{id_consigne_choix}|intval)], parseInt(this.value, 10));">
+						<BOUCLE_classes_choix(DATA){source tableau, #ENV{classes_choix}}>
+						<option value="#CLE"[(#CLE|=={#ENV{id_rubrique}}|oui) selected="selected"]>[(#CLE|classe_icone) ][(#VALEUR|entites_html)]</option>
+						</BOUCLE_classes_choix>
+					</select>
+				</div>
+				</B_classes_choix>
+
 				<div class="editer-ligne">
 					<div class="editer editer_titre obligatoire[ (#ENV**{erreurs}|table_valeur{titre}|oui)erreur]">
 						<label for="titre"><:info_titre:></label>

@@ -43,9 +43,10 @@
 			classe (bouton "Répondre"). ]
 			#SET{classes, #SESSION{id_auteur}|thematique_classes_auteur}
 			#SET{classe_active, #SESSION{id_auteur}|filtre_auteur_vers_classe}
-			[(#REM) Désactivé tant que _THEMATIQUE_CHOIX_CLASSE est faux, cf
-			thematique_options.php. ]
-			#SET{afficher_choix, #GET{classes}|count|>{1}|et{#CONST{_THEMATIQUE_CHOIX_CLASSE}}}
+			[(#REM) Compte hors SSO seulement, sauf _THEMATIQUE_CHOIX_CLASSE vrai,
+			cf thematique_choix_classe_possible(). ]
+			#SET{choix_possible, #VAL|thematique_choix_classe_possible}
+			#SET{afficher_choix, #GET{classes}|count|>{1}|et{#GET{choix_possible}}}
 			<B_choix_classe>
 			<li class="select-option-titre"><:thematique:rediger_pour_la_classe:></li>
 			<BOUCLE_choix_classe(RUBRIQUES){id_rubrique IN #GET{classes}}{par id_rubrique}{tout}{si #GET{afficher_choix}}>

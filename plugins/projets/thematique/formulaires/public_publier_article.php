@@ -111,6 +111,28 @@ function formulaires_public_publier_article_charger_dist(
 		}
 	}
 
+	// Réponse à une mission (création, ou édition depuis le bouton "Modifier")
+	// par un prof rattaché à plusieurs classes, connecté hors SSO (cf
+	// thematique_classes_choix_reponse) : menu de la classe pour laquelle il
+	// répond. Changer de classe rouvre la fenêtre sur la réponse de cette
+	// classe (ou une nouvelle), cf createReponse() : on ne déplace pas une
+	// réponse existante d'une classe à l'autre. La rubrique reste vérifiée en
+	// _verifier_dist/_traiter_dist (thematique_auteur_peut_creer_dans_rubrique).
+	$valeurs['classes_choix'] = [];
+	$valeurs['id_consigne_choix'] = 0;
+	if ($type_article === 'travail_en_cours') {
+		$id_consigne_choix = $valeurs['id_article']
+			? intval(sql_getfetsel('id_consigne', 'spip_articles', 'id_article=' . intval($valeurs['id_article'])))
+			: intval($id_consigne);
+		$classes_choix = thematique_classes_choix_reponse();
+		if ($id_consigne_choix && thematique_consigne_valide($id_consigne_choix)
+			&& isset($classes_choix[intval($valeurs['id_rubrique'])])
+		) {
+			$valeurs['classes_choix'] = $classes_choix;
+			$valeurs['id_consigne_choix'] = $id_consigne_choix;
+		}
+	}
+
 	// Nettoyage des documents orphelins du temp ID -id_auteur : les docs
 	// uploadés lors d'une session précédente et non soumis restent liés à
 	// ce pseudo-id (négatif) et réapparaissent à l'ouverture suivante du

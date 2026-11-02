@@ -36,10 +36,13 @@ if (!defined('_THEMATIQUE_UID_WEBMESTRES')) {
 }
 
 // Choix de la classe active d'un prof rattaché à plusieurs classes (menu haut,
-// action thematique_choisir_classe). Désactivé : l'ENT renvoie aussi les
-// anciennes classes d'un prof (ENTClassesGroupes n'a pas d'année), le menu en
-// listait donc qui ne participent pas au projet. Sans choix, la première classe
-// (par id) fait foi.
+// action thematique_choisir_classe, menu de la fenêtre de réponse à une
+// mission). Désactivé pour les comptes connectés par le SSO : l'ENT renvoie
+// aussi les anciennes classes d'un prof (ENTClassesGroupes n'a pas d'année), le
+// menu en listait donc qui ne participent pas au projet. Toujours possible pour
+// un compte connecté hors SSO, dont les classes sont attribuées à la main (cf
+// thematique_choix_classe_possible()). true : possible aussi pour le SSO. Sans
+// choix, la première classe (par id) fait foi.
 if (!defined('_THEMATIQUE_CHOIX_CLASSE')) {
 	define('_THEMATIQUE_CHOIX_CLASSE', false);
 }

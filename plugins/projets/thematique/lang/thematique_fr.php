@@ -365,6 +365,7 @@ return [
 	'repondre_modifier_posteriori'               => 'Vous pourrez toujours modifier votre réponse à postériori.',
 	'repondre_pas_encore_repondu'                => 'Oups ! Vous n’avez pas encore répondu à la mission proposée par l’intervenant-e.',
 	'repondre_poster_message'                    => 'N’hésitez pas à poster un message dans l’onglet « Discussion autour de la mission ».',
+	'repondre_pour_la_classe'                    => 'Je réponds pour la classe',
 	'repondre_publier'                           => 'Publier',
 	'repondre_voir_reponses_classes'             => 'Regardez les réponses des autres classes.',
 	'reponse'                                    => 'Réponse',

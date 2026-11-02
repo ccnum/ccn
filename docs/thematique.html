@@ -201,7 +201,7 @@
 		<h2 id="maintenance">Maintenance</h2>
 		<ul>
 			<li><strong>Classes vides</strong> (<code>ecrire/?exec=thematique_classes_vides</code>, menu Configuration, webmestres) : liste les rubriques de classe d’une année et supprime celles restées vides, par exemple créées à la connexion de comptes ENT hors projet.</li>
-			<li><strong>Classe active</strong> : un prof lié à plusieurs classes publie dans la première (par numéro de rubrique). Le menu de choix de la classe active existe mais est masqué (<code>_THEMATIQUE_CHOIX_CLASSE</code> à <code>false</code>), l’ENT renvoyant aussi les classes des années passées.</li>
+			<li><strong>Classe active</strong> : un prof lié à plusieurs classes publie par défaut dans la première (par numéro de rubrique). Connecté hors SSO (compte créé dans SPIP, classes attribuées à la main), il choisit sa classe dans le menu de son nom, en haut, et dans un menu déroulant de la fenêtre de réponse à une mission : changer de classe rouvre la fenêtre sur la réponse de cette classe, ou une nouvelle. Pour un compte ENT, ces menus restent masqués (<code>_THEMATIQUE_CHOIX_CLASSE</code> à <code>false</code>, voir <code>thematique_choix_classe_possible()</code>), l’ENT renvoyant aussi les classes des années passées.</li>
 		</ul>
 
 		<h2 id="edifice">Variante Edifice</h2>
