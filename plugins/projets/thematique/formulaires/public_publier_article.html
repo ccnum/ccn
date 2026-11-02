@@ -130,7 +130,8 @@
 			</div>
 			#SET{bouton_creation, #ENV{type_article}|thematique_texte_publication{bouton}}
 			<div id="bouton-container">
-				<button type="submit" id="bouton-enregistrer-article" class="bouton-lisere">
+				#SET{info_enregistrer, #VAL{thematique:enregistrer_jalon_vide_info}|_T}
+				<button type="submit" id="bouton-enregistrer-article" class="bouton-lisere[ (#ENV{jalon_texte_vide}|oui)tooltip]"[(#ENV{jalon_texte_vide}|oui) data-tip="[(#GET{info_enregistrer}|attribut_html)]"]>
 						[(#ENV{id_article}|oui)
 							<:thematique:enregistrer:>
 						]

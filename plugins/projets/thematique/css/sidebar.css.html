@@ -1898,6 +1898,17 @@ ailleurs, ex: le menu du bas). */
 	margin-top: 1rem;
 }
 
+/* Info au survol d'Enregistrer sur un jalon encore vide (cf .tooltip dans
+   menu.css) : calée sur le bord droit du bouton, lui-même collé à droite. */
+#bouton-enregistrer-article.tooltip {
+	position: relative;
+}
+#bouton-enregistrer-article.tooltip::after {
+	top: 0;
+	right: 0;
+	transform-origin: bottom right;
+}
+
 .reponses_intervenant {
 	display: flex;
 	gap: 1rem;

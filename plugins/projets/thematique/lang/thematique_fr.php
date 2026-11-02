@@ -106,6 +106,7 @@ return [
 	'echec_de_la_supression'                     => 'La suppression a échoué.',
 	'editer_votre_profil'                        => 'Éditer votre profil',
 	'enregistrer'                                => 'Enregistrer',
+	'enregistrer_jalon_vide_info'                => 'Le contenu sera rendu visible et les participants notifiés par mail',
 	'envie_de_reagir'                            => 'Envie de réagir, d’apporter ou de demander une précision ? Vous êtes au bon endroit !',
 	'envoyer_video'                              => 'Envoyer la vidéo',
 	'erreur_chargement_de'                       => 'Erreur lors du chargement de',

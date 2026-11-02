@@ -87,6 +87,10 @@ function formulaires_public_publier_article_charger_dist(
 				$valeurs['id_parent'] = thematique_id_rubrique_projet();
 			}
 			$valeurs['date'] = $article['date'];
+			// Jalon encore vide : l'enregistrer le publie pour la première
+			// fois (info au survol du bouton Enregistrer).
+			$valeurs['jalon_texte_vide'] = trim($article['texte']) === ''
+				&& thematique_article_est_jalon($article['id_article']);
 		}
 	} elseif ($id_consigne && thematique_consigne_valide($id_consigne)) {
 		// Sinon, si on répond à une consigne, chercher une éventuelle
