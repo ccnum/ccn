@@ -1,0 +1,68 @@
+# CCN — stack cible (SvelteKit / adapter-node / SQLite)
+#
+# Équivalent du `docker-compose.yml` du dépôt SPIP (`ccnum/ccn`) : le service `db`
+# (mariadb) disparaît — la base est un fichier SQLite monté dans le volume `data/`,
+# et le service `app` n'est plus un PHP/Apache mais `node build` (adapter-node).
+#
+#   docker compose up -d --build      # http://192.168.100.50:8890
+#   docker compose logs -f app
+#   docker compose down
+#
+# `data/` est un **bind mount** (pas un volume nommé) : c'est lui qui porte la base
+# SQLite, les documents (`data/media/`), les e-mails du transport mock
+# (`data/outbox/`) et le journal des notifications. Il est servi par l'utilisateur
+# `node` (uid 1000) dans le conteneur → préparer le dossier à l'hôte :
+#
+#   mkdir -p data/media && chown -R 1000:1000 data
+#
+# Les migrations Drizzle sont appliquées à la première ouverture de la base : un
+# volume `data/` vide se structure tout seul, il n'y a pas de job d'installation.
+
+services:
+  # Service applicatif : le site (SvelteKit, adapter-node).
+  app:
+    image: ccn-sveltekit:local
+    build:
+      context: .
+      target: runtime
+    restart: always
+    env_file:
+      - path: .env
+        required: false
+    environment:
+      # Le conteneur écoute toujours sur 3000 ; c'est le port publié qui change.
+      - HOST=0.0.0.0
+      - PORT=3000
+    ports:
+      - '${CCN_PUBLISHED_PORT:-8890}:3000'
+    volumes:
+      - ./data:/app/data
+    healthcheck:
+      test:
+        - CMD-SHELL
+        - node -e "fetch('http://localhost:3000/api/etat').then((r)=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"
+      interval: 30s
+      timeout: 10s
+      start_period: 20s
+      retries: 5
+
+  # Service de l'opérateur : migrations, ETL SPIP → SQLite, tâches de fond
+  # (rentrée, poubelle, noms d'auteurs du forum, classes vides), écrans de
+  # vérification. One-shot, hors du stack par défaut (profil `taches`).
+  #
+  #   docker compose run --rm taches                       # tâches de l'année
+  #   docker compose run --rm taches npm run db:migrate
+  #   docker compose run --rm taches npm run db:etl -- --source data/spip.sql
+  #   docker compose run --rm taches npm run verif:json
+  taches:
+    profiles: ['taches']
+    image: ccn-sveltekit:outilleur
+    build:
+      context: .
+      target: outilleur
+    restart: 'no'
+    env_file:
+      - path: .env
+        required: false
+    volumes:
+      - ./data:/app/data

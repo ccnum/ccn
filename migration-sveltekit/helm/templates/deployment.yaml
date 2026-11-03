@@ -1,0 +1,70 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}-{{ .Values.nameOverride | default "ccn-app" }}
+  labels:
+    app: {{ .Release.Name }}-ccn
+spec:
+  # Une seule réplica : la base est un fichier SQLite posé sur un PVC
+  # ReadWriteOnce. Plusieurs réplicas ouvriraient la même base en concurrence.
+  replicas: 1
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app: {{ .Release.Name }}-ccn
+  template:
+    metadata:
+      labels:
+        app: {{ .Release.Name }}-ccn
+    spec:
+      volumes:
+        - name: data
+          persistentVolumeClaim:
+            claimName: {{ .Release.Name }}-{{ .Values.pvc.name }}
+      containers:
+        - name: app
+          image: {{ .Values.app.image }}
+          imagePullPolicy: {{ .Values.app.imagePullPolicy | default "IfNotPresent" }}
+          ports:
+            - containerPort: {{ .Values.app.port | default 3000 }}
+              name: http
+              protocol: TCP
+          env:
+            - name: HOST
+              value: "0.0.0.0"
+            - name: PORT
+              value: {{ .Values.app.port | default 3000 | quote }}
+            {{- range $k, $v := .Values.app.env }}
+            - name: {{ $k }}
+              value: {{ $v | quote }}
+            {{- end }}
+            {{- if .Values.app.existingSecret }}
+            - name: CCN_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.app.existingSecret }}
+                  key: CCN_SECRET
+            {{- end }}
+          volumeMounts:
+            # Le même contrat que le bind mount Docker : base SQLite + media + outbox.
+            - mountPath: /app/data
+              name: data
+          readinessProbe:
+            httpGet:
+              path: /api/etat
+              port: http
+            initialSeconds: 15
+            periodSeconds: 20
+          livenessProbe:
+            httpGet:
+              path: /api/etat
+              port: http
+            initialSeconds: 40
+            periodSeconds: 30
+          resources:
+            requests:
+              cpu: "100m"
+              memory: "256Mi"
+            limits:
+              memory: "1Gi"

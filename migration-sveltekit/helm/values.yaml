@@ -1,0 +1,42 @@
+# Valeurs du chart CCN (stack cible SvelteKit + SQLite).
+# Équivalent du `values.yaml` du chart SPIP : le bloc `mariadb` disparaît, le bloc
+# `spip` devient `app`, et le PVC n’est plus monté sur /var/lib/mysql mais sur /app/data.
+
+nameOverride: "ccn-app"
+
+app:
+  image: "ccn-sveltekit:local"
+  imagePullPolicy: IfNotPresent
+  # Port d’écoute du conteneur (adapter-node) et port publié par le Service.
+  port: 3000
+  publishedPort: 8890
+  env:
+    CCN_DB_PATH: "data/ccn.sqlite"
+    CCN_MIGRATIONS_FOLDER: "drizzle"
+    CCN_MEDIA_RACINE: "data/media"
+    CCN_MAIL_TRANSPORT: "mock"
+    CCN_SITE_URL: "https://ccn.example.com"
+    CCN_NOM_SITE: "ontourne"
+    # Derrière un frontal TLS : self-origin calcule à partir des en-têtes du proxy.
+    PROTOCOL_HEADER: "x-forwarded-proto"
+    HOST_HEADER: "x-forwarded-host"
+    # Cookies de session `Secure` (vrai derrière un frontal TLS).
+    CCN_COOKIE_SECURE: "vrai"
+  # Secrets non mis en clair dans le chart : CCN_SECRET (signature du cookie de
+  # session), CCN_SMTP_* — à fournir par un Secret Kubernetes.
+  existingSecret: ""
+
+pvc:
+  name: "ccn-data"
+  storage: "2Gi"
+  storageClass: "standard"
+
+service:
+  name: "ccn-service"
+  type: "ClusterIP"
+
+ingress:
+  name: "ccn-ingress"
+  host: "ccn.example.com"
+  class: "nginx"
+  tls: false

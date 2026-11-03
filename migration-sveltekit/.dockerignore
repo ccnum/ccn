@@ -1,0 +1,13 @@
+# Ce que l'image de build ne doit pas voir (le `node_modules` de l'hôte est built
+# pour l'ABI de l'hôte, il n'a rien à faire dans l'image).
+node_modules
+build
+.svelte-kit
+data
+.git
+.env
+.env.*
+!.env.example
+c
+*.log
+.DS_Store

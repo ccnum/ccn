@@ -1,0 +1,24 @@
+# Surcharge « parité » : le même conteneur `app`, servi sur la base **réelle**
+# (miroir SQLite du dump SPIP 2026-08-11, importé par l'ETL) au lieu du jeu de
+# démonstration, sur un port dédié.
+#
+#   cd app
+#   CCN_PUBLISHED_PORT=8891 docker compose -f docker-compose.yml -f docker-compose.parite.yml up -d --build
+#   npm run verif:json -- --base http://192.168.100.50:8891
+#   npm run verif:listes -- --base http://192.168.100.50:8891
+#
+# La base réelle est produite par :
+#   npm run db:etl -- --source ../baseline/2026-08-11.sqlite
+# (avec CCN_DB_PATH=data/ccn-reel.sqlite), puis `export-spip-mysql.ts` pour que le
+# SPIP de référence (`baseline/`, port 8880) serve exactement les mêmes lignes.
+
+services:
+  app:
+    environment:
+      - CCN_DB_PATH=data/ccn-reel.sqlite
+      # Nom du site de l’instance de référence (`meta nom_site` du SPIP capturé) :
+      # sans cette égalité, les titres des flux RSS diffèrent par le nom du site.
+      - CCN_NOM_SITE=ontourne
+      - CCN_SITE_URL=http://192.168.100.50:8891
+      - CCN_TRUSTED_ORIGINS=http://192.168.100.50:8891,http://localhost:8891,http://127.0.0.1:8891
+      - CCN_ANNEE_SCOLAIRE=2025

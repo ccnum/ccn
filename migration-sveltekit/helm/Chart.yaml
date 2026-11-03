@@ -1,0 +1,9 @@
+apiVersion: v2
+name: ccn-sveltekit
+description: >
+  Helm chart de la stack cible CCN — SvelteKit 3 / Svelte 5 + Drizzle + SQLite.
+  Équivalent du chart `ccn-chart` (SPIP + MariaDB) sans MariaDB : la base est un
+  fichier SQLite posé sur le volume `data/`, avec les documents.
+type: application
+version: "1.0.0"
+appVersion: "sveltekit-3"
