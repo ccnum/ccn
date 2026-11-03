@@ -1,3 +1,11 @@
+[(#REM)
+Racine div.ajax propre au formulaire : il contient le div.ajax de l'envoi de
+document, et la réponse ajax de SPIP (ajaxCallback.js, formulaire_dyn_ajax)
+attend alors un div.ajax en tête pour remplacer le formulaire. Sans lui, une
+erreur de saisie emportait le div.ajax parent (publier_article.html) : le
+renvoi suivant partait hors ajax et affichait la page brute.
+]
+<div class="ajax formulaire-publier-article-ajax">
 <div class="formulaire_spip formulaire_public_publier_article">
 	[<p class="reponse_formulaire reponse_formulaire_ok">(#ENV*{message_ok})</p>]
 	[<p class="reponse_formulaire reponse_formulaire_erreur" role="alert">(#ENV*{message_erreur})</p>]
@@ -65,6 +73,20 @@
 					]
 				]
 
+				[(#REM) Prof de plusieurs classes qui répond à une mission : classe
+				pour laquelle il répond, cf classes_choix dans le charger. Pas de
+				name : rouvre la fenêtre sur la réponse de la classe choisie. ]
+				<B_classes_choix>
+				<div class="editer editer_classe_reponse">
+					<label for="classe_reponse"><:thematique:repondre_pour_la_classe:></label>
+					<select id="classe_reponse" onchange="createReponse([(#ENV{id_consigne_choix}|intval)], parseInt(this.value, 10));">
+						<BOUCLE_classes_choix(DATA){source tableau, #ENV{classes_choix}}>
+						<option value="#CLE"[(#CLE|=={#ENV{id_rubrique}}|oui) selected="selected"]>[(#CLE|classe_icone) ][(#VALEUR|entites_html)]</option>
+						</BOUCLE_classes_choix>
+					</select>
+				</div>
+				</B_classes_choix>
+
 				<div class="editer-ligne">
 					<div class="editer editer_titre obligatoire[ (#ENV**{erreurs}|table_valeur{titre}|oui)erreur]">
 						<label for="titre"><:info_titre:></label>
@@ -116,7 +138,8 @@
 			</div>
 			#SET{bouton_creation, #ENV{type_article}|thematique_texte_publication{bouton}}
 			<div id="bouton-container">
-				<button type="submit" id="bouton-enregistrer-article" class="bouton-lisere">
+				#SET{info_enregistrer, #VAL{thematique:enregistrer_jalon_vide_info}|_T}
+				<button type="submit" id="bouton-enregistrer-article" class="bouton-lisere[ (#ENV{jalon_texte_vide}|oui)tooltip]"[(#ENV{jalon_texte_vide}|oui) data-tip="[(#GET{info_enregistrer}|attribut_html)]"]>
 						[(#ENV{id_article}|oui)
 							<:thematique:enregistrer:>
 						]
@@ -127,4 +150,5 @@
 			</div>
 		</form>
 	</div>
-	
+</div>
+</div>

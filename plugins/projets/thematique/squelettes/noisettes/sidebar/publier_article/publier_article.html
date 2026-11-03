@@ -24,7 +24,9 @@
 			class="icon circle-xmark btn-reset" 
 			aria-label="<:thematique:fermer:>"
 	></button>
-	<div class="ajax publier-article-form-wrapper">
+	[(#REM) Pas de classe ajax ici : le formulaire porte la sienne (cf
+	public_publier_article.html), seule à être remplacée à chaque envoi. ]
+	<div class="publier-article-form-wrapper">
 		<div class="page-inner">
 			#FORMULAIRE_PUBLIC_PUBLIER_ARTICLE{#ID_RUBRIQUE, #TYPE_ARTICLE, #ID_CONSIGNE, #ENV{id_article}}
 		</div>

@@ -1272,14 +1272,10 @@ function thematique_id_rubrique_classe($id_auteur, $classe_active = null) {
 		return 0;
 	}
 
-	// defined() : appelée aussi par thematique_preparer_fichier_session(), qui peut
-	// s'exécuter avant le chargement de thematique_options.php (session réécrite
-	// tôt dans la requête, ex. changement d'IP) : erreur fatale sinon.
-	if (!defined('_THEMATIQUE_CHOIX_CLASSE') || !_THEMATIQUE_CHOIX_CLASSE) {
+	if (!thematique_choix_classe_possible()) {
 		return $classes[0];
 	}
 	if ($classe_active === null) {
-		include_spip('inc/session');
 		$classe_active = intval(session_get('id_auteur')) === intval($id_auteur)
 			? session_get('classe_active')
 			: 0;
@@ -1287,6 +1283,55 @@ function thematique_id_rubrique_classe($id_auteur, $classe_active = null) {
 	$classe_active = intval($classe_active);
 
 	return in_array($classe_active, $classes, true) ? $classe_active : $classes[0];
+}
+
+/**
+ * L'auteur connecté peut-il choisir sa classe active parmi ses classes (menu
+ * haut, menu de la fenêtre de réponse à une mission) ?
+ *
+ * Oui pour un compte connecté hors SSO (pas de cioidc_id_token en session,
+ * posé par cioidc à la connexion ENT) : ses classes lui ont été attribuées à
+ * la main pour ce projet. Pour un compte ENT, seulement si
+ * _THEMATIQUE_CHOIX_CLASSE est vrai (cf thematique_options.php : l'ENT renvoie
+ * aussi ses classes des années passées).
+ *
+ * @return bool
+ */
+function thematique_choix_classe_possible() {
+	// defined() : appelée aussi par thematique_preparer_fichier_session(), qui peut
+	// s'exécuter avant le chargement de thematique_options.php (session réécrite
+	// tôt dans la requête, ex. changement d'IP) : erreur fatale sinon.
+	if (defined('_THEMATIQUE_CHOIX_CLASSE') && _THEMATIQUE_CHOIX_CLASSE) {
+		return true;
+	}
+	include_spip('inc/session');
+	return session_get('id_auteur') && !session_get('cioidc_id_token');
+}
+
+/**
+ * Classes entre lesquelles l'auteur connecté peut choisir pour répondre à une
+ * mission (menu de la fenêtre de publication, cf
+ * formulaires/public_publier_article.php), vide s'il n'a pas de choix à faire.
+ *
+ * @return array id_rubrique => titre, par id croissant
+ */
+function thematique_classes_choix_reponse() {
+	include_spip('inc/session');
+	$id_auteur = intval(session_get('id_auteur'));
+	if (!$id_auteur || thematique_donner_role($id_auteur) !== 'prof' || !thematique_choix_classe_possible()) {
+		return [];
+	}
+	$classes = thematique_classes_auteur($id_auteur);
+	if (count($classes) < 2) {
+		return [];
+	}
+	include_spip('base/abstract_sql');
+	include_spip('inc/filtres');
+	$choix = [];
+	foreach (sql_allfetsel('id_rubrique, titre', 'spip_rubriques', sql_in('id_rubrique', $classes), '', 'id_rubrique') as $rubrique) {
+		$choix[intval($rubrique['id_rubrique'])] = supprimer_numero($rubrique['titre']);
+	}
+	return $choix;
 }
 
 /**

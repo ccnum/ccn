@@ -2,7 +2,9 @@
 Bouton "Modifier" du titre d'un article (mission/réponse/billet), factorisé
 depuis header_sidebar.html/header_reponse_sidebar.html/header_blog.html.
 Paramètres attendus : id_article, type_objet ; classe (optionnel) ajoutée
-au bouton, ex. bouton-lisere pour le style des boutons Publier/Dépublier.
+au bouton, ex. bouton-lisere pour le style des boutons Publier/Dépublier ;
+libelle (optionnel, déjà traduit) remplace « Modifier », ex. « Rédiger »
+sur un jalon encore vide.
 Le clic est géré en JS par délégation (classe js-call-modifier-article,
 cf controleurs.js) plutôt qu'un onclick inline : sur ce SPIP, une balise
 entre parenthèses littérales dans le texte affiché par un bloc
@@ -21,6 +23,7 @@ compilation de ce bloc REM lui-même.
         data-type-objet="#ENV{type_objet}"
 >
     <span class="icon icon-publier"></span>
-    <div><:thematique:modifier:></div>
+    [(#ENV{libelle}|oui)<div>[(#ENV{libelle})]</div>]
+    [(#ENV{libelle}|non)<div><:thematique:modifier:></div>]
 </button>
 ]

@@ -112,7 +112,7 @@
 				<tbody>
 					<tr><td>Modifier</td><td>L’auteur de l’article, même publié ; un admin. Les jalons (« Cap sur l’année », « La Rencontre ») sont modifiables par tout intervenant du projet, pas seulement celui à qui ils ont été attribués.</td></tr>
 					<tr><td>Changer la date</td><td>Un admin sur tout contenu ; un intervenant sur un événement ou un billet de salle des profs seulement.</td></tr>
-					<tr><td>Publier / Dépublier</td><td>Quiconque peut modifier l’article (action <code>thematique_statut_article</code>, boutons des jalons), intervenant compris. Dépublié, l’article repasse « proposé » ; le rééditer le republie.</td></tr>
+					<tr><td>Publier / Dépublier</td><td>Quiconque peut modifier l’article (action <code>thematique_statut_article</code>, boutons des jalons), intervenant compris. Dépublié, l’article repasse « proposé » ; le rééditer le republie. Un jalon vide n’a qu’un bouton « Rédiger » : l’enregistrer avec un texte le publie, ce qu’annonce une info au survol d’« Enregistrer ».</td></tr>
 					<tr><td>Supprimer</td><td>Un admin ; sinon l’auteur, pour ses propres articles. Bouton « Supprimer » sur les billets, les événements et les ressources (l’article passe à la poubelle).</td></tr>
 				</tbody>
 			</table>
@@ -201,7 +201,7 @@
 		<h2 id="maintenance">Maintenance</h2>
 		<ul>
 			<li><strong>Classes vides</strong> (<code>ecrire/?exec=thematique_classes_vides</code>, menu Configuration, webmestres) : liste les rubriques de classe d’une année et supprime celles restées vides, par exemple créées à la connexion de comptes ENT hors projet.</li>
-			<li><strong>Classe active</strong> : un prof lié à plusieurs classes publie dans la première (par numéro de rubrique). Le menu de choix de la classe active existe mais est masqué (<code>_THEMATIQUE_CHOIX_CLASSE</code> à <code>false</code>), l’ENT renvoyant aussi les classes des années passées.</li>
+			<li><strong>Classe active</strong> : un prof lié à plusieurs classes publie par défaut dans la première (par numéro de rubrique). Connecté hors SSO (compte créé dans SPIP, classes attribuées à la main), il choisit sa classe dans le menu de son nom, en haut, et dans un menu déroulant de la fenêtre de réponse à une mission : changer de classe rouvre la fenêtre sur la réponse de cette classe, ou une nouvelle. Pour un compte ENT, ces menus restent masqués (<code>_THEMATIQUE_CHOIX_CLASSE</code> à <code>false</code>, voir <code>thematique_choix_classe_possible()</code>), l’ENT renvoyant aussi les classes des années passées.</li>
 		</ul>
 
 		<h2 id="edifice">Variante Edifice</h2>

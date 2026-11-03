@@ -81,6 +81,7 @@ Agenda                        mot-clé blogs
 Blog pédagogique              mot-clé evenements (affiché « Salle des profs »)
 Contenu éditorial             mot-clé images_background
 Intervenants                  fiches des intervenants</code></pre>
+		<p>Les trois sous-rubriques de « Ressources » sont créées avec elle (<code>thematique_migrer_bibliotheques()</code>). Sur un site plus ancien, la même fonction, lancée à la mise à jour du plugin, renomme l’ancienne racine « Espace Ressources », réutilise ses sous-rubriques ou crée celles qui manquent, et regroupe toutes les ressources existantes dans « Pédagogie ».</p>
 		<p>La racine d’une année est titrée <code>2026</code>, pas <code>2026-2027</code>. Ses rubriques « Consignes » et « Travail des classes » sont créées automatiquement à la rentrée (voir <a href="#rentree">Cycle de rentrée</a>), les projets et les classes à la connexion ENT (voir <a href="sso.html">Connexion et comptes</a>).</p>
 		<div class="callout">
 			<p>Les rubriques permanentes ne sont pas découpées par année : c’est la <strong>date des articles</strong> qui les range. Le pipeline <code>pre_boucle</code> limite les boucles <code>ARTICLES</code> à la période de l’année scolaire active (voir <a href="architecture.html#annee">Année scolaire</a>).</p>

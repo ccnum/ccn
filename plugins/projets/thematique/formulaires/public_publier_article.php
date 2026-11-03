@@ -87,6 +87,10 @@ function formulaires_public_publier_article_charger_dist(
 				$valeurs['id_parent'] = thematique_id_rubrique_projet();
 			}
 			$valeurs['date'] = $article['date'];
+			// Jalon encore vide : l'enregistrer le publie pour la première
+			// fois (info au survol du bouton Enregistrer).
+			$valeurs['jalon_texte_vide'] = trim($article['texte']) === ''
+				&& thematique_article_est_jalon($article['id_article']);
 		}
 	} elseif ($id_consigne && thematique_consigne_valide($id_consigne)) {
 		// Sinon, si on répond à une consigne, chercher une éventuelle
@@ -108,6 +112,28 @@ function formulaires_public_publier_article_charger_dist(
 			$valeurs['id_parent'] = $reponse['id_rubrique'];
 			$valeurs['id_consigne'] = $reponse['id_consigne'];
 			$valeurs['date'] = $reponse['date'];
+		}
+	}
+
+	// Réponse à une mission (création, ou édition depuis le bouton "Modifier")
+	// par un prof rattaché à plusieurs classes, connecté hors SSO (cf
+	// thematique_classes_choix_reponse) : menu de la classe pour laquelle il
+	// répond. Changer de classe rouvre la fenêtre sur la réponse de cette
+	// classe (ou une nouvelle), cf createReponse() : on ne déplace pas une
+	// réponse existante d'une classe à l'autre. La rubrique reste vérifiée en
+	// _verifier_dist/_traiter_dist (thematique_auteur_peut_creer_dans_rubrique).
+	$valeurs['classes_choix'] = [];
+	$valeurs['id_consigne_choix'] = 0;
+	if ($type_article === 'travail_en_cours') {
+		$id_consigne_choix = $valeurs['id_article']
+			? intval(sql_getfetsel('id_consigne', 'spip_articles', 'id_article=' . intval($valeurs['id_article'])))
+			: intval($id_consigne);
+		$classes_choix = thematique_classes_choix_reponse();
+		if ($id_consigne_choix && thematique_consigne_valide($id_consigne_choix)
+			&& isset($classes_choix[intval($valeurs['id_rubrique'])])
+		) {
+			$valeurs['classes_choix'] = $classes_choix;
+			$valeurs['id_consigne_choix'] = $id_consigne_choix;
 		}
 	}
 
@@ -281,6 +307,14 @@ function formulaires_public_publier_article_verifier_dist(
 	}
 
 	$erreurs = formulaires_editer_objet_verifier('article', $id_article_poste ?: 'new', ['titre', 'texte']);
+	// formulaires_editer_objet_verifier() n'écarte que la chaîne vide : un
+	// titre ou un texte fait seulement d'espaces, retours à la ligne,
+	// tabulations, espaces insécables ou de largeur nulle est aussi refusé.
+	foreach (['titre', 'texte'] as $champ) {
+		if (empty($erreurs[$champ]) && preg_replace('/[\s\p{Z}\x{200B}\x{FEFF}]+/u', '', (string) _request($champ)) === '') {
+			$erreurs[$champ] = _T('info_obligatoire');
+		}
+	}
 	if (public_publier_article_est_ressource($type_article, $id_article_poste)
 		&& thematique_id_rubrique_ressources()
 		&& !public_publier_article_rubrique_ressource()

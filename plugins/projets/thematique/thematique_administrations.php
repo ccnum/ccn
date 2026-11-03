@@ -107,6 +107,10 @@ function thematique_upgrade($nom_meta_base_version, $version_cible) {
 	// n'altère jamais une colonne existante, on les remet au type déclaré.
 	$maj['3.4.10'] = [['thematique_aligner_champs_sql']];
 
+	// Racines "ressources" avec moins de 3 sous-rubriques, laissées telles
+	// quelles par la 3.4.3 : on crée les sous-rubriques manquantes.
+	$maj['3.4.11'] = [['thematique_migrer_bibliotheques']];
+
 	include_spip('thematique_fonctions');
 	include_spip('base/upgrade');
 	maj_plugin($nom_meta_base_version, $version_cible, $maj);
@@ -142,10 +146,10 @@ function thematique_aligner_champs_sql() {
  * 1. trouve la rubrique racine (id_parent = 0) portant le mot-clé
  *    "ressources" (celle créée par thematique_configurer_rubriques(),
  *    jusqu'ici titrée "Espace Ressources") ;
- * 2. parmi ses rubriques filles déjà existantes, en renomme 3 en
- *    "Méthodologie", "Pédagogie" et "Thématique" (pas de création : on
- *    réutilise des rubriques déjà là, pour ne perdre aucun contenu déjà
- *    lié à elles) ;
+ * 2. parmi ses rubriques filles déjà existantes, en renomme jusqu'à 3 en
+ *    "Méthodologie", "Pédagogie" et "Thématique" (on réutilise d'abord
+ *    des rubriques déjà là, pour ne perdre aucun contenu déjà lié à
+ *    elles) et crée celles qui manquent ;
  * 3. déplace tous les articles de tout le secteur (racine + toutes ses
  *    sous-rubriques, à toute profondeur) vers la rubrique "Pédagogie" ;
  * 4. supprime toutes les rubriques du secteur devenues inutiles (tout sauf
@@ -195,33 +199,36 @@ function thematique_migrer_bibliotheques() {
 	}
 
 	// -----------------------------------------------------------------
-	// 2. Choisir 3 rubriques filles déjà existantes et les renommer.
+	// 2. Renommer jusqu'à 3 rubriques filles déjà existantes, créer celles
+	// qui manquent (racine sans ou avec peu de sous-rubriques, ex. une CCN
+	// installée avec seulement "Espace Ressources").
 	//
-	// Ordre par id_rubrique : arbitraire mais déterministe (peu importe
-	// laquelle des 3 devient laquelle, tout le contenu est de toute façon
-	// re-regroupé dans "Pédagogie" juste après).
+	// Ordre par id_rubrique, "Pédagogie" d'abord : la première rubrique
+	// existante garde ainsi ses articles, tout le contenu étant de toute
+	// façon re-regroupé dans "Pédagogie" juste après.
 	// -----------------------------------------------------------------
 
+	include_spip('action/editer_rubrique');
 	$enfants = sql_allfetsel('id_rubrique', 'spip_rubriques', 'id_parent=' . $id_racine, '', 'id_rubrique ASC');
+	$id_enfants = array_map('intval', array_column(array_slice($enfants, 0, 3), 'id_rubrique'));
 
-	if (count($enfants) < 3) {
-		spip_log(
-			'thematique_migrer_bibliotheques : rubrique #' . $id_racine . ' a moins de 3 sous-rubriques (' . count(
-				$enfants
-			) . '), abandon (rien à renommer)',
-			'thematique' . _LOG_ERREUR
-		);
-		return;
-	}
-
-	$nouveaux_titres = ['Méthodologie', 'Pédagogie', 'Thématique'];
+	$nouveaux_titres = ['Pédagogie', 'Méthodologie', 'Thématique'];
+	$id_a_conserver = [$id_racine];
 	$id_pedagogie = 0;
 
-	foreach (array_slice($enfants, 0, 3) as $index => $enfant) {
-		$id_enfant = intval($enfant['id_rubrique']);
-		$titre = $nouveaux_titres[$index];
-
-		sql_updateq('spip_rubriques', ['titre' => $titre], 'id_rubrique=' . $id_enfant);
+	foreach ($nouveaux_titres as $index => $titre) {
+		$id_enfant = $id_enfants[$index] ?? 0;
+		if ($id_enfant) {
+			sql_updateq('spip_rubriques', ['titre' => $titre], 'id_rubrique=' . $id_enfant);
+		} else {
+			$id_enfant = (int) rubrique_inserer($id_racine);
+			if (!$id_enfant) {
+				spip_log("thematique_migrer_bibliotheques : création de '$titre' sous #$id_racine impossible, abandon", 'thematique' . _LOG_ERREUR);
+				return;
+			}
+			rubrique_modifier($id_enfant, ['titre' => $titre]);
+		}
+		$id_a_conserver[] = $id_enfant;
 
 		if ($titre === 'Pédagogie') {
 			$id_pedagogie = $id_enfant;
@@ -274,9 +281,6 @@ function thematique_migrer_bibliotheques() {
 	// de suppression en cascade), puis on les supprime feuilles d'abord.
 	// -----------------------------------------------------------------
 
-	$id_a_conserver = array_merge([$id_racine], array_column(array_slice($enfants, 0, 3), 'id_rubrique'));
-	$id_a_conserver = array_map('intval', $id_a_conserver);
-
 	foreach ($rubriques_du_secteur as $id_rubrique) {
 		if (in_array($id_rubrique, $id_a_conserver, true)) {
 			continue;
@@ -292,6 +296,10 @@ function thematique_migrer_bibliotheques() {
 	// -----------------------------------------------------------------
 
 	sql_updateq('spip_rubriques', ['titre' => 'Ressources'], 'id_rubrique=' . $id_racine);
+
+	// Statuts des rubriques (créées, vidées ou remplies) recalculés.
+	include_spip('inc/rubriques');
+	calculer_rubriques();
 
 	spip_log(
 		"thematique_migrer_bibliotheques : secteur #$id_racine migré, articles regroupés dans 'Pédagogie' (#$id_pedagogie)",
@@ -460,7 +468,7 @@ function thematique_configurer_rubriques() {
 	$mots = [
 		'travail_en_cours' => 'Travail des classes',
 		'consignes' => 'Consignes',
-		'ressources' => 'Espace Ressources',
+		'ressources' => 'Ressources',
 		'blogs' => 'Agenda',
 		'evenements' => 'Blog pédagogique',
 		'images_background' => 'Contenu éditorial',
@@ -486,4 +494,7 @@ function thematique_configurer_rubriques() {
 			objet_associer(['mots' => $id_mot], ['rubriques' => $id_rubrique]);
 		}
 	}
+
+	// Sous-rubriques Méthodologie / Pédagogie / Thématique de "Ressources"
+	thematique_migrer_bibliotheques();
 }
