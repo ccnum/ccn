@@ -351,6 +351,40 @@ function formulaires_public_publier_article_verifier_dist(
 }
 
 /**
+ * En édition, reposte la valeur en base des champs extras de l'article
+ * (id_consigne, x, y…) absents du formulaire.
+ *
+ * cextras_pre_edition() réécrit chaque champ extra que l'auteur a le droit de
+ * modifier (statut 0minirezo ou webmestre, cf base/thematique_cextras.php)
+ * avec sa valeur postée, ou '' s'il n'est pas posté : un admin, ou un prof
+ * hors SSO (compte local admin restreint, ex. Edifice), qui modifiait une
+ * réponse remettait son id_consigne à 0 et la détachait de sa mission — elle
+ * disparaissait de la consigne et de la classe.
+ *
+ * @param int $id_article Article modifié
+ */
+function public_publier_article_conserver_champs_extras($id_article) {
+	if (!include_spip('cextras_pipelines') || !function_exists('champs_extras_objet')) {
+		return;
+	}
+	include_spip('inc/cextras');
+	$noms = [];
+	foreach (champs_extras_saisies_lister_avec_sql(champs_extras_objet('spip_articles')) as $saisie) {
+		$nom = $saisie['options']['nom'] ?? '';
+		if ($nom && _request($nom) === null) {
+			$noms[] = $nom;
+		}
+	}
+	if (!$noms) {
+		return;
+	}
+	$valeurs = sql_fetsel($noms, 'spip_articles', 'id_article=' . intval($id_article));
+	foreach ($valeurs ?: [] as $nom => $valeur) {
+		set_request($nom, $valeur);
+	}
+}
+
+/**
  * Crée ou modifie l'article, puis le publie.
  *
  * @param int|string $id_rubrique Rubrique de publication
@@ -432,6 +466,7 @@ function formulaires_public_publier_article_traiter_dist(
 			// l'applique telle quelle.
 			set_request('date');
 		}
+		public_publier_article_conserver_champs_extras($id_article);
 	}
 	// Les ressources sont créées depuis la page "Ressources" (popup sans
 	// id_rubrique, cf callNouvelleRessource) : la rubrique cible est la
