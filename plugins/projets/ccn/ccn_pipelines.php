@@ -124,3 +124,31 @@ function ccn_formulaire_fond($flux) {
 	}
 	return $flux;
 }
+
+/**
+ * Pipeline notifications_envoyer_mails : échappe les caractères UTF-8 sur 4
+ * octets (emojis) du texte et du sujet avant leur mise en file d'attente.
+ *
+ * notifications_envoyer_mails() ne fait pas l'envoi : elle crée une tâche
+ * envoyer_mail (spip_jobs) signée sur ses arguments. La connexion MySQL de
+ * SPIP étant en utf8mb3, l'écriture convertit ces caractères en entités
+ * (utf8_noplanes()) : relue par le cron, la tâche ne correspond plus à sa
+ * signature (« job signature invalide » dans queue.log) et elle est
+ * supprimée sans envoi. Toute notification dont le gabarit (avatar de
+ * secours 📄/🐝, cf notifications/inc_avatar.html) ou le titre contenait un
+ * emoji était ainsi perdue. Échappée ici, la valeur signée est celle relue
+ * en base ; facteur reconvertit les entités du sujet, le corps HTML les
+ * affiche telles quelles.
+ *
+ * @param array $flux email, sujet, texte, from, headers
+ * @return array
+ */
+function ccn_notifications_envoyer_mails($flux) {
+	include_spip('inc/charsets');
+	foreach (['sujet', 'texte'] as $champ) {
+		if (isset($flux[$champ]) && is_string($flux[$champ])) {
+			$flux[$champ] = utf8_noplanes($flux[$champ]);
+		}
+	}
+	return $flux;
+}
