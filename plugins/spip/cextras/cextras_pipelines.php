@@ -78,8 +78,7 @@ function champs_extras_autorisation($faire, $quoi='', $saisies=array(), $args=ar
  *
  * Liste les champs extras de l'objet, et s'il y en a les ajoute
  * sur le formulaire d'édition en ayant filtré uniquement les saisies
- * que peut voir le visiteur et en ayant ajouté des champs hidden
- * servant à champs extras.
+ * que peut voir l'internaute.
  *
  * @pipeline editer_contenu_objet
  * @param array $flux Données du pipeline
@@ -88,18 +87,38 @@ function champs_extras_autorisation($faire, $quoi='', $saisies=array(), $args=ar
 function cextras_editer_contenu_objet($flux){
 	// recuperer les saisies de l'objet en cours
 	$objet = $flux['args']['type'];
+
+	// Approximation du formulaire
+	// Quelques formulaires natifs de SPIP (édition des groupes de mot clé) ne sont pas construits exactement sur ce pattern
+	// mais à priori ces formulaires ne sont pas concernés par les tests qui utilisent `$formulaire` dans la suite du code
+	// la solution pour être plus précise consisterait à chercher dans le squelette le résultat de la regexp `/#FORMULAIRE_EDITER_([A-Z]+)/`
+	// mais ca ne vaut pas la peine, car on considère que ces cas de non homonymie objet/formulaire d'édition sont raririssimes, et en tout état de cause non concernés par la possibilité de déclarer un formulaire en tableau PHP de saisies
+	$formulaire = "editer_$objet";
+
 	include_spip('inc/cextras');
 	if ($saisies = champs_extras_objet(table_objet_sql($objet))) {
 		// filtrer simplement les saisies que la personne en cours peut voir
 		$saisies = champs_extras_autorisation('modifier', $objet, $saisies, $flux['args']);
 
-		//  Si l'objet déclare déjà ses champs en saisies, les champs extras ont déjà été ajoutées au fond via `cextras_formulaire_saisies()` (pipeline `formulaire_saisie`) (cas du plugin coordonnées)
-		//  Pour le savoir, on se contente de compter le nombre de saisies deja déclarés : si supérieures au nombre de saisies en champ extra, c'est que c'est le cas
+		//  Si l'objet déclare déjà ses champs en saisies via PHP, les champs extras ont déjà été ajoutées au fond via `cextras_formulaire_saisies()` (pipeline `formulaire_saisie`) (cas du plugin coordonnées)
+		//  toutefois, parfois un plugin déclare les saisies via PHP mais gère lui même son html (cas du plugin profils, qui laisse le core générer le html)
+		// il ne faut pas insérer le html des saisies si la première condition est remplie mais pas la seconde
 		if (
-			isset($flux['args']['contexte']['_saisies'])
-			&& count($flux['args']['contexte']['_saisies']) > count($saisies)
+			charger_fonction('saisies', 'formulaires/' . $formulaire, true)// Les saisies sont-elles déclarées en PHP ?
 		) {
-			return $flux;
+			$fond = trouver_fond($formulaire, 'formulaires/'); // En théorie il y a forcément un fond à ce stade, mais sait-on jamais
+			if (
+				$fond
+				&&
+				lire_fichier($fond, $contenu_squelette)
+				&& (
+					!trim($contenu_squelette) // Squelettes vide -> c'est saisies qui prend la main sur l'affichage
+					|| str_contains($contenu_squelette, '#GENERER_SAISIES') // Squelette contenant #GENERER_SAISIE -> idem
+				)
+			) {
+				return $flux;
+			}
+			unset ($contenu_squelette);
 		}
 
 		// ajouter au formulaire
@@ -220,7 +239,7 @@ function cextras_appliquer_traitements_saisies($saisies, $valeurs) {
  * Déclarer les champs extras comme au plugin saisies
  * pour qu'il s'occupe tout seul des vérifications et des éventuelles prétraitement à la réception
  *
- * @pipeline formulaire_verifier
+ * @pipeline formulaire_saisies
  * @param array $flux Données du pipeline
  * @return array      Données du pipeline
 **/
