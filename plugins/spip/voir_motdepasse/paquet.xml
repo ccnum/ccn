@@ -1,0 +1,18 @@
+<paquet
+	prefix="voir_motdepasse"
+	version="1.1.2"
+	etat="test"
+	compatibilite="[4.2.0;4.*.*]"
+	logo="voir_motdepasse.svg"
+	documentation="https://contrib.spip.net/5675"
+>
+	<nom>Voir le mot de passe</nom>
+
+	<auteur>RastaPopoulos</auteur>
+	<copyright>2025</copyright>
+	<licence>GPL v3</licence>
+
+	<pipeline nom="formulaire_fond" inclure="voir_motdepasse_pipelines.php" />
+
+	<style source="css/voir_motdepasse.css" />
+</paquet>

@@ -766,7 +766,9 @@ function saisies_supprimer_callback(array $saisies, callable $callback): array {
 			unset($saisies[$key]);
 		}
 	}
-	$saisies = array_values($saisies);
+	if (array_is_list($saisies)) {
+		$saisies = array_values($saisies);
+	}
 	if (isset($options_generales)) {
 		$saisies['options'] = $options_generales;
 	}
