@@ -271,6 +271,14 @@ function thematique_notifications_destinataires($flux) {
 		}
 	}
 
+	// Publication : ne pas prévenir la personne qui vient de publier (règle
+	// pas_prevenir_publieur du plugin notifications, qui n'est plus actif sur
+	// les sites thematique). Pour un commentaire, le cœur (forumvalide)
+	// écarte déjà son auteur.
+	if (($flux['args']['quoi'] ?? '') === 'instituerarticle' && !empty($GLOBALS['visiteur_session']['email'])) {
+		$flux['data'] = array_diff((array) $flux['data'], [$GLOBALS['visiteur_session']['email']]);
+	}
+
 	$flux['data'] = thematique_filtrer_emails_poubelle($flux['data']);
 	return $flux;
 }

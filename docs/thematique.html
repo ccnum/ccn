@@ -137,7 +137,7 @@
 		<p>Une seule autorisation, <code>forumsupprimer</code>, décide à la fois de l’affichage du bouton et de l’action.</p>
 
 		<h2 id="notifications">Notifications</h2>
-		<p>Les e-mails partent par le plugin <code>notifications</code> (envoi via facteur). <code>thematique</code> en choisit les destinataires dans le pipeline <code>notifications_destinataires</code> (<code>thematique_notifications_destinataires()</code>) et en surcharge la mise en page.</p>
+		<p>Les e-mails partent par les notifications du cœur SPIP et du plugin <code>forum</code> (envoi via facteur) ; le plugin contrib <code>notifications</code> n’est pas activé sur les sites thematique (il ne l’est que pour <code>fictions</code>/<code>petitfablab</code>, cf <code>docker-entrypoint.sh</code>). <code>thematique</code> en choisit les destinataires dans le pipeline <code>notifications_destinataires</code> (<code>thematique_notifications_destinataires()</code>) et en surcharge la mise en page.</p>
 
 		<h3 id="quand-un-e-mail-part">Quand un e-mail part</h3>
 		<ul>
@@ -156,18 +156,19 @@
 				Pour un commentaire, la même règle s’applique à l’article commenté.
 			</li>
 			<li><strong>Réponse à un commentaire</strong> : en plus, l’auteur du commentaire d’origine (<code>thematique_email_auteur_forum()</code> : e-mail du compte, sinon celui saisi avec le commentaire), sauf s’il est élève.</li>
-			<li>Les règles propres au plugin <code>notifications</code> (auteurs de l’article, participants au fil…) s’ajoutent selon sa configuration dans <code>/ecrire</code>.</li>
+			<li>Les règles du cœur s’ajoutent selon la configuration de <code>/ecrire</code> : adresse de suivi éditorial pour une publication, option « prévenir les auteurs » du forum pour un commentaire.</li>
 		</ul>
-		<p>Les <strong>élèves</strong> (<code>6forum</code>) ne sont jamais ajoutés par <code>thematique</code> ; seule une règle du plugin <code>notifications</code> activée dans sa configuration pourrait en viser.</p>
+		<p>Les <strong>élèves</strong> (<code>6forum</code>) ne sont jamais ajoutés par <code>thematique</code> ; seule une règle du cœur activée dans <code>/ecrire</code> pourrait en viser.</p>
 		<p>Sont retirés ensuite :</p>
 		<ul>
-			<li>l’<strong>auteur du commentaire</strong> lui-même (règle du plugin <code>notifications</code>) ;</li>
-			<li>les <strong>comptes à la poubelle</strong> (<code>thematique_filtrer_emails_poubelle()</code>, appliqué en dernier, donc aussi aux destinataires ajoutés par le plugin <code>notifications</code>). Après la mise à la poubelle de septembre, un compte n’est donc plus prévenu tant que la personne ne s’est pas reconnectée ;</li>
+			<li>l’<strong>auteur du commentaire</strong> lui-même, et la personne qui le valide (cœur, <code>forumvalide</code>) ;</li>
+			<li>pour une publication, la <strong>personne qui publie</strong> (<code>thematique_notifications_destinataires()</code>) ;</li>
+			<li>les <strong>comptes à la poubelle</strong> (<code>thematique_filtrer_emails_poubelle()</code>, appliqué en dernier, donc aussi aux destinataires ajoutés par le cœur). Après la mise à la poubelle de septembre, un compte n’est donc plus prévenu tant que la personne ne s’est pas reconnectée ;</li>
 			<li>les doublons.</li>
 		</ul>
 
 		<h3 id="mise-en-page">Mise en page</h3>
-		<p><code>notifications/article_publie.html</code> et <code>notifications/forum_poste.html</code> surchargent ceux du plugin <code>notifications</code> et choisissent un fond selon le type de contenu (<code>thematique_type_objet_article()</code>) :</p>
+		<p><code>notifications/article_publie.html</code> et <code>notifications/forum_poste.html</code> surchargent ceux du cœur et du plugin <code>forum</code> et choisissent un fond selon le type de contenu (<code>thematique_type_objet_article()</code>) :</p>
 		<div class="table-wrap">
 			<table>
 				<thead><tr><th>Cas</th><th>Fond</th><th>Titre du mail</th></tr></thead>

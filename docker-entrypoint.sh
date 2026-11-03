@@ -133,7 +133,6 @@ spip plugins:activer corbeille -y
 spip plugins:activer facteur -y
 spip plugins:activer jqueryui -y
 spip plugins:activer notation -y
-spip plugins:activer notifications -y
 spip plugins:activer oembed -y
 spip plugins:activer saisies -y
 spip plugins:activer socialtags -y
@@ -196,7 +195,9 @@ if [ -n "${plugin_site}" ]; then
 			spip plugins:desactiver "${variante}" -y
 		fi
 	done
-	spip plugins:activer cadavrexquis vider_rubrique "${plugin_site}" -y
+	# notifications : dépendance de fictions/petitfablab seulement. thematique
+	# s'appuie sur les notifications du cœur (publication d'article, forum).
+	spip plugins:activer cadavrexquis vider_rubrique notifications "${plugin_site}" -y
 	# thematique (et sa variante de projet) n'a rien à faire sur un site
 	# fictions/petitfablab : resté actif d'une configuration antérieure, il y
 	# laissait ses squelettes et pages accessibles.
@@ -205,7 +206,7 @@ if [ -n "${plugin_site}" ]; then
 	fi
 	spip plugins:desactiver thematique -y
 else
-	spip plugins:desactiver fictions petitfablab fictions_archive petitfablab_archive fictionsv2 petitfablabv2 cadavrexquis -y
+	spip plugins:desactiver fictions petitfablab fictions_archive petitfablab_archive fictionsv2 petitfablabv2 cadavrexquis notifications -y
 	spip plugins:activer "${SPIP_VERSION_SITE}" -y
 fi
 if [ -z "${plugin_site}" ] && [ "${PROJET}" != "laclasse" ]; then
@@ -235,8 +236,10 @@ spip config:ecrire -p mediabox active:oui
 spip config:ecrire -p crayons upload:
 spip config:ecrire -p notation acces:ide
 spip config:ecrire -p notation change_note:oui
-spip config:ecrire -p notifications forum_article:0
-spip config:ecrire -p notifications thread_forum:0
+if [ -n "${plugin_site}" ]; then
+	spip config:ecrire -p notifications forum_article:0
+	spip config:ecrire -p notifications thread_forum:0
+fi
 spip config:ecrire formats_documents_forum:".pdf,.jpg,.jpeg,.png,.gif,.mp4"
 
 # Envoi des e-mails (facteur) : chaque réglage n'est écrit que si sa variable est
