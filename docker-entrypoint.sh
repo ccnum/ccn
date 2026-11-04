@@ -172,6 +172,13 @@ if [ "${VIMEO_ACCESS_TOKEN:-}" != "" ]; then
 else
 	spip plugins:desactiver api_vimeo -y
 fi
+# Bouton œil pour afficher le mot de passe saisi (formulaire de connexion
+# natif SPIP) : utile seulement sur un site sans SSO ENT, désactivé par défaut.
+if [ "${SPIP_PLUGINS_VOIR_MOTDEPASSE:-false}" = true ]; then
+	spip plugins:activer voir_motdepasse -y
+else
+	spip plugins:desactiver voir_motdepasse -y
+fi
 # SPIP écarte un plugin dont une dépendance n'est pas encore active, et
 # "spip plugins:activer" ne renvoie pas d'erreur dans ce cas (il affiche juste
 # "Plugins non actives") : le plugin du site doit être activé dans le même appel

@@ -70,6 +70,13 @@ if (!function_exists('autoriser_article_modifier')) {
 			|| (($qui['statut'] ?? '') === '0minirezo' && empty($qui['restreint']));
 		if (!$admin_complet) {
 			include_spip('inc/fictions_autorisation');
+			// Script d'un chapitre publié : champ texte seul (crayon), cf
+			// fictions_script_droits(). Crayons passe le champ en chaîne
+			// (affichage) ou en tableau (enregistrement).
+			$champs = (array) ($opt['champ'] ?? []);
+			if ($champs === ['texte'] && fictions_script_droits(intval($id), $qui)) {
+				return true;
+			}
 			if (fictions_article_est_chapitre(intval($id))) {
 				$statut = sql_getfetsel('statut', 'spip_articles', 'id_article=' . intval($id));
 				if ($statut !== 'prop' || fictions_ecriture_droits(intval($id), $qui) !== 'oui') {
@@ -79,6 +86,28 @@ if (!function_exists('autoriser_article_modifier')) {
 		}
 		return autoriser_article_modifier_dist($faire, $type, $id, $qui, $opt);
 	}
+}
+
+/**
+ * Joindre ou retirer un document d'un chapitre publié : documents du script,
+ * même règle que son texte (fictions_script_droits()). Autres cas : règle
+ * native (droit de modifier l'article).
+ */
+function autoriser_article_joindredocument_dist($faire, $type, $id, $qui, $opt) {
+	include_spip('inc/fictions_autorisation');
+	if (intval($id) > 0 && empty($opt['mode']) && fictions_script_droits(intval($id), $qui)) {
+		return autoriser('creer', 'document', 0, $qui, $opt)
+			&& (empty($opt['extension']) || autoriser('creer', 'documentextension', $opt['extension'], $qui, $opt));
+	}
+	return autoriser_joindredocument_dist($faire, $type, $id, $qui, $opt);
+}
+
+function autoriser_article_dissocierdocuments_dist($faire, $type, $id, $qui, $opt) {
+	include_spip('inc/fictions_autorisation');
+	if (intval($id) > 0 && fictions_script_droits(intval($id), $qui)) {
+		return true;
+	}
+	return autoriser_dissocierdocuments_dist($faire, $type, $id, $qui, $opt);
 }
 
 /**

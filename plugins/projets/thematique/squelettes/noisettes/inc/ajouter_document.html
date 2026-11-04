@@ -47,7 +47,15 @@
 				[(#FICHIER|image_reduire{760}|inserer_attribut{alt,#TITRE})]
 			</a>
 			]
-			[(#MIME_TYPE|match{image}|non)
+			[(#MIME_TYPE|match{'^audio/'}|oui)
+				[(#REM) Son (mp3, etc.) : lecteur intégré plutôt qu'une icône ouvrant
+				le fichier dans la mediabox. preload=metadata pour afficher la durée
+				sans télécharger tout le fichier. ]
+				<div class="spip_document_audio">
+					<audio controls preload="metadata" src="#URL_DOCUMENT"></audio>
+				</div>
+			]
+			[(#MIME_TYPE|match{'^image/|^audio/'}|non)
 				[(#MIME_TYPE|match{'application/pdf'}|oui)
 					<a href="#URL_DOCUMENT" title="[(#TITRE)]" class="mediabox" type="#MIME_TYPE" data-box-min-height="90pc">
 						[(#LOGO_DOCUMENT|image_reduire{100}|inserer_attribut{style,'border:0px solid #000000;'}|inserer_attribut{alt,#TITRE})]

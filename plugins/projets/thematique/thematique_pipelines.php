@@ -329,7 +329,13 @@ function thematique_cioidc_userinfo($flux) {
 	$groupes_libres = thematique_cioidc_normaliser_liste($flux['data']['ENTGroupesLibres'] ?? []);
 	$is_intervenant_ccn = thematique_cioidc_est_intervenant_ccn($groupes_libres, (string) $uid);
 	$uai_liste = thematique_cioidc_normaliser_liste($flux['data']['ENTAllUai'] ?? []);
-	$is_webmestre = thematique_cioidc_est_webmestre($uai_liste, $is_enseignant, $is_intervenant_ccn);
+	$is_webmestre = thematique_cioidc_est_webmestre(
+		$uai_liste,
+		$is_enseignant,
+		$is_intervenant_ccn,
+		(bool) $classes_reelles,
+		(string) $uid
+	);
 	$is_eleve = (strpos($profils, 'ELV') !== false);
 	// Intervenant : groupe des intervenants CCN, sans classe réelle.
 	$is_intervenant = thematique_cioidc_est_intervenant(
@@ -388,11 +394,15 @@ function thematique_cioidc_userinfo($flux) {
 		spip_log('userinfo passage webmestre', 'cioidc');
 		sql_updateq('spip_auteurs', ['webmestre' => 'oui'], 'id_auteur=' . intval($auteur['id_auteur']));
 		$auteur['webmestre'] = 'oui';
-	} elseif ($is_intervenant_ccn && ($auteur['webmestre'] ?? 'non') === 'oui') {
-		// Intervenant promu à tort par l'ancienne règle (UAI seul) : on retire le
-		// webmestre. Limité aux intervenants pour ne pas toucher un webmestre
-		// nommé à la main dans SPIP.
-		spip_log('userinfo retrait webmestre (intervenant CCN)', 'cioidc');
+	} elseif (
+		!$is_webmestre
+		&& thematique_cioidc_dans_rne_webmestres($uai_liste, $is_enseignant)
+		&& ($auteur['webmestre'] ?? 'non') === 'oui'
+	) {
+		// Intervenant ou prof avec une classe, promu à tort par l'ancienne règle
+		// (UAI seul) : on retire le webmestre. Limité aux comptes que cette règle
+		// avait promus, pour ne pas toucher un webmestre nommé à la main dans SPIP.
+		spip_log('userinfo retrait webmestre (intervenant ou prof de la structure CCN)', 'cioidc');
 		sql_updateq('spip_auteurs', ['webmestre' => 'non'], 'id_auteur=' . intval($auteur['id_auteur']));
 		$auteur['webmestre'] = 'non';
 	}

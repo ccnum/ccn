@@ -872,6 +872,20 @@ li a, li a:hover {
 				outline-offset: -3px;
 			}
 		}
+		/* Lecteur audio (ajouter_document.html) : pleine largeur du cadre,
+		bornée comme l'aperçu des images. */
+		> .spip_document_audio {
+			flex: 0 0 100%;
+			min-width: 0;
+			box-sizing: border-box;
+			padding: 15px 10px 0;
+			> audio {
+				display: block;
+				width: 100%;
+				max-width: 380px;
+				margin: 0 auto;
+			}
+		}
 		> .spip_document_meta {
 			flex: 0 0 100%;
 			/* sans min-width:0, l'élément flex garde la largeur du nom entier

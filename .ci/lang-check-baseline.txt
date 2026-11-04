@@ -9,3 +9,4 @@ plugins/projets/thematique/thematique_administrations.php:177: Thématique
 plugins/projets/thematique/thematique_administrations.php:195: Pédagogie
 plugins/projets/thematique/thematique_administrations.php:406: Blog pédagogique
 plugins/projets/thematique/thematique_administrations.php:407: Contenu éditorial
+plugins/projets/thematique/thematique_options.php:30: CCN Intervenants & Médiateurs
