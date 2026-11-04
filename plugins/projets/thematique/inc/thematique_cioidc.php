@@ -114,30 +114,58 @@ function thematique_cioidc_classes_reelles(array $classes_groupes) {
  * Les intervenants sont rattachés à cette même structure avec le même profil ENS :
  * un membre du groupe libre _THEMATIQUE_GROUPE_INTERVENANTS n'est jamais webmestre
  * (sinon "Admin", sans lien vers son projet sous "Consignes").
+ * Des classes réelles sont aussi créées dans cette structure : un enseignant qui y
+ * a une classe (CLS) est un prof, pas un membre de l'équipe projet, sauf uid listé
+ * dans _THEMATIQUE_UID_WEBMESTRES.
  *
  * @param mixed $uai_liste UAI de rattachement (ENTAllUai, liste ou valeur unique)
  * @param bool $is_enseignant Profil enseignant
  * @param bool $is_intervenant_ccn Membre du groupe des intervenants
+ * @param bool $a_une_classe Au moins une classe réelle dans l'ENT
+ * @param string $uid uid ENT
  * @return bool
  */
-function thematique_cioidc_est_webmestre($uai_liste, bool $is_enseignant, bool $is_intervenant_ccn = false) {
+function thematique_cioidc_est_webmestre(
+	$uai_liste,
+	bool $is_enseignant,
+	bool $is_intervenant_ccn = false,
+	bool $a_une_classe = false,
+	string $uid = ''
+) {
 	$uai_liste = array_map('strval', (array) thematique_cioidc_normaliser_liste($uai_liste));
-	$rne_webmestres = array_filter(array_map('trim', explode(',', _THEMATIQUE_RNE_WEBMESTRES)));
-	$is_webmestre = $is_enseignant && !$is_intervenant_ccn && (bool) array_intersect($uai_liste, $rne_webmestres);
+	$prof_avec_classe = $a_une_classe && !thematique_cioidc_uid_webmestre($uid);
+	$is_webmestre = thematique_cioidc_dans_rne_webmestres($uai_liste, $is_enseignant)
+		&& !$is_intervenant_ccn
+		&& !$prof_avec_classe;
 	spip_log(
 		'userinfo ENTAllUai=' . implode(',', $uai_liste)
 			. ' intervenant_ccn:' . ($is_intervenant_ccn ? 'oui' : 'non')
+			. ' prof_avec_classe:' . ($prof_avec_classe ? 'oui' : 'non')
 			. ' => webmestre:' . ($is_webmestre ? 'oui' : 'non'),
 		'cioidc'
 	);
 	return $is_webmestre;
 }
 
+// Enseignant rattaché à un établissement de _THEMATIQUE_RNE_WEBMESTRES : seule
+// condition de l'ancienne règle (UAI seul), qui faisait webmestre les intervenants
+// et les profs ayant une classe dans cette structure.
+function thematique_cioidc_dans_rne_webmestres(array $uai_liste, bool $is_enseignant) {
+	$rne_webmestres = array_filter(array_map('trim', explode(',', _THEMATIQUE_RNE_WEBMESTRES)));
+	return $is_enseignant && (bool) array_intersect(array_map('strval', $uai_liste), $rne_webmestres);
+}
+
+// uid listé dans _THEMATIQUE_UID_WEBMESTRES : membre de l'équipe projet qui reste
+// webmestre même inscrit comme intervenant ou avec une classe dans l'ENT.
+function thematique_cioidc_uid_webmestre(string $uid) {
+	$uid_webmestres = array_filter(array_map('trim', explode(',', _THEMATIQUE_UID_WEBMESTRES)));
+	return $uid !== '' && in_array($uid, $uid_webmestres, true);
+}
+
 // Membre du groupe libre ENT des intervenants CCN (cf _THEMATIQUE_GROUPE_INTERVENANTS),
 // sauf uid listé dans _THEMATIQUE_UID_WEBMESTRES (admin aussi inscrit dans ce groupe).
 function thematique_cioidc_est_intervenant_ccn(array $groupes_libres, string $uid = '') {
-	$uid_webmestres = array_filter(array_map('trim', explode(',', _THEMATIQUE_UID_WEBMESTRES)));
-	if ($uid !== '' && in_array($uid, $uid_webmestres, true)) {
+	if (thematique_cioidc_uid_webmestre($uid)) {
 		return false;
 	}
 	$nom_groupe = thematique_cioidc_normaliser_nom(_THEMATIQUE_GROUPE_INTERVENANTS);

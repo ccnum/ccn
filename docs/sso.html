@@ -93,7 +93,7 @@
 		<ol>
 			<li><strong>Compte</strong> : retrouvé par son login (= uid ENT). À défaut, un compte historique est repris par e-mail, seulement s’il est le seul à porter cet e-mail. Sinon, un compte est créé (statut <code>6forum</code>). Un compte passé à la poubelle à la rentrée retrouve ainsi son statut.</li>
 			<li><strong>Intervenant CCN ?</strong> Membre du groupe libre <code>_THEMATIQUE_GROUPE_INTERVENANTS</code> (« CCN Intervenants »), sauf si son uid figure dans <code>_THEMATIQUE_UID_WEBMESTRES</code>.</li>
-			<li><strong>Webmestre ?</strong> Profil <code>ENS</code>, rattaché à un établissement listé dans <code>_THEMATIQUE_RNE_WEBMESTRES</code> (<code>00000CCN</code>), et pas intervenant CCN. Les intervenants sont rattachés à cette même structure : sans cette exclusion, ils deviendraient tous webmestres.</li>
+			<li><strong>Webmestre ?</strong> Profil <code>ENS</code>, rattaché à un établissement listé dans <code>_THEMATIQUE_RNE_WEBMESTRES</code> (<code>00000CCN</code>), pas intervenant CCN, et sans classe réelle (<code>CLS</code>) dans l’ENT sauf si son uid figure dans <code>_THEMATIQUE_UID_WEBMESTRES</code>. Les intervenants et les profs dont la classe est créée dans cette structure y sont rattachés avec le même profil <code>ENS</code> : sans ces exclusions, ils deviendraient tous webmestres. Un compte promu à tort par l’ancienne règle (UAI seul) perd le webmestre à sa connexion suivante.</li>
 			<li><strong>Groupe projet pertinent ?</strong> Un groupe libre dont le nom normalisé <strong>commence par</strong> « &lt;site&gt; &lt;année&gt; ». Le site est le premier segment de <code>nom_site</code>, et la comparaison ignore casse, accents, espaces et ponctuation : « On tourne 2026 » correspond au site <code>ontourne</code> en 2026, mais pas « CCN - On tourne 2026 » ni « Fictions 2026 ».</li>
 			<li><strong>Statut SPIP</strong> : webmestre → <code>0minirezo</code> ; <code>ELV</code> → <code>6forum</code> ; <code>ENS</code> → <code>1comite</code> s’il a un groupe projet pertinent, sinon <code>6forum</code>.</li>
 			<li><strong>Projet archivé</strong> (<code>CCN_PROJET_ACTIVE=false</code>) : la connexion est refusée à tout non-webmestre.</li>
@@ -182,7 +182,7 @@
 				<tbody>
 					<tr><td><code>_THEMATIQUE_RNE_WEBMESTRES</code></td><td>UAI dont les comptes <code>ENS</code> deviennent webmestres, séparés par des virgules. Par défaut <code>00000CCN</code>, la structure de l’équipe projet.</td></tr>
 					<tr><td><code>_THEMATIQUE_GROUPE_INTERVENANTS</code></td><td>Nom du groupe libre ENT des intervenants (« CCN Intervenants »). Ses membres ne sont jamais webmestres.</td></tr>
-					<tr><td><code>_THEMATIQUE_UID_WEBMESTRES</code></td><td>uid ENT qui restent webmestres même membres du groupe intervenants (membres de l’équipe projet inscrits aussi comme intervenants).</td></tr>
+					<tr><td><code>_THEMATIQUE_UID_WEBMESTRES</code></td><td>uid ENT qui restent webmestres même membres du groupe intervenants ou avec une classe dans l’ENT (membres de l’équipe projet inscrits aussi comme intervenants ou profs).</td></tr>
 				</tbody>
 			</table>
 		</div>
