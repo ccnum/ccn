@@ -35,7 +35,15 @@ include_spip('inc/fictions_participants');
  * fermée, plutôt que de lever les dates de clôture.
  */
 function fictions_ecriture_ouverte(int $id_rubrique): bool {
-	$annee = fictions_annee_histoire($id_rubrique);
+	return fictions_annee_ecriture_ouverte(fictions_annee_histoire($id_rubrique));
+}
+
+/**
+ * La période d'écriture de cette année est-elle ouverte (cf
+ * fictions_ecriture_ouverte(), qui part de la rubrique d'une histoire).
+ * Année 0 (indéterminable) : fermée.
+ */
+function fictions_annee_ecriture_ouverte(int $annee): bool {
 	return $annee && (!fictions_annee_configuree($annee) || fictions_phase_ecriture($annee) === 'ouverte');
 }
 
@@ -206,6 +214,38 @@ function fictions_ecriture_droits(int $id_article, ?array $qui = null): string {
 	}
 
 	return '';
+}
+
+/**
+ * L'auteur peut-il modifier le script (champ texte) et les documents d'un
+ * chapitre déjà publié : chapitre d'une histoire ou chapitre 1 commun de
+ * l'année, auteur lié à l'article, période d'écriture de l'année ouverte.
+ *
+ * Le texte du chapitre (descriptif) reste verrouillé une fois publié
+ * (autoriser_article_modifier) ; le script, lui, accompagne le chapitre
+ * suivant (inclure/chapitre-visible.html) et son auteur doit pouvoir le
+ * compléter. Sans cette règle, seul un admin le pouvait : le chapitre 1
+ * commun, publié par un admin, n'était même pas modifiable par l'écrivain.
+ */
+function fictions_script_droits(int $id_article, ?array $qui = null): bool {
+	[$id_auteur] = fictions_droits_qui($qui);
+	$article = sql_fetsel('id_rubrique, statut', 'spip_articles', 'id_article=' . $id_article);
+	if (
+		!$article
+		|| $article['statut'] !== 'publie'
+		|| !fictions_auteur_affecte_chapitre($id_auteur, $id_article)
+	) {
+		return false;
+	}
+	$id_rubrique = (int) $article['id_rubrique'];
+	if (fictions_article_est_chapitre($id_article)) {
+		return fictions_ecriture_ouverte($id_rubrique);
+	}
+	// Chapitre 1 commun : directement dans la rubrique de l'année
+	$annee = trim((string) sql_getfetsel('titre', 'spip_rubriques', 'id_rubrique=' . $id_rubrique));
+	return preg_match('/^\d{4}$/', $annee)
+		&& fictions_id_chapitre1($annee) === $id_article
+		&& fictions_annee_ecriture_ouverte((int) $annee);
 }
 
 /**
