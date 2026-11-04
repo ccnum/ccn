@@ -34,6 +34,7 @@ This monorepo contains all the plugins for SPIP CMS :
 | SPIP_CIOIDC_CLIENT_NOM | Identifiant client OpenID Connect enregistré sur le serveur LaClasse (requis si SPIP_PLUGINS_CIOIDC=true) |
 | SPIP_CIOIDC_CLIENT_SECRET | Secret client OpenID Connect enregistré sur le serveur LaClasse (requis si SPIP_PLUGINS_CIOIDC=true) |
 | SPIP_PLUGINS_IMPORTS_UTILISATEURS | Mettre true pour la page d'import de comptes par CSV (sites sans SSO), désactivée par défaut |
+| SPIP_PLUGINS_VOIR_MOTDEPASSE | Mettre true pour le bouton qui affiche le mot de passe saisi à la connexion (plugin voir_motdepasse), désactivé par défaut |
 | PROJET             | Default laclasse, possibilite : edifice                        |
 
 > ℹ️ `config/_config_cioidc.php` est régénéré à chaque démarrage du conteneur à partir des variables `SPIP_CIOIDC_*` : toute modification prend effet au redémarrage suivant.
