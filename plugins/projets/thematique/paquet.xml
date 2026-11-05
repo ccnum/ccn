@@ -31,6 +31,8 @@
 	<pipeline nom="preparer_fichier_session" inclure="thematique_pipelines.php" />
 	<pipeline nom="insert_head" inclure="thematique_pipelines.php" />
 	<pipeline nom="jqueryui_plugins" inclure="thematique_pipelines.php" />
+	<pipeline nom="porte_plume_barre_pre_charger" inclure="thematique_pipelines.php" />
+	<pipeline nom="porte_plume_lien_classe_vers_icone" inclure="thematique_pipelines.php" />
 	<pipeline nom="notifications_destinataires" inclure="thematique_pipelines.php" />
 	<pipeline nom="cioidc_userinfo" inclure="thematique_pipelines.php" />
 	<pipeline nom="affichage_final" inclure="thematique_pipelines.php" />
