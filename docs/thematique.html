@@ -123,7 +123,7 @@
 
 		<h2 id="commentaires">Commentaires</h2>
 		<p>Les commentaires des articles passent par <strong>forumv2</strong> (<code>formulaires/forumv2.php</code>, onglet « Commentaires » de la sidebar). Tout compte connecté, élève compris, peut commenter et répondre ; le message est publié immédiatement, avec prévisualisation possible, dans la limite de <code>_FORUM_LONGUEUR_MAXI</code> caractères.</p>
-		<p>La zone de rédaction (6 lignes) porte la barre <code>forum</code> du porte-plume, réduite par <code>thematique_porte_plume_barre_pre_charger()</code> à trois boutons : gras, souligné et lien. SPIP n’ayant pas de raccourci pour le souligné, le bouton insère <code>&lt;u&gt;…&lt;/u&gt;</code>, que <code>safehtml</code> laisse passer à l’affichage (<code>thematique_texte_forum()</code>). La barre <code>forum</code> de l’espace privé est réduite de la même façon.</p>
+		<p>La zone de rédaction fait 6 lignes au minimum et grandit avec le texte jusqu’à 60 % de la fenêtre (<code>squelettes/js/forum.js</code>). Elle porte la barre <code>forum</code> du porte-plume, réduite par <code>thematique_porte_plume_barre_pre_charger()</code> à trois boutons : gras, souligné et lien. SPIP n’ayant pas de raccourci pour le souligné, le bouton insère <code>&lt;u&gt;…&lt;/u&gt;</code>, que <code>safehtml</code> laisse passer à l’affichage (<code>thematique_texte_forum()</code>). La barre <code>forum</code> de l’espace privé est réduite de la même façon.</p>
 		<div class="table-wrap">
 			<table>
 				<thead><tr><th>Rôle</th><th>Peut supprimer</th></tr></thead>

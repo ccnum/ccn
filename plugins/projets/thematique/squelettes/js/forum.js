@@ -83,8 +83,33 @@ function trouverFormulaireMobile() {
 // Pas de textarea quand le formulaire est en mode prévisualisation.
 function remplirTexte(conteneur, texte) {
     const textarea = conteneur.querySelector('textarea')
-    if (textarea) textarea.value = texte
+    if (!textarea) return
+    textarea.value = texte
+    ajusterHauteurRedaction(textarea)
 }
+
+/**
+ * La zone de rédaction grandit avec le texte, sans descendre sous ses
+ * 6 lignes (rows) ni dépasser 60 % de la fenêtre (au-delà, elle défile).
+ * height = auto d'abord pour revenir à la hauteur des rows et que
+ * scrollHeight mesure le contenu, pas la hauteur courante.
+ */
+function ajusterHauteurRedaction(textarea) {
+    textarea.style.height = 'auto'
+    // Masquée (formulaire Répondre/Modifier pas encore affiché) : scrollHeight
+    // vaut 0, on garde la hauteur des rows jusqu'à la prochaine saisie.
+    if (!textarea.getClientRects().length) return
+    const max = Math.round(window.innerHeight * 0.6)
+    textarea.style.height = Math.min(textarea.scrollHeight, max) + 'px'
+    textarea.style.overflowY = textarea.scrollHeight > max ? 'auto' : 'hidden'
+}
+
+// Délégué sur document : le formulaire arrive dans une popup chargée en ajax.
+document.addEventListener('input', e => {
+    if (e.target.matches?.('.forum-redaction__textarea')) {
+        ajusterHauteurRedaction(e.target)
+    }
+})
 
 function callbackCliqueSurModifierMonCommentaire(e) {
     const bouton = e.currentTarget
@@ -96,11 +121,10 @@ function callbackCliqueSurModifierMonCommentaire(e) {
 
     formulaireMobile.querySelector('.js-forum-id-parent').value = ''
     formulaireMobile.querySelector('.id-forum').value = idForum
-    remplirTexte(formulaireMobile, texteBrut)
-
     formulaireContainer.hidden = true
     formulaireContainer.before(formulaireMobile)
     formulaireMobile.hidden = false
+    remplirTexte(formulaireMobile, texteBrut)
 }
 
 function callbackCliqueSurCommenter(e) {
