@@ -97,6 +97,45 @@ function thematique_pre_boucle($boucle) {
 }
 
 /**
+ * Pipeline porte_plume_barre_pre_charger : barre « forum » réduite à gras,
+ * souligné et lien, utilisée par la rédaction des commentaires forumv2
+ * (classe inserer_barre_forum, cf noisettes/inc/forumv2/forum_redaction.html).
+ * SPIP n'a pas de raccourci pour le souligné : le bouton insère <u></u>,
+ * conservé à l'affichage par safehtml (cf thematique_texte_forum).
+ *
+ * @param array $barres Barres d'outils du porte-plume, indexées par nom
+ * @return array
+ */
+function thematique_porte_plume_barre_pre_charger($barres) {
+	if (isset($barres['forum'])) {
+		$barre = &$barres['forum'];
+		$barre->ajouterApres('bold', [
+			'id' => 'thematique_souligne',
+			'name' => _T('thematique:barre_souligne'),
+			'className' => 'outil_thematique_souligne',
+			'openWith' => '<u>',
+			'closeWith' => '</u>',
+			'display' => true,
+			'selectionType' => 'word',
+		]);
+		$barre->cacherTout();
+		$barre->afficher(['bold', 'thematique_souligne', 'link']);
+	}
+	return $barres;
+}
+
+/**
+ * Pipeline porte_plume_lien_classe_vers_icone : icône du bouton souligné.
+ *
+ * @param array $icones Classe CSS du bouton => image
+ * @return array
+ */
+function thematique_porte_plume_lien_classe_vers_icone($icones) {
+	$icones['outil_thematique_souligne'] = 'text_underline.svg';
+	return $icones;
+}
+
+/**
  * Pipeline jqueryui_plugins : modules jQuery UI utilisés par le plugin.
  *
  * @param array $scripts Plugins jQuery UI à charger

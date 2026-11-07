@@ -4,10 +4,10 @@ LABEL org.opencontainers.image.title="SPIP"
 LABEL org.opencontainers.image.description="SPIP 4.4 CMS on PHP 8.4 / Apache"
 LABEL org.opencontainers.image.source="https://github.com/ccnum/ccn"
 LABEL org.opencontainers.image.licenses="GPL-3.0-only"
-LABEL org.opencontainers.image.version="4.4.29"
+LABEL org.opencontainers.image.version="4.4.30"
 ENV SPIP_VERSION=4.4
-ENV SPIP_PACKAGE=4.4.29
-ENV SPIP_PACKAGE_SHA256=93cb065809819d0cad9ea97bb3de5fb6373f15c1a746b7b92ef260c5bdf6ff7b
+ENV SPIP_PACKAGE=4.4.30
+ENV SPIP_PACKAGE_SHA256=1c4350fbea6dca4d26b98e9ccd9040d81c468c715a7c069825ad67eec22125e5
 
 RUN set -eux; \
 	apt-get update; \
