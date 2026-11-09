@@ -59,8 +59,9 @@
 					le filtre de statut : statut=publie le rétablit, sinon les ressources en
 					rédaction, proposées ou à la poubelle seraient listées. ]
 					<BOUCLE_articles(ARTICLES){id_secteur}{!par date}{tout}{statut=publie}>
-						<BOUCLE_auteur(AUTEURS){id_article}>
-							#SET{nom_auteur, #ID_AUTEUR|thematique_nom_public_auteur}
+						#SET{nom_auteur, ''}
+						<BOUCLE_auteur(AUTEURS){id_article}{statut IN 0minirezo,1comite,6forum,5poubelle}{0,1}>
+							#SET{nom_auteur, #ID_AUTEUR|thematique_prenom_nom_auteur}
 						</BOUCLE_auteur>
 						<INCLURE{
 							fond=noisettes/sidebar/ressource/ressource_card,

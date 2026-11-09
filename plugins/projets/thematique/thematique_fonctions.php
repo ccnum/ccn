@@ -2271,6 +2271,30 @@ function thematique_nom_public_auteur($id_auteur) {
 }
 
 /**
+ * Prénom NOM d'un auteur, tel que saisi dans sa fiche (spip_auteurs.nom_complet,
+ * renseigné à la connexion SSO, cf thematique_cioidc_nom_complet) — pour
+ * « Publié par » des ressources. Repli sur le nom public (cf
+ * thematique_nom_public_auteur) si nom_complet est vide (compte créé à la
+ * main, sans SSO). Mis en cache mémoire par requête.
+ *
+ * @param int $id_auteur
+ * @return string
+ */
+function thematique_prenom_nom_auteur($id_auteur) {
+	static $cache = [];
+
+	$id_auteur = intval($id_auteur);
+	if (!$id_auteur) {
+		return '';
+	}
+	if (!array_key_exists($id_auteur, $cache)) {
+		$nom_complet = trim((string) sql_getfetsel('nom_complet', 'spip_auteurs', 'id_auteur=' . $id_auteur));
+		$cache[$id_auteur] = $nom_complet !== '' ? $nom_complet : thematique_nom_public_auteur($id_auteur);
+	}
+	return $cache[$id_auteur];
+}
+
+/**
  * Noms publics (cf thematique_nom_public_auteur) des auteurs d'un article,
  * séparés par une virgule — remplace #LESAUTEURS|textebrut dans les mails
  * de notification.
