@@ -31,6 +31,23 @@ function getClassIcon(index) {
     return CLASS_ICONS[index % CLASS_ICONS.length];
 }
 
+/**
+ * Suffixe des classes CSS de couleur d'une classe (bgc_classe_N,
+ * reponse_border_N) : seules les couleurs 0 à 9 existent (css/colors.css.html),
+ * on boucle donc comme les icônes et comme classe_numero() côté PHP. Sans ce
+ * modulo, à partir de la 11e classe le trait mission → réponse et la
+ * pastille restaient sans couleur (fond transparent, invisibles).
+ *
+ * @param {number} index rang de la classe, -1 si inconnue
+ * @returns {number|string} 0 à 9, ou 'defaut'
+ */
+function getClassCouleur(index) {
+    if (index < 0) {
+        return 'defaut';
+    }
+    return index % CLASS_ICONS.length;
+}
+
 function escHtml(s) {
 	return String(s)
 		.replace(/&/g, '&amp;')

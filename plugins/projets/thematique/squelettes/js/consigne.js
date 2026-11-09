@@ -69,13 +69,13 @@ function Consigne() {
 			const nomClasse = decodeHtmlEntities(classe.nom);
 			if (this.reponses_id.includes(classe.id)) {
 				disabled = '';
-				// bgc_classe_${index} sur le conteneur circulaire (comme dans
+				// bgc_classe_N sur le conteneur circulaire (comme dans
 				// reponse.js), pas sur le span de l'emoji : posée sur le span, le
 				// fond ne colorait qu'une petite boîte texte (visible en carré une
 				// fois l'emoji réduit à sa taille réelle par le padding de
 				// .reponse_puce), au lieu de tout le cercle découpé par
 				// border-radius:50%+overflow:hidden du conteneur.
-				coulClasse = `bgc_classe_${index}`;
+				coulClasse = `bgc_classe_${getClassCouleur(index)}`;
 				iconSpan = `<span role="img" aria-label="${escHtml(nomClasse)}" style="font-size:100%">${getClassIcon(index)}</span>`;
 			}
 

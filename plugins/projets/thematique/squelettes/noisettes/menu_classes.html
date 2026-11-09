@@ -26,14 +26,17 @@ du cache de la page. ]
 		[(#REM) ======== INTERVENANT DE L'ANNÉE (affiché en tête de liste) ========
 		Visible de tous, connecté ou non, même si sa fiche n'est pas encore
 		publiée : seul le contenu de la fiche reste réservé aux admin/intervenant
-		dans la popup (cf intervenant_detail.html, thematique_id_fiche_intervenant). ]
+		dans la popup (cf intervenant_detail.html, thematique_id_fiche_intervenant).
+		Ouvre l'article de la fiche de l'année : sans fiche, pas d'icône. ]
+		#SET{id_fiche_intervenant, #VAL|thematique_id_fiche_intervenant_annee_active}
+		[(#GET{id_fiche_intervenant}|non) #SET{id_intervenant_annee, 0}]
 		<BOUCLE_intervenant_annee(AUTEURS){id_auteur=#GET{id_intervenant_annee}}{0,1}>
 			#SET{image, #ID_AUTEUR|thematique_image_auteur_ou_classe{''}}
 			#SET{nom_auteur, #ID_AUTEUR|thematique_nom_public_auteur}
 			<li class="logo cercle tooltip menu_logo_intervenant" data-tip="[(#GET{nom_auteur}|attribut_html)]">
 				<img src="#GET{image}"
 					alt="[(#GET{nom_auteur}|attribut_html)]"
-					onclick="callIntervenant([(#VAL|thematique_id_rubrique_projet)])"
+					onclick="callIntervenant(#GET{id_fiche_intervenant})"
 				/>
 			</li>
 		</BOUCLE_intervenant_annee>
