@@ -895,6 +895,62 @@ li a, li a:hover {
 	}
 }
 
+a.pdf_apercu,
+.portfolio > .spip_documents > a.pdf_apercu {
+	display: block;
+	padding-bottom: 0;
+	&:hover {
+		background-color: transparent;
+	}
+	> .pdf_apercu_cadre {
+		position: relative;
+		> .pdf_apercu_conteneur {
+			position: absolute;
+			inset: 0;
+			overflow: hidden;
+			/* page centrée quand elle est moins large que la sidebar */
+			> .pdfViewer .page {
+				margin: 0 auto;
+			}
+		}
+	}
+	&:hover .pdfViewer .page,
+	&:focus-visible .pdfViewer .page {
+		outline: 3px solid var(--background-color-hover);
+		outline-offset: -3px;
+	}
+}
+
+/* Page précédente / suivante sous l'aperçu (flex-basis : pleine ligne dans
+   le portfolio, qui est en flex wrap). */
+.pdf_apercu_pager {
+	flex: 0 0 100%;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	gap: 12px;
+	padding-top: 8px;
+	> button {
+		width: 32px;
+		height: 32px;
+		font-size: 20px;
+		line-height: 1;
+		border: 1px solid #ccc;
+		border-radius: 4px;
+		background: #fff;
+		color: var(--color-default);
+		cursor: pointer;
+		&:hover:not(:disabled) {
+			background-color: var(--background-color-hover);
+			color: var(--color-hover);
+		}
+		&:disabled {
+			opacity: .35;
+			cursor: default;
+		}
+	}
+}
+
 /* Nom (avec extension), poids et bouton de téléchargement affichés
    sous chaque document du portfolio (image, PDF ou autre format). */
 .spip_document_meta {

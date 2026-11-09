@@ -43,7 +43,7 @@
 			[(#REM) Réduite à 760 px, double des 380 px d'affichage (sidebar.css.html)
 			pour les écrans haute densité, sans charger l'original en pleine taille
 			(photos de téléphone) : le clic ouvre l'original dans la mediabox. ]
-			<a href="#URL_DOCUMENT" title="[(#TITRE)]" class="mediabox" type="image/jpeg" data-box-min-height="90pc">
+			<a href="#URL_DOCUMENT" title="[(#TITRE)]" class="mediabox" type="image/jpeg" data-box-min-height="90vh">
 				[(#FICHIER|image_reduire{760}|inserer_attribut{alt,#TITRE})]
 			</a>
 			]
@@ -57,7 +57,7 @@
 			]
 			[(#MIME_TYPE|match{'^image/|^audio/'}|non)
 				[(#MIME_TYPE|match{'application/pdf'}|oui)
-					<a href="#URL_DOCUMENT" title="[(#TITRE)]" class="mediabox" type="#MIME_TYPE" data-box-min-height="90pc">
+					<a href="#URL_DOCUMENT" title="[(#TITRE)]" class="mediabox" type="#MIME_TYPE" data-box-height="90vh">
 						[(#LOGO_DOCUMENT|image_reduire{100}|inserer_attribut{style,'border:0px solid #000000;'}|inserer_attribut{alt,#TITRE})]
 					</a>
 				]
