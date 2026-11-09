@@ -16,12 +16,18 @@
 				<span class="icon icon-down"></span>
 			</button>
 			<ul class="select-options">
-				<BOUCLE_dates(RUBRIQUES){!par titre}{tout}{racine}{titre==^[2]}>
-				[(#ENV{annee_scolaire}|=={#TITRE}|oui)
-					<li class="select-option actif" data-value="#TITRE">#TITRE/[(#TITRE|plus{1})]</li>
+				[(#REM) Seules les rubriques racines titrées d'une année pure (ex: 2025),
+				comme le repli de _ANNEE_SCOLAIRE (ccn_options.php). Sur les anciens
+				sites, des racines numérotées (« 2. Consignes ») passaient un filtre
+				« commence par 2 », et TITRE, qui retire le numéro, donnait
+				« Consignes »|plus{1} : TypeError en PHP 8, menu haut en erreur.
+				TITRE* (brut) par sécurité. ]
+				<BOUCLE_dates(RUBRIQUES){!par titre}{tout}{racine}{titre==^[0-9][0-9][0-9][0-9]$}>
+				[(#ENV{annee_scolaire}|=={#TITRE*}|oui)
+					<li class="select-option actif" data-value="#TITRE*">#TITRE*/[(#TITRE*|plus{1})]</li>
 				]
-				[(#ENV{annee_scolaire}|!={#TITRE}|oui)
-					<li class="select-option" data-value="#TITRE">#TITRE/[(#TITRE|plus{1})]</li>
+				[(#ENV{annee_scolaire}|!={#TITRE*}|oui)
+					<li class="select-option" data-value="#TITRE*">#TITRE*/[(#TITRE*|plus{1})]</li>
 				]
 				</BOUCLE_dates>
 			</ul>
