@@ -38,7 +38,6 @@ annee_scolaire ignorait l'image titrée de l'année et sortait des dates vides. 
 #SET{id_rubrique_travail_en_cours, #VAL{travail_en_cours}|thematique_id_rubrique_a_mot}
 #SET{id_rubrique_blogs, #VAL{blogs}|thematique_id_rubrique_a_mot}
 #SET{id_rubrique_evenements, #VAL{evenements}|thematique_id_rubrique_a_mot}
-#SET{id_rubrique_intervenant, #VAL|thematique_id_rubrique_projet}
 {
 	"date_debut": "[(#GET{annee})]-09-01",
 	"date_fin": "[(#GET{annee}|plus{1})]-09-01",
@@ -65,7 +64,7 @@ annee_scolaire ignorait l'image titrée de l'année et sortait des dates vides. 
 	"url_popup_ressources_detail": [(#VAL{rubrique}|thematique_url_popup{ressource_detail, #GET{id_rubrique_ressources}})],
 	"url_popup_ressources_ajout": [(#VAL{publier}|thematique_url_popup{ressources})],
 	"url_popup_classes": [(#VAL{rubrique}|thematique_url_popup{travail_en_cours, #GET{id_rubrique_travail_en_cours}})],
-	"url_popup_intervenant": [(#VAL{rubrique}|thematique_url_popup{intervenant, #GET{id_rubrique_intervenant}})],
+	"url_popup_intervenant": [(#VAL{article}|thematique_url_popup{intervenant})],
 	"url_popup_evenement_creer": [(#VAL{publier}|thematique_url_popup{blogs, #GET{id_rubrique_blogs}})],
 	"url_popup_information_creer": [(#VAL{publier}|thematique_url_popup{evenements, #GET{id_rubrique_evenements}})],
 	"url_popup_chat": "",

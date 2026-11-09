@@ -1981,25 +1981,20 @@ function thematique_url_popup($page, $type_objet = '', $id_rubrique = null) {
 }
 
 /**
- * Fiche de l'intervenant (cf thematique_id_fiche_intervenant_annee()) de
- * l'année d'une rubrique projet, si le visiteur peut la voir : publiée, ou
- * non publiée pour un admin ou un intervenant (même règle que les badges des
- * jalons, cf main.js:updateBadgeJalon). Mise en cache mémoire par requête.
+ * Fiche intervenant ouverte en popup (page=article, type_objet=intervenant),
+ * si le visiteur peut la voir : publiée, ou non publiée pour un admin ou un
+ * intervenant (même règle que les badges des jalons, cf
+ * main.js:updateBadgeJalon).
  *
- * Appelée comme filtre : `#ENV{id_rubrique}|thematique_id_fiche_intervenant`
+ * Appelée comme filtre : `#ENV{id_article}|thematique_id_fiche_intervenant`
  *
- * @param int $id_rubrique rubrique projet ; 0 ou rubrique hors année (ex:
- *   « Intervenants », après publication de la fiche) = année active
- * @return int 0 si pas de fiche ou fiche non visible
+ * @param int $id_article
+ * @return int 0 si l'article n'est pas une fiche intervenant ou n'est pas visible
  */
-function thematique_id_fiche_intervenant($id_rubrique = 0) {
-	static $cache = [];
-	$annee = intval($id_rubrique) ? thematique_annee_rubrique(intval($id_rubrique)) : 0;
-	if (!$annee) {
-		$annee = thematique_annee_scolaire();
-	}
-	if (isset($cache[$annee])) {
-		return $cache[$annee];
+function thematique_id_fiche_intervenant($id_article) {
+	$id_article = intval($id_article);
+	if (!$id_article || !thematique_article_est_fiche_intervenant($id_article)) {
+		return 0;
 	}
 
 	include_spip('inc/session');
@@ -2007,7 +2002,20 @@ function thematique_id_fiche_intervenant($id_rubrique = 0) {
 		? ['publie', 'prop', 'prepa']
 		: ['publie'];
 
-	return $cache[$annee] = thematique_id_fiche_intervenant_annee($annee, $statuts);
+	return sql_countsel('spip_articles', 'id_article=' . $id_article . ' AND ' . sql_in('statut', $statuts))
+		? $id_article
+		: 0;
+}
+
+/**
+ * Fiche intervenant (tous statuts) de l'année scolaire active, cible de
+ * l'icône de l'intervenant dans le pied de page (noisettes/menu_classes.html).
+ *
+ * @param mixed $_ Valeur ignorée (permet l'appel comme filtre)
+ * @return int 0 si aucune
+ */
+function thematique_id_fiche_intervenant_annee_active($_ = null) {
+	return thematique_id_fiche_intervenant_annee(thematique_annee_scolaire());
 }
 
 /**

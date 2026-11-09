@@ -162,9 +162,7 @@ $(function () {
 			const type_article = $container.find('input[name="type_article"]').val()
 			if(!type_article) return CCN.projet.showWholeTimeline();
 			if (type_article === 'intervenant') {
-				const id_rubrique = parseInt($container.find('input[name="id_parent"]').val(), 10);
-				if (!id_rubrique) return CCN.projet.showWholeTimeline();
-				callIntervenant(id_rubrique);
+				callIntervenant(id_article);
 				collapseSidebar();
 				return;
 			}
@@ -362,7 +360,7 @@ function setContentFromState(state, title, url) {
 
 		// Fiche intervenant
 		if (state.type_objet == "intervenant") {
-			callIntervenant(state.id_rubrique || state.id_objet);
+			callIntervenant(state.id_article || state.id_objet);
 		}
 
 		// Article de blog
@@ -678,27 +676,24 @@ function callClasses() {
 }
 
 /*
-	Afficher la fiche d'un intervenant.
+	Afficher la fiche d'un intervenant (article de la rubrique « Intervenants »).
 */
-function callIntervenant(id_rubrique) {
-	if (id_rubrique !== '' && !Number.isInteger(Number(id_rubrique))) return;
+function callIntervenant(id_article) {
+	if (!Number.isInteger(Number(id_article)) || !Number(id_article)) return;
 	CCN.projet.showWholeTimeline();
 	setLateralSidebarExpanded(false);
 	updateMenuIcon(['intervenant'], 'sidebarView');
-	let url = CCN.projet.url_popup_intervenant;
-	if (id_rubrique != '') {
-		url = CCN.projet.url_popup_intervenant + '&id_objet=' + id_rubrique + '&type_objet=intervenant';
-	}
+	const url = CCN.projet.url_popup_intervenant + '&id_article=' + id_article;
 	loadContentInMainSidebar(
 		url,
 		() => {
 			updateUrl(
 				{
 					'type_objet': 'intervenant',
-					'id_objet': id_rubrique,
-					'id_rubrique': id_rubrique,
-					'page': 'rubrique'
-				}, "Intervenant", "./spip.php?page=rubrique&id_objet=" + id_rubrique + "&mode=complet&type_objet=intervenant"
+					'id_objet': id_article,
+					'id_article': id_article,
+					'page': 'article'
+				}, "Intervenant", "./spip.php?page=article&id_article=" + id_article + "&mode=complet"
 			);
 		},
 		"intervenant"
