@@ -1,8 +1,22 @@
 #CACHE{0}
-[(#REM) En-tête de la fiche intervenant (cf intervenant_detail.html). ]
+[(#REM) En-tête de la fiche intervenant (cf intervenant_detail.html).
+Photo et nom de l'auteur de la fiche ouverte (id_article) : même personne
+que l'icône du pied de page (cf thematique_intervenant_annee,
+noisettes/menu_classes.html). Fiche encore sans auteur : intervenant lié à
+la rubrique projet (id_rubrique), comme avant. ]
 <div class="sidebar_bubble header-reponse">
 	<div id="row_header">
+        <BOUCLE_auteur_fiche(AUTEURS){id_article}{tout}{0,1}>
+        #SET{nom_auteur, #ID_AUTEUR|thematique_nom_public_auteur}
+        <div id="header-col-left">
+            <div class="photo">
+                <img src="[(#ID_AUTEUR|thematique_image_auteur_ou_classe{''})]" alt="[(#GET{nom_auteur}|attribut_html)]" />
+            </div>
+            <div class="auteur">#GET{nom_auteur}</div>
+        </div>
+        </BOUCLE_auteur_fiche>
         <INCLURE{fond=noisettes/sidebar/inc/header_gauche_photo_auteur, id_rubrique} />
+        <//B_auteur_fiche>
         <div id="header-col-right">
             <div id="header-row-1">
                 <div class="etiquette-etape">
