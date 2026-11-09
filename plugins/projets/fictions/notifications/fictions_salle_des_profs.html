@@ -1,0 +1,24 @@
+[(#REM)
+
+  Mail « Nouveau message dans la salle des profs » (cf forum_poste.html),
+  envoyé aux profs de l'année (cf fictions_notifications_destinataires()).
+  Mise en page commune aux CCN (plugins/projets/ccn/notifications/inc_corps.html).
+
+  Contexte : le message de forum (titre, texte, auteur, date_heure, id_objet =
+  article de la salle des profs), fourni par inc/email_notification_forum.
+
+  Le bouton ouvre la page du forum (page=forum), celle qu'affiche le lien
+  « Salle des profs » du pied de page.
+
+]
+#SET{url_salle, #URL_PAGE{forum}|parametre_url{id_article, #ENV{id_objet}}|url_absolue}
+#SET{carte_date, #ENV{date_heure}|affdate}
+#SET{carte_extrait, #ENV{texte}|textebrut|couper{200}}
+#SET{mail_titre, #VAL{fictions:notif_salle_des_profs_titre}|_T}
+#SET{mail_detail, #VAL{fictions:notif_salle_des_profs_detail}|_T{#ARRAY{auteur, #ENV{auteur}}}}
+#SET{mail_bouton, #VAL{fictions:notif_bouton_lire_message}|_T}
+<title>[(#VAL{fictions:notif_salle_des_profs_sujet}|_T|nettoyer_titre_email)]</title>
+
+<body>
+<INCLURE{fond=notifications/inc_corps, titre=#GET{mail_titre}, detail=#GET{mail_detail}, url=#GET{url_salle}, bouton=#GET{mail_bouton}, avatar_secours_emoji=💬, avatar_secours_fond=#DEE0FF, avatar_secours_couleur=#1E2055, carte_titre=#ENV{titre}, date_carte=#GET{carte_date}, extrait=#GET{carte_extrait}} />
+</body>

@@ -30,6 +30,7 @@
 
 	<menu nom="fictions_associations" titre="fictions:associations_titre" parent="menu_edition" icone="images/auteur-xx.svg" />
 	<pipeline nom="post_edition" inclure="fictions_pipelines.php" />
+	<pipeline nom="notifications_destinataires" inclure="fictions_pipelines.php" />
 	<pipeline nom="cioidc_userinfo" inclure="fictions_pipelines.php" />
 	<pipeline nom="calculer_rubriques" inclure="fictions_pipelines.php" />
 	<pipeline nom="taches_generales_cron" inclure="fictions_pipelines.php" />

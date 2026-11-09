@@ -1,0 +1,24 @@
+[(#REM)
+
+  Surcharge de plugins/notifications/notifications/forum_poste.html : un
+  message de la salle des profs (forum de l'année, cf footer.html) reçoit une
+  mise en page dédiée (fictions_salle_des_profs.html) ; tout autre message
+  retombe sur le mail d'origine (forum_poste_defaut.html, plugin ccn).
+  Destinataires : cf fictions_notifications_destinataires().
+
+  Deux fonds distincts plutôt qu'un gros bloc conditionnel : comme dans
+  thematique, les crochets conditionnels de SPIP ne supportent pas un bloc
+  aussi long contenant lui-même des conditions.
+
+]
+#SET{annee_salle, 0}
+[(#ENV{objet}|=={article}|oui)
+	#SET{annee_salle, #ENV{id_objet}|fictions_annee_salle_des_profs}
+]
+[(#GET{annee_salle}|oui)
+	#INCLURE{fond=notifications/fictions_salle_des_profs, env}
+]
+[(#GET{annee_salle}|non)
+	#INCLURE{fond=notifications/forum_poste_defaut, env}
+]
+#FILTRE{facteur_email_wrap_to_html}

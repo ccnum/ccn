@@ -286,3 +286,56 @@ function fictions_associations_donnees_filtre($annee): array {
 	include_spip('inc/fictions_plan');
 	return fictions_associations_donnees(intval($annee));
 }
+
+/**
+ * Année de la salle des profs si l'article en est une, 0 sinon. Salle des profs :
+ * article tagué footer-forum (créé à la rentrée, cf inc/fictions_rentree.php) ou,
+ * jusqu'en 2021, agora, rangé dans la rubrique de l'année (cf footer.html).
+ * Filtre : #ENV{id_objet}|fictions_annee_salle_des_profs
+ */
+function fictions_annee_salle_des_profs($id_article): int {
+	static $cache = [];
+	$id_article = intval($id_article);
+	if (!$id_article) {
+		return 0;
+	}
+	if (!array_key_exists($id_article, $cache)) {
+		$est_salle = sql_countsel(
+			'spip_mots_liens AS L JOIN spip_mots AS M ON M.id_mot=L.id_mot',
+			["L.objet='article'", 'L.id_objet=' . $id_article, sql_in('M.titre', ['footer-forum', 'agora'])]
+		);
+		$titre = $est_salle ? (string) sql_getfetsel(
+			'R.titre',
+			'spip_articles AS A JOIN spip_rubriques AS R ON R.id_rubrique=A.id_rubrique',
+			'A.id_article=' . $id_article
+		) : '';
+		$cache[$id_article] = preg_match('/^\d{4}$/', trim($titre)) ? intval($titre) : 0;
+	}
+	return $cache[$id_article];
+}
+
+/**
+ * Emails des profs d'une année : comptes des participants actifs (classes,
+ * écrivain) et profs inscrits au projet (groupe ENT, cf fictions_cioidc_userinfo),
+ * rédacteurs ou admins, hors poubelle.
+ *
+ * @return string[]
+ */
+function fictions_emails_profs_annee(int $annee): array {
+	include_spip('inc/fictions_participants');
+	$config = fictions_annee_config($annee);
+	$ids = array_merge(
+		array_column(fictions_participants($annee), 'id_auteur'),
+		array_keys($config['inscrits'])
+	);
+	$ids = array_values(array_unique(array_filter(array_map('intval', $ids))));
+	if (!$ids) {
+		return [];
+	}
+	$emails = sql_allfetsel('email', 'spip_auteurs', [
+		sql_in('id_auteur', $ids),
+		sql_in('statut', ['0minirezo', '1comite']),
+		"email<>''",
+	]);
+	return array_column($emails, 'email');
+}

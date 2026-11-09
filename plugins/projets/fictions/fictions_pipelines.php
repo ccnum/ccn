@@ -92,6 +92,29 @@ function fictions_notifier_chapitre_a_ecrire(int $id_publie, int $id_suivant): v
 }
 
 /**
+ * Pipeline notifications_destinataires : un message publié dans la salle des profs
+ * (forum de l'année, cf fictions_annee_salle_des_profs()) est notifié aux profs de
+ * cette année (cf fictions_emails_profs_annee()), avec le mail dédié
+ * notifications/fictions_salle_des_profs.html. Son auteur est écarté par
+ * forumvalide.
+ */
+function fictions_notifications_destinataires($flux) {
+	$forum = $flux['args']['options']['forum'] ?? [];
+	if (($flux['args']['quoi'] ?? '') !== 'forumvalide' || ($forum['objet'] ?? '') !== 'article') {
+		return $flux;
+	}
+	include_spip('fictions_fonctions');
+	$annee = fictions_annee_salle_des_profs($forum['id_objet'] ?? 0);
+	if (!$annee) {
+		return $flux;
+	}
+	$emails = fictions_emails_profs_annee($annee);
+	spip_log('fictions salle des profs ' . $annee . ' : message #' . intval($forum['id_forum'] ?? 0) . ' notifié à ' . count($emails) . ' prof(s)', 'fictions');
+	$flux['data'] = array_merge((array) $flux['data'], $emails);
+	return $flux;
+}
+
+/**
  * Connexion SSO : trace l'inscription d'un prof au projet de l'année (groupe libre ENT
  * "Fictions <année>"). Ne crée plus d'histoire : une histoire par compte faussait
  * le compte (un enseignant peut gérer plusieurs classes) ; les histoires se créent
