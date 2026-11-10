@@ -168,9 +168,12 @@ function thematique_cioidc_est_intervenant_ccn(array $groupes_libres, string $ui
 	if (thematique_cioidc_uid_webmestre($uid)) {
 		return false;
 	}
-	$nom_groupe = thematique_cioidc_normaliser_nom(_THEMATIQUE_GROUPE_INTERVENANTS);
+	$noms_groupe = array_filter(array_map(
+		'thematique_cioidc_normaliser_nom',
+		explode('|', _THEMATIQUE_GROUPE_INTERVENANTS)
+	));
 	foreach ($groupes_libres as $groupe) {
-		if ($nom_groupe !== '' && thematique_cioidc_normaliser_nom($groupe->name ?? '') === $nom_groupe) {
+		if (in_array(thematique_cioidc_normaliser_nom($groupe->name ?? ''), $noms_groupe, true)) {
 			return true;
 		}
 	}
