@@ -3,7 +3,7 @@
 cf noisettes/article.html). CACHE{0} : visibilité selon le rôle en session —
 une fiche non publiée n'est visible que d'un admin/intervenant, comme les
 jalons (cf thematique_id_fiche_intervenant) ; l'en-tête (photo et nom de
-l'intervenant lié à la rubrique projet) reste affiché à tous. ]
+l'auteur de la fiche, cf header_intervenant.html) reste affiché à tous. ]
 #SET{id_fiche, #ENV{id_article}|thematique_id_fiche_intervenant}
 #SET{id_rubrique_projet, #VAL|thematique_id_rubrique_projet}
 <div class="bloc_article">
@@ -11,6 +11,7 @@ l'intervenant lié à la rubrique projet) reste affiché à tous. ]
 		<INCLURE{
 			fond=noisettes/sidebar/page_participant/header_intervenant,
 			id_rubrique=#GET{id_rubrique_projet},
+			id_article=#ENV{id_article},
 			ajax
 		} />
 	</div>

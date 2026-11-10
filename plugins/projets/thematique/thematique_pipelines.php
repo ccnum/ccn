@@ -183,6 +183,7 @@ function thematique_insert_head($flux) {
 		'js/consigne.js',
 		'js/controleurs.js',
 		'js/deferred_count.js',
+		'js/documents_pdf_apercu.js',
 		'js/getClassColorByClassName.js',
 		'js/getClassIconByClassName.js',
 		'js/globales.js',

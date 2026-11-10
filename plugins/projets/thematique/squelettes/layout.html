@@ -45,6 +45,18 @@ Id de la rubrique restreinte sélectionnée : calculés en un seul appel]
 		<meta http-equiv="Cache-Control" content="no-cache, must-revalidate">
 		<meta http-equiv="Expires" content="0">
 		<link rel="stylesheet" href="[(#URL_PAGE{thematique.css}|parametre_url{chemin,#DOSSIER_SQUELETTE})]">
+		[(#REM) PDF.js et son visualiseur (PDFSinglePageViewer) : aperçu des PDF joints
+		dans la sidebar (js/documents_pdf_apercu.js). pdf_viewer.min.js doit suivre
+		pdf.min.js : il lit pdfjsLib à son chargement (defer garde l'ordre). ]
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf_viewer.min.css"
+			integrity="sha384-OPLBIVpTWn5IeFhdZcMhX+XMJ4ZMKDN6ykKH+ZxgPvlpLnTW8qrpBePnYNjyeBQM"
+			crossorigin="anonymous">
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"
+			integrity="sha384-/1qUCSGwTur9vjf/z9lmu/eCUYbpOTgSjmpbMQZ1/CtX2v/WcAIKqRv+U1DUCG6e"
+			crossorigin="anonymous" defer></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf_viewer.min.js"
+			integrity="sha384-2Ym0vIGZP7EU5dRsGZWa74Xxgslz0W8v9GN5xrX2i+dKJ+E9c7N4Xf+pLPbmAhoX"
+			crossorigin="anonymous" defer></script>
 	</head>
 	<body>
 	<a href="#global" class="skip-link"><:thematique:aller_au_contenu:></a>
