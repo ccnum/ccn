@@ -26,8 +26,10 @@ define('_THEMATIQUE_RNE_WEBMESTRES', '00000CCN');
 
 // Groupe libre ENT des intervenants : rattachés à la même structure que l'équipe
 // projet (00000CCN) avec le profil ENS, ils seraient sinon promus webmestres.
+// Plusieurs noms acceptés, séparés par | (le nom peut contenir une virgule) :
+// l'ancien nom reste reconnu le temps du renommage du groupe dans l'ENT.
 if (!defined('_THEMATIQUE_GROUPE_INTERVENANTS')) {
-	define('_THEMATIQUE_GROUPE_INTERVENANTS', 'CCN Intervenants & Médiateurs');
+	define('_THEMATIQUE_GROUPE_INTERVENANTS', 'CCN Intervenants, Médiateurs et Partenaires|CCN Intervenants & Médiateurs');
 }
 // uid ENT (ex: VBZ63652) qui restent webmestres même membres de ce groupe (équipe
 // projet inscrite aussi comme intervenant), séparés par des virgules.
