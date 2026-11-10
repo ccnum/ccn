@@ -10,7 +10,8 @@
  *   document reste téléchargeable comme avant.
  * - Taille et orientation : chaque page est affichée aussi grande que
  *   possible dans la largeur de la sidebar ET dans sa hauteur visible,
- *   flèches comprises (mode 'page-fit' de PDF.js) : une page paysage
+ *   flèches comprises, sans dépasser HAUTEUR_MAX (mode 'page-fit' de
+ *   PDF.js) : une page paysage
  *   s'affiche en paysage, une page portrait est réduite pour être vue en
  *   entier sans défiler. Le clic l'ouvre en grand (mediabox).
  * - Initialisation : le contenu de la sidebar arrive toujours en ajax
@@ -35,6 +36,10 @@
 	// sous l'aperçu, déduites de la hauteur visible.
 	const HAUTEUR_PAGER = 40;
 	const MARGE = 10;
+	// Hauteur bornée comme celle des photos (380 px, sidebar.css.html) : la
+	// page, centrée, laisse voir autour d'elle le fond bleu de survol du cadre.
+	// Le clic l'ouvre en grand (mediabox).
+	const HAUTEUR_MAX = 380;
 
 	/**
 	 * Worker PDF.js unique, partagé par tous les aperçus. Sans lui, chaque
@@ -194,9 +199,13 @@
 		async function ajuster() {
 			const page = await pdf.getPage(viewer.currentPageNumber);
 			const { width, height } = page.getViewport({ scale: 1 }); // tient compte du /Rotate
-			const largeur = lien.clientWidth || 380;
-			const hauteurMax = hauteurVisible(zoneDefilement(lien)) - (avecPager ? HAUTEUR_PAGER : 0);
-			$cadre.css('height', Math.floor(Math.min(hauteurMax, largeur * height / width)) + 'px');
+			// Largeur du cadre et non du lien : clientWidth inclut le padding du
+			// lien (marge de survol dans le portfolio, sidebar.css.html).
+			const largeur = $cadre[0].clientWidth || 380;
+			const hauteurMax = hauteurVisible(zoneDefilement(lien)) - (avecPager ? HAUTEUR_PAGER : 0)
+				- (lien.offsetHeight - $cadre[0].offsetHeight);
+			const hauteurBornee = Math.min(hauteurMax, HAUTEUR_MAX);
+			$cadre.css('height', Math.floor(Math.min(hauteurBornee, largeur * height / width)) + 'px');
 			viewer.currentScaleValue = 'page-fit';
 		}
 

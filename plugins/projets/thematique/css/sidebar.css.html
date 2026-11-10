@@ -806,6 +806,12 @@ li a, li a:hover {
 			color: var(--color-hover);
 			> .spip_document_meta {
 				color: var(--color-hover);
+				/* poids et « Télécharger » ont leur propre gris (#666, cf plus
+				bas) : sans ça ils restaient gris sur le fond de survol. */
+				> .spip_document_taille,
+				> .spip_document_telecharger {
+					color: inherit;
+				}
 			}
 		}
 		> .bloc_modifier_mdp_video {
@@ -898,9 +904,10 @@ li a, li a:hover {
 a.pdf_apercu,
 .portfolio > .spip_documents > a.pdf_apercu {
 	display: block;
-	padding-bottom: 0;
+	padding: 15px;
+	box-sizing: border-box;
 	&:hover {
-		background-color: transparent;
+		background-color: var(--background-color-hover);
 	}
 	> .pdf_apercu_cadre {
 		position: relative;
@@ -914,10 +921,48 @@ a.pdf_apercu,
 			}
 		}
 	}
-	&:hover .pdfViewer .page,
-	&:focus-visible .pdfViewer .page {
-		outline: 3px solid var(--background-color-hover);
-		outline-offset: -3px;
+}
+/* Documents insérés dans le texte (modèle SPIP : div.spip_document > figure
+   > lien ou image + légende) : même cadre blanc que les pièces jointes du
+   portfolio, séparés de 11 px (comme le gap de .portfolio) où se voit le fond
+   de la zone de texte. */
+.bloc_texte .spip_document {
+	background: #fff;
+	border: 1px solid #ccc;
+	border-radius: 4px;
+	+ .spip_document {
+		margin-top: 11px;
+	}
+	> .spip_doc_inner {
+		margin: 0;
+		/* image ou icône (hors aperçu PDF, qui a sa propre marge) */
+		> img,
+		> a:not(.pdf_apercu) > img {
+			display: block;
+			max-width: 100%;
+			height: auto;
+			margin: 15px auto 0;
+		}
+		> .spip_doc_legende {
+			padding: 12px 10px;
+		}
+		> .pdf_apercu + .spip_doc_legende,
+		> .pdf_apercu_pager + .spip_doc_legende {
+			padding-top: 0;
+		}
+		> .pdf_apercu_pager {
+			padding-bottom: 8px;
+		}
+	}
+}
+/* PDF inséré dans le texte : fond bleu et texte blanc au survol, comme une
+   pièce jointe. */
+.spip_document:has(> .spip_doc_inner > a.pdf_apercu):hover {
+	background-color: var(--background-color-hover);
+	color: var(--color-hover);
+	.spip_doc_legende,
+	.spip_doc_legende * {
+		color: var(--color-hover);
 	}
 }
 
