@@ -25,6 +25,7 @@
 					<ul class="sub">
 						<li><a href="#modes">Avec ou sans ENT</a></li>
 						<li><a href="#principe">ENT : principe</a></li>
+						<li><a href="#schema">Qui met à jour quoi</a></li>
 						<li><a href="#attributs">Attributs ENT</a></li>
 						<li><a href="#etapes">Étapes</a></li>
 						<li><a href="#tableau">Tableau de décision</a></li>
@@ -74,6 +75,146 @@
 		<div class="callout">
 			<p>L’ENT n’a <strong>pas de profil « intervenant »</strong> : un intervenant arrive avec le même profil <code>ENS</code> qu’un enseignant. Ce qui les distingue, c’est l’appartenance au groupe libre « CCN Intervenants, Médiateurs et Partenaires », sans classe réelle dans <code>ENTClassesGroupes</code>. Un enseignant sans classe dans l’ENT, mais hors de ce groupe, reste un enseignant.</p>
 		</div>
+
+		<h2 id="schema">Qui met à jour quoi</h2>
+		<p>Ce que laclasse.com envoie à la connexion, ce que le plugin <code>thematique</code> en déduit, et les champs SPIP qu’il écrit. Le plugin tiers <code>cioidc</code> ne fait que l’échange OpenID Connect : il passe les attributs au pipeline <code>cioidc_userinfo</code>, puis ouvre la session du compte qui a ce <code>login</code>.</p>
+		<figure class="schema">
+			<svg viewBox="0 0 780 610" role="img" aria-labelledby="schema-titre schema-desc">
+				<title id="schema-titre">Flux des informations de laclasse.com vers SPIP</title>
+				<desc id="schema-desc">Les attributs uid et MailAdressePrincipal servent à retrouver ou créer le compte (login, email). name et avatar sont recopiés dans nom_complet et avatar. ENTPersonProfils, ENTClassesGroupes, ENTGroupesLibres et ENTAllUai déterminent le profil (webmestre, intervenant, enseignant, élève), qui fixe statut, webmestre, nom et ent_statut. ENTGroupesLibres donne le groupe projet, qui fixe le statut et lie la rubrique du projet. ENTClassesGroupes et ENTAllUai donnent les classes et l’école : rubriques liées, classes_ent, rubrique école. Après la connexion, la pop-up de choix des classes lit classes_ent et écrit classes_ent_choisies et les liens vers les classes ; à l’écriture de la session, thematique_donner_role() lit statut, ent_statut et les liens pour calculer #SESSION{role}.</desc>
+				<defs><marker id="schema-pointe" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="currentColor"/></marker></defs>
+				<text x="100" y="22" class="entete">laclasse.com</text>
+				<text x="100" y="40" class="sous">attributs userinfo OIDC</text>
+				<text x="380" y="22" class="entete">Plugin thematique</text>
+				<text x="380" y="40" class="sous">à chaque connexion ENT</text>
+				<text x="660" y="22" class="entete">Base SPIP</text>
+				<text x="660" y="40" class="sous">ce qui est écrit</text>
+				<g class="boite ent"><rect x="0" y="60" width="200" height="34" rx="10"/>
+					<text x="100" y="81.5" class="mono">uid</text>
+				</g>
+				<g class="boite ent"><rect x="0" y="104" width="200" height="34" rx="10"/>
+					<text x="100" y="125.5" class="mono">MailAdressePrincipal</text>
+				</g>
+				<g class="boite ent"><rect x="0" y="148" width="200" height="34" rx="10"/>
+					<text x="100" y="169.5" class="mono">name</text>
+				</g>
+				<g class="boite ent"><rect x="0" y="192" width="200" height="34" rx="10"/>
+					<text x="100" y="213.5" class="mono">avatar</text>
+				</g>
+				<g class="boite ent"><rect x="0" y="236" width="200" height="34" rx="10"/>
+					<text x="100" y="257.5" class="mono">ENTPersonProfils</text>
+				</g>
+				<g class="boite ent"><rect x="0" y="280" width="200" height="34" rx="10"/>
+					<text x="100" y="301.5" class="mono">ENTClassesGroupes</text>
+				</g>
+				<g class="boite ent"><rect x="0" y="324" width="200" height="34" rx="10"/>
+					<text x="100" y="345.5" class="mono">ENTGroupesLibres</text>
+				</g>
+				<g class="boite ent"><rect x="0" y="368" width="200" height="34" rx="10"/>
+					<text x="100" y="389.5" class="mono">ENTAllUai</text>
+				</g>
+				<g class="boite traitement"><rect x="280" y="60" width="200" height="78" rx="10"/>
+					<text x="380" y="87.5" class="titre">Compte</text>
+					<text x="380" y="103.5" class="detail">login, sinon e-mail unique,</text>
+					<text x="380" y="119.5" class="detail">sinon création</text>
+				</g>
+				<g class="boite traitement"><rect x="280" y="148" width="200" height="78" rx="10"/>
+					<text x="380" y="183.5" class="titre">Identité</text>
+					<text x="380" y="199.5" class="detail">recopiée si elle a changé</text>
+				</g>
+				<g class="boite traitement"><rect x="280" y="236" width="200" height="70" rx="10"/>
+					<text x="380" y="259.5" class="titre">Profil</text>
+					<text x="380" y="275.5" class="detail">webmestre · intervenant</text>
+					<text x="380" y="291.5" class="detail">enseignant · élève</text>
+				</g>
+				<g class="boite traitement"><rect x="280" y="314" width="200" height="48" rx="10"/>
+					<text x="380" y="334.5" class="titre">Groupe projet</text>
+					<text x="380" y="350.5" class="detail">« &lt;site&gt; &lt;année&gt; »</text>
+				</g>
+				<g class="boite traitement"><rect x="280" y="370" width="200" height="44" rx="10"/>
+					<text x="380" y="396.5" class="titre">Classes et école</text>
+				</g>
+				<g class="boite base"><rect x="560" y="60" width="200" height="78" rx="10"/>
+					<text x="660" y="95.5" class="titre">spip_auteurs</text>
+					<text x="660" y="111.5" class="mono">login · email</text>
+				</g>
+				<g class="boite base"><rect x="560" y="148" width="200" height="78" rx="10"/>
+					<text x="660" y="183.5" class="titre">spip_auteurs</text>
+					<text x="660" y="199.5" class="mono">nom_complet · avatar</text>
+				</g>
+				<g class="boite base"><rect x="560" y="236" width="200" height="32" rx="10"/>
+					<text x="660" y="256.5" class="mono">statut · webmestre</text>
+				</g>
+				<g class="boite base"><rect x="560" y="274" width="200" height="32" rx="10"/>
+					<text x="660" y="294.5" class="mono">nom · ent_statut</text>
+				</g>
+				<g class="boite base"><rect x="560" y="314" width="200" height="48" rx="10"/>
+					<text x="660" y="334.5" class="titre">Rubriques liées</text>
+					<text x="660" y="350.5" class="detail">projet, blog, agenda, classe</text>
+				</g>
+				<g class="boite base"><rect x="560" y="370" width="200" height="44" rx="10"/>
+					<text x="660" y="388.5" class="mono">classes_ent</text>
+					<text x="660" y="404.5" class="detail">rubrique école créée</text>
+				</g>
+				<path class="fleche" d="M200,77 C239,77 239,90 278,90"/>
+				<path class="fleche" d="M200,121 C239,121 239,108 278,108"/>
+				<path class="fleche" d="M200,165 C239,165 239,178 278,178"/>
+				<path class="fleche" d="M200,209 C239,209 239,196 278,196"/>
+				<path class="fleche" d="M200,253 C239,253 239,256 278,256"/>
+				<path class="fleche" d="M200,297 C239,297 239,271 278,271"/>
+				<path class="fleche" d="M200,341 C239,341 239,286 278,286"/>
+				<path class="fleche" d="M200,385 C239,385 239,300 278,300"/>
+				<path class="fleche" d="M200,297 C239,297 239,386 278,386"/>
+				<path class="fleche" d="M200,385 C239,385 239,400 278,400"/>
+				<path class="fleche" d="M200,341 C239,341 239,338 278,338"/>
+				<path class="fleche" d="M480,99 C519,99 519,99 558,99"/>
+				<path class="fleche" d="M480,187 C519,187 519,187 558,187"/>
+				<path class="fleche" d="M480,258 C519,258 519,252 558,252"/>
+				<path class="fleche" d="M480,276 C519,276 519,290 558,290"/>
+				<path class="fleche" d="M480,330 C519,330 519,258 558,258"/>
+				<path class="fleche" d="M480,342 C519,342 519,334 558,334"/>
+				<path class="fleche" d="M480,386 C519,386 519,344 558,344"/>
+				<path class="fleche" d="M480,398 C519,398 519,394 558,394"/>
+				<line class="separateur" x1="0" y1="438" x2="780" y2="438"/>
+				<text x="0" y="462" class="sous gauche">Après la connexion</text>
+				<g class="boite traitement"><rect x="280" y="478" width="200" height="52" rx="10"/>
+					<text x="380" y="500.5" class="titre">Pop-up choix des classes</text>
+					<text x="380" y="516.5" class="detail">prof, une fois par an</text>
+				</g>
+				<g class="boite base"><rect x="560" y="478" width="200" height="52" rx="10"/>
+					<text x="660" y="500.5" class="mono">classes_ent_choisies</text>
+					<text x="660" y="516.5" class="detail">liens vers les classes cochées</text>
+				</g>
+				<g class="boite traitement"><rect x="280" y="548" width="200" height="52" rx="10"/>
+					<text x="380" y="570.5" class="mono">thematique_donner_role()</text>
+					<text x="380" y="586.5" class="detail">à l’écriture de la session</text>
+				</g>
+				<g class="boite session"><rect x="0" y="548" width="200" height="52" rx="10"/>
+					<text x="100" y="570.5" class="mono">#SESSION{role}</text>
+					<text x="100" y="586.5" class="detail">admin · prof · intervenant · eleve</text>
+				</g>
+				<path class="fleche" d="M620,414 C620,452 400,444 400,476"/>
+				<path class="fleche" d="M480,504 C519,504 519,504 558,504"/>
+				<path class="fleche" d="M760,252 H772 M760,290 H772 M760,338 H772 M760,504 H772 M772,252 V574 H482"/>
+				<text x="626" y="566" class="sous">lit statut, ent_statut, liens</text>
+				<path class="fleche" d="M280,574 C241,574 241,574 202,574"/>
+
+			</svg>
+			<figcaption>En bleu, les attributs ENT ; en violet, les traitements de <code>thematique</code> ; en vert, la base SPIP ; en jaune, la session.</figcaption>
+		</figure>
+		<div class="table-wrap">
+			<table>
+				<thead><tr><th>Qui</th><th>Quand</th><th>Écrit</th></tr></thead>
+				<tbody>
+					<tr><td><code>cioidc</code> (plugin tiers)</td><td>Connexion</td><td>Rien sur le compte quand <code>thematique</code> l’a déjà créé : ouvre la session du compte dont le <code>login</code> est l’uid ENT.</td></tr>
+					<tr><td><code>thematique_cioidc_userinfo()</code></td><td>Chaque connexion ENT</td><td><code>spip_auteurs</code> : <code>login</code> (création), <code>email</code>, <code>avatar</code>, <code>nom_complet</code>, <code>nom</code>, <code>ent_statut</code>, <code>statut</code>, <code>webmestre</code>, <code>classes_ent</code>. Liens vers les rubriques de projet, blog, agenda, classe (élève) ou école ; création du projet sous « Consignes » et de la rubrique école ; renommage d’une ancienne classe. Pour un intervenant nouvellement lié : structure de l’année, jalons, fiche intervenant.</td></tr>
+					<tr><td>Pop-up <code>formulaires/choisir_classes_ent.php</code></td><td>Prof, une fois par an (ou « Modifier mes classes »)</td><td><code>classes_ent_choisies</code>, rubriques de classe créées et liées au prof.</td></tr>
+					<tr><td><code>thematique_preparer_fichier_session()</code></td><td>Écriture de la session</td><td>Rien en base : <code>#SESSION{role}</code> par <code>thematique_donner_role()</code>.</td></tr>
+					<tr><td><code>fictions_cioidc_userinfo()</code></td><td>Connexion ENT, sites <code>fictions</code></td><td>Prof inscrit au projet seulement : <code>login</code> (création), <code>nom</code> (= <code>name</code>), <code>email</code>, <code>statut</code> <code>1comite</code> ; inscription notée dans la configuration de l’année (comptes proposés en premier pour les participants). Pas de rubrique liée.</td></tr>
+				</tbody>
+			</table>
+		</div>
+		<p>Les champs ne sont écrits que si la valeur reçue est non vide et différente (<code>thematique_cioidc_maj_champ()</code>) : un champ alimenté par l’ENT et modifié à la main dans <code>/ecrire</code> est rétabli à la connexion suivante, et une valeur vide côté ENT n’efface rien.</p>
 
 		<h2 id="attributs">Attributs ENT utilisés</h2>
 		<div class="table-wrap">
