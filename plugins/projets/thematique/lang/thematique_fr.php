@@ -326,6 +326,8 @@ return [
 	'publier_checklist_eviter_majuscules'        => 'Éviter d’écrire en MAJUSCULES',
 	'publier_checklist_phrases_courtes'          => 'Phrases courtes et simples',
 	'publier_compteur_caracteres'                => '/ 50 caractères',
+	'publier_deconnexion_bandeau'                => 'Le soir (de 20h à 7h) et le week-end (du vendredi 20h au lundi 7h), votre mission est bien publiée sur la CCN, mais le mail de notification adressé aux enseignants est différé en application du « droit à la déconnexion ». Il ne partira pas avant @jour@, @heure@h.',
+	'publier_deconnexion_titre'                  => 'Droit à la déconnexion : envoi du mail différé',
 	'publier_document_etape_1'                   => 'Étape 1 : téléverser son document',
 	'publier_document_etape_2'                   => 'Étape 2 : insérer le document dans l’article',
 	'publier_document_etape_2_texte'             => 'Insérez-le ensuite au sein de votre texte (à droite) en cliquant sur la pastille',

@@ -144,6 +144,7 @@
 		<h3 id="quand-un-e-mail-part">Quand un e-mail part</h3>
 		<ul>
 			<li><strong>Publication d’un article</strong> : au passage d’un autre statut à « publié » (événement <code>instituerarticle</code>). Modifier un article déjà publié n’envoie rien ; le republier après une dépublication renvoie un e-mail.</li>
+			<li><strong>Droit à la déconnexion</strong> : pour une <strong>mission</strong> publiée le soir (de 20h à 7h) ou le week-end (du vendredi 20h au lundi 7h), la mission est en ligne tout de suite mais l’e-mail part à la fin de cette plage (<code>thematique_deconnexion_fin()</code>, heures dans <code>_THEMATIQUE_DECONNEXION_DEBUT</code>/<code>_THEMATIQUE_DECONNEXION_FIN</code> ; jours fériés et vacances non pris en compte). Le pipeline <code>notifications</code> (<code>thematique_notifications()</code>) charge <code>inc/thematique_deconnexion.php</code>, dont <code>notifications_instituerarticle()</code> remplace celle du cœur : pendant la plage, elle programme une tâche <code>thematique_notifier_publication_differee</code> dans <code>spip_jobs</code> (en base, donc conservée en cas de redémarrage), qui lance la notification normale à l’heure dite si l’article est toujours publié. Destinataires et contenu du mail sont donc calculés au moment de l’envoi. Le formulaire de création d’une mission affiche un bandeau qui l’annonce pendant la plage (<code>thematique_deconnexion_bandeau()</code>). Les tâches de fond de SPIP étant lancées par les visites, l’e-mail part à la première visite après l’heure prévue.</li>
 			<li><strong>Nouveau commentaire forumv2</strong> : forumv2 enregistre le message déjà publié, ce qui ne déclenche pas la notification à lui seul. <code>formulaires/forumv2.php</code> appelle donc <code>forumposte</code> explicitement, qui enchaîne sur <code>forumvalide</code>. C’est à cette étape que <code>thematique</code> ajoute ses destinataires.</li>
 		</ul>
 
@@ -164,7 +165,7 @@
 		<p>Sont retirés ensuite :</p>
 		<ul>
 			<li>l’<strong>auteur du commentaire</strong> lui-même, et la personne qui le valide (cœur, <code>forumvalide</code>) ;</li>
-			<li>pour une publication, la <strong>personne qui publie</strong> (<code>thematique_notifications_destinataires()</code>) ;</li>
+			<li>pour une publication, la <strong>personne qui publie</strong> (<code>thematique_notifications_destinataires()</code> ; pour un envoi différé, son e-mail est transmis à la tâche dans l’option <code>email_publieur</code>) ;</li>
 			<li>les <strong>comptes à la poubelle</strong> (<code>thematique_filtrer_emails_poubelle()</code>, appliqué en dernier, donc aussi aux destinataires ajoutés par le cœur). Après la mise à la poubelle de septembre, un compte n’est donc plus prévenu tant que la personne ne s’est pas reconnectée ;</li>
 			<li>les doublons.</li>
 		</ul>

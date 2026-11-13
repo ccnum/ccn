@@ -33,6 +33,7 @@
 	<pipeline nom="jqueryui_plugins" inclure="thematique_pipelines.php" />
 	<pipeline nom="porte_plume_barre_pre_charger" inclure="thematique_pipelines.php" />
 	<pipeline nom="porte_plume_lien_classe_vers_icone" inclure="thematique_pipelines.php" />
+	<pipeline nom="notifications" inclure="thematique_pipelines.php" />
 	<pipeline nom="notifications_destinataires" inclure="thematique_pipelines.php" />
 	<pipeline nom="cioidc_userinfo" inclure="thematique_pipelines.php" />
 	<pipeline nom="affichage_final" inclure="thematique_pipelines.php" />

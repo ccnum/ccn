@@ -57,6 +57,14 @@ renvoi suivant partait hors ajax et affichait la page brute.
 				#SET{titre_creation, #ENV{type_article}|thematique_texte_publication{titre}}
 				#SET{intro_creation, #ENV{type_article}|thematique_texte_publication{intro}}
 				<div class="sidebar-titre-droit">[(#GET{est_edition}|oui)<:thematique:modifier_publication:>][(#GET{est_edition}|non)#GET{titre_creation}]</div>
+				[(#REM) Bandeau droit à la déconnexion : vide hors plage, en modification et pour un autre type que mission, cf charger ]
+				[<div class="publier-article-deconnexion" role="status">
+					<span class="publier-article-deconnexion-icone" aria-hidden="true">🌙</span>
+					<div>
+						<strong class="publier-article-deconnexion-titre"><:thematique:publier_deconnexion_titre:></strong>
+						<p>(#ENV{_bandeau_deconnexion})</p>
+					</div>
+				</div>]
 				[(#GET{est_edition}|non)
 					[(#GET{intro_creation}|oui)
 					<p class="publier-article-intro">#GET{intro_creation}</p>

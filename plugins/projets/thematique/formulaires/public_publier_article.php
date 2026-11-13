@@ -44,6 +44,12 @@ function formulaires_public_publier_article_charger_dist(
 		'max_date_school_year' => constant('_DATE_FIN') ?: date('Y-09-01'),
 	];
 
+	// Mission créée le soir ou le week-end : prévenir que le mail aux
+	// enseignants sera différé (droit à la déconnexion). Préfixe _ : valeur
+	// non reprise des données postées.
+	include_spip('inc/thematique_deconnexion');
+	$valeurs['_bandeau_deconnexion'] = intval($id_article) ? '' : thematique_deconnexion_bandeau($type_article);
+
 	// Édition directe d'un article déjà publié (réutilise la
 	// modale de publication pour l'édition, cf le bouton "Modifier" de
 	// header_sidebar.html/header_blog.html) : #ID_ARTICLE prévaut sur

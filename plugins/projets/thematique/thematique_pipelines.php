@@ -219,6 +219,22 @@ function thematique_insert_head($flux) {
 }
 
 /**
+ * Pipeline notifications : appelé par le cœur avant de chercher la fonction
+ * de notification. Pour une publication d'article, charge la surcharge
+ * notifications_instituerarticle() qui diffère le mail d'une mission publiée
+ * pendant la plage de déconnexion (cf inc/thematique_deconnexion.php).
+ *
+ * @param array $flux Flux du pipeline (args : quoi, id, options)
+ * @return array
+ */
+function thematique_notifications($flux) {
+	if (($flux['args']['quoi'] ?? '') === 'instituerarticle') {
+		include_spip('inc/thematique_deconnexion');
+	}
+	return $flux;
+}
+
+/**
  * Pipeline notifications_destinataires : destinataires des notifications de
  * forum et de publication.
  *
@@ -314,9 +330,16 @@ function thematique_notifications_destinataires($flux) {
 	// Publication : ne pas prévenir la personne qui vient de publier (règle
 	// pas_prevenir_publieur du plugin notifications, qui n'est plus actif sur
 	// les sites thematique). Pour un commentaire, le cœur (forumvalide)
-	// écarte déjà son auteur.
-	if (($flux['args']['quoi'] ?? '') === 'instituerarticle' && !empty($GLOBALS['visiteur_session']['email'])) {
-		$flux['data'] = array_diff((array) $flux['data'], [$GLOBALS['visiteur_session']['email']]);
+	// écarte déjà son auteur. Notification différée (droit à la
+	// déconnexion) : envoyée par une tâche de fond, hors de la session de la
+	// personne qui publie, d'où son e-mail transmis dans email_publieur.
+	if (($flux['args']['quoi'] ?? '') === 'instituerarticle') {
+		$email_publieur = array_key_exists('email_publieur', $flux['args']['options'] ?? [])
+			? $flux['args']['options']['email_publieur']
+			: ($GLOBALS['visiteur_session']['email'] ?? '');
+		if ($email_publieur) {
+			$flux['data'] = array_diff((array) $flux['data'], [$email_publieur]);
+		}
 	}
 
 	$flux['data'] = thematique_filtrer_emails_poubelle($flux['data']);
