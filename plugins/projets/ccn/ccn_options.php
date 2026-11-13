@@ -105,3 +105,39 @@ if (!defined('_CCN_CIOIDC_LOG_COMPLET')) {
 if (!defined('_CCN_UPLOADS_SUSPENDUS')) {
 	define('_CCN_UPLOADS_SUSPENDUS', false);
 }
+
+// Droit à la déconnexion (cf inc/ccn_deconnexion.php) : les e-mails de
+// notification produits entre ces deux heures, ou du vendredi à l'heure de début
+// au lundi à l'heure de fin, partent au lundi/lendemain à l'heure de fin.
+if (!defined('_CCN_DECONNEXION_HEURE_DEBUT')) {
+	define('_CCN_DECONNEXION_HEURE_DEBUT', 20);
+}
+if (!defined('_CCN_DECONNEXION_HEURE_FIN')) {
+	define('_CCN_DECONNEXION_HEURE_FIN', 7);
+}
+
+/**
+ * Surcharge de inc_notifications_dist() (charger_fonction('notifications', 'inc')
+ * préfère inc_notifications) : borne chaque événement de notification
+ * (publication d'article, commentaire...) pour que les e-mails qu'il envoie
+ * soient différés en période de repos, sans toucher à ceux que le cœur envoie
+ * directement (mot de passe oublié, inscription), cf inc/ccn_deconnexion.php.
+ *
+ * Définie ici plutôt que dans un fichier inc/ : charger_fonction() ne trouve une
+ * surcharge sans _dist que si elle existe déjà, ou dans un fichier
+ * inc/notifications.php qui masquerait celui du cœur.
+ *
+ * @param string $quoi
+ * @param int $id
+ * @param array $options
+ */
+function inc_notifications($quoi, $id = 0, $options = []) {
+	include_spip('inc/notifications');
+	include_spip('inc/ccn_deconnexion');
+	ccn_deconnexion_notification_debut();
+	try {
+		inc_notifications_dist($quoi, $id, $options);
+	} finally {
+		ccn_deconnexion_notification_fin();
+	}
+}

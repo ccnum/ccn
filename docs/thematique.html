@@ -146,6 +146,7 @@
 			<li><strong>Publication d’un article</strong> : au passage d’un autre statut à « publié » (événement <code>instituerarticle</code>). Modifier un article déjà publié n’envoie rien ; le republier après une dépublication renvoie un e-mail.</li>
 			<li><strong>Nouveau commentaire forumv2</strong> : forumv2 enregistre le message déjà publié, ce qui ne déclenche pas la notification à lui seul. <code>formulaires/forumv2.php</code> appelle donc <code>forumposte</code> explicitement, qui enchaîne sur <code>forumvalide</code>. C’est à cette étape que <code>thematique</code> ajoute ses destinataires.</li>
 		</ul>
+		<p><strong>Droit à la déconnexion</strong> : entre 20h et 7h et du vendredi 20h au lundi 7h, la publication est en ligne tout de suite mais ses e-mails (publication comme commentaire) partent au prochain jour ouvré à 7h (mécanisme commun du plugin <code>ccn</code>, voir <a href="architecture.html#ccn-divers">Architecture</a>). Pendant ces horaires, le formulaire de publication affiche en tête un encadré noir sur jaune qui le signale, quand l’enregistrement va déclencher un e-mail (création, ou republication d’un article non publié) : <code>public_publier_article_avertissement_deconnexion()</code>, item de langue <code>avertissement_deconnexion</code>. La fonction reçoit le type de publication, pour un texte propre à chaque type si besoin.</p>
 
 		<h3 id="qui-le-recoit">Qui le reçoit</h3>
 		<ul>

@@ -27,6 +27,7 @@ return [
 	'ascendant'                                  => 'Ascendant',
 	'attendre_livrable_final'                    => 'J’attends le livrable final de cette consigne',
 	'aucun_commentaire'                          => 'Il n’y a aucun commentaire pour le moment.',
+	'avertissement_deconnexion'                  => 'Entre @debut@h et @fin@h et le week-end, votre publication sera bien en ligne sur la CCN, mais les e-mails de notification seront différés en application du « droit à la déconnexion ».',
 	'bandes_sons_info'                           => 'Lancer les bandes sons librement en appuyant sur PLAY après avoir déclenché le film muet.',
 	'barre_souligne'                             => 'Souligner',
 	'besoin_daide'                               => 'Besoin d’aide ?',

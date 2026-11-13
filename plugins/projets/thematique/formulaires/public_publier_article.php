@@ -174,7 +174,44 @@ function formulaires_public_publier_article_charger_dist(
 		}
 	}
 
+	$valeurs['_avertissement_deconnexion'] = public_publier_article_avertissement_deconnexion(
+		$type_article,
+		$valeurs['id_article']
+	);
+
 	return $valeurs;
+}
+
+/**
+ * Encadré « droit à la déconnexion » en tête du formulaire : la publication
+ * déclenchera des e-mails de notification (création, ou republication d'un
+ * article non publié, cf _traiter_dist et l'événement instituerarticle) et on
+ * est en période de repos, où ces e-mails sont différés (cf
+ * ccn/inc/ccn_deconnexion.php).
+ *
+ * @param string $type_article Type de publication, pour un texte propre à
+ *   chaque type le jour venu (aujourd'hui un seul texte pour tous)
+ * @param int $id_article 0 en création
+ * @return string Texte de l'encadré, vide s'il n'y a pas lieu de l'afficher
+ */
+function public_publier_article_avertissement_deconnexion($type_article, $id_article) {
+	if ($id_article) {
+		$statut = sql_getfetsel('statut', 'spip_articles', 'id_article=' . intval($id_article));
+		// Déjà publié : pas de nouvel e-mail. Poubelle/refusé : pas republié.
+		if (in_array($statut, ['publie', 'poubelle', 'refuse'], true)) {
+			return '';
+		}
+	}
+
+	include_spip('inc/ccn_deconnexion');
+	if (!ccn_fin_deconnexion()) {
+		return '';
+	}
+
+	return _T('thematique:avertissement_deconnexion', [
+		'debut' => _CCN_DECONNEXION_HEURE_DEBUT,
+		'fin' => _CCN_DECONNEXION_HEURE_FIN,
+	]);
 }
 
 /**
