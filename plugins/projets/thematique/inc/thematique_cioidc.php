@@ -559,14 +559,18 @@ function thematique_cioidc_rubrique_classe_prof($groupe, $id_travail_classes) {
 	if (!$id_travail_classes) {
 		return null;
 	}
+	// Titre exact : « classe test » retrouvait sinon « classe test 2 » (LIKE), si
+	// bien qu'une classe décochée (donc supprimée, cf
+	// thematique_cioidc_supprimer_classes_non_choisies()) puis recochée n'était
+	// jamais recréée, le prof était lié à une autre de ses classes.
 	$titre = thematique_cioidc_titre_rubrique_classe($groupe);
-	if ($id_classe = thematique_trouver_rubrique($titre, $id_travail_classes)) {
+	if ($id_classe = thematique_trouver_rubrique($titre, $id_travail_classes, true)) {
 		return $id_classe;
 	}
 	if ($id_ancienne = thematique_cioidc_renommer_ancienne_classe($groupe, $id_travail_classes)) {
 		return $id_ancienne;
 	}
-	return thematique_trouver_ou_creer_rubrique($titre, $id_travail_classes);
+	return thematique_trouver_ou_creer_rubrique($titre, $id_travail_classes, true);
 }
 
 // Classes ENT proposées au prof dans la pop-up de choix (cf
@@ -850,7 +854,8 @@ function thematique_cioidc_resoudre_liens_rubriques(
 		}
 	} elseif ($is_eleve) {
 		foreach ($classes_reelles as $groupe) {
-			$id_classe = thematique_trouver_rubrique(thematique_cioidc_titre_rubrique_classe($groupe), $id_travail_classes)
+			// Titre exact, comme pour un prof (cf thematique_cioidc_rubrique_classe_prof()).
+			$id_classe = thematique_trouver_rubrique(thematique_cioidc_titre_rubrique_classe($groupe), $id_travail_classes, true)
 				?: thematique_cioidc_renommer_ancienne_classe($groupe, $id_travail_classes);
 			if ($id_classe) {
 				$classes_a_lier[] = $id_classe;
