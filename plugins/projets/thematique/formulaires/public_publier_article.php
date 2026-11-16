@@ -116,7 +116,7 @@ function formulaires_public_publier_article_charger_dist(
 	}
 
 	// Réponse à une mission (création, ou édition depuis le bouton "Modifier")
-	// par un prof rattaché à plusieurs classes, connecté hors SSO (cf
+	// par un prof rattaché à plusieurs classes (cf
 	// thematique_classes_choix_reponse) : menu de la classe pour laquelle il
 	// répond. Changer de classe rouvre la fenêtre sur la réponse de cette
 	// classe (ou une nouvelle), cf createReponse() : on ne déplace pas une

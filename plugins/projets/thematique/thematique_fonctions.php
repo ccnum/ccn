@@ -1252,7 +1252,9 @@ function thematique_prof_sans_classe($id_auteur) {
  * son emoji d'avatar, et celle dans laquelle un prof rédige (réponse à une
  * mission, cf filtre_auteur_vers_classe()).
  *
- * Un prof rattaché à plusieurs classes choisit sa classe active dans le
+ * Un prof rattaché à plusieurs classes (celles retenues dans la pop-up
+ * « Modifier mes classes » pour un compte ENT, cf
+ * thematique_cioidc_valider_classes_ent()) choisit sa classe active dans le
  * menu haut (action thematique_choisir_classe, mémorisée en
  * #SESSION{classe_active}) ; sans choix valide, la première classe (par id)
  * fait foi. Le choix en session ne s'applique qu'à l'auteur connecté : pour
@@ -1272,9 +1274,6 @@ function thematique_id_rubrique_classe($id_auteur, $classe_active = null) {
 		return 0;
 	}
 
-	if (!thematique_choix_classe_possible()) {
-		return $classes[0];
-	}
 	if ($classe_active === null) {
 		$classe_active = intval(session_get('id_auteur')) === intval($id_auteur)
 			? session_get('classe_active')
@@ -1283,29 +1282,6 @@ function thematique_id_rubrique_classe($id_auteur, $classe_active = null) {
 	$classe_active = intval($classe_active);
 
 	return in_array($classe_active, $classes, true) ? $classe_active : $classes[0];
-}
-
-/**
- * L'auteur connecté peut-il choisir sa classe active parmi ses classes (menu
- * haut, menu de la fenêtre de réponse à une mission) ?
- *
- * Oui pour un compte connecté hors SSO (pas de cioidc_id_token en session,
- * posé par cioidc à la connexion ENT) : ses classes lui ont été attribuées à
- * la main pour ce projet. Pour un compte ENT, seulement si
- * _THEMATIQUE_CHOIX_CLASSE est vrai (cf thematique_options.php : l'ENT renvoie
- * aussi ses classes des années passées).
- *
- * @return bool
- */
-function thematique_choix_classe_possible() {
-	// defined() : appelée aussi par thematique_preparer_fichier_session(), qui peut
-	// s'exécuter avant le chargement de thematique_options.php (session réécrite
-	// tôt dans la requête, ex. changement d'IP) : erreur fatale sinon.
-	if (defined('_THEMATIQUE_CHOIX_CLASSE') && _THEMATIQUE_CHOIX_CLASSE) {
-		return true;
-	}
-	include_spip('inc/session');
-	return session_get('id_auteur') && !session_get('cioidc_id_token');
 }
 
 /**
@@ -1318,7 +1294,7 @@ function thematique_choix_classe_possible() {
 function thematique_classes_choix_reponse() {
 	include_spip('inc/session');
 	$id_auteur = intval(session_get('id_auteur'));
-	if (!$id_auteur || thematique_donner_role($id_auteur) !== 'prof' || !thematique_choix_classe_possible()) {
+	if (!$id_auteur || thematique_donner_role($id_auteur) !== 'prof') {
 		return [];
 	}
 	$classes = thematique_classes_auteur($id_auteur);
