@@ -140,6 +140,10 @@ function ccn_formulaire_fond($flux) {
  * en base ; facteur reconvertit les entités du sujet, le corps HTML les
  * affiche telles quelles.
  *
+ * Retient aussi, en dernier (flux dans son état final), les e-mails de
+ * notification à différer en période de repos (droit à la déconnexion, cf
+ * inc/ccn_deconnexion.php).
+ *
  * @param array $flux email, sujet, texte, from, headers
  * @return array
  */
@@ -150,5 +154,7 @@ function ccn_notifications_envoyer_mails($flux) {
 			$flux[$champ] = utf8_noplanes($flux[$champ]);
 		}
 	}
+	include_spip('inc/ccn_deconnexion');
+	ccn_deconnexion_noter_envoi($flux);
 	return $flux;
 }
