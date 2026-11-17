@@ -160,6 +160,11 @@ if (!function_exists('autoriser_article_modifier')) {
 	 * archivée, champ date) que le reste de cette fonction — au lieu de shadower le tout comme
 	 * le faisait autorite.
 	 *
+	 * Réponse à une mission : un prof peut la modifier si elle est publiée dans
+	 * l'une de ses classes, quel qu'en soit l'auteur. La réponse appartient à la
+	 * classe : un admin qui l'a écrite à sa place, ou un collègue de la même
+	 * classe, en est l'auteur SPIP, et le prof ne pouvait plus la corriger.
+	 *
 	 * @param string $faire Action demandée
 	 * @param string $type Type d'objet
 	 * @param int|string $id Identifiant de l'objet
@@ -221,7 +226,19 @@ if (!function_exists('autoriser_article_modifier')) {
 				&& intval($id) === thematique_id_fiche_intervenant_annee(thematique_annee_scolaire())
 				&& thematique_auteur_lie_sous_rubrique($id_auteur_visiteur, thematique_id_rubrique_projet());
 
-			if (!$exception_jalon && !$exception_auteur_propre_article && !$exception_fiche_intervenant) {
+			// Réponse à une mission (id_consigne renseigné) publiée dans l'une des
+			// classes du prof (cf docstring ci-dessus) : seules ses classes de
+			// l'année en cours (thematique_classes_auteur()), les années passées
+			// étant de toute façon bloquées ci-dessous.
+			$exception_reponse_classe = false;
+			if ($statut_article !== 'refuse' && thematique_donner_role($id_auteur_visiteur) === 'prof') {
+				$article = sql_fetsel('id_rubrique, id_consigne', 'spip_articles', 'id_article=' . intval($id));
+				$exception_reponse_classe = $article
+					&& intval($article['id_consigne'])
+					&& in_array(intval($article['id_rubrique']), thematique_classes_auteur($id_auteur_visiteur), true);
+			}
+
+			if (!$exception_jalon && !$exception_auteur_propre_article && !$exception_fiche_intervenant && !$exception_reponse_classe) {
 				return false;
 			}
 			// on continue, sous les mêmes garde-fous (année passée, champ date) que le cas normal
