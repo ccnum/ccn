@@ -231,8 +231,11 @@
 	text-decoration: none;
 }
 
-.select-option.choix-classe.actif {
-	color: inherit;
+/* Sépare la liste des classes (seule concernée par le grisé .actif, comme le
+   sélecteur d'année) des actions qui suivent : Modifier mes classes, Me
+   déconnecter... */
+.select-option.choix-classe + .select-option:not(.choix-classe) {
+	border-top: 1px solid var(--color-gris-1);
 }
 
 /* Modal du formulaire de login SPIP natif (CIOIDC désactivé, cf

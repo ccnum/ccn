@@ -111,7 +111,7 @@
 			<table>
 				<thead><tr><th>Action</th><th>Qui</th></tr></thead>
 				<tbody>
-					<tr><td>Modifier</td><td>L’auteur de l’article, même publié ; un admin. Les jalons (« Cap sur l’année », « La Rencontre ») sont modifiables par tout intervenant du projet, pas seulement celui à qui ils ont été attribués.</td></tr>
+					<tr><td>Modifier</td><td>L’auteur de l’article, même publié ; un admin. Pour une réponse à une mission, tout prof lié à la classe où elle est publiée, quel qu’en soit l’auteur (un admin qui l’a écrite à sa place, un collègue de la même classe). Les jalons (« Cap sur l’année », « La Rencontre ») sont modifiables par tout intervenant du projet, pas seulement celui à qui ils ont été attribués.</td></tr>
 					<tr><td>Changer la date</td><td>Un admin sur tout contenu ; un intervenant sur un événement ou un billet de salle des profs seulement.</td></tr>
 					<tr><td>Publier / Dépublier</td><td>Quiconque peut modifier l’article (action <code>thematique_statut_article</code>, boutons des jalons), intervenant compris. Dépublié, l’article repasse « proposé » ; le rééditer le republie. Un jalon vide n’a qu’un bouton « Rédiger » : l’enregistrer avec un texte le publie, ce qu’annonce une info au survol d’« Enregistrer ».</td></tr>
 					<tr><td>Supprimer</td><td>Un admin ; sinon l’auteur, pour ses propres articles. Bouton « Supprimer » sur les billets, les événements et les ressources (l’article passe à la poubelle).</td></tr>
@@ -206,7 +206,7 @@
 		<h2 id="maintenance">Maintenance</h2>
 		<ul>
 			<li><strong>Classes vides</strong> (<code>ecrire/?exec=thematique_classes_vides</code>, menu Configuration, webmestres) : liste les rubriques de classe d’une année et supprime celles restées vides, par exemple créées à la connexion de comptes ENT hors projet.</li>
-			<li><strong>Classe active</strong> : un prof lié à plusieurs classes publie par défaut dans la première (par numéro de rubrique). Connecté hors SSO (compte créé dans SPIP, classes attribuées à la main), il choisit sa classe dans le menu de son nom, en haut, et dans un menu déroulant de la fenêtre de réponse à une mission : changer de classe rouvre la fenêtre sur la réponse de cette classe, ou une nouvelle. Pour un compte ENT, ces menus restent masqués (<code>_THEMATIQUE_CHOIX_CLASSE</code> à <code>false</code>, voir <code>thematique_choix_classe_possible()</code>), l’ENT renvoyant aussi les classes des années passées.</li>
+			<li><strong>Classe active</strong> : un prof lié à plusieurs classes (pour un compte ENT, celles retenues dans la pop-up « Modifier mes classes », voir <a href="sso.html">Connexion ENT</a>) choisit sa classe dans le menu de son nom, en haut : la classe active y est grisée et non cliquable, comme l’année dans le sélecteur d’année, et son emoji s’affiche à côté de son nom. Ses publications (réponses aux missions) sont faites au nom de cette classe (<code>thematique_id_rubrique_classe()</code>, <code>#SESSION{classe_active}</code>, action <code>thematique_choisir_classe</code>). La fenêtre de réponse à une mission propose aussi un menu déroulant de ses classes : changer de classe rouvre la fenêtre sur la réponse de cette classe, ou une nouvelle. Sans choix, la première classe (par numéro de rubrique) fait foi. Un prof d’une seule classe ne voit pas ces menus.</li>
 		</ul>
 
 		<h2 id="edifice">Variante Edifice</h2>

@@ -22,8 +22,8 @@ function action_thematique_choisir_classe_dist() {
 	include_spip('thematique_fonctions');
 	$id_auteur = intval(session_get('id_auteur'));
 
-	// Uniquement une de ses propres classes
-	if (thematique_choix_classe_possible() && $id_auteur && in_array($id_rubrique, thematique_classes_auteur($id_auteur), true)) {
+	// Uniquement un prof, et une de ses propres classes
+	if ($id_auteur && thematique_donner_role($id_auteur) === 'prof' && in_array($id_rubrique, thematique_classes_auteur($id_auteur), true)) {
 		session_set('classe_active', $id_rubrique);
 	}
 }

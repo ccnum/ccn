@@ -296,3 +296,30 @@ footer.page-footer {
 	.hero { flex-direction: column; align-items: flex-start; padding: 24px; gap: 16px; }
 	.hero img { width: 64px; }
 }
+
+/* ---------- Schémas SVG (ex. sso.html#schema) ---------- */
+
+.schema { margin: 20px 0; overflow-x: auto; }
+.schema svg {
+	display: block;
+	width: 100%;
+	min-width: 640px;
+	height: auto;
+	color: var(--text-muted);
+	font-family: inherit;
+}
+.schema text { text-anchor: middle; font-size: 13px; }
+.schema .entete { fill: var(--text); font-weight: 600; font-size: 15px; }
+.schema .sous { fill: var(--text-muted); font-size: 12px; }
+.schema .gauche { text-anchor: start; font-weight: 600; text-transform: uppercase; letter-spacing: .06em; }
+.schema .boite text { fill: var(--color-default); }
+.schema .titre { font-weight: 600; }
+.schema .detail { font-size: 12px; }
+.schema .mono { font-family: ui-monospace, 'SFMono-Regular', Menlo, Consolas, monospace; font-size: 12px; }
+.schema .ent rect { fill: var(--color-classe-4); }
+.schema .traitement rect { fill: var(--color-classe-2); }
+.schema .base rect { fill: var(--color-classe-1); }
+.schema .session rect { fill: var(--color-classe-0); }
+.schema .fleche { fill: none; stroke: currentColor; stroke-width: 1.4; marker-end: url(#schema-pointe); }
+.schema .separateur { stroke: var(--border); stroke-dasharray: 4 4; }
+.schema figcaption { font-size: .85rem; color: var(--text-muted); margin-top: 10px; }
