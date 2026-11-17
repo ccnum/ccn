@@ -13,12 +13,10 @@ calculé par l'appelant (noisettes/article.html) ]
 				#GET{titre_onglet_reponse}
 			</div>
 			<div class="tabs-content">
-				[(#ENV{c_est_ma_reponse}|=={oui}|oui)
-					<INCLURE{fond=noisettes/sidebar/onglet_reponse_modifiable, id_article} />
-				]
-				[(#ENV{c_est_ma_reponse}|=={oui}|non)
-					<INCLURE{fond=noisettes/sidebar/onglet_reponse_non_modifiable, id_article} />
-				]
+				[(#REM) Même contenu pour sa classe ou une autre : le bouton Modifier
+				du haut (bouton_modifier_article) n’apparaît que si le visiteur peut
+				modifier la réponse. ]
+				<INCLURE{fond=noisettes/sidebar/onglet_reponse_non_modifiable, id_article} />
 			</div>
 		</div>
 		<INCLURE{fond=noisettes/sidebar/inc/onglet_commentaires_tab, env} />
