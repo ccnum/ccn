@@ -21,16 +21,19 @@
 		</div>
 	]
 	[(#ENV{type_objet}|=={travail_en_cours}|oui)
-		[(#REM) "c'est ma réponse" : rubrique restreinte de l'admin/prof courant,
-		ou classe de l'élève courant. Calculé ici pour éviter de dupliquer
-		cette détection dans chaque fond reponse_pour_*.html]
+		[(#REM) "c'est ma réponse" : réponse de l'une des classes du prof courant
+		(toutes, pas seulement la classe active ni la rubrique restreinte de
+		session, qui n'en retient qu'une), ou de la classe de l'élève courant.
+		Calculé ici pour éviter de dupliquer cette détection dans chaque fond
+		reponse_pour_*.html]
 		#SET{c_est_ma_reponse, non}
 		[(#SESSION{role}|=={eleve}|oui)
 			<BOUCLE_ma_classe(RUBRIQUES auteurs_liens){id_auteur=#SESSION{id_auteur}}{id_rubrique=#ID_RUBRIQUE}{0,1}>
 				#SET{c_est_ma_reponse, oui}
 			</BOUCLE_ma_classe>
 		] [(#SESSION{role}|!={eleve}|oui)
-			[(#ID_RUBRIQUE|=={#SESSION{restreint}}|oui) #SET{c_est_ma_reponse, oui}]
+			#SET{mes_classes, #SESSION{id_auteur}|thematique_classes_auteur}
+			[(#ID_RUBRIQUE|in_array{#GET{mes_classes}}|oui) #SET{c_est_ma_reponse, oui}]
 		]
 
 		#SET{fond_reponse, #SESSION{role}|fond_reponse_pour_role}
