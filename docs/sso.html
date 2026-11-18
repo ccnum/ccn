@@ -25,6 +25,7 @@
 					<ul class="sub">
 						<li><a href="#modes">Avec ou sans ENT</a></li>
 						<li><a href="#principe">ENT : principe</a></li>
+						<li><a href="#responsabilites">Qui fait quoi</a></li>
 						<li><a href="#schema">Qui met à jour quoi</a></li>
 						<li><a href="#attributs">Attributs ENT</a></li>
 						<li><a href="#etapes">Étapes</a></li>
@@ -75,6 +76,33 @@
 		<div class="callout">
 			<p>L’ENT n’a <strong>pas de profil « intervenant »</strong> : un intervenant arrive avec le même profil <code>ENS</code> qu’un enseignant. Ce qui les distingue, c’est l’appartenance au groupe libre « CCN Intervenants, Médiateurs et Partenaires », sans classe réelle dans <code>ENTClassesGroupes</code>. Un enseignant sans classe dans l’ENT, mais hors de ce groupe, reste un enseignant.</p>
 		</div>
+
+		<h2 id="responsabilites">Qui fait quoi</h2>
+		<p>Avec l’ENT, un compte ne se crée ni ne se corrige sur le site : tout part de laclasse.com, et le site recopie à chaque connexion. Corriger quelque chose, c’est donc presque toujours le corriger dans l’ENT, puis faire se reconnecter la personne.</p>
+		<div class="table-wrap">
+			<table>
+				<thead><tr><th>Étape</th><th>Qui</th><th>Où</th></tr></thead>
+				<tbody>
+					<tr><td>Recenser les personnes associées aux CCN (formateurs, intervenants, partenaires) et les CCN qu’elles suivent</td><td>Erasme, à partir d’ADAGE et à la main</td><td>Tableau GRIST</td></tr>
+					<tr><td>Reporter ce tableau dans l’ENT : comptes, groupe « CCN Intervenants, Médiateurs et Partenaires », groupe libre de chaque CCN suivi</td><td><span class="tag muted">à préciser</span></td><td>laclasse.com, <span class="tag muted">rythme à préciser</span></td></tr>
+					<tr><td>Inscrire un prof à une CCN : groupe libre « &lt;site&gt; &lt;année&gt; » (ex. « On tourne 2026 »)</td><td><span class="tag muted">à préciser</span></td><td>laclasse.com</td></tr>
+					<tr><td>Créer la classe d’un établissement absent de laclasse.com, dans la structure CCN (<code>00000CCN</code>)</td><td><span class="tag muted">à préciser</span></td><td>laclasse.com</td></tr>
+					<tr><td>Associer un enseignant à sa classe dans un établissement présent sur laclasse.com</td><td>Le directeur ou l’admin ENT de l’établissement</td><td>laclasse.com</td></tr>
+					<tr><td>Recopier statut, nom affiché, projet et classes</td><td>Le site, automatiquement</td><td>À chaque connexion par l’ENT</td></tr>
+					<tr><td>Choisir les classes qui participent cette année</td><td>Le prof</td><td>Pop-up du site (<a href="#choix-classes">Choix des classes</a>)</td></tr>
+					<tr><td>Écarter les comptes qui ne reviennent pas</td><td>Le site, automatiquement</td><td>En septembre (poubelle de rentrée)</td></tr>
+				</tbody>
+			</table>
+		</div>
+		<h3 id="cas-classe-hors-laclasse">Cas : prof d’un établissement absent de laclasse.com</h3>
+		<p>Sa classe est créée comme groupe dans la structure CCN (<code>00000CCN</code>). Sur le site, son nom devient « Enseignant - &lt;nom du groupe&gt; », sans établissement : l’annuaire de l’Éducation nationale ne connaît pas <code>00000CCN</code> (voir <a href="thematique.html#noms">Noms des comptes</a>). Le nom du groupe est donc ce qui s’affiche à côté du sien, et le titre de la rubrique de sa classe. Pour le changer : renommer le groupe dans l’ENT, puis le prof se reconnecte. Bien que rattaché à <code>00000CCN</code>, il n’est pas webmestre, puisqu’il a une classe dans l’ENT.</p>
+		<h3 id="cas-notifications">Cas : un intervenant reçoit les notifications de CCN qu’il ne suit pas</h3>
+		<p>Chaque CCN est un site à part. Sur un site, un e-mail part vers <strong>tous les adultes de l’année</strong>, quels que soient le projet ou la classe (voir <a href="thematique.html#notifications">Notifications</a>) ; on est adulte d’un site dès qu’on est dans son groupe libre ENT. Être inscrit à tous les groupes, c’est donc être prévenu par tous les sites. Pour s’arrêter à certaines CCN :</p>
+		<ol>
+			<li>le retirer, dans l’ENT, des groupes libres des CCN qu’il ne suit pas (et dans le tableau GRIST, pour que le prochain report ne le réinscrive pas) ;</li>
+			<li>le site n’en tient compte qu’à sa prochaine connexion sur chacune de ces CCN, où il repasse en <code>6forum</code>. Sans reconnexion, il reste prévenu jusqu’à la poubelle de septembre : un admin peut le passer en <code>6forum</code> dans <code>/ecrire</code> du site concerné.</li>
+		</ol>
+		<p>Il n’est pas possible, sur un même site, de ne recevoir que les e-mails d’un projet ou d’une classe.</p>
 
 		<h2 id="schema">Qui met à jour quoi</h2>
 		<p>Ce que laclasse.com envoie à la connexion, ce que le plugin <code>thematique</code> en déduit, et les champs SPIP qu’il écrit. Le plugin tiers <code>cioidc</code> ne fait que l’échange OpenID Connect : il passe les attributs au pipeline <code>cioidc_userinfo</code>, puis ouvre la session du compte qui a ce <code>login</code>.</p>
