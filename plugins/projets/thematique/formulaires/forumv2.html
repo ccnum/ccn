@@ -10,9 +10,11 @@
 	<input type="hidden" name="nom_auteur" value="[(#GET{nom_auteur}|attribut_html)]">
 	<input type="hidden" name="id_parent" value="#ENV{id_parent,0}" class="js-forum-id-parent">
 	<input type="hidden" name="id_forum" value="#ENV{id_forum,0}" class="id-forum">
-	[(#REM) Jeton du document joint en attente de publication, cf
+	[(#REM) Jetons des documents joints en attente de publication, cf
 	forumv2_document_verifier() ]
-	<input type="hidden" name="document_forum" value="[(#ENV{_document_forum}|attribut_html)]" class="js-forum-document-jeton">
+	<BOUCLE_jetons_documents(DATA){source tableau, #ENV{_documents_forum}}>
+	<input type="hidden" name="document_forum[]" value="[(#VALEUR{jeton}|attribut_html)]" class="js-forum-document-jeton">
+	</BOUCLE_jetons_documents>
 
 	[(#ENV{affichage}|=={previsualisation}|oui)
 		<INCLURE{fond=noisettes/inc/forumv2/forum_previsualisation}{nom_auteur=#GET{nom_auteur}}{env}>

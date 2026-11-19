@@ -89,11 +89,10 @@ function afficherAvertissementDeconnexion(conteneur, afficher) {
 }
 
 // Pas de textarea quand le formulaire est en mode prévisualisation.
-// Le document joint en attente est oublié en même temps que le texte : le
-// formulaire partagé ne doit pas le rattacher au commentaire suivant.
+// Les documents joints en attente sont oubliés en même temps que le texte :
+// le formulaire partagé ne doit pas les rattacher au commentaire suivant.
 function remplirTexte(conteneur, texte) {
-    const jeton = conteneur.querySelector('.js-forum-document-jeton')
-    if (jeton) jeton.value = ''
+    conteneur.querySelectorAll('.js-forum-document-jeton').forEach(jeton => jeton.remove())
     conteneur.querySelector('.js-forum-document-en-attente')?.remove()
     // Fichier déposé dans la zone bigup mais pas encore envoyé avec le
     // formulaire : « Enlever » l'efface aussi côté serveur.

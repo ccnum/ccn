@@ -13,28 +13,37 @@
 		<label for="texte" class="sr-only"><:thematique:redigez_commentaire:></label>
 		<textarea id="texte" name="texte" rows="6" class="forum-redaction__textarea inserer_barre_forum" aria-describedby="texte-erreur">[(#ENV{texte}|entites_html)]</textarea>
 	</div>
-	[(#REM) Zone de dépôt bigup (upload par morceaux, limite de taille vérifiée
-	dès le choix du fichier). Le fichier est ensuite mis en attente côté
-	serveur jusqu'à la publication, cf forumv2_document_verifier(). ]
+	[(#REM) Zone de dépôt bigup (upload par morceaux, plusieurs fichiers comme
+	pour une mission, limite de taille vérifiée dès le choix). Les fichiers sont
+	ensuite mis en attente côté serveur jusqu'à la publication, cf
+	forumv2_document_verifier(). ]
 	#SET{label_document, #VAL{thematique:joindre_document_commentaire}|_T}
-	[(#ENV{_document_forum_nom}|oui)
-		#SET{label_document, #VAL{thematique:remplacer_document_commentaire}|_T}
+	[(#ENV{_documents_forum}|oui)
+		#SET{label_document, #VAL{thematique:ajouter_documents_commentaire}|_T}
 	]
 	#SET{explication_document, #VAL{thematique:taille_maximale_document_forum}|_T}
 	<div class="saisie_document_forum">
-		[(#ENV{_document_forum_nom}|oui)
-			<p class="forum-document-en-attente js-forum-document-en-attente">
-				<:thematique:document_joint_commentaire:> : <strong>[(#ENV{_document_forum_nom})]</strong>
-				<label class="forum-document-retirer">
-					<input type="checkbox" name="supprimer_document_forum" value="oui">
-					<:thematique:retirer_document_commentaire:>
-				</label>
-			</p>
-		]
+		<B_documents_en_attente>
+		<div class="forum-document-en-attente js-forum-document-en-attente">
+			<p><:thematique:document_joint_commentaire:> :</p>
+			<ul>
+			<BOUCLE_documents_en_attente(DATA){source tableau, #ENV{_documents_forum}}>
+				<li>
+					<strong>[(#VALEUR{name}|entites_html)]</strong>
+					<label class="forum-document-retirer">
+						<input type="checkbox" name="supprimer_document_forum[]" value="[(#VALEUR{jeton}|attribut_html)]">
+						<:thematique:retirer_document_commentaire:>
+					</label>
+				</li>
+			</BOUCLE_documents_en_attente>
+			</ul>
+		</div>
+		</B_documents_en_attente>
 		[(#SAISIE_FICHIER{bigup, fichier_upload,
 			label=#GET{label_document},
 			explication=#GET{explication_document},
 			accept=#ENV{_accept},
+			multiple=oui,
 			maxFileSize=#CONST{_CCN_UPLOAD_TAILLE_MAX_MO}})]
 	</div>
 	<div class="footer-creation-forum">
