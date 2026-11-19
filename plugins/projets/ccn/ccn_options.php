@@ -110,10 +110,10 @@ if (!defined('_CCN_UPLOADS_SUSPENDUS')) {
 // notification produits entre ces deux heures, ou du vendredi à l'heure de début
 // au lundi à l'heure de fin, partent au lundi/lendemain à l'heure de fin.
 if (!defined('_CCN_DECONNEXION_HEURE_DEBUT')) {
-	define('_CCN_DECONNEXION_HEURE_DEBUT', 20);
+	define('_CCN_DECONNEXION_HEURE_DEBUT', 11);
 }
 if (!defined('_CCN_DECONNEXION_HEURE_FIN')) {
-	define('_CCN_DECONNEXION_HEURE_FIN', 7);
+	define('_CCN_DECONNEXION_HEURE_FIN', 15);
 }
 
 /**
