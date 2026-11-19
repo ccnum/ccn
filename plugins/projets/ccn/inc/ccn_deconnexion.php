@@ -27,30 +27,70 @@ if (!defined('_ECRIRE_INC_VERSION')) {
 }
 
 /**
+ * L'heure $heure (0-23) tombe-t-elle dans la plage de repos quotidienne ?
+ *
+ * La plage peut passer minuit (début > fin, 20h -> 7h en production) ou tenir
+ * dans la journée (début < fin, ex. 11h -> 15h pour tester en journée). Début
+ * égal à fin : pas de plage quotidienne, seul le week-end est au repos.
+ *
+ * @param int $heure
+ * @return bool
+ */
+function ccn_heure_en_repos(int $heure): bool {
+	$debut = intval(_CCN_DECONNEXION_HEURE_DEBUT);
+	$fin = intval(_CCN_DECONNEXION_HEURE_FIN);
+
+	if ($debut > $fin) {
+		return $heure >= $debut || $heure < $fin;
+	}
+
+	return $heure >= $debut && $heure < $fin;
+}
+
+/**
+ * L'instant $time tombe-t-il en période de repos (week-end, ou plage
+ * quotidienne) ?
+ *
+ * @param int $time
+ * @return bool
+ */
+function ccn_est_en_repos(int $time): bool {
+	return intval(date('N', $time)) >= 6 || ccn_heure_en_repos(intval(date('G', $time)));
+}
+
+/**
  * Fin de la période de repos en cours.
  *
+ * La reprise est le premier instant ouvré qui suit : un jour de semaine à
+ * _CCN_DECONNEXION_HEURE_FIN, ou à minuit le lundi si minuit est hors de la
+ * plage (plage dans la journée). Avec la plage de nuit, le vendredi 20h donne
+ * le lundi 7h.
+ *
  * @param int|null $time Instant à tester (maintenant par défaut)
- * @return int|null Timestamp de reprise (prochain jour ouvré à
- *   _CCN_DECONNEXION_HEURE_FIN), null si $time tombe en période ouvrée
+ * @return int|null Timestamp de reprise, null si $time tombe en période ouvrée
  */
 function ccn_fin_deconnexion(?int $time = null): ?int {
 	$time = $time ?? time();
-	$debut = intval(_CCN_DECONNEXION_HEURE_DEBUT);
-	$fin = intval(_CCN_DECONNEXION_HEURE_FIN);
-	$heure = intval(date('G', $time));
-	$week_end = intval(date('N', $time)) >= 6;
-
-	if (!$week_end && $heure >= $fin && $heure < $debut) {
+	if (!ccn_est_en_repos($time)) {
 		return null;
 	}
 
+	$fin = intval(_CCN_DECONNEXION_HEURE_FIN);
+	$jour = intval(date('j', $time));
+	$mois = intval(date('n', $time));
+	$annee = intval(date('Y', $time));
 	// mktime() plutôt que +86400 : juste au passage heure d'été/d'hiver.
-	$jour = intval(date('j', $time)) + ($heure >= $fin ? 1 : 0);
-	do {
-		$reprise = mktime($fin, 0, 0, intval(date('n', $time)), $jour++, intval(date('Y', $time)));
-	} while (intval(date('N', $reprise)) >= 6);
+	// Candidats dans l'ordre chronologique ; 8 jours couvrent tous les cas.
+	for ($i = 0; $i <= 7; $i++) {
+		foreach ([0, $fin] as $heure) {
+			$candidat = mktime($heure, 0, 0, $mois, $jour + $i, $annee);
+			if ($candidat > $time && !ccn_est_en_repos($candidat)) {
+				return $candidat;
+			}
+		}
+	}
 
-	return $reprise;
+	return null;
 }
 
 /**

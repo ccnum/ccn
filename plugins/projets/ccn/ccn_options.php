@@ -107,8 +107,10 @@ if (!defined('_CCN_UPLOADS_SUSPENDUS')) {
 }
 
 // Droit à la déconnexion (cf inc/ccn_deconnexion.php) : les e-mails de
-// notification produits entre ces deux heures, ou du vendredi à l'heure de début
-// au lundi à l'heure de fin, partent au lundi/lendemain à l'heure de fin.
+// notification produits entre ces deux heures, ou le week-end, partent au
+// premier instant ouvré suivant (avec 20h -> 7h : lendemain ou lundi à 7h).
+// La plage peut passer minuit (début > fin) ou tenir dans la journée (début <
+// fin, pratique pour tester) ; début = fin : seul le week-end est au repos.
 if (!defined('_CCN_DECONNEXION_HEURE_DEBUT')) {
 	define('_CCN_DECONNEXION_HEURE_DEBUT', 20);
 }
