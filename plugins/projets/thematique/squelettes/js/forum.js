@@ -121,6 +121,24 @@ function ajusterHauteurRedaction(textarea) {
     textarea.style.overflowY = textarea.scrollHeight > max ? 'auto' : 'hidden'
 }
 
+/**
+ * Zone de dépôt bigup du document joint. bigup.loader.js n'initialise que
+ * « .formulaire_spip form input.bigup » (form à l'intérieur d'un conteneur
+ * .formulaire_spip) ; ici formulaire_spip est porté par le <form> lui-même,
+ * le champ resterait un simple bouton « Parcourir ». .bigup() ignore les
+ * champs déjà initialisés (classe bigup_done).
+ */
+function initBigupForum() {
+    if (!window.jQuery || !jQuery.fn.bigup) return
+    setTimeout(() => jQuery('form.forum-formulaire input[type=file].bigup').bigup(), 10)
+}
+if (window.jQuery) {
+    jQuery(() => {
+        initBigupForum()
+        if (typeof onAjaxLoad === 'function') onAjaxLoad(initBigupForum)
+    })
+}
+
 // Délégué sur document : le formulaire arrive dans une popup chargée en ajax.
 document.addEventListener('input', e => {
     if (e.target.matches?.('.forum-redaction__textarea')) {
