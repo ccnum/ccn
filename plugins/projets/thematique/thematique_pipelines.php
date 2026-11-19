@@ -176,7 +176,6 @@ function thematique_insert_head($flux) {
 		'js/publier_article.js',
 		'js/addCloseModal.js',
 		'js/forum.js',
-		'js/ajouter_document_forum.js',
 		'js/article.js',
 		'js/article_email_consigne.js',
 		'js/classe.js',

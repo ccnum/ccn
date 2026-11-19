@@ -94,9 +94,11 @@ function afficherAvertissementDeconnexion(conteneur, afficher) {
 function remplirTexte(conteneur, texte) {
     const jeton = conteneur.querySelector('.js-forum-document-jeton')
     if (jeton) jeton.value = ''
-    const fichier = conteneur.querySelector('.js-forum-document-fichier')
-    if (fichier) fichier.value = ''
     conteneur.querySelector('.js-forum-document-en-attente')?.remove()
+    // Fichier déposé dans la zone bigup mais pas encore envoyé avec le
+    // formulaire : « Enlever » l'efface aussi côté serveur.
+    conteneur.querySelectorAll('.saisie_document_forum .bigup_fichiers .bigup-btn')
+        .forEach(bouton => bouton.click())
     const textarea = conteneur.querySelector('textarea')
     if (!textarea) return
     textarea.value = texte

@@ -86,38 +86,55 @@ function forumv2_document_verifier() {
 	}
 
 	$envoi = $_FILES['fichier_upload'] ?? null;
+	$erreur = null;
 	if ($envoi && is_string($envoi['name'] ?? null) && $envoi['name'] !== '' && !empty($envoi['tmp_name'])) {
-		include_spip('inc/uploads');
-		include_spip('inc/joindre_document');
-		include_spip('action/ajouter_documents');
-		include_spip('inc/getdocument');
-
-		// Extension et taille, comme pour tout champ fichier_upload du site.
-		$erreurs = ccn_verifier_uploads();
-		if (!empty($erreurs['message_erreur'])) {
-			set_request('document_forum', $document['jeton'] ?? '');
-			return $erreurs['message_erreur'];
-		}
-
-		[, $nom] = fixer_extension_document($envoi);
-		$jeton = md5(uniqid(random_int(0, mt_getrandmax()), true));
-		$base = forumv2_document_repertoire() . $jeton;
-		if (!deplacer_fichier_upload($envoi['tmp_name'], $base . '.bin')) {
-			set_request('document_forum', $document['jeton'] ?? '');
-			return _T('copie_document_impossible');
-		}
-		ecrire_fichier($base . '.txt', serialize([
-			'name' => $nom,
-			'id_auteur' => intval($GLOBALS['visiteur_session']['id_auteur'] ?? 0),
-		]));
-
-		// Un seul document par envoi : le nouveau remplace l'ancien.
-		forumv2_document_supprimer($document);
-		forumv2_document_purger();
-		$document = forumv2_document_en_attente($jeton);
+		$erreur = forumv2_document_mettre_en_attente($envoi, $document);
+		// Mis en attente ou refusé, le fichier ne doit plus figurer dans
+		// $_FILES : bigup efface alors sa propre copie (cf
+		// bigup_formulaire_verifier) au lieu de la réafficher dans sa zone
+		// de dépôt et de la réinjecter au prochain envoi.
+		unset($_FILES['fichier_upload']);
 	}
 
 	set_request('document_forum', $document['jeton'] ?? '');
+
+	return $erreur;
+}
+
+/**
+ * Contrôle un fichier envoyé et le met en attente, à la place du document
+ * déjà en attente (un seul document par commentaire).
+ *
+ * @param array $envoi Entrée de $_FILES
+ * @param array|null $document Document en attente, remplacé en cas de succès
+ * @return string|null Message d'erreur, ou null
+ */
+function forumv2_document_mettre_en_attente($envoi, &$document) {
+	include_spip('inc/uploads');
+	include_spip('inc/joindre_document');
+	include_spip('action/ajouter_documents');
+	include_spip('inc/getdocument');
+
+	// Extension et taille, comme pour tout champ fichier_upload du site.
+	$erreurs = ccn_verifier_uploads();
+	if (!empty($erreurs['message_erreur'])) {
+		return $erreurs['message_erreur'];
+	}
+
+	[, $nom] = fixer_extension_document($envoi);
+	$jeton = md5(uniqid(random_int(0, mt_getrandmax()), true));
+	$base = forumv2_document_repertoire() . $jeton;
+	if (!deplacer_fichier_upload($envoi['tmp_name'], $base . '.bin')) {
+		return _T('copie_document_impossible');
+	}
+	ecrire_fichier($base . '.txt', serialize([
+		'name' => $nom,
+		'id_auteur' => intval($GLOBALS['visiteur_session']['id_auteur'] ?? 0),
+	]));
+
+	forumv2_document_supprimer($document);
+	forumv2_document_purger();
+	$document = forumv2_document_en_attente($jeton);
 
 	return null;
 }
@@ -252,6 +269,8 @@ function formulaires_forumv2_charger_dist($id_article) {
 		'_document_forum_nom' => $document['name'] ?? '',
 		'_accept' => ccn_attribut_accept_documents(),
 		'_avertissement_deconnexion' => $avertissement_deconnexion,
+		// Active la réinjection dans $_FILES des fichiers envoyés par bigup.
+		'_bigup_rechercher_fichiers' => true,
 	];
 }
 
@@ -290,7 +309,7 @@ function formulaires_forumv2_verifier_dist($id_article) {
 	// Même quand le texte manque : le fichier envoyé reste en attente et
 	// n'est pas à renvoyer une fois l'erreur corrigée.
 	if ($erreur_document = forumv2_document_verifier()) {
-		$erreurs['document'] = $erreur_document;
+		$erreurs['fichier_upload'] = $erreur_document;
 		$erreurs['message_erreur'] = '';
 	}
 
