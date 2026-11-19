@@ -62,6 +62,7 @@ renvoi suivant partait hors ajax et affichait la page brute.
 					<p class="publier-article-intro">#GET{intro_creation}</p>
 					]
 				]
+				[<p class="publier-article-avertissement-deconnexion" role="note">(#ENV{_avertissement_deconnexion})</p>]
 
 				[(#GET{est_edition}|non)
 					[(#ENV{type_article}|=={consignes}|oui)
