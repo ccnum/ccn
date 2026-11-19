@@ -228,6 +228,18 @@ function formulaires_forumv2_charger_dist($id_article) {
 	include_spip('inc/uploads');
 	$document = forumv2_document_en_attente(_request('document_forum'));
 
+	// Encadré « droit à la déconnexion » : un nouveau commentaire notifie par
+	// e-mail, différé en période de repos (cf ccn/inc/ccn_deconnexion.php). Pas
+	// en modification, qui n'envoie rien.
+	$avertissement_deconnexion = '';
+	include_spip('inc/ccn_deconnexion');
+	if (!$id_forum && ccn_fin_deconnexion()) {
+		$avertissement_deconnexion = _T('thematique:avertissement_deconnexion_commentaire', [
+			'debut' => _CCN_DECONNEXION_HEURE_DEBUT,
+			'fin' => _CCN_DECONNEXION_HEURE_FIN,
+		]);
+	}
+
 	return [
 		'id_article' => $id_article,
 		'id_forum' => $id_forum,
@@ -239,6 +251,7 @@ function formulaires_forumv2_charger_dist($id_article) {
 		'_document_forum' => $document['jeton'] ?? '',
 		'_document_forum_nom' => $document['name'] ?? '',
 		'_accept' => ccn_attribut_accept_documents(),
+		'_avertissement_deconnexion' => $avertissement_deconnexion,
 	];
 }
 
