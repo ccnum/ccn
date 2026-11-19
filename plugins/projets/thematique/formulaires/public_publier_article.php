@@ -189,8 +189,8 @@ function formulaires_public_publier_article_charger_dist(
  * est en période de repos, où ces e-mails sont différés (cf
  * ccn/inc/ccn_deconnexion.php).
  *
- * @param string $type_article Type de publication, pour un texte propre à
- *   chaque type le jour venu (aujourd'hui un seul texte pour tous)
+ * @param string $type_article Type de publication : texte propre aux
+ *   missions (consignes), texte commun aux autres types
  * @param int $id_article 0 en création
  * @return string Texte de l'encadré, vide s'il n'y a pas lieu de l'afficher
  */
@@ -208,7 +208,9 @@ function public_publier_article_avertissement_deconnexion($type_article, $id_art
 		return '';
 	}
 
-	return _T('thematique:avertissement_deconnexion', [
+	return _T($type_article === 'consignes'
+		? 'thematique:avertissement_deconnexion_mission'
+		: 'thematique:avertissement_deconnexion', [
 		'debut' => _CCN_DECONNEXION_HEURE_DEBUT,
 		'fin' => _CCN_DECONNEXION_HEURE_FIN,
 	]);

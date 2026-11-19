@@ -548,13 +548,24 @@ p.boutons:has(input[type="submit"]) {
 
 /* Droit à la déconnexion : noir sur jaune, demandé par la direction. */
 .avertissement-deconnexion {
-	background: #ffe600;
-	color: #000;
-	font-weight: 700;
-	padding: 10px 14px;
+	display: flex;
+	align-items: flex-start;
+	gap: 12px;
+	background: var(--color-gris-1);
+	color: var(--color-default);
+	padding: 14px 18px;
 	margin: 12px 0;
-	border: 2px solid #000;
-	border-radius: 8px;
+	border-left: 4px solid var(--color-tonic);
+}
+.avertissement-deconnexion[hidden] {
+	display: none;
+}
+.avertissement-deconnexion p {
+	margin: 0;
+}
+.avertissement-deconnexion__picto {
+	flex: none;
+	color: var(--color-tonic);
 }
 
 .publier-article-formats-autorises a {

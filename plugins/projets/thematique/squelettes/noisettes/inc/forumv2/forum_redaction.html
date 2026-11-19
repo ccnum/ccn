@@ -2,7 +2,7 @@
 	<h2><:thematique:redaction_commentaire:></h2>
 	[(#REM) Masqué par forum.js quand le formulaire partagé sert à modifier un
 	commentaire, ce qui n'envoie pas d'e-mail. ]
-	[<p class="avertissement-deconnexion js-avertissement-deconnexion" role="note">(#ENV{_avertissement_deconnexion})</p>]
+	<INCLURE{fond=noisettes/inc/avertissement_deconnexion, texte=#ENV{_avertissement_deconnexion}, classe=js-avertissement-deconnexion} />
 	[(#ENV**{erreurs/message_erreur})]
 	<p><:thematique:redigez_commentaire:></p>
 	[(#ENV{id_parent}|>{0}|oui)
