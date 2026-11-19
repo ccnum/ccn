@@ -11,6 +11,153 @@ function forumv2_texte_est_valide() {
 	return trim(_request('texte')) !== '';
 }
 
+/*
+ * Document joint à un commentaire.
+ *
+ * Le fichier est envoyé à l'étape « Prévisualiser », alors que le commentaire
+ * n'est enregistré qu'à l'étape « Poster » : entre les deux, il est gardé dans
+ * tmp/documents_forum/<jeton>.bin, avec ses métadonnées (nom, auteur) dans
+ * <jeton>.txt, et le jeton circule dans le champ caché document_forum. Même
+ * principe que le formulaire de forum natif (plugins-dist/forum), mais avec un
+ * jeton par envoi plutôt qu'un emplacement unique par session : un fichier
+ * abandonné (Annuler) ne se rattache pas au commentaire suivant de l'auteur.
+ */
+
+/**
+ * Répertoire des documents en attente de publication.
+ */
+function forumv2_document_repertoire() {
+	return sous_repertoire(_DIR_TMP, 'documents_forum');
+}
+
+/**
+ * Document en attente désigné par un jeton, s'il existe et appartient à
+ * l'auteur connecté.
+ *
+ * @param string $jeton Valeur du champ caché document_forum
+ * @return array|null ['jeton', 'tmp_name', 'name'], ou null
+ */
+function forumv2_document_en_attente($jeton) {
+	$jeton = (string) $jeton;
+	$id_auteur = intval($GLOBALS['visiteur_session']['id_auteur'] ?? 0);
+	if (!$id_auteur || !preg_match(',^[a-f0-9]{32}$,', $jeton)) {
+		return null;
+	}
+
+	$base = forumv2_document_repertoire() . $jeton;
+	if (!file_exists($base . '.bin') || !lire_fichier($base . '.txt', $meta)) {
+		return null;
+	}
+	$meta = @unserialize($meta);
+	if (!is_array($meta) || intval($meta['id_auteur'] ?? 0) !== $id_auteur) {
+		return null;
+	}
+
+	return [
+		'jeton' => $jeton,
+		'tmp_name' => $base . '.bin',
+		'name' => (string) ($meta['name'] ?? ''),
+	];
+}
+
+/**
+ * Supprime un document en attente (fichier et métadonnées).
+ */
+function forumv2_document_supprimer($document) {
+	if ($document) {
+		spip_unlink($document['tmp_name']);
+		spip_unlink(preg_replace(',\.bin$,', '.txt', $document['tmp_name']));
+	}
+}
+
+/**
+ * Gère le champ fichier à la vérification : retrait demandé, nouvel envoi
+ * (contrôlé puis mis en attente), ou conservation du document déjà en attente.
+ * Le jeton retenu est réinjecté dans document_forum pour charger().
+ *
+ * @return string|null Message d'erreur, ou null
+ */
+function forumv2_document_verifier() {
+	$document = forumv2_document_en_attente(_request('document_forum'));
+
+	if (_request('supprimer_document_forum')) {
+		forumv2_document_supprimer($document);
+		$document = null;
+	}
+
+	$envoi = $_FILES['fichier_upload'] ?? null;
+	if ($envoi && is_string($envoi['name'] ?? null) && $envoi['name'] !== '' && !empty($envoi['tmp_name'])) {
+		include_spip('inc/uploads');
+		include_spip('inc/joindre_document');
+		include_spip('action/ajouter_documents');
+		include_spip('inc/getdocument');
+
+		// Extension et taille, comme pour tout champ fichier_upload du site.
+		$erreurs = ccn_verifier_uploads();
+		if (!empty($erreurs['message_erreur'])) {
+			set_request('document_forum', $document['jeton'] ?? '');
+			return $erreurs['message_erreur'];
+		}
+
+		[, $nom] = fixer_extension_document($envoi);
+		$jeton = md5(uniqid(random_int(0, mt_getrandmax()), true));
+		$base = forumv2_document_repertoire() . $jeton;
+		if (!deplacer_fichier_upload($envoi['tmp_name'], $base . '.bin')) {
+			set_request('document_forum', $document['jeton'] ?? '');
+			return _T('copie_document_impossible');
+		}
+		ecrire_fichier($base . '.txt', serialize([
+			'name' => $nom,
+			'id_auteur' => intval($GLOBALS['visiteur_session']['id_auteur'] ?? 0),
+		]));
+
+		// Un seul document par envoi : le nouveau remplace l'ancien.
+		forumv2_document_supprimer($document);
+		forumv2_document_purger();
+		$document = forumv2_document_en_attente($jeton);
+	}
+
+	set_request('document_forum', $document['jeton'] ?? '');
+
+	return null;
+}
+
+/**
+ * Supprime les documents en attente abandonnés depuis plus d'un jour.
+ */
+function forumv2_document_purger() {
+	foreach (glob(forumv2_document_repertoire() . '*.{bin,txt}', GLOB_BRACE) ?: [] as $fichier) {
+		if (filemtime($fichier) < time() - 86400) {
+			spip_unlink($fichier);
+		}
+	}
+}
+
+/**
+ * Rattache le document en attente au commentaire publié.
+ *
+ * @param int $id_forum
+ */
+function forumv2_document_publier($id_forum) {
+	$document = forumv2_document_en_attente(_request('document_forum'));
+	if (!$document || !$id_forum) {
+		return;
+	}
+
+	$ajouter_documents = charger_fonction('ajouter_documents', 'action');
+	$resultat = $ajouter_documents('new', [[
+		'tmp_name' => $document['tmp_name'],
+		'name' => $document['name'],
+	]], 'forum', $id_forum, 'document');
+	foreach ($resultat as $id_document) {
+		if (!is_numeric($id_document) || !$id_document) {
+			spip_log("document non rattaché au forum $id_forum : " . $id_document, 'forumv2.' . _LOG_ERREUR);
+		}
+	}
+
+	forumv2_document_supprimer($document);
+}
+
 /**
  * Charge le formulaire.
  *
@@ -78,6 +225,9 @@ function formulaires_forumv2_charger_dist($id_article) {
 		$affichage = 'previsualisation';
 	}
 
+	include_spip('inc/uploads');
+	$document = forumv2_document_en_attente(_request('document_forum'));
+
 	return [
 		'id_article' => $id_article,
 		'id_forum' => $id_forum,
@@ -85,6 +235,10 @@ function formulaires_forumv2_charger_dist($id_article) {
 		'texte' => $texte,
 		'affichage' => $affichage,
 		'edition' => ($id_forum > 0),
+		// Préfixe _ : valeurs calculées, que SPIP ne remplace pas par la saisie.
+		'_document_forum' => $document['jeton'] ?? '',
+		'_document_forum_nom' => $document['name'] ?? '',
+		'_accept' => ccn_attribut_accept_documents(),
 	];
 }
 
@@ -118,6 +272,13 @@ function formulaires_forumv2_verifier_dist($id_article) {
 	if (thematique_annee_est_passee(thematique_annee_article($id_article))) {
 		$erreurs['message_erreur'] = _T('info_acces_interdit');
 		return $erreurs;
+	}
+
+	// Même quand le texte manque : le fichier envoyé reste en attente et
+	// n'est pas à renvoyer une fois l'erreur corrigée.
+	if ($erreur_document = forumv2_document_verifier()) {
+		$erreurs['document'] = $erreur_document;
+		$erreurs['message_erreur'] = '';
 	}
 
 	/**
@@ -181,6 +342,7 @@ function formulaires_forumv2_traiter_dist($id_article) {
 		$id_forum = intval(_request('id_forum'));
 		if ($id_forum) {
 			sql_updateq('spip_forum', ['texte' => _request('texte')], 'id_forum=' . $id_forum);
+			forumv2_document_publier($id_forum);
 		} else {
 			$id_parent = intval(_request('id_parent'));
 			$id_auteur = $GLOBALS['visiteur_session']['id_auteur'] ?? 0;
@@ -208,6 +370,8 @@ function formulaires_forumv2_traiter_dist($id_article) {
 				]
 			);
 			session_set('forum_commentaire_succes', $id_forum);
+			// Avant la notification, pour que le document soit déjà lié au message.
+			forumv2_document_publier($id_forum);
 
 			// forum_inserer() n'est que l'insertion SQL brute : contrairement à
 			// forum_insert_base() (chemin de l'ancien formulaire public forum.php),

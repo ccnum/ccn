@@ -1,0 +1,30 @@
+[(#REM) Documents joints à un commentaire (liens objet=forum), y compris ceux
+envoyés avec l'ancien forum des années précédentes.
+{tout} : sans filtre sur le statut du document (calculé d'après son parent),
+le commentaire affiché suffit à décider qu'ils sont visibles.
+Paramètre : id_forum ]
+<B_documents_forum>
+<div class="forum-documents">
+	<BOUCLE_documents_forum(DOCUMENTS){id_forum}{tout}{par id_document}>
+	<div class="forum-document">
+		[(#DISTANT|=={oui}|oui)
+			[(#VIMEO_STATUT|=={disponible}|oui)[(#FICHIER|oembed{380,380})]]
+		]
+		[(#DISTANT|=={oui}|non)
+			[(#MIME_TYPE|match{'^image/'}|oui)
+				<a href="#URL_DOCUMENT" title="[(#TITRE|attribut_html)]" class="mediabox" type="#MIME_TYPE" data-box-min-height="90vh">
+					[(#FICHIER|image_reduire{760}|inserer_attribut{alt,''})]
+				</a>
+			]
+			[(#MIME_TYPE|match{'^audio/'}|oui)
+				<audio controls preload="metadata" src="#URL_DOCUMENT"></audio>
+			]
+			[(#MIME_TYPE|match{'^video/'}|oui)
+				<video controls preload="metadata" src="#URL_DOCUMENT"></video>
+			]
+			<INCLURE{fond=noisettes/inc/document_meta, fichier=#FICHIER, taille=#TAILLE, url=#URL_DOCUMENT}>
+		]
+	</div>
+	</BOUCLE_documents_forum>
+</div>
+</B_documents_forum>

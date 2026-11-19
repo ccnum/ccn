@@ -7,6 +7,36 @@ if (!defined('_ECRIRE_INC_VERSION')) {
 function thematique_autoriser() {
 }
 
+/**
+ * Joindre un document à un commentaire : réservé à son auteur, quel que soit
+ * son rôle (élève compris).
+ *
+ * Sans elle, l'autorisation générique du plugin medias refuse toujours un
+ * forum (spip_forum absent de documents_objets, et forum_modifier vaut
+ * false), et exige un statut rédacteur que les comptes SSO (6forum) n'ont
+ * pas. Le contrôle des extensions dangereuses (html, php…) est conservé.
+ * Appelée par action/ajouter_documents au moment de rattacher le document
+ * (cf forumv2_document_publier()).
+ *
+ * @param string $faire Action demandée
+ * @param string $type Type d'objet
+ * @param int|string $id Identifiant du message de forum
+ * @param array $qui Auteur concerné (visiteur en session si vide)
+ * @param array $opt Options (extension, mode)
+ * @return bool
+ */
+function autoriser_forum_joindredocument_dist($faire, $type, $id, $qui, $opt) {
+	$id_auteur = intval($qui['id_auteur'] ?? 0);
+	if (!$id_auteur || in_array($opt['mode'] ?? '', ['logoon', 'logooff'])) {
+		return false;
+	}
+	if (!empty($opt['extension']) && !autoriser('creer', 'documentextension', $opt['extension'], $qui, $opt)) {
+		return false;
+	}
+
+	return $id_auteur === intval(sql_getfetsel('id_auteur', 'spip_forum', 'id_forum=' . intval($id)));
+}
+
 // declarations d'autorisations
 // Uniquement des fonctions courtes ici théoriquement
 /**

@@ -10,6 +10,26 @@
 		<label for="texte" class="sr-only"><:thematique:redigez_commentaire:></label>
 		<textarea id="texte" name="texte" rows="6" class="forum-redaction__textarea inserer_barre_forum" aria-describedby="texte-erreur">[(#ENV{texte}|entites_html)]</textarea>
 	</div>
+	[(#REM) Label englobant plutôt que for/id : le formulaire est présent deux
+	fois sur la page (nouveau commentaire, réponse/modification). ]
+	<div class="editer saisie_document_forum[ (#ENV**{erreurs/document}|oui)erreur]">
+		[<p class="erreur_message" role="alert">(#ENV**{erreurs/document})</p>]
+		[(#ENV{_document_forum_nom}|oui)
+			<p class="forum-document-en-attente js-forum-document-en-attente">
+				<:thematique:document_joint_commentaire:> : <strong>[(#ENV{_document_forum_nom})]</strong>
+				<label class="forum-document-retirer">
+					<input type="checkbox" name="supprimer_document_forum" value="oui">
+					<:thematique:retirer_document_commentaire:>
+				</label>
+			</p>
+		]
+		<label class="forum-document-label">
+			[(#ENV{_document_forum_nom}|oui)<:thematique:remplacer_document_commentaire:>]
+			[(#ENV{_document_forum_nom}|non)<:thematique:joindre_document_commentaire:>]
+			<input type="file" name="fichier_upload" class="js-forum-document-fichier"[ accept="(#ENV{_accept})"]>
+		</label>
+		<p class="explication"><:thematique:taille_maximale_document_forum:></p>
+	</div>
 	<div class="footer-creation-forum">
 		<div class="forum-actions">
 			<button type="button" class="link-button cancel-button" onclick="callbackCliqueSurAnnuler(event)">

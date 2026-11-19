@@ -81,7 +81,14 @@ function trouverFormulaireMobile() {
 }
 
 // Pas de textarea quand le formulaire est en mode prévisualisation.
+// Le document joint en attente est oublié en même temps que le texte : le
+// formulaire partagé ne doit pas le rattacher au commentaire suivant.
 function remplirTexte(conteneur, texte) {
+    const jeton = conteneur.querySelector('.js-forum-document-jeton')
+    if (jeton) jeton.value = ''
+    const fichier = conteneur.querySelector('.js-forum-document-fichier')
+    if (fichier) fichier.value = ''
+    conteneur.querySelector('.js-forum-document-en-attente')?.remove()
     const textarea = conteneur.querySelector('textarea')
     if (!textarea) return
     textarea.value = texte

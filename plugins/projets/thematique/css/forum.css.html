@@ -274,3 +274,41 @@ limite de 5 lignes (cf forum.js:mesurerLireLaSuite). */
 
 
 
+
+/* Documents joints à un commentaire (forum_documents.html) */
+.forum-documents {
+	display: flex;
+	flex-direction: column;
+	gap: 0.5rem;
+	margin-top: 0.5rem;
+}
+.forum-document img,
+.forum-document video,
+.forum-document audio,
+.forum-document iframe {
+	display: block;
+	max-width: 100%;
+	height: auto;
+}
+
+/* Champ de pièce jointe du formulaire (forum_redaction.html) */
+.saisie_document_forum {
+	margin-top: 0.5rem;
+}
+.saisie_document_forum .forum-document-label {
+	display: flex;
+	flex-direction: column;
+	gap: 0.25rem;
+}
+.saisie_document_forum .explication {
+	margin: 0.25rem 0 0;
+	font-size: 0.85em;
+}
+.saisie_document_forum.erreur .erreur_message {
+	color: red;
+}
+.forum-document-retirer {
+	display: inline-flex;
+	gap: 0.25rem;
+	margin-left: 0.5rem;
+}
