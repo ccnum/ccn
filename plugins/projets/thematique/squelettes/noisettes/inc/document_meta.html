@@ -1,0 +1,8 @@
+[(#REM) Nom, taille et lien de téléchargement d'un document, sous son aperçu.
+Paramètres (champs de la boucle DOCUMENTS appelante, pour ne pas refaire de
+requête) : fichier, taille, url ]
+<div class="spip_document_meta">
+	<span class="spip_document_nom" title="[(#ENV{fichier}|basename|attribut_html)]"><img src="#CHEMIN{img/file.svg}" alt="" />[(#ENV{fichier}|basename)]</span>
+	<span class="spip_document_taille">[(#ENV{taille}|taille_en_octets)]</span>
+	<a href="[(#ENV{url}|attribut_url)]" download title="<:thematique:telecharger_document:>" class="spip_document_telecharger"><:thematique:telecharger:></a>
+</div>

@@ -44,6 +44,9 @@ doivent jamais être figés dans le cache. ]
 				<:thematique:lire_la_suite_commentaire:>
 			</a>
 		</div>
+		[(#ENV{id_forum}|oui)
+			<INCLURE{fond=noisettes/inc/forumv2/forum_documents, id_forum=#ENV{id_forum}}>
+		]
 		[(#ENV{est_une_previsualisation}|non)
 			#SET{peut_voir_reponses,
 				#ENV{is_root}|et{#ENV{nombre_reponses}|>{0}}

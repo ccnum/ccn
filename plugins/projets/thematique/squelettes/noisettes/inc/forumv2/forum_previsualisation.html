@@ -18,6 +18,16 @@
 			is_root=oui
 		}>
 	</div>
+	<B_documents_previsualisation>
+	<div class="forum-document-en-attente">
+		<p><:thematique:document_joint_commentaire:> :</p>
+		<ul>
+		<BOUCLE_documents_previsualisation(DATA){source tableau, #ENV{_documents_forum}}>
+			<li><strong>[(#VALEUR{name}|entites_html)]</strong></li>
+		</BOUCLE_documents_previsualisation>
+		</ul>
+	</div>
+	</B_documents_previsualisation>
 	<div class="footer-creation-forum">
 		<div class="forum-actions">
 			<button type="submit" name="publication_forum_action" value="rediger" class="link-button cancel-button"><:thematique:retour:></button>

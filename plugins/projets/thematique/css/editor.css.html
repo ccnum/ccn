@@ -228,7 +228,10 @@ p.boutons:has(input[type="submit"]) {
 	margin-bottom: 20px;
 }
 
-.formulaire_public_publier_article .editer-groupe .dropfile {
+/* Même zone de dépôt bigup pour le document joint d'un commentaire
+   (forumv2/forum_redaction.html). */
+.formulaire_public_publier_article .editer-groupe .dropfile,
+.saisie_document_forum .dropfile {
 	display: flex;
 	flex-direction: column;
 	align-items: center;
@@ -237,7 +240,8 @@ p.boutons:has(input[type="submit"]) {
 	background: repeating-conic-gradient(#f3f3f3 0% 25%, #fff 0% 50%) 0 0 / 40px 40px;  /* damier */
 }
 
-.editer-groupe .dropfileor {
+.editer-groupe .dropfileor,
+.saisie_document_forum .dropfileor {
 	margin: 0.4rem 0;
 }
 
@@ -540,6 +544,28 @@ p.boutons:has(input[type="submit"]) {
 	color: var(--color-tonic);
 	font-size: 0.85em;
 	margin-top: 6px;
+}
+
+/* Droit à la déconnexion : noir sur jaune, demandé par la direction. */
+.avertissement-deconnexion {
+	display: flex;
+	align-items: flex-start;
+	gap: 12px;
+	background: var(--color-gris-1);
+	color: var(--color-default);
+	padding: 14px 18px;
+	margin: 12px 0;
+	border-left: 4px solid var(--color-tonic);
+}
+.avertissement-deconnexion[hidden] {
+	display: none;
+}
+.avertissement-deconnexion p {
+	margin: 0;
+}
+.avertissement-deconnexion__picto {
+	flex: none;
+	color: var(--color-tonic);
 }
 
 .publier-article-formats-autorises a {

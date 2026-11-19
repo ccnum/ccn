@@ -1,0 +1,13 @@
+[(#REM)
+Encadré « droit à la déconnexion » (picto lune), commun au formulaire de
+publication et au formulaire de commentaire.
+Arguments :
+- texte : texte de l'encadré, rien n'est affiché s'il est vide
+- classe : classe(s) en plus (ex. crochet JS)
+]
+[(#ENV{texte}|oui)
+<div class="avertissement-deconnexion[ (#ENV{classe})]" role="note">
+	<svg class="avertissement-deconnexion__picto" aria-hidden="true" focusable="false" viewBox="0 0 24 24" width="24" height="24"><path fill="currentColor" d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8Z"/></svg>
+	<p>#ENV{texte}</p>
+</div>
+]

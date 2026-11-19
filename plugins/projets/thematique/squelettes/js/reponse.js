@@ -58,7 +58,7 @@ function Reponse() {
 						</div>
 					</div>
 					<div class="second-row reponse_border_${coul}">
-						<div class="auteur_date">${escHtml(this.nom_classe)} - ${date_texte}</div>
+						<div class="auteur_date"><span>${escHtml(this.nom_classe)}</span><span>${date_texte}</span></div>
 					</div>
 					${this.nombre_commentaires > 0 ? `<div aria-label="${this.nombre_commentaires} interaction${this.nombre_commentaires > 1 ? 's' : ''}" class="picto_nombre_commentaires">${this.nombre_commentaires}</div>` : ''}
 					<div class="nettoyeur"></div>
