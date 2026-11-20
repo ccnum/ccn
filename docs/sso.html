@@ -51,6 +51,7 @@
 	<main>
 		<h1>Connexion et comptes</h1>
 		<p class="lead">Comment les comptes arrivent sur un site CCN, par l’ENT laclasse.com ou sans lui, et comment une connexion en fait un admin, un prof, un intervenant ou un élève.</p>
+		<p>Cette page décrit le SSO avec l’ENT laclasse.com ; un autre fournisseur OIDC demanderait d’adapter la lecture des attributs (<code>thematique_cioidc_userinfo()</code>).</p>
 
 		<h2 id="modes">Avec ou sans ENT</h2>
 		<p>La connexion par l’ENT passe par le plugin tiers <code>cioidc</code> (client OpenID Connect). Il est activé ou désactivé à chaque démarrage du conteneur selon <code>SPIP_PLUGINS_CIOIDC</code> (voir <a href="deploiement.html#variables">variables</a>).</p>
@@ -84,9 +85,9 @@
 				<thead><tr><th>Étape</th><th>Qui</th><th>Où</th></tr></thead>
 				<tbody>
 					<tr><td>Recenser les personnes associées aux CCN (formateurs, intervenants, partenaires) et les CCN qu’elles suivent</td><td>Erasme, à partir d’ADAGE et à la main</td><td>Tableau GRIST</td></tr>
-					<tr><td>Reporter ce tableau dans l’ENT : comptes, groupe « CCN Intervenants, Médiateurs et Partenaires », groupe libre de chaque CCN suivi</td><td><span class="tag muted">à préciser</span></td><td>laclasse.com, <span class="tag muted">rythme à préciser</span></td></tr>
-					<tr><td>Inscrire un prof à une CCN : groupe libre « &lt;site&gt; &lt;année&gt; » (ex. « On tourne 2026 »)</td><td><span class="tag muted">à préciser</span></td><td>laclasse.com</td></tr>
-					<tr><td>Créer la classe d’un établissement absent de laclasse.com, dans la structure CCN (<code>00000CCN</code>)</td><td><span class="tag muted">à préciser</span></td><td>laclasse.com</td></tr>
+					<tr><td>Reporter ce tableau dans l’ENT : comptes, groupe « CCN Intervenants, Médiateurs et Partenaires », groupe libre de chaque CCN suivi</td><td>Admin de laclasse.com</td><td>laclasse.com, <span class="tag muted">rythme à préciser</span></td></tr>
+					<tr><td>Inscrire un prof à une CCN : groupe libre « &lt;site&gt; &lt;année&gt; » (ex. « On tourne 2026 »)</td><td>Admin de laclasse.com</td><td>laclasse.com</td></tr>
+					<tr><td>Créer la classe d’un établissement absent de laclasse.com, dans la structure CCN (<code>00000CCN</code>)</td><td>Admin de laclasse.com</td><td>laclasse.com</td></tr>
 					<tr><td>Associer un enseignant à sa classe dans un établissement présent sur laclasse.com</td><td>Le directeur ou l’admin ENT de l’établissement</td><td>laclasse.com</td></tr>
 					<tr><td>Recopier statut, nom affiché, projet et classes</td><td>Le site, automatiquement</td><td>À chaque connexion par l’ENT</td></tr>
 					<tr><td>Choisir les classes qui participent cette année</td><td>Le prof</td><td>Pop-up du site (<a href="#choix-classes">Choix des classes</a>)</td></tr>

@@ -95,6 +95,19 @@ docker-compose up</code></pre>
 		</div>
 		<p>Chaque build est précédé des <a href="developpement.html#lint">lints CI</a> : un lint en échec bloque la publication. Un pod ne prend la nouvelle image qu’à son redémarrage (<code>imagePullPolicy: Always</code>).</p>
 
+		<h3 id="maj-spip">Mises à jour de SPIP</h3>
+		<p>Le core SPIP n’est pas versionné : l’image l’installe au build depuis l’archive officielle, à la version et au sha256 fixés par <code>ENV SPIP_PACKAGE</code> et <code>ENV SPIP_PACKAGE_SHA256</code> du <code>Dockerfile</code>. Le workflow <code>.github/workflows/maj-spip.yml</code> (script <code>.ci/maj_spip.py</code>) applique les mises à jour correctives (4.4.x → 4.4.y, jamais de changement de branche SPIP) chaque soir à 19 h UTC, après les publications de spip.net :</p>
+		<ul>
+			<li>pour <code>dev</code> puis <code>main</code>, il compare <code>SPIP_PACKAGE</code> à l’API spip_loader (<code>https://www.spip.net/spip_loader.api/3</code>) ;</li>
+			<li>si une version plus récente existe, il vérifie le sha256 de l’archive, crée la branche <code>maj-spip-&lt;version&gt;</code> (<code>maj-spip-&lt;version&gt;-main</code> pour <code>main</code>) ne changeant que ces lignes du <code>Dockerfile</code>, ouvre une PR et la fusionne : le build et la publication suivent comme pour toute fusion (pour <code>main</code>, nouveau tag de version) ;</li>
+			<li><code>main</code> reçoit la mise à jour directement, sans le reste de <code>dev</code>, et seulement entre 18 h et 8 h (heure de Paris) : le redéploiement de <code>latest</code> redémarre les sites ;</li>
+			<li>une PR déjà proposée (même fermée sans fusion) n’est pas reproposée ; une PR restée ouverte est fusionnée au passage suivant.</li>
+		</ul>
+		<p>Au démarrage, <code>docker-entrypoint.sh</code> lance <code>spip core:maj:bdd</code>, qui applique les éventuelles mises à jour de la base. Un déclenchement manuel (<em>Actions → Mise à jour de SPIP → Run workflow</em>) peut se faire en mode essai, qui n’écrit rien.</p>
+		<div class="callout">
+			<p>Le workflow a besoin du secret <code>MAJ_SPIP_TOKEN</code> : un jeton personnel GitHub (fine-grained, droits <em>Contents</em> et <em>Pull requests</em> en écriture sur le dépôt). Le <code>GITHUB_TOKEN</code> du workflow ne convient pas : une fusion faite avec lui ne déclenche pas le build. Le jeton expire : penser à le renouveler. Une montée de version mineure ou majeure de SPIP reste manuelle.</p>
+		</div>
+
 		<h2 id="versions">Gestion des versions</h2>
 		<p>Les versions suivent le format <code>X.Y.Z</code>. À chaque pull request fusionnée dans <code>main</code>, un tag est créé sur GitHub et l’image correspondante est publiée sur Docker Hub.</p>
 		<div class="table-wrap">
