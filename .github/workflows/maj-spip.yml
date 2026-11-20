@@ -1,0 +1,45 @@
+name: Mise à jour de SPIP
+
+# Applique les mises à jour correctives de SPIP (4.4.x -> 4.4.y) : chaque soir
+# à 19 h UTC (20 h ou 21 h à Paris, après les publications de spip.net vers
+# 19 h), compare SPIP_PACKAGE du Dockerfile de dev et de main à l'API
+# spip_loader et, si besoin, ouvre et fusionne une PR par branche ne changeant
+# que ces lignes (détail : .ci/maj_spip.py). La fusion déclenche le build comme
+# toute autre (build_dev.yml, build_main.yaml).
+# main n'est mise à jour qu'entre 18 h et 8 h (heure de Paris), comme
+# rebuild.yml : le redéploiement de latest redémarre les sites. Un
+# déclenchement manuel en journée ne met donc à jour que dev.
+# Secret requis : MAJ_SPIP_TOKEN, jeton personnel (droits Contents et Pull
+# requests en écriture sur le dépôt) : une fusion faite avec le GITHUB_TOKEN
+# du workflow ne déclencherait pas le build.
+
+on:
+  schedule:
+    - cron: '0 19 * * *'
+  workflow_dispatch:
+    inputs:
+      essai:
+        description: "Essai : ne crée ni branche ni PR"
+        type: boolean
+        default: false
+
+jobs:
+  maj-spip:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.MAJ_SPIP_TOKEN }}
+
+      - name: Proposer et fusionner les mises à jour
+        env:
+          GH_TOKEN: ${{ secrets.MAJ_SPIP_TOKEN }}
+          MAJ_SPIP_DOCKERFILE: Dockerfile
+          MAJ_SPIP_SCOPE: spip
+          MAJ_SPIP_MAIN_HEURES: '18-8'
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          python3 .ci/maj_spip.py ${{ inputs.essai && '--essai' || '' }}
