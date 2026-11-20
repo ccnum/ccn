@@ -2924,8 +2924,11 @@ function thematique_numero_mission($id_article) {
 		? $article
 		: sql_fetsel('id_article, id_rubrique', 'spip_articles', 'id_article=' . $id_consigne);
 
+	// Un article hors "Consignes" (salle des profs, agenda, ressources…) a lui
+	// aussi id_consigne=0 : sans ce test, il était classé parmi les articles de
+	// sa propre rubrique et le mail de commentaire annonçait une "Mission n°X".
 	$rang = 0;
-	if ($consigne) {
+	if ($consigne && thematique_type_objet_article($id_consigne) === 'consignes') {
 		// Seules les missions publiées comptent (la consigne
 		// elle-même est gardée quel que soit son statut, la notification
 		// pouvant partir avant que le statut soit relu), et les jalons
