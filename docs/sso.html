@@ -51,6 +51,7 @@
 	<main>
 		<h1>Connexion et comptes</h1>
 		<p class="lead">Comment les comptes arrivent sur un site CCN, par l’ENT laclasse.com ou sans lui, et comment une connexion en fait un admin, un prof, un intervenant ou un élève.</p>
+		<p>Cette page décrit le SSO avec l’ENT laclasse.com ; un autre fournisseur OIDC demanderait d’adapter la lecture des attributs (<code>thematique_cioidc_userinfo()</code>).</p>
 
 		<h2 id="modes">Avec ou sans ENT</h2>
 		<p>La connexion par l’ENT passe par le plugin tiers <code>cioidc</code> (client OpenID Connect). Il est activé ou désactivé à chaque démarrage du conteneur selon <code>SPIP_PLUGINS_CIOIDC</code> (voir <a href="deploiement.html#variables">variables</a>).</p>
