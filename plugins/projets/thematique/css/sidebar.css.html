@@ -2051,8 +2051,29 @@ ailleurs, ex: le menu du bas). */
 	display: flex;
 	align-items: center;
 	gap: 1em;
+	width: 100%;
 	padding: 0.4rem;
+	border: none;
 	border-radius: 4.9998px;
+	font: inherit;
+	color: inherit;
+	text-align: left;
+}
+
+button.card_reponse {
+	cursor: pointer;
+}
+
+button.card_reponse:hover,
+button.card_reponse:focus-visible {
+	filter: brightness(0.95);
+	outline: 2px solid currentColor;
+	outline-offset: 2px;
+}
+
+.card_reponse_titre,
+.card_reponse_date {
+	display: block;
 }
 
 .card_reponse_icone {

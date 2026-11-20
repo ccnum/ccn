@@ -1,11 +1,17 @@
-<div class="card_reponse" style="background-color: var(#ENV{couleur-bg});">
-	<div class="card_reponse_icone bgc_classe_[(#ENV{id_rubrique}|classe_numero)]">
+[(#REM)
+	Carte d'une classe dans l'onglet "Suivi des réponses" de l'intervenant
+	(cf onglet_reponses_intervenant.html) : cliquable seulement si la classe a
+	répondu (id_reponse), pour ouvrir sa réponse.
+]#SET{balise, #ENV{id_reponse}|intval|?{button,div}}
+<[(#GET{balise})] class="card_reponse" style="background-color: var(#ENV{couleur-bg});"[(#ENV{id_reponse}|intval|oui)
+	type="button" onclick="callReponse([(#ENV{id_reponse}|intval)])"]>
+	<span class="card_reponse_icone bgc_classe_[(#ENV{id_rubrique}|classe_numero)]">
 		#ENV{icone}
-	</div>
-	<div>
-		<div class="card_reponse_titre">#ENV{titre}</div>
+	</span>
+	<span>
+		<span class="card_reponse_titre">#ENV{titre}</span>
 		[(#ENV{date}|strlen|oui)
-			<div>[(#ENV{date}|affdate)]</div>
+			<span class="card_reponse_date">[(#ENV{date}|affdate)]</span>
 		]
-	</div>
-</div>
+	</span>
+</#GET{balise}>
