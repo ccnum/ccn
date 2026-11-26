@@ -137,10 +137,10 @@
 		<p>Quand un participant enregistre son chapitre, le pipeline <code>post_edition</code> (<code>fictions_post_edition()</code>) enchaîne :</p>
 		<ol>
 			<li>le chapitre est publié ;</li>
-			<li>l’extrait du chapitre précédent (son descriptif) est masqué : ses lettres sont remplacées par des X (<code>masquerTexteChapitre</code>), et seule sa fin reste affichée en clair (<code>recupererDernieresLignesChapitres</code>) ;</li>
 			<li>le chapitre suivant passe de « en attente » à « à écrire » ;</li>
 			<li>les comptes liés à ce chapitre suivant sont prévenus par e-mail (<code>notifications/fictions_chapitre_a_ecrire.html</code>).</li>
 		</ol>
+		<p>Les changements de statut de cette cascade sont faits pour le compte du site, même quand le participant n’est que rédacteur (exception <code>publierdans</code> limitée à la rubrique de l’histoire). Le chapitre précédent n’est pas modifié en base : il est masqué à l’affichage, ses lettres remplacées par des X (<code>masquerTexteChapitre</code>) sauf sa fin, laissée en clair (<code>recupererDernieresLignesChapitres</code>). Son texte complet reste lisible une fois l’histoire terminée.</p>
 		<p>Ce qu’un visiteur connecté voit d’une histoire (<code>inc/fictions_autorisation.php</code>, autorisations <code>lirechapitre</code> et <code>ecrirechapitre</code>) :</p>
 		<div class="table-wrap">
 			<table>
