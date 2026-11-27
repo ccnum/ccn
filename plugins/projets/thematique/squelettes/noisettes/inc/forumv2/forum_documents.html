@@ -13,7 +13,7 @@ Paramètre : id_forum ]
 		[(#DISTANT|=={oui}|non)
 			[(#MIME_TYPE|match{'^image/'}|oui)
 				<a href="#URL_DOCUMENT" title="[(#TITRE|attribut_html)]" class="mediabox" type="#MIME_TYPE" data-box-min-height="90vh">
-					[(#FICHIER|image_reduire{760}|inserer_attribut{alt,''})]
+					[(#FICHIER|image_reduire{760}|inserer_attribut{alt,''}|inserer_attribut{loading,lazy}|inserer_attribut{decoding,async})]
 				</a>
 			]
 			[(#MIME_TYPE|match{'^audio/'}|oui)

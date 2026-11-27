@@ -21,8 +21,7 @@ function fictions_post_edition($flux) {
 	// contrairement à champs_anciens qui est l'état AVANT cette modification. Sur le
 	// tout premier enregistrement d'un chapitre, champs_anciens['descriptif'] est
 	// encore vide : lire uniquement l'ancienne valeur faisait sortir cette fonction
-	// avant la cascade prop->publie, laissant le chapitre précédent visible en entier
-	// jusqu'à un enregistrement ultérieur (masquage manuel en attendant).
+	// avant la cascade prop->publie.
 	$descriptif = $flux['data']['descriptif'] ?? ($flux['args']['champs_anciens']['descriptif'] ?? '');
 	$id_rubrique = intval($flux['args']['champs_anciens']['id_rubrique'] ?? 0);
 
@@ -32,9 +31,21 @@ function fictions_post_edition($flux) {
 
 	include_spip('action/editer_objet');
 	include_spip('fictions/fictions_fonctions');
+	include_spip('inc/autoriser');
+
+	// Les changements de statut de la cascade (publication du chapitre, chapitre
+	// suivant à écrire) passent par objet_instituer(), qui exige
+	// autoriser('publierdans') du visiteur : un participant rédacteur (1comite)
+	// ne l'a pas, la publication était refusée et le chapitre restait en prop.
+	// La cascade est une règle du site, pas un choix du visiteur : exception
+	// limitée à la rubrique de l'histoire, le temps de la cascade.
+	// Le chapitre précédent n'est pas modifié en base : le masquage se fait à
+	// l'affichage (inclure/chapitre-visible.html, chapitre-verrouille.html), son
+	// texte complet reste lisible à la fin de l'histoire.
+	autoriser_exception('publierdans', 'rubrique', $id_rubrique);
 
 	if ($statut === 'prop') {
-		fictions_publier_masquer_precedent($id_objet, $id_rubrique);
+		objet_modifier('article', $id_objet, ['statut' => 'publie']);
 		// Passer de prépa à prop le suivant
 		$id_article = sql_getfetsel('id_article', 'spip_articles', ['id_rubrique=' . $id_rubrique, 'statut=' . sql_quote('prepa')], '', 'id_article', '0,1');
 		if ($id_article) {
@@ -44,29 +55,14 @@ function fictions_post_edition($flux) {
 	}
 
 	// Rubrique blog auteur (une fois créée et la constante surchargée) :
-	// publication automatique de l'article, chapitre précédent masqué.
+	// publication automatique de l'article.
 	if ($id_rubrique === (int) _FICTIONS_ID_BLOG_AUTEUR && $statut === 'prepa') {
-		fictions_publier_masquer_precedent($id_objet, $id_rubrique);
+		objet_modifier('article', $id_objet, ['statut' => 'publie']);
 	}
+
+	autoriser_exception('publierdans', 'rubrique', $id_rubrique, false);
 
 	return $flux;
-}
-
-/**
- * Publie l'article que l'on vient de modifier et masque le chapitre précédent
- * de la rubrique en tronquant son descriptif.
- */
-function fictions_publier_masquer_precedent(int $id_objet, int $id_rubrique): void {
-	objet_modifier('article', $id_objet, ['statut' => 'publie']);
-	$prev_id = sql_getfetsel('id_article', 'spip_articles', [
-		'id_rubrique=' . $id_rubrique,
-		'statut=' . sql_quote('publie'),
-		'id_article<>' . $id_objet,
-	], '', 'id_article', '1', 'id_article DESC');
-	if ($prev_id) {
-		$prev_desc = sql_getfetsel('descriptif', 'spip_articles', 'id_article=' . intval($prev_id));
-		objet_modifier('article', intval($prev_id), ['descriptif' => masquerTexteChapitre($prev_desc)]);
-	}
 }
 
 /**

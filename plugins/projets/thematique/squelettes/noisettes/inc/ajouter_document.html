@@ -42,9 +42,11 @@
 			[(#MIME_TYPE|match{image}|oui)
 			[(#REM) Réduite à 760 px, double des 380 px d'affichage (sidebar.css.html)
 			pour les écrans haute densité, sans charger l'original en pleine taille
-			(photos de téléphone) : le clic ouvre l'original dans la mediabox. ]
+			(photos de téléphone) : le clic ouvre l'original dans la mediabox.
+			loading=lazy : une ressource peut compter des dizaines d'images, chargées
+			au fil du défilement de la popup plutôt que toutes à l'ouverture. ]
 			<a href="#URL_DOCUMENT" title="[(#TITRE)]" class="mediabox" type="image/jpeg" data-box-min-height="90vh">
-				[(#FICHIER|image_reduire{760}|inserer_attribut{alt,#TITRE})]
+				[(#FICHIER|image_reduire{760}|inserer_attribut{alt,#TITRE}|inserer_attribut{loading,lazy}|inserer_attribut{decoding,async})]
 			</a>
 			]
 			[(#MIME_TYPE|match{'^audio/'}|oui)
